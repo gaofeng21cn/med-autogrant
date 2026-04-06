@@ -20,6 +20,8 @@
 !.omx/context/CURRENT_PROGRAM.md
 !.omx/context/PROGRAM_ROUTING.md
 !.omx/context/OMX_TEAM_PROMPT.md
+!.omx/context/OMX_EXECUTION_PROMPT.md
+!.omx/context/CODEX_APP_SUPERVISOR_PROMPT.md
 .omx/plans/*
 !.omx/plans/*.md
 .omx/reports/*
