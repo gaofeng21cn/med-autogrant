@@ -20,6 +20,19 @@ class WorkspaceFileError(WorkspaceError):
 class WorkspaceStateError(WorkspaceError):
     """Workspace 状态不满足运行时约束。"""
 
+    def __init__(
+        self,
+        message: str,
+        *,
+        errors: list[ValidationIssue] | None = None,
+        workspace_id: str | None = None,
+        lifecycle_stage: str | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.errors = list(errors or [])
+        self.workspace_id = workspace_id
+        self.lifecycle_stage = lifecycle_stage
+
 
 @dataclass(frozen=True)
 class ValidationIssue:
@@ -297,18 +310,27 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
             )
 
     _validate_reference_sets(document, issues)
-    _validate_stage_requirements(document, active_critique, issues)
+    _validate_stage_requirements(document, active_revision_plan, active_critique, issues)
 
     return issues
 
 
 def _validate_stage_requirements(
     document: dict[str, Any],
+    active_revision_plan: dict[str, Any] | None,
     active_critique: dict[str, Any] | None,
     issues: list[ValidationIssue],
 ) -> None:
     stage = document.get("lifecycle_stage")
     gates = document.get("gates", {})
+    selection = document.get("current_selection", {})
+    active_draft = None
+    active_draft_id = selection.get("active_draft_id")
+    if isinstance(active_draft_id, str):
+        for item in document.get("application_drafts", []):
+            if isinstance(item, dict) and item.get("draft_id") == active_draft_id:
+                active_draft = item
+                break
     if stage in {"outline", "drafting", "critique", "revision", "frozen"}:
         for gate_name in ("direction_frozen", "scientific_question_frozen", "argument_chain_frozen"):
             if not gates.get(gate_name):
@@ -339,11 +361,48 @@ def _validate_stage_requirements(
                 message=f"{stage} 阶段不能缺少 MentorCritique。",
             )
         )
+    if stage in {"critique", "revision", "frozen"}:
+        revision_items = active_revision_plan.get("items") if isinstance(active_revision_plan, dict) else None
+        if not isinstance(revision_items, list) or not revision_items:
+            issues.append(
+                ValidationIssue(
+                    path="revision_plans",
+                    message=f"{stage} 阶段必须存在非空 RevisionPlan。",
+                )
+            )
     if stage == "frozen" and not gates.get("presubmission_frozen"):
         issues.append(
             ValidationIssue(
                 path="gates.presubmission_frozen",
                 message="frozen 阶段必须已经冻结 presubmission 版本。",
+            )
+        )
+    if stage == "frozen" and active_critique is not None and active_critique.get("verdict") != "ready_for_submission":
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques.verdict",
+                message="frozen 阶段的激活批注 verdict 必须为 ready_for_submission。",
+            )
+        )
+    if stage == "revision" and active_critique is not None and active_critique.get("verdict") not in {"major_revision", "minor_revision"}:
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques.verdict",
+                message="revision 阶段的激活批注 verdict 必须为 major_revision 或 minor_revision。",
+            )
+        )
+    if stage in {"critique", "revision"} and active_draft is not None and active_draft.get("status") not in {"draft", "revised"}:
+        issues.append(
+            ValidationIssue(
+                path="application_drafts.status",
+                message=f"{stage} 阶段的激活草稿 status 必须为 draft 或 revised。",
+            )
+        )
+    if stage == "frozen" and active_draft is not None and active_draft.get("status") != "frozen":
+        issues.append(
+            ValidationIssue(
+                path="application_drafts.status",
+                message="frozen 阶段的激活草稿 status 必须为 frozen。",
             )
         )
     if active_critique is not None:
@@ -512,7 +571,12 @@ def _require_workspace_context(document: dict[str, Any]) -> WorkspaceContext:
     result = validate_workspace_document(document)
     if not result.ok:
         first = result.errors[0]
-        raise WorkspaceStateError(f"{first.path}: {first.message}")
+        raise WorkspaceStateError(
+            f"{first.path}: {first.message}",
+            errors=result.errors,
+            workspace_id=document.get("workspace_id"),
+            lifecycle_stage=document.get("lifecycle_stage"),
+        )
 
     selection = document["current_selection"]
     direction_by_id = {item["direction_id"]: item for item in document["direction_hypotheses"]}

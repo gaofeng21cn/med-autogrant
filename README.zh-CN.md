@@ -4,57 +4,102 @@
 
 # Med Auto Grant
 
-**`Grant Foundry` 在医学场景下的未来实现 repo scaffold**
+**面向 `NSFC` 风格申请的医学基金写作主线系统（开发中）**
 
-`Med Auto Grant` 是 `Grant Foundry` 在医学场景下的首个实现骨架。
-它正在被定义为未来 `Grant Ops` 的医学 domain gateway 与 harness，第一阶段 MVP 聚焦医学场景下的 `NSFC` 通用申请骨架。
+> 当前状态：项目方向已经清晰，最小 runtime baseline 已经存在，但它还不是一个可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
 
-## 当前定位
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <strong>面向谁</strong><br/>
+      需要准备基金申请的医学研究者、临床团队、青年教师与 PI
+    </td>
+    <td width="33%" valign="top">
+      <strong>它是什么</strong><br/>
+      <code>Grant Foundry</code> 主线下，面向申请人侧、proposal-facing 的医学 <code>Grant Ops</code> 系统
+    </td>
+    <td width="33%" valign="top">
+      <strong>当前成熟度</strong><br/>
+      已有结构化 MVP 底座与最小可运行 contract，但还不是完整的端到端写标书产品
+    </td>
+  </tr>
+</table>
 
-- 当前阶段：repo scaffold，不是成熟 runtime
-- domain 角色：未来作者侧、proposal-facing 的 `Grant Ops` surface
-- 第一阶段 MVP：医学 `NSFC` 通用标书工作流
-- 与 `Research Ops` 的关系：高度复用资产，但保持独立边界
+## 一句话理解
 
-## 统一执行方向
+如果你的目标是把申请人履历、既有成果、在研项目、预实验结果和候选方向，收敛成一条更像样的 `NSFC` 风格基金申请主线，`Med Auto Grant` 正在被构建成一套可治理、可审计、可持续修订的医学基金写作系统。
 
-`Med Auto Grant` 继承 `OPL` 顶层冻结的执行原则：
+## 它主要想帮你解决什么问题
 
-- 默认采用 `Agent-first`，而不是 `fixed-code-first`
-- 在同一套共享基座上支持两种模式：
-  - `Auto`
-  - `Human-in-the-loop`
+- 判断一个方向到底是不是“真正的科学问题”，而不是工程任务或泛泛的临床需求。
+- 把申请人画像、代表作、在研项目和预实验，组织进同一个可审计的基金工作区。
+- 在花大力气写全文之前，先把“必要性与科学价值”这条主线磨清楚。
+- 让“为什么是这个申请人来做这个问题”成为显式判断，而不是简历堆砌。
+- 用“导师式批注 + 结构化修订”替代一次性文本生成。
 
-这个系统的目标不是单纯把申请书章节补齐，而是围绕科学问题提纯、论证链构建、导师式批注与修订闭环来组织整个流程。
+## 现在已经能做什么
+
+仓库已经有一套围绕冻结 `NSFCWorkspace` 契约的最小可运行底座。
+
+当前 runtime 已经可以：
+
+- 校验结构化 `NSFC` workspace 是否满足冻结 schema 与关键运行时约束
+- 汇总当前方向、科学问题、论证链、草稿、批注和修订计划状态
+- 根据 `lifecycle_stage`、gates 和批注 verdict 给出下一步建议
+- 输出围绕 `60/30/10` 框架的结构化导师批注摘要
+- 把核心 route 聚合成单个 machine-readable `stage-route-report`
+- 对后段 route 中的明显状态冲突做显式失败，例如错误的 verdict 或错误的草稿状态切换
+
+## 现在还没有完成什么
+
+下面这些能力仍处于规划或开发中：
+
+- 从 intake 到稳定 draft 的完整 authoring loop
+- `revision` 阶段内部更细粒度的草稿版本切换建模
+- human-in-the-loop gate 与 submission-grade 交付面
+- 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展
+
+## 最快开始方式：通过你的 Agent
+
+对大多数医学用户来说，最快的入口不是先学习底层命令，而是先把你的申请材料和目标交给自己的 Agent，再让它调用 `Med Auto Grant`。
+
+通常可以这样开始：
+
+1. 准备申请人材料、代表性成果、在研项目、预实验结果和目标基金要求。
+2. 让 Agent 先把这些材料整理成结构化、可审计的 grant workspace。
+3. 再让 Agent 用 `Med Auto Grant` 去推进科学问题提纯、必要性链条收紧、导师式批注和修订。
+
+你可以直接把下面这段话发给 Agent：
+
+> 请先读取这个工作区里的申请人材料、既有成果、在研项目、预实验结果和目标基金要求，并把它们整理成结构化、可审计的 grant workspace。然后使用 Med Auto Grant 作为医学 Grant Ops 主线来推进这份 NSFC 风格申请。请优先判断科学问题是否成立、必要性与科学价值是否足够、申请人与问题是否真正适配，再进入草稿扩写。如果当前方向偏弱，请及时止损、改题或指出缺失证据，而不是机械地把一条弱路线写到底。
 
 ## 公开文档
 
+- [文档索引](./docs/README.zh-CN.md)
 - [Domain Positioning](./docs/domain-positioning.zh-CN.md)
 - [MVP Scope](./docs/mvp-scope.zh-CN.md)
 
-## 最小 Runtime
+<details>
+<summary><strong>技术与 Agent 说明</strong></summary>
 
-仓库现在已经包含一套最小 Python runtime scaffold，用来驱动已冻结的 `NSFCWorkspace` 契约。
-
-快速试跑：
+### 最小 Runtime 命令
 
 ```bash
 PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_minimal.json
 PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_minimal.json
 PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_minimal.json
 PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_minimal.json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_minimal.json
 ```
 
-当前 CLI 范围：
+### 当前技术范围
 
-- 校验冻结后的 `NSFCWorkspace` schema 子集与关键运行时约束
-- 汇总当前选中的方向、科学问题、草稿与修订状态
-- 根据 `lifecycle_stage`、`gates` 与导师批注 verdict 给出下一步路由建议
-- 导出围绕 `60/30/10` 结构的导师批注摘要
+- 基于 schema 的 `NSFCWorkspace` 校验
+- critique、revision、frozen 等后段 route 的运行时一致性检查
+- machine-readable 的批注与 route artifact
+- 覆盖 runtime 与 control-surface 不变量的测试
 
-## 内部文档
-
-仓库内部设计、计划与开发细节默认仅维护中文，见：
+### 内部文档
 
 - [`docs/specs/2026-04-06-med-auto-grant-top-level-design.md`](./docs/specs/2026-04-06-med-auto-grant-top-level-design.md)
 - [`docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md`](./docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
@@ -62,4 +107,8 @@ PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_w
 - [`docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`](./docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [`docs/plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md`](./docs/plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
 
-仓库现在也带有 repo-managed 的内部 `Codex App <-> OMX` 控制面，位于 `.omx/context`、`.omx/plans` 和 `.omx/reports`。
+### 本地运行状态
+
+本地 operator 与 runtime 状态属于机器私有内容，不属于公开 GitHub 源码表面。
+
+</details>

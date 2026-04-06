@@ -8,6 +8,7 @@ from typing import Any
 from med_autogrant.stage_router import determine_next_step
 from med_autogrant.workspace import (
     WorkspaceError,
+    WorkspaceStateError,
     build_critique_summary,
     load_workspace_document,
     summarize_workspace_document,
@@ -43,6 +44,12 @@ def build_parser() -> argparse.ArgumentParser:
         handle_critique_summary,
         "输出当前激活导师批注摘要。",
     )
+    _add_workspace_command(
+        subparsers,
+        "stage-route-report",
+        handle_stage_route_report,
+        "按固定 stage route 聚合输出当前 workspace 状态。",
+    )
     return parser
 
 
@@ -56,7 +63,27 @@ def main(argv: list[str] | None = None) -> int:
     try:
         payload = args.handler(args)
     except WorkspaceError as exc:
-        print(str(exc), file=sys.stderr)
+        if args.format == "json":
+            workspace_context = _extract_workspace_context_for_error(args)
+            if isinstance(exc, WorkspaceStateError):
+                workspace_context.setdefault("workspace_id", exc.workspace_id)
+                workspace_context.setdefault("lifecycle_stage", exc.lifecycle_stage)
+            print(
+                json.dumps(
+                    {
+                        "ok": False,
+                        "command": args.command,
+                        "workspace_id": workspace_context.get("workspace_id"),
+                        "lifecycle_stage": workspace_context.get("lifecycle_stage"),
+                        "error": str(exc),
+                        "errors": _extract_error_details(exc),
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+        else:
+            print(str(exc), file=sys.stderr)
         return 1
 
     if args.format == "json":
@@ -90,6 +117,35 @@ def handle_critique_summary(args: argparse.Namespace) -> dict[str, Any]:
     payload = build_critique_summary(document)
     payload["recommended_next_stage"] = determine_next_step(document)["recommended_stage"]
     return payload
+
+
+def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
+    document = load_workspace_document(args.input)
+    validation = validate_workspace_document(document)
+    if not validation.ok:
+        first = validation.errors[0]
+        raise WorkspaceStateError(
+            f"{first.path}: {first.message}",
+            errors=validation.errors,
+            workspace_id=document.get("workspace_id"),
+            lifecycle_stage=document.get("lifecycle_stage"),
+        )
+
+    summary = summarize_workspace_document(document)
+    next_step = determine_next_step(document)
+    critique_summary = build_critique_summary(document)
+    critique_summary["recommended_next_stage"] = next_step["recommended_stage"]
+    return {
+        "ok": True,
+        "workspace_id": document["workspace_id"],
+        "lifecycle_stage": document["lifecycle_stage"],
+        "route": {
+            "validate_workspace": validation.to_dict(document),
+            "summarize_workspace": summary,
+            "next_step": next_step,
+            "critique_summary": critique_summary,
+        },
+    }
 
 
 def _add_workspace_command(
@@ -151,7 +207,43 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             lines.append(f"- {item}")
         return "\n".join(lines)
 
+    if command == "stage-route-report":
+        lines = [
+            f"workspace_id: {payload['workspace_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"route_ok: {payload['ok']}",
+            f"recommended_stage: {payload['route']['next_step']['recommended_stage']}",
+            f"critique_verdict: {payload['route']['critique_summary']['verdict']}",
+        ]
+        return "\n".join(lines)
+
     raise ValueError(f"未知命令: {command}")
+
+
+def _extract_workspace_context_for_error(args: argparse.Namespace) -> dict[str, Any]:
+    input_path = getattr(args, "input", None)
+    if not input_path:
+        return {}
+    try:
+        document = load_workspace_document(input_path)
+    except WorkspaceError:
+        return {}
+    return {
+        "workspace_id": document.get("workspace_id"),
+        "lifecycle_stage": document.get("lifecycle_stage"),
+    }
+
+
+def _extract_error_details(exc: WorkspaceError) -> list[dict[str, str]]:
+    if not isinstance(exc, WorkspaceStateError):
+        return []
+    return [
+        {
+            "path": issue.path,
+            "message": issue.message,
+        }
+        for issue in exc.errors
+    ]
 
 
 if __name__ == "__main__":

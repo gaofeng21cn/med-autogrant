@@ -4,59 +4,102 @@
 
 # Med Auto Grant
 
-**The document-first scaffold for the future medical implementation of `Grant Foundry`**
+**An in-development medical grant-writing mainline for NSFC-style applications**
 
-`Med Auto Grant` is the first medical implementation scaffold under the `Grant Foundry` line.
-It is being shaped as a future `Grant Ops` medical domain gateway and harness, with the first MVP focused on a medical `NSFC` generic application skeleton.
+> Status: active development. The product direction is clear and the minimal runtime exists, but this is not yet a production-grade grant-writing system or a submission-ready autopilot.
 
-## Current Position
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <strong>Who It Serves</strong><br/>
+      Medical researchers, clinical teams, and faculty members preparing investigator-side grant applications
+    </td>
+    <td width="33%" valign="top">
+      <strong>What It Is</strong><br/>
+      An author-side, proposal-facing medical <code>Grant Ops</code> mainline under <code>Grant Foundry</code>
+    </td>
+    <td width="33%" valign="top">
+      <strong>Current Maturity</strong><br/>
+      Structured MVP foundation with a working runtime baseline, not a finished end-to-end authoring product
+    </td>
+  </tr>
+</table>
 
-- current stage: repository scaffold, not a mature runtime
-- domain role: future author-side, proposal-facing `Grant Ops` surface
-- first MVP: medical `NSFC` generic grant-writing workflow
-- relation to `Research Ops`: high asset reuse, but independent domain boundary
+## One-Line Position
 
-## Shared Operating Pattern
+If your goal is to turn applicant background, prior work, preliminary evidence, and a candidate topic into a stronger `NSFC`-style proposal direction, `Med Auto Grant` is being built to provide a governed mainline for question refinement, argument sharpening, mentor-style critique, and revision.
 
-`Med Auto Grant` follows the same top-level doctrine frozen in `OPL`:
+## What It Is Designed To Help With
 
-- `Agent-first` rather than `fixed-code-first`
-- one shared base with two modes:
-  - `Auto`
-  - `Human-in-the-loop`
+- Clarify whether a proposed topic is a real scientific question rather than an engineering task or a vague clinical need.
+- Organize applicant profile, prior outputs, active projects, and preliminary evidence into one auditable grant workspace.
+- Strengthen the necessity and scientific-value chain before spending effort on full drafting.
+- Keep applicant-problem fit visible instead of reducing grant writing to template filling.
+- Support mentor-style critique and structured revision rather than one-shot text generation.
 
-The goal is not just to fill sections of an application form.
-The system centers on scientific-question refinement, argument-chain construction, mentor-style critique, and revision loops.
+## What Is Already Working
+
+The repository already contains a minimal executable baseline around a frozen `NSFCWorkspace` contract.
+
+Today, the runtime can:
+
+- validate a structured `NSFC` workspace against the frozen schema subset and key runtime constraints
+- summarize the current direction, question, argument chain, draft, critique, and revision-plan state
+- recommend the next stage from `lifecycle_stage`, gates, and critique verdict
+- export a structured mentor-style critique summary around the `60/30/10` frame
+- aggregate the core route into one machine-readable `stage-route-report`
+- enforce runtime guards for later-stage inconsistencies such as invalid critique verdicts or invalid draft status transitions
+
+## What Is Still In Progress
+
+The following pieces are planned but not yet complete:
+
+- the full end-to-end authoring loop from intake to stable draft
+- explicit modeling of `revision`-internal draft version transitions
+- human-in-the-loop gate surfaces and submission-grade delivery
+- broader grant-family expansion beyond the first `NSFC` generic skeleton
+
+## Fastest Way To Start
+
+For most medical users, the best entry is through your own agent rather than low-level commands.
+
+Typical flow:
+
+1. Prepare applicant materials, representative outputs, active projects, preliminary evidence, and the target funding brief in one workspace.
+2. Ask your agent to first organize them into a structured, auditable grant workspace.
+3. Ask your agent to use `Med Auto Grant` to refine the scientific question, tighten the argument chain, produce critique, and drive revision.
+
+You can give your agent an instruction like this:
+
+> Read the applicant materials, prior outputs, active projects, preliminary evidence, and the target funding requirements in this workspace first. Organize them into a structured, auditable grant workspace. Then use Med Auto Grant as the medical Grant Ops mainline for an NSFC-style application. Prioritize scientific-question quality, necessity and scientific value, applicant-problem fit, and mentor-style critique before trying to complete full draft text. If the direction is weak, stop, reframe, or request missing evidence instead of pushing a weak proposal forward.
 
 ## Public Docs
 
+- [Docs Index](./docs/README.md)
 - [Domain Positioning](./docs/domain-positioning.md)
 - [MVP Scope](./docs/mvp-scope.md)
 
-## Minimal Runtime
+<details>
+<summary><strong>Technical And Agent Notes</strong></summary>
 
-The repository now includes a minimal Python runtime scaffold for the frozen `NSFCWorkspace` contract.
-
-Quickstart:
+### Minimal Runtime Commands
 
 ```bash
 PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_minimal.json
 PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_minimal.json
 PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_minimal.json
 PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_minimal.json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_minimal.json
 ```
 
-Current CLI scope:
+### Current Technical Scope
 
-- validate the frozen `NSFCWorkspace` schema subset plus key runtime constraints
-- summarize the active direction/question/draft/revision state
-- route the next recommended stage from `lifecycle_stage`, `gates`, and critique verdict
-- export a structured mentor-critique summary around the `60/30/10` frame
+- schema-backed `NSFCWorkspace` validation
+- runtime route checks for critique, revision, and frozen-stage consistency
+- machine-readable critique and route artifacts
+- tests covering runtime and control-surface invariants
 
-## Internal Docs
-
-The repository keeps internal planning and design notes in Chinese only.
-See:
+### Internal Docs
 
 - [`docs/specs/2026-04-06-med-auto-grant-top-level-design.md`](./docs/specs/2026-04-06-med-auto-grant-top-level-design.md)
 - [`docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md`](./docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
@@ -64,4 +107,8 @@ See:
 - [`docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`](./docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [`docs/plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md`](./docs/plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
 
-The repository also now carries repo-managed internal `Codex App <-> OMX` control surfaces under `.omx/context`, `.omx/plans`, and `.omx/reports`.
+### Local Operator State
+
+Local operator and runtime state remains machine-specific and is intentionally excluded from the public GitHub-facing source surface.
+
+</details>

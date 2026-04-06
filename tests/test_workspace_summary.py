@@ -52,6 +52,102 @@ class WorkspaceSummaryTest(unittest.TestCase):
             messages,
         )
 
+    def test_validation_rejects_empty_revision_plan_during_critique(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["revision_plans"][0]["items"] = []
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("revision_plans", "critique 阶段必须存在非空 RevisionPlan。"),
+            messages,
+        )
+
+    def test_validation_rejects_frozen_stage_without_ready_for_submission_verdict(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["lifecycle_stage"] = "frozen"
+        document["gates"]["presubmission_frozen"] = True
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("mentor_critiques.verdict", "frozen 阶段的激活批注 verdict 必须为 ready_for_submission。"),
+            messages,
+        )
+
+    def test_validation_rejects_revision_stage_with_major_reframe_verdict(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["lifecycle_stage"] = "revision"
+        document["mentor_critiques"][0]["verdict"] = "major_reframe"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("mentor_critiques.verdict", "revision 阶段的激活批注 verdict 必须为 major_revision 或 minor_revision。"),
+            messages,
+        )
+
+    def test_validation_rejects_revision_stage_with_ready_for_submission_verdict(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["lifecycle_stage"] = "revision"
+        document["mentor_critiques"][0]["verdict"] = "ready_for_submission"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("mentor_critiques.verdict", "revision 阶段的激活批注 verdict 必须为 major_revision 或 minor_revision。"),
+            messages,
+        )
+
+    def test_validation_rejects_revision_stage_with_outline_draft_status(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["lifecycle_stage"] = "revision"
+        document["application_drafts"][0]["status"] = "outline"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("application_drafts.status", "revision 阶段的激活草稿 status 必须为 draft 或 revised。"),
+            messages,
+        )
+
+    def test_validation_rejects_critique_stage_with_outline_draft_status(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["application_drafts"][0]["status"] = "outline"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("application_drafts.status", "critique 阶段的激活草稿 status 必须为 draft 或 revised。"),
+            messages,
+        )
+
+    def test_validation_rejects_frozen_stage_without_frozen_draft_status(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["lifecycle_stage"] = "frozen"
+        document["gates"]["presubmission_frozen"] = True
+        document["mentor_critiques"][0]["verdict"] = "ready_for_submission"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("application_drafts.status", "frozen 阶段的激活草稿 status 必须为 frozen。"),
+            messages,
+        )
 
 if __name__ == "__main__":
     unittest.main()

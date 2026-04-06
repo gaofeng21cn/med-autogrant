@@ -208,13 +208,13 @@ Date: `2026-04-06`
 
 当前 tranche：
 
-- `P1.A / authoritative NSFC workspace baseline`
+- `P1.B / runtime baseline hardening`
 
-这一 tranche 只做三件事：
+其中：
 
-1. 冻结长线 north star
-2. 冻结 phase 顺序
-3. 冻结 `Codex App <-> OMX` 的 durable handoff 机制
+1. `P1.A / authoritative NSFC workspace baseline` 已完成长线 north star、phase 顺序与 `Codex App <-> OMX` durable handoff 的 truth freeze
+2. 当前 `P1.B` 只继续收紧 runtime baseline：workspace mutation、stage route、artifact write/read contract 与 control-surface promotion invariants
+3. 当前允许做的是 runtime / CLI / tests / reports / docs 的同轴收口，不允许偷跑 `P2` authoring controller
 
 ## OMX 长线运行入口
 
