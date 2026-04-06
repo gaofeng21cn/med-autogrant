@@ -1,0 +1,12 @@
+.DS_Store
+.codex/
+.omx/
+.venv/
+__pycache__/
+.pytest_cache/
+node_modules/
+dist/
+coverage/
+*.log
+.env
+

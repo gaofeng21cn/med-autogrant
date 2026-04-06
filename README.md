@@ -1,0 +1,43 @@
+<p align="center">
+  <a href="./README.md"><strong>English</strong></a> | <a href="./README.zh-CN.md">中文</a>
+</p>
+
+# Med Auto Grant
+
+**The document-first scaffold for the future medical implementation of `Grant Foundry`**
+
+`Med Auto Grant` is the first medical implementation scaffold under the `Grant Foundry` line.
+It is being shaped as a future `Grant Ops` medical domain gateway and harness, with the first MVP focused on a medical `NSFC` generic application skeleton.
+
+## Current Position
+
+- current stage: repository scaffold, not a mature runtime
+- domain role: future author-side, proposal-facing `Grant Ops` surface
+- first MVP: medical `NSFC` generic grant-writing workflow
+- relation to `Research Ops`: high asset reuse, but independent domain boundary
+
+## Shared Operating Pattern
+
+`Med Auto Grant` follows the same top-level doctrine frozen in `OPL`:
+
+- `Agent-first` rather than `fixed-code-first`
+- one shared base with two modes:
+  - `Auto`
+  - `Human-in-the-loop`
+
+The goal is not just to fill sections of an application form.
+The system centers on scientific-question refinement, argument-chain construction, mentor-style critique, and revision loops.
+
+## Public Docs
+
+- [Domain Positioning](./docs/domain-positioning.md)
+- [MVP Scope](./docs/mvp-scope.md)
+
+## Internal Docs
+
+The repository keeps internal planning and design notes in Chinese only.
+See:
+
+- [`docs/specs/2026-04-06-med-auto-grant-top-level-design.md`](./docs/specs/2026-04-06-med-auto-grant-top-level-design.md)
+- [`docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md`](./docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
+- [`docs/plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md`](./docs/plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
