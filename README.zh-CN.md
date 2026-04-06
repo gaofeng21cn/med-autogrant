@@ -32,6 +32,26 @@
 - [Domain Positioning](./docs/domain-positioning.zh-CN.md)
 - [MVP Scope](./docs/mvp-scope.zh-CN.md)
 
+## 最小 Runtime
+
+仓库现在已经包含一套最小 Python runtime scaffold，用来驱动已冻结的 `NSFCWorkspace` 契约。
+
+快速试跑：
+
+```bash
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_minimal.json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_minimal.json
+PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_minimal.json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_minimal.json
+```
+
+当前 CLI 范围：
+
+- 校验冻结后的 `NSFCWorkspace` schema 子集与关键运行时约束
+- 汇总当前选中的方向、科学问题、草稿与修订状态
+- 根据 `lifecycle_stage`、`gates` 与导师批注 verdict 给出下一步路由建议
+- 导出围绕 `60/30/10` 结构的导师批注摘要
+
 ## 内部文档
 
 仓库内部设计、计划与开发细节默认仅维护中文，见：

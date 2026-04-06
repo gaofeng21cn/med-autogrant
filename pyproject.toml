@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "med-autogrant"
+version = "0.1.0"
+description = "Medical grant authoring scaffold for NSFC-oriented workflows."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+  { name = "Gao Feng" }
+]
+
+[project.scripts]
+medautogrant = "med_autogrant.cli:entrypoint"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

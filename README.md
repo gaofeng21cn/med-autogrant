@@ -33,6 +33,26 @@ The system centers on scientific-question refinement, argument-chain constructio
 - [Domain Positioning](./docs/domain-positioning.md)
 - [MVP Scope](./docs/mvp-scope.md)
 
+## Minimal Runtime
+
+The repository now includes a minimal Python runtime scaffold for the frozen `NSFCWorkspace` contract.
+
+Quickstart:
+
+```bash
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_minimal.json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_minimal.json
+PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_minimal.json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_minimal.json
+```
+
+Current CLI scope:
+
+- validate the frozen `NSFCWorkspace` schema subset plus key runtime constraints
+- summarize the active direction/question/draft/revision state
+- route the next recommended stage from `lifecycle_stage`, `gates`, and critique verdict
+- export a structured mentor-critique summary around the `60/30/10` frame
+
 ## Internal Docs
 
 The repository keeps internal planning and design notes in Chinese only.

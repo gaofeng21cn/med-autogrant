@@ -1,0 +1,659 @@
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+from med_autogrant.schema_loader import SchemaStore
+
+
+class WorkspaceError(Exception):
+    """Workspace 相关错误。"""
+
+
+class WorkspaceFileError(WorkspaceError):
+    """Workspace 文件读写错误。"""
+
+
+class WorkspaceStateError(WorkspaceError):
+    """Workspace 状态不满足运行时约束。"""
+
+
+@dataclass(frozen=True)
+class ValidationIssue:
+    path: str
+    message: str
+
+
+@dataclass(frozen=True)
+class ValidationResult:
+    errors: list[ValidationIssue]
+
+    @property
+    def ok(self) -> bool:
+        return not self.errors
+
+    @property
+    def error_count(self) -> int:
+        return len(self.errors)
+
+    def to_dict(self, document: dict[str, Any] | None = None) -> dict[str, Any]:
+        workspace_id = None
+        lifecycle_stage = None
+        if isinstance(document, dict):
+            workspace_id = document.get("workspace_id")
+            lifecycle_stage = document.get("lifecycle_stage")
+        return {
+            "ok": self.ok,
+            "workspace_id": workspace_id,
+            "lifecycle_stage": lifecycle_stage,
+            "error_count": self.error_count,
+            "errors": [
+                {
+                    "path": issue.path,
+                    "message": issue.message,
+                }
+                for issue in self.errors
+            ],
+        }
+
+
+@dataclass(frozen=True)
+class WorkspaceContext:
+    document: dict[str, Any]
+    selected_direction: dict[str, Any]
+    selected_question: dict[str, Any]
+    active_argument_chain: dict[str, Any]
+    active_draft: dict[str, Any]
+    active_revision_plan: dict[str, Any]
+    active_critique: dict[str, Any]
+
+
+def load_workspace_document(path: str | Path) -> dict[str, Any]:
+    workspace_path = Path(path)
+    try:
+        payload = json.loads(workspace_path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise WorkspaceFileError(f"未找到 workspace 文件: {workspace_path}") from exc
+    except json.JSONDecodeError as exc:
+        raise WorkspaceFileError(f"workspace JSON 解析失败: {workspace_path}") from exc
+    if not isinstance(payload, dict):
+        raise WorkspaceFileError("workspace 顶层必须是 JSON object。")
+    return payload
+
+
+def validate_workspace_document(document: dict[str, Any]) -> ValidationResult:
+    issues: list[ValidationIssue] = []
+    issues.extend(_validate_schema(document))
+    if not issues:
+        issues.extend(_validate_runtime_constraints(document))
+    return ValidationResult(errors=issues)
+
+
+def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
+    context = _require_workspace_context(document)
+    return {
+        "workspace_id": document["workspace_id"],
+        "mode": document["mode"],
+        "lifecycle_stage": document["lifecycle_stage"],
+        "gates": dict(document["gates"]),
+        "selected_direction": {
+            "id": context.selected_direction["direction_id"],
+            "title": context.selected_direction["title"],
+            "decision_status": context.selected_direction["decision_status"],
+        },
+        "selected_question": {
+            "id": context.selected_question["question_id"],
+            "core_question": context.selected_question["core_question"],
+            "knowledge_boundary": context.selected_question["knowledge_boundary"],
+        },
+        "active_argument_chain": {
+            "id": context.active_argument_chain["argument_chain_id"],
+            "necessity_claim": context.active_argument_chain["necessity_claim"],
+        },
+        "active_draft": {
+            "id": context.active_draft["draft_id"],
+            "version_label": context.active_draft["version_label"],
+            "status": context.active_draft["status"],
+            "project_title": context.active_draft["project_title"],
+        },
+        "active_revision_plan": {
+            "id": context.active_revision_plan["revision_plan_id"],
+            "item_count": len(context.active_revision_plan["items"]),
+        },
+        "active_critique": {
+            "id": context.active_critique["critique_id"],
+            "verdict": context.active_critique["verdict"],
+        },
+    }
+
+
+def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
+    context = _require_workspace_context(document)
+    critique = context.active_critique
+    revision_plan = context.active_revision_plan
+    return {
+        "workspace_id": document["workspace_id"],
+        "mode": document["mode"],
+        "lifecycle_stage": document["lifecycle_stage"],
+        "selected_direction_id": context.selected_direction["direction_id"],
+        "selected_question_id": context.selected_question["question_id"],
+        "draft_id": critique["draft_id"],
+        "critique_id": critique["critique_id"],
+        "revision_plan_id": revision_plan["revision_plan_id"],
+        "overall_diagnosis": critique["overall_diagnosis"],
+        "current_scientific_question": critique["current_scientific_question"],
+        "suggested_question": critique["suggested_question"],
+        "verdict": critique["verdict"],
+        "necessity_scientific_value": dict(critique["necessity_scientific_value"]),
+        "applicant_fit": dict(critique["applicant_fit"]),
+        "feasibility": dict(critique["feasibility"]),
+        "blocking_issues": list(critique.get("blocking_issues", [])),
+        "logic_chain_repairs": list(critique.get("logic_chain_repairs", [])),
+        "applicant_fit_repairs": list(critique.get("applicant_fit_repairs", [])),
+        "next_review_focus": list(revision_plan.get("next_review_focus", [])),
+    }
+
+
+def _validate_schema(document: dict[str, Any]) -> list[ValidationIssue]:
+    validator = _SchemaSubsetValidator(SchemaStore())
+    return validator.validate(document, "nsfc-workspace.schema.json")
+
+
+def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIssue]:
+    issues: list[ValidationIssue] = []
+
+    directions = _index_objects(document.get("direction_hypotheses"), "direction_id", "direction_hypotheses", issues)
+    questions = _index_objects(document.get("scientific_question_cards"), "question_id", "scientific_question_cards", issues)
+    argument_chains = _index_objects(document.get("argument_chains"), "argument_chain_id", "argument_chains", issues)
+    drafts = _index_objects(document.get("application_drafts"), "draft_id", "application_drafts", issues)
+    critiques = _index_objects(document.get("mentor_critiques"), "critique_id", "mentor_critiques", issues)
+    revision_plans = _index_objects(document.get("revision_plans"), "revision_plan_id", "revision_plans", issues)
+
+    selected_directions = [
+        item["direction_id"]
+        for item in document.get("direction_hypotheses", [])
+        if isinstance(item, dict) and item.get("decision_status") == "selected"
+    ]
+    if len(selected_directions) != 1:
+        issues.append(
+            ValidationIssue(
+                path="direction_hypotheses",
+                message="必须且只能有一个 decision_status=selected 的 DirectionHypothesis。",
+            )
+        )
+
+    selection = document.get("current_selection", {})
+    selected_direction = directions.get(selection.get("selected_direction_id"))
+    if selected_direction is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.selected_direction_id",
+                message="未找到对应的 DirectionHypothesis。",
+            )
+        )
+    elif selected_direction.get("decision_status") != "selected":
+        issues.append(
+            ValidationIssue(
+                path="current_selection.selected_direction_id",
+                message="当前选中方向必须处于 selected 状态。",
+            )
+        )
+
+    selected_question = questions.get(selection.get("selected_question_id"))
+    if selected_question is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.selected_question_id",
+                message="未找到对应的 ScientificQuestionCard。",
+            )
+        )
+    elif selected_direction is not None and selected_question.get("parent_direction_id") != selected_direction.get("direction_id"):
+        issues.append(
+            ValidationIssue(
+                path="current_selection.selected_question_id",
+                message="当前选中问题不属于当前选中方向。",
+            )
+        )
+
+    selected_argument_chains = [
+        item
+        for item in document.get("argument_chains", [])
+        if isinstance(item, dict) and item.get("scientific_question_id") == selection.get("selected_question_id")
+    ]
+    if not selected_argument_chains:
+        issues.append(
+            ValidationIssue(
+                path="argument_chains",
+                message="当前选中问题缺少对应的 ArgumentChain。",
+            )
+        )
+    elif len(selected_argument_chains) > 1:
+        issues.append(
+            ValidationIssue(
+                path="argument_chains",
+                message="当前选中问题只能对应一个激活中的 ArgumentChain。",
+            )
+        )
+    active_argument_chain = selected_argument_chains[0] if len(selected_argument_chains) == 1 else None
+
+    active_draft = drafts.get(selection.get("active_draft_id"))
+    if active_draft is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.active_draft_id",
+                message="未找到对应的 ApplicationDraft。",
+            )
+        )
+    elif active_draft.get("frozen_question_id") != selection.get("selected_question_id"):
+        issues.append(
+            ValidationIssue(
+                path="application_drafts",
+                message="激活草稿冻结的问题必须与当前选中问题一致。",
+            )
+        )
+    if active_draft is not None and active_argument_chain is not None and not _draft_links_argument_chain(active_draft, active_argument_chain["argument_chain_id"]):
+        issues.append(
+            ValidationIssue(
+                path="application_drafts",
+                message="激活草稿必须显式链接当前问题对应的 ArgumentChain。",
+            )
+        )
+
+    active_revision_plan = revision_plans.get(selection.get("active_revision_plan_id"))
+    if active_revision_plan is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.active_revision_plan_id",
+                message="未找到对应的 RevisionPlan。",
+            )
+        )
+    elif active_draft is not None and active_revision_plan.get("draft_id") != active_draft.get("draft_id"):
+        issues.append(
+            ValidationIssue(
+                path="revision_plans",
+                message="激活修订计划必须回指当前激活草稿。",
+            )
+        )
+
+    active_critique = None
+    if active_revision_plan is not None:
+        active_critique = critiques.get(active_revision_plan.get("critique_id"))
+        if active_critique is None:
+            issues.append(
+                ValidationIssue(
+                    path="revision_plans",
+                    message="激活修订计划引用了不存在的 MentorCritique。",
+                )
+            )
+        elif active_draft is not None and active_critique.get("draft_id") != active_draft.get("draft_id"):
+            issues.append(
+                ValidationIssue(
+                    path="mentor_critiques",
+                    message="激活批注必须与当前激活草稿一致。",
+                )
+            )
+
+    _validate_reference_sets(document, issues)
+    _validate_stage_requirements(document, active_critique, issues)
+
+    return issues
+
+
+def _validate_stage_requirements(
+    document: dict[str, Any],
+    active_critique: dict[str, Any] | None,
+    issues: list[ValidationIssue],
+) -> None:
+    stage = document.get("lifecycle_stage")
+    gates = document.get("gates", {})
+    if stage in {"outline", "drafting", "critique", "revision", "frozen"}:
+        for gate_name in ("direction_frozen", "scientific_question_frozen", "argument_chain_frozen"):
+            if not gates.get(gate_name):
+                issues.append(
+                    ValidationIssue(
+                        path=f"gates.{gate_name}",
+                        message=f"{stage} 阶段前必须先冻结 {gate_name}。",
+                    )
+                )
+    if stage in {"drafting", "critique", "revision", "frozen"} and not gates.get("outline_frozen"):
+        issues.append(
+            ValidationIssue(
+                path="gates.outline_frozen",
+                message=f"{stage} 阶段前必须先冻结提纲。",
+            )
+        )
+    if stage == "drafting" and not document.get("application_drafts"):
+        issues.append(
+            ValidationIssue(
+                path="application_drafts",
+                message="drafting 阶段不能缺少 ApplicationDraft。",
+            )
+        )
+    if stage in {"critique", "revision", "frozen"} and not document.get("mentor_critiques"):
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques",
+                message=f"{stage} 阶段不能缺少 MentorCritique。",
+            )
+        )
+    if stage == "frozen" and not gates.get("presubmission_frozen"):
+        issues.append(
+            ValidationIssue(
+                path="gates.presubmission_frozen",
+                message="frozen 阶段必须已经冻结 presubmission 版本。",
+            )
+        )
+    if active_critique is not None:
+        for field, expected in (
+            ("necessity_scientific_value", 60),
+            ("applicant_fit", 30),
+            ("feasibility", 10),
+        ):
+            criterion = active_critique.get(field, {})
+            if criterion.get("weight") != expected:
+                issues.append(
+                    ValidationIssue(
+                        path=f"mentor_critiques.{field}",
+                        message=f"{field} 的权重必须固定为 {expected}。",
+                    )
+                )
+
+
+def _validate_reference_sets(document: dict[str, Any], issues: list[ValidationIssue]) -> None:
+    known_ids = _collect_known_ids(document)
+    fields_to_scan = [
+        ("direction_hypotheses", "required_evidence_ids"),
+        ("scientific_question_cards", "linked_evidence_ids"),
+        ("argument_chains", "linked_evidence_ids"),
+        ("application_drafts", "outline", "linked_object_ids"),
+        ("application_drafts", "sections", "linked_object_ids"),
+        ("revision_plans", "items", "required_input_ids"),
+        ("preliminary_evidence_pack", "evidence_items", "supports"),
+    ]
+    for spec in fields_to_scan:
+        if len(spec) == 2:
+            collection_name, field_name = spec
+            for index, item in enumerate(document.get(collection_name, [])):
+                if not isinstance(item, dict):
+                    continue
+                _validate_reference_list(
+                    item.get(field_name),
+                    known_ids,
+                    f"{collection_name}[{index}].{field_name}",
+                    issues,
+                )
+            continue
+
+        parent_name, collection_name, field_name = spec
+        parent = document.get(parent_name)
+        if isinstance(parent, list):
+            parents = parent
+        elif isinstance(parent, dict):
+            parents = [parent]
+        else:
+            parents = []
+        for parent_index, parent_item in enumerate(parents):
+            nested_items = parent_item.get(collection_name, []) if isinstance(parent_item, dict) else []
+            for index, item in enumerate(nested_items):
+                if not isinstance(item, dict):
+                    continue
+                _validate_reference_list(
+                    item.get(field_name),
+                    known_ids,
+                    f"{parent_name}[{parent_index}].{collection_name}[{index}].{field_name}",
+                    issues,
+                )
+
+
+def _validate_reference_list(
+    values: Any,
+    known_ids: set[str],
+    path: str,
+    issues: list[ValidationIssue],
+) -> None:
+    if not isinstance(values, list):
+        return
+    for index, ref_id in enumerate(values):
+        if isinstance(ref_id, str) and ref_id not in known_ids:
+            issues.append(
+                ValidationIssue(
+                    path=f"{path}[{index}]",
+                    message="引用了不存在的对象或证据 ID。",
+                )
+            )
+
+
+def _collect_known_ids(document: dict[str, Any]) -> set[str]:
+    known_ids: set[str] = set()
+
+    def add_id(value: Any) -> None:
+        if isinstance(value, str) and value:
+            known_ids.add(value)
+
+    collections = [
+        ("direction_hypotheses", "direction_id"),
+        ("scientific_question_cards", "question_id"),
+        ("argument_chains", "argument_chain_id"),
+        ("application_drafts", "draft_id"),
+        ("mentor_critiques", "critique_id"),
+        ("revision_plans", "revision_plan_id"),
+    ]
+    for collection_name, key in collections:
+        for item in document.get(collection_name, []):
+            if isinstance(item, dict):
+                add_id(item.get(key))
+
+    for output in document.get("track_record", {}).get("representative_outputs", []):
+        if isinstance(output, dict):
+            add_id(output.get("output_id"))
+            evidence = output.get("evidence")
+            if isinstance(evidence, dict):
+                add_id(evidence.get("evidence_id"))
+
+    for project in document.get("active_project_set", {}).get("projects", []):
+        if isinstance(project, dict):
+            add_id(project.get("project_id"))
+            for evidence in project.get("linked_evidence", []):
+                if isinstance(evidence, dict):
+                    add_id(evidence.get("evidence_id"))
+
+    for evidence_item in document.get("preliminary_evidence_pack", {}).get("evidence_items", []):
+        if isinstance(evidence_item, dict):
+            add_id(evidence_item.get("item_id"))
+            evidence = evidence_item.get("evidence")
+            if isinstance(evidence, dict):
+                add_id(evidence.get("evidence_id"))
+
+    return known_ids
+
+
+def _draft_links_argument_chain(draft: dict[str, Any], argument_chain_id: str) -> bool:
+    for section_group in ("outline", "sections"):
+        for item in draft.get(section_group, []):
+            if not isinstance(item, dict):
+                continue
+            linked_ids = item.get("linked_object_ids", [])
+            if isinstance(linked_ids, list) and argument_chain_id in linked_ids:
+                return True
+    return False
+
+
+def _index_objects(
+    items: Any,
+    key_name: str,
+    scope_name: str,
+    issues: list[ValidationIssue],
+) -> dict[str, dict[str, Any]]:
+    indexed: dict[str, dict[str, Any]] = {}
+    if not isinstance(items, list):
+        return indexed
+    for index, item in enumerate(items):
+        if not isinstance(item, dict):
+            continue
+        key = item.get(key_name)
+        if not isinstance(key, str) or not key:
+            continue
+        if key in indexed:
+            issues.append(
+                ValidationIssue(
+                    path=f"{scope_name}[{index}].{key_name}",
+                    message=f"{key_name} 不能重复。",
+                )
+            )
+            continue
+        indexed[key] = item
+    return indexed
+
+
+def _require_workspace_context(document: dict[str, Any]) -> WorkspaceContext:
+    result = validate_workspace_document(document)
+    if not result.ok:
+        first = result.errors[0]
+        raise WorkspaceStateError(f"{first.path}: {first.message}")
+
+    selection = document["current_selection"]
+    direction_by_id = {item["direction_id"]: item for item in document["direction_hypotheses"]}
+    question_by_id = {item["question_id"]: item for item in document["scientific_question_cards"]}
+    draft_by_id = {item["draft_id"]: item for item in document["application_drafts"]}
+    critique_by_id = {item["critique_id"]: item for item in document["mentor_critiques"]}
+    revision_plan_by_id = {item["revision_plan_id"]: item for item in document["revision_plans"]}
+    selected_direction = direction_by_id[selection["selected_direction_id"]]
+    selected_question = question_by_id[selection["selected_question_id"]]
+    active_draft = draft_by_id[selection["active_draft_id"]]
+    active_revision_plan = revision_plan_by_id[selection["active_revision_plan_id"]]
+    active_critique = critique_by_id[active_revision_plan["critique_id"]]
+    active_argument_chain = next(
+        item
+        for item in document["argument_chains"]
+        if item["scientific_question_id"] == selected_question["question_id"]
+    )
+    return WorkspaceContext(
+        document=document,
+        selected_direction=selected_direction,
+        selected_question=selected_question,
+        active_argument_chain=active_argument_chain,
+        active_draft=active_draft,
+        active_revision_plan=active_revision_plan,
+        active_critique=active_critique,
+    )
+
+
+class _SchemaSubsetValidator:
+    def __init__(self, store: SchemaStore) -> None:
+        self._store = store
+        self._cache: dict[str, dict[str, Any]] = {}
+
+    def validate(self, document: dict[str, Any], schema_file: str) -> list[ValidationIssue]:
+        issues: list[ValidationIssue] = []
+        schema = self._load_schema(schema_file)
+        self._validate_node(document, schema, schema_file, "", issues)
+        return issues
+
+    def _load_schema(self, file_name: str) -> dict[str, Any]:
+        if file_name not in self._cache:
+            self._cache[file_name] = self._store.load_json(file_name)
+        return self._cache[file_name]
+
+    def _resolve_ref(self, ref: str, base_file: str) -> tuple[dict[str, Any], str]:
+        file_name, _, fragment = ref.partition("#")
+        target_file = file_name or base_file
+        schema = self._load_schema(target_file)
+        if fragment:
+            schema = self._resolve_pointer(schema, fragment)
+        if not isinstance(schema, dict):
+            raise WorkspaceStateError(f"无法解析 schema ref: {ref}")
+        return schema, target_file
+
+    def _resolve_pointer(self, schema: dict[str, Any], fragment: str) -> dict[str, Any]:
+        pointer = fragment.removeprefix("/")
+        current: Any = schema
+        if not pointer:
+            return schema
+        for part in pointer.split("/"):
+            token = part.replace("~1", "/").replace("~0", "~")
+            current = current[token]
+        if not isinstance(current, dict):
+            raise WorkspaceStateError("schema pointer 未指向 object。")
+        return current
+
+    def _validate_node(
+        self,
+        value: Any,
+        schema: dict[str, Any],
+        base_file: str,
+        path: str,
+        issues: list[ValidationIssue],
+    ) -> None:
+        if "$ref" in schema:
+            resolved, resolved_file = self._resolve_ref(schema["$ref"], base_file)
+            merged = dict(resolved)
+            for key, item in schema.items():
+                if key != "$ref":
+                    merged[key] = item
+            self._validate_node(value, merged, resolved_file, path, issues)
+            return
+
+        expected_type = schema.get("type")
+        if expected_type == "object":
+            if not isinstance(value, dict):
+                issues.append(ValidationIssue(path or "$", "必须是 object。"))
+                return
+            required = schema.get("required", [])
+            for name in required:
+                if name not in value:
+                    issues.append(ValidationIssue(_join_path(path, name), "缺少必填字段。"))
+            properties = schema.get("properties", {})
+            if schema.get("additionalProperties") is False:
+                for extra in value.keys() - properties.keys():
+                    issues.append(ValidationIssue(_join_path(path, extra), "存在未声明字段。"))
+            for name, child_schema in properties.items():
+                if name in value:
+                    self._validate_node(value[name], child_schema, base_file, _join_path(path, name), issues)
+        elif expected_type == "array":
+            if not isinstance(value, list):
+                issues.append(ValidationIssue(path or "$", "必须是 array。"))
+                return
+            item_schema = schema.get("items")
+            if isinstance(item_schema, dict):
+                for index, item in enumerate(value):
+                    self._validate_node(item, item_schema, base_file, f"{path}[{index}]" if path else f"[{index}]", issues)
+        elif expected_type == "string":
+            if not isinstance(value, str):
+                issues.append(ValidationIssue(path or "$", "必须是 string。"))
+                return
+            min_length = schema.get("minLength")
+            if isinstance(min_length, int) and len(value) < min_length:
+                issues.append(ValidationIssue(path or "$", f"字符串长度必须至少为 {min_length}。"))
+            if schema.get("format") == "date-time":
+                try:
+                    datetime.fromisoformat(value.replace("Z", "+00:00"))
+                except ValueError:
+                    issues.append(ValidationIssue(path or "$", "必须是合法的 date-time。"))
+        elif expected_type == "integer":
+            if isinstance(value, bool) or not isinstance(value, int):
+                issues.append(ValidationIssue(path or "$", "必须是 integer。"))
+                return
+            minimum = schema.get("minimum")
+            maximum = schema.get("maximum")
+            if isinstance(minimum, int) and value < minimum:
+                issues.append(ValidationIssue(path or "$", f"必须大于等于 {minimum}。"))
+            if isinstance(maximum, int) and value > maximum:
+                issues.append(ValidationIssue(path or "$", f"必须小于等于 {maximum}。"))
+        elif expected_type == "boolean":
+            if not isinstance(value, bool):
+                issues.append(ValidationIssue(path or "$", "必须是 boolean。"))
+                return
+
+        const_value = schema.get("const")
+        if const_value is not None and value != const_value:
+            issues.append(ValidationIssue(path or "$", f"必须等于 {const_value!r}。"))
+        enum_values = schema.get("enum")
+        if isinstance(enum_values, list) and value not in enum_values:
+            issues.append(ValidationIssue(path or "$", "取值不在允许枚举内。"))
+
+
+def _join_path(prefix: str, name: str) -> str:
+    return f"{prefix}.{name}" if prefix else name
