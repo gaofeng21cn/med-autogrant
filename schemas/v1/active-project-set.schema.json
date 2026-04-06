@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/active-project-set.schema.json",
+  "title": "ActiveProjectSet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "project_set_id",
+    "projects"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "project_set_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "title",
+          "status",
+          "relevance_to_grant"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "idea",
+              "ongoing",
+              "submitted",
+              "completed",
+              "paused"
+            ]
+          },
+          "role": {
+            "type": "string"
+          },
+          "relevance_to_grant": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "reusable_assets": {
+            "$ref": "common.schema.json#/$defs/stringList"
+          },
+          "linked_evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/evidencePointer"
+            },
+            "default": []
+          }
+        }
+      }
+    }
+  }
+}

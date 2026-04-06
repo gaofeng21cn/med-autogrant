@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/preliminary-evidence-pack.schema.json",
+  "title": "PreliminaryEvidencePack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "evidence_pack_id",
+    "evidence_items"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "evidence_pack_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "evidence_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_id",
+          "title",
+          "finding_summary",
+          "strength"
+        ],
+        "properties": {
+          "item_id": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "finding_summary": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "modality": {
+            "type": "string",
+            "enum": [
+              "wet_lab",
+              "clinical",
+              "imaging",
+              "omics",
+              "algorithm",
+              "literature",
+              "other"
+            ]
+          },
+          "strength": {
+            "type": "string",
+            "enum": [
+              "weak",
+              "moderate",
+              "strong"
+            ]
+          },
+          "supports": {
+            "$ref": "common.schema.json#/$defs/stringList"
+          },
+          "gaps": {
+            "$ref": "common.schema.json#/$defs/stringList"
+          },
+          "evidence": {
+            "$ref": "common.schema.json#/$defs/evidencePointer"
+          }
+        }
+      }
+    }
+  }
+}

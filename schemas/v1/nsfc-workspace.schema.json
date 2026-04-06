@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/nsfc-workspace.schema.json",
+  "title": "NSFCWorkspace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "workspace_id",
+    "mode",
+    "lifecycle_stage",
+    "applicant_profile",
+    "track_record",
+    "active_project_set",
+    "preliminary_evidence_pack",
+    "funding_opportunity_brief",
+    "direction_hypotheses",
+    "scientific_question_cards",
+    "argument_chains",
+    "application_drafts",
+    "mentor_critiques",
+    "revision_plans",
+    "current_selection",
+    "gates"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "mode": {
+      "$ref": "common.schema.json#/$defs/mode"
+    },
+    "lifecycle_stage": {
+      "type": "string",
+      "enum": [
+        "input_intake",
+        "direction_screening",
+        "question_refinement",
+        "argument_building",
+        "fit_alignment",
+        "outline",
+        "drafting",
+        "critique",
+        "revision",
+        "frozen"
+      ]
+    },
+    "applicant_profile": {
+      "$ref": "applicant-profile.schema.json"
+    },
+    "track_record": {
+      "$ref": "track-record.schema.json"
+    },
+    "active_project_set": {
+      "$ref": "active-project-set.schema.json"
+    },
+    "preliminary_evidence_pack": {
+      "$ref": "preliminary-evidence-pack.schema.json"
+    },
+    "funding_opportunity_brief": {
+      "$ref": "funding-opportunity-brief.schema.json"
+    },
+    "direction_hypotheses": {
+      "type": "array",
+      "items": {
+        "$ref": "direction-hypothesis.schema.json"
+      }
+    },
+    "scientific_question_cards": {
+      "type": "array",
+      "items": {
+        "$ref": "scientific-question-card.schema.json"
+      }
+    },
+    "argument_chains": {
+      "type": "array",
+      "items": {
+        "$ref": "argument-chain.schema.json"
+      }
+    },
+    "application_drafts": {
+      "type": "array",
+      "items": {
+        "$ref": "application-draft.schema.json"
+      }
+    },
+    "mentor_critiques": {
+      "type": "array",
+      "items": {
+        "$ref": "mentor-critique.schema.json"
+      }
+    },
+    "revision_plans": {
+      "type": "array",
+      "items": {
+        "$ref": "revision-plan.schema.json"
+      }
+    },
+    "current_selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_direction_id",
+        "selected_question_id",
+        "active_draft_id",
+        "active_revision_plan_id"
+      ],
+      "properties": {
+        "selected_direction_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "selected_question_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "active_draft_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "active_revision_plan_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "direction_frozen",
+        "scientific_question_frozen",
+        "argument_chain_frozen",
+        "outline_frozen",
+        "presubmission_frozen"
+      ],
+      "properties": {
+        "direction_frozen": {
+          "type": "boolean"
+        },
+        "scientific_question_frozen": {
+          "type": "boolean"
+        },
+        "argument_chain_frozen": {
+          "type": "boolean"
+        },
+        "outline_frozen": {
+          "type": "boolean"
+        },
+        "presubmission_frozen": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

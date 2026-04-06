@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/mentor-critique.schema.json",
+  "title": "MentorCritique",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "critique_id",
+    "draft_id",
+    "overall_diagnosis",
+    "current_scientific_question",
+    "suggested_question",
+    "verdict",
+    "necessity_scientific_value",
+    "applicant_fit",
+    "feasibility"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "critique_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "overall_diagnosis": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "current_scientific_question": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "suggested_question": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "major_reframe",
+        "major_revision",
+        "minor_revision",
+        "ready_for_submission"
+      ]
+    },
+    "necessity_scientific_value": {
+      "$ref": "common.schema.json#/$defs/criterionAssessment"
+    },
+    "applicant_fit": {
+      "$ref": "common.schema.json#/$defs/criterionAssessment"
+    },
+    "feasibility": {
+      "$ref": "common.schema.json#/$defs/criterionAssessment"
+    },
+    "logic_chain_repairs": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "applicant_fit_repairs": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "blocking_issues": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    }
+  }
+}

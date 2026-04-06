@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/direction-hypothesis.schema.json",
+  "title": "DirectionHypothesis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "direction_id",
+    "title",
+    "knowledge_gap_summary",
+    "applicant_fit_summary",
+    "decision_status"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "direction_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "title": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "rationale": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "knowledge_gap_summary": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "applicant_fit_summary": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "novelty_angle": {
+      "type": "string"
+    },
+    "risk_summary": {
+      "type": "string"
+    },
+    "required_evidence_ids": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "decision_status": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "selected",
+        "rejected",
+        "deferred"
+      ]
+    }
+  }
+}

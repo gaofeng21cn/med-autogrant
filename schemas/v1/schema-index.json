@@ -1,0 +1,77 @@
+{
+  "schema_version": "v1",
+  "aggregate_root": "nsfc-workspace.schema.json",
+  "schemas": [
+    {
+      "name": "common",
+      "file": "common.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "applicant_profile",
+      "file": "applicant-profile.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "track_record",
+      "file": "track-record.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "active_project_set",
+      "file": "active-project-set.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "preliminary_evidence_pack",
+      "file": "preliminary-evidence-pack.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "funding_opportunity_brief",
+      "file": "funding-opportunity-brief.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "direction_hypothesis",
+      "file": "direction-hypothesis.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "scientific_question_card",
+      "file": "scientific-question-card.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "argument_chain",
+      "file": "argument-chain.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "application_draft",
+      "file": "application-draft.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "mentor_critique",
+      "file": "mentor-critique.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "revision_plan",
+      "file": "revision-plan.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "nsfc_workspace",
+      "file": "nsfc-workspace.schema.json",
+      "status": "frozen"
+    }
+  ],
+  "deferred_objects": [
+    "gate_state_machine",
+    "execution_trace",
+    "section_level_evidence_graph",
+    "cross_cycle_diff_artifact"
+  ]
+}

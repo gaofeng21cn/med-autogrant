@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/revision-plan.schema.json",
+  "title": "RevisionPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "revision_plan_id",
+    "draft_id",
+    "critique_id",
+    "items"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "revision_plan_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "critique_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_id",
+          "priority",
+          "action_type",
+          "action",
+          "done_criteria"
+        ],
+        "properties": {
+          "item_id": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "p0",
+              "p1",
+              "p2"
+            ]
+          },
+          "action_type": {
+            "type": "string",
+            "enum": [
+              "reframe_question",
+              "rebuild_argument",
+              "add_evidence",
+              "rewrite_section",
+              "tighten_fit",
+              "format_cleanup"
+            ]
+          },
+          "target_ref": {
+            "type": "string"
+          },
+          "action": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "done_criteria": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "required_input_ids": {
+            "$ref": "common.schema.json#/$defs/stringList"
+          }
+        }
+      }
+    },
+    "next_review_focus": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/common.schema.json",
+  "title": "Med Auto Grant Common Types",
+  "type": "object",
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stringList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
+      "default": []
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "human_in_the_loop",
+        "mixed"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "created_at",
+        "updated_at",
+        "source_mode"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "v1"
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "source_mode": {
+          "$ref": "#/$defs/mode"
+        },
+        "owner": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "notes": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "evidencePointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "label",
+        "source_type"
+      ],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "publication",
+            "project",
+            "preliminary_result",
+            "external_reference",
+            "cv_item",
+            "draft_section",
+            "other"
+          ]
+        },
+        "uri": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "criterionAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "weight",
+        "judgment"
+      ],
+      "properties": {
+        "weight": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "judgment": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "blocking_issues": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    }
+  }
+}

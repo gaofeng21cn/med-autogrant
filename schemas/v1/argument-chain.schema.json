@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/argument-chain.schema.json",
+  "title": "ArgumentChain",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "argument_chain_id",
+    "scientific_question_id",
+    "background_claim",
+    "field_gap",
+    "necessity_claim",
+    "uniqueness_claim",
+    "route_justification",
+    "if_not_done_loss"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "argument_chain_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "scientific_question_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "background_claim": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "field_gap": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "necessity_claim": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "uniqueness_claim": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "route_justification": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "non_arbitrary_route_reason": {
+      "type": "string"
+    },
+    "if_not_done_loss": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "linked_evidence_ids": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/funding-opportunity-brief.schema.json",
+  "title": "FundingOpportunityBrief",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "brief_id",
+    "funder",
+    "program_family",
+    "mandatory_sections"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "brief_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "funder": {
+      "const": "NSFC"
+    },
+    "program_family": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "project_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "young_scientist",
+          "general",
+          "regional",
+          "other"
+        ]
+      },
+      "default": []
+    },
+    "application_year": {
+      "type": "integer",
+      "minimum": 2020
+    },
+    "mandatory_sections": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "formal_constraints": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "evaluation_notes": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    }
+  }
+}

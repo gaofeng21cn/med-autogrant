@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/application-draft.schema.json",
+  "title": "ApplicationDraft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "draft_id",
+    "version_label",
+    "project_title",
+    "status",
+    "frozen_question_id",
+    "outline"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "draft_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "version_label": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "project_title": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "outline",
+        "draft",
+        "revised",
+        "frozen"
+      ]
+    },
+    "frozen_question_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "outline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "section_key",
+          "section_title",
+          "core_claim"
+        ],
+        "properties": {
+          "section_key": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "section_title": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "core_claim": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "linked_object_ids": {
+            "$ref": "common.schema.json#/$defs/stringList"
+          }
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "section_key",
+          "section_title",
+          "text"
+        ],
+        "properties": {
+          "section_key": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "section_title": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "text": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "linked_object_ids": {
+            "$ref": "common.schema.json#/$defs/stringList"
+          }
+        }
+      },
+      "default": []
+    }
+  }
+}
