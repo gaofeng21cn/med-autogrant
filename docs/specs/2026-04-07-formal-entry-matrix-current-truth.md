@@ -83,9 +83,11 @@ external verifier durable 裁决如下：
 - `python3 /Users/gaofeng/workspace/omx-project-installer/skills/omx-project-installer/scripts/omx_project_installer.py diff --target /Users/gaofeng/workspace/med-autogrant`
   - 当前状态：`external advisory verifier`
   - 不是当前 tranche hard gate
+  - 当前观测输出：`AGENTS.md: drift`
   - 原因：
+    - 它审计的是 installer baseline / scaffold drift，不是当前 runtime baseline 的功能正确性
     - 它依赖仓库外脚本，不属于 repo-native current truth
-    - 它当前失败来自外部脚本 `NameError`，不反映本仓 runtime baseline 的真实性
+    - 当前失败面是 root `AGENTS.md` 相对 installer 模板的漂移，而不是 `med-autogrant` 的 CLI / schema / tests / reports 失真
     - 若未来要重新纳入 hard gate，必须先同步改写 `CURRENT_PROGRAM / PROGRAM_ROUTING / active plans / reports`
 
 ## 禁止越界解释
