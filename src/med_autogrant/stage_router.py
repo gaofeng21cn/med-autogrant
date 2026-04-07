@@ -12,11 +12,16 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
     critique = context.active_critique
     revision_plan = context.active_revision_plan
     active_draft = context.active_draft
+    identity = {
+        "grant_run_id": document["grant_run_id"],
+        "workspace_id": document["workspace_id"],
+    }
 
     if stage in {"critique", "revision"}:
         verdict = critique["verdict"]
         if verdict == "major_reframe":
             return {
+                **identity,
                 "current_stage": stage,
                 "recommended_stage": "question_refinement",
                 "reason": "导师批注判定需要重塑科学问题，应回退到 question_refinement。",
@@ -33,6 +38,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 and revision_plan.get("execution_status") == "completed"
             ):
                 return {
+                    **identity,
                     "current_stage": stage,
                     "recommended_stage": "critique",
                     "reason": "当前 revision 已完成显式 revised 切换，应带着 revised 草稿回到 critique 做 re-review。",
@@ -43,6 +49,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                     "requires_human_confirmation": False,
                 }
             return {
+                **identity,
                 "current_stage": stage,
                 "recommended_stage": "revision",
                 "reason": f"导师批注 verdict={verdict}，应先执行结构化修订。",
@@ -54,6 +61,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
             }
         if verdict == "ready_for_submission":
             return {
+                **identity,
                 "current_stage": stage,
                 "recommended_stage": "frozen" if gates["presubmission_frozen"] else "frozen",
                 "reason": "当前批注已经达到 ready_for_submission，可进入送审前冻结。",
@@ -66,6 +74,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
 
     if not gates["direction_frozen"]:
         return {
+            **identity,
             "current_stage": stage,
             "recommended_stage": "direction_screening",
             "reason": "方向尚未冻结，不能继续向下游阶段推进。",
@@ -76,6 +85,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
         }
     if not gates["scientific_question_frozen"]:
         return {
+            **identity,
             "current_stage": stage,
             "recommended_stage": "question_refinement",
             "reason": "科学问题尚未冻结，应先完成问题提纯。",
@@ -86,6 +96,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
         }
     if not gates["argument_chain_frozen"]:
         return {
+            **identity,
             "current_stage": stage,
             "recommended_stage": "argument_building",
             "reason": "立项依据主链尚未冻结，应先闭合必要性论证。",
@@ -96,6 +107,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
         }
     if not gates["outline_frozen"]:
         return {
+            **identity,
             "current_stage": stage,
             "recommended_stage": "outline",
             "reason": "提纲尚未冻结，不能直接进入稳定 drafting/critique 闭环。",
@@ -106,6 +118,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
         }
     if stage == "drafting":
         return {
+            **identity,
             "current_stage": stage,
             "recommended_stage": "critique",
             "reason": "当前草稿已形成，下一步进入导师批注。",
@@ -115,6 +128,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
             "requires_human_confirmation": False,
         }
     return {
+        **identity,
         "current_stage": stage,
         "recommended_stage": stage,
         "reason": "当前状态已与冻结 gate 对齐，保持当前阶段继续推进。",

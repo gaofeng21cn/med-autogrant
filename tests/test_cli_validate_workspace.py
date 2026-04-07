@@ -44,6 +44,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
         payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["error_count"], 0)
@@ -62,6 +63,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(stderr, "")
 
         payload = json.loads(stdout)
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["critique_id"], "critique-v1")
         self.assertEqual(payload["draft_id"], "draft-v1")
         self.assertEqual(payload["verdict"], "major_revision")
@@ -94,6 +96,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
         self.assertEqual(completed.returncode, 0)
         payload = json.loads(completed.stdout)
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["selected_question"]["id"], "question-immune-fibrosis")
 
@@ -111,8 +114,13 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
         payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(
+            payload["route"]["validate_workspace"]["grant_run_id"],
+            "grant-run-nsfc-demo-001-baseline-001",
+        )
         self.assertEqual(payload["route"]["validate_workspace"]["ok"], True)
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
         self.assertEqual(payload["route"]["critique_summary"]["verdict"], "major_revision")
@@ -133,6 +141,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertFalse(payload["ok"])
         self.assertEqual(payload["command"], "summarize-workspace")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["errors"][0]["path"], "revision_plans")
@@ -155,6 +164,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertFalse(payload["ok"])
         self.assertEqual(payload["command"], "next-step")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["errors"][0]["path"], "revision_plans")
@@ -177,6 +187,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertFalse(payload["ok"])
         self.assertEqual(payload["command"], "critique-summary")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["errors"][0]["path"], "revision_plans")
@@ -199,6 +210,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertFalse(payload["ok"])
         self.assertEqual(payload["command"], "stage-route-report")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["errors"][0]["path"], "application_drafts.status")
@@ -221,6 +233,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertFalse(payload["ok"])
         self.assertEqual(payload["command"], "next-step")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["lifecycle_stage"], "revision")
         self.assertEqual(payload["errors"][0]["path"], "application_drafts.status")
@@ -242,6 +255,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(stderr, "")
         payload = json.loads(stdout)
         self.assertFalse(payload["ok"])
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["lifecycle_stage"], "revision")
         self.assertGreaterEqual(payload["error_count"], 1)
@@ -268,6 +282,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         payload = json.loads(stdout)
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["current_stage"], "revision")
         self.assertEqual(payload["recommended_stage"], "critique")
         self.assertIn("revised", payload["reason"])

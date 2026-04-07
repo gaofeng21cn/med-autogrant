@@ -50,6 +50,7 @@ The repository already contains a minimal executable baseline around a frozen `N
 Today, the runtime can:
 
 - validate a structured `NSFC` workspace against the frozen schema subset and key runtime constraints
+- carry a stable `grant_run_id` across CLI outputs as the formal execution handle for the current hydrated grant run
 - summarize the current direction, question, argument chain, draft, critique, and revision-plan state
 - recommend the next stage from `lifecycle_stage`, gates, and critique verdict
 - export a structured mentor-style critique summary around the `60/30/10` frame
@@ -102,6 +103,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 ### Current Technical Scope
 
 - schema-backed `NSFCWorkspace` validation
+- explicit `grant_run_id` / `workspace_id` / `draft_id` separation for runtime and CLI surfaces
 - runtime route checks for critique, revision, and frozen-stage consistency
 - machine-readable critique and route artifacts
 - tests covering runtime and control-surface invariants

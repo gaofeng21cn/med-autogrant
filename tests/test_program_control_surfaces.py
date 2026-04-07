@@ -6,11 +6,16 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+README_EN = REPO_ROOT / "README.md"
+README_ZH = REPO_ROOT / "README.zh-CN.md"
 CURRENT_PROGRAM = REPO_ROOT / ".omx" / "context" / "CURRENT_PROGRAM.md"
 PROGRAM_ROUTING = REPO_ROOT / ".omx" / "context" / "PROGRAM_ROUTING.md"
 TEAM_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_TEAM_PROMPT.md"
 EXECUTION_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_EXECUTION_PROMPT.md"
 OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
+OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
+WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
+WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
 PRD = REPO_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
 TEST_SPEC = REPO_ROOT / ".omx" / "plans" / "test-spec-med-autogrant-mainline.md"
 IMPLEMENTATION = REPO_ROOT / ".omx" / "plans" / "implementation-med-autogrant-mainline.md"
@@ -52,6 +57,22 @@ REVISION_TRANSITION_SNIPPETS = (
     "comparison_summary",
     "draft_id",
     "frozen_question_id",
+)
+
+EXECUTION_HANDLE_SNIPPETS = (
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "program_id",
+)
+
+EXECUTION_HANDLE_REVIEW_SURFACES = (
+    README_EN,
+    README_ZH,
+    OMX_BRIDGE,
+    OBJECT_MODEL_SCHEMA,
+    WORKSPACE_EXAMPLE,
+    WORKSPACE_SCHEMA,
 )
 
 
@@ -204,6 +225,24 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             for snippet in REVISION_TRANSITION_SNIPPETS:
                 with self.subTest(path=path.name, snippet=snippet):
                     self.assertIn(snippet, text)
+
+    def test_grant_run_id_contract_is_frozen_across_runtime_and_control_surfaces(self) -> None:
+        for path in EXECUTION_HANDLE_REVIEW_SURFACES:
+            text = read_text(path)
+            with self.subTest(path=path.name):
+                self.assertIn("grant_run_id", text)
+
+        boundary_text = "\n".join(
+            read_text(path)
+            for path in (OMX_BRIDGE, OBJECT_MODEL_SCHEMA)
+        )
+        for snippet in EXECUTION_HANDLE_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, boundary_text)
+
+        bridge_text = read_text(OMX_BRIDGE)
+        self.assertIn("repo-tracked review surfaces", bridge_text)
+        self.assertIn("local durable handoff surfaces", bridge_text)
 
 
 if __name__ == "__main__":

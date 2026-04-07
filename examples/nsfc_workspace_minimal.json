@@ -6,6 +6,7 @@
     "source_mode": "auto",
     "owner": "Med Auto Grant scaffold"
   },
+  "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
   "workspace_id": "nsfc-demo-001",
   "mode": "auto",
   "lifecycle_stage": "critique",

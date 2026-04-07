@@ -127,6 +127,26 @@ Date: `2026-04-06`
 - `PreliminaryEvidencePack`
 - `FundingOpportunityBrief`
 
+## 执行句柄与对象 ID 边界
+
+`NSFCWorkspace` 作为聚合根，当前同时承载两类不能混写的标识：
+
+- `grant_run_id`
+  - 当前 hydrated grant run 的稳定执行句柄
+  - 用于 CLI 输出、reports 与恢复入口回显同一次运行
+  - 不是 workspace 主键，也不是草稿身份
+- `workspace_id`
+  - grant workspace 聚合根身份
+  - 表示“哪一个工作区对象”而不是“哪一次运行”
+- `draft_id`
+  - `ApplicationDraft` 身份
+  - 即使 `revision` 完成后显式从 `draft -> revised` 切换，也继续沿用同一 `draft_id`
+- `program_id`
+  - `.omx` 控制面上的长期 mainline 句柄
+  - 负责把 reports 与 control surface 路由到同一 active program，而不是指向某一次 runtime run
+
+第一版 schema 的最小合同是：`grant_run_id` 进入 `NSFCWorkspace` 聚合根；runtime 与 CLI 必须稳定回显它，但不因此把 `workspace_id`、`draft_id`、`program_id` 混成同一种 ID。
+
 ## 第一版 schema 的边界
 
 这次冻结强调的是：

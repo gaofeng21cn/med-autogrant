@@ -6,6 +6,7 @@
   "additionalProperties": false,
   "required": [
     "metadata",
+    "grant_run_id",
     "workspace_id",
     "mode",
     "lifecycle_stage",
@@ -26,6 +27,9 @@
   "properties": {
     "metadata": {
       "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
     "workspace_id": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"

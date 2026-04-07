@@ -25,11 +25,13 @@ class WorkspaceStateError(WorkspaceError):
         message: str,
         *,
         errors: list[ValidationIssue] | None = None,
+        grant_run_id: str | None = None,
         workspace_id: str | None = None,
         lifecycle_stage: str | None = None,
     ) -> None:
         super().__init__(message)
         self.errors = list(errors or [])
+        self.grant_run_id = grant_run_id
         self.workspace_id = workspace_id
         self.lifecycle_stage = lifecycle_stage
 
@@ -53,13 +55,16 @@ class ValidationResult:
         return len(self.errors)
 
     def to_dict(self, document: dict[str, Any] | None = None) -> dict[str, Any]:
+        grant_run_id = None
         workspace_id = None
         lifecycle_stage = None
         if isinstance(document, dict):
+            grant_run_id = document.get("grant_run_id")
             workspace_id = document.get("workspace_id")
             lifecycle_stage = document.get("lifecycle_stage")
         return {
             "ok": self.ok,
+            "grant_run_id": grant_run_id,
             "workspace_id": workspace_id,
             "lifecycle_stage": lifecycle_stage,
             "error_count": self.error_count,
@@ -108,6 +113,7 @@ def validate_workspace_document(document: dict[str, Any]) -> ValidationResult:
 def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
     context = _require_workspace_context(document)
     return {
+        "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
         "mode": document["mode"],
         "lifecycle_stage": document["lifecycle_stage"],
@@ -148,6 +154,7 @@ def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
     critique = context.active_critique
     revision_plan = context.active_revision_plan
     return {
+        "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
         "mode": document["mode"],
         "lifecycle_stage": document["lifecycle_stage"],
@@ -648,6 +655,7 @@ def _require_workspace_context(document: dict[str, Any]) -> WorkspaceContext:
         raise WorkspaceStateError(
             f"{first.path}: {first.message}",
             errors=result.errors,
+            grant_run_id=document.get("grant_run_id"),
             workspace_id=document.get("workspace_id"),
             lifecycle_stage=document.get("lifecycle_stage"),
         )

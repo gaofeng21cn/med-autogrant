@@ -25,6 +25,8 @@ class StageRouterTest(unittest.TestCase):
     def test_major_revision_routes_to_revision(self) -> None:
         route = determine_next_step(self.load_example())
 
+        self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(route["workspace_id"], "nsfc-demo-001")
         self.assertEqual(route["current_stage"], "critique")
         self.assertEqual(route["recommended_stage"], "revision")
         self.assertIn("major_revision", route["reason"])
@@ -36,6 +38,7 @@ class StageRouterTest(unittest.TestCase):
 
         route = determine_next_step(document)
 
+        self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(route["recommended_stage"], "question_refinement")
         self.assertIn("重塑科学问题", route["reason"])
 
@@ -51,6 +54,7 @@ class StageRouterTest(unittest.TestCase):
 
         route = determine_next_step(document)
 
+        self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(route["current_stage"], "revision")
         self.assertEqual(route["recommended_stage"], "critique")
         self.assertIn("revised", route["reason"])

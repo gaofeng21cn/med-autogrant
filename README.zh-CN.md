@@ -50,6 +50,7 @@
 当前 runtime 已经可以：
 
 - 校验结构化 `NSFC` workspace 是否满足冻结 schema 与关键运行时约束
+- 在 CLI 输出中统一携带稳定的 `grant_run_id`，作为当前 hydrated grant run 的正式执行句柄
 - 汇总当前方向、科学问题、论证链、草稿、批注和修订计划状态
 - 根据 `lifecycle_stage`、gates 和批注 verdict 给出下一步建议
 - 输出围绕 `60/30/10` 框架的结构化导师批注摘要
@@ -102,6 +103,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 ### 当前技术范围
 
 - 基于 schema 的 `NSFCWorkspace` 校验
+- runtime / CLI 表面上显式区分 `grant_run_id`、`workspace_id` 与 `draft_id`
 - critique、revision、frozen 等后段 route 的运行时一致性检查
 - machine-readable 的批注与 route artifact
 - 覆盖 runtime 与 control-surface 不变量的测试

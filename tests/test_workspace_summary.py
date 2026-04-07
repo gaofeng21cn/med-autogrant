@@ -30,6 +30,7 @@ class WorkspaceSummaryTest(unittest.TestCase):
         document = load_workspace_document(EXAMPLE_PATH)
         summary = summarize_workspace_document(document)
 
+        self.assertEqual(summary["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(summary["workspace_id"], "nsfc-demo-001")
         self.assertEqual(summary["mode"], "auto")
         self.assertEqual(summary["lifecycle_stage"], "critique")

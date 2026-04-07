@@ -66,6 +66,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.format == "json":
             workspace_context = _extract_workspace_context_for_error(args)
             if isinstance(exc, WorkspaceStateError):
+                workspace_context.setdefault("grant_run_id", exc.grant_run_id)
                 workspace_context.setdefault("workspace_id", exc.workspace_id)
                 workspace_context.setdefault("lifecycle_stage", exc.lifecycle_stage)
             print(
@@ -73,6 +74,7 @@ def main(argv: list[str] | None = None) -> int:
                     {
                         "ok": False,
                         "command": args.command,
+                        "grant_run_id": workspace_context.get("grant_run_id"),
                         "workspace_id": workspace_context.get("workspace_id"),
                         "lifecycle_stage": workspace_context.get("lifecycle_stage"),
                         "error": str(exc),
@@ -127,6 +129,7 @@ def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
         raise WorkspaceStateError(
             f"{first.path}: {first.message}",
             errors=validation.errors,
+            grant_run_id=document.get("grant_run_id"),
             workspace_id=document.get("workspace_id"),
             lifecycle_stage=document.get("lifecycle_stage"),
         )
@@ -137,6 +140,7 @@ def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
     critique_summary["recommended_next_stage"] = next_step["recommended_stage"]
     return {
         "ok": True,
+        "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
         "lifecycle_stage": document["lifecycle_stage"],
         "route": {
@@ -163,6 +167,7 @@ def _add_workspace_command(
 def _render_text(command: str, payload: dict[str, Any]) -> str:
     if command == "validate-workspace":
         lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"lifecycle_stage: {payload['lifecycle_stage']}",
             f"ok: {payload['ok']}",
@@ -175,6 +180,7 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
     if command == "summarize-workspace":
         return "\n".join(
             [
+                f"grant_run_id: {payload['grant_run_id']}",
                 f"workspace_id: {payload['workspace_id']}",
                 f"mode: {payload['mode']}",
                 f"lifecycle_stage: {payload['lifecycle_stage']}",
@@ -187,6 +193,8 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
 
     if command == "next-step":
         lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
             f"current_stage: {payload['current_stage']}",
             f"recommended_stage: {payload['recommended_stage']}",
             f"reason: {payload['reason']}",
@@ -197,6 +205,8 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
 
     if command == "critique-summary":
         lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
             f"critique_id: {payload['critique_id']}",
             f"draft_id: {payload['draft_id']}",
             f"verdict: {payload['verdict']}",
@@ -209,6 +219,7 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
 
     if command == "stage-route-report":
         lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"lifecycle_stage: {payload['lifecycle_stage']}",
             f"route_ok: {payload['ok']}",
@@ -229,6 +240,7 @@ def _extract_workspace_context_for_error(args: argparse.Namespace) -> dict[str, 
     except WorkspaceError:
         return {}
     return {
+        "grant_run_id": document.get("grant_run_id"),
         "workspace_id": document.get("workspace_id"),
         "lifecycle_stage": document.get("lifecycle_stage"),
     }

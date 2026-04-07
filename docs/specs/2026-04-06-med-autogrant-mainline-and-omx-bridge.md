@@ -110,6 +110,48 @@ Date: `2026-04-06`
 
 这层负责把运行中的项目状态 durable 化，避免恢复时只能看旧 pane。
 
+## P0：正式执行句柄（`grant_run_id`）合同
+
+当前 mainline 在 runtime baseline hardening 内补充冻结如下边界：
+
+- `grant_run_id`
+  - 当前 grant run 的稳定执行句柄
+  - 必须由 workspace 输入显式提供
+  - CLI 输出、runtime reports 与未来恢复入口必须回显同一个 `grant_run_id`
+- `workspace_id`
+  - `NSFCWorkspace` 聚合根身份
+  - 回答“这是哪个 grant workspace”，不是“这是哪一次运行”
+- `draft_id`
+  - `ApplicationDraft` 身份
+  - `revision` 完成后仍沿用同一 `draft_id`，不借由 run handle 生成新草稿身份
+- `program_id`
+  - `med-autogrant-mainline` 这一长期 active mainline 的控制面句柄
+  - 用来路由 `.omx/reports/<program_id>/` 与 pointer-bearing control surfaces，不等于单次 runtime run
+
+当前需要保持的 formal durable entry 真相是：
+
+- runtime / user-facing formal entry 仍以当前 CLI 为准
+- `OMX` 的恢复入口仍是 `OMX_TEAM_PROMPT + CURRENT_PROGRAM + PROGRAM_ROUTING + active plans + active reports`
+- `grant_run_id` 只负责把同一次运行绑到同一输出与恢复上下文，不扩成新的 MCP / controller surface
+
+针对这次 `grant_run_id` 合同，还要固定 review / handoff 边界：
+
+- repo-tracked review surfaces
+  - `README*`
+  - `docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`
+  - `docs/specs/2026-04-06-object-model-schema-v1.md`
+  - `schemas/v1/nsfc-workspace.schema.json`
+  - `examples/nsfc_workspace_minimal.json`
+- local durable handoff surfaces
+  - `.omx/context/**`
+  - `.omx/plans/**`
+  - `.omx/reports/**`
+
+也就是说：
+
+- reviewer 应能仅凭 repo-tracked review surfaces 理解 `grant_run_id` 的正式合同
+- `.omx/**` 仍然承担本机 durable handoff 责任，但不是这次提交必须依赖的 review 入口
+
 ## 当前固定阶段顺序
 
 ### P1. Reality Convergence And NSFC Baseline Freeze
