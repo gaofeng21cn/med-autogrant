@@ -147,6 +147,7 @@ Date: `2026-04-06`
   - 草稿
   - critique
   - revision plan
+- 在不提前硬化 `P3` verdict / rollback 语义的前提下，收通第一轮 `critique / revision` skeleton
 
 停止条件：
 
@@ -154,12 +155,19 @@ Date: `2026-04-06`
 - 闭环里的对象引用、gate 和 route 清晰稳定
 - critique / revision 不是散文，而是结构化 artifact
 
+当前预冻结 tranche：
+
+- `P2.A / Intake-Direction-Question Mainline`
+- `P2.B / Argument-Fit-Outline Mainline`
+- `P2.C / Draft-Critique-Revision Skeleton`
+
 ### P3. Mentor Critique And Revision Loop Hardening
 
 目标：
 
 - 把 `60/30/10` 导师批注与修订闭环做成 machine-readable 主线
 - 编码 `major_reframe / major_revision / ready_for_submission`
+- 编码 `draft -> revised`、re-review 与 presubmission gate
 - 把强制回退到 direction / question / argument 的条件收紧成可执行 route
 
 停止条件：
@@ -167,6 +175,12 @@ Date: `2026-04-06`
 - critique -> revision -> re-review 闭环 machine-readable
 - 回退规则有 route 和验证支撑
 - 批注不再停留在自由文本点评层
+
+当前预冻结 tranche：
+
+- `P3.A / Mentor Verdict Contract Freeze`
+- `P3.B / Revision Transition And Re-Review Hardening`
+- `P3.C / Forced Rollback And Presubmission Gate`
 
 ### P4. Dual-Mode Harness And Verification OS
 
@@ -182,6 +196,11 @@ Date: `2026-04-06`
 - team gate、验证口径和 final verification 稳定
 - 人接管与 agent 接管边界 durable 可见
 
+当前预冻结 tranche：
+
+- `P4.A / Dual-Mode Gate Surface`
+- `P4.B / Verification OS And Checkpoint Surface`
+
 ### P5. Grant Ops Gateway Expansion And Federation
 
 目标：
@@ -195,6 +214,18 @@ Date: `2026-04-06`
 - 至少完成一个非 `NSFC` 通用骨架的扩展示例
 - 共享基座与 domain-specific logic 边界清楚
 - 联邦接入 contract 明确，不是口头约定
+
+当前预冻结 tranche：
+
+- `P5.A / Second Grant Family Onboarding`
+- `P5.B / Federation Contract Freeze`
+
+## Future Same-Phase Auto-Promotion Envelope
+
+- future `P2 / P3` 只在对应 phase 已先由 `Codex App` 激活时，才允许 `OMX` 在同一 phase 内执行 `same-phase auto-promotion`
+- `same-phase auto-promotion` 只允许推进到已预冻结的下一 tranche，不允许顺手补写新的产品语义
+- `OMX` 在该 envelope 内只能改写 pointer-bearing control surfaces 与 reports；phase promotion 仍必须交回 `Codex App`
+- `P4 / P5` 当前只冻结 tranche map，不开放 `same-phase auto-promotion`
 
 ## 当前活跃子线
 
@@ -214,7 +245,15 @@ Date: `2026-04-06`
 
 1. `P1.A / authoritative NSFC workspace baseline` 已完成长线 north star、phase 顺序与 `Codex App <-> OMX` durable handoff 的 truth freeze
 2. 当前 `P1.B` 只继续收紧 runtime baseline：workspace mutation、stage route、artifact write/read contract 与 control-surface promotion invariants
-3. 当前允许做的是 runtime / CLI / tests / reports / docs 的同轴收口，不允许偷跑 `P2` authoring controller
+3. 当前允许做的是 runtime / CLI / tests / reports / docs 的同轴收口，不允许偷跑任何 `P2+` controller；future tranche map 与 `same-phase auto-promotion` 只作为后续 phase activation 的预冻结合同存在
+
+### P1.B 当前补充冻结：revision transition minimal contract
+
+- 当前 `P1.B` 必须把 `draft -> revised` 的最小语义写成 durable control surface，而不是只保留“允许哪些 status”的集合。
+- 触发 gate 固定为 `RevisionPlan.execution_status`；当 `RevisionPlan.execution_status=completed` 时，post-revision 必须继续沿用同一 `draft_id`，保持同一 `frozen_question_id`，并保留当前 argument chain 链接。
+- 切换后的最小差异约束固定为：`active_draft.status` 必须显式变成 `revised`，`active_draft.version_label` 必须等于 `post_revision_version_label`，且 `post_revision_version_label` 必须不同于 `pre_revision_version_label`。
+- `comparison_summary` 必须非空，用来表达 pre-revision draft 与 post-revision revised draft 的前后版本比较证据。
+- 当 `revision` 阶段已经满足上述 contract 并持有 `revised` 草稿时，最小 route 应回到 `critique` 做 re-review；更完整的多轮 hardening 仍留给 future `P3.B / Revision Transition And Re-Review Hardening`。
 
 ## OMX 长线运行入口
 
@@ -234,3 +273,4 @@ Date: `2026-04-06`
 - 为了“让 OMX 好跑”而牺牲项目边界
 - 把 `.omx` 报告写成一次性总结，而不维护持续状态
 - 把 `Codex App` 与 `OMX` 的职责重新混回一个对话里
+- 把 future tranche map 误当成当前 phase 的执行许可

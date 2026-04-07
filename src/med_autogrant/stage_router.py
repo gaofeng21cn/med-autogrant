@@ -10,6 +10,8 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
     stage = document["lifecycle_stage"]
     gates = document["gates"]
     critique = context.active_critique
+    revision_plan = context.active_revision_plan
+    active_draft = context.active_draft
 
     if stage in {"critique", "revision"}:
         verdict = critique["verdict"]
@@ -25,6 +27,21 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 "requires_human_confirmation": document["mode"] != "auto",
             }
         if verdict in {"major_revision", "minor_revision"}:
+            if (
+                stage == "revision"
+                and active_draft["status"] == "revised"
+                and revision_plan.get("execution_status") == "completed"
+            ):
+                return {
+                    "current_stage": stage,
+                    "recommended_stage": "critique",
+                    "reason": "当前 revision 已完成显式 revised 切换，应带着 revised 草稿回到 critique 做 re-review。",
+                    "actions": [
+                        "提交 revised 草稿进入新一轮导师批注。",
+                        "基于 comparison_summary 核对本轮修订是否覆盖前一轮 blocking issues。",
+                    ],
+                    "requires_human_confirmation": False,
+                }
             return {
                 "current_stage": stage,
                 "recommended_stage": "revision",

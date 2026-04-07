@@ -227,6 +227,51 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["errors"][0]["message"], "revision 阶段的激活草稿 status 必须为 draft 或 revised。")
         self.assertIn("revision 阶段的激活草稿 status 必须为 draft 或 revised", payload["error"])
 
+    def test_validate_workspace_reports_revision_transition_error_when_completed_plan_does_not_switch_status(self) -> None:
+        invalid_path = self.write_revision_completed_without_revised_workspace()
+
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(invalid_path),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], "revision")
+        self.assertGreaterEqual(payload["error_count"], 1)
+        messages = {(item["path"], item["message"]) for item in payload["errors"]}
+        self.assertIn(
+            (
+                "application_drafts.status",
+                "revision plan 已标记 completed 时，激活草稿 status 必须显式切换为 revised。",
+            ),
+            messages,
+        )
+
+    def test_next_step_routes_completed_revision_back_to_critique(self) -> None:
+        valid_path = self.write_completed_revision_workspace()
+
+        exit_code, stdout, stderr = self.run_cli(
+            "next-step",
+            "--input",
+            str(valid_path),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["current_stage"], "revision")
+        self.assertEqual(payload["recommended_stage"], "critique")
+        self.assertIn("revised", payload["reason"])
+
     def write_invalid_workspace(self) -> Path:
         payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
         payload["revision_plans"][0]["items"] = []
@@ -255,6 +300,34 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         invalid_path = tmp_dir / "revision-outline-workspace.json"
         invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
         return invalid_path
+
+    def write_revision_completed_without_revised_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["lifecycle_stage"] = "revision"
+        payload["revision_plans"][0]["execution_status"] = "completed"
+        payload["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+        payload["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+        payload["revision_plans"][0]["comparison_summary"] = "已按批注完成修订，但尚未切换草稿状态。"
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        invalid_path = tmp_dir / "revision-completed-without-revised.json"
+        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return invalid_path
+
+    def write_completed_revision_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["lifecycle_stage"] = "revision"
+        payload["application_drafts"][0]["status"] = "revised"
+        payload["application_drafts"][0]["version_label"] = "v0.4"
+        payload["revision_plans"][0]["execution_status"] = "completed"
+        payload["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+        payload["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+        payload["revision_plans"][0]["comparison_summary"] = "已根据 major_revision 完成立项依据与机制链条修订。"
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        valid_path = tmp_dir / "revision-completed.json"
+        valid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return valid_path
 
 
 if __name__ == "__main__":

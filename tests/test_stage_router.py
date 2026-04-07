@@ -39,6 +39,22 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["recommended_stage"], "question_refinement")
         self.assertIn("重塑科学问题", route["reason"])
 
+    def test_completed_revision_routes_back_to_critique(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["lifecycle_stage"] = "revision"
+        document["application_drafts"][0]["status"] = "revised"
+        document["application_drafts"][0]["version_label"] = "v0.4"
+        document["revision_plans"][0]["execution_status"] = "completed"
+        document["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+        document["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+        document["revision_plans"][0]["comparison_summary"] = "已完成修订并形成前后版本比较。"
+
+        route = determine_next_step(document)
+
+        self.assertEqual(route["current_stage"], "revision")
+        self.assertEqual(route["recommended_stage"], "critique")
+        self.assertIn("revised", route["reason"])
+
 
 if __name__ == "__main__":
     unittest.main()

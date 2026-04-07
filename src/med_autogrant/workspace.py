@@ -405,6 +405,7 @@ def _validate_stage_requirements(
                 message="frozen 阶段的激活草稿 status 必须为 frozen。",
             )
         )
+    _validate_revision_transition_contract(active_draft, active_revision_plan, issues)
     if active_critique is not None:
         for field, expected in (
             ("necessity_scientific_value", 60),
@@ -419,6 +420,79 @@ def _validate_stage_requirements(
                         message=f"{field} 的权重必须固定为 {expected}。",
                     )
                 )
+
+
+def _validate_revision_transition_contract(
+    active_draft: dict[str, Any] | None,
+    active_revision_plan: dict[str, Any] | None,
+    issues: list[ValidationIssue],
+) -> None:
+    if active_draft is None or active_revision_plan is None:
+        return
+
+    draft_status = active_draft.get("status")
+    draft_version_label = active_draft.get("version_label")
+    execution_status = active_revision_plan.get("execution_status", "planned")
+    pre_revision_version_label = active_revision_plan.get("pre_revision_version_label")
+    post_revision_version_label = active_revision_plan.get("post_revision_version_label")
+    comparison_summary = active_revision_plan.get("comparison_summary")
+
+    if draft_status == "revised" and execution_status != "completed":
+        issues.append(
+            ValidationIssue(
+                path="revision_plans.execution_status",
+                message="激活草稿 status=revised 时，RevisionPlan.execution_status 必须为 completed。",
+            )
+        )
+
+    if execution_status == "completed" and draft_status != "revised":
+        issues.append(
+            ValidationIssue(
+                path="application_drafts.status",
+                message="revision plan 已标记 completed 时，激活草稿 status 必须显式切换为 revised。",
+            )
+        )
+
+    requires_revision_evidence = draft_status == "revised" or execution_status == "completed"
+    if not requires_revision_evidence:
+        return
+
+    if not isinstance(pre_revision_version_label, str) or not pre_revision_version_label:
+        issues.append(
+            ValidationIssue(
+                path="revision_plans.pre_revision_version_label",
+                message="revised 草稿必须声明 pre_revision_version_label。",
+            )
+        )
+    if not isinstance(post_revision_version_label, str) or not post_revision_version_label:
+        issues.append(
+            ValidationIssue(
+                path="revision_plans.post_revision_version_label",
+                message="revised 草稿必须声明 post_revision_version_label。",
+            )
+        )
+    if not isinstance(comparison_summary, str) or not comparison_summary.strip():
+        issues.append(
+            ValidationIssue(
+                path="revision_plans.comparison_summary",
+                message="revised 草稿必须提供非空 comparison_summary。",
+            )
+        )
+    if isinstance(pre_revision_version_label, str) and isinstance(post_revision_version_label, str):
+        if pre_revision_version_label == post_revision_version_label:
+            issues.append(
+                ValidationIssue(
+                    path="revision_plans.post_revision_version_label",
+                    message="post_revision_version_label 必须与 pre_revision_version_label 不同。",
+                )
+            )
+        if draft_version_label != post_revision_version_label:
+            issues.append(
+                ValidationIssue(
+                    path="application_drafts.version_label",
+                    message="revised 草稿的 version_label 必须等于 post_revision_version_label。",
+                )
+            )
 
 
 def _validate_reference_sets(document: dict[str, Any], issues: list[ValidationIssue]) -> None:

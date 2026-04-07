@@ -24,6 +24,22 @@
     "critique_id": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
+    "execution_status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "completed"
+      ]
+    },
+    "pre_revision_version_label": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "post_revision_version_label": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "comparison_summary": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
     "items": {
       "type": "array",
       "items": {

@@ -149,5 +149,52 @@ class WorkspaceSummaryTest(unittest.TestCase):
             messages,
         )
 
+    def test_validation_accepts_completed_revision_with_explicit_revised_switch(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["lifecycle_stage"] = "revision"
+        document["application_drafts"][0]["status"] = "revised"
+        document["application_drafts"][0]["version_label"] = "v0.4"
+        document["revision_plans"][0]["execution_status"] = "completed"
+        document["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+        document["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+        document["revision_plans"][0]["comparison_summary"] = "已根据 major_revision 完成立项依据与机制链条重写。"
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
+    def test_validation_rejects_completed_revision_without_revised_status_switch(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["lifecycle_stage"] = "revision"
+        document["revision_plans"][0]["execution_status"] = "completed"
+        document["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+        document["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+        document["revision_plans"][0]["comparison_summary"] = "已根据 major_revision 完成修订。"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("application_drafts.status", "revision plan 已标记 completed 时，激活草稿 status 必须显式切换为 revised。"),
+            messages,
+        )
+
+    def test_validation_rejects_revised_status_without_completed_revision_evidence(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["lifecycle_stage"] = "revision"
+        document["application_drafts"][0]["status"] = "revised"
+        document["application_drafts"][0]["version_label"] = "v0.4"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("revision_plans.execution_status", "激活草稿 status=revised 时，RevisionPlan.execution_status 必须为 completed。"),
+            messages,
+        )
+
 if __name__ == "__main__":
     unittest.main()
