@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：仓库仍处于 `P2 / NSFC Authoring Mainline Freeze`，当前 active tranche 为 `P2.C / Draft-Critique-Revision Skeleton`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库仍处于 `P3 / Mentor Critique And Revision Loop Hardening`，当前 active tranche 为 `P3.A / Mentor Verdict Contract Freeze`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      已有最小 runtime baseline，当前 active tranche 已切到 <code>P2.C / Draft-Critique-Revision Skeleton</code>
+      已有最小 runtime baseline，当前 active tranche 已切到 <code>P3.A / Mentor Verdict Contract Freeze</code>
     </td>
   </tr>
 </table>
@@ -41,7 +41,7 @@
 - 把申请人画像、代表作、在研项目和预实验，组织进同一个可审计的基金工作区。
 - 在花大力气写全文之前，先把“必要性与科学价值”这条主线磨清楚。
 - 让“为什么是这个申请人来做这个问题”成为显式判断，而不是简历堆砌。
-- 用“草稿扩写 + 导师式批注 + 结构化修订”替代一次性文本生成。
+- 用“草稿扩写 + 导师式批注 + 结构化修订 + verdict 分叉”替代一次性文本生成。
 
 ## 现在已经能做什么
 
@@ -49,18 +49,18 @@
 
 当前 runtime 已经可以：
 
-- 校验从 `drafting` 到 `critique`、`revision` 的结构化 `NSFC` workspace，同时通过 repo 测试保持上游 `input_intake -> direction_screening -> question_refinement -> argument_building -> fit_alignment -> outline` 兼容
+- 校验已 absorbed 的 `drafting -> critique -> revision` 主线，并把 `major_reframe / major_revision / minor_revision / ready_for_submission` 的导师 verdict 分叉冻结成 machine-readable contract
 - 在 CLI 输出中统一携带稳定的 `grant_run_id`，作为当前 hydrated grant run 的正式执行句柄
 - 汇总 direction / question / fit mapping / draft / revision plan 的显式 `current_selection` 绑定
-- 根据 `lifecycle_stage` 与 gates 给出 `outline -> drafting -> critique -> revision` 的下一步建议，以及 completed revision 回到 `critique` 的 re-review 边界
+- 根据 `lifecycle_stage`、gates 与 verdict 给出 `major_reframe -> question_refinement`、`major_revision / minor_revision -> revision`、`ready_for_submission -> frozen` 的下一步建议，并保留 completed revision 回到 `critique` 的 re-review 边界
 - 把当前 authoring route 聚合成单个 machine-readable `stage-route-report`
-- 输出带有 `RevisionPlan.execution_status`、版本标签和比较证据的 `critique-summary` 审计面
+- 输出带有 verdict、`RevisionPlan.execution_status`、版本标签和比较证据的 `critique-summary / stage-route-report` 审计面
 
 ## 现在还没有完成什么
 
 下面这些能力仍处于规划或开发中：
 
-- `major_reframe`、`ready_for_submission`、forced rollback 等更强 verdict 语义仍属于后续 tranche 的 hardening 目标，尚未进入当前 tranche hard gate
+- `revision` 多轮 re-review hardening、forced rollback 与 presubmission hard gate 仍在后续 tranche 中
 - human-in-the-loop gate 与 submission-grade 交付面
 - 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展
 
@@ -90,19 +90,19 @@
 ### 最小 Runtime 命令
 
 ```bash
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_drafting.json
-PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_revision.json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_revision.json
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_major_reframe.json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json
+PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_major_reframe.json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_ready_for_submission.json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_major_reframe.json
 ```
 
 ### 当前技术范围
 
 - 基于 schema 的 `NSFCWorkspace` 校验
 - runtime / CLI 表面上显式区分 `grant_run_id`、`workspace_id` 与 `draft_id`
-- `drafting / critique / revision` 的 machine-readable route 与 audit surface
-- machine-readable 的批注与 route artifact
+- `major_reframe / major_revision / minor_revision / ready_for_submission` 的 machine-readable verdict contract
+- machine-readable 的批注、verdict 与 route artifact
 - 覆盖 runtime 与 control-surface 不变量的测试
 
 ### 内部文档
@@ -113,6 +113,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 - [`docs/specs/2026-04-06-object-model-schema-v1.md`](./docs/specs/2026-04-06-object-model-schema-v1.md)
 - [`docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`](./docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`](./docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md)
+- [`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`](./docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md)
 
 ### 本地运行状态
 

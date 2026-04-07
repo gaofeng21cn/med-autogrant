@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository remains in `P2 / NSFC Authoring Mainline Freeze`, with `P2.C / Draft-Critique-Revision Skeleton` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
+> Status: active development. The repository remains in `P3 / Mentor Critique And Revision Loop Hardening`, with `P3.A / Mentor Verdict Contract Freeze` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
 
 <table>
   <tr>
@@ -20,14 +20,14 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      Minimal runtime baseline is retained, and the active tranche is now <code>P2.C / Draft-Critique-Revision Skeleton</code>
+      Minimal runtime baseline is retained, and the active tranche is now <code>P3.A / Mentor Verdict Contract Freeze</code>
     </td>
   </tr>
 </table>
 
 ## One-Line Position
 
-If your goal is to turn applicant background, prior work, preliminary evidence, and a candidate topic into a stronger `NSFC`-style proposal direction, `Med Auto Grant` is being built as a medical `Grant Ops` `Domain Harness OS` on the shared `Unified Harness Engineering Substrate` for governed question refinement, argument sharpening, draft expansion, mentor-style critique, and structured revision.
+If your goal is to turn applicant background, prior work, preliminary evidence, and a candidate topic into a stronger `NSFC`-style proposal direction, `Med Auto Grant` is being built as a medical `Grant Ops` `Domain Harness OS` on the shared `Unified Harness Engineering Substrate` for governed question refinement, argument sharpening, draft expansion, mentor-style critique, structured revision, and explicit verdict gating.
 
 ## Runtime Shape (Current And Future)
 
@@ -49,18 +49,18 @@ The repository already contains a minimal executable baseline around a frozen `N
 
 Today, the runtime can:
 
-- validate structured `NSFC` workspaces from `drafting` through `critique` and `revision`, while retaining upstream `input_intake -> direction_screening -> question_refinement -> argument_building -> fit_alignment -> outline` compatibility through repo tests
+- validate structured `NSFC` workspaces across the absorbed `drafting -> critique -> revision` mainline while now freezing mentor verdict branches for `major_reframe / major_revision / minor_revision / ready_for_submission`
 - carry a stable `grant_run_id` across CLI outputs as the formal execution handle for the current hydrated grant run
 - summarize explicit `current_selection` bindings for direction, question, fit mapping, draft, and revision-plan identity
-- recommend the next stage across `outline -> drafting -> critique -> revision`, plus the completed-revision re-review boundary back to `critique`
+- recommend the next stage across `major_reframe -> question_refinement`, `major_revision / minor_revision -> revision`, `ready_for_submission -> frozen`, plus the absorbed completed-revision re-review boundary back to `critique`
 - aggregate the current authoring route into one machine-readable `stage-route-report`
-- expose structured `critique-summary` audit data including `RevisionPlan.execution_status`, version labels, and comparison evidence
+- expose structured `critique-summary` and `stage-route-report` audit data including verdict, `RevisionPlan.execution_status`, version labels, and comparison evidence
 
 ## What Is Still In Progress
 
 The following pieces are planned but not yet complete:
 
-- verdict hardening such as `major_reframe`, `ready_for_submission`, and forced rollback as active tranche semantics
+- revision transition / re-review hardening beyond the verdict contract, plus forced rollback and presubmission hard gates
 - human-in-the-loop gate surfaces and submission-grade delivery
 - broader grant-family expansion beyond the first `NSFC` generic skeleton
 
@@ -90,19 +90,19 @@ You can give your agent an instruction like this:
 ### Minimal Runtime Commands
 
 ```bash
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_drafting.json
-PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_revision.json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_revision.json
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_major_reframe.json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json
+PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_major_reframe.json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_ready_for_submission.json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_major_reframe.json
 ```
 
 ### Current Technical Scope
 
 - schema-backed `NSFCWorkspace` validation
 - explicit `grant_run_id` / `workspace_id` / `draft_id` separation for runtime and CLI surfaces
-- machine-readable route checks for `drafting / critique / revision` consistency
-- machine-readable critique and route artifacts
+- machine-readable mentor verdict contract across `major_reframe / major_revision / minor_revision / ready_for_submission`
+- machine-readable critique, verdict, and route artifacts
 - tests covering runtime and control-surface invariants
 
 ### Internal Docs
@@ -113,6 +113,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 - [`docs/specs/2026-04-06-object-model-schema-v1.md`](./docs/specs/2026-04-06-object-model-schema-v1.md)
 - [`docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`](./docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`](./docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md)
+- [`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`](./docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md)
 
 ### Local Operator State
 

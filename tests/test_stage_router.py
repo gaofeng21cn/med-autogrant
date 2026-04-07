@@ -25,6 +25,8 @@ OUTLINE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_outline.json
 DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
 CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
+MAJOR_REFRAME_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_major_reframe.json"
+READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
 
 
 class StageRouterTest(unittest.TestCase):
@@ -98,14 +100,28 @@ class StageRouterTest(unittest.TestCase):
         self.assertIn("执行 revision plan", route["actions"][0])
 
     def test_major_reframe_routes_back_to_question_refinement(self) -> None:
-        document = copy.deepcopy(self.load_example())
-        document["mentor_critiques"][0]["verdict"] = "major_reframe"
-
-        route = determine_next_step(document)
+        route = determine_next_step(json.loads(MAJOR_REFRAME_EXAMPLE_PATH.read_text(encoding="utf-8")))
 
         self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(route["recommended_stage"], "question_refinement")
         self.assertIn("重塑科学问题", route["reason"])
+
+    def test_minor_revision_routes_to_revision(self) -> None:
+        document = copy.deepcopy(self.load_example())
+        document["mentor_critiques"][0]["verdict"] = "minor_revision"
+
+        route = determine_next_step(document)
+
+        self.assertEqual(route["current_stage"], "critique")
+        self.assertEqual(route["recommended_stage"], "revision")
+        self.assertIn("minor_revision", route["reason"])
+
+    def test_ready_for_submission_routes_to_frozen(self) -> None:
+        route = determine_next_step(json.loads(READY_FOR_SUBMISSION_EXAMPLE_PATH.read_text(encoding="utf-8")))
+
+        self.assertEqual(route["current_stage"], "critique")
+        self.assertEqual(route["recommended_stage"], "frozen")
+        self.assertIn("ready_for_submission", route["reason"])
 
     def test_completed_revision_routes_back_to_critique(self) -> None:
         route = determine_next_step(json.loads(REVISION_EXAMPLE_PATH.read_text(encoding="utf-8")))

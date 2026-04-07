@@ -282,17 +282,17 @@ Date: `2026-04-06`
 
 当前 phase：
 
-- `P2 / NSFC Authoring Mainline Freeze`
+- `P3 / Mentor Critique And Revision Loop Hardening`
 
 当前 tranche：
 
-- `P2.C / Draft-Critique-Revision Skeleton`
+- `P3.A / Mentor Verdict Contract Freeze`
 
 其中：
 
 1. `P1.A / authoritative NSFC workspace baseline` 与 `P1.B / runtime baseline hardening` 已完成 repo-native baseline、formal entry、durability 与 `grant_run_id` 合同冻结
-2. `P2.B` 已冻结 `argument_building -> fit_alignment -> outline`，并继续作为当前 `P2.C` 的上游 hard boundary
-3. 当前 `P2.C` 只继续收通 `drafting -> critique -> revision` 的 skeleton 级 route、audit surface 与 control-surface sync，不允许偷跑 `P3+`；future tranche map 与 `same-phase auto-promotion` 只作为后续 phase activation 的预冻结合同存在
+2. `P2.B` 与 `P2.C` 已分别冻结上游 argument-fit-outline route 与 absorbed 的 draft-critique-revision skeleton，并继续作为当前 `P3.A` 的上游 hard boundary
+3. 当前 `P3.A` 只冻结 `MentorCritique.verdict` 的 canonical branch、route recommendation 与 audit surface，不提前偷跑 `P3.B / P3.C`；future tranche map 与 `same-phase auto-promotion` 只作为后续 phase activation 的预冻结合同存在
 
 ### 保留的 P1.B hard boundary：revision transition minimal contract
 
@@ -302,14 +302,15 @@ Date: `2026-04-06`
 - `comparison_summary` 必须非空，用来表达 pre-revision draft 与 post-revision revised draft 的前后版本比较证据。
 - 当 `revision` 阶段已经满足上述 contract 并持有 `revised` 草稿时，最小 route 应回到 `critique` 做 re-review；更完整的多轮 hardening 仍留给 future `P3.B / Revision Transition And Re-Review Hardening`。
 
-### 当前 P2.B / P2.C canonical surface
+### 当前 P2.B / P2.C / P3.A canonical surface
 
-- 上游 P2.B：`docs/specs/2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md`
-- 当前 P2.C：`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
-- 这两份文件当前共同冻结：
+- absorbed P2.B：`docs/specs/2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md`
+- absorbed P2.C：`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
+- 当前 P3.A：`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`
+- 这三份文件当前共同冻结：
   - `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 的上游绑定
-  - `drafting -> critique -> revision` 的最小闭环
-  - completed revision 回到 critique 的 skeleton 级 re-review 边界
+  - `drafting -> critique -> revision` 的 absorbed 主线与 completed revision 回到 critique 的 re-review 边界
+  - `major_reframe / major_revision / minor_revision / ready_for_submission` 的 canonical verdict branch
 
 ## OMX 长线运行入口
 

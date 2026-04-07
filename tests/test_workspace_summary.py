@@ -29,6 +29,8 @@ OUTLINE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_outline.json
 DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
 CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
+MAJOR_REFRAME_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_major_reframe.json"
+READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
 
 
 class WorkspaceSummaryTest(unittest.TestCase):
@@ -253,6 +255,22 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertTrue(result.ok)
         self.assertEqual(result.errors, [])
 
+    def test_validation_accepts_major_reframe_critique_workspace(self) -> None:
+        document = load_workspace_document(MAJOR_REFRAME_EXAMPLE_PATH)
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
+    def test_validation_accepts_ready_for_submission_critique_workspace(self) -> None:
+        document = load_workspace_document(READY_FOR_SUBMISSION_EXAMPLE_PATH)
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
     def test_validation_rejects_critique_with_mismatched_current_scientific_question(self) -> None:
         document = load_workspace_document(CRITIQUE_EXAMPLE_PATH)
         document["mentor_critiques"][0]["current_scientific_question"] = "错误的问题表述"
@@ -383,6 +401,25 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertEqual(summary["active_revision_plan"]["pre_revision_version_label"], "v0.3")
         self.assertEqual(summary["active_revision_plan"]["post_revision_version_label"], "v0.4")
         self.assertEqual(summary["active_critique"]["blocking_issue_count"], 1)
+
+    def test_summary_exposes_major_reframe_verdict(self) -> None:
+        document = load_workspace_document(MAJOR_REFRAME_EXAMPLE_PATH)
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["lifecycle_stage"], "critique")
+        self.assertEqual(summary["active_critique"]["verdict"], "major_reframe")
+        self.assertEqual(summary["active_revision_plan"]["item_count"], 1)
+
+    def test_summary_exposes_ready_for_submission_verdict(self) -> None:
+        document = load_workspace_document(READY_FOR_SUBMISSION_EXAMPLE_PATH)
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["lifecycle_stage"], "critique")
+        self.assertEqual(summary["active_draft"]["status"], "revised")
+        self.assertEqual(summary["active_critique"]["verdict"], "ready_for_submission")
+        self.assertEqual(summary["active_revision_plan"]["execution_status"], "completed")
 
     def test_validation_rejects_completed_revision_without_revised_status_switch(self) -> None:
         document = copy.deepcopy(self.load_example())

@@ -8,10 +8,10 @@ Date: `2026-04-07`
 
 ## 当前指针
 
-- Current phase: `P2 / NSFC Authoring Mainline Freeze`
-- Active tranche: `P2.C / Draft-Critique-Revision Skeleton`
+- Current phase: `P3 / Mentor Critique And Revision Loop Hardening`
+- Active tranche: `P3.A / Mentor Verdict Contract Freeze`
 
-本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不替代当前 `P2.C` 的 route contract。
+本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不替代当前 `P3.A` 的 verdict contract。
 
 ## Formal Entry Matrix
 
@@ -71,21 +71,22 @@ Date: `2026-04-07`
 当前 active tranche 的 hard gate 只包含 repo-native 验证命令：
 
 1. `python3 -m unittest discover -s tests -p 'test_*.py'`
-2. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_drafting.json --format json`
-3. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json --format json`
-4. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json`
-5. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_drafting.json --format json`
-6. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_critique.json --format json`
-7. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_revision.json --format json`
-8. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_drafting.json --format json`
-9. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json`
-10. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_revision.json --format json`
+2. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json --format json`
+3. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
+4. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
+5. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_critique.json --format json`
+6. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
+7. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
+8. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json`
+9. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
+10. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
 11. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json`
-12. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_revision.json --format json`
-13. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_drafting.json --format json`
+12. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
+13. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
 14. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json`
-15. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_revision.json --format json`
-16. `git diff --check`
+15. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
+16. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
+17. `git diff --check`
 
 external verifier durable 裁决如下：
 
@@ -101,4 +102,4 @@ external verifier durable 裁决如下：
 
 - 不得把“developer control-plane entry 存在”解释成“产品 controller 已正式支持”。
 - 不得把 `grant_run_id` 解释成新的 control-plane pointer。
-- 不得因为 formal entry matrix 已冻结，就默认进入 `P3`。
+- 不得因为 formal entry matrix 已冻结，就默认宣称 `P3.B / P3.C` 已完成。
