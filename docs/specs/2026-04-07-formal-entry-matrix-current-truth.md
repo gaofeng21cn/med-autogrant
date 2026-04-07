@@ -4,14 +4,14 @@ Date: `2026-04-07`
 
 ## 目标
 
-在 `P1 / Reality Convergence And NSFC Baseline Freeze` 下，把当前 runtime baseline 的正式入口矩阵冻结成 repo-durable current truth，避免把 future scope、控制面入口和恢复入口混写成同一种“入口”。
+在当前 active mainline 下，把正式入口矩阵持续冻结成 repo-durable current truth，避免把 future scope、控制面入口和恢复入口混写成同一种“入口”。
 
 ## 当前指针
 
-- Current phase: `P1 / Reality Convergence And NSFC Baseline Freeze`
-- Active tranche: `P1.B / runtime baseline hardening`
+- Current phase: `P2 / NSFC Authoring Mainline Freeze`
+- Active tranche: `P2.A / Intake-Direction-Question Mainline`
 
-本文件只冻结当前 `P1.B` 的入口真相，不激活 `P2`，也不扩 `MCP / controller / write / export / HITL`。
+本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不替代当前 `P2.A` 的 route contract。
 
 ## Formal Entry Matrix
 
@@ -68,15 +68,18 @@ Date: `2026-04-07`
 
 ## 当前 hard gate 与 external verifier 裁决
 
-当前 `P1.B` 的 hard gate 只包含 repo-native 验证命令：
+当前 active tranche 的 hard gate 只包含 repo-native 验证命令：
 
 1. `python3 -m unittest discover -s tests -p 'test_*.py'`
-2. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_minimal.json --format json`
-3. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_minimal.json --format json`
-4. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_minimal.json --format json`
-5. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_minimal.json --format json`
-6. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_minimal.json --format json`
-7. `git diff --check`
+2. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2a_input_intake.json --format json`
+3. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2a_direction_screening.json --format json`
+4. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2a_question_refinement.json --format json`
+5. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2a_question_refinement.json --format json`
+6. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2a_input_intake.json --format json`
+7. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2a_direction_screening.json --format json`
+8. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2a_question_refinement.json --format json`
+9. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2a_question_refinement.json --format json`
+10. `git diff --check`
 
 external verifier durable 裁决如下：
 

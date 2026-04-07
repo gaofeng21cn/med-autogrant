@@ -16,6 +16,7 @@ OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-a
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
+P2A_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-07-p2a-intake-direction-question-mainline-current-truth.md"
 WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
 PRD = REPO_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
@@ -30,11 +31,14 @@ REPORT_README = REPORT_DIR / "README.md"
 
 REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
-    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_minimal.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_minimal.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_minimal.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_minimal.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_minimal.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2a_input_intake.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2a_direction_screening.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2a_question_refinement.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2a_question_refinement.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2a_input_intake.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2a_direction_screening.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2a_question_refinement.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2a_question_refinement.json --format json",
     "git diff --check",
 )
 
@@ -74,6 +78,7 @@ EXECUTION_HANDLE_REVIEW_SURFACES = (
     OBJECT_MODEL_SCHEMA,
     FORMAL_ENTRY_MATRIX,
     DURABILITY_MODEL,
+    P2A_CURRENT_TRUTH,
     WORKSPACE_EXAMPLE,
     WORKSPACE_SCHEMA,
 )
@@ -172,7 +177,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, test_spec_text)
 
         self.assertIn("Verification Snapshot", latest_status_text)
-        for keyword in ("validate-workspace", "summarize-workspace", "next-step", "critique-summary"):
+        for keyword in ("validate-workspace", "summarize-workspace", "next-step", "stage-route-report"):
             with self.subTest(keyword=keyword):
                 self.assertIn(keyword, latest_status_text)
 
@@ -180,7 +185,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         formal_entry_text = read_text(FORMAL_ENTRY_MATRIX)
         durability_text = read_text(DURABILITY_MODEL)
 
-        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL):
+        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, P2A_CURRENT_TRUTH):
             with self.subTest(path=path.name):
                 self.assertTrue(path.exists(), f"current truth doc 不存在: {path}")
 
@@ -209,7 +214,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         current_program_text = read_text(CURRENT_PROGRAM)
         execution_prompt_text = read_text(EXECUTION_PROMPT)
         team_prompt_text = read_text(TEAM_PROMPT)
-        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL):
+        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, P2A_CURRENT_TRUTH):
             path_text = str(path)
             with self.subTest(current_program_path=path.name):
                 self.assertIn(path_text, current_program_text)
@@ -240,7 +245,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(line=line):
                 self.assertFalse(any(marker in line for marker in rejected_markers), "blockers 段落只能保留当前 active blocker。")
                 self.assertTrue(
-                    any(keyword in line for keyword in ("P1.B", "promotion", "revision", "tranche", "phase boundary")),
+                    any(keyword in line for keyword in ("P2.A", "promotion", "direction", "question", "tranche", "phase boundary")),
                     "blockers 段落必须只记录与当前 pointer 或 promotion 直接相关的 active blocker。",
                 )
 
@@ -288,6 +293,18 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         bridge_text = read_text(OMX_BRIDGE)
         self.assertIn("repo-tracked review surfaces", bridge_text)
         self.assertIn("local durable handoff surfaces", bridge_text)
+
+    def test_p2a_current_truth_doc_is_referenced_in_active_control_surfaces(self) -> None:
+        p2a_path_text = str(P2A_CURRENT_TRUTH)
+        for path in (CURRENT_PROGRAM, PROGRAM_ROUTING, PRD, TEST_SPEC, IMPLEMENTATION):
+            with self.subTest(path=path.name):
+                self.assertIn(p2a_path_text, read_text(path))
+
+    def test_object_model_and_p2a_current_truth_freeze_current_selection_binding(self) -> None:
+        combined = "\n".join(read_text(path) for path in (OBJECT_MODEL_SCHEMA, P2A_CURRENT_TRUTH))
+        for snippet in ("current_selection", "selected_direction_id", "selected_question_id", "DirectionHypothesis", "ScientificQuestionCard"):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, combined)
 
     def test_external_verifier_is_not_current_hard_gate(self) -> None:
         current_program_text = read_text(CURRENT_PROGRAM)

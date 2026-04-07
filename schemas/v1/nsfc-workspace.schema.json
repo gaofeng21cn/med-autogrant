@@ -17,10 +17,6 @@
     "funding_opportunity_brief",
     "direction_hypotheses",
     "scientific_question_cards",
-    "argument_chains",
-    "application_drafts",
-    "mentor_critiques",
-    "revision_plans",
     "current_selection",
     "gates"
   ],
@@ -106,12 +102,6 @@
     "current_selection": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "selected_direction_id",
-        "selected_question_id",
-        "active_draft_id",
-        "active_revision_plan_id"
-      ],
       "properties": {
         "selected_direction_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"

@@ -1,0 +1,246 @@
+{
+  "metadata": {
+    "schema_version": "v1",
+    "created_at": "2026-04-06T10:00:00Z",
+    "updated_at": "2026-04-07T12:00:00Z",
+    "source_mode": "auto",
+    "owner": "Med Auto Grant scaffold"
+  },
+  "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+  "workspace_id": "nsfc-demo-001",
+  "mode": "auto",
+  "lifecycle_stage": "question_refinement",
+  "applicant_profile": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "applicant_id": "applicant-gaofeng",
+    "applicant_name": "示例申请人",
+    "institution": "示例医学院",
+    "career_stage": "faculty",
+    "research_domains": [
+      "心血管医学",
+      "炎症与纤维化"
+    ],
+    "clinical_domains": [
+      "心力衰竭"
+    ],
+    "methods_stack": [
+      "单细胞测序",
+      "空间转录组",
+      "动物模型"
+    ],
+    "training_background": [
+      "临床医学",
+      "转化医学"
+    ],
+    "strengths": [
+      "有心血管队列资源",
+      "有跨组学分析经验"
+    ],
+    "constraints": [
+      "时序预实验仍需补足"
+    ]
+  },
+  "track_record": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "track_record_id": "track-001",
+    "representative_outputs": [
+      {
+        "output_id": "output-1",
+        "title": "单细胞图谱揭示心肌梗死后免疫重塑",
+        "output_type": "paper",
+        "year": 2024,
+        "relevance_summary": "提供免疫细胞时序变化和成纤维细胞通讯线索。",
+        "evidence": {
+          "evidence_id": "evi-output-1",
+          "label": "代表作 1",
+          "source_type": "publication",
+          "uri": "https://example.org/paper-1"
+        }
+      }
+    ],
+    "prior_grants": [
+      "省部级青年项目"
+    ],
+    "awards": [
+      "青年拔尖人才"
+    ]
+  },
+  "active_project_set": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "project_set_id": "projects-001",
+    "projects": [
+      {
+        "project_id": "project-1",
+        "title": "心梗后炎症消退的单细胞时序研究",
+        "status": "ongoing",
+        "role": "负责人",
+        "relevance_to_grant": "可直接支撑免疫-纤维化窗口期判断。",
+        "reusable_assets": [
+          "小鼠模型流程",
+          "时序样本库"
+        ],
+        "linked_evidence": [
+          {
+            "evidence_id": "evi-project-1",
+            "label": "在研项目 1",
+            "source_type": "project"
+          }
+        ]
+      }
+    ]
+  },
+  "preliminary_evidence_pack": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "evidence_pack_id": "prelim-001",
+    "evidence_items": [
+      {
+        "item_id": "prelim-item-1",
+        "title": "单细胞预实验提示炎症巨噬细胞驱动纤维化相关成纤维细胞扩增",
+        "finding_summary": "心梗后第 3 天至第 7 天出现关键跨细胞通讯信号增强。",
+        "modality": "omics",
+        "strength": "moderate",
+        "supports": [
+          "question-immune-fibrosis"
+        ],
+        "gaps": [
+          "缺乏功能阻断实验"
+        ],
+        "evidence": {
+          "evidence_id": "evi-prelim-1",
+          "label": "预实验 1",
+          "source_type": "preliminary_result"
+        }
+      }
+    ]
+  },
+  "funding_opportunity_brief": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "brief_id": "nsfc-2026-general",
+    "funder": "NSFC",
+    "program_family": "医学科学部",
+    "project_types": [
+      "young_scientist",
+      "general"
+    ],
+    "application_year": 2026,
+    "mandatory_sections": [
+      "立项依据",
+      "研究内容",
+      "研究方案",
+      "创新点",
+      "研究基础"
+    ],
+    "formal_constraints": [
+      "题目需与核心科学问题一致"
+    ],
+    "evaluation_notes": [
+      "必要性与科学价值优先"
+    ]
+  },
+  "direction_hypotheses": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-07T12:00:00Z",
+        "source_mode": "auto"
+      },
+      "direction_id": "dir-inflammatory-remodeling",
+      "title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
+      "rationale": "申请人现有单细胞与心血管样本基础可直接支撑该方向。",
+      "knowledge_gap_summary": "免疫信号如何在特定时间窗触发成纤维细胞表型跃迁仍不清楚。",
+      "applicant_fit_summary": "已有相关队列、模型和组学分析管线。",
+      "novelty_angle": "聚焦时间窗依赖的跨细胞通讯机制。",
+      "risk_summary": "功能验证证据仍需补齐。",
+      "required_evidence_ids": [
+        "output-1",
+        "evi-prelim-1"
+      ],
+      "decision_status": "selected"
+    },
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-07T12:00:00Z",
+        "updated_at": "2026-04-07T12:00:00Z",
+        "source_mode": "auto"
+      },
+      "direction_id": "dir-immunometabolism-repair",
+      "title": "心梗后免疫代谢失衡与修复失败的机制窗口",
+      "rationale": "同样连接申请人的心血管炎症与组学分析积累，但更偏代谢调控切入。",
+      "knowledge_gap_summary": "免疫代谢重编程如何限制心肌修复窗口仍缺机制级解释。",
+      "applicant_fit_summary": "申请人具备代谢组与时序组学联动分析基础。",
+      "novelty_angle": "将代谢窗口与修复失败联系起来。",
+      "risk_summary": "代谢干预路径较多，路线收敛风险更高。",
+      "required_evidence_ids": [
+        "output-1",
+        "evi-project-1"
+      ],
+      "decision_status": "candidate"
+    }
+  ],
+  "scientific_question_cards": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-07T12:00:00Z",
+        "source_mode": "auto"
+      },
+      "question_id": "question-immune-fibrosis",
+      "parent_direction_id": "dir-inflammatory-remodeling",
+      "phenomenon": "心梗后纤维化程度与特定炎症亚群动态相关。",
+      "knowledge_boundary": "目前尚不清楚炎症巨噬细胞如何通过时序性旁分泌信号驱动成纤维细胞异常激活。",
+      "unknown_mechanism": "免疫细胞与成纤维细胞之间的关键通讯轴及其时间窗机制未被解释。",
+      "core_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
+      "subquestions": [
+        "关键通讯轴是什么？",
+        "作用时间窗如何决定重塑结局？"
+      ],
+      "falsifiable_statement": "若阻断该通讯轴，则成纤维细胞致纤维化状态转换将显著减弱。",
+      "proposed_breakthrough_angle": "结合单细胞时序图谱与功能阻断实验识别机制级调控轴。",
+      "why_not_engineering": "核心未知在于机制级知识边界，而非构建一个分类系统或提高预测准确率。",
+      "why_now": "申请人已具备时序样本和单细胞预实验基础。",
+      "linked_evidence_ids": [
+        "evi-output-1",
+        "evi-prelim-1"
+      ]
+    }
+  ],
+  "current_selection": {
+    "selected_direction_id": "dir-inflammatory-remodeling",
+    "selected_question_id": "question-immune-fibrosis"
+  },
+  "gates": {
+    "direction_frozen": true,
+    "scientific_question_frozen": true,
+    "argument_chain_frozen": false,
+    "outline_frozen": false,
+    "presubmission_frozen": false
+  }
+}

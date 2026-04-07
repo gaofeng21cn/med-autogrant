@@ -136,19 +136,21 @@ def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
 
     summary = summarize_workspace_document(document)
     next_step = determine_next_step(document)
-    critique_summary = build_critique_summary(document)
-    critique_summary["recommended_next_stage"] = next_step["recommended_stage"]
+    route: dict[str, Any] = {
+        "validate_workspace": validation.to_dict(document),
+        "summarize_workspace": summary,
+        "next_step": next_step,
+    }
+    if document["lifecycle_stage"] in {"critique", "revision", "frozen"}:
+        critique_summary = build_critique_summary(document)
+        critique_summary["recommended_next_stage"] = next_step["recommended_stage"]
+        route["critique_summary"] = critique_summary
     return {
         "ok": True,
         "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
         "lifecycle_stage": document["lifecycle_stage"],
-        "route": {
-            "validate_workspace": validation.to_dict(document),
-            "summarize_workspace": summary,
-            "next_step": next_step,
-            "critique_summary": critique_summary,
-        },
+        "route": route,
     }
 
 
@@ -178,16 +180,22 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         return "\n".join(lines)
 
     if command == "summarize-workspace":
+        selected_direction = payload["selected_direction"]["title"] if payload["selected_direction"] is not None else "none"
+        selected_question = (
+            payload["selected_question"]["core_question"] if payload["selected_question"] is not None else "none"
+        )
+        active_draft = payload["active_draft"]["project_title"] if payload["active_draft"] is not None else "none"
+        active_critique_verdict = payload["active_critique"]["verdict"] if payload["active_critique"] is not None else "none"
         return "\n".join(
             [
                 f"grant_run_id: {payload['grant_run_id']}",
                 f"workspace_id: {payload['workspace_id']}",
                 f"mode: {payload['mode']}",
                 f"lifecycle_stage: {payload['lifecycle_stage']}",
-                f"selected_direction: {payload['selected_direction']['title']}",
-                f"selected_question: {payload['selected_question']['core_question']}",
-                f"active_draft: {payload['active_draft']['project_title']}",
-                f"active_critique_verdict: {payload['active_critique']['verdict']}",
+                f"selected_direction: {selected_direction}",
+                f"selected_question: {selected_question}",
+                f"active_draft: {active_draft}",
+                f"active_critique_verdict: {active_critique_verdict}",
             ]
         )
 
@@ -218,13 +226,15 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         return "\n".join(lines)
 
     if command == "stage-route-report":
+        critique_summary = payload["route"].get("critique_summary")
+        critique_verdict = critique_summary["verdict"] if isinstance(critique_summary, dict) else "n/a"
         lines = [
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"lifecycle_stage: {payload['lifecycle_stage']}",
             f"route_ok: {payload['ok']}",
             f"recommended_stage: {payload['route']['next_step']['recommended_stage']}",
-            f"critique_verdict: {payload['route']['critique_summary']['verdict']}",
+            f"critique_verdict: {critique_verdict}",
         ]
         return "\n".join(lines)
 

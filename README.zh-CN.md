@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：最小 runtime baseline 已存在，但当前仍处于 `baseline freeze / runtime hardening` 阶段；它还不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库已进入 `P2 / NSFC Authoring Mainline Freeze`，当前 active tranche 为 `P2.A / Intake-Direction-Question Mainline`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      已有最小 runtime baseline，但成熟度当前受限于 <code>baseline freeze / runtime hardening</code>
+      已有最小 runtime baseline，当前 active tranche 已切到 <code>P2.A / Intake-Direction-Question Mainline</code>
     </td>
   </tr>
 </table>
@@ -49,20 +49,18 @@
 
 当前 runtime 已经可以：
 
-- 校验结构化 `NSFC` workspace 是否满足冻结 schema 与关键运行时约束
+- 校验 `input_intake`、`direction_screening`、`question_refinement` 三段结构化 `NSFC` workspace
 - 在 CLI 输出中统一携带稳定的 `grant_run_id`，作为当前 hydrated grant run 的正式执行句柄
-- 汇总当前方向、科学问题、论证链、草稿、批注和修订计划状态
-- 根据 `lifecycle_stage`、gates 和批注 verdict 给出下一步建议
-- 输出围绕 `60/30/10` 框架的结构化导师批注摘要
-- 把核心 route 聚合成单个 machine-readable `stage-route-report`
-- 对后段 route 中的明显状态冲突做显式失败，例如错误的 verdict 或错误的草稿状态切换
+- 汇总 intake artifact，以及 direction / question 的显式 `current_selection` 绑定
+- 根据 `lifecycle_stage` 与 gates 给出 `input_intake -> direction_screening -> question_refinement -> argument_building` 的下一步建议
+- 把早段 route 聚合成单个 machine-readable `stage-route-report`
+- 在存在后段 workspace 时，继续保留结构化 `critique-summary` 与 later-stage baseline 检查
 
 ## 现在还没有完成什么
 
 下面这些能力仍处于规划或开发中：
 
-- `baseline freeze / runtime hardening` 的收敛与固化
-- 从 intake 到稳定 draft 的完整 authoring loop
+- 从 argument building 到稳定 draft 的完整 authoring loop
 - `revision` 阶段内部更细粒度的草稿版本切换建模
 - human-in-the-loop gate 与 submission-grade 交付面
 - 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展

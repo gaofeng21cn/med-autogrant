@@ -112,7 +112,7 @@ Date: `2026-04-06`
 
 ## P0：正式执行句柄（`grant_run_id`）合同
 
-当前 mainline 在 runtime baseline hardening 内补充冻结如下边界：
+当前 mainline 在 `P1.B` 已冻结并在当前 tranche 继续保持如下边界：
 
 - `grant_run_id`
   - 当前 grant run 的稳定执行句柄
@@ -282,25 +282,33 @@ Date: `2026-04-06`
 
 当前 phase：
 
-- `P1 / Reality Convergence And NSFC Baseline Freeze`
+- `P2 / NSFC Authoring Mainline Freeze`
 
 当前 tranche：
 
-- `P1.B / runtime baseline hardening`
+- `P2.A / Intake-Direction-Question Mainline`
 
 其中：
 
-1. `P1.A / authoritative NSFC workspace baseline` 已完成长线 north star、phase 顺序与 `Codex App <-> OMX` durable handoff 的 truth freeze
-2. 当前 `P1.B` 只继续收紧 runtime baseline：workspace mutation、stage route、artifact write/read contract 与 control-surface promotion invariants
-3. 当前允许做的是 runtime / CLI / tests / reports / docs 的同轴收口，不允许偷跑任何 `P2+` controller；future tranche map 与 `same-phase auto-promotion` 只作为后续 phase activation 的预冻结合同存在
+1. `P1.A / authoritative NSFC workspace baseline` 与 `P1.B / runtime baseline hardening` 已完成 repo-native baseline、formal entry、durability 与 `grant_run_id` 合同冻结
+2. 当前 `P2.A` 只继续收通 `input_intake -> direction_screening -> question_refinement`，并保持当前 hard boundary不漂移
+3. 当前允许做的是 early-stage runtime / CLI / tests / reports / docs 的同轴收口，不允许偷跑 `P2.B / P2.C / P3+`；future tranche map 与 `same-phase auto-promotion` 只作为后续 phase activation 的预冻结合同存在
 
-### P1.B 当前补充冻结：revision transition minimal contract
+### 保留的 P1.B hard boundary：revision transition minimal contract
 
-- 当前 `P1.B` 必须把 `draft -> revised` 的最小语义写成 durable control surface，而不是只保留“允许哪些 status”的集合。
+- `P1.B` 已把 `draft -> revised` 的最小语义写成 durable control surface；当前 `P2.A` 必须继续保留这一 hard boundary，而不是删弱它。
 - 触发 gate 固定为 `RevisionPlan.execution_status`；当 `RevisionPlan.execution_status=completed` 时，post-revision 必须继续沿用同一 `draft_id`，保持同一 `frozen_question_id`，并保留当前 argument chain 链接。
 - 切换后的最小差异约束固定为：`active_draft.status` 必须显式变成 `revised`，`active_draft.version_label` 必须等于 `post_revision_version_label`，且 `post_revision_version_label` 必须不同于 `pre_revision_version_label`。
 - `comparison_summary` 必须非空，用来表达 pre-revision draft 与 post-revision revised draft 的前后版本比较证据。
 - 当 `revision` 阶段已经满足上述 contract 并持有 `revised` 草稿时，最小 route 应回到 `critique` 做 re-review；更完整的多轮 hardening 仍留给 future `P3.B / Revision Transition And Re-Review Hardening`。
+
+### 当前 P2.A canonical surface
+
+- `docs/specs/2026-04-07-p2a-intake-direction-question-mainline-current-truth.md`
+- 该文件当前冻结：
+  - `input_intake -> direction_screening -> question_refinement`
+  - `current_selection` 对 `selected_direction_id / selected_question_id` 的显式绑定
+  - early-stage artifacts 与 CLI/runtime transitions
 
 ## OMX 长线运行入口
 

@@ -89,6 +89,18 @@ class WorkspaceContext:
     active_critique: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class WorkspaceState:
+    document: dict[str, Any]
+    current_selection: dict[str, Any]
+    selected_direction: dict[str, Any] | None
+    selected_question: dict[str, Any] | None
+    active_argument_chain: dict[str, Any] | None
+    active_draft: dict[str, Any] | None
+    active_revision_plan: dict[str, Any] | None
+    active_critique: dict[str, Any] | None
+
+
 def load_workspace_document(path: str | Path) -> dict[str, Any]:
     workspace_path = Path(path)
     try:
@@ -111,41 +123,41 @@ def validate_workspace_document(document: dict[str, Any]) -> ValidationResult:
 
 
 def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
-    context = _require_workspace_context(document)
+    state = _build_workspace_state(document)
     return {
         "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
         "mode": document["mode"],
         "lifecycle_stage": document["lifecycle_stage"],
         "gates": dict(document["gates"]),
-        "selected_direction": {
-            "id": context.selected_direction["direction_id"],
-            "title": context.selected_direction["title"],
-            "decision_status": context.selected_direction["decision_status"],
+        "current_selection": {
+            "selected_direction_id": state.current_selection.get("selected_direction_id"),
+            "selected_question_id": state.current_selection.get("selected_question_id"),
+            "active_draft_id": state.current_selection.get("active_draft_id"),
+            "active_revision_plan_id": state.current_selection.get("active_revision_plan_id"),
         },
-        "selected_question": {
-            "id": context.selected_question["question_id"],
-            "core_question": context.selected_question["core_question"],
-            "knowledge_boundary": context.selected_question["knowledge_boundary"],
+        "intake_snapshot": {
+            "applicant_id": document["applicant_profile"]["applicant_id"],
+            "applicant_name": document["applicant_profile"]["applicant_name"],
+            "representative_output_count": len(document["track_record"].get("representative_outputs", [])),
+            "active_project_count": len(document["active_project_set"].get("projects", [])),
+            "preliminary_evidence_count": len(document["preliminary_evidence_pack"].get("evidence_items", [])),
+            "funding_program": document["funding_opportunity_brief"]["brief_id"],
         },
-        "active_argument_chain": {
-            "id": context.active_argument_chain["argument_chain_id"],
-            "necessity_claim": context.active_argument_chain["necessity_claim"],
+        "direction_hypotheses": {
+            "count": len(document.get("direction_hypotheses", [])),
+            "selected_direction_id": state.current_selection.get("selected_direction_id"),
         },
-        "active_draft": {
-            "id": context.active_draft["draft_id"],
-            "version_label": context.active_draft["version_label"],
-            "status": context.active_draft["status"],
-            "project_title": context.active_draft["project_title"],
+        "scientific_question_cards": {
+            "count": len(document.get("scientific_question_cards", [])),
+            "selected_question_id": state.current_selection.get("selected_question_id"),
         },
-        "active_revision_plan": {
-            "id": context.active_revision_plan["revision_plan_id"],
-            "item_count": len(context.active_revision_plan["items"]),
-        },
-        "active_critique": {
-            "id": context.active_critique["critique_id"],
-            "verdict": context.active_critique["verdict"],
-        },
+        "selected_direction": _serialize_direction(state.selected_direction),
+        "selected_question": _serialize_question(state.selected_question),
+        "active_argument_chain": _serialize_argument_chain(state.active_argument_chain),
+        "active_draft": _serialize_draft(state.active_draft),
+        "active_revision_plan": _serialize_revision_plan(state.active_revision_plan),
+        "active_critique": _serialize_critique(state.active_critique),
     }
 
 
@@ -184,6 +196,7 @@ def _validate_schema(document: dict[str, Any]) -> list[ValidationIssue]:
 
 def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIssue]:
     issues: list[ValidationIssue] = []
+    stage = document.get("lifecycle_stage")
 
     directions = _index_objects(document.get("direction_hypotheses"), "direction_id", "direction_hypotheses", issues)
     questions = _index_objects(document.get("scientific_question_cards"), "question_id", "scientific_question_cards", issues)
@@ -192,12 +205,61 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
     critiques = _index_objects(document.get("mentor_critiques"), "critique_id", "mentor_critiques", issues)
     revision_plans = _index_objects(document.get("revision_plans"), "revision_plan_id", "revision_plans", issues)
 
+    requires_direction = stage in {
+        "direction_screening",
+        "question_refinement",
+        "argument_building",
+        "fit_alignment",
+        "outline",
+        "drafting",
+        "critique",
+        "revision",
+        "frozen",
+    }
+    requires_question = stage in {
+        "question_refinement",
+        "argument_building",
+        "fit_alignment",
+        "outline",
+        "drafting",
+        "critique",
+        "revision",
+        "frozen",
+    }
+    requires_argument_chain = stage in {
+        "argument_building",
+        "fit_alignment",
+        "outline",
+        "drafting",
+        "critique",
+        "revision",
+        "frozen",
+    }
+    requires_draft = stage in {"drafting", "critique", "revision", "frozen"}
+    requires_revision_plan = stage in {"critique", "revision", "frozen"}
+
     selected_directions = [
         item["direction_id"]
         for item in document.get("direction_hypotheses", [])
         if isinstance(item, dict) and item.get("decision_status") == "selected"
     ]
-    if len(selected_directions) != 1:
+    if stage in {"direction_screening", "question_refinement"}:
+        direction_count = len(document.get("direction_hypotheses", []))
+        if direction_count < 2 or direction_count > 5:
+            issues.append(
+                ValidationIssue(
+                    path="direction_hypotheses",
+                    message="P2.A 方向阶段必须保留 2 到 5 个 DirectionHypothesis。",
+                )
+            )
+
+    selection = document.get("current_selection", {})
+    selected_direction_id = selection.get("selected_direction_id")
+    selected_question_id = selection.get("selected_question_id")
+    active_draft_id = selection.get("active_draft_id")
+    active_revision_plan_id = selection.get("active_revision_plan_id")
+
+    if requires_direction and len(selected_directions) != 1:
         issues.append(
             ValidationIssue(
                 path="direction_hypotheses",
@@ -205,16 +267,22 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
             )
         )
 
-    selection = document.get("current_selection", {})
-    selected_direction = directions.get(selection.get("selected_direction_id"))
-    if selected_direction is None:
+    selected_direction = directions.get(selected_direction_id) if isinstance(selected_direction_id, str) else None
+    if requires_direction and selected_direction_id is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.selected_direction_id",
+                message=f"{stage} 阶段必须显式绑定当前 DirectionHypothesis。",
+            )
+        )
+    elif selected_direction_id is not None and selected_direction is None:
         issues.append(
             ValidationIssue(
                 path="current_selection.selected_direction_id",
                 message="未找到对应的 DirectionHypothesis。",
             )
         )
-    elif selected_direction.get("decision_status") != "selected":
+    elif selected_direction is not None and selected_direction.get("decision_status") != "selected":
         issues.append(
             ValidationIssue(
                 path="current_selection.selected_direction_id",
@@ -222,15 +290,26 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
             )
         )
 
-    selected_question = questions.get(selection.get("selected_question_id"))
-    if selected_question is None:
+    selected_question = questions.get(selected_question_id) if isinstance(selected_question_id, str) else None
+    if requires_question and selected_question_id is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.selected_question_id",
+                message=f"{stage} 阶段必须显式绑定当前 ScientificQuestionCard。",
+            )
+        )
+    elif selected_question_id is not None and selected_question is None:
         issues.append(
             ValidationIssue(
                 path="current_selection.selected_question_id",
                 message="未找到对应的 ScientificQuestionCard。",
             )
         )
-    elif selected_direction is not None and selected_question.get("parent_direction_id") != selected_direction.get("direction_id"):
+    elif (
+        selected_direction is not None
+        and selected_question is not None
+        and selected_question.get("parent_direction_id") != selected_direction.get("direction_id")
+    ):
         issues.append(
             ValidationIssue(
                 path="current_selection.selected_question_id",
@@ -238,36 +317,46 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
             )
         )
 
-    selected_argument_chains = [
-        item
-        for item in document.get("argument_chains", [])
-        if isinstance(item, dict) and item.get("scientific_question_id") == selection.get("selected_question_id")
-    ]
-    if not selected_argument_chains:
-        issues.append(
-            ValidationIssue(
-                path="argument_chains",
-                message="当前选中问题缺少对应的 ArgumentChain。",
+    active_argument_chain = None
+    if selected_question is not None and requires_argument_chain:
+        selected_argument_chains = [
+            item
+            for item in document.get("argument_chains", [])
+            if isinstance(item, dict) and item.get("scientific_question_id") == selected_question_id
+        ]
+        if not selected_argument_chains:
+            issues.append(
+                ValidationIssue(
+                    path="argument_chains",
+                    message="当前选中问题缺少对应的 ArgumentChain。",
+                )
             )
-        )
-    elif len(selected_argument_chains) > 1:
-        issues.append(
-            ValidationIssue(
-                path="argument_chains",
-                message="当前选中问题只能对应一个激活中的 ArgumentChain。",
+        elif len(selected_argument_chains) > 1:
+            issues.append(
+                ValidationIssue(
+                    path="argument_chains",
+                    message="当前选中问题只能对应一个激活中的 ArgumentChain。",
+                )
             )
-        )
-    active_argument_chain = selected_argument_chains[0] if len(selected_argument_chains) == 1 else None
+        if len(selected_argument_chains) == 1:
+            active_argument_chain = selected_argument_chains[0]
 
-    active_draft = drafts.get(selection.get("active_draft_id"))
-    if active_draft is None:
+    active_draft = drafts.get(active_draft_id) if isinstance(active_draft_id, str) else None
+    if requires_draft and active_draft_id is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.active_draft_id",
+                message=f"{stage} 阶段必须显式绑定当前 ApplicationDraft。",
+            )
+        )
+    elif active_draft_id is not None and active_draft is None:
         issues.append(
             ValidationIssue(
                 path="current_selection.active_draft_id",
                 message="未找到对应的 ApplicationDraft。",
             )
         )
-    elif active_draft.get("frozen_question_id") != selection.get("selected_question_id"):
+    elif active_draft is not None and selected_question_id is not None and active_draft.get("frozen_question_id") != selected_question_id:
         issues.append(
             ValidationIssue(
                 path="application_drafts",
@@ -282,15 +371,22 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
             )
         )
 
-    active_revision_plan = revision_plans.get(selection.get("active_revision_plan_id"))
-    if active_revision_plan is None:
+    active_revision_plan = revision_plans.get(active_revision_plan_id) if isinstance(active_revision_plan_id, str) else None
+    if requires_revision_plan and active_revision_plan_id is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.active_revision_plan_id",
+                message=f"{stage} 阶段必须显式绑定当前 RevisionPlan。",
+            )
+        )
+    elif active_revision_plan_id is not None and active_revision_plan is None:
         issues.append(
             ValidationIssue(
                 path="current_selection.active_revision_plan_id",
                 message="未找到对应的 RevisionPlan。",
             )
         )
-    elif active_draft is not None and active_revision_plan.get("draft_id") != active_draft.get("draft_id"):
+    elif active_revision_plan is not None and active_draft is not None and active_revision_plan.get("draft_id") != active_draft.get("draft_id"):
         issues.append(
             ValidationIssue(
                 path="revision_plans",
@@ -621,6 +717,114 @@ def _draft_links_argument_chain(draft: dict[str, Any], argument_chain_id: str) -
     return False
 
 
+def _build_workspace_state(document: dict[str, Any]) -> WorkspaceState:
+    result = validate_workspace_document(document)
+    if not result.ok:
+        first = result.errors[0]
+        raise WorkspaceStateError(
+            f"{first.path}: {first.message}",
+            errors=result.errors,
+            grant_run_id=document.get("grant_run_id"),
+            workspace_id=document.get("workspace_id"),
+            lifecycle_stage=document.get("lifecycle_stage"),
+        )
+
+    selection = document["current_selection"]
+    direction_by_id = {item["direction_id"]: item for item in document.get("direction_hypotheses", []) if isinstance(item, dict)}
+    question_by_id = {item["question_id"]: item for item in document.get("scientific_question_cards", []) if isinstance(item, dict)}
+    draft_by_id = {item["draft_id"]: item for item in document.get("application_drafts", []) if isinstance(item, dict)}
+    critique_by_id = {item["critique_id"]: item for item in document.get("mentor_critiques", []) if isinstance(item, dict)}
+    revision_plan_by_id = {item["revision_plan_id"]: item for item in document.get("revision_plans", []) if isinstance(item, dict)}
+
+    selected_direction = direction_by_id.get(selection.get("selected_direction_id"))
+    selected_question = question_by_id.get(selection.get("selected_question_id"))
+    active_draft = draft_by_id.get(selection.get("active_draft_id"))
+    active_revision_plan = revision_plan_by_id.get(selection.get("active_revision_plan_id"))
+    active_critique = None
+    if active_revision_plan is not None:
+        active_critique = critique_by_id.get(active_revision_plan.get("critique_id"))
+
+    active_argument_chain = None
+    if selected_question is not None:
+        active_argument_chain = next(
+            (
+                item
+                for item in document.get("argument_chains", [])
+                if isinstance(item, dict) and item.get("scientific_question_id") == selected_question["question_id"]
+            ),
+            None,
+        )
+
+    return WorkspaceState(
+        document=document,
+        current_selection=selection,
+        selected_direction=selected_direction,
+        selected_question=selected_question,
+        active_argument_chain=active_argument_chain,
+        active_draft=active_draft,
+        active_revision_plan=active_revision_plan,
+        active_critique=active_critique,
+    )
+
+
+def _serialize_direction(direction: dict[str, Any] | None) -> dict[str, Any] | None:
+    if direction is None:
+        return None
+    return {
+        "id": direction["direction_id"],
+        "title": direction["title"],
+        "decision_status": direction["decision_status"],
+    }
+
+
+def _serialize_question(question: dict[str, Any] | None) -> dict[str, Any] | None:
+    if question is None:
+        return None
+    return {
+        "id": question["question_id"],
+        "core_question": question["core_question"],
+        "knowledge_boundary": question["knowledge_boundary"],
+    }
+
+
+def _serialize_argument_chain(argument_chain: dict[str, Any] | None) -> dict[str, Any] | None:
+    if argument_chain is None:
+        return None
+    return {
+        "id": argument_chain["argument_chain_id"],
+        "necessity_claim": argument_chain["necessity_claim"],
+    }
+
+
+def _serialize_draft(draft: dict[str, Any] | None) -> dict[str, Any] | None:
+    if draft is None:
+        return None
+    return {
+        "id": draft["draft_id"],
+        "version_label": draft["version_label"],
+        "status": draft["status"],
+        "project_title": draft["project_title"],
+    }
+
+
+def _serialize_revision_plan(revision_plan: dict[str, Any] | None) -> dict[str, Any] | None:
+    if revision_plan is None:
+        return None
+    return {
+        "id": revision_plan["revision_plan_id"],
+        "item_count": len(revision_plan["items"]),
+    }
+
+
+def _serialize_critique(critique: dict[str, Any] | None) -> dict[str, Any] | None:
+    if critique is None:
+        return None
+    return {
+        "id": critique["critique_id"],
+        "verdict": critique["verdict"],
+    }
+
+
 def _index_objects(
     items: Any,
     key_name: str,
@@ -649,41 +853,34 @@ def _index_objects(
 
 
 def _require_workspace_context(document: dict[str, Any]) -> WorkspaceContext:
-    result = validate_workspace_document(document)
-    if not result.ok:
-        first = result.errors[0]
+    state = _build_workspace_state(document)
+    if (
+        state.selected_direction is None
+        or state.selected_question is None
+        or state.active_argument_chain is None
+        or state.active_draft is None
+        or state.active_revision_plan is None
+        or state.active_critique is None
+    ):
+        issue = ValidationIssue(
+            path="lifecycle_stage",
+            message="当前 workspace 尚未具备 critique/revision 所需的完整下游上下文。",
+        )
         raise WorkspaceStateError(
-            f"{first.path}: {first.message}",
-            errors=result.errors,
+            f"{issue.path}: {issue.message}",
+            errors=[issue],
             grant_run_id=document.get("grant_run_id"),
             workspace_id=document.get("workspace_id"),
             lifecycle_stage=document.get("lifecycle_stage"),
         )
-
-    selection = document["current_selection"]
-    direction_by_id = {item["direction_id"]: item for item in document["direction_hypotheses"]}
-    question_by_id = {item["question_id"]: item for item in document["scientific_question_cards"]}
-    draft_by_id = {item["draft_id"]: item for item in document["application_drafts"]}
-    critique_by_id = {item["critique_id"]: item for item in document["mentor_critiques"]}
-    revision_plan_by_id = {item["revision_plan_id"]: item for item in document["revision_plans"]}
-    selected_direction = direction_by_id[selection["selected_direction_id"]]
-    selected_question = question_by_id[selection["selected_question_id"]]
-    active_draft = draft_by_id[selection["active_draft_id"]]
-    active_revision_plan = revision_plan_by_id[selection["active_revision_plan_id"]]
-    active_critique = critique_by_id[active_revision_plan["critique_id"]]
-    active_argument_chain = next(
-        item
-        for item in document["argument_chains"]
-        if item["scientific_question_id"] == selected_question["question_id"]
-    )
     return WorkspaceContext(
         document=document,
-        selected_direction=selected_direction,
-        selected_question=selected_question,
-        active_argument_chain=active_argument_chain,
-        active_draft=active_draft,
-        active_revision_plan=active_revision_plan,
-        active_critique=active_critique,
+        selected_direction=state.selected_direction,
+        selected_question=state.selected_question,
+        active_argument_chain=state.active_argument_chain,
+        active_draft=state.active_draft,
+        active_revision_plan=state.active_revision_plan,
+        active_critique=state.active_critique,
     )
 
 

@@ -4,12 +4,12 @@ Date: `2026-04-07`
 
 ## 目标
 
-在当前 `P1.B / runtime baseline hardening` 内，把 repo-durable review truth、local durable handoff truth 与对象身份边界写清楚，避免 review、恢复和 runtime identity 三类语义继续混写。
+在当前 active mainline 下，把 repo-durable review truth、local durable handoff truth 与对象身份边界写清楚，避免 review、恢复和 runtime identity 三类语义继续混写。
 
 ## 当前指针
 
-- Current phase: `P1 / Reality Convergence And NSFC Baseline Freeze`
-- Active tranche: `P1.B / runtime baseline hardening`
+- Current phase: `P2 / NSFC Authoring Mainline Freeze`
+- Active tranche: `P2.A / Intake-Direction-Question Mainline`
 
 ## repo-tracked review surfaces
 
@@ -21,8 +21,12 @@ Date: `2026-04-07`
 - `docs/specs/2026-04-06-object-model-schema-v1.md`
 - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
 - `docs/specs/2026-04-07-durability-model-clarification.md`
+- `docs/specs/2026-04-07-p2a-intake-direction-question-mainline-current-truth.md`
 - `schemas/v1/nsfc-workspace.schema.json`
 - `examples/nsfc_workspace_minimal.json`
+- `examples/nsfc_workspace_p2a_input_intake.json`
+- `examples/nsfc_workspace_p2a_direction_screening.json`
+- `examples/nsfc_workspace_p2a_question_refinement.json`
 - `tests/test_cli_validate_workspace.py`
 - `tests/test_stage_router.py`
 - `tests/test_workspace_summary.py`
@@ -113,4 +117,4 @@ Date: `2026-04-07`
 - formal entry 真相已进入 repo-durable current truth
 - durability model 真相已进入 repo-durable current truth
 - `grant_run_id / workspace_id / draft_id / program_id` 边界已在 docs / schema / example / CLI / tests / reports 中一致
-- 当前 freeze 只完成 `P1` closeout，不构成 `P2` activation
+- 当前 freeze 继续作为 `P2.A` 的硬边界存在，但不构成 `P2.B` activation

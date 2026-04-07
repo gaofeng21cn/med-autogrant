@@ -20,6 +20,9 @@ from med_autogrant.cli import main  # noqa: E402
 
 
 EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
+INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
+DIRECTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_direction_screening.json"
+QUESTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_question_refinement.json"
 
 
 class CliValidateWorkspaceTest(unittest.TestCase):
@@ -29,6 +32,97 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         with redirect_stdout(stdout), redirect_stderr(stderr):
             exit_code = main(list(args))
         return exit_code, stdout.getvalue(), stderr.getvalue()
+
+    def test_validate_workspace_accepts_p2a_input_intake_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(INPUT_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "input_intake")
+
+    def test_validate_workspace_accepts_p2a_direction_screening_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(DIRECTION_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "direction_screening")
+
+    def test_summarize_workspace_exposes_current_selection_for_question_refinement(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "summarize-workspace",
+            "--input",
+            str(QUESTION_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["lifecycle_stage"], "question_refinement")
+        self.assertEqual(payload["current_selection"]["selected_direction_id"], "dir-inflammatory-remodeling")
+        self.assertEqual(payload["current_selection"]["selected_question_id"], "question-immune-fibrosis")
+        self.assertIsNone(payload["active_argument_chain"])
+
+    def test_next_step_routes_each_p2a_stage_forward(self) -> None:
+        cases = [
+            (INPUT_EXAMPLE_PATH, "input_intake", "direction_screening"),
+            (DIRECTION_EXAMPLE_PATH, "direction_screening", "question_refinement"),
+            (QUESTION_EXAMPLE_PATH, "question_refinement", "argument_building"),
+        ]
+
+        for example_path, current_stage, recommended_stage in cases:
+            with self.subTest(example=example_path.name):
+                exit_code, stdout, stderr = self.run_cli(
+                    "next-step",
+                    "--input",
+                    str(example_path),
+                    "--format",
+                    "json",
+                )
+
+                self.assertEqual(exit_code, 0)
+                self.assertEqual(stderr, "")
+                payload = json.loads(stdout)
+                self.assertEqual(payload["current_stage"], current_stage)
+                self.assertEqual(payload["recommended_stage"], recommended_stage)
+
+    def test_stage_route_report_aggregates_p2a_question_refinement_without_critique_summary(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "stage-route-report",
+            "--input",
+            str(QUESTION_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "question_refinement")
+        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
+        self.assertEqual(
+            payload["route"]["summarize_workspace"]["current_selection"]["selected_question_id"],
+            "question-immune-fibrosis",
+        )
+        self.assertNotIn("critique_summary", payload["route"])
 
     def test_validate_workspace_json_output(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

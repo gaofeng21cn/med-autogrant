@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. A minimal runtime baseline exists, but the project is still in `baseline freeze / runtime hardening`; this is not yet a production-grade grant-writing system or a submission-ready autopilot.
+> Status: active development. The repository has entered `P2 / NSFC Authoring Mainline Freeze`, with `P2.A / Intake-Direction-Question Mainline` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      Minimal runtime baseline is available, but maturity is currently bounded to <code>baseline freeze / runtime hardening</code>
+      Minimal runtime baseline is retained, and the active tranche is now <code>P2.A / Intake-Direction-Question Mainline</code>
     </td>
   </tr>
 </table>
@@ -49,20 +49,18 @@ The repository already contains a minimal executable baseline around a frozen `N
 
 Today, the runtime can:
 
-- validate a structured `NSFC` workspace against the frozen schema subset and key runtime constraints
+- validate structured `NSFC` workspaces for `input_intake`, `direction_screening`, and `question_refinement`
 - carry a stable `grant_run_id` across CLI outputs as the formal execution handle for the current hydrated grant run
-- summarize the current direction, question, argument chain, draft, critique, and revision-plan state
-- recommend the next stage from `lifecycle_stage`, gates, and critique verdict
-- export a structured mentor-style critique summary around the `60/30/10` frame
-- aggregate the core route into one machine-readable `stage-route-report`
-- enforce runtime guards for later-stage inconsistencies such as invalid critique verdicts or invalid draft status transitions
+- summarize intake artifacts plus explicit `current_selection` bindings for direction and question
+- recommend the next stage across `input_intake -> direction_screening -> question_refinement -> argument_building`
+- aggregate the early-stage route into one machine-readable `stage-route-report`
+- retain later-stage critique/revision baseline checks and structured `critique-summary` support when a downstream workspace is present
 
 ## What Is Still In Progress
 
 The following pieces are planned but not yet complete:
 
-- completion of `baseline freeze / runtime hardening` toward a more stable runtime contract
-- the full end-to-end authoring loop from intake to stable draft
+- the full end-to-end authoring loop from argument building to stable draft
 - explicit modeling of `revision`-internal draft version transitions
 - human-in-the-loop gate surfaces and submission-grade delivery
 - broader grant-family expansion beyond the first `NSFC` generic skeleton

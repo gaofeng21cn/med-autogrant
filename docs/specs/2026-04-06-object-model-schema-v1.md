@@ -147,6 +147,25 @@ Date: `2026-04-06`
 
 第一版 schema 的最小合同是：`grant_run_id` 进入 `NSFCWorkspace` 聚合根；runtime 与 CLI 必须稳定回显它，但不因此把 `workspace_id`、`draft_id`、`program_id` 混成同一种 ID。
 
+## current_selection 的阶段相关合同
+
+`NSFCWorkspace.current_selection` 当前不再被解释成“永远已经进入后段”的固定形态，而是阶段相关合同：
+
+- `selected_direction_id`
+  - 在 `direction_screening` 起成为显式绑定
+- `selected_question_id`
+  - 在 `question_refinement` 起成为显式绑定
+- `active_draft_id`
+- `active_revision_plan_id`
+  - 保留为 downstream identity 槽位，不属于当前 `P2.A` hard gate
+
+这意味着：
+
+- `input_intake` 允许空 `current_selection`
+- `direction_screening` 先冻结 direction 绑定
+- `question_refinement` 再冻结 direction/question 双绑定
+- `ArgumentChain`、`ApplicationDraft`、`MentorCritique`、`RevisionPlan` 不再作为早段无条件必填
+
 ## 第一版 schema 的边界
 
 这次冻结强调的是：

@@ -2,22 +2,33 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.workspace import _require_workspace_context
+from med_autogrant.workspace import WorkspaceStateError, _require_workspace_context, validate_workspace_document
 
 
 def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
-    context = _require_workspace_context(document)
+    validation = validate_workspace_document(document)
+    if not validation.ok:
+        first = validation.errors[0]
+        raise WorkspaceStateError(
+            f"{first.path}: {first.message}",
+            errors=validation.errors,
+            grant_run_id=document.get("grant_run_id"),
+            workspace_id=document.get("workspace_id"),
+            lifecycle_stage=document.get("lifecycle_stage"),
+        )
+
     stage = document["lifecycle_stage"]
     gates = document["gates"]
-    critique = context.active_critique
-    revision_plan = context.active_revision_plan
-    active_draft = context.active_draft
     identity = {
         "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
     }
 
     if stage in {"critique", "revision"}:
+        context = _require_workspace_context(document)
+        critique = context.active_critique
+        revision_plan = context.active_revision_plan
+        active_draft = context.active_draft
         verdict = critique["verdict"]
         if verdict == "major_reframe":
             return {
