@@ -1,30 +1,53 @@
+# Docs
+
 **English** | [中文](./README.zh-CN.md)
 
-# Med Auto Grant Documentation
+This bilingual index is the default public surface for `Med Auto Grant`.
+It reflects the project truth that the repository is the medical `Grant Ops` `Domain Harness OS` direction on the shared `Unified Harness Engineering Substrate`, currently in `baseline freeze / runtime hardening`.
 
-## Public Docs
+## Unified Documentation Governance
 
+- External documents must ship as paired English `.md` and Chinese `.zh-CN.md` files that stay synchronized.
+- Internal design, planning, and memo documents default to Chinese unless they are explicitly promoted into the bilingual surface.
+- Terminology may remain English when it represents stable domain language, but avoid unnecessary mixed-language prose.
+- `docs/README*` should keep one consistent structure so readers can quickly distinguish public bilingual surfaces from internal reference material.
+- For more detail, see [Documentation Governance](documentation-governance.md) (Chinese only).
+
+## External Bilingual Surface
+
+- [Repository home](../README.md)
 - [Domain Positioning](./domain-positioning.md)
 - [MVP Scope](./mvp-scope.md)
 
-## Internal Design And Planning Docs
+This index plus the repository home forms the default bilingual face shown on GitHub.
 
-These documents are primarily for internal design, implementation, and planning. They may evolve more quickly than the public-facing overview.
+## Repo-Tracked Internal Design & Planning Docs
 
+These documents are internal design references and default to Chinese.
+
+- [Domain Harness OS Positioning](./domain-harness-os-positioning.md)
 - [Top-Level Design](./specs/2026-04-06-med-auto-grant-top-level-design.md)
 - [NSFC Main Flow And Critique Loop](./specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
 - [Object Model Schema V1](./specs/2026-04-06-object-model-schema-v1.md)
 - [Mainline And OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [Minimal Scaffold Plan](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
+- [Documentation Governance](documentation-governance.md) (Chinese only)
 
 ## Reading Order
 
-For human readers who want to understand the project quickly:
-
-1. Start with [Domain Positioning](./domain-positioning.md)
-2. Continue with [MVP Scope](./mvp-scope.md)
-3. Read the internal design docs only if you need architecture, schema, or execution details
+1. Start with [Domain Positioning](./domain-positioning.md).
+2. Continue with [MVP Scope](./mvp-scope.md).
+3. Only read the internal design docs when you need architecture, schema, or execution specifics.
 
 ## Status Note
 
-`Med Auto Grant` is still under active development. The planning boundary is relatively clear, but the full grant authoring runtime is not complete yet.
+`Med Auto Grant` is still under active development with a minimal runtime baseline.
+The maturity level remains in `baseline freeze / runtime hardening`, and the full grant authoring runtime is not yet complete.
+
+## Documentation Boundary
+
+- `README*` and `docs/README*`: default bilingual public surface.
+- `docs/domain-harness-os-positioning.md`, `docs/specs/**`, and `docs/plans/**`: internal technical/design docs by default.
+- Public docs must ship with synchronized English and Chinese mirrors.
+- Internal technical, planning, and memo docs default to Chinese.
+- Avoid unnecessary mixed-language prose; reserve English for fixed terms, file paths, commands, and code identifiers.

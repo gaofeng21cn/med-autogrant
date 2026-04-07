@@ -12,22 +12,30 @@ The root `AGENTS.md` remains the development/orchestration entry file, while thi
 
 ## Project Identity
 
-`Med Auto Grant` 是 `Grant Foundry` 在医学场景下的首个实现 scaffold。
+`Med Auto Grant` 是共享 `Unified Harness Engineering Substrate` 上，面向医学 `Grant Ops` 的 `Domain Harness OS` 方向/系统。
 
 它当前是：
 
-- 医学 `Grant Ops` 的 future domain gateway 与 harness
+- 医学 `Grant Ops` 的 author-side、proposal-facing `Domain Harness OS` 主线
+- 共享 substrate 上的 domain harness 实现，而不是独立 substrate
 - 作者侧、proposal-facing 的基金申请主线
 - `Agent-first` 的 grant authoring 基座
-- `Auto` 与 `Human-in-the-loop` 共享同一 substrate 的系统
+- 以 `Codex-default host-agent runtime` 作为当前默认本地执行形态的最小 runtime baseline
 
 它当前不是：
 
-- 已完成的成熟 runtime
+- 已完成的成熟 runtime 或 submission-grade autopilot
 - reviewer-owned surface
 - `Research Ops` 的论文写作分支
 - 只会补模板、润色措辞的文本生成器
 - 绑定某一种外部 LLM API 的固定实现
+- 与 `MedAutoScience` 同成熟度阶段的系统
+
+当前成熟度边界：
+
+- 已有最小 runtime baseline，可支撑 `NSFCWorkspace` 冻结契约下的基本闭环验证
+- 仍处于 `baseline freeze / runtime hardening` 阶段
+- future managed web runtime 仍是同一 substrate 上的后续演进目标，不是已完成形态
 
 人类操作者负责：
 
@@ -45,17 +53,26 @@ Agent 负责：
 平台/runtime 层负责：
 
 - 提供稳定对象模型、controller、tool surface 与 gate 规则
-- 维护 `Codex App <-> OMX` 的长期协作控制面
+- 在当前阶段承载 `Codex-default host-agent runtime` 的执行稳定性
+- 为后续 managed web runtime 预留同构 contract
 - 保证 durable artifact、report 和 validation surface 的一致性
 
 ## Architecture Priorities
 
 - 默认采用 `Agent-first`，而不是 `fixed-code-first`。
-- `Agent-first` 不等于必须走某一种外部 API；`Codex-native / host-agent` 可以是正式主执行器。
+- `Agent-first` 不等于必须走某一种外部 API；`Codex-default host-agent runtime` 是当前正式默认执行形态。
+- 未来 managed web runtime 必须复用同一 `Unified Harness Engineering Substrate` contract，不允许分叉成第二套 domain runtime。
 - `Auto` 与 `Human-in-the-loop` 共享同一基座，不允许演化成两套系统。
 - `Grant Ops` 保持 author-side、proposal-facing 边界，不折叠进 `Research Ops`，也不伪装成 reviewer-owned surface。
 - 第一阶段先做医学 `NSFC` 通用骨架，不提前把系统锁死在单一项目类型细枝末节上。
 - 代码负责 contract、validation、audit、persistence、gate 和 host bridge，不负责重新抢回高层创作主导权。
+
+## Runtime And Control-Plane Boundary
+
+- `Codex App <-> OMX` 协作属于开发控制面（planning、orchestration、report 回写），不是产品 runtime 本体。
+- 产品 runtime 指 `Med Auto Grant` domain harness 在 shared substrate 上执行 grant loop 的运行面。
+- 不能把“控制面可用”误写成“产品 runtime 已成熟”；两者的成熟度与验收标准必须分开表述。
+- 后续迁移到 managed web runtime 时，控制面形态可以变化，但 domain contract 与 substrate 约束不应漂移。
 
 ## Stability Rules
 
@@ -69,17 +86,22 @@ Agent 负责：
 对外公开、给人看的文档保持中英双语：
 
 - `README*`
+- `docs/README*`
 - `docs/domain-positioning*`
 - `docs/mvp-scope*`
 
 内部开发、计划、备忘、实现细节默认只保留中文：
 
+- `docs/documentation-governance.md`
+- `docs/domain-harness-os-positioning.md`
 - `docs/specs/**`
+- `docs/plans/**`
 - `.omx/context/**`
 - `.omx/plans/**`
 - `.omx/reports/**`
 
 不应无边界扩大双语范围。
+中文内部文档优先使用完整中文叙述；英文仅保留给固定术语、路径、命令、schema 与代码标识符，避免无意义中英混写。
 
 ## Host Collaboration Model
 

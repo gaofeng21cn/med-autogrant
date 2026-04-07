@@ -4,9 +4,9 @@
 
 # Med Auto Grant
 
-**面向 `NSFC` 风格申请的医学基金写作主线系统（开发中）**
+**面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：项目方向已经清晰，最小 runtime baseline 已经存在，但它还不是一个可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：最小 runtime baseline 已存在，但当前仍处于 `baseline freeze / runtime hardening` 阶段；它还不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -16,18 +16,24 @@
     </td>
     <td width="33%" valign="top">
       <strong>它是什么</strong><br/>
-      <code>Grant Foundry</code> 主线下，面向申请人侧、proposal-facing 的医学 <code>Grant Ops</code> 系统
+      共享 <code>Unified Harness Engineering Substrate</code> 之上，面向申请人侧、proposal-facing 的医学 <code>Grant Ops</code> <code>Domain Harness OS</code> 方向/系统
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      已有结构化 MVP 底座与最小可运行 contract，但还不是完整的端到端写标书产品
+      已有最小 runtime baseline，但成熟度当前受限于 <code>baseline freeze / runtime hardening</code>
     </td>
   </tr>
 </table>
 
 ## 一句话理解
 
-如果你的目标是把申请人履历、既有成果、在研项目、预实验结果和候选方向，收敛成一条更像样的 `NSFC` 风格基金申请主线，`Med Auto Grant` 正在被构建成一套可治理、可审计、可持续修订的医学基金写作系统。
+如果你的目标是把申请人履历、既有成果、在研项目、预实验结果和候选方向，收敛成一条更像样的 `NSFC` 风格基金申请主线，`Med Auto Grant` 正在被构建成共享 `Unified Harness Engineering Substrate` 之上的医学 `Grant Ops` `Domain Harness OS`，用于承载可治理、可审计、可持续修订的主线流程。
+
+## Runtime 形态（当前与未来）
+
+- 当前默认本地执行形态：`Codex-default host-agent runtime`。
+- 当前仓库最小 baseline 以该 host-agent 形态为默认落地与验证对象。
+- 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
 
 ## 它主要想帮你解决什么问题
 
@@ -39,7 +45,7 @@
 
 ## 现在已经能做什么
 
-仓库已经有一套围绕冻结 `NSFCWorkspace` 契约的最小可运行底座。
+仓库已经有一套围绕冻结 `NSFCWorkspace` 契约的最小可运行底座，默认运行在当前 `Codex-default host-agent runtime` 形态上。
 
 当前 runtime 已经可以：
 
@@ -54,6 +60,7 @@
 
 下面这些能力仍处于规划或开发中：
 
+- `baseline freeze / runtime hardening` 的收敛与固化
 - 从 intake 到稳定 draft 的完整 authoring loop
 - `revision` 阶段内部更细粒度的草稿版本切换建模
 - human-in-the-loop gate 与 submission-grade 交付面
@@ -101,6 +108,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 
 ### 内部文档
 
+- [`docs/domain-harness-os-positioning.md`](./docs/domain-harness-os-positioning.md)
 - [`docs/specs/2026-04-06-med-auto-grant-top-level-design.md`](./docs/specs/2026-04-06-med-auto-grant-top-level-design.md)
 - [`docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md`](./docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
 - [`docs/specs/2026-04-06-object-model-schema-v1.md`](./docs/specs/2026-04-06-object-model-schema-v1.md)

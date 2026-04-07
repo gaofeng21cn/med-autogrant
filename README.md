@@ -4,9 +4,9 @@
 
 # Med Auto Grant
 
-**An in-development medical grant-writing mainline for NSFC-style applications**
+**An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The product direction is clear and the minimal runtime exists, but this is not yet a production-grade grant-writing system or a submission-ready autopilot.
+> Status: active development. A minimal runtime baseline exists, but the project is still in `baseline freeze / runtime hardening`; this is not yet a production-grade grant-writing system or a submission-ready autopilot.
 
 <table>
   <tr>
@@ -16,18 +16,24 @@
     </td>
     <td width="33%" valign="top">
       <strong>What It Is</strong><br/>
-      An author-side, proposal-facing medical <code>Grant Ops</code> mainline under <code>Grant Foundry</code>
+      An author-side, proposal-facing medical <code>Grant Ops</code> <code>Domain Harness OS</code> direction built on the shared <code>Unified Harness Engineering Substrate</code>
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      Structured MVP foundation with a working runtime baseline, not a finished end-to-end authoring product
+      Minimal runtime baseline is available, but maturity is currently bounded to <code>baseline freeze / runtime hardening</code>
     </td>
   </tr>
 </table>
 
 ## One-Line Position
 
-If your goal is to turn applicant background, prior work, preliminary evidence, and a candidate topic into a stronger `NSFC`-style proposal direction, `Med Auto Grant` is being built to provide a governed mainline for question refinement, argument sharpening, mentor-style critique, and revision.
+If your goal is to turn applicant background, prior work, preliminary evidence, and a candidate topic into a stronger `NSFC`-style proposal direction, `Med Auto Grant` is being built as a medical `Grant Ops` `Domain Harness OS` on the shared `Unified Harness Engineering Substrate` for governed question refinement, argument sharpening, mentor-style critique, and revision.
+
+## Runtime Shape (Current And Future)
+
+- Current default local execution shape: `Codex-default host-agent runtime`.
+- This repository's current baseline is validated in that host-agent shape.
+- Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 
 ## What It Is Designed To Help With
 
@@ -39,7 +45,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 
 ## What Is Already Working
 
-The repository already contains a minimal executable baseline around a frozen `NSFCWorkspace` contract.
+The repository already contains a minimal executable baseline around a frozen `NSFCWorkspace` contract under the current `Codex-default host-agent runtime`.
 
 Today, the runtime can:
 
@@ -54,6 +60,7 @@ Today, the runtime can:
 
 The following pieces are planned but not yet complete:
 
+- completion of `baseline freeze / runtime hardening` toward a more stable runtime contract
 - the full end-to-end authoring loop from intake to stable draft
 - explicit modeling of `revision`-internal draft version transitions
 - human-in-the-loop gate surfaces and submission-grade delivery
@@ -101,6 +108,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 
 ### Internal Docs
 
+- [`docs/domain-harness-os-positioning.md`](./docs/domain-harness-os-positioning.md)
 - [`docs/specs/2026-04-06-med-auto-grant-top-level-design.md`](./docs/specs/2026-04-06-med-auto-grant-top-level-design.md)
 - [`docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md`](./docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
 - [`docs/specs/2026-04-06-object-model-schema-v1.md`](./docs/specs/2026-04-06-object-model-schema-v1.md)
