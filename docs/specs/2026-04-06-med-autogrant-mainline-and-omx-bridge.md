@@ -133,6 +133,7 @@ Date: `2026-04-06`
 - runtime / user-facing formal entry 仍以当前 CLI 为准
 - `OMX` 的恢复入口仍是 `OMX_TEAM_PROMPT + CURRENT_PROGRAM + PROGRAM_ROUTING + active plans + active reports`
 - `grant_run_id` 只负责把同一次运行绑到同一输出与恢复上下文，不扩成新的 MCP / controller surface
+- 上述 formal entry matrix 的单独 current truth 冻结在 `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
 
 针对这次 `grant_run_id` 合同，还要固定 review / handoff 边界：
 
@@ -140,12 +141,16 @@ Date: `2026-04-06`
   - `README*`
   - `docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`
   - `docs/specs/2026-04-06-object-model-schema-v1.md`
+  - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
+  - `docs/specs/2026-04-07-durability-model-clarification.md`
   - `schemas/v1/nsfc-workspace.schema.json`
   - `examples/nsfc_workspace_minimal.json`
 - local durable handoff surfaces
   - `.omx/context/**`
   - `.omx/plans/**`
   - `.omx/reports/**`
+
+当前 durability model clarification 的单独 current truth 冻结在 `docs/specs/2026-04-07-durability-model-clarification.md`。
 
 也就是说：
 

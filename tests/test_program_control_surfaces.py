@@ -14,6 +14,8 @@ TEAM_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_TEAM_PROMPT.md"
 EXECUTION_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_EXECUTION_PROMPT.md"
 OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
+FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
+DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
 WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
 PRD = REPO_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
@@ -33,7 +35,6 @@ REQUIRED_COMMAND_SNIPPETS = (
     "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_minimal.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_minimal.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_minimal.json --format json",
-    "python3 /Users/gaofeng/workspace/omx-project-installer/skills/omx-project-installer/scripts/omx_project_installer.py diff --target /Users/gaofeng/workspace/med-autogrant",
     "git diff --check",
 )
 
@@ -71,6 +72,8 @@ EXECUTION_HANDLE_REVIEW_SURFACES = (
     README_ZH,
     OMX_BRIDGE,
     OBJECT_MODEL_SCHEMA,
+    FORMAL_ENTRY_MATRIX,
+    DURABILITY_MODEL,
     WORKSPACE_EXAMPLE,
     WORKSPACE_SCHEMA,
 )
@@ -173,6 +176,48 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(keyword=keyword):
                 self.assertIn(keyword, latest_status_text)
 
+    def test_formal_entry_and_durability_current_truth_are_frozen(self) -> None:
+        formal_entry_text = read_text(FORMAL_ENTRY_MATRIX)
+        durability_text = read_text(DURABILITY_MODEL)
+
+        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL):
+            with self.subTest(path=path.name):
+                self.assertTrue(path.exists(), f"current truth doc 不存在: {path}")
+
+        for snippet in (
+            "CLI",
+            "developer control-plane entry",
+            "recovery / resume entry",
+            "MCP",
+            "controller",
+            "not-yet-supported",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, formal_entry_text)
+
+        for snippet in (
+            "repo-tracked review surfaces",
+            "local durable handoff surfaces",
+            "grant_run_id",
+            "workspace_id",
+            "draft_id",
+            "program_id",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, durability_text)
+
+        current_program_text = read_text(CURRENT_PROGRAM)
+        execution_prompt_text = read_text(EXECUTION_PROMPT)
+        team_prompt_text = read_text(TEAM_PROMPT)
+        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL):
+            path_text = str(path)
+            with self.subTest(current_program_path=path.name):
+                self.assertIn(path_text, current_program_text)
+            with self.subTest(execution_prompt_path=path.name):
+                self.assertIn(path_text, execution_prompt_text)
+            with self.subTest(team_prompt_path=path.name):
+                self.assertIn(path_text, team_prompt_text)
+
     def test_report_surface_documents_required_files_and_sync_rule(self) -> None:
         report_text = read_text(REPORT_README)
         for required_name in ("LATEST_STATUS.md", "ITERATION_LOG.md", "OPEN_ISSUES.md"):
@@ -243,6 +288,20 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         bridge_text = read_text(OMX_BRIDGE)
         self.assertIn("repo-tracked review surfaces", bridge_text)
         self.assertIn("local durable handoff surfaces", bridge_text)
+
+    def test_external_verifier_is_not_current_hard_gate(self) -> None:
+        current_program_text = read_text(CURRENT_PROGRAM)
+        test_spec_text = read_text(TEST_SPEC)
+        latest_status_text = read_text(LATEST_STATUS)
+        open_issues_text = read_text(OPEN_ISSUES)
+
+        for text in (current_program_text, test_spec_text, latest_status_text, open_issues_text):
+            self.assertIn("advisory", text)
+
+        self.assertNotIn(
+            "python3 /Users/gaofeng/workspace/omx-project-installer/skills/omx-project-installer/scripts/omx_project_installer.py diff --target /Users/gaofeng/workspace/med-autogrant",
+            test_spec_text,
+        )
 
 
 if __name__ == "__main__":
