@@ -184,6 +184,9 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         selected_question = (
             payload["selected_question"]["core_question"] if payload["selected_question"] is not None else "none"
         )
+        active_fit_mapping = (
+            payload["active_fit_mapping"]["id"] if payload["active_fit_mapping"] is not None else "none"
+        )
         active_draft = payload["active_draft"]["project_title"] if payload["active_draft"] is not None else "none"
         active_critique_verdict = payload["active_critique"]["verdict"] if payload["active_critique"] is not None else "none"
         return "\n".join(
@@ -194,6 +197,7 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
                 f"lifecycle_stage: {payload['lifecycle_stage']}",
                 f"selected_direction: {selected_direction}",
                 f"selected_question: {selected_question}",
+                f"active_fit_mapping: {active_fit_mapping}",
                 f"active_draft: {active_draft}",
                 f"active_critique_verdict: {active_critique_verdict}",
             ]

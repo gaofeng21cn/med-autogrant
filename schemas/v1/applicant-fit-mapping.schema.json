@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/applicant-fit-mapping.schema.json",
+  "title": "ApplicantFitMapping",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "fit_mapping_id",
+    "scientific_question_id",
+    "argument_chain_id",
+    "applicant_fit_summary",
+    "unique_advantage",
+    "methods_readiness",
+    "resource_readiness",
+    "risk_mitigation"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "fit_mapping_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "scientific_question_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "argument_chain_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "applicant_fit_summary": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "unique_advantage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "methods_readiness": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "resource_readiness": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "risk_mitigation": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "linked_evidence_ids": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    }
+  }
+}

@@ -19,6 +19,9 @@ EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
 DIRECTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_direction_screening.json"
 QUESTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_question_refinement.json"
+ARGUMENT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_argument_building.json"
+FIT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_fit_alignment.json"
+OUTLINE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_outline.json"
 
 
 class StageRouterTest(unittest.TestCase):
@@ -45,6 +48,27 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["current_stage"], "question_refinement")
         self.assertEqual(route["recommended_stage"], "argument_building")
         self.assertIn("立项依据主链尚未冻结", route["reason"])
+
+    def test_argument_building_routes_to_fit_alignment(self) -> None:
+        route = determine_next_step(json.loads(ARGUMENT_EXAMPLE_PATH.read_text(encoding="utf-8")))
+
+        self.assertEqual(route["current_stage"], "argument_building")
+        self.assertEqual(route["recommended_stage"], "fit_alignment")
+        self.assertIn("申请人适配度映射尚未冻结", route["reason"])
+
+    def test_fit_alignment_routes_to_outline(self) -> None:
+        route = determine_next_step(json.loads(FIT_EXAMPLE_PATH.read_text(encoding="utf-8")))
+
+        self.assertEqual(route["current_stage"], "fit_alignment")
+        self.assertEqual(route["recommended_stage"], "outline")
+        self.assertIn("提纲尚未冻结", route["reason"])
+
+    def test_outline_routes_to_drafting_after_outline_freeze(self) -> None:
+        route = determine_next_step(json.loads(OUTLINE_EXAMPLE_PATH.read_text(encoding="utf-8")))
+
+        self.assertEqual(route["current_stage"], "outline")
+        self.assertEqual(route["recommended_stage"], "drafting")
+        self.assertIn("提纲已冻结", route["reason"])
 
     def test_major_revision_routes_to_revision(self) -> None:
         route = determine_next_step(self.load_example())

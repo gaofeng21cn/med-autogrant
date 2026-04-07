@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository has entered `P2 / NSFC Authoring Mainline Freeze`, with `P2.A / Intake-Direction-Question Mainline` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
+> Status: active development. The repository has entered `P2 / NSFC Authoring Mainline Freeze`, with `P2.B / Argument-Fit-Outline Mainline` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      Minimal runtime baseline is retained, and the active tranche is now <code>P2.A / Intake-Direction-Question Mainline</code>
+      Minimal runtime baseline is retained, and the active tranche is now <code>P2.B / Argument-Fit-Outline Mainline</code>
     </td>
   </tr>
 </table>
@@ -49,18 +49,18 @@ The repository already contains a minimal executable baseline around a frozen `N
 
 Today, the runtime can:
 
-- validate structured `NSFC` workspaces for `input_intake`, `direction_screening`, and `question_refinement`
+- validate structured `NSFC` workspaces for `argument_building`, `fit_alignment`, and `outline`, while retaining upstream `input_intake -> direction_screening -> question_refinement` compatibility through repo tests
 - carry a stable `grant_run_id` across CLI outputs as the formal execution handle for the current hydrated grant run
-- summarize intake artifacts plus explicit `current_selection` bindings for direction and question
-- recommend the next stage across `input_intake -> direction_screening -> question_refinement -> argument_building`
-- aggregate the early-stage route into one machine-readable `stage-route-report`
+- summarize explicit `current_selection` bindings for direction, question, fit mapping, and outline draft identity
+- recommend the next stage across `argument_building -> fit_alignment -> outline -> drafting`
+- aggregate the current authoring route into one machine-readable `stage-route-report`
 - retain later-stage critique/revision baseline checks and structured `critique-summary` support when a downstream workspace is present
 
 ## What Is Still In Progress
 
 The following pieces are planned but not yet complete:
 
-- the full end-to-end authoring loop from argument building to stable draft
+- the full end-to-end authoring loop from drafting to stable draft
 - explicit modeling of `revision`-internal draft version transitions
 - human-in-the-loop gate surfaces and submission-grade delivery
 - broader grant-family expansion beyond the first `NSFC` generic skeleton

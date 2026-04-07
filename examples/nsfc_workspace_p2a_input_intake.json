@@ -166,6 +166,7 @@
     "direction_frozen": false,
     "scientific_question_frozen": false,
     "argument_chain_frozen": false,
+    "fit_alignment_frozen": false,
     "outline_frozen": false,
     "presubmission_frozen": false
   }

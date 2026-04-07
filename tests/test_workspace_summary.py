@@ -23,6 +23,9 @@ EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
 DIRECTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_direction_screening.json"
 QUESTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_question_refinement.json"
+ARGUMENT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_argument_building.json"
+FIT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_fit_alignment.json"
+OUTLINE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_outline.json"
 
 
 class WorkspaceSummaryTest(unittest.TestCase):
@@ -39,6 +42,7 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertEqual(summary["lifecycle_stage"], "critique")
         self.assertEqual(summary["selected_direction"]["id"], "dir-inflammatory-remodeling")
         self.assertEqual(summary["selected_question"]["id"], "question-immune-fibrosis")
+        self.assertEqual(summary["active_fit_mapping"]["id"], "fit-001")
         self.assertEqual(summary["active_draft"]["id"], "draft-v1")
         self.assertEqual(summary["active_revision_plan"]["id"], "revision-v1")
         self.assertEqual(summary["active_critique"]["id"], "critique-v1")
@@ -95,6 +99,72 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertIsNone(summary["active_draft"])
         self.assertIsNone(summary["active_revision_plan"])
         self.assertIsNone(summary["active_critique"])
+        self.assertIsNone(summary["active_fit_mapping"])
+
+    def test_validation_accepts_argument_building_with_argument_chain_only(self) -> None:
+        document = load_workspace_document(ARGUMENT_EXAMPLE_PATH)
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
+    def test_validation_accepts_fit_alignment_with_explicit_fit_mapping_binding(self) -> None:
+        document = load_workspace_document(FIT_EXAMPLE_PATH)
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
+    def test_summary_exposes_active_fit_mapping_for_fit_alignment(self) -> None:
+        document = load_workspace_document(FIT_EXAMPLE_PATH)
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["lifecycle_stage"], "fit_alignment")
+        self.assertEqual(summary["current_selection"]["selected_direction_id"], "dir-inflammatory-remodeling")
+        self.assertEqual(summary["current_selection"]["selected_question_id"], "question-immune-fibrosis")
+        self.assertEqual(summary["current_selection"]["active_fit_mapping_id"], "fit-001")
+        self.assertEqual(summary["active_fit_mapping"]["id"], "fit-001")
+        self.assertEqual(summary["active_fit_mapping"]["argument_chain_id"], "arg-001")
+        self.assertIsNone(summary["active_draft"])
+
+    def test_validation_rejects_fit_alignment_without_active_fit_mapping_binding(self) -> None:
+        document = load_workspace_document(FIT_EXAMPLE_PATH)
+        document["current_selection"].pop("active_fit_mapping_id")
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("current_selection.active_fit_mapping_id", "fit_alignment 阶段必须显式绑定当前 ApplicantFitMapping。"),
+            messages,
+        )
+
+    def test_validation_accepts_outline_with_fit_mapping_and_outline_freeze(self) -> None:
+        document = load_workspace_document(OUTLINE_EXAMPLE_PATH)
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
+    def test_validation_rejects_outline_without_fit_mapping_link_on_active_draft(self) -> None:
+        document = load_workspace_document(OUTLINE_EXAMPLE_PATH)
+        for item in document["application_drafts"][0]["outline"]:
+            if "linked_object_ids" in item:
+                item["linked_object_ids"] = [ref for ref in item["linked_object_ids"] if ref != "fit-001"]
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("application_drafts", "激活草稿必须显式链接当前问题对应的 ApplicantFitMapping。"),
+            messages,
+        )
 
     def test_validation_rejects_question_refinement_without_selected_question_binding(self) -> None:
         document = load_workspace_document(QUESTION_EXAMPLE_PATH)

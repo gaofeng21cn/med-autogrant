@@ -23,6 +23,9 @@ EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
 DIRECTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_direction_screening.json"
 QUESTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_question_refinement.json"
+ARGUMENT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_argument_building.json"
+FIT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_fit_alignment.json"
+OUTLINE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_outline.json"
 
 
 class CliValidateWorkspaceTest(unittest.TestCase):
@@ -62,6 +65,51 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "direction_screening")
+
+    def test_validate_workspace_accepts_p2b_argument_building_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(ARGUMENT_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "argument_building")
+
+    def test_validate_workspace_accepts_p2b_fit_alignment_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(FIT_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "fit_alignment")
+
+    def test_validate_workspace_accepts_p2b_outline_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(OUTLINE_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "outline")
 
     def test_summarize_workspace_exposes_current_selection_for_question_refinement(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -103,6 +151,46 @@ class CliValidateWorkspaceTest(unittest.TestCase):
                 self.assertEqual(payload["current_stage"], current_stage)
                 self.assertEqual(payload["recommended_stage"], recommended_stage)
 
+    def test_summarize_workspace_exposes_active_fit_mapping_for_fit_alignment(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "summarize-workspace",
+            "--input",
+            str(FIT_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["lifecycle_stage"], "fit_alignment")
+        self.assertEqual(payload["current_selection"]["active_fit_mapping_id"], "fit-001")
+        self.assertEqual(payload["active_fit_mapping"]["id"], "fit-001")
+        self.assertEqual(payload["active_fit_mapping"]["argument_chain_id"], "arg-001")
+
+    def test_next_step_routes_each_p2b_stage_forward(self) -> None:
+        cases = [
+            (ARGUMENT_EXAMPLE_PATH, "argument_building", "fit_alignment"),
+            (FIT_EXAMPLE_PATH, "fit_alignment", "outline"),
+            (OUTLINE_EXAMPLE_PATH, "outline", "drafting"),
+        ]
+
+        for example_path, current_stage, recommended_stage in cases:
+            with self.subTest(example=example_path.name):
+                exit_code, stdout, stderr = self.run_cli(
+                    "next-step",
+                    "--input",
+                    str(example_path),
+                    "--format",
+                    "json",
+                )
+
+                self.assertEqual(exit_code, 0)
+                self.assertEqual(stderr, "")
+                payload = json.loads(stdout)
+                self.assertEqual(payload["current_stage"], current_stage)
+                self.assertEqual(payload["recommended_stage"], recommended_stage)
+
     def test_stage_route_report_aggregates_p2a_question_refinement_without_critique_summary(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "stage-route-report",
@@ -122,6 +210,25 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             payload["route"]["summarize_workspace"]["current_selection"]["selected_question_id"],
             "question-immune-fibrosis",
         )
+        self.assertNotIn("critique_summary", payload["route"])
+
+    def test_stage_route_report_aggregates_p2b_outline_without_critique_summary(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "stage-route-report",
+            "--input",
+            str(OUTLINE_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "outline")
+        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "drafting")
+        self.assertEqual(payload["route"]["summarize_workspace"]["active_fit_mapping"]["id"], "fit-001")
+        self.assertEqual(payload["route"]["summarize_workspace"]["active_draft"]["id"], "draft-outline-v1")
         self.assertNotIn("critique_summary", payload["route"])
 
     def test_validate_workspace_json_output(self) -> None:

@@ -48,6 +48,11 @@
       "status": "frozen"
     },
     {
+      "name": "applicant_fit_mapping",
+      "file": "applicant-fit-mapping.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "application_draft",
       "file": "application-draft.schema.json",
       "status": "frozen"

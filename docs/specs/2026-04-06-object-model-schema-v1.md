@@ -74,6 +74,9 @@ Date: `2026-04-06`
 - `ArgumentChain`
   立项依据不是正文段落堆砌，而是一条可审查的链条。
 
+- `ApplicantFitMapping`
+  申请人与问题的适配度不能只靠履历散文；它必须是可链接、可验证、可冻结的结构对象。
+
 - `ApplicationDraft`
   草稿必须和被冻结的问题与链条显式绑定。
 
@@ -115,7 +118,9 @@ Date: `2026-04-06`
 
 - `DirectionHypothesis` -> `ScientificQuestionCard`
 - `ScientificQuestionCard` -> `ArgumentChain`
+- `ArgumentChain` -> `ApplicantFitMapping`
 - `ScientificQuestionCard` -> `ApplicationDraft`
+- `ApplicantFitMapping` -> `ApplicationDraft`
 - `ApplicationDraft` -> `MentorCritique`
 - `MentorCritique` -> `RevisionPlan`
 
@@ -155,6 +160,8 @@ Date: `2026-04-06`
   - 在 `direction_screening` 起成为显式绑定
 - `selected_question_id`
   - 在 `question_refinement` 起成为显式绑定
+- `active_fit_mapping_id`
+  - 在 `fit_alignment` 起成为显式绑定
 - `active_draft_id`
 - `active_revision_plan_id`
   - 保留为 downstream identity 槽位，不属于当前 `P2.A` hard gate
@@ -164,6 +171,8 @@ Date: `2026-04-06`
 - `input_intake` 允许空 `current_selection`
 - `direction_screening` 先冻结 direction 绑定
 - `question_refinement` 再冻结 direction/question 双绑定
+- `fit_alignment` 再冻结 applicant-problem fit mapping
+- `outline` 再冻结 draft outline 与 object linking
 - `ArgumentChain`、`ApplicationDraft`、`MentorCritique`、`RevisionPlan` 不再作为早段无条件必填
 
 ## 第一版 schema 的边界

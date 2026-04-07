@@ -2,19 +2,19 @@
   "metadata": {
     "schema_version": "v1",
     "created_at": "2026-04-06T10:00:00Z",
-    "updated_at": "2026-04-06T10:00:00Z",
+    "updated_at": "2026-04-07T18:10:00Z",
     "source_mode": "auto",
     "owner": "Med Auto Grant scaffold"
   },
   "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
   "workspace_id": "nsfc-demo-001",
   "mode": "auto",
-  "lifecycle_stage": "critique",
+  "lifecycle_stage": "fit_alignment",
   "applicant_profile": {
     "metadata": {
       "schema_version": "v1",
       "created_at": "2026-04-06T10:00:00Z",
-      "updated_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
       "source_mode": "auto"
     },
     "applicant_id": "applicant-gaofeng",
@@ -49,7 +49,7 @@
     "metadata": {
       "schema_version": "v1",
       "created_at": "2026-04-06T10:00:00Z",
-      "updated_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
       "source_mode": "auto"
     },
     "track_record_id": "track-001",
@@ -79,7 +79,7 @@
     "metadata": {
       "schema_version": "v1",
       "created_at": "2026-04-06T10:00:00Z",
-      "updated_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
       "source_mode": "auto"
     },
     "project_set_id": "projects-001",
@@ -108,7 +108,7 @@
     "metadata": {
       "schema_version": "v1",
       "created_at": "2026-04-06T10:00:00Z",
-      "updated_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
       "source_mode": "auto"
     },
     "evidence_pack_id": "prelim-001",
@@ -120,8 +120,7 @@
         "modality": "omics",
         "strength": "moderate",
         "supports": [
-          "question-immune-fibrosis",
-          "arg-001"
+          "question-immune-fibrosis"
         ],
         "gaps": [
           "缺乏功能阻断实验"
@@ -138,7 +137,7 @@
     "metadata": {
       "schema_version": "v1",
       "created_at": "2026-04-06T10:00:00Z",
-      "updated_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
       "source_mode": "auto"
     },
     "brief_id": "nsfc-2026-general",
@@ -168,7 +167,7 @@
       "metadata": {
         "schema_version": "v1",
         "created_at": "2026-04-06T10:00:00Z",
-        "updated_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-07T12:00:00Z",
         "source_mode": "auto"
       },
       "direction_id": "dir-inflammatory-remodeling",
@@ -183,6 +182,26 @@
         "evi-prelim-1"
       ],
       "decision_status": "selected"
+    },
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-07T12:00:00Z",
+        "updated_at": "2026-04-07T12:00:00Z",
+        "source_mode": "auto"
+      },
+      "direction_id": "dir-immunometabolism-repair",
+      "title": "心梗后免疫代谢失衡与修复失败的机制窗口",
+      "rationale": "同样连接申请人的心血管炎症与组学分析积累，但更偏代谢调控切入。",
+      "knowledge_gap_summary": "免疫代谢重编程如何限制心肌修复窗口仍缺机制级解释。",
+      "applicant_fit_summary": "申请人具备代谢组与时序组学联动分析基础。",
+      "novelty_angle": "将代谢窗口与修复失败联系起来。",
+      "risk_summary": "代谢干预路径较多，路线收敛风险更高。",
+      "required_evidence_ids": [
+        "output-1",
+        "evi-project-1"
+      ],
+      "decision_status": "candidate"
     }
   ],
   "scientific_question_cards": [
@@ -190,7 +209,7 @@
       "metadata": {
         "schema_version": "v1",
         "created_at": "2026-04-06T10:00:00Z",
-        "updated_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-07T12:00:00Z",
         "source_mode": "auto"
       },
       "question_id": "question-immune-fibrosis",
@@ -213,6 +232,19 @@
       ]
     }
   ],
+  "current_selection": {
+    "selected_direction_id": "dir-inflammatory-remodeling",
+    "selected_question_id": "question-immune-fibrosis",
+    "active_fit_mapping_id": "fit-001"
+  },
+  "gates": {
+    "direction_frozen": true,
+    "scientific_question_frozen": true,
+    "argument_chain_frozen": true,
+    "fit_alignment_frozen": true,
+    "outline_frozen": false,
+    "presubmission_frozen": false
+  },
   "argument_chains": [
     {
       "metadata": {
@@ -236,161 +268,6 @@
       ]
     }
   ],
-  "application_drafts": [
-    {
-      "metadata": {
-        "schema_version": "v1",
-        "created_at": "2026-04-06T10:00:00Z",
-        "updated_at": "2026-04-06T10:00:00Z",
-        "source_mode": "auto"
-      },
-      "draft_id": "draft-v1",
-      "version_label": "v0.3",
-      "project_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
-      "status": "draft",
-      "frozen_question_id": "question-immune-fibrosis",
-      "outline": [
-        {
-          "section_key": "basis",
-          "section_title": "立项依据",
-          "core_claim": "当前知识边界在于免疫-成纤维细胞通讯机制未知。",
-          "linked_object_ids": [
-            "question-immune-fibrosis",
-            "arg-001",
-            "fit-001"
-          ]
-        },
-        {
-          "section_key": "foundation",
-          "section_title": "研究基础",
-          "core_claim": "申请人已有单细胞时序和模型平台可直接支撑该问题。",
-          "linked_object_ids": [
-            "output-1",
-            "project-1",
-            "fit-001"
-          ]
-        }
-      ],
-      "sections": [
-        {
-          "section_key": "basis",
-          "section_title": "立项依据",
-          "text": "当前问题不是再做一个风险预测系统，而是要解释关键炎症通讯如何驱动致纤维化重编程。",
-          "linked_object_ids": [
-            "question-immune-fibrosis",
-            "arg-001",
-            "fit-001"
-          ]
-        }
-      ]
-    }
-  ],
-  "mentor_critiques": [
-    {
-      "metadata": {
-        "schema_version": "v1",
-        "created_at": "2026-04-06T10:00:00Z",
-        "updated_at": "2026-04-06T10:00:00Z",
-        "source_mode": "auto"
-      },
-      "critique_id": "critique-v1",
-      "draft_id": "draft-v1",
-      "overall_diagnosis": "科学问题已经成形，但必要性推导仍有一处从现象到机制的跳步。",
-      "current_scientific_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
-      "suggested_question": "虽然心梗后纤维化与炎症动态相关，但其背后的时间窗依赖性跨细胞通讯机制尚不清楚。本项目拟解决的关键科学问题是：炎症巨噬细胞相关通讯轴如何在特定时间窗调控成纤维细胞致纤维化重编程？",
-      "verdict": "major_revision",
-      "necessity_scientific_value": {
-        "weight": 60,
-        "score": 74,
-        "judgment": "必要性主线正确，但知识边界与现有研究不足之间的过渡还不够锋利。",
-        "blocking_issues": [
-          "尚未充分说明为什么现有现象学研究不能回答该机制问题。"
-        ]
-      },
-      "applicant_fit": {
-        "weight": 30,
-        "score": 82,
-        "judgment": "申请人基础较好，但需要更直接地把既有成果和当前科学问题一一对应。",
-        "blocking_issues": [
-          "前期成果到机制验证路线的映射仍偏间接。"
-        ]
-      },
-      "feasibility": {
-        "weight": 10,
-        "score": 78,
-        "judgment": "总体可行，但功能阻断证据仍需补足。",
-        "blocking_issues": []
-      },
-      "logic_chain_repairs": [
-        "在立项依据中补出从现象相关到未知机制的关键过渡段。",
-        "明确说明为何当前 proposal 路线不是任意可替换。"
-      ],
-      "applicant_fit_repairs": [
-        "把既有单细胞成果和动物模型资源直接映射到研究方案关键节点。"
-      ],
-      "blocking_issues": [
-        "必要性表述仍略偏现象描述。"
-      ]
-    }
-  ],
-  "revision_plans": [
-    {
-      "metadata": {
-        "schema_version": "v1",
-        "created_at": "2026-04-06T10:00:00Z",
-        "updated_at": "2026-04-06T10:00:00Z",
-        "source_mode": "auto"
-      },
-      "revision_plan_id": "revision-v1",
-      "draft_id": "draft-v1",
-      "critique_id": "critique-v1",
-      "items": [
-        {
-          "item_id": "rev-item-1",
-          "priority": "p0",
-          "action_type": "rebuild_argument",
-          "target_ref": "section:basis",
-          "action": "重写立项依据中现象到机制缺口的推导段。",
-          "done_criteria": "读者能清楚看到知识边界、未知机制和不做该研究的理论损失。",
-          "required_input_ids": [
-            "arg-001",
-            "question-immune-fibrosis"
-          ]
-        },
-        {
-          "item_id": "rev-item-2",
-          "priority": "p1",
-          "action_type": "tighten_fit",
-          "target_ref": "section:foundation",
-          "action": "将申请人的前期成果与当前问题逐点映射。",
-          "done_criteria": "研究基础章节能直接回答为什么是该申请人来做。",
-          "required_input_ids": [
-            "output-1",
-            "project-1"
-          ]
-        }
-      ],
-      "next_review_focus": [
-        "必要性链条是否闭合",
-        "申请人与问题适配度是否更直接"
-      ]
-    }
-  ],
-  "current_selection": {
-    "selected_direction_id": "dir-inflammatory-remodeling",
-    "selected_question_id": "question-immune-fibrosis",
-    "active_draft_id": "draft-v1",
-    "active_revision_plan_id": "revision-v1",
-    "active_fit_mapping_id": "fit-001"
-  },
-  "gates": {
-    "direction_frozen": true,
-    "scientific_question_frozen": true,
-    "argument_chain_frozen": true,
-    "fit_alignment_frozen": true,
-    "outline_frozen": true,
-    "presubmission_frozen": false
-  },
   "applicant_fit_mappings": [
     {
       "metadata": {

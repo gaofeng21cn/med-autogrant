@@ -116,6 +116,18 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
             ],
             "requires_human_confirmation": document["mode"] != "auto",
         }
+    if not gates["fit_alignment_frozen"]:
+        return {
+            **identity,
+            "current_stage": stage,
+            "recommended_stage": "fit_alignment",
+            "reason": "申请人适配度映射尚未冻结，应先完成 applicant-problem fit 对齐。",
+            "actions": [
+                "补足申请人既有基础、方法栈与当前问题的显式映射。",
+                "把 applicant fit 证据链绑定到当前 ArgumentChain。",
+            ],
+            "requires_human_confirmation": document["mode"] != "auto",
+        }
     if not gates["outline_frozen"]:
         return {
             **identity,
@@ -124,6 +136,18 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
             "reason": "提纲尚未冻结，不能直接进入稳定 drafting/critique 闭环。",
             "actions": [
                 "冻结章节提纲及每节核心论点。",
+            ],
+            "requires_human_confirmation": document["mode"] != "auto",
+        }
+    if stage == "outline":
+        return {
+            **identity,
+            "current_stage": stage,
+            "recommended_stage": "drafting",
+            "reason": "提纲已冻结，可在不改写上游 contract 的前提下进入 drafting。",
+            "actions": [
+                "基于已冻结 outline 展开章节草稿。",
+                "保持当前 question / argument chain / fit mapping 链接不漂移。",
             ],
             "requires_human_confirmation": document["mode"] != "auto",
         }

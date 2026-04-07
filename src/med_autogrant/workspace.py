@@ -84,6 +84,7 @@ class WorkspaceContext:
     selected_direction: dict[str, Any]
     selected_question: dict[str, Any]
     active_argument_chain: dict[str, Any]
+    active_fit_mapping: dict[str, Any]
     active_draft: dict[str, Any]
     active_revision_plan: dict[str, Any]
     active_critique: dict[str, Any]
@@ -96,6 +97,7 @@ class WorkspaceState:
     selected_direction: dict[str, Any] | None
     selected_question: dict[str, Any] | None
     active_argument_chain: dict[str, Any] | None
+    active_fit_mapping: dict[str, Any] | None
     active_draft: dict[str, Any] | None
     active_revision_plan: dict[str, Any] | None
     active_critique: dict[str, Any] | None
@@ -133,6 +135,7 @@ def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
         "current_selection": {
             "selected_direction_id": state.current_selection.get("selected_direction_id"),
             "selected_question_id": state.current_selection.get("selected_question_id"),
+            "active_fit_mapping_id": state.current_selection.get("active_fit_mapping_id"),
             "active_draft_id": state.current_selection.get("active_draft_id"),
             "active_revision_plan_id": state.current_selection.get("active_revision_plan_id"),
         },
@@ -155,6 +158,7 @@ def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
         "selected_direction": _serialize_direction(state.selected_direction),
         "selected_question": _serialize_question(state.selected_question),
         "active_argument_chain": _serialize_argument_chain(state.active_argument_chain),
+        "active_fit_mapping": _serialize_fit_mapping(state.active_fit_mapping),
         "active_draft": _serialize_draft(state.active_draft),
         "active_revision_plan": _serialize_revision_plan(state.active_revision_plan),
         "active_critique": _serialize_critique(state.active_critique),
@@ -201,6 +205,7 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
     directions = _index_objects(document.get("direction_hypotheses"), "direction_id", "direction_hypotheses", issues)
     questions = _index_objects(document.get("scientific_question_cards"), "question_id", "scientific_question_cards", issues)
     argument_chains = _index_objects(document.get("argument_chains"), "argument_chain_id", "argument_chains", issues)
+    fit_mappings = _index_objects(document.get("applicant_fit_mappings"), "fit_mapping_id", "applicant_fit_mappings", issues)
     drafts = _index_objects(document.get("application_drafts"), "draft_id", "application_drafts", issues)
     critiques = _index_objects(document.get("mentor_critiques"), "critique_id", "mentor_critiques", issues)
     revision_plans = _index_objects(document.get("revision_plans"), "revision_plan_id", "revision_plans", issues)
@@ -235,7 +240,15 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
         "revision",
         "frozen",
     }
-    requires_draft = stage in {"drafting", "critique", "revision", "frozen"}
+    requires_fit_mapping = stage in {
+        "fit_alignment",
+        "outline",
+        "drafting",
+        "critique",
+        "revision",
+        "frozen",
+    }
+    requires_draft = stage in {"outline", "drafting", "critique", "revision", "frozen"}
     requires_revision_plan = stage in {"critique", "revision", "frozen"}
 
     selected_directions = [
@@ -256,6 +269,7 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
     selection = document.get("current_selection", {})
     selected_direction_id = selection.get("selected_direction_id")
     selected_question_id = selection.get("selected_question_id")
+    active_fit_mapping_id = selection.get("active_fit_mapping_id")
     active_draft_id = selection.get("active_draft_id")
     active_revision_plan_id = selection.get("active_revision_plan_id")
 
@@ -341,6 +355,40 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
         if len(selected_argument_chains) == 1:
             active_argument_chain = selected_argument_chains[0]
 
+    active_fit_mapping = fit_mappings.get(active_fit_mapping_id) if isinstance(active_fit_mapping_id, str) else None
+    if requires_fit_mapping and active_fit_mapping_id is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.active_fit_mapping_id",
+                message=f"{stage} 阶段必须显式绑定当前 ApplicantFitMapping。",
+            )
+        )
+    elif active_fit_mapping_id is not None and active_fit_mapping is None:
+        issues.append(
+            ValidationIssue(
+                path="current_selection.active_fit_mapping_id",
+                message="未找到对应的 ApplicantFitMapping。",
+            )
+        )
+    elif active_fit_mapping is not None and selected_question_id is not None and active_fit_mapping.get("scientific_question_id") != selected_question_id:
+        issues.append(
+            ValidationIssue(
+                path="applicant_fit_mappings",
+                message="激活适配度映射必须回指当前选中问题。",
+            )
+        )
+    elif (
+        active_fit_mapping is not None
+        and active_argument_chain is not None
+        and active_fit_mapping.get("argument_chain_id") != active_argument_chain.get("argument_chain_id")
+    ):
+        issues.append(
+            ValidationIssue(
+                path="applicant_fit_mappings",
+                message="激活适配度映射必须回指当前问题对应的 ArgumentChain。",
+            )
+        )
+
     active_draft = drafts.get(active_draft_id) if isinstance(active_draft_id, str) else None
     if requires_draft and active_draft_id is None:
         issues.append(
@@ -368,6 +416,13 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
             ValidationIssue(
                 path="application_drafts",
                 message="激活草稿必须显式链接当前问题对应的 ArgumentChain。",
+            )
+        )
+    if active_draft is not None and active_fit_mapping is not None and not _draft_links_fit_mapping(active_draft, active_fit_mapping["fit_mapping_id"]):
+        issues.append(
+            ValidationIssue(
+                path="application_drafts",
+                message="激活草稿必须显式链接当前问题对应的 ApplicantFitMapping。",
             )
         )
 
@@ -434,7 +489,7 @@ def _validate_stage_requirements(
             if isinstance(item, dict) and item.get("draft_id") == active_draft_id:
                 active_draft = item
                 break
-    if stage in {"outline", "drafting", "critique", "revision", "frozen"}:
+    if stage in {"fit_alignment", "outline", "drafting", "critique", "revision", "frozen"}:
         for gate_name in ("direction_frozen", "scientific_question_frozen", "argument_chain_frozen"):
             if not gates.get(gate_name):
                 issues.append(
@@ -443,11 +498,25 @@ def _validate_stage_requirements(
                         message=f"{stage} 阶段前必须先冻结 {gate_name}。",
                     )
                 )
+    if stage in {"outline", "drafting", "critique", "revision", "frozen"} and not gates.get("fit_alignment_frozen"):
+        issues.append(
+            ValidationIssue(
+                path="gates.fit_alignment_frozen",
+                message=f"{stage} 阶段前必须先冻结申请人适配度映射。",
+            )
+        )
     if stage in {"drafting", "critique", "revision", "frozen"} and not gates.get("outline_frozen"):
         issues.append(
             ValidationIssue(
                 path="gates.outline_frozen",
                 message=f"{stage} 阶段前必须先冻结提纲。",
+            )
+        )
+    if stage == "outline" and active_draft is not None and active_draft.get("status") != "outline":
+        issues.append(
+            ValidationIssue(
+                path="application_drafts.status",
+                message="outline 阶段的激活草稿 status 必须为 outline。",
             )
         )
     if stage == "drafting" and not document.get("application_drafts"):
@@ -604,6 +673,7 @@ def _validate_reference_sets(document: dict[str, Any], issues: list[ValidationIs
         ("direction_hypotheses", "required_evidence_ids"),
         ("scientific_question_cards", "linked_evidence_ids"),
         ("argument_chains", "linked_evidence_ids"),
+        ("applicant_fit_mappings", "linked_evidence_ids"),
         ("application_drafts", "outline", "linked_object_ids"),
         ("application_drafts", "sections", "linked_object_ids"),
         ("revision_plans", "items", "required_input_ids"),
@@ -673,6 +743,7 @@ def _collect_known_ids(document: dict[str, Any]) -> set[str]:
         ("direction_hypotheses", "direction_id"),
         ("scientific_question_cards", "question_id"),
         ("argument_chains", "argument_chain_id"),
+        ("applicant_fit_mappings", "fit_mapping_id"),
         ("application_drafts", "draft_id"),
         ("mentor_critiques", "critique_id"),
         ("revision_plans", "revision_plan_id"),
@@ -717,6 +788,17 @@ def _draft_links_argument_chain(draft: dict[str, Any], argument_chain_id: str) -
     return False
 
 
+def _draft_links_fit_mapping(draft: dict[str, Any], fit_mapping_id: str) -> bool:
+    for section_group in ("outline", "sections"):
+        for item in draft.get(section_group, []):
+            if not isinstance(item, dict):
+                continue
+            linked_ids = item.get("linked_object_ids", [])
+            if isinstance(linked_ids, list) and fit_mapping_id in linked_ids:
+                return True
+    return False
+
+
 def _build_workspace_state(document: dict[str, Any]) -> WorkspaceState:
     result = validate_workspace_document(document)
     if not result.ok:
@@ -732,12 +814,16 @@ def _build_workspace_state(document: dict[str, Any]) -> WorkspaceState:
     selection = document["current_selection"]
     direction_by_id = {item["direction_id"]: item for item in document.get("direction_hypotheses", []) if isinstance(item, dict)}
     question_by_id = {item["question_id"]: item for item in document.get("scientific_question_cards", []) if isinstance(item, dict)}
+    fit_mapping_by_id = {
+        item["fit_mapping_id"]: item for item in document.get("applicant_fit_mappings", []) if isinstance(item, dict)
+    }
     draft_by_id = {item["draft_id"]: item for item in document.get("application_drafts", []) if isinstance(item, dict)}
     critique_by_id = {item["critique_id"]: item for item in document.get("mentor_critiques", []) if isinstance(item, dict)}
     revision_plan_by_id = {item["revision_plan_id"]: item for item in document.get("revision_plans", []) if isinstance(item, dict)}
 
     selected_direction = direction_by_id.get(selection.get("selected_direction_id"))
     selected_question = question_by_id.get(selection.get("selected_question_id"))
+    active_fit_mapping = fit_mapping_by_id.get(selection.get("active_fit_mapping_id"))
     active_draft = draft_by_id.get(selection.get("active_draft_id"))
     active_revision_plan = revision_plan_by_id.get(selection.get("active_revision_plan_id"))
     active_critique = None
@@ -761,6 +847,7 @@ def _build_workspace_state(document: dict[str, Any]) -> WorkspaceState:
         selected_direction=selected_direction,
         selected_question=selected_question,
         active_argument_chain=active_argument_chain,
+        active_fit_mapping=active_fit_mapping,
         active_draft=active_draft,
         active_revision_plan=active_revision_plan,
         active_critique=active_critique,
@@ -793,6 +880,17 @@ def _serialize_argument_chain(argument_chain: dict[str, Any] | None) -> dict[str
     return {
         "id": argument_chain["argument_chain_id"],
         "necessity_claim": argument_chain["necessity_claim"],
+    }
+
+
+def _serialize_fit_mapping(fit_mapping: dict[str, Any] | None) -> dict[str, Any] | None:
+    if fit_mapping is None:
+        return None
+    return {
+        "id": fit_mapping["fit_mapping_id"],
+        "argument_chain_id": fit_mapping["argument_chain_id"],
+        "applicant_fit_summary": fit_mapping["applicant_fit_summary"],
+        "unique_advantage": fit_mapping["unique_advantage"],
     }
 
 
@@ -858,6 +956,7 @@ def _require_workspace_context(document: dict[str, Any]) -> WorkspaceContext:
         state.selected_direction is None
         or state.selected_question is None
         or state.active_argument_chain is None
+        or state.active_fit_mapping is None
         or state.active_draft is None
         or state.active_revision_plan is None
         or state.active_critique is None
@@ -878,6 +977,7 @@ def _require_workspace_context(document: dict[str, Any]) -> WorkspaceContext:
         selected_direction=state.selected_direction,
         selected_question=state.selected_question,
         active_argument_chain=state.active_argument_chain,
+        active_fit_mapping=state.active_fit_mapping,
         active_draft=state.active_draft,
         active_revision_plan=state.active_revision_plan,
         active_critique=state.active_critique,
