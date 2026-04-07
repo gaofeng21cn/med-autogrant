@@ -26,6 +26,9 @@ QUESTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_question_re
 ARGUMENT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_argument_building.json"
 FIT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_fit_alignment.json"
 OUTLINE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_outline.json"
+DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
+CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
+REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 
 
 class WorkspaceSummaryTest(unittest.TestCase):
@@ -151,6 +154,56 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertTrue(result.ok)
         self.assertEqual(result.errors, [])
 
+    def test_validation_accepts_drafting_with_sections_bound_to_upstream_objects(self) -> None:
+        document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
+    def test_summary_exposes_draft_audit_for_drafting(self) -> None:
+        document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["lifecycle_stage"], "drafting")
+        self.assertEqual(summary["active_draft"]["id"], "draft-v1")
+        self.assertEqual(summary["active_draft"]["status"], "draft")
+        self.assertEqual(summary["active_draft"]["section_count"], 3)
+        self.assertIsNone(summary["active_revision_plan"])
+        self.assertIsNone(summary["active_critique"])
+
+    def test_validation_rejects_drafting_without_sections(self) -> None:
+        document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
+        document["application_drafts"][0]["sections"] = []
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("application_drafts.sections", "drafting 阶段的激活草稿必须包含非空 sections。"),
+            messages,
+        )
+
+    def test_validation_rejects_drafting_without_selected_question_link_in_sections(self) -> None:
+        document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
+        for item in document["application_drafts"][0]["sections"]:
+            if "linked_object_ids" in item:
+                item["linked_object_ids"] = [
+                    ref for ref in item["linked_object_ids"] if ref != "question-immune-fibrosis"
+                ]
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("application_drafts.sections", "drafting 阶段的激活草稿 sections 必须显式链接当前 ScientificQuestionCard。"),
+            messages,
+        )
+
     def test_validation_rejects_outline_without_fit_mapping_link_on_active_draft(self) -> None:
         document = load_workspace_document(OUTLINE_EXAMPLE_PATH)
         for item in document["application_drafts"][0]["outline"]:
@@ -189,6 +242,27 @@ class WorkspaceSummaryTest(unittest.TestCase):
         messages = {(item.path, item.message) for item in result.errors}
         self.assertIn(
             ("current_selection.selected_question_id", "未找到对应的 ScientificQuestionCard。"),
+            messages,
+        )
+
+    def test_validation_accepts_critique_with_structured_revision_inputs(self) -> None:
+        document = load_workspace_document(CRITIQUE_EXAMPLE_PATH)
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
+    def test_validation_rejects_critique_with_mismatched_current_scientific_question(self) -> None:
+        document = load_workspace_document(CRITIQUE_EXAMPLE_PATH)
+        document["mentor_critiques"][0]["current_scientific_question"] = "错误的问题表述"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("mentor_critiques.current_scientific_question", "激活批注必须锚定当前选中问题的 core_question。"),
             messages,
         )
 
@@ -290,19 +364,25 @@ class WorkspaceSummaryTest(unittest.TestCase):
         )
 
     def test_validation_accepts_completed_revision_with_explicit_revised_switch(self) -> None:
-        document = copy.deepcopy(self.load_example())
-        document["lifecycle_stage"] = "revision"
-        document["application_drafts"][0]["status"] = "revised"
-        document["application_drafts"][0]["version_label"] = "v0.4"
-        document["revision_plans"][0]["execution_status"] = "completed"
-        document["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
-        document["revision_plans"][0]["post_revision_version_label"] = "v0.4"
-        document["revision_plans"][0]["comparison_summary"] = "已根据 major_revision 完成立项依据与机制链条重写。"
+        document = load_workspace_document(REVISION_EXAMPLE_PATH)
 
         result = validate_workspace_document(document)
 
         self.assertTrue(result.ok)
         self.assertEqual(result.errors, [])
+
+    def test_summary_exposes_revision_audit_for_completed_revision(self) -> None:
+        document = load_workspace_document(REVISION_EXAMPLE_PATH)
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["lifecycle_stage"], "revision")
+        self.assertEqual(summary["active_draft"]["status"], "revised")
+        self.assertEqual(summary["active_draft"]["version_label"], "v0.4")
+        self.assertEqual(summary["active_revision_plan"]["execution_status"], "completed")
+        self.assertEqual(summary["active_revision_plan"]["pre_revision_version_label"], "v0.3")
+        self.assertEqual(summary["active_revision_plan"]["post_revision_version_label"], "v0.4")
+        self.assertEqual(summary["active_critique"]["blocking_issue_count"], 1)
 
     def test_validation_rejects_completed_revision_without_revised_status_switch(self) -> None:
         document = copy.deepcopy(self.load_example())

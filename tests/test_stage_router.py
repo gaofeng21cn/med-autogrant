@@ -22,6 +22,9 @@ QUESTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_question_re
 ARGUMENT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_argument_building.json"
 FIT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_fit_alignment.json"
 OUTLINE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2b_outline.json"
+DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
+CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
+REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 
 
 class StageRouterTest(unittest.TestCase):
@@ -70,6 +73,20 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["recommended_stage"], "drafting")
         self.assertIn("提纲已冻结", route["reason"])
 
+    def test_drafting_routes_to_critique(self) -> None:
+        route = determine_next_step(json.loads(DRAFTING_EXAMPLE_PATH.read_text(encoding="utf-8")))
+
+        self.assertEqual(route["current_stage"], "drafting")
+        self.assertEqual(route["recommended_stage"], "critique")
+        self.assertIn("当前草稿已形成", route["reason"])
+
+    def test_critique_routes_to_revision(self) -> None:
+        route = determine_next_step(json.loads(CRITIQUE_EXAMPLE_PATH.read_text(encoding="utf-8")))
+
+        self.assertEqual(route["current_stage"], "critique")
+        self.assertEqual(route["recommended_stage"], "revision")
+        self.assertIn("major_revision", route["reason"])
+
     def test_major_revision_routes_to_revision(self) -> None:
         route = determine_next_step(self.load_example())
 
@@ -91,16 +108,7 @@ class StageRouterTest(unittest.TestCase):
         self.assertIn("重塑科学问题", route["reason"])
 
     def test_completed_revision_routes_back_to_critique(self) -> None:
-        document = copy.deepcopy(self.load_example())
-        document["lifecycle_stage"] = "revision"
-        document["application_drafts"][0]["status"] = "revised"
-        document["application_drafts"][0]["version_label"] = "v0.4"
-        document["revision_plans"][0]["execution_status"] = "completed"
-        document["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
-        document["revision_plans"][0]["post_revision_version_label"] = "v0.4"
-        document["revision_plans"][0]["comparison_summary"] = "已完成修订并形成前后版本比较。"
-
-        route = determine_next_step(document)
+        route = determine_next_step(json.loads(REVISION_EXAMPLE_PATH.read_text(encoding="utf-8")))
 
         self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(route["current_stage"], "revision")

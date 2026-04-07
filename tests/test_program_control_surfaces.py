@@ -17,6 +17,7 @@ OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-sc
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
 P2B_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md"
+P2C_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md"
 WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
 PRD = REPO_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
@@ -31,15 +32,20 @@ REPORT_README = REPORT_DIR / "README.md"
 
 REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
-    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2b_argument_building.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2b_fit_alignment.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2b_outline.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2b_fit_alignment.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2b_outline.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2b_argument_building.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2b_fit_alignment.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2b_outline.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2b_outline.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_drafting.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_drafting.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_revision.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_drafting.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_revision.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_revision.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_drafting.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_revision.json --format json",
     "git diff --check",
 )
 
@@ -80,6 +86,7 @@ EXECUTION_HANDLE_REVIEW_SURFACES = (
     FORMAL_ENTRY_MATRIX,
     DURABILITY_MODEL,
     P2B_CURRENT_TRUTH,
+    P2C_CURRENT_TRUTH,
     WORKSPACE_EXAMPLE,
     WORKSPACE_SCHEMA,
 )
@@ -178,7 +185,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, test_spec_text)
 
         self.assertIn("Verification Snapshot", latest_status_text)
-        for keyword in ("validate-workspace", "summarize-workspace", "next-step", "stage-route-report"):
+        for keyword in ("validate-workspace", "summarize-workspace", "next-step", "critique-summary", "stage-route-report"):
             with self.subTest(keyword=keyword):
                 self.assertIn(keyword, latest_status_text)
 
@@ -186,7 +193,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         formal_entry_text = read_text(FORMAL_ENTRY_MATRIX)
         durability_text = read_text(DURABILITY_MODEL)
 
-        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, P2B_CURRENT_TRUTH):
+        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, P2B_CURRENT_TRUTH, P2C_CURRENT_TRUTH):
             with self.subTest(path=path.name):
                 self.assertTrue(path.exists(), f"current truth doc 不存在: {path}")
 
@@ -215,7 +222,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         current_program_text = read_text(CURRENT_PROGRAM)
         execution_prompt_text = read_text(EXECUTION_PROMPT)
         team_prompt_text = read_text(TEAM_PROMPT)
-        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, P2B_CURRENT_TRUTH):
+        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, P2B_CURRENT_TRUTH, P2C_CURRENT_TRUTH):
             path_text = str(path)
             with self.subTest(current_program_path=path.name):
                 self.assertIn(path_text, current_program_text)
@@ -295,23 +302,27 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("repo-tracked review surfaces", bridge_text)
         self.assertIn("local durable handoff surfaces", bridge_text)
 
-    def test_p2b_current_truth_doc_is_referenced_in_active_control_surfaces(self) -> None:
-        p2b_path_text = str(P2B_CURRENT_TRUTH)
+    def test_p2c_current_truth_doc_is_referenced_in_active_control_surfaces(self) -> None:
+        p2c_path_text = str(P2C_CURRENT_TRUTH)
         for path in (CURRENT_PROGRAM, PROGRAM_ROUTING, PRD, TEST_SPEC, IMPLEMENTATION):
             with self.subTest(path=path.name):
-                self.assertIn(p2b_path_text, read_text(path))
+                self.assertIn(p2c_path_text, read_text(path))
 
-    def test_object_model_and_p2b_current_truth_freeze_current_selection_binding(self) -> None:
-        combined = "\n".join(read_text(path) for path in (OBJECT_MODEL_SCHEMA, P2B_CURRENT_TRUTH))
+    def test_object_model_and_p2c_current_truth_freeze_current_selection_binding(self) -> None:
+        combined = "\n".join(read_text(path) for path in (OBJECT_MODEL_SCHEMA, P2C_CURRENT_TRUTH))
         for snippet in (
             "current_selection",
             "selected_direction_id",
             "selected_question_id",
             "active_fit_mapping_id",
-            "ArgumentChain",
-            "ApplicantFitMapping",
+            "active_draft_id",
+            "active_revision_plan_id",
+            "drafting",
+            "critique",
+            "revision",
             "ApplicationDraft",
-            "outline",
+            "MentorCritique",
+            "RevisionPlan",
         ):
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, combined)

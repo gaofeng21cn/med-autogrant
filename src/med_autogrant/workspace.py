@@ -169,6 +169,7 @@ def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
     context = _require_workspace_context(document)
     critique = context.active_critique
     revision_plan = context.active_revision_plan
+    draft = context.active_draft
     return {
         "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
@@ -177,8 +178,14 @@ def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
         "selected_direction_id": context.selected_direction["direction_id"],
         "selected_question_id": context.selected_question["question_id"],
         "draft_id": critique["draft_id"],
+        "draft_status": draft["status"],
+        "draft_version_label": draft["version_label"],
         "critique_id": critique["critique_id"],
         "revision_plan_id": revision_plan["revision_plan_id"],
+        "execution_status": revision_plan.get("execution_status", "planned"),
+        "pre_revision_version_label": revision_plan.get("pre_revision_version_label"),
+        "post_revision_version_label": revision_plan.get("post_revision_version_label"),
+        "comparison_summary": revision_plan.get("comparison_summary"),
         "overall_diagnosis": critique["overall_diagnosis"],
         "current_scientific_question": critique["current_scientific_question"],
         "suggested_question": critique["suggested_question"],
@@ -467,14 +474,39 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
                 )
             )
 
+    if (
+        stage in {"critique", "revision", "frozen"}
+        and active_critique is not None
+        and selected_question is not None
+        and active_critique.get("current_scientific_question") != selected_question.get("core_question")
+    ):
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques.current_scientific_question",
+                message="激活批注必须锚定当前选中问题的 core_question。",
+            )
+        )
+
     _validate_reference_sets(document, issues)
-    _validate_stage_requirements(document, active_revision_plan, active_critique, issues)
+    _validate_stage_requirements(
+        document,
+        selected_question_id=selected_question_id if isinstance(selected_question_id, str) else None,
+        active_argument_chain_id=active_argument_chain.get("argument_chain_id") if isinstance(active_argument_chain, dict) else None,
+        active_fit_mapping_id=active_fit_mapping.get("fit_mapping_id") if isinstance(active_fit_mapping, dict) else None,
+        active_revision_plan=active_revision_plan,
+        active_critique=active_critique,
+        issues=issues,
+    )
 
     return issues
 
 
 def _validate_stage_requirements(
     document: dict[str, Any],
+    *,
+    selected_question_id: str | None,
+    active_argument_chain_id: str | None,
+    active_fit_mapping_id: str | None,
     active_revision_plan: dict[str, Any] | None,
     active_critique: dict[str, Any] | None,
     issues: list[ValidationIssue],
@@ -524,6 +556,13 @@ def _validate_stage_requirements(
             ValidationIssue(
                 path="application_drafts",
                 message="drafting 阶段不能缺少 ApplicationDraft。",
+            )
+        )
+    if stage == "drafting" and active_draft is not None and active_draft.get("status") != "draft":
+        issues.append(
+            ValidationIssue(
+                path="application_drafts.status",
+                message="drafting 阶段的激活草稿 status 必须为 draft。",
             )
         )
     if stage in {"critique", "revision", "frozen"} and not document.get("mentor_critiques"):
@@ -577,6 +616,37 @@ def _validate_stage_requirements(
                 message="frozen 阶段的激活草稿 status 必须为 frozen。",
             )
         )
+    if stage in {"drafting", "critique", "revision", "frozen"} and active_draft is not None:
+        sections = active_draft.get("sections")
+        if not isinstance(sections, list) or not sections:
+            issues.append(
+                ValidationIssue(
+                    path="application_drafts.sections",
+                    message=f"{stage} 阶段的激活草稿必须包含非空 sections。",
+                )
+            )
+        else:
+            if selected_question_id is not None and not _draft_sections_link_object(active_draft, selected_question_id):
+                issues.append(
+                    ValidationIssue(
+                        path="application_drafts.sections",
+                        message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ScientificQuestionCard。",
+                    )
+                )
+            if active_argument_chain_id is not None and not _draft_sections_link_object(active_draft, active_argument_chain_id):
+                issues.append(
+                    ValidationIssue(
+                        path="application_drafts.sections",
+                        message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ArgumentChain。",
+                    )
+                )
+            if active_fit_mapping_id is not None and not _draft_sections_link_object(active_draft, active_fit_mapping_id):
+                issues.append(
+                    ValidationIssue(
+                        path="application_drafts.sections",
+                        message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ApplicantFitMapping。",
+                    )
+                )
     _validate_revision_transition_contract(active_draft, active_revision_plan, issues)
     if active_critique is not None:
         for field, expected in (
@@ -799,6 +869,16 @@ def _draft_links_fit_mapping(draft: dict[str, Any], fit_mapping_id: str) -> bool
     return False
 
 
+def _draft_sections_link_object(draft: dict[str, Any], object_id: str) -> bool:
+    for item in draft.get("sections", []):
+        if not isinstance(item, dict):
+            continue
+        linked_ids = item.get("linked_object_ids", [])
+        if isinstance(linked_ids, list) and object_id in linked_ids:
+            return True
+    return False
+
+
 def _build_workspace_state(document: dict[str, Any]) -> WorkspaceState:
     result = validate_workspace_document(document)
     if not result.ok:
@@ -902,6 +982,8 @@ def _serialize_draft(draft: dict[str, Any] | None) -> dict[str, Any] | None:
         "version_label": draft["version_label"],
         "status": draft["status"],
         "project_title": draft["project_title"],
+        "outline_count": len(draft.get("outline", [])),
+        "section_count": len(draft.get("sections", [])),
     }
 
 
@@ -911,6 +993,11 @@ def _serialize_revision_plan(revision_plan: dict[str, Any] | None) -> dict[str, 
     return {
         "id": revision_plan["revision_plan_id"],
         "item_count": len(revision_plan["items"]),
+        "execution_status": revision_plan.get("execution_status", "planned"),
+        "pre_revision_version_label": revision_plan.get("pre_revision_version_label"),
+        "post_revision_version_label": revision_plan.get("post_revision_version_label"),
+        "comparison_summary": revision_plan.get("comparison_summary"),
+        "next_review_focus_count": len(revision_plan.get("next_review_focus", [])),
     }
 
 
@@ -920,6 +1007,7 @@ def _serialize_critique(critique: dict[str, Any] | None) -> dict[str, Any] | Non
     return {
         "id": critique["critique_id"],
         "verdict": critique["verdict"],
+        "blocking_issue_count": len(critique.get("blocking_issues", [])),
     }
 
 

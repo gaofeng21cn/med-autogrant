@@ -1,0 +1,444 @@
+{
+  "metadata": {
+    "schema_version": "v1",
+    "created_at": "2026-04-06T10:00:00Z",
+    "updated_at": "2026-04-07T20:20:00Z",
+    "source_mode": "auto",
+    "owner": "Med Auto Grant scaffold"
+  },
+  "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+  "workspace_id": "nsfc-demo-001",
+  "mode": "auto",
+  "lifecycle_stage": "revision",
+  "applicant_profile": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-06T10:00:00Z",
+      "source_mode": "auto"
+    },
+    "applicant_id": "applicant-gaofeng",
+    "applicant_name": "示例申请人",
+    "institution": "示例医学院",
+    "career_stage": "faculty",
+    "research_domains": [
+      "心血管医学",
+      "炎症与纤维化"
+    ],
+    "clinical_domains": [
+      "心力衰竭"
+    ],
+    "methods_stack": [
+      "单细胞测序",
+      "空间转录组",
+      "动物模型"
+    ],
+    "training_background": [
+      "临床医学",
+      "转化医学"
+    ],
+    "strengths": [
+      "有心血管队列资源",
+      "有跨组学分析经验"
+    ],
+    "constraints": [
+      "时序预实验仍需补足"
+    ]
+  },
+  "track_record": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-06T10:00:00Z",
+      "source_mode": "auto"
+    },
+    "track_record_id": "track-001",
+    "representative_outputs": [
+      {
+        "output_id": "output-1",
+        "title": "单细胞图谱揭示心肌梗死后免疫重塑",
+        "output_type": "paper",
+        "year": 2024,
+        "relevance_summary": "提供免疫细胞时序变化和成纤维细胞通讯线索。",
+        "evidence": {
+          "evidence_id": "evi-output-1",
+          "label": "代表作 1",
+          "source_type": "publication",
+          "uri": "https://example.org/paper-1"
+        }
+      }
+    ],
+    "prior_grants": [
+      "省部级青年项目"
+    ],
+    "awards": [
+      "青年拔尖人才"
+    ]
+  },
+  "active_project_set": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-06T10:00:00Z",
+      "source_mode": "auto"
+    },
+    "project_set_id": "projects-001",
+    "projects": [
+      {
+        "project_id": "project-1",
+        "title": "心梗后炎症消退的单细胞时序研究",
+        "status": "ongoing",
+        "role": "负责人",
+        "relevance_to_grant": "可直接支撑免疫-纤维化窗口期判断。",
+        "reusable_assets": [
+          "小鼠模型流程",
+          "时序样本库"
+        ],
+        "linked_evidence": [
+          {
+            "evidence_id": "evi-project-1",
+            "label": "在研项目 1",
+            "source_type": "project"
+          }
+        ]
+      }
+    ]
+  },
+  "preliminary_evidence_pack": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-06T10:00:00Z",
+      "source_mode": "auto"
+    },
+    "evidence_pack_id": "prelim-001",
+    "evidence_items": [
+      {
+        "item_id": "prelim-item-1",
+        "title": "单细胞预实验提示炎症巨噬细胞驱动纤维化相关成纤维细胞扩增",
+        "finding_summary": "心梗后第 3 天至第 7 天出现关键跨细胞通讯信号增强。",
+        "modality": "omics",
+        "strength": "moderate",
+        "supports": [
+          "question-immune-fibrosis",
+          "arg-001"
+        ],
+        "gaps": [
+          "缺乏功能阻断实验"
+        ],
+        "evidence": {
+          "evidence_id": "evi-prelim-1",
+          "label": "预实验 1",
+          "source_type": "preliminary_result"
+        }
+      }
+    ]
+  },
+  "funding_opportunity_brief": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-06T10:00:00Z",
+      "source_mode": "auto"
+    },
+    "brief_id": "nsfc-2026-general",
+    "funder": "NSFC",
+    "program_family": "医学科学部",
+    "project_types": [
+      "young_scientist",
+      "general"
+    ],
+    "application_year": 2026,
+    "mandatory_sections": [
+      "立项依据",
+      "研究内容",
+      "研究方案",
+      "创新点",
+      "研究基础"
+    ],
+    "formal_constraints": [
+      "题目需与核心科学问题一致"
+    ],
+    "evaluation_notes": [
+      "必要性与科学价值优先"
+    ]
+  },
+  "direction_hypotheses": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-06T10:00:00Z",
+        "source_mode": "auto"
+      },
+      "direction_id": "dir-inflammatory-remodeling",
+      "title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
+      "rationale": "申请人现有单细胞与心血管样本基础可直接支撑该方向。",
+      "knowledge_gap_summary": "免疫信号如何在特定时间窗触发成纤维细胞表型跃迁仍不清楚。",
+      "applicant_fit_summary": "已有相关队列、模型和组学分析管线。",
+      "novelty_angle": "聚焦时间窗依赖的跨细胞通讯机制。",
+      "risk_summary": "功能验证证据仍需补齐。",
+      "required_evidence_ids": [
+        "output-1",
+        "evi-prelim-1"
+      ],
+      "decision_status": "selected"
+    }
+  ],
+  "scientific_question_cards": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-06T10:00:00Z",
+        "source_mode": "auto"
+      },
+      "question_id": "question-immune-fibrosis",
+      "parent_direction_id": "dir-inflammatory-remodeling",
+      "phenomenon": "心梗后纤维化程度与特定炎症亚群动态相关。",
+      "knowledge_boundary": "目前尚不清楚炎症巨噬细胞如何通过时序性旁分泌信号驱动成纤维细胞异常激活。",
+      "unknown_mechanism": "免疫细胞与成纤维细胞之间的关键通讯轴及其时间窗机制未被解释。",
+      "core_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
+      "subquestions": [
+        "关键通讯轴是什么？",
+        "作用时间窗如何决定重塑结局？"
+      ],
+      "falsifiable_statement": "若阻断该通讯轴，则成纤维细胞致纤维化状态转换将显著减弱。",
+      "proposed_breakthrough_angle": "结合单细胞时序图谱与功能阻断实验识别机制级调控轴。",
+      "why_not_engineering": "核心未知在于机制级知识边界，而非构建一个分类系统或提高预测准确率。",
+      "why_now": "申请人已具备时序样本和单细胞预实验基础。",
+      "linked_evidence_ids": [
+        "evi-output-1",
+        "evi-prelim-1"
+      ]
+    }
+  ],
+  "argument_chains": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-06T10:00:00Z",
+        "source_mode": "auto"
+      },
+      "argument_chain_id": "arg-001",
+      "scientific_question_id": "question-immune-fibrosis",
+      "background_claim": "心梗后纤维化重塑决定心功能长期结局。",
+      "field_gap": "现有研究多数停留在炎症相关现象描述，缺少时间窗依赖的机制解释。",
+      "necessity_claim": "若不能解释该机制，就无法判断何时以及为何出现不可逆纤维化重塑。",
+      "uniqueness_claim": "申请人同时具备时序单细胞样本、心血管临床问题意识和功能验证路径。",
+      "route_justification": "先用时序单细胞图谱定位通讯轴，再以功能实验验证其因果作用。",
+      "non_arbitrary_route_reason": "该路线直接对应知识边界与机制验证，不是可任意替换的装饰性方案。",
+      "if_not_done_loss": "该领域将继续停留在现象归纳层，缺乏可证伪的机制链条。",
+      "linked_evidence_ids": [
+        "evi-output-1",
+        "evi-prelim-1"
+      ]
+    }
+  ],
+  "application_drafts": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-06T10:00:00Z",
+        "source_mode": "auto"
+      },
+      "draft_id": "draft-v1",
+      "version_label": "v0.4",
+      "project_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
+      "status": "revised",
+      "frozen_question_id": "question-immune-fibrosis",
+      "outline": [
+        {
+          "section_key": "basis",
+          "section_title": "立项依据",
+          "core_claim": "当前知识边界在于免疫-成纤维细胞通讯机制未知。",
+          "linked_object_ids": [
+            "question-immune-fibrosis",
+            "arg-001",
+            "fit-001"
+          ]
+        },
+        {
+          "section_key": "foundation",
+          "section_title": "研究基础",
+          "core_claim": "申请人已有单细胞时序和模型平台可直接支撑该问题。",
+          "linked_object_ids": [
+            "output-1",
+            "project-1",
+            "fit-001"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "section_key": "basis",
+          "section_title": "立项依据",
+          "text": "当前知识边界不在现象是否存在，而在炎症巨噬细胞介导的跨细胞通讯如何在特定时间窗驱动致纤维化重编程。",
+          "linked_object_ids": [
+            "question-immune-fibrosis",
+            "arg-001",
+            "fit-001"
+          ]
+        },
+        {
+          "section_key": "content",
+          "section_title": "研究内容",
+          "text": "围绕关键通讯轴识别、时间窗验证与功能阻断三段展开，并让每一段都回指既有 argument chain 与 fit mapping。",
+          "linked_object_ids": [
+            "question-immune-fibrosis",
+            "arg-001",
+            "fit-001",
+            "prelim-item-1"
+          ]
+        },
+        {
+          "section_key": "foundation",
+          "section_title": "研究基础",
+          "text": "申请人的单细胞时序样本、动物模型和跨组学分析流程可直接覆盖当前 proposal 的关键验证节点。",
+          "linked_object_ids": [
+            "question-immune-fibrosis",
+            "arg-001",
+            "fit-001",
+            "output-1",
+            "project-1"
+          ]
+        }
+      ]
+    }
+  ],
+  "mentor_critiques": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-06T10:00:00Z",
+        "source_mode": "auto"
+      },
+      "critique_id": "critique-v1",
+      "draft_id": "draft-v1",
+      "overall_diagnosis": "科学问题已经成形，但必要性推导仍有一处从现象到机制的跳步。",
+      "current_scientific_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
+      "suggested_question": "虽然心梗后纤维化与炎症动态相关，但其背后的时间窗依赖性跨细胞通讯机制尚不清楚。本项目拟解决的关键科学问题是：炎症巨噬细胞相关通讯轴如何在特定时间窗调控成纤维细胞致纤维化重编程？",
+      "verdict": "major_revision",
+      "necessity_scientific_value": {
+        "weight": 60,
+        "score": 74,
+        "judgment": "必要性主线正确，但知识边界与现有研究不足之间的过渡还不够锋利。",
+        "blocking_issues": [
+          "尚未充分说明为什么现有现象学研究不能回答该机制问题。"
+        ]
+      },
+      "applicant_fit": {
+        "weight": 30,
+        "score": 82,
+        "judgment": "申请人基础较好，但需要更直接地把既有成果和当前科学问题一一对应。",
+        "blocking_issues": [
+          "前期成果到机制验证路线的映射仍偏间接。"
+        ]
+      },
+      "feasibility": {
+        "weight": 10,
+        "score": 78,
+        "judgment": "总体可行，但功能阻断证据仍需补足。",
+        "blocking_issues": []
+      },
+      "logic_chain_repairs": [
+        "在立项依据中补出从现象相关到未知机制的关键过渡段。",
+        "明确说明为何当前 proposal 路线不是任意可替换。"
+      ],
+      "applicant_fit_repairs": [
+        "把既有单细胞成果和动物模型资源直接映射到研究方案关键节点。"
+      ],
+      "blocking_issues": [
+        "必要性表述仍略偏现象描述。"
+      ]
+    }
+  ],
+  "revision_plans": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-06T10:00:00Z",
+        "source_mode": "auto"
+      },
+      "revision_plan_id": "revision-v1",
+      "draft_id": "draft-v1",
+      "critique_id": "critique-v1",
+      "items": [
+        {
+          "item_id": "rev-item-1",
+          "priority": "p0",
+          "action_type": "rebuild_argument",
+          "target_ref": "section:basis",
+          "action": "重写立项依据中现象到机制缺口的推导段。",
+          "done_criteria": "读者能清楚看到知识边界、未知机制和不做该研究的理论损失。",
+          "required_input_ids": [
+            "arg-001",
+            "question-immune-fibrosis"
+          ]
+        },
+        {
+          "item_id": "rev-item-2",
+          "priority": "p1",
+          "action_type": "tighten_fit",
+          "target_ref": "section:foundation",
+          "action": "将申请人的前期成果与当前问题逐点映射。",
+          "done_criteria": "研究基础章节能直接回答为什么是该申请人来做。",
+          "required_input_ids": [
+            "output-1",
+            "project-1"
+          ]
+        }
+      ],
+      "next_review_focus": [
+        "必要性链条是否闭合",
+        "修订后章节是否保持问题-证据-申请人三点对齐"
+      ],
+      "execution_status": "completed",
+      "pre_revision_version_label": "v0.3",
+      "post_revision_version_label": "v0.4",
+      "comparison_summary": "已比较修订前后版本：必要性链条更锋利，研究基础与当前问题的映射更直接。"
+    }
+  ],
+  "current_selection": {
+    "selected_direction_id": "dir-inflammatory-remodeling",
+    "selected_question_id": "question-immune-fibrosis",
+    "active_draft_id": "draft-v1",
+    "active_revision_plan_id": "revision-v1",
+    "active_fit_mapping_id": "fit-001"
+  },
+  "gates": {
+    "direction_frozen": true,
+    "scientific_question_frozen": true,
+    "argument_chain_frozen": true,
+    "fit_alignment_frozen": true,
+    "outline_frozen": true,
+    "presubmission_frozen": false
+  },
+  "applicant_fit_mappings": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-07T18:00:00Z",
+        "updated_at": "2026-04-07T18:00:00Z",
+        "source_mode": "auto"
+      },
+      "fit_mapping_id": "fit-001",
+      "scientific_question_id": "question-immune-fibrosis",
+      "argument_chain_id": "arg-001",
+      "applicant_fit_summary": "申请人的时序单细胞样本、心血管模型和跨组学分析经验与当前问题直接对齐。",
+      "unique_advantage": "同一团队同时具备临床问题意识、时序样本和功能验证路径，能把必要性链条落到可执行实验。",
+      "methods_readiness": "现有单细胞、空间转录组与动物模型方法栈足以覆盖机制识别与功能阻断验证。",
+      "resource_readiness": "在研项目沉淀的样本库、模型流程与预实验结果可以直接复用到本轮申请。",
+      "risk_mitigation": "对关键功能验证的薄弱环节已预留补充实验与时间窗对照设计。",
+      "linked_evidence_ids": [
+        "evi-output-1",
+        "evi-project-1",
+        "evi-prelim-1"
+      ]
+    }
+  ]
+}

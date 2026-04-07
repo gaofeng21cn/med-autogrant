@@ -9,7 +9,7 @@ Date: `2026-04-07`
 ## 当前指针
 
 - Current phase: `P2 / NSFC Authoring Mainline Freeze`
-- Active tranche: `P2.B / Argument-Fit-Outline Mainline`
+- Active tranche: `P2.C / Draft-Critique-Revision Skeleton`
 
 ## repo-tracked review surfaces
 
@@ -22,14 +22,15 @@ Date: `2026-04-07`
 - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
 - `docs/specs/2026-04-07-durability-model-clarification.md`
 - `docs/specs/2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md`
+- `docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
 - `schemas/v1/nsfc-workspace.schema.json`
-- `schemas/v1/argument-chain.schema.json`
-- `schemas/v1/applicant-fit-mapping.schema.json`
 - `schemas/v1/application-draft.schema.json`
+- `schemas/v1/mentor-critique.schema.json`
+- `schemas/v1/revision-plan.schema.json`
 - `examples/nsfc_workspace_minimal.json`
-- `examples/nsfc_workspace_p2b_argument_building.json`
-- `examples/nsfc_workspace_p2b_fit_alignment.json`
-- `examples/nsfc_workspace_p2b_outline.json`
+- `examples/nsfc_workspace_p2c_drafting.json`
+- `examples/nsfc_workspace_p2c_critique.json`
+- `examples/nsfc_workspace_p2c_revision.json`
 - `tests/test_cli_validate_workspace.py`
 - `tests/test_stage_router.py`
 - `tests/test_workspace_summary.py`
@@ -42,7 +43,7 @@ Date: `2026-04-07`
 - 哪些语义是 future scope
 - `grant_run_id / workspace_id / draft_id / program_id` 的边界
 - 当前 repo-native hard gate 命令是什么
-- `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 的 object linking 如何冻结
+- `ApplicationDraft / MentorCritique / RevisionPlan` 的 object linking 如何冻结
 
 ## local durable handoff surfaces
 
@@ -77,8 +78,8 @@ Date: `2026-04-07`
 - verification contract 中的 hard gate 命令集合
 - `grant_run_id / workspace_id / draft_id / program_id` 的正式语义边界
 - `CLI`、`MCP`、`controller` 各自是否正式支持
-- `ApplicantFitMapping` 是否进入当前 canonical route
-- `outline -> drafting` 是否只是 transition contract
+- `ApplicationDraft.sections`、`MentorCritique`、`RevisionPlan` 是否进入当前 canonical route
+- `revision(completed revised switch) -> critique` 是否只是 skeleton 级 re-review boundary
 
 ## 哪些状态允许只留在 local handoff surfaces
 
@@ -123,5 +124,6 @@ Date: `2026-04-07`
 - formal entry 真相已进入 repo-durable current truth
 - durability model 真相已进入 repo-durable current truth
 - `grant_run_id / workspace_id / draft_id / program_id` 边界已在 docs / schema / example / CLI / tests / reports 中一致
-- `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 已进入当前 P2.B canonical route
-- 当前 freeze 继续作为 `P2.B` 的硬边界存在，但不构成 `P2.C` activation
+- `P2.B` 的 `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 继续作为上游 canonical route 保留
+- `P2.C` 已把 `ApplicationDraft / MentorCritique / RevisionPlan` 冻结成当前 canonical route
+- 当前 freeze 继续作为 `P2.C` 的硬边界存在，但不构成 `P3` activation

@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：仓库已进入 `P2 / NSFC Authoring Mainline Freeze`，当前 active tranche 为 `P2.B / Argument-Fit-Outline Mainline`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库仍处于 `P2 / NSFC Authoring Mainline Freeze`，当前 active tranche 为 `P2.C / Draft-Critique-Revision Skeleton`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      已有最小 runtime baseline，当前 active tranche 已切到 <code>P2.B / Argument-Fit-Outline Mainline</code>
+      已有最小 runtime baseline，当前 active tranche 已切到 <code>P2.C / Draft-Critique-Revision Skeleton</code>
     </td>
   </tr>
 </table>
@@ -41,7 +41,7 @@
 - 把申请人画像、代表作、在研项目和预实验，组织进同一个可审计的基金工作区。
 - 在花大力气写全文之前，先把“必要性与科学价值”这条主线磨清楚。
 - 让“为什么是这个申请人来做这个问题”成为显式判断，而不是简历堆砌。
-- 用“导师式批注 + 结构化修订”替代一次性文本生成。
+- 用“草稿扩写 + 导师式批注 + 结构化修订”替代一次性文本生成。
 
 ## 现在已经能做什么
 
@@ -49,19 +49,18 @@
 
 当前 runtime 已经可以：
 
-- 校验 `argument_building`、`fit_alignment`、`outline` 三段结构化 `NSFC` workspace，同时通过 repo 测试保持上游 `input_intake -> direction_screening -> question_refinement` 兼容
+- 校验从 `drafting` 到 `critique`、`revision` 的结构化 `NSFC` workspace，同时通过 repo 测试保持上游 `input_intake -> direction_screening -> question_refinement -> argument_building -> fit_alignment -> outline` 兼容
 - 在 CLI 输出中统一携带稳定的 `grant_run_id`，作为当前 hydrated grant run 的正式执行句柄
-- 汇总 direction / question / fit mapping / outline draft 的显式 `current_selection` 绑定
-- 根据 `lifecycle_stage` 与 gates 给出 `argument_building -> fit_alignment -> outline -> drafting` 的下一步建议
+- 汇总 direction / question / fit mapping / draft / revision plan 的显式 `current_selection` 绑定
+- 根据 `lifecycle_stage` 与 gates 给出 `outline -> drafting -> critique -> revision` 的下一步建议，以及 completed revision 回到 `critique` 的 re-review 边界
 - 把当前 authoring route 聚合成单个 machine-readable `stage-route-report`
-- 在存在后段 workspace 时，继续保留结构化 `critique-summary` 与 later-stage baseline 检查
+- 输出带有 `RevisionPlan.execution_status`、版本标签和比较证据的 `critique-summary` 审计面
 
 ## 现在还没有完成什么
 
 下面这些能力仍处于规划或开发中：
 
-- 从 drafting 到稳定 draft 的完整 authoring loop
-- `revision` 阶段内部更细粒度的草稿版本切换建模
+- `major_reframe`、`ready_for_submission`、forced rollback 等更强 verdict 语义仍属于后续 tranche 的 hardening 目标，尚未进入当前 tranche hard gate
 - human-in-the-loop gate 与 submission-grade 交付面
 - 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展
 
@@ -73,11 +72,11 @@
 
 1. 准备申请人材料、代表性成果、在研项目、预实验结果和目标基金要求。
 2. 让 Agent 先把这些材料整理成结构化、可审计的 grant workspace。
-3. 再让 Agent 用 `Med Auto Grant` 去推进科学问题提纯、必要性链条收紧、导师式批注和修订。
+3. 再让 Agent 用 `Med Auto Grant` 去推进科学问题提纯、必要性链条收紧、草稿扩写、导师式批注和修订。
 
 你可以直接把下面这段话发给 Agent：
 
-> 请先读取这个工作区里的申请人材料、既有成果、在研项目、预实验结果和目标基金要求，并把它们整理成结构化、可审计的 grant workspace。然后使用 Med Auto Grant 作为医学 Grant Ops 主线来推进这份 NSFC 风格申请。请优先判断科学问题是否成立、必要性与科学价值是否足够、申请人与问题是否真正适配，再进入草稿扩写。如果当前方向偏弱，请及时止损、改题或指出缺失证据，而不是机械地把一条弱路线写到底。
+> 请先读取这个工作区里的申请人材料、既有成果、在研项目、预实验结果和目标基金要求，并把它们整理成结构化、可审计的 grant workspace。然后使用 Med Auto Grant 作为医学 Grant Ops 主线来推进这份 NSFC 风格申请。请优先判断科学问题是否成立、必要性与科学价值是否足够、申请人与问题是否真正适配、草稿是否忠实继承已冻结问题，再进入 submission-facing 的更后段动作。如果当前方向偏弱，请及时止损、改题或指出缺失证据，而不是机械地把一条弱路线写到底。
 
 ## 公开文档
 
@@ -91,18 +90,18 @@
 ### 最小 Runtime 命令
 
 ```bash
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_minimal.json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_minimal.json
-PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_minimal.json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_minimal.json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_minimal.json
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_drafting.json
+PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_revision.json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_revision.json
 ```
 
 ### 当前技术范围
 
 - 基于 schema 的 `NSFCWorkspace` 校验
 - runtime / CLI 表面上显式区分 `grant_run_id`、`workspace_id` 与 `draft_id`
-- critique、revision、frozen 等后段 route 的运行时一致性检查
+- `drafting / critique / revision` 的 machine-readable route 与 audit surface
 - machine-readable 的批注与 route artifact
 - 覆盖 runtime 与 control-surface 不变量的测试
 
@@ -113,10 +112,9 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 - [`docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md`](./docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
 - [`docs/specs/2026-04-06-object-model-schema-v1.md`](./docs/specs/2026-04-06-object-model-schema-v1.md)
 - [`docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`](./docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
-- [`docs/plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md`](./docs/plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
+- [`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`](./docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md)
 
 ### 本地运行状态
 
 本地 operator 与 runtime 状态属于机器私有内容，不属于公开 GitHub 源码表面。
-
 </details>
