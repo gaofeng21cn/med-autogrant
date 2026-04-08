@@ -314,7 +314,7 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 当前 active execution tranche：
 
-- `R1 / Autonomous Main Loop`
+- `R2 / Artifact Production Surface`
 
 当前 runtime-first ladder：
 
@@ -370,19 +370,20 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 当前 latest absorbed slice：
 
-- `R1.B / Stage Action Executor Envelope`
+- `R2.A / Artifact Bundle Production Surface`
 - upstream `R1.A / Local Main Loop Entry And Stop Reason`
   - freeze absorb：`38b5347`
   - implementation absorb：`8e087dc`
 - `R1.B` activation freeze absorb：`2b193da`
 - `R1.B` implementation absorb：`2953026`
+- `R2.A` activation freeze absorb：`424ded0`
+- `R2.A` implementation：absorbed in current mainline truth
 
 当前 future boundary 已预冻结：
 
-1. `R2.A / Artifact Bundle Production Surface`
-2. `R3.A / Critique Revision Executor Surface`
-3. `R4.A / Final Freeze And Export Package`
-4. `R5.A / Hosted-Friendly Session Boundary`
+1. `R3.A / Critique Revision Executor Surface`
+2. `R4.A / Final Freeze And Export Package`
+3. `R5.A / Hosted-Friendly Session Boundary`
 
 对应 repo-tracked boundary map：
 
@@ -391,7 +392,7 @@ durable handoff 回答的是控制面如何不断点连续推进。
 这组边界的作用是：
 
 1. 允许 `OMX` 从当前 latest absorbed runtime slice 出发，继续做 honest delta audit
-2. 允许 `OMX` 把下一增量正确归类到 `R2.A / R3.A / R4.A / R5.A`
+2. 允许 `OMX` 把下一增量正确归类到 `R3.A / R4.A / R5.A`
 3. 如果下一能力其实已经属于更后面的 stage，允许直接重分类到后面的 pre-frozen package，而不是强行在当前 stage 编造中间 tranche
 4. 只有在没有 honest delta 或下一步需要新平台语义 / 外部 readiness 时，才允许停车
 5. `P5.A / P5.B` 继续只保留为 deferred future expansion，不属于这条 `R1 -> R5` 本地主线的实现面

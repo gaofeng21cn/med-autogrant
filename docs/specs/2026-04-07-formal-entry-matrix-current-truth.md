@@ -9,8 +9,8 @@ Date: `2026-04-07`
 ## 当前指针
 
 - Current phase: `Runtime Productization Program`
-- Active tranche: `R1 / Autonomous Main Loop`
-- Active slice: `R1.B / Stage Action Executor Envelope`
+- Active tranche: `R2 / Artifact Production Surface`
+- Active slice: `R2.A / Artifact Bundle Production Surface`
 
 本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不把 `R1.A` 的本地主循环 entry 混写成新的 formal-entry family。
 
@@ -27,6 +27,7 @@ Date: `2026-04-07`
   - `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input ...`
   - `PYTHONPATH=src python3 -m med_autogrant run-local --input ... [--journal ...]`
   - `PYTHONPATH=src python3 -m med_autogrant resume-local --journal ...`
+  - `PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input ... --output ...`
 - 当前 contract：
   - `CLI` 是当前唯一 repo-verified 的 user-facing runtime formal entry。
   - CLI 输出必须稳定回显同一 `grant_run_id`，并保持与 `workspace_id`、`draft_id`、`program_id` 分离。
@@ -34,12 +35,14 @@ Date: `2026-04-07`
   - `stage-route-report` 当前必须输出 `verification_checkpoint / checkpoint_status`，把 verification、route recommendation、rollback / frozen gate、gate-open ready-for-freeze 状态与 reviewed revision evidence 聚合进同一个 machine-readable checkpoint surface。
   - `run-local` 当前是本地主循环 entry；它只允许在既有 route / checkpoint surface 之上增加 machine-readable `stop_reason`、`stage_action_envelope` 与 local run journal。
   - `resume-local` 当前是本地 runtime recovery entry；它只允许从同一 journal 恢复 `input_path`、沿用同一 `grant_run_id` 重新进入一次 local runtime pass，并在 `stage_action_required` 时继续 durable 回写 `stage_action_envelope`。
-  - 在当前 `R1.B` slice 内，CLI 的 repo-native runtime / audit surface 还必须同时保持：
+  - `build-artifact-bundle` 当前是本地 artifact bundle entry；它只允许把当前 active workspace 的 canonical objects 写成 machine-readable local bundle，并补 manifest / lineage / version / bundle summary，不得写回 workspace、不得写 `.omx/**`、不得偷跑 critique / revision / export。
+  - 在当前 `R2.A` slice 内，CLI 的 repo-native runtime / audit surface 还必须同时保持：
     - absorbed `P3.B` retained boundary：`active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`
     - absorbed `P3.C` retained boundary：`forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`
     - absorbed `P4.A` gate-open boundary：`ready_for_submission + presubmission_frozen=false`
     - absorbed `P4.B` checkpoint durable boundary：`VerificationCheckpoint` 只能作为 `stage-route-report.verification_checkpoint` 的 derived checkpoint object 存在，不能被解释成新的 formal entry、runtime identity 或 controller capability
     - 当前 `R1.B` local runtime boundary：`stage_action_envelope` 只能结构化 `stage_action_required` 的 route continuation，不得替代旧五个 canonical CLI surfaces，也不得把 local run journal 写成 `.omx` control-plane report
+    - 当前 `R2.A` local artifact boundary：`build-artifact-bundle` 只能打包当前 `selected_direction / selected_question / ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline / ApplicationDraft.sections`，不得改写 `frozen_question_id`、不得生成新内容、不得把 local bundle output 写成 `.omx` control-plane report
 
 ### 2. `supported_protocol_layer`
 
@@ -134,6 +137,8 @@ Date: `2026-04-07`
 31. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3a_ready_for_submission.json --journal "$TMPDIR/r1a-freeze-ready.json" --format json`
 32. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_presubmission_frozen.json --journal "$TMPDIR/r1a-frozen.json" --format json`
 33. `PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json`
+34. `PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2b_outline.json --output "$TMPDIR/r2a-outline-bundle.json" --format json`
+35. `PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2c_revision.json --output "$TMPDIR/r2a-revision-bundle.json" --format json`
 
 external verifier durable 裁决如下：
 

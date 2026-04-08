@@ -44,7 +44,7 @@
 - `draft_id`：跨 critique / revision 延续的草稿身份，而不是每次 run 重新生成的 ID
 - `program_id`：当前 Med Auto Grant active mainline 的 control-plane / report-routing 指针
 - 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
-- 当前 repo-verified 的本地 runtime entry 还包括 `run-local` 与 `resume-local`，用于写入并恢复机器私有的 run journal，以及用于 runtime continuation 的 machine-readable `stage_action_envelope`
+- 当前 repo-verified 的本地 runtime entry 还包括 `run-local`、`resume-local` 与 `build-artifact-bundle`；前两者负责写入并恢复机器私有的 run journal 与 machine-readable `stage_action_envelope`，后者负责写出带有 manifest、lineage 与 bundle summary 的 machine-readable 本地 artifact bundle
 - `stage-route-report` 当前还是 machine-readable 的 verification / checkpoint 聚合面，并会输出 `verification_checkpoint` 与 `checkpoint_status`
 - repo-tracked review truth 与 local durable handoff surfaces 必须分开：前者负责解释 runtime contract，后者负责机器私有的恢复状态
 
@@ -71,12 +71,13 @@
 - 通过 `verification_checkpoint / checkpoint_status` 把当前 verification、forced rollback 与 frozen gate 语义收进同一个 checkpoint surface
 - 输出带有 verdict、当前 `RevisionPlan.execution_status`、reviewed revision evidence、rollback / frozen gate 状态、版本标签和比较证据的 `critique-summary / stage-route-report` 审计面
 - 通过 `run-local` 运行一次本地主循环、派生 machine-readable `stop_reason`、在 `stage_action_required` 分支上生成 machine-readable `stage_action_envelope`、写入 durable run journal，并通过 `resume-local` 从该 journal 恢复
+- 通过 `build-artifact-bundle` 把当前已选方向、问题、论证链、适配度、提纲与草稿章节打包成 local `artifact_bundle`，并保留 manifest、lineage、version 与 `grant_run_id / workspace_id / draft_id` 身份一致性
 
 ## 现在还没有完成什么
 
 下面这些能力仍处于规划或开发中：
 
-- 当前仍在围绕 machine-readable `stage_action_envelope` 收紧本地 runtime continuation；更后的 artifact 生产、最终交付与 future product layer 仍未完成
+- 当前本地 runtime continuation 与 local artifact production 已落地；更后的 critique/revision executor、最终交付与 future product layer 仍未完成
 - 未来 `Human-in-the-loop` sibling 或 upper-layer product 相关表面，以及 submission-grade 交付面
 - 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展
 
@@ -114,6 +115,7 @@ PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_w
 PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json"
 PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json"
+PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2c_revision.json --output "$TMPDIR/r2a-revision-bundle.json"
 ```
 
 ### 当前技术范围
@@ -125,6 +127,7 @@ PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revi
 - 通过 `forced_rollback_stage`、`forced_rollback_reason` 与 `presubmission_frozen` 冻结 machine-readable rollback / gate contract
 - machine-readable 的批注、verdict 与 route artifact
 - machine-readable 的本地 runtime stop reason、stage-action envelope 与 durable run-journal recovery
+- 带有 manifest、lineage、version 与 bundle summary 的 machine-readable 本地 artifact bundle 生产
 - 覆盖 runtime 与 control-surface 不变量的测试
 
 ### 内部文档

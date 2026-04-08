@@ -18,13 +18,15 @@ Date: `2026-04-08`
 
 当前 latest absorbed slice 为：
 
-- `R1.B / Stage Action Executor Envelope`
+- `R2.A / Artifact Bundle Production Surface`
 - upstream absorbed anchor：
   - `R1.A / Local Main Loop Entry And Stop Reason`
   - freeze absorb：`38b5347`
   - implementation absorb：`8e087dc`
 - `R1.B` activation freeze absorb：`2b193da`
 - `R1.B` implementation absorb：`2953026`
+- `R2.A` activation freeze absorb：`424ded0`
+- `R2.A` implementation：absorbed in current mainline truth
 
 当前已 landed 的 surface：
 
@@ -34,13 +36,15 @@ Date: `2026-04-08`
 - durable JSON run journal
 - machine-readable `stage_action_envelope`
 - `latest_stage_action_envelope`
+- `build-artifact-bundle`
+- machine-readable `artifact_bundle`
 
 ## One-Shot Autonomous Continuation Contract
 
 这份边界图冻结后，`OMX` 被授权：
 
 1. 从当前 latest absorbed slice 出发，持续做 honest delta audit
-2. 把新识别到的 delta 与下面仍未 absorbed 的 `R2.A / R3.A / R4.A / R5.A` 边界进行匹配
+2. 把新识别到的 delta 与下面仍未 absorbed 的 `R3.A / R4.A / R5.A` 边界进行匹配
 3. 如果匹配成功：
    - 先把对应 tranche freeze 到 active `CURRENT_PROGRAM + PRD + test-spec + implementation + reports`
    - 必要时补 repo-tracked internal spec
@@ -133,8 +137,8 @@ Date: `2026-04-08`
 
 ## Activation Status
 
-- pre-frozen
-- current status：尚未实现；当下一 honest delta 已经进入 artifact writing 时允许激活
+- absorbed
+- current status：已实现并 absorbed；它把当前 active workspace 的 canonical objects 写成 machine-readable local `artifact_bundle`，但没有越界到 critique / revision executor、final export 或 hostedization
 
 ## Scope
 
@@ -157,7 +161,7 @@ Date: `2026-04-08`
 
 - artifact bundle schema / manifest tests
 - direction -> question -> argument -> fit -> outline -> draft lineage consistency tests
-- canonical artifact-producing examples
+- canonical artifact-producing examples（`build-artifact-bundle`）
 - `test_*.py`
 - `git diff --check`
 

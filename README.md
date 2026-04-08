@@ -44,7 +44,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - `draft_id` is the draft identity carried across critique and revision rather than regenerated per run.
 - `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
-- Current repo-verified local runtime entry also includes `run-local` and `resume-local`, which write and recover the machine-local run journal plus the machine-readable `stage_action_envelope` used for runtime continuation.
+- Current repo-verified local runtime entry also includes `run-local`, `resume-local`, and `build-artifact-bundle`; the first two write and recover the machine-local run journal plus the machine-readable `stage_action_envelope` used for runtime continuation, while the latter writes a machine-readable local artifact bundle with manifest, lineage, and bundle summary.
 - `stage-route-report` is the current machine-readable verification/checkpoint aggregation surface and now emits `verification_checkpoint` plus `checkpoint_status`.
 - Repo-tracked review truth and local durable handoff surfaces stay separate: the former explains the runtime contract, while the latter carries machine-specific resume state.
 
@@ -71,12 +71,13 @@ Today, the runtime can:
 - emit `verification_checkpoint` / `checkpoint_status` so the current verification, rollback, and frozen-gate semantics stay on one canonical checkpoint surface
 - expose structured `critique-summary` and `stage-route-report` audit data including verdict, current `RevisionPlan.execution_status`, reviewed revision evidence, rollback / frozen gate state, version labels, and comparison evidence
 - run one local main-loop pass through `run-local`, derive a machine-readable `stop_reason`, emit a machine-readable `stage_action_envelope` for `stage_action_required`, write a durable local run journal, and re-enter that journal through `resume-local`
+- write the currently selected direction, question, argument chain, fit mapping, outline, and draft sections into a local `artifact_bundle` through `build-artifact-bundle`, while preserving manifest, lineage, version, and `grant_run_id / workspace_id / draft_id` identity
 
 ## What Is Still In Progress
 
 The following pieces are planned but not yet complete:
 
-- runtime continuation is still being hardened around the machine-readable `stage_action_envelope`; broader artifact production, final delivery, and future product layers are not complete yet
+- runtime continuation and local artifact production are now landed; critique-revision execution, final delivery, and future product layers are not complete yet
 - any future `Human-in-the-loop` sibling or upper-layer product surfaces, plus submission-grade delivery
 - broader grant-family expansion beyond the first `NSFC` generic skeleton
 
@@ -114,6 +115,7 @@ PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_w
 PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json"
 PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json"
+PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2c_revision.json --output "$TMPDIR/r2a-revision-bundle.json"
 ```
 
 ### Current Technical Scope
@@ -125,6 +127,7 @@ PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revi
 - machine-readable forced rollback and presubmission gate fields through `forced_rollback_stage`, `forced_rollback_reason`, and `presubmission_frozen`
 - machine-readable critique, verdict, and route artifacts
 - machine-readable local runtime stop reasons, stage-action envelopes, and durable run-journal recovery
+- machine-readable local artifact bundle production with manifest, lineage, version, and bundle summary
 - tests covering runtime and control-surface invariants
 
 ### Internal Docs

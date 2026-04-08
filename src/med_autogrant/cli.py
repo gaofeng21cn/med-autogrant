@@ -5,6 +5,7 @@ import json
 import sys
 from typing import Any
 
+from med_autogrant.artifact_bundle import build_artifact_bundle_payload
 from med_autogrant.local_runtime import resume_local_runtime, run_local_runtime
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.stage_router import determine_next_step
@@ -63,6 +64,12 @@ def build_parser() -> argparse.ArgumentParser:
         "resume-local",
         handle_resume_local,
         "从 durable run journal 恢复本地 runtime 单次主循环。",
+    )
+    _add_artifact_bundle_command(
+        subparsers,
+        "build-artifact-bundle",
+        handle_build_artifact_bundle,
+        "把当前 workspace 的已冻结对象写成本地 artifact bundle。",
     )
     return parser
 
@@ -148,6 +155,11 @@ def handle_resume_local(args: argparse.Namespace) -> dict[str, Any]:
     return resume_local_runtime(journal_path=args.journal)
 
 
+def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
+    document = load_workspace_document(args.input)
+    return build_artifact_bundle_payload(document, output_path=args.output)
+
+
 def _add_workspace_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -181,6 +193,19 @@ def _add_resume_runtime_command(
 ) -> None:
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--journal", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_artifact_bundle_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--output", required=True)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -271,6 +296,20 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"checkpoint_status: {payload['stop_reason']['checkpoint_status']}",
             f"recommended_next_stage: {payload['stop_reason']['recommended_next_stage']}",
             f"journal_path: {payload['journal_path']}",
+        ]
+        return "\n".join(lines)
+
+    if command == "build-artifact-bundle":
+        bundle = payload["bundle"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"output_path: {payload['output_path']}",
+            f"bundle_kind: {bundle['bundle_kind']}",
+            f"outline_count: {bundle['bundle_summary']['outline_count']}",
+            f"section_count: {bundle['bundle_summary']['section_count']}",
         ]
         return "\n".join(lines)
 

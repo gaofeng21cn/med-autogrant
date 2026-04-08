@@ -80,6 +80,8 @@ REQUIRED_COMMAND_SNIPPETS = (
     "PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3a_ready_for_submission.json --journal \"$TMPDIR/r1a-freeze-ready.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_presubmission_frozen.json --journal \"$TMPDIR/r1a-frozen.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant resume-local --journal \"$TMPDIR/r1a-revision.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2b_outline.json --output \"$TMPDIR/r2a-outline-bundle.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2c_revision.json --output \"$TMPDIR/r2a-revision-bundle.json\" --format json",
     "git diff --check",
 )
 
@@ -209,6 +211,14 @@ R1B_RUNTIME_SURFACE_SNIPPETS = (
     "action_items",
     "route_reason",
     "resume_decision",
+)
+
+R2A_RUNTIME_SURFACE_SNIPPETS = (
+    "build-artifact-bundle",
+    "artifact bundle",
+    "manifest",
+    "lineage",
+    "bundle summary",
 )
 
 R1B_ACTIVATION_SNIPPETS = (
@@ -663,6 +673,21 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             )
         )
         for snippet in R1B_RUNTIME_SURFACE_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, combined)
+
+    def test_r2a_runtime_surface_is_explicit_in_public_and_truth_docs(self) -> None:
+        combined = "\n".join(
+            read_text(path)
+            for path in (
+                README_EN,
+                README_ZH,
+                FORMAL_ENTRY_MATRIX,
+                DURABILITY_MODEL,
+                R2A_ACTIVATION_PACKAGE,
+            )
+        )
+        for snippet in R2A_RUNTIME_SURFACE_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, combined)
 

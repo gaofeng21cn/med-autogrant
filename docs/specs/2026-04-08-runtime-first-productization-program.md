@@ -55,14 +55,13 @@ Date: `2026-04-08`
 
 这份边界图当前承认：
 
-- `R1.B / Stage Action Executor Envelope` 已从 pre-frozen package 进入 absorbed current truth
+- `R1.B / Stage Action Executor Envelope` 与 `R2.A / Artifact Bundle Production Surface` 已从 pre-frozen package 进入 absorbed current truth
 - 仍待 future activation 的 tranche 为：
-  1. `R2.A / Artifact Bundle Production Surface`
-  2. `R3.A / Critique Revision Executor Surface`
-  3. `R4.A / Final Freeze And Export Package`
-  4. `R5.A / Hosted-Friendly Session Boundary`
+  1. `R3.A / Critique Revision Executor Surface`
+  2. `R4.A / Final Freeze And Export Package`
+  3. `R5.A / Hosted-Friendly Session Boundary`
 
-也就是说，边界图仍然是 future boundary map，但其中 `R1.B` 已不再属于“尚未实现”的 tranche。
+也就是说，边界图仍然是 future boundary map，但其中 `R1.B / R2.A` 已不再属于“尚未实现”的 tranche。
 
 ## Program Ladder
 
@@ -91,6 +90,7 @@ Date: `2026-04-08`
 
 - 把“方向、问题、论证链、适配度、提纲、草稿”从逻辑状态变成稳定 artifact bundle
 - 让本地 runtime 不只是会判断下一步，还会稳定产出用户真正会用的申请材料包
+- 当前 absorbed surface 已包括：`build-artifact-bundle`
 
 验收重点：
 

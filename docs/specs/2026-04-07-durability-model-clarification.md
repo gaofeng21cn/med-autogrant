@@ -9,8 +9,8 @@ Date: `2026-04-07`
 ## 当前指针
 
 - Current phase: `Runtime Productization Program`
-- Active tranche: `R1 / Autonomous Main Loop`
-- Active slice: `R1.B / Stage Action Executor Envelope`
+- Active tranche: `R2 / Artifact Production Surface`
+- Active slice: `R2.A / Artifact Bundle Production Surface`
 
 ## repo-tracked review surfaces
 
@@ -30,6 +30,7 @@ Date: `2026-04-07`
 - `docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
 - `docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
 - `docs/specs/2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md`
+- `docs/specs/2026-04-08-r2a-artifact-bundle-production-surface-activation-package.md`
 - `schemas/v1/nsfc-workspace.schema.json`
 - `schemas/v1/application-draft.schema.json`
 - `schemas/v1/mentor-critique.schema.json`
@@ -45,6 +46,7 @@ Date: `2026-04-07`
 - `tests/test_workspace_summary.py`
 - `tests/test_program_control_surfaces.py`
 - `tests/test_local_runtime.py`
+- `tests/test_artifact_bundle.py`
 
 这些 surface 承担的是 review truth 职责：
 
@@ -62,6 +64,7 @@ Date: `2026-04-07`
 - `ready_for_submission + presubmission_frozen=false` 是否作为当前 canonical gate-open checkpoint surface
 - `VerificationCheckpoint` 是否继续只是 derived checkpoint object，而不是新的 formal entry、identity 或 controller capability
 - `run-local / resume-local`、machine-readable `stop_reason`、`stage_action_envelope`、以及 local run journal 是否进入当前 canonical local runtime surface
+- `build-artifact-bundle / artifact_bundle / manifest / lineage / bundle_summary` 是否进入当前 canonical local artifact surface
 
 ## local durable handoff surfaces
 
@@ -108,6 +111,26 @@ Date: `2026-04-07`
 - 替代 `.omx/reports/**`
 - 发明新的 `program_id` 或 controller pointer
 
+## local artifact durable surface
+
+除 local run journal 之外，当前产品 runtime 还新增一层 machine-local durable artifact surface：
+
+- `build-artifact-bundle --output ...`
+- local artifact bundle JSON
+
+这层负责：
+
+- 为同一 `grant_run_id / workspace_id / draft_id` durable 写出当前 active draft lineage 对应的 bundle
+- durable 写出 `manifest / lineage / bundle_summary / artifacts`
+- 让 `selected_direction / selected_question / ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline / ApplicationDraft.sections` 在本地形成可复用 bundle
+
+它不负责：
+
+- 改写 workspace
+- 替代 `.omx/reports/**`
+- 替代 `verification_checkpoint / checkpoint_status`
+- 伪装 final export / freeze manifest 已完成
+
 ## 哪些结论必须 repo-native
 
 以下结论如果要成为正式 review truth，必须进入 repo-tracked surface，而不能只留在 `.omx/**`：
@@ -126,6 +149,7 @@ Date: `2026-04-07`
 - `ready_for_submission + presubmission_frozen=false` 是否成为当前 canonical gate-open checkpoint surface
 - `VerificationCheckpoint` 是否作为当前 canonical durable checkpoint object 被冻结
 - `run-local / resume-local / stop_reason / stage_action_envelope / local run journal` 是否成为当前 canonical local runtime surface
+- `build-artifact-bundle / artifact_bundle / manifest / lineage / bundle_summary` 是否成为当前 canonical local artifact surface
 
 ## 哪些状态允许只留在 local handoff surfaces
 
@@ -179,3 +203,4 @@ Date: `2026-04-07`
 - `P4.B` 已冻结 `VerificationCheckpoint` 的 canonical durable surface，并明确 `stage-route-report.verification_checkpoint / checkpoint_status` 与 reports / control surfaces 的 durable 对齐关系
 - `R1.A` 已把 `run-local / resume-local`、machine-readable `stop_reason` 与 local run journal 冻结成当前 local runtime surface
 - `R1.B` 已把 `stage_action_required` 分支上的 machine-readable `stage_action_envelope` 与 `latest_stage_action_envelope` 冻结成当前 local runtime orchestration surface
+- `R2.A` 已把 `build-artifact-bundle`、machine-readable `artifact_bundle`、manifest / lineage / bundle summary 与 local bundle output 冻结成当前 local artifact surface
