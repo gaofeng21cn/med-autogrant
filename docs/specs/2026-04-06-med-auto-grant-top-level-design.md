@@ -37,6 +37,21 @@ Date: `2026-04-06`
 
 而不是立刻承诺成熟 runtime。
 
+## 当前执行优先级
+
+当前最优先的不是继续往 second family、federation 或托管平台扩张，而是先把本地产品 runtime 做成熟。
+
+固定顺序是：
+
+1. 先做成熟本地 `CLI-first + host-agent` runtime
+2. 再做 finalization / export surface
+3. 然后才做 hostedization prep
+4. second-family / federation expansion 后置
+
+当前内部 program 采用的 ladder 见：
+
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-productization-program.md`
+
 ## 边界
 
 `Med Auto Grant` 负责的是作者侧、proposal-facing 的基金申请闭环，重点不是“自动补齐一个申请书模板”，而是围绕科学问题、论证链条与申请人适配度组织整个 grant-writing loop。
@@ -72,14 +87,18 @@ Date: `2026-04-06`
 - 代码负责提供稳定对象模型、controller、tool surface、gate 规则与交付接口
 - domain 能力应围绕可编排的 agent runtime 展开，而不是围绕硬编码流程分支展开
 
-### 2. 双模执行
+### 2. 产品分层复用
 
-`Med Auto Grant` 应共享一套基座，同时支持两条执行主线：
+当前 repo-tracked 主线按 `Auto-only` 理解：
 
-- `Auto`：全自动写标书主线，用于端到端闭环、基座测试、评估与优化
-- `Human-in-the-loop`：共享同一基座，但把高判断密度节点交给人，Agent 负责调研、证据整理、实验执行、格式处理、草稿改写、批注归并与修订跟踪
+- 当前仓先把全自动 author-side 主线做成熟，用于端到端闭环、基座测试、评估与优化
+- 未来若要做高判断密度 `Human-in-the-loop` 产品，应作为兼容 sibling 或 upper-layer product 复用同一 substrate 与执行模块
 
-两者的差异不在于维护两套系统，而在于谁来通过高判断密度 gate。
+也就是说：
+
+- 当前仓不做同仓双模
+- 当前仓的首要任务是把 `CLI-first + host-agent` 本地 runtime 做成熟
+- 未来的人在回路产品，应复用这条自动主线的对象、执行、audit 与 artifact 基座，而不是在当前仓里把判断逻辑强行混成一套
 
 ## 与 Research Ops 的关系
 
@@ -147,6 +166,6 @@ MVP 必须严格区分：
 
 ## 下一步
 
-- 把 MVP 对象模型继续冻结成稳定的可执行 schema 与 validation surface
-- 把 `NSFC` 的“科学问题提纯 / 立项依据 / 适配度”诊断链条硬化成第一版可评估主线
-- 把批注-修订闭环与 `Codex App <-> OMX` 的长期协作控制面继续收敛到同一基座
+- 把本地 `CLI-first + host-agent` runtime 做成熟，先收通连续主循环
+- 把 artifact production、critique / revision autoloop、finalization / export 接成真正产品 runtime
+- 在本地 runtime 成熟后，再做 hostedization prep

@@ -71,6 +71,7 @@ Agent 负责：
 - `Grant Ops` 保持 author-side、proposal-facing 边界，不折叠进 `Research Ops`，也不伪装成 reviewer-owned surface。
 - 第一阶段先做医学 `NSFC` 通用骨架，不提前把系统锁死在单一项目类型细枝末节上。
 - 代码负责 contract、validation、audit、persistence、gate 和 host bridge，不负责重新抢回高层创作主导权。
+- 当前执行优先级固定为：先做成熟本地 `CLI-first + host-agent` runtime，再做 hostedization prep；second-family / federation 扩张后置。
 
 ## Runtime And Control-Plane Boundary
 
@@ -179,6 +180,19 @@ OMX 持续写回：
 - 把 `Med Auto Grant` 推进成医学 `Grant Ops` 的长期主线
 - 先在 `NSFC` 通用骨架上跑通从输入接入到批注修订闭环
 - 再把 evidence augmentation、verification surface、future `Human-in-the-loop` sibling / upper-layer product compatibility、submission-grade surface、federation 依次收进同一基座
+
+当前执行优先级 ladder：
+
+1. `R1 / Autonomous Main Loop`
+2. `R2 / Artifact Production Surface`
+3. `R3 / Critique Revision Autoloop`
+4. `R4 / Finalization And Export Surface`
+5. `R5 / Hostedization Prep`
+
+这条 `R1 -> R5` ladder 是当前 active execution priority，不替换上面的 `P1 -> P5` domain maturity order。
+在 `R4` 之前，不应把 second-family onboarding、federation contract、web runtime 或平台托管化写成当前主要开发目标。
+当前 repo-tracked internal program 文档固定为：
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-productization-program.md`
 
 当前固定阶段顺序：
 

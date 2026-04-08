@@ -10,11 +10,13 @@ README_EN = REPO_ROOT / "README.md"
 README_ZH = REPO_ROOT / "README.zh-CN.md"
 PROJECT_TRUTH = REPO_ROOT / "contracts" / "project-truth" / "AGENTS.md"
 POSITIONING_DOC = REPO_ROOT / "docs" / "domain-harness-os-positioning.md"
+TOP_LEVEL_DESIGN = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-auto-grant-top-level-design.md"
 CURRENT_PROGRAM = REPO_ROOT / ".omx" / "context" / "CURRENT_PROGRAM.md"
 PROGRAM_ROUTING = REPO_ROOT / ".omx" / "context" / "PROGRAM_ROUTING.md"
 TEAM_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_TEAM_PROMPT.md"
 EXECUTION_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_EXECUTION_PROMPT.md"
 OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
+RUNTIME_FIRST_PROGRAM = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-productization-program.md"
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -161,6 +163,14 @@ P5B_ACTIVATION_SNIPPETS = (
     "Grant Foundry",
 )
 
+RUNTIME_FIRST_SNIPPETS = (
+    "R1 / Autonomous Main Loop",
+    "R2 / Artifact Production Surface",
+    "R3 / Critique Revision Autoloop",
+    "R4 / Finalization And Export Surface",
+    "R5 / Hostedization Prep",
+)
+
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -240,6 +250,8 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             LATEST_STATUS,
             ITERATION_LOG,
             OPEN_ISSUES,
+            TOP_LEVEL_DESIGN,
+            RUNTIME_FIRST_PROGRAM,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -398,6 +410,22 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             ):
                 with self.subTest(package=package.name, path=path.name):
                     self.assertIn(package_path, read_text(path))
+
+    def test_runtime_first_program_is_repo_tracked_and_wired(self) -> None:
+        runtime_program_path = str(RUNTIME_FIRST_PROGRAM)
+        runtime_program_text = read_text(RUNTIME_FIRST_PROGRAM)
+
+        for snippet in RUNTIME_FIRST_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, runtime_program_text)
+
+        for path in (PROJECT_TRUTH, TOP_LEVEL_DESIGN, OMX_BRIDGE, CURRENT_PROGRAM):
+            with self.subTest(path=path.name):
+                self.assertIn(runtime_program_path, read_text(path))
+
+        combined = "\n".join(read_text(path) for path in (PROJECT_TRUTH, TOP_LEVEL_DESIGN, OMX_BRIDGE))
+        self.assertIn("runtime-first", combined)
+        self.assertIn("CLI-first + host-agent", combined)
 
     def test_revision_transition_contract_is_frozen_in_active_truth_surfaces(self) -> None:
         for path in (OMX_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION):

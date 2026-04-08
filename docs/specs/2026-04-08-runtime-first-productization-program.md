@@ -1,0 +1,168 @@
+# Runtime-First Productization Program
+
+Date: `2026-04-08`
+
+## Purpose
+
+这份文档冻结 `Med Auto Grant` 当前的执行优先级：
+
+- 先把 `CLI-first + host-agent` 的本地产品 runtime 做成熟
+- 再把最终交付面做成 submission-facing 的本地导出面
+- 最后才做 hostedization prep
+
+它不是在改写项目的长期 north star，也不是在替代 `P1 -> P5` 的 domain maturity order。
+
+更准确地说：
+
+- `P1 -> P5` 仍然回答“Grant Ops domain 本身成熟到哪里”
+- `R1 -> R5` 回答“当前执行优先级应该先把哪条产品 runtime 主线做出来”
+
+## Why This Program Exists
+
+当前仓内已经有：
+
+- `NSFC` 通用 authoring loop 的对象与 route 边界
+- critique / revision / re-review / rollback 的 machine-readable contract
+- verification / checkpoint 的 CLI baseline 与 durable report surface
+
+但这些能力还没有被收束成一个真正连续运行的本地产品 runtime。
+
+因此，当前最优先的不是继续做第二 family、federation、或托管平台外壳，而是先把下面这条产品主线真正跑起来：
+
+`输入接入 -> 方向收敛 -> 科学问题提纯 -> 论证链 -> 适配度 -> 提纲 -> 草稿 -> 批注 -> 修订 -> 冻结 -> 导出`
+
+## Relationship To Existing P1-P5 Order
+
+`P1 -> P5` 仍保持原有语义：
+
+1. `P1 / Reality Convergence And NSFC Baseline Freeze`
+2. `P2 / NSFC Authoring Mainline Freeze`
+3. `P3 / Mentor Critique And Revision Loop Hardening`
+4. `P4 / Verification Surface And HITL Layering Preparation`
+5. `P5 / Grant Ops Gateway Expansion And Federation`
+
+当前 `runtime-first productization` 不替换这条顺序，只改变执行优先级：
+
+- 先消化 `P1 -> P4` 已冻结能力，把它们收束成成熟本地 runtime
+- `P5.A / P5.B` 当前转为 deferred future expansion
+- hostedization prep 只有在本地 runtime 已经像一个真正产品那样工作时才允许进入
+
+## Program Ladder
+
+### R1 / Autonomous Main Loop
+
+目标：
+
+- 把现有 `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report` 五个 CLI surfaces 收束成一个连续的本地主循环
+- 让系统能围绕同一 `grant_run_id`、同一 workspace、同一 draft lineage 持续推进，而不是靠人工逐条调用命令拼出来
+- 让停机、回退、冻结、恢复都变成 runtime 行为，而不是只存在于控制面叙述里
+
+当前推荐冻结的 runtime entry：
+
+- `CLI-first`
+- 新的本地主循环 entry 可以由 `run-local` 类命令承载，但必须保持旧五个 CLI surfaces 继续作为 verifier / audit surfaces
+
+验收重点：
+
+- 至少一个本地主循环入口能够从 workspace 输入连续跑到真实 stop reason
+- stop reason 必须 machine-readable
+- recovery 必须不依赖旧 pane / 聊天上下文
+
+### R2 / Artifact Production Surface
+
+目标：
+
+- 把“方向、问题、论证链、适配度、提纲、草稿”从逻辑状态变成稳定 artifact bundle
+- 让本地 runtime 不只是会判断下一步，还会稳定产出用户真正会用的申请材料包
+
+验收重点：
+
+- 产物必须有 manifest / lineage / version
+- artifact bundle 必须与当前 frozen question、argument chain、fit mapping、draft lineage 一致
+- 不允许在写作阶段偷偷换题
+
+### R3 / Critique Revision Autoloop
+
+目标：
+
+- 把“导师批注 -> 修订计划 -> 执行修订 -> 复审 -> 必要时回退”变成真正连续的 autoloop
+- 让系统不仅能给批注，还能围绕批注持续修改，直到进入下一真实 stop condition
+
+验收重点：
+
+- critique、revision、re-review 之间必须保持 evidence trace
+- forced rollback 必须是 runtime 真行为
+- 局部润色与结构性返工必须可区分
+
+### R4 / Finalization And Export Surface
+
+目标：
+
+- 把最终冻结版本、导出包、checkpoint summary 与 submission-facing 本地交付面做出来
+- 让系统从“能出草稿”提升到“能形成可审阅的完整申请包”
+
+验收重点：
+
+- final package 必须有冻结版本身份
+- 章节完整性、证据挂接、lineage 与 final checkpoint 必须一致
+- export surface 必须是结构化 package，不是自由文本说明
+
+### R5 / Hostedization Prep
+
+目标：
+
+- 在本地 runtime 成熟后，再拆 host/runtime boundary，为后续托管化准备
+- 只做 contract、state、session、artifact、audit surface 的 hosted-friendly 抽象
+
+验收重点：
+
+- 不改写 domain contract
+- 不提前伪装成已完成 hosted runtime
+- hostedization prep 只在 `R1 -> R4` 成熟后打开
+
+## Deferred Scope
+
+在当前 program 内，以下内容全部后置：
+
+- `P5.A / Second Grant Family Onboarding`
+- `P5.B / Federation Contract Freeze`
+- second-family source packet 扩张
+- `Grant Foundry` admission / federation package
+- same-repo `Human-in-the-loop`
+- `MCP / controller` public formal entry
+- web runtime / hosted runtime 正式落地
+
+## Promotion Invariants
+
+- formal entry 继续固定为 `CLI-first`
+- `grant_run_id / workspace_id / draft_id / program_id` 边界不变
+- 旧五个 CLI surfaces 继续作为 verifier / audit surfaces
+- critique / revision / rollback / checkpoint 的 absorbed contracts 不得回退
+- 本地 runtime 成熟化优先于 second-family / federation 扩张
+- hostedization 只能发生在本地 runtime 成熟之后
+
+## OMX Autonomy Rules For This Program
+
+在这条 program 里，`OMX` 不是被允许“想到什么就做什么”，而是被允许：
+
+1. 先在 `R1 -> R5` 中定位当前 stage
+2. 如果发现新的、具体的、可测试的 runtime 缺口：
+   - 先把缺口冻结进 active `PRD / test-spec / implementation`
+   - 必要时新增 repo-tracked 内部 spec
+   - 再实现、验证、closeout、absorb
+3. 在同一 stage 内连续拆分多个 bounded sub-slices，只要每个 sub-slice 都先 freeze 再 implement
+
+禁止：
+
+- 直接跳到 hostedization
+- 越过 `R1 -> R4` 去做 second-family / federation
+- 在没有 frozen slice contract 的情况下硬写 runtime 行为
+
+## Honest Stop Conditions
+
+以下情况必须诚实停车，而不是硬跑：
+
+- 当前 stage 没有新的 concrete runtime delta
+- 下一步需要新的 formal entry、平台 runtime、外部凭据、或仓外 readiness
+- 当前想做的动作其实属于 `P5` expansion，而不是 runtime-first productization
+- 无法把新增能力写成可验证 slice

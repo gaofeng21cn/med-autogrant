@@ -117,6 +117,7 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - `.omx/plans/prd-med-autogrant-mainline.md`
 - `.omx/plans/test-spec-med-autogrant-mainline.md`
 - `.omx/plans/implementation-med-autogrant-mainline.md`
+- `docs/specs/2026-04-08-runtime-first-productization-program.md`
 
 它们分别回答：
 
@@ -181,6 +182,8 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - `.omx/**` 仍然承担本机 durable handoff 责任，但不是这次提交必须依赖的 review 入口
 
 ## 当前固定阶段顺序
+
+这条顺序仍然是 domain maturity order，不等于当前执行优先级。
 
 ### P1. Reality Convergence And NSFC Baseline Freeze
 
@@ -295,6 +298,36 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5a-second-grant-family-onboarding-activation-package.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5b-federation-contract-freeze-activation-package.md`
 
+## 当前 active execution priority
+
+当前 active execution priority 不再继续把 `P4.B -> P5.A -> P5.B` 视为唯一长线。
+
+当前改为：
+
+- 先按 runtime-first ladder 做成熟本地产品 runtime
+- 再做 hostedization prep
+- `P5.A / P5.B` 转为 deferred future expansion
+
+当前 active execution phase：
+
+- `Runtime Productization Program`
+
+当前 active execution tranche：
+
+- `R1 / Autonomous Main Loop`
+
+当前 runtime-first ladder：
+
+1. `R1 / Autonomous Main Loop`
+2. `R2 / Artifact Production Surface`
+3. `R3 / Critique Revision Autoloop`
+4. `R4 / Finalization And Export Surface`
+5. `R5 / Hostedization Prep`
+
+对应 repo-tracked internal program doc：
+
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-productization-program.md`
+
 ## Autonomous Longrun Program Mode
 
 当 north star、阶段顺序、硬边界与 stop conditions 已冻结时，当前默认推荐的是：
@@ -340,6 +373,7 @@ durable handoff 回答的是控制面如何不断点连续推进。
    - 把 `VerificationCheckpoint` 明确成 author-side canonical durable checkpoint object，并保持它仍由 `stage-route-report.verification_checkpoint` 聚合输出
    - 把 runtime checkpoint object、repo-tracked truth 与 local reports 的 durable 关系写清楚，同时禁止把 checkpoint surface 混写成 formal entry、runtime identity、reviewer/HITL 或 `MCP / controller` capability
 5. `P5.A / P5.B` 当前已作为 future activation package 预冻结进 repo-tracked docs 与 active control surfaces；这意味着 `OMX` 后续可以继续长跑，但只有在 admitted second-family source packet 与上游 federation truth 真正存在时才允许跨 phase 进入。
+6. 当前 active execution priority 已改成 runtime-first：先把本地 `CLI-first + host-agent` runtime 做成熟，再讨论托管化与 `P5` expansion。
 
 ### 保留的 P1.B hard boundary：revision transition minimal contract
 
