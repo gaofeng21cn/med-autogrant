@@ -19,6 +19,7 @@ OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-a
 RUNTIME_FIRST_PROGRAM = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-productization-program.md"
 RUNTIME_BOUNDARY_MAP = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-r1-to-r5-boundary-map.md"
 R1A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md"
+R1B_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1b-stage-action-executor-envelope-activation-package.md"
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -193,6 +194,22 @@ R1A_RUNTIME_SURFACE_SNIPPETS = (
     "journal",
 )
 
+R1B_ACTIVATION_SNIPPETS = (
+    "stage_action_envelope",
+    "latest_stage_action_envelope",
+    "stage_action_required",
+    "current_selection",
+    "resume-local",
+    "action_items",
+    "route_reason",
+    "append_attempt",
+    "reuse_grant_run_id",
+    "CLI",
+    "MCP",
+    "controller",
+    "not-yet-supported",
+)
+
 RUNTIME_BOUNDARY_MAP_SNIPPETS = (
     "R1.B / Stage Action Executor Envelope",
     "R2.A / Artifact Bundle Production Surface",
@@ -305,6 +322,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             RUNTIME_FIRST_PROGRAM,
             RUNTIME_BOUNDARY_MAP,
             R1A_ACTIVATION_PACKAGE,
+            R1B_ACTIVATION_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -515,9 +533,32 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(path=path.name):
                 self.assertIn(package_path, read_text(path))
 
+    def test_r1b_activation_package_is_wired_into_active_control_surfaces(self) -> None:
+        package_path = str(R1B_ACTIVATION_PACKAGE)
+        self.assertTrue(R1B_ACTIVATION_PACKAGE.exists(), f"R1.B activation package 不存在: {R1B_ACTIVATION_PACKAGE}")
+
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            TEAM_PROMPT,
+            EXECUTION_PROMPT,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
     def test_r1a_activation_package_freezes_local_main_loop_contract(self) -> None:
         text = read_text(R1A_ACTIVATION_PACKAGE)
         for snippet in R1A_ACTIVATION_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, text)
+
+    def test_r1b_activation_package_freezes_stage_action_envelope_contract(self) -> None:
+        text = read_text(R1B_ACTIVATION_PACKAGE)
+        for snippet in R1B_ACTIVATION_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, text)
 
