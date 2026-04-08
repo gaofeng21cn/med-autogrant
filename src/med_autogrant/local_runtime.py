@@ -36,6 +36,11 @@ def run_local_runtime(
     if validation.ok:
         route_report = build_stage_route_report(document)
         stop_reason = derive_stop_reason(route_report)
+        stage_action_envelope = derive_stage_action_envelope(
+            route_report=route_report,
+            stop_reason=stop_reason,
+            journal_path=resolved_journal_path,
+        )
         draft_id = route_report["verification_checkpoint"]["identity"]["draft_id"]
         lifecycle_stage = route_report["lifecycle_stage"]
     else:
@@ -57,6 +62,7 @@ def run_local_runtime(
             "forced_rollback_stage": None,
             "forced_rollback_reason": None,
         }
+        stage_action_envelope = None
         draft_id = None
         lifecycle_stage = document.get("lifecycle_stage")
 
@@ -66,6 +72,7 @@ def run_local_runtime(
         lifecycle_stage=lifecycle_stage,
         route_report=route_report,
         stop_reason=stop_reason,
+        stage_action_envelope=stage_action_envelope,
     )
     _write_journal(resolved_journal_path, journal)
 
@@ -80,6 +87,7 @@ def run_local_runtime(
         "journal_path": str(resolved_journal_path),
         "attempt_index": journal["attempts"][-1]["attempt_index"],
         "stop_reason": stop_reason,
+        "stage_action_envelope": stage_action_envelope,
         "route_report": route_report,
         "resume": {
             "command": "resume-local",
@@ -133,6 +141,55 @@ def derive_stop_reason(route_report: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def derive_stage_action_envelope(
+    *,
+    route_report: dict[str, Any],
+    stop_reason: dict[str, Any],
+    journal_path: Path,
+) -> dict[str, Any] | None:
+    if stop_reason.get("code") != "stage_action_required":
+        return None
+
+    summary = route_report["route"]["summarize_workspace"]
+    next_step = route_report["route"]["next_step"]
+    checkpoint = route_report["verification_checkpoint"]
+    selection = summary.get("current_selection") or {}
+    actions = next_step.get("actions") or []
+
+    return {
+        "envelope_version": 1,
+        "status": "action_required",
+        "grant_run_id": route_report["grant_run_id"],
+        "workspace_id": route_report["workspace_id"],
+        "draft_id": checkpoint["identity"]["draft_id"],
+        "current_stage": next_step["current_stage"],
+        "recommended_next_stage": next_step["recommended_stage"],
+        "checkpoint_status": checkpoint["checkpoint_status"],
+        "requires_human_confirmation": bool(next_step.get("requires_human_confirmation")),
+        "selection": {
+            "selected_direction_id": selection.get("selected_direction_id"),
+            "selected_question_id": selection.get("selected_question_id"),
+            "active_fit_mapping_id": selection.get("active_fit_mapping_id"),
+            "active_draft_id": selection.get("active_draft_id"),
+            "active_revision_plan_id": selection.get("active_revision_plan_id"),
+        },
+        "action_items": [
+            {
+                "index": index,
+                "instruction": instruction,
+            }
+            for index, instruction in enumerate(actions, start=1)
+        ],
+        "route_reason": next_step["reason"],
+        "resume_decision": {
+            "command": "resume-local",
+            "journal_path": str(journal_path),
+            "append_attempt": True,
+            "reuse_grant_run_id": True,
+        },
+    }
+
+
 def _resolve_journal_path(*, document: dict[str, Any], journal_path: str | Path | None) -> Path:
     if journal_path is not None:
         return Path(journal_path).expanduser().resolve()
@@ -167,6 +224,7 @@ def _load_or_initialize_journal(
             "workspace_id": document.get("workspace_id"),
             "input_path": str(input_path),
             "latest_stop_reason": None,
+            "latest_stage_action_envelope": None,
             "latest_route_report": None,
             "attempts": [],
         }
@@ -197,6 +255,7 @@ def _append_attempt(
     lifecycle_stage: str | None,
     route_report: dict[str, Any],
     stop_reason: dict[str, Any],
+    stage_action_envelope: dict[str, Any] | None,
 ) -> dict[str, Any]:
     attempts = journal.setdefault("attempts", [])
     attempt_index = len(attempts) + 1
@@ -209,9 +268,11 @@ def _append_attempt(
             "lifecycle_stage": lifecycle_stage,
             "checkpoint_status": checkpoint_status,
             "stop_reason": stop_reason,
+            "stage_action_envelope": stage_action_envelope,
         }
     )
     journal["latest_stop_reason"] = stop_reason
+    journal["latest_stage_action_envelope"] = stage_action_envelope
     journal["latest_route_report"] = route_report
     return journal
 

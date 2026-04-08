@@ -10,7 +10,7 @@ Date: `2026-04-07`
 
 - Current phase: `Runtime Productization Program`
 - Active tranche: `R1 / Autonomous Main Loop`
-- Active slice: `R1.A / Local Main Loop Entry And Stop Reason`
+- Active slice: `R1.B / Stage Action Executor Envelope`
 
 ## repo-tracked review surfaces
 
@@ -61,7 +61,7 @@ Date: `2026-04-07`
 - `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
 - `ready_for_submission + presubmission_frozen=false` 是否作为当前 canonical gate-open checkpoint surface
 - `VerificationCheckpoint` 是否继续只是 derived checkpoint object，而不是新的 formal entry、identity 或 controller capability
-- `run-local / resume-local`、machine-readable `stop_reason`、以及 local run journal 是否进入当前 canonical local runtime surface
+- `run-local / resume-local`、machine-readable `stop_reason`、`stage_action_envelope`、以及 local run journal 是否进入当前 canonical local runtime surface
 
 ## local durable handoff surfaces
 
@@ -98,8 +98,9 @@ Date: `2026-04-07`
 这层负责：
 
 - 为同一 `grant_run_id` durable 回写 `latest_stop_reason`
+- 为 `stage_action_required` 类 stop reason durable 回写 `latest_stage_action_envelope`
 - durable 回写 `latest_route_report`
-- 通过 `attempts` 记录 `run-local / resume-local` 的本地 runtime 进入历史
+- 通过 `attempts` 记录 `run-local / resume-local` 的本地 runtime 进入历史，包括 attempt 级 `stage_action_envelope`
 
 它不负责：
 
@@ -124,7 +125,7 @@ Date: `2026-04-07`
 - `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
 - `ready_for_submission + presubmission_frozen=false` 是否成为当前 canonical gate-open checkpoint surface
 - `VerificationCheckpoint` 是否作为当前 canonical durable checkpoint object 被冻结
-- `run-local / resume-local / stop_reason / local run journal` 是否成为当前 canonical local runtime surface
+- `run-local / resume-local / stop_reason / stage_action_envelope / local run journal` 是否成为当前 canonical local runtime surface
 
 ## 哪些状态允许只留在 local handoff surfaces
 
@@ -177,3 +178,4 @@ Date: `2026-04-07`
 - `P4.A` 已把 `ready_for_submission + presubmission_frozen=false` 的 gate-open verification surface 冻结进 current truth，并把 `examples/nsfc_workspace_p3a_ready_for_submission.json` 纳入 hard gate
 - `P4.B` 已冻结 `VerificationCheckpoint` 的 canonical durable surface，并明确 `stage-route-report.verification_checkpoint / checkpoint_status` 与 reports / control surfaces 的 durable 对齐关系
 - `R1.A` 已把 `run-local / resume-local`、machine-readable `stop_reason` 与 local run journal 冻结成当前 local runtime surface
+- `R1.B` 已把 `stage_action_required` 分支上的 machine-readable `stage_action_envelope` 与 `latest_stage_action_envelope` 冻结成当前 local runtime orchestration surface

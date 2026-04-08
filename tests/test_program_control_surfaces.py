@@ -46,6 +46,8 @@ REPORT_README = REPORT_DIR / "README.md"
 
 REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "python3 -m unittest discover -s tests -p 'test_program_control_surfaces.py'",
+    "python3 -m unittest discover -s tests -p 'test_local_runtime.py'",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json",
@@ -71,6 +73,12 @@ REQUIRED_COMMAND_SNIPPETS = (
     "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal \"$TMPDIR/r1a-revision.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3b_re_review_major_revision.json --journal \"$TMPDIR/r1b-major-revision.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --journal \"$TMPDIR/r1a-rollback.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3a_ready_for_submission.json --journal \"$TMPDIR/r1a-freeze-ready.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_presubmission_frozen.json --journal \"$TMPDIR/r1a-frozen.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant resume-local --journal \"$TMPDIR/r1a-revision.json\" --format json",
     "git diff --check",
 )
 
@@ -192,6 +200,14 @@ R1A_RUNTIME_SURFACE_SNIPPETS = (
     "resume-local",
     "stop_reason",
     "journal",
+)
+
+R1B_RUNTIME_SURFACE_SNIPPETS = (
+    "stage_action_envelope",
+    "latest_stage_action_envelope",
+    "action_items",
+    "route_reason",
+    "resume_decision",
 )
 
 R1B_ACTIVATION_SNIPPETS = (
@@ -574,6 +590,21 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             )
         )
         for snippet in R1A_RUNTIME_SURFACE_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, combined)
+
+    def test_r1b_runtime_surface_is_explicit_in_public_and_truth_docs(self) -> None:
+        combined = "\n".join(
+            read_text(path)
+            for path in (
+                README_EN,
+                README_ZH,
+                FORMAL_ENTRY_MATRIX,
+                DURABILITY_MODEL,
+                R1B_ACTIVATION_PACKAGE,
+            )
+        )
+        for snippet in R1B_RUNTIME_SURFACE_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, combined)
 

@@ -21,6 +21,7 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.js
 READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
 FORCED_ROLLBACK_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_forced_rollback_argument.json"
 PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
+RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 
 
 class LocalRuntimeCliTest(unittest.TestCase):
@@ -75,6 +76,138 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(len(journal["attempts"]), 1)
             self.assertEqual(journal["attempts"][0]["trigger"], "run-local")
             self.assertEqual(journal["attempts"][0]["attempt_index"], 1)
+
+    def test_run_local_adds_stage_action_envelope_for_revision_workspace(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            journal_path = Path(tmp_dir) / "revision-envelope-journal.json"
+
+            exit_code, stdout, stderr = self.run_cli(
+                "run-local",
+                "--input",
+                str(REVISION_EXAMPLE_PATH),
+                "--journal",
+                str(journal_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            envelope = payload["stage_action_envelope"]
+            self.assertIsInstance(envelope, dict)
+            self.assertEqual(envelope["envelope_version"], 1)
+            self.assertEqual(envelope["status"], "action_required")
+            self.assertEqual(envelope["grant_run_id"], payload["grant_run_id"])
+            self.assertEqual(envelope["workspace_id"], payload["workspace_id"])
+            self.assertEqual(envelope["draft_id"], payload["draft_id"])
+            self.assertEqual(envelope["current_stage"], "revision")
+            self.assertEqual(envelope["recommended_next_stage"], "critique")
+            self.assertEqual(envelope["checkpoint_status"], "forward_progress")
+            self.assertFalse(envelope["requires_human_confirmation"])
+            self.assertEqual(
+                envelope["selection"],
+                {
+                    "selected_direction_id": "dir-inflammatory-remodeling",
+                    "selected_question_id": "question-immune-fibrosis",
+                    "active_fit_mapping_id": "fit-001",
+                    "active_draft_id": "draft-v1",
+                    "active_revision_plan_id": "revision-v1",
+                },
+            )
+            self.assertEqual(
+                envelope["action_items"],
+                [
+                    {
+                        "index": 1,
+                        "instruction": "提交 revised 草稿进入新一轮导师批注。",
+                    },
+                    {
+                        "index": 2,
+                        "instruction": "基于 comparison_summary 核对本轮修订是否覆盖前一轮 blocking issues。",
+                    },
+                ],
+            )
+            self.assertIn("revised 草稿", envelope["route_reason"])
+            self.assertEqual(
+                envelope["resume_decision"],
+                {
+                    "command": "resume-local",
+                    "journal_path": str(journal_path.resolve()),
+                    "append_attempt": True,
+                    "reuse_grant_run_id": True,
+                },
+            )
+
+            journal = json.loads(journal_path.read_text(encoding="utf-8"))
+            self.assertEqual(journal["latest_stage_action_envelope"], envelope)
+            self.assertEqual(journal["attempts"][0]["stage_action_envelope"], envelope)
+
+    def test_run_local_adds_stage_action_envelope_for_critique_major_revision_workspace(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            journal_path = Path(tmp_dir) / "major-revision-envelope-journal.json"
+
+            exit_code, stdout, stderr = self.run_cli(
+                "run-local",
+                "--input",
+                str(RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH),
+                "--journal",
+                str(journal_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            envelope = payload["stage_action_envelope"]
+            self.assertIsInstance(envelope, dict)
+            self.assertEqual(envelope["current_stage"], "critique")
+            self.assertEqual(envelope["recommended_next_stage"], "revision")
+            self.assertEqual(envelope["selection"]["active_revision_plan_id"], "revision-v2")
+            self.assertEqual(
+                envelope["action_items"],
+                [
+                    {
+                        "index": 1,
+                        "instruction": "执行 revision plan 中的 P0/P1 项。",
+                    },
+                    {
+                        "index": 2,
+                        "instruction": "修订后重新进入导师批注闭环。",
+                    },
+                ],
+            )
+
+    def test_non_stage_action_stop_reasons_do_not_emit_stage_action_envelope(self) -> None:
+        cases = (
+            (FORCED_ROLLBACK_EXAMPLE_PATH, "rollback.json"),
+            (READY_FOR_SUBMISSION_EXAMPLE_PATH, "freeze-ready.json"),
+            (PRESUBMISSION_FROZEN_EXAMPLE_PATH, "frozen.json"),
+        )
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            for input_path, journal_name in cases:
+                with self.subTest(input_path=input_path.name):
+                    journal_path = Path(tmp_dir) / journal_name
+                    exit_code, stdout, stderr = self.run_cli(
+                        "run-local",
+                        "--input",
+                        str(input_path),
+                        "--journal",
+                        str(journal_path),
+                        "--format",
+                        "json",
+                    )
+
+                    self.assertEqual(exit_code, 0)
+                    self.assertEqual(stderr, "")
+                    payload = json.loads(stdout)
+                    self.assertIsNone(payload["stage_action_envelope"])
+
+                    journal = json.loads(journal_path.read_text(encoding="utf-8"))
+                    self.assertIsNone(journal["latest_stage_action_envelope"])
+                    self.assertIsNone(journal["attempts"][0]["stage_action_envelope"])
 
     def test_run_local_surfaces_rollback_required_stop_reason(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -179,12 +312,22 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(second_payload["workspace_id"], first_payload["workspace_id"])
             self.assertEqual(second_payload["stop_reason"]["code"], "stage_action_required")
             self.assertEqual(second_payload["attempt_index"], 2)
+            self.assertEqual(second_payload["stage_action_envelope"]["current_stage"], "revision")
+            self.assertEqual(second_payload["stage_action_envelope"]["recommended_next_stage"], "critique")
 
             journal = json.loads(journal_path.read_text(encoding="utf-8"))
             self.assertEqual(len(journal["attempts"]), 2)
             self.assertEqual(journal["attempts"][0]["trigger"], "run-local")
             self.assertEqual(journal["attempts"][1]["trigger"], "resume-local")
             self.assertEqual(journal["attempts"][1]["attempt_index"], 2)
+            self.assertEqual(
+                journal["attempts"][1]["stage_action_envelope"]["resume_decision"]["journal_path"],
+                str(journal_path.resolve()),
+            )
+            self.assertEqual(
+                journal["latest_stage_action_envelope"]["recommended_next_stage"],
+                "critique",
+            )
 
     def test_run_local_rejects_journal_reuse_with_different_input_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

@@ -10,7 +10,7 @@ Date: `2026-04-07`
 
 - Current phase: `Runtime Productization Program`
 - Active tranche: `R1 / Autonomous Main Loop`
-- Active slice: `R1.A / Local Main Loop Entry And Stop Reason`
+- Active slice: `R1.B / Stage Action Executor Envelope`
 
 本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不把 `R1.A` 的本地主循环 entry 混写成新的 formal-entry family。
 
@@ -32,14 +32,14 @@ Date: `2026-04-07`
   - CLI 输出必须稳定回显同一 `grant_run_id`，并保持与 `workspace_id`、`draft_id`、`program_id` 分离。
   - `grant_run_id` 是 execution handle，不是新的入口面。
   - `stage-route-report` 当前必须输出 `verification_checkpoint / checkpoint_status`，把 verification、route recommendation、rollback / frozen gate、gate-open ready-for-freeze 状态与 reviewed revision evidence 聚合进同一个 machine-readable checkpoint surface。
-  - `run-local` 当前是本地主循环 entry；它只允许在既有 route / checkpoint surface 之上增加 machine-readable `stop_reason` 与 local run journal。
-  - `resume-local` 当前是本地 runtime recovery entry；它只允许从同一 journal 恢复 `input_path` 并沿用同一 `grant_run_id` 重新进入一次 local runtime pass。
-  - 在当前 `R1.A` slice 内，CLI 的 repo-native runtime / audit surface 还必须同时保持：
+  - `run-local` 当前是本地主循环 entry；它只允许在既有 route / checkpoint surface 之上增加 machine-readable `stop_reason`、`stage_action_envelope` 与 local run journal。
+  - `resume-local` 当前是本地 runtime recovery entry；它只允许从同一 journal 恢复 `input_path`、沿用同一 `grant_run_id` 重新进入一次 local runtime pass，并在 `stage_action_required` 时继续 durable 回写 `stage_action_envelope`。
+  - 在当前 `R1.B` slice 内，CLI 的 repo-native runtime / audit surface 还必须同时保持：
     - absorbed `P3.B` retained boundary：`active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`
     - absorbed `P3.C` retained boundary：`forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`
     - absorbed `P4.A` gate-open boundary：`ready_for_submission + presubmission_frozen=false`
     - absorbed `P4.B` checkpoint durable boundary：`VerificationCheckpoint` 只能作为 `stage-route-report.verification_checkpoint` 的 derived checkpoint object 存在，不能被解释成新的 formal entry、runtime identity 或 controller capability
-    - 当前 `R1.A` local runtime boundary：`run-local / resume-local` 不得替代旧五个 canonical CLI surfaces，也不得把 local run journal 写成 `.omx` control-plane report
+    - 当前 `R1.B` local runtime boundary：`stage_action_envelope` 只能结构化 `stage_action_required` 的 route continuation，不得替代旧五个 canonical CLI surfaces，也不得把 local run journal 写成 `.omx` control-plane report
 
 ### 2. `supported_protocol_layer`
 
@@ -81,6 +81,7 @@ Date: `2026-04-07`
   - 最后读 active `LATEST_STATUS / ITERATION_LOG / OPEN_ISSUES`
 - 当前 contract：
   - `resume-local` 是当前产品 runtime 的本地恢复入口；它从 journal 恢复 `input_path`、沿用同一 `grant_run_id`，并 append 新 `attempt`。
+  - 当当前 stop reason 为 `stage_action_required` 时，恢复入口还必须能继续 durable 回写 machine-readable `stage_action_envelope`。
   - developer control-plane 的恢复入口继续使用同一组 `.omx` durable surfaces。
   - 恢复时必须沿用同一 `grant_run_id` 上下文回显，但不能把 `grant_run_id` 误写成 `program_id` 或 `workspace_id`。
   - 恢复时也不得丢失 absorbed `P3.B` 的 `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`，absorbed `P3.C` 的 `forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`，absorbed `P4.A` 的 gate-open ready-for-freeze 语义，以及 absorbed `P4.B` 的 `VerificationCheckpoint` durable boundary。
@@ -101,13 +102,13 @@ Date: `2026-04-07`
 当前 active tranche 的 hard gate 只包含 repo-native 验证命令：
 
 1. `python3 -m unittest discover -s tests -p 'test_*.py'`
-2. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json`
-3. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
-4. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json`
-5. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
-6. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
-7. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_revision.json --format json`
-8. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
+2. `python3 -m unittest discover -s tests -p 'test_program_control_surfaces.py'`
+3. `python3 -m unittest discover -s tests -p 'test_local_runtime.py'`
+4. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json`
+5. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
+6. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json`
+7. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
+8. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
 9. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json`
 10. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
 11. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
@@ -128,10 +129,11 @@ Date: `2026-04-07`
 26. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
 27. `git diff --check`
 28. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json" --format json`
-29. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --journal "$TMPDIR/r1a-rollback.json" --format json`
-30. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3a_ready_for_submission.json --journal "$TMPDIR/r1a-freeze-ready.json" --format json`
-31. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_presubmission_frozen.json --journal "$TMPDIR/r1a-frozen.json" --format json`
-32. `PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json`
+29. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3b_re_review_major_revision.json --journal "$TMPDIR/r1b-major-revision.json" --format json`
+30. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --journal "$TMPDIR/r1a-rollback.json" --format json`
+31. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3a_ready_for_submission.json --journal "$TMPDIR/r1a-freeze-ready.json" --format json`
+32. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_presubmission_frozen.json --journal "$TMPDIR/r1a-frozen.json" --format json`
+33. `PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json`
 
 external verifier durable 裁决如下：
 
