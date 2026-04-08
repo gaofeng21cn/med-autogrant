@@ -88,6 +88,7 @@ class WorkspaceContext:
     active_draft: dict[str, Any]
     active_revision_plan: dict[str, Any]
     active_critique: dict[str, Any]
+    reviewed_revision_plan: dict[str, Any] | None
 
 
 @dataclass(frozen=True)
@@ -101,6 +102,7 @@ class WorkspaceState:
     active_draft: dict[str, Any] | None
     active_revision_plan: dict[str, Any] | None
     active_critique: dict[str, Any] | None
+    reviewed_revision_plan: dict[str, Any] | None
 
 
 def load_workspace_document(path: str | Path) -> dict[str, Any]:
@@ -162,6 +164,7 @@ def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
         "active_draft": _serialize_draft(state.active_draft),
         "active_revision_plan": _serialize_revision_plan(state.active_revision_plan),
         "active_critique": _serialize_critique(state.active_critique),
+        "reviewed_revision_evidence": _serialize_reviewed_revision_evidence(state.reviewed_revision_plan),
     }
 
 
@@ -181,11 +184,13 @@ def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
         "draft_status": draft["status"],
         "draft_version_label": draft["version_label"],
         "critique_id": critique["critique_id"],
+        "reviewed_revision_plan_id": critique.get("reviewed_revision_plan_id"),
         "revision_plan_id": revision_plan["revision_plan_id"],
         "execution_status": revision_plan.get("execution_status", "planned"),
         "pre_revision_version_label": revision_plan.get("pre_revision_version_label"),
         "post_revision_version_label": revision_plan.get("post_revision_version_label"),
         "comparison_summary": revision_plan.get("comparison_summary"),
+        "reviewed_revision_evidence": _serialize_reviewed_revision_evidence(context.reviewed_revision_plan),
         "overall_diagnosis": critique["overall_diagnosis"],
         "current_scientific_question": critique["current_scientific_question"],
         "suggested_question": critique["suggested_question"],
@@ -457,6 +462,7 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
         )
 
     active_critique = None
+    reviewed_revision_plan = None
     if active_revision_plan is not None:
         active_critique = critiques.get(active_revision_plan.get("critique_id"))
         if active_critique is None:
@@ -473,6 +479,41 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
                     message="激活批注必须与当前激活草稿一致。",
                 )
             )
+        reviewed_revision_plan_id = active_critique.get("reviewed_revision_plan_id")
+        if reviewed_revision_plan_id is not None:
+            reviewed_revision_plan = revision_plans.get(reviewed_revision_plan_id)
+            if reviewed_revision_plan is None:
+                issues.append(
+                    ValidationIssue(
+                        path="mentor_critiques.reviewed_revision_plan_id",
+                        message="re-review 批注必须引用已存在的已完成 RevisionPlan。",
+                    )
+                )
+            else:
+                if active_draft is not None and reviewed_revision_plan.get("draft_id") != active_draft.get("draft_id"):
+                    issues.append(
+                        ValidationIssue(
+                            path="mentor_critiques.reviewed_revision_plan_id",
+                            message="re-review 批注引用的 RevisionPlan 必须回指当前激活草稿。",
+                        )
+                    )
+                if reviewed_revision_plan.get("execution_status") != "completed":
+                    issues.append(
+                        ValidationIssue(
+                            path="mentor_critiques.reviewed_revision_plan_id",
+                            message="re-review 批注引用的 RevisionPlan 必须已经 completed。",
+                        )
+                    )
+                if (
+                    active_draft is not None
+                    and reviewed_revision_plan.get("post_revision_version_label") != active_draft.get("version_label")
+                ):
+                    issues.append(
+                        ValidationIssue(
+                            path="mentor_critiques.reviewed_revision_plan_id",
+                            message="re-review 批注引用的 RevisionPlan 必须与当前激活草稿版本一致。",
+                        )
+                    )
 
     if (
         stage in {"critique", "revision", "frozen"}
@@ -495,6 +536,7 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
         active_fit_mapping_id=active_fit_mapping.get("fit_mapping_id") if isinstance(active_fit_mapping, dict) else None,
         active_revision_plan=active_revision_plan,
         active_critique=active_critique,
+        reviewed_revision_plan=reviewed_revision_plan,
         issues=issues,
     )
 
@@ -509,6 +551,7 @@ def _validate_stage_requirements(
     active_fit_mapping_id: str | None,
     active_revision_plan: dict[str, Any] | None,
     active_critique: dict[str, Any] | None,
+    reviewed_revision_plan: dict[str, Any] | None,
     issues: list[ValidationIssue],
 ) -> None:
     stage = document.get("lifecycle_stage")
@@ -647,7 +690,14 @@ def _validate_stage_requirements(
                         message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ApplicantFitMapping。",
                     )
                 )
-    _validate_revision_transition_contract(active_draft, active_revision_plan, issues)
+    _validate_revision_transition_contract(
+        stage=stage,
+        active_draft=active_draft,
+        active_revision_plan=active_revision_plan,
+        active_critique=active_critique,
+        reviewed_revision_plan=reviewed_revision_plan,
+        issues=issues,
+    )
     if active_critique is not None:
         for field, expected in (
             ("necessity_scientific_value", 60),
@@ -665,8 +715,12 @@ def _validate_stage_requirements(
 
 
 def _validate_revision_transition_contract(
+    *,
+    stage: Any,
     active_draft: dict[str, Any] | None,
     active_revision_plan: dict[str, Any] | None,
+    active_critique: dict[str, Any] | None,
+    reviewed_revision_plan: dict[str, Any] | None,
     issues: list[ValidationIssue],
 ) -> None:
     if active_draft is None or active_revision_plan is None:
@@ -678,14 +732,20 @@ def _validate_revision_transition_contract(
     pre_revision_version_label = active_revision_plan.get("pre_revision_version_label")
     post_revision_version_label = active_revision_plan.get("post_revision_version_label")
     comparison_summary = active_revision_plan.get("comparison_summary")
+    reviewed_revision_plan_id = active_critique.get("reviewed_revision_plan_id") if isinstance(active_critique, dict) else None
+    reviewed_execution_status = None
+    if isinstance(reviewed_revision_plan, dict):
+        reviewed_execution_status = reviewed_revision_plan.get("execution_status", "planned")
+    has_completed_reviewed_revision = reviewed_execution_status == "completed"
 
     if draft_status == "revised" and execution_status != "completed":
-        issues.append(
-            ValidationIssue(
-                path="revision_plans.execution_status",
-                message="激活草稿 status=revised 时，RevisionPlan.execution_status 必须为 completed。",
+        if not (stage == "critique" and reviewed_revision_plan_id is not None and has_completed_reviewed_revision):
+            issues.append(
+                ValidationIssue(
+                    path="revision_plans.execution_status",
+                    message="激活草稿 status=revised 时，RevisionPlan.execution_status 必须为 completed。",
+                )
             )
-        )
 
     if execution_status == "completed" and draft_status != "revised":
         issues.append(
@@ -695,40 +755,44 @@ def _validate_revision_transition_contract(
             )
         )
 
-    requires_revision_evidence = draft_status == "revised" or execution_status == "completed"
-    if not requires_revision_evidence:
+    revision_evidence = active_revision_plan if execution_status == "completed" else reviewed_revision_plan
+    if not isinstance(revision_evidence, dict):
         return
 
-    if not isinstance(pre_revision_version_label, str) or not pre_revision_version_label:
+    evidence_pre_revision_version_label = revision_evidence.get("pre_revision_version_label")
+    evidence_post_revision_version_label = revision_evidence.get("post_revision_version_label")
+    evidence_comparison_summary = revision_evidence.get("comparison_summary")
+
+    if not isinstance(evidence_pre_revision_version_label, str) or not evidence_pre_revision_version_label:
         issues.append(
             ValidationIssue(
                 path="revision_plans.pre_revision_version_label",
                 message="revised 草稿必须声明 pre_revision_version_label。",
             )
         )
-    if not isinstance(post_revision_version_label, str) or not post_revision_version_label:
+    if not isinstance(evidence_post_revision_version_label, str) or not evidence_post_revision_version_label:
         issues.append(
             ValidationIssue(
                 path="revision_plans.post_revision_version_label",
                 message="revised 草稿必须声明 post_revision_version_label。",
             )
         )
-    if not isinstance(comparison_summary, str) or not comparison_summary.strip():
+    if not isinstance(evidence_comparison_summary, str) or not evidence_comparison_summary.strip():
         issues.append(
             ValidationIssue(
                 path="revision_plans.comparison_summary",
                 message="revised 草稿必须提供非空 comparison_summary。",
             )
         )
-    if isinstance(pre_revision_version_label, str) and isinstance(post_revision_version_label, str):
-        if pre_revision_version_label == post_revision_version_label:
+    if isinstance(evidence_pre_revision_version_label, str) and isinstance(evidence_post_revision_version_label, str):
+        if evidence_pre_revision_version_label == evidence_post_revision_version_label:
             issues.append(
                 ValidationIssue(
                     path="revision_plans.post_revision_version_label",
                     message="post_revision_version_label 必须与 pre_revision_version_label 不同。",
                 )
             )
-        if draft_version_label != post_revision_version_label:
+        if draft_version_label != evidence_post_revision_version_label:
             issues.append(
                 ValidationIssue(
                     path="application_drafts.version_label",
@@ -907,8 +971,11 @@ def _build_workspace_state(document: dict[str, Any]) -> WorkspaceState:
     active_draft = draft_by_id.get(selection.get("active_draft_id"))
     active_revision_plan = revision_plan_by_id.get(selection.get("active_revision_plan_id"))
     active_critique = None
+    reviewed_revision_plan = None
     if active_revision_plan is not None:
         active_critique = critique_by_id.get(active_revision_plan.get("critique_id"))
+        if active_critique is not None:
+            reviewed_revision_plan = revision_plan_by_id.get(active_critique.get("reviewed_revision_plan_id"))
 
     active_argument_chain = None
     if selected_question is not None:
@@ -931,6 +998,7 @@ def _build_workspace_state(document: dict[str, Any]) -> WorkspaceState:
         active_draft=active_draft,
         active_revision_plan=active_revision_plan,
         active_critique=active_critique,
+        reviewed_revision_plan=reviewed_revision_plan,
     )
 
 
@@ -1007,7 +1075,21 @@ def _serialize_critique(critique: dict[str, Any] | None) -> dict[str, Any] | Non
     return {
         "id": critique["critique_id"],
         "verdict": critique["verdict"],
+        "reviewed_revision_plan_id": critique.get("reviewed_revision_plan_id"),
         "blocking_issue_count": len(critique.get("blocking_issues", [])),
+    }
+
+
+def _serialize_reviewed_revision_evidence(revision_plan: dict[str, Any] | None) -> dict[str, Any] | None:
+    if revision_plan is None:
+        return None
+    return {
+        "revision_plan_id": revision_plan["revision_plan_id"],
+        "source_critique_id": revision_plan["critique_id"],
+        "execution_status": revision_plan.get("execution_status", "planned"),
+        "pre_revision_version_label": revision_plan.get("pre_revision_version_label"),
+        "post_revision_version_label": revision_plan.get("post_revision_version_label"),
+        "comparison_summary": revision_plan.get("comparison_summary"),
     }
 
 
@@ -1069,6 +1151,7 @@ def _require_workspace_context(document: dict[str, Any]) -> WorkspaceContext:
         active_draft=state.active_draft,
         active_revision_plan=state.active_revision_plan,
         active_critique=state.active_critique,
+        reviewed_revision_plan=state.reviewed_revision_plan,
     )
 
 

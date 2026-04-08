@@ -123,6 +123,9 @@ Date: `2026-04-06`
 - `ApplicantFitMapping` -> `ApplicationDraft`
 - `ApplicationDraft` -> `MentorCritique`
 - `MentorCritique` -> `RevisionPlan`
+- `MentorCritique.reviewed_revision_plan_id` -> 上一轮 completed `RevisionPlan`
+- `MentorCritique.reviewed_revision_plan_id` -> `reviewed_revision_evidence`
+- `reviewed_revision_evidence.source_critique_id` -> 产出上一轮 completed `RevisionPlan` 的 `MentorCritique`
 
 同时，以下输入对象为上游支撑层：
 
@@ -174,6 +177,14 @@ Date: `2026-04-06`
 - `fit_alignment` 再冻结 applicant-problem fit mapping
 - `outline` 再冻结 draft outline 与 object linking
 - `ArgumentChain`、`ApplicationDraft`、`MentorCritique`、`RevisionPlan` 不再作为早段无条件必填
+
+进入 `critique / revision / re-review` 后，还要继续保持以下边界：
+
+- 当前 active critique 仍通过 `current_selection.active_revision_plan_id -> RevisionPlan.critique_id` 推导
+- `current_selection` 不新增 `active_critique_id`
+- 当当前 active draft 已是 `status=revised` 且进入新一轮 `critique` 时，`MentorCritique.reviewed_revision_plan_id` 用来显式绑定上一轮 completed revision evidence
+- `reviewed_revision_evidence` 当前必须稳定暴露：`revision_plan_id`、`source_critique_id`、`execution_status`、`pre_revision_version_label`、`post_revision_version_label`、`comparison_summary`
+- `reviewed_revision_plan_id` 不替代当前 active `RevisionPlan`；前者回答“这轮批注审阅的是哪份已完成修订证据”，后者回答“当前准备执行的是哪一轮新修订计划”
 
 ## 第一版 schema 的边界
 

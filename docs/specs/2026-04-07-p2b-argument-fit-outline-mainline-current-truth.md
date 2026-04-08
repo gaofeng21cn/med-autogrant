@@ -10,7 +10,7 @@ Date: `2026-04-07`
 
 - Frozen in phase: `P2 / NSFC Authoring Mainline Freeze`
 - Frozen tranche: `P2.B / Argument-Fit-Outline Mainline`
-- Current role under active mainline: upstream canonical boundary retained under `P3.A / Mentor Verdict Contract Freeze`
+- Current role under active mainline: upstream canonical boundary retained under `P3.B / Revision Transition And Re-Review Hardening`
 - Hard boundary docs:
   - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
   - `docs/specs/2026-04-07-durability-model-clarification.md`

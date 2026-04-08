@@ -9,7 +9,7 @@ Date: `2026-04-07`
 ## 当前指针
 
 - Current phase: `P3 / Mentor Critique And Revision Loop Hardening`
-- Active tranche: `P3.A / Mentor Verdict Contract Freeze`
+- Active tranche: `P3.B / Revision Transition And Re-Review Hardening`
 
 ## repo-tracked review surfaces
 
@@ -24,13 +24,15 @@ Date: `2026-04-07`
 - `docs/specs/2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md`
 - `docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
 - `docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`
+- `docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
 - `schemas/v1/nsfc-workspace.schema.json`
 - `schemas/v1/application-draft.schema.json`
 - `schemas/v1/mentor-critique.schema.json`
 - `schemas/v1/revision-plan.schema.json`
 - `examples/nsfc_workspace_minimal.json`
-- `examples/nsfc_workspace_p2c_critique.json`
+- `examples/nsfc_workspace_p2c_revision.json`
 - `examples/nsfc_workspace_p3a_major_reframe.json`
+- `examples/nsfc_workspace_p3b_re_review_major_revision.json`
 - `examples/nsfc_workspace_p3a_ready_for_submission.json`
 - `tests/test_cli_validate_workspace.py`
 - `tests/test_stage_router.py`
@@ -81,7 +83,9 @@ Date: `2026-04-07`
 - `CLI`、`MCP`、`controller` 各自是否正式支持
 - `ApplicationDraft.sections`、`MentorCritique`、`RevisionPlan` 是否进入当前 canonical route
 - `major_reframe / major_revision / minor_revision / ready_for_submission` 是否进入当前 canonical verdict surface
-- `revision(completed revised switch) -> critique` 与 `ready_for_submission -> frozen` 是否都只是当前边界内的 machine-readable transition contract
+- `current_selection.active_revision_plan_id` 是否继续作为当前 active route pointer
+- `reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id` 是否进入当前 canonical re-review surface
+- `revision(completed revised switch) -> critique -> revision` 与 `ready_for_submission -> frozen` 是否都只是当前边界内的 machine-readable transition contract
 
 ## 哪些状态允许只留在 local handoff surfaces
 
@@ -129,4 +133,5 @@ Date: `2026-04-07`
 - `P2.B` 的 `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 继续作为上游 canonical route 保留
 - `P2.C` 已把 `ApplicationDraft / MentorCritique / RevisionPlan` 冻结成 absorbed canonical route
 - `P3.A` 已把 `major_reframe / major_revision / minor_revision / ready_for_submission` 冻结成当前 canonical verdict surface
+- `P3.B` 已把 `current_selection.active_revision_plan_id`、`MentorCritique.reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 与当前 active `RevisionPlan` 的边界冻结成当前 canonical re-review surface
 - `ready_for_submission -> frozen` 当前只作为 transition boundary 存在，不等于 `P3.C` 已完成

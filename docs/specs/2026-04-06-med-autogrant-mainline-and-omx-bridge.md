@@ -318,13 +318,14 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 当前 tranche：
 
-- `P3.A / Mentor Verdict Contract Freeze`
+- `P3.B / Revision Transition And Re-Review Hardening`
 
 其中：
 
 1. `P1.A / authoritative NSFC workspace baseline` 与 `P1.B / runtime baseline hardening` 已完成 repo-native baseline、formal entry、durability 与 `grant_run_id` 合同冻结
-2. `P2.B` 与 `P2.C` 已分别冻结上游 argument-fit-outline route 与 absorbed 的 draft-critique-revision skeleton，并继续作为当前 `P3.A` 的上游 hard boundary
-3. 当前 `P3.A` 只冻结 `MentorCritique.verdict` 的 canonical branch、route recommendation 与 audit surface，不提前偷跑 `P3.B / P3.C`；future tranche map 与 `same-phase auto-promotion` 只作为后续 phase activation 的预冻结合同存在
+2. `P2.B` 与 `P2.C` 已分别冻结上游 argument-fit-outline route 与 absorbed 的 draft-critique-revision skeleton，并继续作为当前 `P3.B` 的上游 hard boundary
+3. 已 absorbed 的 `P3.A` 冻结了 `MentorCritique.verdict` 的 canonical branch、route recommendation 与 audit surface；当前 `P3.B` 继续在不改写 verdict branch 的前提下，收紧 re-review identity、completed revision evidence 与下一轮 critique / revision linkage
+4. 当前 `P3.B` 的 re-review contract 继续以 `current_selection.active_revision_plan_id` 作为当前 active route pointer，并要求当前 critique 持有 `reviewed_revision_plan_id`，同时通过 `reviewed_revision_evidence.source_critique_id` 回指上一轮 completed revision 的来源批注
 
 ### 保留的 P1.B hard boundary：revision transition minimal contract
 
@@ -332,17 +333,19 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - 触发 gate 固定为 `RevisionPlan.execution_status`；当 `RevisionPlan.execution_status=completed` 时，post-revision 必须继续沿用同一 `draft_id`，保持同一 `frozen_question_id`，并保留当前 argument chain 链接。
 - 切换后的最小差异约束固定为：`active_draft.status` 必须显式变成 `revised`，`active_draft.version_label` 必须等于 `post_revision_version_label`，且 `post_revision_version_label` 必须不同于 `pre_revision_version_label`。
 - `comparison_summary` 必须非空，用来表达 pre-revision draft 与 post-revision revised draft 的前后版本比较证据。
-- 当 `revision` 阶段已经满足上述 contract 并持有 `revised` 草稿时，最小 route 应回到 `critique` 做 re-review；更完整的多轮 hardening 仍留给 future `P3.B / Revision Transition And Re-Review Hardening`。
+- 当 `revision` 阶段已经满足上述 contract 并持有 `revised` 草稿时，最小 route 应回到 `critique` 做 re-review；当前 `P3.B` 继续把这条边界收紧成“当前 active revision plan + reviewed completed revision evidence”双锚定合同。
 
-### 当前 P2.B / P2.C / P3.A canonical surface
+### 当前 P2.B / P2.C / P3.A / P3.B canonical surface
 
 - absorbed P2.B：`docs/specs/2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md`
 - absorbed P2.C：`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
-- 当前 P3.A：`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`
-- 这三份文件当前共同冻结：
+- absorbed P3.A：`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`
+- 当前 P3.B：`docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
+- 这四份文件当前共同冻结：
   - `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 的上游绑定
   - `drafting -> critique -> revision` 的 absorbed 主线与 completed revision 回到 critique 的 re-review 边界
   - `major_reframe / major_revision / minor_revision / ready_for_submission` 的 canonical verdict branch
+  - `current_selection.active_revision_plan_id`、`MentorCritique.reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 与当前 active `RevisionPlan` 的 re-review 双锚定合同
 
 ## OMX 长线运行入口
 

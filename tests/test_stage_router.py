@@ -27,11 +27,15 @@ CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.js
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 MAJOR_REFRAME_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_major_reframe.json"
 READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
+RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 
 
 class StageRouterTest(unittest.TestCase):
     def load_example(self) -> dict[str, object]:
         return json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+
+    def build_re_review_workspace(self) -> dict[str, object]:
+        return json.loads(RE_REVIEW_EXAMPLE_PATH.read_text(encoding="utf-8"))
 
     def test_input_intake_routes_to_direction_screening(self) -> None:
         route = determine_next_step(json.loads(INPUT_EXAMPLE_PATH.read_text(encoding="utf-8")))
@@ -130,6 +134,14 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["current_stage"], "revision")
         self.assertEqual(route["recommended_stage"], "critique")
         self.assertIn("revised", route["reason"])
+
+    def test_re_review_critique_routes_back_to_revision_using_new_active_plan(self) -> None:
+        route = determine_next_step(self.build_re_review_workspace())
+
+        self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(route["current_stage"], "critique")
+        self.assertEqual(route["recommended_stage"], "revision")
+        self.assertIn("major_revision", route["reason"])
 
 
 if __name__ == "__main__":

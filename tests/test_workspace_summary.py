@@ -31,11 +31,15 @@ CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.js
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 MAJOR_REFRAME_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_major_reframe.json"
 READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
+RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 
 
 class WorkspaceSummaryTest(unittest.TestCase):
     def load_example(self) -> dict[str, object]:
         return json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+
+    def build_re_review_workspace(self) -> dict[str, object]:
+        return load_workspace_document(RE_REVIEW_EXAMPLE_PATH)
 
     def test_summary_exposes_selected_objects(self) -> None:
         document = load_workspace_document(EXAMPLE_PATH)
@@ -271,6 +275,14 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertTrue(result.ok)
         self.assertEqual(result.errors, [])
 
+    def test_validation_accepts_re_review_critique_with_linked_completed_revision_evidence(self) -> None:
+        document = self.build_re_review_workspace()
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
     def test_validation_rejects_critique_with_mismatched_current_scientific_question(self) -> None:
         document = load_workspace_document(CRITIQUE_EXAMPLE_PATH)
         document["mentor_critiques"][0]["current_scientific_question"] = "错误的问题表述"
@@ -420,6 +432,21 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertEqual(summary["active_draft"]["status"], "revised")
         self.assertEqual(summary["active_critique"]["verdict"], "ready_for_submission")
         self.assertEqual(summary["active_revision_plan"]["execution_status"], "completed")
+
+    def test_summary_exposes_re_review_linkage_and_previous_revision_evidence(self) -> None:
+        document = self.build_re_review_workspace()
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["lifecycle_stage"], "critique")
+        self.assertEqual(summary["active_draft"]["status"], "revised")
+        self.assertEqual(summary["active_critique"]["id"], "critique-v2")
+        self.assertEqual(summary["active_critique"]["verdict"], "major_revision")
+        self.assertEqual(summary["active_critique"]["reviewed_revision_plan_id"], "revision-v1")
+        self.assertEqual(summary["active_revision_plan"]["id"], "revision-v2")
+        self.assertEqual(summary["active_revision_plan"]["execution_status"], "planned")
+        self.assertEqual(summary["reviewed_revision_evidence"]["revision_plan_id"], "revision-v1")
+        self.assertEqual(summary["reviewed_revision_evidence"]["post_revision_version_label"], "v0.4")
 
     def test_validation_rejects_completed_revision_without_revised_status_switch(self) -> None:
         document = copy.deepcopy(self.load_example())

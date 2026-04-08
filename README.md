@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository remains in `P3 / Mentor Critique And Revision Loop Hardening`, with `P3.A / Mentor Verdict Contract Freeze` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
+> Status: active development. The repository remains in `P3 / Mentor Critique And Revision Loop Hardening`, with `P3.B / Revision Transition And Re-Review Hardening` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
 
 <table>
   <tr>
@@ -20,14 +20,14 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      Minimal runtime baseline is retained, and the active tranche is now <code>P3.A / Mentor Verdict Contract Freeze</code>
+      Minimal runtime baseline is retained, and the active tranche is now <code>P3.B / Revision Transition And Re-Review Hardening</code>
     </td>
   </tr>
 </table>
 
 ## One-Line Position
 
-If your goal is to turn applicant background, prior work, preliminary evidence, and a candidate topic into a stronger `NSFC`-style proposal direction, `Med Auto Grant` is being built as a medical `Grant Ops` `Domain Harness OS` on the shared `Unified Harness Engineering Substrate` for governed question refinement, argument sharpening, draft expansion, mentor-style critique, structured revision, and explicit verdict gating.
+If your goal is to turn applicant background, prior work, preliminary evidence, and a candidate topic into a stronger `NSFC`-style proposal direction, `Med Auto Grant` is being built as a medical `Grant Ops` `Domain Harness OS` on the shared `Unified Harness Engineering Substrate` for governed question refinement, argument sharpening, draft expansion, mentor-style critique, structured revision, re-review evidence binding, and explicit verdict gating.
 
 ## Runtime Shape (Current And Future)
 
@@ -41,7 +41,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - Organize applicant profile, prior outputs, active projects, and preliminary evidence into one auditable grant workspace.
 - Strengthen the necessity and scientific-value chain before spending effort on full drafting.
 - Keep applicant-problem fit visible instead of reducing grant writing to template filling.
-- Support draft expansion, mentor-style critique, and structured revision rather than one-shot text generation.
+- Support draft expansion, mentor-style critique, structured revision, and explicit re-review evidence rather than one-shot text generation.
 
 ## What Is Already Working
 
@@ -49,18 +49,19 @@ The repository already contains a minimal executable baseline around a frozen `N
 
 Today, the runtime can:
 
-- validate structured `NSFC` workspaces across the absorbed `drafting -> critique -> revision` mainline while now freezing mentor verdict branches for `major_reframe / major_revision / minor_revision / ready_for_submission`
+- validate structured `NSFC` workspaces across the absorbed `drafting -> critique -> revision` mainline while retaining `major_reframe / major_revision / minor_revision / ready_for_submission` verdict branches
 - carry a stable `grant_run_id` across CLI outputs as the formal execution handle for the current hydrated grant run
 - summarize explicit `current_selection` bindings for direction, question, fit mapping, draft, and revision-plan identity
-- recommend the next stage across `major_reframe -> question_refinement`, `major_revision / minor_revision -> revision`, `ready_for_submission -> frozen`, plus the absorbed completed-revision re-review boundary back to `critique`
+- bind a re-review critique to prior completed revision evidence through `MentorCritique.reviewed_revision_plan_id`
+- recommend the next stage across `major_reframe -> question_refinement`, `major_revision / minor_revision -> revision`, `ready_for_submission -> frozen`, plus `revision(completed) -> critique -> revision` in the re-review loop
 - aggregate the current authoring route into one machine-readable `stage-route-report`
-- expose structured `critique-summary` and `stage-route-report` audit data including verdict, `RevisionPlan.execution_status`, version labels, and comparison evidence
+- expose structured `critique-summary` and `stage-route-report` audit data including verdict, current `RevisionPlan.execution_status`, reviewed revision evidence, version labels, and comparison evidence
 
 ## What Is Still In Progress
 
 The following pieces are planned but not yet complete:
 
-- revision transition / re-review hardening beyond the verdict contract, plus forced rollback and presubmission hard gates
+- forced rollback and presubmission hard gates beyond the current re-review contract
 - human-in-the-loop gate surfaces and submission-grade delivery
 - broader grant-family expansion beyond the first `NSFC` generic skeleton
 
@@ -72,11 +73,11 @@ Typical flow:
 
 1. Prepare applicant materials, representative outputs, active projects, preliminary evidence, and the target funding brief in one workspace.
 2. Ask your agent to first organize them into a structured, auditable grant workspace.
-3. Ask your agent to use `Med Auto Grant` to refine the scientific question, tighten the argument chain, expand draft sections, produce critique, and drive revision.
+3. Ask your agent to use `Med Auto Grant` to refine the scientific question, tighten the argument chain, expand draft sections, produce critique, drive revision, and keep prior revision evidence visible during re-review.
 
 You can give your agent an instruction like this:
 
-> Read the applicant materials, prior outputs, active projects, preliminary evidence, and the target funding requirements in this workspace first. Organize them into a structured, auditable grant workspace. Then use Med Auto Grant as the medical Grant Ops mainline for an NSFC-style application. Prioritize scientific-question quality, necessity and scientific value, applicant-problem fit, draft consistency, and mentor-style critique before trying to complete submission-facing packaging. If the direction is weak, stop, reframe, or request missing evidence instead of pushing a weak proposal forward.
+> Read the applicant materials, prior outputs, active projects, preliminary evidence, and the target funding requirements in this workspace first. Organize them into a structured, auditable grant workspace. Then use Med Auto Grant as the medical Grant Ops mainline for an NSFC-style application. Prioritize scientific-question quality, necessity and scientific value, applicant-problem fit, draft consistency, mentor-style critique, and explicit revision evidence before trying to complete submission-facing packaging. If the direction is weak, stop, reframe, or request missing evidence instead of pushing a weak proposal forward.
 
 ## Public Docs
 
@@ -90,11 +91,11 @@ You can give your agent an instruction like this:
 ### Minimal Runtime Commands
 
 ```bash
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_major_reframe.json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json
-PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_major_reframe.json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_ready_for_submission.json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_major_reframe.json
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json
+PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3b_re_review_major_revision.json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3b_re_review_major_revision.json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3b_re_review_major_revision.json
 ```
 
 ### Current Technical Scope
@@ -102,6 +103,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 - schema-backed `NSFCWorkspace` validation
 - explicit `grant_run_id` / `workspace_id` / `draft_id` separation for runtime and CLI surfaces
 - machine-readable mentor verdict contract across `major_reframe / major_revision / minor_revision / ready_for_submission`
+- machine-readable re-review linkage through `reviewed_revision_plan_id` and `reviewed_revision_evidence`
 - machine-readable critique, verdict, and route artifacts
 - tests covering runtime and control-surface invariants
 
@@ -114,6 +116,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 - [`docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`](./docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`](./docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md)
 - [`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`](./docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md)
+- [`docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`](./docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md)
 
 ### Local Operator State
 
