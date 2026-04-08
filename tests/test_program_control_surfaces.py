@@ -21,6 +21,7 @@ RUNTIME_BOUNDARY_MAP = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-
 R1A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md"
 R1B_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1b-stage-action-executor-envelope-activation-package.md"
 R2A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r2a-artifact-bundle-production-surface-activation-package.md"
+R3A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r3a-critique-revision-executor-surface-activation-package.md"
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -268,6 +269,23 @@ R2A_ACTIVATION_SNIPPETS = (
     "not-yet-supported",
 )
 
+R3A_ACTIVATION_SNIPPETS = (
+    "execute-revision-pass",
+    "active_revision_plan_id",
+    "reviewed_revision_plan_id",
+    "reviewed_revision_evidence",
+    "source_critique_id",
+    "pre_revision_version_label",
+    "post_revision_version_label",
+    "comparison_summary",
+    "forced_rollback_stage",
+    "presubmission_frozen",
+    "CLI",
+    "MCP",
+    "controller",
+    "not-yet-supported",
+)
+
 RUNTIME_BOUNDARY_MAP_SNIPPETS = (
     "R1.B / Stage Action Executor Envelope",
     "R2.A / Artifact Bundle Production Surface",
@@ -382,6 +400,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             R1A_ACTIVATION_PACKAGE,
             R1B_ACTIVATION_PACKAGE,
             R2A_ACTIVATION_PACKAGE,
+            R3A_ACTIVATION_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -628,6 +647,25 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(path=path.name):
                 self.assertIn(package_path, read_text(path))
 
+    def test_r3a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
+        package_path = str(R3A_ACTIVATION_PACKAGE)
+        self.assertTrue(R3A_ACTIVATION_PACKAGE.exists(), f"R3.A activation package 不存在: {R3A_ACTIVATION_PACKAGE}")
+
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            TEAM_PROMPT,
+            EXECUTION_PROMPT,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+            ITERATION_LOG,
+            OPEN_ISSUES,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
     def test_r1a_activation_package_freezes_local_main_loop_contract(self) -> None:
         text = read_text(R1A_ACTIVATION_PACKAGE)
         for snippet in R1A_ACTIVATION_SNIPPETS:
@@ -643,6 +681,12 @@ class ProgramControlSurfaceTest(unittest.TestCase):
     def test_r2a_activation_package_freezes_artifact_bundle_contract(self) -> None:
         text = read_text(R2A_ACTIVATION_PACKAGE)
         for snippet in R2A_ACTIVATION_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, text)
+
+    def test_r3a_activation_package_freezes_revision_executor_contract(self) -> None:
+        text = read_text(R3A_ACTIVATION_PACKAGE)
+        for snippet in R3A_ACTIVATION_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, text)
 

@@ -9,8 +9,8 @@ Date: `2026-04-07`
 ## 当前指针
 
 - Current phase: `Runtime Productization Program`
-- Active tranche: `R2 / Artifact Production Surface`
-- Active slice: `R2.A / Artifact Bundle Production Surface`
+- Active tranche: `R3 / Critique Revision Autoloop`
+- Active slice: `R3.A / Critique Revision Executor Surface`
 
 本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不把 `R1.A` 的本地主循环 entry 混写成新的 formal-entry family。
 
@@ -36,13 +36,14 @@ Date: `2026-04-07`
   - `run-local` 当前是本地主循环 entry；它只允许在既有 route / checkpoint surface 之上增加 machine-readable `stop_reason`、`stage_action_envelope` 与 local run journal。
   - `resume-local` 当前是本地 runtime recovery entry；它只允许从同一 journal 恢复 `input_path`、沿用同一 `grant_run_id` 重新进入一次 local runtime pass，并在 `stage_action_required` 时继续 durable 回写 `stage_action_envelope`。
   - `build-artifact-bundle` 当前是本地 artifact bundle entry；它只允许把当前 active workspace 的 canonical objects 写成 machine-readable local bundle，并补 manifest / lineage / version / bundle summary，不得写回 workspace、不得写 `.omx/**`、不得偷跑 critique / revision / export。
-  - 在当前 `R2.A` slice 内，CLI 的 repo-native runtime / audit surface 还必须同时保持：
+  - 在当前 `R3.A` activation freeze 阶段，CLI 的 repo-native runtime / audit surface 还必须同时保持：
     - absorbed `P3.B` retained boundary：`active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`
     - absorbed `P3.C` retained boundary：`forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`
     - absorbed `P4.A` gate-open boundary：`ready_for_submission + presubmission_frozen=false`
     - absorbed `P4.B` checkpoint durable boundary：`VerificationCheckpoint` 只能作为 `stage-route-report.verification_checkpoint` 的 derived checkpoint object 存在，不能被解释成新的 formal entry、runtime identity 或 controller capability
     - 当前 `R1.B` local runtime boundary：`stage_action_envelope` 只能结构化 `stage_action_required` 的 route continuation，不得替代旧五个 canonical CLI surfaces，也不得把 local run journal 写成 `.omx` control-plane report
     - 当前 `R2.A` local artifact boundary：`build-artifact-bundle` 只能打包当前 `selected_direction / selected_question / ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline / ApplicationDraft.sections`，不得改写 `frozen_question_id`、不得生成新内容、不得把 local bundle output 写成 `.omx` control-plane report
+    - 当前 `R3.A` activation freeze boundary：`execute-revision-pass` 仍未 landed；当前 formal entry 只承认其 activation contract 已冻结，不能误写成已支持的 CLI command
 
 ### 2. `supported_protocol_layer`
 

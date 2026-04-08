@@ -56,12 +56,12 @@ Date: `2026-04-08`
 这份边界图当前承认：
 
 - `R1.B / Stage Action Executor Envelope` 与 `R2.A / Artifact Bundle Production Surface` 已从 pre-frozen package 进入 absorbed current truth
+- `R3.A / Critique Revision Executor Surface` 已从 pre-frozen package 进入 activation-frozen / implementation-pending current truth
 - 仍待 future activation 的 tranche 为：
-  1. `R3.A / Critique Revision Executor Surface`
-  2. `R4.A / Final Freeze And Export Package`
-  3. `R5.A / Hosted-Friendly Session Boundary`
+  1. `R4.A / Final Freeze And Export Package`
+  2. `R5.A / Hosted-Friendly Session Boundary`
 
-也就是说，边界图仍然是 future boundary map，但其中 `R1.B / R2.A` 已不再属于“尚未实现”的 tranche。
+也就是说，边界图仍然是 future boundary map，但其中 `R1.B / R2.A` 已不再属于“尚未实现”的 tranche，而 `R3.A` 已切到当前 active activation freeze。
 
 ## Program Ladder
 

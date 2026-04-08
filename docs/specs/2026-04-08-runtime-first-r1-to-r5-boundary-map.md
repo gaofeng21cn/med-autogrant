@@ -44,7 +44,7 @@ Date: `2026-04-08`
 这份边界图冻结后，`OMX` 被授权：
 
 1. 从当前 latest absorbed slice 出发，持续做 honest delta audit
-2. 把新识别到的 delta 与下面仍未 absorbed 的 `R3.A / R4.A / R5.A` 边界进行匹配
+2. 把新识别到的 delta 与下面尚未实现的 `R3.A / R4.A / R5.A` 边界进行匹配
 3. 如果匹配成功：
    - 先把对应 tranche freeze 到 active `CURRENT_PROGRAM + PRD + test-spec + implementation + reports`
    - 必要时补 repo-tracked internal spec
@@ -193,8 +193,8 @@ Date: `2026-04-08`
 
 ## Activation Status
 
-- pre-frozen
-- current status：尚未实现；当下一 honest delta 已经进入 critique / revision autoloop 时允许激活
+- activation-frozen / implementation-pending
+- current status：activation package 已冻结并成为当前 active slice；在 freeze absorbed 与 implementation promotion 之间，只允许围绕 revision-side executor 做 implementation-readiness audit
 
 ## Scope
 

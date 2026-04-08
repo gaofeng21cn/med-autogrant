@@ -9,8 +9,8 @@ Date: `2026-04-07`
 ## 当前指针
 
 - Current phase: `Runtime Productization Program`
-- Active tranche: `R2 / Artifact Production Surface`
-- Active slice: `R2.A / Artifact Bundle Production Surface`
+- Active tranche: `R3 / Critique Revision Autoloop`
+- Active slice: `R3.A / Critique Revision Executor Surface`
 
 ## repo-tracked review surfaces
 
@@ -31,6 +31,7 @@ Date: `2026-04-07`
 - `docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
 - `docs/specs/2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md`
 - `docs/specs/2026-04-08-r2a-artifact-bundle-production-surface-activation-package.md`
+- `docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
 - `schemas/v1/nsfc-workspace.schema.json`
 - `schemas/v1/application-draft.schema.json`
 - `schemas/v1/mentor-critique.schema.json`
@@ -204,3 +205,4 @@ Date: `2026-04-07`
 - `R1.A` 已把 `run-local / resume-local`、machine-readable `stop_reason` 与 local run journal 冻结成当前 local runtime surface
 - `R1.B` 已把 `stage_action_required` 分支上的 machine-readable `stage_action_envelope` 与 `latest_stage_action_envelope` 冻结成当前 local runtime orchestration surface
 - `R2.A` 已把 `build-artifact-bundle`、machine-readable `artifact_bundle`、manifest / lineage / bundle summary 与 local bundle output 冻结成当前 local artifact surface
+- `R3.A` 已把 `execute-revision-pass` 的 activation package 冻结成当前 repo-tracked internal spec，但尚未把 revision executor 误写成 landed runtime surface
