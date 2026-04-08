@@ -33,6 +33,8 @@
 
 - 当前默认本地执行形态：`Codex-default host-agent runtime`。
 - 当前仓库最小 baseline 以该 host-agent 形态为默认落地与验证对象。
+- 其 formal-entry matrix 已固定为：默认正式入口 `CLI`、支持协议层 `MCP`（当前保留为 future layer，尚未 repo-verified）、内部控制面 `controller`。
+- 当前仓库主线按 `Auto-only` 理解；未来如果要做 `Human-in-the-loop` 产品，应作为兼容 sibling 或 upper-layer product 复用同一 substrate，而不是把当前仓改成同仓双模。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
 
 ## 它主要想帮你解决什么问题
@@ -62,7 +64,7 @@
 下面这些能力仍处于规划或开发中：
 
 - forced rollback 与 presubmission hard gate 是当前正在收紧的 tranche，但尚未 absorbed 完成
-- human-in-the-loop gate 与 submission-grade 交付面
+- 未来 `Human-in-the-loop` sibling 或 upper-layer product 相关表面，以及 submission-grade 交付面
 - 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展
 
 ## 最快开始方式：通过你的 Agent

@@ -21,6 +21,11 @@ The root `AGENTS.md` remains the development/orchestration entry file, while thi
 - 作者侧、proposal-facing 的基金申请主线
 - `Agent-first` 的 grant authoring 基座
 - 以 `Codex-default host-agent runtime` 作为当前默认本地执行形态的最小 runtime baseline
+- 当前 formal-entry matrix 固定为：
+  - `default_formal_entry`：`CLI`
+  - `supported_protocol_layer`：`MCP`（当前保留为 future protocol layer，尚未 repo-verified）
+  - `internal_controller_surface`：`controller`
+- 当前 repo-tracked 产品主线按 `Auto-only` 理解；未来若做高判断密度 `Human-in-the-loop` 产品，应作为兼容 sibling 或 upper-layer product 复用同一 substrate，而不是把当前仓改成同仓双模
 
 它当前不是：
 
@@ -62,7 +67,7 @@ Agent 负责：
 - 默认采用 `Agent-first`，而不是 `fixed-code-first`。
 - `Agent-first` 不等于必须走某一种外部 API；`Codex-default host-agent runtime` 是当前正式默认执行形态。
 - 未来 managed web runtime 必须复用同一 `Unified Harness Engineering Substrate` contract，不允许分叉成第二套 domain runtime。
-- `Auto` 与 `Human-in-the-loop` 共享同一基座，不允许演化成两套系统。
+- 当前 repo 主线按 `Auto-only` 理解；未来 `Human-in-the-loop` 产品应作为兼容 sibling 或 upper-layer product 复用同一 substrate，不允许在当前仓里强行演化成同仓双模系统。
 - `Grant Ops` 保持 author-side、proposal-facing 边界，不折叠进 `Research Ops`，也不伪装成 reviewer-owned surface。
 - 第一阶段先做医学 `NSFC` 通用骨架，不提前把系统锁死在单一项目类型细枝末节上。
 - 代码负责 contract、validation、audit、persistence、gate 和 host bridge，不负责重新抢回高层创作主导权。
@@ -151,14 +156,14 @@ OMX 持续写回：
 
 - 把 `Med Auto Grant` 推进成医学 `Grant Ops` 的长期主线
 - 先在 `NSFC` 通用骨架上跑通从输入接入到批注修订闭环
-- 再把 evidence augmentation、`Human-in-the-loop`、submission-grade surface、federation 依次收进同一基座
+- 再把 evidence augmentation、verification surface、future `Human-in-the-loop` sibling / upper-layer product compatibility、submission-grade surface、federation 依次收进同一基座
 
 当前固定阶段顺序：
 
 1. `P1 / Reality Convergence And NSFC Baseline Freeze`
 2. `P2 / NSFC Authoring Mainline Freeze`
 3. `P3 / Mentor Critique And Revision Loop Hardening`
-4. `P4 / Dual-Mode Harness And Verification OS`
+4. `P4 / Verification Surface And HITL Layering Preparation`
 5. `P5 / Grant Ops Gateway Expansion And Federation`
 
 除非 `CURRENT_PROGRAM.md` 和主线计划一起更新，否则不允许私自改 phase 顺序。

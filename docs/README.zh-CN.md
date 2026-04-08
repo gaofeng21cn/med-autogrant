@@ -3,7 +3,7 @@
 [English](./README.md) | **中文**
 
 这里是 `Med Auto Grant` 的双语文档索引，也是默认的对外公开入口。
-内容与项目真相一致：该仓库在共享 `Unified Harness Engineering Substrate` 上承载面向医学 `Grant Ops` 的领域承载操作系统（Domain Harness OS），当前处于 baseline freeze（基线冻结）/runtime hardening（运行时强化）阶段。
+内容与项目真相一致：该仓库在共享 `Unified Harness Engineering Substrate` 上承载面向医学 `Grant Ops` 的领域承载操作系统（Domain Harness OS），当前处于 baseline freeze（基线冻结）/runtime hardening（运行时强化）阶段；其 formal-entry matrix 固定为默认正式入口 `CLI`、支持协议层 `MCP`（当前保留为 future layer）、内部控制面 `controller`，当前仓库主线按 `Auto-only` 理解。
 
 ## 统一文档治理
 

@@ -33,6 +33,8 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 
 - Current default local execution shape: `Codex-default host-agent runtime`.
 - This repository's current baseline is validated in that host-agent shape.
+- Its formal-entry matrix is fixed as: default formal entry `CLI`, supported protocol layer `MCP` (reserved future layer, not yet repo-verified), internal control surface `controller`.
+- The current repository mainline is `Auto-only`; any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than split this repository into same-repo dual-mode logic.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 
 ## What It Is Designed To Help With
@@ -62,7 +64,7 @@ Today, the runtime can:
 The following pieces are planned but not yet complete:
 
 - forced rollback and presubmission hard gates are the current active hardening tranche and are not fully absorbed yet
-- human-in-the-loop gate surfaces and submission-grade delivery
+- any future `Human-in-the-loop` sibling or upper-layer product surfaces, plus submission-grade delivery
 - broader grant-family expansion beyond the first `NSFC` generic skeleton
 
 ## Fastest Way To Start

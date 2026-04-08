@@ -45,9 +45,14 @@
 仓库当前遵循两条共享架构原则：
 
 - 默认采用 `Agent-first`，而不是 `fixed-code-first`
-- 在同一套共享基座上支持两种模式：
-  - `Auto`
-  - `Human-in-the-loop`
+- 当前仓库主线按 `Auto-only` 理解
+- 未来 `Human-in-the-loop` 产品应作为兼容 sibling 或 upper-layer product 复用同一 substrate，而不是把当前仓改成同仓双模
+
+其 formal-entry matrix 为：
+
+- `default_formal_entry`：`CLI`
+- `supported_protocol_layer`：`MCP`（当前保留为 future layer，尚未 repo-verified）
+- `internal_controller_surface`：`controller`
 
 ## 当前公开面状态
 

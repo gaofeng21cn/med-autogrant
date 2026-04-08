@@ -18,7 +18,7 @@
 
 - 对象模型、controller、tool surface、gate 规则走显式结构契约，不依赖隐式 prompt 漂移
 - 关键状态先读后写，跨阶段迁移遵循冻结顺序与审计轨迹
-- `Auto` 与 `Human-in-the-loop` 走同一 runtime contract，不演化为两套系统
+- 当前 repo 主线按 `Auto-only` 理解；未来 `Human-in-the-loop` 产品应作为兼容 sibling 或 upper-layer product 复用同一 substrate，而不是把当前仓改成同仓双模
 - durable artifact、validation surface、report 语义保持一致，避免不同执行形态下语义漂移
 
 ## 3. Domain-Specific Contract：医学 Grant Ops 边界
@@ -38,6 +38,12 @@
 ## 4. 当前默认 Runtime 形态
 
 当前默认本地执行形态是 `Codex-default host-agent runtime`。
+
+当前 formal-entry matrix 固定为：
+
+- `default_formal_entry`：`CLI`
+- `supported_protocol_layer`：`MCP`（当前保留为 future layer，尚未 repo-verified）
+- `internal_controller_surface`：`controller`
 
 该形态下，项目已有最小 runtime baseline，可覆盖以下基线能力：
 

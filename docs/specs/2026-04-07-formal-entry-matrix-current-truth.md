@@ -15,9 +15,9 @@ Date: `2026-04-07`
 
 ## Formal Entry Matrix
 
-### 1. user-facing runtime entry
+### 1. `default_formal_entry`
 
-- 正式支持：`CLI`
+- 当前冻结值：`CLI`
 - 当前入口：
   - `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input ...`
   - `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input ...`
@@ -25,16 +25,25 @@ Date: `2026-04-07`
   - `PYTHONPATH=src python3 -m med_autogrant critique-summary --input ...`
   - `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input ...`
 - 当前 contract：
-  - CLI 是当前唯一正式支持的 user-facing runtime entry。
+  - `CLI` 是当前唯一 repo-verified 的 user-facing runtime formal entry。
   - CLI 输出必须稳定回显同一 `grant_run_id`，并保持与 `workspace_id`、`draft_id`、`program_id` 分离。
   - `grant_run_id` 是 execution handle，不是新的入口面。
   - 在当前 `P3.C` tranche 内，CLI 的 repo-native audit surface 还必须同时保持：
     - absorbed `P3.B` retained boundary：`active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`
     - 当前 `P3.C` hard gate boundary：`forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`
 
-### 2. developer control-plane entry
+### 2. `supported_protocol_layer`
 
-- 正式支持：是
+- 当前冻结值：`MCP`
+- 当前状态：`reserved future layer / not-yet-supported`
+- 当前 contract：
+  - `MCP` 在统一 formal-entry matrix 中保留为 supported protocol layer。
+  - 当前仓库尚未把 `MCP` 冻结成 repo-verified public runtime formal entry。
+  - 在没有 repo-tracked current truth 改写前，不得把 `MCP` 口头提升成“当前已经正式支持”。
+
+### 3. `internal_controller_surface`
+
+- 当前冻结值：`controller`
 - 当前入口：
   - `OMX_TEAM_PROMPT.md`
   - `CURRENT_PROGRAM.md`
@@ -42,14 +51,14 @@ Date: `2026-04-07`
   - active `PRD / test-spec / implementation`
   - active `LATEST_STATUS / ITERATION_LOG / OPEN_ISSUES`
 - 当前 contract：
-  - 这是开发控制面入口，不是产品 runtime 入口。
+  - `controller` 在当前 formal-entry matrix 中属于 internal control surface，不是产品 runtime formal entry。
   - 它负责 planning、phase/tranche pointer、verification contract、report sync 与 long-run orchestration。
   - 它不能被叙述成“已经有正式 MCP / controller runtime”。
   - 当前 control-plane truth 还必须显式同时冻结：
     - `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 的 P3.B re-review contract
     - `forced_rollback_stage`、`forced_rollback_reason` 与 `presubmission_frozen` 的 P3.C hard gate contract
 
-### 3. recovery / resume entry
+### 4. recovery / resume entry
 
 - 正式支持：是
 - 当前入口：
@@ -62,14 +71,14 @@ Date: `2026-04-07`
   - 恢复时必须沿用同一 `grant_run_id` 上下文回显，但不能把 `grant_run_id` 误写成 `program_id` 或 `workspace_id`。
   - 恢复时也不得丢失 absorbed `P3.B` 的 `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`，以及当前 `P3.C` 的 `forced_rollback_stage`、`forced_rollback_reason` 与 `presubmission_frozen` 的 machine-readable 边界。
 
-### 4. not-yet-supported / future scope
+### 5. not-yet-supported / future public entry scope
 
-- `MCP`
+- `MCP public runtime entry`
   - 当前状态：`not-yet-supported`
-  - 说明：当前仓没有把 MCP 冻结成正式 runtime 或 formal entry。
-- `controller`
+  - 说明：当前仓没有把 `MCP` 冻结成 repo-verified public runtime formal entry。
+- `controller public runtime entry`
   - 当前状态：`not-yet-supported`
-  - 说明：当前仓没有把 controller 冻结成正式 runtime 或 formal entry。
+  - 说明：当前仓没有把 `controller` 冻结成 public runtime formal entry；它当前只属于 internal controller surface。
 
 这些面仍属 future scope。任何后续若要把它们升级为正式入口，必须先改写 active truth surfaces，而不是口头默认。
 
@@ -112,6 +121,7 @@ external verifier durable 裁决如下：
 
 ## 禁止越界解释
 
+- 不得把 `supported_protocol_layer` 解释成“当前 public runtime 已正式支持 `MCP`”。
 - 不得把“developer control-plane entry 存在”解释成“产品 controller 已正式支持”。
 - 不得把 `grant_run_id` 解释成新的 control-plane pointer。
 - 不得因为 formal entry matrix 已冻结，就默认宣称 `P3.B / P3.C` 已完成。

@@ -45,9 +45,14 @@ But it keeps an independent domain boundary because grant writing is not the sam
 The repository follows two shared architectural rules:
 
 - `Agent-first` rather than `fixed-code-first`
-- one shared base with two modes:
-  - `Auto`
-  - `Human-in-the-loop`
+- the current repository mainline is `Auto-only`
+- any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than forcing same-repo dual-mode logic
+
+Its formal-entry matrix is:
+
+- `default_formal_entry`: `CLI`
+- `supported_protocol_layer`: `MCP` (reserved future layer, not yet repo-verified)
+- `internal_controller_surface`: `controller`
 
 ## Public Surface Status
 

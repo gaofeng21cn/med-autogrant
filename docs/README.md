@@ -3,7 +3,7 @@
 **English** | [中文](./README.zh-CN.md)
 
 This bilingual index is the default public surface for `Med Auto Grant`.
-It reflects the project truth that the repository is the medical `Grant Ops` `Domain Harness OS` direction on the shared `Unified Harness Engineering Substrate`, currently in `baseline freeze / runtime hardening`.
+It reflects the project truth that the repository is the medical `Grant Ops` `Domain Harness OS` direction on the shared `Unified Harness Engineering Substrate`, currently in `baseline freeze / runtime hardening`. Its formal-entry matrix is `CLI` as default formal entry, `MCP` as a reserved future protocol layer, and `controller` as internal control surface. The current repository mainline is `Auto-only`.
 
 ## Unified Documentation Governance
 

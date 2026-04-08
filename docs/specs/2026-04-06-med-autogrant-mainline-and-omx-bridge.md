@@ -44,6 +44,12 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - 不是固定代码流程去替代高判断密度创作
 - 不是某一种外部 LLM API 的壳
 
+当前还必须补一条固定理解：
+
+- 当前 repo-tracked 产品主线按 `Auto-only` 理解
+- 未来若要做高判断密度 `Human-in-the-loop` 产品，应作为兼容 sibling 或 upper-layer product 复用同一 substrate，而不是把当前仓改成同仓双模
+- formal-entry matrix 固定为：`CLI` 作为默认 formal entry，`MCP` 作为保留的 future protocol layer，`controller` 作为 internal control surface
+
 ## 为什么要固定 Codex App / OMX 双层
 
 如果没有 durable control surface，`OMX` 每次长跑都需要重新理解项目，容易出现三类漂移：
@@ -246,23 +252,23 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - `P3.B / Revision Transition And Re-Review Hardening`
 - `P3.C / Forced Rollback And Presubmission Gate`
 
-### P4. Dual-Mode Harness And Verification OS
+### P4. Verification OS And HITL Layering Preparation
 
 目标：
 
-- 把 evidence augmentation、`Human-in-the-loop`、verification、reports、checkpoint 收成连续运行面
+- 把 evidence augmentation、verification、reports、checkpoint 收成连续运行面
 - 让 `CURRENT_PROGRAM + reports + test-spec + implementation` 足以支撑 OMX 长跑
-- 让 `Auto` / `Human-in-the-loop` 双模共享同一 substrate
+- 为未来 `Human-in-the-loop` sibling 或 upper-layer product 预留可复用的 substrate-compatible contract 与模块边界
 
 停止条件：
 
 - `OMX` 无需重建上下文即可持续推进
 - team gate、验证口径和 final verification 稳定
-- 人接管与 agent 接管边界 durable 可见
+- 上层 `Human-in-the-loop` 产品可复用的边界 durable 可见
 
 当前预冻结 tranche：
 
-- `P4.A / Dual-Mode Gate Surface`
+- `P4.A / Verification Gate Surface`
 - `P4.B / Verification OS And Checkpoint Surface`
 
 ### P5. Grant Ops Gateway Expansion And Federation
