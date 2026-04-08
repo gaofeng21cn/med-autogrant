@@ -20,6 +20,7 @@ P2B_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-07-p2b-argument-fit-
 P2C_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md"
 P3A_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md"
 P3B_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md"
+P3C_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md"
 WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
 PRD = REPO_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
@@ -35,25 +36,25 @@ REPORT_README = REPORT_DIR / "README.md"
 REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_major_reframe.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_major_reframe.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_major_reframe.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_major_reframe.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_major_reframe.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json",
-    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json",
     "git diff --check",
 )
 
@@ -86,6 +87,12 @@ RE_REVIEW_TRANSITION_SNIPPETS = (
     "active_revision_plan_id",
 )
 
+ROLLBACK_GATE_SNIPPETS = (
+    "forced_rollback_stage",
+    "forced_rollback_reason",
+    "presubmission_frozen",
+)
+
 EXECUTION_HANDLE_SNIPPETS = (
     "grant_run_id",
     "workspace_id",
@@ -104,6 +111,7 @@ EXECUTION_HANDLE_REVIEW_SURFACES = (
     P2C_CURRENT_TRUTH,
     P3A_CURRENT_TRUTH,
     P3B_CURRENT_TRUTH,
+    P3C_CURRENT_TRUTH,
     WORKSPACE_EXAMPLE,
     WORKSPACE_SCHEMA,
 )
@@ -210,7 +218,15 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         formal_entry_text = read_text(FORMAL_ENTRY_MATRIX)
         durability_text = read_text(DURABILITY_MODEL)
 
-        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, P2B_CURRENT_TRUTH, P2C_CURRENT_TRUTH, P3A_CURRENT_TRUTH, P3B_CURRENT_TRUTH):
+        for path in (
+            FORMAL_ENTRY_MATRIX,
+            DURABILITY_MODEL,
+            P2B_CURRENT_TRUTH,
+            P2C_CURRENT_TRUTH,
+            P3A_CURRENT_TRUTH,
+            P3B_CURRENT_TRUTH,
+            P3C_CURRENT_TRUTH,
+        ):
             with self.subTest(path=path.name):
                 self.assertTrue(path.exists(), f"current truth doc 不存在: {path}")
 
@@ -239,7 +255,15 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         current_program_text = read_text(CURRENT_PROGRAM)
         execution_prompt_text = read_text(EXECUTION_PROMPT)
         team_prompt_text = read_text(TEAM_PROMPT)
-        for path in (FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, P2B_CURRENT_TRUTH, P2C_CURRENT_TRUTH, P3A_CURRENT_TRUTH, P3B_CURRENT_TRUTH):
+        for path in (
+            FORMAL_ENTRY_MATRIX,
+            DURABILITY_MODEL,
+            P2B_CURRENT_TRUTH,
+            P2C_CURRENT_TRUTH,
+            P3A_CURRENT_TRUTH,
+            P3B_CURRENT_TRUTH,
+            P3C_CURRENT_TRUTH,
+        ):
             path_text = str(path)
             with self.subTest(current_program_path=path.name):
                 self.assertIn(path_text, current_program_text)
@@ -326,16 +350,21 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("repo-tracked review surfaces", bridge_text)
         self.assertIn("local durable handoff surfaces", bridge_text)
 
-    def test_p3a_and_p3b_current_truth_docs_are_referenced_in_active_control_surfaces(self) -> None:
+    def test_p3a_p3b_and_p3c_current_truth_docs_are_referenced_in_active_control_surfaces(self) -> None:
         p3a_path_text = str(P3A_CURRENT_TRUTH)
         p3b_path_text = str(P3B_CURRENT_TRUTH)
+        p3c_path_text = str(P3C_CURRENT_TRUTH)
         for path in (CURRENT_PROGRAM, PROGRAM_ROUTING, PRD, TEST_SPEC, IMPLEMENTATION):
             with self.subTest(path=path.name):
                 self.assertIn(p3a_path_text, read_text(path))
                 self.assertIn(p3b_path_text, read_text(path))
+                self.assertIn(p3c_path_text, read_text(path))
 
-    def test_object_model_and_p3_current_truth_freeze_verdict_and_re_review_contract(self) -> None:
-        combined = "\n".join(read_text(path) for path in (OBJECT_MODEL_SCHEMA, P2C_CURRENT_TRUTH, P3A_CURRENT_TRUTH, P3B_CURRENT_TRUTH))
+    def test_object_model_and_p3_current_truth_freeze_verdict_re_review_and_rollback_gate_contract(self) -> None:
+        combined = "\n".join(
+            read_text(path)
+            for path in (OBJECT_MODEL_SCHEMA, P2C_CURRENT_TRUTH, P3A_CURRENT_TRUTH, P3B_CURRENT_TRUTH, P3C_CURRENT_TRUTH)
+        )
         for snippet in (
             "current_selection",
             "selected_direction_id",
@@ -356,9 +385,19 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "reviewed_revision_plan_id",
             "reviewed_revision_evidence",
             "source_critique_id",
+            "forced_rollback_stage",
+            "forced_rollback_reason",
+            "presubmission_frozen",
         ):
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, combined)
+
+    def test_rollback_and_presubmission_gate_contract_is_frozen_in_active_truth_surfaces(self) -> None:
+        for path in (OBJECT_MODEL_SCHEMA, FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, OMX_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION, P3C_CURRENT_TRUTH):
+            text = read_text(path)
+            for snippet in ROLLBACK_GATE_SNIPPETS:
+                with self.subTest(path=path.name, snippet=snippet):
+                    self.assertIn(snippet, text)
 
     def test_external_verifier_is_not_current_hard_gate(self) -> None:
         current_program_text = read_text(CURRENT_PROGRAM)

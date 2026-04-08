@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：仓库仍处于 `P3 / Mentor Critique And Revision Loop Hardening`，当前 active tranche 为 `P3.B / Revision Transition And Re-Review Hardening`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库仍处于 `P3 / Mentor Critique And Revision Loop Hardening`，当前 active tranche 为 `P3.C / Forced Rollback And Presubmission Gate`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      已有最小 runtime baseline，当前 active tranche 已切到 <code>P3.B / Revision Transition And Re-Review Hardening</code>
+      已有最小 runtime baseline，当前 active tranche 已切到 <code>P3.C / Forced Rollback And Presubmission Gate</code>
     </td>
   </tr>
 </table>
@@ -61,7 +61,7 @@
 
 下面这些能力仍处于规划或开发中：
 
-- forced rollback 与 presubmission hard gate 仍在后续 tranche 中
+- forced rollback 与 presubmission hard gate 是当前正在收紧的 tranche，但尚未 absorbed 完成
 - human-in-the-loop gate 与 submission-grade 交付面
 - 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展
 
@@ -91,11 +91,12 @@
 ### 最小 Runtime 命令
 
 ```bash
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json
-PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3b_re_review_major_revision.json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3b_re_review_major_revision.json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3b_re_review_major_revision.json
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json
 ```
 
 ### 当前技术范围
@@ -103,7 +104,8 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 - 基于 schema 的 `NSFCWorkspace` 校验
 - runtime / CLI 表面上显式区分 `grant_run_id`、`workspace_id` 与 `draft_id`
 - `major_reframe / major_revision / minor_revision / ready_for_submission` 的 machine-readable verdict contract
-- 通过 `reviewed_revision_plan_id` 与 `reviewed_revision_evidence` 冻结 machine-readable re-review linkage
+- 通过 `active_revision_plan_id`、`reviewed_revision_plan_id` 与 `reviewed_revision_evidence` 冻结 machine-readable re-review linkage
+- 通过 `forced_rollback_stage`、`forced_rollback_reason` 与 `presubmission_frozen` 冻结 machine-readable rollback / gate contract
 - machine-readable 的批注、verdict 与 route artifact
 - 覆盖 runtime 与 control-surface 不变量的测试
 
@@ -117,6 +119,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 - [`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`](./docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md)
 - [`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`](./docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md)
 - [`docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`](./docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md)
+- [`docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`](./docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md)
 
 ### 本地运行状态
 

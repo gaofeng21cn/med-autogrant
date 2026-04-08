@@ -126,6 +126,8 @@ Date: `2026-04-06`
 - `MentorCritique.reviewed_revision_plan_id` -> 上一轮 completed `RevisionPlan`
 - `MentorCritique.reviewed_revision_plan_id` -> `reviewed_revision_evidence`
 - `reviewed_revision_evidence.source_critique_id` -> 产出上一轮 completed `RevisionPlan` 的 `MentorCritique`
+- `MentorCritique.forced_rollback_stage` -> 更早的 authoring stage
+- `MentorCritique.forced_rollback_reason` -> 当前 rollback target 的显式理由
 
 同时，以下输入对象为上游支撑层：
 
@@ -185,6 +187,10 @@ Date: `2026-04-06`
 - 当当前 active draft 已是 `status=revised` 且进入新一轮 `critique` 时，`MentorCritique.reviewed_revision_plan_id` 用来显式绑定上一轮 completed revision evidence
 - `reviewed_revision_evidence` 当前必须稳定暴露：`revision_plan_id`、`source_critique_id`、`execution_status`、`pre_revision_version_label`、`post_revision_version_label`、`comparison_summary`
 - `reviewed_revision_plan_id` 不替代当前 active `RevisionPlan`；前者回答“这轮批注审阅的是哪份已完成修订证据”，后者回答“当前准备执行的是哪一轮新修订计划”
+- 当当前批注判定不能继续留在 `revision` 局部修订时，必须显式写出 `MentorCritique.forced_rollback_stage`
+- `forced_rollback_stage` 当前最小枚举固定为：`direction_screening / question_refinement / argument_building / fit_alignment`
+- `forced_rollback_reason` 在 `forced_rollback_stage` 存在时必须非空，不能用 prompt-only 解释代替
+- 当 `lifecycle_stage=frozen` 时，`gates.presubmission_frozen=true`、`ApplicationDraft.status=frozen` 与 active `RevisionPlan.execution_status=completed` 必须同时成立
 
 ## 第一版 schema 的边界
 

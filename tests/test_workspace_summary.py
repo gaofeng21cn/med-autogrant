@@ -32,6 +32,8 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.js
 MAJOR_REFRAME_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_major_reframe.json"
 READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
+FORCED_ROLLBACK_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_forced_rollback_argument.json"
+PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 
 
 class WorkspaceSummaryTest(unittest.TestCase):
@@ -40,6 +42,12 @@ class WorkspaceSummaryTest(unittest.TestCase):
 
     def build_re_review_workspace(self) -> dict[str, object]:
         return load_workspace_document(RE_REVIEW_EXAMPLE_PATH)
+
+    def build_forced_rollback_workspace(self) -> dict[str, object]:
+        return load_workspace_document(FORCED_ROLLBACK_EXAMPLE_PATH)
+
+    def build_presubmission_frozen_workspace(self) -> dict[str, object]:
+        return load_workspace_document(PRESUBMISSION_FROZEN_EXAMPLE_PATH)
 
     def test_summary_exposes_selected_objects(self) -> None:
         document = load_workspace_document(EXAMPLE_PATH)
@@ -283,6 +291,22 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertTrue(result.ok)
         self.assertEqual(result.errors, [])
 
+    def test_validation_accepts_forced_rollback_workspace(self) -> None:
+        document = self.build_forced_rollback_workspace()
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
+    def test_validation_accepts_presubmission_frozen_workspace(self) -> None:
+        document = self.build_presubmission_frozen_workspace()
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
     def test_validation_rejects_critique_with_mismatched_current_scientific_question(self) -> None:
         document = load_workspace_document(CRITIQUE_EXAMPLE_PATH)
         document["mentor_critiques"][0]["current_scientific_question"] = "错误的问题表述"
@@ -393,6 +417,99 @@ class WorkspaceSummaryTest(unittest.TestCase):
             messages,
         )
 
+    def test_validation_rejects_minor_revision_with_forced_rollback_stage(self) -> None:
+        document = copy.deepcopy(self.build_forced_rollback_workspace())
+        document["mentor_critiques"][1]["verdict"] = "minor_revision"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("mentor_critiques.forced_rollback_stage", "minor_revision 不得携带 forced_rollback_stage。"),
+            messages,
+        )
+
+    def test_validation_rejects_ready_for_submission_with_forced_rollback_stage(self) -> None:
+        document = copy.deepcopy(self.build_forced_rollback_workspace())
+        document["mentor_critiques"][1]["verdict"] = "ready_for_submission"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("mentor_critiques.forced_rollback_stage", "ready_for_submission 不得携带 forced_rollback_stage。"),
+            messages,
+        )
+
+    def test_validation_rejects_forced_rollback_stage_without_reason(self) -> None:
+        document = copy.deepcopy(self.build_forced_rollback_workspace())
+        document["mentor_critiques"][1].pop("forced_rollback_reason")
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("mentor_critiques.forced_rollback_reason", "forced_rollback_stage 存在时必须提供非空 forced_rollback_reason。"),
+            messages,
+        )
+
+    def test_validation_rejects_major_revision_with_invalid_forced_rollback_target(self) -> None:
+        document = copy.deepcopy(self.build_forced_rollback_workspace())
+        document["mentor_critiques"][1]["forced_rollback_stage"] = "question_refinement"
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("mentor_critiques.forced_rollback_stage", "verdict=major_revision 时 forced_rollback_stage 只能是 argument_building 或 fit_alignment。"),
+            messages,
+        )
+
+    def test_validation_rejects_non_frozen_stage_with_presubmission_gate_marked_true(self) -> None:
+        document = load_workspace_document(READY_FOR_SUBMISSION_EXAMPLE_PATH)
+        document["gates"]["presubmission_frozen"] = True
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("gates.presubmission_frozen", "只有 frozen 阶段才允许将 presubmission_frozen 置为 true。"),
+            messages,
+        )
+
+    def test_validation_rejects_frozen_stage_without_completed_revision_plan(self) -> None:
+        document = self.build_presubmission_frozen_workspace()
+        document["revision_plans"][0]["execution_status"] = "planned"
+        for field in ("pre_revision_version_label", "post_revision_version_label", "comparison_summary"):
+            document["revision_plans"][0].pop(field, None)
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("revision_plans.execution_status", "frozen 阶段的激活 RevisionPlan.execution_status 必须为 completed。"),
+            messages,
+        )
+
+    def test_validation_rejects_frozen_stage_with_criterion_blocking_issues(self) -> None:
+        document = self.build_presubmission_frozen_workspace()
+        document["mentor_critiques"][0]["feasibility"]["blocking_issues"] = ["仍缺关键闭环实验。"]
+
+        result = validate_workspace_document(document)
+
+        self.assertFalse(result.ok)
+        messages = {(item.path, item.message) for item in result.errors}
+        self.assertIn(
+            ("mentor_critiques.feasibility.blocking_issues", "frozen 阶段的 feasibility.blocking_issues 必须为空。"),
+            messages,
+        )
+
     def test_validation_accepts_completed_revision_with_explicit_revised_switch(self) -> None:
         document = load_workspace_document(REVISION_EXAMPLE_PATH)
 
@@ -432,6 +549,28 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertEqual(summary["active_draft"]["status"], "revised")
         self.assertEqual(summary["active_critique"]["verdict"], "ready_for_submission")
         self.assertEqual(summary["active_revision_plan"]["execution_status"], "completed")
+
+    def test_summary_exposes_forced_rollback_fields(self) -> None:
+        document = self.build_forced_rollback_workspace()
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["lifecycle_stage"], "critique")
+        self.assertFalse(summary["gates"]["presubmission_frozen"])
+        self.assertEqual(summary["active_critique"]["id"], "critique-v2")
+        self.assertEqual(summary["active_critique"]["forced_rollback_stage"], "argument_building")
+        self.assertEqual(summary["active_critique"]["forced_rollback_reason"], "当前必要性链条已经失真，必须回到 argument chain 重建。")
+
+    def test_summary_exposes_presubmission_frozen_gate(self) -> None:
+        document = self.build_presubmission_frozen_workspace()
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["lifecycle_stage"], "frozen")
+        self.assertTrue(summary["gates"]["presubmission_frozen"])
+        self.assertEqual(summary["active_draft"]["status"], "frozen")
+        self.assertEqual(summary["active_revision_plan"]["execution_status"], "completed")
+        self.assertEqual(summary["active_critique"]["verdict"], "ready_for_submission")
 
     def test_summary_exposes_re_review_linkage_and_previous_revision_evidence(self) -> None:
         document = self.build_re_review_workspace()

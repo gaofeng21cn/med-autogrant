@@ -29,6 +29,18 @@
     "reviewed_revision_plan_id": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
+    "forced_rollback_stage": {
+      "type": "string",
+      "enum": [
+        "direction_screening",
+        "question_refinement",
+        "argument_building",
+        "fit_alignment"
+      ]
+    },
+    "forced_rollback_reason": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
     "overall_diagnosis": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
     },

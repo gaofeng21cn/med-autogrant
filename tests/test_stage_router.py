@@ -28,6 +28,8 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.js
 MAJOR_REFRAME_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_major_reframe.json"
 READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
+FORCED_ROLLBACK_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_forced_rollback_argument.json"
+PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 
 
 class StageRouterTest(unittest.TestCase):
@@ -36,6 +38,12 @@ class StageRouterTest(unittest.TestCase):
 
     def build_re_review_workspace(self) -> dict[str, object]:
         return json.loads(RE_REVIEW_EXAMPLE_PATH.read_text(encoding="utf-8"))
+
+    def build_major_reframe_workspace(self) -> dict[str, object]:
+        return json.loads(MAJOR_REFRAME_EXAMPLE_PATH.read_text(encoding="utf-8"))
+
+    def build_forced_rollback_workspace(self) -> dict[str, object]:
+        return json.loads(FORCED_ROLLBACK_EXAMPLE_PATH.read_text(encoding="utf-8"))
 
     def test_input_intake_routes_to_direction_screening(self) -> None:
         route = determine_next_step(json.loads(INPUT_EXAMPLE_PATH.read_text(encoding="utf-8")))
@@ -110,6 +118,30 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["recommended_stage"], "question_refinement")
         self.assertIn("重塑科学问题", route["reason"])
 
+    def test_major_reframe_can_force_rollback_to_direction_screening(self) -> None:
+        document = self.build_major_reframe_workspace()
+        document["mentor_critiques"][0]["forced_rollback_stage"] = "direction_screening"
+        document["mentor_critiques"][0]["forced_rollback_reason"] = "当前方向无法稳定承载机制级科学问题。"
+
+        route = determine_next_step(document)
+
+        self.assertEqual(route["current_stage"], "critique")
+        self.assertEqual(route["recommended_stage"], "direction_screening")
+        self.assertEqual(route["forced_rollback_stage"], "direction_screening")
+        self.assertIn("forced rollback", route["reason"])
+
+    def test_major_reframe_can_force_rollback_to_question_refinement(self) -> None:
+        document = self.build_major_reframe_workspace()
+        document["mentor_critiques"][0]["forced_rollback_stage"] = "question_refinement"
+        document["mentor_critiques"][0]["forced_rollback_reason"] = "当前问题表述无法稳定锚定知识边界。"
+
+        route = determine_next_step(document)
+
+        self.assertEqual(route["current_stage"], "critique")
+        self.assertEqual(route["recommended_stage"], "question_refinement")
+        self.assertEqual(route["forced_rollback_stage"], "question_refinement")
+        self.assertIn("forced rollback", route["reason"])
+
     def test_minor_revision_routes_to_revision(self) -> None:
         document = copy.deepcopy(self.load_example())
         document["mentor_critiques"][0]["verdict"] = "minor_revision"
@@ -142,6 +174,35 @@ class StageRouterTest(unittest.TestCase):
         self.assertEqual(route["current_stage"], "critique")
         self.assertEqual(route["recommended_stage"], "revision")
         self.assertIn("major_revision", route["reason"])
+
+    def test_major_revision_can_force_rollback_to_argument_building(self) -> None:
+        route = determine_next_step(self.build_forced_rollback_workspace())
+
+        self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(route["current_stage"], "critique")
+        self.assertEqual(route["recommended_stage"], "argument_building")
+        self.assertEqual(route["forced_rollback_stage"], "argument_building")
+        self.assertIn("forced rollback", route["reason"])
+
+    def test_major_revision_can_force_rollback_to_fit_alignment(self) -> None:
+        document = self.build_forced_rollback_workspace()
+        document["mentor_critiques"][1]["forced_rollback_stage"] = "fit_alignment"
+        document["mentor_critiques"][1]["forced_rollback_reason"] = "申请人适配度证据链需要回退重建。"
+
+        route = determine_next_step(document)
+
+        self.assertEqual(route["current_stage"], "critique")
+        self.assertEqual(route["recommended_stage"], "fit_alignment")
+        self.assertEqual(route["forced_rollback_stage"], "fit_alignment")
+        self.assertIn("forced rollback", route["reason"])
+
+    def test_presubmission_frozen_stage_stays_frozen(self) -> None:
+        route = determine_next_step(json.loads(PRESUBMISSION_FROZEN_EXAMPLE_PATH.read_text(encoding="utf-8")))
+
+        self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(route["current_stage"], "frozen")
+        self.assertEqual(route["recommended_stage"], "frozen")
+        self.assertTrue(route["presubmission_frozen"])
 
 
 if __name__ == "__main__":

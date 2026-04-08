@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository remains in `P3 / Mentor Critique And Revision Loop Hardening`, with `P3.B / Revision Transition And Re-Review Hardening` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
+> Status: active development. The repository remains in `P3 / Mentor Critique And Revision Loop Hardening`, with `P3.C / Forced Rollback And Presubmission Gate` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      Minimal runtime baseline is retained, and the active tranche is now <code>P3.B / Revision Transition And Re-Review Hardening</code>
+      Minimal runtime baseline is retained, and the active tranche is now <code>P3.C / Forced Rollback And Presubmission Gate</code>
     </td>
   </tr>
 </table>
@@ -61,7 +61,7 @@ Today, the runtime can:
 
 The following pieces are planned but not yet complete:
 
-- forced rollback and presubmission hard gates beyond the current re-review contract
+- forced rollback and presubmission hard gates are the current active hardening tranche and are not fully absorbed yet
 - human-in-the-loop gate surfaces and submission-grade delivery
 - broader grant-family expansion beyond the first `NSFC` generic skeleton
 
@@ -91,11 +91,12 @@ You can give your agent an instruction like this:
 ### Minimal Runtime Commands
 
 ```bash
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json
-PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3b_re_review_major_revision.json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3b_re_review_major_revision.json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3b_re_review_major_revision.json
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json
 ```
 
 ### Current Technical Scope
@@ -103,7 +104,8 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 - schema-backed `NSFCWorkspace` validation
 - explicit `grant_run_id` / `workspace_id` / `draft_id` separation for runtime and CLI surfaces
 - machine-readable mentor verdict contract across `major_reframe / major_revision / minor_revision / ready_for_submission`
-- machine-readable re-review linkage through `reviewed_revision_plan_id` and `reviewed_revision_evidence`
+- machine-readable re-review linkage through `active_revision_plan_id`, `reviewed_revision_plan_id`, and `reviewed_revision_evidence`
+- machine-readable forced rollback and presubmission gate fields through `forced_rollback_stage`, `forced_rollback_reason`, and `presubmission_frozen`
 - machine-readable critique, verdict, and route artifacts
 - tests covering runtime and control-surface invariants
 
@@ -117,6 +119,7 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 - [`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`](./docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md)
 - [`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`](./docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md)
 - [`docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`](./docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md)
+- [`docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`](./docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md)
 
 ### Local Operator State
 

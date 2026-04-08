@@ -22,6 +22,7 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
     identity = {
         "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
+        "presubmission_frozen": bool(gates.get("presubmission_frozen")),
     }
 
     if stage in {"critique", "revision"}:
@@ -30,6 +31,22 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
         revision_plan = context.active_revision_plan
         active_draft = context.active_draft
         verdict = critique["verdict"]
+        forced_rollback_stage = critique.get("forced_rollback_stage")
+        forced_rollback_reason = critique.get("forced_rollback_reason")
+        if forced_rollback_stage is not None:
+            return {
+                **identity,
+                "current_stage": stage,
+                "recommended_stage": forced_rollback_stage,
+                "forced_rollback_stage": forced_rollback_stage,
+                "reason": f"当前批注触发 forced rollback，应回退到 {forced_rollback_stage}：{forced_rollback_reason}",
+                "actions": _build_forced_rollback_actions(forced_rollback_stage),
+                "requires_human_confirmation": (
+                    document["mode"] != "auto"
+                    if forced_rollback_stage in {"direction_screening", "question_refinement"}
+                    else False
+                ),
+            }
         if verdict == "major_reframe":
             return {
                 **identity,
@@ -172,3 +189,29 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
         ],
         "requires_human_confirmation": document["mode"] != "auto",
     }
+
+
+def _build_forced_rollback_actions(target_stage: str) -> list[str]:
+    if target_stage == "direction_screening":
+        return [
+            "重新筛选主方向，并判断当前题目是否还值得保留。",
+            "只保留能够承载机制级科学问题的方向候选。",
+        ]
+    if target_stage == "question_refinement":
+        return [
+            "回退重塑核心科学问题，并重新冻结知识边界与可证伪表述。",
+            "确认当前问题仍与所选方向严格一致。",
+        ]
+    if target_stage == "argument_building":
+        return [
+            "回退重建立项依据主链，重新闭合 field gap、necessity claim 与 route justification。",
+            "让新的 argument chain 显式回指当前问题与关键证据。",
+        ]
+    if target_stage == "fit_alignment":
+        return [
+            "回退重建 applicant-problem fit 映射，并重新核对研究基础与关键验证节点的对齐。",
+            "补足申请人与问题之间的不可替代性证据链。",
+        ]
+    return [
+        "按当前 rollback target 回退并重建上游对象。",
+    ]

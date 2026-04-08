@@ -9,9 +9,9 @@ Date: `2026-04-07`
 ## 当前指针
 
 - Current phase: `P3 / Mentor Critique And Revision Loop Hardening`
-- Active tranche: `P3.B / Revision Transition And Re-Review Hardening`
+- Active tranche: `P3.C / Forced Rollback And Presubmission Gate`
 
-本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不替代当前 `P3.B` 的 re-review contract。
+本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不替代当前 `P3.C` 的 forced rollback / presubmission gate contract。
 
 ## Formal Entry Matrix
 
@@ -28,7 +28,9 @@ Date: `2026-04-07`
   - CLI 是当前唯一正式支持的 user-facing runtime entry。
   - CLI 输出必须稳定回显同一 `grant_run_id`，并保持与 `workspace_id`、`draft_id`、`program_id` 分离。
   - `grant_run_id` 是 execution handle，不是新的入口面。
-  - 在当前 `P3.B` tranche 内，CLI 的 repo-native audit surface 还必须保持 `current_selection.active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence` 与 `source_critique_id` 的稳定回显或聚合。
+  - 在当前 `P3.C` tranche 内，CLI 的 repo-native audit surface 还必须同时保持：
+    - absorbed `P3.B` retained boundary：`active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`
+    - 当前 `P3.C` hard gate boundary：`forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`
 
 ### 2. developer control-plane entry
 
@@ -43,7 +45,9 @@ Date: `2026-04-07`
   - 这是开发控制面入口，不是产品 runtime 入口。
   - 它负责 planning、phase/tranche pointer、verification contract、report sync 与 long-run orchestration。
   - 它不能被叙述成“已经有正式 MCP / controller runtime”。
-  - 当前 control-plane truth 还必须显式冻结 `current_selection.active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence` 与 `source_critique_id` 的 P3.B re-review contract。
+  - 当前 control-plane truth 还必须显式同时冻结：
+    - `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 的 P3.B re-review contract
+    - `forced_rollback_stage`、`forced_rollback_reason` 与 `presubmission_frozen` 的 P3.C hard gate contract
 
 ### 3. recovery / resume entry
 
@@ -56,7 +60,7 @@ Date: `2026-04-07`
 - 当前 contract：
   - recovery / resume 入口与 developer control-plane 使用同一组 durable surfaces。
   - 恢复时必须沿用同一 `grant_run_id` 上下文回显，但不能把 `grant_run_id` 误写成 `program_id` 或 `workspace_id`。
-  - 恢复时也不得丢失当前 `current_selection.active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence` 与 `source_critique_id` 的 machine-readable 边界。
+  - 恢复时也不得丢失 absorbed `P3.B` 的 `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`，以及当前 `P3.C` 的 `forced_rollback_stage`、`forced_rollback_reason` 与 `presubmission_frozen` 的 machine-readable 边界。
 
 ### 4. not-yet-supported / future scope
 
@@ -75,25 +79,25 @@ Date: `2026-04-07`
 
 1. `python3 -m unittest discover -s tests -p 'test_*.py'`
 2. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json`
-3. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
-4. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
-5. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
+3. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
+4. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json`
+5. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
 6. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_revision.json --format json`
-7. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
-8. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
-9. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
+7. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
+8. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json`
+9. `PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
 10. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_revision.json --format json`
-11. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
-12. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
-13. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
+11. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
+12. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json`
+13. `PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
 14. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_revision.json --format json`
-15. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
-16. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
-17. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
+15. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
+16. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json`
+17. `PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
 18. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_revision.json --format json`
-19. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_major_reframe.json --format json`
-20. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
-21. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
+19. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json`
+20. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json`
+21. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
 22. `git diff --check`
 
 external verifier durable 裁决如下：

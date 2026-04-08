@@ -195,6 +195,9 @@ def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
         "current_scientific_question": critique["current_scientific_question"],
         "suggested_question": critique["suggested_question"],
         "verdict": critique["verdict"],
+        "forced_rollback_stage": critique.get("forced_rollback_stage"),
+        "forced_rollback_reason": critique.get("forced_rollback_reason"),
+        "presubmission_frozen": bool(document["gates"].get("presubmission_frozen")),
         "necessity_scientific_value": dict(critique["necessity_scientific_value"]),
         "applicant_fit": dict(critique["applicant_fit"]),
         "feasibility": dict(critique["feasibility"]),
@@ -698,6 +701,15 @@ def _validate_stage_requirements(
         reviewed_revision_plan=reviewed_revision_plan,
         issues=issues,
     )
+    _validate_forced_rollback_contract(active_critique=active_critique, issues=issues)
+    _validate_presubmission_gate_contract(
+        stage=stage,
+        gates=gates,
+        active_draft=active_draft,
+        active_revision_plan=active_revision_plan,
+        active_critique=active_critique,
+        issues=issues,
+    )
     if active_critique is not None:
         for field, expected in (
             ("necessity_scientific_value", 60),
@@ -747,13 +759,19 @@ def _validate_revision_transition_contract(
                 )
             )
 
-    if execution_status == "completed" and draft_status != "revised":
-        issues.append(
-            ValidationIssue(
-                path="application_drafts.status",
-                message="revision plan 已标记 completed 时，激活草稿 status 必须显式切换为 revised。",
+    if execution_status == "completed":
+        expected_draft_status = "frozen" if stage == "frozen" else "revised"
+        if draft_status != expected_draft_status:
+            issues.append(
+                ValidationIssue(
+                    path="application_drafts.status",
+                    message=(
+                        "frozen 阶段的 completed revision 必须对应 status=frozen 的激活草稿。"
+                        if stage == "frozen"
+                        else "revision plan 已标记 completed 时，激活草稿 status 必须显式切换为 revised。"
+                    ),
+                )
             )
-        )
 
     revision_evidence = active_revision_plan if execution_status == "completed" else reviewed_revision_plan
     if not isinstance(revision_evidence, dict):
@@ -796,7 +814,143 @@ def _validate_revision_transition_contract(
             issues.append(
                 ValidationIssue(
                     path="application_drafts.version_label",
-                    message="revised 草稿的 version_label 必须等于 post_revision_version_label。",
+                    message="激活草稿的 version_label 必须等于 post_revision_version_label。",
+                )
+            )
+
+
+def _validate_forced_rollback_contract(
+    *,
+    active_critique: dict[str, Any] | None,
+    issues: list[ValidationIssue],
+) -> None:
+    if not isinstance(active_critique, dict):
+        return
+
+    verdict = active_critique.get("verdict")
+    forced_rollback_stage = active_critique.get("forced_rollback_stage")
+    forced_rollback_reason = active_critique.get("forced_rollback_reason")
+
+    if forced_rollback_stage is None:
+        if isinstance(forced_rollback_reason, str) and forced_rollback_reason.strip():
+            issues.append(
+                ValidationIssue(
+                    path="mentor_critiques.forced_rollback_reason",
+                    message="forced_rollback_stage 缺失时不得单独提供 forced_rollback_reason。",
+                )
+            )
+        return
+
+    if not isinstance(forced_rollback_reason, str) or not forced_rollback_reason.strip():
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques.forced_rollback_reason",
+                message="forced_rollback_stage 存在时必须提供非空 forced_rollback_reason。",
+            )
+        )
+
+    if verdict == "minor_revision":
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques.forced_rollback_stage",
+                message="minor_revision 不得携带 forced_rollback_stage。",
+            )
+        )
+        return
+
+    if verdict == "ready_for_submission":
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques.forced_rollback_stage",
+                message="ready_for_submission 不得携带 forced_rollback_stage。",
+            )
+        )
+        return
+
+    allowed_targets_by_verdict = {
+        "major_reframe": {"direction_screening", "question_refinement"},
+        "major_revision": {"argument_building", "fit_alignment"},
+    }
+    allowed_targets = allowed_targets_by_verdict.get(verdict)
+    if allowed_targets is None:
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques.forced_rollback_stage",
+                message="只有 major_reframe 或 major_revision 才允许携带 forced_rollback_stage。",
+            )
+        )
+        return
+
+    if forced_rollback_stage not in allowed_targets:
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques.forced_rollback_stage",
+                message=(
+                    "verdict=major_reframe 时 forced_rollback_stage 只能是 direction_screening 或 question_refinement。"
+                    if verdict == "major_reframe"
+                    else "verdict=major_revision 时 forced_rollback_stage 只能是 argument_building 或 fit_alignment。"
+                ),
+            )
+        )
+
+
+def _validate_presubmission_gate_contract(
+    *,
+    stage: Any,
+    gates: dict[str, Any],
+    active_draft: dict[str, Any] | None,
+    active_revision_plan: dict[str, Any] | None,
+    active_critique: dict[str, Any] | None,
+    issues: list[ValidationIssue],
+) -> None:
+    presubmission_frozen = bool(gates.get("presubmission_frozen"))
+    if stage != "frozen" and presubmission_frozen:
+        issues.append(
+            ValidationIssue(
+                path="gates.presubmission_frozen",
+                message="只有 frozen 阶段才允许将 presubmission_frozen 置为 true。",
+            )
+        )
+        return
+
+    if stage != "frozen" or not isinstance(active_critique, dict):
+        return
+
+    if not isinstance(active_revision_plan, dict) or active_revision_plan.get("execution_status") != "completed":
+        issues.append(
+            ValidationIssue(
+                path="revision_plans.execution_status",
+                message="frozen 阶段的激活 RevisionPlan.execution_status 必须为 completed。",
+            )
+        )
+
+    if (
+        isinstance(active_revision_plan, dict)
+        and isinstance(active_draft, dict)
+        and active_revision_plan.get("post_revision_version_label") != active_draft.get("version_label")
+    ):
+        issues.append(
+            ValidationIssue(
+                path="revision_plans.post_revision_version_label",
+                message="frozen 阶段的激活 RevisionPlan.post_revision_version_label 必须等于激活草稿 version_label。",
+            )
+        )
+
+    if active_critique.get("blocking_issues"):
+        issues.append(
+            ValidationIssue(
+                path="mentor_critiques.blocking_issues",
+                message="frozen 阶段的激活批注 blocking_issues 必须为空。",
+            )
+        )
+
+    for field in ("necessity_scientific_value", "applicant_fit", "feasibility"):
+        criterion = active_critique.get(field, {})
+        if isinstance(criterion, dict) and criterion.get("blocking_issues"):
+            issues.append(
+                ValidationIssue(
+                    path=f"mentor_critiques.{field}.blocking_issues",
+                    message=f"frozen 阶段的 {field}.blocking_issues 必须为空。",
                 )
             )
 
@@ -1076,6 +1230,8 @@ def _serialize_critique(critique: dict[str, Any] | None) -> dict[str, Any] | Non
         "id": critique["critique_id"],
         "verdict": critique["verdict"],
         "reviewed_revision_plan_id": critique.get("reviewed_revision_plan_id"),
+        "forced_rollback_stage": critique.get("forced_rollback_stage"),
+        "forced_rollback_reason": critique.get("forced_rollback_reason"),
         "blocking_issue_count": len(critique.get("blocking_issues", [])),
     }
 

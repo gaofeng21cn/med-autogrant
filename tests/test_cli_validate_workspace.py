@@ -32,6 +32,8 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.js
 MAJOR_REFRAME_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_major_reframe.json"
 READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a_ready_for_submission.json"
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
+FORCED_ROLLBACK_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_forced_rollback_argument.json"
+PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 
 
 class CliValidateWorkspaceTest(unittest.TestCase):
@@ -344,6 +346,39 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["recommended_stage"], "frozen")
         self.assertIn("ready_for_submission", payload["reason"])
 
+    def test_next_step_routes_forced_rollback_to_argument_building(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "next-step",
+            "--input",
+            str(FORCED_ROLLBACK_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["current_stage"], "critique")
+        self.assertEqual(payload["recommended_stage"], "argument_building")
+        self.assertEqual(payload["forced_rollback_stage"], "argument_building")
+        self.assertIn("forced rollback", payload["reason"])
+
+    def test_next_step_keeps_presubmission_frozen_workspace_at_frozen(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "next-step",
+            "--input",
+            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["current_stage"], "frozen")
+        self.assertEqual(payload["recommended_stage"], "frozen")
+        self.assertTrue(payload["presubmission_frozen"])
+
     def test_stage_route_report_aggregates_p2a_question_refinement_without_critique_summary(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "stage-route-report",
@@ -552,6 +587,36 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
 
+    def test_validate_workspace_accepts_forced_rollback_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(FORCED_ROLLBACK_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+
+    def test_validate_workspace_accepts_presubmission_frozen_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "frozen")
+
     def test_critique_summary_exposes_re_review_linkage(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "critique-summary",
@@ -569,6 +634,41 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["reviewed_revision_plan_id"], "revision-v1")
         self.assertEqual(payload["reviewed_revision_evidence"]["post_revision_version_label"], "v0.4")
 
+    def test_critique_summary_exposes_forced_rollback_fields(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "critique-summary",
+            "--input",
+            str(FORCED_ROLLBACK_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["critique_id"], "critique-v2")
+        self.assertEqual(payload["forced_rollback_stage"], "argument_building")
+        self.assertEqual(payload["forced_rollback_reason"], "当前必要性链条已经失真，必须回到 argument chain 重建。")
+        self.assertFalse(payload["presubmission_frozen"])
+        self.assertEqual(payload["recommended_next_stage"], "argument_building")
+
+    def test_critique_summary_exposes_presubmission_frozen_fields(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "critique-summary",
+            "--input",
+            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["lifecycle_stage"], "frozen")
+        self.assertEqual(payload["verdict"], "ready_for_submission")
+        self.assertTrue(payload["presubmission_frozen"])
+        self.assertEqual(payload["recommended_next_stage"], "frozen")
+
     def test_summarize_workspace_exposes_re_review_evidence(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "summarize-workspace",
@@ -584,6 +684,39 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["active_critique"]["reviewed_revision_plan_id"], "revision-v1")
         self.assertEqual(payload["reviewed_revision_evidence"]["source_critique_id"], "critique-v1")
+
+    def test_summarize_workspace_exposes_forced_rollback_evidence(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "summarize-workspace",
+            "--input",
+            str(FORCED_ROLLBACK_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["active_critique"]["forced_rollback_stage"], "argument_building")
+        self.assertEqual(payload["active_critique"]["forced_rollback_reason"], "当前必要性链条已经失真，必须回到 argument chain 重建。")
+        self.assertFalse(payload["gates"]["presubmission_frozen"])
+
+    def test_summarize_workspace_exposes_presubmission_frozen_gate(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "summarize-workspace",
+            "--input",
+            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["lifecycle_stage"], "frozen")
+        self.assertTrue(payload["gates"]["presubmission_frozen"])
+        self.assertEqual(payload["active_draft"]["status"], "frozen")
 
     def test_stage_route_report_aggregates_p3b_re_review_branch(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -602,6 +735,43 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
         self.assertEqual(payload["route"]["summarize_workspace"]["reviewed_revision_evidence"]["revision_plan_id"], "revision-v1")
         self.assertEqual(payload["route"]["critique_summary"]["reviewed_revision_plan_id"], "revision-v1")
+
+    def test_stage_route_report_aggregates_p3c_forced_rollback_branch(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "stage-route-report",
+            "--input",
+            str(FORCED_ROLLBACK_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
+        self.assertEqual(payload["route"]["next_step"]["forced_rollback_stage"], "argument_building")
+        self.assertEqual(payload["route"]["critique_summary"]["forced_rollback_stage"], "argument_building")
+        self.assertFalse(payload["route"]["critique_summary"]["presubmission_frozen"])
+
+    def test_stage_route_report_aggregates_p3c_presubmission_frozen_branch(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "stage-route-report",
+            "--input",
+            str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["lifecycle_stage"], "frozen")
+        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "frozen")
+        self.assertTrue(payload["route"]["summarize_workspace"]["gates"]["presubmission_frozen"])
+        self.assertTrue(payload["route"]["critique_summary"]["presubmission_frozen"])
 
     def test_validate_workspace_json_output(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
