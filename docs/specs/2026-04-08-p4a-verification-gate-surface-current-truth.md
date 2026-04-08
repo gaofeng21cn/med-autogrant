@@ -6,8 +6,8 @@ Date: `2026-04-08`
 
 - Current phase: `P4 / Verification OS And HITL Layering Preparation`
 - Active tranche: `P4.A / Verification Gate Surface`
-- Status: `activation-frozen / implementation pending`
-- Latest absorbed upstream checkpoint: `P3.C / Forced Rollback And Presubmission Gate`（commit `52b18fe`）
+- Status: `canonical behavior implemented / hard-gate verified`
+- Latest absorbed upstream tranche before P4.A: `P3.C / Forced Rollback And Presubmission Gate`（commit `52b18fe`）
 
 ## Goal
 
@@ -65,6 +65,7 @@ Date: `2026-04-08`
 - 必须聚合：`validate-workspace`、`summarize-workspace`、`next-step`、`critique-summary`。
 - 必须输出：`verification_checkpoint` 与 `checkpoint_status`。
 - `verification_checkpoint` 当前至少继续聚合：`validation_ok`、identity、route alignment、review checkpoint、reviewed revision evidence、forced rollback 与 frozen gate 语义。
+- 对 `ready_for_submission + presubmission_frozen=false` 的 gate-open canonical example，`checkpoint_status` 现已实现为 `freeze_ready`，不再落入 generic `forward_progress`。
 
 ## Checkpoint Vocabulary Freeze
 
@@ -93,9 +94,9 @@ Date: `2026-04-08`
 - `examples/nsfc_workspace_p3a_ready_for_submission.json` 是当前 `P4.A` 新冻结的 gate-open canonical example。
 - `examples/nsfc_workspace_p3c_presubmission_frozen.json` 继续作为 gate-closed frozen canonical example。
 
-## Required Verification Contract For Activation Package
+## Required Verification Contract
 
-当前 activation package 先把以下 repo-native commands 冻结进 active truth surfaces：
+当前 tranche 以以下 repo-native commands 作为 freeze 与 implementation 共用的 hard gate：
 
 1. `python3 -m unittest discover -s tests -p 'test_*.py'`
 2. `PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json`

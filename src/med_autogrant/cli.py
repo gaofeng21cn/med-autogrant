@@ -189,6 +189,12 @@ def _build_verification_checkpoint(
         checkpoint_status = "submission_frozen"
     elif forced_rollback_stage:
         checkpoint_status = "rollback_required"
+    elif _is_freeze_ready_checkpoint(
+        summary=summary,
+        next_step=next_step,
+        critique_summary=critique_summary,
+    ):
+        checkpoint_status = "freeze_ready"
     else:
         checkpoint_status = "forward_progress"
 
@@ -227,6 +233,24 @@ def _build_verification_checkpoint(
             ),
         },
     }
+
+
+def _is_freeze_ready_checkpoint(
+    *,
+    summary: dict[str, Any],
+    next_step: dict[str, Any],
+    critique_summary: dict[str, Any] | None,
+) -> bool:
+    if not isinstance(critique_summary, dict):
+        return False
+
+    if critique_summary.get("verdict") != "ready_for_submission":
+        return False
+
+    if bool(summary.get("gates", {}).get("presubmission_frozen")):
+        return False
+
+    return next_step.get("recommended_stage") == "frozen"
 
 
 def _add_workspace_command(

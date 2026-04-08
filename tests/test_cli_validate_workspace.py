@@ -576,6 +576,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "frozen")
         self.assertEqual(payload["route"]["critique_summary"]["verdict"], "ready_for_submission")
+        self.assertFalse(payload["route"]["critique_summary"]["presubmission_frozen"])
+        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "freeze_ready")
+        self.assertFalse(payload["verification_checkpoint"]["route_alignment"]["presubmission_frozen"])
 
     def test_validate_workspace_accepts_re_review_critique_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
