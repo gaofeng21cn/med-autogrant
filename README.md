@@ -37,6 +37,15 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - The current repository mainline is `Auto-only`; any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than split this repository into same-repo dual-mode logic.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 
+## Execution Handle And Durable Surfaces
+
+- `grant_run_id` is the formal execution handle for one hydrated grant run.
+- `workspace_id` is the durable aggregate-root identity for the current `NSFCWorkspace`.
+- `draft_id` is the draft identity carried across critique and revision rather than regenerated per run.
+- `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
+- Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
+- Repo-tracked review truth and local durable handoff surfaces stay separate: the former explains the runtime contract, while the latter carries machine-specific resume state.
+
 ## What It Is Designed To Help With
 
 - Clarify whether a proposed topic is a real scientific question rather than an engineering task or a vague clinical need.

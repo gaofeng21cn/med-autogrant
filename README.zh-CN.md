@@ -37,6 +37,15 @@
 - 当前仓库主线按 `Auto-only` 理解；未来如果要做 `Human-in-the-loop` 产品，应作为兼容 sibling 或 upper-layer product 复用同一 substrate，而不是把当前仓改成同仓双模。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
 
+## 执行句柄与持久表面
+
+- `grant_run_id`：单次 hydrated grant run 的正式执行句柄
+- `workspace_id`：当前 `NSFCWorkspace` 的持久聚合根身份
+- `draft_id`：跨 critique / revision 延续的草稿身份，而不是每次 run 重新生成的 ID
+- `program_id`：当前 Med Auto Grant active mainline 的 control-plane / report-routing 指针
+- 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
+- repo-tracked review truth 与 local durable handoff surfaces 必须分开：前者负责解释 runtime contract，后者负责机器私有的恢复状态
+
 ## 它主要想帮你解决什么问题
 
 - 判断一个方向到底是不是“真正的科学问题”，而不是工程任务或泛泛的临床需求。

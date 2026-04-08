@@ -54,6 +54,31 @@
 
 这意味着“最小 baseline 已存在”，不意味着“完整产品 runtime 已完成”。
 
+## 4.1 执行句柄与 durable surface 边界
+
+为了和 shared substrate 上其他业务仓逐步对齐，这里需要把当前已经存在的身份与表面合同写得更明确：
+
+- `grant_run_id`
+  - 单次 hydrated grant run 的执行句柄
+  - 当前 CLI 输出、runtime report 与恢复上下文都必须显式回显它
+- `workspace_id`
+  - `NSFCWorkspace` 聚合根身份
+  - 不得被误写成 run handle 或 report-routing pointer
+- `draft_id`
+  - `ApplicationDraft` 的持久身份
+  - critique / revision / re-review 都围绕同一 `draft_id` 绑定，不在每轮 run 中漂移
+- `program_id`
+  - control-plane 与 report-routing 身份
+  - 负责 `.omx/reports/<program_id>/` 与 active mainline 指针
+
+当前 repo-verified durable report / audit surfaces 也已经明确为：
+
+- `summarize-workspace`
+- `critique-summary`
+- `stage-route-report`
+
+而 `validate-workspace` 负责 validation，不应被误写成新的 execution handle 或新的 formal entry。
+
 ## 5. 未来托管形态：Managed Web Runtime（同一 Substrate）
 
 未来可演进为 managed web runtime，但该演进应满足以下前提：

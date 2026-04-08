@@ -8,6 +8,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 README_EN = REPO_ROOT / "README.md"
 README_ZH = REPO_ROOT / "README.zh-CN.md"
+PROJECT_TRUTH = REPO_ROOT / "contracts" / "project-truth" / "AGENTS.md"
+POSITIONING_DOC = REPO_ROOT / "docs" / "domain-harness-os-positioning.md"
 CURRENT_PROGRAM = REPO_ROOT / ".omx" / "context" / "CURRENT_PROGRAM.md"
 PROGRAM_ROUTING = REPO_ROOT / ".omx" / "context" / "PROGRAM_ROUTING.md"
 TEAM_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_TEAM_PROMPT.md"
@@ -65,7 +67,7 @@ FUTURE_TRANCHE_SNIPPETS = (
     "P3.A / Mentor Verdict Contract Freeze",
     "P3.B / Revision Transition And Re-Review Hardening",
     "P3.C / Forced Rollback And Presubmission Gate",
-    "P4.A / Dual-Mode Gate Surface",
+    "P4.A / Verification Gate Surface",
     "P4.B / Verification OS And Checkpoint Surface",
     "P5.A / Second Grant Family Onboarding",
     "P5.B / Federation Contract Freeze",
@@ -103,6 +105,8 @@ EXECUTION_HANDLE_SNIPPETS = (
 EXECUTION_HANDLE_REVIEW_SURFACES = (
     README_EN,
     README_ZH,
+    PROJECT_TRUTH,
+    POSITIONING_DOC,
     OMX_BRIDGE,
     OBJECT_MODEL_SCHEMA,
     FORMAL_ENTRY_MATRIX,
@@ -114,6 +118,12 @@ EXECUTION_HANDLE_REVIEW_SURFACES = (
     P3C_CURRENT_TRUTH,
     WORKSPACE_EXAMPLE,
     WORKSPACE_SCHEMA,
+)
+
+DURABLE_REPORT_SURFACE_SNIPPETS = (
+    "summarize-workspace",
+    "critique-summary",
+    "stage-route-report",
 )
 
 
@@ -349,6 +359,27 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         bridge_text = read_text(OMX_BRIDGE)
         self.assertIn("repo-tracked review surfaces", bridge_text)
         self.assertIn("local durable handoff surfaces", bridge_text)
+
+    def test_execution_handle_and_durable_report_surfaces_are_explicit_in_public_and_truth_docs(self) -> None:
+        combined = "\n".join(
+            read_text(path)
+            for path in (
+                README_EN,
+                README_ZH,
+                PROJECT_TRUTH,
+                POSITIONING_DOC,
+                FORMAL_ENTRY_MATRIX,
+                DURABILITY_MODEL,
+            )
+        )
+
+        for snippet in EXECUTION_HANDLE_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, combined)
+
+        for snippet in DURABLE_REPORT_SURFACE_SNIPPETS:
+            with self.subTest(report_surface=snippet):
+                self.assertIn(snippet, combined)
 
     def test_p3a_p3b_and_p3c_current_truth_docs_are_referenced_in_active_control_surfaces(self) -> None:
         p3a_path_text = str(P3A_CURRENT_TRUTH)

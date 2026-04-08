@@ -79,6 +79,27 @@ Agent 负责：
 - 不能把“控制面可用”误写成“产品 runtime 已成熟”；两者的成熟度与验收标准必须分开表述。
 - 后续迁移到 managed web runtime 时，控制面形态可以变化，但 domain contract 与 substrate 约束不应漂移。
 
+## Execution Handle And Durable Surface Boundary
+
+- `grant_run_id`
+  - 单次 hydrated grant run 的正式执行句柄
+  - CLI 输出、runtime report 与恢复上下文都必须回显同一个 `grant_run_id`
+- `workspace_id`
+  - `NSFCWorkspace` 聚合根身份
+  - 回答“这是哪个 grant workspace”，不是“这是哪一次执行”
+- `draft_id`
+  - `ApplicationDraft` 身份
+  - revision 完成后继续沿用同一 `draft_id`，不借由 run handle 生成新草稿身份
+- `program_id`
+  - control-plane / report-routing 身份
+  - 用于 `.omx/reports/<program_id>/` 与 active mainline pointer
+- 当前 repo-verified durable report / audit surface：
+  - `summarize-workspace`
+  - `critique-summary`
+  - `stage-route-report`
+- `validate-workspace` 是验证 surface，不是 execution handle，也不是 control-plane pointer。
+- 不得把 `grant_run_id`、`workspace_id`、`draft_id`、`program_id` 互相替代，也不得把本地 handoff surface 误写成产品 runtime formal entry。
+
 ## Stability Rules
 
 - 当前唯一 active mainline 由 `.omx/context/CURRENT_PROGRAM.md` 定义。
