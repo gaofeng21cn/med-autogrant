@@ -20,7 +20,7 @@ Date: `2026-04-08`
 
 - 把当前 active `MentorCritique + RevisionPlan + ApplicationDraft` 收成一个 **CLI-first local revision execution pass**
 - 让本地 runtime 第一次具备“围绕已有 critique / revision context 产生 revised workspace candidate”的 author-side 机器可读执行面
-- 把 `pre_revision_version_label / post_revision_version_label / comparison_summary / reviewed_revision_evidence / forced_rollback_stage / presubmission_frozen` 保持在同一个 durable workspace mutation contract 内
+- 把 `reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id / active_revision_plan_id / pre_revision_version_label / post_revision_version_label / comparison_summary / forced_rollback_stage / presubmission_frozen` 保持在同一个 durable workspace mutation contract 内
 
 这里冻结的不是“已经有 critique synthesis / web runtime / hosted runtime”的事实，而是：
 
@@ -171,7 +171,7 @@ Date: `2026-04-08`
 
 1. 新的 revision executor contract regression tests
 2. `draft_id / frozen_question_id / pre_revision_version_label / post_revision_version_label / comparison_summary` 一致性 tests
-3. `reviewed_revision_evidence / forced_rollback_stage / presubmission_frozen` fail-closed tests
+3. `reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id / active_revision_plan_id` 保留 tests，以及 `forced_rollback_stage / presubmission_frozen` fail-closed tests
 4. `PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json`
 5. `git diff --check`
 

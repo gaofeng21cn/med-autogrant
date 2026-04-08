@@ -50,6 +50,7 @@ REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
     "python3 -m unittest discover -s tests -p 'test_program_control_surfaces.py'",
     "python3 -m unittest discover -s tests -p 'test_local_runtime.py'",
+    "python3 -m unittest discover -s tests -p 'test_artifact_bundle.py'",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json",
@@ -286,6 +287,12 @@ R3A_ACTIVATION_SNIPPETS = (
     "not-yet-supported",
 )
 
+R3A_IMPLEMENTATION_PROMOTION_SNIPPETS = (
+    "## R3.A Implementation Promotion Contract",
+    "execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json",
+    "reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id / active_revision_plan_id",
+)
+
 RUNTIME_BOUNDARY_MAP_SNIPPETS = (
     "R1.B / Stage Action Executor Envelope",
     "R2.A / Artifact Bundle Production Surface",
@@ -351,6 +358,12 @@ def extract_section(document: str, title: str) -> list[str]:
     if match is None:
         raise AssertionError(f"OPEN_ISSUES.md 缺少 {title} 段落。")
     return [line.strip() for line in match.group(1).splitlines() if line.strip().startswith("- ")]
+
+
+def assert_labeled_path(document: str, label: str, path: Path) -> None:
+    expected = f"- {label}：\n  - `{path}`"
+    if expected not in document:
+        raise AssertionError(f"段落 {label} 未指向期望路径: {path}")
 
 
 class ProgramControlSurfaceTest(unittest.TestCase):
@@ -666,6 +679,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(path=path.name):
                 self.assertIn(package_path, read_text(path))
 
+    def test_latest_absorbed_and_current_active_runtime_slice_paths_are_aligned(self) -> None:
+        for path in (PROGRAM_ROUTING, LATEST_STATUS):
+            text = read_text(path)
+            with self.subTest(path=path.name, label="latest absorbed runtime slice activation package"):
+                assert_labeled_path(text, "latest absorbed runtime slice activation package", R2A_ACTIVATION_PACKAGE)
+            with self.subTest(path=path.name, label="current active runtime slice activation package"):
+                assert_labeled_path(text, "current active runtime slice activation package", R3A_ACTIVATION_PACKAGE)
+
     def test_r1a_activation_package_freezes_local_main_loop_contract(self) -> None:
         text = read_text(R1A_ACTIVATION_PACKAGE)
         for snippet in R1A_ACTIVATION_SNIPPETS:
@@ -687,6 +708,12 @@ class ProgramControlSurfaceTest(unittest.TestCase):
     def test_r3a_activation_package_freezes_revision_executor_contract(self) -> None:
         text = read_text(R3A_ACTIVATION_PACKAGE)
         for snippet in R3A_ACTIVATION_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, text)
+
+    def test_r3a_implementation_promotion_contract_is_frozen_in_active_test_spec(self) -> None:
+        text = read_text(TEST_SPEC)
+        for snippet in R3A_IMPLEMENTATION_PROMOTION_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, text)
 
