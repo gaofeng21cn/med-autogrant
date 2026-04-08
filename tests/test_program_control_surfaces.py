@@ -17,6 +17,7 @@ TEAM_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_TEAM_PROMPT.md"
 EXECUTION_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_EXECUTION_PROMPT.md"
 OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
 RUNTIME_FIRST_PROGRAM = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-productization-program.md"
+R1A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md"
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -163,6 +164,27 @@ P5B_ACTIVATION_SNIPPETS = (
     "Grant Foundry",
 )
 
+R1A_ACTIVATION_SNIPPETS = (
+    "run-local",
+    "resume-local",
+    "stop_reason",
+    "latest_route_report",
+    "latest_stop_reason",
+    "validation_failed",
+    "rollback_required",
+    "freeze_ready",
+    "presubmission_frozen",
+    "stage_action_required",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "program_id",
+    "CLI",
+    "MCP",
+    "controller",
+    "not-yet-supported",
+)
+
 RUNTIME_FIRST_SNIPPETS = (
     "R1 / Autonomous Main Loop",
     "R2 / Artifact Production Surface",
@@ -252,6 +274,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             OPEN_ISSUES,
             TOP_LEVEL_DESIGN,
             RUNTIME_FIRST_PROGRAM,
+            R1A_ACTIVATION_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -426,6 +449,29 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         combined = "\n".join(read_text(path) for path in (PROJECT_TRUTH, TOP_LEVEL_DESIGN, OMX_BRIDGE))
         self.assertIn("runtime-first", combined)
         self.assertIn("CLI-first + host-agent", combined)
+
+    def test_r1a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
+        package_path = str(R1A_ACTIVATION_PACKAGE)
+        self.assertTrue(R1A_ACTIVATION_PACKAGE.exists(), f"R1.A activation package 不存在: {R1A_ACTIVATION_PACKAGE}")
+
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            TEAM_PROMPT,
+            EXECUTION_PROMPT,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
+    def test_r1a_activation_package_freezes_local_main_loop_contract(self) -> None:
+        text = read_text(R1A_ACTIVATION_PACKAGE)
+        for snippet in R1A_ACTIVATION_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, text)
 
     def test_revision_transition_contract_is_frozen_in_active_truth_surfaces(self) -> None:
         for path in (OMX_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION):
