@@ -8,8 +8,9 @@ Date: `2026-04-07`
 
 ## 当前指针
 
-- Current phase: `P4 / Verification OS And HITL Layering Preparation`
-- Active tranche: `P4.B / Verification OS And Checkpoint Surface`
+- Current phase: `Runtime Productization Program`
+- Active tranche: `R1 / Autonomous Main Loop`
+- Active slice: `R1.A / Local Main Loop Entry And Stop Reason`
 
 ## repo-tracked review surfaces
 
@@ -28,6 +29,7 @@ Date: `2026-04-07`
 - `docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
 - `docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
 - `docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
+- `docs/specs/2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md`
 - `schemas/v1/nsfc-workspace.schema.json`
 - `schemas/v1/application-draft.schema.json`
 - `schemas/v1/mentor-critique.schema.json`
@@ -42,6 +44,7 @@ Date: `2026-04-07`
 - `tests/test_stage_router.py`
 - `tests/test_workspace_summary.py`
 - `tests/test_program_control_surfaces.py`
+- `tests/test_local_runtime.py`
 
 这些 surface 承担的是 review truth 职责：
 
@@ -58,6 +61,7 @@ Date: `2026-04-07`
 - `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
 - `ready_for_submission + presubmission_frozen=false` 是否作为当前 canonical gate-open checkpoint surface
 - `VerificationCheckpoint` 是否继续只是 derived checkpoint object，而不是新的 formal entry、identity 或 controller capability
+- `run-local / resume-local`、machine-readable `stop_reason`、以及 local run journal 是否进入当前 canonical local runtime surface
 
 ## local durable handoff surfaces
 
@@ -83,6 +87,26 @@ Date: `2026-04-07`
 - 当前 active blocker / risk
 - 恢复执行的读取顺序
 
+## local runtime durable surface
+
+除 `.omx/**` 的 control-plane durable handoff 之外，当前产品 runtime 还新增一层 machine-local durable runtime surface：
+
+- `run-local --journal ...`
+- `resume-local --journal ...`
+- local run journal JSON
+
+这层负责：
+
+- 为同一 `grant_run_id` durable 回写 `latest_stop_reason`
+- durable 回写 `latest_route_report`
+- 通过 `attempts` 记录 `run-local / resume-local` 的本地 runtime 进入历史
+
+它不负责：
+
+- 充当 repo-tracked review truth
+- 替代 `.omx/reports/**`
+- 发明新的 `program_id` 或 controller pointer
+
 ## 哪些结论必须 repo-native
 
 以下结论如果要成为正式 review truth，必须进入 repo-tracked surface，而不能只留在 `.omx/**`：
@@ -100,6 +124,7 @@ Date: `2026-04-07`
 - `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
 - `ready_for_submission + presubmission_frozen=false` 是否成为当前 canonical gate-open checkpoint surface
 - `VerificationCheckpoint` 是否作为当前 canonical durable checkpoint object 被冻结
+- `run-local / resume-local / stop_reason / local run journal` 是否成为当前 canonical local runtime surface
 
 ## 哪些状态允许只留在 local handoff surfaces
 
@@ -150,4 +175,5 @@ Date: `2026-04-07`
 - `P3.B` 已把 `current_selection.active_revision_plan_id`、`MentorCritique.reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 与当前 active `RevisionPlan` 的边界冻结成当前 canonical re-review surface
 - `P3.C` 已把 `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 的 rollback / gate surface 冻结进 current truth
 - `P4.A` 已把 `ready_for_submission + presubmission_frozen=false` 的 gate-open verification surface 冻结进 current truth，并把 `examples/nsfc_workspace_p3a_ready_for_submission.json` 纳入 hard gate
-- `P4.B` 当前开始冻结 `VerificationCheckpoint` 的 canonical durable surface，并明确 `stage-route-report.verification_checkpoint / checkpoint_status` 与 reports / control surfaces 的 durable 对齐关系
+- `P4.B` 已冻结 `VerificationCheckpoint` 的 canonical durable surface，并明确 `stage-route-report.verification_checkpoint / checkpoint_status` 与 reports / control surfaces 的 durable 对齐关系
+- `R1.A` 已把 `run-local / resume-local`、machine-readable `stop_reason` 与 local run journal 冻结成当前 local runtime surface

@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：仓库仍处于 `P3 / Mentor Critique And Revision Loop Hardening`，当前 active tranche 为 `P3.C / Forced Rollback And Presubmission Gate`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库当前执行 `Runtime Productization Program`，active tranche 为 `R1 / Autonomous Main Loop`，active slice 为 `R1.A / Local Main Loop Entry And Stop Reason`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      已有最小 runtime baseline，当前 active tranche 已切到 <code>P3.C / Forced Rollback And Presubmission Gate</code>
+      已有最小 runtime baseline，当前 active slice 已切到 <code>R1.A / Local Main Loop Entry And Stop Reason</code>
     </td>
   </tr>
 </table>
@@ -44,6 +44,7 @@
 - `draft_id`：跨 critique / revision 延续的草稿身份，而不是每次 run 重新生成的 ID
 - `program_id`：当前 Med Auto Grant active mainline 的 control-plane / report-routing 指针
 - 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
+- 当前 repo-verified 的本地 runtime entry 还包括 `run-local` 与 `resume-local`，用于写入并恢复机器私有的 run journal
 - `stage-route-report` 当前还是 machine-readable 的 verification / checkpoint 聚合面，并会输出 `verification_checkpoint` 与 `checkpoint_status`
 - repo-tracked review truth 与 local durable handoff surfaces 必须分开：前者负责解释 runtime contract，后者负责机器私有的恢复状态
 
@@ -69,6 +70,7 @@
 - 把当前 authoring route 聚合成单个 machine-readable `stage-route-report`
 - 通过 `verification_checkpoint / checkpoint_status` 把当前 verification、forced rollback 与 frozen gate 语义收进同一个 checkpoint surface
 - 输出带有 verdict、当前 `RevisionPlan.execution_status`、reviewed revision evidence、rollback / frozen gate 状态、版本标签和比较证据的 `critique-summary / stage-route-report` 审计面
+- 通过 `run-local` 运行一次本地主循环、派生 machine-readable `stop_reason`、写入 durable run journal，并通过 `resume-local` 从该 journal 恢复
 
 ## 现在还没有完成什么
 
@@ -104,12 +106,14 @@
 ### 最小 Runtime 命令
 
 ```bash
+TMPDIR="$(mktemp -d)"
 PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json
+PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json"
+PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json"
 ```
 
 ### 当前技术范围
@@ -120,6 +124,7 @@ PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc
 - 通过 `active_revision_plan_id`、`reviewed_revision_plan_id` 与 `reviewed_revision_evidence` 冻结 machine-readable re-review linkage
 - 通过 `forced_rollback_stage`、`forced_rollback_reason` 与 `presubmission_frozen` 冻结 machine-readable rollback / gate contract
 - machine-readable 的批注、verdict 与 route artifact
+- machine-readable 的本地 runtime stop reason 与 durable run-journal recovery
 - 覆盖 runtime 与 control-surface 不变量的测试
 
 ### 内部文档

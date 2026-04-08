@@ -185,6 +185,13 @@ R1A_ACTIVATION_SNIPPETS = (
     "not-yet-supported",
 )
 
+R1A_RUNTIME_SURFACE_SNIPPETS = (
+    "run-local",
+    "resume-local",
+    "stop_reason",
+    "journal",
+)
+
 RUNTIME_FIRST_SNIPPETS = (
     "R1 / Autonomous Main Loop",
     "R2 / Artifact Production Surface",
@@ -472,6 +479,21 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         for snippet in R1A_ACTIVATION_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, text)
+
+    def test_r1a_runtime_surface_is_explicit_in_public_and_truth_docs(self) -> None:
+        combined = "\n".join(
+            read_text(path)
+            for path in (
+                README_EN,
+                README_ZH,
+                FORMAL_ENTRY_MATRIX,
+                DURABILITY_MODEL,
+                R1A_ACTIVATION_PACKAGE,
+            )
+        )
+        for snippet in R1A_RUNTIME_SURFACE_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, combined)
 
     def test_revision_transition_contract_is_frozen_in_active_truth_surfaces(self) -> None:
         for path in (OMX_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION):

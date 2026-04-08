@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository remains in `P3 / Mentor Critique And Revision Loop Hardening`, with `P3.C / Forced Rollback And Presubmission Gate` currently active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
+> Status: active development. The repository is currently executing the `Runtime Productization Program`, with `R1 / Autonomous Main Loop` and `R1.A / Local Main Loop Entry And Stop Reason` active; this is still not a production-grade grant-writing system or a submission-ready autopilot.
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      Minimal runtime baseline is retained, and the active tranche is now <code>P3.C / Forced Rollback And Presubmission Gate</code>
+      Minimal runtime baseline is retained, and the active slice is now <code>R1.A / Local Main Loop Entry And Stop Reason</code>
     </td>
   </tr>
 </table>
@@ -44,6 +44,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - `draft_id` is the draft identity carried across critique and revision rather than regenerated per run.
 - `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
+- Current repo-verified local runtime entry also includes `run-local` and `resume-local`, which write and recover the machine-local run journal.
 - `stage-route-report` is the current machine-readable verification/checkpoint aggregation surface and now emits `verification_checkpoint` plus `checkpoint_status`.
 - Repo-tracked review truth and local durable handoff surfaces stay separate: the former explains the runtime contract, while the latter carries machine-specific resume state.
 
@@ -69,6 +70,7 @@ Today, the runtime can:
 - aggregate the current authoring route into one machine-readable `stage-route-report`
 - emit `verification_checkpoint` / `checkpoint_status` so the current verification, rollback, and frozen-gate semantics stay on one canonical checkpoint surface
 - expose structured `critique-summary` and `stage-route-report` audit data including verdict, current `RevisionPlan.execution_status`, reviewed revision evidence, rollback / frozen gate state, version labels, and comparison evidence
+- run one local main-loop pass through `run-local`, derive a machine-readable `stop_reason`, write a durable local run journal, and re-enter that journal through `resume-local`
 
 ## What Is Still In Progress
 
@@ -104,12 +106,14 @@ You can give your agent an instruction like this:
 ### Minimal Runtime Commands
 
 ```bash
+TMPDIR="$(mktemp -d)"
 PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_presubmission_frozen.json
+PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json"
+PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json"
 ```
 
 ### Current Technical Scope
@@ -120,6 +124,7 @@ PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc
 - machine-readable re-review linkage through `active_revision_plan_id`, `reviewed_revision_plan_id`, and `reviewed_revision_evidence`
 - machine-readable forced rollback and presubmission gate fields through `forced_rollback_stage`, `forced_rollback_reason`, and `presubmission_frozen`
 - machine-readable critique, verdict, and route artifacts
+- machine-readable local runtime stop reasons and durable run-journal recovery
 - tests covering runtime and control-surface invariants
 
 ### Internal Docs

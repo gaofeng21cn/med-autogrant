@@ -8,10 +8,11 @@ Date: `2026-04-07`
 
 ## 当前指针
 
-- Current phase: `P4 / Verification OS And HITL Layering Preparation`
-- Active tranche: `P4.B / Verification OS And Checkpoint Surface`
+- Current phase: `Runtime Productization Program`
+- Active tranche: `R1 / Autonomous Main Loop`
+- Active slice: `R1.A / Local Main Loop Entry And Stop Reason`
 
-本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不替代当前 `P4.B` 的 verification OS / checkpoint surface contract。
+本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不把 `R1.A` 的本地主循环 entry 混写成新的 formal-entry family。
 
 ## Formal Entry Matrix
 
@@ -24,16 +25,21 @@ Date: `2026-04-07`
   - `PYTHONPATH=src python3 -m med_autogrant next-step --input ...`
   - `PYTHONPATH=src python3 -m med_autogrant critique-summary --input ...`
   - `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input ...`
+  - `PYTHONPATH=src python3 -m med_autogrant run-local --input ... [--journal ...]`
+  - `PYTHONPATH=src python3 -m med_autogrant resume-local --journal ...`
 - 当前 contract：
   - `CLI` 是当前唯一 repo-verified 的 user-facing runtime formal entry。
   - CLI 输出必须稳定回显同一 `grant_run_id`，并保持与 `workspace_id`、`draft_id`、`program_id` 分离。
   - `grant_run_id` 是 execution handle，不是新的入口面。
   - `stage-route-report` 当前必须输出 `verification_checkpoint / checkpoint_status`，把 verification、route recommendation、rollback / frozen gate、gate-open ready-for-freeze 状态与 reviewed revision evidence 聚合进同一个 machine-readable checkpoint surface。
-  - 在当前 `P4.B` tranche 内，CLI 的 repo-native audit surface 还必须同时保持：
+  - `run-local` 当前是本地主循环 entry；它只允许在既有 route / checkpoint surface 之上增加 machine-readable `stop_reason` 与 local run journal。
+  - `resume-local` 当前是本地 runtime recovery entry；它只允许从同一 journal 恢复 `input_path` 并沿用同一 `grant_run_id` 重新进入一次 local runtime pass。
+  - 在当前 `R1.A` slice 内，CLI 的 repo-native runtime / audit surface 还必须同时保持：
     - absorbed `P3.B` retained boundary：`active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`
     - absorbed `P3.C` retained boundary：`forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`
     - absorbed `P4.A` gate-open boundary：`ready_for_submission + presubmission_frozen=false`
-    - 当前 `P4.B` checkpoint durable boundary：`VerificationCheckpoint` 只能作为 `stage-route-report.verification_checkpoint` 的 derived checkpoint object 存在，不能被解释成新的 formal entry、runtime identity 或 controller capability
+    - absorbed `P4.B` checkpoint durable boundary：`VerificationCheckpoint` 只能作为 `stage-route-report.verification_checkpoint` 的 derived checkpoint object 存在，不能被解释成新的 formal entry、runtime identity 或 controller capability
+    - 当前 `R1.A` local runtime boundary：`run-local / resume-local` 不得替代旧五个 canonical CLI surfaces，也不得把 local run journal 写成 `.omx` control-plane report
 
 ### 2. `supported_protocol_layer`
 
@@ -67,14 +73,17 @@ Date: `2026-04-07`
 
 - 正式支持：是
 - 当前入口：
+  - `PYTHONPATH=src python3 -m med_autogrant resume-local --journal ...`
+  - 对产品 runtime 来说，恢复依赖同一份 local run journal
   - 先读 `CURRENT_PROGRAM.md`
   - 再读 `PROGRAM_ROUTING.md`
   - 再读 active `PRD / test-spec / implementation`
   - 最后读 active `LATEST_STATUS / ITERATION_LOG / OPEN_ISSUES`
 - 当前 contract：
-  - recovery / resume 入口与 developer control-plane 使用同一组 durable surfaces。
+  - `resume-local` 是当前产品 runtime 的本地恢复入口；它从 journal 恢复 `input_path`、沿用同一 `grant_run_id`，并 append 新 `attempt`。
+  - developer control-plane 的恢复入口继续使用同一组 `.omx` durable surfaces。
   - 恢复时必须沿用同一 `grant_run_id` 上下文回显，但不能把 `grant_run_id` 误写成 `program_id` 或 `workspace_id`。
-  - 恢复时也不得丢失 absorbed `P3.B` 的 `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`，absorbed `P3.C` 的 `forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`，absorbed `P4.A` 的 gate-open ready-for-freeze 语义，以及当前 `P4.B` 的 `VerificationCheckpoint` durable boundary。
+  - 恢复时也不得丢失 absorbed `P3.B` 的 `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`，absorbed `P3.C` 的 `forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`，absorbed `P4.A` 的 gate-open ready-for-freeze 语义，以及 absorbed `P4.B` 的 `VerificationCheckpoint` durable boundary。
 
 ### 5. not-yet-supported / future public entry scope
 
@@ -118,6 +127,11 @@ Date: `2026-04-07`
 25. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json`
 26. `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json`
 27. `git diff --check`
+28. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json" --format json`
+29. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --journal "$TMPDIR/r1a-rollback.json" --format json`
+30. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3a_ready_for_submission.json --journal "$TMPDIR/r1a-freeze-ready.json" --format json`
+31. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_presubmission_frozen.json --journal "$TMPDIR/r1a-frozen.json" --format json`
+32. `PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json`
 
 external verifier durable 裁决如下：
 

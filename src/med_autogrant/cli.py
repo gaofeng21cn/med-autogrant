@@ -5,6 +5,8 @@ import json
 import sys
 from typing import Any
 
+from med_autogrant.local_runtime import resume_local_runtime, run_local_runtime
+from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.stage_router import determine_next_step
 from med_autogrant.workspace import (
     WorkspaceError,
@@ -49,6 +51,18 @@ def build_parser() -> argparse.ArgumentParser:
         "stage-route-report",
         handle_stage_route_report,
         "按固定 stage route 聚合输出当前 workspace 状态。",
+    )
+    _add_runtime_entry_command(
+        subparsers,
+        "run-local",
+        handle_run_local,
+        "运行本地 runtime 单次主循环。",
+    )
+    _add_resume_runtime_command(
+        subparsers,
+        "resume-local",
+        handle_resume_local,
+        "从 durable run journal 恢复本地 runtime 单次主循环。",
     )
     return parser
 
@@ -123,134 +137,15 @@ def handle_critique_summary(args: argparse.Namespace) -> dict[str, Any]:
 
 def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
     document = load_workspace_document(args.input)
-    validation = validate_workspace_document(document)
-    if not validation.ok:
-        first = validation.errors[0]
-        raise WorkspaceStateError(
-            f"{first.path}: {first.message}",
-            errors=validation.errors,
-            grant_run_id=document.get("grant_run_id"),
-            workspace_id=document.get("workspace_id"),
-            lifecycle_stage=document.get("lifecycle_stage"),
-        )
-
-    validation_payload = validation.to_dict(document)
-    summary = summarize_workspace_document(document)
-    next_step = determine_next_step(document)
-    route: dict[str, Any] = {
-        "validate_workspace": validation_payload,
-        "summarize_workspace": summary,
-        "next_step": next_step,
-    }
-    critique_summary: dict[str, Any] | None = None
-    if document["lifecycle_stage"] in {"critique", "revision", "frozen"}:
-        critique_summary = build_critique_summary(document)
-        critique_summary["recommended_next_stage"] = next_step["recommended_stage"]
-        route["critique_summary"] = critique_summary
-    return {
-        "ok": True,
-        "grant_run_id": document["grant_run_id"],
-        "workspace_id": document["workspace_id"],
-        "lifecycle_stage": document["lifecycle_stage"],
-        "route": route,
-        "verification_checkpoint": _build_verification_checkpoint(
-            document=document,
-            validation_payload=validation_payload,
-            summary=summary,
-            next_step=next_step,
-            critique_summary=critique_summary,
-        ),
-    }
+    return build_stage_route_report(document)
 
 
-def _build_verification_checkpoint(
-    *,
-    document: dict[str, Any],
-    validation_payload: dict[str, Any],
-    summary: dict[str, Any],
-    next_step: dict[str, Any],
-    critique_summary: dict[str, Any] | None,
-) -> dict[str, Any]:
-    current_selection = summary.get("current_selection")
-    active_draft = summary.get("active_draft")
-    active_critique = summary.get("active_critique")
-    forced_rollback_stage = next_step.get("forced_rollback_stage")
-    if forced_rollback_stage is None and isinstance(critique_summary, dict):
-        forced_rollback_stage = critique_summary.get("forced_rollback_stage")
-
-    forced_rollback_reason = None
-    if isinstance(critique_summary, dict):
-        forced_rollback_reason = critique_summary.get("forced_rollback_reason")
-    elif isinstance(active_critique, dict):
-        forced_rollback_reason = active_critique.get("forced_rollback_reason")
-
-    presubmission_frozen = bool(summary.get("gates", {}).get("presubmission_frozen"))
-    if presubmission_frozen:
-        checkpoint_status = "submission_frozen"
-    elif forced_rollback_stage:
-        checkpoint_status = "rollback_required"
-    elif _is_freeze_ready_checkpoint(
-        summary=summary,
-        next_step=next_step,
-        critique_summary=critique_summary,
-    ):
-        checkpoint_status = "freeze_ready"
-    else:
-        checkpoint_status = "forward_progress"
-
-    return {
-        "checkpoint_status": checkpoint_status,
-        "validation_ok": bool(validation_payload.get("ok")),
-        "identity": {
-            "grant_run_id": document["grant_run_id"],
-            "workspace_id": document["workspace_id"],
-            "draft_id": active_draft.get("id") if isinstance(active_draft, dict) else None,
-            "active_revision_plan_id": (
-                current_selection.get("active_revision_plan_id")
-                if isinstance(current_selection, dict)
-                else None
-            ),
-            "reviewed_revision_plan_id": (
-                critique_summary.get("reviewed_revision_plan_id")
-                if isinstance(critique_summary, dict)
-                else None
-            ),
-        },
-        "route_alignment": {
-            "lifecycle_stage": document["lifecycle_stage"],
-            "recommended_next_stage": next_step["recommended_stage"],
-            "forced_rollback_stage": forced_rollback_stage,
-            "forced_rollback_reason": forced_rollback_reason,
-            "presubmission_frozen": presubmission_frozen,
-        },
-        "review_checkpoint": {
-            "critique_id": critique_summary.get("critique_id") if isinstance(critique_summary, dict) else None,
-            "reviewed_revision_evidence": summary.get("reviewed_revision_evidence"),
-            "blocking_issue_count": (
-                len(critique_summary.get("blocking_issues", []))
-                if isinstance(critique_summary, dict)
-                else 0
-            ),
-        },
-    }
+def handle_run_local(args: argparse.Namespace) -> dict[str, Any]:
+    return run_local_runtime(input_path=args.input, journal_path=args.journal)
 
 
-def _is_freeze_ready_checkpoint(
-    *,
-    summary: dict[str, Any],
-    next_step: dict[str, Any],
-    critique_summary: dict[str, Any] | None,
-) -> bool:
-    if not isinstance(critique_summary, dict):
-        return False
-
-    if critique_summary.get("verdict") != "ready_for_submission":
-        return False
-
-    if bool(summary.get("gates", {}).get("presubmission_frozen")):
-        return False
-
-    return next_step.get("recommended_stage") == "frozen"
+def handle_resume_local(args: argparse.Namespace) -> dict[str, Any]:
+    return resume_local_runtime(journal_path=args.journal)
 
 
 def _add_workspace_command(
@@ -261,6 +156,31 @@ def _add_workspace_command(
 ) -> None:
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_runtime_entry_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--journal")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_resume_runtime_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--journal", required=True)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -339,6 +259,18 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"checkpoint_status: {payload['verification_checkpoint']['checkpoint_status']}",
             f"recommended_stage: {payload['route']['next_step']['recommended_stage']}",
             f"critique_verdict: {critique_verdict}",
+        ]
+        return "\n".join(lines)
+
+    if command in {"run-local", "resume-local"}:
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"stop_reason: {payload['stop_reason']['code']}",
+            f"checkpoint_status: {payload['stop_reason']['checkpoint_status']}",
+            f"recommended_next_stage: {payload['stop_reason']['recommended_next_stage']}",
+            f"journal_path: {payload['journal_path']}",
         ]
         return "\n".join(lines)
 
