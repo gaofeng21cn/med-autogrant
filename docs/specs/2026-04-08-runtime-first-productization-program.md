@@ -47,6 +47,22 @@ Date: `2026-04-08`
 - `P5.A / P5.B` 当前转为 deferred future expansion
 - hostedization prep 只有在本地 runtime 已经像一个真正产品那样工作时才允许进入
 
+## Pre-Frozen Boundary Map
+
+当前 `R1 -> R5` 的 future activation boundary 已一次性冻结在：
+
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
+
+这份边界图当前预冻结的 future tranche 是：
+
+1. `R1.B / Stage Action Executor Envelope`
+2. `R2.A / Artifact Bundle Production Surface`
+3. `R3.A / Critique Revision Executor Surface`
+4. `R4.A / Final Freeze And Export Package`
+5. `R5.A / Hosted-Friendly Session Boundary`
+
+它们都是 future activation package，而不是已实现状态。
+
 ## Program Ladder
 
 ### R1 / Autonomous Main Loop
@@ -151,6 +167,11 @@ Date: `2026-04-08`
    - 必要时新增 repo-tracked 内部 spec
    - 再实现、验证、closeout、absorb
 3. 在同一 stage 内连续拆分多个 bounded sub-slices，只要每个 sub-slice 都先 freeze 再 implement
+
+补充规则：
+
+- 如果下一 honest delta 实际属于更后面的 stage，`OMX` 可以直接重分类到对应的 pre-frozen package，而不是强行编造当前 stage 的中间 tranche
+- 在 `R1.A` 之后，如果下一能力已经属于 artifact / revision / export / hosted-friendly boundary，就应分别进入 `R2.A / R3.A / R4.A / R5.A`
 
 禁止：
 

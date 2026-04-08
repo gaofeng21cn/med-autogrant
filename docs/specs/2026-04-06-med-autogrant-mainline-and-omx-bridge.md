@@ -328,6 +328,10 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-productization-program.md`
 
+当前对应的 pre-frozen future boundary map：
+
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
+
 ## Autonomous Longrun Program Mode
 
 当 north star、阶段顺序、硬边界与 stop conditions 已冻结时，当前默认推荐的是：
@@ -356,24 +360,39 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 - `med-autogrant-mainline`
 
-当前 phase：
+当前 active execution phase：
 
-- `P4 / Verification OS And HITL Layering Preparation`
+- `Runtime Productization Program`
 
-当前 tranche：
+当前 active execution tranche：
 
-- `P4.B / Verification OS And Checkpoint Surface`
+- `R1 / Autonomous Main Loop`
 
-其中：
+当前 latest absorbed slice：
 
-1. `P1.A / authoritative NSFC workspace baseline` 与 `P1.B / runtime baseline hardening` 已完成 repo-native baseline、formal entry、durability 与 `grant_run_id` 合同冻结
-2. `P2.B` 与 `P2.C` 已分别冻结上游 argument-fit-outline route 与 absorbed 的 draft-critique-revision skeleton，并继续作为当前 `P4.B` 的上游 hard boundary
-3. 已 absorbed 的 `P3.A / P3.B / P3.C / P4.A` 继续提供 canonical verdict、re-review linkage、forced rollback、presubmission gate 与 verification gate surface contract；当前 `P4.B` 只在这些边界之上冻结 verification OS / checkpoint durable surface
-4. 当前 `P4.B` 在上述边界之上继续冻结两件事：
-   - 把 `VerificationCheckpoint` 明确成 author-side canonical durable checkpoint object，并保持它仍由 `stage-route-report.verification_checkpoint` 聚合输出
-   - 把 runtime checkpoint object、repo-tracked truth 与 local reports 的 durable 关系写清楚，同时禁止把 checkpoint surface 混写成 formal entry、runtime identity、reviewer/HITL 或 `MCP / controller` capability
-5. `P5.A / P5.B` 当前已作为 future activation package 预冻结进 repo-tracked docs 与 active control surfaces；这意味着 `OMX` 后续可以继续长跑，但只有在 admitted second-family source packet 与上游 federation truth 真正存在时才允许跨 phase 进入。
-6. 当前 active execution priority 已改成 runtime-first：先把本地 `CLI-first + host-agent` runtime 做成熟，再讨论托管化与 `P5` expansion。
+- `R1.A / Local Main Loop Entry And Stop Reason`
+- freeze absorb：`38b5347`
+- implementation absorb：`8e087dc`
+
+当前 future boundary 已预冻结：
+
+1. `R1.B / Stage Action Executor Envelope`
+2. `R2.A / Artifact Bundle Production Surface`
+3. `R3.A / Critique Revision Executor Surface`
+4. `R4.A / Final Freeze And Export Package`
+5. `R5.A / Hosted-Friendly Session Boundary`
+
+对应 repo-tracked boundary map：
+
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
+
+这组边界的作用是：
+
+1. 允许 `OMX` 从当前 `R1.A` absorbed 状态出发，继续做 honest delta audit
+2. 允许 `OMX` 把下一增量正确归类到 `R1.B / R2.A / R3.A / R4.A / R5.A`
+3. 如果下一能力其实已经属于更后面的 stage，允许直接重分类到后面的 pre-frozen package，而不是强行在当前 stage 编造中间 tranche
+4. 只有在没有 honest delta 或下一步需要新平台语义 / 外部 readiness 时，才允许停车
+5. `P5.A / P5.B` 继续只保留为 deferred future expansion，不属于这条 `R1 -> R5` 本地主线的实现面
 
 ### 保留的 P1.B hard boundary：revision transition minimal contract
 

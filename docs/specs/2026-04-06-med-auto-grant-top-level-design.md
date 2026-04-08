@@ -51,6 +51,7 @@ Date: `2026-04-06`
 当前内部 program 采用的 ladder 见：
 
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-productization-program.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 
 ## 边界
 

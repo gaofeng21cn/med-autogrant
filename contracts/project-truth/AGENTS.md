@@ -193,6 +193,8 @@ OMX 持续写回：
 在 `R4` 之前，不应把 second-family onboarding、federation contract、web runtime 或平台托管化写成当前主要开发目标。
 当前 repo-tracked internal program 文档固定为：
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-productization-program.md`
+当前 repo-tracked future boundary map 固定为：
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 
 当前固定阶段顺序：
 

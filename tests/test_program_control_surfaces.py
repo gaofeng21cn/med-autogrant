@@ -17,6 +17,7 @@ TEAM_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_TEAM_PROMPT.md"
 EXECUTION_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_EXECUTION_PROMPT.md"
 OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
 RUNTIME_FIRST_PROGRAM = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-productization-program.md"
+RUNTIME_BOUNDARY_MAP = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-r1-to-r5-boundary-map.md"
 R1A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md"
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
@@ -192,12 +193,33 @@ R1A_RUNTIME_SURFACE_SNIPPETS = (
     "journal",
 )
 
+RUNTIME_BOUNDARY_MAP_SNIPPETS = (
+    "R1.B / Stage Action Executor Envelope",
+    "R2.A / Artifact Bundle Production Surface",
+    "R3.A / Critique Revision Executor Surface",
+    "R4.A / Final Freeze And Export Package",
+    "R5.A / Hosted-Friendly Session Boundary",
+    "One-Shot Autonomous Continuation Contract",
+    "Honest Reclassification Rules",
+)
+
 RUNTIME_FIRST_SNIPPETS = (
     "R1 / Autonomous Main Loop",
     "R2 / Artifact Production Surface",
     "R3 / Critique Revision Autoloop",
     "R4 / Finalization And Export Surface",
     "R5 / Hostedization Prep",
+)
+
+RUNTIME_BOUNDARY_CONTROL_SURFACES = (
+    CURRENT_PROGRAM,
+    PROGRAM_ROUTING,
+    TEAM_PROMPT,
+    EXECUTION_PROMPT,
+    PRD,
+    TEST_SPEC,
+    IMPLEMENTATION,
+    LATEST_STATUS,
 )
 
 
@@ -281,6 +303,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             OPEN_ISSUES,
             TOP_LEVEL_DESIGN,
             RUNTIME_FIRST_PROGRAM,
+            RUNTIME_BOUNDARY_MAP,
             R1A_ACTIVATION_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
@@ -456,6 +479,24 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         combined = "\n".join(read_text(path) for path in (PROJECT_TRUTH, TOP_LEVEL_DESIGN, OMX_BRIDGE))
         self.assertIn("runtime-first", combined)
         self.assertIn("CLI-first + host-agent", combined)
+
+    def test_runtime_boundary_map_is_repo_tracked_and_wired(self) -> None:
+        boundary_map_path = str(RUNTIME_BOUNDARY_MAP)
+        boundary_map_text = read_text(RUNTIME_BOUNDARY_MAP)
+
+        for snippet in RUNTIME_BOUNDARY_MAP_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, boundary_map_text)
+
+        for path in (PROJECT_TRUTH, TOP_LEVEL_DESIGN, RUNTIME_FIRST_PROGRAM, OMX_BRIDGE):
+            with self.subTest(path=path.name):
+                self.assertIn(boundary_map_path, read_text(path))
+
+    def test_runtime_boundary_map_is_wired_into_active_control_surfaces(self) -> None:
+        boundary_map_path = str(RUNTIME_BOUNDARY_MAP)
+        for path in RUNTIME_BOUNDARY_CONTROL_SURFACES:
+            with self.subTest(path=path.name):
+                self.assertIn(boundary_map_path, read_text(path))
 
     def test_r1a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
         package_path = str(R1A_ACTIVATION_PACKAGE)
