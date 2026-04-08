@@ -20,13 +20,18 @@ Date: `2026-04-06`
 
 ## 角色定位
 
-`Med Auto Grant` 是 `Grant Foundry` 在医学场景下的首个实现 scaffold，目标是未来的医学 `Grant Ops` domain gateway 与 harness。
+`Med Auto Grant` 是 `Grant Foundry` 在医学场景下的首个 repo-native active mainline，也是当前医学 `Grant Ops` 的 domain gateway 与 harness baseline。
 
-在 `OPL` 语义里，它当前仍应被视为规划中的 future domain surface，而不是已经 admitted 的正式 domain。
+在 `OPL` 语义里，它当前仍不应被误写成成熟、submission-grade 的 admitted domain runtime；
+但这不等于它还是尚未开始的 future surface。更准确的表述是：
+
+- 它已经是当前医学 `Grant Ops` 的 repo-native mainline
+- 它已有最小 runtime baseline
+- 它仍处于 `baseline freeze / runtime hardening`
 
 当前阶段的仓库角色是：
 
-- 文档先行
+- current truth 先行
 - 契约先行
 - 最小可验证基座先行
 

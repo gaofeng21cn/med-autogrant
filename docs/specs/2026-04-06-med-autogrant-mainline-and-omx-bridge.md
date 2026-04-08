@@ -6,7 +6,7 @@ Date: `2026-04-06`
 
 ## 目标
 
-把 `Med Auto Grant` 从“已经有一点 schema 和 CLI 的 repo scaffold”，推进成一条可以长期由 `Codex App + OMX` 接力推进的 active mainline。
+把 `Med Auto Grant` 从“已有最小 runtime baseline 的医学 `Grant Ops` mainline”，继续推进成一条可以长期由 `Codex App + OMX` 连续执行的 active mainline。
 
 这里要解决的不是单轮任务如何写完，而是：
 
@@ -14,6 +14,22 @@ Date: `2026-04-06`
 - 每个阶段大概要做什么
 - 什么信息必须被 durable 地写下来
 - `Codex App` 和 `OMX` 到底怎么交接，而不是靠一次性聊天上下文
+
+这里同样必须严格区分：
+
+- 长线目标
+- 当前 phase / tranche
+- durable handoff
+
+长线目标回答的是项目理想终态；
+当前 phase / tranche 回答的是当前这轮 repo-tracked 收口点；
+durable handoff 回答的是控制面如何不断点连续推进。
+
+因此，默认不应把这份文档理解成：
+
+- 每一棒都要停机交棒
+- 只有人工再次点名才允许继续
+- OMX 只能做 same-phase 收尾
 
 ## North Star
 
@@ -39,11 +55,12 @@ Date: `2026-04-06`
 因此这个项目固定采用双层：
 
 - `Codex App`
-  - 负责规划、阶段验收、切 program / 切 phase、处理 truth conflict
+  - 负责规划、truth freeze、阶段验收、切 program / 切 phase、处理 truth conflict
 - `OMX`
-  - 负责长时间连续执行、lane 拆分、报告回写、断点恢复
+  - 负责长时间连续执行、lane 拆分、报告回写、断点恢复，并在已冻结边界内自主选择下一棒
 
 交接必须依赖 durable 文件，而不是依赖旧 terminal 和记忆。
+但 durable handoff 是为了支持连续执行，不是为了默认逐棒停车。
 
 ## Durable 交接机制
 
@@ -85,7 +102,7 @@ Date: `2026-04-06`
 
 - 先读什么
 - 按什么顺序推进
-- 什么情况下可以不停机继续跑
+- 什么情况下可以继续连续跑
 - 什么情况下必须停下来交回 `Codex App`
 
 ### 4. Program 计划层
@@ -267,12 +284,27 @@ Date: `2026-04-06`
 - `P5.A / Second Grant Family Onboarding`
 - `P5.B / Federation Contract Freeze`
 
-## Future Same-Phase Auto-Promotion Envelope
+## Autonomous Longrun Program Mode
 
-- future `P2 / P3` 只在对应 phase 已先由 `Codex App` 激活时，才允许 `OMX` 在同一 phase 内执行 `same-phase auto-promotion`
-- `same-phase auto-promotion` 只允许推进到已预冻结的下一 tranche，不允许顺手补写新的产品语义
-- `OMX` 在该 envelope 内只能改写 pointer-bearing control surfaces 与 reports；phase promotion 仍必须交回 `Codex App`
-- `P4 / P5` 当前只冻结 tranche map，不开放 `same-phase auto-promotion`
+当 north star、阶段顺序、硬边界与 stop conditions 已冻结时，当前默认推荐的是：
+
+- `OMX` 在已冻结边界内连续执行
+- 每一轮都回写 `CURRENT_PROGRAM + plans + reports`
+- 每一轮 tranche 收口后直接 absorb 到 `main`
+- 然后继续判断下一棒，而不是默认停机等待人工点名
+
+只有在下面情况出现时，才应交回 `Codex App`：
+
+- frozen truth conflict 无法在现有合同内裁决
+- 需要新的产品级方向选择
+- 需要改变 phase 顺序或扩大 domain 边界
+- 需要外部输入、授权或凭据
+
+这意味着：
+
+- `same-phase auto-promotion` 不再是默认上限语义
+- 默认姿势是 `autonomous longrun program mode`
+- phase / tranche 仍然是 program pointer，但不等于长线目标本身
 
 ## 当前活跃子线
 
@@ -319,6 +351,11 @@ Date: `2026-04-06`
 - 先读 `.omx/context/OMX_TEAM_PROMPT.md`
 - 再按其中规定读取 `CURRENT_PROGRAM + plans + reports`
 - 然后只围绕当前 active program 推进
+
+默认推进姿势应理解为：
+
+- 不停留在“本轮收口完就自然停车”
+- 而是在 truth 足够时继续向长线目标逼近
 
 也就是说，“提示词”本身已经被拆成 durable control surface，而不是继续停留在聊天里。
 

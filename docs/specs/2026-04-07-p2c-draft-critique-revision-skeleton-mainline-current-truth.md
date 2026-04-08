@@ -8,8 +8,9 @@ Date: `2026-04-07`
 
 ## 当前指针
 
-- Current phase: `P2 / NSFC Authoring Mainline Freeze`
-- Active tranche: `P2.C / Draft-Critique-Revision Skeleton`
+- Frozen in phase: `P2 / NSFC Authoring Mainline Freeze`
+- Frozen tranche: `P2.C / Draft-Critique-Revision Skeleton`
+- Current role under active mainline: upstream canonical boundary retained under `P3.A / Mentor Verdict Contract Freeze`
 - Hard boundary docs:
   - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
   - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-durability-model-clarification.md`

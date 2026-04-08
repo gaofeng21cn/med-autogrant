@@ -30,14 +30,24 @@
 - [NSFC 主流程与导师批注闭环](./specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
 - [对象模型 Schema V1](./specs/2026-04-06-object-model-schema-v1.md)
 - [主线与 OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
-- [最小 Scaffold 计划](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
+- [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
+- [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
 - [文档治理规则](documentation-governance.md)
+
+## 历史规划工件
+
+- [最小 Scaffold 计划](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
+- [P1 Formal Entry And Durability Planning Brief](./plans/2026-04-07-p1-formal-entry-and-durability-planning-brief.md)
 
 ## 建议阅读顺序
 
 1. 先看 [领域定位](./domain-positioning.zh-CN.md)。
 2. 再看 [MVP 范围](./mvp-scope.zh-CN.md)。
-3. 只有在需要架构、Schema 或执行细节时，再阅读内部设计文档。
+3. 如果要看当前内部运行真相，优先阅读：
+   - [主线与 OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
+   - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
+   - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
+4. 只有在需要追溯历史来源时，再阅读历史规划工件。
 
 ## 状态说明
 

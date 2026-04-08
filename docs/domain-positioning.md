@@ -4,8 +4,8 @@
 
 ## What It Is
 
-`Med Auto Grant` is the document-first scaffold for the future medical implementation of `Grant Foundry`.
-Its intended role is an author-side, proposal-facing `Grant Ops` domain gateway and harness for medical grant applications.
+`Med Auto Grant` is the author-side, proposal-facing medical `Grant Ops` mainline under the shared `Unified Harness Engineering Substrate`.
+Its role is a medical `Grant Ops` domain gateway and harness for medical grant applications, with a minimal runtime baseline already established in the current `Codex-default host-agent runtime` shape.
 
 ## What It Is Not
 
@@ -53,8 +53,8 @@ The repository follows two shared architectural rules:
 
 Current status:
 
-- repository scaffold exists
 - top-level public docs exist
-- internal Chinese design and plan artifacts exist
-- runtime implementation is intentionally deferred until the MVP schema and execution path are frozen
-
+- internal Chinese design and current-truth artifacts exist
+- a minimal runtime baseline already exists
+- the repository remains in `baseline freeze / runtime hardening`, not in a pre-runtime scaffold stage
+- a future managed web runtime remains a later deployment evolution on the same substrate, not proof that the project has not started yet

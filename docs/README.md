@@ -30,14 +30,24 @@ These documents are internal design references and default to Chinese.
 - [NSFC Main Flow And Critique Loop](./specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
 - [Object Model Schema V1](./specs/2026-04-06-object-model-schema-v1.md)
 - [Mainline And OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
-- [Minimal Scaffold Plan](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
+- [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
+- [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
 - [Documentation Governance](documentation-governance.md) (Chinese only)
+
+## Historical Planning Artifacts
+
+- [Minimal Scaffold Plan](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
+- [P1 Formal Entry And Durability Planning Brief](./plans/2026-04-07-p1-formal-entry-and-durability-planning-brief.md)
 
 ## Reading Order
 
 1. Start with [Domain Positioning](./domain-positioning.md).
 2. Continue with [MVP Scope](./mvp-scope.md).
-3. Only read the internal design docs when you need architecture, schema, or execution specifics.
+3. For current internal operating truth, prioritize:
+   - [Mainline And OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
+   - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
+   - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
+4. Read historical planning artifacts only when you need provenance.
 
 ## Status Note
 

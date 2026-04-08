@@ -1,6 +1,7 @@
 # Med Auto Grant 最小 Scaffold 实施计划
 
 > 当前文档面向内部执行，只保留中文版本。
+> Historical / completed scaffold plan：该计划对应的仓库搭建阶段已完成，当前仅保留为历史 provenance，不代表当前主线目标。
 
 Date: `2026-04-06`
 
@@ -45,3 +46,4 @@ Date: `2026-04-06`
 - 设计第一版 critique / revision loop
 - 决定首个 runtime 与 controller 组织方式
 
+以上“下一步”已经属于历史阶段后续动作，现已被 repo-tracked current-truth 文档吸收，不再代表当前 active mainline 的最近目标。

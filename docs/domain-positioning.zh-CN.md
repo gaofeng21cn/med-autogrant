@@ -4,8 +4,8 @@
 
 ## 它是什么
 
-`Med Auto Grant` 是 `Grant Foundry` 在医学场景下的未来实现 repo scaffold。
-它的目标角色是面向申请人侧、proposal-facing 的医学 `Grant Ops` domain gateway 与 harness。
+`Med Auto Grant` 是共享 `Unified Harness Engineering Substrate` 上、面向申请人侧且 proposal-facing 的医学 `Grant Ops` 主线。
+它的角色是医学 `Grant Ops` 的 domain gateway 与 harness，当前已经在 `Codex-default host-agent runtime` 形态下建立了最小 runtime baseline。
 
 ## 它不是什么
 
@@ -53,8 +53,8 @@
 
 当前状态：
 
-- repo scaffold 已建立
 - 顶层公开文档已建立
-- 中文内部设计与计划文档已建立
-- runtime 实现暂缓到 MVP schema 与执行主线进一步冻结后再推进
-
+- 中文内部设计与 current-truth 文档已建立
+- 最小 runtime baseline 已存在
+- 当前成熟度仍处于 `baseline freeze / runtime hardening`，而不是 runtime 尚未开始的 scaffold 阶段
+- future managed web runtime 只是同一 substrate 上的后续部署演进，不代表项目仍停留在前置筹备期
