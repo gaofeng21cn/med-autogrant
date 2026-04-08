@@ -320,20 +320,20 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 当前 phase：
 
-- `P3 / Mentor Critique And Revision Loop Hardening`
+- `P4 / Verification OS And HITL Layering Preparation`
 
 当前 tranche：
 
-- `P3.B / Revision Transition And Re-Review Hardening`
+- `P4.A / Verification Gate Surface`
 
 其中：
 
 1. `P1.A / authoritative NSFC workspace baseline` 与 `P1.B / runtime baseline hardening` 已完成 repo-native baseline、formal entry、durability 与 `grant_run_id` 合同冻结
-2. `P2.B` 与 `P2.C` 已分别冻结上游 argument-fit-outline route 与 absorbed 的 draft-critique-revision skeleton，并继续作为当前 `P3.B` 的上游 hard boundary
-3. 已 absorbed 的 `P3.A` 冻结了 `MentorCritique.verdict` 的 canonical branch、route recommendation 与 audit surface；已 absorbed 的 `P3.B` 继续在不改写 verdict branch 的前提下，收紧 re-review identity、completed revision evidence 与下一轮 critique / revision linkage
-4. 当前 `P3.C` 在上述边界之上继续冻结两件事：
-   - `MentorCritique.forced_rollback_stage / forced_rollback_reason`，把“必须回退到更早 stage”写成 machine-readable contract
-   - `ready_for_submission -> frozen` 的真正 presubmission hard gate，而不再只停留在 transition boundary
+2. `P2.B` 与 `P2.C` 已分别冻结上游 argument-fit-outline route 与 absorbed 的 draft-critique-revision skeleton，并继续作为当前 `P4.A` 的上游 hard boundary
+3. 已 absorbed 的 `P3.A / P3.B / P3.C` 继续提供 canonical verdict、re-review linkage、forced rollback 与 presubmission gate contract；当前 `P4.A` 只在这些边界之上收紧 verification gate surface
+4. 当前 `P4.A` 在上述边界之上继续冻结两件事：
+   - 把 `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report` 固定成 author-side canonical machine-readable verification gate surface
+   - 把 `ready_for_submission + presubmission_frozen=false` 的 gate-open 状态与 `submission_frozen` 的 gate-closed 状态显式区分为不同 checkpoint semantics
 
 ### 保留的 P1.B hard boundary：revision transition minimal contract
 
@@ -343,19 +343,21 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - `comparison_summary` 必须非空，用来表达 pre-revision draft 与 post-revision revised draft 的前后版本比较证据。
 - 当 `revision` 阶段已经满足上述 contract 并持有 `revised` 草稿时，最小 route 应回到 `critique` 做 re-review；当前 `P3.B` 继续把这条边界收紧成“当前 active revision plan + reviewed completed revision evidence”双锚定合同。
 
-### 当前 P2.B / P2.C / P3.A / P3.B / P3.C canonical surface
+### 当前 P2.B / P2.C / P3.A / P3.B / P3.C / P4.A canonical surface
 
 - absorbed P2.B：`docs/specs/2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md`
 - absorbed P2.C：`docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
 - absorbed P3.A：`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`
 - absorbed P3.B：`docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
-- 当前 P3.C：`docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
-- 这五份文件当前共同冻结：
+- absorbed P3.C：`docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
+- 当前 P4.A：`docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
+- 这六份文件当前共同冻结：
   - `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 的上游绑定
   - `drafting -> critique -> revision` 的 absorbed 主线与 completed revision 回到 critique 的 re-review 边界
   - `major_reframe / major_revision / minor_revision / ready_for_submission` 的 canonical verdict branch
   - `current_selection.active_revision_plan_id`、`MentorCritique.reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 与当前 active `RevisionPlan` 的 re-review 双锚定合同
   - `MentorCritique.forced_rollback_stage / forced_rollback_reason` 与 `presubmission_frozen` 的 P3.C hard gate
+  - `stage-route-report.verification_checkpoint / checkpoint_status` 与 `ready_for_submission + presubmission_frozen=false` 的 P4.A gate-open checkpoint surface
 
 ## OMX 长线运行入口
 

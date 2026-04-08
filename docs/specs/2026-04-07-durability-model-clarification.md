@@ -8,8 +8,8 @@ Date: `2026-04-07`
 
 ## 当前指针
 
-- Current phase: `P3 / Mentor Critique And Revision Loop Hardening`
-- Active tranche: `P3.C / Forced Rollback And Presubmission Gate`
+- Current phase: `P4 / Verification OS And HITL Layering Preparation`
+- Active tranche: `P4.A / Verification Gate Surface`
 
 ## repo-tracked review surfaces
 
@@ -26,12 +26,14 @@ Date: `2026-04-07`
 - `docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`
 - `docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
 - `docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
+- `docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
 - `schemas/v1/nsfc-workspace.schema.json`
 - `schemas/v1/application-draft.schema.json`
 - `schemas/v1/mentor-critique.schema.json`
 - `schemas/v1/revision-plan.schema.json`
 - `examples/nsfc_workspace_minimal.json`
 - `examples/nsfc_workspace_p2c_revision.json`
+- `examples/nsfc_workspace_p3a_ready_for_submission.json`
 - `examples/nsfc_workspace_p3b_re_review_major_revision.json`
 - `examples/nsfc_workspace_p3c_forced_rollback_argument.json`
 - `examples/nsfc_workspace_p3c_presubmission_frozen.json`
@@ -47,7 +49,13 @@ Date: `2026-04-07`
 - 哪些语义是 future scope
 - `grant_run_id / workspace_id / draft_id / program_id` 的边界
 - 当前 repo-native hard gate 命令是什么
-- `MentorCritique.verdict` 与 `RevisionPlan / ApplicationDraft` 的 object linking 如何冻结
+- `ApplicationDraft.sections`、`MentorCritique`、`RevisionPlan` 是否进入当前 canonical route
+- `major_reframe / major_revision / minor_revision / ready_for_submission` 是否进入当前 canonical verdict surface
+- `current_selection.active_revision_plan_id` 是否继续作为当前 active route pointer
+- `reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id` 是否进入当前 canonical re-review surface
+- `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 是否进入当前 canonical rollback / gate surface
+- `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
+- `ready_for_submission + presubmission_frozen=false` 是否作为当前 canonical gate-open checkpoint surface
 
 ## local durable handoff surfaces
 
@@ -88,7 +96,7 @@ Date: `2026-04-07`
 - `reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id` 是否进入当前 canonical re-review surface
 - `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 是否进入当前 canonical rollback / gate surface
 - `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
-- `revision(completed revised switch) -> critique -> revision` 与 `ready_for_submission -> frozen` 是否都只是当前边界内的 machine-readable transition contract
+- `ready_for_submission + presubmission_frozen=false` 是否成为当前 canonical gate-open checkpoint surface
 
 ## 哪些状态允许只留在 local handoff surfaces
 
@@ -137,5 +145,6 @@ Date: `2026-04-07`
 - `P2.C` 已把 `ApplicationDraft / MentorCritique / RevisionPlan` 冻结成 absorbed canonical route
 - `P3.A` 已把 `major_reframe / major_revision / minor_revision / ready_for_submission` 冻结成当前 canonical verdict surface
 - `P3.B` 已把 `current_selection.active_revision_plan_id`、`MentorCritique.reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 与当前 active `RevisionPlan` 的边界冻结成当前 canonical re-review surface
-- `P3.C` 当前开始冻结 `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 的 rollback / gate surface
-- `stage-route-report` 当前开始冻结 `verification_checkpoint / checkpoint_status` 的 verification aggregation surface
+- `P3.C` 已把 `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 的 rollback / gate surface 冻结进 current truth
+- `P4.A` 当前开始冻结 `ready_for_submission + presubmission_frozen=false` 的 gate-open verification surface，并把 `examples/nsfc_workspace_p3a_ready_for_submission.json` 纳入 hard gate
+- `stage-route-report` 当前继续承担 `verification_checkpoint / checkpoint_status` 的 canonical verification aggregation surface

@@ -23,6 +23,7 @@ P2C_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-07-p2c-draft-critiqu
 P3A_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md"
 P3B_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md"
 P3C_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md"
+P4A_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p4a-verification-gate-surface-current-truth.md"
 WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
 PRD = REPO_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
@@ -57,6 +58,11 @@ REQUIRED_COMMAND_SNIPPETS = (
     "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_presubmission_frozen.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3a_ready_for_submission.json --format json",
     "git diff --check",
 )
 
@@ -116,6 +122,7 @@ EXECUTION_HANDLE_REVIEW_SURFACES = (
     P3A_CURRENT_TRUTH,
     P3B_CURRENT_TRUTH,
     P3C_CURRENT_TRUTH,
+    P4A_CURRENT_TRUTH,
     WORKSPACE_EXAMPLE,
     WORKSPACE_SCHEMA,
 )
@@ -241,6 +248,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             P3A_CURRENT_TRUTH,
             P3B_CURRENT_TRUTH,
             P3C_CURRENT_TRUTH,
+            P4A_CURRENT_TRUTH,
         ):
             with self.subTest(path=path.name):
                 self.assertTrue(path.exists(), f"current truth doc 不存在: {path}")
@@ -278,6 +286,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             P3A_CURRENT_TRUTH,
             P3B_CURRENT_TRUTH,
             P3C_CURRENT_TRUTH,
+            P4A_CURRENT_TRUTH,
         ):
             path_text = str(path)
             with self.subTest(current_program_path=path.name):
@@ -397,6 +406,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 FORMAL_ENTRY_MATRIX,
                 DURABILITY_MODEL,
                 P3C_CURRENT_TRUTH,
+                P4A_CURRENT_TRUTH,
             )
         )
 
@@ -414,10 +424,23 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(p3b_path_text, read_text(path))
                 self.assertIn(p3c_path_text, read_text(path))
 
+    def test_p4a_current_truth_doc_is_referenced_in_active_control_surfaces(self) -> None:
+        p4a_path_text = str(P4A_CURRENT_TRUTH)
+        for path in (CURRENT_PROGRAM, PROGRAM_ROUTING, PRD, TEST_SPEC, IMPLEMENTATION):
+            with self.subTest(path=path.name):
+                self.assertIn(p4a_path_text, read_text(path))
+
     def test_object_model_and_p3_current_truth_freeze_verdict_re_review_and_rollback_gate_contract(self) -> None:
         combined = "\n".join(
             read_text(path)
-            for path in (OBJECT_MODEL_SCHEMA, P2C_CURRENT_TRUTH, P3A_CURRENT_TRUTH, P3B_CURRENT_TRUTH, P3C_CURRENT_TRUTH)
+            for path in (
+                OBJECT_MODEL_SCHEMA,
+                P2C_CURRENT_TRUTH,
+                P3A_CURRENT_TRUTH,
+                P3B_CURRENT_TRUTH,
+                P3C_CURRENT_TRUTH,
+                P4A_CURRENT_TRUTH,
+            )
         )
         for snippet in (
             "current_selection",
