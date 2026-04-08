@@ -9,7 +9,7 @@ Date: `2026-04-07`
 ## 当前指针
 
 - Current phase: `P4 / Verification OS And HITL Layering Preparation`
-- Active tranche: `P4.A / Verification Gate Surface`
+- Active tranche: `P4.B / Verification OS And Checkpoint Surface`
 
 ## repo-tracked review surfaces
 
@@ -27,6 +27,7 @@ Date: `2026-04-07`
 - `docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
 - `docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
 - `docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
+- `docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
 - `schemas/v1/nsfc-workspace.schema.json`
 - `schemas/v1/application-draft.schema.json`
 - `schemas/v1/mentor-critique.schema.json`
@@ -56,6 +57,7 @@ Date: `2026-04-07`
 - `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 是否进入当前 canonical rollback / gate surface
 - `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
 - `ready_for_submission + presubmission_frozen=false` 是否作为当前 canonical gate-open checkpoint surface
+- `VerificationCheckpoint` 是否继续只是 derived checkpoint object，而不是新的 formal entry、identity 或 controller capability
 
 ## local durable handoff surfaces
 
@@ -97,6 +99,7 @@ Date: `2026-04-07`
 - `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 是否进入当前 canonical rollback / gate surface
 - `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
 - `ready_for_submission + presubmission_frozen=false` 是否成为当前 canonical gate-open checkpoint surface
+- `VerificationCheckpoint` 是否作为当前 canonical durable checkpoint object 被冻结
 
 ## 哪些状态允许只留在 local handoff surfaces
 
@@ -146,5 +149,5 @@ Date: `2026-04-07`
 - `P3.A` 已把 `major_reframe / major_revision / minor_revision / ready_for_submission` 冻结成当前 canonical verdict surface
 - `P3.B` 已把 `current_selection.active_revision_plan_id`、`MentorCritique.reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 与当前 active `RevisionPlan` 的边界冻结成当前 canonical re-review surface
 - `P3.C` 已把 `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 的 rollback / gate surface 冻结进 current truth
-- `P4.A` 当前开始冻结 `ready_for_submission + presubmission_frozen=false` 的 gate-open verification surface，并把 `examples/nsfc_workspace_p3a_ready_for_submission.json` 纳入 hard gate
-- `stage-route-report` 当前继续承担 `verification_checkpoint / checkpoint_status` 的 canonical verification aggregation surface
+- `P4.A` 已把 `ready_for_submission + presubmission_frozen=false` 的 gate-open verification surface 冻结进 current truth，并把 `examples/nsfc_workspace_p3a_ready_for_submission.json` 纳入 hard gate
+- `P4.B` 当前开始冻结 `VerificationCheckpoint` 的 canonical durable surface，并明确 `stage-route-report.verification_checkpoint / checkpoint_status` 与 reports / control surfaces 的 durable 对齐关系

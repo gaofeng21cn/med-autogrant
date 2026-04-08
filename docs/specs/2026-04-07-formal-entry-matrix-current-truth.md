@@ -9,9 +9,9 @@ Date: `2026-04-07`
 ## 当前指针
 
 - Current phase: `P4 / Verification OS And HITL Layering Preparation`
-- Active tranche: `P4.A / Verification Gate Surface`
+- Active tranche: `P4.B / Verification OS And Checkpoint Surface`
 
-本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不替代当前 `P4.A` 的 verification gate surface contract。
+本文件继续冻结当前 formal entry 真相；它不扩 `MCP / controller / write / export / HITL`，也不替代当前 `P4.B` 的 verification OS / checkpoint surface contract。
 
 ## Formal Entry Matrix
 
@@ -29,10 +29,11 @@ Date: `2026-04-07`
   - CLI 输出必须稳定回显同一 `grant_run_id`，并保持与 `workspace_id`、`draft_id`、`program_id` 分离。
   - `grant_run_id` 是 execution handle，不是新的入口面。
   - `stage-route-report` 当前必须输出 `verification_checkpoint / checkpoint_status`，把 verification、route recommendation、rollback / frozen gate、gate-open ready-for-freeze 状态与 reviewed revision evidence 聚合进同一个 machine-readable checkpoint surface。
-  - 在当前 `P4.A` tranche 内，CLI 的 repo-native audit surface 还必须同时保持：
+  - 在当前 `P4.B` tranche 内，CLI 的 repo-native audit surface 还必须同时保持：
     - absorbed `P3.B` retained boundary：`active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`
     - absorbed `P3.C` retained boundary：`forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`
-    - 当前 `P4.A` gate-open boundary：`ready_for_submission + presubmission_frozen=false`
+    - absorbed `P4.A` gate-open boundary：`ready_for_submission + presubmission_frozen=false`
+    - 当前 `P4.B` checkpoint durable boundary：`VerificationCheckpoint` 只能作为 `stage-route-report.verification_checkpoint` 的 derived checkpoint object 存在，不能被解释成新的 formal entry、runtime identity 或 controller capability
 
 ### 2. `supported_protocol_layer`
 
@@ -60,6 +61,7 @@ Date: `2026-04-07`
     - `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 的 P3.B re-review contract
     - `forced_rollback_stage`、`forced_rollback_reason` 与 `presubmission_frozen` 的 P3.C hard gate contract
     - `examples/nsfc_workspace_p3a_ready_for_submission.json` 的 P4.A gate-open contract
+    - `VerificationCheckpoint` 的 P4.B checkpoint durable contract
 
 ### 4. recovery / resume entry
 
@@ -72,7 +74,7 @@ Date: `2026-04-07`
 - 当前 contract：
   - recovery / resume 入口与 developer control-plane 使用同一组 durable surfaces。
   - 恢复时必须沿用同一 `grant_run_id` 上下文回显，但不能把 `grant_run_id` 误写成 `program_id` 或 `workspace_id`。
-  - 恢复时也不得丢失 absorbed `P3.B` 的 `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`，absorbed `P3.C` 的 `forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`，以及当前 `P4.A` 的 gate-open ready-for-freeze 语义。
+  - 恢复时也不得丢失 absorbed `P3.B` 的 `active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`，absorbed `P3.C` 的 `forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`，absorbed `P4.A` 的 gate-open ready-for-freeze 语义，以及当前 `P4.B` 的 `VerificationCheckpoint` durable boundary。
 
 ### 5. not-yet-supported / future public entry scope
 
@@ -132,4 +134,4 @@ external verifier durable 裁决如下：
 - 不得把 `supported_protocol_layer` 解释成“当前 public runtime 已正式支持 `MCP`”。
 - 不得把“developer control-plane entry 存在”解释成“产品 controller 已正式支持”。
 - 不得把 `grant_run_id` 解释成新的 control-plane pointer。
-- 不得因为 formal entry matrix 已冻结，就默认宣称 `P4.A` 已 absorb、`P4.B` 已开启或 HITL 已实现。
+- 不得因为 formal entry matrix 已冻结，就默认宣称 `P4.B` implementation 已完成、`MCP / controller` 已支持或 HITL 已实现。
