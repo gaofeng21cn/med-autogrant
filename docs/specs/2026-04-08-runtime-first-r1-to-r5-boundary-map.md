@@ -6,9 +6,9 @@ Date: `2026-04-08`
 
 这份文档把 `Med Auto Grant` 当前 `runtime-first productization` program 的未来边界一次性预冻结到 `R5`。
 
-它的作用不是宣称这些阶段已经实现，而是明确：
+它的作用不是把所有 tranche 误写成已实现，而是明确：
 
-- 从当前 `R1.A` absorbed 状态往后，哪些 future tranche 可以被 `OMX` 继续打开
+- 从当前 latest absorbed runtime slice 往后，哪些 future tranche 可以被 `OMX` 继续打开
 - 每一棒分别属于哪一层能力面
 - 什么时候可以实现
 - 什么时候必须重分类到更后面的阶段
@@ -16,11 +16,15 @@ Date: `2026-04-08`
 
 ## Current Anchor
 
-当前已 absorbed 的起点固定为：
+当前 latest absorbed slice 为：
 
-- `R1.A / Local Main Loop Entry And Stop Reason`
-- freeze absorb：`38b5347`
-- implementation absorb：`8e087dc`
+- `R1.B / Stage Action Executor Envelope`
+- upstream absorbed anchor：
+  - `R1.A / Local Main Loop Entry And Stop Reason`
+  - freeze absorb：`38b5347`
+  - implementation absorb：`8e087dc`
+- `R1.B` activation freeze absorb：`2b193da`
+- `R1.B` implementation absorb：`2953026`
 
 当前已 landed 的 surface：
 
@@ -28,13 +32,15 @@ Date: `2026-04-08`
 - `resume-local`
 - machine-readable `stop_reason`
 - durable JSON run journal
+- machine-readable `stage_action_envelope`
+- `latest_stage_action_envelope`
 
 ## One-Shot Autonomous Continuation Contract
 
 这份边界图冻结后，`OMX` 被授权：
 
-1. 从当前 `R1.A` absorbed 状态出发，持续做 honest delta audit
-2. 把新识别到的 delta 与下面的 `R1.B / R2.A / R3.A / R4.A / R5.A` 边界进行匹配
+1. 从当前 latest absorbed slice 出发，持续做 honest delta audit
+2. 把新识别到的 delta 与下面仍未 absorbed 的 `R2.A / R3.A / R4.A / R5.A` 边界进行匹配
 3. 如果匹配成功：
    - 先把对应 tranche freeze 到 active `CURRENT_PROGRAM + PRD + test-spec + implementation + reports`
    - 必要时补 repo-tracked internal spec
@@ -72,8 +78,8 @@ Date: `2026-04-08`
 
 ## Activation Status
 
-- pre-frozen
-- current status：尚未实现；只有在下一新增能力仍属于纯 runtime execution envelope 时才允许打开
+- absorbed
+- current status：已实现并 absorbed；它把 `stage_action_required` 收紧成 machine-readable `stage_action_envelope`，但没有越界到 artifact writing / revision execution / export / hostedization
 
 ## Scope
 

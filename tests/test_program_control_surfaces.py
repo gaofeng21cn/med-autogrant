@@ -20,6 +20,7 @@ RUNTIME_FIRST_PROGRAM = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first
 RUNTIME_BOUNDARY_MAP = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-r1-to-r5-boundary-map.md"
 R1A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md"
 R1B_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1b-stage-action-executor-envelope-activation-package.md"
+R2A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r2a-artifact-bundle-production-surface-activation-package.md"
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -226,6 +227,37 @@ R1B_ACTIVATION_SNIPPETS = (
     "not-yet-supported",
 )
 
+R2A_ACTIVATION_SNIPPETS = (
+    "build-artifact-bundle",
+    "artifact_bundle",
+    "bundle_version",
+    "bundle_kind",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "program_id",
+    "selected_direction_id",
+    "selected_question_id",
+    "active_fit_mapping_id",
+    "active_draft_id",
+    "manifest",
+    "lineage",
+    "bundle_summary",
+    "outline_count",
+    "section_count",
+    "selected_direction",
+    "selected_question",
+    "argument_chain",
+    "fit_mapping",
+    "draft_outline",
+    "draft_sections",
+    "frozen_question_id",
+    "CLI",
+    "MCP",
+    "controller",
+    "not-yet-supported",
+)
+
 RUNTIME_BOUNDARY_MAP_SNIPPETS = (
     "R1.B / Stage Action Executor Envelope",
     "R2.A / Artifact Bundle Production Surface",
@@ -339,6 +371,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             RUNTIME_BOUNDARY_MAP,
             R1A_ACTIVATION_PACKAGE,
             R1B_ACTIVATION_PACKAGE,
+            R2A_ACTIVATION_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -566,6 +599,25 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(path=path.name):
                 self.assertIn(package_path, read_text(path))
 
+    def test_r2a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
+        package_path = str(R2A_ACTIVATION_PACKAGE)
+        self.assertTrue(R2A_ACTIVATION_PACKAGE.exists(), f"R2.A activation package 不存在: {R2A_ACTIVATION_PACKAGE}")
+
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            TEAM_PROMPT,
+            EXECUTION_PROMPT,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+            ITERATION_LOG,
+            OPEN_ISSUES,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
     def test_r1a_activation_package_freezes_local_main_loop_contract(self) -> None:
         text = read_text(R1A_ACTIVATION_PACKAGE)
         for snippet in R1A_ACTIVATION_SNIPPETS:
@@ -575,6 +627,12 @@ class ProgramControlSurfaceTest(unittest.TestCase):
     def test_r1b_activation_package_freezes_stage_action_envelope_contract(self) -> None:
         text = read_text(R1B_ACTIVATION_PACKAGE)
         for snippet in R1B_ACTIVATION_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, text)
+
+    def test_r2a_activation_package_freezes_artifact_bundle_contract(self) -> None:
+        text = read_text(R2A_ACTIVATION_PACKAGE)
+        for snippet in R2A_ACTIVATION_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, text)
 

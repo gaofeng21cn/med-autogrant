@@ -53,15 +53,16 @@ Date: `2026-04-08`
 
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 
-这份边界图当前预冻结的 future tranche 是：
+这份边界图当前承认：
 
-1. `R1.B / Stage Action Executor Envelope`
-2. `R2.A / Artifact Bundle Production Surface`
-3. `R3.A / Critique Revision Executor Surface`
-4. `R4.A / Final Freeze And Export Package`
-5. `R5.A / Hosted-Friendly Session Boundary`
+- `R1.B / Stage Action Executor Envelope` 已从 pre-frozen package 进入 absorbed current truth
+- 仍待 future activation 的 tranche 为：
+  1. `R2.A / Artifact Bundle Production Surface`
+  2. `R3.A / Critique Revision Executor Surface`
+  3. `R4.A / Final Freeze And Export Package`
+  4. `R5.A / Hosted-Friendly Session Boundary`
 
-它们都是 future activation package，而不是已实现状态。
+也就是说，边界图仍然是 future boundary map，但其中 `R1.B` 已不再属于“尚未实现”的 tranche。
 
 ## Program Ladder
 
