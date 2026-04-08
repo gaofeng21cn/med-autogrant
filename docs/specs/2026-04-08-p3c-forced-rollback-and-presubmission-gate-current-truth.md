@@ -145,6 +145,9 @@ Date: `2026-04-08`
 - `stage-route-report`
   - 必须聚合 forced rollback route recommendation
   - 必须聚合 `presubmission_frozen`
+  - 必须新增 `verification_checkpoint`
+  - 必须新增 `checkpoint_status`
+  - `verification_checkpoint` 内必须继续聚合 reviewed revision evidence、forced rollback 与 frozen gate 语义
 
 ## Canonical Examples
 

@@ -28,6 +28,7 @@ Date: `2026-04-07`
   - `CLI` 是当前唯一 repo-verified 的 user-facing runtime formal entry。
   - CLI 输出必须稳定回显同一 `grant_run_id`，并保持与 `workspace_id`、`draft_id`、`program_id` 分离。
   - `grant_run_id` 是 execution handle，不是新的入口面。
+  - `stage-route-report` 当前必须输出 `verification_checkpoint / checkpoint_status`，把 verification、route recommendation、rollback / frozen gate 与 reviewed revision evidence 聚合进同一个 machine-readable checkpoint surface。
   - 在当前 `P3.C` tranche 内，CLI 的 repo-native audit surface 还必须同时保持：
     - absorbed `P3.B` retained boundary：`active_revision_plan_id`、`reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id`
     - 当前 `P3.C` hard gate boundary：`forced_rollback_stage`、`forced_rollback_reason`、`presubmission_frozen`

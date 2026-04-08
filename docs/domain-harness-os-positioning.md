@@ -77,6 +77,11 @@
 - `critique-summary`
 - `stage-route-report`
 
+其中 `stage-route-report` 当前还是 canonical verification / checkpoint 聚合面，必须稳定输出：
+
+- `verification_checkpoint`
+- `checkpoint_status`
+
 而 `validate-workspace` 负责 validation，不应被误写成新的 execution handle 或新的 formal entry。
 
 ## 5. 未来托管形态：Managed Web Runtime（同一 Substrate）

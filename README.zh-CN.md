@@ -44,6 +44,7 @@
 - `draft_id`：跨 critique / revision 延续的草稿身份，而不是每次 run 重新生成的 ID
 - `program_id`：当前 Med Auto Grant active mainline 的 control-plane / report-routing 指针
 - 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
+- `stage-route-report` 当前还是 machine-readable 的 verification / checkpoint 聚合面，并会输出 `verification_checkpoint` 与 `checkpoint_status`
 - repo-tracked review truth 与 local durable handoff surfaces 必须分开：前者负责解释 runtime contract，后者负责机器私有的恢复状态
 
 ## 它主要想帮你解决什么问题
@@ -66,7 +67,8 @@
 - 通过 `MentorCritique.reviewed_revision_plan_id` 把 re-review 批注显式绑定到上一轮 completed revision evidence
 - 根据 `lifecycle_stage`、gates 与 verdict 给出 `major_reframe -> question_refinement`、`major_revision / minor_revision -> revision`、`ready_for_submission -> frozen`，以及 `revision(completed) -> critique -> revision` 的下一步建议
 - 把当前 authoring route 聚合成单个 machine-readable `stage-route-report`
-- 输出带有 verdict、当前 `RevisionPlan.execution_status`、reviewed revision evidence、版本标签和比较证据的 `critique-summary / stage-route-report` 审计面
+- 通过 `verification_checkpoint / checkpoint_status` 把当前 verification、forced rollback 与 frozen gate 语义收进同一个 checkpoint surface
+- 输出带有 verdict、当前 `RevisionPlan.execution_status`、reviewed revision evidence、rollback / frozen gate 状态、版本标签和比较证据的 `critique-summary / stage-route-report` 审计面
 
 ## 现在还没有完成什么
 

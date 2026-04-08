@@ -394,6 +394,11 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "question_refinement")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
+        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
+        self.assertEqual(
+            payload["verification_checkpoint"]["route_alignment"]["recommended_next_stage"],
+            "argument_building",
+        )
         self.assertEqual(
             payload["route"]["summarize_workspace"]["current_selection"]["selected_question_id"],
             "question-immune-fibrosis",
@@ -735,6 +740,11 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
         self.assertEqual(payload["route"]["summarize_workspace"]["reviewed_revision_evidence"]["revision_plan_id"], "revision-v1")
         self.assertEqual(payload["route"]["critique_summary"]["reviewed_revision_plan_id"], "revision-v1")
+        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
+        self.assertEqual(
+            payload["verification_checkpoint"]["review_checkpoint"]["reviewed_revision_evidence"]["revision_plan_id"],
+            "revision-v1",
+        )
 
     def test_stage_route_report_aggregates_p3c_forced_rollback_branch(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -754,6 +764,11 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["route"]["next_step"]["forced_rollback_stage"], "argument_building")
         self.assertEqual(payload["route"]["critique_summary"]["forced_rollback_stage"], "argument_building")
         self.assertFalse(payload["route"]["critique_summary"]["presubmission_frozen"])
+        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "rollback_required")
+        self.assertEqual(
+            payload["verification_checkpoint"]["route_alignment"]["forced_rollback_stage"],
+            "argument_building",
+        )
 
     def test_stage_route_report_aggregates_p3c_presubmission_frozen_branch(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -772,6 +787,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "frozen")
         self.assertTrue(payload["route"]["summarize_workspace"]["gates"]["presubmission_frozen"])
         self.assertTrue(payload["route"]["critique_summary"]["presubmission_frozen"])
+        self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "submission_frozen")
+        self.assertTrue(payload["verification_checkpoint"]["route_alignment"]["presubmission_frozen"])
 
     def test_validate_workspace_json_output(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

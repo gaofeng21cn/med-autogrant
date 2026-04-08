@@ -97,6 +97,7 @@ Agent 负责：
   - `summarize-workspace`
   - `critique-summary`
   - `stage-route-report`
+- `stage-route-report` 当前必须输出 `verification_checkpoint`，把 validation、route recommendation、reviewed revision evidence、forced rollback 与 presubmission gate 聚合到同一个 machine-readable checkpoint surface。
 - `validate-workspace` 是验证 surface，不是 execution handle，也不是 control-plane pointer。
 - 不得把 `grant_run_id`、`workspace_id`、`draft_id`、`program_id` 互相替代，也不得把本地 handoff surface 误写成产品 runtime formal entry。
 

@@ -44,6 +44,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - `draft_id` is the draft identity carried across critique and revision rather than regenerated per run.
 - `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
+- `stage-route-report` is the current machine-readable verification/checkpoint aggregation surface and now emits `verification_checkpoint` plus `checkpoint_status`.
 - Repo-tracked review truth and local durable handoff surfaces stay separate: the former explains the runtime contract, while the latter carries machine-specific resume state.
 
 ## What It Is Designed To Help With
@@ -66,7 +67,8 @@ Today, the runtime can:
 - bind a re-review critique to prior completed revision evidence through `MentorCritique.reviewed_revision_plan_id`
 - recommend the next stage across `major_reframe -> question_refinement`, `major_revision / minor_revision -> revision`, `ready_for_submission -> frozen`, plus `revision(completed) -> critique -> revision` in the re-review loop
 - aggregate the current authoring route into one machine-readable `stage-route-report`
-- expose structured `critique-summary` and `stage-route-report` audit data including verdict, current `RevisionPlan.execution_status`, reviewed revision evidence, version labels, and comparison evidence
+- emit `verification_checkpoint` / `checkpoint_status` so the current verification, rollback, and frozen-gate semantics stay on one canonical checkpoint surface
+- expose structured `critique-summary` and `stage-route-report` audit data including verdict, current `RevisionPlan.execution_status`, reviewed revision evidence, rollback / frozen gate state, version labels, and comparison evidence
 
 ## What Is Still In Progress
 

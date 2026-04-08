@@ -87,6 +87,7 @@ Date: `2026-04-07`
 - `current_selection.active_revision_plan_id` 是否继续作为当前 active route pointer
 - `reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id` 是否进入当前 canonical re-review surface
 - `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 是否进入当前 canonical rollback / gate surface
+- `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
 - `revision(completed revised switch) -> critique -> revision` 与 `ready_for_submission -> frozen` 是否都只是当前边界内的 machine-readable transition contract
 
 ## 哪些状态允许只留在 local handoff surfaces
@@ -137,3 +138,4 @@ Date: `2026-04-07`
 - `P3.A` 已把 `major_reframe / major_revision / minor_revision / ready_for_submission` 冻结成当前 canonical verdict surface
 - `P3.B` 已把 `current_selection.active_revision_plan_id`、`MentorCritique.reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 与当前 active `RevisionPlan` 的边界冻结成当前 canonical re-review surface
 - `P3.C` 当前开始冻结 `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 的 rollback / gate surface
+- `stage-route-report` 当前开始冻结 `verification_checkpoint / checkpoint_status` 的 verification aggregation surface

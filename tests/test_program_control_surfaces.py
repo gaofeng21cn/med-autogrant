@@ -126,6 +126,11 @@ DURABLE_REPORT_SURFACE_SNIPPETS = (
     "stage-route-report",
 )
 
+VERIFICATION_CHECKPOINT_SNIPPETS = (
+    "verification_checkpoint",
+    "checkpoint_status",
+)
+
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -379,6 +384,24 @@ class ProgramControlSurfaceTest(unittest.TestCase):
 
         for snippet in DURABLE_REPORT_SURFACE_SNIPPETS:
             with self.subTest(report_surface=snippet):
+                self.assertIn(snippet, combined)
+
+    def test_verification_checkpoint_surface_is_explicit_in_public_and_truth_docs(self) -> None:
+        combined = "\n".join(
+            read_text(path)
+            for path in (
+                README_EN,
+                README_ZH,
+                PROJECT_TRUTH,
+                POSITIONING_DOC,
+                FORMAL_ENTRY_MATRIX,
+                DURABILITY_MODEL,
+                P3C_CURRENT_TRUTH,
+            )
+        )
+
+        for snippet in VERIFICATION_CHECKPOINT_SNIPPETS:
+            with self.subTest(snippet=snippet):
                 self.assertIn(snippet, combined)
 
     def test_p3a_p3b_and_p3c_current_truth_docs_are_referenced_in_active_control_surfaces(self) -> None:

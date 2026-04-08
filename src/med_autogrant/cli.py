@@ -134,13 +134,15 @@ def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
             lifecycle_stage=document.get("lifecycle_stage"),
         )
 
+    validation_payload = validation.to_dict(document)
     summary = summarize_workspace_document(document)
     next_step = determine_next_step(document)
     route: dict[str, Any] = {
-        "validate_workspace": validation.to_dict(document),
+        "validate_workspace": validation_payload,
         "summarize_workspace": summary,
         "next_step": next_step,
     }
+    critique_summary: dict[str, Any] | None = None
     if document["lifecycle_stage"] in {"critique", "revision", "frozen"}:
         critique_summary = build_critique_summary(document)
         critique_summary["recommended_next_stage"] = next_step["recommended_stage"]
@@ -151,6 +153,79 @@ def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
         "workspace_id": document["workspace_id"],
         "lifecycle_stage": document["lifecycle_stage"],
         "route": route,
+        "verification_checkpoint": _build_verification_checkpoint(
+            document=document,
+            validation_payload=validation_payload,
+            summary=summary,
+            next_step=next_step,
+            critique_summary=critique_summary,
+        ),
+    }
+
+
+def _build_verification_checkpoint(
+    *,
+    document: dict[str, Any],
+    validation_payload: dict[str, Any],
+    summary: dict[str, Any],
+    next_step: dict[str, Any],
+    critique_summary: dict[str, Any] | None,
+) -> dict[str, Any]:
+    current_selection = summary.get("current_selection")
+    active_draft = summary.get("active_draft")
+    active_critique = summary.get("active_critique")
+    forced_rollback_stage = next_step.get("forced_rollback_stage")
+    if forced_rollback_stage is None and isinstance(critique_summary, dict):
+        forced_rollback_stage = critique_summary.get("forced_rollback_stage")
+
+    forced_rollback_reason = None
+    if isinstance(critique_summary, dict):
+        forced_rollback_reason = critique_summary.get("forced_rollback_reason")
+    elif isinstance(active_critique, dict):
+        forced_rollback_reason = active_critique.get("forced_rollback_reason")
+
+    presubmission_frozen = bool(summary.get("gates", {}).get("presubmission_frozen"))
+    if presubmission_frozen:
+        checkpoint_status = "submission_frozen"
+    elif forced_rollback_stage:
+        checkpoint_status = "rollback_required"
+    else:
+        checkpoint_status = "forward_progress"
+
+    return {
+        "checkpoint_status": checkpoint_status,
+        "validation_ok": bool(validation_payload.get("ok")),
+        "identity": {
+            "grant_run_id": document["grant_run_id"],
+            "workspace_id": document["workspace_id"],
+            "draft_id": active_draft.get("id") if isinstance(active_draft, dict) else None,
+            "active_revision_plan_id": (
+                current_selection.get("active_revision_plan_id")
+                if isinstance(current_selection, dict)
+                else None
+            ),
+            "reviewed_revision_plan_id": (
+                critique_summary.get("reviewed_revision_plan_id")
+                if isinstance(critique_summary, dict)
+                else None
+            ),
+        },
+        "route_alignment": {
+            "lifecycle_stage": document["lifecycle_stage"],
+            "recommended_next_stage": next_step["recommended_stage"],
+            "forced_rollback_stage": forced_rollback_stage,
+            "forced_rollback_reason": forced_rollback_reason,
+            "presubmission_frozen": presubmission_frozen,
+        },
+        "review_checkpoint": {
+            "critique_id": critique_summary.get("critique_id") if isinstance(critique_summary, dict) else None,
+            "reviewed_revision_evidence": summary.get("reviewed_revision_evidence"),
+            "blocking_issue_count": (
+                len(critique_summary.get("blocking_issues", []))
+                if isinstance(critique_summary, dict)
+                else 0
+            ),
+        },
     }
 
 
@@ -237,6 +312,7 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"workspace_id: {payload['workspace_id']}",
             f"lifecycle_stage: {payload['lifecycle_stage']}",
             f"route_ok: {payload['ok']}",
+            f"checkpoint_status: {payload['verification_checkpoint']['checkpoint_status']}",
             f"recommended_stage: {payload['route']['next_step']['recommended_stage']}",
             f"critique_verdict: {critique_verdict}",
         ]
