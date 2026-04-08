@@ -290,6 +290,11 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - `P5.A / Second Grant Family Onboarding`
 - `P5.B / Federation Contract Freeze`
 
+当前对应的 pre-frozen activation package：
+
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5a-second-grant-family-onboarding-activation-package.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5b-federation-contract-freeze-activation-package.md`
+
 ## Autonomous Longrun Program Mode
 
 当 north star、阶段顺序、硬边界与 stop conditions 已冻结时，当前默认推荐的是：
@@ -334,6 +339,7 @@ durable handoff 回答的是控制面如何不断点连续推进。
 4. 当前 `P4.B` 在上述边界之上继续冻结两件事：
    - 把 `VerificationCheckpoint` 明确成 author-side canonical durable checkpoint object，并保持它仍由 `stage-route-report.verification_checkpoint` 聚合输出
    - 把 runtime checkpoint object、repo-tracked truth 与 local reports 的 durable 关系写清楚，同时禁止把 checkpoint surface 混写成 formal entry、runtime identity、reviewer/HITL 或 `MCP / controller` capability
+5. `P5.A / P5.B` 当前已作为 future activation package 预冻结进 repo-tracked docs 与 active control surfaces；这意味着 `OMX` 后续可以继续长跑，但只有在 admitted second-family source packet 与上游 federation truth 真正存在时才允许跨 phase 进入。
 
 ### 保留的 P1.B hard boundary：revision transition minimal contract
 
@@ -352,6 +358,8 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - absorbed P3.C：`docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
 - absorbed P4.A：`docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
 - 当前 P4.B：`docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
+- future P5.A activation package：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5a-second-grant-family-onboarding-activation-package.md`
+- future P5.B activation package：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5b-federation-contract-freeze-activation-package.md`
 - 这七份文件当前共同冻结：
   - `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 的上游绑定
   - `drafting -> critique -> revision` 的 absorbed 主线与 completed revision 回到 critique 的 re-review 边界
@@ -360,6 +368,8 @@ durable handoff 回答的是控制面如何不断点连续推进。
   - `MentorCritique.forced_rollback_stage / forced_rollback_reason` 与 `presubmission_frozen` 的 P3.C hard gate
   - `stage-route-report.verification_checkpoint / checkpoint_status` 与 `ready_for_submission + presubmission_frozen=false` 的 P4.A gate-open checkpoint surface
   - `VerificationCheckpoint` 作为 derived checkpoint object 的 P4.B durable surface，以及它与 reports / control surfaces 的 checkpoint truth 对齐关系
+  - second-family onboarding 必须具备的 admission package、verification gate、excluded scope 与 invariants
+  - federation contract freeze 必须具备的 package、audit、export、gate semantics 与 admitted-family exact-set 边界
 
 ## OMX 长线运行入口
 

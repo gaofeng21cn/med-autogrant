@@ -25,6 +25,8 @@ P3B_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p3b-revision-tran
 P3C_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md"
 P4A_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p4a-verification-gate-surface-current-truth.md"
 P4B_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md"
+P5A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-p5a-second-grant-family-onboarding-activation-package.md"
+P5B_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-p5b-federation-contract-freeze-activation-package.md"
 WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
 PRD = REPO_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
@@ -140,6 +142,25 @@ VERIFICATION_CHECKPOINT_SNIPPETS = (
     "checkpoint_status",
 )
 
+P5_ACTIVATION_SECTION_SNIPPETS = (
+    "## Activation Status",
+    "## Required Verification",
+    "## Promotion Invariants",
+    "## Excluded Scope",
+)
+
+P5A_ACTIVATION_SNIPPETS = (
+    "SecondGrantFamilyAdmissionPackage",
+    "repo-tracked second-family source packet",
+    "CLI-first",
+)
+
+P5B_ACTIVATION_SNIPPETS = (
+    "GrantOpsFederationContractPackage",
+    "admitted families exact-set",
+    "Grant Foundry",
+)
+
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -219,6 +240,8 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             LATEST_STATUS,
             ITERATION_LOG,
             OPEN_ISSUES,
+            P5A_ACTIVATION_PACKAGE,
+            P5B_ACTIVATION_PACKAGE,
         ):
             with self.subTest(path=path.name):
                 self.assertTrue(path.exists(), f"control surface 不存在: {path}")
@@ -345,6 +368,36 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         for path in (CURRENT_PROGRAM, PROGRAM_OPERATING_MODEL, PRD, TEST_SPEC, IMPLEMENTATION, OMX_BRIDGE):
             with self.subTest(path=path.name):
                 self.assertIn("same-phase auto-promotion", read_text(path))
+
+    def test_prefrozen_p5_activation_packages_have_required_sections(self) -> None:
+        for path, unique_snippets in (
+            (P5A_ACTIVATION_PACKAGE, P5A_ACTIVATION_SNIPPETS),
+            (P5B_ACTIVATION_PACKAGE, P5B_ACTIVATION_SNIPPETS),
+        ):
+            text = read_text(path)
+            for snippet in P5_ACTIVATION_SECTION_SNIPPETS:
+                with self.subTest(path=path.name, snippet=snippet):
+                    self.assertIn(snippet, text)
+            for snippet in unique_snippets:
+                with self.subTest(path=path.name, unique_snippet=snippet):
+                    self.assertIn(snippet, text)
+
+    def test_prefrozen_p5_activation_package_paths_are_wired_into_control_surfaces(self) -> None:
+        for package in (P5A_ACTIVATION_PACKAGE, P5B_ACTIVATION_PACKAGE):
+            package_path = str(package)
+            for path in (
+                CURRENT_PROGRAM,
+                PROGRAM_ROUTING,
+                TEAM_PROMPT,
+                EXECUTION_PROMPT,
+                OMX_BRIDGE,
+                PRD,
+                TEST_SPEC,
+                IMPLEMENTATION,
+                LATEST_STATUS,
+            ):
+                with self.subTest(package=package.name, path=path.name):
+                    self.assertIn(package_path, read_text(path))
 
     def test_revision_transition_contract_is_frozen_in_active_truth_surfaces(self) -> None:
         for path in (OMX_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION):
