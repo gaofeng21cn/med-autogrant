@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：仓库当前执行 `Runtime Productization Program`，active tranche 为 `R1 / Autonomous Main Loop`，当前 bounded slice 为 `R1.B / Stage Action Executor Envelope`；它仍不是可直接替代人工判断的成熟基金写作系统，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库当前执行 `Runtime Productization Program`；预冻结的本地 `R1 -> R5` runtime ladder 已吸收到 `R5.A / Hosted-Friendly Session Boundary`。当前已具备本地 `CLI-first + host-agent` runtime baseline，但仍不是 actual hosted runtime，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      已有最小 runtime baseline，当前 bounded slice 已切到 <code>R1.B / Stage Action Executor Envelope</code>
+      本地 <code>R1 -> R5</code> runtime ladder 已吸收至 <code>R5.A</code>，当前保持 <code>baseline freeze / runtime hardening</code>
     </td>
   </tr>
 </table>
@@ -44,7 +44,7 @@
 - `draft_id`：跨 critique / revision 延续的草稿身份，而不是每次 run 重新生成的 ID
 - `program_id`：当前 Med Auto Grant active mainline 的 control-plane / report-routing 指针
 - 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
-- 当前 repo-verified 的本地 runtime entry 还包括 `run-local`、`resume-local` 与 `build-artifact-bundle`；前两者负责写入并恢复机器私有的 run journal 与 machine-readable `stage_action_envelope`，后者负责写出带有 manifest、lineage 与 bundle summary 的 machine-readable 本地 artifact bundle
+- 当前 repo-verified 的本地 runtime entry 还包括 `run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package` 与 `build-hosted-contract-bundle`；它们分别负责本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出，以及 hosted-friendly contract bundle 导出
 - `stage-route-report` 当前还是 machine-readable 的 verification / checkpoint 聚合面，并会输出 `verification_checkpoint` 与 `checkpoint_status`
 - repo-tracked review truth 与 local durable handoff surfaces 必须分开：前者负责解释 runtime contract，后者负责机器私有的恢复状态
 
@@ -72,14 +72,19 @@
 - 输出带有 verdict、当前 `RevisionPlan.execution_status`、reviewed revision evidence、rollback / frozen gate 状态、版本标签和比较证据的 `critique-summary / stage-route-report` 审计面
 - 通过 `run-local` 运行一次本地主循环、派生 machine-readable `stop_reason`、在 `stage_action_required` 分支上生成 machine-readable `stage_action_envelope`、写入 durable run journal，并通过 `resume-local` 从该 journal 恢复
 - 通过 `build-artifact-bundle` 把当前已选方向、问题、论证链、适配度、提纲与草稿章节打包成 local `artifact_bundle`，并保留 manifest、lineage、version 与 `grant_run_id / workspace_id / draft_id` 身份一致性
+- 通过 `execute-revision-pass` 对冻结在 `RevisionPlan` 中的 section-level deterministic mutation 执行本地 revision pass，并保持 draft lineage、rollback gate 与 checkpoint 语义不漂移
+- 通过 `build-final-package` 把 freeze-ready / submission-frozen 的 workspace 与 artifact bundle 收成 machine-readable 本地 `final_package`
+- 通过 `build-hosted-contract-bundle` 从当前 `final_package` 导出 hosted-friendly 的 session / state / artifact / audit contract bundle，作为托管化 prep 的本地合同产物
 
 ## 现在还没有完成什么
 
-下面这些能力仍处于规划或开发中：
+下面这些能力仍处于后续 hardening 或 future scope：
 
-- 当前本地 runtime continuation 与 local artifact production 已落地；更后的 critique/revision executor、最终交付与 future product layer 仍未完成
-- 未来 `Human-in-the-loop` sibling 或 upper-layer product 相关表面，以及 submission-grade 交付面
-- 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展
+- post-`R5.A` 的本地 runtime 仍需继续收紧 validator / checkpoint truth、operator walkthrough 与 docs/runtime 对齐
+- actual hosted runtime、remote execution、Web UI 与 multi-tenant 托管化
+- 未来 `Human-in-the-loop` sibling 或 upper-layer product 相关表面
+- submission-grade 自动驾驶质量与更强的端到端 authoring/runtime 稳定性
+- 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展，以及 `P5` federation
 
 ## 最快开始方式：通过你的 Agent
 
@@ -116,6 +121,12 @@ PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc
 PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json"
 PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json"
 PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2c_revision.json --output "$TMPDIR/r2a-revision-bundle.json"
+PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json"
+PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3a_ready_for_submission.json --output "$TMPDIR/r4a-freeze-ready-bundle.json"
+PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3a_ready_for_submission.json --artifact-bundle "$TMPDIR/r4a-freeze-ready-bundle.json" --output "$TMPDIR/r4a-freeze-ready-package.json"
+PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output "$TMPDIR/r5a-bundle.json"
+PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle "$TMPDIR/r5a-bundle.json" --output "$TMPDIR/r5a-final-package.json"
+PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-package "$TMPDIR/r5a-final-package.json" --output "$TMPDIR/r5a-hosted-contract.json"
 ```
 
 ### 当前技术范围
@@ -128,6 +139,9 @@ PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/n
 - machine-readable 的批注、verdict 与 route artifact
 - machine-readable 的本地 runtime stop reason、stage-action envelope 与 durable run-journal recovery
 - 带有 manifest、lineage、version 与 bundle summary 的 machine-readable 本地 artifact bundle 生产
+- section-level deterministic 本地 revision executor
+- machine-readable 的本地 final package
+- hosted-friendly session / state / artifact / audit contract bundle 导出
 - 覆盖 runtime 与 control-surface 不变量的测试
 
 ### 内部文档
@@ -141,6 +155,7 @@ PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/n
 - [`docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`](./docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md)
 - [`docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`](./docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md)
 - [`docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`](./docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md)
+- [`docs/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`](./docs/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
 
 ### 本地运行状态
 

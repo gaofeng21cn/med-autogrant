@@ -32,6 +32,7 @@ These documents are internal design references and default to Chinese.
 - [Mainline And OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
+- [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only)
 - [Documentation Governance](documentation-governance.md) (Chinese only)
 
 ## Historical Planning Artifacts
@@ -47,6 +48,7 @@ These documents are internal design references and default to Chinese.
    - [Mainline And OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
    - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
    - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
+   - [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only)
 4. Read historical planning artifacts only when you need provenance.
 
 ## Status Note

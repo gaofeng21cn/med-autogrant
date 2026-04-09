@@ -32,6 +32,7 @@
 - [主线与 OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
+- [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
 - [文档治理规则](documentation-governance.md)
 
 ## 历史规划工件
@@ -47,6 +48,7 @@
    - [主线与 OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
    - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
    - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
+   - [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
 4. 只有在需要追溯历史来源时，再阅读历史规划工件。
 
 ## 状态说明
