@@ -367,6 +367,9 @@
       "revision_plan_id": "revision-v1",
       "draft_id": "draft-v1",
       "critique_id": "critique-v1",
+      "execution_status": "planned",
+      "pre_revision_version_label": "v0.3",
+      "post_revision_version_label": "v0.4",
       "items": [
         {
           "item_id": "rev-item-1",
@@ -378,7 +381,17 @@
           "required_input_ids": [
             "arg-001",
             "question-immune-fibrosis"
-          ]
+          ],
+          "mutation_payload": {
+            "operation": "replace_draft_section",
+            "target_section_key": "basis",
+            "replacement_text": "当前关键知识缺口不在于心梗后炎症与纤维化是否相关，而在于炎症巨噬细胞如何通过时间窗依赖的旁分泌通讯触发成纤维细胞致纤维化重编程；若不回答这一机制问题，领域将持续停留在现象描述层。",
+            "replacement_core_claim": "本研究的必要性在于解释炎症巨噬细胞驱动纤维化重编程的时间窗机制缺口。",
+            "linked_object_ids": [
+              "arg-001",
+              "question-immune-fibrosis"
+            ]
+          }
         },
         {
           "item_id": "rev-item-2",
@@ -390,7 +403,17 @@
           "required_input_ids": [
             "output-1",
             "project-1"
-          ]
+          ],
+          "mutation_payload": {
+            "operation": "replace_draft_section",
+            "target_section_key": "foundation",
+            "replacement_text": "申请人已积累心梗后免疫重塑单细胞图谱、时序样本库与动物模型流程，可直接支撑关键通讯轴定位与功能验证，从而把当前科学问题与申请人既有能力闭合为同一条执行路径。",
+            "replacement_core_claim": "申请人的单细胞时序资源与模型平台可直接支撑当前问题的关键验证路径。",
+            "linked_object_ids": [
+              "output-1",
+              "project-1"
+            ]
+          }
         }
       ],
       "next_review_focus": [

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import unittest
 from pathlib import Path
@@ -22,6 +23,9 @@ R1A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1a-local-ma
 R1B_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1b-stage-action-executor-envelope-activation-package.md"
 R2A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r2a-artifact-bundle-production-surface-activation-package.md"
 R3A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r3a-critique-revision-executor-surface-activation-package.md"
+R3A_MUTATION_CONTRACT = REPO_ROOT / "docs" / "specs" / "2026-04-09-r3a-machine-applicable-revision-mutation-contract.md"
+R4A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-09-r4a-final-freeze-and-export-package-activation-package.md"
+R5A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md"
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -34,6 +38,8 @@ P4A_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p4a-verification-
 P4B_CURRENT_TRUTH = REPO_ROOT / "docs" / "specs" / "2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md"
 P5A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-p5a-second-grant-family-onboarding-activation-package.md"
 P5B_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-p5b-federation-contract-freeze-activation-package.md"
+P2C_CRITIQUE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
+P3B_RE_REVIEW_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
 PRD = REPO_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
@@ -290,7 +296,48 @@ R3A_ACTIVATION_SNIPPETS = (
 R3A_IMPLEMENTATION_PROMOTION_SNIPPETS = (
     "## R3.A Implementation Promotion Contract",
     "execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json",
+    "execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json",
     "reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id / active_revision_plan_id",
+    "mutation_payload / target_ref / section_key",
+)
+
+R3A_MUTATION_CONTRACT_SNIPPETS = (
+    "mutation_payload",
+    "replace_draft_section",
+    "target_section_key",
+    "replacement_text",
+    "replacement_core_claim",
+    "linked_object_ids",
+    "section:<section_key>",
+    "duplicate target section",
+)
+
+R4A_ACTIVATION_SNIPPETS = (
+    "build-final-package",
+    "final_package",
+    "freeze_manifest",
+    "checkpoint_summary",
+    "export_summary",
+    "artifact_bundle_manifest",
+    "CLI",
+    "MCP",
+    "controller",
+    "not-yet-supported",
+)
+
+R5A_ACTIVATION_SNIPPETS = (
+    "build-hosted-contract-bundle",
+    "hosted_contract_bundle",
+    "formal_entry_matrix",
+    "execution_identity",
+    "session_contract",
+    "state_contract",
+    "artifact_contract",
+    "audit_contract",
+    "CLI",
+    "MCP",
+    "controller",
+    "not-yet-supported",
 )
 
 RUNTIME_BOUNDARY_MAP_SNIPPETS = (
@@ -414,6 +461,9 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             R1B_ACTIVATION_PACKAGE,
             R2A_ACTIVATION_PACKAGE,
             R3A_ACTIVATION_PACKAGE,
+            R3A_MUTATION_CONTRACT,
+            R4A_ACTIVATION_PACKAGE,
+            R5A_ACTIVATION_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -711,11 +761,133 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, text)
 
+    def test_r3a_mutation_contract_is_repo_tracked_and_wired(self) -> None:
+        contract_path = str(R3A_MUTATION_CONTRACT)
+        self.assertTrue(R3A_MUTATION_CONTRACT.exists(), f"R3.A mutation contract 不存在: {R3A_MUTATION_CONTRACT}")
+
+        contract_text = read_text(R3A_MUTATION_CONTRACT)
+        for snippet in R3A_MUTATION_CONTRACT_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, contract_text)
+
+        for path in (
+            PROJECT_TRUTH,
+            TOP_LEVEL_DESIGN,
+            OMX_BRIDGE,
+            OBJECT_MODEL_SCHEMA,
+            R3A_ACTIVATION_PACKAGE,
+            RUNTIME_FIRST_PROGRAM,
+            RUNTIME_BOUNDARY_MAP,
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            TEAM_PROMPT,
+            EXECUTION_PROMPT,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(contract_path, read_text(path))
+
+    def test_r4a_activation_package_is_repo_tracked_and_wired(self) -> None:
+        package_path = str(R4A_ACTIVATION_PACKAGE)
+        self.assertTrue(R4A_ACTIVATION_PACKAGE.exists(), f"R4.A activation package 不存在: {R4A_ACTIVATION_PACKAGE}")
+
+        text = read_text(R4A_ACTIVATION_PACKAGE)
+        for snippet in R4A_ACTIVATION_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, text)
+
+        for path in (
+            PROJECT_TRUTH,
+            TOP_LEVEL_DESIGN,
+            OMX_BRIDGE,
+            RUNTIME_FIRST_PROGRAM,
+            RUNTIME_BOUNDARY_MAP,
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            TEAM_PROMPT,
+            EXECUTION_PROMPT,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
+    def test_r5a_activation_package_is_repo_tracked_and_wired(self) -> None:
+        package_path = str(R5A_ACTIVATION_PACKAGE)
+        self.assertTrue(R5A_ACTIVATION_PACKAGE.exists(), f"R5.A activation package 不存在: {R5A_ACTIVATION_PACKAGE}")
+
+        text = read_text(R5A_ACTIVATION_PACKAGE)
+        for snippet in R5A_ACTIVATION_SNIPPETS:
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, text)
+
+        for path in (
+            PROJECT_TRUTH,
+            TOP_LEVEL_DESIGN,
+            OMX_BRIDGE,
+            RUNTIME_FIRST_PROGRAM,
+            RUNTIME_BOUNDARY_MAP,
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            TEAM_PROMPT,
+            EXECUTION_PROMPT,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
     def test_r3a_implementation_promotion_contract_is_frozen_in_active_test_spec(self) -> None:
         text = read_text(TEST_SPEC)
         for snippet in R3A_IMPLEMENTATION_PROMOTION_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, text)
+
+    def test_r3a_machine_applicable_examples_are_frozen(self) -> None:
+        cases = (
+            (P2C_CRITIQUE_EXAMPLE, "revision-v1", "v0.3", "v0.4"),
+            (P3B_RE_REVIEW_EXAMPLE, "revision-v2", "v0.4", "v0.5"),
+        )
+
+        for path, revision_plan_id, expected_pre, expected_post in cases:
+            document = json.loads(path.read_text(encoding="utf-8"))
+            current_selection = document["current_selection"]
+            draft = next(item for item in document["application_drafts"] if item["draft_id"] == current_selection["active_draft_id"])
+            section_keys = {item["section_key"] for item in draft["sections"]}
+            outline_keys = {item["section_key"] for item in draft["outline"]}
+            revision_plan = next(item for item in document["revision_plans"] if item["revision_plan_id"] == revision_plan_id)
+
+            with self.subTest(path=path.name, field="execution_status"):
+                self.assertEqual(revision_plan["execution_status"], "planned")
+            with self.subTest(path=path.name, field="pre_revision_version_label"):
+                self.assertEqual(revision_plan["pre_revision_version_label"], expected_pre)
+            with self.subTest(path=path.name, field="post_revision_version_label"):
+                self.assertEqual(revision_plan["post_revision_version_label"], expected_post)
+
+            seen_targets: set[str] = set()
+            for item in revision_plan["items"]:
+                payload = item["mutation_payload"]
+                with self.subTest(path=path.name, item=item["item_id"], field="operation"):
+                    self.assertEqual(payload["operation"], "replace_draft_section")
+                target_ref = item["target_ref"]
+                self.assertTrue(target_ref.startswith("section:"))
+                target_section_key = target_ref.split(":", 1)[1]
+                with self.subTest(path=path.name, item=item["item_id"], field="target_consistency"):
+                    self.assertEqual(payload["target_section_key"], target_section_key)
+                    self.assertIn(target_section_key, section_keys)
+                    self.assertNotIn(target_section_key, seen_targets)
+                seen_targets.add(target_section_key)
+                if target_section_key in outline_keys:
+                    with self.subTest(path=path.name, item=item["item_id"], field="replacement_core_claim"):
+                        self.assertTrue(payload["replacement_core_claim"])
+                with self.subTest(path=path.name, item=item["item_id"], field="linked_object_ids"):
+                    self.assertTrue(set(item["required_input_ids"]).issubset(set(payload["linked_object_ids"])))
 
     def test_r1a_runtime_surface_is_explicit_in_public_and_truth_docs(self) -> None:
         combined = "\n".join(

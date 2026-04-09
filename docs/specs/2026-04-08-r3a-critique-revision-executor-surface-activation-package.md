@@ -47,6 +47,7 @@ Date: `2026-04-08`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-durability-model-clarification.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
 
 ## Object Boundary
 
@@ -120,6 +121,21 @@ Date: `2026-04-08`
 - 当 `reviewed_revision_plan_id / reviewed_revision_evidence` 已存在时，新的 revision execution 不得覆盖或混写上一轮 re-review linkage / evidence
 - 当 `forced_rollback_stage` 存在、或 `ready_for_submission + presubmission_frozen` 已进入冻结门时，`execute-revision-pass` 必须 fail-closed，而不是伪装继续执行
 
+## Machine-Applicable Mutation Contract
+
+`R3.A` 当前不再允许依赖未冻结的 authoring semantics。
+
+进入 implementation 时，active `RevisionPlan.items[]` 必须满足：
+
+- 只允许 section-level executable subset
+- 每个 executable item 都显式携带 `mutation_payload`
+- mutation 目标必须与当前 active `ApplicationDraft.sections[].section_key` 精确匹配
+- 同一轮 execution 不允许 duplicate target section
+
+精确语义以以下文档为准：
+
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+
 ## Local Output Contract
 
 `R3.A` 的本地 output 只能是调用方显式提供的 revised workspace path：
@@ -172,8 +188,10 @@ Date: `2026-04-08`
 1. 新的 revision executor contract regression tests
 2. `draft_id / frozen_question_id / pre_revision_version_label / post_revision_version_label / comparison_summary` 一致性 tests
 3. `reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id / active_revision_plan_id` 保留 tests，以及 `forced_rollback_stage / presubmission_frozen` fail-closed tests
-4. `PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json`
-5. `git diff --check`
+4. `mutation_payload / target_ref / section_key` 对齐 tests
+5. `PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json`
+6. `PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output "$TMPDIR/r3a-p3b-revised.json" --format json`
+7. `git diff --check`
 
 ## Promotion Invariants
 
@@ -191,7 +209,8 @@ Date: `2026-04-08`
 1. `R1.A / R1.B / R2.A` 已 absorbed
 2. active `CURRENT_PROGRAM / PRD / test-spec / implementation / reports` 已把 `R3.A` 写成当前 active next slice
 3. 这次新增能力仍然只属于 critique/revision executor，而不是 final export / hostedization / `P5`
-4. 当前 baseline hard gate 继续全绿
+4. `RevisionPlan.items[].mutation_payload` 的 repo-tracked contract 已冻结，且 current executable examples 已对齐
+5. 当前 baseline hard gate 继续全绿
 
 ## Stop Conditions
 
@@ -199,7 +218,7 @@ Date: `2026-04-08`
 
 - 当前看似要做的能力其实已经需要 final export / freeze manifest / hosted-friendly session contract
 - 必须改写 formal entry、`MCP`、`controller`、或 `P5` 才能让 `R3.A` 成立
-- 必须新增 schema 字段、仓外 authoring engine、或 repo-未验证的外部 runtime 语义，才能让 revision executor 成立
+- 必须依赖未冻结的 mutation semantics、仓外 authoring engine、或 repo-未验证的外部 runtime 语义，才能让 revision executor 成立
 - 必须把 critique synthesis / reviewer decision / hosted runtime 混入第一棒 revision-side executor，才能让这一 tranche 继续
 
 ## Excluded Scope

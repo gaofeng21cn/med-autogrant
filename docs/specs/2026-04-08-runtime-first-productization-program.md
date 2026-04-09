@@ -56,12 +56,23 @@ Date: `2026-04-08`
 这份边界图当前承认：
 
 - `R1.B / Stage Action Executor Envelope` 与 `R2.A / Artifact Bundle Production Surface` 已从 pre-frozen package 进入 absorbed current truth
-- `R3.A / Critique Revision Executor Surface` 已从 pre-frozen package 进入 activation-frozen / implementation-pending current truth
+- `R3.A / Critique Revision Executor Surface` 已从 pre-frozen package 进入 activation-frozen current truth
+- `R3.A` 的 machine-applicable implementation contract 已冻结在：
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
 - 仍待 future activation 的 tranche 为：
   1. `R4.A / Final Freeze And Export Package`
   2. `R5.A / Hosted-Friendly Session Boundary`
 
-也就是说，边界图仍然是 future boundary map，但其中 `R1.B / R2.A` 已不再属于“尚未实现”的 tranche，而 `R3.A` 已切到当前 active activation freeze。
+当前精确 activation package：
+
+- `R3.A`：
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
+- `R4.A`：
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
+- `R5.A`：
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
+
+也就是说，边界图仍然是 future boundary map，但其中 `R1.B / R2.A` 已不再属于“尚未实现”的 tranche，而 `R3.A` 已切到当前 active activation freeze，且 `R4.A / R5.A` 已有精确 activation package，不再只有口号级边界。
 
 ## Program Ladder
 

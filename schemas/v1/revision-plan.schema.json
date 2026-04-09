@@ -49,8 +49,10 @@
           "item_id",
           "priority",
           "action_type",
+          "target_ref",
           "action",
-          "done_criteria"
+          "done_criteria",
+          "required_input_ids"
         ],
         "properties": {
           "item_id": {
@@ -86,6 +88,36 @@
           },
           "required_input_ids": {
             "$ref": "common.schema.json#/$defs/stringList"
+          },
+          "mutation_payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "target_section_key",
+              "replacement_text",
+              "linked_object_ids"
+            ],
+            "properties": {
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "replace_draft_section"
+                ]
+              },
+              "target_section_key": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "replacement_text": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "replacement_core_claim": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "linked_object_ids": {
+                "$ref": "common.schema.json#/$defs/stringList"
+              }
+            }
           }
         }
       }

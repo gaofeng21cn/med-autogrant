@@ -458,18 +458,30 @@
       "revision_plan_id": "revision-v2",
       "draft_id": "draft-v1",
       "critique_id": "critique-v2",
+      "pre_revision_version_label": "v0.4",
+      "post_revision_version_label": "v0.5",
       "items": [
         {
           "item_id": "rev2-item-1",
           "priority": "p0",
           "action_type": "rewrite_section",
-          "target_ref": "section:research-foundation",
+          "target_ref": "section:foundation",
           "action": "收紧研究基础与关键验证实验之间的映射。",
           "done_criteria": "研究基础段落能直接回答修订后方案为何可执行。",
           "required_input_ids": [
             "project-1",
             "output-1"
-          ]
+          ],
+          "mutation_payload": {
+            "operation": "replace_draft_section",
+            "target_section_key": "foundation",
+            "replacement_text": "修订后的研究基础需要直接支撑关键验证实验：申请人现有单细胞时序数据可定位候选通讯轴，在研模型和样本流程可完成阻断验证，因此研究基础与修订后的执行路径形成一一对应的证据闭环。",
+            "replacement_core_claim": "申请人的既有数据、模型与样本流程可直接支撑修订后方案的关键验证闭环。",
+            "linked_object_ids": [
+              "project-1",
+              "output-1"
+            ]
+          }
         }
       ],
       "next_review_focus": [

@@ -1,5 +1,4 @@
 .DS_Store
-.codex/
 .omx/
 .omx/backups/
 .omx/local/
@@ -15,3 +14,4 @@ coverage/
 *.log
 .env
 *.egg-info/
+.codex/

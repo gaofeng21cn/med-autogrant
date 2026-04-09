@@ -194,7 +194,11 @@ Date: `2026-04-08`
 ## Activation Status
 
 - activation-frozen / implementation-pending
-- current status：activation package 已冻结并成为当前 active slice；在 freeze absorbed 与 implementation promotion 之间，只允许围绕 revision-side executor 做 implementation-readiness audit
+- current status：activation package 已冻结并成为当前 active slice；machine-applicable revision mutation contract 已 repo-frozen；在 implementation absorb 前，只允许围绕 revision-side executor 做 deterministic local mutation implementation
+- precise activation package：
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
+- precise implementation contract：
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
 
 ## Scope
 
@@ -248,6 +252,8 @@ Date: `2026-04-08`
 
 - pre-frozen
 - current status：尚未实现；当本地 runtime 已能稳定跑过 artifact + critique revision loop 时允许激活
+- precise activation package：
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
 
 ## Scope
 
@@ -301,6 +307,8 @@ Date: `2026-04-08`
 
 - pre-frozen
 - current status：尚未实现；仅在 `R1 -> R4` absorbed 后允许激活
+- precise activation package：
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 
 ## Scope
 

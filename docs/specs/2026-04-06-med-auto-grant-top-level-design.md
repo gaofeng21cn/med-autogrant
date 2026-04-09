@@ -53,6 +53,13 @@ Date: `2026-04-06`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-productization-program.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 
+当前已精确冻结的 continuation docs 为：
+
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
+
 ## 边界
 
 `Med Auto Grant` 负责的是作者侧、proposal-facing 的基金申请闭环，重点不是“自动补齐一个申请书模板”，而是围绕科学问题、论证链条与申请人适配度组织整个 grant-writing loop。

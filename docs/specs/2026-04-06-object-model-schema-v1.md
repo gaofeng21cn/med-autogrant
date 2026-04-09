@@ -192,6 +192,50 @@ Date: `2026-04-06`
 - `forced_rollback_reason` 在 `forced_rollback_stage` 存在时必须非空，不能用 prompt-only 解释代替
 - 当 `lifecycle_stage=frozen` 时，`gates.presubmission_frozen=true`、`ApplicationDraft.status=frozen` 与 active `RevisionPlan.execution_status=completed` 必须同时成立
 
+## RevisionPlan 的可机械执行子合同
+
+`RevisionPlan` 不再只表示“有一组修订建议”，它还要能承载 `R3.A` 第一棒可机械执行的 section-level mutation 子合同。
+
+这层精确 contract 以以下文档为准：
+
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+
+当前 V1 schema 明确冻结以下边界：
+
+- `RevisionPlan.execution_status`
+  - 当前最小枚举固定为：`planned / completed`
+- `RevisionPlan.pre_revision_version_label`
+  - 表示执行前 active draft 的版本标签
+- `RevisionPlan.post_revision_version_label`
+  - 表示执行后 revised draft 的版本标签
+- `RevisionPlan.comparison_summary`
+  - 表示 revision execution 完成后的 machine-readable 比较摘要
+- `RevisionPlan.items[].target_ref`
+  - 当前 machine-applicable subset 必须形如 `section:<section_key>`
+- `RevisionPlan.items[].required_input_ids`
+  - 表示本轮 mutation 必须保留的对象依赖
+- `RevisionPlan.items[].mutation_payload`
+  - 当前最小字段集固定为：
+    - `operation`
+    - `target_section_key`
+    - `replacement_text`
+    - `replacement_core_claim`
+    - `linked_object_ids`
+
+这层冻结只回答“什么样的修订计划可以被 deterministic runtime 执行”，不回答：
+
+- 更高自由度的 authoring engine 如何工作
+- `question:<id>` 或 `argument:<id>` 级别 mutation 如何实现
+- hosted runtime 如何复用这些 payload
+
+当前第一棒 machine-applicable subset 还必须保持：
+
+- `mutation_payload.operation` 只允许 `replace_draft_section`
+- `mutation_payload.target_section_key` 必须与 `target_ref` 中的 `section_key` 精确一致
+- `linked_object_ids` 必须覆盖 `required_input_ids`
+- 若 active `ApplicationDraft.outline[]` 存在同名 section，则 `replacement_core_claim` 必须存在
+- 同一轮 execution 中不允许 duplicate target section
+
 ## 第一版 schema 的边界
 
 这次冻结强调的是：
