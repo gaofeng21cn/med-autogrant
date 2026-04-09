@@ -6,7 +6,10 @@ import sys
 from typing import Any
 
 from med_autogrant.artifact_bundle import build_artifact_bundle_payload
+from med_autogrant.final_package import build_final_package_payload
+from med_autogrant.hosted_contract_bundle import build_hosted_contract_bundle_payload
 from med_autogrant.local_runtime import resume_local_runtime, run_local_runtime
+from med_autogrant.revision_executor import build_revision_execution_payload
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.stage_router import determine_next_step
 from med_autogrant.workspace import (
@@ -70,6 +73,24 @@ def build_parser() -> argparse.ArgumentParser:
         "build-artifact-bundle",
         handle_build_artifact_bundle,
         "把当前 workspace 的已冻结对象写成本地 artifact bundle。",
+    )
+    _add_revision_executor_command(
+        subparsers,
+        "execute-revision-pass",
+        handle_execute_revision_pass,
+        "按冻结的 section-level deterministic contract 执行 revision pass。",
+    )
+    _add_final_package_command(
+        subparsers,
+        "build-final-package",
+        handle_build_final_package,
+        "把 freeze-ready / submission-frozen workspace 写成本地 final package。",
+    )
+    _add_hosted_contract_bundle_command(
+        subparsers,
+        "build-hosted-contract-bundle",
+        handle_build_hosted_contract_bundle,
+        "把 final package 写成 hosted-friendly contract bundle。",
     )
     return parser
 
@@ -160,6 +181,27 @@ def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
     return build_artifact_bundle_payload(document, output_path=args.output)
 
 
+def handle_execute_revision_pass(args: argparse.Namespace) -> dict[str, Any]:
+    document = load_workspace_document(args.input)
+    return build_revision_execution_payload(document, output_path=args.output)
+
+
+def handle_build_final_package(args: argparse.Namespace) -> dict[str, Any]:
+    document = load_workspace_document(args.input)
+    return build_final_package_payload(
+        document,
+        artifact_bundle_path=args.artifact_bundle,
+        output_path=args.output,
+    )
+
+
+def handle_build_hosted_contract_bundle(args: argparse.Namespace) -> dict[str, Any]:
+    return build_hosted_contract_bundle_payload(
+        final_package_path=args.final_package,
+        output_path=args.output,
+    )
+
+
 def _add_workspace_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -205,6 +247,46 @@ def _add_artifact_bundle_command(
 ) -> None:
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
+    command.add_argument("--output", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_revision_executor_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--output", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_final_package_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--artifact-bundle", required=True)
+    command.add_argument("--output", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_hosted_contract_bundle_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--final-package", required=True)
     command.add_argument("--output", required=True)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
@@ -310,6 +392,44 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"bundle_kind: {bundle['bundle_kind']}",
             f"outline_count: {bundle['bundle_summary']['outline_count']}",
             f"section_count: {bundle['bundle_summary']['section_count']}",
+        ]
+        return "\n".join(lines)
+
+    if command == "execute-revision-pass":
+        revision_execution = payload["revision_execution"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"output_path: {payload['output_path']}",
+            f"active_revision_plan_id: {revision_execution['active_revision_plan_id']}",
+            f"post_revision_version_label: {revision_execution['post_revision_version_label']}",
+        ]
+        return "\n".join(lines)
+
+    if command == "build-final-package":
+        final_package = payload["final_package"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"output_path: {payload['output_path']}",
+            f"package_kind: {final_package['package_kind']}",
+            f"checkpoint_status: {final_package['checkpoint_summary']['checkpoint_status']}",
+        ]
+        return "\n".join(lines)
+
+    if command == "build-hosted-contract-bundle":
+        hosted_contract_bundle = payload["hosted_contract_bundle"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"output_path: {payload['output_path']}",
+            f"bundle_kind: {hosted_contract_bundle['bundle_kind']}",
+            f"program_id: {hosted_contract_bundle['execution_identity']['program_id']}",
         ]
         return "\n".join(lines)
 

@@ -90,6 +90,15 @@ REQUIRED_COMMAND_SNIPPETS = (
     "PYTHONPATH=src python3 -m med_autogrant resume-local --journal \"$TMPDIR/r1a-revision.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2b_outline.json --output \"$TMPDIR/r2a-outline-bundle.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2c_revision.json --output \"$TMPDIR/r2a-revision-bundle.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output \"$TMPDIR/r3a-p3b-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3a_ready_for_submission.json --output \"$TMPDIR/r4a-freeze-ready-bundle.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3a_ready_for_submission.json --artifact-bundle \"$TMPDIR/r4a-freeze-ready-bundle.json\" --output \"$TMPDIR/r4a-freeze-ready-package.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output \"$TMPDIR/r4a-frozen-bundle.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle \"$TMPDIR/r4a-frozen-bundle.json\" --output \"$TMPDIR/r4a-frozen-package.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output \"$TMPDIR/r5a-bundle.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle \"$TMPDIR/r5a-bundle.json\" --output \"$TMPDIR/r5a-final-package.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-package \"$TMPDIR/r5a-final-package.json\" --output \"$TMPDIR/r5a-hosted-contract.json\" --format json",
     "git diff --check",
 )
 
