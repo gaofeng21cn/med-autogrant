@@ -51,6 +51,8 @@ LATEST_STATUS = REPORT_DIR / "LATEST_STATUS.md"
 ITERATION_LOG = REPORT_DIR / "ITERATION_LOG.md"
 OPEN_ISSUES = REPORT_DIR / "OPEN_ISSUES.md"
 REPORT_README = REPORT_DIR / "README.md"
+LATEST_ABSORBED_RUNTIME_SLICE_ACTIVATION_PACKAGE = R5A_ACTIVATION_PACKAGE
+NO_ACTIVE_RUNTIME_SLICE_MARKER = "无；"
 
 REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
@@ -384,14 +386,30 @@ def read_text(path: Path) -> str:
 
 
 def extract_phase_pointer(document: str) -> tuple[str, str]:
-    match = re.search(
-        r"## Current Phase\s+\s*-\s+`([^`]+)`\s+\s*-\s+当前唯一活跃子线：`([^`]+)`",
-        document,
-        re.MULTILINE,
-    )
+    match = re.search(r"## Current Phase\s*\n\n(.+?)(?:\n## |\Z)", document, re.MULTILINE | re.DOTALL)
     if match is None:
         raise AssertionError("CURRENT_PROGRAM.md 缺少可解析的 Current Phase 段落。")
-    return match.group(1), match.group(2)
+
+    phase = None
+    tranche = None
+    for raw_line in match.group(1).splitlines():
+        line = raw_line.strip()
+        if not line.startswith("- "):
+            continue
+        if phase is None:
+            phase_match = re.search(r"`([^`]+)`", line)
+            if phase_match is not None:
+                phase = phase_match.group(1)
+                continue
+        if "当前唯一活跃子线：" in line or "latest absorbed tranche 为" in line:
+            tranche_matches = re.findall(r"`([^`]+)`", line)
+            if tranche_matches:
+                tranche = tranche_matches[-1]
+                break
+
+    if phase is None or tranche is None:
+        raise AssertionError("CURRENT_PROGRAM.md 缺少可解析的 Current Phase 段落。")
+    return phase, tranche
 
 
 def extract_truth_sources(document: str) -> list[Path]:
@@ -420,6 +438,12 @@ def assert_labeled_path(document: str, label: str, path: Path) -> None:
     expected = f"- {label}：\n  - `{path}`"
     if expected not in document:
         raise AssertionError(f"段落 {label} 未指向期望路径: {path}")
+
+
+def assert_labeled_text(document: str, label: str, snippet: str) -> None:
+    match = re.search(rf"- {re.escape(label)}：\n  - (.+)", document)
+    if match is None or snippet not in match.group(1):
+        raise AssertionError(f"段落 {label} 未包含期望文本: {snippet}")
 
 
 class ProgramControlSurfaceTest(unittest.TestCase):
@@ -742,9 +766,13 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         for path in (PROGRAM_ROUTING, LATEST_STATUS):
             text = read_text(path)
             with self.subTest(path=path.name, label="latest absorbed runtime slice activation package"):
-                assert_labeled_path(text, "latest absorbed runtime slice activation package", R2A_ACTIVATION_PACKAGE)
+                assert_labeled_path(
+                    text,
+                    "latest absorbed runtime slice activation package",
+                    LATEST_ABSORBED_RUNTIME_SLICE_ACTIVATION_PACKAGE,
+                )
             with self.subTest(path=path.name, label="current active runtime slice activation package"):
-                assert_labeled_path(text, "current active runtime slice activation package", R3A_ACTIVATION_PACKAGE)
+                assert_labeled_text(text, "current active runtime slice activation package", NO_ACTIVE_RUNTIME_SLICE_MARKER)
 
     def test_r1a_activation_package_freezes_local_main_loop_contract(self) -> None:
         text = read_text(R1A_ACTIVATION_PACKAGE)
