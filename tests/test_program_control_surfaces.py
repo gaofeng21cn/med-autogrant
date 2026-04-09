@@ -1148,7 +1148,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             self.assertIn("advisory", text)
 
         self.assertNotIn(
-            "python3 /Users/gaofeng/workspace/omx-project-installer/skills/omx-project-installer/scripts/omx_project_installer.py diff --target /Users/gaofeng/workspace/med-autogrant",
+            "python3 /Users/gaofeng/workspace/app/omx-project-installer/skills/omx-project-installer/scripts/omx_project_installer.py diff --target /Users/gaofeng/workspace/med-autogrant",
             test_spec_text,
         )
 

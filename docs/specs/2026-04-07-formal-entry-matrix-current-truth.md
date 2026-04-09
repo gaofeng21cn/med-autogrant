@@ -143,7 +143,7 @@ Date: `2026-04-07`
 
 external verifier durable 裁决如下：
 
-- `python3 /Users/gaofeng/workspace/omx-project-installer/skills/omx-project-installer/scripts/omx_project_installer.py diff --target /Users/gaofeng/workspace/med-autogrant`
+- `python3 /Users/gaofeng/workspace/app/omx-project-installer/skills/omx-project-installer/scripts/omx_project_installer.py diff --target /Users/gaofeng/workspace/med-autogrant`
   - 当前状态：`external advisory verifier`
   - 不是当前 tranche hard gate
   - 原因：
