@@ -173,6 +173,9 @@ def _validate_required_final_package_fields(final_package: dict[str, Any]) -> No
     for field in REQUIRED_LINEAGE_FIELDS:
         if field not in lineage:
             raise WorkspaceStateError(f"final package lineage 缺少字段: {field}")
+        value = lineage.get(field)
+        if not isinstance(value, str) or not value:
+            raise WorkspaceStateError(f"final package lineage.{field} 非法: {value}")
 
     draft_status = freeze_manifest.get("draft_status")
     if draft_status not in ALLOWED_FINAL_PACKAGE_DRAFT_STATUSES:
