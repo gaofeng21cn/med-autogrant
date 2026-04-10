@@ -12,10 +12,17 @@ from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 HOSTED_CONTRACT_VERSION = 1
 HOSTED_CONTRACT_KIND = "hosted_contract_bundle"
 CURRENT_PROGRAM_RELATIVE_PATH = Path(".omx") / "context" / "CURRENT_PROGRAM.md"
+SUPPORTED_FINAL_PACKAGE_VERSION = 1
 REQUIRED_FINAL_PACKAGE_OBJECT_FIELDS = (
     "freeze_manifest",
     "lineage",
     "checkpoint_summary",
+)
+REQUIRED_FINAL_PACKAGE_STRING_FIELDS = (
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
 )
 
 
@@ -109,7 +116,7 @@ def _read_final_package(final_package_path: str | Path) -> dict[str, Any]:
     if final_package.get("package_kind") != "final_package":
         raise WorkspaceStateError(f"final package kind 非法: {final_package.get('package_kind')}")
 
-    for field in ("grant_run_id", "workspace_id", "draft_id", "freeze_manifest", "lineage", "checkpoint_summary"):
+    for field in ("package_version", "grant_run_id", "workspace_id", "draft_id", "lifecycle_stage", "freeze_manifest", "lineage", "checkpoint_summary"):
         if field not in final_package:
             raise WorkspaceStateError(f"final package 缺少字段: {field}")
 
@@ -119,6 +126,15 @@ def _read_final_package(final_package_path: str | Path) -> dict[str, Any]:
 
 
 def _validate_required_final_package_fields(final_package: dict[str, Any]) -> None:
+    package_version = final_package.get("package_version")
+    if not isinstance(package_version, int) or package_version != SUPPORTED_FINAL_PACKAGE_VERSION:
+        raise WorkspaceStateError("final package 缺少字段: package_version")
+
+    for field in REQUIRED_FINAL_PACKAGE_STRING_FIELDS:
+        value = final_package.get(field)
+        if not isinstance(value, str) or not value:
+            raise WorkspaceStateError(f"final package 缺少字段: {field}")
+
     for field in REQUIRED_FINAL_PACKAGE_OBJECT_FIELDS:
         if not isinstance(final_package.get(field), dict):
             raise WorkspaceStateError(f"final package 缺少字段: {field}")

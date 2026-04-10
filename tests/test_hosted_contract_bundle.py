@@ -244,6 +244,97 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self.assertIn("lineage", payload["error"])
             self.assertFalse(hosted_contract_path.exists())
 
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_package_version_is_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            final_package_path = Path(tmp_dir) / "missing-package-version-final-package.json"
+            hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+            final_package.pop("package_version")
+            final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            exit_code, stdout, stderr = self.run_cli(
+                "build-hosted-contract-bundle",
+                "--final-package",
+                str(final_package_path),
+                "--output",
+                str(hosted_contract_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 1)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["ok"])
+            self.assertIn("final package 缺少字段", payload["error"])
+            self.assertIn("package_version", payload["error"])
+            self.assertFalse(hosted_contract_path.exists())
+
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_lifecycle_stage_is_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            final_package_path = Path(tmp_dir) / "missing-lifecycle-stage-final-package.json"
+            hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+            final_package.pop("lifecycle_stage")
+            final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            exit_code, stdout, stderr = self.run_cli(
+                "build-hosted-contract-bundle",
+                "--final-package",
+                str(final_package_path),
+                "--output",
+                str(hosted_contract_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 1)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["ok"])
+            self.assertIn("final package 缺少字段", payload["error"])
+            self.assertIn("lifecycle_stage", payload["error"])
+            self.assertFalse(hosted_contract_path.exists())
+
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_identity_fields_are_not_nonempty_strings(self) -> None:
+        cases = (
+            ("grant_run_id", []),
+            ("workspace_id", {}),
+            ("draft_id", []),
+        )
+        for field, bad_value in cases:
+            with self.subTest(field=field):
+                with tempfile.TemporaryDirectory() as tmp_dir:
+                    final_package_path = Path(tmp_dir) / f"bad-{field}-final-package.json"
+                    hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+                    self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+                    final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+                    final_package[field] = bad_value
+                    final_package_path.write_text(
+                        json.dumps(final_package, ensure_ascii=False, indent=2),
+                        encoding="utf-8",
+                    )
+
+                    exit_code, stdout, stderr = self.run_cli(
+                        "build-hosted-contract-bundle",
+                        "--final-package",
+                        str(final_package_path),
+                        "--output",
+                        str(hosted_contract_path),
+                        "--format",
+                        "json",
+                    )
+
+                    self.assertEqual(exit_code, 1)
+                    self.assertEqual(stderr, "")
+                    payload = json.loads(stdout)
+                    self.assertFalse(payload["ok"])
+                    self.assertIn("final package 缺少字段", payload["error"])
+                    self.assertIn(field, payload["error"])
+                    self.assertFalse(hosted_contract_path.exists())
+
     def test_build_hosted_contract_bundle_fails_closed_when_existing_output_identity_mismatches(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             final_package_path = Path(tmp_dir) / "final-package.json"
