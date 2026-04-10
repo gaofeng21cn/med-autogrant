@@ -153,6 +153,12 @@ POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_FIELDS_PACK
     / "specs"
     / "2026-04-10-post-r5a-final-package-artifact-bundle-artifacts-object-required-list-fields-fail-closed-activation-package.md"
 )
+POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_LIST_ELEMENT_REQUIRED_STRING_VALUE_TYPES_PACKAGE = (
+    REPO_ROOT
+    / "docs"
+    / "specs"
+    / "2026-04-10-post-r5a-final-package-artifact-bundle-artifacts-list-element-required-string-value-types-fail-closed-activation-package.md"
+)
 POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_LINEAGE_VALUE_TYPES_PACKAGE = (
     REPO_ROOT
     / "docs"
@@ -186,7 +192,7 @@ OPEN_ISSUES = REPORT_DIR / "OPEN_ISSUES.md"
 REPORT_README = REPORT_DIR / "README.md"
 LATEST_ABSORBED_RUNTIME_SLICE_ACTIVATION_PACKAGE = R5A_ACTIVATION_PACKAGE
 CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = (
-    POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_FIELDS_PACKAGE
+    POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_LIST_ELEMENT_REQUIRED_STRING_VALUE_TYPES_PACKAGE
 )
 
 REQUIRED_COMMAND_SNIPPETS = (
@@ -1488,6 +1494,35 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, package_text)
 
         package_path = canonical_repo_path(POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_FIELDS_PACKAGE)
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+            ITERATION_LOG,
+            OPEN_ISSUES,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
+    def test_post_r5a_final_package_artifact_bundle_artifact_list_element_required_string_value_types_package_is_repo_tracked_and_wired(self) -> None:
+        package_text = read_text(POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_LIST_ELEMENT_REQUIRED_STRING_VALUE_TYPES_PACKAGE)
+        for snippet in (
+            "build-final-package",
+            "artifacts.draft_outline[0].section_key=None",
+            'artifacts.draft_outline[0].section_title=""',
+            "artifacts.draft_outline[0].core_claim=None",
+            'artifacts.draft_sections[0].section_key=""',
+            "artifacts.draft_sections[0].section_title=None",
+            'artifacts.draft_sections[0].text=""',
+            "以上字段都必须是非空字符串",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, package_text)
+
+        package_path = canonical_repo_path(POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_LIST_ELEMENT_REQUIRED_STRING_VALUE_TYPES_PACKAGE)
         for path in (
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,

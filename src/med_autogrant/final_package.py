@@ -103,6 +103,18 @@ REQUIRED_ARTIFACT_BUNDLE_LIST_ELEMENT_FIELDS = {
         "linked_object_ids",
     ),
 }
+REQUIRED_ARTIFACT_BUNDLE_LIST_ELEMENT_REQUIRED_STRING_FIELDS = {
+    "draft_outline": (
+        "section_key",
+        "section_title",
+        "core_claim",
+    ),
+    "draft_sections": (
+        "section_key",
+        "section_title",
+        "text",
+    ),
+}
 REQUIRED_ARTIFACT_BUNDLE_DICT_NESTED_FIELDS = {
     "artifacts": (
         "selected_direction",
@@ -442,6 +454,19 @@ def _validate_required_artifact_bundle_fields(
                 if required_field not in value:
                     raise WorkspaceStateError(
                         f"artifact bundle artifacts.{list_field}[{index}] 缺少字段: {required_field}",
+                        errors=[],
+                        grant_run_id=grant_run_id,
+                        workspace_id=workspace_id,
+                        lifecycle_stage=lifecycle_stage,
+                    )
+
+    for list_field, required_fields in REQUIRED_ARTIFACT_BUNDLE_LIST_ELEMENT_REQUIRED_STRING_FIELDS.items():
+        for index, value in enumerate(artifacts_payload[list_field]):
+            for required_field in required_fields:
+                field_value = value.get(required_field)
+                if not isinstance(field_value, str) or not field_value:
+                    raise WorkspaceStateError(
+                        f"artifact bundle artifacts.{list_field}[{index}].{required_field} 非法: {field_value}",
                         errors=[],
                         grant_run_id=grant_run_id,
                         workspace_id=workspace_id,
