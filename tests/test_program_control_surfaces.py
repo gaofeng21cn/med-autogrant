@@ -39,6 +39,12 @@ POST_R5A_WALKTHROUGH_CURRENT_TRUTH = (
     / "specs"
     / "2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md"
 )
+POST_R5A_STAGE_ROUTE_REPORT_CHECKPOINT_STATUS_PACKAGE = (
+    REPO_ROOT
+    / "docs"
+    / "specs"
+    / "2026-04-10-post-r5a-stage-route-report-checkpoint-status-output-consistency-activation-package.md"
+)
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -807,6 +813,22 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertNotIn("当前会被上述 surfaces 拒绝", truth_text)
         self.assertNotIn("re-review 批注引用的 RevisionPlan 必须与当前激活草稿版本一致。", truth_text)
         self.assertIn("当前 absorbed baseline 已能通过上述 surfaces", truth_text)
+
+    def test_post_r5a_stage_route_report_checkpoint_status_package_is_repo_tracked_and_wired(self) -> None:
+        package_text = read_text(POST_R5A_STAGE_ROUTE_REPORT_CHECKPOINT_STATUS_PACKAGE)
+        for snippet in (
+            "stage-route-report",
+            "checkpoint_status",
+            "verification_checkpoint.checkpoint_status",
+            "唯一 canonical checkpoint aggregation object",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, package_text)
+
+        package_path = canonical_repo_path(POST_R5A_STAGE_ROUTE_REPORT_CHECKPOINT_STATUS_PACKAGE)
+        for path in (PRD, TEST_SPEC, IMPLEMENTATION):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
 
     def test_r1a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
         package_path = canonical_repo_path(R1A_ACTIVATION_PACKAGE)

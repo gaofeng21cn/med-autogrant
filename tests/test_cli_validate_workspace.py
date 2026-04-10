@@ -400,6 +400,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "question_refinement")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "argument_building")
+        self.assertEqual(payload["checkpoint_status"], "forward_progress")
         self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
         self.assertEqual(
             payload["verification_checkpoint"]["route_alignment"]["recommended_next_stage"],
@@ -845,6 +846,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
+        self.assertEqual(payload["checkpoint_status"], "forward_progress")
         self.assertEqual(payload["route"]["summarize_workspace"]["reviewed_revision_evidence"]["revision_plan_id"], "revision-v1")
         self.assertEqual(payload["route"]["critique_summary"]["reviewed_revision_plan_id"], "revision-v1")
         self.assertEqual(payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")

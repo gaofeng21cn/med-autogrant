@@ -280,6 +280,7 @@ class RevisionExecutorCliTest(unittest.TestCase):
             self.assertTrue(route_report["ok"])
             self.assertEqual(route_report["lifecycle_stage"], "critique")
             self.assertEqual(route_report["route"]["next_step"]["recommended_stage"], "revision")
+            self.assertEqual(route_report["checkpoint_status"], "forward_progress")
             self.assertEqual(route_report["verification_checkpoint"]["checkpoint_status"], "forward_progress")
             self.assertTrue(route_report["verification_checkpoint"]["validation_ok"])
             self.assertEqual(

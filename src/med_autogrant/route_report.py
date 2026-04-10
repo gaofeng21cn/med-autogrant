@@ -36,19 +36,21 @@ def build_stage_route_report(document: dict[str, Any]) -> dict[str, Any]:
         critique_summary = build_critique_summary(document)
         critique_summary["recommended_next_stage"] = next_step["recommended_stage"]
         route["critique_summary"] = critique_summary
+    verification_checkpoint = build_verification_checkpoint(
+        document=document,
+        validation_payload=validation_payload,
+        summary=summary,
+        next_step=next_step,
+        critique_summary=critique_summary,
+    )
     return {
         "ok": True,
         "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
         "lifecycle_stage": document["lifecycle_stage"],
         "route": route,
-        "verification_checkpoint": build_verification_checkpoint(
-            document=document,
-            validation_payload=validation_payload,
-            summary=summary,
-            next_step=next_step,
-            critique_summary=critique_summary,
-        ),
+        "checkpoint_status": verification_checkpoint["checkpoint_status"],
+        "verification_checkpoint": verification_checkpoint,
     }
 
 
