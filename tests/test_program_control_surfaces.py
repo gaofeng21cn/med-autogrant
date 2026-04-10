@@ -81,6 +81,12 @@ POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_REQUIRED_NESTED_FIELDS_PACKAGE = (
     / "specs"
     / "2026-04-10-post-r5a-hosted-contract-bundle-final-package-required-nested-fields-fail-closed-activation-package.md"
 )
+POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_CHECKPOINT_SEMANTICS_PACKAGE = (
+    REPO_ROOT
+    / "docs"
+    / "specs"
+    / "2026-04-10-post-r5a-hosted-contract-bundle-final-package-checkpoint-semantics-fail-closed-activation-package.md"
+)
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -107,7 +113,7 @@ ITERATION_LOG = REPORT_DIR / "ITERATION_LOG.md"
 OPEN_ISSUES = REPORT_DIR / "OPEN_ISSUES.md"
 REPORT_README = REPORT_DIR / "README.md"
 LATEST_ABSORBED_RUNTIME_SLICE_ACTIVATION_PACKAGE = R5A_ACTIVATION_PACKAGE
-CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_REQUIRED_NESTED_FIELDS_PACKAGE
+CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_CHECKPOINT_SEMANTICS_PACKAGE
 
 REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
@@ -604,6 +610,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             POST_R5A_HOSTED_CONTRACT_MALFORMED_FINAL_PACKAGE_PACKAGE,
             POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_REQUIRED_SCALARS_PACKAGE,
             POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_REQUIRED_NESTED_FIELDS_PACKAGE,
+            POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_CHECKPOINT_SEMANTICS_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -1041,6 +1048,33 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, package_text)
 
         package_path = canonical_repo_path(POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_REQUIRED_NESTED_FIELDS_PACKAGE)
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+            ITERATION_LOG,
+            OPEN_ISSUES,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
+    def test_post_r5a_hosted_contract_bundle_checkpoint_semantics_package_is_repo_tracked_and_wired(self) -> None:
+        package_text = read_text(POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_CHECKPOINT_SEMANTICS_PACKAGE)
+        for snippet in (
+            "build-hosted-contract-bundle",
+            "freeze_manifest.draft_status",
+            "freeze_manifest.checkpoint_status",
+            "checkpoint_summary.checkpoint_status",
+            "verification_checkpoint.checkpoint_status",
+            "checkpoint_status 不一致",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, package_text)
+
+        package_path = canonical_repo_path(POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_CHECKPOINT_SEMANTICS_PACKAGE)
         for path in (
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,

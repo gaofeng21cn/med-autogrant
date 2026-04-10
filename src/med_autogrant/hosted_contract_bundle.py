@@ -40,6 +40,8 @@ REQUIRED_LINEAGE_FIELDS = (
     "draft_id",
     "revision_plan_id",
 )
+ALLOWED_FINAL_PACKAGE_DRAFT_STATUSES = {"revised", "frozen"}
+ALLOWED_FINAL_PACKAGE_CHECKPOINT_STATUSES = {"freeze_ready", "submission_frozen"}
 
 
 def build_hosted_contract_bundle_payload(
@@ -171,6 +173,34 @@ def _validate_required_final_package_fields(final_package: dict[str, Any]) -> No
     for field in REQUIRED_LINEAGE_FIELDS:
         if field not in lineage:
             raise WorkspaceStateError(f"final package lineage 缺少字段: {field}")
+
+    draft_status = freeze_manifest.get("draft_status")
+    if draft_status not in ALLOWED_FINAL_PACKAGE_DRAFT_STATUSES:
+        raise WorkspaceStateError(f"final package freeze_manifest.draft_status 非法: {draft_status}")
+
+    freeze_manifest_checkpoint_status = freeze_manifest.get("checkpoint_status")
+    if freeze_manifest_checkpoint_status not in ALLOWED_FINAL_PACKAGE_CHECKPOINT_STATUSES:
+        raise WorkspaceStateError(
+            f"final package freeze_manifest.checkpoint_status 非法: {freeze_manifest_checkpoint_status}"
+        )
+
+    checkpoint_summary_status = checkpoint_summary.get("checkpoint_status")
+    if checkpoint_summary_status not in ALLOWED_FINAL_PACKAGE_CHECKPOINT_STATUSES:
+        raise WorkspaceStateError(
+            f"final package checkpoint_summary.checkpoint_status 非法: {checkpoint_summary_status}"
+        )
+
+    verification_checkpoint_status = verification_checkpoint.get("checkpoint_status")
+    if verification_checkpoint_status not in ALLOWED_FINAL_PACKAGE_CHECKPOINT_STATUSES:
+        raise WorkspaceStateError(
+            f"final package verification_checkpoint.checkpoint_status 非法: {verification_checkpoint_status}"
+        )
+
+    if (
+        freeze_manifest_checkpoint_status != checkpoint_summary_status
+        or freeze_manifest_checkpoint_status != verification_checkpoint_status
+    ):
+        raise WorkspaceStateError("final package checkpoint_status 不一致。")
 
 
 def _read_program_id() -> str:

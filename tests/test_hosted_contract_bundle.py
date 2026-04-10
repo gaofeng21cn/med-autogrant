@@ -451,6 +451,137 @@ class HostedContractBundleCliTest(unittest.TestCase):
                     self.assertIn(field, payload["error"])
                     self.assertFalse(hosted_contract_path.exists())
 
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_freeze_manifest_draft_status_is_invalid(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            final_package_path = Path(tmp_dir) / "bad-draft-status-final-package.json"
+            hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+            final_package["freeze_manifest"]["draft_status"] = "draft"
+            final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            exit_code, stdout, stderr = self.run_cli(
+                "build-hosted-contract-bundle",
+                "--final-package",
+                str(final_package_path),
+                "--output",
+                str(hosted_contract_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 1)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["ok"])
+            self.assertIn("final package freeze_manifest.draft_status 非法", payload["error"])
+            self.assertIn("draft", payload["error"])
+            self.assertFalse(hosted_contract_path.exists())
+
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_freeze_manifest_checkpoint_status_is_invalid(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            final_package_path = Path(tmp_dir) / "bad-freeze-manifest-checkpoint-status-final-package.json"
+            hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+            final_package["freeze_manifest"]["checkpoint_status"] = "forward_progress"
+            final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            exit_code, stdout, stderr = self.run_cli(
+                "build-hosted-contract-bundle",
+                "--final-package",
+                str(final_package_path),
+                "--output",
+                str(hosted_contract_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 1)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["ok"])
+            self.assertIn("final package freeze_manifest.checkpoint_status 非法", payload["error"])
+            self.assertIn("forward_progress", payload["error"])
+            self.assertFalse(hosted_contract_path.exists())
+
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_checkpoint_summary_checkpoint_status_is_invalid(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            final_package_path = Path(tmp_dir) / "bad-checkpoint-summary-checkpoint-status-final-package.json"
+            hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+            final_package["checkpoint_summary"]["checkpoint_status"] = "forward_progress"
+            final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            exit_code, stdout, stderr = self.run_cli(
+                "build-hosted-contract-bundle",
+                "--final-package",
+                str(final_package_path),
+                "--output",
+                str(hosted_contract_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 1)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["ok"])
+            self.assertIn("final package checkpoint_summary.checkpoint_status 非法", payload["error"])
+            self.assertIn("forward_progress", payload["error"])
+            self.assertFalse(hosted_contract_path.exists())
+
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_checkpoint_status_is_missing_or_mismatched(self) -> None:
+        cases = (
+            (
+                "missing-verification-checkpoint-status",
+                lambda final_package: final_package["checkpoint_summary"]["verification_checkpoint"].pop("checkpoint_status"),
+                "final package verification_checkpoint.checkpoint_status 非法",
+            ),
+            (
+                "mismatched-checkpoint-status",
+                lambda final_package: final_package["checkpoint_summary"]["verification_checkpoint"].__setitem__(
+                    "checkpoint_status", "freeze_ready"
+                ),
+                "final package checkpoint_status 不一致",
+            ),
+            (
+                "mismatched-freeze-manifest-status",
+                lambda final_package: final_package["freeze_manifest"].__setitem__("checkpoint_status", "freeze_ready"),
+                "final package checkpoint_status 不一致",
+            ),
+        )
+        for name, mutate, expected_error in cases:
+            with self.subTest(name=name):
+                with tempfile.TemporaryDirectory() as tmp_dir:
+                    final_package_path = Path(tmp_dir) / f"{name}.json"
+                    hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+                    self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+                    final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+                    mutate(final_package)
+                    final_package_path.write_text(
+                        json.dumps(final_package, ensure_ascii=False, indent=2),
+                        encoding="utf-8",
+                    )
+
+                    exit_code, stdout, stderr = self.run_cli(
+                        "build-hosted-contract-bundle",
+                        "--final-package",
+                        str(final_package_path),
+                        "--output",
+                        str(hosted_contract_path),
+                        "--format",
+                        "json",
+                    )
+
+                    self.assertEqual(exit_code, 1)
+                    self.assertEqual(stderr, "")
+                    payload = json.loads(stdout)
+                    self.assertFalse(payload["ok"])
+                    self.assertIn(expected_error, payload["error"])
+                    self.assertFalse(hosted_contract_path.exists())
+
     def test_build_hosted_contract_bundle_fails_closed_when_existing_output_identity_mismatches(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             final_package_path = Path(tmp_dir) / "final-package.json"
