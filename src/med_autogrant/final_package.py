@@ -97,6 +97,12 @@ REQUIRED_ARTIFACT_BUNDLE_DICT_NESTED_FIELDS = {
         "fit_mapping",
     ),
 }
+REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_PRIMARY_ID_FIELDS = {
+    "selected_direction": "direction_id",
+    "selected_question": "question_id",
+    "argument_chain": "argument_chain_id",
+    "fit_mapping": "fit_mapping_id",
+}
 
 
 def build_final_package_payload(
@@ -355,6 +361,18 @@ def _validate_required_artifact_bundle_fields(
                     workspace_id=workspace_id,
                     lifecycle_stage=lifecycle_stage,
                 )
+
+    artifacts_payload = artifact_bundle["artifacts"]
+    for object_field, nested_field in REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_PRIMARY_ID_FIELDS.items():
+        value = artifacts_payload[object_field].get(nested_field)
+        if not isinstance(value, str) or not value:
+            raise WorkspaceStateError(
+                f"artifact bundle artifacts.{object_field}.{nested_field} 非法: {value}",
+                errors=[],
+                grant_run_id=grant_run_id,
+                workspace_id=workspace_id,
+                lifecycle_stage=lifecycle_stage,
+            )
 
 
 def _guard_output_identity(
