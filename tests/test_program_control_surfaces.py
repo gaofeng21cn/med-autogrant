@@ -105,6 +105,12 @@ POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_REQUIRED_SCALAR_VALUE_TYPES_PACKAGE = (
     / "specs"
     / "2026-04-10-post-r5a-final-package-artifact-bundle-required-scalar-value-types-fail-closed-activation-package.md"
 )
+POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_SUMMARY_COUNT_VALUE_TYPES_PACKAGE = (
+    REPO_ROOT
+    / "docs"
+    / "specs"
+    / "2026-04-10-post-r5a-final-package-artifact-bundle-summary-count-value-types-fail-closed-activation-package.md"
+)
 POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_LINEAGE_VALUE_TYPES_PACKAGE = (
     REPO_ROOT
     / "docs"
@@ -137,7 +143,7 @@ ITERATION_LOG = REPORT_DIR / "ITERATION_LOG.md"
 OPEN_ISSUES = REPORT_DIR / "OPEN_ISSUES.md"
 REPORT_README = REPORT_DIR / "README.md"
 LATEST_ABSORBED_RUNTIME_SLICE_ACTIVATION_PACKAGE = R5A_ACTIVATION_PACKAGE
-CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_REQUIRED_SCALAR_VALUE_TYPES_PACKAGE
+CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_SUMMARY_COUNT_VALUE_TYPES_PACKAGE
 
 REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
@@ -638,6 +644,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_FREEZE_MANIFEST_VALUE_TYPES_PACKAGE,
             POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_REQUIRED_NESTED_FIELDS_PACKAGE,
             POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_REQUIRED_SCALAR_VALUE_TYPES_PACKAGE,
+            POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_SUMMARY_COUNT_VALUE_TYPES_PACKAGE,
             POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_LINEAGE_VALUE_TYPES_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
@@ -1211,6 +1218,33 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, package_text)
 
         package_path = canonical_repo_path(POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_REQUIRED_SCALAR_VALUE_TYPES_PACKAGE)
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+            ITERATION_LOG,
+            OPEN_ISSUES,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
+    def test_post_r5a_final_package_artifact_bundle_summary_count_value_types_package_is_repo_tracked_and_wired(self) -> None:
+        package_text = read_text(POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_SUMMARY_COUNT_VALUE_TYPES_PACKAGE)
+        for snippet in (
+            "build-final-package",
+            'bundle_summary.outline_count="2"',
+            "bundle_summary.outline_count=-1",
+            "bundle_summary.outline_count=False",
+            "bundle_summary.section_count=None",
+            "以上字段都必须是**非负整数**",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, package_text)
+
+        package_path = canonical_repo_path(POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_SUMMARY_COUNT_VALUE_TYPES_PACKAGE)
         for path in (
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,
