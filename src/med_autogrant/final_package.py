@@ -89,6 +89,14 @@ REQUIRED_ARTIFACT_BUNDLE_LIST_NESTED_FIELDS = {
         "draft_sections",
     ),
 }
+REQUIRED_ARTIFACT_BUNDLE_DICT_NESTED_FIELDS = {
+    "artifacts": (
+        "selected_direction",
+        "selected_question",
+        "argument_chain",
+        "fit_mapping",
+    ),
+}
 
 
 def build_final_package_payload(
@@ -327,6 +335,19 @@ def _validate_required_artifact_bundle_fields(
         for required_field in required_fields:
             value = nested_payload.get(required_field)
             if not isinstance(value, list):
+                raise WorkspaceStateError(
+                    f"artifact bundle {object_field}.{required_field} 非法: {value}",
+                    errors=[],
+                    grant_run_id=grant_run_id,
+                    workspace_id=workspace_id,
+                    lifecycle_stage=lifecycle_stage,
+                )
+
+    for object_field, required_fields in REQUIRED_ARTIFACT_BUNDLE_DICT_NESTED_FIELDS.items():
+        nested_payload = artifact_bundle[object_field]
+        for required_field in required_fields:
+            value = nested_payload.get(required_field)
+            if not isinstance(value, dict):
                 raise WorkspaceStateError(
                     f"artifact bundle {object_field}.{required_field} 非法: {value}",
                     errors=[],
