@@ -192,14 +192,14 @@ OMX 持续写回：
 这条 `R1 -> R5` ladder 是当前 active execution priority，不替换上面的 `P1 -> P5` domain maturity order。
 在 `R4` 之前，不应把 second-family onboarding、federation contract、web runtime 或平台托管化写成当前主要开发目标。
 当前 repo-tracked internal program 文档固定为：
-- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-runtime-first-productization-program.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-productization-program.md`
 当前 repo-tracked future boundary map 固定为：
-- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 当前已精确冻结的 runtime continuation docs 固定为：
-- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
-- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
-- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
-- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 
 当前固定阶段顺序：
 

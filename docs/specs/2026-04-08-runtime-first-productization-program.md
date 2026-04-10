@@ -51,7 +51,7 @@ Date: `2026-04-08`
 
 当前 `R1 -> R5` 的 future activation boundary 已一次性冻结在：
 
-- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 
 这份边界图当前承认：
 
@@ -59,7 +59,7 @@ Date: `2026-04-08`
 - `R3.A / R4.A / R5.A` 已在 frozen object boundary 内完成实现并一起 absorbed 到 `main`
 - latest absorbed runtime slice 已是 `R5.A / Hosted-Friendly Session Boundary`
 - `R3.A` 的 machine-applicable implementation contract 已冻结并成为 absorbed runtime truth 的一部分：
-  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
 - 当前 truthful continuation 不再是把 `R4.A / R5.A` 误写成 future activation，而是继续做 post-`R5.A` local runtime hardening：
   1. revised workspace validator / checkpoint regression 持续锁定
   2. runtime-first truth / reports / operator walkthrough 与 landed 本地 runtime ladder 保持一致
@@ -68,11 +68,11 @@ Date: `2026-04-08`
 当前 realized activation packages：
 
 - `R3.A`：
-  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
 - `R4.A`：
-  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
 - `R5.A`：
-  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 
 也就是说，边界图仍然是 runtime boundary contract，但它现在记录的是“已 absorbed through `R5.A` 的对象边界 + post-`R5.A` truthful continuation”，而不是 `R3.A / R4.A / R5.A` 的待实现队列。
 

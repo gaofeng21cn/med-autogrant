@@ -201,9 +201,9 @@ Date: `2026-04-08`
 - absorbed
 - current status：`execute-revision-pass` 已 landed 并 absorbed；machine-applicable revision mutation contract 已 repo-frozen；当前只允许在已 absorbed revision object boundary 内做 post-`R5.A` local runtime hardening / truth-sync，不得回退为 activation-only 口径
 - precise activation package：
-  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
 - precise implementation contract：
-  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
 
 ## Scope
 
@@ -258,7 +258,7 @@ Date: `2026-04-08`
 - absorbed
 - current status：`build-final-package` 已 landed 并 absorbed；当前只允许在本地 final package / export boundary 内做 truth-sync / regression hardening，不得误写成尚未实现或 actual hosted runtime
 - precise activation package：
-  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
 
 ## Scope
 
@@ -313,7 +313,7 @@ Date: `2026-04-08`
 - absorbed / latest absorbed runtime slice
 - current status：`build-hosted-contract-bundle` 已 landed 并 absorbed；当前只允许继续做 hosted-friendly contract prep 的 local truth-sync / hardening，不得误写成 future activation 或 actual hosted runtime
 - precise activation package：
-  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
+  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 
 ## Scope
 
