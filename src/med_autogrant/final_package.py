@@ -19,6 +19,41 @@ REQUIRED_ARTIFACT_BUNDLE_OBJECT_FIELDS = (
     "bundle_summary",
     "artifacts",
 )
+REQUIRED_ARTIFACT_BUNDLE_NESTED_FIELDS = {
+    "selection": (
+        "selected_direction_id",
+        "selected_question_id",
+        "active_fit_mapping_id",
+        "active_draft_id",
+    ),
+    "manifest": (
+        "direction_id",
+        "question_id",
+        "argument_chain_id",
+        "fit_mapping_id",
+        "draft_id",
+        "draft_version_label",
+        "draft_status",
+    ),
+    "lineage": (
+        "frozen_question_id",
+        "argument_chain_id",
+        "fit_mapping_id",
+        "draft_id",
+    ),
+    "bundle_summary": (
+        "outline_count",
+        "section_count",
+    ),
+    "artifacts": (
+        "selected_direction",
+        "selected_question",
+        "argument_chain",
+        "fit_mapping",
+        "draft_outline",
+        "draft_sections",
+    ),
+}
 
 
 def build_final_package_payload(
@@ -213,6 +248,18 @@ def _validate_required_artifact_bundle_fields(
                 workspace_id=workspace_id,
                 lifecycle_stage=lifecycle_stage,
             )
+
+    for object_field, required_fields in REQUIRED_ARTIFACT_BUNDLE_NESTED_FIELDS.items():
+        nested_payload = artifact_bundle[object_field]
+        for required_field in required_fields:
+            if required_field not in nested_payload:
+                raise WorkspaceStateError(
+                    f"artifact bundle {object_field} 缺少字段: {required_field}",
+                    errors=[],
+                    grant_run_id=grant_run_id,
+                    workspace_id=workspace_id,
+                    lifecycle_stage=lifecycle_stage,
+                )
 
 
 def _guard_output_identity(
