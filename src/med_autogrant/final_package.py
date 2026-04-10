@@ -117,6 +117,18 @@ REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_PRIMARY_ID_FIELDS = {
     "argument_chain": "argument_chain_id",
     "fit_mapping": "fit_mapping_id",
 }
+REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_LINKAGE_ID_FIELDS = {
+    "selected_question": (
+        "parent_direction_id",
+    ),
+    "argument_chain": (
+        "scientific_question_id",
+    ),
+    "fit_mapping": (
+        "scientific_question_id",
+        "argument_chain_id",
+    ),
+}
 
 
 def build_final_package_payload(
@@ -407,6 +419,18 @@ def _validate_required_artifact_bundle_fields(
                 workspace_id=workspace_id,
                 lifecycle_stage=lifecycle_stage,
             )
+
+    for object_field, nested_fields in REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_LINKAGE_ID_FIELDS.items():
+        for nested_field in nested_fields:
+            value = artifacts_payload[object_field].get(nested_field)
+            if not isinstance(value, str) or not value:
+                raise WorkspaceStateError(
+                    f"artifact bundle artifacts.{object_field}.{nested_field} 非法: {value}",
+                    errors=[],
+                    grant_run_id=grant_run_id,
+                    workspace_id=workspace_id,
+                    lifecycle_stage=lifecycle_stage,
+                )
 
 
 def _guard_output_identity(
