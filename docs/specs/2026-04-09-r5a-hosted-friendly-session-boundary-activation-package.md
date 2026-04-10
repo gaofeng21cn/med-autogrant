@@ -137,6 +137,7 @@ Date: `2026-04-09`
 
 - `--output <hosted-contract-json-path>` 为必填
 - 若 output 已存在且其 `grant_run_id / workspace_id / draft_id` 与当前 final package 不一致，必须 fail-closed
+- 若 output 已存在且其 `execution_identity.program_id` 与当前 root-checkout `CURRENT_PROGRAM.program_id` 不一致，也必须 fail-closed；`program_id` 仍只作为 control-plane routing identity，不得改写成 runtime session handle
 - hosted contract bundle 是本地 exported contract artifact，不代表 actual hosted runtime 已存在
 
 ## Relation To Existing Canonical Surfaces

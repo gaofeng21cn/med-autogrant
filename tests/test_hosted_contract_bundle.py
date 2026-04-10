@@ -196,6 +196,46 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self.assertFalse(payload["ok"])
             self.assertIn("hosted contract output identity 不匹配", payload["error"])
 
+    def test_build_hosted_contract_bundle_fails_closed_when_existing_execution_identity_program_id_mismatches(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            final_package_path = Path(tmp_dir) / "final-package.json"
+            hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+            hosted_contract_path.write_text(
+                json.dumps(
+                    {
+                        "bundle_kind": "hosted_contract_bundle",
+                        "execution_identity": {
+                            "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                            "workspace_id": "nsfc-demo-001",
+                            "draft_id": "draft-v1",
+                            "program_id": "other-program",
+                        },
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            exit_code, stdout, stderr = self.run_cli(
+                "build-hosted-contract-bundle",
+                "--final-package",
+                str(final_package_path),
+                "--output",
+                str(hosted_contract_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 1)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["ok"])
+            self.assertIn("hosted contract output identity 不匹配", payload["error"])
+            self.assertIn("other-program", payload["error"])
+            self.assertIn("med-autogrant-mainline", payload["error"])
+
     def test_build_hosted_contract_bundle_allows_overwrite_for_same_identity_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             final_package_path = Path(tmp_dir) / "final-package.json"

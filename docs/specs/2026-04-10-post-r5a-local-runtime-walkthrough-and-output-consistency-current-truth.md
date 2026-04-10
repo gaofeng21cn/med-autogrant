@@ -22,6 +22,7 @@ Date: `2026-04-10`
    - `build-final-package` 继续只从 workspace + artifact bundle 生成本地 final package；
    - `build-hosted-contract-bundle` 继续只从 final package 导出 hosted-friendly contract bundle；
    - `grant_run_id / workspace_id / draft_id / program_id` 分工不漂移。
+   - 已存在 hosted contract output 的 `execution_identity.grant_run_id / execution_identity.workspace_id / execution_identity.draft_id / execution_identity.program_id` 必须与当前生成链一致，否则 fail-closed。
 3. operator walkthrough freeze
    - 用 repo-tracked 文档把真实已 landed 的本地 operator path 写清楚；
    - public README 只承认已 landed 的本地 runtime ladder，不再把 walkthrough / output consistency 写成悬空口号。
@@ -43,6 +44,7 @@ Date: `2026-04-10`
    - 继续保留 `supported_protocol_layer=MCP`
    - 继续保留 `internal_controller_surface=controller`
    - 不把 `program_id` 改写成 runtime-side session id
+   - 覆盖已存在 output 时继续把 `program_id` 纳入 `execution_identity` 边界校验
 4. 这条线只做 truth tightening、walkthrough freeze 与 regression coverage，不新增任何新的 runtime command。
 
 ## Canonical Local Walkthrough

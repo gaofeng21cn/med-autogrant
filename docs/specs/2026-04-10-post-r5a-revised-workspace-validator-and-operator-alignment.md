@@ -12,7 +12,7 @@ Date: `2026-04-10`
 
 ## 触发证据
 
-当前已确认的 concrete delta 来自 re-review 分支的 revised workspace：
+这条 slice 的已关闭 concrete delta 来自 re-review 分支的 revised workspace：
 
 1. `examples/nsfc_workspace_p2c_critique.json`
    - `execute-revision-pass` 输出后的 revised workspace 已能通过：
@@ -22,13 +22,14 @@ Date: `2026-04-10`
      - `critique-summary`
      - `next-step`
 2. `examples/nsfc_workspace_p3b_re_review_major_revision.json`
-   - `execute-revision-pass` 输出后的 revised workspace 当前会被上述 surfaces 拒绝，错误固定为：
-     - `mentor_critiques.reviewed_revision_plan_id: re-review 批注引用的 RevisionPlan 必须与当前激活草稿版本一致。`
+   - `execute-revision-pass` 输出后的 revised workspace 先前会被上述 surfaces 拒绝，因为 validator 把 reviewed revision evidence 错误锚到最新 active draft version；
+   - 当前 absorbed baseline 已能通过上述 surfaces，并保留下面固定版本链：
+     - `reviewed_revision_plan.post_revision_version_label -> active_revision_plan.pre_revision_version_label -> active_draft.version_label(= active_revision_plan.post_revision_version_label)`
 
-这说明当前 drift 不在 `execute-revision-pass` 本身是否 landed，而在：
+这说明已关闭的 drift 不在 `execute-revision-pass` 本身是否 landed，而在：
 
-- validator 仍保留了“re-review evidence 的 `post_revision_version_label` 必须等于当前 active draft `version_label`”这一较早假设；
-- 该假设无法覆盖 `R3.A` landed 之后的 re-review revised workspace output。
+- validator 先前保留了“re-review evidence 的 `post_revision_version_label` 必须等于当前 active draft `version_label`”这一较早假设；
+- 该假设无法覆盖 `R3.A` landed 之后的 re-review revised workspace output，因此当前 truth 明确要求 generated revised workspace 重新进入 validator / checkpoint / route surfaces。
 
 ## Hard Boundary
 

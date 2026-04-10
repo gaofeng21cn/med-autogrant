@@ -7,6 +7,10 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+# Post-R5A control surfaces are untracked `.omx/` local state anchored to the
+# root checkout, while repo-tracked docs under test still come from this worktree.
+CANONICAL_ROOT = Path("/Users/gaofeng/workspace/med-autogrant")
+CONTROL_ROOT = CANONICAL_ROOT
 README_EN = REPO_ROOT / "README.md"
 README_ZH = REPO_ROOT / "README.zh-CN.md"
 DOCS_README_EN = REPO_ROOT / "docs" / "README.md"
@@ -14,10 +18,10 @@ DOCS_README_ZH = REPO_ROOT / "docs" / "README.zh-CN.md"
 PROJECT_TRUTH = REPO_ROOT / "contracts" / "project-truth" / "AGENTS.md"
 POSITIONING_DOC = REPO_ROOT / "docs" / "domain-harness-os-positioning.md"
 TOP_LEVEL_DESIGN = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-auto-grant-top-level-design.md"
-CURRENT_PROGRAM = REPO_ROOT / ".omx" / "context" / "CURRENT_PROGRAM.md"
-PROGRAM_ROUTING = REPO_ROOT / ".omx" / "context" / "PROGRAM_ROUTING.md"
-TEAM_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_TEAM_PROMPT.md"
-EXECUTION_PROMPT = REPO_ROOT / ".omx" / "context" / "OMX_EXECUTION_PROMPT.md"
+CURRENT_PROGRAM = CONTROL_ROOT / ".omx" / "context" / "CURRENT_PROGRAM.md"
+PROGRAM_ROUTING = CONTROL_ROOT / ".omx" / "context" / "PROGRAM_ROUTING.md"
+TEAM_PROMPT = CONTROL_ROOT / ".omx" / "context" / "OMX_TEAM_PROMPT.md"
+EXECUTION_PROMPT = CONTROL_ROOT / ".omx" / "context" / "OMX_EXECUTION_PROMPT.md"
 OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
 RUNTIME_FIRST_PROGRAM = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-productization-program.md"
 RUNTIME_BOUNDARY_MAP = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-r1-to-r5-boundary-map.md"
@@ -51,11 +55,11 @@ P2C_CRITIQUE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.jso
 P3B_RE_REVIEW_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
-PRD = REPO_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
-TEST_SPEC = REPO_ROOT / ".omx" / "plans" / "test-spec-med-autogrant-mainline.md"
-IMPLEMENTATION = REPO_ROOT / ".omx" / "plans" / "implementation-med-autogrant-mainline.md"
-PROGRAM_OPERATING_MODEL = REPO_ROOT / ".omx" / "plans" / "spec-program-operating-model.md"
-REPORT_DIR = REPO_ROOT / ".omx" / "reports" / "med-autogrant-mainline"
+PRD = CONTROL_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
+TEST_SPEC = CONTROL_ROOT / ".omx" / "plans" / "test-spec-med-autogrant-mainline.md"
+IMPLEMENTATION = CONTROL_ROOT / ".omx" / "plans" / "implementation-med-autogrant-mainline.md"
+PROGRAM_OPERATING_MODEL = CONTROL_ROOT / ".omx" / "plans" / "spec-program-operating-model.md"
+REPORT_DIR = CONTROL_ROOT / ".omx" / "reports" / "med-autogrant-mainline"
 LATEST_STATUS = REPORT_DIR / "LATEST_STATUS.md"
 ITERATION_LOG = REPORT_DIR / "ITERATION_LOG.md"
 OPEN_ISSUES = REPORT_DIR / "OPEN_ISSUES.md"
@@ -365,6 +369,7 @@ R5A_ACTIVATION_SNIPPETS = (
     "hosted_contract_bundle",
     "formal_entry_matrix",
     "execution_identity",
+    "execution_identity.program_id",
     "session_contract",
     "state_contract",
     "artifact_contract",
@@ -411,6 +416,13 @@ RUNTIME_BOUNDARY_CONTROL_SURFACES = (
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def canonical_repo_path(path: Path) -> str:
+    try:
+        return str(CANONICAL_ROOT / path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
 
 
 def extract_phase_pointer(document: str) -> tuple[str, str]:
@@ -463,7 +475,7 @@ def extract_section(document: str, title: str) -> list[str]:
 
 
 def assert_labeled_path(document: str, label: str, path: Path) -> None:
-    expected = f"- {label}：\n  - `{path}`"
+    expected = f"- {label}：\n  - `{canonical_repo_path(path)}`"
     if expected not in document:
         raise AssertionError(f"段落 {label} 未指向期望路径: {path}")
 
@@ -635,7 +647,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             P4A_CURRENT_TRUTH,
             P4B_CURRENT_TRUTH,
         ):
-            path_text = str(path)
+            path_text = canonical_repo_path(path)
             with self.subTest(current_program_path=path.name):
                 self.assertIn(path_text, current_program_text)
             with self.subTest(execution_prompt_path=path.name):
@@ -704,7 +716,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
 
     def test_prefrozen_p5_activation_package_paths_are_wired_into_control_surfaces(self) -> None:
         for package in (P5A_ACTIVATION_PACKAGE, P5B_ACTIVATION_PACKAGE):
-            package_path = str(package)
+            package_path = canonical_repo_path(package)
             for path in (
                 CURRENT_PROGRAM,
                 PROGRAM_ROUTING,
@@ -720,7 +732,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                     self.assertIn(package_path, read_text(path))
 
     def test_runtime_first_program_is_repo_tracked_and_wired(self) -> None:
-        runtime_program_path = str(RUNTIME_FIRST_PROGRAM)
+        runtime_program_path = canonical_repo_path(RUNTIME_FIRST_PROGRAM)
         runtime_program_text = read_text(RUNTIME_FIRST_PROGRAM)
 
         for snippet in RUNTIME_FIRST_SNIPPETS:
@@ -736,7 +748,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("CLI-first + host-agent", combined)
 
     def test_runtime_boundary_map_is_repo_tracked_and_wired(self) -> None:
-        boundary_map_path = str(RUNTIME_BOUNDARY_MAP)
+        boundary_map_path = canonical_repo_path(RUNTIME_BOUNDARY_MAP)
         boundary_map_text = read_text(RUNTIME_BOUNDARY_MAP)
 
         for snippet in RUNTIME_BOUNDARY_MAP_SNIPPETS:
@@ -748,13 +760,13 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(boundary_map_path, read_text(path))
 
     def test_runtime_boundary_map_is_wired_into_active_control_surfaces(self) -> None:
-        boundary_map_path = str(RUNTIME_BOUNDARY_MAP)
+        boundary_map_path = canonical_repo_path(RUNTIME_BOUNDARY_MAP)
         for path in RUNTIME_BOUNDARY_CONTROL_SURFACES:
             with self.subTest(path=path.name):
                 self.assertIn(boundary_map_path, read_text(path))
 
     def test_post_r5a_walkthrough_truth_is_repo_tracked_and_wired(self) -> None:
-        truth_path = str(POST_R5A_WALKTHROUGH_CURRENT_TRUTH)
+        truth_path = canonical_repo_path(POST_R5A_WALKTHROUGH_CURRENT_TRUTH)
         truth_text = read_text(POST_R5A_WALKTHROUGH_CURRENT_TRUTH)
 
         for snippet in (
@@ -790,8 +802,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(path=path.name):
                 self.assertIn(truth_path, read_text(path))
 
+    def test_post_r5a_hardening_truth_does_not_reopen_landed_p3b_validator_delta(self) -> None:
+        truth_text = read_text(POST_R5A_HARDENING_SPEC)
+        self.assertNotIn("当前会被上述 surfaces 拒绝", truth_text)
+        self.assertNotIn("re-review 批注引用的 RevisionPlan 必须与当前激活草稿版本一致。", truth_text)
+        self.assertIn("当前 absorbed baseline 已能通过上述 surfaces", truth_text)
+
     def test_r1a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
-        package_path = str(R1A_ACTIVATION_PACKAGE)
+        package_path = canonical_repo_path(R1A_ACTIVATION_PACKAGE)
         self.assertTrue(R1A_ACTIVATION_PACKAGE.exists(), f"R1.A activation package 不存在: {R1A_ACTIVATION_PACKAGE}")
 
         for path in (
@@ -808,7 +826,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(package_path, read_text(path))
 
     def test_r1b_activation_package_is_wired_into_active_control_surfaces(self) -> None:
-        package_path = str(R1B_ACTIVATION_PACKAGE)
+        package_path = canonical_repo_path(R1B_ACTIVATION_PACKAGE)
         self.assertTrue(R1B_ACTIVATION_PACKAGE.exists(), f"R1.B activation package 不存在: {R1B_ACTIVATION_PACKAGE}")
 
         for path in (
@@ -825,7 +843,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(package_path, read_text(path))
 
     def test_r2a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
-        package_path = str(R2A_ACTIVATION_PACKAGE)
+        package_path = canonical_repo_path(R2A_ACTIVATION_PACKAGE)
         self.assertTrue(R2A_ACTIVATION_PACKAGE.exists(), f"R2.A activation package 不存在: {R2A_ACTIVATION_PACKAGE}")
 
         for path in (
@@ -844,7 +862,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(package_path, read_text(path))
 
     def test_r3a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
-        package_path = str(R3A_ACTIVATION_PACKAGE)
+        package_path = canonical_repo_path(R3A_ACTIVATION_PACKAGE)
         self.assertTrue(R3A_ACTIVATION_PACKAGE.exists(), f"R3.A activation package 不存在: {R3A_ACTIVATION_PACKAGE}")
 
         for path in (
@@ -899,7 +917,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, text)
 
     def test_r3a_mutation_contract_is_repo_tracked_and_wired(self) -> None:
-        contract_path = str(R3A_MUTATION_CONTRACT)
+        contract_path = canonical_repo_path(R3A_MUTATION_CONTRACT)
         self.assertTrue(R3A_MUTATION_CONTRACT.exists(), f"R3.A mutation contract 不存在: {R3A_MUTATION_CONTRACT}")
 
         contract_text = read_text(R3A_MUTATION_CONTRACT)
@@ -927,7 +945,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(contract_path, read_text(path))
 
     def test_r4a_activation_package_is_repo_tracked_and_wired(self) -> None:
-        package_path = str(R4A_ACTIVATION_PACKAGE)
+        package_path = canonical_repo_path(R4A_ACTIVATION_PACKAGE)
         self.assertTrue(R4A_ACTIVATION_PACKAGE.exists(), f"R4.A activation package 不存在: {R4A_ACTIVATION_PACKAGE}")
 
         text = read_text(R4A_ACTIVATION_PACKAGE)
@@ -954,7 +972,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(package_path, read_text(path))
 
     def test_r5a_activation_package_is_repo_tracked_and_wired(self) -> None:
-        package_path = str(R5A_ACTIVATION_PACKAGE)
+        package_path = canonical_repo_path(R5A_ACTIVATION_PACKAGE)
         self.assertTrue(R5A_ACTIVATION_PACKAGE.exists(), f"R5.A activation package 不存在: {R5A_ACTIVATION_PACKAGE}")
 
         text = read_text(R5A_ACTIVATION_PACKAGE)
@@ -1145,9 +1163,9 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, combined)
 
     def test_p3a_p3b_and_p3c_current_truth_docs_are_referenced_in_active_control_surfaces(self) -> None:
-        p3a_path_text = str(P3A_CURRENT_TRUTH)
-        p3b_path_text = str(P3B_CURRENT_TRUTH)
-        p3c_path_text = str(P3C_CURRENT_TRUTH)
+        p3a_path_text = canonical_repo_path(P3A_CURRENT_TRUTH)
+        p3b_path_text = canonical_repo_path(P3B_CURRENT_TRUTH)
+        p3c_path_text = canonical_repo_path(P3C_CURRENT_TRUTH)
         for path in (CURRENT_PROGRAM, PROGRAM_ROUTING, PRD, TEST_SPEC, IMPLEMENTATION):
             with self.subTest(path=path.name):
                 self.assertIn(p3a_path_text, read_text(path))
@@ -1155,13 +1173,13 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(p3c_path_text, read_text(path))
 
     def test_p4a_current_truth_doc_is_referenced_in_active_control_surfaces(self) -> None:
-        p4a_path_text = str(P4A_CURRENT_TRUTH)
+        p4a_path_text = canonical_repo_path(P4A_CURRENT_TRUTH)
         for path in (CURRENT_PROGRAM, PROGRAM_ROUTING, PRD, TEST_SPEC, IMPLEMENTATION):
             with self.subTest(path=path.name):
                 self.assertIn(p4a_path_text, read_text(path))
 
     def test_p4b_current_truth_doc_is_referenced_in_active_control_surfaces(self) -> None:
-        p4b_path_text = str(P4B_CURRENT_TRUTH)
+        p4b_path_text = canonical_repo_path(P4B_CURRENT_TRUTH)
         for path in (CURRENT_PROGRAM, PROGRAM_ROUTING, PRD, TEST_SPEC, IMPLEMENTATION):
             with self.subTest(path=path.name):
                 self.assertIn(p4b_path_text, read_text(path))

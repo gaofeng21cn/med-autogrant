@@ -10,8 +10,10 @@ from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 
 HOSTED_CONTRACT_VERSION = 1
 HOSTED_CONTRACT_KIND = "hosted_contract_bundle"
-REPO_ROOT = Path(__file__).resolve().parents[2]
-CURRENT_PROGRAM_PATH = REPO_ROOT / ".omx" / "context" / "CURRENT_PROGRAM.md"
+# Post-R5A control-plane truth is anchored to the root checkout because `.omx/`
+# is local state and is not copied into isolated implementation worktrees.
+CONTROL_PLANE_ROOT = Path("/Users/gaofeng/workspace/med-autogrant")
+CURRENT_PROGRAM_PATH = CONTROL_PLANE_ROOT / ".omx" / "context" / "CURRENT_PROGRAM.md"
 
 
 def build_hosted_contract_bundle_payload(
@@ -74,6 +76,7 @@ def build_hosted_contract_bundle_payload(
         grant_run_id=final_package["grant_run_id"],
         workspace_id=final_package["workspace_id"],
         draft_id=final_package["draft_id"],
+        program_id=program_id,
     )
     _write_hosted_contract_bundle(resolved_output_path, hosted_contract_bundle)
 
@@ -128,6 +131,7 @@ def _guard_output_identity(
     grant_run_id: str,
     workspace_id: str,
     draft_id: str,
+    program_id: str,
 ) -> None:
     if not output_path.exists():
         return
@@ -151,15 +155,18 @@ def _guard_output_identity(
         existing_grant_run_id = existing_execution_identity.get("grant_run_id")
         existing_workspace_id = existing_execution_identity.get("workspace_id")
         existing_draft_id = existing_execution_identity.get("draft_id")
+        existing_program_id = existing_execution_identity.get("program_id")
     else:
         existing_grant_run_id = existing_payload.get("grant_run_id")
         existing_workspace_id = existing_payload.get("workspace_id")
         existing_draft_id = existing_payload.get("draft_id")
+        existing_program_id = existing_payload.get("program_id")
 
     same_identity = (
         existing_grant_run_id == grant_run_id
         and existing_workspace_id == workspace_id
         and existing_draft_id == draft_id
+        and existing_program_id == program_id
     )
     if same_identity:
         return
@@ -168,8 +175,8 @@ def _guard_output_identity(
         (
             "hosted contract output identity 不匹配: "
             f"{output_path} -> "
-            f"{existing_grant_run_id}/{existing_workspace_id}/{existing_draft_id} "
-            f"!= {grant_run_id}/{workspace_id}/{draft_id}"
+            f"{existing_grant_run_id}/{existing_workspace_id}/{existing_draft_id}/{existing_program_id} "
+            f"!= {grant_run_id}/{workspace_id}/{draft_id}/{program_id}"
         )
     )
 
