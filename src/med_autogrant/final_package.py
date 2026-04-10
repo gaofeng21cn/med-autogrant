@@ -12,6 +12,13 @@ from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError, _re
 FINAL_PACKAGE_VERSION = 1
 FINAL_PACKAGE_KIND = "final_package"
 ALLOWED_CHECKPOINT_STATUSES = {"freeze_ready", "submission_frozen"}
+REQUIRED_ARTIFACT_BUNDLE_OBJECT_FIELDS = (
+    "selection",
+    "manifest",
+    "lineage",
+    "bundle_summary",
+    "artifacts",
+)
 
 
 def build_final_package_payload(
@@ -87,7 +94,7 @@ def build_final_package_payload(
         "export_summary": {
             "outline_count": len(active_draft.get("outline", [])),
             "section_count": len(active_draft.get("sections", [])),
-            "artifact_count": len(artifact_bundle.get("artifacts", {})),
+            "artifact_count": len(artifact_bundle["artifacts"]),
         },
         "deliverables": {
             "artifact_bundle_manifest": deepcopy(artifact_bundle["manifest"]),
@@ -169,7 +176,43 @@ def _read_artifact_bundle(
             lifecycle_stage=lifecycle_stage,
         )
 
+    _validate_required_artifact_bundle_fields(
+        artifact_bundle,
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+
     return artifact_bundle
+
+
+def _validate_required_artifact_bundle_fields(
+    artifact_bundle: dict[str, Any],
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str | None,
+) -> None:
+    bundle_lifecycle_stage = artifact_bundle.get("lifecycle_stage")
+    if not isinstance(bundle_lifecycle_stage, str) or not bundle_lifecycle_stage:
+        raise WorkspaceStateError(
+            "artifact bundle 缺少必填字段: lifecycle_stage",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+
+    for field in REQUIRED_ARTIFACT_BUNDLE_OBJECT_FIELDS:
+        value = artifact_bundle.get(field)
+        if not isinstance(value, dict):
+            raise WorkspaceStateError(
+                f"artifact bundle 缺少必填字段: {field}",
+                errors=[],
+                grant_run_id=grant_run_id,
+                workspace_id=workspace_id,
+                lifecycle_stage=lifecycle_stage,
+            )
 
 
 def _guard_output_identity(
