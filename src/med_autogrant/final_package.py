@@ -54,6 +54,29 @@ REQUIRED_ARTIFACT_BUNDLE_NESTED_FIELDS = {
         "draft_sections",
     ),
 }
+REQUIRED_ARTIFACT_BUNDLE_STRING_NESTED_FIELDS = {
+    "selection": (
+        "selected_direction_id",
+        "selected_question_id",
+        "active_fit_mapping_id",
+        "active_draft_id",
+    ),
+    "manifest": (
+        "direction_id",
+        "question_id",
+        "argument_chain_id",
+        "fit_mapping_id",
+        "draft_id",
+        "draft_version_label",
+        "draft_status",
+    ),
+    "lineage": (
+        "frozen_question_id",
+        "argument_chain_id",
+        "fit_mapping_id",
+        "draft_id",
+    ),
+}
 
 
 def build_final_package_payload(
@@ -255,6 +278,19 @@ def _validate_required_artifact_bundle_fields(
             if required_field not in nested_payload:
                 raise WorkspaceStateError(
                     f"artifact bundle {object_field} 缺少字段: {required_field}",
+                    errors=[],
+                    grant_run_id=grant_run_id,
+                    workspace_id=workspace_id,
+                    lifecycle_stage=lifecycle_stage,
+                )
+
+    for object_field, required_fields in REQUIRED_ARTIFACT_BUNDLE_STRING_NESTED_FIELDS.items():
+        nested_payload = artifact_bundle[object_field]
+        for required_field in required_fields:
+            value = nested_payload.get(required_field)
+            if not isinstance(value, str) or not value:
+                raise WorkspaceStateError(
+                    f"artifact bundle {object_field}.{required_field} 非法: {value}",
                     errors=[],
                     grant_run_id=grant_run_id,
                     workspace_id=workspace_id,
