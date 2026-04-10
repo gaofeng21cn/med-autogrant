@@ -80,7 +80,7 @@ Today, the runtime can:
 
 The following areas still remain for further hardening or future scope:
 
-- post-`R5.A` tightening for validator/checkpoint truth, operator walkthroughs, and README/docs/runtime alignment
+- the runtime still needs more submission-grade hardening and higher-density authoring judgment, even though the canonical local walkthrough and revised/final/hosted output-consistency truth are now frozen
 - actual hosted runtime, remote execution, Web UI, and multi-tenant hostedization
 - any future `Human-in-the-loop` sibling or upper-layer product surface
 - submission-grade autopilot quality and stronger end-to-end runtime stability
@@ -113,15 +113,30 @@ You can give your agent an instruction like this:
 
 ```bash
 TMPDIR="$(mktemp -d)"
+
+# 1. Baseline audit surfaces
 PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
 PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+
+# 2. Local runtime entry / recovery
 PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json"
 PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json"
+
+# 3. Local artifact / revision surfaces
 PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2c_revision.json --output "$TMPDIR/r2a-revision-bundle.json"
 PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json"
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p2c-revised.json"
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p2c-revised.json"
+PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output "$TMPDIR/r3a-p3b-revised.json"
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p3b-revised.json"
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p3b-revised.json"
+PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input "$TMPDIR/r3a-p3b-revised.json" --output "$TMPDIR/r3a-p3b-revised-bundle.json"
+PYTHONPATH=src python3 -m med_autogrant run-local --input "$TMPDIR/r3a-p3b-revised.json" --journal "$TMPDIR/r3a-p3b-revised-run.json"
+
+# 4. Local finalization / hostedization-prep surfaces
 PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3a_ready_for_submission.json --output "$TMPDIR/r4a-freeze-ready-bundle.json"
 PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3a_ready_for_submission.json --artifact-bundle "$TMPDIR/r4a-freeze-ready-bundle.json" --output "$TMPDIR/r4a-freeze-ready-package.json"
 PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output "$TMPDIR/r5a-bundle.json"
@@ -156,6 +171,7 @@ PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-pac
 - [`docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`](./docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md)
 - [`docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`](./docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md)
 - [`docs/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`](./docs/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
+- [`docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md`](./docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 
 ### Local Operator State
 

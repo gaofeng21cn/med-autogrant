@@ -33,6 +33,7 @@
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
 - [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
+- [Post-R5A revised-workspace validator 与 operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 - [文档治理规则](documentation-governance.md)
 
 ## 历史规划工件
@@ -49,7 +50,10 @@
    - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
    - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
    - [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
+   - [Post-R5A revised-workspace validator 与 operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 4. 只有在需要追溯历史来源时，再阅读历史规划工件。
+
+当前 canonical 本地 operator path 以仓库首页 README 的“最小 Runtime 命令”段为准。
 
 ## 状态说明
 

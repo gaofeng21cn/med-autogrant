@@ -9,6 +9,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 README_EN = REPO_ROOT / "README.md"
 README_ZH = REPO_ROOT / "README.zh-CN.md"
+DOCS_README_EN = REPO_ROOT / "docs" / "README.md"
+DOCS_README_ZH = REPO_ROOT / "docs" / "README.zh-CN.md"
 PROJECT_TRUTH = REPO_ROOT / "contracts" / "project-truth" / "AGENTS.md"
 POSITIONING_DOC = REPO_ROOT / "docs" / "domain-harness-os-positioning.md"
 TOP_LEVEL_DESIGN = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-auto-grant-top-level-design.md"
@@ -26,6 +28,7 @@ R3A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r3a-critique
 R3A_MUTATION_CONTRACT = REPO_ROOT / "docs" / "specs" / "2026-04-09-r3a-machine-applicable-revision-mutation-contract.md"
 R4A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-09-r4a-final-freeze-and-export-package-activation-package.md"
 R5A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md"
+POST_R5A_HARDENING_SPEC = REPO_ROOT / "docs" / "specs" / "2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md"
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -94,6 +97,10 @@ REQUIRED_COMMAND_SNIPPETS = (
     "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2c_revision.json --output \"$TMPDIR/r2a-revision-bundle.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output \"$TMPDIR/r3a-p2c-revised.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output \"$TMPDIR/r3a-p3b-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p3b-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p3b-revised.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3a_ready_for_submission.json --output \"$TMPDIR/r4a-freeze-ready-bundle.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3a_ready_for_submission.json --artifact-bundle \"$TMPDIR/r4a-freeze-ready-bundle.json\" --output \"$TMPDIR/r4a-freeze-ready-package.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output \"$TMPDIR/r4a-frozen-bundle.json\" --format json",
@@ -102,6 +109,14 @@ REQUIRED_COMMAND_SNIPPETS = (
     "PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle \"$TMPDIR/r5a-bundle.json\" --output \"$TMPDIR/r5a-final-package.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-package \"$TMPDIR/r5a-final-package.json\" --output \"$TMPDIR/r5a-hosted-contract.json\" --format json",
     "git diff --check",
+)
+
+POST_R5A_WALKTHROUGH_SNIPPETS = (
+    "docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p2c-revised.json\"",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p2c-revised.json\"",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p3b-revised.json\"",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p3b-revised.json\"",
 )
 
 FUTURE_TRANCHE_SNIPPETS = (
@@ -359,6 +374,8 @@ RUNTIME_BOUNDARY_MAP_SNIPPETS = (
     "R5.A / Hosted-Friendly Session Boundary",
     "One-Shot Autonomous Continuation Contract",
     "Honest Reclassification Rules",
+    "当前 latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`",
+    "post-`R5.A` local runtime hardening / truth-sync",
 )
 
 RUNTIME_FIRST_SNIPPETS = (
@@ -367,6 +384,8 @@ RUNTIME_FIRST_SNIPPETS = (
     "R3 / Critique Revision Autoloop",
     "R4 / Finalization And Export Surface",
     "R5 / Hostedization Prep",
+    "latest absorbed runtime slice 已是 `R5.A / Hosted-Friendly Session Boundary`",
+    "post-`R5.A` local runtime hardening",
 )
 
 RUNTIME_BOUNDARY_CONTROL_SURFACES = (
@@ -497,6 +516,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             R3A_MUTATION_CONTRACT,
             R4A_ACTIVATION_PACKAGE,
             R5A_ACTIVATION_PACKAGE,
+            POST_R5A_HARDENING_SPEC,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -557,6 +577,40 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         ):
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, durability_text)
+
+    def test_post_r5a_hardening_spec_and_public_walkthrough_are_aligned(self) -> None:
+        spec_text = read_text(POST_R5A_HARDENING_SPEC)
+        for snippet in (
+            "execute-revision-pass",
+            "validate-workspace",
+            "stage-route-report",
+            "build-final-package",
+            "build-hosted-contract-bundle",
+        ):
+            with self.subTest(spec_snippet=snippet):
+                self.assertIn(snippet, spec_text)
+
+        for path in (README_EN, README_ZH):
+            text = read_text(path)
+            for snippet in POST_R5A_WALKTHROUGH_SNIPPETS:
+                with self.subTest(path=path.name, snippet=snippet):
+                    self.assertIn(snippet, text)
+
+        spec_path_text = f"./specs/{POST_R5A_HARDENING_SPEC.name}"
+        for path in (DOCS_README_EN, DOCS_README_ZH):
+            with self.subTest(path=path.name, spec_path=spec_path_text):
+                self.assertIn(spec_path_text, read_text(path))
+
+        formal_entry_text = read_text(FORMAL_ENTRY_MATRIX)
+        durability_text = read_text(DURABILITY_MODEL)
+        for text, path in ((formal_entry_text, FORMAL_ENTRY_MATRIX), (durability_text, DURABILITY_MODEL)):
+            for snippet in ("execute-revision-pass", "build-final-package", "build-hosted-contract-bundle"):
+                with self.subTest(path=path.name, landed_snippet=snippet):
+                    self.assertIn(snippet, text)
+            with self.subTest(path=path.name, outdated_not_landed=False):
+                self.assertNotIn("execute-revision-pass` 仍未 landed", text)
+            with self.subTest(path=path.name, outdated_activation_only=False):
+                self.assertNotIn("尚未把 revision executor 误写成 landed runtime surface", text)
 
         current_program_text = read_text(CURRENT_PROGRAM)
         execution_prompt_text = read_text(EXECUTION_PROMPT)

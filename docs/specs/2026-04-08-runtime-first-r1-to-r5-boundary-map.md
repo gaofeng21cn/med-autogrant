@@ -27,6 +27,8 @@ Date: `2026-04-08`
 - `R1.B` implementation absorb：`2953026`
 - `R2.A` activation freeze absorb：`424ded0`
 - `R2.A` implementation：absorbed in current mainline truth
+- `R3.A / R4.A / R5.A` implementation absorb：`0763415`
+- 当前 latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
 
 当前已 landed 的 surface：
 
@@ -38,26 +40,29 @@ Date: `2026-04-08`
 - `latest_stage_action_envelope`
 - `build-artifact-bundle`
 - machine-readable `artifact_bundle`
+- `execute-revision-pass`
+- `build-final-package`
+- `build-hosted-contract-bundle`
 
 ## One-Shot Autonomous Continuation Contract
 
 这份边界图冻结后，`OMX` 被授权：
 
 1. 从当前 latest absorbed slice 出发，持续做 honest delta audit
-2. 把新识别到的 delta 与下面尚未实现的 `R3.A / R4.A / R5.A` 边界进行匹配
-3. 如果匹配成功：
+2. 先判断新识别到的 delta 是否仍属于 post-`R5.A` local runtime hardening / truth-sync
+3. 如果该 delta 仍处于下面 `R3.A / R4.A / R5.A` 已 absorbed 的对象边界内：
    - 先把对应 tranche freeze 到 active `CURRENT_PROGRAM + PRD + test-spec + implementation + reports`
    - 必要时补 repo-tracked internal spec
    - 再实现、验证、absorb，并继续下一棒
 4. 如果新 delta 实际属于更后面的 stage：
    - 不强行停留在当前 stage 编造中间 tranche
-   - 允许直接重分类到更后面的 pre-frozen activation package
+   - 若 repo 内已有对应 frozen truth，允许直接重分类过去；若没有，则 honest stop
 5. 只有在没有 honest delta，或 delta 无法在当前 frozen truth 内归类时，才允许停车
 
 这意味着：
 
 - `OMX` 不需要每到一个小阶段就回头要新提示词
-- 但也不被允许跨边界瞎写实现
+- 但也不被允许把 `R3.A / R4.A / R5.A` 误写回尚未实现，或跨边界瞎写 actual hosted runtime / `P5`
 
 ## Global Invariants
 
@@ -193,12 +198,12 @@ Date: `2026-04-08`
 
 ## Activation Status
 
-- activation-frozen / implementation-pending
-- current status：activation package 已冻结并成为当前 active slice；machine-applicable revision mutation contract 已 repo-frozen；在 implementation absorb 前，只允许围绕 revision-side executor 做 deterministic local mutation implementation
+- absorbed
+- current status：`execute-revision-pass` 已 landed 并 absorbed；machine-applicable revision mutation contract 已 repo-frozen；当前只允许在已 absorbed revision object boundary 内做 post-`R5.A` local runtime hardening / truth-sync，不得回退为 activation-only 口径
 - precise activation package：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
+  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
 - precise implementation contract：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
 
 ## Scope
 
@@ -250,10 +255,10 @@ Date: `2026-04-08`
 
 ## Activation Status
 
-- pre-frozen
-- current status：尚未实现；当本地 runtime 已能稳定跑过 artifact + critique revision loop 时允许激活
+- absorbed
+- current status：`build-final-package` 已 landed 并 absorbed；当前只允许在本地 final package / export boundary 内做 truth-sync / regression hardening，不得误写成尚未实现或 actual hosted runtime
 - precise activation package：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
+  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
 
 ## Scope
 
@@ -305,10 +310,10 @@ Date: `2026-04-08`
 
 ## Activation Status
 
-- pre-frozen
-- current status：尚未实现；仅在 `R1 -> R4` absorbed 后允许激活
+- absorbed / latest absorbed runtime slice
+- current status：`build-hosted-contract-bundle` 已 landed 并 absorbed；当前只允许继续做 hosted-friendly contract prep 的 local truth-sync / hardening，不得误写成 future activation 或 actual hosted runtime
 - precise activation package：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
+  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 
 ## Scope
 
@@ -349,7 +354,7 @@ Date: `2026-04-08`
 
 以下情况必须诚实停车：
 
-- 当前没有新的 concrete delta 可以匹配到任何 pre-frozen package
+- 当前没有新的 concrete delta 可以在已 absorbed `R3.A / R4.A / R5.A` 边界内被诚实冻结
 - 下一步需要新 formal entry、仓外 readiness、外部凭据或平台语义
 - 下一步需要改写 `P5.A / P5.B`
 - 下一步只能靠启发式、临时补丁或模糊故事推进

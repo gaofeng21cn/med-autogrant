@@ -179,6 +179,56 @@ class LocalRuntimeCliTest(unittest.TestCase):
                 ],
             )
 
+    def test_run_local_accepts_re_review_revised_output_after_execute_revision_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            revised_output = Path(tmp_dir) / "p3b-revised.json"
+            journal_path = Path(tmp_dir) / "p3b-revised-journal.json"
+
+            execute_exit, execute_stdout, execute_stderr = self.run_cli(
+                "execute-revision-pass",
+                "--input",
+                str(RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH),
+                "--output",
+                str(revised_output),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(execute_exit, 0)
+            self.assertEqual(execute_stderr, "")
+            self.assertTrue(json.loads(execute_stdout)["ok"])
+
+            exit_code, stdout, stderr = self.run_cli(
+                "run-local",
+                "--input",
+                str(revised_output),
+                "--journal",
+                str(journal_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertTrue(payload["ok"])
+            self.assertEqual(payload["lifecycle_stage"], "critique")
+            self.assertEqual(payload["stop_reason"]["code"], "stage_action_required")
+            self.assertEqual(payload["stop_reason"]["recommended_next_stage"], "revision")
+            self.assertIsInstance(payload["stage_action_envelope"], dict)
+            self.assertEqual(payload["stage_action_envelope"]["current_stage"], "critique")
+            self.assertEqual(payload["stage_action_envelope"]["recommended_next_stage"], "revision")
+            self.assertEqual(payload["stage_action_envelope"]["selection"]["active_revision_plan_id"], "revision-v2")
+
+            journal = json.loads(journal_path.read_text(encoding="utf-8"))
+            self.assertEqual(
+                journal["latest_route_report"]["verification_checkpoint"]["review_checkpoint"]["reviewed_revision_evidence"][
+                    "revision_plan_id"
+                ],
+                "revision-v1",
+            )
+            self.assertEqual(journal["latest_stop_reason"]["code"], "stage_action_required")
+
     def test_non_stage_action_stop_reasons_do_not_emit_stage_action_envelope(self) -> None:
         cases = (
             (FORCED_ROLLBACK_EXAMPLE_PATH, "rollback.json"),

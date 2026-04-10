@@ -19,6 +19,7 @@ from med_autogrant.cli import main  # noqa: E402
 
 OUTLINE_EXAMPLE_PATH = REPO_ROOT / 'examples' / 'nsfc_workspace_p2b_outline.json'
 REVISION_EXAMPLE_PATH = REPO_ROOT / 'examples' / 'nsfc_workspace_p2c_revision.json'
+RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH = REPO_ROOT / 'examples' / 'nsfc_workspace_p3b_re_review_major_revision.json'
 
 
 class ArtifactBundleCliTest(unittest.TestCase):
@@ -121,6 +122,47 @@ class ArtifactBundleCliTest(unittest.TestCase):
             self.assertEqual(len(bundle['artifacts']['draft_sections']), 3)
             self.assertEqual(bundle['artifacts']['draft_sections'][0]['section_key'], 'basis')
             self.assertIn('炎症巨噬细胞', bundle['artifacts']['draft_sections'][0]['text'])
+
+    def test_build_artifact_bundle_accepts_re_review_revised_output_after_execute_revision_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            revised_output = Path(tmp_dir) / 'p3b-revised.json'
+            bundle_path = Path(tmp_dir) / 'p3b-revised-bundle.json'
+
+            execute_exit, execute_stdout, execute_stderr = self.run_cli(
+                'execute-revision-pass',
+                '--input',
+                str(RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH),
+                '--output',
+                str(revised_output),
+                '--format',
+                'json',
+            )
+
+            self.assertEqual(execute_exit, 0)
+            self.assertEqual(execute_stderr, '')
+            self.assertTrue(json.loads(execute_stdout)['ok'])
+
+            exit_code, stdout, stderr = self.run_cli(
+                'build-artifact-bundle',
+                '--input',
+                str(revised_output),
+                '--output',
+                str(bundle_path),
+                '--format',
+                'json',
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, '')
+            payload = json.loads(stdout)
+            self.assertTrue(payload['ok'])
+            bundle = payload['bundle']
+            self.assertEqual(bundle['lifecycle_stage'], 'critique')
+            self.assertEqual(bundle['manifest']['draft_version_label'], 'v0.5')
+            self.assertEqual(bundle['manifest']['draft_status'], 'revised')
+            self.assertEqual(bundle['lineage']['draft_id'], 'draft-v1')
+            self.assertEqual(len(bundle['artifacts']['draft_sections']), 3)
+            self.assertTrue(bundle_path.exists())
 
     def test_build_artifact_bundle_fails_closed_when_existing_output_has_mismatched_identity(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

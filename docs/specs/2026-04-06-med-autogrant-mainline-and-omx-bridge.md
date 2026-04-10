@@ -295,8 +295,8 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 当前对应的 pre-frozen activation package：
 
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5a-second-grant-family-onboarding-activation-package.md`
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5b-federation-contract-freeze-activation-package.md`
+- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-p5a-second-grant-family-onboarding-activation-package.md`
+- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-p5b-federation-contract-freeze-activation-package.md`
 
 ## 当前 active execution priority
 
@@ -326,11 +326,11 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 对应 repo-tracked internal program doc：
 
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-productization-program.md`
+- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-runtime-first-productization-program.md`
 
 当前对应的 pre-frozen future boundary map：
 
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
+- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 
 ## Autonomous Longrun Program Mode
 
@@ -388,17 +388,17 @@ durable handoff 回答的是控制面如何不断点连续推进。
 对应的精确 package / contract：
 
 - `R3.A` activation package：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
+  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
 - `R3.A` machine-applicable implementation contract：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
 - `R4.A` activation package：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
+  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
 - `R5.A` activation package：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
+  - `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 
 对应 repo-tracked boundary map：
 
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
+- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 
 这组边界的作用是：
 
@@ -425,8 +425,8 @@ durable handoff 回答的是控制面如何不断点连续推进。
 - absorbed P3.C：`docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
 - absorbed P4.A：`docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
 - 当前 P4.B：`docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
-- future P5.A activation package：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5a-second-grant-family-onboarding-activation-package.md`
-- future P5.B activation package：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p5b-federation-contract-freeze-activation-package.md`
+- future P5.A activation package：`/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-p5a-second-grant-family-onboarding-activation-package.md`
+- future P5.B activation package：`/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-08-p5b-federation-contract-freeze-activation-package.md`
 - 这七份文件当前共同冻结：
   - `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 的上游绑定
   - `drafting -> critique -> revision` 的 absorbed 主线与 completed revision 回到 critique 的 re-review 边界

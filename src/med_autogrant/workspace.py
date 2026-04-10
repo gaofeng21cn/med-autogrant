@@ -507,14 +507,19 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
                             message="re-review 批注引用的 RevisionPlan 必须已经 completed。",
                         )
                     )
+                expected_reviewed_version = active_draft.get("version_label") if active_draft is not None else None
+                version_anchor_message = "当前激活草稿版本"
+                if active_revision_plan.get("execution_status") == "completed":
+                    expected_reviewed_version = active_revision_plan.get("pre_revision_version_label")
+                    version_anchor_message = "当前激活 RevisionPlan.pre_revision_version_label"
                 if (
-                    active_draft is not None
-                    and reviewed_revision_plan.get("post_revision_version_label") != active_draft.get("version_label")
+                    isinstance(expected_reviewed_version, str)
+                    and reviewed_revision_plan.get("post_revision_version_label") != expected_reviewed_version
                 ):
                     issues.append(
                         ValidationIssue(
                             path="mentor_critiques.reviewed_revision_plan_id",
-                            message="re-review 批注引用的 RevisionPlan 必须与当前激活草稿版本一致。",
+                            message=f"re-review 批注引用的 RevisionPlan 必须与{version_anchor_message}一致。",
                         )
                     )
 

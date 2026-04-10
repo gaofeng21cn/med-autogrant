@@ -16,6 +16,8 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.route_report import build_stage_route_report  # noqa: E402
+from med_autogrant.workspace import validate_workspace_document  # noqa: E402
 
 
 P2C_CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
@@ -202,6 +204,102 @@ class RevisionExecutorCliTest(unittest.TestCase):
 
             active_critique = self._active_critique(revised_workspace)
             self.assertEqual(active_critique["reviewed_revision_plan_id"], "revision-v1")
+
+    def test_execute_revision_pass_re_review_output_remains_valid_and_routeable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_path = Path(tmp_dir) / "re_review-validated-workspace.json"
+
+            exit_code, stdout, stderr = self.run_cli(
+                "execute-revision-pass",
+                "--input",
+                str(P3B_RE_REVIEW_EXAMPLE_PATH),
+                "--output",
+                str(output_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+
+            payload = json.loads(stdout)
+            revised_workspace = payload["revised_workspace"]
+
+            validation = validate_workspace_document(revised_workspace)
+            self.assertTrue(validation.ok, validation.to_dict(revised_workspace))
+
+            route_report = build_stage_route_report(revised_workspace)
+            self.assertTrue(route_report["ok"])
+            self.assertEqual(route_report["lifecycle_stage"], "critique")
+            self.assertEqual(route_report["route"]["next_step"]["recommended_stage"], "revision")
+            self.assertEqual(
+                route_report["verification_checkpoint"]["identity"]["reviewed_revision_plan_id"],
+                "revision-v1",
+            )
+            self.assertEqual(
+                route_report["route"]["critique_summary"]["reviewed_revision_plan_id"],
+                "revision-v1",
+            )
+            self.assertEqual(
+                route_report["route"]["critique_summary"]["reviewed_revision_evidence"]["post_revision_version_label"],
+                "v0.4",
+            )
+            self.assertEqual(
+                route_report["route"]["summarize_workspace"]["active_revision_plan"]["post_revision_version_label"],
+                "v0.5",
+            )
+            self.assertEqual(
+                route_report["route"]["summarize_workspace"]["active_draft"]["version_label"],
+                "v0.5",
+            )
+
+    def test_execute_revision_pass_initial_revision_output_remains_valid_and_routeable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_path = Path(tmp_dir) / "initial-validated-workspace.json"
+
+            exit_code, stdout, stderr = self.run_cli(
+                "execute-revision-pass",
+                "--input",
+                str(P2C_CRITIQUE_EXAMPLE_PATH),
+                "--output",
+                str(output_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+
+            payload = json.loads(stdout)
+            revised_workspace = payload["revised_workspace"]
+
+            validation = validate_workspace_document(revised_workspace)
+            self.assertTrue(validation.ok, validation.to_dict(revised_workspace))
+
+            route_report = build_stage_route_report(revised_workspace)
+            self.assertTrue(route_report["ok"])
+            self.assertEqual(route_report["lifecycle_stage"], "critique")
+            self.assertEqual(route_report["route"]["next_step"]["recommended_stage"], "revision")
+            self.assertEqual(route_report["verification_checkpoint"]["checkpoint_status"], "forward_progress")
+            self.assertTrue(route_report["verification_checkpoint"]["validation_ok"])
+            self.assertEqual(
+                route_report["verification_checkpoint"]["identity"],
+                {
+                    "grant_run_id": payload["grant_run_id"],
+                    "workspace_id": payload["workspace_id"],
+                    "draft_id": payload["draft_id"],
+                    "active_revision_plan_id": "revision-v1",
+                    "reviewed_revision_plan_id": None,
+                },
+            )
+            self.assertEqual(
+                route_report["route"]["summarize_workspace"]["active_revision_plan"]["post_revision_version_label"],
+                "v0.4",
+            )
+            self.assertEqual(
+                route_report["route"]["summarize_workspace"]["active_draft"]["version_label"],
+                "v0.4",
+            )
 
     def test_execute_revision_pass_fails_closed_for_non_executable_gate_states(self) -> None:
         cases = (

@@ -198,7 +198,7 @@ Date: `2026-04-06`
 
 这层精确 contract 以以下文档为准：
 
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+- `/Users/gaofeng/.config/superpowers/worktrees/med-autogrant/post-r5a-local-runtime-hardening-20260410/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
 
 当前 V1 schema 明确冻结以下边界：
 

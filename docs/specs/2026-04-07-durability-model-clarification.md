@@ -4,68 +4,49 @@ Date: `2026-04-07`
 
 ## 目标
 
-在当前 active mainline 下，把 repo-durable review truth、local durable handoff truth 与对象身份边界写清楚，避免 review、恢复和 runtime identity 三类语义继续混写。
+把 repo-tracked review truth、local durable handoff surfaces、以及当前已 landed 的 local runtime durable surfaces 写清楚，避免 review、恢复、runtime identity、artifact output、final package output、hosted-contract output 继续混写。
 
 ## 当前指针
 
 - Current phase: `Runtime Productization Program`
-- Active tranche: `R3 / Critique Revision Autoloop`
-- Active slice: `R3.A / Critique Revision Executor Surface`
+- Active tranche: `R5 / Hostedization Prep`
+- Latest absorbed runtime slice: `R5.A / Hosted-Friendly Session Boundary`
+- Current owner line: `post-R5A local runtime hardening`
 
 ## repo-tracked review surfaces
 
-当前 reviewer 应能仅凭以下 repo-tracked surfaces 理解 runtime baseline 的正式合同：
+当前 reviewer 应能仅凭以下 repo-tracked review surfaces 理解 runtime baseline 的正式合同：
 
 - `README.md`
 - `README.zh-CN.md`
+- `docs/README.md`
+- `docs/README.zh-CN.md`
 - `docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`
 - `docs/specs/2026-04-06-object-model-schema-v1.md`
 - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
 - `docs/specs/2026-04-07-durability-model-clarification.md`
-- `docs/specs/2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md`
-- `docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
-- `docs/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`
 - `docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
 - `docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
 - `docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
 - `docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
-- `docs/specs/2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md`
-- `docs/specs/2026-04-08-r2a-artifact-bundle-production-surface-activation-package.md`
-- `docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
+- `docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+- `docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
+- `docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
+- `docs/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`
+- `docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md`
 - `schemas/v1/nsfc-workspace.schema.json`
-- `schemas/v1/application-draft.schema.json`
-- `schemas/v1/mentor-critique.schema.json`
-- `schemas/v1/revision-plan.schema.json`
-- `examples/nsfc_workspace_minimal.json`
-- `examples/nsfc_workspace_p2c_revision.json`
-- `examples/nsfc_workspace_p3a_ready_for_submission.json`
-- `examples/nsfc_workspace_p3b_re_review_major_revision.json`
-- `examples/nsfc_workspace_p3c_forced_rollback_argument.json`
-- `examples/nsfc_workspace_p3c_presubmission_frozen.json`
-- `tests/test_cli_validate_workspace.py`
-- `tests/test_stage_router.py`
-- `tests/test_workspace_summary.py`
-- `tests/test_program_control_surfaces.py`
-- `tests/test_local_runtime.py`
-- `tests/test_artifact_bundle.py`
+- current canonical examples under `examples/**`
+- runtime / verification tests under `tests/**`
 
-这些 surface 承担的是 review truth 职责：
+这些 surfaces 承担的是 review truth 职责：
 
 - formal entry 是什么
 - 哪些能力当前正式支持
 - 哪些语义是 future scope
 - `grant_run_id / workspace_id / draft_id / program_id` 的边界
+- `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 的 rollback / gate 语义
 - 当前 repo-native hard gate 命令是什么
-- `ApplicationDraft.sections`、`MentorCritique`、`RevisionPlan` 是否进入当前 canonical route
-- `major_reframe / major_revision / minor_revision / ready_for_submission` 是否进入当前 canonical verdict surface
-- `current_selection.active_revision_plan_id` 是否继续作为当前 active route pointer
-- `reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id` 是否进入当前 canonical re-review surface
-- `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 是否进入当前 canonical rollback / gate surface
-- `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
-- `ready_for_submission + presubmission_frozen=false` 是否作为当前 canonical gate-open checkpoint surface
-- `VerificationCheckpoint` 是否继续只是 derived checkpoint object，而不是新的 formal entry、identity 或 controller capability
-- `run-local / resume-local`、machine-readable `stop_reason`、`stage_action_envelope`、以及 local run journal 是否进入当前 canonical local runtime surface
-- `build-artifact-bundle / artifact_bundle / manifest / lineage / bundle_summary` 是否进入当前 canonical local artifact surface
+- revised workspace / checkpoint / operator walkthrough 是否与 landed runtime ladder 一致
 
 ## local durable handoff surfaces
 
@@ -83,17 +64,22 @@ Date: `2026-04-07`
 - `.omx/reports/med-autogrant-mainline/ITERATION_LOG.md`
 - `.omx/reports/med-autogrant-mainline/OPEN_ISSUES.md`
 
-这些 surface 承担的是 handoff / resume truth 职责：
+这些 surfaces 承担的是 handoff / resume truth 职责：
 
 - 当前 phase / tranche pointer
-- 当前 hard gate 与 exit criteria
+- 当前 hard gate 与 closeout criteria
+- 当前 bounded delta 是否已冻结
 - 当前 verification snapshot
-- 当前 active blocker / risk
+- 当前 open risks / blockers
 - 恢复执行的读取顺序
+
+`.omx/**` 不能单独发明新的 formal entry、hard gate、identity semantics，或把 control-plane maturity 误写成 actual hosted runtime。
 
 ## local runtime durable surface
 
-除 `.omx/**` 的 control-plane durable handoff 之外，当前产品 runtime 还新增一层 machine-local durable runtime surface：
+除 `.omx/**` 的 control-plane durable handoff 之外，当前产品 runtime 已 landed 的 local runtime durable surface 至少包括：
+
+### 1. local run journal
 
 - `run-local --journal ...`
 - `resume-local --journal ...`
@@ -104,17 +90,32 @@ Date: `2026-04-07`
 - 为同一 `grant_run_id` durable 回写 `latest_stop_reason`
 - 为 `stage_action_required` 类 stop reason durable 回写 `latest_stage_action_envelope`
 - durable 回写 `latest_route_report`
-- 通过 `attempts` 记录 `run-local / resume-local` 的本地 runtime 进入历史，包括 attempt 级 `stage_action_envelope`
+- 通过 `attempts` 记录 `run-local / resume-local` 的本地 runtime 进入历史
 
-它不负责：
+这层不负责：
 
 - 充当 repo-tracked review truth
 - 替代 `.omx/reports/**`
 - 发明新的 `program_id` 或 controller pointer
 
-## local artifact durable surface
+### 2. local revised workspace output
 
-除 local run journal 之外，当前产品 runtime 还新增一层 machine-local durable artifact surface：
+- `execute-revision-pass --output ...`
+- revised workspace JSON
+
+这层负责：
+
+- 为同一 `grant_run_id / workspace_id / draft_id` durable 写出当前 deterministic revision pass 的 revised workspace candidate
+- 保持 `active_revision_plan_id / reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id / pre_revision_version_label / post_revision_version_label / comparison_summary`
+- 在 re-review 分支上保留“上一棒 reviewed revision evidence”与“当前这一棒 completed revision plan”的版本链
+
+这层不负责：
+
+- 替代 `.omx/reports/**`
+- 重写 `verification_checkpoint / checkpoint_status`
+- 发明新的 critique synthesis / hosted runtime semantics
+
+### 3. local artifact durable surface
 
 - `build-artifact-bundle --output ...`
 - local artifact bundle JSON
@@ -123,34 +124,61 @@ Date: `2026-04-07`
 
 - 为同一 `grant_run_id / workspace_id / draft_id` durable 写出当前 active draft lineage 对应的 bundle
 - durable 写出 `manifest / lineage / bundle_summary / artifacts`
-- 让 `selected_direction / selected_question / ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline / ApplicationDraft.sections` 在本地形成可复用 bundle
+- 让 selected direction / question / argument chain / fit mapping / outline / draft sections 形成可复用 bundle
 
-它不负责：
+这层不负责：
 
 - 改写 workspace
 - 替代 `.omx/reports/**`
 - 替代 `verification_checkpoint / checkpoint_status`
 - 伪装 final export / freeze manifest 已完成
 
+### 4. local final package durable surface
+
+- `build-final-package --output ...`
+- local `final_package` JSON
+
+这层负责：
+
+- durable 写出 machine-readable local `final_package`
+- 保持 `freeze_manifest / checkpoint_summary / export_summary / deliverables`
+- 对齐 `verification_checkpoint / checkpoint_status` 与 `freeze_ready / submission_frozen`
+
+这层不负责：
+
+- 替代 validator / route / revision surfaces
+- 写 `.omx/**`
+- 伪装 actual hosted runtime 已完成
+
+### 5. local hosted-contract durable surface
+
+- `build-hosted-contract-bundle --output ...`
+- local `hosted_contract_bundle` JSON
+
+这层负责：
+
+- durable 导出 hosted-friendly session / state / artifact / audit contract bundle
+- 保持 `execution_identity.grant_run_id / workspace_id / draft_id / program_id`
+- 保持 `formal_entry_matrix.default_formal_entry=CLI`
+
+这层不负责：
+
+- 实现 actual hosted runtime
+- 实现 remote execution / multi-tenant / billing / federation
+- 把 `.omx/reports/**` 伪装成 hosted audit store
+
 ## 哪些结论必须 repo-native
 
-以下结论如果要成为正式 review truth，必须进入 repo-tracked surface，而不能只留在 `.omx/**`：
+以下结论如果要成为正式 review truth，必须进入 repo-tracked review surfaces，而不能只留在 `.omx/**` 或 machine-local outputs：
 
 - formal entry matrix
 - durability model clarification
-- verification contract 中的 hard gate 命令集合
+- hard gate 命令集合
 - `grant_run_id / workspace_id / draft_id / program_id` 的正式语义边界
-- `CLI`、`MCP`、`controller` 各自是否正式支持
-- `ApplicationDraft.sections`、`MentorCritique`、`RevisionPlan` 是否进入当前 canonical route
-- `major_reframe / major_revision / minor_revision / ready_for_submission` 是否进入当前 canonical verdict surface
-- `current_selection.active_revision_plan_id` 是否继续作为当前 active route pointer
-- `reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id` 是否进入当前 canonical re-review surface
-- `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 是否进入当前 canonical rollback / gate surface
-- `stage-route-report.verification_checkpoint / checkpoint_status` 是否成为当前 canonical verification aggregation surface
-- `ready_for_submission + presubmission_frozen=false` 是否成为当前 canonical gate-open checkpoint surface
-- `VerificationCheckpoint` 是否作为当前 canonical durable checkpoint object 被冻结
-- `run-local / resume-local / stop_reason / stage_action_envelope / local run journal` 是否成为当前 canonical local runtime surface
-- `build-artifact-bundle / artifact_bundle / manifest / lineage / bundle_summary` 是否成为当前 canonical local artifact surface
+- revised workspace validator truth
+- `verification_checkpoint / checkpoint_status` 的 canonical aggregation 语义
+- 哪些 outputs 已 landed 为 current local runtime ladder
+- operator walkthrough / command matrix 对当前已 landed runtime ladder 的公开表述
 
 ## 哪些状态允许只留在 local handoff surfaces
 
@@ -160,33 +188,31 @@ Date: `2026-04-07`
 - 当前最新 verification snapshot
 - 当前 open risks / blockers
 - 当前 resume 顺序与执行提示
-- 当前一次 closeout 的 leader notes 与 iteration log
-
-但 `.omx/**` 不能单独发明新的 formal entry、verification hard gate 或 identity semantics。
+- 当前一次 closeout 的 leader notes / iteration log
 
 ## Identity Boundary Contract
 
 - `grant_run_id`
   - 语义：单次 grant run 的稳定执行句柄
-  - 落点：runtime output、CLI output、reports、recovery context 回显
+  - 落点：runtime output、CLI output、reports、recovery context 回显、local runtime artifacts
 - `workspace_id`
   - 语义：`NSFCWorkspace` 聚合根身份
   - 落点：workspace object identity
 - `draft_id`
   - 语义：`ApplicationDraft` 身份
-  - 落点：draft / critique / revision 链接身份
-  - 约束：`revision` 完成后仍沿用同一 `draft_id`
+  - 落点：draft / critique / revision / artifact / final package 链接身份
+  - 约束：revision 完成后仍沿用同一 `draft_id`
 - `program_id`
   - 语义：control-plane / report-routing 身份
-  - 落点：`.omx/reports/<program_id>/` 与 active mainline pointer
+  - 落点：`.omx/reports/<program_id>/` 与 active mainline pointer；hosted-contract export 中只作为 routing identity 保留
 
 这四类 ID 不得互相替代。
 
 ## Verification Boundary Contract
 
 - 当前 tranche hard gate：只看 repo-native commands 与 repo-native tests
-- external verifier `omx_project_installer.py diff --target ...`
-  - 当前仅为 advisory external check
+- external verifier
+  - 当前仅为 `advisory external check`
   - 失败必须在 reports 中被记录
   - 但在没有显式改写 active truth surfaces 前，不得重新写成 current hard gate
 
@@ -194,15 +220,6 @@ Date: `2026-04-07`
 
 - formal entry 真相已进入 repo-durable current truth
 - durability model 真相已进入 repo-durable current truth
-- `grant_run_id / workspace_id / draft_id / program_id` 边界已在 docs / schema / example / CLI / tests / reports 中一致
-- `P2.B` 的 `ArgumentChain / ApplicantFitMapping / ApplicationDraft.outline` 继续作为上游 canonical route 保留
-- `P2.C` 已把 `ApplicationDraft / MentorCritique / RevisionPlan` 冻结成 absorbed canonical route
-- `P3.A` 已把 `major_reframe / major_revision / minor_revision / ready_for_submission` 冻结成当前 canonical verdict surface
-- `P3.B` 已把 `current_selection.active_revision_plan_id`、`MentorCritique.reviewed_revision_plan_id`、`reviewed_revision_evidence`、`source_critique_id` 与当前 active `RevisionPlan` 的边界冻结成当前 canonical re-review surface
-- `P3.C` 已把 `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 的 rollback / gate surface 冻结进 current truth
-- `P4.A` 已把 `ready_for_submission + presubmission_frozen=false` 的 gate-open verification surface 冻结进 current truth，并把 `examples/nsfc_workspace_p3a_ready_for_submission.json` 纳入 hard gate
-- `P4.B` 已冻结 `VerificationCheckpoint` 的 canonical durable surface，并明确 `stage-route-report.verification_checkpoint / checkpoint_status` 与 reports / control surfaces 的 durable 对齐关系
-- `R1.A` 已把 `run-local / resume-local`、machine-readable `stop_reason` 与 local run journal 冻结成当前 local runtime surface
-- `R1.B` 已把 `stage_action_required` 分支上的 machine-readable `stage_action_envelope` 与 `latest_stage_action_envelope` 冻结成当前 local runtime orchestration surface
-- `R2.A` 已把 `build-artifact-bundle`、machine-readable `artifact_bundle`、manifest / lineage / bundle summary 与 local bundle output 冻结成当前 local artifact surface
-- `R3.A` 已把 `execute-revision-pass` 的 activation package 冻结成当前 repo-tracked internal spec，但尚未把 revision executor 误写成 landed runtime surface
+- `grant_run_id / workspace_id / draft_id / program_id` 边界已在 docs / examples / CLI / tests / local outputs 中持续收紧
+- `run-local / resume-local / build-artifact-bundle / execute-revision-pass / build-final-package / build-hosted-contract-bundle` 已构成当前 landed local runtime ladder
+- post-`R5.A` 的下一条 honest owner line 是 local runtime hardening，而不是 actual hosted runtime / `P5` expansion

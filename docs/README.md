@@ -33,6 +33,7 @@ These documents are internal design references and default to Chinese.
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
 - [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only)
+- [Post-R5A revised-workspace validator and operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md) (Chinese only)
 - [Documentation Governance](documentation-governance.md) (Chinese only)
 
 ## Historical Planning Artifacts
@@ -49,7 +50,10 @@ These documents are internal design references and default to Chinese.
    - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
    - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
    - [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only)
+   - [Post-R5A revised-workspace validator and operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md) (Chinese only)
 4. Read historical planning artifacts only when you need provenance.
+
+For the current canonical local operator path, use the “Minimal Runtime Commands” section in the repository home README.
 
 ## Status Note
 
