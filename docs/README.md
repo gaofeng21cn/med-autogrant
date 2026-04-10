@@ -55,7 +55,7 @@ These documents are internal design references and default to Chinese.
 4. For the next honest continuation line after `R5.A`, read [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only).
 5. Read historical planning artifacts only when you need provenance.
 
-For the current canonical local operator path, use the “Minimal Runtime Commands” section in the repository home README.
+For the current canonical local operator path, read the post-`R5.A` walkthrough truth first, then use the “Minimal Runtime Commands” section in the repository home README as its public command mirror.
 
 ## Status Note
 

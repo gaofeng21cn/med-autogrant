@@ -55,7 +55,7 @@
 4. 如果要看 `R5.A` 之后最诚实的下一条延续线，再读 [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)。
 5. 只有在需要追溯历史来源时，再阅读历史规划工件。
 
-当前 canonical 本地 operator path 以仓库首页 README 的“最小 Runtime 命令”段为准。
+当前 canonical 本地 operator path 应先读 post-`R5.A` walkthrough truth，再使用仓库首页 README 的“最小 Runtime 命令”段作为其公开命令镜像。
 
 ## 状态说明
 

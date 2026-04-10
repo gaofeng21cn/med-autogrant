@@ -45,6 +45,12 @@ POST_R5A_STAGE_ROUTE_REPORT_CHECKPOINT_STATUS_PACKAGE = (
     / "specs"
     / "2026-04-10-post-r5a-stage-route-report-checkpoint-status-output-consistency-activation-package.md"
 )
+POST_R5A_WORKTREE_CONTROL_PLANE_ROOT_PACKAGE = (
+    REPO_ROOT
+    / "docs"
+    / "specs"
+    / "2026-04-10-post-r5a-worktree-aware-hosted-contract-control-plane-root-resolution-activation-package.md"
+)
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -71,7 +77,7 @@ ITERATION_LOG = REPORT_DIR / "ITERATION_LOG.md"
 OPEN_ISSUES = REPORT_DIR / "OPEN_ISSUES.md"
 REPORT_README = REPORT_DIR / "README.md"
 LATEST_ABSORBED_RUNTIME_SLICE_ACTIVATION_PACKAGE = R5A_ACTIVATION_PACKAGE
-NO_ACTIVE_RUNTIME_SLICE_MARKER = "无；"
+CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = POST_R5A_WORKTREE_CONTROL_PLANE_ROOT_PACKAGE
 
 REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
@@ -132,10 +138,28 @@ REQUIRED_COMMAND_SNIPPETS = (
 
 POST_R5A_WALKTHROUGH_SNIPPETS = (
     "docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md",
-    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p2c-revised.json\"",
-    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p2c-revised.json\"",
-    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p3b-revised.json\"",
-    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p3b-revised.json\"",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json",
+    "PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output \"$TMPDIR/r3a-p3b-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p3b-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input \"$TMPDIR/r3a-p3b-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input \"$TMPDIR/r3a-p3b-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input \"$TMPDIR/r3a-p3b-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p3b-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input \"$TMPDIR/r3a-p3b-revised.json\" --output \"$TMPDIR/r3a-p3b-revised-bundle.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant run-local --input \"$TMPDIR/r3a-p3b-revised.json\" --journal \"$TMPDIR/r3a-p3b-revised-run.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output \"$TMPDIR/r5a-bundle.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle \"$TMPDIR/r5a-bundle.json\" --output \"$TMPDIR/r5a-final-package.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-package \"$TMPDIR/r5a-final-package.json\" --output \"$TMPDIR/r5a-hosted-contract.json\" --format json",
 )
 
 FUTURE_TRANCHE_SNIPPETS = (
@@ -544,6 +568,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             R4A_ACTIVATION_PACKAGE,
             R5A_ACTIVATION_PACKAGE,
             POST_R5A_HARDENING_SPEC,
+            POST_R5A_WORKTREE_CONTROL_PLANE_ROOT_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -830,6 +855,33 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(path=path.name):
                 self.assertIn(package_path, read_text(path))
 
+    def test_post_r5a_worktree_control_plane_root_package_is_repo_tracked_and_wired(self) -> None:
+        package_text = read_text(POST_R5A_WORKTREE_CONTROL_PLANE_ROOT_PACKAGE)
+        for snippet in (
+            "build-hosted-contract-bundle",
+            "CURRENT_PROGRAM.md",
+            "git worktree list --porcelain",
+            "branch refs/heads/main",
+            "program_id",
+            "fail-closed",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, package_text)
+
+        package_path = canonical_repo_path(POST_R5A_WORKTREE_CONTROL_PLANE_ROOT_PACKAGE)
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+            ITERATION_LOG,
+            OPEN_ISSUES,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
     def test_r1a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
         package_path = canonical_repo_path(R1A_ACTIVATION_PACKAGE)
         self.assertTrue(R1A_ACTIVATION_PACKAGE.exists(), f"R1.A activation package 不存在: {R1A_ACTIVATION_PACKAGE}")
@@ -912,7 +964,11 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                     LATEST_ABSORBED_RUNTIME_SLICE_ACTIVATION_PACKAGE,
                 )
             with self.subTest(path=path.name, label="current active runtime slice activation package"):
-                assert_labeled_text(text, "current active runtime slice activation package", NO_ACTIVE_RUNTIME_SLICE_MARKER)
+                assert_labeled_path(
+                    text,
+                    "current active runtime slice activation package",
+                    CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE,
+                )
 
     def test_r1a_activation_package_freezes_local_main_loop_contract(self) -> None:
         text = read_text(R1A_ACTIVATION_PACKAGE)

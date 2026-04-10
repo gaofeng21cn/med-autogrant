@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -10,10 +11,7 @@ from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 
 HOSTED_CONTRACT_VERSION = 1
 HOSTED_CONTRACT_KIND = "hosted_contract_bundle"
-# Post-R5A control-plane truth is anchored to the root checkout because `.omx/`
-# is local state and is not copied into isolated implementation worktrees.
-CONTROL_PLANE_ROOT = Path("/Users/gaofeng/workspace/med-autogrant")
-CURRENT_PROGRAM_PATH = CONTROL_PLANE_ROOT / ".omx" / "context" / "CURRENT_PROGRAM.md"
+CURRENT_PROGRAM_RELATIVE_PATH = Path(".omx") / "context" / "CURRENT_PROGRAM.md"
 
 
 def build_hosted_contract_bundle_payload(
@@ -114,15 +112,96 @@ def _read_final_package(final_package_path: str | Path) -> dict[str, Any]:
 
 
 def _read_program_id() -> str:
+    current_program_path = _resolve_control_plane_current_program_path()
     try:
-        text = CURRENT_PROGRAM_PATH.read_text(encoding="utf-8")
+        text = current_program_path.read_text(encoding="utf-8")
     except OSError as exc:
-        raise WorkspaceFileError(f"读取 CURRENT_PROGRAM 失败: {CURRENT_PROGRAM_PATH}") from exc
+        raise WorkspaceFileError(f"读取 CURRENT_PROGRAM 失败: {current_program_path}") from exc
 
     match = re.search(r"- program_id:\s*`([^`]+)`", text)
     if match is None:
-        raise WorkspaceStateError(f"CURRENT_PROGRAM 缺少可解析的 program_id: {CURRENT_PROGRAM_PATH}")
+        raise WorkspaceStateError(f"CURRENT_PROGRAM 缺少可解析的 program_id: {current_program_path}")
     return match.group(1)
+
+
+def _resolve_control_plane_current_program_path(
+    *,
+    repo_root: Path | None = None,
+    worktree_list_text: str | None = None,
+) -> Path:
+    resolved_repo_root = (repo_root or Path(__file__).resolve().parents[2]).resolve()
+    local_current_program = resolved_repo_root / CURRENT_PROGRAM_RELATIVE_PATH
+    if local_current_program.exists():
+        return local_current_program
+
+    if worktree_list_text is None:
+        worktree_list_text = _read_git_worktree_list(repo_root=resolved_repo_root)
+    return _select_control_plane_current_program_path(
+        repo_root=resolved_repo_root,
+        worktree_list_text=worktree_list_text,
+    )
+
+
+def _read_git_worktree_list(*, repo_root: Path) -> str:
+    try:
+        result = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            check=True,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+        )
+    except FileNotFoundError as exc:
+        raise WorkspaceFileError("未找到 git，可用性不足，无法解析 control-plane root checkout。") from exc
+    except subprocess.CalledProcessError as exc:
+        stderr = exc.stderr.strip()
+        message = "读取 git worktree 列表失败，无法解析 control-plane root checkout。"
+        if stderr:
+            message = f"{message} {stderr}"
+        raise WorkspaceFileError(message) from exc
+    return result.stdout
+
+
+def _select_control_plane_current_program_path(
+    *,
+    repo_root: Path,
+    worktree_list_text: str,
+) -> Path:
+    entries = _parse_git_worktree_list_porcelain(worktree_list_text)
+    main_entries = [entry for entry in entries if entry.get("branch") == "refs/heads/main"]
+    if not main_entries:
+        raise WorkspaceFileError("git worktree 列表中未找到 `refs/heads/main`，无法解析 control-plane root checkout。")
+    if len(main_entries) > 1:
+        raise WorkspaceStateError("检测到多个 `refs/heads/main` worktree，无法唯一确定 control-plane root checkout。")
+
+    main_worktree_path = Path(main_entries[0]["worktree"]).expanduser().resolve()
+    current_program_path = main_worktree_path / CURRENT_PROGRAM_RELATIVE_PATH
+    if not current_program_path.exists():
+        raise WorkspaceFileError(f"root main worktree 缺少 CURRENT_PROGRAM.md: {current_program_path}")
+    return current_program_path
+
+
+def _parse_git_worktree_list_porcelain(worktree_list_text: str) -> list[dict[str, str]]:
+    entries: list[dict[str, str]] = []
+    current: dict[str, str] | None = None
+
+    for raw_line in worktree_list_text.splitlines():
+        if not raw_line:
+            continue
+        key, _, value = raw_line.partition(" ")
+        if key == "worktree":
+            if current is not None:
+                entries.append(current)
+            current = {"worktree": value}
+            continue
+        if current is None:
+            continue
+        if key in {"branch", "HEAD"}:
+            current[key] = value
+
+    if current is not None:
+        entries.append(current)
+    return entries
 
 
 def _guard_output_identity(

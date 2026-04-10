@@ -15,6 +15,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant import hosted_contract_bundle as hosted_contract_bundle_module  # noqa: E402
 
 
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
@@ -303,6 +304,111 @@ class HostedContractBundleCliTest(unittest.TestCase):
             )
             self.assertEqual(build_package_exit, 0)
             self.assertEqual(build_package_stderr, "")
+
+
+class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):
+    def test_resolve_control_plane_current_program_path_prefers_local_repo_root(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            repo_root = Path(tmp_dir) / "repo-root"
+            current_program_path = repo_root / ".omx" / "context" / "CURRENT_PROGRAM.md"
+            current_program_path.parent.mkdir(parents=True, exist_ok=True)
+            current_program_path.write_text("- program_id: `local-program`\n", encoding="utf-8")
+
+            resolved_path = hosted_contract_bundle_module._resolve_control_plane_current_program_path(
+                repo_root=repo_root,
+            )
+
+            self.assertEqual(resolved_path, current_program_path.resolve())
+
+    def test_resolve_control_plane_current_program_path_falls_back_to_unique_main_worktree(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            feature_worktree = Path(tmp_dir) / "feature-worktree"
+            feature_worktree.mkdir(parents=True, exist_ok=True)
+            main_worktree = Path(tmp_dir) / "root-main"
+            current_program_path = main_worktree / ".omx" / "context" / "CURRENT_PROGRAM.md"
+            current_program_path.parent.mkdir(parents=True, exist_ok=True)
+            current_program_path.write_text("- program_id: `root-program`\n", encoding="utf-8")
+
+            worktree_list_text = "\n".join(
+                (
+                    f"worktree {feature_worktree}",
+                    "HEAD 1111111111111111111111111111111111111111",
+                    "branch refs/heads/post-r5a-local-runtime-hardening-20260410-a",
+                    f"worktree {main_worktree}",
+                    "HEAD 2222222222222222222222222222222222222222",
+                    "branch refs/heads/main",
+                )
+            )
+
+            resolved_path = hosted_contract_bundle_module._resolve_control_plane_current_program_path(
+                repo_root=feature_worktree,
+                worktree_list_text=worktree_list_text,
+            )
+
+            self.assertEqual(resolved_path, current_program_path.resolve())
+
+    def test_resolve_control_plane_current_program_path_fails_closed_without_main_worktree(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            feature_worktree = Path(tmp_dir) / "feature-worktree"
+            feature_worktree.mkdir(parents=True, exist_ok=True)
+            other_worktree = Path(tmp_dir) / "other-worktree"
+            current_program_path = other_worktree / ".omx" / "context" / "CURRENT_PROGRAM.md"
+            current_program_path.parent.mkdir(parents=True, exist_ok=True)
+            current_program_path.write_text("- program_id: `other-program`\n", encoding="utf-8")
+
+            worktree_list_text = "\n".join(
+                (
+                    f"worktree {feature_worktree}",
+                    "HEAD 1111111111111111111111111111111111111111",
+                    "branch refs/heads/post-r5a-local-runtime-hardening-20260410-a",
+                    f"worktree {other_worktree}",
+                    "HEAD 2222222222222222222222222222222222222222",
+                    "branch refs/heads/release-candidate",
+                )
+            )
+
+            with self.assertRaisesRegex(
+                hosted_contract_bundle_module.WorkspaceFileError,
+                "未找到 `refs/heads/main`",
+            ):
+                hosted_contract_bundle_module._resolve_control_plane_current_program_path(
+                    repo_root=feature_worktree,
+                    worktree_list_text=worktree_list_text,
+                )
+
+    def test_resolve_control_plane_current_program_path_fails_closed_for_ambiguous_main_worktrees(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            feature_worktree = Path(tmp_dir) / "feature-worktree"
+            feature_worktree.mkdir(parents=True, exist_ok=True)
+            main_one = Path(tmp_dir) / "root-main-1"
+            main_two = Path(tmp_dir) / "root-main-2"
+            for main_worktree in (main_one, main_two):
+                current_program_path = main_worktree / ".omx" / "context" / "CURRENT_PROGRAM.md"
+                current_program_path.parent.mkdir(parents=True, exist_ok=True)
+                current_program_path.write_text("- program_id: `root-program`\n", encoding="utf-8")
+
+            worktree_list_text = "\n".join(
+                (
+                    f"worktree {feature_worktree}",
+                    "HEAD 1111111111111111111111111111111111111111",
+                    "branch refs/heads/post-r5a-local-runtime-hardening-20260410-a",
+                    f"worktree {main_one}",
+                    "HEAD 2222222222222222222222222222222222222222",
+                    "branch refs/heads/main",
+                    f"worktree {main_two}",
+                    "HEAD 3333333333333333333333333333333333333333",
+                    "branch refs/heads/main",
+                )
+            )
+
+            with self.assertRaisesRegex(
+                hosted_contract_bundle_module.WorkspaceStateError,
+                "多个 `refs/heads/main` worktree",
+            ):
+                hosted_contract_bundle_module._resolve_control_plane_current_program_path(
+                    repo_root=feature_worktree,
+                    worktree_list_text=worktree_list_text,
+                )
 
 
 if __name__ == "__main__":

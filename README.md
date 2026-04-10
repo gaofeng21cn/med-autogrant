@@ -114,34 +114,44 @@ You can give your agent an instruction like this:
 ```bash
 TMPDIR="$(mktemp -d)"
 
-# 1. Baseline audit surfaces
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
-PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p3c_forced_rollback_argument.json
+# Canonical post-R5A local walkthrough (truth source:
+# docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 
-# 2. Local runtime entry / recovery
-PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json"
-PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json"
+# 1. Baseline audit for a critique workspace
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
+PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json
 
-# 3. Local artifact / revision surfaces
-PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p2c_revision.json --output "$TMPDIR/r2a-revision-bundle.json"
-PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json"
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p2c-revised.json"
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p2c-revised.json"
-PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output "$TMPDIR/r3a-p3b-revised.json"
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p3b-revised.json"
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p3b-revised.json"
-PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input "$TMPDIR/r3a-p3b-revised.json" --output "$TMPDIR/r3a-p3b-revised-bundle.json"
-PYTHONPATH=src python3 -m med_autogrant run-local --input "$TMPDIR/r3a-p3b-revised.json" --journal "$TMPDIR/r3a-p3b-revised-run.json"
+# 2. Deterministic local revision pass
+PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json
 
-# 4. Local finalization / hostedization-prep surfaces
-PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3a_ready_for_submission.json --output "$TMPDIR/r4a-freeze-ready-bundle.json"
-PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3a_ready_for_submission.json --artifact-bundle "$TMPDIR/r4a-freeze-ready-bundle.json" --output "$TMPDIR/r4a-freeze-ready-package.json"
-PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output "$TMPDIR/r5a-bundle.json"
-PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle "$TMPDIR/r5a-bundle.json" --output "$TMPDIR/r5a-final-package.json"
-PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-package "$TMPDIR/r5a-final-package.json" --output "$TMPDIR/r5a-hosted-contract.json"
+# 3. Fresh validator / summary / route / checkpoint on the generated revised workspace
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant next-step --input "$TMPDIR/r3a-p2c-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input "$TMPDIR/r3a-p2c-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p2c-revised.json" --format json
+
+# 4. Re-review revised-output follow-up must stay on the same local ladder
+PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output "$TMPDIR/r3a-p3b-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant next-step --input "$TMPDIR/r3a-p3b-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant critique-summary --input "$TMPDIR/r3a-p3b-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p3b-revised.json" --format json
+PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input "$TMPDIR/r3a-p3b-revised.json" --output "$TMPDIR/r3a-p3b-revised-bundle.json" --format json
+PYTHONPATH=src python3 -m med_autogrant run-local --input "$TMPDIR/r3a-p3b-revised.json" --journal "$TMPDIR/r3a-p3b-revised-run.json" --format json
+
+# 5. Local runtime entry / recovery remains CLI-first
+PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json" --format json
+PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json
+
+# 6. Local final / hosted-contract chain
+PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output "$TMPDIR/r5a-bundle.json" --format json
+PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle "$TMPDIR/r5a-bundle.json" --output "$TMPDIR/r5a-final-package.json" --format json
+PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-package "$TMPDIR/r5a-final-package.json" --output "$TMPDIR/r5a-hosted-contract.json" --format json
 ```
 
 ### Current Technical Scope
