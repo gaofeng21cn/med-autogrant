@@ -129,6 +129,43 @@ REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_LINKAGE_ID_FIELDS = {
         "argument_chain_id",
     ),
 }
+REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_STRING_FIELDS = {
+    "selected_direction": (
+        "title",
+        "rationale",
+        "knowledge_gap_summary",
+        "applicant_fit_summary",
+        "novelty_angle",
+        "risk_summary",
+        "decision_status",
+    ),
+    "selected_question": (
+        "phenomenon",
+        "knowledge_boundary",
+        "unknown_mechanism",
+        "core_question",
+        "falsifiable_statement",
+        "proposed_breakthrough_angle",
+        "why_not_engineering",
+        "why_now",
+    ),
+    "argument_chain": (
+        "background_claim",
+        "field_gap",
+        "necessity_claim",
+        "uniqueness_claim",
+        "route_justification",
+        "non_arbitrary_route_reason",
+        "if_not_done_loss",
+    ),
+    "fit_mapping": (
+        "applicant_fit_summary",
+        "unique_advantage",
+        "methods_readiness",
+        "resource_readiness",
+        "risk_mitigation",
+    ),
+}
 
 
 def build_final_package_payload(
@@ -421,6 +458,18 @@ def _validate_required_artifact_bundle_fields(
             )
 
     for object_field, nested_fields in REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_LINKAGE_ID_FIELDS.items():
+        for nested_field in nested_fields:
+            value = artifacts_payload[object_field].get(nested_field)
+            if not isinstance(value, str) or not value:
+                raise WorkspaceStateError(
+                    f"artifact bundle artifacts.{object_field}.{nested_field} 非法: {value}",
+                    errors=[],
+                    grant_run_id=grant_run_id,
+                    workspace_id=workspace_id,
+                    lifecycle_stage=lifecycle_stage,
+                )
+
+    for object_field, nested_fields in REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_STRING_FIELDS.items():
         for nested_field in nested_fields:
             value = artifacts_payload[object_field].get(nested_field)
             if not isinstance(value, str) or not value:
