@@ -12,6 +12,11 @@ from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 HOSTED_CONTRACT_VERSION = 1
 HOSTED_CONTRACT_KIND = "hosted_contract_bundle"
 CURRENT_PROGRAM_RELATIVE_PATH = Path(".omx") / "context" / "CURRENT_PROGRAM.md"
+REQUIRED_FINAL_PACKAGE_OBJECT_FIELDS = (
+    "freeze_manifest",
+    "lineage",
+    "checkpoint_summary",
+)
 
 
 def build_hosted_contract_bundle_payload(
@@ -59,7 +64,7 @@ def build_hosted_contract_bundle_payload(
         "artifact_contract": {
             "artifact_bundle_manifest_kind": "artifact_bundle_manifest",
             "final_package_manifest_kind": "freeze_manifest",
-            "lineage_fields": list(final_package.get("lineage", {}).keys()),
+            "lineage_fields": list(final_package["lineage"].keys()),
         },
         "audit_contract": {
             "verification_checkpoint_kind": "verification_checkpoint",
@@ -108,7 +113,15 @@ def _read_final_package(final_package_path: str | Path) -> dict[str, Any]:
         if field not in final_package:
             raise WorkspaceStateError(f"final package 缺少字段: {field}")
 
+    _validate_required_final_package_fields(final_package)
+
     return final_package
+
+
+def _validate_required_final_package_fields(final_package: dict[str, Any]) -> None:
+    for field in REQUIRED_FINAL_PACKAGE_OBJECT_FIELDS:
+        if not isinstance(final_package.get(field), dict):
+            raise WorkspaceStateError(f"final package 缺少字段: {field}")
 
 
 def _read_program_id() -> str:
