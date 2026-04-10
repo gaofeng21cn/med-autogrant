@@ -335,6 +335,122 @@ class HostedContractBundleCliTest(unittest.TestCase):
                     self.assertIn(field, payload["error"])
                     self.assertFalse(hosted_contract_path.exists())
 
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_freeze_manifest_missing_required_fields(self) -> None:
+        required_fields = (
+            "draft_version_label",
+            "draft_status",
+            "active_revision_plan_id",
+            "critique_id",
+            "checkpoint_status",
+            "presubmission_frozen",
+        )
+        for field in required_fields:
+            with self.subTest(field=field):
+                with tempfile.TemporaryDirectory() as tmp_dir:
+                    final_package_path = Path(tmp_dir) / f"missing-freeze-manifest-{field}.json"
+                    hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+                    self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+                    final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+                    final_package["freeze_manifest"].pop(field)
+                    final_package_path.write_text(
+                        json.dumps(final_package, ensure_ascii=False, indent=2),
+                        encoding="utf-8",
+                    )
+
+                    exit_code, stdout, stderr = self.run_cli(
+                        "build-hosted-contract-bundle",
+                        "--final-package",
+                        str(final_package_path),
+                        "--output",
+                        str(hosted_contract_path),
+                        "--format",
+                        "json",
+                    )
+
+                    self.assertEqual(exit_code, 1)
+                    self.assertEqual(stderr, "")
+                    payload = json.loads(stdout)
+                    self.assertFalse(payload["ok"])
+                    self.assertIn("final package freeze_manifest 缺少字段", payload["error"])
+                    self.assertIn(field, payload["error"])
+                    self.assertFalse(hosted_contract_path.exists())
+
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_checkpoint_summary_missing_required_fields(self) -> None:
+        required_fields = (
+            "verification_checkpoint",
+            "checkpoint_status",
+        )
+        for field in required_fields:
+            with self.subTest(field=field):
+                with tempfile.TemporaryDirectory() as tmp_dir:
+                    final_package_path = Path(tmp_dir) / f"missing-checkpoint-summary-{field}.json"
+                    hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+                    self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+                    final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+                    final_package["checkpoint_summary"].pop(field)
+                    final_package_path.write_text(
+                        json.dumps(final_package, ensure_ascii=False, indent=2),
+                        encoding="utf-8",
+                    )
+
+                    exit_code, stdout, stderr = self.run_cli(
+                        "build-hosted-contract-bundle",
+                        "--final-package",
+                        str(final_package_path),
+                        "--output",
+                        str(hosted_contract_path),
+                        "--format",
+                        "json",
+                    )
+
+                    self.assertEqual(exit_code, 1)
+                    self.assertEqual(stderr, "")
+                    payload = json.loads(stdout)
+                    self.assertFalse(payload["ok"])
+                    self.assertIn("final package checkpoint_summary 缺少字段", payload["error"])
+                    self.assertIn(field, payload["error"])
+                    self.assertFalse(hosted_contract_path.exists())
+
+    def test_build_hosted_contract_bundle_fails_closed_when_final_package_lineage_missing_required_fields(self) -> None:
+        required_fields = (
+            "frozen_question_id",
+            "selected_direction_id",
+            "selected_question_id",
+            "active_fit_mapping_id",
+            "draft_id",
+            "revision_plan_id",
+        )
+        for field in required_fields:
+            with self.subTest(field=field):
+                with tempfile.TemporaryDirectory() as tmp_dir:
+                    final_package_path = Path(tmp_dir) / f"missing-lineage-{field}.json"
+                    hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+                    self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+                    final_package = json.loads(final_package_path.read_text(encoding="utf-8"))
+                    final_package["lineage"].pop(field)
+                    final_package_path.write_text(
+                        json.dumps(final_package, ensure_ascii=False, indent=2),
+                        encoding="utf-8",
+                    )
+
+                    exit_code, stdout, stderr = self.run_cli(
+                        "build-hosted-contract-bundle",
+                        "--final-package",
+                        str(final_package_path),
+                        "--output",
+                        str(hosted_contract_path),
+                        "--format",
+                        "json",
+                    )
+
+                    self.assertEqual(exit_code, 1)
+                    self.assertEqual(stderr, "")
+                    payload = json.loads(stdout)
+                    self.assertFalse(payload["ok"])
+                    self.assertIn("final package lineage 缺少字段", payload["error"])
+                    self.assertIn(field, payload["error"])
+                    self.assertFalse(hosted_contract_path.exists())
+
     def test_build_hosted_contract_bundle_fails_closed_when_existing_output_identity_mismatches(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             final_package_path = Path(tmp_dir) / "final-package.json"

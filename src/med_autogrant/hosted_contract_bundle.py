@@ -24,6 +24,22 @@ REQUIRED_FINAL_PACKAGE_STRING_FIELDS = (
     "draft_id",
     "lifecycle_stage",
 )
+REQUIRED_FREEZE_MANIFEST_FIELDS = (
+    "draft_version_label",
+    "draft_status",
+    "active_revision_plan_id",
+    "critique_id",
+    "checkpoint_status",
+    "presubmission_frozen",
+)
+REQUIRED_LINEAGE_FIELDS = (
+    "frozen_question_id",
+    "selected_direction_id",
+    "selected_question_id",
+    "active_fit_mapping_id",
+    "draft_id",
+    "revision_plan_id",
+)
 
 
 def build_hosted_contract_bundle_payload(
@@ -138,6 +154,23 @@ def _validate_required_final_package_fields(final_package: dict[str, Any]) -> No
     for field in REQUIRED_FINAL_PACKAGE_OBJECT_FIELDS:
         if not isinstance(final_package.get(field), dict):
             raise WorkspaceStateError(f"final package 缺少字段: {field}")
+
+    freeze_manifest = final_package["freeze_manifest"]
+    for field in REQUIRED_FREEZE_MANIFEST_FIELDS:
+        if field not in freeze_manifest:
+            raise WorkspaceStateError(f"final package freeze_manifest 缺少字段: {field}")
+
+    checkpoint_summary = final_package["checkpoint_summary"]
+    verification_checkpoint = checkpoint_summary.get("verification_checkpoint")
+    if not isinstance(verification_checkpoint, dict):
+        raise WorkspaceStateError("final package checkpoint_summary 缺少字段: verification_checkpoint")
+    if "checkpoint_status" not in checkpoint_summary:
+        raise WorkspaceStateError("final package checkpoint_summary 缺少字段: checkpoint_status")
+
+    lineage = final_package["lineage"]
+    for field in REQUIRED_LINEAGE_FIELDS:
+        if field not in lineage:
+            raise WorkspaceStateError(f"final package lineage 缺少字段: {field}")
 
 
 def _read_program_id() -> str:
