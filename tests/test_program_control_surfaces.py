@@ -171,6 +171,12 @@ POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_LIST_ELEMENT_LINKED_OBJECT_IDS_L
     / "specs"
     / "2026-04-10-post-r5a-final-package-artifact-bundle-artifacts-list-element-linked-object-ids-list-element-value-types-fail-closed-activation-package.md"
 )
+POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_ELEMENT_VALUE_TYPES_PACKAGE = (
+    REPO_ROOT
+    / "docs"
+    / "specs"
+    / "2026-04-10-post-r5a-final-package-artifact-bundle-artifacts-object-required-list-element-value-types-fail-closed-activation-package.md"
+)
 POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_LINEAGE_VALUE_TYPES_PACKAGE = (
     REPO_ROOT
     / "docs"
@@ -204,7 +210,7 @@ OPEN_ISSUES = REPORT_DIR / "OPEN_ISSUES.md"
 REPORT_README = REPORT_DIR / "README.md"
 LATEST_ABSORBED_RUNTIME_SLICE_ACTIVATION_PACKAGE = R5A_ACTIVATION_PACKAGE
 CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = (
-    POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_LIST_ELEMENT_LINKED_OBJECT_IDS_LIST_ELEMENT_VALUE_TYPES_PACKAGE
+    POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_ELEMENT_VALUE_TYPES_PACKAGE
 )
 
 REQUIRED_COMMAND_SNIPPETS = (
@@ -1597,6 +1603,40 @@ class ProgramControlSurfaceTest(unittest.TestCase):
 
         package_path = canonical_repo_path(
             POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_LIST_ELEMENT_LINKED_OBJECT_IDS_LIST_ELEMENT_VALUE_TYPES_PACKAGE
+        )
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+            ITERATION_LOG,
+            OPEN_ISSUES,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
+    def test_post_r5a_final_package_artifact_bundle_artifact_object_required_list_element_value_types_package_is_repo_tracked_and_wired(self) -> None:
+        package_text = read_text(
+            POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_ELEMENT_VALUE_TYPES_PACKAGE
+        )
+        for snippet in (
+            "build-final-package",
+            "artifacts.selected_direction.required_evidence_ids[0]=None",
+            "artifacts.selected_direction.required_evidence_ids[0]={}",
+            'artifacts.selected_direction.required_evidence_ids[0]=""',
+            "artifacts.selected_question.subquestions[0]=None",
+            "artifacts.selected_question.linked_evidence_ids[0]={}",
+            'artifacts.argument_chain.linked_evidence_ids[0]=""',
+            "artifacts.fit_mapping.linked_evidence_ids[0]=None",
+            "以上 list element 都必须是非空字符串",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, package_text)
+
+        package_path = canonical_repo_path(
+            POST_R5A_FINAL_PACKAGE_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_ELEMENT_VALUE_TYPES_PACKAGE
         )
         for path in (
             CURRENT_PROGRAM,

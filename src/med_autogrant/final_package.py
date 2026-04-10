@@ -578,6 +578,15 @@ def _validate_required_artifact_bundle_fields(
                     workspace_id=workspace_id,
                     lifecycle_stage=lifecycle_stage,
                 )
+            for index, nested_value in enumerate(value):
+                if not isinstance(nested_value, str) or not nested_value:
+                    raise WorkspaceStateError(
+                        f"artifact bundle artifacts.{object_field}.{nested_field}[{index}] 非法: {nested_value}",
+                        errors=[],
+                        grant_run_id=grant_run_id,
+                        workspace_id=workspace_id,
+                        lifecycle_stage=lifecycle_stage,
+                    )
 
 
 def _guard_output_identity(
