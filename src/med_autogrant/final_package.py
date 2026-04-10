@@ -166,6 +166,21 @@ REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_STRING_FIELDS = {
         "risk_mitigation",
     ),
 }
+REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_FIELDS = {
+    "selected_direction": (
+        "required_evidence_ids",
+    ),
+    "selected_question": (
+        "subquestions",
+        "linked_evidence_ids",
+    ),
+    "argument_chain": (
+        "linked_evidence_ids",
+    ),
+    "fit_mapping": (
+        "linked_evidence_ids",
+    ),
+}
 
 
 def build_final_package_payload(
@@ -473,6 +488,18 @@ def _validate_required_artifact_bundle_fields(
         for nested_field in nested_fields:
             value = artifacts_payload[object_field].get(nested_field)
             if not isinstance(value, str) or not value:
+                raise WorkspaceStateError(
+                    f"artifact bundle artifacts.{object_field}.{nested_field} 非法: {value}",
+                    errors=[],
+                    grant_run_id=grant_run_id,
+                    workspace_id=workspace_id,
+                    lifecycle_stage=lifecycle_stage,
+                )
+
+    for object_field, nested_fields in REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_FIELDS.items():
+        for nested_field in nested_fields:
+            value = artifacts_payload[object_field].get(nested_field)
+            if not isinstance(value, list):
                 raise WorkspaceStateError(
                     f"artifact bundle artifacts.{object_field}.{nested_field} 非法: {value}",
                     errors=[],
