@@ -3,7 +3,7 @@
 [English](./README.md) | **中文**
 
 这里是 `Med Auto Grant` 的双语文档索引，也是默认的对外公开入口。
-内容与项目真相一致：该仓库在共享 `Unified Harness Engineering Substrate` 上承载面向医学 `Grant Ops` 的领域承载操作系统（Domain Harness OS），当前处于 baseline freeze（基线冻结）/runtime hardening（运行时强化）阶段；其 formal-entry matrix 固定为默认正式入口 `CLI`、支持协议层 `MCP`（当前保留为 future layer）、内部控制面 `controller`，当前仓库主线按 `Auto-only` 理解。
+内容与项目真相一致：该仓库在共享 `Unified Harness Engineering Substrate` 上承载面向医学 `Grant Ops` 的领域承载操作系统（Domain Harness OS）；本地 `R1 -> R5` runtime ladder 已吸收到 `R5.A / Hosted-Friendly Session Boundary`，整体成熟度仍处于 baseline freeze（基线冻结）/runtime hardening（运行时强化）阶段。其 formal-entry matrix 固定为默认正式入口 `CLI`、支持协议层 `MCP`（当前保留为 future layer）、内部控制面 `controller`，当前仓库主线按 `Auto-only` 理解。
 
 ## 统一文档治理
 
@@ -32,8 +32,9 @@
 - [主线与 OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
-- [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
+- [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)（下一条 hardening brief）
 - [Post-R5A revised-workspace validator 与 operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
+- [Post-R5A 本地 runtime walkthrough 与 output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)
 - [文档治理规则](documentation-governance.md)
 
 ## 历史规划工件
@@ -45,20 +46,21 @@
 
 1. 先看 [领域定位](./domain-positioning.zh-CN.md)。
 2. 再看 [MVP 范围](./mvp-scope.zh-CN.md)。
-3. 如果要看当前内部运行真相，优先阅读：
+3. 如果要看已经 absorbed 的当前 runtime 真相，优先阅读：
    - [主线与 OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
    - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
    - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
-   - [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
    - [Post-R5A revised-workspace validator 与 operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
-4. 只有在需要追溯历史来源时，再阅读历史规划工件。
+   - [Post-R5A 本地 runtime walkthrough 与 output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)
+4. 如果要看 `R5.A` 之后最诚实的下一条延续线，再读 [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)。
+5. 只有在需要追溯历史来源时，再阅读历史规划工件。
 
 当前 canonical 本地 operator path 以仓库首页 README 的“最小 Runtime 命令”段为准。
 
 ## 状态说明
 
-`Med Auto Grant` 仍在积极开发中，已有最小 runtime baseline。
-当前成熟度保持在 `baseline freeze / runtime hardening`，完整的基金申请 authoring runtime 尚未完成。
+`Med Auto Grant` 仍在积极开发中。
+当前本地 runtime ladder `R1 -> R5` 已吸收到 `R5.A`，最诚实的后续线是 `post-R5A local runtime hardening`；整体成熟度仍保持在 `baseline freeze / runtime hardening`，完整的基金申请 authoring runtime 尚未完成。
 
 ## 文档边界
 

@@ -3,7 +3,7 @@
 **English** | [中文](./README.zh-CN.md)
 
 This bilingual index is the default public surface for `Med Auto Grant`.
-It reflects the project truth that the repository is the medical `Grant Ops` `Domain Harness OS` direction on the shared `Unified Harness Engineering Substrate`, currently in `baseline freeze / runtime hardening`. Its formal-entry matrix is `CLI` as default formal entry, `MCP` as a reserved future protocol layer, and `controller` as internal control surface. The current repository mainline is `Auto-only`.
+It reflects the project truth that the repository is the medical `Grant Ops` `Domain Harness OS` direction on the shared `Unified Harness Engineering Substrate`. The local `R1 -> R5` runtime ladder is already absorbed through `R5.A / Hosted-Friendly Session Boundary`, while the product remains in `baseline freeze / runtime hardening`. Its formal-entry matrix is `CLI` as default formal entry, `MCP` as a reserved future protocol layer, and `controller` as internal control surface. The current repository mainline is `Auto-only`.
 
 ## Unified Documentation Governance
 
@@ -32,8 +32,9 @@ These documents are internal design references and default to Chinese.
 - [Mainline And OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
-- [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only)
+- [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (next-line hardening brief, Chinese only)
 - [Post-R5A revised-workspace validator and operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md) (Chinese only)
+- [Post-R5A local runtime walkthrough and output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md) (Chinese only)
 - [Documentation Governance](documentation-governance.md) (Chinese only)
 
 ## Historical Planning Artifacts
@@ -45,20 +46,21 @@ These documents are internal design references and default to Chinese.
 
 1. Start with [Domain Positioning](./domain-positioning.md).
 2. Continue with [MVP Scope](./mvp-scope.md).
-3. For current internal operating truth, prioritize:
+3. For the absorbed current runtime truth, prioritize:
    - [Mainline And OMX Bridge](./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
    - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
    - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
-   - [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only)
    - [Post-R5A revised-workspace validator and operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md) (Chinese only)
-4. Read historical planning artifacts only when you need provenance.
+   - [Post-R5A local runtime walkthrough and output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md) (Chinese only)
+4. For the next honest continuation line after `R5.A`, read [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only).
+5. Read historical planning artifacts only when you need provenance.
 
 For the current canonical local operator path, use the “Minimal Runtime Commands” section in the repository home README.
 
 ## Status Note
 
-`Med Auto Grant` is still under active development with a minimal runtime baseline.
-The maturity level remains in `baseline freeze / runtime hardening`, and the full grant authoring runtime is not yet complete.
+`Med Auto Grant` is still under active development.
+The local runtime ladder `R1 -> R5` is already absorbed through `R5.A`, and the current honest continuation is `post-R5A local runtime hardening`; the maturity level still remains in `baseline freeze / runtime hardening`, and the full grant authoring runtime is not yet complete.
 
 ## Documentation Boundary
 

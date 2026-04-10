@@ -29,6 +29,12 @@ R3A_MUTATION_CONTRACT = REPO_ROOT / "docs" / "specs" / "2026-04-09-r3a-machine-a
 R4A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-09-r4a-final-freeze-and-export-package-activation-package.md"
 R5A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md"
 POST_R5A_HARDENING_SPEC = REPO_ROOT / "docs" / "specs" / "2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md"
+POST_R5A_WALKTHROUGH_CURRENT_TRUTH = (
+    REPO_ROOT
+    / "docs"
+    / "specs"
+    / "2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md"
+)
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -98,6 +104,9 @@ REQUIRED_COMMAND_SNIPPETS = (
     "PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output \"$TMPDIR/r3a-p2c-revised.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output \"$TMPDIR/r3a-p3b-revised.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant next-step --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
+    "PYTHONPATH=src python3 -m med_autogrant critique-summary --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p2c-revised.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input \"$TMPDIR/r3a-p3b-revised.json\" --format json",
     "PYTHONPATH=src python3 -m med_autogrant stage-route-report --input \"$TMPDIR/r3a-p3b-revised.json\" --format json",
@@ -743,6 +752,43 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         for path in RUNTIME_BOUNDARY_CONTROL_SURFACES:
             with self.subTest(path=path.name):
                 self.assertIn(boundary_map_path, read_text(path))
+
+    def test_post_r5a_walkthrough_truth_is_repo_tracked_and_wired(self) -> None:
+        truth_path = str(POST_R5A_WALKTHROUGH_CURRENT_TRUTH)
+        truth_text = read_text(POST_R5A_WALKTHROUGH_CURRENT_TRUTH)
+
+        for snippet in (
+            "execute-revision-pass",
+            "validate-workspace --input \"$TMPDIR/r3a-p2c-revised.json\"",
+            "stage-route-report --input \"$TMPDIR/r3a-p2c-revised.json\"",
+            "build-final-package",
+            "build-hosted-contract-bundle",
+            "grant_run_id",
+            "workspace_id",
+            "draft_id",
+            "program_id",
+            "verification_checkpoint",
+            "checkpoint_status",
+            "CLI",
+            "MCP",
+            "controller",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, truth_text)
+
+        for path in (
+            README_EN,
+            README_ZH,
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+            OPEN_ISSUES,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(truth_path, read_text(path))
 
     def test_r1a_activation_package_is_wired_into_active_control_surfaces(self) -> None:
         package_path = str(R1A_ACTIVATION_PACKAGE)

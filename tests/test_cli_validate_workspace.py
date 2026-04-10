@@ -44,6 +44,12 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             exit_code = main(list(args))
         return exit_code, stdout.getvalue(), stderr.getvalue()
 
+    def run_json_cli(self, *args: str) -> dict[str, object]:
+        exit_code, stdout, stderr = self.run_cli(*args)
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        return json.loads(stdout)
+
     def test_validate_workspace_accepts_p2a_input_intake_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "validate-workspace",
@@ -624,6 +630,104 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "frozen")
+
+    def test_generated_revised_workspace_reenters_validator_and_checkpoint_surfaces(self) -> None:
+        cases = (
+            (CRITIQUE_EXAMPLE_PATH, "v0.4", None),
+            (RE_REVIEW_EXAMPLE_PATH, "v0.5", "revision-v1"),
+        )
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            for input_path, expected_version_label, expected_reviewed_revision_plan_id in cases:
+                with self.subTest(example=input_path.name):
+                    revised_path = tmp_path / f"{input_path.stem}-revised.json"
+                    revised_payload = self.run_json_cli(
+                        "execute-revision-pass",
+                        "--input",
+                        str(input_path),
+                        "--output",
+                        str(revised_path),
+                        "--format",
+                        "json",
+                    )
+                    self.assertTrue(revised_payload["ok"])
+
+                    validate_payload = self.run_json_cli(
+                        "validate-workspace",
+                        "--input",
+                        str(revised_path),
+                        "--format",
+                        "json",
+                    )
+                    self.assertTrue(validate_payload["ok"])
+                    self.assertEqual(validate_payload["lifecycle_stage"], "critique")
+
+                    summary_payload = self.run_json_cli(
+                        "summarize-workspace",
+                        "--input",
+                        str(revised_path),
+                        "--format",
+                        "json",
+                    )
+                    self.assertEqual(summary_payload["active_draft"]["status"], "revised")
+                    self.assertEqual(summary_payload["active_draft"]["version_label"], expected_version_label)
+                    self.assertEqual(summary_payload["active_revision_plan"]["execution_status"], "completed")
+
+                    next_step_payload = self.run_json_cli(
+                        "next-step",
+                        "--input",
+                        str(revised_path),
+                        "--format",
+                        "json",
+                    )
+                    self.assertEqual(next_step_payload["current_stage"], "critique")
+                    self.assertEqual(next_step_payload["recommended_stage"], "revision")
+
+                    critique_payload = self.run_json_cli(
+                        "critique-summary",
+                        "--input",
+                        str(revised_path),
+                        "--format",
+                        "json",
+                    )
+                    self.assertEqual(critique_payload["draft_status"], "revised")
+                    self.assertEqual(critique_payload["draft_version_label"], expected_version_label)
+                    self.assertEqual(critique_payload["execution_status"], "completed")
+                    self.assertEqual(
+                        critique_payload["reviewed_revision_plan_id"],
+                        expected_reviewed_revision_plan_id,
+                    )
+
+                    route_payload = self.run_json_cli(
+                        "stage-route-report",
+                        "--input",
+                        str(revised_path),
+                        "--format",
+                        "json",
+                    )
+                    self.assertTrue(route_payload["ok"])
+                    self.assertEqual(route_payload["lifecycle_stage"], "critique")
+                    self.assertEqual(route_payload["route"]["next_step"]["recommended_stage"], "revision")
+                    self.assertEqual(route_payload["route"]["summarize_workspace"]["active_draft"]["status"], "revised")
+                    self.assertEqual(
+                        route_payload["route"]["summarize_workspace"]["active_draft"]["version_label"],
+                        expected_version_label,
+                    )
+                    self.assertEqual(route_payload["route"]["critique_summary"]["execution_status"], "completed")
+                    self.assertEqual(route_payload["verification_checkpoint"]["checkpoint_status"], "forward_progress")
+                    self.assertEqual(
+                        route_payload["verification_checkpoint"]["route_alignment"]["recommended_next_stage"],
+                        "revision",
+                    )
+                    self.assertEqual(
+                        route_payload["verification_checkpoint"]["review_checkpoint"]["reviewed_revision_evidence"],
+                        route_payload["route"]["summarize_workspace"]["reviewed_revision_evidence"],
+                    )
+                    self.assertEqual(
+                        route_payload["route"]["critique_summary"]["reviewed_revision_plan_id"],
+                        expected_reviewed_revision_plan_id,
+                    )
 
     def test_critique_summary_exposes_re_review_linkage(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

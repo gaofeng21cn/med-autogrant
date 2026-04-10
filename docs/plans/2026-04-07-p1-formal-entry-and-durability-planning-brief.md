@@ -2,7 +2,7 @@
 
 Date: `2026-04-07`
 
-> Historical / completed planning brief：该 brief 对应的 `P1` 规划冻结已完成，现已被 `formal-entry matrix current truth` 与 `durability model clarification` 吸收，不再代表当前 `P3.A` program 目标。
+> Historical / completed planning brief：该 brief 对应的 `P1` 规划冻结已完成，现已被 `formal-entry matrix current truth` 与 `durability model clarification` 吸收，不再代表当前 active runtime productization program。
 
 ## 目标
 
@@ -128,4 +128,4 @@ P1 明确不做：
 2. 再把 `durability model clarification` 冻结成单独真相文档或同等级 planning artifact
 3. 只有这两份合同都冻结后，才讨论是否开始 `P1` 实现
 
-以上结论属于已完成的历史 `P1` 规划阶段；当前 active program 已前进到 `P3.A / Mentor Verdict Contract Freeze`。
+以上结论属于已完成的历史 `P1` 规划阶段；当前 active program 已不再停留在 `P3.A`，而是已经进入 runtime-first ladder absorbed through `R5.A` 的后续 hardening 语境。
