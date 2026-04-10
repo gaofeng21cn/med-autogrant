@@ -161,6 +161,13 @@ def _validate_required_final_package_fields(final_package: dict[str, Any]) -> No
     for field in REQUIRED_FREEZE_MANIFEST_FIELDS:
         if field not in freeze_manifest:
             raise WorkspaceStateError(f"final package freeze_manifest 缺少字段: {field}")
+    for field in ("draft_version_label", "active_revision_plan_id", "critique_id"):
+        value = freeze_manifest.get(field)
+        if not isinstance(value, str) or not value:
+            raise WorkspaceStateError(f"final package freeze_manifest.{field} 非法: {value}")
+    presubmission_frozen = freeze_manifest.get("presubmission_frozen")
+    if not isinstance(presubmission_frozen, bool):
+        raise WorkspaceStateError(f"final package freeze_manifest.presubmission_frozen 非法: {presubmission_frozen}")
 
     checkpoint_summary = final_package["checkpoint_summary"]
     verification_checkpoint = checkpoint_summary.get("verification_checkpoint")
