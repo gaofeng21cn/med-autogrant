@@ -83,6 +83,12 @@ REQUIRED_ARTIFACT_BUNDLE_NONNEGATIVE_INT_NESTED_FIELDS = {
         "section_count",
     ),
 }
+REQUIRED_ARTIFACT_BUNDLE_LIST_NESTED_FIELDS = {
+    "artifacts": (
+        "draft_outline",
+        "draft_sections",
+    ),
+}
 
 
 def build_final_package_payload(
@@ -308,6 +314,19 @@ def _validate_required_artifact_bundle_fields(
         for required_field in required_fields:
             value = nested_payload.get(required_field)
             if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                raise WorkspaceStateError(
+                    f"artifact bundle {object_field}.{required_field} 非法: {value}",
+                    errors=[],
+                    grant_run_id=grant_run_id,
+                    workspace_id=workspace_id,
+                    lifecycle_stage=lifecycle_stage,
+                )
+
+    for object_field, required_fields in REQUIRED_ARTIFACT_BUNDLE_LIST_NESTED_FIELDS.items():
+        nested_payload = artifact_bundle[object_field]
+        for required_field in required_fields:
+            value = nested_payload.get(required_field)
+            if not isinstance(value, list):
                 raise WorkspaceStateError(
                     f"artifact bundle {object_field}.{required_field} 非法: {value}",
                     errors=[],
