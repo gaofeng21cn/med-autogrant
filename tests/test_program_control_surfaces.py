@@ -51,6 +51,12 @@ POST_R5A_WORKTREE_CONTROL_PLANE_ROOT_PACKAGE = (
     / "specs"
     / "2026-04-10-post-r5a-worktree-aware-hosted-contract-control-plane-root-resolution-activation-package.md"
 )
+POST_R5A_LOCAL_RUNTIME_VALIDATION_FAILED_SHAPE_PACKAGE = (
+    REPO_ROOT
+    / "docs"
+    / "specs"
+    / "2026-04-10-post-r5a-local-runtime-validation-failed-route-checkpoint-shape-alignment-activation-package.md"
+)
 OBJECT_MODEL_SCHEMA = REPO_ROOT / "docs" / "specs" / "2026-04-06-object-model-schema-v1.md"
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
@@ -77,7 +83,7 @@ ITERATION_LOG = REPORT_DIR / "ITERATION_LOG.md"
 OPEN_ISSUES = REPORT_DIR / "OPEN_ISSUES.md"
 REPORT_README = REPORT_DIR / "README.md"
 LATEST_ABSORBED_RUNTIME_SLICE_ACTIVATION_PACKAGE = R5A_ACTIVATION_PACKAGE
-CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = POST_R5A_WORKTREE_CONTROL_PLANE_ROOT_PACKAGE
+CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = POST_R5A_LOCAL_RUNTIME_VALIDATION_FAILED_SHAPE_PACKAGE
 
 REQUIRED_COMMAND_SNIPPETS = (
     "python3 -m unittest discover -s tests -p 'test_*.py'",
@@ -569,6 +575,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             R5A_ACTIVATION_PACKAGE,
             POST_R5A_HARDENING_SPEC,
             POST_R5A_WORKTREE_CONTROL_PLANE_ROOT_PACKAGE,
+            POST_R5A_LOCAL_RUNTIME_VALIDATION_FAILED_SHAPE_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
         ):
@@ -869,6 +876,33 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, package_text)
 
         package_path = canonical_repo_path(POST_R5A_WORKTREE_CONTROL_PLANE_ROOT_PACKAGE)
+        for path in (
+            CURRENT_PROGRAM,
+            PROGRAM_ROUTING,
+            PRD,
+            TEST_SPEC,
+            IMPLEMENTATION,
+            LATEST_STATUS,
+            ITERATION_LOG,
+            OPEN_ISSUES,
+        ):
+            with self.subTest(path=path.name):
+                self.assertIn(package_path, read_text(path))
+
+    def test_post_r5a_local_runtime_validation_failed_shape_package_is_repo_tracked_and_wired(self) -> None:
+        package_text = read_text(POST_R5A_LOCAL_RUNTIME_VALIDATION_FAILED_SHAPE_PACKAGE)
+        for snippet in (
+            "run-local / resume-local",
+            "validation_failed",
+            "verification_checkpoint",
+            "checkpoint_status = null",
+            "stage_action_envelope = null",
+            "stage-route-report",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, package_text)
+
+        package_path = canonical_repo_path(POST_R5A_LOCAL_RUNTIME_VALIDATION_FAILED_SHAPE_PACKAGE)
         for path in (
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,

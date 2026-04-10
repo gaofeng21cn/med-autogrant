@@ -327,6 +327,115 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(payload["stop_reason"]["checkpoint_status"], "submission_frozen")
             self.assertEqual(payload["stop_reason"]["recommended_next_stage"], "frozen")
 
+    def test_run_local_validation_failed_path_keeps_route_checkpoint_shape(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            invalid_workspace = Path(tmp_dir) / "invalid-workspace.json"
+            journal_path = Path(tmp_dir) / "invalid-journal.json"
+            document = json.loads(REVISION_EXAMPLE_PATH.read_text(encoding="utf-8"))
+            document.pop("grant_run_id")
+            invalid_workspace.write_text(json.dumps(document, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            exit_code, stdout, stderr = self.run_cli(
+                "run-local",
+                "--input",
+                str(invalid_workspace),
+                "--journal",
+                str(journal_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["ok"])
+            self.assertEqual(payload["command"], "run-local")
+            self.assertEqual(payload["attempt_index"], 1)
+            self.assertEqual(payload["stop_reason"]["code"], "validation_failed")
+            self.assertIsNone(payload["stop_reason"]["checkpoint_status"])
+            self.assertEqual(payload["stop_reason"]["current_stage"], "revision")
+            self.assertEqual(payload["stop_reason"]["recommended_next_stage"], "revision")
+            self.assertIsNone(payload["stage_action_envelope"])
+
+            route_report = payload["route_report"]
+            self.assertFalse(route_report["ok"])
+            self.assertIsNone(route_report["checkpoint_status"])
+            self.assertEqual(route_report["lifecycle_stage"], "revision")
+            self.assertIsInstance(route_report["route"], dict)
+            self.assertFalse(route_report["route"]["validate_workspace"]["ok"])
+            self.assertGreater(route_report["route"]["validate_workspace"]["error_count"], 0)
+            self.assertIsNone(route_report["route"]["summarize_workspace"])
+            self.assertIsNone(route_report["route"]["critique_summary"])
+            self.assertEqual(route_report["route"]["next_step"]["current_stage"], "revision")
+            self.assertEqual(route_report["route"]["next_step"]["recommended_stage"], "revision")
+            self.assertEqual(route_report["route"]["next_step"]["reason"], payload["stop_reason"]["reason"])
+            self.assertEqual(route_report["route"]["next_step"]["actions"], [])
+            self.assertFalse(route_report["route"]["next_step"]["requires_human_confirmation"])
+
+            verification_checkpoint = route_report["verification_checkpoint"]
+            self.assertIsInstance(verification_checkpoint, dict)
+            self.assertIsNone(verification_checkpoint["checkpoint_status"])
+            self.assertFalse(verification_checkpoint["validation_ok"])
+
+            journal = json.loads(journal_path.read_text(encoding="utf-8"))
+            self.assertEqual(journal["latest_stop_reason"]["code"], "validation_failed")
+            self.assertIsNone(journal["latest_stage_action_envelope"])
+            self.assertIsNone(journal["latest_route_report"]["checkpoint_status"])
+            self.assertIsInstance(journal["latest_route_report"]["route"], dict)
+            self.assertIsInstance(journal["latest_route_report"]["verification_checkpoint"], dict)
+            self.assertFalse(journal["latest_route_report"]["verification_checkpoint"]["validation_ok"])
+
+    def test_resume_local_validation_failed_path_keeps_route_checkpoint_shape(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            invalid_workspace = Path(tmp_dir) / "invalid-workspace.json"
+            journal_path = Path(tmp_dir) / "invalid-journal.json"
+            document = json.loads(REVISION_EXAMPLE_PATH.read_text(encoding="utf-8"))
+            document.pop("grant_run_id")
+            invalid_workspace.write_text(json.dumps(document, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            first_exit, first_stdout, first_stderr = self.run_cli(
+                "run-local",
+                "--input",
+                str(invalid_workspace),
+                "--journal",
+                str(journal_path),
+                "--format",
+                "json",
+            )
+            self.assertEqual(first_exit, 0)
+            self.assertEqual(first_stderr, "")
+            self.assertFalse(json.loads(first_stdout)["ok"])
+
+            second_exit, second_stdout, second_stderr = self.run_cli(
+                "resume-local",
+                "--journal",
+                str(journal_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(second_exit, 0)
+            self.assertEqual(second_stderr, "")
+            payload = json.loads(second_stdout)
+            self.assertFalse(payload["ok"])
+            self.assertEqual(payload["command"], "resume-local")
+            self.assertEqual(payload["attempt_index"], 2)
+            self.assertEqual(payload["stop_reason"]["code"], "validation_failed")
+            self.assertIsNone(payload["stop_reason"]["checkpoint_status"])
+            self.assertIsNone(payload["stage_action_envelope"])
+            self.assertIsNone(payload["route_report"]["checkpoint_status"])
+            self.assertIsInstance(payload["route_report"]["route"], dict)
+            self.assertEqual(payload["route_report"]["route"]["next_step"]["recommended_stage"], "revision")
+            self.assertIsInstance(payload["route_report"]["verification_checkpoint"], dict)
+            self.assertFalse(payload["route_report"]["verification_checkpoint"]["validation_ok"])
+
+            journal = json.loads(journal_path.read_text(encoding="utf-8"))
+            self.assertEqual(len(journal["attempts"]), 2)
+            self.assertEqual(journal["attempts"][1]["trigger"], "resume-local")
+            self.assertEqual(journal["attempts"][1]["attempt_index"], 2)
+            self.assertEqual(journal["latest_stop_reason"]["code"], "validation_failed")
+            self.assertIsInstance(journal["latest_route_report"]["verification_checkpoint"], dict)
+
     def test_resume_local_reuses_journal_input_and_appends_attempt(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "resume-journal.json"

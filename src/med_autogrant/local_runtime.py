@@ -44,20 +44,14 @@ def run_local_runtime(
         draft_id = route_report["verification_checkpoint"]["identity"]["draft_id"]
         lifecycle_stage = route_report["lifecycle_stage"]
     else:
-        route_report = {
-            "ok": False,
-            "grant_run_id": document.get("grant_run_id"),
-            "workspace_id": document.get("workspace_id"),
-            "lifecycle_stage": document.get("lifecycle_stage"),
-            "validation": validation.to_dict(document),
-            "verification_checkpoint": None,
-        }
+        route_report = build_validation_failed_route_report(document=document, validation=validation)
+        next_step = route_report["route"]["next_step"]
         stop_reason = {
             "code": "validation_failed",
-            "reason": validation.errors[0].message,
-            "current_stage": document.get("lifecycle_stage"),
-            "recommended_next_stage": document.get("lifecycle_stage"),
-            "checkpoint_status": None,
+            "reason": next_step["reason"],
+            "current_stage": next_step["current_stage"],
+            "recommended_next_stage": next_step["recommended_stage"],
+            "checkpoint_status": route_report["checkpoint_status"],
             "requires_human_confirmation": False,
             "forced_rollback_stage": None,
             "forced_rollback_reason": None,
@@ -107,6 +101,62 @@ def resume_local_runtime(*, journal_path: str | Path) -> dict[str, Any]:
     if not isinstance(input_path, str) or not input_path:
         raise LocalRuntimeStateError(f"journal 缺少 input_path: {resolved_journal_path}")
     return run_local_runtime(input_path=input_path, journal_path=resolved_journal_path, trigger="resume-local")
+
+
+def build_validation_failed_route_report(
+    *,
+    document: dict[str, Any],
+    validation: Any,
+) -> dict[str, Any]:
+    lifecycle_stage = document.get("lifecycle_stage")
+    validation_payload = validation.to_dict(document)
+    reason = validation.errors[0].message if validation.errors else "workspace validation failed"
+    checkpoint_status = None
+    return {
+        "ok": False,
+        "grant_run_id": document.get("grant_run_id"),
+        "workspace_id": document.get("workspace_id"),
+        "lifecycle_stage": lifecycle_stage,
+        "route": {
+            "validate_workspace": validation_payload,
+            "summarize_workspace": None,
+            "next_step": {
+                "grant_run_id": document.get("grant_run_id"),
+                "workspace_id": document.get("workspace_id"),
+                "presubmission_frozen": bool(document.get("gates", {}).get("presubmission_frozen")),
+                "current_stage": lifecycle_stage,
+                "recommended_stage": lifecycle_stage,
+                "reason": reason,
+                "actions": [],
+                "requires_human_confirmation": False,
+            },
+            "critique_summary": None,
+        },
+        "checkpoint_status": checkpoint_status,
+        "verification_checkpoint": {
+            "checkpoint_status": checkpoint_status,
+            "validation_ok": False,
+            "identity": {
+                "grant_run_id": document.get("grant_run_id"),
+                "workspace_id": document.get("workspace_id"),
+                "draft_id": None,
+                "active_revision_plan_id": None,
+                "reviewed_revision_plan_id": None,
+            },
+            "route_alignment": {
+                "lifecycle_stage": lifecycle_stage,
+                "recommended_next_stage": lifecycle_stage,
+                "forced_rollback_stage": None,
+                "forced_rollback_reason": None,
+                "presubmission_frozen": bool(document.get("gates", {}).get("presubmission_frozen")),
+            },
+            "review_checkpoint": {
+                "critique_id": None,
+                "reviewed_revision_evidence": None,
+                "blocking_issue_count": None,
+            },
+        },
+    }
 
 
 def derive_stop_reason(route_report: dict[str, Any]) -> dict[str, Any]:
