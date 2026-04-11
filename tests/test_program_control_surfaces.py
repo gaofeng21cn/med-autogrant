@@ -15,14 +15,14 @@ README_EN = REPO_ROOT / "README.md"
 README_ZH = REPO_ROOT / "README.zh-CN.md"
 DOCS_README_EN = REPO_ROOT / "docs" / "README.md"
 DOCS_README_ZH = REPO_ROOT / "docs" / "README.zh-CN.md"
-PROJECT_TRUTH = REPO_ROOT / "contracts" / "project-truth" / "AGENTS.md"
+ROOT_AGENTS = REPO_ROOT / "AGENTS.md"
 POSITIONING_DOC = REPO_ROOT / "docs" / "domain-harness-os-positioning.md"
 TOP_LEVEL_DESIGN = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-auto-grant-top-level-design.md"
 CURRENT_PROGRAM = CONTROL_ROOT / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
 PROGRAM_ROUTING = CONTROL_ROOT / ".runtime-program" / "context" / "PROGRAM_ROUTING.md"
-TEAM_PROMPT = CONTROL_ROOT / ".runtime-program" / "context" / "OMX_TEAM_PROMPT.md"
-EXECUTION_PROMPT = CONTROL_ROOT / ".runtime-program" / "context" / "OMX_EXECUTION_PROMPT.md"
-OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
+OMX_HISTORY_INDEX_EN = REPO_ROOT / "docs" / "history" / "omx" / "README.md"
+OMX_HISTORY_INDEX_ZH = REPO_ROOT / "docs" / "history" / "omx" / "README.zh-CN.md"
+OMX_HISTORY_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
 RUNTIME_FIRST_PROGRAM = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-productization-program.md"
 RUNTIME_BOUNDARY_MAP = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-r1-to-r5-boundary-map.md"
 R1A_ACTIVATION_PACKAGE = REPO_ROOT / "docs" / "specs" / "2026-04-08-r1a-local-main-loop-entry-and-stop-reason-activation-package.md"
@@ -341,9 +341,8 @@ EXECUTION_HANDLE_SNIPPETS = (
 EXECUTION_HANDLE_REVIEW_SURFACES = (
     README_EN,
     README_ZH,
-    PROJECT_TRUTH,
+    ROOT_AGENTS,
     POSITIONING_DOC,
-    OMX_BRIDGE,
     OBJECT_MODEL_SCHEMA,
     FORMAL_ENTRY_MATRIX,
     DURABILITY_MODEL,
@@ -356,6 +355,15 @@ EXECUTION_HANDLE_REVIEW_SURFACES = (
     P4B_CURRENT_TRUTH,
     WORKSPACE_EXAMPLE,
     WORKSPACE_SCHEMA,
+)
+
+ACTIVE_CONTROL_SURFACES = (
+    PRD,
+    TEST_SPEC,
+    IMPLEMENTATION,
+    LATEST_STATUS,
+    ITERATION_LOG,
+    OPEN_ISSUES,
 )
 
 DURABLE_REPORT_SURFACE_SNIPPETS = (
@@ -569,8 +577,6 @@ RUNTIME_FIRST_SNIPPETS = (
 RUNTIME_BOUNDARY_CONTROL_SURFACES = (
     CURRENT_PROGRAM,
     PROGRAM_ROUTING,
-    TEAM_PROMPT,
-    EXECUTION_PROMPT,
     PRD,
     TEST_SPEC,
     IMPLEMENTATION,
@@ -654,6 +660,8 @@ class ProgramControlSurfaceTest(unittest.TestCase):
     def test_current_program_truth_sources_exist(self) -> None:
         document = read_text(CURRENT_PROGRAM)
         for path in extract_truth_sources(document):
+            if path == CANONICAL_ROOT / "contracts" / "project-truth" / "AGENTS.md":
+                path = ROOT_AGENTS
             with self.subTest(path=str(path)):
                 self.assertTrue(path.exists(), f"truth source 不存在: {path}")
 
@@ -661,17 +669,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         current_program = read_text(CURRENT_PROGRAM)
         phase, tranche = extract_phase_pointer(current_program)
 
-        for path in (
-            TEAM_PROMPT,
-            EXECUTION_PROMPT,
-            OMX_BRIDGE,
-            PRD,
-            TEST_SPEC,
-            IMPLEMENTATION,
-            LATEST_STATUS,
-            ITERATION_LOG,
-            OPEN_ISSUES,
-        ):
+        for path in ACTIVE_CONTROL_SURFACES:
             with self.subTest(path=path.name):
                 text = read_text(path)
                 self.assertIn(phase, text, f"{path.name} 缺少当前 phase 指针")
@@ -681,8 +679,6 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         for path in (
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,
-            TEAM_PROMPT,
-            EXECUTION_PROMPT,
             PROGRAM_OPERATING_MODEL,
             PRD,
             TEST_SPEC,
@@ -723,24 +719,39 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             POST_R5A_HOSTED_CONTRACT_FINAL_PACKAGE_LINEAGE_VALUE_TYPES_PACKAGE,
             P5A_ACTIVATION_PACKAGE,
             P5B_ACTIVATION_PACKAGE,
+            OMX_HISTORY_INDEX_EN,
+            OMX_HISTORY_INDEX_ZH,
+            OMX_HISTORY_BRIDGE,
         ):
             with self.subTest(path=path.name):
                 self.assertTrue(path.exists(), f"control surface 不存在: {path}")
 
     def test_execution_entry_and_test_spec_share_required_commands(self) -> None:
-        execution_prompt_text = read_text(EXECUTION_PROMPT)
         test_spec_text = read_text(TEST_SPEC)
         latest_status_text = read_text(LATEST_STATUS)
 
         for snippet in REQUIRED_COMMAND_SNIPPETS:
             with self.subTest(command=snippet):
-                self.assertIn(snippet, execution_prompt_text)
                 self.assertIn(snippet, test_spec_text)
 
         self.assertIn("Verification Snapshot", latest_status_text)
         for keyword in ("validate-workspace", "summarize-workspace", "next-step", "critique-summary", "stage-route-report"):
             with self.subTest(keyword=keyword):
                 self.assertIn(keyword, latest_status_text)
+
+    def test_omx_history_archive_is_explicitly_historical(self) -> None:
+        history_en = read_text(OMX_HISTORY_INDEX_EN)
+        history_zh = read_text(OMX_HISTORY_INDEX_ZH)
+        bridge_path = "./specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
+
+        self.assertIn("not an active execution surface", history_en)
+        self.assertIn("不是当前活跃执行入口", history_zh)
+        self.assertIn("2026-04-06-med-autogrant-mainline-and-omx-bridge.md", history_en)
+        self.assertIn("2026-04-06-med-autogrant-mainline-and-omx-bridge.md", history_zh)
+
+        self.assertIn("./history/omx/README.md", read_text(DOCS_README_EN))
+        self.assertIn("./history/omx/README.zh-CN.md", read_text(DOCS_README_ZH))
+        self.assertNotIn(bridge_path, read_text(DOCS_README_EN))
 
     def test_formal_entry_and_durability_current_truth_are_frozen(self) -> None:
         formal_entry_text = read_text(FORMAL_ENTRY_MATRIX)
@@ -817,8 +828,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertNotIn("尚未把 revision executor 误写成 landed runtime surface", text)
 
         current_program_text = read_text(CURRENT_PROGRAM)
-        execution_prompt_text = read_text(EXECUTION_PROMPT)
-        team_prompt_text = read_text(TEAM_PROMPT)
+        program_routing_text = read_text(PROGRAM_ROUTING)
         for path in (
             FORMAL_ENTRY_MATRIX,
             DURABILITY_MODEL,
@@ -833,10 +843,8 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             path_text = canonical_repo_path(path)
             with self.subTest(current_program_path=path.name):
                 self.assertIn(path_text, current_program_text)
-            with self.subTest(execution_prompt_path=path.name):
-                self.assertIn(path_text, execution_prompt_text)
-            with self.subTest(team_prompt_path=path.name):
-                self.assertIn(path_text, team_prompt_text)
+            with self.subTest(program_routing_path=path.name):
+                self.assertIn(path_text, program_routing_text)
 
     def test_report_surface_documents_required_files_and_sync_rule(self) -> None:
         report_text = read_text(REPORT_README)
@@ -868,19 +876,19 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         current_program_text = read_text(CURRENT_PROGRAM)
         prd_text = read_text(PRD)
         implementation_text = read_text(IMPLEMENTATION)
-        bridge_text = read_text(OMX_BRIDGE)
+        bridge_text = read_text(OMX_HISTORY_BRIDGE)
 
         for snippet in FUTURE_TRANCHE_SNIPPETS:
             for path, text in (
                 (CURRENT_PROGRAM, current_program_text),
                 (PRD, prd_text),
                 (IMPLEMENTATION, implementation_text),
-                (OMX_BRIDGE, bridge_text),
+                (OMX_HISTORY_BRIDGE, bridge_text),
             ):
                 with self.subTest(path=path.name, snippet=snippet):
                     self.assertIn(snippet, text)
 
-        for path in (CURRENT_PROGRAM, PROGRAM_OPERATING_MODEL, PRD, TEST_SPEC, IMPLEMENTATION, OMX_BRIDGE):
+        for path in (CURRENT_PROGRAM, PROGRAM_OPERATING_MODEL, PRD, TEST_SPEC, IMPLEMENTATION, OMX_HISTORY_BRIDGE):
             with self.subTest(path=path.name):
                 self.assertIn("same-phase auto-promotion", read_text(path))
 
@@ -903,9 +911,6 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             for path in (
                 CURRENT_PROGRAM,
                 PROGRAM_ROUTING,
-                TEAM_PROMPT,
-                EXECUTION_PROMPT,
-                OMX_BRIDGE,
                 PRD,
                 TEST_SPEC,
                 IMPLEMENTATION,
@@ -922,11 +927,11 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, runtime_program_text)
 
-        for path in (PROJECT_TRUTH, TOP_LEVEL_DESIGN, OMX_BRIDGE, CURRENT_PROGRAM):
+        for path in (TOP_LEVEL_DESIGN, CURRENT_PROGRAM, PROGRAM_ROUTING, PRD, TEST_SPEC, IMPLEMENTATION, LATEST_STATUS):
             with self.subTest(path=path.name):
                 self.assertIn(runtime_program_path, read_text(path))
 
-        combined = "\n".join(read_text(path) for path in (PROJECT_TRUTH, TOP_LEVEL_DESIGN, OMX_BRIDGE))
+        combined = "\n".join(read_text(path) for path in (TOP_LEVEL_DESIGN, CURRENT_PROGRAM, PROGRAM_ROUTING))
         self.assertIn("runtime-first", combined)
         self.assertIn("CLI-first + host-agent", combined)
 
@@ -938,7 +943,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, boundary_map_text)
 
-        for path in (PROJECT_TRUTH, TOP_LEVEL_DESIGN, RUNTIME_FIRST_PROGRAM, OMX_BRIDGE):
+        for path in (TOP_LEVEL_DESIGN, CURRENT_PROGRAM, PROGRAM_ROUTING, PRD, TEST_SPEC, IMPLEMENTATION, LATEST_STATUS):
             with self.subTest(path=path.name):
                 self.assertIn(boundary_map_path, read_text(path))
 
@@ -1658,8 +1663,6 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         for path in (
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,
-            TEAM_PROMPT,
-            EXECUTION_PROMPT,
             PRD,
             TEST_SPEC,
             IMPLEMENTATION,
@@ -1675,8 +1678,6 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         for path in (
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,
-            TEAM_PROMPT,
-            EXECUTION_PROMPT,
             PRD,
             TEST_SPEC,
             IMPLEMENTATION,
@@ -1689,18 +1690,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         package_path = canonical_repo_path(R2A_ACTIVATION_PACKAGE)
         self.assertTrue(R2A_ACTIVATION_PACKAGE.exists(), f"R2.A activation package 不存在: {R2A_ACTIVATION_PACKAGE}")
 
-        for path in (
-            CURRENT_PROGRAM,
-            PROGRAM_ROUTING,
-            TEAM_PROMPT,
-            EXECUTION_PROMPT,
-            PRD,
-            TEST_SPEC,
-            IMPLEMENTATION,
-            LATEST_STATUS,
-            ITERATION_LOG,
-            OPEN_ISSUES,
-        ):
+        for path in ACTIVE_CONTROL_SURFACES:
             with self.subTest(path=path.name):
                 self.assertIn(package_path, read_text(path))
 
@@ -1708,18 +1698,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         package_path = canonical_repo_path(R3A_ACTIVATION_PACKAGE)
         self.assertTrue(R3A_ACTIVATION_PACKAGE.exists(), f"R3.A activation package 不存在: {R3A_ACTIVATION_PACKAGE}")
 
-        for path in (
-            CURRENT_PROGRAM,
-            PROGRAM_ROUTING,
-            TEAM_PROMPT,
-            EXECUTION_PROMPT,
-            PRD,
-            TEST_SPEC,
-            IMPLEMENTATION,
-            LATEST_STATUS,
-            ITERATION_LOG,
-            OPEN_ISSUES,
-        ):
+        for path in ACTIVE_CONTROL_SURFACES:
             with self.subTest(path=path.name):
                 self.assertIn(package_path, read_text(path))
 
@@ -1773,17 +1752,13 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, contract_text)
 
         for path in (
-            PROJECT_TRUTH,
             TOP_LEVEL_DESIGN,
-            OMX_BRIDGE,
             OBJECT_MODEL_SCHEMA,
             R3A_ACTIVATION_PACKAGE,
             RUNTIME_FIRST_PROGRAM,
             RUNTIME_BOUNDARY_MAP,
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,
-            TEAM_PROMPT,
-            EXECUTION_PROMPT,
             PRD,
             TEST_SPEC,
             IMPLEMENTATION,
@@ -1801,15 +1776,11 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, text)
 
         for path in (
-            PROJECT_TRUTH,
             TOP_LEVEL_DESIGN,
-            OMX_BRIDGE,
             RUNTIME_FIRST_PROGRAM,
             RUNTIME_BOUNDARY_MAP,
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,
-            TEAM_PROMPT,
-            EXECUTION_PROMPT,
             PRD,
             TEST_SPEC,
             IMPLEMENTATION,
@@ -1828,15 +1799,11 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, text)
 
         for path in (
-            PROJECT_TRUTH,
             TOP_LEVEL_DESIGN,
-            OMX_BRIDGE,
             RUNTIME_FIRST_PROGRAM,
             RUNTIME_BOUNDARY_MAP,
             CURRENT_PROGRAM,
             PROGRAM_ROUTING,
-            TEAM_PROMPT,
-            EXECUTION_PROMPT,
             PRD,
             TEST_SPEC,
             IMPLEMENTATION,
@@ -1937,14 +1904,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, combined)
 
     def test_revision_transition_contract_is_frozen_in_active_truth_surfaces(self) -> None:
-        for path in (OMX_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION):
+        for path in (OMX_HISTORY_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION):
             text = read_text(path)
             for snippet in REVISION_TRANSITION_SNIPPETS:
                 with self.subTest(path=path.name, snippet=snippet):
                     self.assertIn(snippet, text)
 
     def test_re_review_transition_contract_is_frozen_in_active_truth_surfaces(self) -> None:
-        for path in (OBJECT_MODEL_SCHEMA, FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, OMX_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION, P3B_CURRENT_TRUTH):
+        for path in (OBJECT_MODEL_SCHEMA, FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, OMX_HISTORY_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION, P3B_CURRENT_TRUTH):
             text = read_text(path)
             for snippet in RE_REVIEW_TRANSITION_SNIPPETS:
                 with self.subTest(path=path.name, snippet=snippet):
@@ -1958,13 +1925,13 @@ class ProgramControlSurfaceTest(unittest.TestCase):
 
         boundary_text = "\n".join(
             read_text(path)
-            for path in (OMX_BRIDGE, OBJECT_MODEL_SCHEMA)
+            for path in (OMX_HISTORY_BRIDGE, OBJECT_MODEL_SCHEMA)
         )
         for snippet in EXECUTION_HANDLE_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, boundary_text)
 
-        bridge_text = read_text(OMX_BRIDGE)
+        bridge_text = read_text(OMX_HISTORY_BRIDGE)
         self.assertIn("repo-tracked review surfaces", bridge_text)
         self.assertIn("local durable handoff surfaces", bridge_text)
 
@@ -1974,7 +1941,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             for path in (
                 README_EN,
                 README_ZH,
-                PROJECT_TRUTH,
+                ROOT_AGENTS,
                 POSITIONING_DOC,
                 FORMAL_ENTRY_MATRIX,
                 DURABILITY_MODEL,
@@ -1995,7 +1962,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             for path in (
                 README_EN,
                 README_ZH,
-                PROJECT_TRUTH,
+                ROOT_AGENTS,
                 POSITIONING_DOC,
                 FORMAL_ENTRY_MATRIX,
                 DURABILITY_MODEL,
@@ -2097,7 +2064,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 self.assertIn(snippet, combined)
 
     def test_rollback_and_presubmission_gate_contract_is_frozen_in_active_truth_surfaces(self) -> None:
-        for path in (OBJECT_MODEL_SCHEMA, FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, OMX_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION, P3C_CURRENT_TRUTH):
+        for path in (OBJECT_MODEL_SCHEMA, FORMAL_ENTRY_MATRIX, DURABILITY_MODEL, OMX_HISTORY_BRIDGE, PRD, TEST_SPEC, IMPLEMENTATION, P3C_CURRENT_TRUTH):
             text = read_text(path)
             for snippet in ROLLBACK_GATE_SNIPPETS:
                 with self.subTest(path=path.name, snippet=snippet):

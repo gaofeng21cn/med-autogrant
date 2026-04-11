@@ -1,0 +1,16 @@
+# OMX 历史资料索引
+
+这里收录 `Med Auto Grant` 仓库内与 OMX 时代相关的历史资料入口。
+
+它不是当前活跃执行入口。
+如果要看当前项目规则或当前工作入口，请先读：
+
+- `../../../AGENTS.md`
+- `../../README.zh-CN.md`
+- `../../domain-harness-os-positioning.md`
+- `../../specs/2026-04-07-formal-entry-matrix-current-truth.md`
+- `../../specs/2026-04-07-durability-model-clarification.md`
+
+保留为审计与迁移背景的 OMX 历史资料：
+
+- [主线与 OMX Bridge](../../specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)

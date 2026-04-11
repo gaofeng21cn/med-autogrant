@@ -114,7 +114,7 @@
 执行前，`OMX` 必须先读：
 
 - `AGENTS.md`
-- `contracts/project-truth/AGENTS.md`
+- `AGENTS.md`
 - `README.md`
 - `README.zh-CN.md`
 - `docs/specs/2026-04-08-runtime-first-productization-program.md`

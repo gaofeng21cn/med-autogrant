@@ -72,7 +72,7 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 ### 1. 项目真相层
 
-- `contracts/project-truth/AGENTS.md`
+- `AGENTS.md`
 
 这层定义：
 

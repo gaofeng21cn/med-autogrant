@@ -54,8 +54,8 @@ Date: `2026-04-07`
 
 - `.runtime-program/context/CURRENT_PROGRAM.md`
 - `.runtime-program/context/PROGRAM_ROUTING.md`
-- `.runtime-program/context/OMX_TEAM_PROMPT.md`
-- `.runtime-program/context/OMX_EXECUTION_PROMPT.md`
+- `.runtime-program/context/PROGRAM_ROUTING.md`
+- 历史 OMX prompt（如果本机仍保留）只能作为本地迁移背景，不再构成当前活跃入口
 - `.runtime-program/plans/spec-program-operating-model.md`
 - `.runtime-program/plans/prd-med-autogrant-mainline.md`
 - `.runtime-program/plans/test-spec-med-autogrant-mainline.md`

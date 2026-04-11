@@ -29,7 +29,7 @@ Date: `2026-04-07`
 当前预期需要冻结的最小结论是：
 
 - user-facing runtime formal entry：当前仅正式支持 `CLI`
-- developer control-plane durable entry：`OMX_TEAM_PROMPT + CURRENT_PROGRAM + PROGRAM_ROUTING + active plans + active reports`
+- developer control-plane durable entry：`CURRENT_PROGRAM + PROGRAM_ROUTING + active plans + active reports`；历史 OMX prompt 只保留为本地迁移背景
 - `MCP / controller`：当前仍是 future scope，不得在 `P1` 内伪装成已实现能力
 
 ### 2. durability model clarification

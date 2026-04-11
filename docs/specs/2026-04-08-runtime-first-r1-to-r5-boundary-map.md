@@ -4,6 +4,8 @@ Date: `2026-04-08`
 
 ## Purpose
 
+> 历史说明：本文件保留了 OMX 时代对 `runtime-first productization` 的阶段边界定义，用于审计与追溯；当前活跃入口已迁回根 `AGENTS.md`、`docs/README*` 与 `docs/history/omx/README*`。
+
 这份文档把 `Med Auto Grant` 当前 `runtime-first productization` program 的未来边界一次性预冻结到 `R5`。
 
 它的作用不是把所有 tranche 误写成已实现，而是明确：

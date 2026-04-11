@@ -146,5 +146,5 @@ Date: `2026-04-08`
 
 1. active `test-spec` 中的 repo-native commands 全绿。
 2. `freeze_ready / rollback_required / submission_frozen` checkpoint 语义与 canonical examples 一致。
-3. `CURRENT_PROGRAM`、`PROGRAM_ROUTING`、active `PRD / test-spec / implementation`、`OMX_EXECUTION_PROMPT`、`OMX_TEAM_PROMPT` 与 reports 一致表述 `P4.A`。
+3. `CURRENT_PROGRAM`、`PROGRAM_ROUTING`、active `PRD / test-spec / implementation` 与 reports 一致表述 `P4.A`，历史 OMX prompt 不再作为活跃校验面。
 4. formal entry、durability、team gate、ID-boundary 与 absorbed upstream truth surfaces 均未漂移。

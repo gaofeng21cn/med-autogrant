@@ -173,6 +173,8 @@ Date: `2026-04-08`
 
 ## OMX Autonomy Rules For This Program
 
+> 历史说明：本节保留 OMX 时代的连续执行约束，作为审计与迁移背景；当前活跃入口已迁回根 `AGENTS.md`、`docs/README*` 与 `docs/history/omx/README*`。
+
 在这条 program 里，`OMX` 不是被允许“想到什么就做什么”，而是被允许：
 
 1. 先在 `R1 -> R5` 中定位当前 stage

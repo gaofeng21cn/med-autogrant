@@ -17,7 +17,7 @@ Date: `2026-04-09`
 
 必须同时服从：
 
-- `/Users/gaofeng/workspace/med-autogrant/contracts/project-truth/AGENTS.md`
+- `/Users/gaofeng/workspace/med-autogrant/AGENTS.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
