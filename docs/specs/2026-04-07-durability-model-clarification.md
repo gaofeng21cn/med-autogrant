@@ -80,6 +80,7 @@ Date: `2026-04-07`
 - `run-local --journal ...`
 - `resume-local --journal ...`
 - local run journal JSON
+- 默认 durable root：`$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`
 
 这层负责：
 

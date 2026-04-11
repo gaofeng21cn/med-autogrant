@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
+from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -34,6 +36,40 @@ class LocalRuntimeCliTest(unittest.TestCase):
             except SystemExit as exc:
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
+
+    def test_run_local_defaults_journal_to_runtime_state_sessions_root(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            codex_home = Path(tmp_dir) / "codex-home"
+            expected_journal_path = (
+                codex_home
+                / "projects"
+                / "med-autogrant"
+                / "runtime-state"
+                / "sessions"
+                / "grant-run-nsfc-demo-001-baseline-001.json"
+            )
+
+            with patch.dict(
+                os.environ,
+                {
+                    "CODEX_HOME": str(codex_home),
+                    "MED_AUTOGRANT_RUNTIME_STATE_ROOT": "",
+                },
+                clear=False,
+            ):
+                exit_code, stdout, stderr = self.run_cli(
+                    "run-local",
+                    "--input",
+                    str(REVISION_EXAMPLE_PATH),
+                    "--format",
+                    "json",
+                )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertEqual(payload["journal_path"], str(expected_journal_path.resolve()))
+            self.assertTrue(expected_journal_path.exists())
 
     def test_run_local_writes_journal_and_stage_action_stop_reason_for_revision_workspace(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

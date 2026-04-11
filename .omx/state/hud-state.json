@@ -1,6 +1,0 @@
-{
-  "last_turn_at": "2026-04-11T11:52:14.149Z",
-  "turn_count": 1,
-  "last_progress_at": "2026-04-11T11:52:14.149Z",
-  "last_agent_output": "**本轮完成**\n- 已把 `execute-revision-pass`、`build-artifact-bundle`、`build-final-package` 的 runtime handof"
-}

@@ -10,6 +10,7 @@ from med_autogrant.control_plane import (
     CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
     read_program_id as _read_program_id_from_contract,
     resolve_current_program_contract_path,
+    resolve_runtime_state_root,
 )
 from med_autogrant.final_package import (
     _validate_required_artifact_bundle_fields,
@@ -35,7 +36,6 @@ from med_autogrant.workspace import (
 )
 
 
-DEFAULT_JOURNAL_ROOT = Path.home() / ".med-autogrant" / "runs"
 JOURNAL_VERSION = 1
 CURRENT_PROGRAM_RELATIVE_PATH = CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH
 
@@ -459,7 +459,11 @@ def _resolve_journal_path(*, document: dict[str, Any], journal_path: str | Path 
     grant_run_id = document.get("grant_run_id")
     if not isinstance(grant_run_id, str) or not grant_run_id:
         raise LocalRuntimeStateError("workspace 缺少 grant_run_id，无法推导默认 journal 路径。")
-    return (DEFAULT_JOURNAL_ROOT / f"{grant_run_id}.json").resolve()
+    return (_default_journal_root() / f"{grant_run_id}.json").resolve()
+
+
+def _default_journal_root() -> Path:
+    return resolve_runtime_state_root() / "sessions"
 
 
 def _read_journal(journal_path: Path) -> dict[str, Any]:

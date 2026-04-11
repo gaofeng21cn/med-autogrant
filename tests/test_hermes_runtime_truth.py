@@ -21,6 +21,7 @@ HERMES_PROGRAM_TRUTH = (
 HERMES_MIGRATION_MAP = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md"
 )
+RUNTIME_STATE_SESSIONS_DISPLAY = "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/"
 
 
 def _read(path: Path) -> str:
@@ -69,6 +70,7 @@ def test_repo_tracks_hermes_runtime_program_and_capability_migration_map() -> No
     assert "Auto-only" in program_truth
     assert "compatibility bridge" in program_truth
     assert "regression oracle" in program_truth
+    assert RUNTIME_STATE_SESSIONS_DISPLAY in program_truth
 
     assert "validate-workspace" in migration_map
     assert "summarize-workspace" in migration_map
@@ -86,3 +88,4 @@ def test_repo_tracks_hermes_runtime_program_and_capability_migration_map() -> No
     assert "final package document assembly" in migration_map
     assert "Hermes substrate" in migration_map
     assert "Grant domain logic" in migration_map
+    assert RUNTIME_STATE_SESSIONS_DISPLAY in migration_map
