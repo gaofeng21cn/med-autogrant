@@ -15,6 +15,7 @@
 - 保持 diff 小、可审查、可回退。
 - 能删就别加；能复用现有模式就别新起抽象。
 - 没有明确必要不要新增依赖。
+- 若文档提到 `Hermes-Agent`，只能指上游外部 runtime 项目 / 服务；仓内自写的 runtime helper、shim、pilot 或 scaffold，不得写成“已接入 Hermes-Agent”。
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态；旧本地 runtime 只允许作为迁移桥、兼容层或回归 oracle 存在。
 - 不做降级处理、兜底补丁、启发式修补或“先糊住再说”式实现。
 

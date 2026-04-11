@@ -9,9 +9,9 @@
     "internal_controller_surface": "controller"
   },
   "runtime_owner": {
-    "current_owner_line": "Hermes-backed runtime substrate migration",
-    "active_phase": "Hermes Runtime Substrate Program",
-    "active_tranche": "H1 / Hermes-Owned Runtime Path",
+    "current_owner_line": "repo-local runtime baseline with upstream Hermes-Agent pending",
+    "active_phase": "Truth Reset / Upstream Hermes-Agent Pilot Prep",
+    "active_tranche": "Local Runtime Honesty + Upstream Substrate Migration",
     "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
     "compatibility_bridge": "CLI-first + host-agent runtime"
   },
@@ -23,8 +23,7 @@
   },
   "repo_tracked_truth_surfaces": [
     "contracts/runtime-program/current-program.json",
-    "docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md",
-    "docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md",
+    "docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md",
     "docs/specs/2026-04-07-formal-entry-matrix-current-truth.md",
     "docs/specs/2026-04-07-durability-model-clarification.md"
   ],

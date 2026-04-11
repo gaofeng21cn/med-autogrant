@@ -18,6 +18,9 @@ CORE_INVARIANTS = REPO_ROOT / "docs" / "invariants.md"
 CORE_STATUS = REPO_ROOT / "docs" / "status.md"
 CORE_DECISIONS = REPO_ROOT / "docs" / "decisions.md"
 ROOT_AGENTS = REPO_ROOT / "AGENTS.md"
+TRUTH_RESET_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md"
+)
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -43,10 +46,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["formal_entry"]["internal_controller_surface"], "controller")
         self.assertEqual(
             contract["runtime_owner"]["current_owner_line"],
-            "Hermes-backed runtime substrate migration",
+            "repo-local runtime baseline with upstream Hermes-Agent pending",
         )
-        self.assertEqual(contract["runtime_owner"]["active_phase"], "Hermes Runtime Substrate Program")
-        self.assertEqual(contract["runtime_owner"]["active_tranche"], "H1 / Hermes-Owned Runtime Path")
+        self.assertEqual(contract["runtime_owner"]["active_phase"], "Truth Reset / Upstream Hermes-Agent Pilot Prep")
+        self.assertEqual(contract["runtime_owner"]["active_tranche"], "Local Runtime Honesty + Upstream Substrate Migration")
         self.assertEqual(
             contract["runtime_owner"]["historical_baseline"],
             "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
@@ -54,6 +57,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["machine_local_runtime_state"]["root"], RUNTIME_STATE_ROOT)
         self.assertEqual(contract["machine_local_runtime_state"]["not_repo_tracked"], True)
         self.assertIn("contracts/runtime-program/current-program.json", contract["repo_tracked_truth_surfaces"])
+        self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
 
     def test_core_docs_publish_repo_tracked_contract_and_user_level_runtime_state(self) -> None:
         for path in (
@@ -70,24 +74,21 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             self.assertIn(RUNTIME_STATE_ROOT, text, path.name)
 
         project = _read(CORE_PROJECT)
-        self.assertIn("Hermes-backed runtime", project)
-        self.assertIn("compatibility bridge", project)
+        self.assertIn("repo-local runtime baseline with upstream Hermes-Agent pending", project)
 
         decisions = _read(CORE_DECISIONS)
-        self.assertIn("Hermes-backed runtime substrate", decisions)
+        self.assertIn("上游 Hermes-Agent 目标", decisions)
 
     def test_current_truth_specs_align_with_repo_tracked_contract(self) -> None:
         contract = json.loads(_read(CURRENT_PROGRAM_CONTRACT))
-        program_truth = _read(HERMES_PROGRAM_TRUTH)
+        truth_reset = _read(TRUTH_RESET_CURRENT_TRUTH)
         migration_map = _read(HERMES_MIGRATION_MAP)
         formal_entry = _read(FORMAL_ENTRY_MATRIX)
         durability = _read(DURABILITY_MODEL)
 
-        self.assertIn(contract["program_id"], program_truth)
-        self.assertIn(contract["runtime_owner"]["active_phase"], program_truth)
-        self.assertIn(contract["runtime_owner"]["active_tranche"], program_truth)
-        self.assertIn("contracts/runtime-program/current-program.json", program_truth)
-        self.assertIn(RUNTIME_STATE_ROOT, program_truth)
+        self.assertIn("还没有", truth_reset)
+        self.assertIn("repo-local code", truth_reset)
+        self.assertIn("current-program pointer", truth_reset)
         self.assertIn("contracts/runtime-program/current-program.json", migration_map)
         self.assertIn("build-hosted-contract-bundle", migration_map)
         self.assertIn("contracts/runtime-program/current-program.json", formal_entry)

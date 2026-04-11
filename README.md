@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository is now executing the `Hermes Runtime Substrate Program`. Under the current repo-tracked truth, the previously absorbed `CLI-first + host-agent` line remains repo-tracked only as the post-`R5.A` migration baseline closed by `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`; the product runtime mainline is being re-frozen as a `CLI-first + Hermes-backed runtime`, while the old host-agent shape is retained only as a compatibility bridge / regression oracle. The project is still neither an actual hosted runtime nor a submission-ready autopilot.
+> Status: active development. The repository already has a usable local `CLI` runtime baseline for author-side grant work, but it has **not** landed a true upstream `Hermes-Agent` integration yet. The previously absorbed `CLI-first + host-agent` line remains a historical migration baseline, while the current `hermes_runtime.py` path is still a repo-local migration scaffold rather than an upstream runtime owner. The project is still neither an actual hosted runtime nor a submission-ready autopilot.
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      The repository is currently executing the <code>Hermes Runtime Substrate Program</code>, with the <code>CLI-first + Hermes-backed runtime</code> path on the product mainline and the absorbed <code>R5.A</code> host-agent ladder retained only as a migration baseline
+      A usable local grant runtime already exists, but upstream <code>Hermes-Agent</code> integration has not landed yet; the absorbed <code>R5.A</code> host-agent ladder and the current <code>hermes_runtime.py</code> path should both be read as transitional local lines
     </td>
   </tr>
 </table>
@@ -31,11 +31,12 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 
 ## Runtime Shape (Current And Future)
 
-- Current product runtime shape: `CLI-first + Hermes-backed runtime`.
-- Hermes owns the runtime substrate; `CLI` stays the formal entry, `MCP` stays the supported protocol layer, and `controller` stays the internal surface.
-- The previous `Codex-default host-agent runtime` is retained only as a compatibility bridge / regression oracle during migration.
+- Current executable runtime shape: `CLI-first + repo-local runtime`.
+- The current `hermes_runtime.py` path is a repo-local migration scaffold; it does **not** mean upstream `Hermes-Agent` already owns the runtime substrate.
+- The previous `Codex-default host-agent runtime` remains a historical compatibility bridge / regression oracle.
 - Its formal-entry matrix is fixed as: default formal entry `CLI`, supported protocol layer `MCP` (reserved future layer, not yet repo-verified), internal control surface `controller`.
 - The current repository mainline is `Auto-only`; any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than split this repository into same-repo dual-mode logic.
+- Long-line target: `CLI-first + upstream Hermes-Agent-backed runtime substrate`.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 - Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 
@@ -47,7 +48,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
 - Current repo-verified local runtime entry also includes `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, and `build-hosted-contract-bundle`; together they cover local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, and hosted-friendly contract export.
-- `build-hosted-contract-bundle` now exports a Hermes-owned hosted handoff contract that explicitly carries `runtime_substrate_contract`, `runtime_state_contract`, and `operator_contract` alongside execution identity, artifact, and audit surfaces.
+- `build-hosted-contract-bundle` now exports a hosted-friendly handoff contract that explicitly carries `runtime_substrate_contract`, `runtime_state_contract`, and `operator_contract` alongside execution identity, artifact, and audit surfaces.
 - `stage-route-report` is the current machine-readable verification/checkpoint aggregation surface and now emits `verification_checkpoint` plus `checkpoint_status`.
 - Repo-tracked review truth and local durable handoff surfaces stay separate: the former explains the runtime contract, while the latter carries machine-specific resume state.
 
@@ -61,7 +62,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 
 ## What Is Already Working
 
-The repository already contains a minimal executable baseline around a frozen `NSFCWorkspace` contract under the current `CLI-first + Hermes-backed runtime`, with the previous host-agent line retained only as a compatibility bridge / regression oracle.
+The repository already contains a minimal executable baseline around a frozen `NSFCWorkspace` contract under a local `CLI-first` runtime shape. Both the previous host-agent line and the current `hermes_runtime.py` path are still repo-local lines; neither should be mistaken for a landed upstream `Hermes-Agent` substrate.
 
 Today, the runtime can:
 
@@ -79,7 +80,7 @@ Today, the runtime can:
 - assemble a machine-readable local `final_package` through `build-final-package` for freeze-ready / submission-frozen workspaces
 - export a hosted-friendly session / state / artifact / audit contract bundle from a landed local final package through `build-hosted-contract-bundle`
 
-Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside the old host-agent line. The current forward path is therefore a newly frozen Hermes-backed runtime tranche rather than an implicit continuation of the previous closeout.
+Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside the old host-agent line. The current forward path is therefore a truth reset plus an upstream `Hermes-Agent` integration pilot, not an implicit continuation of the previous closeout and not proof that upstream `Hermes-Agent` is already present.
 
 ## What Is Still In Progress
 
@@ -134,7 +135,7 @@ Layered local test entrypoints:
 ```bash
 TMPDIR="$(mktemp -d)"
 
-# Canonical Hermes-backed local walkthrough (post-R5A baseline retained as truth source:
+# Canonical local CLI walkthrough (current repo-local runtime baseline; post-R5A truth source:
 # docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 
 # 1. Baseline audit for a critique workspace
@@ -191,8 +192,9 @@ PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-pac
 
 ### Internal Docs
 
-- Current Hermes runtime program truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
-- Current Hermes capability migration map: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`
+- Current truth-reset overview: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
+- Historical local runtime program truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
+- Historical local runtime capability migration map: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`
 - Current canonical post-R5A walkthrough truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`
 - Current post-R5A upper-bound closeout truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
 - [`docs/domain-harness-os-positioning.md`](./docs/domain-harness-os-positioning.md)

@@ -17,6 +17,9 @@ CORE_DECISIONS = REPO_ROOT / "docs" / "decisions.md"
 CORE_STATUS = REPO_ROOT / "docs" / "status.md"
 DOMAIN_POSITIONING_EN = REPO_ROOT / "docs" / "domain-positioning.md"
 DOMAIN_POSITIONING_ZH = REPO_ROOT / "docs" / "domain-positioning.zh-CN.md"
+TRUTH_RESET_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md"
+)
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -31,7 +34,7 @@ def _read(path: Path) -> str:
 
 
 @pytest.mark.meta
-def test_core_docs_publish_hermes_runtime_topology_and_bridge_boundary() -> None:
+def test_core_docs_publish_truth_reset_runtime_topology_and_bridge_boundary() -> None:
     for path in (
         README_EN,
         README_ZH,
@@ -42,51 +45,60 @@ def test_core_docs_publish_hermes_runtime_topology_and_bridge_boundary() -> None
         CORE_STATUS,
     ):
         text = _read(path)
-        assert "Hermes-backed runtime" in text
+        assert "Hermes-Agent" in text
         assert "CLI" in text
         assert "MCP" in text
         assert "controller" in text
 
     invariants = _read(CORE_INVARIANTS)
-    assert "Hermes-backed runtime substrate" in invariants
-    assert "compatibility bridge" in invariants
-    assert "regression oracle" in invariants
+    assert "repo-local runtime baseline with upstream Hermes-Agent pending" in invariants
+    assert "migration scaffold" in invariants
 
     decisions = _read(CORE_DECISIONS)
-    assert "Hermes-backed runtime substrate" in decisions
-    assert "post-R5A" in decisions
+    assert "repo-local runtime" in decisions
+    assert "上游 Hermes-Agent 目标" in decisions
 
 
 @pytest.mark.meta
-def test_domain_positioning_public_docs_follow_hermes_mainline() -> None:
+def test_domain_positioning_public_docs_follow_truth_reset_mainline() -> None:
     for path in (DOMAIN_POSITIONING_EN, DOMAIN_POSITIONING_ZH):
         text = _read(path)
-        assert "Hermes-backed runtime" in text
+        assert "repo-local runtime baseline" in text
         assert "compatibility bridge" in text
-        assert "regression oracle" in text
-        assert "Codex-default host-agent runtime" not in text
-        assert "baseline freeze / local-runtime upper-bound closeout" not in text
+        assert "target substrate" in text or "目标 substrate" in text
 
 
 @pytest.mark.meta
-def test_readme_current_maturity_cards_follow_hermes_program_status() -> None:
-    for path in (README_EN, README_ZH):
-        text = _read(path)
-        assert "Hermes Runtime Substrate Program" in text
-        assert "Hermes-backed runtime" in text
-        assert "Current Maturity" in text or "当前成熟度" in text
-        assert "baseline freeze / local-runtime upper-bound closeout" not in text
+def test_readme_current_maturity_cards_follow_truth_reset_status() -> None:
+    readme_en = _read(README_EN)
+    readme_zh = _read(README_ZH)
+
+    assert "landed a true upstream `Hermes-Agent` integration yet" in readme_en
+    assert "repo-local migration scaffold" in readme_en
+    assert "actual hosted runtime" in readme_en
+
+    assert "还没有**真正完成上游 `Hermes-Agent` 集成" in readme_zh or "尚未落地" in readme_zh
+    assert "migration scaffold" in readme_zh
+    assert "submission-ready" in readme_zh
 
 
 @pytest.mark.meta
-def test_repo_tracks_hermes_runtime_program_and_capability_migration_map() -> None:
+def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
+    assert TRUTH_RESET_CURRENT_TRUTH.exists(), f"Truth reset current truth 不存在: {TRUTH_RESET_CURRENT_TRUTH}"
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
 
+    truth_reset = _read(TRUTH_RESET_CURRENT_TRUTH)
     program_truth = _read(HERMES_PROGRAM_TRUTH)
     migration_map = _read(HERMES_MIGRATION_MAP)
 
+    assert "还没有**真正完成上游 `Hermes-Agent` 集成" in truth_reset or "还没有" in truth_reset
+    assert "repo-local code" in truth_reset
+    assert "run-local" in truth_reset
+    assert "build-hosted-contract-bundle" in truth_reset
+
     assert "Hermes-backed runtime substrate" in program_truth
+    assert "history" not in program_truth.lower()
     assert "CLI" in program_truth
     assert "MCP" in program_truth
     assert "controller" in program_truth

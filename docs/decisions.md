@@ -33,23 +33,25 @@
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态，而不是继续把旧本地 runtime 深磨成长期产品终态。
 - 当前本地 runtime 保留为迁移桥、兼容层与回归 oracle；任何新 tranche 都必须显式说明是在延续旧基线，还是在服务新的目标形态。
 
-## 2026-04-11：切换到 Hermes-backed runtime substrate 主线
+## 2026-04-11：`Hermes-Agent` 只指上游外部 runtime substrate
 
-- 新的产品 runtime owner 固定为 `Hermes-backed runtime substrate`。
+- 后续凡是提到 `Hermes-Agent`，只能指上游外部 runtime 项目 / 服务本体。
+- 仓内 `hermes_runtime.py` 只代表 repo-local migration scaffold，不得写成“已接入 Hermes-Agent”。
+
+## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
+
+- 当前可执行 runtime owner 仍是 repo-local code。
 - 旧 `CLI-first + host-agent runtime` 线只保留为 compatibility bridge / regression oracle。
-- `CLI / MCP / controller / Hermes substrate / MedAutoGrant domain logic` 的边界必须显式保留，不得偷换 formal entry 或 authoring semantics。
+- 当前 `hermes_runtime.py` 路径只保留为本地迁移 scaffold。
+- `CLI / MCP / controller / upstream Hermes-Agent target / MedAutoGrant domain logic` 的边界必须显式保留，不得偷换 formal entry 或 authoring semantics。
 
-## 2026-04-11：冻结 Hermes capability migration map
+## 2026-04-11：旧 Hermes 命名材料降级为历史本地迁移工件
 
-- `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report / run-local / resume-local` 的产品主线改为 Hermes-owned runtime path。
-- revision / final package / hosted contract bundle 继续挂在 Hermes runtime 上运行，但对象边界、checkpoint truth 与 fail-closed contract 保持在 MedAutoGrant domain logic 中。
+- `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report / run-local / resume-local` 当前仍运行在 repo-local runtime path 上。
+- 旧的 Hermes 命名 program/spec 文档继续保留为历史迁移材料，但不再作为“上游 Hermes-Agent 已落地”的 current truth。
 
-## 2026-04-11：final package / hosted contract handoff owner 固定到 Hermes
+## 2026-04-11：final package / hosted contract 继续保持本地 owner，等待真实上游集成
 
-- `execute-revision-pass` 的 revised-workspace output identity guard 与输出 handoff 由 Hermes substrate 承担。
-- `revision_executor.py` 保留 deterministic mutation、comparison_summary 与 revision_execution 组装，不再承载长期 runtime owner 语义。
-- `build-artifact-bundle` 的 output identity guard 与输出 handoff 由 Hermes substrate 承担。
-- `artifact_bundle.py` 保留 bundle document assembly 与 compatibility bridge，不再承载长期 runtime owner 语义。
-- `build-final-package` 的 artifact-bundle 输入加载、final package output identity guard 与输出 handoff 由 Hermes substrate 承担。
-- `final_package.py` 保留 checkpoint-consistent final package document assembly 与 compatibility bridge，不再承载长期 runtime owner 语义。
-- `build-hosted-contract-bundle` 继续由 Hermes substrate 承担 final-package 输入加载、`program_id` control-plane 解析、identity guard 与输出 handoff。
+- `execute-revision-pass`、`build-artifact-bundle`、`build-final-package`、`build-hosted-contract-bundle` 当前仍由 repo-local helper 持有输入加载、identity guard 与输出 handoff。
+- `revision_executor.py`、`artifact_bundle.py`、`final_package.py` 继续保留 domain document assembly 责任，不被误写成上游 substrate 已接管。
+- 如果未来这些责任要迁到上游 `Hermes-Agent`，必须以新的 repo-tracked truth 重新冻结。

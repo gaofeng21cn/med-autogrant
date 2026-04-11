@@ -4,7 +4,7 @@
 
 This index is the default documentation surface for `Med Auto Grant`.
 Start with the core skeleton, then use specs/plans/history for deeper provenance.
-The current public runtime topology is `CLI-first + Hermes-backed runtime`; `MCP` remains the supported protocol layer and `controller` remains the internal surface.
+The current public runtime topology is: usable local `CLI` runtime baseline, upstream `Hermes-Agent` integration not yet landed. `MCP` remains the supported protocol layer and `controller` remains the internal surface.
 Repo-tracked current-program truth lives at `contracts/runtime-program/current-program.json`, while machine-local runtime state lives under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 
 ## Start Here: Core Docs
@@ -32,8 +32,7 @@ Repo-tracked current-program truth lives at `contracts/runtime-program/current-p
 
 ## Specs (Current Truth / Activation Packages)
 
-- [Hermes-backed runtime substrate program current truth](./specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md)
-- [Hermes-backed runtime capability migration map current truth](./specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md)
+- [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
 - [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only)
@@ -46,8 +45,8 @@ Specs are repo-tracked and authoritative for activation packages and current tru
 ## Current Baseline, Long-Line Target, And Task Ladder
 
 - Current repo-verified migration baseline: the absorbed `CLI-first + host-agent runtime` line now closes at the `R5.A` honest upper bound and is retained only as a migration baseline / compatibility bridge / regression oracle.
-- Current product runtime mainline: `CLI-first + Hermes-backed runtime`.
-- Active task ladder: continue the `Hermes Runtime Substrate Program` under `H1 / Hermes-Owned Runtime Path`, while keeping object boundaries and authoring semantics stable.
+- Current executable runtime mainline: local `CLI-first` runtime with repo-local helper ownership.
+- Active task ladder: keep the current local runtime honest, then migrate substrate responsibilities to a real upstream `Hermes-Agent` pilot without changing object boundaries or authoring semantics.
 - Historical bridge / OMX materials remain traceability aids only and must not be treated as current entrypoints.
 
 ## Plans & History
