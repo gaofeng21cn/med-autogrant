@@ -15,9 +15,21 @@ README_EN = REPO_ROOT / "README.md"
 README_ZH = REPO_ROOT / "README.zh-CN.md"
 DOCS_README_EN = REPO_ROOT / "docs" / "README.md"
 DOCS_README_ZH = REPO_ROOT / "docs" / "README.zh-CN.md"
+CORE_PROJECT = REPO_ROOT / "docs" / "project.md"
+CORE_ARCHITECTURE = REPO_ROOT / "docs" / "architecture.md"
+CORE_INVARIANTS = REPO_ROOT / "docs" / "invariants.md"
+CORE_DECISIONS = REPO_ROOT / "docs" / "decisions.md"
+CORE_STATUS = REPO_ROOT / "docs" / "status.md"
 ROOT_AGENTS = REPO_ROOT / "AGENTS.md"
 POSITIONING_DOC = REPO_ROOT / "docs" / "domain-harness-os-positioning.md"
 TOP_LEVEL_DESIGN = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-auto-grant-top-level-design.md"
+CORE_DOCS = (
+    CORE_PROJECT,
+    CORE_ARCHITECTURE,
+    CORE_INVARIANTS,
+    CORE_DECISIONS,
+    CORE_STATUS,
+)
 CURRENT_PROGRAM = CONTROL_ROOT / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
 PROGRAM_ROUTING = CONTROL_ROOT / ".runtime-program" / "context" / "PROGRAM_ROUTING.md"
 OMX_HISTORY_INDEX_EN = REPO_ROOT / "docs" / "history" / "omx" / "README.md"
@@ -687,6 +699,11 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             LATEST_STATUS,
             ITERATION_LOG,
             OPEN_ISSUES,
+            CORE_PROJECT,
+            CORE_ARCHITECTURE,
+            CORE_INVARIANTS,
+            CORE_DECISIONS,
+            CORE_STATUS,
             TOP_LEVEL_DESIGN,
             RUNTIME_FIRST_PROGRAM,
             RUNTIME_BOUNDARY_MAP,
@@ -725,6 +742,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         ):
             with self.subTest(path=path.name):
                 self.assertTrue(path.exists(), f"control surface 不存在: {path}")
+
+    def test_docs_readme_indexes_core_docs(self) -> None:
+        for readme in (DOCS_README_EN, DOCS_README_ZH):
+            text = read_text(readme)
+            for path in CORE_DOCS:
+                snippet = f"./{path.name}"
+                with self.subTest(readme=readme.name, snippet=snippet):
+                    self.assertIn(snippet, text)
 
     def test_execution_entry_and_test_spec_share_required_commands(self) -> None:
         test_spec_text = read_text(TEST_SPEC)

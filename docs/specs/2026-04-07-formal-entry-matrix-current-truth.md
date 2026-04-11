@@ -135,13 +135,6 @@ post-`R5.A` local runtime hardening 额外要求：
 - `validate-workspace` on revised output
 - `stage-route-report` on revised output
 
-## 当前 external verifier 裁决
-
-- `python3 /Users/gaofeng/workspace/app/omx-project-installer/skills/omx-project-installer/scripts/omx_project_installer.py diff --target /Users/gaofeng/workspace/med-autogrant`
-  - 当前状态：`external advisory verifier`
-  - 不是当前 tranche hard gate
-  - 若未来要重新纳入 hard gate，必须先同步改写 `CURRENT_PROGRAM / PROGRAM_ROUTING / active plans / reports`
-
 ## 禁止越界解释
 
 - 不得把 `supported_protocol_layer=MCP` 解释成“当前 public runtime 已正式支持 MCP”。

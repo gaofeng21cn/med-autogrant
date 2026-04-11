@@ -45,7 +45,7 @@ def test_public_readmes_publish_layered_test_entrypoints() -> None:
 def test_root_agents_freezes_layered_test_governance() -> None:
     agents = _read("AGENTS.md")
 
-    assert "`make test-fast` is the default developer slice and excludes the `meta` suite" in agents
-    assert "`make test-meta` is reserved for repo-tracked program-control and repository-hygiene checks" in agents
-    assert "`make test-cli-smoke` is the dedicated CLI/local-runtime smoke lane, and `make test-full` remains the clean-clone baseline" in agents
-    assert "update `Makefile`, `pyproject.toml`, `README*`, runtime prompt docs, and command-surface tests together" in agents
+    assert "`make test-fast` 是默认开发验证，并默认排除 `meta` 套件" in agents
+    assert "`make test-meta` 仅用于 repo-tracked program control 与 repo hygiene 检查" in agents
+    assert "`make test-cli-smoke` 是 CLI/local-runtime smoke lane，`make test-full` 是 clean-clone baseline" in agents
+    assert "更新验证命令、控制面或测试入口时，必须同步更新 `Makefile`、`pyproject.toml`、`README*`、`docs/README*`、`scripts/verify.sh` 与相关 tests" in agents
