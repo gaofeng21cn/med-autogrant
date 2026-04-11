@@ -137,10 +137,8 @@ post-`R5.A` local runtime hardening 额外要求：
 
 ## 当前 external verifier 裁决
 
-- `python3 /Users/gaofeng/workspace/app/omx-project-installer/skills/omx-project-installer/scripts/omx_project_installer.py diff --target /Users/gaofeng/workspace/med-autogrant`
-  - 当前状态：`external advisory verifier`
-  - 不是当前 tranche hard gate
-  - 若未来要重新纳入 hard gate，必须先同步改写 `CURRENT_PROGRAM / PROGRAM_ROUTING / active plans / reports`
+- OMX installer diff checker 已退役，不再作为当前 external verifier surface。
+- 若需要追溯 OMX-era 的兼容性比对链路，只能查阅 `docs/history/omx/README*` 与对应历史 bridge 文档。
 
 ## 禁止越界解释
 

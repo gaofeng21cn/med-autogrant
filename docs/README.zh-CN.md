@@ -5,13 +5,15 @@
 这里是 `Med Auto Grant` 的双语文档索引，也是默认的对外公开入口。
 内容与项目真相一致：该仓库在共享 `Unified Harness Engineering Substrate` 上承载面向医学 `Grant Ops` 的领域承载操作系统（Domain Harness OS）；本地 `R1 -> R5` runtime ladder 已吸收到 `R5.A / Hosted-Friendly Session Boundary`，整体成熟度仍处于 baseline freeze（基线冻结）/runtime hardening（运行时强化）阶段。其 formal-entry matrix 固定为默认正式入口 `CLI`、支持协议层 `MCP`（当前保留为 future layer）、内部控制面 `controller`，当前仓库主线按 `Auto-only` 理解。
 
-## 统一文档治理
+## 核心维护工作集
 
-- 所有对外文档都必须同时提供英文 `.md` 与中文 `.zh-CN.md`，并保持同步更新。
-- 内部设计、规划与备忘文档默认使用中文，除非明确提升到公开面后再补充英文。
-- 术语可以保留英文，但要避免无意义的中英混写，保证语言连贯。
-- `docs/README*` 的结构与措辞应保持一致，帮助快速区分双语公开面与内部参考文档。
-- 更多细节请参考 [文档治理规则](documentation-governance.md)。
+在阅读细节 specs 之前，先看这里：
+
+- [项目概览](./project.md)
+- [当前状态](./status.md)
+- [架构](./architecture.md)
+- [硬约束](./invariants.md)
+- [关键决策](./decisions.md)
 
 ## 默认对外双语公开面
 
@@ -34,8 +36,6 @@
 - [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)（下一条 hardening brief）
 - [Post-R5A revised-workspace validator 与 operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 - [Post-R5A 本地 runtime walkthrough 与 output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)
-- [文档治理规则](documentation-governance.md)
-
 ## 历史规划工件
 
 - [最小 Scaffold 计划](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
@@ -44,8 +44,8 @@
 
 ## 建议阅读顺序
 
-1. 先看 [领域定位](./domain-positioning.zh-CN.md)。
-2. 再看 [MVP 范围](./mvp-scope.zh-CN.md)。
+1. 先看上面的“核心维护工作集”。
+2. 再看 [领域定位](./domain-positioning.zh-CN.md) 和 [MVP 范围](./mvp-scope.zh-CN.md)。
 3. 如果要看已经 absorbed 的当前 runtime 真相，优先阅读：
    - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
    - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
@@ -65,6 +65,7 @@
 ## 文档边界
 
 - `README*` 与 `docs/README*`：默认的双语对外公开面。
+- `docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`：AI / 维护者核心工作集。
 - `docs/domain-harness-os-positioning.md`、`docs/specs/**` 与 `docs/plans/**`：默认的内部技术/设计文档。
 - `docs/history/omx/**`：OMX 历史资料归档，只做历史入口，不再承担活跃 workflow。
 - 对外公开文档必须同步提供英文与中文镜像。

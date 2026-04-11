@@ -5,13 +5,15 @@
 This bilingual index is the default public surface for `Med Auto Grant`.
 It reflects the project truth that the repository is the medical `Grant Ops` `Domain Harness OS` direction on the shared `Unified Harness Engineering Substrate`. The local `R1 -> R5` runtime ladder is already absorbed through `R5.A / Hosted-Friendly Session Boundary`, while the product remains in `baseline freeze / runtime hardening`. Its formal-entry matrix is `CLI` as default formal entry, `MCP` as a reserved future protocol layer, and `controller` as internal control surface. The current repository mainline is `Auto-only`.
 
-## Unified Documentation Governance
+## Core Maintainer Working Set
 
-- External documents must ship as paired English `.md` and Chinese `.zh-CN.md` files that stay synchronized.
-- Internal design, planning, and memo documents default to Chinese unless they are explicitly promoted into the bilingual surface.
-- Terminology may remain English when it represents stable domain language, but avoid unnecessary mixed-language prose.
-- `docs/README*` should keep one consistent structure so readers can quickly distinguish public bilingual surfaces from internal reference material.
-- For more detail, see [Documentation Governance](documentation-governance.md) (Chinese only).
+Start here before reading detailed specs:
+
+- [Project](./project.md)
+- [Status](./status.md)
+- [Architecture](./architecture.md)
+- [Invariants](./invariants.md)
+- [Decisions](./decisions.md)
 
 ## External Bilingual Surface
 
@@ -34,8 +36,6 @@ These documents are internal design references and default to Chinese.
 - [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (next-line hardening brief, Chinese only)
 - [Post-R5A revised-workspace validator and operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md) (Chinese only)
 - [Post-R5A local runtime walkthrough and output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md) (Chinese only)
-- [Documentation Governance](documentation-governance.md) (Chinese only)
-
 ## Historical Planning Artifacts
 
 - [Minimal Scaffold Plan](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
@@ -44,8 +44,8 @@ These documents are internal design references and default to Chinese.
 
 ## Reading Order
 
-1. Start with [Domain Positioning](./domain-positioning.md).
-2. Continue with [MVP Scope](./mvp-scope.md).
+1. Start with the [Core Maintainer Working Set](#core-maintainer-working-set).
+2. Continue with [Domain Positioning](./domain-positioning.md) and [MVP Scope](./mvp-scope.md).
 3. For the absorbed current runtime truth, prioritize:
    - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
    - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
@@ -65,6 +65,7 @@ The local runtime ladder `R1 -> R5` is already absorbed through `R5.A`, and the 
 ## Documentation Boundary
 
 - `README*` and `docs/README*`: default bilingual public surface.
+- `docs/project.md`, `docs/status.md`, `docs/architecture.md`, `docs/invariants.md`, `docs/decisions.md`: AI / maintainer core working set.
 - `docs/domain-harness-os-positioning.md`, `docs/specs/**`, and `docs/plans/**`: internal technical/design docs by default.
 - `docs/history/omx/**`: historical OMX archive only, never an active workflow entry.
 - Public docs must ship with synchronized English and Chinese mirrors.

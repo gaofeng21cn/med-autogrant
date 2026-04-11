@@ -45,7 +45,29 @@ def test_public_readmes_publish_layered_test_entrypoints() -> None:
 def test_root_agents_freezes_layered_test_governance() -> None:
     agents = _read("AGENTS.md")
 
-    assert "`make test-fast` is the default developer slice and excludes the `meta` suite" in agents
-    assert "`make test-meta` is reserved for repo-tracked program-control and repository-hygiene checks" in agents
-    assert "`make test-cli-smoke` is the dedicated CLI/local-runtime smoke lane, and `make test-full` remains the clean-clone baseline" in agents
-    assert "update `Makefile`, `pyproject.toml`, `README*`, runtime prompt docs, and command-surface tests together" in agents
+    assert "默认最小验证入口是 `scripts/verify.sh`" in agents
+    assert "默认 smoke 是 `make test-fast`" in agents
+    assert "`make test-meta` 与 `make test-cli-smoke` 是显式 lane" in agents
+    assert "`make test-full` 是 clean-clone 基线" in agents
+    assert "必须与 `Makefile`、`pyproject.toml`、`README*` 与命令面测试保持一致" in agents
+
+
+def test_verify_script_wraps_canonical_make_lanes() -> None:
+    verify_script = _read("scripts/verify.sh")
+
+    assert "make test-fast" in verify_script
+    assert "make test-meta" in verify_script
+    assert "make test-cli-smoke" in verify_script
+    assert "make test-full" in verify_script
+
+
+def test_docs_index_publishes_core_maintainer_working_set() -> None:
+    docs_readme = _read("docs/README.md")
+    docs_readme_zh = _read("docs/README.zh-CN.md")
+
+    for text in (docs_readme, docs_readme_zh):
+        assert "project.md" in text
+        assert "status.md" in text
+        assert "architecture.md" in text
+        assert "invariants.md" in text
+        assert "decisions.md" in text
