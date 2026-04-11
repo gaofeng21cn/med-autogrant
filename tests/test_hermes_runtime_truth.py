@@ -15,6 +15,8 @@ CORE_ARCHITECTURE = REPO_ROOT / "docs" / "architecture.md"
 CORE_INVARIANTS = REPO_ROOT / "docs" / "invariants.md"
 CORE_DECISIONS = REPO_ROOT / "docs" / "decisions.md"
 CORE_STATUS = REPO_ROOT / "docs" / "status.md"
+DOMAIN_POSITIONING_EN = REPO_ROOT / "docs" / "domain-positioning.md"
+DOMAIN_POSITIONING_ZH = REPO_ROOT / "docs" / "domain-positioning.zh-CN.md"
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -53,6 +55,17 @@ def test_core_docs_publish_hermes_runtime_topology_and_bridge_boundary() -> None
     decisions = _read(CORE_DECISIONS)
     assert "Hermes-backed runtime substrate" in decisions
     assert "post-R5A" in decisions
+
+
+@pytest.mark.meta
+def test_domain_positioning_public_docs_follow_hermes_mainline() -> None:
+    for path in (DOMAIN_POSITIONING_EN, DOMAIN_POSITIONING_ZH):
+        text = _read(path)
+        assert "Hermes-backed runtime" in text
+        assert "compatibility bridge" in text
+        assert "regression oracle" in text
+        assert "Codex-default host-agent runtime" not in text
+        assert "baseline freeze / local-runtime upper-bound closeout" not in text
 
 
 @pytest.mark.meta

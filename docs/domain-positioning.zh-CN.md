@@ -5,7 +5,8 @@
 ## 它是什么
 
 `Med Auto Grant` 是共享 `Unified Harness Engineering Substrate` 上、面向申请人侧且 proposal-facing 的医学 `Grant Ops` 主线。
-它的角色是医学 `Grant Ops` 的 domain gateway 与 harness，当前已经在 `Codex-default host-agent runtime` 形态下建立了最小 runtime baseline。
+它的角色是医学 `Grant Ops` 的 domain gateway 与 harness，当前产品 runtime 主线已经冻结为 `CLI-first + Hermes-backed runtime`。
+此前已 absorbed 的 `Codex-default host-agent` 线现在只保留为 migration 期间的 compatibility bridge / regression oracle。
 
 ## 它不是什么
 
@@ -61,5 +62,5 @@
 - 顶层公开文档已建立
 - 中文内部设计与 current-truth 文档已建立
 - 最小 runtime baseline 已存在
-- 当前成熟度已处于 `baseline freeze / local-runtime upper-bound closeout`，并在当前 repo-tracked truth 下以 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` 收口，而不是 runtime 尚未开始的 scaffold 阶段
+- 当前仓库正在执行 `Hermes Runtime Substrate Program`；旧的 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` 只作为 host-agent 历史基线保留，而不是当前产品 runtime 主线
 - future managed web runtime 只是同一 substrate 上的后续部署演进，不代表项目仍停留在前置筹备期
