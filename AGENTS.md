@@ -29,6 +29,13 @@ Read that file first whenever repository-specific goals, architecture priorities
 - After the lane stops, either absorb the verified commits back to `main` or explicitly abandon the lane, then remove its worktree/branch and clear related tmux/session state.
 - Do not rely on session-only isolation to prevent hook interference; use physical worktree isolation.
 
+## Test Surface Governance
+
+- `make test-fast` is the default developer slice and excludes the `meta` suite.
+- `make test-meta` is reserved for repo-tracked program-control and repository-hygiene checks; keep that boundary explicit instead of letting those checks drift into unrelated smoke suites.
+- `make test-cli-smoke` is the dedicated CLI/local-runtime smoke lane, and `make test-full` remains the clean-clone baseline.
+- If a repo-tracked file changes test commands, update `Makefile`, `pyproject.toml`, `README*`, runtime prompt docs, and command-surface tests together.
+
 ## Local State
 
 - `.runtime-program/` and `.codex/` are local tooling state and must remain untracked.
