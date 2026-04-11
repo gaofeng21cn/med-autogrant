@@ -46,10 +46,10 @@ def test_root_agents_freezes_layered_test_governance() -> None:
     agents = _read("AGENTS.md")
 
     assert "默认最小验证入口是 `scripts/verify.sh`" in agents
-    assert "默认 smoke 是 `make test-fast`" in agents
-    assert "`make test-meta` 与 `make test-cli-smoke` 是显式 lane" in agents
-    assert "`make test-full` 是 clean-clone 基线" in agents
-    assert "必须与 `Makefile`、`pyproject.toml`、`README*` 与命令面测试保持一致" in agents
+    assert "`make test-fast` 是默认开发验证，并默认排除 `meta` 套件" in agents
+    assert "`make test-meta` 仅用于 repo-tracked program control 与 repo hygiene 检查" in agents
+    assert "`make test-cli-smoke` 是 CLI/local-runtime smoke lane，`make test-full` 是 clean-clone baseline" in agents
+    assert "更新验证命令、控制面或测试入口时，必须同步更新 `Makefile`、`pyproject.toml`、`README*`、`docs/README*`、`scripts/verify.sh` 与相关 tests" in agents
 
 
 def test_verify_script_wraps_canonical_make_lanes() -> None:

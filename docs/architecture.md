@@ -1,4 +1,4 @@
-# Med Auto Grant 架构
+# 架构概览
 
 ## 主链路
 
@@ -6,44 +6,29 @@
 
 `operator / agent -> CLI -> workspace validation and routing -> critique / export / stage surfaces -> durable artifacts`
 
-## 结构角色
+## 入口与执行
 
-### 1. Public surface
+- CLI 是唯一正式入口：`validate-workspace`、`summarize-workspace`、`next-step`、`critique-summary`、`stage-route-report`。
+- 本地运行时入口：`run-local` 与 `resume-local`，以 journal 串联多次本地 pass。
+- 产物面：`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle`。
 
-- `README*`
-- `docs/README*`
-- `docs/domain-positioning*`
-- `docs/mvp-scope*`
+## 数据与对象模型
 
-这层负责对外说明项目定位、范围和当前成熟度。
+- `schemas/v1/nsfc-workspace.schema.json` 定义 workspace 结构与关键对象。
+- `grant_run_id` 仅作为执行句柄；`workspace_id`、`draft_id`、`program_id` 保持边界分离。
 
-### 2. Core maintainer docs
+## 控制面与报告
 
-- `docs/project.md`
-- `docs/status.md`
-- `docs/architecture.md`
-- `docs/invariants.md`
-- `docs/decisions.md`
+- `.runtime-program/**` 仅承担本地 control-plane：`context/`、`plans/`、`reports/`。
+- `reports/med-autogrant-mainline` 维护 `LATEST_STATUS`、`ITERATION_LOG`、`OPEN_ISSUES` 的同步规则。
 
-这层负责 AI / 维护者快速建立上下文。
+## 文档层次
 
-### 3. Current truth / specs
-
-- `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
-- `docs/specs/2026-04-07-durability-model-clarification.md`
-- 各 activation package / current truth 文档
-
-这层负责冻结当前 runtime 与 control-plane 语义，不承担公开首页叙事。
-
-### 4. Local control-plane
-
-- `.runtime-program/context/**`
-- `.runtime-program/plans/**`
-- `.runtime-program/reports/**`
-
-这层只属于本地 operator control-plane，不是 repo-tracked 产品真相。
+- Public surface：`README*`、`docs/README*`、`docs/domain-positioning*`、`docs/mvp-scope*`。
+- 核心骨架：`docs/project.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`、`docs/status.md`。
+- Repo-tracked current truth 与 activation package：`docs/specs/**`。
+- 历史规划：`docs/plans/**`；历史归档：`docs/history/**`。
 
 ## 历史边界
 
-- OMX 已退场。
-- `docs/history/omx/` 只保留历史与迁移背景。
+- OMX 已退场，仅保留历史入口。

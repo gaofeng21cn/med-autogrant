@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-lane="${1:-smoke}"
+lane="${1:-fast}"
 
 case "$lane" in
-  smoke|fast)
+  fast|smoke)
     make test-fast
     ;;
   meta)
@@ -18,7 +18,7 @@ case "$lane" in
     ;;
   *)
     echo "Unknown lane: $lane" >&2
-    echo "Usage: scripts/verify.sh [smoke|fast|meta|cli-smoke|full]" >&2
-    exit 1
+    echo "Usage: $0 [fast|meta|cli-smoke|full]" >&2
+    exit 2
     ;;
 esac

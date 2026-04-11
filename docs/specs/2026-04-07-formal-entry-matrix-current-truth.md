@@ -134,12 +134,6 @@ post-`R5.A` local runtime hardening 额外要求：
 - `execute-revision-pass` on `examples/nsfc_workspace_p3b_re_review_major_revision.json`
 - `validate-workspace` on revised output
 - `stage-route-report` on revised output
-
-## 当前 external verifier 裁决
-
-- OMX installer diff checker 已退役，不再作为当前 external verifier surface。
-- 若需要追溯 OMX-era 的兼容性比对链路，只能查阅 `docs/history/omx/README*` 与对应历史 bridge 文档。
-
 ## 禁止越界解释
 
 - 不得把 `supported_protocol_layer=MCP` 解释成“当前 public runtime 已正式支持 MCP”。

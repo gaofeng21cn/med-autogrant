@@ -1,16 +1,20 @@
-# Med Auto Grant 当前状态
+# 当前状态
+
+Date: `2026-04-11`
 
 ## 当前角色
 
-- 仓库角色：医学 `Grant Ops` 的 author-side / proposal-facing `Domain Harness OS` 方向
-- 当前执行口径：`Codex-default host-agent runtime`
-- 当前主线：`Auto-only`
-- OMX 状态：已退场，仅保留历史入口
+- 仓库角色：医学 `Grant Ops` 的 author-side / proposal-facing `Domain Harness OS` 方向。
+- 当前执行口径：`CLI-first + host-agent runtime`。
+- 当前主线：`Auto-only`。
+- OMX 状态：已退场，仅保留历史入口。
 
-## 当前主线
+## 主线与阶段
 
-- 已 absorbed：`R1 -> R5.A`
-- 当前诚实延续线：`post-R5A local runtime hardening`
+- Current phase：`Runtime Productization Program`
+- Active tranche：`R5 / Hostedization Prep`
+- Latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
+- Current owner line：`post-R5A local runtime hardening`
 - repo-tracked current truth 入口：
   - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
   - `docs/specs/2026-04-07-durability-model-clarification.md`
@@ -24,7 +28,7 @@
 
 ## 默认验证
 
-- 默认最小验证：`scripts/verify.sh`
-- meta 验证：`scripts/verify.sh meta`
-- cli smoke：`scripts/verify.sh cli-smoke`
-- full 验证：`scripts/verify.sh full`
+- 默认最小验证：`scripts/verify.sh`（`make test-fast`）。
+- meta 验证：`scripts/verify.sh meta`。
+- CLI smoke：`scripts/verify.sh cli-smoke`。
+- full 验证：`scripts/verify.sh full`。

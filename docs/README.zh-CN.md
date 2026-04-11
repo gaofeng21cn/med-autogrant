@@ -2,18 +2,24 @@
 
 [English](./README.md) | **中文**
 
-这里是 `Med Auto Grant` 的双语文档索引，也是默认的对外公开入口。
-内容与项目真相一致：该仓库在共享 `Unified Harness Engineering Substrate` 上承载面向医学 `Grant Ops` 的领域承载操作系统（Domain Harness OS）；本地 `R1 -> R5` runtime ladder 已吸收到 `R5.A / Hosted-Friendly Session Boundary`，整体成熟度仍处于 baseline freeze（基线冻结）/runtime hardening（运行时强化）阶段。其 formal-entry matrix 固定为默认正式入口 `CLI`、支持协议层 `MCP`（当前保留为 future layer）、内部控制面 `controller`，当前仓库主线按 `Auto-only` 理解。
+这里是 `Med Auto Grant` 的文档索引，默认先读核心骨架，再看 specs/plans/history 的来源与细节。
 
-## 核心维护工作集
-
-在阅读细节 specs 之前，先看这里：
+## 先读核心骨架
 
 - [项目概览](./project.md)
 - [当前状态](./status.md)
-- [架构](./architecture.md)
-- [硬约束](./invariants.md)
-- [关键决策](./decisions.md)
+- [架构概览](./architecture.md)
+- [不变量](./invariants.md)
+- [决策记录](./decisions.md)
+
+## 文档角色说明
+
+- `README*` 与 `docs/README*`：对外入口与索引。
+- 对外公开文档必须同步提供中英双语镜像。
+- 核心骨架（`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`）：项目真相与工作约束。
+- `docs/specs/**`：repo-tracked current truth、activation package 与设计冻结文档。
+- `docs/plans/**`：历史规划工件，仅用于追溯。
+- `docs/history/**`：历史归档入口（含 OMX）。
 
 ## 默认对外双语公开面
 
@@ -21,53 +27,18 @@
 - [领域定位](./domain-positioning.zh-CN.md)
 - [MVP 范围](./mvp-scope.zh-CN.md)
 
-这一索引与仓库首页一起构成默认的双语公开面。
+## Specs（current truth / activation package）
 
-## 仓库跟踪的内部设计与规划文档
-
-以下文档主要是内部设计参考，默认以中文维护。
-
-- [Domain Harness OS 定位映射](./domain-harness-os-positioning.md)
-- [顶层设计](./specs/2026-04-06-med-auto-grant-top-level-design.md)
-- [NSFC 主流程与导师批注闭环](./specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)
-- [对象模型 Schema V1](./specs/2026-04-06-object-model-schema-v1.md)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
-- [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)（下一条 hardening brief）
+- [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
 - [Post-R5A revised-workspace validator 与 operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 - [Post-R5A 本地 runtime walkthrough 与 output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)
-## 历史规划工件
+
+Specs 是 repo-tracked 的权威 current truth/activation package，但不替代核心骨架。
+
+## Plans 与历史归档
 
 - [最小 Scaffold 计划](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
 - [P1 Formal Entry And Durability Planning Brief](./plans/2026-04-07-p1-formal-entry-and-durability-planning-brief.md)
 - [OMX 历史资料索引](./history/omx/README.zh-CN.md)
-
-## 建议阅读顺序
-
-1. 先看上面的“核心维护工作集”。
-2. 再看 [领域定位](./domain-positioning.zh-CN.md) 和 [MVP 范围](./mvp-scope.zh-CN.md)。
-3. 如果要看已经 absorbed 的当前 runtime 真相，优先阅读：
-   - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
-   - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
-   - [Post-R5A revised-workspace validator 与 operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
-   - [Post-R5A 本地 runtime walkthrough 与 output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)
-4. 如果要看 `R5.A` 之后最诚实的下一条延续线，再读 [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)。
-5. 只有在需要追溯 OMX 时代迁移背景时，再读 [OMX 历史资料索引](./history/omx/README.zh-CN.md)。
-6. 只有在需要追溯其他历史来源时，再阅读历史规划工件。
-
-当前 canonical 本地 operator path 应先读 post-`R5.A` walkthrough truth，再使用仓库首页 README 的“最小 Runtime 命令”段作为其公开命令镜像。
-
-## 状态说明
-
-`Med Auto Grant` 仍在积极开发中。
-当前本地 runtime ladder `R1 -> R5` 已吸收到 `R5.A`，最诚实的后续线是 `post-R5A local runtime hardening`；整体成熟度仍保持在 `baseline freeze / runtime hardening`，完整的基金申请 authoring runtime 尚未完成。
-
-## 文档边界
-
-- `README*` 与 `docs/README*`：默认的双语对外公开面。
-- `docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`：AI / 维护者核心工作集。
-- `docs/domain-harness-os-positioning.md`、`docs/specs/**` 与 `docs/plans/**`：默认的内部技术/设计文档。
-- `docs/history/omx/**`：OMX 历史资料归档，只做历史入口，不再承担活跃 workflow。
-- 对外公开文档必须同步提供英文与中文镜像。
-- 内部技术、规划与备忘文档默认使用中文。
-- 避免无意义的中英混写；英文只保留给固定术语、路径、命令与代码标识符。
