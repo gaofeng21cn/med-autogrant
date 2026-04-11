@@ -19,7 +19,10 @@ def test_makefile_exposes_layered_test_entrypoints() -> None:
     assert "test-meta:" in makefile
     assert "uv run pytest -q -m meta" in makefile
     assert "test-cli-smoke:" in makefile
-    assert "uv run pytest tests/test_cli_validate_workspace.py tests/test_local_runtime.py -q" in makefile
+    assert (
+        "uv run pytest tests/test_cli_validate_workspace.py tests/test_local_runtime.py "
+        "tests/test_hermes_runtime.py -q"
+    ) in makefile
     assert "test-full:" in makefile
     assert "uv run pytest -q" in makefile
 

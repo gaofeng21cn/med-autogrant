@@ -1,0 +1,84 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+README_EN = REPO_ROOT / "README.md"
+README_ZH = REPO_ROOT / "README.zh-CN.md"
+DOCS_README_EN = REPO_ROOT / "docs" / "README.md"
+DOCS_README_ZH = REPO_ROOT / "docs" / "README.zh-CN.md"
+CORE_PROJECT = REPO_ROOT / "docs" / "project.md"
+CORE_ARCHITECTURE = REPO_ROOT / "docs" / "architecture.md"
+CORE_INVARIANTS = REPO_ROOT / "docs" / "invariants.md"
+CORE_DECISIONS = REPO_ROOT / "docs" / "decisions.md"
+CORE_STATUS = REPO_ROOT / "docs" / "status.md"
+HERMES_PROGRAM_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
+)
+HERMES_MIGRATION_MAP = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md"
+)
+
+
+def _read(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
+
+
+@pytest.mark.meta
+def test_core_docs_publish_hermes_runtime_topology_and_bridge_boundary() -> None:
+    for path in (
+        README_EN,
+        README_ZH,
+        DOCS_README_EN,
+        DOCS_README_ZH,
+        CORE_PROJECT,
+        CORE_ARCHITECTURE,
+        CORE_STATUS,
+    ):
+        text = _read(path)
+        assert "Hermes-backed runtime" in text
+        assert "CLI" in text
+        assert "MCP" in text
+        assert "controller" in text
+
+    invariants = _read(CORE_INVARIANTS)
+    assert "Hermes-backed runtime substrate" in invariants
+    assert "compatibility bridge" in invariants
+    assert "regression oracle" in invariants
+
+    decisions = _read(CORE_DECISIONS)
+    assert "Hermes-backed runtime substrate" in decisions
+    assert "post-R5A" in decisions
+
+
+@pytest.mark.meta
+def test_repo_tracks_hermes_runtime_program_and_capability_migration_map() -> None:
+    assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
+    assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
+
+    program_truth = _read(HERMES_PROGRAM_TRUTH)
+    migration_map = _read(HERMES_MIGRATION_MAP)
+
+    assert "Hermes-backed runtime substrate" in program_truth
+    assert "CLI" in program_truth
+    assert "MCP" in program_truth
+    assert "controller" in program_truth
+    assert "Auto-only" in program_truth
+    assert "compatibility bridge" in program_truth
+    assert "regression oracle" in program_truth
+
+    assert "validate-workspace" in migration_map
+    assert "summarize-workspace" in migration_map
+    assert "next-step" in migration_map
+    assert "critique-summary" in migration_map
+    assert "stage-route-report" in migration_map
+    assert "run-local" in migration_map
+    assert "resume-local" in migration_map
+    assert "execute-revision-pass" in migration_map
+    assert "build-final-package" in migration_map
+    assert "build-hosted-contract-bundle" in migration_map
+    assert "Hermes substrate" in migration_map
+    assert "Grant domain logic" in migration_map

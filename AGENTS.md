@@ -14,6 +14,7 @@
 - 保持 diff 小、可审查、可回退。
 - 能删就别加；能复用现有模式就别新起抽象。
 - 没有明确必要不要新增依赖。
+- 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态；旧本地 runtime 只允许作为迁移桥、兼容层或回归 oracle 存在。
 - 不做降级处理、兜底补丁、启发式修补或“先糊住再说”式实现。
 
 ## 核心文档骨架
@@ -55,6 +56,8 @@
 
 ## 本地控制面（.runtime-program）
 
-- `.runtime-program/**` 与 `.codex/**` 为本地工具/控制面状态，必须保持未跟踪。
+- 项目级 `.codex/` 与 `.omx/` 已退役，不再作为仓库本地状态入口。
+- `.runtime-program/**` 为当前仍保留的本地工具/控制面状态，必须保持未跟踪。
+- 如需保留历史 session、prompt、log 或 hook 状态，应迁入用户级 `~/.codex/` 归档。
 - `.runtime-program/` 是本地控制面，不是产品 runtime，也不是 repo-tracked current truth。
 - `.runtime-program/local/AGENTS.local.md` 仅允许本机 overlay，不进入 repo-tracked 主线。

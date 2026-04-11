@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：仓库当前执行 `Runtime Productization Program`；预冻结的本地 `R1 -> R5` runtime ladder 已吸收到 `R5.A / Hosted-Friendly Session Boundary`。在当前 repo-tracked truth 下，post-`R5.A` 本地 runtime 主线已经以 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` 收口；如果还要继续推进，必须先冻结新的 tranche truth，而不是沿用隐式续推。当前已具备本地 `CLI-first + host-agent` runtime baseline，但仍不是 actual hosted runtime，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库当前执行 `Hermes Runtime Substrate Program`。在当前 repo-tracked truth 下，此前已 absorbed 的 `CLI-first + host-agent` 线继续只作为 post-`R5.A` 迁移基线保留，其 honest stop 结论仍是 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`；当前产品 runtime 主线则重新冻结为 `CLI-first + Hermes-backed runtime`，旧 host-agent 形态只保留为 compatibility bridge / regression oracle。当前仍不是 actual hosted runtime，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -31,8 +31,9 @@
 
 ## Runtime 形态（当前与未来）
 
-- 当前默认本地执行形态：`Codex-default host-agent runtime`。
-- 当前仓库最小 baseline 以该 host-agent 形态为默认落地与验证对象。
+- 当前产品 runtime 形态：`CLI-first + Hermes-backed runtime`。
+- Hermes 负责 runtime substrate；`CLI` 继续是 formal entry，`MCP` 继续是 supported protocol layer，`controller` 继续是 internal surface。
+- 旧 `Codex-default host-agent runtime` 只保留为 compatibility bridge / regression oracle，不再作为长期产品 runtime owner。
 - 其 formal-entry matrix 已固定为：默认正式入口 `CLI`、支持协议层 `MCP`（当前保留为 future layer，尚未 repo-verified）、内部控制面 `controller`。
 - 当前仓库主线按 `Auto-only` 理解；未来如果要做 `Human-in-the-loop` 产品，应作为兼容 sibling 或 upper-layer product 复用同一 substrate，而不是把当前仓改成同仓双模。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
@@ -58,7 +59,7 @@
 
 ## 现在已经能做什么
 
-仓库已经有一套围绕冻结 `NSFCWorkspace` 契约的最小可运行底座，默认运行在当前 `Codex-default host-agent runtime` 形态上。
+仓库已经有一套围绕冻结 `NSFCWorkspace` 契约的最小可运行底座，当前运行在 `CLI-first + Hermes-backed runtime` 形态上，而此前的 host-agent 线只作为 compatibility bridge / regression oracle 保留。
 
 当前 runtime 已经可以：
 
@@ -76,7 +77,7 @@
 - 通过 `build-final-package` 把 freeze-ready / submission-frozen 的 workspace 与 artifact bundle 收成 machine-readable 本地 `final_package`
 - 通过 `build-hosted-contract-bundle` 从当前 `final_package` 导出 hosted-friendly 的 session / state / artifact / audit contract bundle，作为托管化 prep 的本地合同产物
 
-在当前 repo-tracked truth 下，这条既有 CLI-first 本地 ladder 内已经没有新的 concrete post-`R5.A` runtime delta 可继续隐式推进。后续若要再往前走，必须先冻结新的 tranche truth，而不是默认当前主线还会自然延伸。
+在当前 repo-tracked truth 下，旧的 host-agent 本地 ladder 内已经没有新的 concrete post-`R5.A` runtime delta 可继续隐式推进；因此当前主线前进方式不再是续磨旧线，而是按新冻结的 Hermes tranche 往前推进。
 
 ## 现在还没有完成什么
 
@@ -131,7 +132,7 @@ make test-full
 ```bash
 TMPDIR="$(mktemp -d)"
 
-# 当前 canonical post-R5A 本地 walkthrough（真相来源：
+# 当前 canonical Hermes-backed 本地 walkthrough（仍以 post-R5A truth 作为基线来源：
 # docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md）
 
 # 1. 对 critique workspace 做 baseline 审计
@@ -188,6 +189,8 @@ PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-pac
 
 ### 内部文档
 
+- 当前 Hermes runtime program truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
+- 当前 Hermes capability migration map：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`
 - 当前 canonical post-R5A walkthrough truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`
 - 当前 post-R5A 本地 runtime 上限 closeout truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
 - [`docs/domain-harness-os-positioning.md`](./docs/domain-harness-os-positioning.md)

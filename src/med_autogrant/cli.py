@@ -5,20 +5,11 @@ import json
 import sys
 from typing import Any
 
-from med_autogrant.artifact_bundle import build_artifact_bundle_payload
-from med_autogrant.final_package import build_final_package_payload
-from med_autogrant.hosted_contract_bundle import build_hosted_contract_bundle_payload
-from med_autogrant.local_runtime import resume_local_runtime, run_local_runtime
-from med_autogrant.revision_executor import build_revision_execution_payload
-from med_autogrant.route_report import build_stage_route_report
-from med_autogrant.stage_router import determine_next_step
+from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
 from med_autogrant.workspace import (
     WorkspaceError,
     WorkspaceStateError,
-    build_critique_summary,
     load_workspace_document,
-    summarize_workspace_document,
-    validate_workspace_document,
 )
 
 
@@ -141,65 +132,58 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def handle_validate_workspace(args: argparse.Namespace) -> dict[str, Any]:
-    document = load_workspace_document(args.input)
-    result = validate_workspace_document(document)
-    return result.to_dict(document)
+    return _runtime().validate_workspace(input_path=args.input)
 
 
 def handle_summarize_workspace(args: argparse.Namespace) -> dict[str, Any]:
-    document = load_workspace_document(args.input)
-    return summarize_workspace_document(document)
+    return _runtime().summarize_workspace(input_path=args.input)
 
 
 def handle_next_step(args: argparse.Namespace) -> dict[str, Any]:
-    document = load_workspace_document(args.input)
-    return determine_next_step(document)
+    return _runtime().next_step(input_path=args.input)
 
 
 def handle_critique_summary(args: argparse.Namespace) -> dict[str, Any]:
-    document = load_workspace_document(args.input)
-    payload = build_critique_summary(document)
-    payload["recommended_next_stage"] = determine_next_step(document)["recommended_stage"]
-    return payload
+    return _runtime().critique_summary(input_path=args.input)
 
 
 def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
-    document = load_workspace_document(args.input)
-    return build_stage_route_report(document)
+    return _runtime().stage_route_report(input_path=args.input)
 
 
 def handle_run_local(args: argparse.Namespace) -> dict[str, Any]:
-    return run_local_runtime(input_path=args.input, journal_path=args.journal)
+    return _runtime().run_local(input_path=args.input, journal_path=args.journal)
 
 
 def handle_resume_local(args: argparse.Namespace) -> dict[str, Any]:
-    return resume_local_runtime(journal_path=args.journal)
+    return _runtime().resume_local(journal_path=args.journal)
 
 
 def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
-    document = load_workspace_document(args.input)
-    return build_artifact_bundle_payload(document, output_path=args.output)
+    return _runtime().build_artifact_bundle(input_path=args.input, output_path=args.output)
 
 
 def handle_execute_revision_pass(args: argparse.Namespace) -> dict[str, Any]:
-    document = load_workspace_document(args.input)
-    return build_revision_execution_payload(document, output_path=args.output)
+    return _runtime().execute_revision_pass(input_path=args.input, output_path=args.output)
 
 
 def handle_build_final_package(args: argparse.Namespace) -> dict[str, Any]:
-    document = load_workspace_document(args.input)
-    return build_final_package_payload(
-        document,
+    return _runtime().build_final_package(
+        input_path=args.input,
         artifact_bundle_path=args.artifact_bundle,
         output_path=args.output,
     )
 
 
 def handle_build_hosted_contract_bundle(args: argparse.Namespace) -> dict[str, Any]:
-    return build_hosted_contract_bundle_payload(
+    return _runtime().build_hosted_contract_bundle(
         final_package_path=args.final_package,
         output_path=args.output,
     )
+
+
+def _runtime() -> HermesRuntimeSubstrate:
+    return HermesRuntimeSubstrate()
 
 
 def _add_workspace_command(

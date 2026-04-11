@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository is currently executing the `Runtime Productization Program`; the pre-frozen local `R1 -> R5` runtime ladder is now absorbed through `R5.A / Hosted-Friendly Session Boundary`. Under the current repo-tracked truth, the post-`R5.A` local runtime line is closed at `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`; any further productization now requires a newly frozen tranche rather than implicit continuation. The project is still neither an actual hosted runtime nor a submission-ready autopilot.
+> Status: active development. The repository is now executing the `Hermes Runtime Substrate Program`. Under the current repo-tracked truth, the previously absorbed `CLI-first + host-agent` line remains repo-tracked only as the post-`R5.A` migration baseline closed by `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`; the product runtime mainline is being re-frozen as a `CLI-first + Hermes-backed runtime`, while the old host-agent shape is retained only as a compatibility bridge / regression oracle. The project is still neither an actual hosted runtime nor a submission-ready autopilot.
 
 <table>
   <tr>
@@ -31,8 +31,9 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 
 ## Runtime Shape (Current And Future)
 
-- Current default local execution shape: `Codex-default host-agent runtime`.
-- This repository's current baseline is validated in that host-agent shape.
+- Current product runtime shape: `CLI-first + Hermes-backed runtime`.
+- Hermes owns the runtime substrate; `CLI` stays the formal entry, `MCP` stays the supported protocol layer, and `controller` stays the internal surface.
+- The previous `Codex-default host-agent runtime` is retained only as a compatibility bridge / regression oracle during migration.
 - Its formal-entry matrix is fixed as: default formal entry `CLI`, supported protocol layer `MCP` (reserved future layer, not yet repo-verified), internal control surface `controller`.
 - The current repository mainline is `Auto-only`; any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than split this repository into same-repo dual-mode logic.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
@@ -58,7 +59,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 
 ## What Is Already Working
 
-The repository already contains a minimal executable baseline around a frozen `NSFCWorkspace` contract under the current `Codex-default host-agent runtime`.
+The repository already contains a minimal executable baseline around a frozen `NSFCWorkspace` contract under the current `CLI-first + Hermes-backed runtime`, with the previous host-agent line retained only as a compatibility bridge / regression oracle.
 
 Today, the runtime can:
 
@@ -76,7 +77,7 @@ Today, the runtime can:
 - assemble a machine-readable local `final_package` through `build-final-package` for freeze-ready / submission-frozen workspaces
 - export a hosted-friendly session / state / artifact / audit contract bundle from a landed local final package through `build-hosted-contract-bundle`
 
-Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside this existing CLI-first ladder. Any further productization now has to start by freezing a new tranche truth rather than implicitly extending the current one.
+Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside the old host-agent line. The current forward path is therefore a newly frozen Hermes-backed runtime tranche rather than an implicit continuation of the previous closeout.
 
 ## What Is Still In Progress
 
@@ -131,7 +132,7 @@ Layered local test entrypoints:
 ```bash
 TMPDIR="$(mktemp -d)"
 
-# Canonical post-R5A local walkthrough (truth source:
+# Canonical Hermes-backed local walkthrough (post-R5A baseline retained as truth source:
 # docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 
 # 1. Baseline audit for a critique workspace
@@ -188,6 +189,8 @@ PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-pac
 
 ### Internal Docs
 
+- Current Hermes runtime program truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
+- Current Hermes capability migration map: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`
 - Current canonical post-R5A walkthrough truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`
 - Current post-R5A upper-bound closeout truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
 - [`docs/domain-harness-os-positioning.md`](./docs/domain-harness-os-positioning.md)
