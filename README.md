@@ -106,6 +106,20 @@ You can give your agent an instruction like this:
 - [Domain Positioning](./docs/domain-positioning.md)
 - [MVP Scope](./docs/mvp-scope.md)
 
+## Development Verification
+
+```bash
+uv sync --frozen
+make test-full
+```
+
+Layered local test entrypoints:
+
+- `make test-fast`: default developer slice
+- `make test-meta`: program-control and repository-hygiene checks
+- `make test-cli-smoke`: CLI validation and local runtime smoke
+- `make test-full`: full clean-clone baseline
+
 <details>
 <summary><strong>Technical And Agent Notes</strong></summary>
 

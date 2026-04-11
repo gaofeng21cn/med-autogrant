@@ -39,7 +39,7 @@ Date: `2026-04-07`
 - 哪些是 repo-tracked review surfaces
 - 哪些是 local durable handoff surfaces
 - 哪些状态必须 repo-native 才能成为 review truth
-- 哪些状态可以继续只留在 `.omx/**`
+- 哪些状态可以继续只留在 `.runtime-program/**`
 - `grant_run_id / workspace_id / draft_id / program_id` 分别落在哪一层语义里
 
 这里要解决的不是“把 `.omx` 改成 tracked”，而是把：
@@ -99,7 +99,7 @@ P1 明确不做：
 - repo-tracked review surface 列表
 - local durable handoff surface 列表
 - 哪些结论必须 repo-native 才能成为 review truth
-- 哪些状态允许只存在于 `.omx/**`
+- 哪些状态允许只存在于 `.runtime-program/**`
 
 ### C. verification contract
 

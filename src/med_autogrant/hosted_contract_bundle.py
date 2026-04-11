@@ -11,7 +11,7 @@ from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 
 HOSTED_CONTRACT_VERSION = 1
 HOSTED_CONTRACT_KIND = "hosted_contract_bundle"
-CURRENT_PROGRAM_RELATIVE_PATH = Path(".omx") / "context" / "CURRENT_PROGRAM.md"
+CURRENT_PROGRAM_RELATIVE_PATH = Path(".runtime-program") / "context" / "CURRENT_PROGRAM.md"
 SUPPORTED_FINAL_PACKAGE_VERSION = 1
 REQUIRED_FINAL_PACKAGE_OBJECT_FIELDS = (
     "freeze_manifest",

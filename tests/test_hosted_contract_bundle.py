@@ -805,7 +805,7 @@ class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):
     def test_resolve_control_plane_current_program_path_prefers_local_repo_root(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             repo_root = Path(tmp_dir) / "repo-root"
-            current_program_path = repo_root / ".omx" / "context" / "CURRENT_PROGRAM.md"
+            current_program_path = repo_root / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
             current_program_path.parent.mkdir(parents=True, exist_ok=True)
             current_program_path.write_text("- program_id: `local-program`\n", encoding="utf-8")
 
@@ -820,7 +820,7 @@ class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):
             feature_worktree = Path(tmp_dir) / "feature-worktree"
             feature_worktree.mkdir(parents=True, exist_ok=True)
             main_worktree = Path(tmp_dir) / "root-main"
-            current_program_path = main_worktree / ".omx" / "context" / "CURRENT_PROGRAM.md"
+            current_program_path = main_worktree / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
             current_program_path.parent.mkdir(parents=True, exist_ok=True)
             current_program_path.write_text("- program_id: `root-program`\n", encoding="utf-8")
 
@@ -847,7 +847,7 @@ class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):
             feature_worktree = Path(tmp_dir) / "feature-worktree"
             feature_worktree.mkdir(parents=True, exist_ok=True)
             other_worktree = Path(tmp_dir) / "other-worktree"
-            current_program_path = other_worktree / ".omx" / "context" / "CURRENT_PROGRAM.md"
+            current_program_path = other_worktree / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
             current_program_path.parent.mkdir(parents=True, exist_ok=True)
             current_program_path.write_text("- program_id: `other-program`\n", encoding="utf-8")
 
@@ -878,7 +878,7 @@ class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):
             main_one = Path(tmp_dir) / "root-main-1"
             main_two = Path(tmp_dir) / "root-main-2"
             for main_worktree in (main_one, main_two):
-                current_program_path = main_worktree / ".omx" / "context" / "CURRENT_PROGRAM.md"
+                current_program_path = main_worktree / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
                 current_program_path.parent.mkdir(parents=True, exist_ok=True)
                 current_program_path.write_text("- program_id: `root-program`\n", encoding="utf-8")
 

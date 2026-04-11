@@ -106,6 +106,20 @@
 - [Domain Positioning](./docs/domain-positioning.zh-CN.md)
 - [MVP Scope](./docs/mvp-scope.zh-CN.md)
 
+## 开发验证
+
+```bash
+uv sync --frozen
+make test-full
+```
+
+本地测试分层入口：
+
+- `make test-fast`：默认开发切片
+- `make test-meta`：program control 与 repository hygiene 检查
+- `make test-cli-smoke`：CLI 校验与本地 runtime smoke
+- `make test-full`：clean-clone 基线使用的完整验证入口
+
 <details>
 <summary><strong>技术与 Agent 说明</strong></summary>
 

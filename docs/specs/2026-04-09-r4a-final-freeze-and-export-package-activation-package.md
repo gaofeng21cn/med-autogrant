@@ -91,7 +91,7 @@ Date: `2026-04-09`
 - 新命令仍属于 `CLI` formal entry，不新增第二 formal entry
 - `build-final-package` 不得替代旧五个 canonical CLI surfaces
 - `build-final-package` 不得替代 `run-local / resume-local / build-artifact-bundle / execute-revision-pass`
-- `build-final-package` 只写 final package output，不写 `.omx/**`
+- `build-final-package` 只写 final package output，不写 `.runtime-program/**`
 
 ## Final Package Contract
 
@@ -145,7 +145,7 @@ Date: `2026-04-09`
 
 - `--output <final-package-json-path>` 为必填
 - 若 output 已存在且其 `grant_run_id / workspace_id / draft_id` 与当前不一致，必须 fail-closed
-- final package output 是产品 runtime 的本地 durable artifact，不替代 `.omx/reports/**`
+- final package output 是产品 runtime 的本地 durable artifact，不替代 `.runtime-program/reports/**`
 
 ## Relation To Existing Canonical Surfaces
 

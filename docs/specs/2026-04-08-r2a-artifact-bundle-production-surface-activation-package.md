@@ -83,7 +83,7 @@ Date: `2026-04-08`
 - 新命令仍属于 `CLI` formal entry，不新增第二 formal entry
 - 旧五个 commands 与 `run-local / resume-local` 继续作为 verifier / audit baseline
 - `build-artifact-bundle` 不得替代 `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report`
-- `build-artifact-bundle` 只写 bundle output，不写回 workspace，不写 `.omx/**`
+- `build-artifact-bundle` 只写 bundle output，不写回 workspace，不写 `.runtime-program/**`
 
 ## Artifact Bundle Contract
 
@@ -139,7 +139,7 @@ Date: `2026-04-08`
 
 - `--output <bundle-json-path>` 为必填
 - 若 output 已存在且内容与当前 `grant_run_id / workspace_id / draft_id` 不一致，必须 fail-closed
-- bundle output 是产品 runtime 的本地 durable artifact，不替代 `.omx/reports/**`
+- bundle output 是产品 runtime 的本地 durable artifact，不替代 `.runtime-program/reports/**`
 
 ## Relation To Existing Canonical Surfaces
 

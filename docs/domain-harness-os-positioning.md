@@ -69,7 +69,7 @@
   - critique / revision / re-review 都围绕同一 `draft_id` 绑定，不在每轮 run 中漂移
 - `program_id`
   - control-plane 与 report-routing 身份
-  - 负责 `.omx/reports/<program_id>/` 与 active mainline 指针
+  - 负责 `.runtime-program/reports/<program_id>/` 与 active mainline 指针
 
 当前 repo-verified durable report / audit surfaces 也已经明确为：
 

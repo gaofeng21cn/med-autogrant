@@ -1,9 +1,9 @@
 .DS_Store
-.omx/
-.omx/backups/
-.omx/local/
-.omx/logs/
-.omx/state/
+.runtime-program/
+.runtime-program/backups/
+.runtime-program/local/
+.runtime-program/logs/
+.runtime-program/state/
 .venv/
 __pycache__/
 .pytest_cache/

@@ -17,7 +17,7 @@ Date: `2026-04-10`
 
 在不改写 `build-hosted-contract-bundle` object boundary、不引入新 formal entry、也不把 `program_id` 改写成 runtime session handle 的前提下，把一个已存在但仍不够诚实的本地实现细节收紧为 repo-tracked truth：
 
-- `build-hosted-contract-bundle` 继续必须从 **root checkout** 的 `.omx/context/CURRENT_PROGRAM.md` 读取 control-plane `program_id`
+- `build-hosted-contract-bundle` 继续必须从 **root checkout** 的 `.runtime-program/context/CURRENT_PROGRAM.md` 读取 control-plane `program_id`
 - 但 root checkout 的发现方式，不再允许依赖硬编码的机器绝对路径
 - 在独立 worktree 内执行时，必须通过 deterministic 的 git worktree metadata 找到当前 repo 的 root `main` checkout
 - 如果 root checkout 缺失、`main` worktree 不唯一、或对应 `CURRENT_PROGRAM.md` 缺失，则必须 fail-closed
@@ -28,7 +28,7 @@ Date: `2026-04-10`
 
 - 重型执行必须在独立 worktree 中进行
 - root checkout 只用于 absorb / push / cleanup
-- `.omx/` 是本机私有 local state，不会被复制进实现 worktree
+- `.runtime-program/` 是本机私有 local state，不会被复制进实现 worktree
 
 这意味着 `build-hosted-contract-bundle` 若仍靠：
 
@@ -44,10 +44,10 @@ Date: `2026-04-10`
 
 `build-hosted-contract-bundle` 的 `program_id` 读取必须采用以下确定性顺序：
 
-1. 若当前 repo root 自身存在 `.omx/context/CURRENT_PROGRAM.md`，直接读取它；
+1. 若当前 repo root 自身存在 `.runtime-program/context/CURRENT_PROGRAM.md`，直接读取它；
 2. 否则读取 `git worktree list --porcelain`；
 3. 从中定位唯一的 `branch refs/heads/main` worktree；
-4. 读取该 worktree 的 `.omx/context/CURRENT_PROGRAM.md`；
+4. 读取该 worktree 的 `.runtime-program/context/CURRENT_PROGRAM.md`；
 5. 若任一步不满足，fail-closed。
 
 ### 2. no semantic drift
@@ -65,8 +65,8 @@ Date: `2026-04-10`
 
 至少补齐：
 
-- 当前 repo root 自身带 `.omx/context/CURRENT_PROGRAM.md` 时的 direct-resolution regression
-- 当前实现 worktree 缺少 `.omx/` 时，fallback 到唯一 `main` worktree 的 regression
+- 当前 repo root 自身带 `.runtime-program/context/CURRENT_PROGRAM.md` 时的 direct-resolution regression
+- 当前实现 worktree 缺少 `.runtime-program/` 时，fallback 到唯一 `main` worktree 的 regression
 - `main` worktree 缺失或不唯一时的 fail-closed regression
 
 ## Out Of Scope
@@ -97,7 +97,7 @@ Date: `2026-04-10`
 - revision executor
 - artifact bundle
 - route / checkpoint semantics
-- `.omx/reports/**` 的 durable 含义
+- `.runtime-program/reports/**` 的 durable 含义
 
 ## Required Verification
 

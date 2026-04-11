@@ -39,7 +39,7 @@ Date: `2026-04-08`
 2. 一份 repo-tracked 的 family profile / current-truth 文档，明确该 family 与现有 `NSFCWorkspace` 主线的复用边界、差异边界与禁止推断的范围
 3. 至少一个 repo-tracked 的该 family 最小 workspace/example 输入面
 4. 对 active `test-spec` 的精确命令补充，覆盖该 family 的 canonical CLI verification
-5. 与 `.omx/context/**`、`.omx/plans/**`、`.omx/reports/**` 同步的 pointer / report / audit 变更
+5. 与 `.runtime-program/context/**`、`.runtime-program/plans/**`、`.runtime-program/reports/**` 同步的 pointer / report / audit 变更
 
 没有完整 `SecondGrantFamilyAdmissionPackage`，不得把任何 second family 写成 admitted、supported、ready for federation。
 

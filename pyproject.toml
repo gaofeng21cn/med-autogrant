@@ -17,3 +17,6 @@ medautogrant = "med_autogrant.cli:entrypoint"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+  "meta: repo-tracked program control and repository hygiene checks",
+]

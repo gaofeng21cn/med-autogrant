@@ -97,7 +97,7 @@ PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-pac
 
 - 不得改写 `grant_run_id / workspace_id / draft_id / program_id`
 - 不得把 `verification_checkpoint / checkpoint_status` 从 `stage-route-report` 挪到第二个 canonical source
-- 不得让 `build-final-package` 或 `build-hosted-contract-bundle` 反向写回 workspace / `.omx/**`
+- 不得让 `build-final-package` 或 `build-hosted-contract-bundle` 反向写回 workspace / `.runtime-program/**`
 - 不得把 walkthrough 写成 actual hosted runtime、remote execution 或 `P5` expansion
 
 ## Honest Stop Rule

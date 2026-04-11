@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-# Post-R5A control surfaces are untracked `.omx/` local state anchored to the
+# Post-R5A control surfaces are untracked `.runtime-program/` local state anchored to the
 # root checkout, while repo-tracked docs under test still come from this worktree.
 CANONICAL_ROOT = Path("/Users/gaofeng/workspace/med-autogrant")
 CONTROL_ROOT = CANONICAL_ROOT
@@ -18,10 +18,10 @@ DOCS_README_ZH = REPO_ROOT / "docs" / "README.zh-CN.md"
 PROJECT_TRUTH = REPO_ROOT / "contracts" / "project-truth" / "AGENTS.md"
 POSITIONING_DOC = REPO_ROOT / "docs" / "domain-harness-os-positioning.md"
 TOP_LEVEL_DESIGN = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-auto-grant-top-level-design.md"
-CURRENT_PROGRAM = CONTROL_ROOT / ".omx" / "context" / "CURRENT_PROGRAM.md"
-PROGRAM_ROUTING = CONTROL_ROOT / ".omx" / "context" / "PROGRAM_ROUTING.md"
-TEAM_PROMPT = CONTROL_ROOT / ".omx" / "context" / "OMX_TEAM_PROMPT.md"
-EXECUTION_PROMPT = CONTROL_ROOT / ".omx" / "context" / "OMX_EXECUTION_PROMPT.md"
+CURRENT_PROGRAM = CONTROL_ROOT / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
+PROGRAM_ROUTING = CONTROL_ROOT / ".runtime-program" / "context" / "PROGRAM_ROUTING.md"
+TEAM_PROMPT = CONTROL_ROOT / ".runtime-program" / "context" / "OMX_TEAM_PROMPT.md"
+EXECUTION_PROMPT = CONTROL_ROOT / ".runtime-program" / "context" / "OMX_EXECUTION_PROMPT.md"
 OMX_BRIDGE = REPO_ROOT / "docs" / "specs" / "2026-04-06-med-autogrant-mainline-and-omx-bridge.md"
 RUNTIME_FIRST_PROGRAM = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-productization-program.md"
 RUNTIME_BOUNDARY_MAP = REPO_ROOT / "docs" / "specs" / "2026-04-08-runtime-first-r1-to-r5-boundary-map.md"
@@ -199,11 +199,11 @@ P2C_CRITIQUE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.jso
 P3B_RE_REVIEW_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 WORKSPACE_EXAMPLE = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
 WORKSPACE_SCHEMA = REPO_ROOT / "schemas" / "v1" / "nsfc-workspace.schema.json"
-PRD = CONTROL_ROOT / ".omx" / "plans" / "prd-med-autogrant-mainline.md"
-TEST_SPEC = CONTROL_ROOT / ".omx" / "plans" / "test-spec-med-autogrant-mainline.md"
-IMPLEMENTATION = CONTROL_ROOT / ".omx" / "plans" / "implementation-med-autogrant-mainline.md"
-PROGRAM_OPERATING_MODEL = CONTROL_ROOT / ".omx" / "plans" / "spec-program-operating-model.md"
-REPORT_DIR = CONTROL_ROOT / ".omx" / "reports" / "med-autogrant-mainline"
+PRD = CONTROL_ROOT / ".runtime-program" / "plans" / "prd-med-autogrant-mainline.md"
+TEST_SPEC = CONTROL_ROOT / ".runtime-program" / "plans" / "test-spec-med-autogrant-mainline.md"
+IMPLEMENTATION = CONTROL_ROOT / ".runtime-program" / "plans" / "implementation-med-autogrant-mainline.md"
+PROGRAM_OPERATING_MODEL = CONTROL_ROOT / ".runtime-program" / "plans" / "spec-program-operating-model.md"
+REPORT_DIR = CONTROL_ROOT / ".runtime-program" / "reports" / "med-autogrant-mainline"
 LATEST_STATUS = REPORT_DIR / "LATEST_STATUS.md"
 ITERATION_LOG = REPORT_DIR / "ITERATION_LOG.md"
 OPEN_ISSUES = REPORT_DIR / "OPEN_ISSUES.md"
@@ -214,10 +214,10 @@ CURRENT_ACTIVE_RUNTIME_SLICE_ACTIVATION_PACKAGE = (
 )
 
 REQUIRED_COMMAND_SNIPPETS = (
-    "python3 -m unittest discover -s tests -p 'test_*.py'",
-    "python3 -m unittest discover -s tests -p 'test_program_control_surfaces.py'",
-    "python3 -m unittest discover -s tests -p 'test_local_runtime.py'",
-    "python3 -m unittest discover -s tests -p 'test_artifact_bundle.py'",
+    "make test-fast",
+    "make test-meta",
+    "make test-cli-smoke",
+    "make test-full",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_revision.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3b_re_review_major_revision.json --format json",
     "PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --format json",

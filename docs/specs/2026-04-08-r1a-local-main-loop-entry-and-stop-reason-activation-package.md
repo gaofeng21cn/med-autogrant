@@ -112,7 +112,7 @@ Date: `2026-04-08`
 
 ## Run Journal Contract
 
-`R1.A` 的 durable run journal 必须是单个 machine-readable JSON 文件。它是本地 runtime state，不是 `.omx/reports/**` 的替代物。
+`R1.A` 的 durable run journal 必须是单个 machine-readable JSON 文件。它是本地 runtime state，不是 `.runtime-program/reports/**` 的替代物。
 
 最小 durable surface 冻结为：
 
@@ -151,7 +151,7 @@ Date: `2026-04-08`
 当前 `R1.A` 不要求：
 
 - 跨机器同步 journal
-- 从 `.omx/**` 恢复产品 runtime
+- 从 `.runtime-program/**` 恢复产品 runtime
 - 直接恢复到“下一 stage 已执行完”的写入后状态
 
 ## Relation To Existing Canonical Surfaces
@@ -223,7 +223,7 @@ Date: `2026-04-08`
 
 - 识别到的“下一步”其实需要新的 public formal entry 或新的平台语义
 - 必须新增 schema field 才能让 `R1.A` 成立
-- 需要把 `.omx/reports/**` 误写成产品 run journal
+- 需要把 `.runtime-program/reports/**` 误写成产品 run journal
 - 需要把 `run-local` 混写成 artifact writing、revision execution、export、web runtime 或 federation surface
 
 ## Excluded Scope

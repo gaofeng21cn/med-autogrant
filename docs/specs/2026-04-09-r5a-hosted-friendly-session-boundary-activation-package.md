@@ -83,7 +83,7 @@ Date: `2026-04-09`
 
 - 新命令仍属于 `CLI` formal entry，不新增第二 formal entry
 - `build-hosted-contract-bundle` 不得替代既有 runtime commands
-- `build-hosted-contract-bundle` 只写 contract bundle output，不写 `.omx/**`
+- `build-hosted-contract-bundle` 只写 contract bundle output，不写 `.runtime-program/**`
 - `build-hosted-contract-bundle` 不授权 actual hosted runtime
 
 ## Hosted Contract Bundle
@@ -150,13 +150,13 @@ Date: `2026-04-09`
 - `build-final-package`
 - `verification_checkpoint`
 - `checkpoint_status`
-- `.omx/reports/**`
+- `.runtime-program/reports/**`
 
 关系冻结如下：
 
 - `R5.A` 只抽出 contract compatibility，不重写 current product runtime
 - `R5.A` 不改变 `grant_run_id / workspace_id / draft_id / program_id` 分工
-- `R5.A` 不把 `.omx/reports/**` 伪装成 hosted audit store
+- `R5.A` 不把 `.runtime-program/reports/**` 伪装成 hosted audit store
 - `R5.A` 不把 local final package 伪装成 remote object store
 
 ## Required Verification

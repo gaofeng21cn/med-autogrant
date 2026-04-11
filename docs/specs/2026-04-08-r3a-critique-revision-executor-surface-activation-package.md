@@ -92,7 +92,7 @@ Date: `2026-04-08`
 - 新命令仍属于 `CLI` formal entry，不新增第二 formal entry
 - 旧五个 commands、`run-local / resume-local` 与 `build-artifact-bundle` 继续作为 verifier / audit baseline
 - `execute-revision-pass` 不得替代 `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report`
-- `execute-revision-pass` 只写 revised workspace candidate output，不写 `.omx/**`
+- `execute-revision-pass` 只写 revised workspace candidate output，不写 `.runtime-program/**`
 
 ## Revision Executor Contract
 
@@ -142,7 +142,7 @@ Date: `2026-04-08`
 
 - `--output <workspace-json-path>` 为必填
 - 若 output 已存在且其 `grant_run_id / workspace_id / draft_id / active_revision_plan_id` 与当前不一致，必须 fail-closed
-- revised workspace output 是产品 runtime 的本地 durable artifact，不替代 `.omx/reports/**`
+- revised workspace output 是产品 runtime 的本地 durable artifact，不替代 `.runtime-program/reports/**`
 
 ## Relation To Existing Canonical Surfaces
 

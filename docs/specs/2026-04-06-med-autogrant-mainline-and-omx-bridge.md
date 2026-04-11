@@ -83,7 +83,7 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 ### 2. 当前 program 指针
 
-- `.omx/context/CURRENT_PROGRAM.md`
+- `.runtime-program/context/CURRENT_PROGRAM.md`
 
 这层定义：
 
@@ -94,8 +94,8 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 ### 3. OMX 可执行提示面
 
-- `.omx/context/PROGRAM_ROUTING.md`
-- `.omx/context/OMX_TEAM_PROMPT.md`
+- `.runtime-program/context/PROGRAM_ROUTING.md`
+- `.runtime-program/context/OMX_TEAM_PROMPT.md`
 
 其中：
 
@@ -113,10 +113,10 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 ### 4. Program 计划层
 
-- `.omx/plans/spec-program-operating-model.md`
-- `.omx/plans/prd-med-autogrant-mainline.md`
-- `.omx/plans/test-spec-med-autogrant-mainline.md`
-- `.omx/plans/implementation-med-autogrant-mainline.md`
+- `.runtime-program/plans/spec-program-operating-model.md`
+- `.runtime-program/plans/prd-med-autogrant-mainline.md`
+- `.runtime-program/plans/test-spec-med-autogrant-mainline.md`
+- `.runtime-program/plans/implementation-med-autogrant-mainline.md`
 - `docs/specs/2026-04-08-runtime-first-productization-program.md`
 
 它们分别回答：
@@ -128,9 +128,9 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 ### 5. 运行报告层
 
-- `.omx/reports/med-autogrant-mainline/LATEST_STATUS.md`
-- `.omx/reports/med-autogrant-mainline/ITERATION_LOG.md`
-- `.omx/reports/med-autogrant-mainline/OPEN_ISSUES.md`
+- `.runtime-program/reports/med-autogrant-mainline/LATEST_STATUS.md`
+- `.runtime-program/reports/med-autogrant-mainline/ITERATION_LOG.md`
+- `.runtime-program/reports/med-autogrant-mainline/OPEN_ISSUES.md`
 
 这层负责把运行中的项目状态 durable 化，避免恢复时只能看旧 pane。
 
@@ -150,7 +150,7 @@ durable handoff 回答的是控制面如何不断点连续推进。
   - `revision` 完成后仍沿用同一 `draft_id`，不借由 run handle 生成新草稿身份
 - `program_id`
   - `med-autogrant-mainline` 这一长期 active mainline 的控制面句柄
-  - 用来路由 `.omx/reports/<program_id>/` 与 pointer-bearing control surfaces，不等于单次 runtime run
+  - 用来路由 `.runtime-program/reports/<program_id>/` 与 pointer-bearing control surfaces，不等于单次 runtime run
 
 当前需要保持的 formal durable entry 真相是：
 
@@ -170,16 +170,16 @@ durable handoff 回答的是控制面如何不断点连续推进。
   - `schemas/v1/nsfc-workspace.schema.json`
   - `examples/nsfc_workspace_minimal.json`
 - local durable handoff surfaces
-  - `.omx/context/**`
-  - `.omx/plans/**`
-  - `.omx/reports/**`
+  - `.runtime-program/context/**`
+  - `.runtime-program/plans/**`
+  - `.runtime-program/reports/**`
 
 当前 durability model clarification 的单独 current truth 冻结在 `docs/specs/2026-04-07-durability-model-clarification.md`。
 
 也就是说：
 
 - reviewer 应能仅凭 repo-tracked review surfaces 理解 `grant_run_id` 的正式合同
-- `.omx/**` 仍然承担本机 durable handoff 责任，但不是这次提交必须依赖的 review 入口
+- `.runtime-program/**` 仍然承担本机 durable handoff 责任，但不是这次提交必须依赖的 review 入口
 
 ## 当前固定阶段顺序
 
@@ -442,7 +442,7 @@ durable handoff 回答的是控制面如何不断点连续推进。
 
 给 `OMX` 的长期执行入口不再是手写一段一次性提示词，而是：
 
-- 先读 `.omx/context/OMX_TEAM_PROMPT.md`
+- 先读 `.runtime-program/context/OMX_TEAM_PROMPT.md`
 - 再按其中规定读取 `CURRENT_PROGRAM + plans + reports`
 - 然后只围绕当前 active program 推进
 

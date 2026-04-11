@@ -45,10 +45,10 @@ Date: `2026-04-07`
 - `stage-route-report` 继续是 canonical route / checkpoint aggregation surface，并稳定输出 `verification_checkpoint / checkpoint_status`。
 - `run-local` 只在既有 route / checkpoint surface 之上增加 machine-readable `stop_reason`、`stage_action_envelope` 与 local run journal。
 - `resume-local` 只允许从同一 journal 恢复 `input_path`、沿用同一 `grant_run_id` 重新进入一次 local runtime pass。
-- `build-artifact-bundle` 只允许把当前 active workspace 的 canonical objects 写成 machine-readable local bundle，不写回 workspace，不写 `.omx/**`。
+- `build-artifact-bundle` 只允许把当前 active workspace 的 canonical objects 写成 machine-readable local bundle，不写回 workspace，不写 `.runtime-program/**`。
 - `execute-revision-pass` 已 landed，但仍只允许在 repo-frozen `R3.A` deterministic mutation contract 内写出 revised workspace candidate；它不扩成 question / argument 级 mutation，不改写 formal entry。
 - `build-final-package` 已 landed，但仍只允许在 `freeze_ready / submission_frozen` gate 上组装 machine-readable local `final_package`；它不替代 validator / route / revision surfaces。
-- `build-hosted-contract-bundle` 已 landed，但仍只导出 hosted-friendly contract bundle；它不授权 actual hosted runtime，也不把 `.omx/**` 写成 hosted audit store。
+- `build-hosted-contract-bundle` 已 landed，但仍只导出 hosted-friendly contract bundle；它不授权 actual hosted runtime，也不把 `.runtime-program/**` 写成 hosted audit store。
 - post-`R5.A` 的 current hardening 继续要求：
   - revised workspace validator / checkpoint truth 与 landed local outputs 对齐；
   - re-review revised output 不得因为保留 `reviewed_revision_plan_id / reviewed_revision_evidence` 而被错误判 invalid；
@@ -84,7 +84,7 @@ Date: `2026-04-07`
 - 正式支持：是
 - 当前入口：
   - `PYTHONPATH=src python3 -m med_autogrant resume-local --journal ...`
-  - developer control-plane recovery 继续依赖 `.omx/context/**`、`.omx/plans/**`、`.omx/reports/**`
+  - developer control-plane recovery 继续依赖 `.runtime-program/context/**`、`.runtime-program/plans/**`、`.runtime-program/reports/**`
 
 当前 contract：
 

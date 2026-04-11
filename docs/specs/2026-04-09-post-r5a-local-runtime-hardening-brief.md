@@ -123,10 +123,10 @@
 - `docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
 - `docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 - 本文 `docs/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`
-- `.omx/context/CURRENT_PROGRAM.md`
-- `.omx/reports/med-autogrant-mainline/LATEST_STATUS.md`
-- `.omx/reports/med-autogrant-mainline/OPEN_ISSUES.md`
-- `.omx/reports/med-autogrant-mainline/ITERATION_LOG.md`
+- `.runtime-program/context/CURRENT_PROGRAM.md`
+- `.runtime-program/reports/med-autogrant-mainline/LATEST_STATUS.md`
+- `.runtime-program/reports/med-autogrant-mainline/OPEN_ISSUES.md`
+- `.runtime-program/reports/med-autogrant-mainline/ITERATION_LOG.md`
 
 ## Required Verification
 

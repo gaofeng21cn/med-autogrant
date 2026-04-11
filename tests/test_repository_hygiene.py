@@ -16,22 +16,22 @@ class RepositoryHygieneTest(unittest.TestCase):
         text = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
 
         self.assertIn(".codex/", text)
-        self.assertIn(".omx/", text)
+        self.assertIn(".runtime-program/", text)
         self.assertNotIn("!.codex/", text)
-        self.assertNotIn("!.omx/", text)
+        self.assertNotIn("!.runtime-program/", text)
 
     def test_public_readmes_do_not_expose_local_tooling_paths(self) -> None:
         for path in (REPO_ROOT / "README.md", REPO_ROOT / "README.zh-CN.md"):
             with self.subTest(path=path.name):
                 text = path.read_text(encoding="utf-8")
-                self.assertNotIn(".omx/context", text)
-                self.assertNotIn(".omx/plans", text)
-                self.assertNotIn(".omx/reports", text)
+                self.assertNotIn(".runtime-program/context", text)
+                self.assertNotIn(".runtime-program/plans", text)
+                self.assertNotIn(".runtime-program/reports", text)
                 self.assertNotIn(".codex/", text)
 
     def test_local_tooling_state_is_not_tracked(self) -> None:
         completed = subprocess.run(
-            ["git", "ls-files", ".omx", ".codex"],
+            ["git", "ls-files", ".runtime-program", ".codex"],
             cwd=REPO_ROOT,
             check=False,
             capture_output=True,

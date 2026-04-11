@@ -75,7 +75,7 @@ Agent 负责：
 
 ## Runtime And Control-Plane Boundary
 
-- `Codex App <-> OMX` 协作属于开发控制面（planning、orchestration、report 回写），不是产品 runtime 本体。
+- `Codex App` 与 repo-local `.runtime-program/` 协作属于开发控制面（planning、orchestration、report 回写），不是产品 runtime 本体。
 - 产品 runtime 指 `Med Auto Grant` domain harness 在 shared substrate 上执行 grant loop 的运行面。
 - 不能把“控制面可用”误写成“产品 runtime 已成熟”；两者的成熟度与验收标准必须分开表述。
 - 后续迁移到 managed web runtime 时，控制面形态可以变化，但 domain contract 与 substrate 约束不应漂移。
@@ -93,7 +93,7 @@ Agent 负责：
   - revision 完成后继续沿用同一 `draft_id`，不借由 run handle 生成新草稿身份
 - `program_id`
   - control-plane / report-routing 身份
-  - 用于 `.omx/reports/<program_id>/` 与 active mainline pointer
+  - 用于 `.runtime-program/reports/<program_id>/` 与 active mainline pointer
 - 当前 repo-verified durable report / audit surface：
   - `summarize-workspace`
   - `critique-summary`
@@ -104,10 +104,10 @@ Agent 负责：
 
 ## Stability Rules
 
-- 当前唯一 active mainline 由 `.omx/context/CURRENT_PROGRAM.md` 定义。
-- phase 顺序、north star 与 tranche 切换必须先写入 `CURRENT_PROGRAM.md`、对应 `PRD / test-spec / implementation`，再交给 OMX 连续执行。
+- 当前唯一 active mainline 由 `.runtime-program/context/CURRENT_PROGRAM.md` 定义。
+- phase 顺序、north star 与 tranche 切换必须先写入 `CURRENT_PROGRAM.md`、对应 `PRD / test-spec / implementation`，再交给当前 Codex operator line 连续执行。
 - 允许在 `main` 上做小而可回退的直接改动；跨阶段或高耦合重构必须先冻结到主线文档。
-- 不依赖旧 terminal、旧 team pane、或一次性长提示词作为唯一状态来源；恢复必须从 `.omx/context` 与 `.omx/reports` 开始。
+- 不依赖旧 terminal、旧 team pane、或一次性长提示词作为唯一状态来源；恢复必须从 `.runtime-program/context` 与 `.runtime-program/reports` 开始。
 
 ## Documentation Layers
 
@@ -124,32 +124,32 @@ Agent 负责：
 - `docs/domain-harness-os-positioning.md`
 - `docs/specs/**`
 - `docs/plans/**`
-- `.omx/context/**`
-- `.omx/plans/**`
-- `.omx/reports/**`
+- `.runtime-program/context/**`
+- `.runtime-program/plans/**`
+- `.runtime-program/reports/**`
 
 不应无边界扩大双语范围。
 中文内部文档优先使用完整中文叙述；英文仅保留给固定术语、路径、命令、schema 与代码标识符，避免无意义中英混写。
 
 ## Host Collaboration Model
 
-`Codex App` 与 `OMX` 的协作采用固定分工：
+`Codex App` 与当前 Codex operator line 的协作采用固定分工：
 
 - `Codex App`：规划、冻结真相文档、阶段验收、集成判断、冲突裁决
-- `OMX`：长时间连续执行、team lane 拆分、验证、report 回写、断点恢复
+- 当前 Codex operator line：长时间连续执行、team lane 拆分、验证、report 回写、断点恢复
 
 两者之间的 durable handoff 机制固定为：
 
 1. `contracts/project-truth/AGENTS.md`
-2. `.omx/context/CURRENT_PROGRAM.md`
-3. `.omx/context/OMX_TEAM_PROMPT.md`
-4. `.omx/plans/spec-program-operating-model.md`
-5. `.omx/plans/prd-*.md`
-6. `.omx/plans/test-spec-*.md`
-7. `.omx/plans/implementation-*.md`
-8. `.omx/reports/<program-id>/{LATEST_STATUS,ITERATION_LOG,OPEN_ISSUES}.md`
+2. `.runtime-program/context/CURRENT_PROGRAM.md`
+3. `.runtime-program/context/OMX_TEAM_PROMPT.md`
+4. `.runtime-program/plans/spec-program-operating-model.md`
+5. `.runtime-program/plans/prd-*.md`
+6. `.runtime-program/plans/test-spec-*.md`
+7. `.runtime-program/plans/implementation-*.md`
+8. `.runtime-program/reports/<program-id>/{LATEST_STATUS,ITERATION_LOG,OPEN_ISSUES}.md`
 
-如果这些表面没有同步，就不应假设 `OMX` 与 `Codex App` 对当前 program 的理解一致。
+如果这些表面没有同步，就不应假设当前 Codex operator line 与 `Codex App` 对当前 program 的理解一致。
 
 ## Data And State Mutation
 
@@ -157,20 +157,20 @@ Agent 负责：
 - workspace、schema、stage route、critique/revision artifact 必须走显式结构对象，不允许靠隐式 prompt 文本漂移。
 - critique、revision、draft、question、direction 之间的关联必须由稳定 ID 绑定。
 - 对逻辑硬伤、缺失引用、gate 不满足的情况，优先显式失败，不做静默纠偏。
-- `.omx/reports/**` 是当前 active program 的 durable 运行状态面；不是一次性聊天记录。
+- `.runtime-program/reports/**` 是当前 active program 的 durable 运行状态面；不是一次性聊天记录。
 
 ## Review Surface
 
 人类优先 review：
 
 - `docs/specs/**`
-- `.omx/context/**`
-- `.omx/plans/**`
+- `.runtime-program/context/**`
+- `.runtime-program/plans/**`
 - 关键 grant artifact、critique、revision 与出口包
 
-OMX 持续写回：
+当前 Codex operator line 持续写回：
 
-- `.omx/reports/**`
+- `.runtime-program/reports/**`
 - 与当前 tranche 直接相关的实现、测试和验证痕迹
 
 ## Domain-Specific Direction
@@ -215,5 +215,5 @@ OMX 持续写回：
 
 - User instructions override this file.
 - Deeper `AGENTS.md` files override this file for narrower scopes.
-- OMX or Codex host orchestration rules govern how work executes.
+- Codex host orchestration rules together with `.runtime-program/` control-plane rules govern how work executes.
 - This file governs what project-specific truth and boundaries must be preserved.

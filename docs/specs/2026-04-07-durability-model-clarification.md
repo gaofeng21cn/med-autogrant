@@ -52,17 +52,17 @@ Date: `2026-04-07`
 
 当前恢复与连续执行依赖以下 local durable handoff surfaces：
 
-- `.omx/context/CURRENT_PROGRAM.md`
-- `.omx/context/PROGRAM_ROUTING.md`
-- `.omx/context/OMX_TEAM_PROMPT.md`
-- `.omx/context/OMX_EXECUTION_PROMPT.md`
-- `.omx/plans/spec-program-operating-model.md`
-- `.omx/plans/prd-med-autogrant-mainline.md`
-- `.omx/plans/test-spec-med-autogrant-mainline.md`
-- `.omx/plans/implementation-med-autogrant-mainline.md`
-- `.omx/reports/med-autogrant-mainline/LATEST_STATUS.md`
-- `.omx/reports/med-autogrant-mainline/ITERATION_LOG.md`
-- `.omx/reports/med-autogrant-mainline/OPEN_ISSUES.md`
+- `.runtime-program/context/CURRENT_PROGRAM.md`
+- `.runtime-program/context/PROGRAM_ROUTING.md`
+- `.runtime-program/context/OMX_TEAM_PROMPT.md`
+- `.runtime-program/context/OMX_EXECUTION_PROMPT.md`
+- `.runtime-program/plans/spec-program-operating-model.md`
+- `.runtime-program/plans/prd-med-autogrant-mainline.md`
+- `.runtime-program/plans/test-spec-med-autogrant-mainline.md`
+- `.runtime-program/plans/implementation-med-autogrant-mainline.md`
+- `.runtime-program/reports/med-autogrant-mainline/LATEST_STATUS.md`
+- `.runtime-program/reports/med-autogrant-mainline/ITERATION_LOG.md`
+- `.runtime-program/reports/med-autogrant-mainline/OPEN_ISSUES.md`
 
 这些 surfaces 承担的是 handoff / resume truth 职责：
 
@@ -73,11 +73,11 @@ Date: `2026-04-07`
 - 当前 open risks / blockers
 - 恢复执行的读取顺序
 
-`.omx/**` 不能单独发明新的 formal entry、hard gate、identity semantics，或把 control-plane maturity 误写成 actual hosted runtime。
+`.runtime-program/**` 不能单独发明新的 formal entry、hard gate、identity semantics，或把 control-plane maturity 误写成 actual hosted runtime。
 
 ## local runtime durable surface
 
-除 `.omx/**` 的 control-plane durable handoff 之外，当前产品 runtime 已 landed 的 local runtime durable surface 至少包括：
+除 `.runtime-program/**` 的 control-plane durable handoff 之外，当前产品 runtime 已 landed 的 local runtime durable surface 至少包括：
 
 ### 1. local run journal
 
@@ -95,7 +95,7 @@ Date: `2026-04-07`
 这层不负责：
 
 - 充当 repo-tracked review truth
-- 替代 `.omx/reports/**`
+- 替代 `.runtime-program/reports/**`
 - 发明新的 `program_id` 或 controller pointer
 
 ### 2. local revised workspace output
@@ -111,7 +111,7 @@ Date: `2026-04-07`
 
 这层不负责：
 
-- 替代 `.omx/reports/**`
+- 替代 `.runtime-program/reports/**`
 - 重写 `verification_checkpoint / checkpoint_status`
 - 发明新的 critique synthesis / hosted runtime semantics
 
@@ -129,7 +129,7 @@ Date: `2026-04-07`
 这层不负责：
 
 - 改写 workspace
-- 替代 `.omx/reports/**`
+- 替代 `.runtime-program/reports/**`
 - 替代 `verification_checkpoint / checkpoint_status`
 - 伪装 final export / freeze manifest 已完成
 
@@ -147,7 +147,7 @@ Date: `2026-04-07`
 这层不负责：
 
 - 替代 validator / route / revision surfaces
-- 写 `.omx/**`
+- 写 `.runtime-program/**`
 - 伪装 actual hosted runtime 已完成
 
 ### 5. local hosted-contract durable surface
@@ -165,11 +165,11 @@ Date: `2026-04-07`
 
 - 实现 actual hosted runtime
 - 实现 remote execution / multi-tenant / billing / federation
-- 把 `.omx/reports/**` 伪装成 hosted audit store
+- 把 `.runtime-program/reports/**` 伪装成 hosted audit store
 
 ## 哪些结论必须 repo-native
 
-以下结论如果要成为正式 review truth，必须进入 repo-tracked review surfaces，而不能只留在 `.omx/**` 或 machine-local outputs：
+以下结论如果要成为正式 review truth，必须进入 repo-tracked review surfaces，而不能只留在 `.runtime-program/**` 或 machine-local outputs：
 
 - formal entry matrix
 - durability model clarification
@@ -182,7 +182,7 @@ Date: `2026-04-07`
 
 ## 哪些状态允许只留在 local handoff surfaces
 
-以下信息可以继续只由 `.omx/**` 承担：
+以下信息可以继续只由 `.runtime-program/**` 承担：
 
 - 当前 active program / phase / tranche pointer
 - 当前最新 verification snapshot
@@ -204,7 +204,7 @@ Date: `2026-04-07`
   - 约束：revision 完成后仍沿用同一 `draft_id`
 - `program_id`
   - 语义：control-plane / report-routing 身份
-  - 落点：`.omx/reports/<program_id>/` 与 active mainline pointer；hosted-contract export 中只作为 routing identity 保留
+  - 落点：`.runtime-program/reports/<program_id>/` 与 active mainline pointer；hosted-contract export 中只作为 routing identity 保留
 
 这四类 ID 不得互相替代。
 
