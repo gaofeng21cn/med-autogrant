@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import json
-import re
-import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from med_autogrant.artifact_bundle import build_artifact_bundle_payload
+from med_autogrant.control_plane import (
+    CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
+    read_program_id as _read_program_id_from_contract,
+    resolve_current_program_contract_path,
+)
 from med_autogrant.final_package import build_final_package_payload
 from med_autogrant.hosted_contract_bundle import (
     SUPPORTED_FINAL_PACKAGE_VERSION,
@@ -30,7 +33,7 @@ from med_autogrant.workspace import (
 
 DEFAULT_JOURNAL_ROOT = Path.home() / ".med-autogrant" / "runs"
 JOURNAL_VERSION = 1
-CURRENT_PROGRAM_RELATIVE_PATH = Path(".runtime-program") / "context" / "CURRENT_PROGRAM.md"
+CURRENT_PROGRAM_RELATIVE_PATH = CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH
 
 
 class LocalRuntimeStateError(WorkspaceError):
@@ -505,17 +508,8 @@ def _read_final_package(final_package_path: str | Path) -> dict[str, Any]:
     return final_package
 
 
-def _read_program_id() -> str:
-    current_program_path = _resolve_control_plane_current_program_path()
-    try:
-        text = current_program_path.read_text(encoding="utf-8")
-    except OSError as exc:
-        raise WorkspaceFileError(f"读取 CURRENT_PROGRAM 失败: {current_program_path}") from exc
-
-    match = re.search(r"- program_id:\s*`([^`]+)`", text)
-    if match is None:
-        raise WorkspaceStateError(f"CURRENT_PROGRAM 缺少可解析的 program_id: {current_program_path}")
-    return match.group(1)
+def _read_program_id(*, repo_root: Path | None = None) -> str:
+    return _read_program_id_from_contract(repo_root=repo_root)
 
 
 def _resolve_control_plane_current_program_path(
@@ -523,37 +517,13 @@ def _resolve_control_plane_current_program_path(
     repo_root: Path | None = None,
     worktree_list_text: str | None = None,
 ) -> Path:
-    resolved_repo_root = (repo_root or Path(__file__).resolve().parents[2]).resolve()
-    local_current_program = resolved_repo_root / CURRENT_PROGRAM_RELATIVE_PATH
-    if local_current_program.exists():
-        return local_current_program
-
-    if worktree_list_text is None:
-        worktree_list_text = _read_git_worktree_list(repo_root=resolved_repo_root)
-    return _select_control_plane_current_program_path(
-        repo_root=resolved_repo_root,
-        worktree_list_text=worktree_list_text,
-    )
+    del worktree_list_text
+    return resolve_current_program_contract_path(repo_root=repo_root)
 
 
 def _read_git_worktree_list(*, repo_root: Path) -> str:
-    try:
-        result = subprocess.run(
-            ["git", "worktree", "list", "--porcelain"],
-            check=True,
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-        )
-    except FileNotFoundError as exc:
-        raise WorkspaceFileError("未找到 git，可用性不足，无法解析 control-plane root checkout。") from exc
-    except subprocess.CalledProcessError as exc:
-        stderr = exc.stderr.strip()
-        message = "读取 git worktree 列表失败，无法解析 control-plane root checkout。"
-        if stderr:
-            message = f"{message} {stderr}"
-        raise WorkspaceFileError(message) from exc
-    return result.stdout
+    del repo_root
+    raise WorkspaceStateError("项目级 .runtime-program 已退役；不再通过 git worktree 列表解析 control-plane root。")
 
 
 def _select_control_plane_current_program_path(
@@ -561,18 +531,9 @@ def _select_control_plane_current_program_path(
     repo_root: Path,
     worktree_list_text: str,
 ) -> Path:
-    entries = _parse_git_worktree_list_porcelain(worktree_list_text)
-    main_entries = [entry for entry in entries if entry.get("branch") == "refs/heads/main"]
-    if not main_entries:
-        raise WorkspaceFileError("git worktree 列表中未找到 `refs/heads/main`，无法解析 control-plane root checkout。")
-    if len(main_entries) > 1:
-        raise WorkspaceStateError("检测到多个 `refs/heads/main` worktree，无法唯一确定 control-plane root checkout。")
-
-    main_worktree_path = Path(main_entries[0]["worktree"]).expanduser().resolve()
-    current_program_path = main_worktree_path / CURRENT_PROGRAM_RELATIVE_PATH
-    if not current_program_path.exists():
-        raise WorkspaceFileError(f"root main worktree 缺少 CURRENT_PROGRAM.md: {current_program_path}")
-    return current_program_path
+    del repo_root
+    del worktree_list_text
+    raise WorkspaceStateError("项目级 .runtime-program 已退役；不再通过 main worktree 回退解析 CURRENT_PROGRAM。")
 
 
 def _parse_git_worktree_list_porcelain(worktree_list_text: str) -> list[dict[str, str]]:

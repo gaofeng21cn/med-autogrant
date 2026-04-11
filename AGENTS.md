@@ -8,6 +8,7 @@
 
 - AGENTS 只管工作方式，不承载项目真相、规格或阶段判断。
 - 项目知识默认从 `README*`、`docs/README*`、`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md` 读取。
+- repo-tracked current-program pointer 固定为 `contracts/runtime-program/current-program.json`。
 
 ## 工作原则
 
@@ -38,7 +39,7 @@
 
 - 牵涉多文件或多步骤变更，默认从 `main` 新建独立 worktree 再实现。
 - 共享根 checkout 只用于审阅、吸收、提交、push 与清理，不承担重型实现。
-- 新 lane 开始前确认 worktree 干净，并清理陈旧 `.runtime-program/state/sessions/*`、tmux session 与 stale `skill-active` 状态。
+- 新 lane 开始前确认 worktree 干净，并清理用户级 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/*`、tmux session 与 stale `skill-active` 状态。
 - worktree 内实现和验证完成后，应尽快吸收回 `main`，并清理对应 worktree、分支与临时状态。
 
 ## 验证规则
@@ -54,10 +55,10 @@
 
 - 涉及 `grant_run_id`、`workspace_id`、`draft_id`、`program_id` 的语义或表述变更，必须同步更新核心骨架、current truth 与相关 tests。
 
-## 本地控制面（.runtime-program）
+## 本地控制面（runtime-state）
 
 - 项目级 `.codex/` 与 `.omx/` 已退役，不再作为仓库本地状态入口。
-- `.runtime-program/**` 为当前仍保留的本地工具/控制面状态，必须保持未跟踪。
-- 如需保留历史 session、prompt、log 或 hook 状态，应迁入用户级 `~/.codex/` 归档。
-- `.runtime-program/` 是本地控制面，不是产品 runtime，也不是 repo-tracked current truth。
-- `.runtime-program/local/AGENTS.local.md` 仅允许本机 overlay，不进入 repo-tracked 主线。
+- 项目级 `.runtime-program/` 已退役，不再作为仓库本地状态入口。
+- 机器本地 session、prompt、log、report 与 hook 状态统一迁入 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
+- 用户级 runtime-state 不是产品 runtime，也不是 repo-tracked current truth。
+- 任何本机 overlay 也只允许放在用户级 runtime-state 根目录，不进入 repo-tracked 主线。

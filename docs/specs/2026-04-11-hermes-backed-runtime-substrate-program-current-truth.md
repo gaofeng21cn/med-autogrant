@@ -17,10 +17,14 @@ Date: `2026-04-11`
 - `Hermes-backed runtime substrate` 成为新的 runtime owner；
 - 旧 local host-agent runtime 只保留为 migration baseline、compatibility bridge、regression oracle；
 - `CLI / MCP / controller / Hermes substrate / MedAutoGrant domain logic` 的边界；
+- `contracts/runtime-program/current-program.json` 成为 repo-tracked current-program pointer；
+- 机器本地 session / log / report / prompt 状态统一下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`；
 - 在当前 repo 内哪些能力可以诚实迁入 Hermes，哪些必须继续留在 domain logic。
 
 ## Current Pointer
 
+- Repo-tracked current-program pointer: `contracts/runtime-program/current-program.json`
+- Current `program_id`: `med-autogrant-mainline`
 - Previous absorbed baseline: `R5.A / Hosted-Friendly Session Boundary`
 - Previous truthful closeout: `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
 - Current phase: `Hermes Runtime Substrate Program`

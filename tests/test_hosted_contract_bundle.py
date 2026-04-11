@@ -802,12 +802,15 @@ class HostedContractBundleCliTest(unittest.TestCase):
 
 
 class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):
-    def test_resolve_control_plane_current_program_path_prefers_local_repo_root(self) -> None:
+    def test_resolve_control_plane_current_program_path_prefers_repo_tracked_contract(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             repo_root = Path(tmp_dir) / "repo-root"
-            current_program_path = repo_root / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
+            current_program_path = repo_root / "contracts" / "runtime-program" / "current-program.json"
             current_program_path.parent.mkdir(parents=True, exist_ok=True)
-            current_program_path.write_text("- program_id: `local-program`\n", encoding="utf-8")
+            current_program_path.write_text(
+                json.dumps({"program_id": "local-program"}, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
 
             resolved_path = hosted_contract_bundle_module._resolve_control_plane_current_program_path(
                 repo_root=repo_root,
@@ -815,23 +818,22 @@ class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):
 
             self.assertEqual(resolved_path, current_program_path.resolve())
 
-    def test_resolve_control_plane_current_program_path_falls_back_to_unique_main_worktree(self) -> None:
+    def test_resolve_control_plane_current_program_path_ignores_worktree_list_once_contract_exists(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             feature_worktree = Path(tmp_dir) / "feature-worktree"
             feature_worktree.mkdir(parents=True, exist_ok=True)
-            main_worktree = Path(tmp_dir) / "root-main"
-            current_program_path = main_worktree / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
+            current_program_path = feature_worktree / "contracts" / "runtime-program" / "current-program.json"
             current_program_path.parent.mkdir(parents=True, exist_ok=True)
-            current_program_path.write_text("- program_id: `root-program`\n", encoding="utf-8")
+            current_program_path.write_text(
+                json.dumps({"program_id": "feature-program"}, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
 
             worktree_list_text = "\n".join(
                 (
                     f"worktree {feature_worktree}",
                     "HEAD 1111111111111111111111111111111111111111",
                     "branch refs/heads/post-r5a-local-runtime-hardening-20260410-a",
-                    f"worktree {main_worktree}",
-                    "HEAD 2222222222222222222222222222222222222222",
-                    "branch refs/heads/main",
                 )
             )
 
@@ -842,68 +844,30 @@ class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):
 
             self.assertEqual(resolved_path, current_program_path.resolve())
 
-    def test_resolve_control_plane_current_program_path_fails_closed_without_main_worktree(self) -> None:
+    def test_resolve_control_plane_current_program_path_fails_closed_without_repo_tracked_contract(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             feature_worktree = Path(tmp_dir) / "feature-worktree"
             feature_worktree.mkdir(parents=True, exist_ok=True)
-            other_worktree = Path(tmp_dir) / "other-worktree"
-            current_program_path = other_worktree / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
-            current_program_path.parent.mkdir(parents=True, exist_ok=True)
-            current_program_path.write_text("- program_id: `other-program`\n", encoding="utf-8")
-
-            worktree_list_text = "\n".join(
-                (
-                    f"worktree {feature_worktree}",
-                    "HEAD 1111111111111111111111111111111111111111",
-                    "branch refs/heads/post-r5a-local-runtime-hardening-20260410-a",
-                    f"worktree {other_worktree}",
-                    "HEAD 2222222222222222222222222222222222222222",
-                    "branch refs/heads/release-candidate",
-                )
-            )
-
             with self.assertRaisesRegex(
                 hosted_contract_bundle_module.WorkspaceFileError,
-                "未找到 `refs/heads/main`",
+                "repo-tracked CURRENT_PROGRAM contract",
             ):
                 hosted_contract_bundle_module._resolve_control_plane_current_program_path(
                     repo_root=feature_worktree,
-                    worktree_list_text=worktree_list_text,
                 )
 
-    def test_resolve_control_plane_current_program_path_fails_closed_for_ambiguous_main_worktrees(self) -> None:
+    def test_read_program_id_fails_closed_for_missing_program_id(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            feature_worktree = Path(tmp_dir) / "feature-worktree"
-            feature_worktree.mkdir(parents=True, exist_ok=True)
-            main_one = Path(tmp_dir) / "root-main-1"
-            main_two = Path(tmp_dir) / "root-main-2"
-            for main_worktree in (main_one, main_two):
-                current_program_path = main_worktree / ".runtime-program" / "context" / "CURRENT_PROGRAM.md"
-                current_program_path.parent.mkdir(parents=True, exist_ok=True)
-                current_program_path.write_text("- program_id: `root-program`\n", encoding="utf-8")
-
-            worktree_list_text = "\n".join(
-                (
-                    f"worktree {feature_worktree}",
-                    "HEAD 1111111111111111111111111111111111111111",
-                    "branch refs/heads/post-r5a-local-runtime-hardening-20260410-a",
-                    f"worktree {main_one}",
-                    "HEAD 2222222222222222222222222222222222222222",
-                    "branch refs/heads/main",
-                    f"worktree {main_two}",
-                    "HEAD 3333333333333333333333333333333333333333",
-                    "branch refs/heads/main",
-                )
-            )
+            repo_root = Path(tmp_dir) / "repo-root"
+            current_program_path = repo_root / "contracts" / "runtime-program" / "current-program.json"
+            current_program_path.parent.mkdir(parents=True, exist_ok=True)
+            current_program_path.write_text(json.dumps({}, ensure_ascii=False, indent=2), encoding="utf-8")
 
             with self.assertRaisesRegex(
                 hosted_contract_bundle_module.WorkspaceStateError,
-                "多个 `refs/heads/main` worktree",
+                "program_id",
             ):
-                hosted_contract_bundle_module._resolve_control_plane_current_program_path(
-                    repo_root=feature_worktree,
-                    worktree_list_text=worktree_list_text,
-                )
+                hosted_contract_bundle_module._read_program_id(repo_root=repo_root)
 
 
 if __name__ == "__main__":

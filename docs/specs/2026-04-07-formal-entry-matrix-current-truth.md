@@ -86,7 +86,7 @@ Date: `2026-04-07`
 - 正式支持：是
 - 当前入口：
   - `PYTHONPATH=src python3 -m med_autogrant resume-local --journal ...`
-  - developer control-plane recovery 继续依赖 `.runtime-program/context/**`、`.runtime-program/plans/**`、`.runtime-program/reports/**`
+  - developer control-plane recovery 改为依赖 repo-tracked `contracts/runtime-program/current-program.json` 与用户级 `$CODEX_HOME/projects/med-autogrant/runtime-state/`
 
 当前 contract：
 

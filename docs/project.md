@@ -15,7 +15,7 @@
 
 - 不把 `MCP` 或 `controller` 解释为已公开支持的 runtime formal entry。
 - 不把仓库误写成成熟 autopilot 或 reviewer-owned runtime。
-- 不把 `.runtime-program/**` 本地 control-plane 写成 repo-tracked 产品本体。
+- 不把用户级 runtime-state 或其他 machine-local control-plane 写成 repo-tracked 产品本体。
 - 不把 `P5.*` hosted/federation 扩展写成当前已开工的范围。
 
 ## 当前形态

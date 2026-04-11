@@ -16,6 +16,7 @@ Date: `2026-04-11`
 - Historical owner line：`post-R5A local runtime closeout / honest stop`
 - Previous truthful closeout baseline：`NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
 - repo-tracked current truth 入口：
+  - `contracts/runtime-program/current-program.json`
   - `docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
   - `docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`
   - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
@@ -39,7 +40,7 @@ Date: `2026-04-11`
 
 1. 保持当前 Hermes-backed runtime baseline、artifact/export surface 与 canonical CLI examples 持续全绿。
 2. 继续把 CLI/runtime path 从旧 host-agent closeout 收紧到 Hermes-owned substrate，但不漂移 object boundary 与 authoring semantics。
-3. 保持 `.runtime-program/**` 仍只承担本地 control-plane，而不是 repo-tracked 产品主线。
+3. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 
 ## 默认验证
 

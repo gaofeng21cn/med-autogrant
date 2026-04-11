@@ -37,6 +37,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - Its formal-entry matrix is fixed as: default formal entry `CLI`, supported protocol layer `MCP` (reserved future layer, not yet repo-verified), internal control surface `controller`.
 - The current repository mainline is `Auto-only`; any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than split this repository into same-repo dual-mode logic.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
+- Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 
 ## Execution Handle And Durable Surfaces
 

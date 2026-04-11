@@ -182,10 +182,10 @@ def _validate_required_final_package_fields(final_package: dict[str, Any]) -> No
         raise WorkspaceStateError("final package checkpoint_status 不一致。")
 
 
-def _read_program_id() -> str:
+def _read_program_id(*, repo_root: Path | None = None) -> str:
     from med_autogrant.hermes_runtime import _read_program_id as _hermes_read_program_id
 
-    return _hermes_read_program_id()
+    return _hermes_read_program_id(repo_root=repo_root)
 
 
 def _resolve_control_plane_current_program_path(

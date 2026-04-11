@@ -4,6 +4,7 @@
 
 这里是 `Med Auto Grant` 的文档索引，默认先读核心骨架，再看 specs/plans/history 的来源与细节。
 当前公开 runtime topology 是 `CLI-first + Hermes-backed runtime`；`MCP` 继续是 supported protocol layer，`controller` 继续是 internal surface。
+repo-tracked current-program truth 固定在 `contracts/runtime-program/current-program.json`，机器本地 runtime state 统一落在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 
 ## 先读核心骨架
 

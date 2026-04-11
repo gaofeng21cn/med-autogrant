@@ -6,6 +6,8 @@ Date: `2026-04-11`
 
 把当前 runtime 主线中哪些能力迁入 `Hermes substrate`、哪些继续保留在 `Grant domain logic`、以及 revision / final package / hosted contract bundle 如何挂到新 runtime 上，冻结成可执行 current truth。
 
+当前 repo-tracked current-program pointer 固定为 `contracts/runtime-program/current-program.json`；机器本地 runtime state 固定下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
+
 ## Capability Split
 
 ### A. Hermes substrate owner
@@ -91,7 +93,7 @@ Date: `2026-04-11`
   - Hermes substrate：execution dispatch
   - Grant domain logic：checkpoint-consistent final package assembly
 - `build-hosted-contract-bundle`
-  - Hermes substrate：final-package 输入加载、`program_id` control-plane 解析、identity guard、output handoff
+  - Hermes substrate：final-package 输入加载、repo-tracked `program_id` contract 解析、identity guard、output handoff
   - Grant domain logic：hosted-friendly contract export 组装、`program_id` routing identity preservation
 
 ## Minimal Hermes-Backed Runnable Paths

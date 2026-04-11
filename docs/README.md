@@ -5,6 +5,7 @@
 This index is the default documentation surface for `Med Auto Grant`.
 Start with the core skeleton, then use specs/plans/history for deeper provenance.
 The current public runtime topology is `CLI-first + Hermes-backed runtime`; `MCP` remains the supported protocol layer and `controller` remains the internal surface.
+Repo-tracked current-program truth lives at `contracts/runtime-program/current-program.json`, while machine-local runtime state lives under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 
 ## Start Here: Core Docs
 

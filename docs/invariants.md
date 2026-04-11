@@ -10,7 +10,8 @@
 
 ## Control-plane 与 repo-tracked truth
 
-- `.runtime-program/**` 是本地 operator control-plane，不是 repo-tracked 产品真相。
+- `contracts/runtime-program/current-program.json` 是 repo-tracked 的 current-program pointer。
+- 项目级 `.runtime-program/` 已退役；机器本地 runtime state 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 - 项目级 `.codex/` 与 `.omx/` 已退役，不再作为仓库本地状态入口。
 - 如需保留历史 session、prompt、log 或 hook 状态，应迁入用户级 `~/.codex/` 归档。
 - repo-tracked current truth 以 `docs/specs/*current-truth.md` 与相关 activation package 为准。

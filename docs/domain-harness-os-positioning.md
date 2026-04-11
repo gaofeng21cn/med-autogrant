@@ -37,7 +37,7 @@
 
 ## 4. 当前默认 Runtime 形态
 
-当前默认本地执行形态是 `Codex-default host-agent runtime`。
+当前产品 runtime 主线已经切到 `CLI-first + Hermes-backed runtime`；旧 `Codex-default host-agent runtime` 只保留为 compatibility bridge / regression oracle。
 
 当前 formal-entry matrix 固定为：
 
@@ -69,7 +69,7 @@
   - critique / revision / re-review 都围绕同一 `draft_id` 绑定，不在每轮 run 中漂移
 - `program_id`
   - control-plane 与 report-routing 身份
-  - 负责 `.runtime-program/reports/<program_id>/` 与 active mainline 指针
+  - 负责 `contracts/runtime-program/current-program.json` 与用户级 `$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/` 的路由一致性
 
 当前 repo-verified durable report / audit surfaces 也已经明确为：
 

@@ -25,8 +25,8 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 ## 控制面与报告
 
-- `.runtime-program/**` 仅承担本地 control-plane：`context/`、`plans/`、`reports/`。
-- `reports/med-autogrant-mainline` 维护 `LATEST_STATUS`、`ITERATION_LOG`、`OPEN_ISSUES` 的同步规则。
+- `contracts/runtime-program/current-program.json` 是 repo-tracked current-program pointer。
+- 机器本地 runtime state 统一下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`，用于 session / log / report / prompt 等非仓库真相面状态。
 - 旧 local host-agent runtime 只保留为 compatibility bridge / regression oracle，不再作为长期产品 runtime owner。
 
 ## 文档层次

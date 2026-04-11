@@ -1,9 +1,4 @@
 .DS_Store
-.runtime-program/
-.runtime-program/backups/
-.runtime-program/local/
-.runtime-program/logs/
-.runtime-program/state/
 .venv/
 __pycache__/
 .pytest_cache/
@@ -14,4 +9,3 @@ coverage/
 *.log
 .env
 *.egg-info/
-.codex/

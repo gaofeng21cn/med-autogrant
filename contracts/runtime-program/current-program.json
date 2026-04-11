@@ -1,0 +1,48 @@
+{
+  "program_id": "med-autogrant-mainline",
+  "date_anchor": "2026-04-11",
+  "formal_entry": {
+    "default_formal_entry": "CLI",
+    "supported_protocol_layer": [
+      "MCP"
+    ],
+    "internal_controller_surface": "controller"
+  },
+  "runtime_owner": {
+    "current_owner_line": "Hermes-backed runtime substrate migration",
+    "active_phase": "Hermes Runtime Substrate Program",
+    "active_tranche": "H1 / Hermes-Owned Runtime Path",
+    "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
+    "compatibility_bridge": "CLI-first + host-agent runtime"
+  },
+  "execution_identity": {
+    "grant_run_id": "hydrated grant run execution handle",
+    "workspace_id": "NSFCWorkspace aggregate-root identity",
+    "draft_id": "ApplicationDraft durable identity",
+    "program_id": "repo-tracked runtime-program pointer"
+  },
+  "repo_tracked_truth_surfaces": [
+    "contracts/runtime-program/current-program.json",
+    "docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md",
+    "docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md",
+    "docs/specs/2026-04-07-formal-entry-matrix-current-truth.md",
+    "docs/specs/2026-04-07-durability-model-clarification.md"
+  ],
+  "machine_local_runtime_state": {
+    "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
+    "not_repo_tracked": true,
+    "contains": [
+      "sessions",
+      "logs",
+      "reports",
+      "prompts",
+      "handoff_state"
+    ]
+  },
+  "verification": {
+    "default": "scripts/verify.sh",
+    "meta": "scripts/verify.sh meta",
+    "cli_smoke": "scripts/verify.sh cli-smoke",
+    "full": "scripts/verify.sh full"
+  }
+}
