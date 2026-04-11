@@ -65,6 +65,8 @@ Date: `2026-04-08`
 
 - `OMX` 不需要每到一个小阶段就回头要新提示词
 - 但也不被允许把 `R3.A / R4.A / R5.A` 误写回尚未实现，或跨边界瞎写 actual hosted runtime / `P5`
+- 当前 repo-tracked closeout已经固定为 `post-R5A local runtime closeout / honest stop`，结论是 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
+- 因此后续若要继续推进，必须先新增并冻结 tranche truth，而不是默认当前边界图还在自然释放新的 active delta
 
 ## Global Invariants
 
@@ -313,7 +315,7 @@ Date: `2026-04-08`
 ## Activation Status
 
 - absorbed / latest absorbed runtime slice
-- current status：`build-hosted-contract-bundle` 已 landed 并 absorbed；当前只允许继续做 hosted-friendly contract prep 的 local truth-sync / hardening，不得误写成 future activation 或 actual hosted runtime
+- current status：`build-hosted-contract-bundle` 已 landed 并 absorbed；当前 closeout verdict 已是 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`，不得再误写成仍有默认续推中的 hosted-friendly hardening，也不得误写成 future activation 或 actual hosted runtime
 - precise activation package：
   - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 

@@ -34,6 +34,7 @@
 - [Post-R5A 本地 runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md)
 - [Post-R5A revised-workspace validator 与 operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 - [Post-R5A 本地 runtime walkthrough 与 output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)
+- [Post-R5A 本地 runtime 上限与 honest stop current truth](./specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md)
 
 Specs 是 repo-tracked 的权威 current truth/activation package，但不替代核心骨架。
 

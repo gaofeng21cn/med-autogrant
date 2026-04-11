@@ -11,7 +11,8 @@ Date: `2026-04-07`
 - Current phase: `Runtime Productization Program`
 - Active tranche: `R5 / Hostedization Prep`
 - Latest absorbed runtime slice: `R5.A / Hosted-Friendly Session Boundary`
-- Current owner line: `post-R5A local runtime hardening`
+- Current owner line: `post-R5A local runtime closeout / honest stop`
+- Current truthful closeout: `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
 
 本文件冻结的是当前 formal entry 真相；它不把 actual hosted runtime、`P5.A / P5.B`、same-repo `Human-in-the-loop`、`MCP / controller` public runtime entry 写进当前 scope。
 
@@ -49,10 +50,11 @@ Date: `2026-04-07`
 - `execute-revision-pass` 已 landed，但仍只允许在 repo-frozen `R3.A` deterministic mutation contract 内写出 revised workspace candidate；它不扩成 question / argument 级 mutation，不改写 formal entry。
 - `build-final-package` 已 landed，但仍只允许在 `freeze_ready / submission_frozen` gate 上组装 machine-readable local `final_package`；它不替代 validator / route / revision surfaces。
 - `build-hosted-contract-bundle` 已 landed，但仍只导出 hosted-friendly contract bundle；它不授权 actual hosted runtime，也不把 `.runtime-program/**` 写成 hosted audit store。
-- post-`R5.A` 的 current hardening 继续要求：
+- 已 absorbed 的 post-`R5.A` hardening 继续要求：
   - revised workspace validator / checkpoint truth 与 landed local outputs 对齐；
   - re-review revised output 不得因为保留 `reviewed_revision_plan_id / reviewed_revision_evidence` 而被错误判 invalid；
   - operator walkthrough / command matrix 必须诚实展示当前已 landed 的本地 runtime ladder，而不是停留在 `R3.A` 前的旧口径。
+- 在当前 formal-entry truth 下，当前 closeout 结论已经是 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`；若要继续推进，必须先新增并冻结下一条 tranche truth。
 
 ### 2. `supported_protocol_layer`
 

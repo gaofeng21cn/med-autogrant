@@ -11,7 +11,8 @@ Date: `2026-04-07`
 - Current phase: `Runtime Productization Program`
 - Active tranche: `R5 / Hostedization Prep`
 - Latest absorbed runtime slice: `R5.A / Hosted-Friendly Session Boundary`
-- Current owner line: `post-R5A local runtime hardening`
+- Current owner line: `post-R5A local runtime closeout / honest stop`
+- Current truthful closeout: `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
 
 ## repo-tracked review surfaces
 
@@ -34,6 +35,7 @@ Date: `2026-04-07`
 - `docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 - `docs/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`
 - `docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md`
+- `docs/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
 - `schemas/v1/nsfc-workspace.schema.json`
 - current canonical examples under `examples/**`
 - runtime / verification tests under `tests/**`
@@ -222,4 +224,4 @@ Date: `2026-04-07`
 - durability model 真相已进入 repo-durable current truth
 - `grant_run_id / workspace_id / draft_id / program_id` 边界已在 docs / examples / CLI / tests / local outputs 中持续收紧
 - `run-local / resume-local / build-artifact-bundle / execute-revision-pass / build-final-package / build-hosted-contract-bundle` 已构成当前 landed local runtime ladder
-- post-`R5.A` 的下一条 honest owner line 是 local runtime hardening，而不是 actual hosted runtime / `P5` expansion
+- post-`R5.A` local runtime hardening 已在当前 truth 下收口为 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`；任何 further productization 都必须先冻结新的 repo-tracked tranche truth，而不是默认继续当前 ladder

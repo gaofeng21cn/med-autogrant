@@ -10,6 +10,8 @@
 
 - `.runtime-program/**` 是本地 operator control-plane，不是 repo-tracked 产品真相。
 - repo-tracked current truth 以 `docs/specs/*current-truth.md` 与相关 activation package 为准。
+- 当前 owner line 固定为 `post-R5A local runtime closeout / honest stop`，其 closeout verdict 固定为 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`。
+- 在没有新的 repo-tracked tranche truth 前，不得把当前 `R5.A` 之后的本地 runtime closeout 口径重新写回“还有默认续推中的 active delta”。
 
 ## 执行句柄边界
 

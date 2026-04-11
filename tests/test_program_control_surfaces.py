@@ -51,6 +51,12 @@ POST_R5A_WALKTHROUGH_CURRENT_TRUTH = (
     / "specs"
     / "2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md"
 )
+POST_R5A_UPPER_BOUND_HONEST_STOP_CURRENT_TRUTH = (
+    REPO_ROOT
+    / "docs"
+    / "specs"
+    / "2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md"
+)
 POST_R5A_STAGE_ROUTE_REPORT_CHECKPOINT_STATUS_PACKAGE = (
     REPO_ROOT
     / "docs"
@@ -2000,6 +2006,48 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         for snippet in VERIFICATION_CHECKPOINT_SNIPPETS:
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, combined)
+
+    def test_post_r5a_upper_bound_honest_stop_truth_is_repo_tracked_and_indexed(self) -> None:
+        self.assertTrue(
+            POST_R5A_UPPER_BOUND_HONEST_STOP_CURRENT_TRUTH.exists(),
+            f"post-R5A upper-bound current truth 不存在: {POST_R5A_UPPER_BOUND_HONEST_STOP_CURRENT_TRUTH}",
+        )
+
+        text = read_text(POST_R5A_UPPER_BOUND_HONEST_STOP_CURRENT_TRUTH)
+        for snippet in (
+            "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
+            "R5.A / Hosted-Friendly Session Boundary",
+            "下一条 tranche truth",
+            "actual hosted runtime",
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, text)
+
+        for path in (DOCS_README_EN, DOCS_README_ZH):
+            with self.subTest(path=path.name):
+                self.assertIn(
+                    "./specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md",
+                    read_text(path),
+                )
+
+    def test_public_and_core_truth_docs_acknowledge_post_r5a_upper_bound_closeout(self) -> None:
+        self.assertIn("Under the current repo-tracked truth", read_text(README_EN))
+        self.assertIn("在当前 repo-tracked truth 下", read_text(README_ZH))
+
+        for path in (
+            CORE_PROJECT,
+            CORE_STATUS,
+            CORE_INVARIANTS,
+            CORE_DECISIONS,
+            FORMAL_ENTRY_MATRIX,
+            DURABILITY_MODEL,
+            RUNTIME_FIRST_PROGRAM,
+            POST_R5A_UPPER_BOUND_HONEST_STOP_CURRENT_TRUTH,
+        ):
+            with self.subTest(path=path.name):
+                text = read_text(path)
+                self.assertIn("NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP", text)
+                self.assertIn("post-R5A local runtime closeout / honest stop", text)
 
     def test_p3a_p3b_and_p3c_current_truth_docs_are_referenced_in_active_control_surfaces(self) -> None:
         p3a_path_text = canonical_repo_path(P3A_CURRENT_TRUTH)

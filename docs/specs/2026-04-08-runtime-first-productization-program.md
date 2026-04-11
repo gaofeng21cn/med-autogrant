@@ -60,10 +60,15 @@ Date: `2026-04-08`
 - latest absorbed runtime slice 已是 `R5.A / Hosted-Friendly Session Boundary`
 - `R3.A` 的 machine-applicable implementation contract 已冻结并成为 absorbed runtime truth 的一部分：
   - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
-- 当前 truthful continuation 不再是把 `R4.A / R5.A` 误写成 future activation，而是继续做 post-`R5.A` local runtime hardening：
-  1. revised workspace validator / checkpoint regression 持续锁定
-  2. runtime-first truth / reports / operator walkthrough 与 landed 本地 runtime ladder 保持一致
-  3. 不进入 actual hosted runtime / `P5` expansion
+- 已 absorbed 的 post-`R5.A` local runtime hardening 继续锁定：
+  1. revised workspace validator / checkpoint regression
+  2. runtime-first truth / operator walkthrough 与 landed 本地 runtime ladder 的一致性
+  3. final-package / hosted-contract fail-closed closeout
+- 当前 truthful continuation 已收口为 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`：
+  1. 当前 repo 内已没有新的 concrete、本地、可 repo-track 的 runtime delta 可以默认继续
+  2. 若要继续推进，必须先冻结新的 tranche truth
+  3. 不得把 closeout后的本地 runtime 误写成 actual hosted runtime、`P5` expansion 或 submission-grade autopilot reality
+- 当前 owner line 已切换为 `post-R5A local runtime closeout / honest stop`
 
 当前 realized activation packages：
 
@@ -74,7 +79,7 @@ Date: `2026-04-08`
 - `R5.A`：
   - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
 
-也就是说，边界图仍然是 runtime boundary contract，但它现在记录的是“已 absorbed through `R5.A` 的对象边界 + post-`R5.A` truthful continuation”，而不是 `R3.A / R4.A / R5.A` 的待实现队列。
+也就是说，边界图仍然是 runtime boundary contract，但它现在记录的是“已 absorbed through `R5.A` 的对象边界 + absorbed post-`R5.A` closeout + freeze-before-continue rule”，而不是 `R3.A / R4.A / R5.A` 的待实现队列。
 
 ## Program Ladder
 

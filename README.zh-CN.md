@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：仓库当前执行 `Runtime Productization Program`；预冻结的本地 `R1 -> R5` runtime ladder 已吸收到 `R5.A / Hosted-Friendly Session Boundary`。当前已具备本地 `CLI-first + host-agent` runtime baseline，但仍不是 actual hosted runtime，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库当前执行 `Runtime Productization Program`；预冻结的本地 `R1 -> R5` runtime ladder 已吸收到 `R5.A / Hosted-Friendly Session Boundary`。在当前 repo-tracked truth 下，post-`R5.A` 本地 runtime 主线已经以 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` 收口；如果还要继续推进，必须先冻结新的 tranche truth，而不是沿用隐式续推。当前已具备本地 `CLI-first + host-agent` runtime baseline，但仍不是 actual hosted runtime，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      本地 <code>R1 -> R5</code> runtime ladder 已吸收至 <code>R5.A</code>，当前保持 <code>baseline freeze / runtime hardening</code>
+      本地 <code>R1 -> R5</code> runtime ladder 已吸收至 <code>R5.A</code>，当前保持 <code>baseline freeze / local-runtime upper-bound closeout</code>
     </td>
   </tr>
 </table>
@@ -76,11 +76,14 @@
 - 通过 `build-final-package` 把 freeze-ready / submission-frozen 的 workspace 与 artifact bundle 收成 machine-readable 本地 `final_package`
 - 通过 `build-hosted-contract-bundle` 从当前 `final_package` 导出 hosted-friendly 的 session / state / artifact / audit contract bundle，作为托管化 prep 的本地合同产物
 
+在当前 repo-tracked truth 下，这条既有 CLI-first 本地 ladder 内已经没有新的 concrete post-`R5.A` runtime delta 可继续隐式推进。后续若要再往前走，必须先冻结新的 tranche truth，而不是默认当前主线还会自然延伸。
+
 ## 现在还没有完成什么
 
 下面这些能力仍处于后续 hardening 或 future scope：
 
 - 当前本地 runtime 仍需继续做 submission-grade hardening 与更高判断密度的 authoring runtime 收束，但 canonical 本地 walkthrough 与 revised/final/hosted 输出一致性 truth 已冻结
+- 任何进一步的 submission-grade hardening 或更强 authoring-runtime 结论，都需要先新增并冻结 repo-tracked truth，而不是继续沿用隐式的 post-`R5.A` hardening 叙事
 - actual hosted runtime、remote execution、Web UI 与 multi-tenant 托管化
 - 未来 `Human-in-the-loop` sibling 或 upper-layer product 相关表面
 - submission-grade 自动驾驶质量与更强的端到端 authoring/runtime 稳定性
@@ -186,6 +189,7 @@ PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-pac
 ### 内部文档
 
 - 当前 canonical post-R5A walkthrough truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`
+- 当前 post-R5A 本地 runtime 上限 closeout truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
 - [`docs/domain-harness-os-positioning.md`](./docs/domain-harness-os-positioning.md)
 - [`docs/specs/2026-04-06-med-auto-grant-top-level-design.md`](./docs/specs/2026-04-06-med-auto-grant-top-level-design.md)
 - [`docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md`](./docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)

@@ -61,5 +61,5 @@ Current status:
 - top-level public docs exist
 - internal Chinese design and current-truth artifacts exist
 - a minimal runtime baseline already exists
-- the repository remains in `baseline freeze / runtime hardening`, not in a pre-runtime scaffold stage
+- the repository now sits at `baseline freeze / local-runtime upper-bound closeout`, with `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` under the current repo-tracked truth
 - a future managed web runtime remains a later deployment evolution on the same substrate, not proof that the project has not started yet

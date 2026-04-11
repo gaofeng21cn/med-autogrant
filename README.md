@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository is currently executing the `Runtime Productization Program`; the pre-frozen local `R1 -> R5` runtime ladder is now absorbed through `R5.A / Hosted-Friendly Session Boundary`. The project now has a local `CLI-first + host-agent` runtime baseline, but it is still neither an actual hosted runtime nor a submission-ready autopilot.
+> Status: active development. The repository is currently executing the `Runtime Productization Program`; the pre-frozen local `R1 -> R5` runtime ladder is now absorbed through `R5.A / Hosted-Friendly Session Boundary`. Under the current repo-tracked truth, the post-`R5.A` local runtime line is closed at `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`; any further productization now requires a newly frozen tranche rather than implicit continuation. The project is still neither an actual hosted runtime nor a submission-ready autopilot.
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      The local <code>R1 -> R5</code> runtime ladder is absorbed through <code>R5.A</code>, while overall maturity remains <code>baseline freeze / runtime hardening</code>
+      The local <code>R1 -> R5</code> runtime ladder is absorbed through <code>R5.A</code>, while overall maturity remains <code>baseline freeze / local-runtime upper-bound closeout</code>
     </td>
   </tr>
 </table>
@@ -76,11 +76,14 @@ Today, the runtime can:
 - assemble a machine-readable local `final_package` through `build-final-package` for freeze-ready / submission-frozen workspaces
 - export a hosted-friendly session / state / artifact / audit contract bundle from a landed local final package through `build-hosted-contract-bundle`
 
+Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside this existing CLI-first ladder. Any further productization now has to start by freezing a new tranche truth rather than implicitly extending the current one.
+
 ## What Is Still In Progress
 
 The following areas still remain for further hardening or future scope:
 
 - the runtime still needs more submission-grade hardening and higher-density authoring judgment, even though the canonical local walkthrough and revised/final/hosted output-consistency truth are now frozen
+- any further submission-grade hardening or stronger authoring-runtime claims require newly frozen repo-tracked truth rather than another implicit post-`R5.A` continuation
 - actual hosted runtime, remote execution, Web UI, and multi-tenant hostedization
 - any future `Human-in-the-loop` sibling or upper-layer product surface
 - submission-grade autopilot quality and stronger end-to-end runtime stability
@@ -186,6 +189,7 @@ PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-pac
 ### Internal Docs
 
 - Current canonical post-R5A walkthrough truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`
+- Current post-R5A upper-bound closeout truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
 - [`docs/domain-harness-os-positioning.md`](./docs/domain-harness-os-positioning.md)
 - [`docs/specs/2026-04-06-med-auto-grant-top-level-design.md`](./docs/specs/2026-04-06-med-auto-grant-top-level-design.md)
 - [`docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md`](./docs/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md)

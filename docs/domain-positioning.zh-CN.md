@@ -61,5 +61,5 @@
 - 顶层公开文档已建立
 - 中文内部设计与 current-truth 文档已建立
 - 最小 runtime baseline 已存在
-- 当前成熟度仍处于 `baseline freeze / runtime hardening`，而不是 runtime 尚未开始的 scaffold 阶段
+- 当前成熟度已处于 `baseline freeze / local-runtime upper-bound closeout`，并在当前 repo-tracked truth 下以 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` 收口，而不是 runtime 尚未开始的 scaffold 阶段
 - future managed web runtime 只是同一 substrate 上的后续部署演进，不代表项目仍停留在前置筹备期

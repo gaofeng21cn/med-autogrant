@@ -21,3 +21,9 @@
 ## 2026-04-11：统一最小验证入口
 
 - `scripts/verify.sh` 作为默认最小验证入口，保持分层 lane 与 `Makefile` 一致。
+
+## 2026-04-11：冻结 post-R5A 本地 runtime 上限与 honest stop
+
+- 在当前 repo-tracked truth 下，`R1 -> R5.A` 本地 runtime ladder 与 post-`R5.A` fail-closed hardening 已达到当前可验证上限。
+- 当前 owner line 固定为 `post-R5A local runtime closeout / honest stop`，closeout verdict 固定为 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`。
+- 继续推进时必须先新增并冻结 tranche truth；不得把未冻结的 hosted/runtime/submission-grade reality 写成当前已有主线。

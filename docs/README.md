@@ -35,6 +35,7 @@ Start with the core skeleton, then use specs/plans/history for deeper provenance
 - [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only)
 - [Post-R5A revised-workspace validator and operator alignment](./specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
 - [Post-R5A local runtime walkthrough and output consistency current truth](./specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)
+- [Post-R5A local runtime upper-bound honest stop current truth](./specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md)
 
 Specs are repo-tracked and authoritative for activation packages and current truth, but they do not replace the core skeleton.
 

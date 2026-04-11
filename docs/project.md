@@ -9,7 +9,7 @@
 
 - 明确 `CLI / MCP / controller` 的 formal-entry matrix。
 - 稳定 `grant_run_id`、`workspace_id`、`draft_id`、`program_id` 与相关 artifact/export surface。
-- 在 `R1 -> R5.A` 已 absorbed 的前提下，继续推进诚实的后续 hardening。
+- 在 `R1 -> R5.A` 已 absorbed 的前提下，把当前本地 runtime 上限与 honest stop 条件冻结成 repo-tracked truth。
 
 ## 范围与非目标
 
@@ -23,5 +23,6 @@
 - Current phase：`Runtime Productization Program`
 - Active tranche：`R5 / Hostedization Prep`
 - Latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
-- Current owner line：`post-R5A local runtime hardening`
+- Current owner line：`post-R5A local runtime closeout / honest stop`
+- Current truthful closeout：`NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
 - 默认入口：CLI（validator、summarize、next-step、critique、route + local runtime）
