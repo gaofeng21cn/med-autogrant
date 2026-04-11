@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 
 from med_autogrant.workspace import (
-    WorkspaceFileError,
     WorkspaceStateError,
     _collect_known_ids,
     _require_workspace_context,
@@ -23,11 +22,7 @@ ALLOWED_ACTION_TYPES = {
 ALLOWED_MUTATION_OPERATION = "replace_draft_section"
 
 
-def build_revision_execution_payload(
-    document: dict[str, Any],
-    *,
-    output_path: str | Path,
-) -> dict[str, Any]:
+def build_revision_execution_document(*, document: dict[str, Any]) -> dict[str, Any]:
     context = _require_workspace_context(document)
     critique = context.active_critique
     revision_plan = context.active_revision_plan
@@ -43,16 +38,6 @@ def build_revision_execution_payload(
         section_index=section_index,
         outline_index=outline_index,
         known_ids=known_ids,
-    )
-
-    resolved_output_path = Path(output_path).expanduser().resolve()
-    _guard_output_identity(
-        resolved_output_path,
-        grant_run_id=document["grant_run_id"],
-        workspace_id=document["workspace_id"],
-        draft_id=active_draft["draft_id"],
-        active_revision_plan_id=revision_plan["revision_plan_id"],
-        lifecycle_stage=document.get("lifecycle_stage"),
     )
 
     revised_workspace = deepcopy(document)
@@ -87,8 +72,6 @@ def build_revision_execution_payload(
     revised_revision_plan["execution_status"] = "completed"
     revised_revision_plan["comparison_summary"] = comparison_summary
 
-    _write_workspace(resolved_output_path, revised_workspace)
-
     revision_execution = {
         "active_revision_plan_id": revision_plan["revision_plan_id"],
         "reviewed_revision_plan_id": critique.get("reviewed_revision_plan_id"),
@@ -100,15 +83,42 @@ def build_revision_execution_payload(
     }
 
     return {
-        "ok": True,
-        "command": "execute-revision-pass",
         "grant_run_id": revised_workspace["grant_run_id"],
         "workspace_id": revised_workspace["workspace_id"],
         "draft_id": active_draft["draft_id"],
+        "active_revision_plan_id": revision_plan["revision_plan_id"],
         "lifecycle_stage": revised_workspace["lifecycle_stage"],
-        "output_path": str(resolved_output_path),
         "revision_execution": revision_execution,
         "revised_workspace": revised_workspace,
+    }
+
+
+def build_revision_execution_payload(
+    document: dict[str, Any],
+    *,
+    output_path: str | Path,
+) -> dict[str, Any]:
+    revision_document = build_revision_execution_document(document=document)
+    resolved_output_path = Path(output_path).expanduser().resolve()
+    _guard_output_identity(
+        resolved_output_path,
+        grant_run_id=revision_document["grant_run_id"],
+        workspace_id=revision_document["workspace_id"],
+        draft_id=revision_document["draft_id"],
+        active_revision_plan_id=revision_document["active_revision_plan_id"],
+        lifecycle_stage=revision_document["lifecycle_stage"],
+    )
+    _write_workspace(resolved_output_path, revision_document["revised_workspace"])
+    return {
+        "ok": True,
+        "command": "execute-revision-pass",
+        "grant_run_id": revision_document["grant_run_id"],
+        "workspace_id": revision_document["workspace_id"],
+        "draft_id": revision_document["draft_id"],
+        "lifecycle_stage": revision_document["lifecycle_stage"],
+        "output_path": str(resolved_output_path),
+        "revision_execution": revision_document["revision_execution"],
+        "revised_workspace": revision_document["revised_workspace"],
     }
 
 
@@ -367,74 +377,19 @@ def _guard_output_identity(
     active_revision_plan_id: str,
     lifecycle_stage: str | None,
 ) -> None:
-    if not output_path.exists():
-        return
+    from med_autogrant.hermes_runtime import _guard_revision_output_identity as _hermes_guard_revision_output_identity
 
-    try:
-        existing_payload = json.loads(output_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise WorkspaceStateError(
-            f"revision output identity 不匹配: {output_path} 已存在且不是可校验的 JSON object。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        ) from exc
-    except OSError as exc:
-        raise WorkspaceFileError(f"读取 revised workspace output 失败: {output_path}") from exc
-
-    if not isinstance(existing_payload, dict):
-        raise WorkspaceStateError(
-            f"revision output identity 不匹配: {output_path} 已存在且顶层不是 JSON object。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-
-    existing_grant_run_id = existing_payload.get("grant_run_id")
-    existing_workspace_id = existing_payload.get("workspace_id")
-    existing_draft_id = existing_payload.get("draft_id")
-    if existing_draft_id is None:
-        current_selection = existing_payload.get("current_selection")
-        if isinstance(current_selection, dict):
-            existing_draft_id = current_selection.get("active_draft_id")
-
-    existing_active_revision_plan_id = None
-    current_selection = existing_payload.get("current_selection")
-    if isinstance(current_selection, dict):
-        existing_active_revision_plan_id = current_selection.get("active_revision_plan_id")
-    if existing_active_revision_plan_id is None:
-        revision_execution = existing_payload.get("revision_execution")
-        if isinstance(revision_execution, dict):
-            existing_active_revision_plan_id = revision_execution.get("active_revision_plan_id")
-
-    same_identity = (
-        existing_grant_run_id == grant_run_id
-        and existing_workspace_id == workspace_id
-        and existing_draft_id == draft_id
-        and existing_active_revision_plan_id == active_revision_plan_id
-    )
-    if same_identity:
-        return
-
-    raise WorkspaceStateError(
-        (
-            "revision output identity 不匹配: "
-            f"{output_path} -> "
-            f"{existing_grant_run_id}/{existing_workspace_id}/{existing_draft_id}/{existing_active_revision_plan_id} "
-            f"!= {grant_run_id}/{workspace_id}/{draft_id}/{active_revision_plan_id}"
-        ),
-        errors=[],
+    _hermes_guard_revision_output_identity(
+        output_path,
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
+        draft_id=draft_id,
+        active_revision_plan_id=active_revision_plan_id,
         lifecycle_stage=lifecycle_stage,
     )
 
 
 def _write_workspace(output_path: Path, revised_workspace: dict[str, Any]) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        output_path.write_text(json.dumps(revised_workspace, ensure_ascii=False, indent=2), encoding="utf-8")
-    except OSError as exc:
-        raise WorkspaceFileError(f"写入 revised workspace output 失败: {output_path}") from exc
+    from med_autogrant.hermes_runtime import _write_revised_workspace_output as _hermes_write_revised_workspace_output
+
+    _hermes_write_revised_workspace_output(output_path, revised_workspace)

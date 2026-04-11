@@ -80,7 +80,7 @@ Date: `2026-04-11`
 - 保持 fail-closed runtime path，不允许 hidden fallback 或 silent downgrade。
 
 当前 repo 内，上述 owner surface 由 `src/med_autogrant/hermes_runtime.py` 承担；旧 `src/med_autogrant/local_runtime.py` 只保留为 compatibility bridge / regression oracle wrapper。
-其中 `build-artifact-bundle` 的 output identity guard 与输出 handoff、`build-final-package` 的 artifact-bundle 输入加载与 output handoff、以及 `build-hosted-contract-bundle` 的 final-package 输入加载、`program_id` control-plane 解析、identity guard 与输出 handoff，都已经切到 Hermes substrate owner path。
+其中 `execute-revision-pass` 的 revised-workspace output identity guard 与输出 handoff、`build-artifact-bundle` 的 output identity guard 与输出 handoff、`build-final-package` 的 artifact-bundle 输入加载与 output handoff、以及 `build-hosted-contract-bundle` 的 final-package 输入加载、`program_id` control-plane 解析、identity guard 与输出 handoff，都已经切到 Hermes substrate owner path。
 
 ### 5. MedAutoGrant domain logic
 

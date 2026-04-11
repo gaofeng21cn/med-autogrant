@@ -46,6 +46,8 @@
 
 ## 2026-04-11：final package / hosted contract handoff owner 固定到 Hermes
 
+- `execute-revision-pass` 的 revised-workspace output identity guard 与输出 handoff 由 Hermes substrate 承担。
+- `revision_executor.py` 保留 deterministic mutation、comparison_summary 与 revision_execution 组装，不再承载长期 runtime owner 语义。
 - `build-artifact-bundle` 的 output identity guard 与输出 handoff 由 Hermes substrate 承担。
 - `artifact_bundle.py` 保留 bundle document assembly 与 compatibility bridge，不再承载长期 runtime owner 语义。
 - `build-final-package` 的 artifact-bundle 输入加载、final package output identity guard 与输出 handoff 由 Hermes substrate 承担。

@@ -289,6 +289,55 @@ class ArtifactBundleHandoffTest(unittest.TestCase):
         write_output.assert_called_once_with(bundle_path.resolve(), expected_bundle)
 
 
+class RevisionExecutionHandoffTest(unittest.TestCase):
+    def test_execute_revision_pass_uses_hermes_handoff_owner(self) -> None:
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+
+        runtime = HermesRuntimeSubstrate()
+        expected_revised_workspace = {
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "critique",
+        }
+        expected_revision_execution = {
+            "active_revision_plan_id": "revision-plan-test",
+            "comparison_summary": {"changed_section_count": 1},
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            workspace_path = Path(tmp_dir) / "revised.json"
+            with patch(
+                "med_autogrant.hermes_runtime.build_revision_execution_document",
+                create=True,
+                return_value={
+                    "grant_run_id": "grant-run-test",
+                    "workspace_id": "workspace-test",
+                    "draft_id": "draft-test",
+                    "active_revision_plan_id": "revision-plan-test",
+                    "lifecycle_stage": "critique",
+                    "revision_execution": expected_revision_execution,
+                    "revised_workspace": expected_revised_workspace,
+                },
+            ) as build_document, patch(
+                "med_autogrant.hermes_runtime._guard_revision_output_identity",
+                create=True,
+            ) as guard_output, patch(
+                "med_autogrant.hermes_runtime._write_revised_workspace_output",
+                create=True,
+            ) as write_output:
+                payload = runtime.execute_revision_pass(
+                    input_path=str(RE_REVIEW_EXAMPLE_PATH),
+                    output_path=str(workspace_path),
+                )
+
+        self.assertEqual(payload["revised_workspace"], expected_revised_workspace)
+        self.assertEqual(payload["revision_execution"], expected_revision_execution)
+        build_document.assert_called_once()
+        guard_output.assert_called_once()
+        write_output.assert_called_once_with(workspace_path.resolve(), expected_revised_workspace)
+
+
 class FinalPackageHandoffTest(unittest.TestCase):
     def test_build_final_package_uses_hermes_handoff_owner(self) -> None:
         from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
