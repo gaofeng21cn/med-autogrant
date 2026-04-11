@@ -38,6 +38,7 @@
 - 牵涉多文件或多步骤变更，默认从 `main` 新建独立 worktree 再实现。
 - 共享根 checkout 只用于审阅、吸收、提交、push 与清理，不承担重型实现。
 - 新 lane 开始前确认 worktree 干净，并清理陈旧 `.runtime-program/state/sessions/*`、tmux session 与 stale `skill-active` 状态。
+- worktree 内实现和验证完成后，应尽快吸收回 `main`，并清理对应 worktree、分支与临时状态。
 
 ## 验证规则
 
