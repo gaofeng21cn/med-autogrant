@@ -69,6 +69,16 @@ def test_domain_positioning_public_docs_follow_hermes_mainline() -> None:
 
 
 @pytest.mark.meta
+def test_readme_current_maturity_cards_follow_hermes_program_status() -> None:
+    for path in (README_EN, README_ZH):
+        text = _read(path)
+        assert "Hermes Runtime Substrate Program" in text
+        assert "Hermes-backed runtime" in text
+        assert "Current Maturity" in text or "当前成熟度" in text
+        assert "baseline freeze / local-runtime upper-bound closeout" not in text
+
+
+@pytest.mark.meta
 def test_repo_tracks_hermes_runtime_program_and_capability_migration_map() -> None:
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"

@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      The local <code>R1 -> R5</code> runtime ladder is absorbed through <code>R5.A</code>, while overall maturity remains <code>baseline freeze / local-runtime upper-bound closeout</code>
+      The repository is currently executing the <code>Hermes Runtime Substrate Program</code>, with the <code>CLI-first + Hermes-backed runtime</code> path on the product mainline and the absorbed <code>R5.A</code> host-agent ladder retained only as a migration baseline
     </td>
   </tr>
 </table>

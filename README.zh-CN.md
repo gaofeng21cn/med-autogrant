@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      本地 <code>R1 -> R5</code> runtime ladder 已吸收至 <code>R5.A</code>，当前保持 <code>baseline freeze / local-runtime upper-bound closeout</code>
+      当前仓库正在执行 <code>Hermes Runtime Substrate Program</code>，产品主线已经切到 <code>CLI-first + Hermes-backed runtime</code>，而已 absorbed 的 <code>R5.A</code> host-agent ladder 只保留为 migration baseline
     </td>
   </tr>
 </table>
