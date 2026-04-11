@@ -37,10 +37,10 @@
 
 ## 测试面治理
 
-- `make test-fast` 是默认开发测试面，并继续排除 `meta`。
-- `make test-meta` 保留给 repo-tracked program-control 与 repository-hygiene 检查，不要让这些检查漂回普通 smoke。
-- `make test-cli-smoke` 是 CLI / local-runtime 的专用 smoke lane，`make test-full` 继续作为 clean-clone 基线。
-- 任何 repo-tracked 文件一旦改测试命令，要同步更新 `Makefile`、`pyproject.toml`、`README*`、runtime prompt docs 与 command-surface tests。
+- `make test-fast` 是默认开发测试面，并继续排除 `meta`。`make test-fast` is the default developer slice and excludes the `meta` suite.
+- `make test-meta` 保留给 repo-tracked program-control 与 repository-hygiene 检查，不要让这些检查漂回普通 smoke。`make test-meta` is reserved for repo-tracked program-control and repository-hygiene checks.
+- `make test-cli-smoke` 是 CLI / local-runtime 的专用 smoke lane，`make test-full` 继续作为 clean-clone 基线。`make test-cli-smoke` is the dedicated CLI/local-runtime smoke lane, and `make test-full` remains the clean-clone baseline.
+- 任何 repo-tracked 文件一旦改测试命令，要同步更新 `Makefile`、`pyproject.toml`、`README*`、runtime prompt docs 与 command-surface tests。Always update `Makefile`, `pyproject.toml`, `README*`, runtime prompt docs, and command-surface tests together.
 
 ## 文档与附录
 
