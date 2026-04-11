@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import json
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
 from med_autogrant.route_report import build_stage_route_report
-from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError, _require_workspace_context
+from med_autogrant.workspace import WorkspaceStateError, _require_workspace_context
 
 
 FINAL_PACKAGE_VERSION = 1
@@ -211,11 +210,10 @@ REQUIRED_ARTIFACT_BUNDLE_ARTIFACT_OBJECT_REQUIRED_LIST_FIELDS = {
 }
 
 
-def build_final_package_payload(
-    document: dict[str, Any],
+def build_final_package_document(
     *,
-    artifact_bundle_path: str | Path,
-    output_path: str | Path,
+    document: dict[str, Any],
+    artifact_bundle: dict[str, Any],
 ) -> dict[str, Any]:
     context = _require_workspace_context(document)
     active_draft = context.active_draft
@@ -246,15 +244,7 @@ def build_final_package_payload(
             lifecycle_stage=document.get("lifecycle_stage"),
         )
 
-    artifact_bundle = _read_artifact_bundle(
-        artifact_bundle_path,
-        grant_run_id=document["grant_run_id"],
-        workspace_id=document["workspace_id"],
-        draft_id=active_draft["draft_id"],
-        lifecycle_stage=document.get("lifecycle_stage"),
-    )
-
-    final_package = {
+    return {
         "package_version": FINAL_PACKAGE_VERSION,
         "package_kind": FINAL_PACKAGE_KIND,
         "grant_run_id": document["grant_run_id"],
@@ -293,6 +283,25 @@ def build_final_package_payload(
         },
     }
 
+def build_final_package_payload(
+    document: dict[str, Any],
+    *,
+    artifact_bundle_path: str | Path,
+    output_path: str | Path,
+) -> dict[str, Any]:
+    context = _require_workspace_context(document)
+    active_draft = context.active_draft
+    artifact_bundle = _read_artifact_bundle(
+        artifact_bundle_path=artifact_bundle_path,
+        grant_run_id=document["grant_run_id"],
+        workspace_id=document["workspace_id"],
+        draft_id=active_draft["draft_id"],
+        lifecycle_stage=document.get("lifecycle_stage"),
+    )
+    final_package = build_final_package_document(
+        document=document,
+        artifact_bundle=artifact_bundle,
+    )
     resolved_output_path = Path(output_path).expanduser().resolve()
     _guard_output_identity(
         resolved_output_path,
@@ -302,7 +311,6 @@ def build_final_package_payload(
         lifecycle_stage=final_package["lifecycle_stage"],
     )
     _write_final_package(resolved_output_path, final_package)
-
     return {
         "ok": True,
         "command": "build-final-package",
@@ -323,57 +331,15 @@ def _read_artifact_bundle(
     draft_id: str,
     lifecycle_stage: str | None,
 ) -> dict[str, Any]:
-    resolved_bundle_path = Path(artifact_bundle_path).expanduser().resolve()
-    try:
-        artifact_bundle = json.loads(resolved_bundle_path.read_text(encoding="utf-8"))
-    except FileNotFoundError as exc:
-        raise WorkspaceFileError(f"未找到 artifact bundle 文件: {resolved_bundle_path}") from exc
-    except json.JSONDecodeError as exc:
-        raise WorkspaceFileError(f"artifact bundle JSON 解析失败: {resolved_bundle_path}") from exc
+    from med_autogrant.hermes_runtime import _read_artifact_bundle as _hermes_read_artifact_bundle
 
-    if not isinstance(artifact_bundle, dict):
-        raise WorkspaceStateError(
-            f"artifact bundle 顶层必须是 JSON object: {resolved_bundle_path}",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-
-    if artifact_bundle.get("bundle_kind") != "artifact_bundle":
-        raise WorkspaceStateError(
-            f"artifact bundle kind 非法: {artifact_bundle.get('bundle_kind')}",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-
-    if (
-        artifact_bundle.get("grant_run_id") != grant_run_id
-        or artifact_bundle.get("workspace_id") != workspace_id
-        or artifact_bundle.get("draft_id") != draft_id
-    ):
-        raise WorkspaceStateError(
-            (
-                "artifact bundle identity 不匹配: "
-                f"{artifact_bundle.get('grant_run_id')}/{artifact_bundle.get('workspace_id')}/{artifact_bundle.get('draft_id')} "
-                f"!= {grant_run_id}/{workspace_id}/{draft_id}"
-            ),
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-
-    _validate_required_artifact_bundle_fields(
-        artifact_bundle,
+    return _hermes_read_artifact_bundle(
+        artifact_bundle_path,
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
+        draft_id=draft_id,
         lifecycle_stage=lifecycle_stage,
     )
-
-    return artifact_bundle
 
 
 def _validate_required_artifact_bundle_fields(
@@ -597,56 +563,20 @@ def _guard_output_identity(
     draft_id: str,
     lifecycle_stage: str | None,
 ) -> None:
-    if not output_path.exists():
-        return
-
-    try:
-        existing_payload = json.loads(output_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise WorkspaceStateError(
-            f"final package output identity 不匹配: {output_path} 已存在且不是可校验的 JSON object。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        ) from exc
-    except OSError as exc:
-        raise WorkspaceFileError(f"读取 final package output 失败: {output_path}") from exc
-
-    if not isinstance(existing_payload, dict):
-        raise WorkspaceStateError(
-            f"final package output identity 不匹配: {output_path} 已存在且顶层不是 JSON object。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-
-    same_identity = (
-        existing_payload.get("grant_run_id") == grant_run_id
-        and existing_payload.get("workspace_id") == workspace_id
-        and existing_payload.get("draft_id") == draft_id
+    from med_autogrant.hermes_runtime import (
+        _guard_final_package_output_identity as _hermes_guard_final_package_output_identity,
     )
-    if same_identity:
-        return
 
-    raise WorkspaceStateError(
-        (
-            "final package output identity 不匹配: "
-            f"{output_path} -> "
-            f"{existing_payload.get('grant_run_id')}/{existing_payload.get('workspace_id')}/{existing_payload.get('draft_id')} "
-            f"!= {grant_run_id}/{workspace_id}/{draft_id}"
-        ),
-        errors=[],
+    _hermes_guard_final_package_output_identity(
+        output_path,
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
+        draft_id=draft_id,
         lifecycle_stage=lifecycle_stage,
     )
 
 
 def _write_final_package(output_path: Path, final_package: dict[str, Any]) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        output_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
-    except OSError as exc:
-        raise WorkspaceFileError(f"写入 final package output 失败: {output_path}") from exc
+    from med_autogrant.hermes_runtime import _write_final_package_output as _hermes_write_final_package_output
+
+    _hermes_write_final_package_output(output_path, final_package)

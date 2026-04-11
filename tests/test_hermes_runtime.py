@@ -251,5 +251,55 @@ class HostedContractBundleBridgeTest(unittest.TestCase):
         )
 
 
+class FinalPackageHandoffTest(unittest.TestCase):
+    def test_build_final_package_uses_hermes_handoff_owner(self) -> None:
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+
+        runtime = HermesRuntimeSubstrate()
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_root = Path(tmp_dir)
+            bundle_path = tmp_root / "bundle.json"
+            package_path = tmp_root / "package.json"
+            runtime.build_artifact_bundle(
+                input_path=str(FROZEN_EXAMPLE_PATH),
+                output_path=str(bundle_path),
+            )
+            expected_final_package = {
+                "package_version": 1,
+                "package_kind": "final_package",
+                "grant_run_id": "grant-run-test",
+                "workspace_id": "workspace-test",
+                "draft_id": "draft-test",
+                "lifecycle_stage": "frozen",
+            }
+
+            with patch(
+                "med_autogrant.hermes_runtime._read_artifact_bundle",
+                create=True,
+                return_value={"manifest": {}, "artifacts": [1, 2]},
+            ) as read_bundle, patch(
+                "med_autogrant.hermes_runtime.build_final_package_document",
+                create=True,
+                return_value=expected_final_package,
+            ) as build_document, patch(
+                "med_autogrant.hermes_runtime._guard_final_package_output_identity",
+                create=True,
+            ) as guard_output, patch(
+                "med_autogrant.hermes_runtime._write_final_package_output",
+                create=True,
+            ) as write_output:
+                payload = runtime.build_final_package(
+                    input_path=str(FROZEN_EXAMPLE_PATH),
+                    artifact_bundle_path=str(bundle_path),
+                    output_path=str(package_path),
+                )
+
+        self.assertEqual(payload["final_package"], expected_final_package)
+        read_bundle.assert_called_once()
+        build_document.assert_called_once()
+        guard_output.assert_called_once()
+        write_output.assert_called_once_with(package_path.resolve(), expected_final_package)
+
+
 if __name__ == "__main__":
     unittest.main()

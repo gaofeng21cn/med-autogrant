@@ -43,3 +43,9 @@
 
 - `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report / run-local / resume-local` 的产品主线改为 Hermes-owned runtime path。
 - revision / final package / hosted contract bundle 继续挂在 Hermes runtime 上运行，但对象边界、checkpoint truth 与 fail-closed contract 保持在 MedAutoGrant domain logic 中。
+
+## 2026-04-11：final package / hosted contract handoff owner 固定到 Hermes
+
+- `build-final-package` 的 artifact-bundle 输入加载、final package output identity guard 与输出 handoff 由 Hermes substrate 承担。
+- `final_package.py` 保留 checkpoint-consistent final package document assembly 与 compatibility bridge，不再承载长期 runtime owner 语义。
+- `build-hosted-contract-bundle` 继续由 Hermes substrate 承担 final-package 输入加载、`program_id` control-plane 解析、identity guard 与输出 handoff。
