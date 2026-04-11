@@ -5,22 +5,14 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.workspace import (
-    WorkspaceFileError,
-    WorkspaceStateError,
-    _build_workspace_state,
-)
+from med_autogrant.workspace import WorkspaceStateError, _build_workspace_state
 
 
 BUNDLE_VERSION = 1
 BUNDLE_KIND = "artifact_bundle"
 
 
-def build_artifact_bundle_payload(
-    document: dict[str, Any],
-    *,
-    output_path: str | Path,
-) -> dict[str, Any]:
+def build_artifact_bundle_document(*, document: dict[str, Any]) -> dict[str, Any]:
     state = _build_workspace_state(document)
 
     if (
@@ -38,7 +30,7 @@ def build_artifact_bundle_payload(
             lifecycle_stage=document.get("lifecycle_stage"),
         )
 
-    bundle = {
+    return {
         "bundle_version": BUNDLE_VERSION,
         "bundle_kind": BUNDLE_KIND,
         "grant_run_id": document["grant_run_id"],
@@ -80,6 +72,13 @@ def build_artifact_bundle_payload(
         },
     }
 
+
+def build_artifact_bundle_payload(
+    document: dict[str, Any],
+    *,
+    output_path: str | Path,
+) -> dict[str, Any]:
+    bundle = build_artifact_bundle_document(document=document)
     resolved_output_path = Path(output_path).expanduser().resolve()
     _guard_output_identity(
         resolved_output_path,
@@ -110,56 +109,20 @@ def _guard_output_identity(
     draft_id: str,
     lifecycle_stage: str,
 ) -> None:
-    if not output_path.exists():
-        return
-
-    try:
-        existing_payload = json.loads(output_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise WorkspaceStateError(
-            f"bundle output identity 不匹配: {output_path} 已存在且不是可校验的 JSON object。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        ) from exc
-    except OSError as exc:
-        raise WorkspaceFileError(f"读取 bundle output 失败: {output_path}") from exc
-
-    if not isinstance(existing_payload, dict):
-        raise WorkspaceStateError(
-            f"bundle output identity 不匹配: {output_path} 已存在且顶层不是 JSON object。",
-            errors=[],
-            grant_run_id=grant_run_id,
-            workspace_id=workspace_id,
-            lifecycle_stage=lifecycle_stage,
-        )
-
-    same_identity = (
-        existing_payload.get("grant_run_id") == grant_run_id
-        and existing_payload.get("workspace_id") == workspace_id
-        and existing_payload.get("draft_id") == draft_id
+    from med_autogrant.hermes_runtime import (
+        _guard_artifact_bundle_output_identity as _hermes_guard_artifact_bundle_output_identity,
     )
-    if same_identity:
-        return
 
-    raise WorkspaceStateError(
-        (
-            "bundle output identity 不匹配: "
-            f"{output_path} -> "
-            f"{existing_payload.get('grant_run_id')}/{existing_payload.get('workspace_id')}/{existing_payload.get('draft_id')} "
-            f"!= {grant_run_id}/{workspace_id}/{draft_id}"
-        ),
-        errors=[],
+    _hermes_guard_artifact_bundle_output_identity(
+        output_path,
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
+        draft_id=draft_id,
         lifecycle_stage=lifecycle_stage,
     )
 
 
 def _write_bundle(output_path: Path, bundle: dict[str, Any]) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        output_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
-    except OSError as exc:
-        raise WorkspaceFileError(f"写入 bundle output 失败: {output_path}") from exc
+    from med_autogrant.hermes_runtime import _write_artifact_bundle_output as _hermes_write_artifact_bundle_output
+
+    _hermes_write_artifact_bundle_output(output_path, bundle)

@@ -46,6 +46,8 @@
 
 ## 2026-04-11：final package / hosted contract handoff owner 固定到 Hermes
 
+- `build-artifact-bundle` 的 output identity guard 与输出 handoff 由 Hermes substrate 承担。
+- `artifact_bundle.py` 保留 bundle document assembly 与 compatibility bridge，不再承载长期 runtime owner 语义。
 - `build-final-package` 的 artifact-bundle 输入加载、final package output identity guard 与输出 handoff 由 Hermes substrate 承担。
 - `final_package.py` 保留 checkpoint-consistent final package document assembly 与 compatibility bridge，不再承载长期 runtime owner 语义。
 - `build-hosted-contract-bundle` 继续由 Hermes substrate 承担 final-package 输入加载、`program_id` control-plane 解析、identity guard 与输出 handoff。

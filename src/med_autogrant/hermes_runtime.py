@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.artifact_bundle import build_artifact_bundle_payload
+from med_autogrant.artifact_bundle import build_artifact_bundle_document
 from med_autogrant.control_plane import (
     CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
     read_program_id as _read_program_id_from_contract,
@@ -186,7 +186,26 @@ class HermesRuntimeSubstrate:
         output_path: str | Path,
     ) -> dict[str, Any]:
         document = self._load_workspace(input_path)
-        return build_artifact_bundle_payload(document, output_path=output_path)
+        bundle = build_artifact_bundle_document(document=document)
+        resolved_output_path = Path(output_path).expanduser().resolve()
+        _guard_artifact_bundle_output_identity(
+            resolved_output_path,
+            grant_run_id=bundle["grant_run_id"],
+            workspace_id=bundle["workspace_id"],
+            draft_id=bundle["draft_id"],
+            lifecycle_stage=bundle["lifecycle_stage"],
+        )
+        _write_artifact_bundle_output(resolved_output_path, bundle)
+        return {
+            "ok": True,
+            "command": "build-artifact-bundle",
+            "grant_run_id": bundle["grant_run_id"],
+            "workspace_id": bundle["workspace_id"],
+            "draft_id": bundle["draft_id"],
+            "lifecycle_stage": bundle["lifecycle_stage"],
+            "output_path": str(resolved_output_path),
+            "bundle": bundle,
+        }
 
     def execute_revision_pass(
         self,
@@ -502,6 +521,61 @@ def _write_journal(journal_path: Path, journal: dict[str, Any]) -> None:
     journal_path.write_text(json.dumps(journal, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def _guard_artifact_bundle_output_identity(
+    output_path: Path,
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    draft_id: str,
+    lifecycle_stage: str,
+) -> None:
+    if not output_path.exists():
+        return
+
+    try:
+        existing_payload = json.loads(output_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise WorkspaceStateError(
+            f"bundle output identity 不匹配: {output_path} 已存在且不是可校验的 JSON object。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        ) from exc
+    except OSError as exc:
+        raise WorkspaceFileError(f"读取 bundle output 失败: {output_path}") from exc
+
+    if not isinstance(existing_payload, dict):
+        raise WorkspaceStateError(
+            f"bundle output identity 不匹配: {output_path} 已存在且顶层不是 JSON object。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+
+    same_identity = (
+        existing_payload.get("grant_run_id") == grant_run_id
+        and existing_payload.get("workspace_id") == workspace_id
+        and existing_payload.get("draft_id") == draft_id
+    )
+    if same_identity:
+        return
+
+    raise WorkspaceStateError(
+        (
+            "bundle output identity 不匹配: "
+            f"{output_path} -> "
+            f"{existing_payload.get('grant_run_id')}/{existing_payload.get('workspace_id')}/{existing_payload.get('draft_id')} "
+            f"!= {grant_run_id}/{workspace_id}/{draft_id}"
+        ),
+        errors=[],
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+
+
 def _read_artifact_bundle(
     artifact_bundle_path: str | Path,
     *,
@@ -767,6 +841,14 @@ def _write_hosted_contract_bundle_output(output_path: Path, hosted_contract_bund
         output_path.write_text(json.dumps(hosted_contract_bundle, ensure_ascii=False, indent=2), encoding="utf-8")
     except OSError as exc:
         raise WorkspaceFileError(f"写入 hosted contract output 失败: {output_path}") from exc
+
+
+def _write_artifact_bundle_output(output_path: Path, bundle: dict[str, Any]) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        output_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
+    except OSError as exc:
+        raise WorkspaceFileError(f"写入 bundle output 失败: {output_path}") from exc
 
 
 def _write_final_package_output(output_path: Path, final_package: dict[str, Any]) -> None:

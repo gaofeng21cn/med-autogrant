@@ -251,6 +251,44 @@ class HostedContractBundleBridgeTest(unittest.TestCase):
         )
 
 
+class ArtifactBundleHandoffTest(unittest.TestCase):
+    def test_build_artifact_bundle_uses_hermes_handoff_owner(self) -> None:
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+
+        runtime = HermesRuntimeSubstrate()
+        expected_bundle = {
+            "bundle_version": 1,
+            "bundle_kind": "artifact_bundle",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "critique",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            bundle_path = Path(tmp_dir) / "bundle.json"
+            with patch(
+                "med_autogrant.hermes_runtime.build_artifact_bundle_document",
+                create=True,
+                return_value=expected_bundle,
+            ) as build_document, patch(
+                "med_autogrant.hermes_runtime._guard_artifact_bundle_output_identity",
+                create=True,
+            ) as guard_output, patch(
+                "med_autogrant.hermes_runtime._write_artifact_bundle_output",
+                create=True,
+            ) as write_output:
+                payload = runtime.build_artifact_bundle(
+                    input_path=str(FROZEN_EXAMPLE_PATH),
+                    output_path=str(bundle_path),
+                )
+
+        self.assertEqual(payload["bundle"], expected_bundle)
+        build_document.assert_called_once()
+        guard_output.assert_called_once()
+        write_output.assert_called_once_with(bundle_path.resolve(), expected_bundle)
+
+
 class FinalPackageHandoffTest(unittest.TestCase):
     def test_build_final_package_uses_hermes_handoff_owner(self) -> None:
         from med_autogrant.hermes_runtime import HermesRuntimeSubstrate

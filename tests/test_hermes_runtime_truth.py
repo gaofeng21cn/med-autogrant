@@ -81,6 +81,7 @@ def test_repo_tracks_hermes_runtime_program_and_capability_migration_map() -> No
     assert "build-final-package" in migration_map
     assert "build-hosted-contract-bundle" in migration_map
     assert "artifact-bundle 输入加载" in migration_map
+    assert "bundle output identity guard" in migration_map
     assert "final package document assembly" in migration_map
     assert "Hermes substrate" in migration_map
     assert "Grant domain logic" in migration_map

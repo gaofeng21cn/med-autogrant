@@ -34,7 +34,7 @@ Date: `2026-04-11`
 - `build_critique_summary`
 - `build_stage_route_report`
 - `build_revision_execution_payload`
-- `build_artifact_bundle_payload`
+- `build_artifact_bundle_document`
 - `build_final_package_document`
 - `build_hosted_contract_bundle_document`
 
@@ -42,7 +42,7 @@ Date: `2026-04-11`
 
 - Hermes 负责 runtime path owner；
 - MedAutoGrant 继续拥有 author-side semantics。
-- `build_final_package_payload / build_hosted_contract_bundle_payload` 仅保留为 compatibility bridge / regression oracle wrapper，不再拥有产品 runtime path。
+- `build_artifact_bundle_payload / build_final_package_payload / build_hosted_contract_bundle_payload` 仅保留为 compatibility bridge / regression oracle wrapper，不再拥有产品 runtime path。
 
 ### C. migration baseline / bridge / oracle
 
@@ -88,8 +88,8 @@ Date: `2026-04-11`
   - Hermes substrate：execution dispatch 与 output handoff
   - Grant domain logic：deterministic section mutation、comparison_summary、re-review evidence preservation
 - `build-artifact-bundle`
-  - Hermes substrate：execution dispatch 与 durable artifact handoff
-  - Grant domain logic：artifact bundle shape、manifest、lineage、identity guard
+  - Hermes substrate：bundle output identity guard、durable artifact handoff
+  - Grant domain logic：artifact bundle document assembly、shape、manifest、lineage
 - `build-final-package`
   - Hermes substrate：artifact-bundle 输入加载、final package output identity guard、output handoff
   - Grant domain logic：checkpoint-consistent final package document assembly
