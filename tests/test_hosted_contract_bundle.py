@@ -79,6 +79,29 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 },
             )
             self.assertEqual(
+                contract_bundle["runtime_substrate_contract"],
+                {
+                    "runtime_owner": "Hermes",
+                    "current_owner_line": "Hermes-backed runtime substrate migration",
+                    "active_phase": "Hermes Runtime Substrate Program",
+                    "active_tranche": "H1 / Hermes-Owned Runtime Path",
+                    "compatibility_bridge": "CLI-first + host-agent runtime",
+                    "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
+                },
+            )
+            self.assertEqual(
+                contract_bundle["runtime_state_contract"],
+                {
+                    "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
+                    "session_journal_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
+                    "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
+                    "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
+                    "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
+                    "handoff_state_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/",
+                    "non_repo_tracked": True,
+                },
+            )
+            self.assertEqual(
                 contract_bundle["session_contract"],
                 {
                     "session_handle_kind": "grant_run_id",
@@ -92,6 +115,25 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         "run_journal",
                         "stage_action_envelope",
                     ],
+                },
+            )
+            self.assertEqual(
+                contract_bundle["operator_contract"],
+                {
+                    "canonical_audit_surfaces": [
+                        "validate-workspace",
+                        "summarize-workspace",
+                        "next-step",
+                        "critique-summary",
+                        "stage-route-report",
+                    ],
+                    "canonical_export_surfaces": [
+                        "execute-revision-pass",
+                        "build-artifact-bundle",
+                        "build-final-package",
+                        "build-hosted-contract-bundle",
+                    ],
+                    "checkpoint_aggregation_surface": "stage-route-report",
                 },
             )
             self.assertEqual(

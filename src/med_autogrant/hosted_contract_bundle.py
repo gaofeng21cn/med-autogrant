@@ -45,6 +45,9 @@ def build_hosted_contract_bundle_document(
     *,
     final_package: dict[str, Any],
     program_id: str,
+    runtime_substrate_contract: dict[str, Any],
+    runtime_state_contract: dict[str, Any],
+    operator_contract: dict[str, Any],
 ) -> dict[str, Any]:
     return {
         "contract_version": HOSTED_CONTRACT_VERSION,
@@ -60,6 +63,8 @@ def build_hosted_contract_bundle_document(
             "draft_id": final_package["draft_id"],
             "program_id": program_id,
         },
+        "runtime_substrate_contract": runtime_substrate_contract,
+        "runtime_state_contract": runtime_state_contract,
         "session_contract": {
             "session_handle_kind": "grant_run_id",
             "start_entry": "run-local",
@@ -73,6 +78,7 @@ def build_hosted_contract_bundle_document(
                 "stage_action_envelope",
             ],
         },
+        "operator_contract": operator_contract,
         "state_contract": {
             "workspace_surface_kind": "nsfc_workspace",
             "run_journal_kind": "local_run_journal",

@@ -8,9 +8,11 @@ from typing import Any
 from med_autogrant.artifact_bundle import build_artifact_bundle_document
 from med_autogrant.control_plane import (
     CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
+    read_current_program_contract as _read_current_program_contract_from_contract,
     read_program_id as _read_program_id_from_contract,
     resolve_current_program_contract_path,
     resolve_runtime_state_root,
+    runtime_state_display_path,
 )
 from med_autogrant.final_package import (
     _validate_required_artifact_bundle_fields,
@@ -288,10 +290,16 @@ class HermesRuntimeSubstrate:
         output_path: str | Path,
     ) -> dict[str, Any]:
         final_package = _read_final_package(final_package_path)
+        current_program_contract = _read_current_program_contract()
         program_id = _read_program_id()
         hosted_contract_bundle = build_hosted_contract_bundle_document(
             final_package=final_package,
             program_id=program_id,
+            runtime_substrate_contract=_build_runtime_substrate_contract(
+                current_program_contract=current_program_contract,
+            ),
+            runtime_state_contract=_build_runtime_state_contract(),
+            operator_contract=_build_operator_contract(),
         )
         resolved_output_path = Path(output_path).expanduser().resolve()
         _guard_hosted_contract_output_identity(
@@ -777,6 +785,83 @@ def _read_final_package(final_package_path: str | Path) -> dict[str, Any]:
 
 def _read_program_id(*, repo_root: Path | None = None) -> str:
     return _read_program_id_from_contract(repo_root=repo_root)
+
+
+def _read_current_program_contract(*, repo_root: Path | None = None) -> dict[str, Any]:
+    return _read_current_program_contract_from_contract(repo_root=repo_root)
+
+
+def _build_runtime_substrate_contract(*, current_program_contract: dict[str, Any]) -> dict[str, Any]:
+    runtime_owner = current_program_contract.get("runtime_owner")
+    if not isinstance(runtime_owner, dict):
+        raise WorkspaceStateError("CURRENT_PROGRAM contract 缺少字段: runtime_owner")
+
+    return {
+        "runtime_owner": "Hermes",
+        "current_owner_line": _require_nonempty_string(
+            runtime_owner,
+            "current_owner_line",
+            context="CURRENT_PROGRAM contract runtime_owner",
+        ),
+        "active_phase": _require_nonempty_string(
+            runtime_owner,
+            "active_phase",
+            context="CURRENT_PROGRAM contract runtime_owner",
+        ),
+        "active_tranche": _require_nonempty_string(
+            runtime_owner,
+            "active_tranche",
+            context="CURRENT_PROGRAM contract runtime_owner",
+        ),
+        "compatibility_bridge": _require_nonempty_string(
+            runtime_owner,
+            "compatibility_bridge",
+            context="CURRENT_PROGRAM contract runtime_owner",
+        ),
+        "repo_tracked_current_program_contract": CURRENT_PROGRAM_RELATIVE_PATH.as_posix(),
+    }
+
+
+def _build_runtime_state_contract() -> dict[str, Any]:
+    return {
+        "root": runtime_state_display_path(),
+        "session_journal_root": _directory_display_path("sessions"),
+        "logs_root": _directory_display_path("logs"),
+        "reports_root": _directory_display_path("reports", "<program_id>"),
+        "prompts_root": _directory_display_path("prompts"),
+        "handoff_state_root": _directory_display_path("handoff_state"),
+        "non_repo_tracked": True,
+    }
+
+
+def _build_operator_contract() -> dict[str, Any]:
+    return {
+        "canonical_audit_surfaces": [
+            "validate-workspace",
+            "summarize-workspace",
+            "next-step",
+            "critique-summary",
+            "stage-route-report",
+        ],
+        "canonical_export_surfaces": [
+            "execute-revision-pass",
+            "build-artifact-bundle",
+            "build-final-package",
+            "build-hosted-contract-bundle",
+        ],
+        "checkpoint_aggregation_surface": "stage-route-report",
+    }
+
+
+def _require_nonempty_string(payload: dict[str, Any], field: str, *, context: str) -> str:
+    value = payload.get(field)
+    if not isinstance(value, str) or not value:
+        raise WorkspaceStateError(f"{context} 缺少合法字段: {field}")
+    return value
+
+
+def _directory_display_path(*segments: str) -> str:
+    return runtime_state_display_path(*segments).rstrip("/") + "/"
 
 
 def _resolve_control_plane_current_program_path(

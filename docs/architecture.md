@@ -18,6 +18,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `build-artifact-bundle` 的 output identity guard 与输出 handoff 由 `src/med_autogrant/hermes_runtime.py` 接管。
 - `build-final-package` 的 artifact-bundle 输入加载、output identity guard 与输出 handoff 也由 `src/med_autogrant/hermes_runtime.py` 接管。
 - `build-hosted-contract-bundle` 的 final-package 读取、`program_id` control-plane 解析、identity guard 与输出 handoff 也由 `src/med_autogrant/hermes_runtime.py` 接管。
+- `build-hosted-contract-bundle` 当前还会把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，作为 future Hermes host 必须兼容的托管友好 handoff contract。
 - 产物面：`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle`。
 
 ## 数据与对象模型

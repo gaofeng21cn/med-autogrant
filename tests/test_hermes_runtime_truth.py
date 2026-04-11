@@ -94,6 +94,9 @@ def test_repo_tracks_hermes_runtime_program_and_capability_migration_map() -> No
     assert "compatibility bridge" in program_truth
     assert "regression oracle" in program_truth
     assert RUNTIME_STATE_SESSIONS_DISPLAY in program_truth
+    assert "runtime_substrate_contract" in program_truth
+    assert "runtime_state_contract" in program_truth
+    assert "operator_contract" in program_truth
 
     assert "validate-workspace" in migration_map
     assert "summarize-workspace" in migration_map
@@ -112,3 +115,6 @@ def test_repo_tracks_hermes_runtime_program_and_capability_migration_map() -> No
     assert "Hermes substrate" in migration_map
     assert "Grant domain logic" in migration_map
     assert RUNTIME_STATE_SESSIONS_DISPLAY in migration_map
+    assert "runtime_substrate_contract" in migration_map
+    assert "runtime_state_contract" in migration_map
+    assert "operator_contract" in migration_map

@@ -97,6 +97,7 @@ Date: `2026-04-11`
   - Grant domain logic：checkpoint-consistent final package document assembly
 - `build-hosted-contract-bundle`
   - Hermes substrate：final-package 输入加载、repo-tracked `program_id` contract 解析、identity guard、output handoff
+  - Hermes substrate：为 hosted handoff 注入 `runtime_substrate_contract`、`runtime_state_contract`、`operator_contract`
   - Grant domain logic：hosted-friendly contract export 组装、`program_id` routing identity preservation
 
 ## Minimal Hermes-Backed Runnable Paths

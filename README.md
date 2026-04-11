@@ -47,6 +47,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
 - Current repo-verified local runtime entry also includes `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, and `build-hosted-contract-bundle`; together they cover local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, and hosted-friendly contract export.
+- `build-hosted-contract-bundle` now exports a Hermes-owned hosted handoff contract that explicitly carries `runtime_substrate_contract`, `runtime_state_contract`, and `operator_contract` alongside execution identity, artifact, and audit surfaces.
 - `stage-route-report` is the current machine-readable verification/checkpoint aggregation surface and now emits `verification_checkpoint` plus `checkpoint_status`.
 - Repo-tracked review truth and local durable handoff surfaces stay separate: the former explains the runtime contract, while the latter carries machine-specific resume state.
 

@@ -91,6 +91,7 @@
 - 仍复用同一 `Unified Harness Engineering Substrate` contract
 - 不改写既有 domain object、gate 与审计语义
 - 仅改变托管与交付形态，不把控制面描述成产品 runtime 完成度
+- 当前 `build-hosted-contract-bundle` 至少要显式带出 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract`，让 future Hermes host 复用同一 handoff contract
 
 换言之，未来托管形态是“同构迁移”，不是“另起炉灶”。
 

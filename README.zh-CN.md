@@ -46,6 +46,7 @@
 - `program_id`：当前 Med Auto Grant active mainline 的 control-plane / report-routing 指针
 - 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
 - 当前 repo-verified 的本地 runtime entry 还包括 `run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package` 与 `build-hosted-contract-bundle`；它们分别负责本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出，以及 hosted-friendly contract bundle 导出
+- `build-hosted-contract-bundle` 现在会额外导出 Hermes-owned 的 hosted handoff contract，其中显式携带 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract`，连同 execution identity、artifact 与 audit surface 一起进入托管友好导出面
 - `stage-route-report` 当前还是 machine-readable 的 verification / checkpoint 聚合面，并会输出 `verification_checkpoint` 与 `checkpoint_status`
 - repo-tracked review truth 与 local durable handoff surfaces 必须分开：前者负责解释 runtime contract，后者负责机器私有的恢复状态
 
