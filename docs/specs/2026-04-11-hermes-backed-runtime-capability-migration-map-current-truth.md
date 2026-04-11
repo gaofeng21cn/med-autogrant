@@ -91,8 +91,8 @@ Date: `2026-04-11`
   - Hermes substrate：execution dispatch
   - Grant domain logic：checkpoint-consistent final package assembly
 - `build-hosted-contract-bundle`
-  - Hermes substrate：execution dispatch
-  - Grant domain logic：hosted-friendly contract export、`program_id` routing identity preservation
+  - Hermes substrate：final-package 输入加载、`program_id` control-plane 解析、identity guard、output handoff
+  - Grant domain logic：hosted-friendly contract export 组装、`program_id` routing identity preservation
 
 ## Minimal Hermes-Backed Runnable Paths
 

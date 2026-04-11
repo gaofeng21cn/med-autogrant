@@ -14,6 +14,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - Hermes substrate 负责 runtime dispatch、workspace/final-package 输入加载、journal / stop reason orchestration，以及 revision/final/export 的执行路径。
 - 本地运行时入口：`run-local` 与 `resume-local`，继续以 journal 串联多次 pass，但产品 owner 已切到 `src/med_autogrant/hermes_runtime.py`。
 - `src/med_autogrant/local_runtime.py` 只保留为 compatibility bridge / regression oracle wrapper，不再承载长期产品 runtime owner 语义。
+- `build-hosted-contract-bundle` 的 final-package 读取、`program_id` control-plane 解析、identity guard 与输出 handoff 也由 `src/med_autogrant/hermes_runtime.py` 接管。
 - 产物面：`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle`。
 
 ## 数据与对象模型

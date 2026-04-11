@@ -230,5 +230,26 @@ class LocalRuntimeBridgeTest(unittest.TestCase):
         substrate.resume_local.assert_called_once_with(journal_path="/tmp/test-journal.json")
 
 
+class HostedContractBundleBridgeTest(unittest.TestCase):
+    def test_hosted_contract_bundle_payload_uses_hermes_runtime_as_handoff_owner(self) -> None:
+        from med_autogrant.hosted_contract_bundle import build_hosted_contract_bundle_payload
+
+        expected_payload = {"ok": True, "command": "build-hosted-contract-bundle"}
+        with patch("med_autogrant.hermes_runtime.HermesRuntimeSubstrate") as substrate_class:
+            substrate = substrate_class.return_value
+            substrate.build_hosted_contract_bundle.return_value = expected_payload
+
+            payload = build_hosted_contract_bundle_payload(
+                final_package_path="/tmp/final-package.json",
+                output_path="/tmp/hosted-contract.json",
+            )
+
+        self.assertEqual(payload, expected_payload)
+        substrate.build_hosted_contract_bundle.assert_called_once_with(
+            final_package_path="/tmp/final-package.json",
+            output_path="/tmp/hosted-contract.json",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
