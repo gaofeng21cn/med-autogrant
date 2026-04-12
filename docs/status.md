@@ -39,6 +39,19 @@ Date: `2026-04-12`
 - Active tranche：`Real Hermes substrate / service-safe domain entry / fresh proof`
 - Current owner line：`CLI-first with real upstream Hermes-Agent runtime substrate`
 
+## OPL 对齐的理想目标与阶段图
+
+- 理想目标：
+  - `OPL` 保持 family-level 顶层入口与 gateway
+  - `Med Auto Grant Product Entry` 作为 domain direct entry
+  - `Hermes-Agent` 保持 runtime substrate owner
+  - `Med Auto Grant` 保持 author-side grant truth / route / export owner
+- 阶段图：
+  - `P1` `Hermes substrate cutover`：已完成
+  - `P2` `service-safe domain contract convergence`：已完成
+  - `P3` `hosted caller / OPL consumption proof`：下一阶段
+  - `P4` `mature direct grant product entry`：未来阶段
+
 ## 长线目标（规划层）
 
 - 保持上游 `Hermes-Agent` 继续作为 runtime substrate owner，而不是退回 repo-local helper 主责。
@@ -57,6 +70,7 @@ Date: `2026-04-12`
 7. `critique-summary` 只在 source workspace 已经位于 `critique / revision / frozen` review context 时才会被要求；`drafting -> critique` 这类 handoff 继续只要求 `summarize-workspace / stage-route-report`。
 8. 后续若继续替换 critique / revision / export 的具体执行器，必须按 route 单独拿 truth 和 proof；不允许因为 substrate 已统一就自动改写 authoring semantics。
 9. `service-safe-domain-surface.schema.json`、`pending-handoff-requirements.schema.json`、`executor-routing-contract.schema.json`、`product-entry.schema.json` 与 `hosted-contract-bundle.schema.json` 现在已经进入 repo-tracked schema index；任何后续 product-entry / routing / hosted contract bundle 变更都必须同步更新 schema、tests 与 current truth。
+10. 下一阶段默认不再重新发明新的 repo-local hosted helper；优先证明 external hosted caller / `OPL Gateway` 可以直接消费已冻结的 `domain_entry_contract`、`schema_contract` 与 `authoring_contract`。
 
 ## 默认验证
 

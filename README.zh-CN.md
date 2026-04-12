@@ -40,6 +40,7 @@
 - 当前 `product entry` shell 与 `executor_routing_contract` 也已经进一步冻结成 schema-backed contract surface，并在生成时 fail-closed。
 - `build-hosted-contract-bundle` 导出的托管友好合同现在也已经收口成 schema-backed contract bundle，并为 future hosted / `OPL` caller 显式补出 `domain_entry_contract`、`schema_contract`、`authoring_contract`。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
+- 当前理想目标也已经明确：`OPL` 继续是 family-level 顶层入口，`Hermes-Agent` 继续是 runtime substrate owner，`Med Auto Grant` 继续是 domain truth / authoring owner；后续先做 hosted caller proof，再做成熟的 direct grant product entry。
 
 ## 入口分层与产品边界
 

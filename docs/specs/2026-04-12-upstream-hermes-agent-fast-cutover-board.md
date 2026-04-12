@@ -84,6 +84,26 @@
 
 已经能在真实 `Hermes-Agent` substrate 上跑通，且 object boundary 不漂移。
 
+## 当前落点（2026-04-12）
+
+当前这条 fast cutover board 可以诚实视为已完成：
+
+- `F1` completed
+- `F2` completed
+- `F3` completed
+- `F4` completed
+
+但这不等于整个理想目标已经完成。
+
+按新的 `OPL` 对齐 phase map，当前主线位置应理解为：
+
+- `P1 Hermes substrate cutover`：completed
+- `P2 service-safe domain contract convergence`：completed
+- `P3 hosted caller / OPL consumption proof`：next
+- `P4 mature direct grant product entry`：future
+
+因此，board 完成后的正确下一棒不是继续深磨 repo-local runtime，也不是直接把 `OPL Gateway` / hosted runtime 写成 landed，而是沿 `P3` 证明 external caller 可以直接消费已冻结的 bundle / entry / route contracts。
+
 ## 默认验证
 
 - `scripts/verify.sh meta`

@@ -41,6 +41,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - The hosted-friendly `build-hosted-contract-bundle` export is now also frozen as a schema-backed contract bundle, and it explicitly adds `domain_entry_contract`, `schema_contract`, and `authoring_contract` for future hosted / `OPL` callers.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 - Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
+- The ideal target is now explicit: `OPL` remains the family-level top entry, `Hermes-Agent` remains the runtime substrate owner, and `Med Auto Grant` remains the domain truth / authoring owner while moving toward hosted caller proof first and a mature direct grant product entry later.
 
 ## Entry Modes And Product Boundary
 

@@ -41,6 +41,12 @@ PENDING_ROUTE_MATRIX_CURRENT_TRUTH = (
 HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md"
 )
+IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md"
+)
+IDEAL_TARGET_EXECUTION_PLAN = (
+    REPO_ROOT / "docs" / "plans" / "2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md"
+)
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -118,6 +124,10 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH.exists(), (
         f"Hosted contract bundle current truth 不存在: {HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH}"
     )
+    assert IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH.exists(), (
+        f"Ideal target phase map current truth 不存在: {IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH}"
+    )
+    assert IDEAL_TARGET_EXECUTION_PLAN.exists(), f"Ideal target execution plan 不存在: {IDEAL_TARGET_EXECUTION_PLAN}"
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
 
@@ -128,6 +138,8 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     critique_handoff_truth = _read(CRITIQUE_HANDOFF_CURRENT_TRUTH)
     pending_route_matrix_truth = _read(PENDING_ROUTE_MATRIX_CURRENT_TRUTH)
     hosted_contract_bundle_truth = _read(HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH)
+    ideal_target_phase_map_truth = _read(IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH)
+    ideal_target_execution_plan = _read(IDEAL_TARGET_EXECUTION_PLAN)
     program_truth = _read(HERMES_PROGRAM_TRUTH)
     migration_map = _read(HERMES_MIGRATION_MAP)
 
@@ -206,6 +218,22 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "runtime_substrate_contract" in hosted_contract_bundle_truth
     assert "runtime_state_contract" in hosted_contract_bundle_truth
     assert "operator_contract" in hosted_contract_bundle_truth
+
+    assert "OPL" in ideal_target_phase_map_truth
+    assert "理想目标" in ideal_target_phase_map_truth
+    assert "phase map" in ideal_target_phase_map_truth.lower()
+    assert "User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry" in ideal_target_phase_map_truth
+    assert "Hermes-Agent" in ideal_target_phase_map_truth
+    assert "MedAutoGrantDomainEntry" in ideal_target_phase_map_truth
+    assert "completed" in ideal_target_phase_map_truth
+    assert "next" in ideal_target_phase_map_truth.lower()
+
+    assert "# Med Auto Grant OPL-Aligned Target Shape And Hosted Caller Plan" in ideal_target_execution_plan
+    assert "Goal:" in ideal_target_execution_plan
+    assert "Architecture:" in ideal_target_execution_plan
+    assert "Task 1" in ideal_target_execution_plan
+    assert "Task 2" in ideal_target_execution_plan
+    assert "Task 3" in ideal_target_execution_plan
 
     assert "还没有**真正完成上游 `Hermes-Agent` 集成" in truth_reset or "还没有" in truth_reset
     assert "repo-local code" in truth_reset
@@ -346,3 +374,27 @@ def test_docs_and_contracts_index_hosted_contract_bundle_contract_catalog_truth(
     assert "hosted-contract-bundle.schema.json" in architecture
     assert "hosted_contract_bundle" in status
     assert "2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md" in current_program
+
+
+@pytest.mark.meta
+def test_docs_and_contracts_index_opl_aligned_ideal_target_and_phase_map() -> None:
+    readme_en = _read(README_EN)
+    readme_zh = _read(README_ZH)
+    docs_readme_en = _read(DOCS_README_EN)
+    docs_readme_zh = _read(DOCS_README_ZH)
+    project = _read(CORE_PROJECT)
+    status = _read(CORE_STATUS)
+    architecture = _read(CORE_ARCHITECTURE)
+    current_program = (REPO_ROOT / "contracts" / "runtime-program" / "current-program.json").read_text(encoding="utf-8")
+
+    for text in (readme_en, readme_zh, project, status, architecture):
+        assert "ideal target" in text.lower() or "理想目标" in text
+        assert "OPL" in text
+
+    assert "./specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md" in docs_readme_en
+    assert "./specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md" in docs_readme_zh
+    assert "./plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md" in docs_readme_en
+    assert "./plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md" in docs_readme_zh
+    assert "2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md" in current_program
+    assert "phase_map" in current_program
+    assert "ideal_target" in current_program

@@ -37,6 +37,7 @@ repo-tracked current-program truth 固定在 `contracts/runtime-program/current-
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md)
 - [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md)
 - [Hosted contract bundle entry and route catalog current truth](./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md)
+- [OPL 对齐的理想目标与阶段图 current truth](./specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md)
 - [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md)
 - [Pending authoring route handoff matrix current truth](./specs/2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md)
 - [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
@@ -63,5 +64,6 @@ Specs 是 repo-tracked 的权威 current truth/activation package，但不替代
 
 - [最小 Scaffold 计划](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
 - [P1 Formal Entry And Durability Planning Brief](./plans/2026-04-07-p1-formal-entry-and-durability-planning-brief.md)
+- [OPL 对齐目标形态与 hosted caller 计划](./plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md)
 - [轻量产品入口与 OPL Handoff](./references/lightweight_product_entry_and_opl_handoff.md)
 - [OMX 历史资料索引](./history/omx/README.zh-CN.md)

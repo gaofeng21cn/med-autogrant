@@ -65,10 +65,26 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("contracts/runtime-program/current-program.json", contract["repo_tracked_truth_surfaces"])
         self.assertIn("docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md", contract["repo_tracked_truth_surfaces"])
         self.assertIn(
+            "docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertIn(
             "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
+        self.assertEqual(contract["ideal_target"]["family_top_entry"], "OPL Gateway")
+        self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
+        self.assertEqual(contract["ideal_target"]["runtime_substrate_owner"], "Hermes-Agent")
+        self.assertEqual(contract["ideal_target"]["authoring_truth_owner"], "Med Auto Grant")
+        self.assertEqual(contract["phase_map"][0]["phase_id"], "P1")
+        self.assertEqual(contract["phase_map"][0]["status"], "completed")
+        self.assertEqual(contract["phase_map"][1]["phase_id"], "P2")
+        self.assertEqual(contract["phase_map"][1]["status"], "completed")
+        self.assertEqual(contract["phase_map"][2]["phase_id"], "P3")
+        self.assertEqual(contract["phase_map"][2]["status"], "next")
+        self.assertEqual(contract["phase_map"][3]["phase_id"], "P4")
+        self.assertEqual(contract["phase_map"][3]["status"], "future")
 
     def test_core_docs_publish_repo_tracked_contract_and_user_level_runtime_state(self) -> None:
         for path in (

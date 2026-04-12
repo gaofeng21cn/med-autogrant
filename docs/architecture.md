@@ -40,6 +40,15 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 在这层公共 envelope 之上，grant 域继续补充 `workspace_id`、`draft_id`、`funding_call` 等 domain payload。
 
+按 `OPL` 对齐后的理想目标，这条链路的 owner 固定为：
+
+- `OPL Gateway`：family-level route / gateway owner
+- `Med Auto Grant Product Entry`：domain direct entry owner
+- `Hermes-Agent`：runtime substrate owner
+- `Med Auto Grant`：author-side grant truth / route / export owner
+
+当前并不宣称 `OPL Gateway` 已在本仓落地；当前只是在为 future caller 冻结稳定 contract。
+
 ## Hermes substrate 与 grant executor 的分工
 
 在当前架构里，`Hermes-Agent` 已经承担：

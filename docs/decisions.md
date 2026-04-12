@@ -74,6 +74,12 @@
 - 理由：future hosted caller / `OPL` caller 真正要消费的不只是 runtime/state/operator pointer，还需要稳定的 service-safe entry、schema registry 与 author-side route catalog；如果这些合同不随 bundle 一起冻结，后续就会在 bundle 外重新发明 handoff semantics。
 - 影响：hosted bundle 现在只打包已经冻结好的 domain entry / schema / route truth，不新增 repo-local executor，也不把 hosted runtime、`OPL Gateway` 或 pending route 写成已落地。
 
+## 2026-04-12：冻结 OPL 对齐的理想目标与阶段图
+
+- 决策：把 `Med Auto Grant` 的长线理想目标固定为 `OPL` 顶层入口、`Hermes-Agent` substrate owner、`Med Auto Grant` domain truth owner 的分层结构，并把主线阶段固定成 `P1 completed / P2 completed / P3 next / P4 future`。
+- 理由：如果不把 “理想目标” 和 “当前完成态” 分开冻结，后续最容易一边拿 `OPL` 理想型讲话，一边把未完成的 hosted caller / direct product entry 写成 landed。
+- 影响：`current-program` 现在额外携带 `ideal_target` 与 `phase_map`；后续推进默认先做 `P3 hosted caller / OPL consumption proof`，而不是回头重写 repo-local helper 或跳到 product overclaim。
+
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。

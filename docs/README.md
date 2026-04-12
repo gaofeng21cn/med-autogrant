@@ -38,6 +38,7 @@ The hosted-friendly contract bundle now also ships a machine-readable catalog th
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md) (Chinese only)
 - [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md) (Chinese only)
 - [Hosted contract bundle entry and route catalog current truth](./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md) (Chinese only)
+- [OPL-aligned ideal target and phase map current truth](./specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md) (Chinese only)
 - [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md) (Chinese only)
 - [Pending authoring route handoff matrix current truth](./specs/2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md) (Chinese only)
 - [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
@@ -66,5 +67,6 @@ Specs are repo-tracked and authoritative for activation packages and current tru
 
 - [Minimal Scaffold Plan](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
 - [P1 Formal Entry And Durability Planning Brief](./plans/2026-04-07-p1-formal-entry-and-durability-planning-brief.md)
+- [OPL-aligned target shape and hosted caller plan](./plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md)
 - [Lightweight product entry and OPL handoff](./references/lightweight_product_entry_and_opl_handoff.md) (Chinese only)
 - [OMX historical archive](./history/omx/README.md)
