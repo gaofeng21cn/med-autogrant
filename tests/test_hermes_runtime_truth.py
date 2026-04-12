@@ -32,6 +32,9 @@ EXECUTOR_ROUTING_CURRENT_TRUTH = (
 CRITIQUE_HANDOFF_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-critique-pending-handoff-contract-current-truth.md"
 )
+PENDING_ROUTE_MATRIX_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md"
+)
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -100,6 +103,9 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert TRUTH_RESET_CURRENT_TRUTH.exists(), f"Truth reset current truth 不存在: {TRUTH_RESET_CURRENT_TRUTH}"
     assert EXECUTOR_ROUTING_CURRENT_TRUTH.exists(), f"Executor routing current truth 不存在: {EXECUTOR_ROUTING_CURRENT_TRUTH}"
     assert CRITIQUE_HANDOFF_CURRENT_TRUTH.exists(), f"Critique handoff current truth 不存在: {CRITIQUE_HANDOFF_CURRENT_TRUTH}"
+    assert PENDING_ROUTE_MATRIX_CURRENT_TRUTH.exists(), (
+        f"Pending route matrix current truth 不存在: {PENDING_ROUTE_MATRIX_CURRENT_TRUTH}"
+    )
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
 
@@ -107,6 +113,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     truth_reset = _read(TRUTH_RESET_CURRENT_TRUTH)
     executor_routing_truth = _read(EXECUTOR_ROUTING_CURRENT_TRUTH)
     critique_handoff_truth = _read(CRITIQUE_HANDOFF_CURRENT_TRUTH)
+    pending_route_matrix_truth = _read(PENDING_ROUTE_MATRIX_CURRENT_TRUTH)
     program_truth = _read(HERMES_PROGRAM_TRUTH)
     migration_map = _read(HERMES_MIGRATION_MAP)
 
@@ -125,6 +132,11 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "MedAutoGrantDomainEntry" in product_entry_truth
     assert "executor_routing_contract" in product_entry_truth
     assert "handoff_requirements" in product_entry_truth
+    assert "author_side_route_catalog" in product_entry_truth
+    assert (
+        "direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen"
+        in product_entry_truth
+    )
 
     assert "critique" in executor_routing_truth
     assert "pending" in executor_routing_truth
@@ -134,6 +146,11 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "build-final-package" in executor_routing_truth
     assert "build-hosted-contract-bundle" in executor_routing_truth
     assert "handoff_requirements" in executor_routing_truth
+    assert "direction_screening" in executor_routing_truth
+    assert "drafting" in executor_routing_truth
+    assert "frozen" in executor_routing_truth
+    assert "required_summary_fields" in executor_routing_truth
+    assert "required_gate_fields" in executor_routing_truth
 
     assert "critique-pending-handoff" in critique_handoff_truth
     assert "summarize-workspace" in critique_handoff_truth
@@ -144,6 +161,21 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "draft_id" in critique_handoff_truth
     assert "recommended_executor_route" in critique_handoff_truth
     assert "revision 已完成显式 revised 切换" in critique_handoff_truth
+    assert "drafting -> critique" in critique_handoff_truth
+    assert "required_summary_fields" in critique_handoff_truth
+    assert "required_gate_fields" in critique_handoff_truth
+
+    assert "direction_screening" in pending_route_matrix_truth
+    assert "question_refinement" in pending_route_matrix_truth
+    assert "argument_building" in pending_route_matrix_truth
+    assert "fit_alignment" in pending_route_matrix_truth
+    assert "outline" in pending_route_matrix_truth
+    assert "drafting" in pending_route_matrix_truth
+    assert "critique" in pending_route_matrix_truth
+    assert "frozen" in pending_route_matrix_truth
+    assert "required_summary_fields" in pending_route_matrix_truth
+    assert "required_gate_fields" in pending_route_matrix_truth
+    assert "drafting -> critique" in pending_route_matrix_truth
 
     assert "还没有**真正完成上游 `Hermes-Agent` 集成" in truth_reset or "还没有" in truth_reset
     assert "repo-local code" in truth_reset

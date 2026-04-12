@@ -54,7 +54,13 @@
 
 - 决策：在保持 `critique` 继续为 `pending / handoff-required` 的前提下，为它补一份 machine-readable `handoff_requirements`，明确 future Hermes-side collaborator 必须先读取哪些 domain surfaces。
 - 理由：如果 pending route 只有一个状态字段，future host 很容易绕开 grant domain truth，或者误以为需要仓内新增本地 critique helper。把 handoff 要求显式冻结出来，能让“直接协作”与“新 executor 已 landed”保持清楚分层。
-- 影响：当前 `critique` route 固定要求读取 `summarize-workspace`、`critique-summary`、`stage-route-report`，并保留 `grant_run_id / workspace_id / draft_id`；这仍不是 `execute-critique-pass`。
+- 影响：当前 `critique` route 至少要求读取 `summarize-workspace / stage-route-report`，并且只有 source workspace 已进入 `critique / revision / frozen` review context 时才额外要求 `critique-summary`；这仍不是 `execute-critique-pass`。
+
+## 2026-04-12：冻结全 pending authoring route handoff matrix
+
+- 决策：不再只为 `critique` 单独定义 pending handoff，而是把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / frozen` 全部冻结成 route-specific `handoff_requirements`。
+- 理由：最终目标是让 `Hermes` 负责 substrate、让 `OPL` / domain 通过统一 envelope 直接协作，而不是继续脑补新的 repo-local executor。没有完整 matrix，future caller 仍会在其他未 landed route 上重新发明 handoff semantics。
+- 影响：`author_side_route_catalog` 现在会列出完整 pending + landed route matrix；每条 pending route 都会显式导出 `required_domain_surfaces / required_identity_fields / required_summary_fields / required_gate_fields`，并且只允许引用 repo 已有 surface。
 
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 

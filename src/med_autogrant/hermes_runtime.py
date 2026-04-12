@@ -42,9 +42,16 @@ from med_autogrant.workspace import (
 JOURNAL_VERSION = 1
 CURRENT_PROGRAM_RELATIVE_PATH = CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH
 EXECUTOR_ROUTING_CONTRACT_VERSION = 1
-AUTHOR_SIDE_EXECUTOR_ROUTE_IDS = (
+AUTHOR_SIDE_ROUTE_IDS = (
+    "direction_screening",
+    "question_refinement",
+    "argument_building",
+    "fit_alignment",
+    "outline",
+    "drafting",
     "critique",
     "revision",
+    "frozen",
     "artifact_bundle",
     "final_package",
     "hosted_contract_bundle",
@@ -52,6 +59,174 @@ AUTHOR_SIDE_EXECUTOR_ROUTE_IDS = (
 SERVICE_SAFE_ENTRY_ADAPTER = "MedAutoGrantDomainEntry"
 SERVICE_SAFE_ENTRY_SURFACE_KIND = "service-safe-domain-entry-command"
 EXECUTOR_ROUTE_OWNER = "med-autogrant"
+REVIEW_CONTEXT_STAGES = frozenset({"critique", "revision", "frozen"})
+DRAFT_ID_CONTEXT_STAGES = frozenset({"outline", "drafting", "critique", "revision", "frozen"})
+PENDING_ROUTE_HANDOFF_REQUIREMENTS: dict[str, dict[str, list[str]]] = {
+    "direction_screening": {
+        "required_summary_fields": [
+            "current_selection.selected_direction_id",
+            "selected_direction.id",
+            "selected_direction.title",
+            "selected_direction.decision_status",
+        ],
+        "required_gate_fields": ["gates.direction_frozen"],
+    },
+    "question_refinement": {
+        "required_summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "selected_direction.id",
+            "selected_direction.title",
+            "selected_question.id",
+            "selected_question.core_question",
+            "selected_question.knowledge_boundary",
+        ],
+        "required_gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+        ],
+    },
+    "argument_building": {
+        "required_summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "selected_question.core_question",
+            "active_argument_chain.id",
+            "active_argument_chain.necessity_claim",
+        ],
+        "required_gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+        ],
+    },
+    "fit_alignment": {
+        "required_summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_fit_mapping.applicant_fit_summary",
+            "active_fit_mapping.unique_advantage",
+        ],
+        "required_gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+        ],
+    },
+    "outline": {
+        "required_summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "current_selection.active_draft_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_draft.id",
+            "active_draft.version_label",
+            "active_draft.status",
+            "active_draft.outline_count",
+        ],
+        "required_gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+            "gates.outline_frozen",
+        ],
+    },
+    "drafting": {
+        "required_summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "current_selection.active_draft_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_draft.id",
+            "active_draft.version_label",
+            "active_draft.status",
+            "active_draft.outline_count",
+            "active_draft.section_count",
+        ],
+        "required_gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+            "gates.outline_frozen",
+        ],
+    },
+    "critique": {
+        "required_summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "current_selection.active_draft_id",
+            "current_selection.active_revision_plan_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_draft.id",
+            "active_draft.version_label",
+            "active_draft.status",
+            "active_revision_plan.id",
+            "active_revision_plan.execution_status",
+            "active_critique.id",
+            "active_critique.verdict",
+            "active_critique.blocking_issue_count",
+        ],
+        "required_gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+            "gates.outline_frozen",
+            "gates.presubmission_frozen",
+        ],
+    },
+    "frozen": {
+        "required_summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "current_selection.active_draft_id",
+            "current_selection.active_revision_plan_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_draft.id",
+            "active_draft.version_label",
+            "active_draft.status",
+            "active_draft.section_count",
+            "active_revision_plan.id",
+            "active_revision_plan.execution_status",
+            "active_critique.id",
+            "active_critique.verdict",
+        ],
+        "required_gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+            "gates.outline_frozen",
+            "gates.presubmission_frozen",
+        ],
+    },
+}
 
 
 class LocalRuntimeStateError(WorkspaceError):
@@ -826,27 +1001,33 @@ def _build_executor_routing_contract(
 ) -> dict[str, Any]:
     contract = {
         "contract_version": EXECUTOR_ROUTING_CONTRACT_VERSION,
-        "current_stage_route": _build_stage_route_contract(current_stage),
-        "recommended_executor_route": _build_stage_route_contract(recommended_next_stage),
+        "current_stage_route": _build_stage_route_contract(
+            current_stage,
+            source_stage=current_stage,
+        ),
+        "recommended_executor_route": _build_stage_route_contract(
+            recommended_next_stage,
+            source_stage=current_stage,
+        ),
     }
     if include_route_catalog:
         contract["author_side_route_catalog"] = [
-            _build_author_side_route_contract(route_id)
-            for route_id in AUTHOR_SIDE_EXECUTOR_ROUTE_IDS
+            _build_author_side_route_contract(route_id, source_stage=route_id)
+            for route_id in AUTHOR_SIDE_ROUTE_IDS
         ]
     return contract
 
 
-def _build_stage_route_contract(stage: str) -> dict[str, Any]:
+def _build_stage_route_contract(stage: str, *, source_stage: str) -> dict[str, Any]:
     resolved_stage = _require_nonempty_route_id(stage, context="executor routing stage")
     if resolved_stage == "revision":
-        return _build_author_side_route_contract("revision")
+        return _build_author_side_route_contract("revision", source_stage=source_stage)
     if resolved_stage == "critique":
-        return _build_author_side_route_contract("critique")
-    return _build_pending_route_contract(resolved_stage)
+        return _build_author_side_route_contract("critique", source_stage=source_stage)
+    return _build_pending_route_contract(resolved_stage, source_stage=source_stage)
 
 
-def _build_author_side_route_contract(route_id: str) -> dict[str, Any]:
+def _build_author_side_route_contract(route_id: str, *, source_stage: str) -> dict[str, Any]:
     resolved_route_id = _require_nonempty_route_id(route_id, context="executor routing route")
     execution_command = {
         "revision": "execute-revision-pass",
@@ -855,7 +1036,10 @@ def _build_author_side_route_contract(route_id: str) -> dict[str, Any]:
         "hosted_contract_bundle": "build-hosted-contract-bundle",
     }.get(resolved_route_id)
     if execution_command is None:
-        return _build_pending_route_contract(resolved_route_id)
+        return _build_pending_route_contract(
+            resolved_route_id,
+            source_stage=source_stage,
+        )
     return {
         "route_id": resolved_route_id,
         "route_status": "landed",
@@ -869,7 +1053,7 @@ def _build_author_side_route_contract(route_id: str) -> dict[str, Any]:
     }
 
 
-def _build_pending_route_contract(route_id: str) -> dict[str, Any]:
+def _build_pending_route_contract(route_id: str, *, source_stage: str) -> dict[str, Any]:
     resolved_route_id = _require_nonempty_route_id(route_id, context="pending executor route")
     contract = {
         "route_id": resolved_route_id,
@@ -878,25 +1062,40 @@ def _build_pending_route_contract(route_id: str) -> dict[str, Any]:
         "execution_surface": None,
         "handoff_contract_kind": "handoff-required",
     }
-    if resolved_route_id == "critique":
-        contract["handoff_requirements"] = _build_critique_pending_handoff_requirements()
+    handoff_requirements = _build_pending_route_handoff_requirements(
+        resolved_route_id,
+        source_stage=source_stage,
+    )
+    if handoff_requirements is not None:
+        contract["handoff_requirements"] = handoff_requirements
     return contract
 
 
-def _build_critique_pending_handoff_requirements() -> dict[str, Any]:
+def _build_pending_route_handoff_requirements(
+    route_id: str,
+    *,
+    source_stage: str,
+) -> dict[str, Any] | None:
+    requirements = PENDING_ROUTE_HANDOFF_REQUIREMENTS.get(route_id)
+    if requirements is None:
+        return None
+
+    required_domain_surfaces = [_build_service_safe_domain_surface("summarize-workspace")]
+    if source_stage in REVIEW_CONTEXT_STAGES:
+        required_domain_surfaces.append(_build_service_safe_domain_surface("critique-summary"))
+    required_domain_surfaces.append(_build_service_safe_domain_surface("stage-route-report"))
+
+    required_identity_fields = ["grant_run_id", "workspace_id"]
+    if source_stage in DRAFT_ID_CONTEXT_STAGES:
+        required_identity_fields.append("draft_id")
+
     return {
-        "contract_kind": "critique-pending-handoff",
+        "contract_kind": f"{route_id}-pending-handoff",
         "workspace_surface_kind": "nsfc_workspace",
-        "required_domain_surfaces": [
-            _build_service_safe_domain_surface("summarize-workspace"),
-            _build_service_safe_domain_surface("critique-summary"),
-            _build_service_safe_domain_surface("stage-route-report"),
-        ],
-        "required_identity_fields": [
-            "grant_run_id",
-            "workspace_id",
-            "draft_id",
-        ],
+        "required_domain_surfaces": required_domain_surfaces,
+        "required_identity_fields": required_identity_fields,
+        "required_summary_fields": list(requirements["required_summary_fields"]),
+        "required_gate_fields": list(requirements["required_gate_fields"]),
     }
 
 

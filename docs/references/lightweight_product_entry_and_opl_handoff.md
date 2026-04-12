@@ -70,19 +70,28 @@
 
 显式带出来，避免 future caller 误把 `critique` 写成“已有 landed executor”。
 
-如果当前 route 还是：
+如果当前 route 还没有 landed executor：
 
+- `direction_screening`
+- `question_refinement`
+- `argument_building`
+- `fit_alignment`
+- `outline`
+- `drafting`
 - `critique`
+- `frozen`
 
-那 `executor_routing_contract` 还应额外带出：
+那 `executor_routing_contract` 都应额外带出：
 
 - `handoff_requirements`
 
-并明确要求 caller 先读取：
+并且：
 
-- `summarize-workspace`
-- `critique-summary`
-- `stage-route-report`
+- 基础上始终要求 caller 先读取：
+  - `summarize-workspace`
+  - `stage-route-report`
+- 只有 source workspace 已经进入 `critique / revision / frozen` review context 时，才额外要求：
+  - `critique-summary`
 
 ## 5. 当前不应过度宣称的事
 

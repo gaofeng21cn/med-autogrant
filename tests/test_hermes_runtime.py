@@ -23,6 +23,248 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.js
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 
+AUTHOR_SIDE_ROUTE_IDS = (
+    "direction_screening",
+    "question_refinement",
+    "argument_building",
+    "fit_alignment",
+    "outline",
+    "drafting",
+    "critique",
+    "revision",
+    "frozen",
+    "artifact_bundle",
+    "final_package",
+    "hosted_contract_bundle",
+)
+REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
+DRAFT_ID_CONTEXT_STAGES = {"outline", "drafting", "critique", "revision", "frozen"}
+PENDING_ROUTE_REQUIREMENTS = {
+    "direction_screening": {
+        "summary_fields": [
+            "current_selection.selected_direction_id",
+            "selected_direction.id",
+            "selected_direction.title",
+            "selected_direction.decision_status",
+        ],
+        "gate_fields": ["gates.direction_frozen"],
+    },
+    "question_refinement": {
+        "summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "selected_direction.id",
+            "selected_direction.title",
+            "selected_question.id",
+            "selected_question.core_question",
+            "selected_question.knowledge_boundary",
+        ],
+        "gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+        ],
+    },
+    "argument_building": {
+        "summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "selected_question.core_question",
+            "active_argument_chain.id",
+            "active_argument_chain.necessity_claim",
+        ],
+        "gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+        ],
+    },
+    "fit_alignment": {
+        "summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_fit_mapping.applicant_fit_summary",
+            "active_fit_mapping.unique_advantage",
+        ],
+        "gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+        ],
+    },
+    "outline": {
+        "summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "current_selection.active_draft_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_draft.id",
+            "active_draft.version_label",
+            "active_draft.status",
+            "active_draft.outline_count",
+        ],
+        "gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+            "gates.outline_frozen",
+        ],
+    },
+    "drafting": {
+        "summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "current_selection.active_draft_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_draft.id",
+            "active_draft.version_label",
+            "active_draft.status",
+            "active_draft.outline_count",
+            "active_draft.section_count",
+        ],
+        "gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+            "gates.outline_frozen",
+        ],
+    },
+    "critique": {
+        "summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "current_selection.active_draft_id",
+            "current_selection.active_revision_plan_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_draft.id",
+            "active_draft.version_label",
+            "active_draft.status",
+            "active_revision_plan.id",
+            "active_revision_plan.execution_status",
+            "active_critique.id",
+            "active_critique.verdict",
+            "active_critique.blocking_issue_count",
+        ],
+        "gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+            "gates.outline_frozen",
+            "gates.presubmission_frozen",
+        ],
+    },
+    "frozen": {
+        "summary_fields": [
+            "current_selection.selected_direction_id",
+            "current_selection.selected_question_id",
+            "current_selection.active_fit_mapping_id",
+            "current_selection.active_draft_id",
+            "current_selection.active_revision_plan_id",
+            "selected_direction.id",
+            "selected_question.id",
+            "active_argument_chain.id",
+            "active_fit_mapping.id",
+            "active_draft.id",
+            "active_draft.version_label",
+            "active_draft.status",
+            "active_draft.section_count",
+            "active_revision_plan.id",
+            "active_revision_plan.execution_status",
+            "active_critique.id",
+            "active_critique.verdict",
+        ],
+        "gate_fields": [
+            "gates.direction_frozen",
+            "gates.scientific_question_frozen",
+            "gates.argument_chain_frozen",
+            "gates.fit_alignment_frozen",
+            "gates.outline_frozen",
+            "gates.presubmission_frozen",
+        ],
+    },
+}
+
+
+def _service_safe_surface(command: str) -> dict[str, str]:
+    return {
+        "surface_kind": "service-safe-domain-entry-command",
+        "entry_adapter": "MedAutoGrantDomainEntry",
+        "command": command,
+    }
+
+
+def _expected_landed_route(route_id: str) -> dict[str, object]:
+    return {
+        "route_id": route_id,
+        "route_status": "landed",
+        "executor_owner": "med-autogrant",
+        "execution_surface": _service_safe_surface(
+            {
+                "revision": "execute-revision-pass",
+                "artifact_bundle": "build-artifact-bundle",
+                "final_package": "build-final-package",
+                "hosted_contract_bundle": "build-hosted-contract-bundle",
+            }[route_id]
+        ),
+        "handoff_contract_kind": "service-safe-domain-entry-command",
+    }
+
+
+def _expected_pending_route(route_id: str, *, source_stage: str) -> dict[str, object]:
+    requirements = PENDING_ROUTE_REQUIREMENTS[route_id]
+    required_domain_surfaces = [_service_safe_surface("summarize-workspace")]
+    if source_stage in REVIEW_CONTEXT_STAGES:
+        required_domain_surfaces.append(_service_safe_surface("critique-summary"))
+    required_domain_surfaces.append(_service_safe_surface("stage-route-report"))
+
+    required_identity_fields = ["grant_run_id", "workspace_id"]
+    if source_stage in DRAFT_ID_CONTEXT_STAGES:
+        required_identity_fields.append("draft_id")
+
+    return {
+        "route_id": route_id,
+        "route_status": "pending",
+        "executor_owner": "med-autogrant",
+        "execution_surface": None,
+        "handoff_contract_kind": "handoff-required",
+        "handoff_requirements": {
+            "contract_kind": f"{route_id}-pending-handoff",
+            "workspace_surface_kind": "nsfc_workspace",
+            "required_domain_surfaces": required_domain_surfaces,
+            "required_identity_fields": required_identity_fields,
+            "required_summary_fields": requirements["summary_fields"],
+            "required_gate_fields": requirements["gate_fields"],
+        },
+    }
+
+
+def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
+    if route_id in {"revision", "artifact_bundle", "final_package", "hosted_contract_bundle"}:
+        return _expected_landed_route(route_id)
+    return _expected_pending_route(route_id, source_stage=source_stage)
+
 
 class HermesRuntimeCliDispatchTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
@@ -156,50 +398,8 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
                 critique_run["stage_action_envelope"]["executor_routing_contract"],
                 {
                     "contract_version": 1,
-                    "current_stage_route": {
-                        "route_id": "critique",
-                        "route_status": "pending",
-                        "executor_owner": "med-autogrant",
-                        "execution_surface": None,
-                        "handoff_contract_kind": "handoff-required",
-                        "handoff_requirements": {
-                            "contract_kind": "critique-pending-handoff",
-                            "workspace_surface_kind": "nsfc_workspace",
-                            "required_domain_surfaces": [
-                                {
-                                    "surface_kind": "service-safe-domain-entry-command",
-                                    "entry_adapter": "MedAutoGrantDomainEntry",
-                                    "command": "summarize-workspace",
-                                },
-                                {
-                                    "surface_kind": "service-safe-domain-entry-command",
-                                    "entry_adapter": "MedAutoGrantDomainEntry",
-                                    "command": "critique-summary",
-                                },
-                                {
-                                    "surface_kind": "service-safe-domain-entry-command",
-                                    "entry_adapter": "MedAutoGrantDomainEntry",
-                                    "command": "stage-route-report",
-                                },
-                            ],
-                            "required_identity_fields": [
-                                "grant_run_id",
-                                "workspace_id",
-                                "draft_id",
-                            ],
-                        },
-                    },
-                    "recommended_executor_route": {
-                        "route_id": "revision",
-                        "route_status": "landed",
-                        "executor_owner": "med-autogrant",
-                        "execution_surface": {
-                            "surface_kind": "service-safe-domain-entry-command",
-                            "entry_adapter": "MedAutoGrantDomainEntry",
-                            "command": "execute-revision-pass",
-                        },
-                        "handoff_contract_kind": "service-safe-domain-entry-command",
-                    },
+                    "current_stage_route": _expected_route("critique", source_stage="critique"),
+                    "recommended_executor_route": _expected_route("revision", source_stage="critique"),
                 },
             )
 
@@ -213,50 +413,8 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
                 revision_return_run["stage_action_envelope"]["executor_routing_contract"],
                 {
                     "contract_version": 1,
-                    "current_stage_route": {
-                        "route_id": "revision",
-                        "route_status": "landed",
-                        "executor_owner": "med-autogrant",
-                        "execution_surface": {
-                            "surface_kind": "service-safe-domain-entry-command",
-                            "entry_adapter": "MedAutoGrantDomainEntry",
-                            "command": "execute-revision-pass",
-                        },
-                        "handoff_contract_kind": "service-safe-domain-entry-command",
-                    },
-                    "recommended_executor_route": {
-                        "route_id": "critique",
-                        "route_status": "pending",
-                        "executor_owner": "med-autogrant",
-                        "execution_surface": None,
-                        "handoff_contract_kind": "handoff-required",
-                        "handoff_requirements": {
-                            "contract_kind": "critique-pending-handoff",
-                            "workspace_surface_kind": "nsfc_workspace",
-                            "required_domain_surfaces": [
-                                {
-                                    "surface_kind": "service-safe-domain-entry-command",
-                                    "entry_adapter": "MedAutoGrantDomainEntry",
-                                    "command": "summarize-workspace",
-                                },
-                                {
-                                    "surface_kind": "service-safe-domain-entry-command",
-                                    "entry_adapter": "MedAutoGrantDomainEntry",
-                                    "command": "critique-summary",
-                                },
-                                {
-                                    "surface_kind": "service-safe-domain-entry-command",
-                                    "entry_adapter": "MedAutoGrantDomainEntry",
-                                    "command": "stage-route-report",
-                                },
-                            ],
-                            "required_identity_fields": [
-                                "grant_run_id",
-                                "workspace_id",
-                                "draft_id",
-                            ],
-                        },
-                    },
+                    "current_stage_route": _expected_route("revision", source_stage="revision"),
+                    "recommended_executor_route": _expected_route("critique", source_stage="revision"),
                 },
             )
 
@@ -317,6 +475,55 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
                     "program_id": "med-autogrant-mainline",
                 },
             )
+
+    def test_executor_routing_contract_contextualizes_pending_route_handoff_requirements(self) -> None:
+        from med_autogrant.hermes_runtime import _build_executor_routing_contract
+
+        drafting_contract = _build_executor_routing_contract(
+            current_stage="drafting",
+            recommended_next_stage="critique",
+            include_route_catalog=True,
+        )
+        self.assertEqual(
+            drafting_contract["current_stage_route"],
+            _expected_route("drafting", source_stage="drafting"),
+        )
+        self.assertEqual(
+            drafting_contract["recommended_executor_route"],
+            _expected_route("critique", source_stage="drafting"),
+        )
+        self.assertEqual(
+            drafting_contract["recommended_executor_route"]["handoff_requirements"]["required_domain_surfaces"],
+            [
+                _service_safe_surface("summarize-workspace"),
+                _service_safe_surface("stage-route-report"),
+            ],
+        )
+
+        critique_reroute_contract = _build_executor_routing_contract(
+            current_stage="critique",
+            recommended_next_stage="question_refinement",
+        )
+        self.assertEqual(
+            critique_reroute_contract["recommended_executor_route"],
+            _expected_route("question_refinement", source_stage="critique"),
+        )
+        self.assertEqual(
+            critique_reroute_contract["recommended_executor_route"]["handoff_requirements"]["required_domain_surfaces"],
+            [
+                _service_safe_surface("summarize-workspace"),
+                _service_safe_surface("critique-summary"),
+                _service_safe_surface("stage-route-report"),
+            ],
+        )
+
+        self.assertEqual(
+            [
+                route["route_id"]
+                for route in drafting_contract["author_side_route_catalog"]
+            ],
+            list(AUTHOR_SIDE_ROUTE_IDS),
+        )
 
 
 class LocalRuntimeBridgeTest(unittest.TestCase):

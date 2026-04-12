@@ -96,15 +96,19 @@ Date: `2026-04-12`
 - 这份 contract 明确区分：
   - `current_stage_route`
   - `recommended_executor_route`
+- `author_side_route_catalog` 现在会列出完整 authoring matrix，而不只是 critique + landed export routes
 - 当前 landed route 继续是：
   - `revision -> execute-revision-pass`
   - `artifact_bundle -> build-artifact-bundle`
   - `final_package -> build-final-package`
   - `hosted_contract_bundle -> build-hosted-contract-bundle`
-- 当前 `critique` route 继续诚实保持：
+- 当前所有未 landed 的 authoring route 都继续诚实保持：
   - `route_status = pending`
   - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements.required_domain_surfaces = summarize-workspace / critique-summary / stage-route-report`
+  - route-specific `handoff_requirements`
+- `critique` 的 `handoff_requirements.required_domain_surfaces`
+  - 基础是：`summarize-workspace / stage-route-report`
+  - 只有 source workspace 已经进入 `critique / revision / frozen` review context 时，才额外要求 `critique-summary`
 
 ## What Did Not Change
 
@@ -129,8 +133,9 @@ repo 现在至少有下面这些 fresh proof：
    - final package
    - hosted contract bundle
 5. `executor_routing_contract` 能把 critique 的 `pending / handoff-required` 与 revision/export 的 landed route 明确区分出来
-6. critique pending route 还会显式导出 `handoff_requirements`，把直接协作所需的 domain surfaces 冻结下来
-7. `revision(completed revised switch) -> critique` 返场路径也已经在 `run-local` / `build-product-entry` 上给出一致的 critique handoff proof
+6. 所有 pending authoring route 现在都会显式导出 route-specific `handoff_requirements`
+7. `drafting -> critique` 已经证明不会错误要求 `critique-summary`
+8. `revision(completed revised switch) -> critique` 返场路径也已经在 `run-local` / `build-product-entry` 上给出一致的 critique handoff proof
 
 ## Verification
 

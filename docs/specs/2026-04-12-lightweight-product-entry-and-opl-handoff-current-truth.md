@@ -70,10 +70,21 @@ grant 域在这层共享 envelope 之上继续补充：
 
 ### 4. 当前 critique / revision / export route 的状态已经诚实冻结
 
-- `critique`
+- 所有未 landed 的 authoring route
   - `route_status = pending`
   - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements.required_domain_surfaces = summarize-workspace / critique-summary / stage-route-report`
+  - `handoff_requirements`
+    - 至少会列出：
+      - `required_domain_surfaces`
+      - `required_identity_fields`
+      - `required_summary_fields`
+      - `required_gate_fields`
+- `critique`
+  - 在 `drafting -> critique` 这类 pre-review 上下文里，只要求：
+    - `summarize-workspace`
+    - `stage-route-report`
+  - 在 `critique / revision / frozen` review context 里，才额外要求：
+    - `critique-summary`
 - `revision`
   - `route_status = landed`
   - `execution_surface.command = execute-revision-pass`
@@ -118,6 +129,7 @@ grant 域在这层共享 envelope 之上继续补充：
 - 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与真实 Hermes substrate contract 之上
 - 这层 shell 还能显式告诉 caller：当前哪些 author-side route 已 landed，哪些还只是 `pending / handoff-required`
 - 对 `critique` 这类仍未 landed 的 route，这层 shell 现在还会直接导出 `handoff_requirements`，告诉 caller 应先读取哪些 domain surfaces 再协作
+- 这层 shell 现在还会把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen` 一并纳入同一份 `author_side_route_catalog`
 - 对 canonical 的 `revision(completed revised switch) -> critique` 返场路径，这层 shell 也已经能在 `recommended_executor_route` 里稳定导出同一份 critique handoff contract
 
 它不意味着：

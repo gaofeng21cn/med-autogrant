@@ -47,12 +47,23 @@ Date: `2026-04-12`
 - `workspace_surface_kind = nsfc_workspace`
 - `required_domain_surfaces`
 - `required_identity_fields`
+- `required_summary_fields`
+- `required_gate_fields`
 
-其中 `required_domain_surfaces` 当前固定为：
+其中 `required_domain_surfaces` 现在按 source workspace 上下文 fail-closed：
 
 - `summarize-workspace`
-- `critique-summary`
 - `stage-route-report`
+
+只有当 source workspace 已经位于：
+
+- `critique`
+- `revision`
+- `frozen`
+
+这些 review context 之一时，才额外要求：
+
+- `critique-summary`
 
 并且都统一声明为：
 
@@ -66,12 +77,13 @@ Date: `2026-04-12`
 - future Hermes-side collaborator 如果要做 critique，不应绕开 grant domain truth
 - 应先通过现有 service-safe domain surfaces 读取：
   - workspace summary
-  - critique summary
   - route / checkpoint snapshot
+- 如果 source workspace 已经带 review context，再继续读取：
+  - critique summary
 - 并继续保留：
   - `grant_run_id`
   - `workspace_id`
-  - `draft_id`
+  - 如果 source stage 已经进入 draft-bearing context，则继续保留 `draft_id`
 
 它不是在宣称：
 
@@ -101,7 +113,23 @@ Date: `2026-04-12`
 - `route_id = critique`
 - `route_status = pending`
 - `handoff_contract_kind = handoff-required`
-- 同一份 `handoff_requirements`
+- 同一份 review-context critique handoff contract
+
+另外当前还额外证明：
+
+- `drafting -> critique`
+
+这条推荐路径仍会带：
+
+- `route_id = critique`
+- `route_status = pending`
+- `handoff_contract_kind = handoff-required`
+
+但它不会错误要求：
+
+- `critique-summary`
+
+因为当前 workspace 还没有 active critique。
 
 ## What Did Not Change
 
@@ -126,7 +154,8 @@ Date: `2026-04-12`
 - `critique` current-stage route 会带 `handoff_requirements`
 - `product entry` route catalog 里的 `critique` 也会带同一份 `handoff_requirements`
 - `revision(completed revised switch) -> critique` 的 `recommended_executor_route` 也会带同一份 `handoff_requirements`
-- handoff 要求会固定列出：
+- `drafting -> critique` 的 `recommended_executor_route` 不再错误要求 `critique-summary`
+- review-context handoff 仍会列出：
   - `summarize-workspace`
   - `critique-summary`
   - `stage-route-report`
