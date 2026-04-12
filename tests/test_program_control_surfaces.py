@@ -30,6 +30,9 @@ HERMES_PROGRAM_TRUTH = (
 HERMES_MIGRATION_MAP = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md"
 )
+P4A_PRODUCT_PROJECTION_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md"
+)
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
 RUNTIME_STATE_ROOT = "$CODEX_HOME/projects/med-autogrant/runtime-state/"
@@ -51,10 +54,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["runtime_owner"]["current_owner_line"],
             "CLI-first with real upstream Hermes-Agent runtime substrate",
         )
-        self.assertEqual(contract["runtime_owner"]["active_phase"], "Upstream Hermes-Agent Fast Cutover")
+        self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             contract["runtime_owner"]["active_tranche"],
-            "Real Hermes substrate / service-safe domain entry / fresh proof",
+            "P4.A direct grant progress / cockpit projection",
         )
         self.assertEqual(
             contract["runtime_owner"]["historical_baseline"],
@@ -74,6 +77,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertIn(
             "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertIn(
+            "docs/specs/2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
@@ -106,15 +113,18 @@ class ProgramControlSurfaceTest(unittest.TestCase):
 
         project = _read(CORE_PROJECT)
         self.assertIn("CLI-first with real upstream Hermes-Agent runtime substrate", project)
+        self.assertIn("P4.A", project)
 
         decisions = _read(CORE_DECISIONS)
         self.assertIn("上游 Hermes-Agent 目标", decisions)
+        self.assertIn("grant-progress", decisions)
 
     def test_current_truth_specs_align_with_repo_tracked_contract(self) -> None:
         contract = json.loads(_read(CURRENT_PROGRAM_CONTRACT))
         fast_cutover = _read(FAST_CUTOVER_CURRENT_TRUTH)
         truth_reset = _read(TRUTH_RESET_CURRENT_TRUTH)
         migration_map = _read(HERMES_MIGRATION_MAP)
+        p4a_product_projection = _read(P4A_PRODUCT_PROJECTION_CURRENT_TRUTH)
         formal_entry = _read(FORMAL_ENTRY_MATRIX)
         durability = _read(DURABILITY_MODEL)
 
@@ -131,6 +141,9 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("current-program pointer", truth_reset)
         self.assertIn("contracts/runtime-program/current-program.json", migration_map)
         self.assertIn("build-hosted-contract-bundle", migration_map)
+        self.assertIn("grant-progress", p4a_product_projection)
+        self.assertIn("grant-cockpit", p4a_product_projection)
+        self.assertIn("controller-owned", p4a_product_projection)
         self.assertIn("contracts/runtime-program/current-program.json", formal_entry)
         self.assertIn("contracts/runtime-program/current-program.json", durability)
         self.assertIn(RUNTIME_STATE_ROOT, durability)

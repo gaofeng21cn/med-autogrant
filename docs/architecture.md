@@ -4,7 +4,7 @@
 
 当前主链路是 `CLI-first + real upstream Hermes-Agent runtime substrate`：
 
-`operator / agent / future gateway caller -> CLI or MedAutoGrantDomainEntry -> upstream Hermes session substrate -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
+`operator / agent / direct product projection / future gateway caller -> CLI or MedAutoGrantDomainEntry -> upstream Hermes session substrate -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
 
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 
@@ -19,7 +19,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `product entry`
   - 给最终用户直接进入的产品入口
 
-当前真实状态是：前两层已经存在，第三层的轻量结构化 shell 也已经 landed，但成熟用户级前台仍未落地。
+当前真实状态是：前两层已经存在，第三层的轻量结构化 shell 与第一棒 read-only product projection 也已经 landed，但成熟用户级前台仍未落地。
 
 目标中的 domain 级链路应是：
 
@@ -73,9 +73,10 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 ## 入口与执行
 
-- CLI 仍是唯一 formal entry：`validate-workspace`、`summarize-workspace`、`next-step`、`critique-summary`、`stage-route-report`。
+- CLI 仍是唯一 formal entry：`validate-workspace`、`summarize-workspace`、`next-step`、`critique-summary`、`stage-route-report`、`grant-progress`、`grant-cockpit`。
 - `src/med_autogrant/domain_entry.py` 现在提供结构化 `MedAutoGrantDomainEntry`，把 CLI 与 future gateway caller 收口到同一条 service-safe command contract。
 - `src/med_autogrant/product_entry.py` 现在提供 `MedAutoGrantProductEntry`；`build-product-entry` 通过 `MedAutoGrantDomainEntry` 复用已 landed 的 route / summary / runtime contract，统一生成 `direct` 与 `opl-handoff` 共用的 shared envelope，并显式导出 `executor_routing_contract`。
+- `MedAutoGrantProductEntry` 现在还提供 `grant-progress` 与 `grant-cockpit`：它们是 controller-owned、read-only 的 product projection，复用 `summarize-workspace`、`stage-route-report`、`critique-summary` 与 `build-product-entry` contract 信息，但故意不进入 `domain_entry_contract.supported_commands`。
 - `build-product-entry.product_entry` 与 `run-local.stage_action_envelope.executor_routing_contract` 现在都已经收口成 schema-backed contract：前者对应 `schemas/v1/product-entry.schema.json`，后者对应 `schemas/v1/executor-routing-contract.schema.json`，并且两者都会在生成时 fail-closed。
 - `build-product-entry.product_entry.return_surface_contract.domain_entry_contract` 现在会与 hosted bundle 共享同一份 command catalog，并显式固定 `supported_commands` 与每个 command 的 `command_contracts`。
 - `src/med_autogrant/upstream_hermes.py` 负责真实 upstream 依赖探测、runtime root 决议与基于 `hermes_state.SessionDB` 的 attempt ledger。
@@ -86,6 +87,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `execute-revision-pass`、`build-artifact-bundle`、`build-final-package`、`build-hosted-contract-bundle` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
 - `build-hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 hosted contract catalog。
 - 当前 external caller 只需要读取 `domain_entry_contract.supported_commands` 与 `domain_entry_contract.command_contracts`，就能按统一 contract 构造 request，而不需要 repo-local helper。
+- 当前 direct-product projection caller 则可以读取 `grant-progress / grant-cockpit` 的只读投影结果，先看当前 grant 主线、blocker 与 direct / `OPL` entry command catalog，再决定是否进入真正的 domain entry / product entry 调用。
 - `build-hosted-contract-bundle.hosted_contract_bundle` 现在也受 `schemas/v1/hosted-contract-bundle.schema.json` 约束，并在写出前执行 schema + 冻结 truth 的 fail-closed 校验。
 - 当前 author-side executor routing 继续按 route 单独冻结：`revision / artifact_bundle / final_package / hosted_contract_bundle` 已有 landed service-safe command surface，而所有非落地 stage 都只允许输出 `pending / handoff-required`。
 - `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / frozen` 现在都会额外导出 route-specific `handoff_requirements`，并且只引用 `summarize-workspace / stage-route-report / critique-summary` 这些已存在的 domain surfaces。
@@ -103,6 +105,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 - `contracts/runtime-program/current-program.json` 是 repo-tracked current-program pointer。
 - 机器本地 runtime state 统一下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`，用于 session / log / report / prompt 等非仓库真相面状态。
+- `grant-progress / grant-cockpit` 当前属于 controller-owned / read-only product projection；它们不替代 durable truth surface，也不构成新的 service-safe domain entry contract。
 - `run-local / resume-local` 的默认 local run journal 落点固定为 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`；显式 `--journal` 仍可覆盖该默认值。
 - Hermes substrate state db 默认落在 `$CODEX_HOME/projects/med-autogrant/runtime-state/hermes/state.db`；如需显式隔离，可通过 `MED_AUTOGRANT_HERMES_HOME` 覆盖。
 - 旧 local host-agent runtime 只保留为 compatibility bridge / regression oracle，不再作为长期产品 runtime owner。

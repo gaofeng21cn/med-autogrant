@@ -48,6 +48,18 @@ def build_parser() -> argparse.ArgumentParser:
         handle_stage_route_report,
         "按固定 stage route 聚合输出当前 workspace 状态。",
     )
+    _add_workspace_command(
+        subparsers,
+        "grant-progress",
+        handle_grant_progress,
+        "输出 grant 当前阶段的人话 progress projection。",
+    )
+    _add_workspace_command(
+        subparsers,
+        "grant-cockpit",
+        handle_grant_cockpit,
+        "输出 grant 当前的只读 cockpit projection。",
+    )
     _add_simple_command(
         subparsers,
         "probe-upstream-hermes",
@@ -162,6 +174,14 @@ def handle_critique_summary(args: argparse.Namespace) -> dict[str, Any]:
 
 def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "stage-route-report", "input_path": args.input})
+
+
+def handle_grant_progress(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().read_grant_progress(input_path=args.input)
+
+
+def handle_grant_cockpit(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().read_grant_cockpit(input_path=args.input)
 
 
 def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
@@ -433,6 +453,37 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"recommended_stage: {payload['route']['next_step']['recommended_stage']}",
             f"critique_verdict: {critique_verdict}",
         ]
+        return "\n".join(lines)
+
+    if command == "grant-progress":
+        projection = payload["progress_projection"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"checkpoint_status: {projection['checkpoint_status']}",
+            f"recommended_next_stage: {projection['recommended_next_stage']}",
+            f"current_stage_summary: {projection['current_stage_summary']}",
+            f"next_system_action: {projection['next_system_action']}",
+        ]
+        for item in projection["current_blockers"]:
+            lines.append(f"- blocker: {item}")
+        return "\n".join(lines)
+
+    if command == "grant-cockpit":
+        cockpit = payload["grant_cockpit"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"workspace_status: {cockpit['workspace_status']}",
+        ]
+        for item in cockpit["workspace_alerts"]:
+            lines.append(f"- alert: {item}")
+        for name, command_line in cockpit["commands"].items():
+            lines.append(f"- {name}: {command_line}")
         return "\n".join(lines)
 
     if command == "probe-upstream-hermes":

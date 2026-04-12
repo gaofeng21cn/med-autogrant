@@ -6,7 +6,7 @@ This index is the default documentation surface for `Med Auto Grant`.
 Start with the core skeleton, then use specs/plans/history for deeper provenance.
 The current public runtime topology is: `CLI-first + real upstream Hermes-Agent runtime substrate`. `MCP` remains the supported protocol layer and `controller` remains the internal surface.
 Repo-tracked current-program truth lives at `contracts/runtime-program/current-program.json`, while machine-local runtime state lives under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
-The current entry truth is also explicit: `operator entry` and `agent entry` are real today, and the lightweight grant `product entry` shell is now landed. Its shared envelope and routing surfaces are also frozen as schema-backed contract surfaces, while a richer grant-facing product experience still remains future work.
+The current entry truth is also explicit: `operator entry` and `agent entry` are real today, and the lightweight grant `product entry` shell is now landed. Its shared envelope and routing surfaces are also frozen as schema-backed contract surfaces. The first honest `P4.A` direct-product projection is now also landed through `grant-progress` and `grant-cockpit`, while a richer grant-facing product experience still remains future work.
 The hosted-friendly contract bundle now also ships a machine-readable catalog through `domain_entry_contract`, `schema_contract`, and `authoring_contract`, so future hosted / `OPL` callers can consume the same frozen entry, schema, and route truth.
 That shared `domain_entry_contract` now also exposes `supported_commands` and `command_contracts`, and the hosted caller consumption proof is now landed.
 
@@ -42,6 +42,7 @@ That shared `domain_entry_contract` now also exposes `supported_commands` and `c
 - [Hosted caller consumption proof current truth](./specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md) (Chinese only)
 - [OPL-aligned ideal target and phase map current truth](./specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md) (Chinese only)
 - [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md) (Chinese only)
+- [P4.A direct grant cockpit and progress projection current truth](./specs/2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md) (Chinese only)
 - [Pending authoring route handoff matrix current truth](./specs/2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md) (Chinese only)
 - [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
 - [Upstream Hermes-Agent fast cutover board](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md) (Chinese only)
@@ -59,6 +60,7 @@ Specs are repo-tracked and authoritative for activation packages and current tru
 - Current repo-verified migration baseline: the absorbed `CLI-first + host-agent runtime` line now closes at the `R5.A` honest upper bound and is retained only as a migration baseline / compatibility bridge / regression oracle.
 - Current executable runtime mainline: `CLI-first` runtime on real upstream Hermes substrate, with repo-side domain/entry adapters preserving Med Auto Grant semantics.
 - Product-entry shell: the lightweight grant `product entry` shell is now landed through `build-product-entry`, reusable both directly and through `OPL` handoff.
+- Direct-product projection: `grant-progress` and `grant-cockpit` are now landed as controller-owned, read-only product projections. They consume existing route/audit truth and `build-product-entry` contract hints, but they are intentionally not new `domain_entry_contract` executor commands.
 - Schema-backed contract closeout: the landed `product entry` shell, `executor_routing_contract`, `pending_handoff_requirements`, and service-safe route surfaces are now indexed under `schemas/v1/` and validated fail-closed at generation time.
 - Hosted contract bundle closeout: `build-hosted-contract-bundle` now exports `domain_entry_contract`, `schema_contract`, and `authoring_contract` alongside the existing runtime/state/operator surfaces, and the whole bundle is validated through `hosted-contract-bundle.schema.json`.
 - Hosted caller proof closeout: external caller consumption is now repo-verified through the shared `domain_entry_contract`, including `supported_commands` and `command_contracts`, without repo-local helper code.

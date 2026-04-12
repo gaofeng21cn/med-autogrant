@@ -47,6 +47,9 @@ HOSTED_CALLER_CONSUMPTION_PROOF_CURRENT_TRUTH = (
 IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md"
 )
+P4A_PRODUCT_PROJECTION_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md"
+)
 IDEAL_TARGET_EXECUTION_PLAN = (
     REPO_ROOT / "docs" / "plans" / "2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md"
 )
@@ -113,6 +116,30 @@ def test_readme_current_maturity_cards_follow_truth_reset_status() -> None:
 
 
 @pytest.mark.meta
+def test_core_docs_publish_p4a_direct_product_projection_boundary() -> None:
+    for path in (
+        README_EN,
+        README_ZH,
+        DOCS_README_EN,
+        DOCS_README_ZH,
+        CORE_PROJECT,
+        CORE_ARCHITECTURE,
+        CORE_STATUS,
+    ):
+        text = _read(path)
+        assert "grant-progress" in text
+        assert "grant-cockpit" in text
+
+    architecture = _read(CORE_ARCHITECTURE)
+    assert "controller-owned" in architecture
+    assert "supported_commands" in architecture
+
+    status = _read(CORE_STATUS)
+    assert "P4.A" in status
+    assert "read-only" in status
+
+
+@pytest.mark.meta
 def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert FAST_CUTOVER_CURRENT_TRUTH.exists(), f"Fast cutover current truth 不存在: {FAST_CUTOVER_CURRENT_TRUTH}"
     assert TRUTH_RESET_CURRENT_TRUTH.exists(), f"Truth reset current truth 不存在: {TRUTH_RESET_CURRENT_TRUTH}"
@@ -133,6 +160,9 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH.exists(), (
         f"Ideal target phase map current truth 不存在: {IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH}"
     )
+    assert P4A_PRODUCT_PROJECTION_CURRENT_TRUTH.exists(), (
+        f"P4.A product projection current truth 不存在: {P4A_PRODUCT_PROJECTION_CURRENT_TRUTH}"
+    )
     assert IDEAL_TARGET_EXECUTION_PLAN.exists(), f"Ideal target execution plan 不存在: {IDEAL_TARGET_EXECUTION_PLAN}"
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
@@ -146,6 +176,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     hosted_contract_bundle_truth = _read(HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH)
     hosted_caller_consumption_truth = _read(HOSTED_CALLER_CONSUMPTION_PROOF_CURRENT_TRUTH)
     ideal_target_phase_map_truth = _read(IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH)
+    p4a_product_projection_truth = _read(P4A_PRODUCT_PROJECTION_CURRENT_TRUTH)
     ideal_target_execution_plan = _read(IDEAL_TARGET_EXECUTION_PLAN)
     program_truth = _read(HERMES_PROGRAM_TRUTH)
     migration_map = _read(HERMES_MIGRATION_MAP)
@@ -252,6 +283,18 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "P4" in ideal_target_phase_map_truth
     assert "P3" in ideal_target_phase_map_truth and "completed" in ideal_target_phase_map_truth
     assert "next" in ideal_target_phase_map_truth.lower()
+    assert "P4.A" in ideal_target_phase_map_truth
+
+    assert "grant-progress" in p4a_product_projection_truth
+    assert "grant-cockpit" in p4a_product_projection_truth
+    assert "controller-owned" in p4a_product_projection_truth
+    assert "read-only" in p4a_product_projection_truth
+    assert "summarize-workspace" in p4a_product_projection_truth
+    assert "stage-route-report" in p4a_product_projection_truth
+    assert "critique-summary" in p4a_product_projection_truth
+    assert "build-product-entry" in p4a_product_projection_truth
+    assert "supported_commands" in p4a_product_projection_truth
+    assert "没有被写进 `domain_entry_contract.supported_commands`" in p4a_product_projection_truth
 
     assert "# Med Auto Grant OPL-Aligned Target Shape And Hosted Caller Plan" in ideal_target_execution_plan
     assert "Goal:" in ideal_target_execution_plan

@@ -86,6 +86,12 @@
 - 理由：如果 external caller 还要回头读仓内 helper 或手写参数拼装逻辑，那么 `P3` 其实并没有完成，合同也还不算真正 machine-readable。
 - 影响：`product_entry.return_surface_contract.domain_entry_contract` 与 hosted bundle 的 `domain_entry_contract` 现在共享同一份 command catalog；`P3` 可以诚实标成 completed，而 `P4` 成为下一个 honest phase。
 
+## 2026-04-12：`P4.A` 只落 controller-owned / read-only direct product projection
+
+- 决策：`grant-progress` 与 `grant-cockpit` 当前只作为 controller-owned、read-only 的 direct grant product projection 落地，不进入 `domain_entry_contract.supported_commands`，也不被写成新的 service-safe executor surface。
+- 理由：`P4` 的第一棒需要先给 direct user / operator / future caller 一个稳定的人话 projection，但如果把这两条 surface 混进 domain entry command catalog，就会再次把 product projection、domain execution 与 hosted caller contract 语义搅在一起。
+- 影响：当前 direct-product projection 只允许读取 `summarize-workspace`、`stage-route-report`、`critique-summary` 与 `build-product-entry` 的既有合同信息；它们不改写 route owner，不新增 repo-local hosted helper，也不等于成熟前台 / hosted runtime。
+
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。

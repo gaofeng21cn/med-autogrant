@@ -102,7 +102,27 @@
 - `P3 hosted caller / OPL consumption proof`：next
 - `P4 mature direct grant product entry`：future
 
-因此，board 完成后的正确下一棒不是继续深磨 repo-local runtime，也不是直接把 `OPL Gateway` / hosted runtime 写成 landed，而是沿 `P3` 证明 external caller 可以直接消费已冻结的 bundle / entry / route contracts。
+因此，board 完成后的正确下一棒已经不再是继续深磨 repo-local runtime，也不是直接把 `OPL Gateway` / hosted runtime 写成 landed。
+
+当前已完成的下一棒是：
+
+- `P3 hosted caller / OPL consumption proof`
+
+而当前继续前进的 honest 落点是：
+
+- `P4.A direct grant progress / cockpit projection`
+
+这条 `P4.A` 的定位必须固定为：
+
+- controller-owned
+- read-only
+- product-facing direct projection
+
+而不是：
+
+- 新的 service-safe domain entry executor
+- repo-local hosted helper
+- mature Web UI / hosted runtime
 
 ## 默认验证
 

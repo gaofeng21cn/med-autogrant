@@ -357,6 +357,72 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             funding_call=None,
         )
 
+    def test_grant_progress_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "grant-progress",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "critique",
+            "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            "progress_projection": {
+                "projection_kind": "grant_progress",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.read_grant_progress.return_value = expected_payload
+
+            exit_code, stdout, stderr = self.run_cli(
+                "grant-progress",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.read_grant_progress.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
+    def test_grant_cockpit_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "grant-cockpit",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "critique",
+            "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            "grant_cockpit": {
+                "cockpit_kind": "grant_cockpit",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.read_grant_cockpit.return_value = expected_payload
+
+            exit_code, stdout, stderr = self.run_cli(
+                "grant-cockpit",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.read_grant_cockpit.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
 
 class ProductEntryEnvelopeTest(unittest.TestCase):
     def test_product_entry_builds_shared_envelope_for_direct_and_opl_handoff(self) -> None:
@@ -599,13 +665,147 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                     "route_status": "pending",
                 },
             },
-        ):
-            with self.assertRaises(WorkspaceStateError):
-                MedAutoGrantProductEntry().build(
-                    input_path=str(CRITIQUE_EXAMPLE_PATH),
-                    entry_mode="direct",
-                    task_intent="tighten-grant-mainline",
-                )
+            ):
+                with self.assertRaises(WorkspaceStateError):
+                    MedAutoGrantProductEntry().build(
+                        input_path=str(CRITIQUE_EXAMPLE_PATH),
+                        entry_mode="direct",
+                        task_intent="tighten-grant-mainline",
+                    )
+
+    def test_grant_progress_projects_critique_stage_for_direct_entry(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().read_grant_progress(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
+        self.assertEqual(payload["command"], "grant-progress")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["draft_id"], "draft-v1")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["input_path"], str(CRITIQUE_EXAMPLE_PATH.resolve()))
+        self.assertEqual(
+            payload["progress_projection"],
+            {
+                "projection_version": 1,
+                "projection_kind": "grant_progress",
+                "workspace_surface_kind": "nsfc_workspace",
+                "current_stage": "critique",
+                "current_stage_summary": "当前 grant 已进入 critique 阶段；导师批注 verdict=major_revision，应先执行结构化修订。",
+                "checkpoint_status": "forward_progress",
+                "recommended_next_stage": "revision",
+                "current_blockers": [
+                    "必要性表述仍略偏现象描述。",
+                ],
+                "next_system_action": "执行 revision plan 中的 P0/P1 项。",
+                "needs_author_decision": False,
+                "author_decision_summary": None,
+                "focus": {
+                    "applicant_name": "示例申请人",
+                    "funding_program": "nsfc-2026-general",
+                    "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
+                    "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
+                    "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
+                    "critique_verdict": "major_revision",
+                },
+                "product_entry_surface": {
+                    "builder_command": "build-product-entry",
+                    "target_domain_id": "med-autogrant",
+                    "supported_entry_modes": ["direct", "opl-handoff"],
+                    "task_intent_required": True,
+                    "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                },
+            },
+        )
+
+    def test_grant_progress_projects_frozen_stage_without_blockers(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().read_grant_progress(
+            input_path=str(FROZEN_EXAMPLE_PATH),
+        )
+
+        self.assertEqual(payload["lifecycle_stage"], "frozen")
+        self.assertEqual(
+            payload["progress_projection"],
+            {
+                "projection_version": 1,
+                "projection_kind": "grant_progress",
+                "workspace_surface_kind": "nsfc_workspace",
+                "current_stage": "frozen",
+                "current_stage_summary": "当前 grant 已进入 frozen 阶段；送审前冻结 gate 已闭合，可保持当前阶段继续推进。",
+                "checkpoint_status": "submission_frozen",
+                "recommended_next_stage": "frozen",
+                "current_blockers": [],
+                "next_system_action": "沿当前阶段继续执行主线任务。",
+                "needs_author_decision": False,
+                "author_decision_summary": None,
+                "focus": {
+                    "applicant_name": "示例申请人",
+                    "funding_program": "nsfc-2026-general",
+                    "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
+                    "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
+                    "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
+                    "critique_verdict": "ready_for_submission",
+                },
+                "product_entry_surface": {
+                    "builder_command": "build-product-entry",
+                    "target_domain_id": "med-autogrant",
+                    "supported_entry_modes": ["direct", "opl-handoff"],
+                    "task_intent_required": True,
+                    "workspace_path": str(FROZEN_EXAMPLE_PATH.resolve()),
+                },
+            },
+        )
+
+    def test_grant_cockpit_packages_progress_alerts_and_entry_commands(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().read_grant_cockpit(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
+        self.assertEqual(payload["command"], "grant-cockpit")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["draft_id"], "draft-v1")
+        self.assertEqual(
+            payload["grant_cockpit"]["workspace_overview"],
+            {
+                "applicant_name": "示例申请人",
+                "funding_program": "nsfc-2026-general",
+                "lifecycle_stage": "critique",
+                "checkpoint_status": "forward_progress",
+                "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
+                "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
+                "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
+                "critique_verdict": "major_revision",
+            },
+        )
+        self.assertEqual(payload["grant_cockpit"]["workspace_status"], "attention_required")
+        self.assertEqual(
+            payload["grant_cockpit"]["workspace_alerts"],
+            [
+                "必要性表述仍略偏现象描述。",
+            ],
+        )
+        self.assertEqual(
+            payload["grant_cockpit"]["progress_projection"]["projection_kind"],
+            "grant_progress",
+        )
+        self.assertEqual(
+            payload["grant_cockpit"]["commands"],
+            {
+                "grant_progress": f"uv run python -m med_autogrant grant-progress --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+                "summarize_workspace": f"uv run python -m med_autogrant summarize-workspace --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+                "stage_route_report": f"uv run python -m med_autogrant stage-route-report --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+                "critique_summary": f"uv run python -m med_autogrant critique-summary --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+                "build_direct_entry": f"uv run python -m med_autogrant build-product-entry --input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode direct --task-intent <describe-task-intent> --format json",
+                "build_opl_handoff": f"uv run python -m med_autogrant build-product-entry --input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
+            },
+        )
 
 
 if __name__ == "__main__":

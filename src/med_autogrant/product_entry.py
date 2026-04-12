@@ -23,6 +23,10 @@ PRODUCT_ENTRY_VERSION = 1
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
 TARGET_DOMAIN_ID = "med-autogrant"
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
+GRANT_PROGRESS_PROJECTION_VERSION = 1
+GRANT_PROGRESS_PROJECTION_KIND = "grant_progress"
+GRANT_COCKPIT_KIND = "grant_cockpit"
+REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 
 
 class MedAutoGrantProductEntry:
@@ -187,6 +191,182 @@ class MedAutoGrantProductEntry:
             "product_entry": product_entry,
         }
 
+    def read_grant_progress(
+        self,
+        *,
+        input_path: str | Path,
+    ) -> dict[str, Any]:
+        context = self._load_projection_context(input_path=input_path)
+        route_report = context["route_report"]
+        workspace_summary = context["workspace_summary"]
+        critique_summary = context["critique_summary"]
+        resolved_input_path = context["resolved_input_path"]
+
+        verification_checkpoint = _require_mapping(
+            route_report,
+            "verification_checkpoint",
+            context="stage-route-report",
+        )
+        identity = _require_mapping(
+            verification_checkpoint,
+            "identity",
+            context="stage-route-report.verification_checkpoint",
+        )
+        route = _require_mapping(route_report, "route", context="stage-route-report")
+        next_step = _require_mapping(route, "next_step", context="stage-route-report.route")
+
+        grant_run_id = _require_nonempty_string_from_mapping(
+            route_report,
+            "grant_run_id",
+            context="stage-route-report",
+        )
+        workspace_id = _require_nonempty_string_from_mapping(
+            route_report,
+            "workspace_id",
+            context="stage-route-report",
+        )
+        lifecycle_stage = _require_nonempty_string_from_mapping(
+            route_report,
+            "lifecycle_stage",
+            context="stage-route-report",
+        )
+        draft_id = _require_optional_string(identity.get("draft_id"), field_name="draft_id")
+        checkpoint_status = _require_nonempty_string_from_mapping(
+            verification_checkpoint,
+            "checkpoint_status",
+            context="stage-route-report.verification_checkpoint",
+        )
+        recommended_next_stage = _require_nonempty_string_from_mapping(
+            next_step,
+            "recommended_stage",
+            context="stage-route-report.route.next_step",
+        )
+        progress_projection = {
+            "projection_version": GRANT_PROGRESS_PROJECTION_VERSION,
+            "projection_kind": GRANT_PROGRESS_PROJECTION_KIND,
+            "workspace_surface_kind": "nsfc_workspace",
+            "current_stage": lifecycle_stage,
+            "current_stage_summary": _build_current_stage_summary(
+                lifecycle_stage=lifecycle_stage,
+                checkpoint_status=checkpoint_status,
+                next_step=next_step,
+            ),
+            "checkpoint_status": checkpoint_status,
+            "recommended_next_stage": recommended_next_stage,
+            "current_blockers": _read_blocking_issues(critique_summary),
+            "next_system_action": _read_next_system_action(next_step),
+            "needs_author_decision": bool(next_step.get("requires_human_confirmation")),
+            "author_decision_summary": _build_author_decision_summary(next_step),
+            "focus": _build_focus_payload(
+                workspace_summary=workspace_summary,
+                critique_summary=critique_summary,
+            ),
+            "product_entry_surface": {
+                "builder_command": "build-product-entry",
+                "target_domain_id": TARGET_DOMAIN_ID,
+                "supported_entry_modes": list(SUPPORTED_ENTRY_MODES),
+                "task_intent_required": True,
+                "workspace_path": str(resolved_input_path),
+            },
+        }
+        return {
+            "ok": True,
+            "command": "grant-progress",
+            "grant_run_id": grant_run_id,
+            "workspace_id": workspace_id,
+            "draft_id": draft_id,
+            "lifecycle_stage": lifecycle_stage,
+            "input_path": str(resolved_input_path),
+            "progress_projection": progress_projection,
+        }
+
+    def read_grant_cockpit(
+        self,
+        *,
+        input_path: str | Path,
+    ) -> dict[str, Any]:
+        progress_payload = self.read_grant_progress(input_path=input_path)
+        progress_projection = _require_mapping(
+            progress_payload,
+            "progress_projection",
+            context="grant-progress",
+        )
+        resolved_input_path = Path(progress_payload["input_path"]).expanduser().resolve()
+        context = self._load_projection_context(input_path=resolved_input_path)
+        workspace_summary = context["workspace_summary"]
+        critique_summary = context["critique_summary"]
+
+        blocking_issues = list(progress_projection.get("current_blockers", []))
+        needs_author_decision = bool(progress_projection.get("needs_author_decision"))
+        workspace_status = _build_workspace_status(
+            blockers=blocking_issues,
+            needs_author_decision=needs_author_decision,
+        )
+        workspace_alerts = list(blocking_issues)
+        author_decision_summary = progress_projection.get("author_decision_summary")
+        if isinstance(author_decision_summary, str) and author_decision_summary.strip():
+            workspace_alerts.append(author_decision_summary.strip())
+
+        return {
+            "ok": True,
+            "command": "grant-cockpit",
+            "grant_run_id": progress_payload["grant_run_id"],
+            "workspace_id": progress_payload["workspace_id"],
+            "draft_id": progress_payload["draft_id"],
+            "lifecycle_stage": progress_payload["lifecycle_stage"],
+            "input_path": str(resolved_input_path),
+            "grant_cockpit": {
+                "cockpit_kind": GRANT_COCKPIT_KIND,
+                "workspace_overview": _build_workspace_overview(
+                    workspace_summary=workspace_summary,
+                    progress_projection=progress_projection,
+                    critique_summary=critique_summary,
+                ),
+                "workspace_status": workspace_status,
+                "workspace_alerts": workspace_alerts,
+                "progress_projection": dict(progress_projection),
+                "commands": _build_product_command_catalog(resolved_input_path),
+            },
+        }
+
+    def _load_projection_context(
+        self,
+        *,
+        input_path: str | Path,
+    ) -> dict[str, Any]:
+        resolved_input_path = Path(input_path).expanduser().resolve()
+        route_report = self._domain_entry.dispatch(
+            {
+                "command": "stage-route-report",
+                "input_path": str(resolved_input_path),
+            }
+        )
+        workspace_summary = self._domain_entry.dispatch(
+            {
+                "command": "summarize-workspace",
+                "input_path": str(resolved_input_path),
+            }
+        )
+        lifecycle_stage = _require_nonempty_string_from_mapping(
+            route_report,
+            "lifecycle_stage",
+            context="stage-route-report",
+        )
+        critique_summary = None
+        if lifecycle_stage in REVIEW_CONTEXT_STAGES:
+            critique_summary = self._domain_entry.dispatch(
+                {
+                    "command": "critique-summary",
+                    "input_path": str(resolved_input_path),
+                }
+            )
+        return {
+            "resolved_input_path": resolved_input_path,
+            "route_report": route_report,
+            "workspace_summary": workspace_summary,
+            "critique_summary": critique_summary,
+        }
+
 
 def _read_funding_call_from_summary(summary: Mapping[str, Any]) -> str:
     intake_snapshot = _require_mapping(summary, "intake_snapshot", context="summarize-workspace")
@@ -235,9 +415,175 @@ def _require_optional_string(value: Any, *, field_name: str) -> str | None:
     return _require_nonempty_string(value, field_name=field_name)
 
 
+def _optional_mapping(payload: Mapping[str, Any], field_name: str) -> Mapping[str, Any] | None:
+    value = payload.get(field_name)
+    if value is None:
+        return None
+    if not isinstance(value, Mapping):
+        raise WorkspaceStateError(f"product entry 缺少合法字段: {field_name}")
+    return value
+
+
+def _optional_string_from_mapping(payload: Mapping[str, Any] | None, field_name: str) -> str | None:
+    if not isinstance(payload, Mapping):
+        return None
+    value = payload.get(field_name)
+    if value is None:
+        return None
+    return _require_nonempty_string(value, field_name=field_name)
+
+
 def _write_product_entry_output(output_path: Path, product_entry: dict[str, Any]) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         output_path.write_text(json.dumps(product_entry, ensure_ascii=False, indent=2), encoding="utf-8")
     except OSError as exc:
         raise WorkspaceFileError(f"写入 product entry 输出失败: {output_path}") from exc
+
+
+def _read_blocking_issues(critique_summary: Mapping[str, Any] | None) -> list[str]:
+    if not isinstance(critique_summary, Mapping):
+        return []
+    blocking_issues = critique_summary.get("blocking_issues")
+    if not isinstance(blocking_issues, list):
+        return []
+    return [item for item in blocking_issues if isinstance(item, str) and item.strip()]
+
+
+def _read_next_system_action(next_step: Mapping[str, Any]) -> str:
+    actions = next_step.get("actions")
+    if isinstance(actions, list):
+        for item in actions:
+            if isinstance(item, str) and item.strip():
+                return item.strip()
+    return _require_nonempty_string_from_mapping(
+        next_step,
+        "reason",
+        context="stage-route-report.route.next_step",
+    )
+
+
+def _build_current_stage_summary(
+    *,
+    lifecycle_stage: str,
+    checkpoint_status: str,
+    next_step: Mapping[str, Any],
+) -> str:
+    if lifecycle_stage == "frozen" and checkpoint_status == "submission_frozen":
+        reason = "送审前冻结 gate 已闭合，可保持当前阶段继续推进。"
+    else:
+        reason = _require_nonempty_string_from_mapping(
+            next_step,
+            "reason",
+            context="stage-route-report.route.next_step",
+        )
+    return f"当前 grant 已进入 {lifecycle_stage} 阶段；{reason}"
+
+
+def _build_author_decision_summary(next_step: Mapping[str, Any]) -> str | None:
+    if not bool(next_step.get("requires_human_confirmation")):
+        return None
+    return _require_nonempty_string_from_mapping(
+        next_step,
+        "reason",
+        context="stage-route-report.route.next_step",
+    )
+
+
+def _build_focus_payload(
+    *,
+    workspace_summary: Mapping[str, Any],
+    critique_summary: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    intake_snapshot = _require_mapping(
+        workspace_summary,
+        "intake_snapshot",
+        context="summarize-workspace",
+    )
+    selected_direction = _optional_mapping(workspace_summary, "selected_direction")
+    selected_question = _optional_mapping(workspace_summary, "selected_question")
+    active_draft = _optional_mapping(workspace_summary, "active_draft")
+    active_critique = _optional_mapping(workspace_summary, "active_critique")
+    critique_verdict = _optional_string_from_mapping(active_critique, "verdict")
+    if isinstance(critique_summary, Mapping):
+        critique_verdict = _optional_string_from_mapping(critique_summary, "verdict") or critique_verdict
+    return {
+        "applicant_name": _require_nonempty_string_from_mapping(
+            intake_snapshot,
+            "applicant_name",
+            context="summarize-workspace.intake_snapshot",
+        ),
+        "funding_program": _require_nonempty_string_from_mapping(
+            intake_snapshot,
+            "funding_program",
+            context="summarize-workspace.intake_snapshot",
+        ),
+        "selected_direction_title": _optional_string_from_mapping(selected_direction, "title"),
+        "selected_question": _optional_string_from_mapping(selected_question, "core_question"),
+        "active_draft_title": _optional_string_from_mapping(active_draft, "project_title"),
+        "critique_verdict": critique_verdict,
+    }
+
+
+def _build_workspace_overview(
+    *,
+    workspace_summary: Mapping[str, Any],
+    progress_projection: Mapping[str, Any],
+    critique_summary: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    focus = _build_focus_payload(
+        workspace_summary=workspace_summary,
+        critique_summary=critique_summary,
+    )
+    return {
+        "applicant_name": focus["applicant_name"],
+        "funding_program": focus["funding_program"],
+        "lifecycle_stage": _require_nonempty_string_from_mapping(
+            progress_projection,
+            "current_stage",
+            context="grant-progress.progress_projection",
+        ),
+        "checkpoint_status": _require_nonempty_string_from_mapping(
+            progress_projection,
+            "checkpoint_status",
+            context="grant-progress.progress_projection",
+        ),
+        "selected_direction_title": focus["selected_direction_title"],
+        "selected_question": focus["selected_question"],
+        "active_draft_title": focus["active_draft_title"],
+        "critique_verdict": focus["critique_verdict"],
+    }
+
+
+def _build_workspace_status(*, blockers: list[str], needs_author_decision: bool) -> str:
+    if blockers or needs_author_decision:
+        return "attention_required"
+    return "on_track"
+
+
+def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
+    resolved_input_path = input_path.expanduser().resolve()
+    return {
+        "grant_progress": (
+            f"uv run python -m med_autogrant grant-progress --input {resolved_input_path} --format json"
+        ),
+        "summarize_workspace": (
+            f"uv run python -m med_autogrant summarize-workspace --input {resolved_input_path} --format json"
+        ),
+        "stage_route_report": (
+            f"uv run python -m med_autogrant stage-route-report --input {resolved_input_path} --format json"
+        ),
+        "critique_summary": (
+            f"uv run python -m med_autogrant critique-summary --input {resolved_input_path} --format json"
+        ),
+        "build_direct_entry": (
+            "uv run python -m med_autogrant build-product-entry "
+            f"--input {resolved_input_path} --entry-mode direct "
+            "--task-intent <describe-task-intent> --format json"
+        ),
+        "build_opl_handoff": (
+            "uv run python -m med_autogrant build-product-entry "
+            f"--input {resolved_input_path} --entry-mode opl-handoff "
+            "--task-intent <describe-task-intent> --format json"
+        ),
+    }

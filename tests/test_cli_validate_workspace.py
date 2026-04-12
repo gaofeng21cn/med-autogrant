@@ -217,6 +217,45 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["current_selection"]["selected_question_id"], "question-immune-fibrosis")
         self.assertIsNone(payload["active_argument_chain"])
 
+    def test_grant_progress_projects_user_facing_stage_summary_for_critique_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-progress",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "grant-progress")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["progress_projection"]["projection_kind"], "grant_progress")
+        self.assertEqual(payload["progress_projection"]["recommended_next_stage"], "revision")
+        self.assertEqual(payload["progress_projection"]["current_blockers"], ["必要性表述仍略偏现象描述。"])
+        self.assertEqual(payload["progress_projection"]["needs_author_decision"], False)
+
+    def test_grant_cockpit_projects_workspace_alerts_and_commands(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-cockpit",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "grant-cockpit")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["grant_cockpit"]["workspace_status"], "attention_required")
+        self.assertIn("必要性表述仍略偏现象描述。", payload["grant_cockpit"]["workspace_alerts"])
+        self.assertIn("build_direct_entry", payload["grant_cockpit"]["commands"])
+
     def test_next_step_routes_each_p2a_stage_forward(self) -> None:
         cases = [
             (INPUT_EXAMPLE_PATH, "input_intake", "direction_screening"),

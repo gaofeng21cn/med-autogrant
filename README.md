@@ -42,7 +42,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - The shared `domain_entry_contract` now also exports `supported_commands` and `command_contracts`, so an external caller can construct requests from the frozen contract catalog without repo-local helper code.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 - Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
-- The ideal target is now explicit: `OPL` remains the family-level top entry, `Hermes-Agent` remains the runtime substrate owner, and `Med Auto Grant` remains the domain truth / authoring owner. The hosted caller / `OPL` consumption proof is now completed, while the mature direct grant product entry remains the next honest phase.
+- The ideal target is now explicit: `OPL` remains the family-level top entry, `Hermes-Agent` remains the runtime substrate owner, and `Med Auto Grant` remains the domain truth / authoring owner. The hosted caller / `OPL` consumption proof is now completed, and the first honest `P4.A` direct-product projection tranche is now landed through `grant-progress` and `grant-cockpit`, while the mature direct grant product entry still remains the next full phase.
 
 ## Entry Modes And Product Boundary
 
@@ -53,6 +53,7 @@ That means:
 - `operator entry`: human/operator commands, workspace preparation, inspection, and explicit gating
 - `agent entry`: `CLI` plus the landed `MedAutoGrantDomainEntry`, called by `Codex` or another host-agent
 - `product entry`: `build-product-entry` now lands the lightweight structured shell for both direct entry and `OPL` handoff, while richer grant-facing product UX still remains future work
+- `product projection`: `grant-progress` and `grant-cockpit` now land the first controller-owned, read-only direct-product projection, but they are intentionally not new `domain_entry_contract` executor commands and do not yet constitute a mature frontend
 
 The target domain-facing shape is:
 
@@ -83,6 +84,7 @@ So the current honest claim is: the Hermes-backed runtime substrate and the ligh
 - `draft_id` is the draft identity carried across critique and revision rather than regenerated per run.
 - `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
+- Current controller-owned read-only product projection surfaces are `grant-progress` and `grant-cockpit`; they only read the durable truth above plus `build-product-entry` contract hints, and they are intentionally separate from `domain_entry_contract.supported_commands`.
 - Current repo-verified runtime entry also includes `probe-upstream-hermes`, `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, `build-hosted-contract-bundle`, and `build-product-entry`; together they cover upstream dependency proof, local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, hosted-friendly contract export, and the shared direct / `OPL` handoff shell.
 - `build-hosted-contract-bundle` now exports a hosted-friendly handoff contract that explicitly carries `runtime_substrate_contract`, `runtime_state_contract`, `operator_contract`, `domain_entry_contract`, `schema_contract`, and `authoring_contract` alongside execution identity, artifact, and audit surfaces.
 - `domain_entry_contract` now also exports `supported_commands` plus per-command `command_contracts`, so an external caller can consume the same catalog from `product_entry` and the hosted bundle.
@@ -113,6 +115,7 @@ Today, the runtime can:
 - aggregate the current authoring route into one machine-readable `stage-route-report`
 - emit `verification_checkpoint` / `checkpoint_status` so the current verification, rollback, and frozen-gate semantics stay on one canonical checkpoint surface
 - expose structured `critique-summary` and `stage-route-report` audit data including verdict, current `RevisionPlan.execution_status`, reviewed revision evidence, rollback / frozen gate state, version labels, and comparison evidence
+- project a direct grant progress / cockpit surface through `grant-progress` and `grant-cockpit`, reusing `summarize-workspace`, `stage-route-report`, `critique-summary`, and `build-product-entry` contract hints without minting new service-safe domain-entry executor commands
 - run one Hermes-backed local main-loop pass through `run-local`, derive a machine-readable `stop_reason`, emit a machine-readable `stage_action_envelope` for `stage_action_required`, write a durable local run journal, mirror attempt durability into upstream `SessionDB`, and re-enter that journal through `resume-local`
 - write the currently selected direction, question, argument chain, fit mapping, outline, and draft sections into a local `artifact_bundle` through `build-artifact-bundle`, while preserving manifest, lineage, version, and `grant_run_id / workspace_id / draft_id` identity
 - execute the frozen section-level deterministic revision contract through `execute-revision-pass` without breaking draft lineage, rollback semantics, or checkpoint boundaries
@@ -190,6 +193,8 @@ uv run python -m med_autogrant summarize-workspace --input examples/nsfc_workspa
 uv run python -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant grant-progress --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant grant-cockpit --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant build-product-entry --input examples/nsfc_workspace_p2c_critique.json --entry-mode direct --task-intent tighten-grant-mainline --format json
 
 # 2. Deterministic local revision pass
@@ -236,6 +241,7 @@ uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TM
 - a machine-readable local final package
 - hosted-friendly session / state / artifact / audit contract bundle export
 - a hosted caller contract proof that lets an external caller consume `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts` without repo-local helper code
+- controller-owned read-only direct-product projections through `grant-progress` and `grant-cockpit`
 - a service-safe structured domain entry for CLI-equivalent runtime calls
 - tests covering runtime and control-surface invariants
 
@@ -243,6 +249,7 @@ uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TM
 
 - Current fast-cutover truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
 - Current lightweight product-entry truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`
+- Current P4.A direct cockpit/progress truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md`
 - Current hosted caller consumption proof: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md`
 - Current truth-reset overview: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
 - Historical local runtime program truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`

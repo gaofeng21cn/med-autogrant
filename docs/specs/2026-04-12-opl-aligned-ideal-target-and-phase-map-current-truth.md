@@ -103,6 +103,30 @@ Date: `2026-04-12`
 
 - `next`
 
+但 `P4` 现在已经有第一棒 landed：
+
+- `P4.A direct grant progress / cockpit projection`
+
+这条 tranche 当前只落：
+
+- controller-owned
+- read-only
+- product-facing direct projection
+
+它不是：
+
+- mature 前台
+- 新的 service-safe domain entry executor
+- actual hosted runtime
+
+也就是说，当前宏观 phase map 继续保持：
+
+- `P4` overall = `next`
+
+而当前更细粒度的 honest 落点已经前进到：
+
+- `P4.A landed`
+
 ## 不在本线内的事
 
 这份理想目标与阶段图不允许偷带：
