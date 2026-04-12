@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-user-loop.schema.json",
+  "title": "Med Auto Grant User Loop",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "phaseMapCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase_id",
+        "phase_name",
+        "status"
+      ],
+      "properties": {
+        "phase_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "phase_name": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "mainlineSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "current_owner_line",
+        "active_phase",
+        "active_tranche",
+        "phase_map",
+        "next_focus",
+        "remaining_gaps"
+      ],
+      "properties": {
+        "current_owner_line": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "active_phase": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "active_tranche": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "phase_map": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/phaseMapCard"
+          }
+        },
+        "next_focus": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "remaining_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "handoffSurfaces": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "$ref": "common.schema.json#/$defs/nonEmptyString"
+      }
+    },
+    "nextAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action_kind",
+        "route_id",
+        "route_status",
+        "summary",
+        "command",
+        "handoff_surfaces"
+      ],
+      "properties": {
+        "action_kind": {
+          "type": "string",
+          "enum": [
+            "execute_landed_route",
+            "prepare_pending_handoff"
+          ]
+        },
+        "route_id": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+        },
+        "route_status": {
+          "type": "string",
+          "enum": [
+            "landed",
+            "pending"
+          ]
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "command": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "handoff_surfaces": {
+          "$ref": "#/$defs/handoffSurfaces"
+        }
+      }
+    },
+    "userLoop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mainline_status",
+        "phase_status_current",
+        "phase_status_next",
+        "open_grant_cockpit",
+        "open_grant_direct_entry",
+        "run_recommended_route",
+        "build_direct_entry",
+        "build_opl_handoff"
+      ],
+      "properties": {
+        "mainline_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "phase_status_current": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "phase_status_next": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "open_grant_cockpit": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "open_grant_direct_entry": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "run_recommended_route": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "build_direct_entry": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "build_opl_handoff": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "grantUserLoop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_version",
+        "entry_kind",
+        "target_domain_id",
+        "workspace_surface_kind",
+        "task_intent",
+        "mainline_snapshot",
+        "grant_direct_entry",
+        "next_action",
+        "user_loop"
+      ],
+      "properties": {
+        "entry_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "entry_kind": {
+          "const": "grant_user_loop"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "task_intent": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "mainline_snapshot": {
+          "$ref": "#/$defs/mainlineSnapshot"
+        },
+        "grant_direct_entry": {
+          "$ref": "grant-direct-entry.schema.json#/$defs/grantDirectEntry"
+        },
+        "next_action": {
+          "$ref": "#/$defs/nextAction"
+        },
+        "user_loop": {
+          "$ref": "#/$defs/userLoop"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "grant_user_loop"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "grant-user-loop"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "lifecycle_stage": {
+      "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_user_loop": {
+      "$ref": "#/$defs/grantUserLoop"
+    }
+  }
+}

@@ -103,6 +103,11 @@
       "status": "frozen"
     },
     {
+      "name": "grant_user_loop_surface",
+      "file": "grant-user-loop.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "hosted_contract_bundle",
       "file": "hosted-contract-bundle.schema.json",
       "status": "frozen"

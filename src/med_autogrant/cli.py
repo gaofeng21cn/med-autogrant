@@ -5,6 +5,7 @@ import json
 import sys
 from typing import Any
 
+from med_autogrant import mainline_status
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.product_entry import MedAutoGrantProductEntry
 from med_autogrant.workspace import (
@@ -60,11 +61,29 @@ def build_parser() -> argparse.ArgumentParser:
         handle_grant_cockpit,
         "输出 grant 当前的只读 cockpit projection。",
     )
+    _add_simple_command(
+        subparsers,
+        "mainline-status",
+        handle_mainline_status,
+        "输出当前 repo 主线阶段、理想目标与 remaining gaps。",
+    )
+    _add_phase_command(
+        subparsers,
+        "mainline-phase",
+        handle_mainline_phase,
+        "输出某个 mainline phase 的当前入口与退出条件。",
+    )
     _add_direct_entry_command(
         subparsers,
         "grant-direct-entry",
         handle_grant_direct_entry,
         "输出 direct grant product entry composition，复用 progress/cockpit 与 direct / OPL entry envelope。",
+    )
+    _add_direct_entry_command(
+        subparsers,
+        "grant-user-loop",
+        handle_grant_user_loop,
+        "输出当前 direct grant user loop，组合 mainline snapshot、direct entry 与 next action。",
     )
     _add_simple_command(
         subparsers,
@@ -190,8 +209,24 @@ def handle_grant_cockpit(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().read_grant_cockpit(input_path=args.input)
 
 
+def handle_mainline_status(args: argparse.Namespace) -> dict[str, Any]:
+    return mainline_status.read_mainline_status()
+
+
+def handle_mainline_phase(args: argparse.Namespace) -> dict[str, Any]:
+    return mainline_status.read_mainline_phase_status(args.phase)
+
+
 def handle_grant_direct_entry(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_grant_direct_entry(
+        input_path=args.input,
+        task_intent=args.task_intent,
+        funding_call=args.funding_call,
+    )
+
+
+def handle_grant_user_loop(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_grant_user_loop(
         input_path=args.input,
         task_intent=args.task_intent,
         funding_call=args.funding_call,
@@ -294,6 +329,18 @@ def _add_simple_command(
     help_text: str,
 ) -> None:
     command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_phase_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--phase", required=True)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -514,6 +561,27 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             lines.append(f"- {name}: {command_line}")
         return "\n".join(lines)
 
+    if command == "mainline-status":
+        lines = [
+            f"program_id: {payload['program_id']}",
+            f"active_phase: {payload['current_runtime_owner']['active_phase']}",
+            f"active_tranche: {payload['current_runtime_owner']['active_tranche']}",
+        ]
+        for item in payload["next_focus"]:
+            lines.append(f"- next_focus: {item}")
+        return "\n".join(lines)
+
+    if command == "mainline-phase":
+        phase = payload["phase"]
+        lines = [
+            f"phase_id: {phase['phase_id']}",
+            f"phase_name: {phase['phase_name']}",
+            f"status: {phase['status']}",
+        ]
+        for item in phase["entry_points"]:
+            lines.append(f"- {item['name']}: {item['command']}")
+        return "\n".join(lines)
+
     if command == "grant-direct-entry":
         direct_entry = payload["grant_direct_entry"]
         lines = [
@@ -527,6 +595,23 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         ]
         for item in direct_entry["workspace_alerts"]:
             lines.append(f"- alert: {item}")
+        return "\n".join(lines)
+
+    if command == "grant-user-loop":
+        user_loop = payload["grant_user_loop"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"active_tranche: {user_loop['mainline_snapshot']['active_tranche']}",
+            f"next_action: {user_loop['next_action']['action_kind']}",
+        ]
+        if user_loop["next_action"]["command"] is not None:
+            lines.append(f"- run_recommended_route: {user_loop['next_action']['command']}")
+        for name, command_line in user_loop["user_loop"].items():
+            if command_line is not None:
+                lines.append(f"- {name}: {command_line}")
         return "\n".join(lines)
 
     if command == "probe-upstream-hermes":

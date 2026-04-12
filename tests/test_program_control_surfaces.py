@@ -36,6 +36,9 @@ P4A_PRODUCT_PROJECTION_CURRENT_TRUTH = (
 P4B_DIRECT_ENTRY_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-p4b-direct-grant-entry-composition-current-truth.md"
 )
+P4C_USER_LOOP_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md"
+)
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
 RUNTIME_STATE_ROOT = "$CODEX_HOME/projects/med-autogrant/runtime-state/"
@@ -60,7 +63,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             contract["runtime_owner"]["active_tranche"],
-            "P4.B direct grant entry composition",
+            "P4.C mainline status and grant user loop",
         )
         self.assertEqual(
             contract["runtime_owner"]["historical_baseline"],
@@ -88,6 +91,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertIn(
             "docs/specs/2026-04-12-p4b-direct-grant-entry-composition-current-truth.md",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertIn(
+            "docs/specs/2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
@@ -126,6 +133,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         decisions = _read(CORE_DECISIONS)
         self.assertIn("上游 Hermes-Agent 目标", decisions)
         self.assertIn("grant-progress", decisions)
+        self.assertIn("grant-user-loop", decisions)
 
     def test_current_truth_specs_align_with_repo_tracked_contract(self) -> None:
         contract = json.loads(_read(CURRENT_PROGRAM_CONTRACT))
@@ -134,6 +142,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         migration_map = _read(HERMES_MIGRATION_MAP)
         p4a_product_projection = _read(P4A_PRODUCT_PROJECTION_CURRENT_TRUTH)
         p4b_direct_entry = _read(P4B_DIRECT_ENTRY_CURRENT_TRUTH)
+        p4c_user_loop = _read(P4C_USER_LOOP_CURRENT_TRUTH)
         formal_entry = _read(FORMAL_ENTRY_MATRIX)
         durability = _read(DURABILITY_MODEL)
 
@@ -166,6 +175,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("build-product-entry", p4b_direct_entry)
         self.assertIn("grant-cockpit", p4b_direct_entry)
         self.assertIn("P4.B", p4b_direct_entry)
+        self.assertIn("mainline-status", p4c_user_loop)
+        self.assertIn("mainline-phase", p4c_user_loop)
+        self.assertIn("grant-user-loop", p4c_user_loop)
+        self.assertIn("P4.C", p4c_user_loop)
 
     def test_core_docs_publish_schema_backed_projection_contract_boundary(self) -> None:
         architecture = _read(CORE_ARCHITECTURE)
@@ -176,12 +189,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("grant-progress.schema.json", architecture)
         self.assertIn("grant-cockpit.schema.json", architecture)
         self.assertIn("grant-direct-entry.schema.json", architecture)
+        self.assertIn("grant-user-loop.schema.json", architecture)
         self.assertIn("schema-backed", status)
         self.assertIn("fail-closed", status)
         self.assertIn("schema-backed", decisions)
         self.assertIn("grant-progress.schema.json", contracts_readme)
         self.assertIn("grant-cockpit.schema.json", contracts_readme)
         self.assertIn("grant-direct-entry.schema.json", contracts_readme)
+        self.assertIn("grant-user-loop.schema.json", contracts_readme)
 
     def test_public_surfaces_no_longer_require_project_runtime_program_directory(self) -> None:
         for path in (README_EN, README_ZH, DOCS_README_EN, DOCS_README_ZH):

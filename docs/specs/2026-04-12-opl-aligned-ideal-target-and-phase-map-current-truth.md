@@ -111,6 +111,10 @@ Date: `2026-04-12`
 
 - `P4.B direct grant entry composition`
 
+同时当前也已经继续落到第三棒：
+
+- `P4.C mainline status and grant user loop`
+
 这两条 tranche 当前只落：
 
 - controller-owned
@@ -132,6 +136,7 @@ Date: `2026-04-12`
 
 - `P4.A landed`
 - `P4.B landed`
+- `P4.C landed`
 
 ## 不在本线内的事
 

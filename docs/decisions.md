@@ -104,6 +104,12 @@
 - 理由：理想形态中的 `Med Auto Grant Product Entry` 不能永远停在“只读投影 + 单独 build shell”两个分散 surface 上；但当前又不能发明新的 executor 或 handoff semantics。最诚实的推进方式，就是把已冻结 surface 组合成一份 direct-entry contract。
 - 影响：`grant-direct-entry` 继续只复用既有 route truth、grant truth 与 `product_entry` envelope，不进入 `domain_entry_contract.supported_commands`，也不进入 hosted contract bundle 的 command catalog。
 
+## 2026-04-12：冻结 `P4.C` mainline status 与 grant user loop
+
+- 决策：在 `P4.B` 的基础上新增 `mainline-status`、`mainline-phase` 与 `grant-user-loop`，把 repo 主线快照、当前 `grant-direct-entry` 组合面，以及 route-derived next action 收成当前 controller-owned 的 user loop。
+- 理由：如果用户仍要自己翻 `current-program`、phase-map docs 和 route contract 才知道“现在在哪个阶段、下一步该执行什么”，那么 `P4` 仍停留在分散 surface；但当前又不能越界把它写成成熟 Web UI、hosted runtime 或新的 executor。
+- 影响：`grant-user-loop` 现在通过 `grant-user-loop.schema.json` 受 generation-time fail-closed 校验；`mainline-status / mainline-phase / grant-user-loop` 继续只投影已冻结 truth，不进入 `domain_entry_contract.supported_commands`，也不进入 hosted contract bundle 的 command catalog。
+
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。

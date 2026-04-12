@@ -930,7 +930,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.B direct grant entry composition",
+                            "active_tranche": "P4.C mainline status and grant user loop",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1014,7 +1014,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.B direct grant entry composition",
+                            "active_tranche": "P4.C mainline status and grant user loop",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1116,7 +1116,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.B direct grant entry composition",
+                                "active_tranche": "P4.C mainline status and grant user loop",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1210,7 +1210,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.B direct grant entry composition",
+                                "active_tranche": "P4.C mainline status and grant user loop",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1283,6 +1283,108 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                     input_path=str(CRITIQUE_EXAMPLE_PATH),
                     task_intent="tighten-grant-mainline",
                 )
+
+    def test_grant_user_loop_packages_mainline_snapshot_and_landed_next_action(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_grant_user_loop(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            task_intent="tighten-grant-mainline",
+        )
+
+        self.assertEqual(payload["command"], "grant-user-loop")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["draft_id"], "draft-v1")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["grant_user_loop"]["entry_kind"], "grant_user_loop")
+        self.assertEqual(
+            payload["grant_user_loop"]["mainline_snapshot"]["active_tranche"],
+            "P4.C mainline status and grant user loop",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
+            "revision",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["next_action"]["action_kind"],
+            "execute_landed_route",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["next_action"]["route_id"],
+            "revision",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["next_action"]["command"],
+            (
+                "uv run python -m med_autogrant execute-revision-pass "
+                f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} "
+                "--output <revision-output-path> --format json"
+            ),
+        )
+        self.assertIsNone(payload["grant_user_loop"]["next_action"]["handoff_surfaces"])
+        self.assertEqual(
+            payload["grant_user_loop"]["user_loop"]["mainline_status"],
+            "uv run python -m med_autogrant mainline-status --format json",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["user_loop"]["phase_status_current"],
+            "uv run python -m med_autogrant mainline-phase --phase current --format json",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["user_loop"]["open_grant_cockpit"],
+            f"uv run python -m med_autogrant grant-cockpit --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["user_loop"]["open_grant_direct_entry"],
+            (
+                "uv run python -m med_autogrant grant-direct-entry "
+                f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} "
+                "--task-intent tighten-grant-mainline --format json"
+            ),
+        )
+
+    def test_grant_user_loop_projects_pending_handoff_surfaces_without_inventing_executor(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_grant_user_loop(
+            input_path=str(DRAFTING_EXAMPLE_PATH),
+            task_intent="prepare-critique-handoff",
+        )
+
+        self.assertEqual(payload["command"], "grant-user-loop")
+        self.assertEqual(payload["lifecycle_stage"], "drafting")
+        self.assertEqual(
+            payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
+            "critique",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["next_action"]["action_kind"],
+            "prepare_pending_handoff",
+        )
+        self.assertEqual(payload["grant_user_loop"]["next_action"]["route_id"], "critique")
+        self.assertEqual(payload["grant_user_loop"]["next_action"]["route_status"], "pending")
+        self.assertIsNone(payload["grant_user_loop"]["next_action"]["command"])
+        self.assertEqual(
+            payload["grant_user_loop"]["next_action"]["handoff_surfaces"],
+            {
+                "summarize_workspace": (
+                    f"uv run python -m med_autogrant summarize-workspace --input {DRAFTING_EXAMPLE_PATH.resolve()} --format json"
+                ),
+                "stage_route_report": (
+                    f"uv run python -m med_autogrant stage-route-report --input {DRAFTING_EXAMPLE_PATH.resolve()} --format json"
+                ),
+            },
+        )
+        self.assertIsNone(payload["grant_user_loop"]["user_loop"]["run_recommended_route"])
+        self.assertEqual(
+            payload["grant_user_loop"]["user_loop"]["open_grant_direct_entry"],
+            (
+                "uv run python -m med_autogrant grant-direct-entry "
+                f"--input {DRAFTING_EXAMPLE_PATH.resolve()} "
+                "--task-intent prepare-critique-handoff --format json"
+            ),
+        )
 
     def test_grant_progress_fails_closed_on_invalid_projection_shape(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

@@ -112,6 +112,7 @@
 
 - `P4.A direct grant progress / cockpit projection`
 - `P4.B direct grant entry composition`
+- `P4.C mainline status and grant user loop`
 
 这条 `P4.A` 的定位必须固定为：
 

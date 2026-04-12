@@ -10,6 +10,7 @@ from med_autogrant.hermes_runtime import (
     GRANT_COCKPIT_SCHEMA_FILE,
     GRANT_DIRECT_ENTRY_SCHEMA_FILE,
     GRANT_PROGRESS_SCHEMA_FILE,
+    GRANT_USER_LOOP_SCHEMA_FILE,
     PRODUCT_ENTRY_SCHEMA_FILE,
     _build_executor_routing_contract,
     _build_operator_contract,
@@ -19,6 +20,7 @@ from med_autogrant.hermes_runtime import (
     _validate_contract_schema,
     _validate_executor_routing_contract,
 )
+from med_autogrant.mainline_status import read_mainline_status
 from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 
 
@@ -31,6 +33,8 @@ GRANT_PROGRESS_PROJECTION_KIND = "grant_progress"
 GRANT_COCKPIT_KIND = "grant_cockpit"
 GRANT_DIRECT_ENTRY_VERSION = 1
 GRANT_DIRECT_ENTRY_KIND = "grant_direct_entry"
+GRANT_USER_LOOP_VERSION = 1
+GRANT_USER_LOOP_KIND = "grant_user_loop"
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 
 
@@ -477,6 +481,70 @@ class MedAutoGrantProductEntry:
         )
         return payload
 
+    def build_grant_user_loop(
+        self,
+        *,
+        input_path: str | Path,
+        task_intent: str,
+        funding_call: str | None = None,
+    ) -> dict[str, Any]:
+        resolved_input_path = Path(input_path).expanduser().resolve()
+        resolved_task_intent = _require_nonempty_string(task_intent, field_name="task_intent")
+        direct_entry_payload = self.build_grant_direct_entry(
+            input_path=resolved_input_path,
+            task_intent=resolved_task_intent,
+            funding_call=funding_call,
+        )
+        grant_direct_entry = _require_mapping(
+            direct_entry_payload,
+            "grant_direct_entry",
+            context="grant_user_loop.grant_direct_entry",
+        )
+        mainline_status = read_mainline_status()
+        mainline_snapshot = _build_mainline_snapshot(mainline_status)
+        recommended_executor_route = _require_mapping(
+            grant_direct_entry,
+            "recommended_executor_route",
+            context="grant_user_loop.grant_direct_entry",
+        )
+        next_action = _build_next_action_payload(
+            recommended_executor_route=recommended_executor_route,
+            input_path=resolved_input_path,
+        )
+        user_loop = _build_grant_user_loop_commands(
+            input_path=resolved_input_path,
+            task_intent=resolved_task_intent,
+            run_recommended_route=next_action.get("command"),
+        )
+        grant_user_loop = {
+            "entry_version": GRANT_USER_LOOP_VERSION,
+            "entry_kind": GRANT_USER_LOOP_KIND,
+            "target_domain_id": TARGET_DOMAIN_ID,
+            "workspace_surface_kind": "nsfc_workspace",
+            "task_intent": resolved_task_intent,
+            "mainline_snapshot": mainline_snapshot,
+            "grant_direct_entry": dict(grant_direct_entry),
+            "next_action": next_action,
+            "user_loop": user_loop,
+        }
+        payload = {
+            "ok": True,
+            "command": "grant-user-loop",
+            "grant_run_id": direct_entry_payload["grant_run_id"],
+            "workspace_id": direct_entry_payload["workspace_id"],
+            "draft_id": direct_entry_payload["draft_id"],
+            "lifecycle_stage": direct_entry_payload["lifecycle_stage"],
+            "input_path": direct_entry_payload["input_path"],
+            "grant_user_loop": grant_user_loop,
+        }
+        _validate_grant_user_loop_contract(
+            payload,
+            grant_run_id=direct_entry_payload["grant_run_id"],
+            workspace_id=direct_entry_payload["workspace_id"],
+            lifecycle_stage=direct_entry_payload["lifecycle_stage"],
+        )
+        return payload
+
     def _load_projection_context(
         self,
         *,
@@ -880,6 +948,293 @@ def _validate_grant_direct_entry_contract(
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
         )
+
+
+def _build_mainline_snapshot(mainline_status: Mapping[str, Any]) -> dict[str, Any]:
+    current_runtime_owner = _require_mapping(
+        mainline_status,
+        "current_runtime_owner",
+        context="mainline_status",
+    )
+    phase_ladder = mainline_status.get("phase_ladder")
+    if not isinstance(phase_ladder, list):
+        raise WorkspaceStateError("mainline_status.phase_ladder 必须为 list。")
+    return {
+        "current_owner_line": _require_nonempty_string_from_mapping(
+            current_runtime_owner,
+            "current_owner_line",
+            context="mainline_status.current_runtime_owner",
+        ),
+        "active_phase": _require_nonempty_string_from_mapping(
+            current_runtime_owner,
+            "active_phase",
+            context="mainline_status.current_runtime_owner",
+        ),
+        "active_tranche": _require_nonempty_string_from_mapping(
+            current_runtime_owner,
+            "active_tranche",
+            context="mainline_status.current_runtime_owner",
+        ),
+        "phase_map": [
+            {
+                "phase_id": _require_nonempty_string_from_mapping(item, "phase_id", context="mainline_status.phase_ladder"),
+                "phase_name": _require_nonempty_string_from_mapping(item, "phase_name", context="mainline_status.phase_ladder"),
+                "status": _require_nonempty_string_from_mapping(item, "status", context="mainline_status.phase_ladder"),
+            }
+            for item in phase_ladder
+            if isinstance(item, Mapping)
+        ],
+        "next_focus": _read_nonempty_string_list(
+            mainline_status.get("next_focus"),
+            context="mainline_status.next_focus",
+        ),
+        "remaining_gaps": _read_nonempty_string_list(
+            mainline_status.get("remaining_gaps"),
+            context="mainline_status.remaining_gaps",
+        ),
+    }
+
+
+def _build_next_action_payload(
+    *,
+    recommended_executor_route: Mapping[str, Any],
+    input_path: Path,
+) -> dict[str, Any]:
+    route_id = _require_nonempty_string_from_mapping(
+        recommended_executor_route,
+        "route_id",
+        context="grant_user_loop.recommended_executor_route",
+    )
+    route_status = _require_nonempty_string_from_mapping(
+        recommended_executor_route,
+        "route_status",
+        context="grant_user_loop.recommended_executor_route",
+    )
+    if route_status == "landed":
+        return {
+            "action_kind": "execute_landed_route",
+            "route_id": route_id,
+            "route_status": route_status,
+            "summary": f"当前推荐 route {route_id} 已 landed，可直接调用现有 author-side executor surface。",
+            "command": _build_route_execution_command(route_id=route_id, input_path=input_path),
+            "handoff_surfaces": None,
+        }
+
+    handoff_requirements = _optional_mapping(recommended_executor_route, "handoff_requirements")
+    handoff_surfaces = _build_handoff_surface_commands(
+        handoff_requirements=handoff_requirements,
+        input_path=input_path,
+    )
+    return {
+        "action_kind": "prepare_pending_handoff",
+        "route_id": route_id,
+        "route_status": route_status,
+        "summary": f"当前推荐 route {route_id} 仍未 landed，应先按 handoff contract 准备所需 domain surfaces。",
+        "command": None,
+        "handoff_surfaces": handoff_surfaces,
+    }
+
+
+def _build_handoff_surface_commands(
+    *,
+    handoff_requirements: Mapping[str, Any] | None,
+    input_path: Path,
+) -> dict[str, str] | None:
+    if not isinstance(handoff_requirements, Mapping):
+        return None
+    required_domain_surfaces = handoff_requirements.get("required_domain_surfaces")
+    if not isinstance(required_domain_surfaces, list):
+        return None
+    commands: dict[str, str] = {}
+    for item in required_domain_surfaces:
+        if not isinstance(item, Mapping):
+            continue
+        command = _optional_string_from_mapping(item, "command")
+        if command is None:
+            continue
+        commands[_command_name_to_catalog_key(command)] = _build_domain_surface_command(
+            command=command,
+            input_path=input_path,
+        )
+    return commands or None
+
+
+def _command_name_to_catalog_key(command: str) -> str:
+    return command.replace("-", "_")
+
+
+def _build_domain_surface_command(*, command: str, input_path: Path) -> str:
+    resolved_input_path = input_path.expanduser().resolve()
+    return f"uv run python -m med_autogrant {command} --input {resolved_input_path} --format json"
+
+
+def _build_route_execution_command(*, route_id: str, input_path: Path) -> str:
+    resolved_input_path = input_path.expanduser().resolve()
+    if route_id == "revision":
+        return (
+            "uv run python -m med_autogrant execute-revision-pass "
+            f"--input {resolved_input_path} --output <revision-output-path> --format json"
+        )
+    if route_id == "artifact_bundle":
+        return (
+            "uv run python -m med_autogrant build-artifact-bundle "
+            f"--input {resolved_input_path} --output <artifact-bundle-output-path> --format json"
+        )
+    if route_id == "final_package":
+        return (
+            "uv run python -m med_autogrant build-final-package "
+            f"--input {resolved_input_path} --artifact-bundle <artifact-bundle-output-path> "
+            "--output <final-package-output-path> --format json"
+        )
+    if route_id == "hosted_contract_bundle":
+        return (
+            "uv run python -m med_autogrant build-hosted-contract-bundle "
+            "--final-package <final-package-output-path> "
+            "--output <hosted-contract-bundle-output-path> --format json"
+        )
+    raise WorkspaceStateError(f"grant_user_loop 不支持 landed route command: {route_id}")
+
+
+def _build_grant_user_loop_commands(
+    *,
+    input_path: Path,
+    task_intent: str,
+    run_recommended_route: Any,
+) -> dict[str, Any]:
+    resolved_input_path = input_path.expanduser().resolve()
+    return {
+        "mainline_status": "uv run python -m med_autogrant mainline-status --format json",
+        "phase_status_current": "uv run python -m med_autogrant mainline-phase --phase current --format json",
+        "phase_status_next": "uv run python -m med_autogrant mainline-phase --phase next --format json",
+        "open_grant_cockpit": (
+            f"uv run python -m med_autogrant grant-cockpit --input {resolved_input_path} --format json"
+        ),
+        "open_grant_direct_entry": (
+            "uv run python -m med_autogrant grant-direct-entry "
+            f"--input {resolved_input_path} --task-intent {task_intent} --format json"
+        ),
+        "run_recommended_route": (
+            _require_nonempty_string(run_recommended_route, field_name="run_recommended_route")
+            if run_recommended_route is not None
+            else None
+        ),
+        "build_direct_entry": (
+            "uv run python -m med_autogrant build-product-entry "
+            f"--input {resolved_input_path} --entry-mode direct "
+            f"--task-intent {task_intent} --format json"
+        ),
+        "build_opl_handoff": (
+            "uv run python -m med_autogrant build-product-entry "
+            f"--input {resolved_input_path} --entry-mode opl-handoff "
+            f"--task-intent {task_intent} --format json"
+        ),
+    }
+
+
+def _validate_grant_user_loop_contract(
+    payload: dict[str, Any],
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+) -> None:
+    _validate_contract_schema(
+        payload,
+        schema_file=GRANT_USER_LOOP_SCHEMA_FILE,
+        context="grant_user_loop",
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+    grant_user_loop = _require_mapping(
+        payload,
+        "grant_user_loop",
+        context="grant_user_loop",
+    )
+    grant_direct_entry = _require_mapping(
+        grant_user_loop,
+        "grant_direct_entry",
+        context="grant_user_loop.grant_direct_entry",
+    )
+    if (
+        _require_nonempty_string_from_mapping(
+            grant_user_loop,
+            "task_intent",
+            context="grant_user_loop",
+        )
+        != _require_nonempty_string_from_mapping(
+            grant_direct_entry,
+            "task_intent",
+            context="grant_user_loop.grant_direct_entry",
+        )
+    ):
+        raise WorkspaceStateError(
+            "grant_user_loop.task_intent 与 grant_direct_entry.task_intent 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    next_action = _require_mapping(
+        grant_user_loop,
+        "next_action",
+        context="grant_user_loop.next_action",
+    )
+    recommended_executor_route = _require_mapping(
+        grant_direct_entry,
+        "recommended_executor_route",
+        context="grant_user_loop.grant_direct_entry",
+    )
+    if next_action.get("route_id") != recommended_executor_route.get("route_id"):
+        raise WorkspaceStateError(
+            "grant_user_loop.next_action.route_id 与 grant_direct_entry.recommended_executor_route.route_id 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if next_action.get("route_status") != recommended_executor_route.get("route_status"):
+        raise WorkspaceStateError(
+            "grant_user_loop.next_action.route_status 与 grant_direct_entry.recommended_executor_route.route_status 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    action_kind = _require_nonempty_string_from_mapping(
+        next_action,
+        "action_kind",
+        context="grant_user_loop.next_action",
+    )
+    command = next_action.get("command")
+    handoff_surfaces = next_action.get("handoff_surfaces")
+    if action_kind == "execute_landed_route":
+        if not isinstance(command, str) or not command.strip():
+            raise WorkspaceStateError(
+                "grant_user_loop.next_action.command 必须在 landed route 时非空。",
+                grant_run_id=grant_run_id,
+                workspace_id=workspace_id,
+                lifecycle_stage=lifecycle_stage,
+            )
+        if handoff_surfaces is not None:
+            raise WorkspaceStateError(
+                "grant_user_loop.next_action.handoff_surfaces 必须在 landed route 时为空。",
+                grant_run_id=grant_run_id,
+                workspace_id=workspace_id,
+                lifecycle_stage=lifecycle_stage,
+            )
+    if action_kind == "prepare_pending_handoff":
+        if command is not None:
+            raise WorkspaceStateError(
+                "grant_user_loop.next_action.command 必须在 pending handoff 时为空。",
+                grant_run_id=grant_run_id,
+                workspace_id=workspace_id,
+                lifecycle_stage=lifecycle_stage,
+            )
+        if not isinstance(handoff_surfaces, Mapping) or not handoff_surfaces:
+            raise WorkspaceStateError(
+                "grant_user_loop.next_action.handoff_surfaces 必须在 pending handoff 时非空。",
+                grant_run_id=grant_run_id,
+                workspace_id=workspace_id,
+                lifecycle_stage=lifecycle_stage,
+            )
 
 
 def _build_product_command_catalog(input_path: Path) -> dict[str, str]:

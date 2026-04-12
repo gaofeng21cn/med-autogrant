@@ -281,6 +281,64 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             "revision",
         )
 
+    def test_mainline_status_projects_current_phase_and_tranche(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "mainline-status",
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["program_id"], "med-autogrant-mainline")
+        self.assertEqual(payload["current_phase"]["phase_id"], "P4")
+        self.assertEqual(
+            payload["current_runtime_owner"]["active_tranche"],
+            "P4.C mainline status and grant user loop",
+        )
+
+    def test_mainline_phase_resolves_next_selector(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "mainline-phase",
+            "--phase",
+            "next",
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["phase"]["phase_id"], "P4")
+        self.assertEqual(payload["phase"]["status"], "next")
+
+    def test_grant_user_loop_projects_mainline_snapshot_and_route_action(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-user-loop",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--task-intent",
+            "tighten-grant-mainline",
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "grant-user-loop")
+        self.assertEqual(payload["grant_user_loop"]["entry_kind"], "grant_user_loop")
+        self.assertEqual(
+            payload["grant_user_loop"]["next_action"]["action_kind"],
+            "execute_landed_route",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
+            "revision",
+        )
+
     def test_next_step_routes_each_p2a_stage_forward(self) -> None:
         cases = [
             (INPUT_EXAMPLE_PATH, "input_intake", "direction_screening"),
