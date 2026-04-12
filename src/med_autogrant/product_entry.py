@@ -6,6 +6,7 @@ from typing import Any, Mapping
 
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.hermes_runtime import (
+    _build_domain_entry_contract,
     PRODUCT_ENTRY_SCHEMA_FILE,
     _build_executor_routing_contract,
     _build_operator_contract,
@@ -144,6 +145,7 @@ class MedAutoGrantProductEntry:
                 "entry_adapter": "MedAutoGrantDomainEntry",
                 "default_formal_entry": "CLI",
                 "supported_entry_modes": list(SUPPORTED_ENTRY_MODES),
+                "domain_entry_contract": _build_domain_entry_contract(),
                 "checkpoint_aggregation_surface": "stage-route-report",
                 "operator_contract": _build_operator_contract(),
             },

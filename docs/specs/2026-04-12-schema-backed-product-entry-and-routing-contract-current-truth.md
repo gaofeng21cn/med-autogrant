@@ -87,6 +87,9 @@ Date: `2026-04-12`
 - `workspace_locator`
 - `runtime_session_contract`
 - `return_surface_contract`
+  - `domain_entry_contract`
+    - `supported_commands`
+    - `command_contracts`
 - `domain_payload`
 - `stage_snapshot`
 - `executor_routing_contract.author_side_route_catalog`

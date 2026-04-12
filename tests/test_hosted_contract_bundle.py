@@ -35,6 +35,42 @@ AUTHOR_SIDE_ROUTE_IDS = (
     "final_package",
     "hosted_contract_bundle",
 )
+SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
+    "probe-upstream-hermes",
+    "validate-workspace",
+    "summarize-workspace",
+    "next-step",
+    "critique-summary",
+    "stage-route-report",
+    "run-local",
+    "resume-local",
+    "build-artifact-bundle",
+    "execute-revision-pass",
+    "build-final-package",
+    "build-hosted-contract-bundle",
+]
+DOMAIN_ENTRY_COMMAND_CONTRACTS = [
+    {"command": "probe-upstream-hermes", "required_fields": [], "optional_fields": []},
+    {"command": "validate-workspace", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "summarize-workspace", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "next-step", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "critique-summary", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "stage-route-report", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "run-local", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
+    {"command": "resume-local", "required_fields": ["journal_path"], "optional_fields": []},
+    {"command": "build-artifact-bundle", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {"command": "execute-revision-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {
+        "command": "build-final-package",
+        "required_fields": ["input_path", "artifact_bundle_path", "output_path"],
+        "optional_fields": [],
+    },
+    {
+        "command": "build-hosted-contract-bundle",
+        "required_fields": ["final_package_path", "output_path"],
+        "optional_fields": [],
+    },
+]
 
 
 class HostedContractBundleCliTest(unittest.TestCase):
@@ -196,6 +232,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         "direct",
                         "opl-handoff",
                     ],
+                    "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
+                    "command_contracts": DOMAIN_ENTRY_COMMAND_CONTRACTS,
                 },
             )
             self.assertEqual(

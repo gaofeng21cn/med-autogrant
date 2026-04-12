@@ -76,9 +76,15 @@
 
 ## 2026-04-12：冻结 OPL 对齐的理想目标与阶段图
 
-- 决策：把 `Med Auto Grant` 的长线理想目标固定为 `OPL` 顶层入口、`Hermes-Agent` substrate owner、`Med Auto Grant` domain truth owner 的分层结构，并把主线阶段固定成 `P1 completed / P2 completed / P3 next / P4 future`。
+- 决策：把 `Med Auto Grant` 的长线理想目标固定为 `OPL` 顶层入口、`Hermes-Agent` substrate owner、`Med Auto Grant` domain truth owner 的分层结构，并把主线阶段固定成 `P1 completed / P2 completed / P3 completed / P4 next`。
 - 理由：如果不把 “理想目标” 和 “当前完成态” 分开冻结，后续最容易一边拿 `OPL` 理想型讲话，一边把未完成的 hosted caller / direct product entry 写成 landed。
-- 影响：`current-program` 现在额外携带 `ideal_target` 与 `phase_map`；后续推进默认先做 `P3 hosted caller / OPL consumption proof`，而不是回头重写 repo-local helper 或跳到 product overclaim。
+- 影响：`current-program` 现在额外携带 `ideal_target` 与 `phase_map`；当前 `P3 hosted caller / OPL consumption proof` 已通过冻结合同与 proof test 落地，后续推进默认转向 `P4 mature direct grant product entry`，而不是回头重写 repo-local helper 或跳到 product overclaim。
+
+## 2026-04-12：冻结 hosted caller contract consumption proof
+
+- 决策：external caller / future `OPL` caller 必须直接消费仓库已经冻结好的 `domain_entry_contract`、`schema_contract`、`authoring_contract`，并且只通过 `supported_commands` 与 `command_contracts` 构造 request；不新增 repo-local hosted helper。
+- 理由：如果 external caller 还要回头读仓内 helper 或手写参数拼装逻辑，那么 `P3` 其实并没有完成，合同也还不算真正 machine-readable。
+- 影响：`product_entry.return_surface_contract.domain_entry_contract` 与 hosted bundle 的 `domain_entry_contract` 现在共享同一份 command catalog；`P3` 可以诚实标成 completed，而 `P4` 成为下一个 honest phase。
 
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 

@@ -8,6 +8,7 @@ The current public runtime topology is: `CLI-first + real upstream Hermes-Agent 
 Repo-tracked current-program truth lives at `contracts/runtime-program/current-program.json`, while machine-local runtime state lives under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 The current entry truth is also explicit: `operator entry` and `agent entry` are real today, and the lightweight grant `product entry` shell is now landed. Its shared envelope and routing surfaces are also frozen as schema-backed contract surfaces, while a richer grant-facing product experience still remains future work.
 The hosted-friendly contract bundle now also ships a machine-readable catalog through `domain_entry_contract`, `schema_contract`, and `authoring_contract`, so future hosted / `OPL` callers can consume the same frozen entry, schema, and route truth.
+That shared `domain_entry_contract` now also exposes `supported_commands` and `command_contracts`, and the hosted caller consumption proof is now landed.
 
 ## Start Here: Core Docs
 
@@ -38,6 +39,7 @@ The hosted-friendly contract bundle now also ships a machine-readable catalog th
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md) (Chinese only)
 - [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md) (Chinese only)
 - [Hosted contract bundle entry and route catalog current truth](./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md) (Chinese only)
+- [Hosted caller consumption proof current truth](./specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md) (Chinese only)
 - [OPL-aligned ideal target and phase map current truth](./specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md) (Chinese only)
 - [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md) (Chinese only)
 - [Pending authoring route handoff matrix current truth](./specs/2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md) (Chinese only)
@@ -59,8 +61,9 @@ Specs are repo-tracked and authoritative for activation packages and current tru
 - Product-entry shell: the lightweight grant `product entry` shell is now landed through `build-product-entry`, reusable both directly and through `OPL` handoff.
 - Schema-backed contract closeout: the landed `product entry` shell, `executor_routing_contract`, `pending_handoff_requirements`, and service-safe route surfaces are now indexed under `schemas/v1/` and validated fail-closed at generation time.
 - Hosted contract bundle closeout: `build-hosted-contract-bundle` now exports `domain_entry_contract`, `schema_contract`, and `authoring_contract` alongside the existing runtime/state/operator surfaces, and the whole bundle is validated through `hosted-contract-bundle.schema.json`.
+- Hosted caller proof closeout: external caller consumption is now repo-verified through the shared `domain_entry_contract`, including `supported_commands` and `command_contracts`, without repo-local helper code.
 - Fastest cutover board: [Upstream Hermes-Agent fast cutover board](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md) (Chinese only)
-- Active task ladder: keep the landed Hermes substrate, service-safe domain entry, and author-side object boundaries green while the old host-agent line remains only as a regression oracle.
+- Active task ladder: keep the landed Hermes substrate, service-safe domain entry, hosted caller proof, and author-side object boundaries green while the old host-agent line remains only as a regression oracle.
 - Historical bridge / OMX materials remain traceability aids only and must not be treated as current entrypoints.
 
 ## Plans & History

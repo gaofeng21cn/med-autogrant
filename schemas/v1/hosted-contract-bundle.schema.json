@@ -159,7 +159,9 @@
         "service_safe_surface_kind",
         "product_entry_builder_command",
         "product_entry_kind",
-        "supported_entry_modes"
+        "supported_entry_modes",
+        "supported_commands",
+        "command_contracts"
       ],
       "properties": {
         "entry_adapter": {
@@ -179,6 +181,29 @@
             "direct",
             "opl-handoff"
           ]
+        },
+        "supported_commands": {
+          "const": [
+            "probe-upstream-hermes",
+            "validate-workspace",
+            "summarize-workspace",
+            "next-step",
+            "critique-summary",
+            "stage-route-report",
+            "run-local",
+            "resume-local",
+            "build-artifact-bundle",
+            "execute-revision-pass",
+            "build-final-package",
+            "build-hosted-contract-bundle"
+          ]
+        },
+        "command_contracts": {
+          "type": "array",
+          "items": {
+            "$ref": "product-entry.schema.json#/$defs/domainEntryCommandContract"
+          },
+          "minItems": 12
         }
       }
     },

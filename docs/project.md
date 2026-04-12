@@ -7,6 +7,7 @@
 当前入口真相是：`CLI + MedAutoGrantDomainEntry` 已经构成稳定的 `agent entry`，`build-product-entry` 也已经把轻量结构化 `product entry` shell 落到仓库里；当前这层 shell 及其 `executor_routing_contract` 还已经进一步收口成 schema-backed contract，并在生成时 fail-closed；`build-hosted-contract-bundle` 现在也会把 `domain_entry_contract`、`schema_contract`、`authoring_contract` 一起冻结进 hosted-friendly 合同目录；但更完整的 grant-facing 产品体验仍未落地。
 按 `OPL` 对齐后的理想目标，这个仓最终应收敛成：`OPL` 继续负责 family-level 顶层入口与 gateway，`Hermes-Agent` 继续负责 runtime substrate，`Med Auto Grant` 继续负责 grant authoring truth、domain entry 与 direct grant product entry。
 当前统一协作模型是：`Hermes-Agent` 持有 runtime substrate / orchestration，`Med Auto Grant` 持有 grant 对象边界、author-side contract 与 export truth；具体 critique / revision / packaging 执行继续通过 repo-side domain logic 与 executor adapter 落地，而不是被强行收缩成单一 runtime 脑。
+当前 `P3 hosted caller / OPL consumption proof` 也已经 landed：external caller 现在可以直接消费 `domain_entry_contract`、`schema_contract`、`authoring_contract`，并按 `supported_commands` / `command_contracts` 构造请求，而不需要 repo-local helper。
 
 ## 项目目标
 
@@ -15,7 +16,7 @@
 - 在 `R1 -> R5.A` 已 absorbed 的前提下，把当前 post-`R5.A` honest stop 作为迁移基线保留，并在真实上游 `Hermes-Agent` substrate 上延续 author-side grant mainline。
 - 在已落地 runtime substrate 之上，保持 `build-product-entry` 这层共享-envelope lightweight grant `product entry` shell 稳定，并让它同时服务 direct entry 与 `OPL` handoff。
 - 把 hosted-friendly handoff contract 收口成 future caller 可直接消费的 entry / schema / route catalog，而不是在 bundle 外重新发明协作语义。
-- 明确这条主线从 “fast cutover 已完成什么” 到 “下一阶段 hosted caller / `OPL Gateway` proof” 再到 “未来 direct product entry” 的阶段顺序，不在理想目标与当前完成态之间反复漂移。
+- 明确这条主线从 “fast cutover 已完成什么” 到 “hosted caller / `OPL` contract consumption proof 已完成什么” 再到 “下一阶段 mature direct product entry” 的阶段顺序，不在理想目标与当前完成态之间反复漂移。
 
 ## 范围与非目标
 

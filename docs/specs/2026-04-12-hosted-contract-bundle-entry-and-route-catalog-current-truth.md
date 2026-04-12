@@ -74,6 +74,8 @@ Date: `2026-04-12`
   - `product_entry_builder_command = build-product-entry`
   - `product_entry_kind = med_auto_grant_product_entry`
   - `supported_entry_modes = [direct, opl-handoff]`
+  - `supported_commands`
+  - `command_contracts`
 - `schema_contract`
   - `schema_version = v1`
   - `schema_index_path = schemas/v1/schema-index.json`
@@ -94,6 +96,7 @@ Date: `2026-04-12`
 - 怎么调用已 landed 的 service-safe entry
 - 应该读哪套 schema registry
 - 当前 author-side route 哪些是 landed、哪些仍是 pending / handoff-required
+- 以及当前每个 landed command 需要哪些字段才能由 external caller 直接发起调用
 
 ### 4. authoring_contract 只打包已经冻结的 route truth
 
@@ -160,6 +163,7 @@ Date: `2026-04-12`
 
 - hosted contract bundle 现在已经成为 schema-backed、truth-backed 的 contract catalog
 - future hosted / `OPL` caller 可以直接消费 entry / schema / route truth
+- current hosted caller 还可以直接读取 `supported_commands` / `command_contracts`，无需 repo-local helper
 - author-side grant mainline 没有因为 hosted export 而漂移
 
 它不意味着：

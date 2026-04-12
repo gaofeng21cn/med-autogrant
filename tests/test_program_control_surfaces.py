@@ -69,6 +69,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
+            "docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertIn(
             "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",
             contract["repo_tracked_truth_surfaces"],
         )
@@ -82,9 +86,9 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["phase_map"][1]["phase_id"], "P2")
         self.assertEqual(contract["phase_map"][1]["status"], "completed")
         self.assertEqual(contract["phase_map"][2]["phase_id"], "P3")
-        self.assertEqual(contract["phase_map"][2]["status"], "next")
+        self.assertEqual(contract["phase_map"][2]["status"], "completed")
         self.assertEqual(contract["phase_map"][3]["phase_id"], "P4")
-        self.assertEqual(contract["phase_map"][3]["status"], "future")
+        self.assertEqual(contract["phase_map"][3]["status"], "next")
 
     def test_core_docs_publish_repo_tracked_contract_and_user_level_runtime_state(self) -> None:
         for path in (

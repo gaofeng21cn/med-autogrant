@@ -39,8 +39,9 @@
 - 已落地的 service-safe entry：`MedAutoGrantDomainEntry`，它把 CLI 命令面保留成 future gateway caller 可复用的结构化 entry contract。
 - 当前 `product entry` shell 与 `executor_routing_contract` 也已经进一步冻结成 schema-backed contract surface，并在生成时 fail-closed。
 - `build-hosted-contract-bundle` 导出的托管友好合同现在也已经收口成 schema-backed contract bundle，并为 future hosted / `OPL` caller 显式补出 `domain_entry_contract`、`schema_contract`、`authoring_contract`。
+- 这份共享 `domain_entry_contract` 现在还会显式导出 `supported_commands` 与 `command_contracts`，因此外部 caller 已经可以直接按冻结合同拼 request，而不需要 repo-local helper。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
-- 当前理想目标也已经明确：`OPL` 继续是 family-level 顶层入口，`Hermes-Agent` 继续是 runtime substrate owner，`Med Auto Grant` 继续是 domain truth / authoring owner；后续先做 hosted caller proof，再做成熟的 direct grant product entry。
+- 当前理想目标也已经明确：`OPL` 继续是 family-level 顶层入口，`Hermes-Agent` 继续是 runtime substrate owner，`Med Auto Grant` 继续是 domain truth / authoring owner；其中 hosted caller / `OPL` consumption proof 现已完成，而成熟的 direct grant product entry 成为下一阶段。
 
 ## 入口分层与产品边界
 
@@ -82,6 +83,7 @@
 - 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
 - 当前 repo-verified 的 runtime entry 还包括 `probe-upstream-hermes`、`run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle` 与 `build-product-entry`；它们分别负责 upstream 依赖证明、本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出、hosted-friendly contract bundle 导出，以及 direct / `OPL` handoff 共用的 product shell
 - `build-hosted-contract-bundle` 现在会额外导出托管友好的 handoff contract，其中显式携带 `runtime_substrate_contract`、`runtime_state_contract`、`operator_contract`、`domain_entry_contract`、`schema_contract` 与 `authoring_contract`，连同 execution identity、artifact 与 audit surface 一起进入导出面
+- `domain_entry_contract` 现在还会一起导出 `supported_commands` 与逐命令的 `command_contracts`，让 hosted caller / 外部 caller 能直接消费相同的 command catalog
 - `stage-route-report` 当前还是 machine-readable 的 verification / checkpoint 聚合面，并会输出 `verification_checkpoint` 与 `checkpoint_status`
 - `MedAutoGrantDomainEntry` 是当前 CLI 等价 runtime 调用的 service-safe structured adapter，也为 future gateway reuse 预留了同一条 contract
 - repo-tracked review truth 与 local durable handoff surfaces 必须分开：前者负责解释 runtime contract，后者负责机器私有的恢复状态
@@ -114,6 +116,7 @@
 - 通过 `execute-revision-pass` 对冻结在 `RevisionPlan` 中的 section-level deterministic mutation 执行本地 revision pass，并保持 draft lineage、rollback gate 与 checkpoint 语义不漂移
 - 通过 `build-final-package` 把 freeze-ready / submission-frozen 的 workspace 与 artifact bundle 收成 machine-readable 本地 `final_package`
 - 通过 `build-hosted-contract-bundle` 从当前 `final_package` 导出 hosted-friendly 的 session / state / artifact / audit contract bundle，作为托管化 prep 的本地合同产物，并显式携带 `domain_entry_contract`、`schema_contract` 与 `authoring_contract`
+- 通过 hosted caller consumption proof 证明外部 caller 现在已经可以直接读取 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`，并在不依赖 repo-local helper 的前提下完成已 landed export chain
 - 通过 `MedAutoGrantDomainEntry` 把同一组 runtime command surface 暴露成 future gateway caller 可复用的 service-safe structured entry contract
 - 通过 `build-product-entry` 构建轻量结构化 `product entry` shell，让 `direct` 与 `opl-handoff` 共用同一套 envelope
 - 把已 landed 的 `product entry`、`executor_routing_contract`、pending handoff surface 与 hosted contract bundle 一起冻成可供 future `OPL` / gateway 消费的 schema-backed contract
@@ -238,6 +241,7 @@ uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TM
 
 - 当前 fast-cutover truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
 - 当前 lightweight product-entry truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`
+- 当前 hosted caller consumption proof：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md`
 - 当前真相重置总览：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
 - 历史本地 runtime program truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
 - 历史本地 runtime capability migration map：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`

@@ -72,7 +72,12 @@ class MedAutoGrantDomainEntry:
                 runtime_kwargs[field_name] = field_value
 
         runtime_method = getattr(self._runtime, spec.runtime_method)
-        return runtime_method(**runtime_kwargs)
+        payload = runtime_method(**runtime_kwargs)
+        if not isinstance(payload, dict):
+            raise WorkspaceStateError(f"domain entry `{command}` 返回值必须是 object。")
+        if "command" not in payload:
+            return {"command": command, **payload}
+        return payload
 
 
 def _require_command(request: Mapping[str, Any]) -> str:

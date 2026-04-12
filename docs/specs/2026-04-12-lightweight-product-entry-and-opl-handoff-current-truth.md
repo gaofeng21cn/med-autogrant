@@ -61,6 +61,9 @@ grant 域在这层共享 envelope 之上继续补充：
   - `runtime_state_contract`
 - `return_surface_contract` 继续复用：
   - `MedAutoGrantDomainEntry`
+  - `domain_entry_contract`
+    - `supported_commands`
+    - `command_contracts`
   - `stage-route-report`
   - `operator_contract`
 - `executor_routing_contract` 现在与 `stage_action_envelope` 共享同一份 route truth：
@@ -127,6 +130,7 @@ grant 域在这层共享 envelope 之上继续补充：
 - 轻量结构化 `product entry` shell 已 landed
 - `direct` 与 `opl-handoff` 现在共享同一套 envelope
 - 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与真实 Hermes substrate contract 之上
+- external caller 现在还可以直接从 `return_surface_contract.domain_entry_contract` 读取 `supported_commands` / `command_contracts`
 - 这层 shell 还能显式告诉 caller：当前哪些 author-side route 已 landed，哪些还只是 `pending / handoff-required`
 - 对 `critique` 这类仍未 landed 的 route，这层 shell 现在还会直接导出 `handoff_requirements`，告诉 caller 应先读取哪些 domain surfaces 再协作
 - 这层 shell 现在还会把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen` 一并纳入同一份 `author_side_route_catalog`

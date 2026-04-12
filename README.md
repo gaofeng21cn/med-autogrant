@@ -39,9 +39,10 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - Landed service-safe entry: `MedAutoGrantDomainEntry`, which preserves the CLI command surface as a structured domain-entry contract for future gateway callers.
 - The current `product entry` shell and `executor_routing_contract` are now also frozen as schema-backed contract surfaces under `schemas/v1/`, with fail-closed validation at generation time.
 - The hosted-friendly `build-hosted-contract-bundle` export is now also frozen as a schema-backed contract bundle, and it explicitly adds `domain_entry_contract`, `schema_contract`, and `authoring_contract` for future hosted / `OPL` callers.
+- The shared `domain_entry_contract` now also exports `supported_commands` and `command_contracts`, so an external caller can construct requests from the frozen contract catalog without repo-local helper code.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 - Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
-- The ideal target is now explicit: `OPL` remains the family-level top entry, `Hermes-Agent` remains the runtime substrate owner, and `Med Auto Grant` remains the domain truth / authoring owner while moving toward hosted caller proof first and a mature direct grant product entry later.
+- The ideal target is now explicit: `OPL` remains the family-level top entry, `Hermes-Agent` remains the runtime substrate owner, and `Med Auto Grant` remains the domain truth / authoring owner. The hosted caller / `OPL` consumption proof is now completed, while the mature direct grant product entry remains the next honest phase.
 
 ## Entry Modes And Product Boundary
 
@@ -84,6 +85,7 @@ So the current honest claim is: the Hermes-backed runtime substrate and the ligh
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
 - Current repo-verified runtime entry also includes `probe-upstream-hermes`, `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, `build-hosted-contract-bundle`, and `build-product-entry`; together they cover upstream dependency proof, local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, hosted-friendly contract export, and the shared direct / `OPL` handoff shell.
 - `build-hosted-contract-bundle` now exports a hosted-friendly handoff contract that explicitly carries `runtime_substrate_contract`, `runtime_state_contract`, `operator_contract`, `domain_entry_contract`, `schema_contract`, and `authoring_contract` alongside execution identity, artifact, and audit surfaces.
+- `domain_entry_contract` now also exports `supported_commands` plus per-command `command_contracts`, so an external caller can consume the same catalog from `product_entry` and the hosted bundle.
 - `stage-route-report` is the current machine-readable verification/checkpoint aggregation surface and now emits `verification_checkpoint` plus `checkpoint_status`.
 - `MedAutoGrantDomainEntry` is the current service-safe structured adapter for CLI-equivalent runtime calls and future gateway reuse.
 - Repo-tracked review truth and local durable handoff surfaces stay separate: the former explains the runtime contract, while the latter carries machine-specific resume state.
@@ -233,6 +235,7 @@ uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TM
 - a section-level deterministic local revision executor
 - a machine-readable local final package
 - hosted-friendly session / state / artifact / audit contract bundle export
+- a hosted caller contract proof that lets an external caller consume `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts` without repo-local helper code
 - a service-safe structured domain entry for CLI-equivalent runtime calls
 - tests covering runtime and control-surface invariants
 
@@ -240,6 +243,7 @@ uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TM
 
 - Current fast-cutover truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
 - Current lightweight product-entry truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`
+- Current hosted caller consumption proof: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md`
 - Current truth-reset overview: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
 - Historical local runtime program truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
 - Historical local runtime capability migration map: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`

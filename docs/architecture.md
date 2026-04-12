@@ -77,6 +77,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `src/med_autogrant/domain_entry.py` 现在提供结构化 `MedAutoGrantDomainEntry`，把 CLI 与 future gateway caller 收口到同一条 service-safe command contract。
 - `src/med_autogrant/product_entry.py` 现在提供 `MedAutoGrantProductEntry`；`build-product-entry` 通过 `MedAutoGrantDomainEntry` 复用已 landed 的 route / summary / runtime contract，统一生成 `direct` 与 `opl-handoff` 共用的 shared envelope，并显式导出 `executor_routing_contract`。
 - `build-product-entry.product_entry` 与 `run-local.stage_action_envelope.executor_routing_contract` 现在都已经收口成 schema-backed contract：前者对应 `schemas/v1/product-entry.schema.json`，后者对应 `schemas/v1/executor-routing-contract.schema.json`，并且两者都会在生成时 fail-closed。
+- `build-product-entry.product_entry.return_surface_contract.domain_entry_contract` 现在会与 hosted bundle 共享同一份 command catalog，并显式固定 `supported_commands` 与每个 command 的 `command_contracts`。
 - `src/med_autogrant/upstream_hermes.py` 负责真实 upstream 依赖探测、runtime root 决议与基于 `hermes_state.SessionDB` 的 attempt ledger。
 - `run-local` 与 `resume-local` 继续以 journal 串联多次 pass，但 attempt index 现在来自真实上游 Hermes session substrate。
 - 对 valid workspace，Hermes session handle 继续沿用 `grant_run_id`；对 `validation_failed` path，只允许使用 journal-scoped substrate session handle 持续 durability，不得伪造新的 domain `grant_run_id`。
@@ -84,6 +85,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `src/med_autogrant/local_runtime.py` 只保留 compatibility bridge 责任。
 - `execute-revision-pass`、`build-artifact-bundle`、`build-final-package`、`build-hosted-contract-bundle` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
 - `build-hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 hosted contract catalog。
+- 当前 external caller 只需要读取 `domain_entry_contract.supported_commands` 与 `domain_entry_contract.command_contracts`，就能按统一 contract 构造 request，而不需要 repo-local helper。
 - `build-hosted-contract-bundle.hosted_contract_bundle` 现在也受 `schemas/v1/hosted-contract-bundle.schema.json` 约束，并在写出前执行 schema + 冻结 truth 的 fail-closed 校验。
 - 当前 author-side executor routing 继续按 route 单独冻结：`revision / artifact_bundle / final_package / hosted_contract_bundle` 已有 landed service-safe command surface，而所有非落地 stage 都只允许输出 `pending / handoff-required`。
 - `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / frozen` 现在都会额外导出 route-specific `handoff_requirements`，并且只引用 `summarize-workspace / stage-route-report / critique-summary` 这些已存在的 domain surfaces。

@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry  # noqa: E402
+from med_autogrant.product_entry import MedAutoGrantProductEntry  # noqa: E402
 from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
 
 
@@ -238,6 +239,133 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                 "program_id": "med-autogrant-mainline",
             },
         )
+
+
+class HostedCallerConsumptionProofTest(unittest.TestCase):
+    def test_external_caller_can_consume_domain_entry_contract_without_repo_local_helper(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_root = Path(tmp_dir)
+            critique_product_entry = MedAutoGrantProductEntry().build(
+                input_path=str(CRITIQUE_EXAMPLE_PATH),
+                entry_mode="opl-handoff",
+                task_intent="tighten-grant-mainline",
+            )["product_entry"]
+            critique_contract = critique_product_entry["return_surface_contract"]["domain_entry_contract"]
+
+            critique_request = _build_request_from_contract(
+                critique_contract,
+                "stage-route-report",
+                input_path=critique_product_entry["workspace_locator"]["workspace_path"],
+            )
+            critique_payload = MedAutoGrantDomainEntry().dispatch(critique_request)
+            self.assertTrue(critique_payload["ok"])
+            self.assertEqual(critique_payload["command"], "stage-route-report")
+
+            artifact_bundle_path = tmp_root / "artifact-bundle.json"
+            final_package_path = tmp_root / "final-package.json"
+            hosted_contract_path = tmp_root / "hosted-contract.json"
+
+            hosted_contract = _build_hosted_bundle_for_external_caller(
+                tmp_root=tmp_root,
+                final_package_path=final_package_path,
+                hosted_contract_path=hosted_contract_path,
+            )
+            hosted_entry_contract = hosted_contract["domain_entry_contract"]
+            route_catalog = {
+                route["route_id"]: route
+                for route in hosted_contract["authoring_contract"]["author_side_route_catalog"]
+            }
+
+            artifact_request = _build_request_from_contract(
+                hosted_entry_contract,
+                route_catalog["artifact_bundle"]["execution_surface"]["command"],
+                input_path=str(FROZEN_EXAMPLE_PATH),
+                output_path=str(artifact_bundle_path),
+            )
+            artifact_payload = MedAutoGrantDomainEntry().dispatch(artifact_request)
+            self.assertTrue(artifact_payload["ok"])
+
+            final_request = _build_request_from_contract(
+                hosted_entry_contract,
+                route_catalog["final_package"]["execution_surface"]["command"],
+                input_path=str(FROZEN_EXAMPLE_PATH),
+                artifact_bundle_path=str(artifact_bundle_path),
+                output_path=str(final_package_path),
+            )
+            final_payload = MedAutoGrantDomainEntry().dispatch(final_request)
+            self.assertTrue(final_payload["ok"])
+
+            hosted_request = _build_request_from_contract(
+                hosted_entry_contract,
+                route_catalog["hosted_contract_bundle"]["execution_surface"]["command"],
+                final_package_path=str(final_package_path),
+                output_path=str(hosted_contract_path),
+            )
+            hosted_payload = MedAutoGrantDomainEntry().dispatch(hosted_request)
+            self.assertTrue(hosted_payload["ok"])
+            self.assertEqual(
+                hosted_payload["hosted_contract_bundle"]["domain_entry_contract"]["command_contracts"],
+                hosted_entry_contract["command_contracts"],
+            )
+
+
+def _build_request_from_contract(
+    domain_entry_contract: dict[str, object],
+    command: str,
+    **context: str,
+) -> dict[str, str]:
+    for item in domain_entry_contract["command_contracts"]:
+        if item["command"] == command:
+            request = {"command": command}
+            for field in item["required_fields"] + item["optional_fields"]:
+                value = context.get(field)
+                if value is not None:
+                    request[field] = value
+            missing_fields = [field for field in item["required_fields"] if field not in request]
+            if missing_fields:
+                raise AssertionError(f"external caller context 缺少字段: {missing_fields}")
+            return request
+    raise AssertionError(f"未找到 command contract: {command}")
+
+
+def _build_hosted_bundle_for_external_caller(
+    *,
+    tmp_root: Path,
+    final_package_path: Path,
+    hosted_contract_path: Path,
+) -> dict[str, object]:
+    artifact_bundle_path = tmp_root / "bundle-for-hosted-proof.json"
+    bundle_payload = MedAutoGrantDomainEntry().dispatch(
+        {
+            "command": "build-artifact-bundle",
+            "input_path": str(FROZEN_EXAMPLE_PATH),
+            "output_path": str(artifact_bundle_path),
+        }
+    )
+    if bundle_payload["ok"] is not True:
+        raise AssertionError("artifact bundle proof 构建失败")
+
+    final_payload = MedAutoGrantDomainEntry().dispatch(
+        {
+            "command": "build-final-package",
+            "input_path": str(FROZEN_EXAMPLE_PATH),
+            "artifact_bundle_path": str(artifact_bundle_path),
+            "output_path": str(final_package_path),
+        }
+    )
+    if final_payload["ok"] is not True:
+        raise AssertionError("final package proof 构建失败")
+
+    hosted_payload = MedAutoGrantDomainEntry().dispatch(
+        {
+            "command": "build-hosted-contract-bundle",
+            "final_package_path": str(final_package_path),
+            "output_path": str(hosted_contract_path),
+        }
+    )
+    if hosted_payload["ok"] is not True:
+        raise AssertionError("hosted contract proof 构建失败")
+    return hosted_payload["hosted_contract_bundle"]
 
 
 if __name__ == "__main__":

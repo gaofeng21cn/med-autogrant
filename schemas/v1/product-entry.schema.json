@@ -167,6 +167,88 @@
         }
       }
     },
+    "domainEntryCommandContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "required_fields",
+        "optional_fields"
+      ],
+      "properties": {
+        "command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "required_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "optional_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "domainEntryContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_adapter",
+        "service_safe_surface_kind",
+        "product_entry_builder_command",
+        "product_entry_kind",
+        "supported_entry_modes",
+        "supported_commands",
+        "command_contracts"
+      ],
+      "properties": {
+        "entry_adapter": {
+          "const": "MedAutoGrantDomainEntry"
+        },
+        "service_safe_surface_kind": {
+          "const": "service-safe-domain-entry-command"
+        },
+        "product_entry_builder_command": {
+          "const": "build-product-entry"
+        },
+        "product_entry_kind": {
+          "const": "med_auto_grant_product_entry"
+        },
+        "supported_entry_modes": {
+          "const": [
+            "direct",
+            "opl-handoff"
+          ]
+        },
+        "supported_commands": {
+          "const": [
+            "probe-upstream-hermes",
+            "validate-workspace",
+            "summarize-workspace",
+            "next-step",
+            "critique-summary",
+            "stage-route-report",
+            "run-local",
+            "resume-local",
+            "build-artifact-bundle",
+            "execute-revision-pass",
+            "build-final-package",
+            "build-hosted-contract-bundle"
+          ]
+        },
+        "command_contracts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/domainEntryCommandContract"
+          },
+          "minItems": 12
+        }
+      }
+    },
     "returnSurfaceContract": {
       "type": "object",
       "additionalProperties": false,
@@ -174,6 +256,7 @@
         "entry_adapter",
         "default_formal_entry",
         "supported_entry_modes",
+        "domain_entry_contract",
         "checkpoint_aggregation_surface",
         "operator_contract"
       ],
@@ -189,6 +272,9 @@
             "direct",
             "opl-handoff"
           ]
+        },
+        "domain_entry_contract": {
+          "$ref": "#/$defs/domainEntryContract"
         },
         "checkpoint_aggregation_surface": {
           "const": "stage-route-report"

@@ -67,22 +67,28 @@ Date: `2026-04-12`
 
 ### P3. hosted caller / OPL consumption proof
 
-下一阶段的正确方向不是继续在 repo 里发明新的 local hosted helper。
+这阶段当前也已完成。
 
-而是：
+当前已经 landed 的事实是：
 
-- 证明 external hosted caller / `OPL Gateway` 可以直接消费：
+- external hosted caller / future `OPL` caller 可以直接消费：
   - `domain_entry_contract`
   - `schema_contract`
   - `authoring_contract`
-- 保持 direct entry 与 family-level handoff 共用同一份 contract truth
-- 不改写 pending route 的 owner 与状态
+- `domain_entry_contract` 现在还会显式导出：
+  - `supported_commands`
+  - `command_contracts`
+- external caller 可以只按冻结合同构造 request，而不需要 repo-local helper
+- direct entry 与 family-level handoff 继续共用同一份 contract truth
+- pending route 的 owner 与状态没有被改写
 
-因此当前 `P3` 的 honest status 是：
+因此当前 `P3` 的 honest status 应更新为：
 
-- `next`
+- `completed`
 
-还不能写成 completed。
+相关 proof 现已冻结在：
+
+- `docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md`
 
 ## 更远阶段
 
@@ -95,7 +101,7 @@ Date: `2026-04-12`
 
 因此当前 `P4` 只能诚实写成：
 
-- `future`
+- `next`
 
 ## 不在本线内的事
 
@@ -113,7 +119,7 @@ Date: `2026-04-12`
 
 - `P1` completed
 - `P2` completed
-- `P3` next
-- `P4` future
+- `P3` completed
+- `P4` next
 
 这份 phase map 是当前 repo-tracked honest target，不是 overclaim。
