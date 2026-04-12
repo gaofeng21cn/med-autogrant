@@ -39,6 +39,35 @@
 - 已落地的 service-safe entry：`MedAutoGrantDomainEntry`，它把 CLI 命令面保留成 future gateway caller 可复用的结构化 entry contract。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
 
+## 入口分层与产品边界
+
+当前 `Med Auto Grant` 已经有真实的 `operator entry` 和 `agent entry`，但还没有成熟的 `product entry`。也就是说：
+
+- `operator entry`：给人类操作同事使用的命令、workspace 准备、检查和显式 gate
+- `agent entry`：由 `Codex` 或其他 host-agent 调用的 `CLI + MedAutoGrantDomainEntry`
+- `product entry`：即使 runtime substrate 已经跑在真实上游 `Hermes-Agent` 上，用户直接进入的产品前台仍然是下一步缺口
+
+目标中的 domain 级入口形态应是：
+
+`User -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant Domain Harness OS`
+
+而在更大的 `OPL` 家族入口里，应兼容：
+
+`User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+
+这条 handoff 至少共享下面这组最小 envelope：
+
+- `target_domain_id`
+- `task_intent`
+- `entry_mode`
+- `workspace_locator`
+- `runtime_session_contract`
+- `return_surface_contract`
+
+在这层共享 envelope 之上，`Med Auto Grant` 再补充 `workspace_id`、`draft_id`、`funding_call` 这些 grant domain payload。
+
+因此当前最诚实的判断是：Hermes-backed runtime substrate 已经落地，但真正面向最终用户的 product entry shell 还需要继续补。
+
 ## 执行句柄与持久表面
 
 - `grant_run_id`：单次 hydrated grant run 的正式执行句柄
@@ -114,6 +143,7 @@
 - [文档索引](./docs/README.zh-CN.md)
 - [Domain Positioning](./docs/domain-positioning.zh-CN.md)
 - [MVP Scope](./docs/mvp-scope.zh-CN.md)
+- [轻量产品入口与 OPL Handoff](./docs/references/lightweight_product_entry_and_opl_handoff.md)
 
 ## 开发验证
 

@@ -140,3 +140,50 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "runtime_substrate_contract" in migration_map
     assert "runtime_state_contract" in migration_map
     assert "operator_contract" in migration_map
+
+
+@pytest.mark.meta
+def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtime_substrate() -> None:
+    reference = REPO_ROOT / "docs" / "references" / "lightweight_product_entry_and_opl_handoff.md"
+    reference_text = _read(reference)
+
+    for path in (README_EN, README_ZH, DOCS_README_EN, DOCS_README_ZH, CORE_PROJECT, CORE_ARCHITECTURE, CORE_STATUS):
+        text = _read(path)
+        assert "product entry" in text
+        assert "OPL" in text
+
+    readme_en = _read(README_EN)
+    readme_zh = _read(README_ZH)
+    docs_readme_en = _read(DOCS_README_EN)
+    docs_readme_zh = _read(DOCS_README_ZH)
+    architecture = _read(CORE_ARCHITECTURE)
+    status = _read(CORE_STATUS)
+
+    assert "the user-facing product entry shell still needs to be built" in readme_en
+    assert "runtime substrate is already on real upstream `Hermes-Agent`" in readme_en
+    assert "真正面向最终用户的 product entry shell 还需要继续补" in readme_zh
+    assert "真实上游 `Hermes-Agent` 上" in readme_zh
+
+    assert "grant-facing `product entry`" in docs_readme_en
+    assert "Product-entry target" in docs_readme_en
+    assert "./references/lightweight_product_entry_and_opl_handoff.md" in docs_readme_en
+    assert "grant-facing `product entry`" in docs_readme_zh
+    assert "产品入口目标" in docs_readme_zh
+    assert "./references/lightweight_product_entry_and_opl_handoff.md" in docs_readme_zh
+
+    assert "User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry" in architecture
+    assert "workspace_id" in architecture
+    assert "draft_id" in architecture
+    assert "funding_call" in architecture
+    assert "OPL -> Med Auto Grant" in status
+
+    assert "target_domain_id" in reference_text
+    assert "task_intent" in reference_text
+    assert "entry_mode" in reference_text
+    assert "workspace_locator" in reference_text
+    assert "runtime_session_contract" in reference_text
+    assert "return_surface_contract" in reference_text
+    assert "workspace_id" in reference_text
+    assert "draft_id" in reference_text
+    assert "funding_call" in reference_text
+    assert "runtime substrate 已经真正落在上游 `Hermes-Agent` 上" in reference_text

@@ -40,6 +40,36 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 - Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 
+## Entry Modes And Product Boundary
+
+Today, `Med Auto Grant` already has real `operator entry` and `agent entry`, but not yet a mature `product entry`.
+That means:
+
+- `operator entry`: human/operator commands, workspace preparation, inspection, and explicit gating
+- `agent entry`: `CLI` plus the landed `MedAutoGrantDomainEntry`, called by `Codex` or another host-agent
+- `product entry`: still the next gap, even though the runtime substrate is already on real upstream `Hermes-Agent`
+
+The target domain-facing shape is:
+
+`User -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant Domain Harness OS`
+
+Inside the broader `OPL` family, the compatible top-level route is:
+
+`User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+
+That handoff should carry one shared minimum envelope:
+
+- `target_domain_id`
+- `task_intent`
+- `entry_mode`
+- `workspace_locator`
+- `runtime_session_contract`
+- `return_surface_contract`
+
+On top of that, `Med Auto Grant` adds domain payload such as `workspace_id`, `draft_id`, and `funding_call`.
+
+So the current honest claim is: the Hermes-backed runtime substrate is landed, but the user-facing product entry shell still needs to be built on top of it.
+
 ## Execution Handle And Durable Surfaces
 
 - `grant_run_id` is the formal execution handle for one hydrated grant run.
@@ -115,6 +145,7 @@ You can give your agent an instruction like this:
 - [Docs Index](./docs/README.md)
 - [Domain Positioning](./docs/domain-positioning.md)
 - [MVP Scope](./docs/mvp-scope.md)
+- [Lightweight product entry and OPL handoff](./docs/references/lightweight_product_entry_and_opl_handoff.md) (Chinese only)
 
 ## Development Verification
 

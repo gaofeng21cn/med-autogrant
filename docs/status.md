@@ -9,6 +9,7 @@ Date: `2026-04-12`
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
 - OMX 状态：已退场，仅保留历史入口。
+- 当前入口真相：`operator entry` 与 `agent entry` 已存在；成熟的 grant-facing `product entry` 仍未落地
 
 ## 当前基线（repo-verified）
 
@@ -35,12 +36,14 @@ Date: `2026-04-12`
 - 保持上游 `Hermes-Agent` 继续作为 runtime substrate owner，而不是退回 repo-local helper 主责。
 - 保留旧 `CLI-first + host-agent` 本地 runtime 作为已验证基线、兼容桥和回归 oracle，而不是长期终态。
 - 在真实上游 substrate 上继续延续 `workspace -> critique -> revision -> final package -> hosted contract bundle` 这条 author-side grant mainline。
+- 在不改写 grant 对象边界的前提下，把 `Med Auto Grant Product Entry` 与 `OPL` handoff 壳补到真实 runtime substrate 之上。
 
 ## 当前优先事项
 
 1. 保持真实 upstream substrate、service-safe domain entry 与 author-side artifact/export surface 持续全绿。
 2. 继续沿 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` 的口径推进，不把 repo-local adapter 重新写回 runtime owner。
 3. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
+4. 下一步产品层重点是补齐 lightweight `product entry` 与 `OPL -> Med Auto Grant` handoff，而不是回头扩写 repo-local runtime owner 叙事。
 
 ## 默认验证
 

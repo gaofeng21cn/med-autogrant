@@ -8,6 +8,38 @@
 
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 
+## 入口 taxonomy 与 OPL handoff
+
+当前需要明确区分三层入口：
+
+- `operator entry`
+  - 给人类操作同事使用的命令、workspace 准备、检查与显式 gate
+- `agent entry`
+  - 给 `Codex`、Claude Code、OpenClaw 等 host-agent 使用的 `CLI` / `MedAutoGrantDomainEntry`
+- `product entry`
+  - 给最终用户直接进入的产品入口
+
+当前真实状态是：前两层已经存在，第三层还没有成熟落地。
+
+目标中的 domain 级链路应是：
+
+`User -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant Domain Harness OS`
+
+与 `OPL` 的家族级衔接应是：
+
+`User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+
+`OPL -> Med Auto Grant` 的最小 handoff envelope 至少包括：
+
+- `target_domain_id`
+- `task_intent`
+- `entry_mode`
+- `workspace_locator`
+- `runtime_session_contract`
+- `return_surface_contract`
+
+在这层公共 envelope 之上，grant 域继续补充 `workspace_id`、`draft_id`、`funding_call` 等 domain payload。
+
 ## 入口与执行
 
 - CLI 仍是唯一 formal entry：`validate-workspace`、`summarize-workspace`、`next-step`、`critique-summary`、`stage-route-report`。
