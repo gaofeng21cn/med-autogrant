@@ -6,6 +6,7 @@ from typing import Any, Mapping
 
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.hermes_runtime import (
+    _build_executor_routing_contract,
     _build_operator_contract,
     _build_runtime_state_contract,
     _build_runtime_substrate_contract,
@@ -139,6 +140,11 @@ class MedAutoGrantProductEntry:
                 "checkpoint_status": checkpoint_status,
                 "recommended_next_stage": recommended_next_stage,
             },
+            "executor_routing_contract": _build_executor_routing_contract(
+                current_stage=lifecycle_stage,
+                recommended_next_stage=recommended_next_stage,
+                include_route_catalog=True,
+            ),
         }
 
         resolved_output_path = None

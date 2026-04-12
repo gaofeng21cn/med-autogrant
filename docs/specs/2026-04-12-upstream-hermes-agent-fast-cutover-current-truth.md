@@ -90,6 +90,21 @@ Date: `2026-04-12`
 - CLI 仍然是 formal entry，但现在通过同一条 service-safe adapter 进入 runtime/domain path。
 - 这条 adapter 允许未来 `OPL Gateway` 复用同一结构化 entry contract，而不需要先发明自然语言壳。
 
+### 5. author-side executor routing contract 已显式冻结
+
+- `stage_action_envelope` 与 `build-product-entry` 现在都会输出 `executor_routing_contract`
+- 这份 contract 明确区分：
+  - `current_stage_route`
+  - `recommended_executor_route`
+- 当前 landed route 继续是：
+  - `revision -> execute-revision-pass`
+  - `artifact_bundle -> build-artifact-bundle`
+  - `final_package -> build-final-package`
+  - `hosted_contract_bundle -> build-hosted-contract-bundle`
+- 当前 `critique` route 继续诚实保持：
+  - `route_status = pending`
+  - `handoff_contract_kind = handoff-required`
+
 ## What Did Not Change
 
 - formal entry 仍是 `CLI`
@@ -112,6 +127,7 @@ repo 现在至少有下面这些 fresh proof：
    - run/resume
    - final package
    - hosted contract bundle
+5. `executor_routing_contract` 能把 critique 的 `pending / handoff-required` 与 revision/export 的 landed route 明确区分出来
 
 ## Verification
 

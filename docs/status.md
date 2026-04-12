@@ -21,6 +21,7 @@ Date: `2026-04-12`
   - `contracts/runtime-program/current-program.json`
   - `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
   - `docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`
+  - `docs/specs/2026-04-12-author-side-executor-routing-contract-current-truth.md`
   - `docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
   - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
   - `docs/specs/2026-04-07-durability-model-clarification.md`
@@ -46,7 +47,8 @@ Date: `2026-04-12`
 2. 继续沿 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` 的口径推进，不把 repo-local adapter 重新写回 runtime owner。
 3. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 4. 已 landed 的 lightweight `product entry` / `OPL -> Med Auto Grant` handoff shell 现在由 `build-product-entry` 承载；后续只允许沿同一 shared envelope 继续收口，不回头扩写 repo-local runtime owner 叙事。
-5. 后续若继续替换 critique / revision / export 的具体执行器，必须按 route 单独拿 truth 和 proof；不允许因为 substrate 已统一就自动改写 authoring semantics。
+5. `stage_action_envelope` 与 `build-product-entry` 现在都带同一份 `executor_routing_contract`；当前 `critique` 继续诚实标为 `pending / handoff-required`，而 `revision / artifact_bundle / final_package / hosted_contract_bundle` 才是已 landed route。
+6. 后续若继续替换 critique / revision / export 的具体执行器，必须按 route 单独拿 truth 和 proof；不允许因为 substrate 已统一就自动改写 authoring semantics。
 
 ## 默认验证
 

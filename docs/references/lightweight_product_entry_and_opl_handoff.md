@@ -60,6 +60,15 @@
 - `workspace_id`
 - `draft_id`
 - `funding_call`
+- `executor_routing_contract`
+
+其中 `executor_routing_contract` 当前至少要把：
+
+- `current_stage_route`
+- `recommended_executor_route`
+- `author_side_route_catalog`
+
+显式带出来，避免 future caller 误把 `critique` 写成“已有 landed executor”。
 
 ## 5. 当前不应过度宣称的事
 
@@ -72,4 +81,5 @@
 
 1. 继续保持真实 upstream `Hermes-Agent` substrate、service-safe domain entry 与 `build-product-entry` 全绿。
 2. 让 `OPL -> Med Auto Grant` handoff 与 direct entry 持续共用同一套结构化 envelope，而不是再起第二套入口语义。
-3. 在轻量结构化 shell 已 landed 的前提下，仍然克制表述成熟度，不把它写成完整最终 UX。
+3. 继续把 critique / revision / export 的 executor route truth 显式冻结到同一份 `executor_routing_contract`，不让 `pending` route 偷偷漂成“已 landed”。
+4. 在轻量结构化 shell 已 landed 的前提下，仍然克制表述成熟度，不把它写成完整最终 UX。

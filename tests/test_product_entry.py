@@ -157,6 +157,83 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "recommended_next_stage": "revision",
             },
         )
+        self.assertEqual(
+            direct_envelope["executor_routing_contract"],
+            {
+                "contract_version": 1,
+                "current_stage_route": {
+                    "route_id": "critique",
+                    "route_status": "pending",
+                    "executor_owner": "med-autogrant",
+                    "execution_surface": None,
+                    "handoff_contract_kind": "handoff-required",
+                },
+                "recommended_executor_route": {
+                    "route_id": "revision",
+                    "route_status": "landed",
+                    "executor_owner": "med-autogrant",
+                    "execution_surface": {
+                        "surface_kind": "service-safe-domain-entry-command",
+                        "entry_adapter": "MedAutoGrantDomainEntry",
+                        "command": "execute-revision-pass",
+                    },
+                    "handoff_contract_kind": "service-safe-domain-entry-command",
+                },
+                "author_side_route_catalog": [
+                    {
+                        "route_id": "critique",
+                        "route_status": "pending",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": None,
+                        "handoff_contract_kind": "handoff-required",
+                    },
+                    {
+                        "route_id": "revision",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "execute-revision-pass",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                    {
+                        "route_id": "artifact_bundle",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "build-artifact-bundle",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                    {
+                        "route_id": "final_package",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "build-final-package",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                    {
+                        "route_id": "hosted_contract_bundle",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "build-hosted-contract-bundle",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                ],
+            },
+        )
 
     def test_product_entry_fails_closed_on_blank_task_intent(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

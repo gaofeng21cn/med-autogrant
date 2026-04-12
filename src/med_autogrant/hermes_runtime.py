@@ -41,6 +41,17 @@ from med_autogrant.workspace import (
 
 JOURNAL_VERSION = 1
 CURRENT_PROGRAM_RELATIVE_PATH = CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH
+EXECUTOR_ROUTING_CONTRACT_VERSION = 1
+AUTHOR_SIDE_EXECUTOR_ROUTE_IDS = (
+    "critique",
+    "revision",
+    "artifact_bundle",
+    "final_package",
+    "hosted_contract_bundle",
+)
+SERVICE_SAFE_ENTRY_ADAPTER = "MedAutoGrantDomainEntry"
+SERVICE_SAFE_ENTRY_SURFACE_KIND = "service-safe-domain-entry-command"
+EXECUTOR_ROUTE_OWNER = "med-autogrant"
 
 
 class LocalRuntimeStateError(WorkspaceError):
@@ -464,6 +475,10 @@ def derive_stage_action_envelope(
             for index, instruction in enumerate(actions, start=1)
         ],
         "route_reason": next_step["reason"],
+        "executor_routing_contract": _build_executor_routing_contract(
+            current_stage=next_step["current_stage"],
+            recommended_next_stage=next_step["recommended_stage"],
+        ),
         "resume_decision": {
             "command": "resume-local",
             "journal_path": str(journal_path),
@@ -803,6 +818,68 @@ def _read_current_program_contract(*, repo_root: Path | None = None) -> dict[str
     return _read_current_program_contract_from_contract(repo_root=repo_root)
 
 
+def _build_executor_routing_contract(
+    *,
+    current_stage: str,
+    recommended_next_stage: str,
+    include_route_catalog: bool = False,
+) -> dict[str, Any]:
+    contract = {
+        "contract_version": EXECUTOR_ROUTING_CONTRACT_VERSION,
+        "current_stage_route": _build_stage_route_contract(current_stage),
+        "recommended_executor_route": _build_stage_route_contract(recommended_next_stage),
+    }
+    if include_route_catalog:
+        contract["author_side_route_catalog"] = [
+            _build_author_side_route_contract(route_id)
+            for route_id in AUTHOR_SIDE_EXECUTOR_ROUTE_IDS
+        ]
+    return contract
+
+
+def _build_stage_route_contract(stage: str) -> dict[str, Any]:
+    resolved_stage = _require_nonempty_route_id(stage, context="executor routing stage")
+    if resolved_stage == "revision":
+        return _build_author_side_route_contract("revision")
+    if resolved_stage == "critique":
+        return _build_author_side_route_contract("critique")
+    return _build_pending_route_contract(resolved_stage)
+
+
+def _build_author_side_route_contract(route_id: str) -> dict[str, Any]:
+    resolved_route_id = _require_nonempty_route_id(route_id, context="executor routing route")
+    execution_command = {
+        "revision": "execute-revision-pass",
+        "artifact_bundle": "build-artifact-bundle",
+        "final_package": "build-final-package",
+        "hosted_contract_bundle": "build-hosted-contract-bundle",
+    }.get(resolved_route_id)
+    if execution_command is None:
+        return _build_pending_route_contract(resolved_route_id)
+    return {
+        "route_id": resolved_route_id,
+        "route_status": "landed",
+        "executor_owner": EXECUTOR_ROUTE_OWNER,
+        "execution_surface": {
+            "surface_kind": SERVICE_SAFE_ENTRY_SURFACE_KIND,
+            "entry_adapter": SERVICE_SAFE_ENTRY_ADAPTER,
+            "command": execution_command,
+        },
+        "handoff_contract_kind": SERVICE_SAFE_ENTRY_SURFACE_KIND,
+    }
+
+
+def _build_pending_route_contract(route_id: str) -> dict[str, Any]:
+    resolved_route_id = _require_nonempty_route_id(route_id, context="pending executor route")
+    return {
+        "route_id": resolved_route_id,
+        "route_status": "pending",
+        "executor_owner": EXECUTOR_ROUTE_OWNER,
+        "execution_surface": None,
+        "handoff_contract_kind": "handoff-required",
+    }
+
+
 def _build_runtime_substrate_contract(*, current_program_contract: dict[str, Any]) -> dict[str, Any]:
     runtime_owner = current_program_contract.get("runtime_owner")
     if not isinstance(runtime_owner, dict):
@@ -870,6 +947,12 @@ def _require_nonempty_string(payload: dict[str, Any], field: str, *, context: st
     if not isinstance(value, str) or not value:
         raise WorkspaceStateError(f"{context} 缺少合法字段: {field}")
     return value
+
+
+def _require_nonempty_route_id(value: Any, *, context: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise WorkspaceStateError(f"{context} 缺少合法 route_id")
+    return value.strip()
 
 
 def _directory_display_path(*segments: str) -> str:

@@ -133,6 +133,7 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
+            critique_journal_path = tmp_root / "critique-journal.json"
             revised_workspace_path = tmp_root / "revised.json"
             revised_bundle_path = tmp_root / "revised-bundle.json"
             revised_journal_path = tmp_root / "revised-journal.json"
@@ -143,6 +144,37 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
             critique_report = runtime.stage_route_report(input_path=str(CRITIQUE_EXAMPLE_PATH))
             self.assertTrue(critique_report["ok"])
             self.assertEqual(critique_report["verification_checkpoint"]["identity"]["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+
+            critique_run = runtime.run_local(
+                input_path=str(CRITIQUE_EXAMPLE_PATH),
+                journal_path=str(critique_journal_path),
+            )
+            self.assertTrue(critique_run["ok"])
+            self.assertEqual(critique_run["stop_reason"]["recommended_next_stage"], "revision")
+            self.assertEqual(
+                critique_run["stage_action_envelope"]["executor_routing_contract"],
+                {
+                    "contract_version": 1,
+                    "current_stage_route": {
+                        "route_id": "critique",
+                        "route_status": "pending",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": None,
+                        "handoff_contract_kind": "handoff-required",
+                    },
+                    "recommended_executor_route": {
+                        "route_id": "revision",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "execute-revision-pass",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                },
+            )
 
             revised_payload = runtime.execute_revision_pass(
                 input_path=str(RE_REVIEW_EXAMPLE_PATH),

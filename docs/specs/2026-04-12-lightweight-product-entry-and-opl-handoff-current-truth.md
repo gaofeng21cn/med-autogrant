@@ -63,8 +63,30 @@ grant 域在这层共享 envelope 之上继续补充：
   - `MedAutoGrantDomainEntry`
   - `stage-route-report`
   - `operator_contract`
+- `executor_routing_contract` 现在与 `stage_action_envelope` 共享同一份 route truth：
+  - `current_stage_route`
+  - `recommended_executor_route`
+  - `author_side_route_catalog`
 
-### 4. 当前实现是 fail-closed 的
+### 4. 当前 critique / revision / export route 的状态已经诚实冻结
+
+- `critique`
+  - `route_status = pending`
+  - `handoff_contract_kind = handoff-required`
+- `revision`
+  - `route_status = landed`
+  - `execution_surface.command = execute-revision-pass`
+- `artifact_bundle`
+  - `route_status = landed`
+  - `execution_surface.command = build-artifact-bundle`
+- `final_package`
+  - `route_status = landed`
+  - `execution_surface.command = build-final-package`
+- `hosted_contract_bundle`
+  - `route_status = landed`
+  - `execution_surface.command = build-hosted-contract-bundle`
+
+### 5. 当前实现是 fail-closed 的
 
 - 空白 `task_intent` 会直接拒绝
 - 缺失 `workspace_id`、`grant_run_id`、`checkpoint_status` 或 `recommended_next_stage` 的 route snapshot 会直接拒绝
@@ -93,6 +115,7 @@ grant 域在这层共享 envelope 之上继续补充：
 - 轻量结构化 `product entry` shell 已 landed
 - `direct` 与 `opl-handoff` 现在共享同一套 envelope
 - 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与真实 Hermes substrate contract 之上
+- 这层 shell 还能显式告诉 caller：当前哪些 author-side route 已 landed，哪些还只是 `pending / handoff-required`
 
 它不意味着：
 
