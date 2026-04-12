@@ -423,6 +423,43 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
 
+    def test_grant_direct_entry_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "grant-direct-entry",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "critique",
+            "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            "grant_direct_entry": {
+                "entry_kind": "grant_direct_entry",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.build_grant_direct_entry.return_value = expected_payload
+
+            exit_code, stdout, stderr = self.run_cli(
+                "grant-direct-entry",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--task-intent",
+                "tighten-grant-mainline",
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_grant_direct_entry.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            task_intent="tighten-grant-mainline",
+            funding_call=None,
+        )
+
 
 class ProductEntryEnvelopeTest(unittest.TestCase):
     def test_product_entry_builds_shared_envelope_for_direct_and_opl_handoff(self) -> None:
@@ -806,6 +843,446 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "build_opl_handoff": f"uv run python -m med_autogrant build-product-entry --input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
             },
         )
+
+    def test_grant_direct_entry_composes_projection_and_entry_envelopes(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_grant_direct_entry(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            task_intent="tighten-grant-mainline",
+        )
+
+        self.assertEqual(payload["command"], "grant-direct-entry")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["draft_id"], "draft-v1")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(
+            payload["grant_direct_entry"],
+            {
+                "entry_version": 1,
+                "entry_kind": "grant_direct_entry",
+                "target_domain_id": "med-autogrant",
+                "workspace_surface_kind": "nsfc_workspace",
+                "task_intent": "tighten-grant-mainline",
+                "workspace_overview": {
+                    "applicant_name": "示例申请人",
+                    "funding_program": "nsfc-2026-general",
+                    "lifecycle_stage": "critique",
+                    "checkpoint_status": "forward_progress",
+                    "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
+                    "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
+                    "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
+                    "critique_verdict": "major_revision",
+                },
+                "workspace_status": "attention_required",
+                "workspace_alerts": [
+                    "必要性表述仍略偏现象描述。",
+                ],
+                "progress_projection": {
+                    "projection_version": 1,
+                    "projection_kind": "grant_progress",
+                    "workspace_surface_kind": "nsfc_workspace",
+                    "current_stage": "critique",
+                    "current_stage_summary": "当前 grant 已进入 critique 阶段；导师批注 verdict=major_revision，应先执行结构化修订。",
+                    "checkpoint_status": "forward_progress",
+                    "recommended_next_stage": "revision",
+                    "current_blockers": [
+                        "必要性表述仍略偏现象描述。",
+                    ],
+                    "next_system_action": "执行 revision plan 中的 P0/P1 项。",
+                    "needs_author_decision": False,
+                    "author_decision_summary": None,
+                    "focus": {
+                        "applicant_name": "示例申请人",
+                        "funding_program": "nsfc-2026-general",
+                        "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
+                        "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
+                        "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
+                        "critique_verdict": "major_revision",
+                    },
+                    "product_entry_surface": {
+                        "builder_command": "build-product-entry",
+                        "target_domain_id": "med-autogrant",
+                        "supported_entry_modes": ["direct", "opl-handoff"],
+                        "task_intent_required": True,
+                        "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                    },
+                },
+                "current_stage_route": _expected_route("critique", source_stage="critique"),
+                "recommended_executor_route": _expected_route("revision", source_stage="critique"),
+                "direct_entry": {
+                    "entry_version": 1,
+                    "entry_kind": "med_auto_grant_product_entry",
+                    "target_domain_id": "med-autogrant",
+                    "task_intent": "tighten-grant-mainline",
+                    "entry_mode": "direct",
+                    "workspace_locator": {
+                        "workspace_surface_kind": "nsfc_workspace",
+                        "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                    },
+                    "runtime_session_contract": {
+                        "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                        "session_handle_kind": "grant_run_id",
+                        "start_entry": "run-local",
+                        "resume_entry": "resume-local",
+                        "runtime_substrate_contract": {
+                            "runtime_owner": "Hermes",
+                            "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                            "active_phase": "P4 mature direct grant product entry",
+                            "active_tranche": "P4.B direct grant entry composition",
+                            "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
+                            "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
+                        },
+                        "runtime_state_contract": {
+                            "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
+                            "session_journal_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
+                            "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
+                            "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
+                            "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
+                            "handoff_state_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/",
+                            "non_repo_tracked": True,
+                        },
+                    },
+                    "return_surface_contract": {
+                        "entry_adapter": "MedAutoGrantDomainEntry",
+                        "default_formal_entry": "CLI",
+                        "supported_entry_modes": ["direct", "opl-handoff"],
+                        "domain_entry_contract": {
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "service_safe_surface_kind": "service-safe-domain-entry-command",
+                            "product_entry_builder_command": "build-product-entry",
+                            "product_entry_kind": "med_auto_grant_product_entry",
+                            "supported_entry_modes": ["direct", "opl-handoff"],
+                            "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
+                            "command_contracts": DOMAIN_ENTRY_COMMAND_CONTRACTS,
+                        },
+                        "checkpoint_aggregation_surface": "stage-route-report",
+                        "operator_contract": {
+                            "canonical_audit_surfaces": [
+                                "validate-workspace",
+                                "summarize-workspace",
+                                "next-step",
+                                "critique-summary",
+                                "stage-route-report",
+                            ],
+                            "canonical_export_surfaces": [
+                                "execute-revision-pass",
+                                "build-artifact-bundle",
+                                "build-final-package",
+                                "build-hosted-contract-bundle",
+                            ],
+                            "checkpoint_aggregation_surface": "stage-route-report",
+                        },
+                    },
+                    "domain_payload": {
+                        "workspace_id": "nsfc-demo-001",
+                        "draft_id": "draft-v1",
+                        "funding_call": "nsfc-2026-general",
+                    },
+                    "stage_snapshot": {
+                        "lifecycle_stage": "critique",
+                        "checkpoint_status": "forward_progress",
+                        "recommended_next_stage": "revision",
+                    },
+                    "executor_routing_contract": {
+                        "contract_version": 1,
+                        "current_stage_route": _expected_route("critique", source_stage="critique"),
+                        "recommended_executor_route": _expected_route("revision", source_stage="critique"),
+                        "author_side_route_catalog": [
+                            _expected_route(route_id, source_stage=route_id)
+                            for route_id in AUTHOR_SIDE_ROUTE_IDS
+                        ],
+                    },
+                },
+                "opl_handoff_entry": {
+                    "entry_version": 1,
+                    "entry_kind": "med_auto_grant_product_entry",
+                    "target_domain_id": "med-autogrant",
+                    "task_intent": "tighten-grant-mainline",
+                    "entry_mode": "opl-handoff",
+                    "workspace_locator": {
+                        "workspace_surface_kind": "nsfc_workspace",
+                        "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                    },
+                    "runtime_session_contract": {
+                        "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                        "session_handle_kind": "grant_run_id",
+                        "start_entry": "run-local",
+                        "resume_entry": "resume-local",
+                        "runtime_substrate_contract": {
+                            "runtime_owner": "Hermes",
+                            "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                            "active_phase": "P4 mature direct grant product entry",
+                            "active_tranche": "P4.B direct grant entry composition",
+                            "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
+                            "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
+                        },
+                        "runtime_state_contract": {
+                            "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
+                            "session_journal_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
+                            "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
+                            "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
+                            "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
+                            "handoff_state_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/",
+                            "non_repo_tracked": True,
+                        },
+                    },
+                    "return_surface_contract": {
+                        "entry_adapter": "MedAutoGrantDomainEntry",
+                        "default_formal_entry": "CLI",
+                        "supported_entry_modes": ["direct", "opl-handoff"],
+                        "domain_entry_contract": {
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "service_safe_surface_kind": "service-safe-domain-entry-command",
+                            "product_entry_builder_command": "build-product-entry",
+                            "product_entry_kind": "med_auto_grant_product_entry",
+                            "supported_entry_modes": ["direct", "opl-handoff"],
+                            "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
+                            "command_contracts": DOMAIN_ENTRY_COMMAND_CONTRACTS,
+                        },
+                        "checkpoint_aggregation_surface": "stage-route-report",
+                        "operator_contract": {
+                            "canonical_audit_surfaces": [
+                                "validate-workspace",
+                                "summarize-workspace",
+                                "next-step",
+                                "critique-summary",
+                                "stage-route-report",
+                            ],
+                            "canonical_export_surfaces": [
+                                "execute-revision-pass",
+                                "build-artifact-bundle",
+                                "build-final-package",
+                                "build-hosted-contract-bundle",
+                            ],
+                            "checkpoint_aggregation_surface": "stage-route-report",
+                        },
+                    },
+                    "domain_payload": {
+                        "workspace_id": "nsfc-demo-001",
+                        "draft_id": "draft-v1",
+                        "funding_call": "nsfc-2026-general",
+                    },
+                    "stage_snapshot": {
+                        "lifecycle_stage": "critique",
+                        "checkpoint_status": "forward_progress",
+                        "recommended_next_stage": "revision",
+                    },
+                    "executor_routing_contract": {
+                        "contract_version": 1,
+                        "current_stage_route": _expected_route("critique", source_stage="critique"),
+                        "recommended_executor_route": _expected_route("revision", source_stage="critique"),
+                        "author_side_route_catalog": [
+                            _expected_route(route_id, source_stage=route_id)
+                            for route_id in AUTHOR_SIDE_ROUTE_IDS
+                        ],
+                    },
+                },
+            },
+        )
+
+    def test_grant_direct_entry_fails_closed_on_mismatched_entry_mode(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with patch(
+            "med_autogrant.product_entry.MedAutoGrantProductEntry.build",
+            side_effect=[
+                {
+                    "ok": True,
+                    "command": "build-product-entry",
+                    "grant_run_id": "grant-run-test",
+                    "workspace_id": "workspace-test",
+                    "draft_id": "draft-test",
+                    "lifecycle_stage": "critique",
+                    "input_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                    "output_path": None,
+                    "product_entry": {
+                        "entry_version": 1,
+                        "entry_kind": "med_auto_grant_product_entry",
+                        "target_domain_id": "med-autogrant",
+                        "task_intent": "tighten-grant-mainline",
+                        "entry_mode": "opl-handoff",
+                        "workspace_locator": {
+                            "workspace_surface_kind": "nsfc_workspace",
+                            "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                        },
+                        "runtime_session_contract": {
+                            "grant_run_id": "grant-run-test",
+                            "session_handle_kind": "grant_run_id",
+                            "start_entry": "run-local",
+                            "resume_entry": "resume-local",
+                            "runtime_substrate_contract": {
+                                "runtime_owner": "Hermes",
+                                "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                                "active_phase": "P4 mature direct grant product entry",
+                                "active_tranche": "P4.B direct grant entry composition",
+                                "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
+                                "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
+                            },
+                            "runtime_state_contract": {
+                                "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
+                                "session_journal_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
+                                "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
+                                "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
+                                "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
+                                "handoff_state_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/",
+                                "non_repo_tracked": True,
+                            },
+                        },
+                        "return_surface_contract": {
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "default_formal_entry": "CLI",
+                            "supported_entry_modes": ["direct", "opl-handoff"],
+                            "domain_entry_contract": {
+                                "entry_adapter": "MedAutoGrantDomainEntry",
+                                "service_safe_surface_kind": "service-safe-domain-entry-command",
+                                "product_entry_builder_command": "build-product-entry",
+                                "product_entry_kind": "med_auto_grant_product_entry",
+                                "supported_entry_modes": ["direct", "opl-handoff"],
+                                "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
+                                "command_contracts": DOMAIN_ENTRY_COMMAND_CONTRACTS,
+                            },
+                            "checkpoint_aggregation_surface": "stage-route-report",
+                            "operator_contract": {
+                                "canonical_audit_surfaces": [
+                                    "validate-workspace",
+                                    "summarize-workspace",
+                                    "next-step",
+                                    "critique-summary",
+                                    "stage-route-report",
+                                ],
+                                "canonical_export_surfaces": [
+                                    "execute-revision-pass",
+                                    "build-artifact-bundle",
+                                    "build-final-package",
+                                    "build-hosted-contract-bundle",
+                                ],
+                                "checkpoint_aggregation_surface": "stage-route-report",
+                            },
+                        },
+                        "domain_payload": {
+                            "workspace_id": "workspace-test",
+                            "draft_id": "draft-test",
+                            "funding_call": "nsfc-2026-general",
+                        },
+                        "stage_snapshot": {
+                            "lifecycle_stage": "critique",
+                            "checkpoint_status": "forward_progress",
+                            "recommended_next_stage": "revision",
+                        },
+                        "executor_routing_contract": {
+                            "contract_version": 1,
+                            "current_stage_route": _expected_route("critique", source_stage="critique"),
+                            "recommended_executor_route": _expected_route("revision", source_stage="critique"),
+                            "author_side_route_catalog": [
+                                _expected_route(route_id, source_stage=route_id)
+                                for route_id in AUTHOR_SIDE_ROUTE_IDS
+                            ],
+                        },
+                    },
+                },
+                {
+                    "ok": True,
+                    "command": "build-product-entry",
+                    "grant_run_id": "grant-run-test",
+                    "workspace_id": "workspace-test",
+                    "draft_id": "draft-test",
+                    "lifecycle_stage": "critique",
+                    "input_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                    "output_path": None,
+                    "product_entry": {
+                        "entry_version": 1,
+                        "entry_kind": "med_auto_grant_product_entry",
+                        "target_domain_id": "med-autogrant",
+                        "task_intent": "tighten-grant-mainline",
+                        "entry_mode": "opl-handoff",
+                        "workspace_locator": {
+                            "workspace_surface_kind": "nsfc_workspace",
+                            "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                        },
+                        "runtime_session_contract": {
+                            "grant_run_id": "grant-run-test",
+                            "session_handle_kind": "grant_run_id",
+                            "start_entry": "run-local",
+                            "resume_entry": "resume-local",
+                            "runtime_substrate_contract": {
+                                "runtime_owner": "Hermes",
+                                "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                                "active_phase": "P4 mature direct grant product entry",
+                                "active_tranche": "P4.B direct grant entry composition",
+                                "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
+                                "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
+                            },
+                            "runtime_state_contract": {
+                                "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
+                                "session_journal_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
+                                "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
+                                "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
+                                "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
+                                "handoff_state_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/",
+                                "non_repo_tracked": True,
+                            },
+                        },
+                        "return_surface_contract": {
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "default_formal_entry": "CLI",
+                            "supported_entry_modes": ["direct", "opl-handoff"],
+                            "domain_entry_contract": {
+                                "entry_adapter": "MedAutoGrantDomainEntry",
+                                "service_safe_surface_kind": "service-safe-domain-entry-command",
+                                "product_entry_builder_command": "build-product-entry",
+                                "product_entry_kind": "med_auto_grant_product_entry",
+                                "supported_entry_modes": ["direct", "opl-handoff"],
+                                "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
+                                "command_contracts": DOMAIN_ENTRY_COMMAND_CONTRACTS,
+                            },
+                            "checkpoint_aggregation_surface": "stage-route-report",
+                            "operator_contract": {
+                                "canonical_audit_surfaces": [
+                                    "validate-workspace",
+                                    "summarize-workspace",
+                                    "next-step",
+                                    "critique-summary",
+                                    "stage-route-report",
+                                ],
+                                "canonical_export_surfaces": [
+                                    "execute-revision-pass",
+                                    "build-artifact-bundle",
+                                    "build-final-package",
+                                    "build-hosted-contract-bundle",
+                                ],
+                                "checkpoint_aggregation_surface": "stage-route-report",
+                            },
+                        },
+                        "domain_payload": {
+                            "workspace_id": "workspace-test",
+                            "draft_id": "draft-test",
+                            "funding_call": "nsfc-2026-general",
+                        },
+                        "stage_snapshot": {
+                            "lifecycle_stage": "critique",
+                            "checkpoint_status": "forward_progress",
+                            "recommended_next_stage": "revision",
+                        },
+                        "executor_routing_contract": {
+                            "contract_version": 1,
+                            "current_stage_route": _expected_route("critique", source_stage="critique"),
+                            "recommended_executor_route": _expected_route("revision", source_stage="critique"),
+                            "author_side_route_catalog": [
+                                _expected_route(route_id, source_stage=route_id)
+                                for route_id in AUTHOR_SIDE_ROUTE_IDS
+                            ],
+                        },
+                    },
+                },
+            ],
+        ):
+            with self.assertRaisesRegex(WorkspaceStateError, "grant_direct_entry.direct_entry"):
+                MedAutoGrantProductEntry().build_grant_direct_entry(
+                    input_path=str(CRITIQUE_EXAMPLE_PATH),
+                    task_intent="tighten-grant-mainline",
+                )
 
     def test_grant_progress_fails_closed_on_invalid_projection_shape(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

@@ -107,11 +107,16 @@ Date: `2026-04-12`
 
 - `P4.A direct grant progress / cockpit projection`
 
-这条 tranche 当前只落：
+并且当前已经继续落到第二棒：
+
+- `P4.B direct grant entry composition`
+
+这两条 tranche 当前只落：
 
 - controller-owned
 - read-only
 - product-facing direct projection
+- direct-entry composition
 
 它不是：
 
@@ -126,6 +131,7 @@ Date: `2026-04-12`
 而当前更细粒度的 honest 落点已经前进到：
 
 - `P4.A landed`
+- `P4.B landed`
 
 ## 不在本线内的事
 

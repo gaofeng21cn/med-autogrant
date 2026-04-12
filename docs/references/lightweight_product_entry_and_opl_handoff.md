@@ -13,6 +13,7 @@
 
 在此基础上，`build-product-entry` 已经把轻量结构化 `product entry` shell 落到仓库里，并让 `direct` 与 `opl-handoff` 共用同一套 envelope。
 但即便如此，它仍然不等于成熟的用户级 `product entry` 或完整最终 UX。
+当前在这层 shell 之上，`grant-progress` / `grant-cockpit` 已经先落了只读 projection，而 `grant-direct-entry` 也已经进一步把 projection + direct / `opl-handoff` envelope 收成一份 direct-entry composition contract。
 
 ## 2. 目标形态
 
@@ -43,6 +44,14 @@
 - 怎么围绕已 landed 的 `build-product-entry` shell 做更完整的 direct-entry 编排
 - 怎么让 `OPL` 能稳定消费这份 handoff envelope
 - 怎么在不改写 grant domain 语义的前提下，继续补产品层而不是偷换成熟度
+
+当前 `grant-direct-entry` 已经完成的是：
+
+- 一次性带出 `grant-progress`
+- 一次性带出 `grant-cockpit`
+- 一次性带出 direct / `opl-handoff` 两份 `product_entry`
+
+但它仍然不是 mature 前台，也不是新的 domain executor。
 
 ## 4. 共享 handoff envelope
 

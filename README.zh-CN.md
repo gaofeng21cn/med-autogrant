@@ -39,6 +39,7 @@
 - 已落地的 service-safe entry：`MedAutoGrantDomainEntry`，它把 CLI 命令面保留成 future gateway caller 可复用的结构化 entry contract。
 - 当前 `product entry` shell 与 `executor_routing_contract` 也已经进一步冻结成 schema-backed contract surface，并在生成时 fail-closed。
 - 当前 controller-owned 的 direct-product projection `grant-progress` 与 `grant-cockpit` 也已经通过 `grant-progress.schema.json` 与 `grant-cockpit.schema.json` 进一步冻结成 schema-backed contract surface，并在生成时 fail-closed。
+- 下一棒诚实的 `P4.B` direct-entry layer 也已经通过 `grant-direct-entry` 落地：它把 `grant-progress`、`grant-cockpit` 和已冻结的 direct / `opl-handoff` `product_entry` envelope 组合成一份 schema-backed、fail-closed 的 direct-entry contract，对应 `grant-direct-entry.schema.json`。
 - `build-hosted-contract-bundle` 导出的托管友好合同现在也已经收口成 schema-backed contract bundle，并为 future hosted / `OPL` caller 显式补出 `domain_entry_contract`、`schema_contract`、`authoring_contract`。
 - 这份共享 `domain_entry_contract` 现在还会显式导出 `supported_commands` 与 `command_contracts`，因此外部 caller 已经可以直接按冻结合同拼 request，而不需要 repo-local helper。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
@@ -53,6 +54,7 @@
 - `agent entry`：由 `Codex` 或其他 host-agent 调用的 `CLI + MedAutoGrantDomainEntry`
 - `product entry`：`build-product-entry` 现在已经把 direct entry 与 `OPL` handoff 共用的轻量结构化 shell 落到仓库里，但更完整的 grant-facing 产品体验仍要继续补
 - `product projection`：`grant-progress` 与 `grant-cockpit` 现在已经以 schema-backed、generation-time fail-closed 的 contract surface 落第一层 controller-owned、read-only 的 direct-product projection，但它们故意不是新的 `domain_entry_contract` executor command，也不进入 hosted contract bundle 的 command catalog，更不等于成熟前台
+- `direct entry composition`：`grant-direct-entry` 现在继续把 `grant-progress`、`grant-cockpit` 与 direct / `opl-handoff` 两份 `product_entry` envelope 收成一层 controller-owned 的 direct-entry 组合面，但它仍然不是新的 service-safe domain executor，也不进入 hosted contract bundle 的 command catalog
 
 目标中的 domain 级入口形态应是：
 
@@ -84,6 +86,7 @@
 - `program_id`：当前 Med Auto Grant active mainline 的 control-plane / report-routing 指针
 - 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
 - 当前 controller-owned 的只读 product projection surface：`grant-progress` 与 `grant-cockpit`；它们只读取上面的 durable truth 和 `build-product-entry` 的 contract hint，由 `schemas/v1/grant-progress.schema.json` 与 `schemas/v1/grant-cockpit.schema.json` 冻结，并且故意不混入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
+- 当前 controller-owned 的 direct-entry 组合面：`grant-direct-entry`；它会把上面的 projection 与 direct / `opl-handoff` 两份 `product_entry` envelope 组装到一起，由 `schemas/v1/grant-direct-entry.schema.json` 冻结，并且继续不混入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
 - 当前 repo-verified 的 runtime entry 还包括 `probe-upstream-hermes`、`run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle` 与 `build-product-entry`；它们分别负责 upstream 依赖证明、本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出、hosted-friendly contract bundle 导出，以及 direct / `OPL` handoff 共用的 product shell
 - `build-hosted-contract-bundle` 现在会额外导出托管友好的 handoff contract，其中显式携带 `runtime_substrate_contract`、`runtime_state_contract`、`operator_contract`、`domain_entry_contract`、`schema_contract` 与 `authoring_contract`，连同 execution identity、artifact 与 audit surface 一起进入导出面
 - `domain_entry_contract` 现在还会一起导出 `supported_commands` 与逐命令的 `command_contracts`，让 hosted caller / 外部 caller 能直接消费相同的 command catalog
@@ -115,6 +118,7 @@
 - 通过 `verification_checkpoint / checkpoint_status` 把当前 verification、forced rollback 与 frozen gate 语义收进同一个 checkpoint surface
 - 输出带有 verdict、当前 `RevisionPlan.execution_status`、reviewed revision evidence、rollback / frozen gate 状态、版本标签和比较证据的 `critique-summary / stage-route-report` 审计面
 - 通过 `grant-progress` 与 `grant-cockpit` 输出 direct grant 的 progress / cockpit 投影，复用 `summarize-workspace`、`stage-route-report`、`critique-summary` 与 `build-product-entry` 的合同信息，并把这两条投影面收口成 schema-backed、generation-time fail-closed 的 projection contract，而不新增 service-safe domain-entry executor command 或 hosted bundle command catalog 项
+- 通过 `grant-direct-entry` 把 `grant-progress`、`grant-cockpit` 与 direct / `opl-handoff` 两份 `build-product-entry` envelope 收成一份 direct-entry 组合面，并把它收口成 schema-backed、generation-time fail-closed 的 product contract，而不新增 service-safe domain-entry executor command
 - 通过 `run-local` 运行一次 Hermes-backed 本地主循环、派生 machine-readable `stop_reason`、在 `stage_action_required` 分支上生成 machine-readable `stage_action_envelope`、写入 durable run journal、同时把 attempt durability 镜像进 upstream `SessionDB`，并通过 `resume-local` 从该 journal 恢复
 - 通过 `build-artifact-bundle` 把当前已选方向、问题、论证链、适配度、提纲与草稿章节打包成 local `artifact_bundle`，并保留 manifest、lineage、version 与 `grant_run_id / workspace_id / draft_id` 身份一致性
 - 通过 `execute-revision-pass` 对冻结在 `RevisionPlan` 中的 section-level deterministic mutation 执行本地 revision pass，并保持 draft lineage、rollback gate 与 checkpoint 语义不漂移
@@ -195,6 +199,7 @@ uv run python -m med_autogrant critique-summary --input examples/nsfc_workspace_
 uv run python -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant grant-progress --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant grant-cockpit --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant grant-direct-entry --input examples/nsfc_workspace_p2c_critique.json --task-intent tighten-grant-mainline --format json
 uv run python -m med_autogrant build-product-entry --input examples/nsfc_workspace_p2c_critique.json --entry-mode direct --task-intent tighten-grant-mainline --format json
 
 # 2. 执行 deterministic local revision pass

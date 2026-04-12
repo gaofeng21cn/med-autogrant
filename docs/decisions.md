@@ -98,6 +98,12 @@
 - 理由：如果 `P4.A` 只有命令和 current truth，没有独立 schema，那么 direct product projection 的 shape、blocker 语义、command catalog 展示面和 nullability 边界都可能悄悄漂移；而这两条 surface 又必须和 service-safe domain command catalog 保持严格分层。
 - 影响：`read_grant_progress(...)` 与 `read_grant_cockpit(...)` 现在都会在返回前执行 schema 校验；这两条 projection 继续不进入 `domain_entry_contract.supported_commands`，也不进入 hosted contract bundle 的 command catalog。
 
+## 2026-04-12：冻结 `P4.B` direct entry composition contract
+
+- 决策：在 `P4.A` 的基础上新增 `grant-direct-entry`，把 `grant-progress`、`grant-cockpit` 与 direct / `opl-handoff` 两份 `product_entry` envelope 组合成一份 schema-backed、generation-time fail-closed 的 direct-entry contract。
+- 理由：理想形态中的 `Med Auto Grant Product Entry` 不能永远停在“只读投影 + 单独 build shell”两个分散 surface 上；但当前又不能发明新的 executor 或 handoff semantics。最诚实的推进方式，就是把已冻结 surface 组合成一份 direct-entry contract。
+- 影响：`grant-direct-entry` 继续只复用既有 route truth、grant truth 与 `product_entry` envelope，不进入 `domain_entry_contract.supported_commands`，也不进入 hosted contract bundle 的 command catalog。
+
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。

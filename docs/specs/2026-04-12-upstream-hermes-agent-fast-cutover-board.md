@@ -111,6 +111,7 @@
 而当前继续前进的 honest 落点是：
 
 - `P4.A direct grant progress / cockpit projection`
+- `P4.B direct grant entry composition`
 
 这条 `P4.A` 的定位必须固定为：
 

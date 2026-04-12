@@ -256,6 +256,31 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("必要性表述仍略偏现象描述。", payload["grant_cockpit"]["workspace_alerts"])
         self.assertIn("build_direct_entry", payload["grant_cockpit"]["commands"])
 
+    def test_grant_direct_entry_composes_product_surface_for_critique_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-direct-entry",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--task-intent",
+            "tighten-grant-mainline",
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "grant-direct-entry")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["grant_direct_entry"]["entry_kind"], "grant_direct_entry")
+        self.assertEqual(payload["grant_direct_entry"]["direct_entry"]["entry_mode"], "direct")
+        self.assertEqual(payload["grant_direct_entry"]["opl_handoff_entry"]["entry_mode"], "opl-handoff")
+        self.assertEqual(
+            payload["grant_direct_entry"]["recommended_executor_route"]["route_id"],
+            "revision",
+        )
+
     def test_next_step_routes_each_p2a_stage_forward(self) -> None:
         cases = [
             (INPUT_EXAMPLE_PATH, "input_intake", "direction_screening"),

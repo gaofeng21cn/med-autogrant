@@ -60,6 +60,12 @@ def build_parser() -> argparse.ArgumentParser:
         handle_grant_cockpit,
         "输出 grant 当前的只读 cockpit projection。",
     )
+    _add_direct_entry_command(
+        subparsers,
+        "grant-direct-entry",
+        handle_grant_direct_entry,
+        "输出 direct grant product entry composition，复用 progress/cockpit 与 direct / OPL entry envelope。",
+    )
     _add_simple_command(
         subparsers,
         "probe-upstream-hermes",
@@ -184,6 +190,14 @@ def handle_grant_cockpit(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().read_grant_cockpit(input_path=args.input)
 
 
+def handle_grant_direct_entry(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_grant_direct_entry(
+        input_path=args.input,
+        task_intent=args.task_intent,
+        funding_call=args.funding_call,
+    )
+
+
 def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 
@@ -293,6 +307,20 @@ def _add_runtime_entry_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
     command.add_argument("--journal")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_direct_entry_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--task-intent", required=True)
+    command.add_argument("--funding-call")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -484,6 +512,21 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             lines.append(f"- alert: {item}")
         for name, command_line in cockpit["commands"].items():
             lines.append(f"- {name}: {command_line}")
+        return "\n".join(lines)
+
+    if command == "grant-direct-entry":
+        direct_entry = payload["grant_direct_entry"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"task_intent: {direct_entry['task_intent']}",
+            f"workspace_status: {direct_entry['workspace_status']}",
+            f"recommended_route: {direct_entry['recommended_executor_route']['route_id']}",
+        ]
+        for item in direct_entry["workspace_alerts"]:
+            lines.append(f"- alert: {item}")
         return "\n".join(lines)
 
     if command == "probe-upstream-hermes":

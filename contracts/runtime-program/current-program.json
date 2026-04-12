@@ -11,7 +11,7 @@
   "runtime_owner": {
     "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
     "active_phase": "P4 mature direct grant product entry",
-    "active_tranche": "P4.A direct grant progress / cockpit projection",
+    "active_tranche": "P4.B direct grant entry composition",
     "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
     "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle"
   },
@@ -27,6 +27,7 @@
     "docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md",
     "docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md",
     "docs/specs/2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md",
+    "docs/specs/2026-04-12-p4b-direct-grant-entry-composition-current-truth.md",
     "docs/specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md",
     "docs/specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md",
     "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",

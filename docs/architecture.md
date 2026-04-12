@@ -73,10 +73,11 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 ## 入口与执行
 
-- CLI 仍是唯一 formal entry：`validate-workspace`、`summarize-workspace`、`next-step`、`critique-summary`、`stage-route-report`、`grant-progress`、`grant-cockpit`。
+- CLI 仍是唯一 formal entry：`validate-workspace`、`summarize-workspace`、`next-step`、`critique-summary`、`stage-route-report`、`grant-progress`、`grant-cockpit`、`grant-direct-entry`。
 - `src/med_autogrant/domain_entry.py` 现在提供结构化 `MedAutoGrantDomainEntry`，把 CLI 与 future gateway caller 收口到同一条 service-safe command contract。
 - `src/med_autogrant/product_entry.py` 现在提供 `MedAutoGrantProductEntry`；`build-product-entry` 通过 `MedAutoGrantDomainEntry` 复用已 landed 的 route / summary / runtime contract，统一生成 `direct` 与 `opl-handoff` 共用的 shared envelope，并显式导出 `executor_routing_contract`。
 - `MedAutoGrantProductEntry` 现在还提供 `grant-progress` 与 `grant-cockpit`：它们是 controller-owned、read-only 的 product projection，复用 `summarize-workspace`、`stage-route-report`、`critique-summary` 与 `build-product-entry` contract 信息，并分别受 `schemas/v1/grant-progress.schema.json` 与 `schemas/v1/grant-cockpit.schema.json` 约束、在生成时 fail-closed，但故意不进入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog。
+- `MedAutoGrantProductEntry` 现在还提供 `grant-direct-entry`：它会把 `grant-progress`、`grant-cockpit` 与 direct / `opl-handoff` 两份 `product_entry` envelope 收成一份 controller-owned 的 direct-entry composition，并受 `schemas/v1/grant-direct-entry.schema.json` 约束、在生成时 fail-closed；它同样不进入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog。
 - `build-product-entry.product_entry` 与 `run-local.stage_action_envelope.executor_routing_contract` 现在都已经收口成 schema-backed contract：前者对应 `schemas/v1/product-entry.schema.json`，后者对应 `schemas/v1/executor-routing-contract.schema.json`，并且两者都会在生成时 fail-closed。
 - `build-product-entry.product_entry.return_surface_contract.domain_entry_contract` 现在会与 hosted bundle 共享同一份 command catalog，并显式固定 `supported_commands` 与每个 command 的 `command_contracts`。
 - `src/med_autogrant/upstream_hermes.py` 负责真实 upstream 依赖探测、runtime root 决议与基于 `hermes_state.SessionDB` 的 attempt ledger。
@@ -97,7 +98,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 ## 数据与对象模型
 
 - `schemas/v1/nsfc-workspace.schema.json` 定义 workspace 结构与关键对象。
-- `schemas/v1/service-safe-domain-surface.schema.json`、`schemas/v1/pending-handoff-requirements.schema.json`、`schemas/v1/executor-routing-contract.schema.json`、`schemas/v1/product-entry.schema.json`、`schemas/v1/grant-progress.schema.json`、`schemas/v1/grant-cockpit.schema.json` 与 `schemas/v1/hosted-contract-bundle.schema.json` 定义当前 product entry / route handoff / direct projection / hosted bundle / service-safe surface 的 schema-backed contract。
+- `schemas/v1/service-safe-domain-surface.schema.json`、`schemas/v1/pending-handoff-requirements.schema.json`、`schemas/v1/executor-routing-contract.schema.json`、`schemas/v1/product-entry.schema.json`、`schemas/v1/grant-progress.schema.json`、`schemas/v1/grant-cockpit.schema.json`、`schemas/v1/grant-direct-entry.schema.json` 与 `schemas/v1/hosted-contract-bundle.schema.json` 定义当前 product entry / route handoff / direct projection / direct-entry composition / hosted bundle / service-safe surface 的 schema-backed contract。
 - `grant_run_id` 仅作为执行句柄；`workspace_id`、`draft_id`、`program_id` 保持边界分离。
 - `workspace.py`、`stage_router.py`、`revision_executor.py`、`final_package.py` 等继续承载 MedAutoGrant 的 author-side domain logic；它们不应被未来的上游 substrate 目标或当前 repo-local helper 偷换成新的 authoring semantics。
 
@@ -106,6 +107,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `contracts/runtime-program/current-program.json` 是 repo-tracked current-program pointer。
 - 机器本地 runtime state 统一下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`，用于 session / log / report / prompt 等非仓库真相面状态。
 - `grant-progress / grant-cockpit` 当前属于 controller-owned / read-only product projection；它们不替代 durable truth surface，也不构成新的 service-safe domain entry contract，并且不会被镜像进 hosted contract bundle 的 command catalog。
+- `grant-direct-entry` 当前属于 controller-owned 的 direct-entry composition；它不会改写 route owner，也不会被镜像进 hosted contract bundle 的 command catalog。
 - `run-local / resume-local` 的默认 local run journal 落点固定为 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`；显式 `--journal` 仍可覆盖该默认值。
 - Hermes substrate state db 默认落在 `$CODEX_HOME/projects/med-autogrant/runtime-state/hermes/state.db`；如需显式隔离，可通过 `MED_AUTOGRANT_HERMES_HOME` 覆盖。
 - 旧 local host-agent runtime 只保留为 compatibility bridge / regression oracle，不再作为长期产品 runtime owner。

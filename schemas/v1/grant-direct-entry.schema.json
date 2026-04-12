@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-direct-entry.schema.json",
+  "title": "Med Auto Grant Direct Entry Composition",
+  "type": "object",
+  "$defs": {
+    "workspaceStatus": {
+      "type": "string",
+      "enum": [
+        "attention_required",
+        "on_track"
+      ]
+    },
+    "grantDirectEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_version",
+        "entry_kind",
+        "target_domain_id",
+        "workspace_surface_kind",
+        "task_intent",
+        "workspace_overview",
+        "workspace_status",
+        "workspace_alerts",
+        "progress_projection",
+        "current_stage_route",
+        "recommended_executor_route",
+        "direct_entry",
+        "opl_handoff_entry"
+      ],
+      "properties": {
+        "entry_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "entry_kind": {
+          "const": "grant_direct_entry"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "task_intent": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_overview": {
+          "$ref": "grant-cockpit.schema.json#/$defs/workspaceOverview"
+        },
+        "workspace_status": {
+          "$ref": "#/$defs/workspaceStatus"
+        },
+        "workspace_alerts": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "progress_projection": {
+          "$ref": "grant-progress.schema.json#/$defs/grantProgressProjection"
+        },
+        "current_stage_route": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/routeContract"
+        },
+        "recommended_executor_route": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/routeContract"
+        },
+        "direct_entry": {
+          "$ref": "product-entry.schema.json"
+        },
+        "opl_handoff_entry": {
+          "$ref": "product-entry.schema.json"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "grant_direct_entry"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "grant-direct-entry"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "lifecycle_stage": {
+      "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_direct_entry": {
+      "$ref": "#/$defs/grantDirectEntry"
+    }
+  }
+}

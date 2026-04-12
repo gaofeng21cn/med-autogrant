@@ -30,6 +30,7 @@ EXPECTED_SCHEMAS = {
     "product-entry.schema.json",
     "grant-progress.schema.json",
     "grant-cockpit.schema.json",
+    "grant-direct-entry.schema.json",
     "hosted-contract-bundle.schema.json",
     "schema-index.json",
 }
@@ -115,6 +116,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["product_entry"], "product-entry.schema.json")
         self.assertEqual(names["grant_progress_projection"], "grant-progress.schema.json")
         self.assertEqual(names["grant_cockpit_projection"], "grant-cockpit.schema.json")
+        self.assertEqual(names["grant_direct_entry_surface"], "grant-direct-entry.schema.json")
         self.assertEqual(names["hosted_contract_bundle"], "hosted-contract-bundle.schema.json")
 
 

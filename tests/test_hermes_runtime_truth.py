@@ -50,6 +50,9 @@ IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH = (
 P4A_PRODUCT_PROJECTION_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md"
 )
+P4B_DIRECT_ENTRY_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-p4b-direct-grant-entry-composition-current-truth.md"
+)
 IDEAL_TARGET_EXECUTION_PLAN = (
     REPO_ROOT / "docs" / "plans" / "2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md"
 )
@@ -129,15 +132,18 @@ def test_core_docs_publish_p4a_direct_product_projection_boundary() -> None:
         text = _read(path)
         assert "grant-progress" in text
         assert "grant-cockpit" in text
+        assert "grant-direct-entry" in text or "P4.B" in text
 
     architecture = _read(CORE_ARCHITECTURE)
     assert "controller-owned" in architecture
     assert "supported_commands" in architecture
     assert "grant-progress.schema.json" in architecture
     assert "grant-cockpit.schema.json" in architecture
+    assert "grant-direct-entry.schema.json" in architecture
 
     status = _read(CORE_STATUS)
     assert "P4.A" in status
+    assert "P4.B" in status
     assert "read-only" in status
     assert "schema-backed" in status
     assert "fail-closed" in status
@@ -167,6 +173,9 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert P4A_PRODUCT_PROJECTION_CURRENT_TRUTH.exists(), (
         f"P4.A product projection current truth 不存在: {P4A_PRODUCT_PROJECTION_CURRENT_TRUTH}"
     )
+    assert P4B_DIRECT_ENTRY_CURRENT_TRUTH.exists(), (
+        f"P4.B direct entry current truth 不存在: {P4B_DIRECT_ENTRY_CURRENT_TRUTH}"
+    )
     assert IDEAL_TARGET_EXECUTION_PLAN.exists(), f"Ideal target execution plan 不存在: {IDEAL_TARGET_EXECUTION_PLAN}"
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
@@ -181,6 +190,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     hosted_caller_consumption_truth = _read(HOSTED_CALLER_CONSUMPTION_PROOF_CURRENT_TRUTH)
     ideal_target_phase_map_truth = _read(IDEAL_TARGET_PHASE_MAP_CURRENT_TRUTH)
     p4a_product_projection_truth = _read(P4A_PRODUCT_PROJECTION_CURRENT_TRUTH)
+    p4b_direct_entry_truth = _read(P4B_DIRECT_ENTRY_CURRENT_TRUTH)
     ideal_target_execution_plan = _read(IDEAL_TARGET_EXECUTION_PLAN)
     program_truth = _read(HERMES_PROGRAM_TRUTH)
     migration_map = _read(HERMES_MIGRATION_MAP)
@@ -288,6 +298,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "P3" in ideal_target_phase_map_truth and "completed" in ideal_target_phase_map_truth
     assert "next" in ideal_target_phase_map_truth.lower()
     assert "P4.A" in ideal_target_phase_map_truth
+    assert "P4.B" in ideal_target_phase_map_truth
 
     assert "grant-progress" in p4a_product_projection_truth
     assert "grant-cockpit" in p4a_product_projection_truth
@@ -304,6 +315,16 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "supported_commands" in p4a_product_projection_truth
     assert "没有被写进 `domain_entry_contract.supported_commands`" in p4a_product_projection_truth
     assert "也不进入 hosted contract bundle 的 command catalog" in p4a_product_projection_truth
+
+    assert "grant-direct-entry" in p4b_direct_entry_truth
+    assert "grant_direct_entry" in p4b_direct_entry_truth
+    assert "build-product-entry" in p4b_direct_entry_truth
+    assert "grant-cockpit" in p4b_direct_entry_truth
+    assert "grant-progress" in p4b_direct_entry_truth
+    assert "grant-direct-entry.schema.json" in p4b_direct_entry_truth
+    assert "schema-backed" in p4b_direct_entry_truth
+    assert "fail-closed" in p4b_direct_entry_truth
+    assert "不进入 `domain_entry_contract.supported_commands`" in p4b_direct_entry_truth or "不进入 hosted contract bundle 的 command catalog" in p4b_direct_entry_truth
 
     assert "# Med Auto Grant OPL-Aligned Target Shape And Hosted Caller Plan" in ideal_target_execution_plan
     assert "Goal:" in ideal_target_execution_plan
@@ -449,8 +470,10 @@ def test_docs_publish_schema_backed_p4a_projection_contract_boundary() -> None:
     assert "schema-backed" in decisions
     assert "grant-progress.schema.json" in architecture
     assert "grant-cockpit.schema.json" in architecture
+    assert "grant-direct-entry.schema.json" in architecture
     assert "grant-progress.schema.json" in contracts_readme
     assert "grant-cockpit.schema.json" in contracts_readme
+    assert "grant-direct-entry.schema.json" in contracts_readme
 
 
 @pytest.mark.meta

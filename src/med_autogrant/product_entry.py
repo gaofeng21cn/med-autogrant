@@ -8,6 +8,7 @@ from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.hermes_runtime import (
     _build_domain_entry_contract,
     GRANT_COCKPIT_SCHEMA_FILE,
+    GRANT_DIRECT_ENTRY_SCHEMA_FILE,
     GRANT_PROGRESS_SCHEMA_FILE,
     PRODUCT_ENTRY_SCHEMA_FILE,
     _build_executor_routing_contract,
@@ -28,6 +29,8 @@ SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
 GRANT_PROGRESS_PROJECTION_VERSION = 1
 GRANT_PROGRESS_PROJECTION_KIND = "grant_progress"
 GRANT_COCKPIT_KIND = "grant_cockpit"
+GRANT_DIRECT_ENTRY_VERSION = 1
+GRANT_DIRECT_ENTRY_KIND = "grant_direct_entry"
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 
 
@@ -349,6 +352,131 @@ class MedAutoGrantProductEntry:
         )
         return payload
 
+    def build_grant_direct_entry(
+        self,
+        *,
+        input_path: str | Path,
+        task_intent: str,
+        funding_call: str | None = None,
+    ) -> dict[str, Any]:
+        resolved_task_intent = _require_nonempty_string(task_intent, field_name="task_intent")
+        direct_payload = self.build(
+            input_path=input_path,
+            entry_mode="direct",
+            task_intent=resolved_task_intent,
+            funding_call=funding_call,
+        )
+        opl_handoff_payload = self.build(
+            input_path=input_path,
+            entry_mode="opl-handoff",
+            task_intent=resolved_task_intent,
+            funding_call=funding_call,
+        )
+        direct_entry = _require_mapping(
+            direct_payload,
+            "product_entry",
+            context="grant_direct_entry.direct_entry",
+        )
+        opl_handoff_entry = _require_mapping(
+            opl_handoff_payload,
+            "product_entry",
+            context="grant_direct_entry.opl_handoff_entry",
+        )
+        _assert_entry_mode(
+            direct_entry,
+            expected_entry_mode="direct",
+            context="grant_direct_entry.direct_entry",
+        )
+        _assert_entry_mode(
+            opl_handoff_entry,
+            expected_entry_mode="opl-handoff",
+            context="grant_direct_entry.opl_handoff_entry",
+        )
+        cockpit_payload = self.read_grant_cockpit(input_path=input_path)
+
+        _require_matching_top_level_identity(
+            direct_payload,
+            opl_handoff_payload,
+            context="grant_direct_entry.opl_handoff_entry",
+        )
+        _require_matching_top_level_identity(
+            direct_payload,
+            cockpit_payload,
+            context="grant_direct_entry.grant_cockpit",
+        )
+
+        cockpit = _require_mapping(
+            cockpit_payload,
+            "grant_cockpit",
+            context="grant_direct_entry.grant_cockpit",
+        )
+        progress_projection = _require_mapping(
+            cockpit,
+            "progress_projection",
+            context="grant_direct_entry.grant_cockpit",
+        )
+        workspace_overview = _require_mapping(
+            cockpit,
+            "workspace_overview",
+            context="grant_direct_entry.grant_cockpit",
+        )
+        direct_executor_routing_contract = _require_mapping(
+            direct_entry,
+            "executor_routing_contract",
+            context="grant_direct_entry.direct_entry",
+        )
+        grant_direct_entry = {
+            "entry_version": GRANT_DIRECT_ENTRY_VERSION,
+            "entry_kind": GRANT_DIRECT_ENTRY_KIND,
+            "target_domain_id": TARGET_DOMAIN_ID,
+            "workspace_surface_kind": "nsfc_workspace",
+            "task_intent": resolved_task_intent,
+            "workspace_overview": dict(workspace_overview),
+            "workspace_status": _require_nonempty_string_from_mapping(
+                cockpit,
+                "workspace_status",
+                context="grant_direct_entry.grant_cockpit",
+            ),
+            "workspace_alerts": _read_nonempty_string_list(
+                cockpit.get("workspace_alerts"),
+                context="grant_direct_entry.grant_cockpit",
+            ),
+            "progress_projection": dict(progress_projection),
+            "current_stage_route": dict(
+                _require_mapping(
+                    direct_executor_routing_contract,
+                    "current_stage_route",
+                    context="grant_direct_entry.direct_entry.executor_routing_contract",
+                )
+            ),
+            "recommended_executor_route": dict(
+                _require_mapping(
+                    direct_executor_routing_contract,
+                    "recommended_executor_route",
+                    context="grant_direct_entry.direct_entry.executor_routing_contract",
+                )
+            ),
+            "direct_entry": dict(direct_entry),
+            "opl_handoff_entry": dict(opl_handoff_entry),
+        }
+        payload = {
+            "ok": True,
+            "command": "grant-direct-entry",
+            "grant_run_id": direct_payload["grant_run_id"],
+            "workspace_id": direct_payload["workspace_id"],
+            "draft_id": direct_payload["draft_id"],
+            "lifecycle_stage": direct_payload["lifecycle_stage"],
+            "input_path": direct_payload["input_path"],
+            "grant_direct_entry": grant_direct_entry,
+        }
+        _validate_grant_direct_entry_contract(
+            payload,
+            grant_run_id=direct_payload["grant_run_id"],
+            workspace_id=direct_payload["workspace_id"],
+            lifecycle_stage=direct_payload["lifecycle_stage"],
+        )
+        return payload
+
     def _load_projection_context(
         self,
         *,
@@ -451,6 +579,14 @@ def _optional_string_from_mapping(payload: Mapping[str, Any] | None, field_name:
     if value is None:
         return None
     return _require_nonempty_string(value, field_name=field_name)
+
+
+def _read_nonempty_string_list(value: Any, *, context: str) -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise WorkspaceStateError(f"{context} 缺少合法字段: workspace_alerts")
+    return [item for item in value if isinstance(item, str) and item.strip()]
 
 
 def _write_product_entry_output(output_path: Path, product_entry: dict[str, Any]) -> None:
@@ -579,6 +715,171 @@ def _build_workspace_status(*, blockers: list[str], needs_author_decision: bool)
     if blockers or needs_author_decision:
         return "attention_required"
     return "on_track"
+
+
+def _require_matching_top_level_identity(
+    left: Mapping[str, Any],
+    right: Mapping[str, Any],
+    *,
+    context: str,
+) -> None:
+    for field_name in ("grant_run_id", "workspace_id", "draft_id", "lifecycle_stage", "input_path"):
+        if left.get(field_name) != right.get(field_name):
+            raise WorkspaceStateError(f"{context} 与当前 direct entry identity 不一致: {field_name}")
+
+
+def _assert_entry_mode(
+    payload: Mapping[str, Any],
+    *,
+    expected_entry_mode: str,
+    context: str,
+) -> None:
+    resolved_entry_mode = _require_nonempty_string_from_mapping(
+        payload,
+        "entry_mode",
+        context=context,
+    )
+    if resolved_entry_mode != expected_entry_mode:
+        raise WorkspaceStateError(f"{context}.entry_mode 必须为 {expected_entry_mode}。")
+
+
+def _validate_grant_direct_entry_contract(
+    payload: dict[str, Any],
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+) -> None:
+    _validate_contract_schema(
+        payload,
+        schema_file=GRANT_DIRECT_ENTRY_SCHEMA_FILE,
+        context="grant_direct_entry",
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+    grant_direct_entry = _require_mapping(
+        payload,
+        "grant_direct_entry",
+        context="grant_direct_entry",
+    )
+    direct_entry = _require_mapping(
+        grant_direct_entry,
+        "direct_entry",
+        context="grant_direct_entry.direct_entry",
+    )
+    opl_handoff_entry = _require_mapping(
+        grant_direct_entry,
+        "opl_handoff_entry",
+        context="grant_direct_entry.opl_handoff_entry",
+    )
+    if (
+        _require_nonempty_string_from_mapping(
+            direct_entry,
+            "entry_mode",
+            context="grant_direct_entry.direct_entry",
+        )
+        != "direct"
+    ):
+        raise WorkspaceStateError(
+            "grant_direct_entry.direct_entry.entry_mode 必须为 direct。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if (
+        _require_nonempty_string_from_mapping(
+            opl_handoff_entry,
+            "entry_mode",
+            context="grant_direct_entry.opl_handoff_entry",
+        )
+        != "opl-handoff"
+    ):
+        raise WorkspaceStateError(
+            "grant_direct_entry.opl_handoff_entry.entry_mode 必须为 opl-handoff。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+
+    direct_task_intent = _require_nonempty_string_from_mapping(
+        direct_entry,
+        "task_intent",
+        context="grant_direct_entry.direct_entry",
+    )
+    opl_handoff_task_intent = _require_nonempty_string_from_mapping(
+        opl_handoff_entry,
+        "task_intent",
+        context="grant_direct_entry.opl_handoff_entry",
+    )
+    task_intent = _require_nonempty_string_from_mapping(
+        grant_direct_entry,
+        "task_intent",
+        context="grant_direct_entry",
+    )
+    if direct_task_intent != task_intent:
+        raise WorkspaceStateError(
+            "grant_direct_entry.direct_entry.task_intent 与顶层 direct entry contract 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if opl_handoff_task_intent != task_intent:
+        raise WorkspaceStateError(
+            "grant_direct_entry.opl_handoff_entry.task_intent 与顶层 direct entry contract 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+
+    current_stage_route = _require_mapping(
+        grant_direct_entry,
+        "current_stage_route",
+        context="grant_direct_entry",
+    )
+    recommended_executor_route = _require_mapping(
+        grant_direct_entry,
+        "recommended_executor_route",
+        context="grant_direct_entry",
+    )
+    direct_executor_routing_contract = _require_mapping(
+        direct_entry,
+        "executor_routing_contract",
+        context="grant_direct_entry.direct_entry",
+    )
+    opl_executor_routing_contract = _require_mapping(
+        opl_handoff_entry,
+        "executor_routing_contract",
+        context="grant_direct_entry.opl_handoff_entry",
+    )
+    if direct_executor_routing_contract.get("current_stage_route") != current_stage_route:
+        raise WorkspaceStateError(
+            "grant_direct_entry.current_stage_route 与 direct entry route truth 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if direct_executor_routing_contract.get("recommended_executor_route") != recommended_executor_route:
+        raise WorkspaceStateError(
+            "grant_direct_entry.recommended_executor_route 与 direct entry route truth 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if opl_executor_routing_contract.get("current_stage_route") != current_stage_route:
+        raise WorkspaceStateError(
+            "grant_direct_entry.current_stage_route 与 opl_handoff entry route truth 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if opl_executor_routing_contract.get("recommended_executor_route") != recommended_executor_route:
+        raise WorkspaceStateError(
+            "grant_direct_entry.recommended_executor_route 与 opl_handoff entry route truth 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
 
 
 def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
