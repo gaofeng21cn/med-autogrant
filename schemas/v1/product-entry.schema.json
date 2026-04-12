@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/product-entry.schema.json",
+  "title": "Med Auto Grant Product Entry",
+  "type": "object",
+  "$defs": {
+    "entryMode": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "opl-handoff"
+      ]
+    },
+    "checkpointStatus": {
+      "type": "string",
+      "enum": [
+        "forward_progress",
+        "freeze_ready",
+        "rollback_required",
+        "submission_frozen"
+      ]
+    },
+    "workspaceLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspace_surface_kind",
+        "workspace_path"
+      ],
+      "properties": {
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "workspace_path": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "runtimeSubstrateContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime_owner",
+        "current_owner_line",
+        "active_phase",
+        "active_tranche",
+        "compatibility_bridge",
+        "repo_tracked_current_program_contract"
+      ],
+      "properties": {
+        "runtime_owner": {
+          "const": "Hermes"
+        },
+        "current_owner_line": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "active_phase": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "active_tranche": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "compatibility_bridge": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "repo_tracked_current_program_contract": {
+          "const": "contracts/runtime-program/current-program.json"
+        }
+      }
+    },
+    "runtimeStateContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "root",
+        "session_journal_root",
+        "logs_root",
+        "reports_root",
+        "prompts_root",
+        "handoff_state_root",
+        "non_repo_tracked"
+      ],
+      "properties": {
+        "root": {
+          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/"
+        },
+        "session_journal_root": {
+          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/"
+        },
+        "logs_root": {
+          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/"
+        },
+        "reports_root": {
+          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/"
+        },
+        "prompts_root": {
+          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/"
+        },
+        "handoff_state_root": {
+          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/"
+        },
+        "non_repo_tracked": {
+          "const": true
+        }
+      }
+    },
+    "operatorContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_audit_surfaces",
+        "canonical_export_surfaces",
+        "checkpoint_aggregation_surface"
+      ],
+      "properties": {
+        "canonical_audit_surfaces": {
+          "const": [
+            "validate-workspace",
+            "summarize-workspace",
+            "next-step",
+            "critique-summary",
+            "stage-route-report"
+          ]
+        },
+        "canonical_export_surfaces": {
+          "const": [
+            "execute-revision-pass",
+            "build-artifact-bundle",
+            "build-final-package",
+            "build-hosted-contract-bundle"
+          ]
+        },
+        "checkpoint_aggregation_surface": {
+          "const": "stage-route-report"
+        }
+      }
+    },
+    "runtimeSessionContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grant_run_id",
+        "session_handle_kind",
+        "start_entry",
+        "resume_entry",
+        "runtime_substrate_contract",
+        "runtime_state_contract"
+      ],
+      "properties": {
+        "grant_run_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "session_handle_kind": {
+          "const": "grant_run_id"
+        },
+        "start_entry": {
+          "const": "run-local"
+        },
+        "resume_entry": {
+          "const": "resume-local"
+        },
+        "runtime_substrate_contract": {
+          "$ref": "#/$defs/runtimeSubstrateContract"
+        },
+        "runtime_state_contract": {
+          "$ref": "#/$defs/runtimeStateContract"
+        }
+      }
+    },
+    "returnSurfaceContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_adapter",
+        "default_formal_entry",
+        "supported_entry_modes",
+        "checkpoint_aggregation_surface",
+        "operator_contract"
+      ],
+      "properties": {
+        "entry_adapter": {
+          "const": "MedAutoGrantDomainEntry"
+        },
+        "default_formal_entry": {
+          "const": "CLI"
+        },
+        "supported_entry_modes": {
+          "const": [
+            "direct",
+            "opl-handoff"
+          ]
+        },
+        "checkpoint_aggregation_surface": {
+          "const": "stage-route-report"
+        },
+        "operator_contract": {
+          "$ref": "#/$defs/operatorContract"
+        }
+      }
+    },
+    "domainPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspace_id",
+        "draft_id",
+        "funding_call"
+      ],
+      "properties": {
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "draft_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "funding_call": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "stageSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lifecycle_stage",
+        "checkpoint_status",
+        "recommended_next_stage"
+      ],
+      "properties": {
+        "lifecycle_stage": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+        },
+        "checkpoint_status": {
+          "$ref": "#/$defs/checkpointStatus"
+        },
+        "recommended_next_stage": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "entry_version",
+    "entry_kind",
+    "target_domain_id",
+    "task_intent",
+    "entry_mode",
+    "workspace_locator",
+    "runtime_session_contract",
+    "return_surface_contract",
+    "domain_payload",
+    "stage_snapshot",
+    "executor_routing_contract"
+  ],
+  "properties": {
+    "entry_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "entry_kind": {
+      "const": "med_auto_grant_product_entry"
+    },
+    "target_domain_id": {
+      "const": "med-autogrant"
+    },
+    "task_intent": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "entry_mode": {
+      "$ref": "#/$defs/entryMode"
+    },
+    "workspace_locator": {
+      "$ref": "#/$defs/workspaceLocator"
+    },
+    "runtime_session_contract": {
+      "$ref": "#/$defs/runtimeSessionContract"
+    },
+    "return_surface_contract": {
+      "$ref": "#/$defs/returnSurfaceContract"
+    },
+    "domain_payload": {
+      "$ref": "#/$defs/domainPayload"
+    },
+    "stage_snapshot": {
+      "$ref": "#/$defs/stageSnapshot"
+    },
+    "executor_routing_contract": {
+      "$ref": "executor-routing-contract.schema.json"
+    }
+  }
+}

@@ -26,6 +26,9 @@ FAST_CUTOVER_CURRENT_TRUTH = (
 PRODUCT_ENTRY_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md"
 )
+SCHEMA_BACKED_ENTRY_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md"
+)
 EXECUTOR_ROUTING_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-author-side-executor-routing-contract-current-truth.md"
 )
@@ -101,6 +104,9 @@ def test_readme_current_maturity_cards_follow_truth_reset_status() -> None:
 def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert FAST_CUTOVER_CURRENT_TRUTH.exists(), f"Fast cutover current truth 不存在: {FAST_CUTOVER_CURRENT_TRUTH}"
     assert TRUTH_RESET_CURRENT_TRUTH.exists(), f"Truth reset current truth 不存在: {TRUTH_RESET_CURRENT_TRUTH}"
+    assert SCHEMA_BACKED_ENTRY_CURRENT_TRUTH.exists(), (
+        f"Schema-backed product entry current truth 不存在: {SCHEMA_BACKED_ENTRY_CURRENT_TRUTH}"
+    )
     assert EXECUTOR_ROUTING_CURRENT_TRUTH.exists(), f"Executor routing current truth 不存在: {EXECUTOR_ROUTING_CURRENT_TRUTH}"
     assert CRITIQUE_HANDOFF_CURRENT_TRUTH.exists(), f"Critique handoff current truth 不存在: {CRITIQUE_HANDOFF_CURRENT_TRUTH}"
     assert PENDING_ROUTE_MATRIX_CURRENT_TRUTH.exists(), (
@@ -111,6 +117,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
 
     fast_cutover = _read(FAST_CUTOVER_CURRENT_TRUTH)
     truth_reset = _read(TRUTH_RESET_CURRENT_TRUTH)
+    schema_backed_entry_truth = _read(SCHEMA_BACKED_ENTRY_CURRENT_TRUTH)
     executor_routing_truth = _read(EXECUTOR_ROUTING_CURRENT_TRUTH)
     critique_handoff_truth = _read(CRITIQUE_HANDOFF_CURRENT_TRUTH)
     pending_route_matrix_truth = _read(PENDING_ROUTE_MATRIX_CURRENT_TRUTH)
@@ -137,6 +144,11 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
         "direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen"
         in product_entry_truth
     )
+    assert "schema-backed" in schema_backed_entry_truth
+    assert "executor-routing-contract.schema.json" in schema_backed_entry_truth
+    assert "product-entry.schema.json" in schema_backed_entry_truth
+    assert "fail-closed" in schema_backed_entry_truth
+    assert "author_side_route_catalog" in schema_backed_entry_truth
 
     assert "critique" in executor_routing_truth
     assert "pending" in executor_routing_truth
@@ -255,8 +267,10 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
     assert "workspace_id" in architecture
     assert "draft_id" in architecture
     assert "funding_call" in architecture
+    assert "schema-backed contract" in architecture
     assert "OPL -> Med Auto Grant" in status
     assert "build-product-entry" in status
+    assert "schema-backed" in status
 
     assert "target_domain_id" in reference_text
     assert "task_intent" in reference_text
@@ -269,3 +283,22 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
     assert "funding_call" in reference_text
     assert "runtime substrate 已经真正落在上游 `Hermes-Agent` 上" in reference_text
     assert "build-product-entry" in reference_text
+
+
+@pytest.mark.meta
+def test_docs_and_contracts_index_schema_backed_product_entry_and_routing_contract() -> None:
+    readme_en = _read(README_EN)
+    readme_zh = _read(README_ZH)
+    docs_readme_en = _read(DOCS_README_EN)
+    docs_readme_zh = _read(DOCS_README_ZH)
+    decisions = _read(CORE_DECISIONS)
+    current_program = (REPO_ROOT / "contracts" / "runtime-program" / "current-program.json").read_text(encoding="utf-8")
+    contracts_readme = (REPO_ROOT / "contracts" / "README.md").read_text(encoding="utf-8")
+
+    assert "schema-backed" in readme_en
+    assert "schema-backed" in readme_zh
+    assert "./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md" in docs_readme_en
+    assert "./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md" in docs_readme_zh
+    assert "schema-backed" in decisions
+    assert "2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md" in current_program
+    assert "schema-backed" in contracts_readme

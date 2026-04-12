@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/executor-routing-contract.schema.json",
+  "title": "Med Auto Grant Executor Routing Contract",
+  "type": "object",
+  "$defs": {
+    "authorSideRouteId": {
+      "type": "string",
+      "enum": [
+        "direction_screening",
+        "question_refinement",
+        "argument_building",
+        "fit_alignment",
+        "outline",
+        "drafting",
+        "critique",
+        "revision",
+        "frozen",
+        "artifact_bundle",
+        "final_package",
+        "hosted_contract_bundle"
+      ]
+    },
+    "routeContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id",
+        "route_status",
+        "executor_owner",
+        "execution_surface",
+        "handoff_contract_kind"
+      ],
+      "properties": {
+        "route_id": {
+          "$ref": "#/$defs/authorSideRouteId"
+        },
+        "route_status": {
+          "type": "string",
+          "enum": [
+            "landed",
+            "pending"
+          ]
+        },
+        "executor_owner": {
+          "const": "med-autogrant"
+        },
+        "execution_surface": {
+          "$ref": "service-safe-domain-surface.schema.json",
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "handoff_contract_kind": {
+          "type": "string",
+          "enum": [
+            "service-safe-domain-entry-command",
+            "handoff-required"
+          ]
+        },
+        "handoff_requirements": {
+          "$ref": "pending-handoff-requirements.schema.json",
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "current_stage_route",
+    "recommended_executor_route"
+  ],
+  "properties": {
+    "contract_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "current_stage_route": {
+      "$ref": "#/$defs/routeContract"
+    },
+    "recommended_executor_route": {
+      "$ref": "#/$defs/routeContract"
+    },
+    "author_side_route_catalog": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/routeContract"
+      },
+      "minItems": 12
+    }
+  }
+}

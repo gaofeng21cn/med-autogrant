@@ -68,6 +68,26 @@
       "status": "frozen"
     },
     {
+      "name": "service_safe_domain_surface",
+      "file": "service-safe-domain-surface.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "pending_handoff_requirements",
+      "file": "pending-handoff-requirements.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "executor_routing_contract",
+      "file": "executor-routing-contract.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "product_entry",
+      "file": "product-entry.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "nsfc_workspace",
       "file": "nsfc-workspace.schema.json",
       "status": "frozen"

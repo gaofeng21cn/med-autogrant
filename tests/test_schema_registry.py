@@ -24,6 +24,10 @@ EXPECTED_SCHEMAS = {
     "mentor-critique.schema.json",
     "revision-plan.schema.json",
     "nsfc-workspace.schema.json",
+    "service-safe-domain-surface.schema.json",
+    "pending-handoff-requirements.schema.json",
+    "executor-routing-contract.schema.json",
+    "product-entry.schema.json",
     "schema-index.json",
 }
 
@@ -97,6 +101,15 @@ class SchemaRegistryTest(unittest.TestCase):
         }
         for ref in expected_refs:
             self.assertIn(ref, refs)
+
+    def test_schema_index_tracks_domain_handoff_contract_schemas(self) -> None:
+        payload = json.loads((SCHEMA_ROOT / "schema-index.json").read_text(encoding="utf-8"))
+        names = {item["name"]: item["file"] for item in payload["schemas"]}
+
+        self.assertEqual(names["service_safe_domain_surface"], "service-safe-domain-surface.schema.json")
+        self.assertEqual(names["pending_handoff_requirements"], "pending-handoff-requirements.schema.json")
+        self.assertEqual(names["executor_routing_contract"], "executor-routing-contract.schema.json")
+        self.assertEqual(names["product_entry"], "product-entry.schema.json")
 
 
 if __name__ == "__main__":

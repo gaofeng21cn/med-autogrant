@@ -1321,7 +1321,7 @@ class _SchemaSubsetValidator:
         self._store = store
         self._cache: dict[str, dict[str, Any]] = {}
 
-    def validate(self, document: dict[str, Any], schema_file: str) -> list[ValidationIssue]:
+    def validate(self, document: Any, schema_file: str) -> list[ValidationIssue]:
         issues: list[ValidationIssue] = []
         schema = self._load_schema(schema_file)
         self._validate_node(document, schema, schema_file, "", issues)
@@ -1371,8 +1371,8 @@ class _SchemaSubsetValidator:
             self._validate_node(value, merged, resolved_file, path, issues)
             return
 
-        expected_type = schema.get("type")
-        if expected_type == "object":
+        resolved_type = self._resolve_schema_type(value=value, schema=schema, path=path, issues=issues)
+        if resolved_type == "object":
             if not isinstance(value, dict):
                 issues.append(ValidationIssue(path or "$", "必须是 object。"))
                 return
@@ -1387,15 +1387,18 @@ class _SchemaSubsetValidator:
             for name, child_schema in properties.items():
                 if name in value:
                     self._validate_node(value[name], child_schema, base_file, _join_path(path, name), issues)
-        elif expected_type == "array":
+        elif resolved_type == "array":
             if not isinstance(value, list):
                 issues.append(ValidationIssue(path or "$", "必须是 array。"))
                 return
+            min_items = schema.get("minItems")
+            if isinstance(min_items, int) and len(value) < min_items:
+                issues.append(ValidationIssue(path or "$", f"数组长度必须至少为 {min_items}。"))
             item_schema = schema.get("items")
             if isinstance(item_schema, dict):
                 for index, item in enumerate(value):
                     self._validate_node(item, item_schema, base_file, f"{path}[{index}]" if path else f"[{index}]", issues)
-        elif expected_type == "string":
+        elif resolved_type == "string":
             if not isinstance(value, str):
                 issues.append(ValidationIssue(path or "$", "必须是 string。"))
                 return
@@ -1407,7 +1410,7 @@ class _SchemaSubsetValidator:
                     datetime.fromisoformat(value.replace("Z", "+00:00"))
                 except ValueError:
                     issues.append(ValidationIssue(path or "$", "必须是合法的 date-time。"))
-        elif expected_type == "integer":
+        elif resolved_type == "integer":
             if isinstance(value, bool) or not isinstance(value, int):
                 issues.append(ValidationIssue(path or "$", "必须是 integer。"))
                 return
@@ -1417,9 +1420,13 @@ class _SchemaSubsetValidator:
                 issues.append(ValidationIssue(path or "$", f"必须大于等于 {minimum}。"))
             if isinstance(maximum, int) and value > maximum:
                 issues.append(ValidationIssue(path or "$", f"必须小于等于 {maximum}。"))
-        elif expected_type == "boolean":
+        elif resolved_type == "boolean":
             if not isinstance(value, bool):
                 issues.append(ValidationIssue(path or "$", "必须是 boolean。"))
+                return
+        elif resolved_type == "null":
+            if value is not None:
+                issues.append(ValidationIssue(path or "$", "必须是 null。"))
                 return
 
         const_value = schema.get("const")
@@ -1428,6 +1435,51 @@ class _SchemaSubsetValidator:
         enum_values = schema.get("enum")
         if isinstance(enum_values, list) and value not in enum_values:
             issues.append(ValidationIssue(path or "$", "取值不在允许枚举内。"))
+
+    def _resolve_schema_type(
+        self,
+        *,
+        value: Any,
+        schema: dict[str, Any],
+        path: str,
+        issues: list[ValidationIssue],
+    ) -> str | None:
+        expected_type = schema.get("type")
+        if isinstance(expected_type, str):
+            return expected_type
+        if not isinstance(expected_type, list):
+            return None
+
+        allowed_types = [item for item in expected_type if isinstance(item, str)]
+        if not allowed_types:
+            return None
+
+        actual_type = self._infer_json_type(value)
+        if actual_type in allowed_types:
+            return actual_type
+
+        issues.append(
+            ValidationIssue(
+                path or "$",
+                f"必须是 {' 或 '.join(allowed_types)}。",
+            )
+        )
+        return None
+
+    def _infer_json_type(self, value: Any) -> str | None:
+        if value is None:
+            return "null"
+        if isinstance(value, dict):
+            return "object"
+        if isinstance(value, list):
+            return "array"
+        if isinstance(value, str):
+            return "string"
+        if isinstance(value, bool):
+            return "boolean"
+        if isinstance(value, int):
+            return "integer"
+        return None
 
 
 def _join_path(prefix: str, name: str) -> str:

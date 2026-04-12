@@ -536,6 +536,26 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 task_intent="tighten-grant-mainline",
             )
 
+    def test_product_entry_fails_closed_on_invalid_executor_routing_contract_shape(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with patch(
+            "med_autogrant.product_entry._build_executor_routing_contract",
+            return_value={
+                "contract_version": 1,
+                "current_stage_route": {
+                    "route_id": "critique",
+                    "route_status": "pending",
+                },
+            },
+        ):
+            with self.assertRaises(WorkspaceStateError):
+                MedAutoGrantProductEntry().build(
+                    input_path=str(CRITIQUE_EXAMPLE_PATH),
+                    entry_mode="direct",
+                    task_intent="tighten-grant-mainline",
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

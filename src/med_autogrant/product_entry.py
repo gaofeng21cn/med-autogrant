@@ -6,11 +6,14 @@ from typing import Any, Mapping
 
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.hermes_runtime import (
+    PRODUCT_ENTRY_SCHEMA_FILE,
     _build_executor_routing_contract,
     _build_operator_contract,
     _build_runtime_state_contract,
     _build_runtime_substrate_contract,
     _read_current_program_contract,
+    _validate_contract_schema,
+    _validate_executor_routing_contract,
 )
 from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 
@@ -103,6 +106,20 @@ class MedAutoGrantProductEntry:
         )
 
         current_program_contract = _read_current_program_contract()
+        executor_routing_contract = _build_executor_routing_contract(
+            current_stage=lifecycle_stage,
+            recommended_next_stage=recommended_next_stage,
+            include_route_catalog=True,
+        )
+        _validate_executor_routing_contract(
+            executor_routing_contract,
+            current_stage=lifecycle_stage,
+            recommended_next_stage=recommended_next_stage,
+            include_route_catalog=True,
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
         product_entry = {
             "entry_version": PRODUCT_ENTRY_VERSION,
             "entry_kind": PRODUCT_ENTRY_KIND,
@@ -140,12 +157,16 @@ class MedAutoGrantProductEntry:
                 "checkpoint_status": checkpoint_status,
                 "recommended_next_stage": recommended_next_stage,
             },
-            "executor_routing_contract": _build_executor_routing_contract(
-                current_stage=lifecycle_stage,
-                recommended_next_stage=recommended_next_stage,
-                include_route_catalog=True,
-            ),
+            "executor_routing_contract": executor_routing_contract,
         }
+        _validate_contract_schema(
+            product_entry,
+            schema_file=PRODUCT_ENTRY_SCHEMA_FILE,
+            context="product_entry",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
 
         resolved_output_path = None
         if output_path is not None:

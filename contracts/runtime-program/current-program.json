@@ -24,6 +24,7 @@
   "repo_tracked_truth_surfaces": [
     "contracts/runtime-program/current-program.json",
     "docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md",
+    "docs/specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md",
     "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",
     "docs/specs/2026-04-12-author-side-executor-routing-contract-current-truth.md",
     "docs/specs/2026-04-12-critique-pending-handoff-contract-current-truth.md",

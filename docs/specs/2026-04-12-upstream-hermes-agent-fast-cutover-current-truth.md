@@ -110,6 +110,19 @@ Date: `2026-04-12`
   - 基础是：`summarize-workspace / stage-route-report`
   - 只有 source workspace 已经进入 `critique / revision / frozen` review context 时，才额外要求 `critique-summary`
 
+### 6. product-entry / routing surface 现在已经收口成 schema-backed contract
+
+- `schemas/v1/service-safe-domain-surface.schema.json`
+- `schemas/v1/pending-handoff-requirements.schema.json`
+- `schemas/v1/executor-routing-contract.schema.json`
+- `schemas/v1/product-entry.schema.json`
+
+这些 schema 现在已经进入 `schemas/v1/schema-index.json`，并且：
+
+- `run-local.stage_action_envelope.executor_routing_contract` 会先过 schema 校验，再对照冻结 route truth 做 fail-closed 比对
+- `build-product-entry.product_entry` 也会先过 schema 校验，并且内嵌的 `executor_routing_contract` 同样必须与当前冻结 truth 完全一致
+- 当前这层 schema-backed closeout 只是在把 author-side contract 机器可读化，不是在新增本地 executor surface
+
 ## What Did Not Change
 
 - formal entry 仍是 `CLI`

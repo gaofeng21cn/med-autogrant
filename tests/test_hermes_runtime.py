@@ -525,6 +525,29 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
             list(AUTHOR_SIDE_ROUTE_IDS),
         )
 
+    def test_run_local_fails_closed_on_invalid_executor_routing_contract_shape(self) -> None:
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.workspace import WorkspaceStateError
+
+        runtime = HermesRuntimeSubstrate()
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            journal_path = Path(tmp_dir) / "critique-journal.json"
+            with patch(
+                "med_autogrant.hermes_runtime._build_executor_routing_contract",
+                return_value={
+                    "contract_version": 1,
+                    "current_stage_route": {
+                        "route_id": "critique",
+                        "route_status": "pending",
+                    },
+                },
+            ):
+                with self.assertRaises(WorkspaceStateError):
+                    runtime.run_local(
+                        input_path=str(CRITIQUE_EXAMPLE_PATH),
+                        journal_path=str(journal_path),
+                    )
+
 
 class LocalRuntimeBridgeTest(unittest.TestCase):
     def test_run_local_runtime_uses_hermes_runtime_as_compatibility_bridge(self) -> None:

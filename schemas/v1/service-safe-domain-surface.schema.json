@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/service-safe-domain-surface.schema.json",
+  "title": "Med Auto Grant Service-Safe Domain Surface",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "surface_kind",
+    "entry_adapter",
+    "command"
+  ],
+  "properties": {
+    "surface_kind": {
+      "const": "service-safe-domain-entry-command"
+    },
+    "entry_adapter": {
+      "const": "MedAutoGrantDomainEntry"
+    },
+    "command": {
+      "type": "string",
+      "enum": [
+        "summarize-workspace",
+        "critique-summary",
+        "stage-route-report",
+        "execute-revision-pass",
+        "build-artifact-bundle",
+        "build-final-package",
+        "build-hosted-contract-bundle"
+      ]
+    }
+  }
+}

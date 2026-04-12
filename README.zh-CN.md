@@ -37,6 +37,7 @@
 - 其 formal-entry matrix 已固定为：默认正式入口 `CLI`、支持协议层 `MCP`（当前保留为 future layer，尚未 repo-verified）、内部控制面 `controller`。
 - 当前仓库主线按 `Auto-only` 理解；未来如果要做 `Human-in-the-loop` 产品，应作为兼容 sibling 或 upper-layer product 复用同一 substrate，而不是把当前仓改成同仓双模。
 - 已落地的 service-safe entry：`MedAutoGrantDomainEntry`，它把 CLI 命令面保留成 future gateway caller 可复用的结构化 entry contract。
+- 当前 `product entry` shell 与 `executor_routing_contract` 也已经进一步冻结成 schema-backed contract surface，并在生成时 fail-closed。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
 
 ## 入口分层与产品边界
@@ -113,6 +114,7 @@
 - 通过 `build-hosted-contract-bundle` 从当前 `final_package` 导出 hosted-friendly 的 session / state / artifact / audit contract bundle，作为托管化 prep 的本地合同产物
 - 通过 `MedAutoGrantDomainEntry` 把同一组 runtime command surface 暴露成 future gateway caller 可复用的 service-safe structured entry contract
 - 通过 `build-product-entry` 构建轻量结构化 `product entry` shell，让 `direct` 与 `opl-handoff` 共用同一套 envelope
+- 把已 landed 的 `product entry`、`executor_routing_contract` 与 pending handoff surface 冻成可供 future `OPL` / gateway 消费的 schema-backed contract
 
 在当前 repo-tracked truth 下，旧的 host-agent 本地 ladder 内已经没有新的 concrete post-`R5.A` runtime delta 可继续隐式推进；因此当前主线前进方式是保持已 landed 的 upstream substrate、service-safe domain entry 与 author-side object boundary 持续全绿，而不是重新打开 repo-local runtime ownership。
 

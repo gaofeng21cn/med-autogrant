@@ -37,6 +37,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - Its formal-entry matrix is fixed as: default formal entry `CLI`, supported protocol layer `MCP` (reserved future layer, not yet repo-verified), internal control surface `controller`.
 - The current repository mainline is `Auto-only`; any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than split this repository into same-repo dual-mode logic.
 - Landed service-safe entry: `MedAutoGrantDomainEntry`, which preserves the CLI command surface as a structured domain-entry contract for future gateway callers.
+- The current `product entry` shell and `executor_routing_contract` are now also frozen as schema-backed contract surfaces under `schemas/v1/`, with fail-closed validation at generation time.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 - Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 
@@ -115,6 +116,7 @@ Today, the runtime can:
 - export a hosted-friendly session / state / artifact / audit contract bundle from a landed local final package through `build-hosted-contract-bundle`
 - dispatch the same runtime command set through `MedAutoGrantDomainEntry` as a service-safe structured entry contract for future gateway callers
 - build a lightweight structured `product entry` shell through `build-product-entry`, reusing one shared envelope across `direct` and `opl-handoff`
+- freeze the landed `product entry`, `executor_routing_contract`, and pending handoff surfaces as schema-backed contract surfaces for future `OPL` / gateway consumption
 
 Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside the old host-agent line. The current forward path is to keep the landed upstream substrate, service-safe domain entry, and author-side object boundaries green, not to reopen repo-local runtime ownership.
 

@@ -23,6 +23,7 @@ from med_autogrant.hosted_contract_bundle import (
     _validate_required_final_package_fields,
     build_hosted_contract_bundle_document,
 )
+from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.upstream_hermes import HermesGrantRunLedger
 from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
@@ -31,6 +32,7 @@ from med_autogrant.workspace import (
     WorkspaceError,
     WorkspaceFileError,
     WorkspaceStateError,
+    _SchemaSubsetValidator,
     _require_workspace_context,
     build_critique_summary,
     load_workspace_document,
@@ -42,6 +44,8 @@ from med_autogrant.workspace import (
 JOURNAL_VERSION = 1
 CURRENT_PROGRAM_RELATIVE_PATH = CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH
 EXECUTOR_ROUTING_CONTRACT_VERSION = 1
+EXECUTOR_ROUTING_CONTRACT_SCHEMA_FILE = "executor-routing-contract.schema.json"
+PRODUCT_ENTRY_SCHEMA_FILE = "product-entry.schema.json"
 AUTHOR_SIDE_ROUTE_IDS = (
     "direction_screening",
     "question_refinement",
@@ -624,6 +628,19 @@ def derive_stage_action_envelope(
     checkpoint = route_report["verification_checkpoint"]
     selection = summary.get("current_selection") or {}
     actions = next_step.get("actions") or []
+    executor_routing_contract = _build_executor_routing_contract(
+        current_stage=next_step["current_stage"],
+        recommended_next_stage=next_step["recommended_stage"],
+    )
+    _validate_executor_routing_contract(
+        executor_routing_contract,
+        current_stage=next_step["current_stage"],
+        recommended_next_stage=next_step["recommended_stage"],
+        include_route_catalog=False,
+        grant_run_id=route_report["grant_run_id"],
+        workspace_id=route_report["workspace_id"],
+        lifecycle_stage=next_step["current_stage"],
+    )
 
     return {
         "envelope_version": 1,
@@ -650,10 +667,7 @@ def derive_stage_action_envelope(
             for index, instruction in enumerate(actions, start=1)
         ],
         "route_reason": next_step["reason"],
-        "executor_routing_contract": _build_executor_routing_contract(
-            current_stage=next_step["current_stage"],
-            recommended_next_stage=next_step["recommended_stage"],
-        ),
+        "executor_routing_contract": executor_routing_contract,
         "resume_decision": {
             "command": "resume-local",
             "journal_path": str(journal_path),
@@ -993,6 +1007,100 @@ def _read_current_program_contract(*, repo_root: Path | None = None) -> dict[str
     return _read_current_program_contract_from_contract(repo_root=repo_root)
 
 
+def _validate_contract_schema(
+    payload: dict[str, Any],
+    *,
+    schema_file: str,
+    context: str,
+    grant_run_id: str | None = None,
+    workspace_id: str | None = None,
+    lifecycle_stage: str | None = None,
+) -> None:
+    issues = _SchemaSubsetValidator(SchemaStore()).validate(payload, schema_file)
+    if not issues:
+        return
+    detail = "; ".join(f"{issue.path}: {issue.message}" for issue in issues[:5])
+    if len(issues) > 5:
+        detail = f"{detail}; 其余 {len(issues) - 5} 项略"
+    raise WorkspaceStateError(
+        f"{context} schema 校验失败: {detail}",
+        errors=issues,
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+
+
+def _validate_executor_routing_contract(
+    contract: dict[str, Any],
+    *,
+    current_stage: str,
+    recommended_next_stage: str,
+    include_route_catalog: bool,
+    grant_run_id: str | None = None,
+    workspace_id: str | None = None,
+    lifecycle_stage: str | None = None,
+) -> None:
+    _validate_contract_schema(
+        contract,
+        schema_file=EXECUTOR_ROUTING_CONTRACT_SCHEMA_FILE,
+        context="executor_routing_contract",
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+
+    expected_current_stage_route = _build_stage_route_contract(
+        current_stage,
+        source_stage=current_stage,
+    )
+    if contract.get("current_stage_route") != expected_current_stage_route:
+        raise WorkspaceStateError(
+            "executor_routing_contract.current_stage_route 与当前冻结 route truth 不一致。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+
+    expected_recommended_route = _build_stage_route_contract(
+        recommended_next_stage,
+        source_stage=current_stage,
+    )
+    if contract.get("recommended_executor_route") != expected_recommended_route:
+        raise WorkspaceStateError(
+            "executor_routing_contract.recommended_executor_route 与当前冻结 route truth 不一致。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+
+    if not include_route_catalog:
+        if "author_side_route_catalog" in contract:
+            raise WorkspaceStateError(
+                "executor_routing_contract 不允许在当前 surface 携带 author_side_route_catalog。",
+                errors=[],
+                grant_run_id=grant_run_id,
+                workspace_id=workspace_id,
+                lifecycle_stage=lifecycle_stage,
+            )
+        return
+
+    expected_route_catalog = [
+        _build_author_side_route_contract(route_id, source_stage=route_id)
+        for route_id in AUTHOR_SIDE_ROUTE_IDS
+    ]
+    if contract.get("author_side_route_catalog") != expected_route_catalog:
+        raise WorkspaceStateError(
+            "executor_routing_contract.author_side_route_catalog 与当前冻结 route matrix 不一致。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+
+
 def _build_executor_routing_contract(
     *,
     current_stage: str,
@@ -1019,7 +1127,7 @@ def _build_executor_routing_contract(
 
 
 def _build_stage_route_contract(stage: str, *, source_stage: str) -> dict[str, Any]:
-    resolved_stage = _require_nonempty_route_id(stage, context="executor routing stage")
+    resolved_stage = _require_known_route_id(stage, context="executor routing stage")
     if resolved_stage == "revision":
         return _build_author_side_route_contract("revision", source_stage=source_stage)
     if resolved_stage == "critique":
@@ -1028,7 +1136,7 @@ def _build_stage_route_contract(stage: str, *, source_stage: str) -> dict[str, A
 
 
 def _build_author_side_route_contract(route_id: str, *, source_stage: str) -> dict[str, Any]:
-    resolved_route_id = _require_nonempty_route_id(route_id, context="executor routing route")
+    resolved_route_id = _require_known_route_id(route_id, context="executor routing route")
     execution_command = {
         "revision": "execute-revision-pass",
         "artifact_bundle": "build-artifact-bundle",
@@ -1054,7 +1162,7 @@ def _build_author_side_route_contract(route_id: str, *, source_stage: str) -> di
 
 
 def _build_pending_route_contract(route_id: str, *, source_stage: str) -> dict[str, Any]:
-    resolved_route_id = _require_nonempty_route_id(route_id, context="pending executor route")
+    resolved_route_id = _require_known_route_id(route_id, context="pending executor route")
     contract = {
         "route_id": resolved_route_id,
         "route_status": "pending",
@@ -1181,6 +1289,13 @@ def _require_nonempty_route_id(value: Any, *, context: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise WorkspaceStateError(f"{context} 缺少合法 route_id")
     return value.strip()
+
+
+def _require_known_route_id(value: Any, *, context: str) -> str:
+    resolved_value = _require_nonempty_route_id(value, context=context)
+    if resolved_value not in AUTHOR_SIDE_ROUTE_IDS:
+        raise WorkspaceStateError(f"{context} 不支持 route_id: {resolved_value}")
+    return resolved_value
 
 
 def _directory_display_path(*segments: str) -> str:

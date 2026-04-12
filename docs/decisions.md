@@ -62,6 +62,12 @@
 - 理由：最终目标是让 `Hermes` 负责 substrate、让 `OPL` / domain 通过统一 envelope 直接协作，而不是继续脑补新的 repo-local executor。没有完整 matrix，future caller 仍会在其他未 landed route 上重新发明 handoff semantics。
 - 影响：`author_side_route_catalog` 现在会列出完整 pending + landed route matrix；每条 pending route 都会显式导出 `required_domain_surfaces / required_identity_fields / required_summary_fields / required_gate_fields`，并且只允许引用 repo 已有 surface。
 
+## 2026-04-12：冻结 schema-backed product entry / routing contract
+
+- 决策：把已 landed 的 `service-safe domain surface`、`pending_handoff_requirements`、`executor_routing_contract` 与 `product_entry` 从“文档冻结 + 运行时 dict”进一步收口成 schema-backed contract，并在 `run-local` / `build-product-entry` 生成时 fail-closed。
+- 理由：`OPL Gateway` 与 future domain caller 最终消费的是 machine-readable contract，而不是 repo 内部约定。如果这些 surface 只有 current truth 没有 schema，后续最容易在 pending route、route catalog、draft-bearing/nullability 边界上悄悄漂移。
+- 影响：`schemas/v1/schema-index.json` 现在会显式索引这四份 schema；`product_entry` 与 `stage_action_envelope.executor_routing_contract` 必须同时满足 schema 校验和冻结 truth 比对；后续任何 contract 变更都必须同步更新 schema、tests、docs 与 current-program pointer。
+
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。
