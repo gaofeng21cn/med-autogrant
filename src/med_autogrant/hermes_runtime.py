@@ -871,12 +871,41 @@ def _build_author_side_route_contract(route_id: str) -> dict[str, Any]:
 
 def _build_pending_route_contract(route_id: str) -> dict[str, Any]:
     resolved_route_id = _require_nonempty_route_id(route_id, context="pending executor route")
-    return {
+    contract = {
         "route_id": resolved_route_id,
         "route_status": "pending",
         "executor_owner": EXECUTOR_ROUTE_OWNER,
         "execution_surface": None,
         "handoff_contract_kind": "handoff-required",
+    }
+    if resolved_route_id == "critique":
+        contract["handoff_requirements"] = _build_critique_pending_handoff_requirements()
+    return contract
+
+
+def _build_critique_pending_handoff_requirements() -> dict[str, Any]:
+    return {
+        "contract_kind": "critique-pending-handoff",
+        "workspace_surface_kind": "nsfc_workspace",
+        "required_domain_surfaces": [
+            _build_service_safe_domain_surface("summarize-workspace"),
+            _build_service_safe_domain_surface("critique-summary"),
+            _build_service_safe_domain_surface("stage-route-report"),
+        ],
+        "required_identity_fields": [
+            "grant_run_id",
+            "workspace_id",
+            "draft_id",
+        ],
+    }
+
+
+def _build_service_safe_domain_surface(command: str) -> dict[str, str]:
+    resolved_command = _require_nonempty_route_id(command, context="service-safe domain surface command")
+    return {
+        "surface_kind": SERVICE_SAFE_ENTRY_SURFACE_KIND,
+        "entry_adapter": SERVICE_SAFE_ENTRY_ADAPTER,
+        "command": resolved_command,
     }
 
 

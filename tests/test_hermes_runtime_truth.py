@@ -29,6 +29,9 @@ PRODUCT_ENTRY_CURRENT_TRUTH = (
 EXECUTOR_ROUTING_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-author-side-executor-routing-contract-current-truth.md"
 )
+CRITIQUE_HANDOFF_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-critique-pending-handoff-contract-current-truth.md"
+)
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -96,12 +99,14 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert FAST_CUTOVER_CURRENT_TRUTH.exists(), f"Fast cutover current truth 不存在: {FAST_CUTOVER_CURRENT_TRUTH}"
     assert TRUTH_RESET_CURRENT_TRUTH.exists(), f"Truth reset current truth 不存在: {TRUTH_RESET_CURRENT_TRUTH}"
     assert EXECUTOR_ROUTING_CURRENT_TRUTH.exists(), f"Executor routing current truth 不存在: {EXECUTOR_ROUTING_CURRENT_TRUTH}"
+    assert CRITIQUE_HANDOFF_CURRENT_TRUTH.exists(), f"Critique handoff current truth 不存在: {CRITIQUE_HANDOFF_CURRENT_TRUTH}"
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
 
     fast_cutover = _read(FAST_CUTOVER_CURRENT_TRUTH)
     truth_reset = _read(TRUTH_RESET_CURRENT_TRUTH)
     executor_routing_truth = _read(EXECUTOR_ROUTING_CURRENT_TRUTH)
+    critique_handoff_truth = _read(CRITIQUE_HANDOFF_CURRENT_TRUTH)
     program_truth = _read(HERMES_PROGRAM_TRUTH)
     migration_map = _read(HERMES_MIGRATION_MAP)
 
@@ -119,6 +124,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "return_surface_contract" in product_entry_truth
     assert "MedAutoGrantDomainEntry" in product_entry_truth
     assert "executor_routing_contract" in product_entry_truth
+    assert "handoff_requirements" in product_entry_truth
 
     assert "critique" in executor_routing_truth
     assert "pending" in executor_routing_truth
@@ -127,6 +133,15 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "build-artifact-bundle" in executor_routing_truth
     assert "build-final-package" in executor_routing_truth
     assert "build-hosted-contract-bundle" in executor_routing_truth
+    assert "handoff_requirements" in executor_routing_truth
+
+    assert "critique-pending-handoff" in critique_handoff_truth
+    assert "summarize-workspace" in critique_handoff_truth
+    assert "critique-summary" in critique_handoff_truth
+    assert "stage-route-report" in critique_handoff_truth
+    assert "grant_run_id" in critique_handoff_truth
+    assert "workspace_id" in critique_handoff_truth
+    assert "draft_id" in critique_handoff_truth
 
     assert "还没有**真正完成上游 `Hermes-Agent` 集成" in truth_reset or "还没有" in truth_reset
     assert "repo-local code" in truth_reset

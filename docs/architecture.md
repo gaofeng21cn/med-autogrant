@@ -75,6 +75,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `execute-revision-pass`、`build-artifact-bundle`、`build-final-package`、`build-hosted-contract-bundle` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
 - `build-hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，作为 future host 需要兼容的托管友好 handoff contract。
 - 当前 author-side executor routing 继续按 route 单独冻结：`revision / artifact_bundle / final_package / hosted_contract_bundle` 已有 landed service-safe command surface，而 `critique` 与其他非落地 stage 仍只允许输出 `pending / handoff-required`。
+- `critique` route 虽然仍未 landed executor，但现在会额外导出 machine-readable `handoff_requirements`，要求 future collaborator 先通过 `MedAutoGrantDomainEntry` 读取 `summarize-workspace`、`critique-summary` 与 `stage-route-report`。
 - 产物面：`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle`。
 
 ## 数据与对象模型

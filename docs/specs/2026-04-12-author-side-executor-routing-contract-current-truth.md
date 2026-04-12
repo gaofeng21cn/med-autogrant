@@ -66,6 +66,14 @@ Date: `2026-04-12`
 - `recommended_executor_route.route_status = landed`
 - `recommended_executor_route.execution_surface.command = execute-revision-pass`
 
+如果 route 是：
+
+- `critique`
+
+那当前还会额外带：
+
+- `handoff_requirements`
+
 ### 3. landed 与 pending 的 author-side route 口径已经冻结
 
 当前 `author_side_route_catalog` 的真实状态是：
@@ -73,6 +81,8 @@ Date: `2026-04-12`
 - `critique`
   - `route_status = pending`
   - `handoff_contract_kind = handoff-required`
+  - `handoff_requirements.contract_kind = critique-pending-handoff`
+  - `handoff_requirements.required_domain_surfaces = summarize-workspace / critique-summary / stage-route-report`
   - 当前还没有 repo-tracked 的 Hermes-native critique executor；不得假装已 landed
 - `revision`
   - `route_status = landed`
@@ -133,6 +143,7 @@ Date: `2026-04-12`
 - `stage_action_envelope` 会输出 `executor_routing_contract`
 - `build-product-entry` 会输出 `executor_routing_contract`
 - `critique` route 继续诚实保持 `pending / handoff-required`
+- `critique` route 现在还会显式列出 `handoff_requirements`
 - `revision / artifact_bundle / final_package / hosted_contract_bundle` 继续保持当前 landed surface
 
 ## Honest Boundary

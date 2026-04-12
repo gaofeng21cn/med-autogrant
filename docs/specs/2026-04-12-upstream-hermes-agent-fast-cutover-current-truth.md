@@ -104,6 +104,7 @@ Date: `2026-04-12`
 - 当前 `critique` route 继续诚实保持：
   - `route_status = pending`
   - `handoff_contract_kind = handoff-required`
+  - `handoff_requirements.required_domain_surfaces = summarize-workspace / critique-summary / stage-route-report`
 
 ## What Did Not Change
 
@@ -128,6 +129,7 @@ repo 现在至少有下面这些 fresh proof：
    - final package
    - hosted contract bundle
 5. `executor_routing_contract` 能把 critique 的 `pending / handoff-required` 与 revision/export 的 landed route 明确区分出来
+6. critique pending route 还会显式导出 `handoff_requirements`，把直接协作所需的 domain surfaces 冻结下来
 
 ## Verification
 

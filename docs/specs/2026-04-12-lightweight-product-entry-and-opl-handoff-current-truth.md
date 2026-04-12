@@ -73,6 +73,7 @@ grant 域在这层共享 envelope 之上继续补充：
 - `critique`
   - `route_status = pending`
   - `handoff_contract_kind = handoff-required`
+  - `handoff_requirements.required_domain_surfaces = summarize-workspace / critique-summary / stage-route-report`
 - `revision`
   - `route_status = landed`
   - `execution_surface.command = execute-revision-pass`
@@ -116,6 +117,7 @@ grant 域在这层共享 envelope 之上继续补充：
 - `direct` 与 `opl-handoff` 现在共享同一套 envelope
 - 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与真实 Hermes substrate contract 之上
 - 这层 shell 还能显式告诉 caller：当前哪些 author-side route 已 landed，哪些还只是 `pending / handoff-required`
+- 对 `critique` 这类仍未 landed 的 route，这层 shell 现在还会直接导出 `handoff_requirements`，告诉 caller 应先读取哪些 domain surfaces 再协作
 
 它不意味着：
 

@@ -50,6 +50,12 @@
 - 理由：如果只写“substrate 已统一”，却不把 critique / revision / export 的 route status 显式冻结下来，后续最容易把 `pending` route 误写成“已 landed executor”。
 - 影响：当前 `critique` route 固定为 `pending / handoff-required`；`revision / artifact_bundle / final_package / hosted_contract_bundle` 固定为当前 landed service-safe domain command surface；未来继续替换任何 route，都必须先改这份 contract truth。
 
+## 2026-04-12：为 critique pending route 冻结直接协作 handoff contract
+
+- 决策：在保持 `critique` 继续为 `pending / handoff-required` 的前提下，为它补一份 machine-readable `handoff_requirements`，明确 future Hermes-side collaborator 必须先读取哪些 domain surfaces。
+- 理由：如果 pending route 只有一个状态字段，future host 很容易绕开 grant domain truth，或者误以为需要仓内新增本地 critique helper。把 handoff 要求显式冻结出来，能让“直接协作”与“新 executor 已 landed”保持清楚分层。
+- 影响：当前 `critique` route 固定要求读取 `summarize-workspace`、`critique-summary`、`stage-route-report`，并保留 `grant_run_id / workspace_id / draft_id`；这仍不是 `execute-critique-pass`。
+
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。

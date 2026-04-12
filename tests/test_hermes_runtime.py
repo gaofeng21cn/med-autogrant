@@ -161,6 +161,32 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
                         "executor_owner": "med-autogrant",
                         "execution_surface": None,
                         "handoff_contract_kind": "handoff-required",
+                        "handoff_requirements": {
+                            "contract_kind": "critique-pending-handoff",
+                            "workspace_surface_kind": "nsfc_workspace",
+                            "required_domain_surfaces": [
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "summarize-workspace",
+                                },
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "critique-summary",
+                                },
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "stage-route-report",
+                                },
+                            ],
+                            "required_identity_fields": [
+                                "grant_run_id",
+                                "workspace_id",
+                                "draft_id",
+                            ],
+                        },
                     },
                     "recommended_executor_route": {
                         "route_id": "revision",

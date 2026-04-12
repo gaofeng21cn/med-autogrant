@@ -70,6 +70,20 @@
 
 显式带出来，避免 future caller 误把 `critique` 写成“已有 landed executor”。
 
+如果当前 route 还是：
+
+- `critique`
+
+那 `executor_routing_contract` 还应额外带出：
+
+- `handoff_requirements`
+
+并明确要求 caller 先读取：
+
+- `summarize-workspace`
+- `critique-summary`
+- `stage-route-report`
+
 ## 5. 当前不应过度宣称的事
 
 - 不能把 runtime substrate 已落地，误写成产品入口也已成熟
