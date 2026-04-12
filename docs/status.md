@@ -11,9 +11,9 @@ Date: `2026-04-12`
 - OMX 状态：已退场，仅保留历史入口。
 - 当前入口真相：`operator entry` 与 `agent entry` 已存在；共享 envelope 的 lightweight `product entry` shell 已由 `build-product-entry` 落地；`grant-progress / grant-cockpit` 也已经把第一棒 controller-owned、read-only 的 direct-product projection 落地，但成熟的 grant-facing UX 仍未落地
 - 当前统一协作模型：`Hermes-Agent` 持有 runtime substrate / orchestration，`Med Auto Grant` 持有 grant 对象边界、author-side domain truth 与 executor routing；单步 critique / revision / packaging 仍按 route 选择具体执行逻辑
-- 当前 contract 口径：`build-product-entry`、`stage_action_envelope.executor_routing_contract` 与 `build-hosted-contract-bundle` 都已经是 schema-backed contract，并在生成时 fail-closed；其中 hosted bundle 现在额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，而共享 `domain_entry_contract` 现在还会固定 `supported_commands` 与 `command_contracts`
+- 当前 contract 口径：`build-product-entry`、`stage_action_envelope.executor_routing_contract`、`grant-progress`、`grant-cockpit` 与 `build-hosted-contract-bundle` 都已经是 schema-backed contract，并在生成时 fail-closed；其中 projection 对应 `grant-progress.schema.json` / `grant-cockpit.schema.json`，hosted bundle 现在额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，而共享 `domain_entry_contract` 现在还会固定 `supported_commands` 与 `command_contracts`
 - 当前 external caller 口径：hosted caller / 外部 caller 已经可以直接消费上述合同，并按 `supported_commands` / `command_contracts` 调用已 landed route，无需 repo-local helper
-- 当前 direct-product projection 口径：`grant-progress / grant-cockpit` 当前只消费 `summarize-workspace`、`stage-route-report`、`critique-summary` 与 `build-product-entry` 的合同信息；它们故意不进入 `domain_entry_contract.supported_commands`
+- 当前 direct-product projection 口径：`grant-progress / grant-cockpit` 当前只消费 `summarize-workspace`、`stage-route-report`、`critique-summary` 与 `build-product-entry` 的合同信息；它们通过 `grant-progress.schema.json` / `grant-cockpit.schema.json` 受 generation-time fail-closed 校验，且故意不进入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
 
 ## 当前基线（repo-verified）
 
@@ -76,7 +76,7 @@ Date: `2026-04-12`
 8. 后续若继续替换 critique / revision / export 的具体执行器，必须按 route 单独拿 truth 和 proof；不允许因为 substrate 已统一就自动改写 authoring semantics。
 9. `service-safe-domain-surface.schema.json`、`pending-handoff-requirements.schema.json`、`executor-routing-contract.schema.json`、`product-entry.schema.json` 与 `hosted-contract-bundle.schema.json` 现在已经进入 repo-tracked schema index；任何后续 product-entry / routing / hosted contract bundle 变更都必须同步更新 schema、tests 与 current truth。
 10. `P3` 已经证明 external hosted caller / `OPL` caller 可以直接消费已冻结的 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`；后续继续沿 `P4` 的诚实 product 面推进，而不是回头重新发明新的 repo-local hosted helper。
-11. `P4.A` 当前只允许落 controller-owned / read-only projection：`grant-progress` 与 `grant-cockpit` 不能被误写成新的 service-safe domain executor，也不能被写成已落地的 Web UI / hosted runtime。
+11. `P4.A` 当前只允许落 controller-owned / read-only projection：`grant-progress` 与 `grant-cockpit` 现在虽然已经是 schema-backed、generation-time fail-closed 的 projection contract，但仍不能被误写成新的 service-safe domain executor、hosted bundle command catalog 项，或已落地的 Web UI / hosted runtime。
 
 ## 默认验证
 

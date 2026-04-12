@@ -133,10 +133,14 @@ def test_core_docs_publish_p4a_direct_product_projection_boundary() -> None:
     architecture = _read(CORE_ARCHITECTURE)
     assert "controller-owned" in architecture
     assert "supported_commands" in architecture
+    assert "grant-progress.schema.json" in architecture
+    assert "grant-cockpit.schema.json" in architecture
 
     status = _read(CORE_STATUS)
     assert "P4.A" in status
     assert "read-only" in status
+    assert "schema-backed" in status
+    assert "fail-closed" in status
 
 
 @pytest.mark.meta
@@ -289,12 +293,17 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "grant-cockpit" in p4a_product_projection_truth
     assert "controller-owned" in p4a_product_projection_truth
     assert "read-only" in p4a_product_projection_truth
+    assert "schema-backed" in p4a_product_projection_truth
+    assert "fail-closed" in p4a_product_projection_truth
+    assert "grant-progress.schema.json" in p4a_product_projection_truth
+    assert "grant-cockpit.schema.json" in p4a_product_projection_truth
     assert "summarize-workspace" in p4a_product_projection_truth
     assert "stage-route-report" in p4a_product_projection_truth
     assert "critique-summary" in p4a_product_projection_truth
     assert "build-product-entry" in p4a_product_projection_truth
     assert "supported_commands" in p4a_product_projection_truth
     assert "没有被写进 `domain_entry_contract.supported_commands`" in p4a_product_projection_truth
+    assert "也不进入 hosted contract bundle 的 command catalog" in p4a_product_projection_truth
 
     assert "# Med Auto Grant OPL-Aligned Target Shape And Hosted Caller Plan" in ideal_target_execution_plan
     assert "Goal:" in ideal_target_execution_plan
@@ -416,6 +425,32 @@ def test_docs_and_contracts_index_schema_backed_product_entry_and_routing_contra
     assert "schema-backed" in decisions
     assert "2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md" in current_program
     assert "schema-backed" in contracts_readme
+
+
+@pytest.mark.meta
+def test_docs_publish_schema_backed_p4a_projection_contract_boundary() -> None:
+    readme_en = _read(README_EN)
+    readme_zh = _read(README_ZH)
+    docs_readme_en = _read(DOCS_README_EN)
+    docs_readme_zh = _read(DOCS_README_ZH)
+    project = _read(CORE_PROJECT)
+    architecture = _read(CORE_ARCHITECTURE)
+    status = _read(CORE_STATUS)
+    decisions = _read(CORE_DECISIONS)
+    contracts_readme = (REPO_ROOT / "contracts" / "README.md").read_text(encoding="utf-8")
+
+    assert "schema-backed" in readme_en
+    assert "schema-backed" in readme_zh
+    assert "schema-backed" in docs_readme_en
+    assert "schema-backed" in docs_readme_zh
+    assert "schema-backed" in project
+    assert "schema-backed" in architecture
+    assert "schema-backed" in status
+    assert "schema-backed" in decisions
+    assert "grant-progress.schema.json" in architecture
+    assert "grant-cockpit.schema.json" in architecture
+    assert "grant-progress.schema.json" in contracts_readme
+    assert "grant-cockpit.schema.json" in contracts_readme
 
 
 @pytest.mark.meta

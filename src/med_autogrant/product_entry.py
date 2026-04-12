@@ -7,6 +7,8 @@ from typing import Any, Mapping
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.hermes_runtime import (
     _build_domain_entry_contract,
+    GRANT_COCKPIT_SCHEMA_FILE,
+    GRANT_PROGRESS_SCHEMA_FILE,
     PRODUCT_ENTRY_SCHEMA_FILE,
     _build_executor_routing_contract,
     _build_operator_contract,
@@ -269,7 +271,7 @@ class MedAutoGrantProductEntry:
                 "workspace_path": str(resolved_input_path),
             },
         }
-        return {
+        payload = {
             "ok": True,
             "command": "grant-progress",
             "grant_run_id": grant_run_id,
@@ -279,6 +281,15 @@ class MedAutoGrantProductEntry:
             "input_path": str(resolved_input_path),
             "progress_projection": progress_projection,
         }
+        _validate_contract_schema(
+            payload,
+            schema_file=GRANT_PROGRESS_SCHEMA_FILE,
+            context="grant_progress",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+        return payload
 
     def read_grant_cockpit(
         self,
@@ -307,7 +318,7 @@ class MedAutoGrantProductEntry:
         if isinstance(author_decision_summary, str) and author_decision_summary.strip():
             workspace_alerts.append(author_decision_summary.strip())
 
-        return {
+        payload = {
             "ok": True,
             "command": "grant-cockpit",
             "grant_run_id": progress_payload["grant_run_id"],
@@ -328,6 +339,15 @@ class MedAutoGrantProductEntry:
                 "commands": _build_product_command_catalog(resolved_input_path),
             },
         }
+        _validate_contract_schema(
+            payload,
+            schema_file=GRANT_COCKPIT_SCHEMA_FILE,
+            context="grant_cockpit",
+            grant_run_id=progress_payload["grant_run_id"],
+            workspace_id=progress_payload["workspace_id"],
+            lifecycle_stage=progress_payload["lifecycle_stage"],
+        )
+        return payload
 
     def _load_projection_context(
         self,

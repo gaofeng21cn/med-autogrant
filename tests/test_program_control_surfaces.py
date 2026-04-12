@@ -144,9 +144,28 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("grant-progress", p4a_product_projection)
         self.assertIn("grant-cockpit", p4a_product_projection)
         self.assertIn("controller-owned", p4a_product_projection)
+        self.assertIn("schema-backed", p4a_product_projection)
+        self.assertIn("fail-closed", p4a_product_projection)
+        self.assertIn("grant-progress.schema.json", p4a_product_projection)
+        self.assertIn("grant-cockpit.schema.json", p4a_product_projection)
+        self.assertIn("也不进入 hosted contract bundle 的 command catalog", p4a_product_projection)
         self.assertIn("contracts/runtime-program/current-program.json", formal_entry)
         self.assertIn("contracts/runtime-program/current-program.json", durability)
         self.assertIn(RUNTIME_STATE_ROOT, durability)
+
+    def test_core_docs_publish_schema_backed_projection_contract_boundary(self) -> None:
+        architecture = _read(CORE_ARCHITECTURE)
+        status = _read(CORE_STATUS)
+        decisions = _read(CORE_DECISIONS)
+        contracts_readme = _read(CONTRACTS_README)
+
+        self.assertIn("grant-progress.schema.json", architecture)
+        self.assertIn("grant-cockpit.schema.json", architecture)
+        self.assertIn("schema-backed", status)
+        self.assertIn("fail-closed", status)
+        self.assertIn("schema-backed", decisions)
+        self.assertIn("grant-progress.schema.json", contracts_readme)
+        self.assertIn("grant-cockpit.schema.json", contracts_readme)
 
     def test_public_surfaces_no_longer_require_project_runtime_program_directory(self) -> None:
         for path in (README_EN, README_ZH, DOCS_README_EN, DOCS_README_ZH):

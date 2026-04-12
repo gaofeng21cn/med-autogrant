@@ -807,6 +807,34 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             },
         )
 
+    def test_grant_progress_fails_closed_on_invalid_projection_shape(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with patch(
+            "med_autogrant.product_entry._build_focus_payload",
+            return_value={
+                "applicant_name": "示例申请人",
+            },
+        ):
+            with self.assertRaisesRegex(WorkspaceStateError, "grant_progress"):
+                MedAutoGrantProductEntry().read_grant_progress(
+                    input_path=str(CRITIQUE_EXAMPLE_PATH),
+                )
+
+    def test_grant_cockpit_fails_closed_on_invalid_command_catalog_shape(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with patch(
+            "med_autogrant.product_entry._build_product_command_catalog",
+            return_value={
+                "grant_progress": "uv run python -m med_autogrant grant-progress --format json",
+            },
+        ):
+            with self.assertRaisesRegex(WorkspaceStateError, "grant_cockpit"):
+                MedAutoGrantProductEntry().read_grant_cockpit(
+                    input_path=str(CRITIQUE_EXAMPLE_PATH),
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

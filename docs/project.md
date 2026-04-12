@@ -4,11 +4,11 @@
 
 `Med Auto Grant` 是共享 `Unified Harness Engineering Substrate` 上、面向医学 `Grant Ops` 的 author-side、proposal-facing `Domain Harness OS` 方向。
 当前仓库主线按 `Auto-only` 理解，formal entry 仍是 `CLI`，但 runtime substrate 已切到真实上游 `Hermes-Agent`；旧 `CLI-first + host-agent` 线只保留为历史迁移基线，而当前 `hermes_runtime.py` 路径应被理解为 repo-side domain adapter。
-当前入口真相是：`CLI + MedAutoGrantDomainEntry` 已经构成稳定的 `agent entry`，`build-product-entry` 也已经把轻量结构化 `product entry` shell 落到仓库里；当前这层 shell 及其 `executor_routing_contract` 还已经进一步收口成 schema-backed contract，并在生成时 fail-closed；`build-hosted-contract-bundle` 现在也会把 `domain_entry_contract`、`schema_contract`、`authoring_contract` 一起冻结进 hosted-friendly 合同目录；`grant-progress / grant-cockpit` 也已经把第一棒 controller-owned、read-only 的 direct grant product projection 落地，但更完整的 grant-facing 产品体验仍未落地。
+当前入口真相是：`CLI + MedAutoGrantDomainEntry` 已经构成稳定的 `agent entry`，`build-product-entry` 也已经把轻量结构化 `product entry` shell 落到仓库里；当前这层 shell 及其 `executor_routing_contract` 还已经进一步收口成 schema-backed contract，并在生成时 fail-closed；`build-hosted-contract-bundle` 现在也会把 `domain_entry_contract`、`schema_contract`、`authoring_contract` 一起冻结进 hosted-friendly 合同目录；`grant-progress / grant-cockpit` 也已经把第一棒 controller-owned、read-only 的 direct grant product projection 落地，并通过 `schemas/v1/grant-progress.schema.json` 与 `schemas/v1/grant-cockpit.schema.json` 收口成 schema-backed、generation-time fail-closed 的 projection contract，但更完整的 grant-facing 产品体验仍未落地。
 按 `OPL` 对齐后的理想目标，这个仓最终应收敛成：`OPL` 继续负责 family-level 顶层入口与 gateway，`Hermes-Agent` 继续负责 runtime substrate，`Med Auto Grant` 继续负责 grant authoring truth、domain entry 与 direct grant product entry。
 当前统一协作模型是：`Hermes-Agent` 持有 runtime substrate / orchestration，`Med Auto Grant` 持有 grant 对象边界、author-side contract 与 export truth；具体 critique / revision / packaging 执行继续通过 repo-side domain logic 与 executor adapter 落地，而不是被强行收缩成单一 runtime 脑。
 当前 `P3 hosted caller / OPL consumption proof` 也已经 landed：external caller 现在可以直接消费 `domain_entry_contract`、`schema_contract`、`authoring_contract`，并按 `supported_commands` / `command_contracts` 构造请求，而不需要 repo-local helper。
-当前 `P4` 的第一棒也已经 landed：`grant-progress / grant-cockpit` 当前只作为 product-facing read-only projection 存在，故意不进入 `domain_entry_contract.supported_commands`，也不把它们写成新的 route executor。
+当前 `P4` 的第一棒也已经 landed：`grant-progress / grant-cockpit` 当前只作为 product-facing read-only projection 存在，故意不进入 `domain_entry_contract.supported_commands`，也不进入 hosted contract bundle 的 command catalog，更不把它们写成新的 route executor。
 
 ## 项目目标
 

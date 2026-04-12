@@ -88,6 +88,16 @@
       "status": "frozen"
     },
     {
+      "name": "grant_progress_projection",
+      "file": "grant-progress.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "grant_cockpit_projection",
+      "file": "grant-cockpit.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "hosted_contract_bundle",
       "file": "hosted-contract-bundle.schema.json",
       "status": "frozen"

@@ -38,6 +38,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - The current repository mainline is `Auto-only`; any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than split this repository into same-repo dual-mode logic.
 - Landed service-safe entry: `MedAutoGrantDomainEntry`, which preserves the CLI command surface as a structured domain-entry contract for future gateway callers.
 - The current `product entry` shell and `executor_routing_contract` are now also frozen as schema-backed contract surfaces under `schemas/v1/`, with fail-closed validation at generation time.
+- The current controller-owned direct-product projections `grant-progress` and `grant-cockpit` are now also frozen as schema-backed contract surfaces under `schemas/v1/` through `grant-progress.schema.json` and `grant-cockpit.schema.json`, with fail-closed validation at generation time.
 - The hosted-friendly `build-hosted-contract-bundle` export is now also frozen as a schema-backed contract bundle, and it explicitly adds `domain_entry_contract`, `schema_contract`, and `authoring_contract` for future hosted / `OPL` callers.
 - The shared `domain_entry_contract` now also exports `supported_commands` and `command_contracts`, so an external caller can construct requests from the frozen contract catalog without repo-local helper code.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
@@ -53,7 +54,7 @@ That means:
 - `operator entry`: human/operator commands, workspace preparation, inspection, and explicit gating
 - `agent entry`: `CLI` plus the landed `MedAutoGrantDomainEntry`, called by `Codex` or another host-agent
 - `product entry`: `build-product-entry` now lands the lightweight structured shell for both direct entry and `OPL` handoff, while richer grant-facing product UX still remains future work
-- `product projection`: `grant-progress` and `grant-cockpit` now land the first controller-owned, read-only direct-product projection, but they are intentionally not new `domain_entry_contract` executor commands and do not yet constitute a mature frontend
+- `product projection`: `grant-progress` and `grant-cockpit` now land the first controller-owned, read-only direct-product projection as schema-backed, generation-time fail-closed contract surfaces, but they are intentionally not new `domain_entry_contract` executor commands, do not enter the hosted contract bundle command catalog, and do not yet constitute a mature frontend
 
 The target domain-facing shape is:
 
@@ -84,7 +85,7 @@ So the current honest claim is: the Hermes-backed runtime substrate and the ligh
 - `draft_id` is the draft identity carried across critique and revision rather than regenerated per run.
 - `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
-- Current controller-owned read-only product projection surfaces are `grant-progress` and `grant-cockpit`; they only read the durable truth above plus `build-product-entry` contract hints, and they are intentionally separate from `domain_entry_contract.supported_commands`.
+- Current controller-owned read-only product projection surfaces are `grant-progress` and `grant-cockpit`; they only read the durable truth above plus `build-product-entry` contract hints, they are frozen by `schemas/v1/grant-progress.schema.json` and `schemas/v1/grant-cockpit.schema.json`, and they are intentionally separate from `domain_entry_contract.supported_commands` and the hosted contract bundle command catalog.
 - Current repo-verified runtime entry also includes `probe-upstream-hermes`, `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, `build-hosted-contract-bundle`, and `build-product-entry`; together they cover upstream dependency proof, local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, hosted-friendly contract export, and the shared direct / `OPL` handoff shell.
 - `build-hosted-contract-bundle` now exports a hosted-friendly handoff contract that explicitly carries `runtime_substrate_contract`, `runtime_state_contract`, `operator_contract`, `domain_entry_contract`, `schema_contract`, and `authoring_contract` alongside execution identity, artifact, and audit surfaces.
 - `domain_entry_contract` now also exports `supported_commands` plus per-command `command_contracts`, so an external caller can consume the same catalog from `product_entry` and the hosted bundle.
@@ -115,7 +116,7 @@ Today, the runtime can:
 - aggregate the current authoring route into one machine-readable `stage-route-report`
 - emit `verification_checkpoint` / `checkpoint_status` so the current verification, rollback, and frozen-gate semantics stay on one canonical checkpoint surface
 - expose structured `critique-summary` and `stage-route-report` audit data including verdict, current `RevisionPlan.execution_status`, reviewed revision evidence, rollback / frozen gate state, version labels, and comparison evidence
-- project a direct grant progress / cockpit surface through `grant-progress` and `grant-cockpit`, reusing `summarize-workspace`, `stage-route-report`, `critique-summary`, and `build-product-entry` contract hints without minting new service-safe domain-entry executor commands
+- project a direct grant progress / cockpit surface through `grant-progress` and `grant-cockpit`, reusing `summarize-workspace`, `stage-route-report`, `critique-summary`, and `build-product-entry` contract hints as schema-backed, generation-time fail-closed projection contracts without minting new service-safe domain-entry executor commands or hosted bundle command catalog entries
 - run one Hermes-backed local main-loop pass through `run-local`, derive a machine-readable `stop_reason`, emit a machine-readable `stage_action_envelope` for `stage_action_required`, write a durable local run journal, mirror attempt durability into upstream `SessionDB`, and re-enter that journal through `resume-local`
 - write the currently selected direction, question, argument chain, fit mapping, outline, and draft sections into a local `artifact_bundle` through `build-artifact-bundle`, while preserving manifest, lineage, version, and `grant_run_id / workspace_id / draft_id` identity
 - execute the frozen section-level deterministic revision contract through `execute-revision-pass` without breaking draft lineage, rollback semantics, or checkpoint boundaries

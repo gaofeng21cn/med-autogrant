@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-progress.schema.json",
+  "title": "Med Auto Grant Progress Projection",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "focusPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicant_name",
+        "funding_program",
+        "selected_direction_title",
+        "selected_question",
+        "active_draft_title",
+        "critique_verdict"
+      ],
+      "properties": {
+        "applicant_name": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "funding_program": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "selected_direction_title": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "selected_question": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "active_draft_title": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "critique_verdict": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "productEntrySurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "builder_command",
+        "target_domain_id",
+        "supported_entry_modes",
+        "task_intent_required",
+        "workspace_path"
+      ],
+      "properties": {
+        "builder_command": {
+          "const": "build-product-entry"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "supported_entry_modes": {
+          "const": [
+            "direct",
+            "opl-handoff"
+          ]
+        },
+        "task_intent_required": {
+          "const": true
+        },
+        "workspace_path": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "grantProgressProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projection_version",
+        "projection_kind",
+        "workspace_surface_kind",
+        "current_stage",
+        "current_stage_summary",
+        "checkpoint_status",
+        "recommended_next_stage",
+        "current_blockers",
+        "next_system_action",
+        "needs_author_decision",
+        "author_decision_summary",
+        "focus",
+        "product_entry_surface"
+      ],
+      "properties": {
+        "projection_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "projection_kind": {
+          "const": "grant_progress"
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "current_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "current_stage_summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "checkpoint_status": {
+          "$ref": "product-entry.schema.json#/$defs/checkpointStatus"
+        },
+        "recommended_next_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "current_blockers": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "next_system_action": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "needs_author_decision": {
+          "type": "boolean"
+        },
+        "author_decision_summary": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "focus": {
+          "$ref": "#/$defs/focusPayload"
+        },
+        "product_entry_surface": {
+          "$ref": "#/$defs/productEntrySurface"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "progress_projection"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "grant-progress"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "lifecycle_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "progress_projection": {
+      "$ref": "#/$defs/grantProgressProjection"
+    }
+  }
+}

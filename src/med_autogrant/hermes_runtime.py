@@ -46,6 +46,8 @@ CURRENT_PROGRAM_RELATIVE_PATH = CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH
 EXECUTOR_ROUTING_CONTRACT_VERSION = 1
 EXECUTOR_ROUTING_CONTRACT_SCHEMA_FILE = "executor-routing-contract.schema.json"
 PRODUCT_ENTRY_SCHEMA_FILE = "product-entry.schema.json"
+GRANT_PROGRESS_SCHEMA_FILE = "grant-progress.schema.json"
+GRANT_COCKPIT_SCHEMA_FILE = "grant-cockpit.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
 SUPPORTED_DOMAIN_ENTRY_COMMANDS = (
     "probe-upstream-hermes",

@@ -5,7 +5,7 @@
 这里是 `Med Auto Grant` 的文档索引，默认先读核心骨架，再看 specs/plans/history 的来源与细节。
 当前公开 runtime topology 是：`CLI-first + real upstream Hermes-Agent runtime substrate`；`MCP` 继续是 supported protocol layer，`controller` 继续是 internal surface。
 repo-tracked current-program truth 固定在 `contracts/runtime-program/current-program.json`，机器本地 runtime state 统一落在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-当前入口真相也已经明确：现在真实存在的是 `operator entry` 与 `agent entry`，轻量 grant `product entry` shell 也已经 landed；它的 shared envelope 与 routing surface 还已经进一步冻结成 schema-backed contract，并在生成时 fail-closed。第一棒诚实的 `P4.A` direct-product projection 也已经通过 `grant-progress` 与 `grant-cockpit` 落地；但更完整的 grant-facing 产品体验仍未完成。
+当前入口真相也已经明确：现在真实存在的是 `operator entry` 与 `agent entry`，轻量 grant `product entry` shell 也已经 landed；它的 shared envelope 与 routing surface 还已经进一步冻结成 schema-backed contract，并在生成时 fail-closed。第一棒诚实的 `P4.A` direct-product projection 也已经通过 `grant-progress` 与 `grant-cockpit` 落地，而且这两条 projection 现在也已经进入 `schemas/v1/`，成为 generation-time fail-closed 的 schema-backed contract；但更完整的 grant-facing 产品体验仍未完成。
 当前 hosted-friendly contract bundle 也已经补出可机器读取的合同目录：`domain_entry_contract`、`schema_contract`、`authoring_contract` 一起进入 bundle，让 future hosted / `OPL` caller 能直接消费同一份 entry、schema 与 route truth。
 这份共享 `domain_entry_contract` 现在还会显式导出 `supported_commands` 与 `command_contracts`，而 hosted caller consumption proof 也已经 landed。
 
@@ -58,8 +58,8 @@ Specs 是 repo-tracked 的权威 current truth/activation package，但不替代
 - 当前 repo-verified 迁移基线：已 absorbed 的 `CLI-first + host-agent runtime` 线现在收口于 `R5.A` honest upper bound，只保留为 migration baseline / compatibility bridge / regression oracle。
 - 当前可执行 runtime 主线：`CLI-first` 形态下的真实 upstream Hermes substrate，repo-side 只保留 domain/entry adapter。
 - 产品入口 shell：`build-product-entry` 已经把可直接进入、也可被 `OPL` handoff 调起的轻量 grant `product entry` shell 落到仓库里。
-- direct-product projection：`grant-progress` 与 `grant-cockpit` 现在已经作为 controller-owned、read-only 的产品投影落地；它们只消费现有 route/audit truth 与 `build-product-entry` contract hint，并且故意不是新的 `domain_entry_contract` executor command。
-- schema-backed contract 收口：已 landed 的 `product entry` shell、`executor_routing_contract`、`pending_handoff_requirements` 与 service-safe route surface 现在都已进入 `schemas/v1/`，并且会在生成时 fail-closed。
+- direct-product projection：`grant-progress` 与 `grant-cockpit` 现在已经作为 controller-owned、read-only 的产品投影落地；它们只消费现有 route/audit truth 与 `build-product-entry` contract hint，由 `grant-progress.schema.json` 与 `grant-cockpit.schema.json` 冻结，并且故意不是新的 `domain_entry_contract` executor command，也不进入 hosted bundle command catalog。
+- schema-backed contract 收口：已 landed 的 `product entry` shell、`executor_routing_contract`、`pending_handoff_requirements`、`grant-progress`、`grant-cockpit` 与 service-safe route surface 现在都已进入 `schemas/v1/`，并且会在生成时 fail-closed。
 - hosted contract bundle 收口：`build-hosted-contract-bundle` 现在会在既有 runtime/state/operator surface 之外，再显式导出 `domain_entry_contract`、`schema_contract` 与 `authoring_contract`，并统一受 `hosted-contract-bundle.schema.json` 约束。
 - hosted caller proof 收口：external caller 现在已经可以直接消费共享 `domain_entry_contract` 里的 `supported_commands` 与 `command_contracts`，不再依赖 repo-local helper。
 - 当前任务梯子：保持已 landed 的 Hermes substrate、service-safe domain entry、hosted caller proof 与 author-side object boundary 持续全绿；旧 host-agent 线只作为回归 oracle。

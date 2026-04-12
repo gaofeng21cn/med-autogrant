@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-cockpit.schema.json",
+  "title": "Med Auto Grant Cockpit Projection",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "workspaceOverview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicant_name",
+        "funding_program",
+        "lifecycle_stage",
+        "checkpoint_status",
+        "selected_direction_title",
+        "selected_question",
+        "active_draft_title",
+        "critique_verdict"
+      ],
+      "properties": {
+        "applicant_name": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "funding_program": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "checkpoint_status": {
+          "$ref": "product-entry.schema.json#/$defs/checkpointStatus"
+        },
+        "selected_direction_title": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "selected_question": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "active_draft_title": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "critique_verdict": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "commandCatalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grant_progress",
+        "summarize_workspace",
+        "stage_route_report",
+        "critique_summary",
+        "build_direct_entry",
+        "build_opl_handoff"
+      ],
+      "properties": {
+        "grant_progress": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summarize_workspace": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "stage_route_report": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "critique_summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "build_direct_entry": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "build_opl_handoff": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "grantCockpit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cockpit_kind",
+        "workspace_overview",
+        "workspace_status",
+        "workspace_alerts",
+        "progress_projection",
+        "commands"
+      ],
+      "properties": {
+        "cockpit_kind": {
+          "const": "grant_cockpit"
+        },
+        "workspace_overview": {
+          "$ref": "#/$defs/workspaceOverview"
+        },
+        "workspace_status": {
+          "type": "string",
+          "enum": [
+            "attention_required",
+            "on_track"
+          ]
+        },
+        "workspace_alerts": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "progress_projection": {
+          "$ref": "grant-progress.schema.json#/$defs/grantProgressProjection"
+        },
+        "commands": {
+          "$ref": "#/$defs/commandCatalog"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "grant_cockpit"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "grant-cockpit"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "lifecycle_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_cockpit": {
+      "$ref": "#/$defs/grantCockpit"
+    }
+  }
+}

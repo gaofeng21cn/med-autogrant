@@ -92,6 +92,12 @@
 - 理由：`P4` 的第一棒需要先给 direct user / operator / future caller 一个稳定的人话 projection，但如果把这两条 surface 混进 domain entry command catalog，就会再次把 product projection、domain execution 与 hosted caller contract 语义搅在一起。
 - 影响：当前 direct-product projection 只允许读取 `summarize-workspace`、`stage-route-report`、`critique-summary` 与 `build-product-entry` 的既有合同信息；它们不改写 route owner，不新增 repo-local hosted helper，也不等于成熟前台 / hosted runtime。
 
+## 2026-04-12：冻结 `P4.A` direct product projection contract
+
+- 决策：`grant-progress` 与 `grant-cockpit` 不只停留在 CLI projection，而是进一步通过 `grant-progress.schema.json` 与 `grant-cockpit.schema.json` 冻结成 schema-backed、generation-time fail-closed 的 projection contract。
+- 理由：如果 `P4.A` 只有命令和 current truth，没有独立 schema，那么 direct product projection 的 shape、blocker 语义、command catalog 展示面和 nullability 边界都可能悄悄漂移；而这两条 surface 又必须和 service-safe domain command catalog 保持严格分层。
+- 影响：`read_grant_progress(...)` 与 `read_grant_cockpit(...)` 现在都会在返回前执行 schema 校验；这两条 projection 继续不进入 `domain_entry_contract.supported_commands`，也不进入 hosted contract bundle 的 command catalog。
+
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。
