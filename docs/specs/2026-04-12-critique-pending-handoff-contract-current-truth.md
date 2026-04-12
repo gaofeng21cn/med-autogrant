@@ -35,6 +35,10 @@ Date: `2026-04-12`
 
 - `recommended_executor_route`
 
+这条 reroute 在当前 canonical grant mainline 里已经有一条明确已验证的返场例子：
+
+- `revision 已完成显式 revised 切换，应带着 revised 草稿回到 critique 做 re-review`
+
 ### 2. 当前冻结的 critique handoff 合同字段
 
 当前 `handoff_requirements` 至少包括：
@@ -75,6 +79,30 @@ Date: `2026-04-12`
 - critique 已经变成 Hermes-native mutation executor
 - repo-local helper 已经完成新的 critique runtime owner 接管
 
+### 4. 当前已经证明 reroute-to-critique 也会带同一份 handoff contract
+
+当前不只是：
+
+- `lifecycle_stage = critique`
+
+会输出这份 `handoff_requirements`。
+
+对 canonical 的：
+
+- `revision(completed revised switch) -> critique`
+
+返场路径，下面两个 surface 也已经能稳定输出：
+
+- `run-local.stage_action_envelope.executor_routing_contract.recommended_executor_route`
+- `build-product-entry.product_entry.executor_routing_contract.recommended_executor_route`
+
+并且二者都会保持：
+
+- `route_id = critique`
+- `route_status = pending`
+- `handoff_contract_kind = handoff-required`
+- 同一份 `handoff_requirements`
+
 ## What Did Not Change
 
 - `critique` route 仍然是 `pending`
@@ -91,12 +119,13 @@ Date: `2026-04-12`
 
 本 tranche 至少已覆盖：
 
-- `uv run pytest tests/test_hermes_runtime.py tests/test_product_entry.py tests/test_hermes_runtime_truth.py -q`
+- `uv run pytest tests/test_hermes_runtime.py tests/test_product_entry.py tests/test_domain_entry.py tests/test_hermes_runtime_truth.py -q`
 
 并验证：
 
 - `critique` current-stage route 会带 `handoff_requirements`
 - `product entry` route catalog 里的 `critique` 也会带同一份 `handoff_requirements`
+- `revision(completed revised switch) -> critique` 的 `recommended_executor_route` 也会带同一份 `handoff_requirements`
 - handoff 要求会固定列出：
   - `summarize-workspace`
   - `critique-summary`

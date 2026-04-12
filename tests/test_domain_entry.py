@@ -18,6 +18,7 @@ from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
 
 
 CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
+REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 
@@ -65,6 +66,7 @@ class DomainEntryFreshProofTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
             hermes_home = tmp_root / "hermes-home"
+            reroute_journal_path = tmp_root / "reroute-journal.json"
             revised_workspace_path = tmp_root / "revised.json"
             revised_journal_path = tmp_root / "revised-journal.json"
             frozen_bundle_path = tmp_root / "frozen-bundle.json"
@@ -93,6 +95,52 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                 self.assertEqual(
                     critique_report["verification_checkpoint"]["identity"]["grant_run_id"],
                     "grant-run-nsfc-demo-001-baseline-001",
+                )
+
+                reroute_payload = entry.dispatch(
+                    {
+                        "command": "run-local",
+                        "input_path": str(REVISION_EXAMPLE_PATH),
+                        "journal_path": str(reroute_journal_path),
+                    }
+                )
+                self.assertTrue(reroute_payload["ok"])
+                self.assertEqual(reroute_payload["stop_reason"]["recommended_next_stage"], "critique")
+                self.assertEqual(
+                    reroute_payload["stage_action_envelope"]["executor_routing_contract"]["recommended_executor_route"],
+                    {
+                        "route_id": "critique",
+                        "route_status": "pending",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": None,
+                        "handoff_contract_kind": "handoff-required",
+                        "handoff_requirements": {
+                            "contract_kind": "critique-pending-handoff",
+                            "workspace_surface_kind": "nsfc_workspace",
+                            "required_domain_surfaces": [
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "summarize-workspace",
+                                },
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "critique-summary",
+                                },
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "stage-route-report",
+                                },
+                            ],
+                            "required_identity_fields": [
+                                "grant_run_id",
+                                "workspace_id",
+                                "draft_id",
+                            ],
+                        },
+                    },
                 )
 
                 revision_payload = entry.dispatch(

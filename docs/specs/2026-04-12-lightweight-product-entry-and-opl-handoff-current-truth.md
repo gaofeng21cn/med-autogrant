@@ -118,6 +118,7 @@ grant 域在这层共享 envelope 之上继续补充：
 - 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与真实 Hermes substrate contract 之上
 - 这层 shell 还能显式告诉 caller：当前哪些 author-side route 已 landed，哪些还只是 `pending / handoff-required`
 - 对 `critique` 这类仍未 landed 的 route，这层 shell 现在还会直接导出 `handoff_requirements`，告诉 caller 应先读取哪些 domain surfaces 再协作
+- 对 canonical 的 `revision(completed revised switch) -> critique` 返场路径，这层 shell 也已经能在 `recommended_executor_route` 里稳定导出同一份 critique handoff contract
 
 它不意味着：
 

@@ -66,6 +66,18 @@ Date: `2026-04-12`
 - `recommended_executor_route.route_status = landed`
 - `recommended_executor_route.execution_surface.command = execute-revision-pass`
 
+而对 canonical 的：
+
+- `revision(completed revised switch) -> critique`
+
+返场路径：
+
+- `current_stage_route.route_id = revision`
+- `current_stage_route.route_status = landed`
+- `recommended_executor_route.route_id = critique`
+- `recommended_executor_route.route_status = pending`
+- `recommended_executor_route.handoff_requirements.contract_kind = critique-pending-handoff`
+
 如果 route 是：
 
 - `critique`

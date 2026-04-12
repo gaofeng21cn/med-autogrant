@@ -19,6 +19,7 @@ from med_autogrant.cli import main  # noqa: E402
 
 
 CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
+REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 
@@ -198,6 +199,63 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
                             "command": "execute-revision-pass",
                         },
                         "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                },
+            )
+
+            revision_return_run = runtime.run_local(
+                input_path=str(REVISION_EXAMPLE_PATH),
+                journal_path=str(tmp_root / "revision-return-journal.json"),
+            )
+            self.assertTrue(revision_return_run["ok"])
+            self.assertEqual(revision_return_run["stop_reason"]["recommended_next_stage"], "critique")
+            self.assertEqual(
+                revision_return_run["stage_action_envelope"]["executor_routing_contract"],
+                {
+                    "contract_version": 1,
+                    "current_stage_route": {
+                        "route_id": "revision",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "execute-revision-pass",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                    "recommended_executor_route": {
+                        "route_id": "critique",
+                        "route_status": "pending",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": None,
+                        "handoff_contract_kind": "handoff-required",
+                        "handoff_requirements": {
+                            "contract_kind": "critique-pending-handoff",
+                            "workspace_surface_kind": "nsfc_workspace",
+                            "required_domain_surfaces": [
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "summarize-workspace",
+                                },
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "critique-summary",
+                                },
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "stage-route-report",
+                                },
+                            ],
+                            "required_identity_fields": [
+                                "grant_run_id",
+                                "workspace_id",
+                                "draft_id",
+                            ],
+                        },
                     },
                 },
             )

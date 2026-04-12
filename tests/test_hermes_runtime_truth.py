@@ -142,6 +142,8 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "grant_run_id" in critique_handoff_truth
     assert "workspace_id" in critique_handoff_truth
     assert "draft_id" in critique_handoff_truth
+    assert "recommended_executor_route" in critique_handoff_truth
+    assert "revision 已完成显式 revised 切换" in critique_handoff_truth
 
     assert "还没有**真正完成上游 `Hermes-Agent` 集成" in truth_reset or "还没有" in truth_reset
     assert "repo-local code" in truth_reset

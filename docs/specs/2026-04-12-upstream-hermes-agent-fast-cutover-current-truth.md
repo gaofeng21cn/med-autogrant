@@ -130,6 +130,7 @@ repo 现在至少有下面这些 fresh proof：
    - hosted contract bundle
 5. `executor_routing_contract` 能把 critique 的 `pending / handoff-required` 与 revision/export 的 landed route 明确区分出来
 6. critique pending route 还会显式导出 `handoff_requirements`，把直接协作所需的 domain surfaces 冻结下来
+7. `revision(completed revised switch) -> critique` 返场路径也已经在 `run-local` / `build-product-entry` 上给出一致的 critique handoff proof
 
 ## Verification
 

@@ -19,6 +19,7 @@ from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
 
 
 CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
+REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 
 
 class ProductEntryCliDispatchTest(unittest.TestCase):
@@ -204,6 +205,154 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "command": "execute-revision-pass",
                     },
                     "handoff_contract_kind": "service-safe-domain-entry-command",
+                },
+                "author_side_route_catalog": [
+                    {
+                        "route_id": "critique",
+                        "route_status": "pending",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": None,
+                        "handoff_contract_kind": "handoff-required",
+                        "handoff_requirements": {
+                            "contract_kind": "critique-pending-handoff",
+                            "workspace_surface_kind": "nsfc_workspace",
+                            "required_domain_surfaces": [
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "summarize-workspace",
+                                },
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "critique-summary",
+                                },
+                                {
+                                    "surface_kind": "service-safe-domain-entry-command",
+                                    "entry_adapter": "MedAutoGrantDomainEntry",
+                                    "command": "stage-route-report",
+                                },
+                            ],
+                            "required_identity_fields": [
+                                "grant_run_id",
+                                "workspace_id",
+                                "draft_id",
+                            ],
+                        },
+                    },
+                    {
+                        "route_id": "revision",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "execute-revision-pass",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                    {
+                        "route_id": "artifact_bundle",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "build-artifact-bundle",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                    {
+                        "route_id": "final_package",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "build-final-package",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                    {
+                        "route_id": "hosted_contract_bundle",
+                        "route_status": "landed",
+                        "executor_owner": "med-autogrant",
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "build-hosted-contract-bundle",
+                        },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
+                    },
+                ],
+            },
+        )
+
+    def test_product_entry_surfaces_revision_completed_reroute_to_critique_handoff(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build(
+            input_path=str(REVISION_EXAMPLE_PATH),
+            entry_mode="direct",
+            task_intent="tighten-grant-mainline",
+        )
+
+        self.assertEqual(payload["lifecycle_stage"], "revision")
+        self.assertEqual(
+            payload["product_entry"]["stage_snapshot"],
+            {
+                "lifecycle_stage": "revision",
+                "checkpoint_status": "forward_progress",
+                "recommended_next_stage": "critique",
+            },
+        )
+        self.assertEqual(
+            payload["product_entry"]["executor_routing_contract"],
+            {
+                "contract_version": 1,
+                "current_stage_route": {
+                    "route_id": "revision",
+                    "route_status": "landed",
+                    "executor_owner": "med-autogrant",
+                    "execution_surface": {
+                        "surface_kind": "service-safe-domain-entry-command",
+                        "entry_adapter": "MedAutoGrantDomainEntry",
+                        "command": "execute-revision-pass",
+                    },
+                    "handoff_contract_kind": "service-safe-domain-entry-command",
+                },
+                "recommended_executor_route": {
+                    "route_id": "critique",
+                    "route_status": "pending",
+                    "executor_owner": "med-autogrant",
+                    "execution_surface": None,
+                    "handoff_contract_kind": "handoff-required",
+                    "handoff_requirements": {
+                        "contract_kind": "critique-pending-handoff",
+                        "workspace_surface_kind": "nsfc_workspace",
+                        "required_domain_surfaces": [
+                            {
+                                "surface_kind": "service-safe-domain-entry-command",
+                                "entry_adapter": "MedAutoGrantDomainEntry",
+                                "command": "summarize-workspace",
+                            },
+                            {
+                                "surface_kind": "service-safe-domain-entry-command",
+                                "entry_adapter": "MedAutoGrantDomainEntry",
+                                "command": "critique-summary",
+                            },
+                            {
+                                "surface_kind": "service-safe-domain-entry-command",
+                                "entry_adapter": "MedAutoGrantDomainEntry",
+                                "command": "stage-route-report",
+                            },
+                        ],
+                        "required_identity_fields": [
+                            "grant_run_id",
+                            "workspace_id",
+                            "draft_id",
+                        ],
+                    },
                 },
                 "author_side_route_catalog": [
                     {
