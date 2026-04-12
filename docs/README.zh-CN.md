@@ -5,7 +5,7 @@
 这里是 `Med Auto Grant` 的文档索引，默认先读核心骨架，再看 specs/plans/history 的来源与细节。
 当前公开 runtime topology 是：`CLI-first + real upstream Hermes-Agent runtime substrate`；`MCP` 继续是 supported protocol layer，`controller` 继续是 internal surface。
 repo-tracked current-program truth 固定在 `contracts/runtime-program/current-program.json`，机器本地 runtime state 统一落在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-当前入口真相也已经明确：现在真实存在的是 `operator entry` 与 `agent entry`，而成熟的 grant-facing `product entry` 仍然是下一步产品层缺口。
+当前入口真相也已经明确：现在真实存在的是 `operator entry` 与 `agent entry`，轻量 grant `product entry` shell 也已经 landed，但更完整的 grant-facing 产品体验仍未完成。
 
 ## 先读核心骨架
 
@@ -34,6 +34,7 @@ repo-tracked current-program truth 固定在 `contracts/runtime-program/current-
 ## Specs（current truth / activation package）
 
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md)
+- [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md)
 - [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
@@ -48,7 +49,7 @@ Specs 是 repo-tracked 的权威 current truth/activation package，但不替代
 
 - 当前 repo-verified 迁移基线：已 absorbed 的 `CLI-first + host-agent runtime` 线现在收口于 `R5.A` honest upper bound，只保留为 migration baseline / compatibility bridge / regression oracle。
 - 当前可执行 runtime 主线：`CLI-first` 形态下的真实 upstream Hermes substrate，repo-side 只保留 domain/entry adapter。
-- 产品入口目标：在已落地的 runtime substrate 之上补齐一个可直接进入、也可被 `OPL` handoff 调起的轻量 grant `product entry`。
+- 产品入口 shell：`build-product-entry` 已经把可直接进入、也可被 `OPL` handoff 调起的轻量 grant `product entry` shell 落到仓库里。
 - 当前任务梯子：保持已 landed 的 Hermes substrate、service-safe domain entry 与 author-side object boundary 持续全绿；旧 host-agent 线只作为回归 oracle。
 - 历史 bridge / OMX 资料只负责追溯，不再构成当前入口。
 

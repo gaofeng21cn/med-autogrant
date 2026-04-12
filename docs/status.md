@@ -9,7 +9,7 @@ Date: `2026-04-12`
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
 - OMX 状态：已退场，仅保留历史入口。
-- 当前入口真相：`operator entry` 与 `agent entry` 已存在；成熟的 grant-facing `product entry` 仍未落地
+- 当前入口真相：`operator entry` 与 `agent entry` 已存在；共享 envelope 的 lightweight `product entry` shell 已由 `build-product-entry` 落地，但成熟的 grant-facing UX 仍未落地
 
 ## 当前基线（repo-verified）
 
@@ -19,6 +19,7 @@ Date: `2026-04-12`
 - repo-tracked current truth 入口：
   - `contracts/runtime-program/current-program.json`
   - `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
+  - `docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`
   - `docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
   - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
   - `docs/specs/2026-04-07-durability-model-clarification.md`
@@ -40,10 +41,10 @@ Date: `2026-04-12`
 
 ## 当前优先事项
 
-1. 保持真实 upstream substrate、service-safe domain entry 与 author-side artifact/export surface 持续全绿。
+1. 保持真实 upstream substrate、service-safe domain entry、`build-product-entry` 与 author-side artifact/export surface 持续全绿。
 2. 继续沿 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` 的口径推进，不把 repo-local adapter 重新写回 runtime owner。
 3. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-4. 下一步产品层重点是补齐 lightweight `product entry` 与 `OPL -> Med Auto Grant` handoff，而不是回头扩写 repo-local runtime owner 叙事。
+4. 已 landed 的 lightweight `product entry` / `OPL -> Med Auto Grant` handoff shell 现在由 `build-product-entry` 承载；后续只允许沿同一 shared envelope 继续收口，不回头扩写 repo-local runtime owner 叙事。
 
 ## 默认验证
 

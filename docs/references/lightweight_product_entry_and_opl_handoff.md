@@ -11,7 +11,8 @@
 
 同时，这个仓的 runtime substrate 已经真正落在上游 `Hermes-Agent` 上。
 
-但即便如此，它仍然没有成熟的用户级 `product entry`。
+在此基础上，`build-product-entry` 已经把轻量结构化 `product entry` shell 落到仓库里，并让 `direct` 与 `opl-handoff` 共用同一套 envelope。
+但即便如此，它仍然不等于成熟的用户级 `product entry` 或完整最终 UX。
 
 ## 2. 目标形态
 
@@ -39,9 +40,9 @@
 
 所以当前最主要的缺口已经不是“怎么让它跑在 Hermes 上”，而是：
 
-- 怎么让用户能直接进入它
-- 怎么让 `OPL` 能把任务平滑 handoff 给它
-- 怎么在不改写 grant domain 语义的前提下，补出 product shell
+- 怎么围绕已 landed 的 `build-product-entry` shell 做更完整的 direct-entry 编排
+- 怎么让 `OPL` 能稳定消费这份 handoff envelope
+- 怎么在不改写 grant domain 语义的前提下，继续补产品层而不是偷换成熟度
 
 ## 4. 共享 handoff envelope
 
@@ -69,6 +70,6 @@
 
 ## 6. 下一步落地方向
 
-1. 继续保持真实 upstream `Hermes-Agent` substrate 与 service-safe domain entry 全绿。
-2. 在此基础上补 `Med Auto Grant Product Entry` shell。
-3. 让 `OPL -> Med Auto Grant` handoff 与 direct entry 共用同一套结构化 envelope，而不是再起第二套入口语义。
+1. 继续保持真实 upstream `Hermes-Agent` substrate、service-safe domain entry 与 `build-product-entry` 全绿。
+2. 让 `OPL -> Med Auto Grant` handoff 与 direct entry 持续共用同一套结构化 envelope，而不是再起第二套入口语义。
+3. 在轻量结构化 shell 已 landed 的前提下，仍然克制表述成熟度，不把它写成完整最终 UX。

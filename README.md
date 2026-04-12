@@ -42,12 +42,13 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 
 ## Entry Modes And Product Boundary
 
-Today, `Med Auto Grant` already has real `operator entry` and `agent entry`, but not yet a mature `product entry`.
+Today, `Med Auto Grant` already has real `operator entry` and `agent entry`, and the lightweight structured `product entry` shell is now landed.
+A mature grant-facing product experience still remains future work.
 That means:
 
 - `operator entry`: human/operator commands, workspace preparation, inspection, and explicit gating
 - `agent entry`: `CLI` plus the landed `MedAutoGrantDomainEntry`, called by `Codex` or another host-agent
-- `product entry`: still the next gap, even though the runtime substrate is already on real upstream `Hermes-Agent`
+- `product entry`: `build-product-entry` now lands the lightweight structured shell for both direct entry and `OPL` handoff, while richer grant-facing product UX still remains future work
 
 The target domain-facing shape is:
 
@@ -68,7 +69,8 @@ That handoff should carry one shared minimum envelope:
 
 On top of that, `Med Auto Grant` adds domain payload such as `workspace_id`, `draft_id`, and `funding_call`.
 
-So the current honest claim is: the Hermes-backed runtime substrate is landed, but the user-facing product entry shell still needs to be built on top of it.
+That shared envelope is now built by `build-product-entry` in both `direct` and `opl-handoff` modes.
+So the current honest claim is: the Hermes-backed runtime substrate and the lightweight structured `product entry` shell are landed, while richer grant-facing product experience still remains future work.
 
 ## Execution Handle And Durable Surfaces
 
@@ -77,7 +79,7 @@ So the current honest claim is: the Hermes-backed runtime substrate is landed, b
 - `draft_id` is the draft identity carried across critique and revision rather than regenerated per run.
 - `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
-- Current repo-verified runtime entry also includes `probe-upstream-hermes`, `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, and `build-hosted-contract-bundle`; together they cover upstream dependency proof, local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, and hosted-friendly contract export.
+- Current repo-verified runtime entry also includes `probe-upstream-hermes`, `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, `build-hosted-contract-bundle`, and `build-product-entry`; together they cover upstream dependency proof, local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, hosted-friendly contract export, and the shared direct / `OPL` handoff shell.
 - `build-hosted-contract-bundle` now exports a hosted-friendly handoff contract that explicitly carries `runtime_substrate_contract`, `runtime_state_contract`, and `operator_contract` alongside execution identity, artifact, and audit surfaces.
 - `stage-route-report` is the current machine-readable verification/checkpoint aggregation surface and now emits `verification_checkpoint` plus `checkpoint_status`.
 - `MedAutoGrantDomainEntry` is the current service-safe structured adapter for CLI-equivalent runtime calls and future gateway reuse.
@@ -112,6 +114,7 @@ Today, the runtime can:
 - assemble a machine-readable local `final_package` through `build-final-package` for freeze-ready / submission-frozen workspaces
 - export a hosted-friendly session / state / artifact / audit contract bundle from a landed local final package through `build-hosted-contract-bundle`
 - dispatch the same runtime command set through `MedAutoGrantDomainEntry` as a service-safe structured entry contract for future gateway callers
+- build a lightweight structured `product entry` shell through `build-product-entry`, reusing one shared envelope across `direct` and `opl-handoff`
 
 Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside the old host-agent line. The current forward path is to keep the landed upstream substrate, service-safe domain entry, and author-side object boundaries green, not to reopen repo-local runtime ownership.
 
@@ -122,6 +125,7 @@ The following areas still remain for further hardening or future scope:
 - the runtime still needs more submission-grade hardening and higher-density authoring judgment, even though the canonical local walkthrough and revised/final/hosted output-consistency truth are now frozen
 - any further submission-grade hardening or stronger authoring-runtime claims require newly frozen repo-tracked truth rather than another implicit post-`R5.A` continuation
 - actual hosted runtime, remote execution, Web UI, and multi-tenant hostedization
+- a richer grant-facing product experience beyond the landed lightweight structured shell
 - any future `Human-in-the-loop` sibling or upper-layer product surface
 - submission-grade autopilot quality and stronger end-to-end runtime stability
 - broader grant-family expansion beyond the first `NSFC` generic skeleton, including `P5` federation
@@ -180,6 +184,7 @@ uv run python -m med_autogrant summarize-workspace --input examples/nsfc_workspa
 uv run python -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant build-product-entry --input examples/nsfc_workspace_p2c_critique.json --entry-mode direct --task-intent tighten-grant-mainline --format json
 
 # 2. Deterministic local revision pass
 uv run python -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json
@@ -230,6 +235,7 @@ uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TM
 ### Internal Docs
 
 - Current fast-cutover truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
+- Current lightweight product-entry truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`
 - Current truth-reset overview: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
 - Historical local runtime program truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
 - Historical local runtime capability migration map: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`

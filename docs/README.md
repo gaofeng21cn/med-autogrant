@@ -6,7 +6,7 @@ This index is the default documentation surface for `Med Auto Grant`.
 Start with the core skeleton, then use specs/plans/history for deeper provenance.
 The current public runtime topology is: `CLI-first + real upstream Hermes-Agent runtime substrate`. `MCP` remains the supported protocol layer and `controller` remains the internal surface.
 Repo-tracked current-program truth lives at `contracts/runtime-program/current-program.json`, while machine-local runtime state lives under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
-The current entry truth is also explicit: `operator entry` and `agent entry` are real today, while a mature grant-facing `product entry` is still the next product-layer gap.
+The current entry truth is also explicit: `operator entry` and `agent entry` are real today, and the lightweight grant `product entry` shell is now landed, while a richer grant-facing product experience still remains future work.
 
 ## Start Here: Core Docs
 
@@ -35,6 +35,7 @@ The current entry truth is also explicit: `operator entry` and `agent entry` are
 ## Specs (Current Truth / Activation Packages)
 
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md) (Chinese only)
+- [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md) (Chinese only)
 - [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
 - [Upstream Hermes-Agent fast cutover board](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md) (Chinese only)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
@@ -50,7 +51,7 @@ Specs are repo-tracked and authoritative for activation packages and current tru
 
 - Current repo-verified migration baseline: the absorbed `CLI-first + host-agent runtime` line now closes at the `R5.A` honest upper bound and is retained only as a migration baseline / compatibility bridge / regression oracle.
 - Current executable runtime mainline: `CLI-first` runtime on real upstream Hermes substrate, with repo-side domain/entry adapters preserving Med Auto Grant semantics.
-- Product-entry target: build a lightweight grant `product entry` on top of the landed runtime substrate, reusable both directly and through `OPL` handoff.
+- Product-entry shell: the lightweight grant `product entry` shell is now landed through `build-product-entry`, reusable both directly and through `OPL` handoff.
 - Fastest cutover board: [Upstream Hermes-Agent fast cutover board](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md) (Chinese only)
 - Active task ladder: keep the landed Hermes substrate, service-safe domain entry, and author-side object boundaries green while the old host-agent line remains only as a regression oracle.
 - Historical bridge / OMX materials remain traceability aids only and must not be treated as current entrypoints.

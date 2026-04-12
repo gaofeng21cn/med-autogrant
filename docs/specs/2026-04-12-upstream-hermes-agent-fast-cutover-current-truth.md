@@ -128,6 +128,8 @@ repo 现在至少有下面这些 fresh proof：
 - 真实 upstream Hermes substrate 已经接住当前 runtime session durability
 - service-safe domain entry 已形成
 - author-side grant mainline 没有漂移
+- product-layer follow-up 需要查看：
+  - `docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`
 
 它不意味着：
 

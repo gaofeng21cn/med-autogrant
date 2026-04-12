@@ -1,0 +1,102 @@
+# Lightweight Product Entry And OPL Handoff Current Truth
+
+Date: `2026-04-12`
+
+## Activation Status
+
+- Phase: `Lightweight Product Entry / OPL Handoff Shell`
+- Status: `landed / current truth`
+
+## Goal
+
+在已经 landed 的：
+
+- `CLI-first + real upstream Hermes-Agent runtime substrate`
+- `MedAutoGrantDomainEntry`
+
+之上，落一层轻量结构化 `product entry` shell，让：
+
+- `direct`
+- `opl-handoff`
+
+共用同一套 entry envelope，同时不改写 author-side grant mainline 的对象边界与语义。
+
+## Landed Facts
+
+### 1. 仓库现在已有显式的 lightweight product-entry shell
+
+- 新增 `src/med_autogrant/product_entry.py`
+- 新增 CLI 命令：`build-product-entry`
+- `build-product-entry` 当前支持：
+  - `--entry-mode direct`
+  - `--entry-mode opl-handoff`
+
+### 2. `direct` 与 `opl-handoff` 现在共用同一套 envelope
+
+当前共享 envelope 至少包括：
+
+- `target_domain_id`
+- `task_intent`
+- `entry_mode`
+- `workspace_locator`
+- `runtime_session_contract`
+- `return_surface_contract`
+
+grant 域在这层共享 envelope 之上继续补充：
+
+- `workspace_id`
+- `draft_id`
+- `funding_call`
+
+### 3. 这层 shell 明确复用已 landed 的 domain/runtime contract
+
+- `build-product-entry` 当前通过 `MedAutoGrantDomainEntry` 读取：
+  - `stage-route-report`
+  - `summarize-workspace`
+- `runtime_session_contract` 继续复用：
+  - `grant_run_id`
+  - `start_entry=run-local`
+  - `resume_entry=resume-local`
+  - `runtime_substrate_contract`
+  - `runtime_state_contract`
+- `return_surface_contract` 继续复用：
+  - `MedAutoGrantDomainEntry`
+  - `stage-route-report`
+  - `operator_contract`
+
+### 4. 当前实现是 fail-closed 的
+
+- 空白 `task_intent` 会直接拒绝
+- 缺失 `workspace_id`、`grant_run_id`、`checkpoint_status` 或 `recommended_next_stage` 的 route snapshot 会直接拒绝
+- 非 valid workspace 不允许生成 product entry shell
+
+## What Did Not Change
+
+- formal entry 仍是 `CLI`
+- `supported_protocol_layer` 仍是 `MCP`
+- `internal_controller_surface` 仍是 `controller`
+- `hermes_runtime.py` 仍只是 repo-side domain adapter / orchestrator，而不是 runtime substrate owner
+- 不扩 `P5` federation / second family / Human-in-the-loop sibling
+- 这层 landed shell 不等于成熟最终 UX，也不等于 actual hosted runtime
+
+## Verification
+
+本 tranche 至少已覆盖：
+
+- `uv run pytest tests/test_product_entry.py tests/test_hermes_runtime_truth.py tests/test_program_control_surfaces.py tests/test_test_command_surfaces.py -q`
+- `uv run python -m med_autogrant build-product-entry --input examples/nsfc_workspace_p2c_critique.json --entry-mode direct --task-intent tighten-grant-mainline --format json`
+
+## Honest Boundary
+
+这条 current truth 只说明：
+
+- 轻量结构化 `product entry` shell 已 landed
+- `direct` 与 `opl-handoff` 现在共享同一套 envelope
+- 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与真实 Hermes substrate contract 之上
+
+它不意味着：
+
+- 最终用户产品前台已经成熟
+- `OPL Gateway` 完整消费链已全部落地
+- actual hosted runtime 已完成
+- submission-grade autopilot 已完成

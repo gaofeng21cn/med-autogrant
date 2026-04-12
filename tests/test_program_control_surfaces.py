@@ -64,6 +64,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["machine_local_runtime_state"]["not_repo_tracked"], True)
         self.assertIn("contracts/runtime-program/current-program.json", contract["repo_tracked_truth_surfaces"])
         self.assertIn("docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md", contract["repo_tracked_truth_surfaces"])
+        self.assertIn(
+            "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",
+            contract["repo_tracked_truth_surfaces"],
+        )
         self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
 
     def test_core_docs_publish_repo_tracked_contract_and_user_level_runtime_state(self) -> None:
@@ -98,6 +102,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("probe-upstream-hermes", fast_cutover)
         self.assertIn("MedAutoGrantDomainEntry", fast_cutover)
         self.assertIn("SessionDB", fast_cutover)
+        self.assertIn(
+            "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",
+            fast_cutover,
+        )
         self.assertIn("还没有", truth_reset)
         self.assertIn("repo-local code", truth_reset)
         self.assertIn("current-program pointer", truth_reset)

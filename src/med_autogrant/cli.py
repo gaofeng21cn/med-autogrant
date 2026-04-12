@@ -6,6 +6,7 @@ import sys
 from typing import Any
 
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
+from med_autogrant.product_entry import MedAutoGrantProductEntry
 from med_autogrant.workspace import (
     WorkspaceError,
     WorkspaceStateError,
@@ -88,6 +89,12 @@ def build_parser() -> argparse.ArgumentParser:
         "build-hosted-contract-bundle",
         handle_build_hosted_contract_bundle,
         "把 final package 写成 hosted-friendly contract bundle。",
+    )
+    _add_product_entry_command(
+        subparsers,
+        "build-product-entry",
+        handle_build_product_entry,
+        "构建可直接进入或供 OPL handoff 复用的轻量 product entry envelope。",
     )
     return parser
 
@@ -216,8 +223,22 @@ def handle_build_hosted_contract_bundle(args: argparse.Namespace) -> dict[str, A
     )
 
 
+def handle_build_product_entry(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build(
+        input_path=args.input,
+        entry_mode=args.entry_mode,
+        task_intent=args.task_intent,
+        output_path=args.output,
+        funding_call=args.funding_call,
+    )
+
+
 def _domain_entry() -> MedAutoGrantDomainEntry:
     return MedAutoGrantDomainEntry()
+
+
+def _product_entry() -> MedAutoGrantProductEntry:
+    return MedAutoGrantProductEntry()
 
 
 def _add_workspace_command(
@@ -317,6 +338,22 @@ def _add_hosted_contract_bundle_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--final-package", required=True)
     command.add_argument("--output", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_product_entry_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--entry-mode", required=True, choices=("direct", "opl-handoff"))
+    command.add_argument("--task-intent", required=True)
+    command.add_argument("--funding-call")
+    command.add_argument("--output")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -470,6 +507,21 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"output_path: {payload['output_path']}",
             f"bundle_kind: {hosted_contract_bundle['bundle_kind']}",
             f"program_id: {hosted_contract_bundle['execution_identity']['program_id']}",
+        ]
+        return "\n".join(lines)
+
+    if command == "build-product-entry":
+        product_entry = payload["product_entry"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"entry_mode: {product_entry['entry_mode']}",
+            f"task_intent: {product_entry['task_intent']}",
+            f"target_domain_id: {product_entry['target_domain_id']}",
+            f"checkpoint_status: {product_entry['stage_snapshot']['checkpoint_status']}",
+            f"output_path: {payload['output_path']}",
         ]
         return "\n".join(lines)
 

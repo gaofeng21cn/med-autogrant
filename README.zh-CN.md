@@ -41,11 +41,12 @@
 
 ## 入口分层与产品边界
 
-当前 `Med Auto Grant` 已经有真实的 `operator entry` 和 `agent entry`，但还没有成熟的 `product entry`。也就是说：
+当前 `Med Auto Grant` 已经有真实的 `operator entry`、`agent entry`，并且轻量结构化 `product entry` shell 已经落地。
+但更完整的 grant-facing 产品体验仍要继续补。也就是说：
 
 - `operator entry`：给人类操作同事使用的命令、workspace 准备、检查和显式 gate
 - `agent entry`：由 `Codex` 或其他 host-agent 调用的 `CLI + MedAutoGrantDomainEntry`
-- `product entry`：即使 runtime substrate 已经跑在真实上游 `Hermes-Agent` 上，用户直接进入的产品前台仍然是下一步缺口
+- `product entry`：`build-product-entry` 现在已经把 direct entry 与 `OPL` handoff 共用的轻量结构化 shell 落到仓库里，但更完整的 grant-facing 产品体验仍要继续补
 
 目标中的 domain 级入口形态应是：
 
@@ -66,7 +67,8 @@
 
 在这层共享 envelope 之上，`Med Auto Grant` 再补充 `workspace_id`、`draft_id`、`funding_call` 这些 grant domain payload。
 
-因此当前最诚实的判断是：Hermes-backed runtime substrate 已经落地，但真正面向最终用户的 product entry shell 还需要继续补。
+这套共享 envelope 现在已经由 `build-product-entry` 在 `direct` 与 `opl-handoff` 两种模式下生成。
+因此当前最诚实的判断是：Hermes-backed runtime substrate 与轻量 `product entry` shell 都已落地，但更完整的 grant-facing 产品体验仍要继续补。
 
 ## 执行句柄与持久表面
 
@@ -75,7 +77,7 @@
 - `draft_id`：跨 critique / revision 延续的草稿身份，而不是每次 run 重新生成的 ID
 - `program_id`：当前 Med Auto Grant active mainline 的 control-plane / report-routing 指针
 - 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
-- 当前 repo-verified 的 runtime entry 还包括 `probe-upstream-hermes`、`run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package` 与 `build-hosted-contract-bundle`；它们分别负责 upstream 依赖证明、本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出，以及 hosted-friendly contract bundle 导出
+- 当前 repo-verified 的 runtime entry 还包括 `probe-upstream-hermes`、`run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle` 与 `build-product-entry`；它们分别负责 upstream 依赖证明、本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出、hosted-friendly contract bundle 导出，以及 direct / `OPL` handoff 共用的 product shell
 - `build-hosted-contract-bundle` 现在会额外导出托管友好的 handoff contract，其中显式携带 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract`，连同 execution identity、artifact 与 audit surface 一起进入导出面
 - `stage-route-report` 当前还是 machine-readable 的 verification / checkpoint 聚合面，并会输出 `verification_checkpoint` 与 `checkpoint_status`
 - `MedAutoGrantDomainEntry` 是当前 CLI 等价 runtime 调用的 service-safe structured adapter，也为 future gateway reuse 预留了同一条 contract
@@ -110,6 +112,7 @@
 - 通过 `build-final-package` 把 freeze-ready / submission-frozen 的 workspace 与 artifact bundle 收成 machine-readable 本地 `final_package`
 - 通过 `build-hosted-contract-bundle` 从当前 `final_package` 导出 hosted-friendly 的 session / state / artifact / audit contract bundle，作为托管化 prep 的本地合同产物
 - 通过 `MedAutoGrantDomainEntry` 把同一组 runtime command surface 暴露成 future gateway caller 可复用的 service-safe structured entry contract
+- 通过 `build-product-entry` 构建轻量结构化 `product entry` shell，让 `direct` 与 `opl-handoff` 共用同一套 envelope
 
 在当前 repo-tracked truth 下，旧的 host-agent 本地 ladder 内已经没有新的 concrete post-`R5.A` runtime delta 可继续隐式推进；因此当前主线前进方式是保持已 landed 的 upstream substrate、service-safe domain entry 与 author-side object boundary 持续全绿，而不是重新打开 repo-local runtime ownership。
 
@@ -120,6 +123,7 @@
 - 当前本地 runtime 仍需继续做 submission-grade hardening 与更高判断密度的 authoring runtime 收束，但 canonical 本地 walkthrough 与 revised/final/hosted 输出一致性 truth 已冻结
 - 任何进一步的 submission-grade hardening 或更强 authoring-runtime 结论，都需要先新增并冻结 repo-tracked truth，而不是继续沿用隐式的 post-`R5.A` hardening 叙事
 - actual hosted runtime、remote execution、Web UI 与 multi-tenant 托管化
+- 超出已 landed 轻量结构化 shell 之外、更完整的 grant-facing 产品体验
 - 未来 `Human-in-the-loop` sibling 或 upper-layer product 相关表面
 - submission-grade 自动驾驶质量与更强的端到端 authoring/runtime 稳定性
 - 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展，以及 `P5` federation
@@ -178,6 +182,7 @@ uv run python -m med_autogrant summarize-workspace --input examples/nsfc_workspa
 uv run python -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant build-product-entry --input examples/nsfc_workspace_p2c_critique.json --entry-mode direct --task-intent tighten-grant-mainline --format json
 
 # 2. 执行 deterministic local revision pass
 uv run python -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json
@@ -228,6 +233,7 @@ uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TM
 ### 内部文档
 
 - 当前 fast-cutover truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
+- 当前 lightweight product-entry truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`
 - 当前真相重置总览：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
 - 历史本地 runtime program truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
 - 历史本地 runtime capability migration map：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`

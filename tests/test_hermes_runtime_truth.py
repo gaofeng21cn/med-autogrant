@@ -23,6 +23,9 @@ TRUTH_RESET_CURRENT_TRUTH = (
 FAST_CUTOVER_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md"
 )
+PRODUCT_ENTRY_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md"
+)
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -101,6 +104,15 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "probe-upstream-hermes" in fast_cutover
     assert "MedAutoGrantDomainEntry" in fast_cutover
     assert "service-safe domain entry" in fast_cutover
+    assert PRODUCT_ENTRY_CURRENT_TRUTH.exists(), f"Product entry current truth 不存在: {PRODUCT_ENTRY_CURRENT_TRUTH}"
+
+    product_entry_truth = _read(PRODUCT_ENTRY_CURRENT_TRUTH)
+    assert "build-product-entry" in product_entry_truth
+    assert "direct" in product_entry_truth
+    assert "opl-handoff" in product_entry_truth
+    assert "runtime_session_contract" in product_entry_truth
+    assert "return_surface_contract" in product_entry_truth
+    assert "MedAutoGrantDomainEntry" in product_entry_truth
 
     assert "还没有**真正完成上游 `Hermes-Agent` 集成" in truth_reset or "还没有" in truth_reset
     assert "repo-local code" in truth_reset
@@ -159,23 +171,29 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
     architecture = _read(CORE_ARCHITECTURE)
     status = _read(CORE_STATUS)
 
-    assert "the user-facing product entry shell still needs to be built" in readme_en
-    assert "runtime substrate is already on real upstream `Hermes-Agent`" in readme_en
-    assert "真正面向最终用户的 product entry shell 还需要继续补" in readme_zh
-    assert "真实上游 `Hermes-Agent` 上" in readme_zh
+    assert "lightweight structured `product entry` shell is now landed" in readme_en
+    assert "`build-product-entry`" in readme_en
+    assert "richer grant-facing product experience still remains future work" in readme_en
+    assert "轻量结构化 `product entry` shell 已经落地" in readme_zh
+    assert "`build-product-entry`" in readme_zh
+    assert "更完整的 grant-facing 产品体验仍要继续补" in readme_zh
 
-    assert "grant-facing `product entry`" in docs_readme_en
-    assert "Product-entry target" in docs_readme_en
+    assert "lightweight grant `product entry` shell" in docs_readme_en
+    assert "Product-entry shell" in docs_readme_en
+    assert "./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md" in docs_readme_en
     assert "./references/lightweight_product_entry_and_opl_handoff.md" in docs_readme_en
-    assert "grant-facing `product entry`" in docs_readme_zh
-    assert "产品入口目标" in docs_readme_zh
+    assert "轻量 grant `product entry` shell" in docs_readme_zh
+    assert "产品入口 shell" in docs_readme_zh
+    assert "./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md" in docs_readme_zh
     assert "./references/lightweight_product_entry_and_opl_handoff.md" in docs_readme_zh
 
     assert "User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry" in architecture
+    assert "build-product-entry" in architecture
     assert "workspace_id" in architecture
     assert "draft_id" in architecture
     assert "funding_call" in architecture
     assert "OPL -> Med Auto Grant" in status
+    assert "build-product-entry" in status
 
     assert "target_domain_id" in reference_text
     assert "task_intent" in reference_text
@@ -187,3 +205,4 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
     assert "draft_id" in reference_text
     assert "funding_call" in reference_text
     assert "runtime substrate 已经真正落在上游 `Hermes-Agent` 上" in reference_text
+    assert "build-product-entry" in reference_text
