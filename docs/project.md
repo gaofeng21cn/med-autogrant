@@ -4,7 +4,7 @@
 
 `Med Auto Grant` 是共享 `Unified Harness Engineering Substrate` 上、面向医学 `Grant Ops` 的 author-side、proposal-facing `Domain Harness OS` 方向。
 当前仓库主线按 `Auto-only` 理解，formal entry 仍是 `CLI`，但 runtime substrate 已切到真实上游 `Hermes-Agent`；旧 `CLI-first + host-agent` 线只保留为历史迁移基线，而当前 `hermes_runtime.py` 路径应被理解为 repo-side domain adapter。
-当前入口真相是：`CLI + MedAutoGrantDomainEntry` 已经构成稳定的 `agent entry`，`build-product-entry` 也已经把轻量结构化 `product entry` shell 落到仓库里；当前这层 shell 及其 `executor_routing_contract` 还已经进一步收口成 schema-backed contract，并在生成时 fail-closed；但更完整的 grant-facing 产品体验仍未落地。
+当前入口真相是：`CLI + MedAutoGrantDomainEntry` 已经构成稳定的 `agent entry`，`build-product-entry` 也已经把轻量结构化 `product entry` shell 落到仓库里；当前这层 shell 及其 `executor_routing_contract` 还已经进一步收口成 schema-backed contract，并在生成时 fail-closed；`build-hosted-contract-bundle` 现在也会把 `domain_entry_contract`、`schema_contract`、`authoring_contract` 一起冻结进 hosted-friendly 合同目录；但更完整的 grant-facing 产品体验仍未落地。
 当前统一协作模型是：`Hermes-Agent` 持有 runtime substrate / orchestration，`Med Auto Grant` 持有 grant 对象边界、author-side contract 与 export truth；具体 critique / revision / packaging 执行继续通过 repo-side domain logic 与 executor adapter 落地，而不是被强行收缩成单一 runtime 脑。
 
 ## 项目目标
@@ -13,6 +13,7 @@
 - 稳定 `grant_run_id`、`workspace_id`、`draft_id`、`program_id` 与相关 artifact/export surface。
 - 在 `R1 -> R5.A` 已 absorbed 的前提下，把当前 post-`R5.A` honest stop 作为迁移基线保留，并在真实上游 `Hermes-Agent` substrate 上延续 author-side grant mainline。
 - 在已落地 runtime substrate 之上，保持 `build-product-entry` 这层共享-envelope lightweight grant `product entry` shell 稳定，并让它同时服务 direct entry 与 `OPL` handoff。
+- 把 hosted-friendly handoff contract 收口成 future caller 可直接消费的 entry / schema / route catalog，而不是在 bundle 外重新发明协作语义。
 
 ## 范围与非目标
 

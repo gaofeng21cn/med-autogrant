@@ -7,6 +7,7 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
+from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +21,20 @@ from med_autogrant import hosted_contract_bundle as hosted_contract_bundle_modul
 
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 CURRENT_PROGRAM_CONTRACT = REPO_ROOT / "contracts" / "runtime-program" / "current-program.json"
+AUTHOR_SIDE_ROUTE_IDS = (
+    "direction_screening",
+    "question_refinement",
+    "argument_building",
+    "fit_alignment",
+    "outline",
+    "drafting",
+    "critique",
+    "revision",
+    "frozen",
+    "artifact_bundle",
+    "final_package",
+    "hosted_contract_bundle",
+)
 
 
 class HostedContractBundleCliTest(unittest.TestCase):
@@ -170,7 +185,77 @@ class HostedContractBundleCliTest(unittest.TestCase):
                     "reviewed_revision_evidence_kind": "reviewed_revision_evidence",
                 },
             )
+            self.assertEqual(
+                contract_bundle["domain_entry_contract"],
+                {
+                    "entry_adapter": "MedAutoGrantDomainEntry",
+                    "service_safe_surface_kind": "service-safe-domain-entry-command",
+                    "product_entry_builder_command": "build-product-entry",
+                    "product_entry_kind": "med_auto_grant_product_entry",
+                    "supported_entry_modes": [
+                        "direct",
+                        "opl-handoff",
+                    ],
+                },
+            )
+            self.assertEqual(
+                contract_bundle["schema_contract"],
+                {
+                    "schema_version": "v1",
+                    "schema_index_path": "schemas/v1/schema-index.json",
+                    "aggregate_root_schema": "nsfc-workspace.schema.json",
+                    "contract_schema_files": [
+                        "service-safe-domain-surface.schema.json",
+                        "pending-handoff-requirements.schema.json",
+                        "executor-routing-contract.schema.json",
+                        "product-entry.schema.json",
+                        "hosted-contract-bundle.schema.json",
+                    ],
+                },
+            )
+            self.assertEqual(contract_bundle["authoring_contract"]["route_contract_version"], 1)
+            self.assertEqual(contract_bundle["authoring_contract"]["route_catalog_kind"], "author_side_route_catalog")
+            self.assertEqual(
+                [route["route_id"] for route in contract_bundle["authoring_contract"]["author_side_route_catalog"]],
+                list(AUTHOR_SIDE_ROUTE_IDS),
+            )
+            route_catalog = {
+                route["route_id"]: route
+                for route in contract_bundle["authoring_contract"]["author_side_route_catalog"]
+            }
+            self.assertEqual(route_catalog["critique"]["route_status"], "pending")
+            self.assertEqual(route_catalog["critique"]["handoff_contract_kind"], "handoff-required")
+            self.assertEqual(route_catalog["revision"]["route_status"], "landed")
+            self.assertEqual(route_catalog["revision"]["execution_surface"]["command"], "execute-revision-pass")
+            self.assertEqual(route_catalog["hosted_contract_bundle"]["route_status"], "landed")
+            self.assertEqual(
+                route_catalog["hosted_contract_bundle"]["execution_surface"]["command"],
+                "build-hosted-contract-bundle",
+            )
             self.assertEqual(json.loads(hosted_contract_path.read_text(encoding="utf-8")), contract_bundle)
+
+    def test_build_hosted_contract_bundle_fails_closed_on_invalid_hosted_contract_shape(self) -> None:
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.workspace import WorkspaceStateError
+
+        runtime = HermesRuntimeSubstrate()
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            final_package_path = Path(tmp_dir) / "final-package.json"
+            hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"
+            self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
+
+            with patch(
+                "med_autogrant.hermes_runtime.build_hosted_contract_bundle_document",
+                return_value={
+                    "contract_version": 1,
+                    "bundle_kind": "hosted_contract_bundle",
+                },
+            ):
+                with self.assertRaises(WorkspaceStateError):
+                    runtime.build_hosted_contract_bundle(
+                        final_package_path=str(final_package_path),
+                        output_path=str(hosted_contract_path),
+                    )
 
     def test_build_hosted_contract_bundle_fails_closed_for_non_final_package_input(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

@@ -46,6 +46,18 @@ CURRENT_PROGRAM_RELATIVE_PATH = CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH
 EXECUTOR_ROUTING_CONTRACT_VERSION = 1
 EXECUTOR_ROUTING_CONTRACT_SCHEMA_FILE = "executor-routing-contract.schema.json"
 PRODUCT_ENTRY_SCHEMA_FILE = "product-entry.schema.json"
+HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
+SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
+PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
+PRODUCT_ENTRY_BUILD_COMMAND = "build-product-entry"
+SUPPORTED_PRODUCT_ENTRY_MODES = ("direct", "opl-handoff")
+HOSTED_CONTRACT_SCHEMA_FILES = (
+    "service-safe-domain-surface.schema.json",
+    "pending-handoff-requirements.schema.json",
+    "executor-routing-contract.schema.json",
+    "product-entry.schema.json",
+    "hosted-contract-bundle.schema.json",
+)
 AUTHOR_SIDE_ROUTE_IDS = (
     "direction_screening",
     "question_refinement",
@@ -502,6 +514,15 @@ class HermesRuntimeSubstrate:
             ),
             runtime_state_contract=_build_runtime_state_contract(),
             operator_contract=_build_operator_contract(),
+            domain_entry_contract=_build_domain_entry_contract(),
+            schema_contract=_build_schema_contract(),
+            authoring_contract=_build_hosted_authoring_contract(),
+        )
+        _validate_hosted_contract_bundle(
+            hosted_contract_bundle,
+            grant_run_id=final_package["grant_run_id"],
+            workspace_id=final_package["workspace_id"],
+            lifecycle_stage=final_package["lifecycle_stage"],
         )
         resolved_output_path = Path(output_path).expanduser().resolve()
         _guard_hosted_contract_output_identity(
@@ -1101,6 +1122,47 @@ def _validate_executor_routing_contract(
         )
 
 
+def _validate_hosted_contract_bundle(
+    bundle: dict[str, Any],
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str | None,
+) -> None:
+    _validate_contract_schema(
+        bundle,
+        schema_file=HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE,
+        context="hosted_contract_bundle",
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+    if bundle.get("domain_entry_contract") != _build_domain_entry_contract():
+        raise WorkspaceStateError(
+            "hosted_contract_bundle.domain_entry_contract 与当前冻结 entry contract 不一致。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if bundle.get("schema_contract") != _build_schema_contract():
+        raise WorkspaceStateError(
+            "hosted_contract_bundle.schema_contract 与当前冻结 schema registry 不一致。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if bundle.get("authoring_contract") != _build_hosted_authoring_contract():
+        raise WorkspaceStateError(
+            "hosted_contract_bundle.authoring_contract 与当前冻结 author-side route matrix 不一致。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+
+
 def _build_executor_routing_contract(
     *,
     current_stage: str,
@@ -1275,6 +1337,36 @@ def _build_operator_contract() -> dict[str, Any]:
             "build-hosted-contract-bundle",
         ],
         "checkpoint_aggregation_surface": "stage-route-report",
+    }
+
+
+def _build_domain_entry_contract() -> dict[str, Any]:
+    return {
+        "entry_adapter": SERVICE_SAFE_ENTRY_ADAPTER,
+        "service_safe_surface_kind": SERVICE_SAFE_ENTRY_SURFACE_KIND,
+        "product_entry_builder_command": PRODUCT_ENTRY_BUILD_COMMAND,
+        "product_entry_kind": PRODUCT_ENTRY_KIND,
+        "supported_entry_modes": list(SUPPORTED_PRODUCT_ENTRY_MODES),
+    }
+
+
+def _build_schema_contract() -> dict[str, Any]:
+    return {
+        "schema_version": SchemaStore().load_schema_index()["schema_version"],
+        "schema_index_path": SCHEMA_INDEX_RELATIVE_PATH,
+        "aggregate_root_schema": SchemaStore().load_schema_index()["aggregate_root"],
+        "contract_schema_files": list(HOSTED_CONTRACT_SCHEMA_FILES),
+    }
+
+
+def _build_hosted_authoring_contract() -> dict[str, Any]:
+    return {
+        "route_contract_version": EXECUTOR_ROUTING_CONTRACT_VERSION,
+        "route_catalog_kind": "author_side_route_catalog",
+        "author_side_route_catalog": [
+            _build_author_side_route_contract(route_id, source_stage=route_id)
+            for route_id in AUTHOR_SIDE_ROUTE_IDS
+        ],
     }
 
 

@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/hosted-contract-bundle.schema.json",
+  "title": "Med Auto Grant Hosted Contract Bundle",
+  "type": "object",
+  "$defs": {
+    "formalEntryMatrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_formal_entry",
+        "supported_protocol_layer",
+        "internal_controller_surface"
+      ],
+      "properties": {
+        "default_formal_entry": {
+          "const": "CLI"
+        },
+        "supported_protocol_layer": {
+          "const": "MCP"
+        },
+        "internal_controller_surface": {
+          "const": "controller"
+        }
+      }
+    },
+    "executionIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grant_run_id",
+        "workspace_id",
+        "draft_id",
+        "program_id"
+      ],
+      "properties": {
+        "grant_run_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "draft_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "program_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "sessionContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "session_handle_kind",
+        "start_entry",
+        "resume_entry",
+        "required_local_surfaces"
+      ],
+      "properties": {
+        "session_handle_kind": {
+          "const": "grant_run_id"
+        },
+        "start_entry": {
+          "const": "run-local"
+        },
+        "resume_entry": {
+          "const": "resume-local"
+        },
+        "required_local_surfaces": {
+          "const": [
+            "run-local",
+            "resume-local",
+            "build-artifact-bundle",
+            "build-final-package",
+            "run_journal",
+            "stage_action_envelope"
+          ]
+        }
+      }
+    },
+    "stateContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspace_surface_kind",
+        "run_journal_kind",
+        "stage_action_envelope_kind",
+        "artifact_bundle_kind",
+        "final_package_kind"
+      ],
+      "properties": {
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "run_journal_kind": {
+          "const": "local_run_journal"
+        },
+        "stage_action_envelope_kind": {
+          "const": "stage_action_envelope"
+        },
+        "artifact_bundle_kind": {
+          "const": "artifact_bundle"
+        },
+        "final_package_kind": {
+          "const": "final_package"
+        }
+      }
+    },
+    "artifactContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_bundle_manifest_kind",
+        "final_package_manifest_kind",
+        "lineage_fields"
+      ],
+      "properties": {
+        "artifact_bundle_manifest_kind": {
+          "const": "artifact_bundle_manifest"
+        },
+        "final_package_manifest_kind": {
+          "const": "freeze_manifest"
+        },
+        "lineage_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "minItems": 6
+        }
+      }
+    },
+    "auditContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verification_checkpoint_kind",
+        "checkpoint_status_kind",
+        "reviewed_revision_evidence_kind"
+      ],
+      "properties": {
+        "verification_checkpoint_kind": {
+          "const": "verification_checkpoint"
+        },
+        "checkpoint_status_kind": {
+          "const": "checkpoint_status"
+        },
+        "reviewed_revision_evidence_kind": {
+          "const": "reviewed_revision_evidence"
+        }
+      }
+    },
+    "domainEntryContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_adapter",
+        "service_safe_surface_kind",
+        "product_entry_builder_command",
+        "product_entry_kind",
+        "supported_entry_modes"
+      ],
+      "properties": {
+        "entry_adapter": {
+          "const": "MedAutoGrantDomainEntry"
+        },
+        "service_safe_surface_kind": {
+          "const": "service-safe-domain-entry-command"
+        },
+        "product_entry_builder_command": {
+          "const": "build-product-entry"
+        },
+        "product_entry_kind": {
+          "const": "med_auto_grant_product_entry"
+        },
+        "supported_entry_modes": {
+          "const": [
+            "direct",
+            "opl-handoff"
+          ]
+        }
+      }
+    },
+    "schemaContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "schema_index_path",
+        "aggregate_root_schema",
+        "contract_schema_files"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "v1"
+        },
+        "schema_index_path": {
+          "const": "schemas/v1/schema-index.json"
+        },
+        "aggregate_root_schema": {
+          "const": "nsfc-workspace.schema.json"
+        },
+        "contract_schema_files": {
+          "const": [
+            "service-safe-domain-surface.schema.json",
+            "pending-handoff-requirements.schema.json",
+            "executor-routing-contract.schema.json",
+            "product-entry.schema.json",
+            "hosted-contract-bundle.schema.json"
+          ]
+        }
+      }
+    },
+    "authoringContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_contract_version",
+        "route_catalog_kind",
+        "author_side_route_catalog"
+      ],
+      "properties": {
+        "route_contract_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "route_catalog_kind": {
+          "const": "author_side_route_catalog"
+        },
+        "author_side_route_catalog": {
+          "type": "array",
+          "items": {
+            "$ref": "executor-routing-contract.schema.json#/$defs/routeContract"
+          },
+          "minItems": 12
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "bundle_kind",
+    "formal_entry_matrix",
+    "execution_identity",
+    "runtime_substrate_contract",
+    "runtime_state_contract",
+    "session_contract",
+    "operator_contract",
+    "state_contract",
+    "artifact_contract",
+    "audit_contract",
+    "domain_entry_contract",
+    "schema_contract",
+    "authoring_contract"
+  ],
+  "properties": {
+    "contract_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "bundle_kind": {
+      "const": "hosted_contract_bundle"
+    },
+    "formal_entry_matrix": {
+      "$ref": "#/$defs/formalEntryMatrix"
+    },
+    "execution_identity": {
+      "$ref": "#/$defs/executionIdentity"
+    },
+    "runtime_substrate_contract": {
+      "$ref": "product-entry.schema.json#/$defs/runtimeSubstrateContract"
+    },
+    "runtime_state_contract": {
+      "$ref": "product-entry.schema.json#/$defs/runtimeStateContract"
+    },
+    "session_contract": {
+      "$ref": "#/$defs/sessionContract"
+    },
+    "operator_contract": {
+      "$ref": "product-entry.schema.json#/$defs/operatorContract"
+    },
+    "state_contract": {
+      "$ref": "#/$defs/stateContract"
+    },
+    "artifact_contract": {
+      "$ref": "#/$defs/artifactContract"
+    },
+    "audit_contract": {
+      "$ref": "#/$defs/auditContract"
+    },
+    "domain_entry_contract": {
+      "$ref": "#/$defs/domainEntryContract"
+    },
+    "schema_contract": {
+      "$ref": "#/$defs/schemaContract"
+    },
+    "authoring_contract": {
+      "$ref": "#/$defs/authoringContract"
+    }
+  }
+}

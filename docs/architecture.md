@@ -74,7 +74,8 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `src/med_autogrant/hermes_runtime.py` 现在应被理解为 repo-side domain adapter / orchestrator，而不是 runtime substrate owner。
 - `src/med_autogrant/local_runtime.py` 只保留 compatibility bridge 责任。
 - `execute-revision-pass`、`build-artifact-bundle`、`build-final-package`、`build-hosted-contract-bundle` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
-- `build-hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，作为 future host 需要兼容的托管友好 handoff contract。
+- `build-hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 hosted contract catalog。
+- `build-hosted-contract-bundle.hosted_contract_bundle` 现在也受 `schemas/v1/hosted-contract-bundle.schema.json` 约束，并在写出前执行 schema + 冻结 truth 的 fail-closed 校验。
 - 当前 author-side executor routing 继续按 route 单独冻结：`revision / artifact_bundle / final_package / hosted_contract_bundle` 已有 landed service-safe command surface，而所有非落地 stage 都只允许输出 `pending / handoff-required`。
 - `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / frozen` 现在都会额外导出 route-specific `handoff_requirements`，并且只引用 `summarize-workspace / stage-route-report / critique-summary` 这些已存在的 domain surfaces。
 - `critique-summary` 只有在 source workspace 已经位于 `critique / revision / frozen` review context 时才会被要求；`drafting -> critique` 这类 pre-review handoff 不能错误依赖它。
@@ -83,7 +84,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 ## 数据与对象模型
 
 - `schemas/v1/nsfc-workspace.schema.json` 定义 workspace 结构与关键对象。
-- `schemas/v1/service-safe-domain-surface.schema.json`、`schemas/v1/pending-handoff-requirements.schema.json`、`schemas/v1/executor-routing-contract.schema.json` 与 `schemas/v1/product-entry.schema.json` 定义当前 product entry / route handoff / service-safe surface 的 schema-backed contract。
+- `schemas/v1/service-safe-domain-surface.schema.json`、`schemas/v1/pending-handoff-requirements.schema.json`、`schemas/v1/executor-routing-contract.schema.json`、`schemas/v1/product-entry.schema.json` 与 `schemas/v1/hosted-contract-bundle.schema.json` 定义当前 product entry / route handoff / hosted bundle / service-safe surface 的 schema-backed contract。
 - `grant_run_id` 仅作为执行句柄；`workspace_id`、`draft_id`、`program_id` 保持边界分离。
 - `workspace.py`、`stage_router.py`、`revision_executor.py`、`final_package.py` 等继续承载 MedAutoGrant 的 author-side domain logic；它们不应被未来的上游 substrate 目标或当前 repo-local helper 偷换成新的 authoring semantics。
 

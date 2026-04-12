@@ -68,6 +68,12 @@
 - 理由：`OPL Gateway` 与 future domain caller 最终消费的是 machine-readable contract，而不是 repo 内部约定。如果这些 surface 只有 current truth 没有 schema，后续最容易在 pending route、route catalog、draft-bearing/nullability 边界上悄悄漂移。
 - 影响：`schemas/v1/schema-index.json` 现在会显式索引这四份 schema；`product_entry` 与 `stage_action_envelope.executor_routing_contract` 必须同时满足 schema 校验和冻结 truth 比对；后续任何 contract 变更都必须同步更新 schema、tests、docs 与 current-program pointer。
 
+## 2026-04-12：冻结 hosted contract bundle entry and route catalog
+
+- 决策：`build-hosted-contract-bundle` 不再只导出 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract`，还要显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，并受 `hosted-contract-bundle.schema.json` 的 fail-closed 约束。
+- 理由：future hosted caller / `OPL` caller 真正要消费的不只是 runtime/state/operator pointer，还需要稳定的 service-safe entry、schema registry 与 author-side route catalog；如果这些合同不随 bundle 一起冻结，后续就会在 bundle 外重新发明 handoff semantics。
+- 影响：hosted bundle 现在只打包已经冻结好的 domain entry / schema / route truth，不新增 repo-local executor，也不把 hosted runtime、`OPL Gateway` 或 pending route 写成已落地。
+
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。

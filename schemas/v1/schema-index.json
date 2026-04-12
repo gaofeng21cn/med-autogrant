@@ -88,6 +88,11 @@
       "status": "frozen"
     },
     {
+      "name": "hosted_contract_bundle",
+      "file": "hosted-contract-bundle.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "nsfc_workspace",
       "file": "nsfc-workspace.schema.json",
       "status": "frozen"

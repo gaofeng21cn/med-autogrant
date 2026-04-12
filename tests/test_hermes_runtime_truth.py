@@ -38,6 +38,9 @@ CRITIQUE_HANDOFF_CURRENT_TRUTH = (
 PENDING_ROUTE_MATRIX_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md"
 )
+HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md"
+)
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -112,6 +115,9 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert PENDING_ROUTE_MATRIX_CURRENT_TRUTH.exists(), (
         f"Pending route matrix current truth 不存在: {PENDING_ROUTE_MATRIX_CURRENT_TRUTH}"
     )
+    assert HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH.exists(), (
+        f"Hosted contract bundle current truth 不存在: {HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH}"
+    )
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
 
@@ -121,6 +127,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     executor_routing_truth = _read(EXECUTOR_ROUTING_CURRENT_TRUTH)
     critique_handoff_truth = _read(CRITIQUE_HANDOFF_CURRENT_TRUTH)
     pending_route_matrix_truth = _read(PENDING_ROUTE_MATRIX_CURRENT_TRUTH)
+    hosted_contract_bundle_truth = _read(HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH)
     program_truth = _read(HERMES_PROGRAM_TRUTH)
     migration_map = _read(HERMES_MIGRATION_MAP)
 
@@ -188,6 +195,17 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "required_summary_fields" in pending_route_matrix_truth
     assert "required_gate_fields" in pending_route_matrix_truth
     assert "drafting -> critique" in pending_route_matrix_truth
+
+    assert "hosted contract bundle" in hosted_contract_bundle_truth.lower()
+    assert "domain_entry_contract" in hosted_contract_bundle_truth
+    assert "schema_contract" in hosted_contract_bundle_truth
+    assert "authoring_contract" in hosted_contract_bundle_truth
+    assert "hosted-contract-bundle.schema.json" in hosted_contract_bundle_truth
+    assert "fail-closed" in hosted_contract_bundle_truth
+    assert "OPL" in hosted_contract_bundle_truth
+    assert "runtime_substrate_contract" in hosted_contract_bundle_truth
+    assert "runtime_state_contract" in hosted_contract_bundle_truth
+    assert "operator_contract" in hosted_contract_bundle_truth
 
     assert "还没有**真正完成上游 `Hermes-Agent` 集成" in truth_reset or "还没有" in truth_reset
     assert "repo-local code" in truth_reset
@@ -302,3 +320,29 @@ def test_docs_and_contracts_index_schema_backed_product_entry_and_routing_contra
     assert "schema-backed" in decisions
     assert "2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md" in current_program
     assert "schema-backed" in contracts_readme
+
+
+@pytest.mark.meta
+def test_docs_and_contracts_index_hosted_contract_bundle_contract_catalog_truth() -> None:
+    readme_en = _read(README_EN)
+    readme_zh = _read(README_ZH)
+    docs_readme_en = _read(DOCS_README_EN)
+    docs_readme_zh = _read(DOCS_README_ZH)
+    architecture = _read(CORE_ARCHITECTURE)
+    status = _read(CORE_STATUS)
+    decisions = _read(CORE_DECISIONS)
+    current_program = (REPO_ROOT / "contracts" / "runtime-program" / "current-program.json").read_text(encoding="utf-8")
+    contracts_readme = (REPO_ROOT / "contracts" / "README.md").read_text(encoding="utf-8")
+
+    for text in (readme_en, readme_zh, architecture, status, decisions, contracts_readme):
+        assert "domain_entry_contract" in text
+        assert "schema_contract" in text
+        assert "authoring_contract" in text
+
+    assert "./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md" in docs_readme_en
+    assert "./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md" in docs_readme_zh
+    assert "hosted contract bundle" in readme_en.lower()
+    assert "托管友好的 handoff contract" in readme_zh
+    assert "hosted-contract-bundle.schema.json" in architecture
+    assert "hosted_contract_bundle" in status
+    assert "2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md" in current_program

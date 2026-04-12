@@ -48,6 +48,9 @@ def build_hosted_contract_bundle_document(
     runtime_substrate_contract: dict[str, Any],
     runtime_state_contract: dict[str, Any],
     operator_contract: dict[str, Any],
+    domain_entry_contract: dict[str, Any],
+    schema_contract: dict[str, Any],
+    authoring_contract: dict[str, Any],
 ) -> dict[str, Any]:
     return {
         "contract_version": HOSTED_CONTRACT_VERSION,
@@ -96,6 +99,9 @@ def build_hosted_contract_bundle_document(
             "checkpoint_status_kind": "checkpoint_status",
             "reviewed_revision_evidence_kind": "reviewed_revision_evidence",
         },
+        "domain_entry_contract": domain_entry_contract,
+        "schema_contract": schema_contract,
+        "authoring_contract": authoring_contract,
     }
 
 

@@ -6,6 +6,7 @@
 当前公开 runtime topology 是：`CLI-first + real upstream Hermes-Agent runtime substrate`；`MCP` 继续是 supported protocol layer，`controller` 继续是 internal surface。
 repo-tracked current-program truth 固定在 `contracts/runtime-program/current-program.json`，机器本地 runtime state 统一落在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 当前入口真相也已经明确：现在真实存在的是 `operator entry` 与 `agent entry`，轻量 grant `product entry` shell 也已经 landed；它的 shared envelope 与 routing surface 还已经进一步冻结成 schema-backed contract，并在生成时 fail-closed；但更完整的 grant-facing 产品体验仍未完成。
+当前 hosted-friendly contract bundle 也已经补出可机器读取的合同目录：`domain_entry_contract`、`schema_contract`、`authoring_contract` 一起进入 bundle，让 future hosted / `OPL` caller 能直接消费同一份 entry、schema 与 route truth。
 
 ## 先读核心骨架
 
@@ -35,6 +36,7 @@ repo-tracked current-program truth 固定在 `contracts/runtime-program/current-
 
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md)
 - [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md)
+- [Hosted contract bundle entry and route catalog current truth](./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md)
 - [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md)
 - [Pending authoring route handoff matrix current truth](./specs/2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md)
 - [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
@@ -53,6 +55,7 @@ Specs 是 repo-tracked 的权威 current truth/activation package，但不替代
 - 当前可执行 runtime 主线：`CLI-first` 形态下的真实 upstream Hermes substrate，repo-side 只保留 domain/entry adapter。
 - 产品入口 shell：`build-product-entry` 已经把可直接进入、也可被 `OPL` handoff 调起的轻量 grant `product entry` shell 落到仓库里。
 - schema-backed contract 收口：已 landed 的 `product entry` shell、`executor_routing_contract`、`pending_handoff_requirements` 与 service-safe route surface 现在都已进入 `schemas/v1/`，并且会在生成时 fail-closed。
+- hosted contract bundle 收口：`build-hosted-contract-bundle` 现在会在既有 runtime/state/operator surface 之外，再显式导出 `domain_entry_contract`、`schema_contract` 与 `authoring_contract`，并统一受 `hosted-contract-bundle.schema.json` 约束。
 - 当前任务梯子：保持已 landed 的 Hermes substrate、service-safe domain entry 与 author-side object boundary 持续全绿；旧 host-agent 线只作为回归 oracle。
 - 历史 bridge / OMX 资料只负责追溯，不再构成当前入口。
 

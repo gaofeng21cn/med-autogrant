@@ -25,6 +25,7 @@
     "contracts/runtime-program/current-program.json",
     "docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md",
     "docs/specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md",
+    "docs/specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md",
     "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",
     "docs/specs/2026-04-12-author-side-executor-routing-contract-current-truth.md",
     "docs/specs/2026-04-12-critique-pending-handoff-contract-current-truth.md",
@@ -33,6 +34,17 @@
     "docs/specs/2026-04-07-formal-entry-matrix-current-truth.md",
     "docs/specs/2026-04-07-durability-model-clarification.md"
   ],
+  "hosted_contract_bundle": {
+    "schema_file": "schemas/v1/hosted-contract-bundle.schema.json",
+    "exported_contracts": [
+      "runtime_substrate_contract",
+      "runtime_state_contract",
+      "operator_contract",
+      "domain_entry_contract",
+      "schema_contract",
+      "authoring_contract"
+    ]
+  },
   "machine_local_runtime_state": {
     "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
     "not_repo_tracked": true,

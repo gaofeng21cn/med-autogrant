@@ -7,6 +7,7 @@ Start with the core skeleton, then use specs/plans/history for deeper provenance
 The current public runtime topology is: `CLI-first + real upstream Hermes-Agent runtime substrate`. `MCP` remains the supported protocol layer and `controller` remains the internal surface.
 Repo-tracked current-program truth lives at `contracts/runtime-program/current-program.json`, while machine-local runtime state lives under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 The current entry truth is also explicit: `operator entry` and `agent entry` are real today, and the lightweight grant `product entry` shell is now landed. Its shared envelope and routing surfaces are also frozen as schema-backed contract surfaces, while a richer grant-facing product experience still remains future work.
+The hosted-friendly contract bundle now also ships a machine-readable catalog through `domain_entry_contract`, `schema_contract`, and `authoring_contract`, so future hosted / `OPL` callers can consume the same frozen entry, schema, and route truth.
 
 ## Start Here: Core Docs
 
@@ -36,6 +37,7 @@ The current entry truth is also explicit: `operator entry` and `agent entry` are
 
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md) (Chinese only)
 - [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md) (Chinese only)
+- [Hosted contract bundle entry and route catalog current truth](./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md) (Chinese only)
 - [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md) (Chinese only)
 - [Pending authoring route handoff matrix current truth](./specs/2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md) (Chinese only)
 - [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
@@ -55,6 +57,7 @@ Specs are repo-tracked and authoritative for activation packages and current tru
 - Current executable runtime mainline: `CLI-first` runtime on real upstream Hermes substrate, with repo-side domain/entry adapters preserving Med Auto Grant semantics.
 - Product-entry shell: the lightweight grant `product entry` shell is now landed through `build-product-entry`, reusable both directly and through `OPL` handoff.
 - Schema-backed contract closeout: the landed `product entry` shell, `executor_routing_contract`, `pending_handoff_requirements`, and service-safe route surfaces are now indexed under `schemas/v1/` and validated fail-closed at generation time.
+- Hosted contract bundle closeout: `build-hosted-contract-bundle` now exports `domain_entry_contract`, `schema_contract`, and `authoring_contract` alongside the existing runtime/state/operator surfaces, and the whole bundle is validated through `hosted-contract-bundle.schema.json`.
 - Fastest cutover board: [Upstream Hermes-Agent fast cutover board](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md) (Chinese only)
 - Active task ladder: keep the landed Hermes substrate, service-safe domain entry, and author-side object boundaries green while the old host-agent line remains only as a regression oracle.
 - Historical bridge / OMX materials remain traceability aids only and must not be treated as current entrypoints.
