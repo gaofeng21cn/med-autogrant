@@ -33,6 +33,7 @@ Repo-tracked current-program truth lives at `contracts/runtime-program/current-p
 ## Specs (Current Truth / Activation Packages)
 
 - [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
+- [Upstream Hermes-Agent fast cutover board](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md) (Chinese only)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
 - [Post-R5A local runtime hardening brief](./specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md) (Chinese only)
@@ -46,6 +47,7 @@ Specs are repo-tracked and authoritative for activation packages and current tru
 
 - Current repo-verified migration baseline: the absorbed `CLI-first + host-agent runtime` line now closes at the `R5.A` honest upper bound and is retained only as a migration baseline / compatibility bridge / regression oracle.
 - Current executable runtime mainline: local `CLI-first` runtime with repo-local helper ownership.
+- Fastest cutover board: [Upstream Hermes-Agent fast cutover board](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md) (Chinese only)
 - Active task ladder: keep the current local runtime honest, then migrate substrate responsibilities to a real upstream `Hermes-Agent` pilot without changing object boundaries or authoring semantics.
 - Historical bridge / OMX materials remain traceability aids only and must not be treated as current entrypoints.
 

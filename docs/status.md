@@ -38,7 +38,7 @@ Date: `2026-04-11`
 ## 当前优先事项
 
 1. 保持当前本地 runtime baseline、artifact/export surface 与 canonical CLI examples 持续全绿。
-2. 继续把 CLI/runtime path 从 repo-local helper ownership 收紧到真实的上游 `Hermes-Agent` substrate，但不漂移 object boundary 与 authoring semantics。
+2. 按 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md` 继续把 CLI/runtime path 从 repo-local helper ownership 收紧到真实的上游 `Hermes-Agent` substrate，但不漂移 object boundary 与 authoring semantics。
 3. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 
 ## 默认验证
