@@ -5,8 +5,8 @@
 ## What It Is
 
 `Med Auto Grant` is the author-side, proposal-facing medical `Grant Ops` mainline under the shared `Unified Harness Engineering Substrate`.
-Its role is a medical `Grant Ops` domain gateway and harness for medical grant applications, with the current product runtime mainline frozen as `CLI-first + repo-local runtime baseline`.
-The previously absorbed `Codex-default host-agent` line is retained only as a compatibility bridge / regression oracle during migration, while upstream `Hermes-Agent` remains the target substrate rather than a landed fact.
+Its role is a medical `Grant Ops` domain gateway and harness for medical grant applications, with the current product runtime mainline frozen as `CLI-first + real upstream Hermes-Agent runtime substrate`.
+The previously absorbed `Codex-default host-agent` line is retained only as a compatibility bridge / regression oracle, while repo-side adapters preserve Med Auto Grant domain semantics on top of the landed upstream substrate.
 
 ## What It Is Not
 
@@ -61,6 +61,6 @@ Current status:
 
 - top-level public docs exist
 - internal Chinese design and current-truth artifacts exist
-- a minimal runtime baseline already exists
-- the repository is now in `Truth Reset / Upstream Hermes-Agent Pilot Prep`, with the old `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` closeout retained only as the historical host-agent baseline
+- a real upstream-Hermes-backed runtime substrate is landed
+- the repository is now in `Upstream Hermes-Agent Fast Cutover`, with the old `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` closeout retained only as the historical host-agent baseline
 - a future managed web runtime remains a later deployment evolution on the same substrate, not proof that the project has not started yet

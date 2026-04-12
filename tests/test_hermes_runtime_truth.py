@@ -20,6 +20,9 @@ DOMAIN_POSITIONING_ZH = REPO_ROOT / "docs" / "domain-positioning.zh-CN.md"
 TRUTH_RESET_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md"
 )
+FAST_CUTOVER_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md"
+)
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -51,8 +54,8 @@ def test_core_docs_publish_truth_reset_runtime_topology_and_bridge_boundary() ->
         assert "controller" in text
 
     invariants = _read(CORE_INVARIANTS)
-    assert "repo-local runtime baseline with upstream Hermes-Agent pending" in invariants
-    assert "migration scaffold" in invariants
+    assert "CLI-first with real upstream Hermes-Agent runtime substrate" in invariants
+    assert "domain adapter / entry adapter" in invariants
 
     decisions = _read(CORE_DECISIONS)
     assert "repo-local runtime" in decisions
@@ -63,9 +66,9 @@ def test_core_docs_publish_truth_reset_runtime_topology_and_bridge_boundary() ->
 def test_domain_positioning_public_docs_follow_truth_reset_mainline() -> None:
     for path in (DOMAIN_POSITIONING_EN, DOMAIN_POSITIONING_ZH):
         text = _read(path)
-        assert "repo-local runtime baseline" in text
+        assert "real upstream Hermes-Agent runtime substrate" in text
         assert "compatibility bridge" in text
-        assert "target substrate" in text or "目标 substrate" in text
+        assert "regression oracle" in text or "regression oracle" in text
 
 
 @pytest.mark.meta
@@ -73,24 +76,31 @@ def test_readme_current_maturity_cards_follow_truth_reset_status() -> None:
     readme_en = _read(README_EN)
     readme_zh = _read(README_ZH)
 
-    assert "landed a true upstream `Hermes-Agent` integration yet" in readme_en
-    assert "repo-local migration scaffold" in readme_en
+    assert "real upstream `Hermes-Agent` runtime substrate" in readme_en
+    assert "MedAutoGrantDomainEntry" in readme_en
     assert "actual hosted runtime" in readme_en
 
-    assert "还没有**真正完成上游 `Hermes-Agent` 集成" in readme_zh or "尚未落地" in readme_zh
-    assert "migration scaffold" in readme_zh
+    assert "真实上游 `Hermes-Agent` runtime substrate" in readme_zh
+    assert "MedAutoGrantDomainEntry" in readme_zh
     assert "submission-ready" in readme_zh
 
 
 @pytest.mark.meta
 def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
+    assert FAST_CUTOVER_CURRENT_TRUTH.exists(), f"Fast cutover current truth 不存在: {FAST_CUTOVER_CURRENT_TRUTH}"
     assert TRUTH_RESET_CURRENT_TRUTH.exists(), f"Truth reset current truth 不存在: {TRUTH_RESET_CURRENT_TRUTH}"
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
 
+    fast_cutover = _read(FAST_CUTOVER_CURRENT_TRUTH)
     truth_reset = _read(TRUTH_RESET_CURRENT_TRUTH)
     program_truth = _read(HERMES_PROGRAM_TRUTH)
     migration_map = _read(HERMES_MIGRATION_MAP)
+
+    assert "landed / current truth" in fast_cutover
+    assert "probe-upstream-hermes" in fast_cutover
+    assert "MedAutoGrantDomainEntry" in fast_cutover
+    assert "service-safe domain entry" in fast_cutover
 
     assert "还没有**真正完成上游 `Hermes-Agent` 集成" in truth_reset or "还没有" in truth_reset
     assert "repo-local code" in truth_reset

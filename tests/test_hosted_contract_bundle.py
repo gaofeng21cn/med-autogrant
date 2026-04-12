@@ -19,6 +19,7 @@ from med_autogrant import hosted_contract_bundle as hosted_contract_bundle_modul
 
 
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
+CURRENT_PROGRAM_CONTRACT = REPO_ROOT / "contracts" / "runtime-program" / "current-program.json"
 
 
 class HostedContractBundleCliTest(unittest.TestCase):
@@ -82,10 +83,10 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 contract_bundle["runtime_substrate_contract"],
                 {
                     "runtime_owner": "Hermes",
-                    "current_owner_line": "Hermes-backed runtime substrate migration",
-                    "active_phase": "Hermes Runtime Substrate Program",
-                    "active_tranche": "H1 / Hermes-Owned Runtime Path",
-                    "compatibility_bridge": "CLI-first + host-agent runtime",
+                    "current_owner_line": self._current_runtime_owner()["current_owner_line"],
+                    "active_phase": self._current_runtime_owner()["active_phase"],
+                    "active_tranche": self._current_runtime_owner()["active_tranche"],
+                    "compatibility_bridge": self._current_runtime_owner()["compatibility_bridge"],
                     "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                 },
             )
@@ -841,6 +842,10 @@ class HostedContractBundleCliTest(unittest.TestCase):
             )
             self.assertEqual(build_package_exit, 0)
             self.assertEqual(build_package_stderr, "")
+
+    def _current_runtime_owner(self) -> dict[str, str]:
+        contract = json.loads(CURRENT_PROGRAM_CONTRACT.read_text(encoding="utf-8"))
+        return contract["runtime_owner"]
 
 
 class HostedContractBundleControlPlaneResolutionTest(unittest.TestCase):

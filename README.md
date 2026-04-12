@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository already has a usable local `CLI` runtime baseline for author-side grant work, but it has **not** landed a true upstream `Hermes-Agent` integration yet. The previously absorbed `CLI-first + host-agent` line remains a historical migration baseline, while the current `hermes_runtime.py` path is still a repo-local migration scaffold rather than an upstream runtime owner. The project is still neither an actual hosted runtime nor a submission-ready autopilot.
+> Status: active development. The repository now runs on a real upstream `Hermes-Agent` runtime substrate while preserving the author-side grant domain in repo-local adapters and domain logic. The previously absorbed `CLI-first + host-agent` line remains only as a historical migration baseline / regression oracle. The project is still neither an actual hosted runtime nor a submission-ready autopilot.
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>Current Maturity</strong><br/>
-      A usable local grant runtime already exists, but upstream <code>Hermes-Agent</code> integration has not landed yet; the absorbed <code>R5.A</code> host-agent ladder and the current <code>hermes_runtime.py</code> path should both be read as transitional local lines
+      A real upstream <code>Hermes-Agent</code> runtime substrate is now landed; the absorbed <code>R5.A</code> host-agent ladder survives only as a historical regression oracle, while the current <code>hermes_runtime.py</code> and <code>domain_entry.py</code> paths should be read as repo-side domain/entry adapters
     </td>
   </tr>
 </table>
@@ -31,12 +31,12 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 
 ## Runtime Shape (Current And Future)
 
-- Current executable runtime shape: `CLI-first + repo-local runtime`.
-- The current `hermes_runtime.py` path is a repo-local migration scaffold; it does **not** mean upstream `Hermes-Agent` already owns the runtime substrate.
+- Current executable runtime shape: `CLI-first + real upstream Hermes-Agent runtime substrate`.
+- The current `hermes_runtime.py` and `domain_entry.py` paths are repo-side domain/entry adapters; they do **not** replace the upstream runtime substrate owner.
 - The previous `Codex-default host-agent runtime` remains a historical compatibility bridge / regression oracle.
 - Its formal-entry matrix is fixed as: default formal entry `CLI`, supported protocol layer `MCP` (reserved future layer, not yet repo-verified), internal control surface `controller`.
 - The current repository mainline is `Auto-only`; any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than split this repository into same-repo dual-mode logic.
-- Long-line target: `CLI-first + upstream Hermes-Agent-backed runtime substrate`.
+- Landed service-safe entry: `MedAutoGrantDomainEntry`, which preserves the CLI command surface as a structured domain-entry contract for future gateway callers.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 - Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 
@@ -47,9 +47,10 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - `draft_id` is the draft identity carried across critique and revision rather than regenerated per run.
 - `program_id` is the control-plane and report-routing pointer for the active Med Auto Grant mainline.
 - Current repo-verified durable report and audit surfaces are `summarize-workspace`, `critique-summary`, and `stage-route-report`.
-- Current repo-verified local runtime entry also includes `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, and `build-hosted-contract-bundle`; together they cover local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, and hosted-friendly contract export.
+- Current repo-verified runtime entry also includes `probe-upstream-hermes`, `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, and `build-hosted-contract-bundle`; together they cover upstream dependency proof, local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, and hosted-friendly contract export.
 - `build-hosted-contract-bundle` now exports a hosted-friendly handoff contract that explicitly carries `runtime_substrate_contract`, `runtime_state_contract`, and `operator_contract` alongside execution identity, artifact, and audit surfaces.
 - `stage-route-report` is the current machine-readable verification/checkpoint aggregation surface and now emits `verification_checkpoint` plus `checkpoint_status`.
+- `MedAutoGrantDomainEntry` is the current service-safe structured adapter for CLI-equivalent runtime calls and future gateway reuse.
 - Repo-tracked review truth and local durable handoff surfaces stay separate: the former explains the runtime contract, while the latter carries machine-specific resume state.
 
 ## What It Is Designed To Help With
@@ -62,10 +63,11 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 
 ## What Is Already Working
 
-The repository already contains a minimal executable baseline around a frozen `NSFCWorkspace` contract under a local `CLI-first` runtime shape. Both the previous host-agent line and the current `hermes_runtime.py` path are still repo-local lines; neither should be mistaken for a landed upstream `Hermes-Agent` substrate.
+The repository now contains a landed `CLI-first` runtime on top of a real upstream `Hermes-Agent` substrate while keeping the frozen `NSFCWorkspace` contract and author-side grant semantics in repo-local domain modules. The previous host-agent line is retained only as a historical bridge / regression oracle.
 
 Today, the runtime can:
 
+- prove the landed upstream substrate through `probe-upstream-hermes`, including `hermes`, `hermes acp`, `run_agent.AIAgent`, `hermes_state.SessionDB`, and `acp_adapter.session.SessionManager`
 - validate structured `NSFC` workspaces across the absorbed `drafting -> critique -> revision` mainline while retaining `major_reframe / major_revision / minor_revision / ready_for_submission` verdict branches
 - carry a stable `grant_run_id` across CLI outputs as the formal execution handle for the current hydrated grant run
 - summarize explicit `current_selection` bindings for direction, question, fit mapping, draft, and revision-plan identity
@@ -74,13 +76,14 @@ Today, the runtime can:
 - aggregate the current authoring route into one machine-readable `stage-route-report`
 - emit `verification_checkpoint` / `checkpoint_status` so the current verification, rollback, and frozen-gate semantics stay on one canonical checkpoint surface
 - expose structured `critique-summary` and `stage-route-report` audit data including verdict, current `RevisionPlan.execution_status`, reviewed revision evidence, rollback / frozen gate state, version labels, and comparison evidence
-- run one local main-loop pass through `run-local`, derive a machine-readable `stop_reason`, emit a machine-readable `stage_action_envelope` for `stage_action_required`, write a durable local run journal, and re-enter that journal through `resume-local`
+- run one Hermes-backed local main-loop pass through `run-local`, derive a machine-readable `stop_reason`, emit a machine-readable `stage_action_envelope` for `stage_action_required`, write a durable local run journal, mirror attempt durability into upstream `SessionDB`, and re-enter that journal through `resume-local`
 - write the currently selected direction, question, argument chain, fit mapping, outline, and draft sections into a local `artifact_bundle` through `build-artifact-bundle`, while preserving manifest, lineage, version, and `grant_run_id / workspace_id / draft_id` identity
 - execute the frozen section-level deterministic revision contract through `execute-revision-pass` without breaking draft lineage, rollback semantics, or checkpoint boundaries
 - assemble a machine-readable local `final_package` through `build-final-package` for freeze-ready / submission-frozen workspaces
 - export a hosted-friendly session / state / artifact / audit contract bundle from a landed local final package through `build-hosted-contract-bundle`
+- dispatch the same runtime command set through `MedAutoGrantDomainEntry` as a service-safe structured entry contract for future gateway callers
 
-Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside the old host-agent line. The current forward path is therefore a truth reset plus an upstream `Hermes-Agent` integration pilot, not an implicit continuation of the previous closeout and not proof that upstream `Hermes-Agent` is already present.
+Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside the old host-agent line. The current forward path is to keep the landed upstream substrate, service-safe domain entry, and author-side object boundaries green, not to reopen repo-local runtime ownership.
 
 ## What Is Still In Progress
 
@@ -135,44 +138,46 @@ Layered local test entrypoints:
 ```bash
 TMPDIR="$(mktemp -d)"
 
-# Canonical local CLI walkthrough (current repo-local runtime baseline; post-R5A truth source:
-# docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md)
+# Canonical CLI walkthrough on the landed upstream Hermes substrate
+
+# 0. Probe real upstream Hermes entrypoints and runtime root
+uv run python -m med_autogrant probe-upstream-hermes --format json
 
 # 1. Baseline audit for a critique workspace
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
-PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json
 
 # 2. Deterministic local revision pass
-PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json
 
 # 3. Fresh validator / summary / route / checkpoint on the generated revised workspace
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant next-step --input "$TMPDIR/r3a-p2c-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input "$TMPDIR/r3a-p2c-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant next-step --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant critique-summary --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p2c-revised.json" --format json
 
 # 4. Re-review revised-output follow-up must stay on the same local ladder
-PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant next-step --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input "$TMPDIR/r3a-p3b-revised.json" --output "$TMPDIR/r3a-p3b-revised-bundle.json" --format json
-PYTHONPATH=src python3 -m med_autogrant run-local --input "$TMPDIR/r3a-p3b-revised.json" --journal "$TMPDIR/r3a-p3b-revised-run.json" --format json
+uv run python -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant next-step --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant critique-summary --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant build-artifact-bundle --input "$TMPDIR/r3a-p3b-revised.json" --output "$TMPDIR/r3a-p3b-revised-bundle.json" --format json
+uv run python -m med_autogrant run-local --input "$TMPDIR/r3a-p3b-revised.json" --journal "$TMPDIR/r3a-p3b-revised-run.json" --format json
 
 # 5. Local runtime entry / recovery remains CLI-first
-PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json" --format json
-PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json
+uv run python -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json" --format json
+uv run python -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json
 
 # 6. Local final / hosted-contract chain
-PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output "$TMPDIR/r5a-bundle.json" --format json
-PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle "$TMPDIR/r5a-bundle.json" --output "$TMPDIR/r5a-final-package.json" --format json
-PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-package "$TMPDIR/r5a-final-package.json" --output "$TMPDIR/r5a-hosted-contract.json" --format json
+uv run python -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output "$TMPDIR/r5a-bundle.json" --format json
+uv run python -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle "$TMPDIR/r5a-bundle.json" --output "$TMPDIR/r5a-final-package.json" --format json
+uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TMPDIR/r5a-final-package.json" --output "$TMPDIR/r5a-hosted-contract.json" --format json
 ```
 
 ### Current Technical Scope
@@ -183,15 +188,17 @@ PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-pac
 - machine-readable re-review linkage through `active_revision_plan_id`, `reviewed_revision_plan_id`, and `reviewed_revision_evidence`
 - machine-readable forced rollback and presubmission gate fields through `forced_rollback_stage`, `forced_rollback_reason`, and `presubmission_frozen`
 - machine-readable critique, verdict, and route artifacts
-- machine-readable local runtime stop reasons, stage-action envelopes, and durable run-journal recovery
+- machine-readable Hermes-backed runtime stop reasons, stage-action envelopes, durable run-journal recovery, and upstream `SessionDB` attempt durability
 - machine-readable local artifact bundle production with manifest, lineage, version, and bundle summary
 - a section-level deterministic local revision executor
 - a machine-readable local final package
 - hosted-friendly session / state / artifact / audit contract bundle export
+- a service-safe structured domain entry for CLI-equivalent runtime calls
 - tests covering runtime and control-surface invariants
 
 ### Internal Docs
 
+- Current fast-cutover truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
 - Current truth-reset overview: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
 - Historical local runtime program truth: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
 - Historical local runtime capability migration map: `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`

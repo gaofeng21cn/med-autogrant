@@ -1,22 +1,23 @@
 # 当前状态
 
-Date: `2026-04-11`
+Date: `2026-04-12`
 
 ## 当前角色
 
 - 仓库角色：医学 `Grant Ops` 的 author-side / proposal-facing `Domain Harness OS` 方向。
-- 当前执行口径：本地 `CLI-first` runtime（上游 `Hermes-Agent` 尚未落地）。
+- 当前执行口径：`CLI-first + real upstream Hermes-Agent runtime substrate`。
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
 - OMX 状态：已退场，仅保留历史入口。
 
 ## 当前基线（repo-verified）
 
-- Latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
+- Latest absorbed runtime slice：`Upstream Hermes-Agent Fast Cutover`
 - Historical owner line：`post-R5A local runtime closeout / honest stop`
 - Previous truthful closeout baseline：`NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
 - repo-tracked current truth 入口：
   - `contracts/runtime-program/current-program.json`
+  - `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
   - `docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
   - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
   - `docs/specs/2026-04-07-durability-model-clarification.md`
@@ -25,20 +26,20 @@ Date: `2026-04-11`
 
 ## 当前阶段（active mainline）
 
-- Current phase：`Truth Reset / Upstream Hermes-Agent Pilot Prep`
-- Active tranche：`Local Runtime Honesty + Upstream Substrate Migration`
-- Current owner line：`repo-local runtime baseline with upstream Hermes-Agent pending`
+- Current phase：`Upstream Hermes-Agent Fast Cutover`
+- Active tranche：`Real Hermes substrate / service-safe domain entry / fresh proof`
+- Current owner line：`CLI-first with real upstream Hermes-Agent runtime substrate`
 
 ## 长线目标（规划层）
 
-- 让上游 `Hermes-Agent` 成为新的产品 runtime substrate。
-- 保留当前 `CLI-first + host-agent` 本地 runtime 作为已验证基线、兼容桥和回归 oracle，而不是长期终态。
-- 在真实上游 substrate 上延续 `workspace -> critique -> revision -> final package -> hosted contract bundle` 这条 author-side grant mainline。
+- 保持上游 `Hermes-Agent` 继续作为 runtime substrate owner，而不是退回 repo-local helper 主责。
+- 保留旧 `CLI-first + host-agent` 本地 runtime 作为已验证基线、兼容桥和回归 oracle，而不是长期终态。
+- 在真实上游 substrate 上继续延续 `workspace -> critique -> revision -> final package -> hosted contract bundle` 这条 author-side grant mainline。
 
 ## 当前优先事项
 
-1. 保持当前本地 runtime baseline、artifact/export surface 与 canonical CLI examples 持续全绿。
-2. 按 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md` 继续把 CLI/runtime path 从 repo-local helper ownership 收紧到真实的上游 `Hermes-Agent` substrate，但不漂移 object boundary 与 authoring semantics。
+1. 保持真实 upstream substrate、service-safe domain entry 与 author-side artifact/export surface 持续全绿。
+2. 继续沿 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` 的口径推进，不把 repo-local adapter 重新写回 runtime owner。
 3. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 
 ## 默认验证

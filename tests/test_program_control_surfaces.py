@@ -21,6 +21,9 @@ ROOT_AGENTS = REPO_ROOT / "AGENTS.md"
 TRUTH_RESET_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md"
 )
+FAST_CUTOVER_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md"
+)
 HERMES_PROGRAM_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md"
 )
@@ -46,10 +49,13 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["formal_entry"]["internal_controller_surface"], "controller")
         self.assertEqual(
             contract["runtime_owner"]["current_owner_line"],
-            "repo-local runtime baseline with upstream Hermes-Agent pending",
+            "CLI-first with real upstream Hermes-Agent runtime substrate",
         )
-        self.assertEqual(contract["runtime_owner"]["active_phase"], "Truth Reset / Upstream Hermes-Agent Pilot Prep")
-        self.assertEqual(contract["runtime_owner"]["active_tranche"], "Local Runtime Honesty + Upstream Substrate Migration")
+        self.assertEqual(contract["runtime_owner"]["active_phase"], "Upstream Hermes-Agent Fast Cutover")
+        self.assertEqual(
+            contract["runtime_owner"]["active_tranche"],
+            "Real Hermes substrate / service-safe domain entry / fresh proof",
+        )
         self.assertEqual(
             contract["runtime_owner"]["historical_baseline"],
             "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
@@ -57,6 +63,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["machine_local_runtime_state"]["root"], RUNTIME_STATE_ROOT)
         self.assertEqual(contract["machine_local_runtime_state"]["not_repo_tracked"], True)
         self.assertIn("contracts/runtime-program/current-program.json", contract["repo_tracked_truth_surfaces"])
+        self.assertIn("docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md", contract["repo_tracked_truth_surfaces"])
         self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
 
     def test_core_docs_publish_repo_tracked_contract_and_user_level_runtime_state(self) -> None:
@@ -74,18 +81,23 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             self.assertIn(RUNTIME_STATE_ROOT, text, path.name)
 
         project = _read(CORE_PROJECT)
-        self.assertIn("repo-local runtime baseline with upstream Hermes-Agent pending", project)
+        self.assertIn("CLI-first with real upstream Hermes-Agent runtime substrate", project)
 
         decisions = _read(CORE_DECISIONS)
         self.assertIn("上游 Hermes-Agent 目标", decisions)
 
     def test_current_truth_specs_align_with_repo_tracked_contract(self) -> None:
         contract = json.loads(_read(CURRENT_PROGRAM_CONTRACT))
+        fast_cutover = _read(FAST_CUTOVER_CURRENT_TRUTH)
         truth_reset = _read(TRUTH_RESET_CURRENT_TRUTH)
         migration_map = _read(HERMES_MIGRATION_MAP)
         formal_entry = _read(FORMAL_ENTRY_MATRIX)
         durability = _read(DURABILITY_MODEL)
 
+        self.assertIn("landed / current truth", fast_cutover)
+        self.assertIn("probe-upstream-hermes", fast_cutover)
+        self.assertIn("MedAutoGrantDomainEntry", fast_cutover)
+        self.assertIn("SessionDB", fast_cutover)
         self.assertIn("还没有", truth_reset)
         self.assertIn("repo-local code", truth_reset)
         self.assertIn("current-program pointer", truth_reset)

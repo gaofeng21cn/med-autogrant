@@ -5,7 +5,7 @@ import json
 import sys
 from typing import Any
 
-from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.workspace import (
     WorkspaceError,
     WorkspaceStateError,
@@ -46,6 +46,12 @@ def build_parser() -> argparse.ArgumentParser:
         "stage-route-report",
         handle_stage_route_report,
         "按固定 stage route 聚合输出当前 workspace 状态。",
+    )
+    _add_simple_command(
+        subparsers,
+        "probe-upstream-hermes",
+        handle_probe_upstream_hermes,
+        "探测真实上游 Hermes-Agent 依赖、入口与 session substrate。",
     )
     _add_runtime_entry_command(
         subparsers,
@@ -132,58 +138,86 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def handle_validate_workspace(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().validate_workspace(input_path=args.input)
+    return _domain_entry().dispatch({"command": "validate-workspace", "input_path": args.input})
 
 
 def handle_summarize_workspace(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().summarize_workspace(input_path=args.input)
+    return _domain_entry().dispatch({"command": "summarize-workspace", "input_path": args.input})
 
 
 def handle_next_step(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().next_step(input_path=args.input)
+    return _domain_entry().dispatch({"command": "next-step", "input_path": args.input})
 
 
 def handle_critique_summary(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().critique_summary(input_path=args.input)
+    return _domain_entry().dispatch({"command": "critique-summary", "input_path": args.input})
 
 
 def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().stage_route_report(input_path=args.input)
+    return _domain_entry().dispatch({"command": "stage-route-report", "input_path": args.input})
+
+
+def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 
 
 def handle_run_local(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().run_local(input_path=args.input, journal_path=args.journal)
+    return _domain_entry().dispatch(
+        {
+            "command": "run-local",
+            "input_path": args.input,
+            "journal_path": args.journal,
+        }
+    )
 
 
 def handle_resume_local(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().resume_local(journal_path=args.journal)
+    return _domain_entry().dispatch({"command": "resume-local", "journal_path": args.journal})
 
 
 def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().build_artifact_bundle(input_path=args.input, output_path=args.output)
+    return _domain_entry().dispatch(
+        {
+            "command": "build-artifact-bundle",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
 
 
 def handle_execute_revision_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().execute_revision_pass(input_path=args.input, output_path=args.output)
+    return _domain_entry().dispatch(
+        {
+            "command": "execute-revision-pass",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
 
 
 def handle_build_final_package(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().build_final_package(
-        input_path=args.input,
-        artifact_bundle_path=args.artifact_bundle,
-        output_path=args.output,
+    return _domain_entry().dispatch(
+        {
+            "command": "build-final-package",
+            "input_path": args.input,
+            "artifact_bundle_path": args.artifact_bundle,
+            "output_path": args.output,
+        }
     )
 
 
 def handle_build_hosted_contract_bundle(args: argparse.Namespace) -> dict[str, Any]:
-    return _runtime().build_hosted_contract_bundle(
-        final_package_path=args.final_package,
-        output_path=args.output,
+    return _domain_entry().dispatch(
+        {
+            "command": "build-hosted-contract-bundle",
+            "final_package_path": args.final_package,
+            "output_path": args.output,
+        }
     )
 
 
-def _runtime() -> HermesRuntimeSubstrate:
-    return HermesRuntimeSubstrate()
+def _domain_entry() -> MedAutoGrantDomainEntry:
+    return MedAutoGrantDomainEntry()
 
 
 def _add_workspace_command(
@@ -194,6 +228,17 @@ def _add_workspace_command(
 ) -> None:
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_simple_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -351,6 +396,17 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"recommended_stage: {payload['route']['next_step']['recommended_stage']}",
             f"critique_verdict: {critique_verdict}",
         ]
+        return "\n".join(lines)
+
+    if command == "probe-upstream-hermes":
+        lines = [
+            f"package_version: {payload['package_version']}",
+            f"hermes_command: {payload['hermes_command']}",
+            f"runtime_root: {payload['runtime_root']}",
+            f"state_db_path: {payload['state_db_path']}",
+        ]
+        for name, target in payload["entrypoints"].items():
+            lines.append(f"- {name}: {target}")
         return "\n".join(lines)
 
     if command in {"run-local", "resume-local"}:

@@ -45,9 +45,9 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
             "errors": [],
         }
 
-        with patch("med_autogrant.cli.HermesRuntimeSubstrate") as substrate_class:
-            substrate = substrate_class.return_value
-            substrate.validate_workspace.return_value = expected_payload
+        with patch("med_autogrant.cli.MedAutoGrantDomainEntry") as entry_class:
+            entry = entry_class.return_value
+            entry.dispatch.return_value = expected_payload
 
             exit_code, stdout, stderr = self.run_cli(
                 "validate-workspace",
@@ -60,7 +60,12 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertEqual(json.loads(stdout), expected_payload)
-        substrate.validate_workspace.assert_called_once_with(input_path=str(CRITIQUE_EXAMPLE_PATH))
+        entry.dispatch.assert_called_once_with(
+            {
+                "command": "validate-workspace",
+                "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            }
+        )
 
     def test_run_local_dispatches_through_hermes_runtime_substrate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -93,9 +98,9 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
                 },
             }
 
-            with patch("med_autogrant.cli.HermesRuntimeSubstrate") as substrate_class:
-                substrate = substrate_class.return_value
-                substrate.run_local.return_value = expected_payload
+            with patch("med_autogrant.cli.MedAutoGrantDomainEntry") as entry_class:
+                entry = entry_class.return_value
+                entry.dispatch.return_value = expected_payload
 
                 exit_code, stdout, stderr = self.run_cli(
                     "run-local",
@@ -110,9 +115,12 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
             self.assertEqual(exit_code, 0)
             self.assertEqual(stderr, "")
             self.assertEqual(json.loads(stdout), expected_payload)
-            substrate.run_local.assert_called_once_with(
-                input_path=str(CRITIQUE_EXAMPLE_PATH),
-                journal_path=str(journal_path),
+            entry.dispatch.assert_called_once_with(
+                {
+                    "command": "run-local",
+                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                    "journal_path": str(journal_path),
+                }
             )
 
 

@@ -23,6 +23,7 @@ from med_autogrant.hosted_contract_bundle import (
     _validate_required_final_package_fields,
     build_hosted_contract_bundle_document,
 )
+from med_autogrant.upstream_hermes import HermesGrantRunLedger
 from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.stage_router import determine_next_step
@@ -136,8 +137,19 @@ class HermesRuntimeSubstrate:
             draft_id = None
             lifecycle_stage = document.get("lifecycle_stage")
 
+        attempt_index = HermesGrantRunLedger().record_attempt(
+            grant_run_id=document.get("grant_run_id"),
+            workspace_id=document.get("workspace_id"),
+            trigger=trigger,
+            journal_path=resolved_journal_path,
+            lifecycle_stage=lifecycle_stage,
+            stop_reason=stop_reason,
+            stage_action_envelope=stage_action_envelope,
+            route_report=route_report,
+        )
         journal = _append_attempt(
             journal=journal,
+            attempt_index=attempt_index,
             trigger=trigger,
             lifecycle_stage=lifecycle_stage,
             route_report=route_report,
@@ -526,6 +538,7 @@ def _load_or_initialize_journal(
 def _append_attempt(
     *,
     journal: dict[str, Any],
+    attempt_index: int,
     trigger: str,
     lifecycle_stage: str | None,
     route_report: dict[str, Any],
@@ -533,7 +546,6 @@ def _append_attempt(
     stage_action_envelope: dict[str, Any] | None,
 ) -> dict[str, Any]:
     attempts = journal.setdefault("attempts", [])
-    attempt_index = len(attempts) + 1
     checkpoint_status = stop_reason.get("checkpoint_status")
     attempts.append(
         {

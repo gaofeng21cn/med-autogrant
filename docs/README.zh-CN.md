@@ -3,7 +3,7 @@
 [English](./README.md) | **中文**
 
 这里是 `Med Auto Grant` 的文档索引，默认先读核心骨架，再看 specs/plans/history 的来源与细节。
-当前公开 runtime topology 是：已经有可用的本地 `CLI` runtime 基线，但上游 `Hermes-Agent` 集成尚未落地；`MCP` 继续是 supported protocol layer，`controller` 继续是 internal surface。
+当前公开 runtime topology 是：`CLI-first + real upstream Hermes-Agent runtime substrate`；`MCP` 继续是 supported protocol layer，`controller` 继续是 internal surface。
 repo-tracked current-program truth 固定在 `contracts/runtime-program/current-program.json`，机器本地 runtime state 统一落在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 
 ## 先读核心骨架
@@ -31,6 +31,7 @@ repo-tracked current-program truth 固定在 `contracts/runtime-program/current-
 
 ## Specs（current truth / activation package）
 
+- [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md)
 - [Upstream Hermes-Agent truth reset current truth](./specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
 - [Formal Entry Matrix Current Truth](./specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability Model Clarification](./specs/2026-04-07-durability-model-clarification.md)
@@ -44,8 +45,8 @@ Specs 是 repo-tracked 的权威 current truth/activation package，但不替代
 ## 当前基线、长线目标与任务层级
 
 - 当前 repo-verified 迁移基线：已 absorbed 的 `CLI-first + host-agent runtime` 线现在收口于 `R5.A` honest upper bound，只保留为 migration baseline / compatibility bridge / regression oracle。
-- 当前可执行 runtime 主线：本地 `CLI-first` runtime，runtime helper 仍由仓内代码持有。
-- 当前任务梯子：先保持当前本地 runtime 诚实，再把 substrate 责任迁到真实的上游 `Hermes-Agent` pilot，同时保持对象边界与 authoring semantics 稳定。
+- 当前可执行 runtime 主线：`CLI-first` 形态下的真实 upstream Hermes substrate，repo-side 只保留 domain/entry adapter。
+- 当前任务梯子：保持已 landed 的 Hermes substrate、service-safe domain entry 与 author-side object boundary 持续全绿；旧 host-agent 线只作为回归 oracle。
 - 历史 bridge / OMX 资料只负责追溯，不再构成当前入口。
 
 ## Plans 与历史归档

@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：仓库已经有可用的本地 `CLI` grant runtime 基线，但**还没有**真正完成上游 `Hermes-Agent` 集成。此前已 absorbed 的 `CLI-first + host-agent` 线继续只作为历史迁移基线保留；当前 `hermes_runtime.py` 路径也仍是仓内本地 migration scaffold，而不是上游 runtime owner。当前仍不是 actual hosted runtime，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库现在已经跑在真实上游 `Hermes-Agent` runtime substrate 上，同时把申请人侧 grant domain 语义保留在 repo-local adapter 与 domain logic 中。此前已 absorbed 的 `CLI-first + host-agent` 线继续只作为历史迁移基线 / regression oracle 保留。当前仍不是 actual hosted runtime，也不是 submission-ready 的自动驾驶产品。
 
 <table>
   <tr>
@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>当前成熟度</strong><br/>
-      当前已经有一条可用的本地 grant runtime 主线，但上游 <code>Hermes-Agent</code> 集成尚未落地；已 absorbed 的 <code>R5.A</code> host-agent ladder 与当前 <code>hermes_runtime.py</code> 路径都应被理解成过渡性的本地路线
+      当前已经有一条真实 upstream <code>Hermes-Agent</code> runtime substrate 主线；已 absorbed 的 <code>R5.A</code> host-agent ladder 只保留为历史 regression oracle，而当前 <code>hermes_runtime.py</code> 与 <code>domain_entry.py</code> 路径都应被理解成 repo-side domain/entry adapter
     </td>
   </tr>
 </table>
@@ -31,12 +31,12 @@
 
 ## Runtime 形态（当前与未来）
 
-- 当前可执行 runtime 形态：`CLI-first + repo-local runtime`。
-- 当前 `hermes_runtime.py` 路径仍是仓内本地 migration scaffold；它**不**等于上游 `Hermes-Agent` 已经拥有 runtime substrate。
+- 当前可执行 runtime 形态：`CLI-first + real upstream Hermes-Agent runtime substrate`。
+- 当前 `hermes_runtime.py` 与 `domain_entry.py` 路径是 repo-side domain/entry adapter；它们**不**替代上游 runtime substrate owner。
 - 旧 `Codex-default host-agent runtime` 继续只作为历史 compatibility bridge / regression oracle。
 - 其 formal-entry matrix 已固定为：默认正式入口 `CLI`、支持协议层 `MCP`（当前保留为 future layer，尚未 repo-verified）、内部控制面 `controller`。
 - 当前仓库主线按 `Auto-only` 理解；未来如果要做 `Human-in-the-loop` 产品，应作为兼容 sibling 或 upper-layer product 复用同一 substrate，而不是把当前仓改成同仓双模。
-- 长线目标：`CLI-first + 上游 Hermes-Agent-backed runtime substrate`。
+- 已落地的 service-safe entry：`MedAutoGrantDomainEntry`，它把 CLI 命令面保留成 future gateway caller 可复用的结构化 entry contract。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
 
 ## 执行句柄与持久表面
@@ -46,9 +46,10 @@
 - `draft_id`：跨 critique / revision 延续的草稿身份，而不是每次 run 重新生成的 ID
 - `program_id`：当前 Med Auto Grant active mainline 的 control-plane / report-routing 指针
 - 当前 repo-verified 的 durable report / audit surface：`summarize-workspace`、`critique-summary`、`stage-route-report`
-- 当前 repo-verified 的本地 runtime entry 还包括 `run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package` 与 `build-hosted-contract-bundle`；它们分别负责本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出，以及 hosted-friendly contract bundle 导出
+- 当前 repo-verified 的 runtime entry 还包括 `probe-upstream-hermes`、`run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package` 与 `build-hosted-contract-bundle`；它们分别负责 upstream 依赖证明、本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出，以及 hosted-friendly contract bundle 导出
 - `build-hosted-contract-bundle` 现在会额外导出托管友好的 handoff contract，其中显式携带 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract`，连同 execution identity、artifact 与 audit surface 一起进入导出面
 - `stage-route-report` 当前还是 machine-readable 的 verification / checkpoint 聚合面，并会输出 `verification_checkpoint` 与 `checkpoint_status`
+- `MedAutoGrantDomainEntry` 是当前 CLI 等价 runtime 调用的 service-safe structured adapter，也为 future gateway reuse 预留了同一条 contract
 - repo-tracked review truth 与 local durable handoff surfaces 必须分开：前者负责解释 runtime contract，后者负责机器私有的恢复状态
 
 ## 它主要想帮你解决什么问题
@@ -61,10 +62,11 @@
 
 ## 现在已经能做什么
 
-仓库已经有一套围绕冻结 `NSFCWorkspace` 契约的最小可运行底座，当前运行在本地 `CLI-first` runtime 形态上。此前的 host-agent 线和当前 `hermes_runtime.py` 路径都仍是 repo-local 本地路线，不能被误读成已经落地的上游 `Hermes-Agent` substrate。
+仓库现在已经有一套跑在真实上游 `Hermes-Agent` substrate 之上的 `CLI-first` runtime，同时把冻结的 `NSFCWorkspace` 契约与申请人侧 grant 语义继续保留在 repo-local domain modules 里。此前的 host-agent 线只保留为历史迁移桥 / regression oracle。
 
 当前 runtime 已经可以：
 
+- 通过 `probe-upstream-hermes` 显式证明已落地的 upstream substrate，包括 `hermes`、`hermes acp`、`run_agent.AIAgent`、`hermes_state.SessionDB` 与 `acp_adapter.session.SessionManager`
 - 校验已 absorbed 的 `drafting -> critique -> revision` 主线，并保留 `major_reframe / major_revision / minor_revision / ready_for_submission` 的导师 verdict 分叉
 - 在 CLI 输出中统一携带稳定的 `grant_run_id`，作为当前 hydrated grant run 的正式执行句柄
 - 汇总 direction / question / fit mapping / draft / revision plan 的显式 `current_selection` 绑定
@@ -73,13 +75,14 @@
 - 把当前 authoring route 聚合成单个 machine-readable `stage-route-report`
 - 通过 `verification_checkpoint / checkpoint_status` 把当前 verification、forced rollback 与 frozen gate 语义收进同一个 checkpoint surface
 - 输出带有 verdict、当前 `RevisionPlan.execution_status`、reviewed revision evidence、rollback / frozen gate 状态、版本标签和比较证据的 `critique-summary / stage-route-report` 审计面
-- 通过 `run-local` 运行一次本地主循环、派生 machine-readable `stop_reason`、在 `stage_action_required` 分支上生成 machine-readable `stage_action_envelope`、写入 durable run journal，并通过 `resume-local` 从该 journal 恢复
+- 通过 `run-local` 运行一次 Hermes-backed 本地主循环、派生 machine-readable `stop_reason`、在 `stage_action_required` 分支上生成 machine-readable `stage_action_envelope`、写入 durable run journal、同时把 attempt durability 镜像进 upstream `SessionDB`，并通过 `resume-local` 从该 journal 恢复
 - 通过 `build-artifact-bundle` 把当前已选方向、问题、论证链、适配度、提纲与草稿章节打包成 local `artifact_bundle`，并保留 manifest、lineage、version 与 `grant_run_id / workspace_id / draft_id` 身份一致性
 - 通过 `execute-revision-pass` 对冻结在 `RevisionPlan` 中的 section-level deterministic mutation 执行本地 revision pass，并保持 draft lineage、rollback gate 与 checkpoint 语义不漂移
 - 通过 `build-final-package` 把 freeze-ready / submission-frozen 的 workspace 与 artifact bundle 收成 machine-readable 本地 `final_package`
 - 通过 `build-hosted-contract-bundle` 从当前 `final_package` 导出 hosted-friendly 的 session / state / artifact / audit contract bundle，作为托管化 prep 的本地合同产物
+- 通过 `MedAutoGrantDomainEntry` 把同一组 runtime command surface 暴露成 future gateway caller 可复用的 service-safe structured entry contract
 
-在当前 repo-tracked truth 下，旧的 host-agent 本地 ladder 内已经没有新的 concrete post-`R5.A` runtime delta 可继续隐式推进；因此当前主线前进方式不再是续磨旧线，而是先做 truth reset，再推进真实的上游 `Hermes-Agent` integration pilot。
+在当前 repo-tracked truth 下，旧的 host-agent 本地 ladder 内已经没有新的 concrete post-`R5.A` runtime delta 可继续隐式推进；因此当前主线前进方式是保持已 landed 的 upstream substrate、service-safe domain entry 与 author-side object boundary 持续全绿，而不是重新打开 repo-local runtime ownership。
 
 ## 现在还没有完成什么
 
@@ -134,44 +137,46 @@ make test-full
 ```bash
 TMPDIR="$(mktemp -d)"
 
-# 当前 canonical 本地 CLI walkthrough（当前 repo-local runtime 基线；post-R5A truth 仍作为来源：
-# docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md）
+# 当前 canonical CLI walkthrough（基于已落地的 upstream Hermes substrate）
+
+# 0. 探测真实 upstream Hermes 入口与 runtime root
+uv run python -m med_autogrant probe-upstream-hermes --format json
 
 # 1. 对 critique workspace 做 baseline 审计
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
-PYTHONPATH=src python3 -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant validate-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant summarize-workspace --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant next-step --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant critique-summary --input examples/nsfc_workspace_p2c_critique.json --format json
+uv run python -m med_autogrant stage-route-report --input examples/nsfc_workspace_p2c_critique.json --format json
 
 # 2. 执行 deterministic local revision pass
-PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p2c_critique.json --output "$TMPDIR/r3a-p2c-revised.json" --format json
 
 # 3. 对 generated revised workspace 做 fresh validator / summary / route / checkpoint
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant next-step --input "$TMPDIR/r3a-p2c-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input "$TMPDIR/r3a-p2c-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant next-step --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant critique-summary --input "$TMPDIR/r3a-p2c-revised.json" --format json
+uv run python -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p2c-revised.json" --format json
 
 # 4. re-review revised output 也必须留在同一条本地 ladder 上
-PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant next-step --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant critique-summary --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p3b-revised.json" --format json
-PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input "$TMPDIR/r3a-p3b-revised.json" --output "$TMPDIR/r3a-p3b-revised-bundle.json" --format json
-PYTHONPATH=src python3 -m med_autogrant run-local --input "$TMPDIR/r3a-p3b-revised.json" --journal "$TMPDIR/r3a-p3b-revised-run.json" --format json
+uv run python -m med_autogrant execute-revision-pass --input examples/nsfc_workspace_p3b_re_review_major_revision.json --output "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant validate-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant summarize-workspace --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant next-step --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant critique-summary --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant stage-route-report --input "$TMPDIR/r3a-p3b-revised.json" --format json
+uv run python -m med_autogrant build-artifact-bundle --input "$TMPDIR/r3a-p3b-revised.json" --output "$TMPDIR/r3a-p3b-revised-bundle.json" --format json
+uv run python -m med_autogrant run-local --input "$TMPDIR/r3a-p3b-revised.json" --journal "$TMPDIR/r3a-p3b-revised-run.json" --format json
 
 # 5. 本地 runtime 入口 / 恢复继续保持 CLI-first
-PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json" --format json
-PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json
+uv run python -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json" --format json
+uv run python -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json
 
 # 6. 本地 final / hosted-contract 产物链
-PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output "$TMPDIR/r5a-bundle.json" --format json
-PYTHONPATH=src python3 -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle "$TMPDIR/r5a-bundle.json" --output "$TMPDIR/r5a-final-package.json" --format json
-PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-package "$TMPDIR/r5a-final-package.json" --output "$TMPDIR/r5a-hosted-contract.json" --format json
+uv run python -m med_autogrant build-artifact-bundle --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output "$TMPDIR/r5a-bundle.json" --format json
+uv run python -m med_autogrant build-final-package --input examples/nsfc_workspace_p3c_presubmission_frozen.json --artifact-bundle "$TMPDIR/r5a-bundle.json" --output "$TMPDIR/r5a-final-package.json" --format json
+uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TMPDIR/r5a-final-package.json" --output "$TMPDIR/r5a-hosted-contract.json" --format json
 ```
 
 ### 当前技术范围
@@ -182,15 +187,17 @@ PYTHONPATH=src python3 -m med_autogrant build-hosted-contract-bundle --final-pac
 - 通过 `active_revision_plan_id`、`reviewed_revision_plan_id` 与 `reviewed_revision_evidence` 冻结 machine-readable re-review linkage
 - 通过 `forced_rollback_stage`、`forced_rollback_reason` 与 `presubmission_frozen` 冻结 machine-readable rollback / gate contract
 - machine-readable 的批注、verdict 与 route artifact
-- machine-readable 的本地 runtime stop reason、stage-action envelope 与 durable run-journal recovery
+- machine-readable 的 Hermes-backed runtime stop reason、stage-action envelope、durable run-journal recovery，以及 upstream `SessionDB` attempt durability
 - 带有 manifest、lineage、version 与 bundle summary 的 machine-readable 本地 artifact bundle 生产
 - section-level deterministic 本地 revision executor
 - machine-readable 的本地 final package
 - hosted-friendly session / state / artifact / audit contract bundle 导出
+- 供 CLI 等价 runtime 调用复用的 service-safe structured domain entry
 - 覆盖 runtime 与 control-surface 不变量的测试
 
 ### 内部文档
 
+- 当前 fast-cutover truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
 - 当前真相重置总览：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`
 - 历史本地 runtime program truth：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`
 - 历史本地 runtime capability migration map：`/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`

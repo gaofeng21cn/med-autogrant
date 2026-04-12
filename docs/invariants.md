@@ -5,9 +5,9 @@
 - formal-entry matrix 当前固定为：默认正式入口 `CLI`、支持协议层 `MCP`（future layer）、内部控制面 `controller`。
 - 不得把 `supported_protocol_layer=MCP` 解释成“当前 public runtime 已正式支持 MCP”。
 - 不得把 developer control-plane entry 的存在解释成“产品 controller 已正式支持”。
-- 当前可执行 runtime mainline 固定为本地 `CLI-first` runtime；上游 `Hermes-Agent` 仍是目标 substrate，不是已落地主线。
+- 当前可执行 runtime mainline 固定为 `CLI-first + real upstream Hermes-Agent runtime substrate`。
 - 旧 local host-agent runtime 只允许作为 compatibility bridge / regression oracle，不得继续写成长期产品 runtime。
-- 当前 `hermes_runtime.py` 也属于 repo-local migration scaffold，不得写成“已接入 Hermes-Agent”。
+- 当前 `hermes_runtime.py` 与 `domain_entry.py` 只允许被写成 repo-side domain adapter / entry adapter，不得再被误写成 runtime substrate owner。
 
 ## Control-plane 与 repo-tracked truth
 
@@ -16,7 +16,7 @@
 - 项目级 `.codex/` 与 `.omx/` 已退役，不再作为仓库本地状态入口。
 - 如需保留历史 session、prompt、log 或 hook 状态，应迁入用户级 `~/.codex/` 归档。
 - repo-tracked current truth 以 `docs/specs/*current-truth.md` 与相关 activation package 为准。
-- 当前 owner line 固定为“repo-local runtime baseline with upstream Hermes-Agent pending”。
+- 当前 owner line 固定为“CLI-first with real upstream Hermes-Agent runtime substrate”。
 - 历史 owner line 仍保留为 `post-R5A local runtime closeout / honest stop`，只作为旧 host-agent 线的 closeout anchor。
 - `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` 继续只作为旧 host-agent 线的历史 closeout baseline。
 - 在没有新的 repo-tracked tranche truth 前，不得把当前 `R5.A` 之后的旧 host-agent runtime closeout 口径重新写回“还有默认续推中的 active delta”。
@@ -24,9 +24,9 @@
 ## 目标优先级
 
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态，而不是继续深磨已放弃的旧本地宿主路线。
-- 当前 `CLI-first + host-agent runtime` 是 repo-verified baseline，但它只允许作为迁移桥、兼容层或回归 oracle 存在，不应再被误写为长期终态。
-- 当前 `hermes_runtime.py` 也是 repo-local helper，只允许作为迁移 scaffold，不应再被误写成上游 `Hermes-Agent` 已落地主线。
-- 当前基线与长线目标并存时，必须在 `docs/status.md` 与 `docs/README*` 中显式拆开。
+- 当前 `CLI-first + host-agent runtime` 是历史 repo-verified baseline，但它只允许作为迁移桥、兼容层或回归 oracle 存在，不应再被误写为长期终态。
+- 当前 Hermes substrate 已落地主线时，不得把 repo-side adapter 重新写回“runtime 仍由本地 helper 主责”。
+- 当前 landed substrate、兼容桥与 future scope 必须在 `docs/status.md` 与 `docs/README*` 中显式拆开。
 
 ## 执行句柄边界
 

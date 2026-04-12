@@ -1,6 +1,6 @@
 {
   "program_id": "med-autogrant-mainline",
-  "date_anchor": "2026-04-11",
+  "date_anchor": "2026-04-12",
   "formal_entry": {
     "default_formal_entry": "CLI",
     "supported_protocol_layer": [
@@ -9,11 +9,11 @@
     "internal_controller_surface": "controller"
   },
   "runtime_owner": {
-    "current_owner_line": "repo-local runtime baseline with upstream Hermes-Agent pending",
-    "active_phase": "Truth Reset / Upstream Hermes-Agent Pilot Prep",
-    "active_tranche": "Local Runtime Honesty + Upstream Substrate Migration",
+    "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+    "active_phase": "Upstream Hermes-Agent Fast Cutover",
+    "active_tranche": "Real Hermes substrate / service-safe domain entry / fresh proof",
     "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
-    "compatibility_bridge": "CLI-first + host-agent runtime"
+    "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle"
   },
   "execution_identity": {
     "grant_run_id": "hydrated grant run execution handle",
@@ -23,6 +23,7 @@
   },
   "repo_tracked_truth_surfaces": [
     "contracts/runtime-program/current-program.json",
+    "docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md",
     "docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md",
     "docs/specs/2026-04-07-formal-entry-matrix-current-truth.md",
     "docs/specs/2026-04-07-durability-model-clarification.md"

@@ -37,7 +37,7 @@
 
 ## 4. 当前默认 Runtime 形态
 
-当前产品 runtime 主线是 `CLI-first + repo-local runtime baseline`；旧 `Codex-default host-agent runtime` 只保留为 compatibility bridge / regression oracle，而上游 `Hermes-Agent` 仍是后续目标 substrate。
+当前产品 runtime 主线是 `CLI-first + real upstream Hermes-Agent runtime substrate`；旧 `Codex-default host-agent runtime` 只保留为 compatibility bridge / regression oracle。`hermes_runtime.py` 与 `domain_entry.py` 当前承担的是 repo-side domain/entry adapter 责任，而不是 substrate owner。
 
 当前 formal-entry matrix 固定为：
 
@@ -45,7 +45,7 @@
 - `supported_protocol_layer`：`MCP`（当前保留为 future layer，尚未 repo-verified）
 - `internal_controller_surface`：`controller`
 
-该形态下，项目已有最小 runtime baseline，可覆盖以下基线能力：
+该形态下，项目已有一条真实 substrate-backed runtime 主线，可覆盖以下基线能力：
 
 - 冻结 `NSFCWorkspace` 契约下的结构化校验
 - 基于 `lifecycle_stage` 与 gate 的下一步建议
@@ -99,9 +99,9 @@
 
 当前阶段应统一表述为：
 
-- 已有最小 runtime baseline
-- 正在 `baseline freeze / runtime hardening`
-- 未完成端到端 submission-grade authoring runtime
+- 已完成 upstream Hermes substrate fast cutover
+- 已形成 service-safe domain entry 与 fresh proof
+- 尚未完成 actual hosted runtime 与 submission-grade autopilot
 
 成熟度比较边界：
 

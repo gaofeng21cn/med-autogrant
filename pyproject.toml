@@ -11,6 +11,9 @@ requires-python = ">=3.12"
 authors = [
   { name = "Gao Feng" }
 ]
+dependencies = [
+    "hermes-agent[acp]",
+]
 
 [project.scripts]
 medautogrant = "med_autogrant.cli:entrypoint"
@@ -19,4 +22,12 @@ medautogrant = "med_autogrant.cli:entrypoint"
 testpaths = ["tests"]
 markers = [
   "meta: repo-tracked program control and repository hygiene checks",
+]
+
+[tool.uv.sources]
+hermes-agent = { git = "https://github.com/NousResearch/hermes-agent.git", rev = "96051955755a83f22afed5e3501d447462fbe9c8" }
+
+[dependency-groups]
+dev = [
+    "pytest>=9,<10",
 ]
