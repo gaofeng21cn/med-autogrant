@@ -38,6 +38,12 @@
 - 后续凡是提到 `Hermes-Agent`，只能指上游外部 runtime 项目 / 服务本体。
 - 仓内 `hermes_runtime.py` 只代表 repo-local migration scaffold，不得写成“已接入 Hermes-Agent”。
 
+## 2026-04-12：runtime substrate 与 grant executor 明确分层
+
+- 决策：既然上游 `Hermes-Agent` 已承担 runtime substrate owner，后续不把这件事偷换成“grant authoring 的每个单步都必须立刻迁成 Hermes-native executor”。
+- 理由：当前已经跑通的是长期在线 runtime substrate，不是 authoring semantics 的完全替换。若把二者混在一起，只会让已验证的 grant critique / revision / packaging 主线失去稳定边界。
+- 影响：repo-side domain logic、artifact assembly、identity guard 与 executor routing 继续保留为 domain owner；未来若要替换单步执行器，必须以新的 route truth 单独推进。
+
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。

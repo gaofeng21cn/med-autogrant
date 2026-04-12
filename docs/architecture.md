@@ -40,6 +40,28 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 在这层公共 envelope 之上，grant 域继续补充 `workspace_id`、`draft_id`、`funding_call` 等 domain payload。
 
+## Hermes substrate 与 grant executor 的分工
+
+在当前架构里，`Hermes-Agent` 已经承担：
+
+- session substrate
+- runtime state / attempt ledger durability
+- gateway / interrupt / resume / scheduling 这类长期在线 runtime 能力
+
+`Med Auto Grant` 自己继续承担：
+
+- workspace / draft / critique / revision / export 的 domain truth
+- author-side object model 与 identity guard
+- stage routing、artifact assembly 与 hosted handoff contract
+
+因此，这里真实成立的是：
+
+- runtime substrate owner 已切到上游 `Hermes-Agent`
+- repo-side `domain logic + executor adapter` 仍然负责 grant authoring 流程
+
+这不等于“所有单步 authoring 都已经迁成 Hermes-native executor”。
+如果未来某条 critique / revision / export route 要替换执行器，也必须按 route 单独冻结 truth 与 proof，而不是因为 substrate 已统一就自动把 authoring semantics 一起改掉。
+
 ## 入口与执行
 
 - CLI 仍是唯一 formal entry：`validate-workspace`、`summarize-workspace`、`next-step`、`critique-summary`、`stage-route-report`。

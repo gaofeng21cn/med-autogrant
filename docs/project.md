@@ -5,6 +5,7 @@
 `Med Auto Grant` 是共享 `Unified Harness Engineering Substrate` 上、面向医学 `Grant Ops` 的 author-side、proposal-facing `Domain Harness OS` 方向。
 当前仓库主线按 `Auto-only` 理解，formal entry 仍是 `CLI`，但 runtime substrate 已切到真实上游 `Hermes-Agent`；旧 `CLI-first + host-agent` 线只保留为历史迁移基线，而当前 `hermes_runtime.py` 路径应被理解为 repo-side domain adapter。
 当前入口真相是：`CLI + MedAutoGrantDomainEntry` 已经构成稳定的 `agent entry`，`build-product-entry` 也已经把轻量结构化 `product entry` shell 落到仓库里；但更完整的 grant-facing 产品体验仍未落地。
+当前统一协作模型是：`Hermes-Agent` 持有 runtime substrate / orchestration，`Med Auto Grant` 持有 grant 对象边界、author-side contract 与 export truth；具体 critique / revision / packaging 执行继续通过 repo-side domain logic 与 executor adapter 落地，而不是被强行收缩成单一 runtime 脑。
 
 ## 项目目标
 

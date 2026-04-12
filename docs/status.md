@@ -10,6 +10,7 @@ Date: `2026-04-12`
 - 当前主线：`Auto-only`。
 - OMX 状态：已退场，仅保留历史入口。
 - 当前入口真相：`operator entry` 与 `agent entry` 已存在；共享 envelope 的 lightweight `product entry` shell 已由 `build-product-entry` 落地，但成熟的 grant-facing UX 仍未落地
+- 当前统一协作模型：`Hermes-Agent` 持有 runtime substrate / orchestration，`Med Auto Grant` 持有 grant 对象边界、author-side domain truth 与 executor routing；单步 critique / revision / packaging 仍按 route 选择具体执行逻辑
 
 ## 当前基线（repo-verified）
 
@@ -45,6 +46,7 @@ Date: `2026-04-12`
 2. 继续沿 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` 的口径推进，不把 repo-local adapter 重新写回 runtime owner。
 3. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 4. 已 landed 的 lightweight `product entry` / `OPL -> Med Auto Grant` handoff shell 现在由 `build-product-entry` 承载；后续只允许沿同一 shared envelope 继续收口，不回头扩写 repo-local runtime owner 叙事。
+5. 后续若继续替换 critique / revision / export 的具体执行器，必须按 route 单独拿 truth 和 proof；不允许因为 substrate 已统一就自动改写 authoring semantics。
 
 ## 默认验证
 
