@@ -1,5 +1,23 @@
 # 决策记录
 
+## 2026-04-13：critique route 升级为 Codex CLI autonomous landed route
+
+- 决策：把 `critique` route 从历史上的 `pending / handoff-required` 正式提升为已 landed 的 `execute-critique-pass` route。
+- 理由：实现层 (`hermes_runtime.py` / `critique_executor.py` / `codex_cli.py`) 与现有 route tests 已经稳定落在 landed 口径；继续把它写成 pending 会制造第二真相。
+- 影响：`current-program`、status/architecture/current-truth specs、hosted bundle route catalog 与 meta tests 全部改写为 `critique = landed`；当前 landed author-side route 变成 `critique / revision / artifact_bundle / final_package / hosted_contract_bundle`。
+
+## 2026-04-13：critique 的默认 concrete executor 继承本机 Codex 默认
+
+- 决策：`execute-critique-pass` 的默认模型与默认 reasoning effort 统一收口到 `inherit_local_codex_default`，不在 repo 内固定 `gpt-5.4 / xhigh`。
+- 理由：当前真实入口是 `read_codex_cli_contract()` + `run_codex_exec(...)`；未显式配置环境变量覆盖时，本就应该跟随本机 Codex 默认配置，避免四仓未来一起追着改 model pin。
+- 影响：文档、current-program 与 current-truth 必须显式写出 `default_model / default_reasoning_effort = inherit_local_codex_default`；只有设置 `MED_AUTOGRANT_CODEX_MODEL` / `MED_AUTOGRANT_CODEX_REASONING_EFFORT` 时才会覆盖。
+
+## 2026-04-13：Hermes-native 只指完整 agent loop
+
+- 决策：文档层统一声明，只有带 session substrate、route orchestration、domain mutation 与 durable state transition 的 full agent loop 才算 `Hermes-native`。
+- 理由：如果把 chat relay / 单次 chat completion 也写成 `Hermes-native`，就会把 substrate owner 与单步 executor 混写，误导后续跨仓收敛。
+- 影响：当前 `critique` landed 只能写成 `Codex CLI autonomous executor landed`，不能写成 `Hermes-native landed`；后续若切到 Hermes executor，必须额外拿 full-loop truth 与 proof。
+
 ## 2026-04-11：统一文档骨架
 
 - 采用核心五件套：`project/architecture/invariants/decisions/status`。
@@ -48,19 +66,19 @@
 
 - 决策：`stage_action_envelope` 与 `build-product-entry` 必须共享同一份 `executor_routing_contract`，明确当前 stage、下一步 executor route，以及已 landed 的 author-side route catalog。
 - 理由：如果只写“substrate 已统一”，却不把 critique / revision / export 的 route status 显式冻结下来，后续最容易把 `pending` route 误写成“已 landed executor”。
-- 影响：当前 `critique` route 固定为 `pending / handoff-required`；`revision / artifact_bundle / final_package / hosted_contract_bundle` 固定为当前 landed service-safe domain command surface；未来继续替换任何 route，都必须先改这份 contract truth。
+- 影响：这条 contract 仍是 route truth 的锚点；但其中关于 `critique = pending / handoff-required` 的历史表述，已被 `2026-04-13` 的 critique landed 决策 supersede。未来继续替换任何 route，都必须先改这份 contract truth。
 
 ## 2026-04-12：为 critique pending route 冻结直接协作 handoff contract
 
 - 决策：在保持 `critique` 继续为 `pending / handoff-required` 的前提下，为它补一份 machine-readable `handoff_requirements`，明确 future Hermes-side collaborator 必须先读取哪些 domain surfaces。
 - 理由：如果 pending route 只有一个状态字段，future host 很容易绕开 grant domain truth，或者误以为需要仓内新增本地 critique helper。把 handoff 要求显式冻结出来，能让“直接协作”与“新 executor 已 landed”保持清楚分层。
-- 影响：当前 `critique` route 至少要求读取 `summarize-workspace / stage-route-report`，并且只有 source workspace 已进入 `critique / revision / frozen` review context 时才额外要求 `critique-summary`；这仍不是 `execute-critique-pass`。
+- 影响：这份 pending handoff contract 现已退为历史 superseded note；`2026-04-13` 之后的 current truth 已改成 `critique -> execute-critique-pass` landed。旧 contract 只保留作历史迁移说明。
 
 ## 2026-04-12：冻结全 pending authoring route handoff matrix
 
 - 决策：不再只为 `critique` 单独定义 pending handoff，而是把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / frozen` 全部冻结成 route-specific `handoff_requirements`。
 - 理由：最终目标是让 `Hermes` 负责 substrate、让 `OPL` / domain 通过统一 envelope 直接协作，而不是继续脑补新的 repo-local executor。没有完整 matrix，future caller 仍会在其他未 landed route 上重新发明 handoff semantics。
-- 影响：`author_side_route_catalog` 现在会列出完整 pending + landed route matrix；每条 pending route 都会显式导出 `required_domain_surfaces / required_identity_fields / required_summary_fields / required_gate_fields`，并且只允许引用 repo 已有 surface。
+- 影响：`author_side_route_catalog` 继续保留完整 pending + landed route matrix；但 `critique` 已在 `2026-04-13` 被提升出 pending matrix，当前仍属 pending 的是 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen`。
 
 ## 2026-04-12：冻结 schema-backed product entry / routing contract
 

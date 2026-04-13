@@ -90,6 +90,7 @@ Date: `2026-04-12`
 当前 proof 继续只允许消费已经冻结的 route truth：
 
 - landed：
+  - `critique`
   - `revision`
   - `artifact_bundle`
   - `final_package`
@@ -101,7 +102,6 @@ Date: `2026-04-12`
   - `fit_alignment`
   - `outline`
   - `drafting`
-  - `critique`
   - `frozen`
 
 因此这条 current truth 不是在：

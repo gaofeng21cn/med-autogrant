@@ -961,7 +961,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.C mainline status and grant user loop",
+                            "active_tranche": "P4.D critique Codex CLI autonomous executor landing",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1046,7 +1046,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.C mainline status and grant user loop",
+                            "active_tranche": "P4.D critique Codex CLI autonomous executor landing",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1149,7 +1149,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.C mainline status and grant user loop",
+                                "active_tranche": "P4.D critique Codex CLI autonomous executor landing",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1244,7 +1244,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.C mainline status and grant user loop",
+                                "active_tranche": "P4.D critique Codex CLI autonomous executor landing",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1335,7 +1335,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["grant_user_loop"]["entry_kind"], "grant_user_loop")
         self.assertEqual(
             payload["grant_user_loop"]["mainline_snapshot"]["active_tranche"],
-            "P4.C mainline status and grant user loop",
+            "P4.D critique Codex CLI autonomous executor landing",
         )
         self.assertEqual(
             payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
@@ -1416,7 +1416,10 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(manifest["operator_loop_actions"]["inspect_progress"]["requires"], [])
         self.assertEqual(manifest["operator_loop_actions"]["build_direct_entry"]["requires"], ["task_intent"])
         self.assertEqual(manifest["repo_mainline"]["active_phase"], "P4 mature direct grant product entry")
-        self.assertEqual(manifest["repo_mainline"]["active_tranche"], "P4.C mainline status and grant user loop")
+        self.assertEqual(
+            manifest["repo_mainline"]["active_tranche"],
+            "P4.D critique Codex CLI autonomous executor landing",
+        )
         self.assertEqual(manifest["repo_mainline"]["phase_id"], "P4")
         self.assertEqual(
             manifest["repo_mainline"]["phase_summary"],

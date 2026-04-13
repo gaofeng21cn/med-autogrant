@@ -63,8 +63,16 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             contract["runtime_owner"]["active_tranche"],
-            "P4.C mainline status and grant user loop",
+            "P4.D critique Codex CLI autonomous executor landing",
         )
+        self.assertEqual(contract["executor_defaults"]["default_executor"], "codex_cli_autonomous")
+        self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")
+        self.assertEqual(
+            contract["executor_defaults"]["default_reasoning_effort"],
+            "inherit_local_codex_default",
+        )
+        self.assertTrue(contract["executor_defaults"]["chat_completion_only_executor_forbidden"])
+        self.assertTrue(contract["executor_defaults"]["hermes_native_requires_full_agent_loop"])
         self.assertEqual(
             contract["runtime_owner"]["historical_baseline"],
             "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",

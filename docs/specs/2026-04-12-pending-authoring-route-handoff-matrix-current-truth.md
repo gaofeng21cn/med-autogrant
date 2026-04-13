@@ -1,6 +1,6 @@
 # Pending Authoring Route Handoff Matrix Current Truth
 
-Date: `2026-04-12`
+Date: `2026-04-13`
 
 ## Activation Status
 
@@ -21,7 +21,7 @@ Date: `2026-04-12`
 
 ## Landed Facts
 
-### 1. 不再只有 critique 拥有 pending handoff contract
+### 1. pending handoff matrix 现在不再包含 critique
 
 当前下面这些 pending authoring route 都会带 `handoff_requirements`：
 
@@ -31,11 +31,11 @@ Date: `2026-04-12`
 - `fit_alignment`
 - `outline`
 - `drafting`
-- `critique`
 - `frozen`
 
 已 landed 的 route 继续保持：
 
+- `critique`
 - `revision`
 - `artifact_bundle`
 - `final_package`
@@ -56,17 +56,16 @@ pending route 合同没有引入新的 surface。
 - `critique-summary` 只在 source workspace 已经进入 review context 时才会被要求
   - 即 source stage 属于 `critique / revision / frozen`
 
-### 3. critique handoff 现在按真实上下文 fail-closed
+### 3. review-context pending route 继续按真实上下文 fail-closed
 
 当前已经明确区分：
 
-- `drafting -> critique`
+- `drafting` 这类 pre-review pending route
   - 只能要求：
     - `summarize-workspace`
     - `stage-route-report`
   - 不能错误要求 `critique-summary`
-  - 因为当前 workspace 还没有 active critique
-- `critique -> revision` / `revision -> critique` / `frozen`
+- `frozen` 或其他 review-context pending route
   - 可以继续要求：
     - `summarize-workspace`
     - `critique-summary`
@@ -106,8 +105,8 @@ pending route 合同没有引入新的 surface。
 
 - `Hermes-Agent` 仍然只代表 runtime substrate / orchestration owner
 - `Med Auto Grant` 仍然持有 grant object boundary 与 author-side route truth
-- 这条 matrix 不是在宣称任何 pending route 已经 landed executor
-- 不新增 `execute-critique-pass`
+- 这条 matrix 不是在宣称任何 remaining pending route 已经 landed executor
+- `critique` 已经被提升到 landed route，因此不再属于这条 pending matrix
 - 不新增新的 repo-local helper family
 - 不扩 `Human-in-the-loop` sibling / family expansion / federation story
 
@@ -120,8 +119,7 @@ pending route 合同没有引入新的 surface。
 并验证：
 
 - `drafting` current-stage route 现在也会带 route-specific `handoff_requirements`
-- `drafting -> critique` 的 `recommended_executor_route` 不再错误要求 `critique-summary`
-- `critique -> question_refinement` 这类 rollback handoff 会在 review context 下继续要求 `critique-summary`
+- review-context pending route 继续会在需要时要求 `critique-summary`
 - `author_side_route_catalog` 会列出完整 route matrix
 - `frozen` current-stage route 也会带 route-specific `handoff_requirements`
 
@@ -135,5 +133,6 @@ pending route 合同没有引入新的 surface。
 它不意味着：
 
 - 这些 pending route 已经拥有 landed executor
+- `critique` 仍然属于 pending route
 - 更成熟的 product UX 已经完成
 - actual hosted runtime 已完成

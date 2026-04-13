@@ -32,8 +32,8 @@ SCHEMA_BACKED_ENTRY_CURRENT_TRUTH = (
 EXECUTOR_ROUTING_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-author-side-executor-routing-contract-current-truth.md"
 )
-CRITIQUE_HANDOFF_CURRENT_TRUTH = (
-    REPO_ROOT / "docs" / "specs" / "2026-04-12-critique-pending-handoff-contract-current-truth.md"
+CRITIQUE_EXECUTOR_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-13-critique-codex-cli-autonomous-executor-current-truth.md"
 )
 PENDING_ROUTE_MATRIX_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md"
@@ -163,7 +163,9 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
         f"Schema-backed product entry current truth 不存在: {SCHEMA_BACKED_ENTRY_CURRENT_TRUTH}"
     )
     assert EXECUTOR_ROUTING_CURRENT_TRUTH.exists(), f"Executor routing current truth 不存在: {EXECUTOR_ROUTING_CURRENT_TRUTH}"
-    assert CRITIQUE_HANDOFF_CURRENT_TRUTH.exists(), f"Critique handoff current truth 不存在: {CRITIQUE_HANDOFF_CURRENT_TRUTH}"
+    assert CRITIQUE_EXECUTOR_CURRENT_TRUTH.exists(), (
+        f"Critique executor current truth 不存在: {CRITIQUE_EXECUTOR_CURRENT_TRUTH}"
+    )
     assert PENDING_ROUTE_MATRIX_CURRENT_TRUTH.exists(), (
         f"Pending route matrix current truth 不存在: {PENDING_ROUTE_MATRIX_CURRENT_TRUTH}"
     )
@@ -193,7 +195,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     truth_reset = _read(TRUTH_RESET_CURRENT_TRUTH)
     schema_backed_entry_truth = _read(SCHEMA_BACKED_ENTRY_CURRENT_TRUTH)
     executor_routing_truth = _read(EXECUTOR_ROUTING_CURRENT_TRUTH)
-    critique_handoff_truth = _read(CRITIQUE_HANDOFF_CURRENT_TRUTH)
+    critique_executor_truth = _read(CRITIQUE_EXECUTOR_CURRENT_TRUTH)
     pending_route_matrix_truth = _read(PENDING_ROUTE_MATRIX_CURRENT_TRUTH)
     hosted_contract_bundle_truth = _read(HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH)
     hosted_caller_consumption_truth = _read(HOSTED_CALLER_CONSUMPTION_PROOF_CURRENT_TRUTH)
@@ -235,8 +237,8 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "author_side_route_catalog" in schema_backed_entry_truth
 
     assert "critique" in executor_routing_truth
-    assert "pending" in executor_routing_truth
-    assert "handoff-required" in executor_routing_truth
+    assert "landed" in executor_routing_truth
+    assert "execute-critique-pass" in executor_routing_truth
     assert "execute-revision-pass" in executor_routing_truth
     assert "build-artifact-bundle" in executor_routing_truth
     assert "build-final-package" in executor_routing_truth
@@ -248,18 +250,14 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "required_summary_fields" in executor_routing_truth
     assert "required_gate_fields" in executor_routing_truth
 
-    assert "critique-pending-handoff" in critique_handoff_truth
-    assert "summarize-workspace" in critique_handoff_truth
-    assert "critique-summary" in critique_handoff_truth
-    assert "stage-route-report" in critique_handoff_truth
-    assert "grant_run_id" in critique_handoff_truth
-    assert "workspace_id" in critique_handoff_truth
-    assert "draft_id" in critique_handoff_truth
-    assert "recommended_executor_route" in critique_handoff_truth
-    assert "revision 已完成显式 revised 切换" in critique_handoff_truth
-    assert "drafting -> critique" in critique_handoff_truth
-    assert "required_summary_fields" in critique_handoff_truth
-    assert "required_gate_fields" in critique_handoff_truth
+    assert "execute-critique-pass" in critique_executor_truth
+    assert "run_codex_exec" in critique_executor_truth
+    assert "Codex CLI autonomous" in critique_executor_truth
+    assert "inherit_local_codex_default" in critique_executor_truth
+    assert "MED_AUTOGRANT_CODEX_MODEL" in critique_executor_truth
+    assert "MED_AUTOGRANT_CODEX_REASONING_EFFORT" in critique_executor_truth
+    assert "critique_execution.executor" in critique_executor_truth
+    assert "full agent loop" in critique_executor_truth
 
     assert "direction_screening" in pending_route_matrix_truth
     assert "question_refinement" in pending_route_matrix_truth
@@ -267,11 +265,9 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "fit_alignment" in pending_route_matrix_truth
     assert "outline" in pending_route_matrix_truth
     assert "drafting" in pending_route_matrix_truth
-    assert "critique" in pending_route_matrix_truth
     assert "frozen" in pending_route_matrix_truth
     assert "required_summary_fields" in pending_route_matrix_truth
     assert "required_gate_fields" in pending_route_matrix_truth
-    assert "drafting -> critique" in pending_route_matrix_truth
 
     assert "hosted contract bundle" in hosted_contract_bundle_truth.lower()
     assert "domain_entry_contract" in hosted_contract_bundle_truth
@@ -296,6 +292,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "without repo-local helper" in hosted_caller_consumption_truth
     assert "P3" in hosted_caller_consumption_truth
     assert "completed" in hosted_caller_consumption_truth
+    assert "critique" in hosted_caller_consumption_truth
 
     assert "OPL" in ideal_target_phase_map_truth
     assert "理想目标" in ideal_target_phase_map_truth
