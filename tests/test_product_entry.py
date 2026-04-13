@@ -460,6 +460,40 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             funding_call=None,
         )
 
+    def test_product_entry_manifest_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "product-entry-manifest",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "critique",
+            "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            "product_entry_manifest": {
+                "manifest_kind": "med_auto_grant_product_entry_manifest",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.build_product_entry_manifest.return_value = expected_payload
+
+            exit_code, stdout, stderr = self.run_cli(
+                "product-entry-manifest",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_product_entry_manifest.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            funding_call=None,
+        )
+
 
 class ProductEntryEnvelopeTest(unittest.TestCase):
     def test_product_entry_builds_shared_envelope_for_direct_and_opl_handoff(self) -> None:
@@ -1342,6 +1376,44 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} "
                 "--task-intent tighten-grant-mainline --format json"
             ),
+        )
+
+    def test_product_entry_manifest_projects_current_grant_shell_and_shared_handoff(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_product_entry_manifest(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
+        self.assertEqual(payload["command"], "product-entry-manifest")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        manifest = payload["product_entry_manifest"]
+        self.assertEqual(manifest["manifest_kind"], "med_auto_grant_product_entry_manifest")
+        self.assertEqual(manifest["target_domain_id"], "med-autogrant")
+        self.assertEqual(manifest["formal_entry"]["default"], "CLI")
+        self.assertEqual(manifest["formal_entry"]["supported_protocols"], ["MCP"])
+        self.assertEqual(manifest["workspace_locator"]["workspace_path"], str(CRITIQUE_EXAMPLE_PATH.resolve()))
+        self.assertEqual(manifest["repo_mainline"]["active_phase"], "P4 mature direct grant product entry")
+        self.assertEqual(manifest["repo_mainline"]["active_tranche"], "P4.C mainline status and grant user loop")
+        self.assertEqual(
+            manifest["product_entry_shell"]["grant_progress"]["command"],
+            f"uv run python -m med_autogrant grant-progress --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(
+            manifest["product_entry_shell"]["grant_user_loop"]["command"],
+            "uv run python -m med_autogrant grant-user-loop "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(
+            manifest["shared_handoff"]["direct_entry_builder"]["command"],
+            "uv run python -m med_autogrant build-product-entry "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode direct --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(
+            manifest["shared_handoff"]["opl_handoff_builder"]["command"],
+            "uv run python -m med_autogrant build-product-entry "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
         )
 
     def test_grant_user_loop_projects_pending_handoff_surfaces_without_inventing_executor(self) -> None:

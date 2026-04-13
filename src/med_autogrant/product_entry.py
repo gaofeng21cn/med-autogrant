@@ -26,6 +26,7 @@ from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 
 PRODUCT_ENTRY_VERSION = 1
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
+PRODUCT_ENTRY_MANIFEST_KIND = "med_auto_grant_product_entry_manifest"
 TARGET_DOMAIN_ID = "med-autogrant"
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
 GRANT_PROGRESS_PROJECTION_VERSION = 1
@@ -544,6 +545,114 @@ class MedAutoGrantProductEntry:
             lifecycle_stage=direct_entry_payload["lifecycle_stage"],
         )
         return payload
+
+    def build_product_entry_manifest(
+        self,
+        *,
+        input_path: str | Path,
+        funding_call: str | None = None,
+    ) -> dict[str, Any]:
+        del funding_call
+        resolved_input_path = Path(input_path).expanduser().resolve()
+        progress_payload = self.read_grant_progress(input_path=resolved_input_path)
+        mainline_payload = read_mainline_status()
+        current_runtime_owner = _require_mapping(
+            mainline_payload,
+            "current_runtime_owner",
+            context="mainline_status",
+        )
+        command_catalog = _build_product_command_catalog(resolved_input_path)
+
+        return {
+            "ok": True,
+            "command": "product-entry-manifest",
+            "grant_run_id": progress_payload["grant_run_id"],
+            "workspace_id": progress_payload["workspace_id"],
+            "draft_id": progress_payload["draft_id"],
+            "lifecycle_stage": progress_payload["lifecycle_stage"],
+            "input_path": progress_payload["input_path"],
+            "product_entry_manifest": {
+                "manifest_version": 1,
+                "manifest_kind": PRODUCT_ENTRY_MANIFEST_KIND,
+                "target_domain_id": TARGET_DOMAIN_ID,
+                "formal_entry": {
+                    "default": "CLI",
+                    "supported_protocols": ["MCP"],
+                    "internal_surface": "MedAutoGrantDomainEntry",
+                },
+                "workspace_locator": {
+                    "workspace_surface_kind": "nsfc_workspace",
+                    "workspace_path": str(resolved_input_path),
+                },
+                "repo_mainline": {
+                    "program_id": _require_nonempty_string_from_mapping(
+                        mainline_payload,
+                        "program_id",
+                        context="mainline_status",
+                    ),
+                    "active_phase": _require_nonempty_string_from_mapping(
+                        current_runtime_owner,
+                        "active_phase",
+                        context="mainline_status.current_runtime_owner",
+                    ),
+                    "active_tranche": _require_nonempty_string_from_mapping(
+                        current_runtime_owner,
+                        "active_tranche",
+                        context="mainline_status.current_runtime_owner",
+                    ),
+                },
+                "runtime": {
+                    "current_owner_line": _require_nonempty_string_from_mapping(
+                        current_runtime_owner,
+                        "current_owner_line",
+                        context="mainline_status.current_runtime_owner",
+                    ),
+                    "runtime_owner": "upstream_hermes_agent",
+                },
+                "product_entry_shell": {
+                    "grant_progress": {
+                        "command": command_catalog["grant_progress"],
+                        "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
+                    },
+                    "grant_cockpit": {
+                        "command": (
+                            f"uv run python -m med_autogrant grant-cockpit --input {resolved_input_path} --format json"
+                        ),
+                        "surface_kind": GRANT_COCKPIT_KIND,
+                    },
+                    "grant_direct_entry": {
+                        "command": (
+                            "uv run python -m med_autogrant grant-direct-entry "
+                            f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
+                        ),
+                        "surface_kind": GRANT_DIRECT_ENTRY_KIND,
+                    },
+                    "grant_user_loop": {
+                        "command": (
+                            "uv run python -m med_autogrant grant-user-loop "
+                            f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
+                        ),
+                        "surface_kind": GRANT_USER_LOOP_KIND,
+                    },
+                },
+                "shared_handoff": {
+                    "direct_entry_builder": {
+                        "command": command_catalog["build_direct_entry"],
+                        "entry_mode": "direct",
+                    },
+                    "opl_handoff_builder": {
+                        "command": command_catalog["build_opl_handoff"],
+                        "entry_mode": "opl-handoff",
+                    },
+                },
+                "remaining_gaps": list(mainline_payload.get("remaining_gaps") or []),
+                "notes": [
+                    "This manifest freezes the current repo-tracked grant product shell only.",
+                    "It does not claim that mature hosted runtime or Web UI is already landed.",
+                    "funding_call stays part of direct-entry build time rather than manifest discovery time.",
+                ],
+            },
+        }
 
     def _load_projection_context(
         self,
