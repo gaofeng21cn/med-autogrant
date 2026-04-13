@@ -22,6 +22,12 @@ Date: `2026-04-13`
 - 当前 direct user loop 口径：`grant-user-loop` 当前会复用 `mainline-status`、`mainline-phase` 与 `grant-direct-entry`，并把推荐 route 的 landed command / pending-handoff surface 投影成当前 next-action 卡片；其中 `drafting -> critique` 已是 landed command `execute-critique-pass`，其余未落地 route 继续维持 pending-handoff；`grant-user-loop` 通过 `grant-user-loop.schema.json` 受 generation-time fail-closed 校验，并且同样故意不进入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
 - 当前用户动作面口径：`product-entry-manifest` 新增的 `frontdesk_surface`、`operator_loop_actions` 与 `grant-user-loop` 保持同一真相；外部 caller 可以先定位 direct frontdesk，再直接消费 `open_loop / inspect_progress / inspect_cockpit / build_direct_entry`，而不必自己猜 grant-facing 第一棒命令组合
 
+## OPL family orchestration contracts（对齐方向）
+
+- `OPL` 顶层将冻结 5 类 family contracts：family event envelope、family checkpoint lineage、family action graph、family human gate、family product-entry manifest v2。
+- `Med Auto Grant` 当前优先对齐面：`grant-progress / grant-cockpit / grant-direct-entry / grant-user-loop`，并对齐到 family action graph / family human gate / family product-entry manifest v2；domain 侧继续保持 `workspace / draft / program` 的真相边界。
+- 本轮对齐不引入 `CrewAI` 依赖，不把 `OPL` 写成 runtime owner，也不宣称已完成跨仓 runtime core ingest；真实状态仍是上游 `Hermes-Agent` 作为 runtime substrate owner，MAG 维持 family-level contract-first 对齐与 domain-owned truth。
+
 ## 当前基线（repo-verified）
 
 - Latest absorbed runtime slice：`Upstream Hermes-Agent Fast Cutover`
@@ -77,16 +83,17 @@ Date: `2026-04-13`
 ## 当前优先事项
 
 1. 保持真实 upstream substrate、service-safe domain entry、`build-product-entry`、`grant-progress / grant-cockpit`、`grant-direct-entry`、`grant-user-loop`、`build-hosted-contract-bundle`、external caller consumption proof 与 author-side artifact/export surface 持续全绿。
-2. 继续沿 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` 的口径推进，不把 repo-local adapter 重新写回 runtime owner。
-3. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-4. 已 landed 的 lightweight `product entry` / `OPL -> Med Auto Grant` handoff shell 现在由 `build-product-entry` 承载；后续只允许沿同一 shared envelope 继续收口，不回头扩写 repo-local runtime owner 叙事。
-5. `stage_action_envelope` 与 `build-product-entry` 现在都带同一份 `executor_routing_contract`；其中 `critique / revision / artifact_bundle / final_package / hosted_contract_bundle` 都是已 landed route，其他 authoring stage 才是 `pending / handoff-required`。
-6. `execute-critique-pass` 当前执行器固定为 `Codex CLI autonomous executor`；默认 `model / reasoning` 继承本机 Codex 默认（`inherit_local_codex_default`），显式环境变量覆盖仍受控保留。
-7. 所有仍 pending 的 authoring route 继续带 route-specific `handoff_requirements`；`critique-summary` 只在 source workspace 已经位于 `critique / revision / frozen` review context 时才会被要求。
-8. Hermes-native 口径只认 full agent loop，不认 chat relay；后续若替换 critique / revision / export 执行器，必须按 route 单独拿 truth 和 proof。
-9. `service-safe-domain-surface.schema.json`、`pending-handoff-requirements.schema.json`、`executor-routing-contract.schema.json`、`product-entry.schema.json` 与 `hosted-contract-bundle.schema.json` 现在已经进入 repo-tracked schema index；任何后续 product-entry / routing / hosted contract bundle 变更都必须同步更新 schema、tests 与 current truth。
-10. `P3` 已经证明 external hosted caller / `OPL` caller 可以直接消费已冻结的 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`；后续继续沿 `P4` 的诚实 product 面推进，而不是回头重新发明新的 repo-local hosted helper。
-11. `P4.A / P4.B / P4.C` 当前只允许沿 controller-owned 的 product 面继续推进：`grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop` 现在虽然都已经是 schema-backed、generation-time fail-closed 的 product contract 或 controller surface，但仍不能被误写成新的 service-safe domain executor、hosted bundle command catalog 项，或已落地的 Web UI / hosted runtime。
+2. 下一步：把 `grant-progress / grant-cockpit / grant-direct-entry / grant-user-loop` 对齐到 family action graph / family human gate / family product-entry manifest v2，并继续维护 domain-owned truth。
+3. 继续沿 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` 的口径推进，不把 repo-local adapter 重新写回 runtime owner。
+4. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
+5. 已 landed 的 lightweight `product entry` / `OPL -> Med Auto Grant` handoff shell 现在由 `build-product-entry` 承载；后续只允许沿同一 shared envelope 继续收口，不回头扩写 repo-local runtime owner 叙事。
+6. `stage_action_envelope` 与 `build-product-entry` 现在都带同一份 `executor_routing_contract`；其中 `critique / revision / artifact_bundle / final_package / hosted_contract_bundle` 都是已 landed route，其他 authoring stage 才是 `pending / handoff-required`。
+7. `execute-critique-pass` 当前执行器固定为 `Codex CLI autonomous executor`；默认 `model / reasoning` 继承本机 Codex 默认（`inherit_local_codex_default`），显式环境变量覆盖仍受控保留。
+8. 所有仍 pending 的 authoring route 继续带 route-specific `handoff_requirements`；`critique-summary` 只在 source workspace 已经位于 `critique / revision / frozen` review context 时才会被要求。
+9. Hermes-native 口径只认 full agent loop，不认 chat relay；后续若替换 critique / revision / export 执行器，必须按 route 单独拿 truth 和 proof。
+10. `service-safe-domain-surface.schema.json`、`pending-handoff-requirements.schema.json`、`executor-routing-contract.schema.json`、`product-entry.schema.json` 与 `hosted-contract-bundle.schema.json` 现在已经进入 repo-tracked schema index；任何后续 product-entry / routing / hosted contract bundle 变更都必须同步更新 schema、tests 与 current truth。
+11. `P3` 已经证明 external hosted caller / `OPL` caller 可以直接消费已冻结的 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`；后续继续沿 `P4` 的诚实 product 面推进，而不是回头重新发明新的 repo-local hosted helper。
+12. `P4.A / P4.B / P4.C / P4.D` 当前只允许沿 controller-owned 的 product 面继续推进：`grant-progress`、`grant-cockpit`、`grant-direct-entry`、`grant-user-loop` 与 `execute-critique-pass` 现在虽然都已经是 schema-backed、generation-time fail-closed 的 product contract 或 controller surface，但仍不能被误写成新的 service-safe domain executor、hosted bundle command catalog 项，或已落地的 Web UI / hosted runtime。
 
 ## 默认验证
 
