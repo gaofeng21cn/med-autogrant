@@ -103,6 +103,7 @@ Date: `2026-04-12`
 当前 `authoring_contract.author_side_route_catalog` 继续复用同一份已冻结 route matrix：
 
 - landed：
+  - `critique -> execute-critique-pass`
   - `revision -> execute-revision-pass`
   - `artifact_bundle -> build-artifact-bundle`
   - `final_package -> build-final-package`
@@ -114,7 +115,6 @@ Date: `2026-04-12`
   - `fit_alignment`
   - `outline`
   - `drafting`
-  - `critique`
   - `frozen`
 
 因此这条 truth 不是在：
@@ -170,5 +170,5 @@ Date: `2026-04-12`
 
 - actual hosted runtime 已完成
 - `OPL Gateway` 已在本仓落地
-- critique executor 已经 landed
+- landed route 已经自动升级成 Hermes-native full agent loop
 - pending authoring route 已经拥有新的执行器

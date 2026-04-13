@@ -86,14 +86,16 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - 对 valid workspace，Hermes session handle 继续沿用 `grant_run_id`；对 `validation_failed` path，只允许使用 journal-scoped substrate session handle 持续 durability，不得伪造新的 domain `grant_run_id`。
 - `src/med_autogrant/hermes_runtime.py` 现在应被理解为 repo-side domain adapter / orchestrator，而不是 runtime substrate owner。
 - `src/med_autogrant/local_runtime.py` 只保留 compatibility bridge 责任。
-- `execute-revision-pass`、`build-artifact-bundle`、`build-final-package`、`build-hosted-contract-bundle` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
+- `execute-critique-pass`、`execute-revision-pass`、`build-artifact-bundle`、`build-final-package`、`build-hosted-contract-bundle` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
+- `execute-critique-pass` 当前固定走 `Codex CLI autonomous executor`：具体由 `critique_executor.py -> run_codex_exec(...)` 调起 `codex exec`，默认 `model / reasoning` 都继承本机 Codex 默认（`inherit_local_codex_default`），只有显式环境变量覆盖才会传 override。
 - `build-hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 hosted contract catalog。
 - 当前 external caller 只需要读取 `domain_entry_contract.supported_commands` 与 `domain_entry_contract.command_contracts`，就能按统一 contract 构造 request，而不需要 repo-local helper。
 - 当前 direct-product projection caller 则可以读取 `grant-progress / grant-cockpit` 的只读投影结果，先看当前 grant 主线、blocker 与 direct / `OPL` entry command catalog，再决定是否进入真正的 domain entry / product entry 调用。
 - `build-hosted-contract-bundle.hosted_contract_bundle` 现在也受 `schemas/v1/hosted-contract-bundle.schema.json` 约束，并在写出前执行 schema + 冻结 truth 的 fail-closed 校验。
-- 当前 author-side executor routing 继续按 route 单独冻结：`revision / artifact_bundle / final_package / hosted_contract_bundle` 已有 landed service-safe command surface，而所有非落地 stage 都只允许输出 `pending / handoff-required`。
-- `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / frozen` 现在都会额外导出 route-specific `handoff_requirements`，并且只引用 `summarize-workspace / stage-route-report / critique-summary` 这些已存在的 domain surfaces。
-- `critique-summary` 只有在 source workspace 已经位于 `critique / revision / frozen` review context 时才会被要求；`drafting -> critique` 这类 pre-review handoff 不能错误依赖它。
+- 当前 author-side executor routing 继续按 route 单独冻结：`critique / revision / artifact_bundle / final_package / hosted_contract_bundle` 已有 landed service-safe command surface，而其余 authoring stage 才允许输出 `pending / handoff-required`。
+- `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen` 现在都会额外导出 route-specific `handoff_requirements`，并且只引用 `summarize-workspace / stage-route-report / critique-summary` 这些已存在的 domain surfaces。
+- `critique-summary` 只有在 source workspace 已经位于 `critique / revision / frozen` review context 且当前 route 仍属于 pending handoff 时才会被要求；`drafting -> critique` 已经是 landed `execute-critique-pass`，不再依赖 pending handoff contract。
+- 这里的 `critique` landed 只表示当前默认 concrete executor 已统一到 `Codex CLI autonomous`；只有带 session substrate、route orchestration、domain mutation 与 durable state transition 的 full agent loop 才算 `Hermes-native`，chat relay 不算。
 - 产物面：`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle`。
 
 ## 数据与对象模型

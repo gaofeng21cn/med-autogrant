@@ -1,174 +1,26 @@
-# Critique Pending Handoff Contract Current Truth
+# Critique Pending Handoff Contract Current Truth (Historical, Superseded)
 
 Date: `2026-04-12`
 
-## Activation Status
+## Historical Status
 
 - Phase: `Upstream Hermes-Agent Fast Cutover`
-- Active tranche: `Critique pending handoff contract`
-- Status: `landed / current truth`
+- Recorded at: `2026-04-12`
+- Current status: `historical note / superseded`
 
-## Goal
+## Note
 
-在不把 `critique` route 误写成“已 landed executor”的前提下，把当前和 `Hermes-Agent` 直接协作所需的最小 handoff 要求冻结成 machine-readable contract。
+本文件记录的是 `2026-04-12` 时点，`critique` 仍被当作 `pending / handoff-required` 的历史冻结状态。
 
-这条 truth 解决的是：
+它已经被下面这份 current truth supersede：
 
-- `critique` 继续是 `pending / handoff-required`
-- 但 future host / gateway / Hermes-side collaborator 不再只看到一个空的 pending 标记
-- 而是能明确知道当前应该读取哪些 domain surfaces，才能对 grant 草稿做导师式 critique
+- `docs/specs/2026-04-13-critique-codex-cli-autonomous-executor-current-truth.md`
 
-## Landed Facts
+当前 repo-tracked truth 不再是 `critique-pending-handoff`，而是：
 
-### 1. critique pending route 现在自带 `handoff_requirements`
+- `critique -> execute-critique-pass`
+- `route_status = landed`
+- `Codex CLI autonomous executor`
+- `default model / reasoning = inherit_local_codex_default`
 
-当前下面两个 surface 里的 `critique` route 都会显式带上：
-
-- `run-local` 的 `stage_action_envelope.executor_routing_contract.current_stage_route`
-- `build-product-entry` 的 `product_entry.executor_routing_contract.current_stage_route`
-
-如果某个 workspace 的下一步又回到：
-
-- `recommended_executor_route.route_id = critique`
-
-那同一份 `handoff_requirements` 也会出现在：
-
-- `recommended_executor_route`
-
-这条 reroute 在当前 canonical grant mainline 里已经有一条明确已验证的返场例子：
-
-- `revision 已完成显式 revised 切换，应带着 revised 草稿回到 critique 做 re-review`
-
-### 2. 当前冻结的 critique handoff 合同字段
-
-当前 `handoff_requirements` 至少包括：
-
-- `contract_kind = critique-pending-handoff`
-- `workspace_surface_kind = nsfc_workspace`
-- `required_domain_surfaces`
-- `required_identity_fields`
-- `required_summary_fields`
-- `required_gate_fields`
-
-其中 `required_domain_surfaces` 现在按 source workspace 上下文 fail-closed：
-
-- `summarize-workspace`
-- `stage-route-report`
-
-只有当 source workspace 已经位于：
-
-- `critique`
-- `revision`
-- `frozen`
-
-这些 review context 之一时，才额外要求：
-
-- `critique-summary`
-
-并且都统一声明为：
-
-- `surface_kind = service-safe-domain-entry-command`
-- `entry_adapter = MedAutoGrantDomainEntry`
-
-### 3. 这份 handoff contract 明确服务“直接协作”，不是“本地 executor 已替换”
-
-这条 contract 的意思是：
-
-- future Hermes-side collaborator 如果要做 critique，不应绕开 grant domain truth
-- 应先通过现有 service-safe domain surfaces 读取：
-  - workspace summary
-  - route / checkpoint snapshot
-- 如果 source workspace 已经带 review context，再继续读取：
-  - critique summary
-- 并继续保留：
-  - `grant_run_id`
-  - `workspace_id`
-  - 如果 source stage 已经进入 draft-bearing context，则继续保留 `draft_id`
-
-它不是在宣称：
-
-- 仓库里已经有 `execute-critique-pass`
-- critique 已经变成 Hermes-native mutation executor
-- repo-local helper 已经完成新的 critique runtime owner 接管
-
-### 4. 当前已经证明 reroute-to-critique 也会带同一份 handoff contract
-
-当前不只是：
-
-- `lifecycle_stage = critique`
-
-会输出这份 `handoff_requirements`。
-
-对 canonical 的：
-
-- `revision(completed revised switch) -> critique`
-
-返场路径，下面两个 surface 也已经能稳定输出：
-
-- `run-local.stage_action_envelope.executor_routing_contract.recommended_executor_route`
-- `build-product-entry.product_entry.executor_routing_contract.recommended_executor_route`
-
-并且二者都会保持：
-
-- `route_id = critique`
-- `route_status = pending`
-- `handoff_contract_kind = handoff-required`
-- 同一份 review-context critique handoff contract
-
-另外当前还额外证明：
-
-- `drafting -> critique`
-
-这条推荐路径仍会带：
-
-- `route_id = critique`
-- `route_status = pending`
-- `handoff_contract_kind = handoff-required`
-
-但它不会错误要求：
-
-- `critique-summary`
-
-因为当前 workspace 还没有 active critique。
-
-## What Did Not Change
-
-- `critique` route 仍然是 `pending`
-- `handoff_contract_kind` 仍然是 `handoff-required`
-- 已 landed 的 route 仍然只有：
-  - `revision`
-  - `artifact_bundle`
-  - `final_package`
-  - `hosted_contract_bundle`
-- `Med Auto Grant` 继续持有 author-side critique / revision / export truth
-- `Hermes-Agent` 继续只持有 runtime substrate / orchestration owner
-
-## Verification
-
-本 tranche 至少已覆盖：
-
-- `uv run pytest tests/test_hermes_runtime.py tests/test_product_entry.py tests/test_domain_entry.py tests/test_hermes_runtime_truth.py -q`
-
-并验证：
-
-- `critique` current-stage route 会带 `handoff_requirements`
-- `product entry` route catalog 里的 `critique` 也会带同一份 `handoff_requirements`
-- `revision(completed revised switch) -> critique` 的 `recommended_executor_route` 也会带同一份 `handoff_requirements`
-- `drafting -> critique` 的 `recommended_executor_route` 不再错误要求 `critique-summary`
-- review-context handoff 仍会列出：
-  - `summarize-workspace`
-  - `critique-summary`
-  - `stage-route-report`
-
-## Honest Boundary
-
-这条 current truth 只说明：
-
-- critique pending route 现在有 machine-readable 的 handoff requirements
-- future host / gateway / Hermes collaborator 已经能更诚实地和当前 grant domain 直接协作
-
-它不意味着：
-
-- critique executor 已经 landed
-- critique mutation surface 已经新增
-- 更成熟的 grant-facing UX 已完成
+保留这个文件的唯一目的，是给后续审计与迁移追踪提供历史上下文，而不是继续充当当前真相入口。

@@ -147,10 +147,10 @@ repo 现在至少有下面这些 fresh proof：
    - run/resume
    - final package
    - hosted contract bundle
-5. `executor_routing_contract` 能把 critique 的 `pending / handoff-required` 与 revision/export 的 landed route 明确区分出来
-6. 所有 pending authoring route 现在都会显式导出 route-specific `handoff_requirements`
-7. `drafting -> critique` 已经证明不会错误要求 `critique-summary`
-8. `revision(completed revised switch) -> critique` 返场路径也已经在 `run-local` / `build-product-entry` 上给出一致的 critique handoff proof
+5. `executor_routing_contract` 已把 critique 收口成 landed `execute-critique-pass`，并把其余 pending route 与 landed critique/revision/export route 明确区分出来
+6. 所有 remaining pending authoring route 现在都会显式导出 route-specific `handoff_requirements`
+7. `drafting -> critique` 已经证明会稳定落到 landed `execute-critique-pass`
+8. `revision(completed revised switch) -> critique` 返场路径也已经在 `run-local` / `build-product-entry` 上给出一致的 landed critique proof
 
 ## Verification
 

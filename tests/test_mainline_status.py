@@ -10,7 +10,10 @@ def test_mainline_status_projects_ideal_target_phase_ladder_and_remaining_gaps()
 
     assert payload["program_id"] == "med-autogrant-mainline"
     assert payload["current_runtime_owner"]["active_phase"] == "P4 mature direct grant product entry"
-    assert payload["current_runtime_owner"]["active_tranche"] == "P4.C mainline status and grant user loop"
+    assert (
+        payload["current_runtime_owner"]["active_tranche"]
+        == "P4.D critique Codex CLI autonomous executor landing"
+    )
     assert payload["ideal_target"]["family_top_entry"] == "OPL Gateway"
     assert payload["ideal_target"]["domain_direct_entry"] == "Med Auto Grant Product Entry"
     assert payload["current_phase"]["phase_id"] == "P4"

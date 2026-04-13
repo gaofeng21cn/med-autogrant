@@ -295,7 +295,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["current_phase"]["phase_id"], "P4")
         self.assertEqual(
             payload["current_runtime_owner"]["active_tranche"],
-            "P4.C mainline status and grant user loop",
+            "P4.D critique Codex CLI autonomous executor landing",
         )
 
     def test_mainline_phase_resolves_next_selector(self) -> None:

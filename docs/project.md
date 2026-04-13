@@ -34,7 +34,7 @@
 ## 当前形态
 
 - Current phase：`P4 mature direct grant product entry`
-- Active tranche：`P4.C mainline status and grant user loop`
+- Active tranche：`P4.D critique Codex CLI autonomous executor landing`
 - Latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
 - Current owner line：`CLI-first with real upstream Hermes-Agent runtime substrate`
 - Historical owner line：`post-R5A local runtime closeout / honest stop`
