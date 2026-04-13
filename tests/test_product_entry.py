@@ -1397,6 +1397,11 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(manifest["workspace_locator"]["workspace_root"], str(CRITIQUE_EXAMPLE_PATH.resolve()))
         self.assertEqual(manifest["workspace_locator"]["workspace_path"], str(CRITIQUE_EXAMPLE_PATH.resolve()))
         self.assertEqual(manifest["recommended_shell"], "grant_user_loop")
+        self.assertEqual(
+            manifest["recommended_command"],
+            "uv run python -m med_autogrant grant-user-loop "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
         self.assertEqual(manifest["repo_mainline"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(manifest["repo_mainline"]["active_tranche"], "P4.C mainline status and grant user loop")
         self.assertEqual(

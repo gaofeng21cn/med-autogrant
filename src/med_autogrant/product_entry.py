@@ -587,6 +587,10 @@ class MedAutoGrantProductEntry:
                     "workspace_path": str(resolved_input_path),
                 },
                 "recommended_shell": "grant_user_loop",
+                "recommended_command": (
+                    "uv run python -m med_autogrant grant-user-loop "
+                    f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
+                ),
                 "repo_mainline": {
                     "program_id": _require_nonempty_string_from_mapping(
                         mainline_payload,
