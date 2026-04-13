@@ -236,6 +236,10 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["progress_projection"]["recommended_next_stage"], "revision")
         self.assertEqual(payload["progress_projection"]["current_blockers"], ["必要性表述仍略偏现象描述。"])
         self.assertEqual(payload["progress_projection"]["needs_author_decision"], False)
+        self.assertIn("family_orchestration", payload)
+        self.assertIn("action_graph_ref", payload["family_orchestration"])
+        self.assertIn("human_gates", payload["family_orchestration"])
+        self.assertIn("resume_contract", payload["family_orchestration"])
 
     def test_grant_cockpit_projects_workspace_alerts_and_commands(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -255,6 +259,10 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["grant_cockpit"]["workspace_status"], "attention_required")
         self.assertIn("必要性表述仍略偏现象描述。", payload["grant_cockpit"]["workspace_alerts"])
         self.assertIn("build_direct_entry", payload["grant_cockpit"]["commands"])
+        self.assertIn("family_orchestration", payload)
+        self.assertIn("action_graph_ref", payload["family_orchestration"])
+        self.assertIn("human_gates", payload["family_orchestration"])
+        self.assertIn("resume_contract", payload["family_orchestration"])
 
     def test_grant_direct_entry_composes_product_surface_for_critique_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -280,6 +288,10 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             payload["grant_direct_entry"]["recommended_executor_route"]["route_id"],
             "revision",
         )
+        self.assertIn("family_orchestration", payload)
+        self.assertIn("action_graph_ref", payload["family_orchestration"])
+        self.assertIn("human_gates", payload["family_orchestration"])
+        self.assertIn("resume_contract", payload["family_orchestration"])
 
     def test_mainline_status_projects_current_phase_and_tranche(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -338,6 +350,31 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
             "revision",
         )
+        self.assertIn("family_orchestration", payload)
+        self.assertIn("action_graph_ref", payload["family_orchestration"])
+        self.assertIn("human_gates", payload["family_orchestration"])
+        self.assertIn("resume_contract", payload["family_orchestration"])
+
+    def test_product_entry_manifest_exposes_family_orchestration_v2(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "product-entry-manifest",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "product-entry-manifest")
+        manifest = payload["product_entry_manifest"]
+        self.assertEqual(manifest["manifest_version"], 2)
+        self.assertIn("family_orchestration", manifest)
+        self.assertIn("action_graph_ref", manifest["family_orchestration"])
+        self.assertIn("human_gates", manifest["family_orchestration"])
+        self.assertIn("resume_contract", manifest["family_orchestration"])
 
     def test_product_frontdesk_projects_frontdoor_and_current_loop(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

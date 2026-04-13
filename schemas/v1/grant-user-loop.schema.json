@@ -215,7 +215,8 @@
     "draft_id",
     "lifecycle_stage",
     "input_path",
-    "grant_user_loop"
+    "grant_user_loop",
+    "family_orchestration"
   ],
   "properties": {
     "ok": {
@@ -241,6 +242,9 @@
     },
     "grant_user_loop": {
       "$ref": "#/$defs/grantUserLoop"
+    },
+    "family_orchestration": {
+      "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
     }
   }
 }

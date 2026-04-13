@@ -121,6 +121,20 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["grant_user_loop_surface"], "grant-user-loop.schema.json")
         self.assertEqual(names["hosted_contract_bundle"], "hosted-contract-bundle.schema.json")
 
+    def test_product_surface_schemas_require_family_orchestration_companion(self) -> None:
+        schema_files = [
+            "grant-progress.schema.json",
+            "grant-cockpit.schema.json",
+            "grant-direct-entry.schema.json",
+            "grant-user-loop.schema.json",
+        ]
+        for schema_file in schema_files:
+            with self.subTest(schema=schema_file):
+                payload = json.loads((SCHEMA_ROOT / schema_file).read_text(encoding="utf-8"))
+                required = payload.get("required")
+                self.assertIsInstance(required, list)
+                self.assertIn("family_orchestration", required)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -305,6 +305,47 @@ def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
     return _expected_pending_route(route_id, source_stage=source_stage)
 
 
+def _assert_family_orchestration_companion(
+    test_case: unittest.TestCase,
+    family_orchestration: object,
+    *,
+    expected_resume_surface: str,
+) -> None:
+    test_case.assertIsInstance(family_orchestration, dict)
+    companion = family_orchestration
+    test_case.assertIn("action_graph_ref", companion)
+    test_case.assertIn("human_gates", companion)
+    test_case.assertIn("resume_contract", companion)
+    test_case.assertIn("action_graph", companion)
+
+    action_graph_ref = companion["action_graph_ref"]
+    test_case.assertIsInstance(action_graph_ref, dict)
+    test_case.assertEqual(action_graph_ref["ref_kind"], "json_pointer")
+    test_case.assertEqual(action_graph_ref["ref"], "/family_orchestration/action_graph")
+
+    human_gates = companion["human_gates"]
+    test_case.assertIsInstance(human_gates, list)
+    test_case.assertGreaterEqual(len(human_gates), 1)
+    for gate in human_gates:
+        test_case.assertIsInstance(gate, dict)
+        test_case.assertIn("gate_id", gate)
+        test_case.assertIn("status", gate)
+        test_case.assertIn(gate["status"], {"requested", "approved", "rejected", "changes_requested"})
+
+    resume_contract = companion["resume_contract"]
+    test_case.assertIsInstance(resume_contract, dict)
+    test_case.assertEqual(resume_contract["surface_kind"], expected_resume_surface)
+    test_case.assertEqual(resume_contract["session_locator_field"], "grant_run_id")
+    test_case.assertEqual(resume_contract["checkpoint_locator_field"], "lifecycle_stage")
+
+    action_graph = companion["action_graph"]
+    test_case.assertIsInstance(action_graph, dict)
+    test_case.assertEqual(action_graph["version"], "family-action-graph.v1")
+    test_case.assertEqual(action_graph["target_domain_id"], "med-autogrant")
+    test_case.assertGreaterEqual(len(action_graph["nodes"]), 2)
+    test_case.assertGreaterEqual(len(action_graph["entry_nodes"]), 1)
+
+
 class ProductEntryCliDispatchTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
         stdout = StringIO()
@@ -1391,6 +1432,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         manifest = payload["product_entry_manifest"]
         self.assertEqual(manifest["surface_kind"], "product_entry_manifest")
+        self.assertEqual(manifest["manifest_version"], 2)
         self.assertEqual(manifest["manifest_kind"], "med_auto_grant_product_entry_manifest")
         self.assertEqual(manifest["target_domain_id"], "med-autogrant")
         self.assertEqual(manifest["formal_entry"]["default"], "CLI")
@@ -1469,6 +1511,50 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["shared_handoff"]["opl_handoff_builder"]["command"],
             "uv run python -m med_autogrant build-product-entry "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
+        )
+
+    def test_family_orchestration_companion_is_projected_across_product_surfaces(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        entry = MedAutoGrantProductEntry()
+        progress_payload = entry.read_grant_progress(input_path=str(CRITIQUE_EXAMPLE_PATH))
+        cockpit_payload = entry.read_grant_cockpit(input_path=str(CRITIQUE_EXAMPLE_PATH))
+        direct_entry_payload = entry.build_grant_direct_entry(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            task_intent="tighten-grant-mainline",
+        )
+        user_loop_payload = entry.build_grant_user_loop(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            task_intent="tighten-grant-mainline",
+        )
+        manifest_payload = entry.build_product_entry_manifest(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
+        _assert_family_orchestration_companion(
+            self,
+            progress_payload.get("family_orchestration"),
+            expected_resume_surface="grant_user_loop",
+        )
+        _assert_family_orchestration_companion(
+            self,
+            cockpit_payload.get("family_orchestration"),
+            expected_resume_surface="grant_user_loop",
+        )
+        _assert_family_orchestration_companion(
+            self,
+            direct_entry_payload.get("family_orchestration"),
+            expected_resume_surface="grant_user_loop",
+        )
+        _assert_family_orchestration_companion(
+            self,
+            user_loop_payload.get("family_orchestration"),
+            expected_resume_surface="grant_user_loop",
+        )
+        _assert_family_orchestration_companion(
+            self,
+            manifest_payload["product_entry_manifest"].get("family_orchestration"),
+            expected_resume_surface="grant_user_loop",
         )
 
     def test_grant_user_loop_projects_landed_critique_route_when_drafting_can_execute_directly(self) -> None:

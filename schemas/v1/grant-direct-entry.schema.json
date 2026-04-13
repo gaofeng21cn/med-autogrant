@@ -85,7 +85,8 @@
     "draft_id",
     "lifecycle_stage",
     "input_path",
-    "grant_direct_entry"
+    "grant_direct_entry",
+    "family_orchestration"
   ],
   "properties": {
     "ok": {
@@ -115,6 +116,9 @@
     },
     "grant_direct_entry": {
       "$ref": "#/$defs/grantDirectEntry"
+    },
+    "family_orchestration": {
+      "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
     }
   }
 }

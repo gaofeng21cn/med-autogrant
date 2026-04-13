@@ -27,6 +27,7 @@ from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 PRODUCT_ENTRY_VERSION = 1
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
 PRODUCT_ENTRY_MANIFEST_KIND = "med_auto_grant_product_entry_manifest"
+PRODUCT_ENTRY_MANIFEST_VERSION = 2
 PRODUCT_FRONTDESK_KIND = "product_frontdesk"
 TARGET_DOMAIN_ID = "med-autogrant"
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
@@ -38,6 +39,7 @@ GRANT_DIRECT_ENTRY_KIND = "grant_direct_entry"
 GRANT_USER_LOOP_VERSION = 1
 GRANT_USER_LOOP_KIND = "grant_user_loop"
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
+LANDED_ROUTE_IDS = {"critique", "revision", "artifact_bundle", "final_package", "hosted_contract_bundle"}
 
 
 class MedAutoGrantProductEntry:
@@ -280,6 +282,16 @@ class MedAutoGrantProductEntry:
                 "workspace_path": str(resolved_input_path),
             },
         }
+        family_orchestration = _build_family_orchestration_companion(
+            current_route_id=lifecycle_stage,
+            recommended_route_id=recommended_next_stage,
+            recommended_route_status=_route_status_from_route_id(recommended_next_stage),
+            needs_author_decision=bool(next_step.get("requires_human_confirmation")),
+            review_surface_ref="/progress_projection/product_entry_surface",
+            event_envelope_surface_ref="/progress_projection/next_system_action",
+            checkpoint_lineage_surface_ref="/progress_projection/checkpoint_status",
+            resume_surface_kind=GRANT_USER_LOOP_KIND,
+        )
         payload = {
             "ok": True,
             "command": "grant-progress",
@@ -289,6 +301,7 @@ class MedAutoGrantProductEntry:
             "lifecycle_stage": lifecycle_stage,
             "input_path": str(resolved_input_path),
             "progress_projection": progress_projection,
+            "family_orchestration": family_orchestration,
         }
         _validate_contract_schema(
             payload,
@@ -326,6 +339,26 @@ class MedAutoGrantProductEntry:
         author_decision_summary = progress_projection.get("author_decision_summary")
         if isinstance(author_decision_summary, str) and author_decision_summary.strip():
             workspace_alerts.append(author_decision_summary.strip())
+        current_stage = _require_nonempty_string_from_mapping(
+            progress_projection,
+            "current_stage",
+            context="grant-progress.progress_projection",
+        )
+        recommended_next_stage = _require_nonempty_string_from_mapping(
+            progress_projection,
+            "recommended_next_stage",
+            context="grant-progress.progress_projection",
+        )
+        family_orchestration = _build_family_orchestration_companion(
+            current_route_id=current_stage,
+            recommended_route_id=recommended_next_stage,
+            recommended_route_status=_route_status_from_route_id(recommended_next_stage),
+            needs_author_decision=bool(progress_projection.get("needs_author_decision")),
+            review_surface_ref="/grant_cockpit/commands/build_direct_entry",
+            event_envelope_surface_ref="/grant_cockpit/progress_projection/next_system_action",
+            checkpoint_lineage_surface_ref="/grant_cockpit/progress_projection/checkpoint_status",
+            resume_surface_kind=GRANT_USER_LOOP_KIND,
+        )
 
         payload = {
             "ok": True,
@@ -347,6 +380,7 @@ class MedAutoGrantProductEntry:
                 "progress_projection": dict(progress_projection),
                 "commands": _build_product_command_catalog(resolved_input_path),
             },
+            "family_orchestration": family_orchestration,
         }
         _validate_contract_schema(
             payload,
@@ -465,6 +499,32 @@ class MedAutoGrantProductEntry:
             "direct_entry": dict(direct_entry),
             "opl_handoff_entry": dict(opl_handoff_entry),
         }
+        current_stage_route_id = _require_nonempty_string_from_mapping(
+            grant_direct_entry["current_stage_route"],
+            "route_id",
+            context="grant_direct_entry.current_stage_route",
+        )
+        recommended_route_id = _require_nonempty_string_from_mapping(
+            grant_direct_entry["recommended_executor_route"],
+            "route_id",
+            context="grant_direct_entry.recommended_executor_route",
+        )
+        recommended_route_status = _require_nonempty_string_from_mapping(
+            grant_direct_entry["recommended_executor_route"],
+            "route_status",
+            context="grant_direct_entry.recommended_executor_route",
+        )
+        needs_author_decision = bool(progress_projection.get("needs_author_decision"))
+        family_orchestration = _build_family_orchestration_companion(
+            current_route_id=current_stage_route_id,
+            recommended_route_id=recommended_route_id,
+            recommended_route_status=recommended_route_status,
+            needs_author_decision=needs_author_decision,
+            review_surface_ref="/grant_direct_entry/recommended_executor_route",
+            event_envelope_surface_ref="/grant_direct_entry/progress_projection/next_system_action",
+            checkpoint_lineage_surface_ref="/grant_direct_entry/progress_projection/checkpoint_status",
+            resume_surface_kind=GRANT_USER_LOOP_KIND,
+        )
         payload = {
             "ok": True,
             "command": "grant-direct-entry",
@@ -474,6 +534,7 @@ class MedAutoGrantProductEntry:
             "lifecycle_stage": direct_payload["lifecycle_stage"],
             "input_path": direct_payload["input_path"],
             "grant_direct_entry": grant_direct_entry,
+            "family_orchestration": family_orchestration,
         }
         _validate_grant_direct_entry_contract(
             payload,
@@ -529,6 +590,51 @@ class MedAutoGrantProductEntry:
             "next_action": next_action,
             "user_loop": user_loop,
         }
+        current_stage_route = _require_mapping(
+            grant_direct_entry,
+            "current_stage_route",
+            context="grant_user_loop.grant_direct_entry",
+        )
+        progress_projection = _require_mapping(
+            grant_direct_entry,
+            "progress_projection",
+            context="grant_user_loop.grant_direct_entry",
+        )
+        current_route_id = _require_nonempty_string_from_mapping(
+            current_stage_route,
+            "route_id",
+            context="grant_user_loop.grant_direct_entry.current_stage_route",
+        )
+        recommended_route_id = _require_nonempty_string_from_mapping(
+            next_action,
+            "route_id",
+            context="grant_user_loop.next_action",
+        )
+        recommended_route_status = _require_nonempty_string_from_mapping(
+            next_action,
+            "route_status",
+            context="grant_user_loop.next_action",
+        )
+        needs_author_decision = bool(progress_projection.get("needs_author_decision")) or (
+            _require_nonempty_string_from_mapping(
+                next_action,
+                "action_kind",
+                context="grant_user_loop.next_action",
+            )
+            == "prepare_pending_handoff"
+        )
+        family_orchestration = _build_family_orchestration_companion(
+            current_route_id=current_route_id,
+            recommended_route_id=recommended_route_id,
+            recommended_route_status=recommended_route_status,
+            needs_author_decision=needs_author_decision,
+            review_surface_ref="/grant_user_loop/next_action",
+            event_envelope_surface_ref="/grant_user_loop/next_action",
+            checkpoint_lineage_surface_ref=(
+                "/grant_user_loop/grant_direct_entry/progress_projection/checkpoint_status"
+            ),
+            resume_surface_kind=GRANT_USER_LOOP_KIND,
+        )
         payload = {
             "ok": True,
             "command": "grant-user-loop",
@@ -538,6 +644,7 @@ class MedAutoGrantProductEntry:
             "lifecycle_stage": direct_entry_payload["lifecycle_stage"],
             "input_path": direct_entry_payload["input_path"],
             "grant_user_loop": grant_user_loop,
+            "family_orchestration": family_orchestration,
         }
         _validate_grant_user_loop_contract(
             payload,
@@ -556,6 +663,11 @@ class MedAutoGrantProductEntry:
         del funding_call
         resolved_input_path = Path(input_path).expanduser().resolve()
         progress_payload = self.read_grant_progress(input_path=resolved_input_path)
+        progress_projection = _require_mapping(
+            progress_payload,
+            "progress_projection",
+            context="grant-progress",
+        )
         mainline_payload = read_mainline_status()
         mainline_snapshot = _build_mainline_snapshot(mainline_payload)
         current_runtime_owner = _require_mapping(
@@ -610,6 +722,26 @@ class MedAutoGrantProductEntry:
                 "requires": ["task_intent"],
             },
         }
+        current_route_id = _require_nonempty_string_from_mapping(
+            progress_projection,
+            "current_stage",
+            context="grant-progress.progress_projection",
+        )
+        recommended_route_id = _require_nonempty_string_from_mapping(
+            progress_projection,
+            "recommended_next_stage",
+            context="grant-progress.progress_projection",
+        )
+        family_orchestration = _build_family_orchestration_companion(
+            current_route_id=current_route_id,
+            recommended_route_id=recommended_route_id,
+            recommended_route_status=_route_status_from_route_id(recommended_route_id),
+            needs_author_decision=bool(progress_projection.get("needs_author_decision")),
+            review_surface_ref="/product_entry_manifest/operator_loop_surface",
+            event_envelope_surface_ref="/product_entry_manifest/recommended_command",
+            checkpoint_lineage_surface_ref="/product_entry_manifest/repo_mainline/phase_status",
+            resume_surface_kind=GRANT_USER_LOOP_KIND,
+        )
 
         return {
             "ok": True,
@@ -621,7 +753,7 @@ class MedAutoGrantProductEntry:
             "input_path": progress_payload["input_path"],
             "product_entry_manifest": {
                 "surface_kind": "product_entry_manifest",
-                "manifest_version": 1,
+                "manifest_version": PRODUCT_ENTRY_MANIFEST_VERSION,
                 "manifest_kind": PRODUCT_ENTRY_MANIFEST_KIND,
                 "target_domain_id": TARGET_DOMAIN_ID,
                 "formal_entry": {
@@ -732,6 +864,7 @@ class MedAutoGrantProductEntry:
                         "entry_mode": "opl-handoff",
                     },
                 },
+                "family_orchestration": family_orchestration,
                 "product_entry_status": {
                     "summary": _require_nonempty_string_from_mapping(
                         current_phase,
@@ -994,6 +1127,157 @@ def _read_nonempty_string_list(value: Any, *, context: str) -> list[str]:
     if not isinstance(value, list):
         raise WorkspaceStateError(f"{context} 缺少合法字段: workspace_alerts")
     return [item for item in value if isinstance(item, str) and item.strip()]
+
+
+def _route_status_from_route_id(route_id: str) -> str:
+    resolved_route_id = _require_nonempty_string(route_id, field_name="route_id")
+    if resolved_route_id in LANDED_ROUTE_IDS:
+        return "landed"
+    return "pending"
+
+
+def _build_family_orchestration_companion(
+    *,
+    current_route_id: str,
+    recommended_route_id: str,
+    recommended_route_status: str,
+    needs_author_decision: bool,
+    review_surface_ref: str,
+    event_envelope_surface_ref: str,
+    checkpoint_lineage_surface_ref: str,
+    resume_surface_kind: str,
+) -> dict[str, Any]:
+    resolved_current_route_id = _require_nonempty_string(current_route_id, field_name="current_route_id")
+    resolved_recommended_route_id = _require_nonempty_string(
+        recommended_route_id,
+        field_name="recommended_route_id",
+    )
+    resolved_review_surface_ref = _require_nonempty_string(
+        review_surface_ref,
+        field_name="review_surface_ref",
+    )
+    resolved_event_envelope_surface_ref = _require_nonempty_string(
+        event_envelope_surface_ref,
+        field_name="event_envelope_surface_ref",
+    )
+    resolved_checkpoint_lineage_surface_ref = _require_nonempty_string(
+        checkpoint_lineage_surface_ref,
+        field_name="checkpoint_lineage_surface_ref",
+    )
+    resolved_resume_surface_kind = _require_nonempty_string(
+        resume_surface_kind,
+        field_name="resume_surface_kind",
+    )
+    route_status = _require_nonempty_string(
+        recommended_route_status,
+        field_name="recommended_route_status",
+    )
+    if route_status not in {"landed", "pending"}:
+        raise WorkspaceStateError("family_orchestration.recommended_route_status 只允许 landed 或 pending。")
+
+    gate_status = "requested" if needs_author_decision or route_status == "pending" else "approved"
+    gate_id = f"mag_route_gate_{resolved_recommended_route_id}"
+    return {
+        "action_graph_ref": {
+            "ref_kind": "json_pointer",
+            "ref": "/family_orchestration/action_graph",
+            "label": "mag family action graph",
+        },
+        "action_graph": _build_family_action_graph(
+            current_route_id=resolved_current_route_id,
+            recommended_route_id=resolved_recommended_route_id,
+            gate_id=gate_id,
+            gate_status=gate_status,
+        ),
+        "human_gates": [
+            {
+                "gate_id": gate_id,
+                "title": f"确认 {resolved_recommended_route_id} route 执行决策",
+                "status": gate_status,
+                "review_surface": {
+                    "ref_kind": "json_pointer",
+                    "ref": resolved_review_surface_ref,
+                    "label": "route review surface",
+                },
+            }
+        ],
+        "resume_contract": {
+            "surface_kind": resolved_resume_surface_kind,
+            "session_locator_field": "grant_run_id",
+            "checkpoint_locator_field": "lifecycle_stage",
+        },
+        "event_envelope_surface": {
+            "ref_kind": "json_pointer",
+            "ref": resolved_event_envelope_surface_ref,
+            "label": "family event envelope surface",
+        },
+        "checkpoint_lineage_surface": {
+            "ref_kind": "json_pointer",
+            "ref": resolved_checkpoint_lineage_surface_ref,
+            "label": "family checkpoint lineage surface",
+        },
+    }
+
+
+def _build_family_action_graph(
+    *,
+    current_route_id: str,
+    recommended_route_id: str,
+    gate_id: str,
+    gate_status: str,
+) -> dict[str, Any]:
+    current_node_id = f"route:{current_route_id}"
+    recommended_node_id = f"route:{recommended_route_id}"
+    edge_on = "decision" if gate_status == "requested" else "success"
+    return {
+        "version": "family-action-graph.v1",
+        "graph_id": f"mag_{current_route_id}_to_{recommended_route_id}_graph",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "graph_kind": "grant_route_orchestration",
+        "graph_version": "2026-04-13",
+        "nodes": [
+            {
+                "node_id": current_node_id,
+                "node_kind": _route_to_action_node_kind(current_route_id),
+                "title": f"Current route: {current_route_id}",
+                "produces_checkpoint": True,
+            },
+            {
+                "node_id": recommended_node_id,
+                "node_kind": _route_to_action_node_kind(recommended_route_id),
+                "title": f"Recommended route: {recommended_route_id}",
+                "produces_checkpoint": True,
+            },
+        ],
+        "edges": [
+            {
+                "from": current_node_id,
+                "to": recommended_node_id,
+                "on": edge_on,
+            },
+        ],
+        "entry_nodes": [current_node_id],
+        "exit_nodes": [recommended_node_id],
+        "human_gates": [
+            {
+                "gate_id": gate_id,
+                "trigger_nodes": [recommended_node_id],
+                "blocking": gate_status == "requested",
+            }
+        ],
+        "checkpoint_policy": {
+            "mode": "explicit_nodes",
+            "checkpoint_nodes": [current_node_id, recommended_node_id],
+        },
+    }
+
+
+def _route_to_action_node_kind(route_id: str) -> str:
+    if route_id in {"critique", "revision", "frozen"}:
+        return "review"
+    if route_id in {"artifact_bundle", "final_package", "hosted_contract_bundle"}:
+        return "publish"
+    return "authoring"
 
 
 def _write_product_entry_output(output_path: Path, product_entry: dict[str, Any]) -> None:

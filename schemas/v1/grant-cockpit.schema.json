@@ -131,7 +131,8 @@
     "draft_id",
     "lifecycle_stage",
     "input_path",
-    "grant_cockpit"
+    "grant_cockpit",
+    "family_orchestration"
   ],
   "properties": {
     "ok": {
@@ -157,6 +158,9 @@
     },
     "grant_cockpit": {
       "$ref": "#/$defs/grantCockpit"
+    },
+    "family_orchestration": {
+      "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
     }
   }
 }

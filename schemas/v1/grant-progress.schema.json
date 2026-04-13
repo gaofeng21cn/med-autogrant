@@ -147,7 +147,8 @@
     "draft_id",
     "lifecycle_stage",
     "input_path",
-    "progress_projection"
+    "progress_projection",
+    "family_orchestration"
   ],
   "properties": {
     "ok": {
@@ -173,6 +174,9 @@
     },
     "progress_projection": {
       "$ref": "#/$defs/grantProgressProjection"
+    },
+    "family_orchestration": {
+      "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
     }
   }
 }
