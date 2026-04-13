@@ -22,6 +22,8 @@ CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.js
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
+INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
+DIRECTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_direction_screening.json"
 
 AUTHOR_SIDE_ROUTE_IDS = (
     "direction_screening",
@@ -214,9 +216,16 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "stage-route-report",
     "run-local",
     "resume-local",
+    "execute-direction-screening-pass",
+    "execute-question-refinement-pass",
+    "execute-argument-building-pass",
+    "execute-fit-alignment-pass",
+    "execute-outline-pass",
+    "execute-drafting-pass",
     "build-artifact-bundle",
     "execute-critique-pass",
     "execute-revision-pass",
+    "execute-freeze-pass",
     "build-final-package",
     "build-hosted-contract-bundle",
 ]
@@ -229,9 +238,16 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "stage-route-report", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "run-local", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
     {"command": "resume-local", "required_fields": ["journal_path"], "optional_fields": []},
+    {"command": "execute-direction-screening-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {"command": "execute-question-refinement-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {"command": "execute-argument-building-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {"command": "execute-fit-alignment-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {"command": "execute-outline-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {"command": "execute-drafting-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {"command": "build-artifact-bundle", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {"command": "execute-critique-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {"command": "execute-revision-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {"command": "execute-freeze-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {
         "command": "build-final-package",
         "required_fields": ["input_path", "artifact_bundle_path", "output_path"],
@@ -242,6 +258,34 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
         "required_fields": ["final_package_path", "output_path"],
         "optional_fields": [],
     },
+]
+CANONICAL_EXPORT_SURFACES = [
+    "execute-direction-screening-pass",
+    "execute-question-refinement-pass",
+    "execute-argument-building-pass",
+    "execute-fit-alignment-pass",
+    "execute-outline-pass",
+    "execute-drafting-pass",
+    "execute-critique-pass",
+    "execute-revision-pass",
+    "execute-freeze-pass",
+    "build-artifact-bundle",
+    "build-final-package",
+    "build-hosted-contract-bundle",
+]
+CANONICAL_EXPORT_SURFACES = [
+    "execute-direction-screening-pass",
+    "execute-question-refinement-pass",
+    "execute-argument-building-pass",
+    "execute-fit-alignment-pass",
+    "execute-outline-pass",
+    "execute-drafting-pass",
+    "execute-critique-pass",
+    "execute-revision-pass",
+    "execute-freeze-pass",
+    "build-artifact-bundle",
+    "build-final-package",
+    "build-hosted-contract-bundle",
 ]
 
 
@@ -260,8 +304,15 @@ def _expected_landed_route(route_id: str) -> dict[str, object]:
         "executor_owner": "med-autogrant",
         "execution_surface": _service_safe_surface(
             {
+                "direction_screening": "execute-direction-screening-pass",
+                "question_refinement": "execute-question-refinement-pass",
+                "argument_building": "execute-argument-building-pass",
+                "fit_alignment": "execute-fit-alignment-pass",
+                "outline": "execute-outline-pass",
+                "drafting": "execute-drafting-pass",
                 "critique": "execute-critique-pass",
                 "revision": "execute-revision-pass",
+                "frozen": "execute-freeze-pass",
                 "artifact_bundle": "build-artifact-bundle",
                 "final_package": "build-final-package",
                 "hosted_contract_bundle": "build-hosted-contract-bundle",
@@ -300,9 +351,8 @@ def _expected_pending_route(route_id: str, *, source_stage: str) -> dict[str, ob
 
 
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
-    if route_id in {"critique", "revision", "artifact_bundle", "final_package", "hosted_contract_bundle"}:
-        return _expected_landed_route(route_id)
-    return _expected_pending_route(route_id, source_stage=source_stage)
+    del source_stage
+    return _expected_landed_route(route_id)
 
 
 class ProductEntryCliDispatchTest(unittest.TestCase):
@@ -961,7 +1011,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.D critique Codex CLI autonomous executor landing",
+                            "active_tranche": "P4.D full grant authoring executor landing",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -997,13 +1047,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "critique-summary",
                                 "stage-route-report",
                             ],
-                            "canonical_export_surfaces": [
-                                "execute-critique-pass",
-                                "execute-revision-pass",
-                                "build-artifact-bundle",
-                                "build-final-package",
-                                "build-hosted-contract-bundle",
-                            ],
+                            "canonical_export_surfaces": CANONICAL_EXPORT_SURFACES,
                             "checkpoint_aggregation_surface": "stage-route-report",
                         },
                     },
@@ -1046,7 +1090,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.D critique Codex CLI autonomous executor landing",
+                            "active_tranche": "P4.D full grant authoring executor landing",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1082,13 +1126,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "critique-summary",
                                 "stage-route-report",
                             ],
-                            "canonical_export_surfaces": [
-                                "execute-critique-pass",
-                                "execute-revision-pass",
-                                "build-artifact-bundle",
-                                "build-final-package",
-                                "build-hosted-contract-bundle",
-                            ],
+                            "canonical_export_surfaces": CANONICAL_EXPORT_SURFACES,
                             "checkpoint_aggregation_surface": "stage-route-report",
                         },
                     },
@@ -1149,7 +1187,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.D critique Codex CLI autonomous executor landing",
+                                "active_tranche": "P4.D full grant authoring executor landing",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1185,16 +1223,10 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                     "critique-summary",
                                     "stage-route-report",
                                 ],
-                                "canonical_export_surfaces": [
-                                    "execute-critique-pass",
-                                    "execute-revision-pass",
-                                    "build-artifact-bundle",
-                                    "build-final-package",
-                                    "build-hosted-contract-bundle",
-                                ],
-                                "checkpoint_aggregation_surface": "stage-route-report",
-                            },
+                            "canonical_export_surfaces": CANONICAL_EXPORT_SURFACES,
+                            "checkpoint_aggregation_surface": "stage-route-report",
                         },
+                    },
                         "domain_payload": {
                             "workspace_id": "workspace-test",
                             "draft_id": "draft-test",
@@ -1244,7 +1276,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.D critique Codex CLI autonomous executor landing",
+                                "active_tranche": "P4.D full grant authoring executor landing",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1280,13 +1312,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                     "critique-summary",
                                     "stage-route-report",
                                 ],
-                                "canonical_export_surfaces": [
-                                    "execute-critique-pass",
-                                    "execute-revision-pass",
-                                    "build-artifact-bundle",
-                                    "build-final-package",
-                                    "build-hosted-contract-bundle",
-                                ],
+                                "canonical_export_surfaces": CANONICAL_EXPORT_SURFACES,
                                 "checkpoint_aggregation_surface": "stage-route-report",
                             },
                         },
@@ -1335,7 +1361,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["grant_user_loop"]["entry_kind"], "grant_user_loop")
         self.assertEqual(
             payload["grant_user_loop"]["mainline_snapshot"]["active_tranche"],
-            "P4.D critique Codex CLI autonomous executor landing",
+            "P4.D full grant authoring executor landing",
         )
         self.assertEqual(
             payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
@@ -1421,7 +1447,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(manifest["repo_mainline"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             manifest["repo_mainline"]["active_tranche"],
-            "P4.D critique Codex CLI autonomous executor landing",
+            "P4.D full grant authoring executor landing",
         )
         self.assertEqual(manifest["repo_mainline"]["phase_id"], "P4")
         self.assertEqual(
@@ -1431,8 +1457,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(
             manifest["repo_mainline"]["next_focus"],
             [
-                "继续把 `grant-user-loop` 当作当前 direct grant user inbox shell，并保持主线 snapshot / route action / product entry truth 对齐。",
-                "继续用 fresh proof 验证 critique / revision / final package / hosted contract bundle 在 Hermes substrate 上不漂移。",
+                "继续把 `grant-user-loop` 当作当前 direct grant user inbox shell，并保持全链 landed route catalog 与 mainline snapshot / product entry truth 对齐。",
+                "继续用 fresh proof 验证 direction_screening -> frozen 的 landed authoring executor 链条在 Hermes substrate 上不漂移。",
             ],
         )
         self.assertEqual(
@@ -1517,6 +1543,43 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "uv run python -m med_autogrant grant-direct-entry "
                 f"--input {DRAFTING_EXAMPLE_PATH.resolve()} "
                 "--task-intent prepare-critique-handoff --format json"
+            ),
+        )
+
+    def test_grant_user_loop_projects_landed_question_refinement_route_when_direction_screening_can_execute_directly(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_grant_user_loop(
+            input_path=str(DIRECTION_EXAMPLE_PATH),
+            task_intent="advance-grant-mainline",
+        )
+
+        self.assertEqual(payload["command"], "grant-user-loop")
+        self.assertEqual(payload["lifecycle_stage"], "direction_screening")
+        self.assertEqual(
+            payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
+            "question_refinement",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["next_action"]["action_kind"],
+            "execute_landed_route",
+        )
+        self.assertEqual(payload["grant_user_loop"]["next_action"]["route_id"], "question_refinement")
+        self.assertEqual(payload["grant_user_loop"]["next_action"]["route_status"], "landed")
+        self.assertEqual(
+            payload["grant_user_loop"]["next_action"]["command"],
+            (
+                "uv run python -m med_autogrant execute-question-refinement-pass "
+                f"--input {DIRECTION_EXAMPLE_PATH.resolve()} "
+                "--output <question-refinement-output-path> --format json"
+            ),
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["user_loop"]["run_recommended_route"],
+            (
+                "uv run python -m med_autogrant execute-question-refinement-pass "
+                f"--input {DIRECTION_EXAMPLE_PATH.resolve()} "
+                "--output <question-refinement-output-path> --format json"
             ),
         )
 

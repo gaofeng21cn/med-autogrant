@@ -23,9 +23,34 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "stage-route-report": DomainEntryCommandSpec("stage_route_report", ("input_path",)),
     "run-local": DomainEntryCommandSpec("run_local", ("input_path",), ("journal_path",)),
     "resume-local": DomainEntryCommandSpec("resume_local", ("journal_path",)),
+    "execute-direction-screening-pass": DomainEntryCommandSpec(
+        "execute_direction_screening_pass",
+        ("input_path", "output_path"),
+    ),
+    "execute-question-refinement-pass": DomainEntryCommandSpec(
+        "execute_question_refinement_pass",
+        ("input_path", "output_path"),
+    ),
+    "execute-argument-building-pass": DomainEntryCommandSpec(
+        "execute_argument_building_pass",
+        ("input_path", "output_path"),
+    ),
+    "execute-fit-alignment-pass": DomainEntryCommandSpec(
+        "execute_fit_alignment_pass",
+        ("input_path", "output_path"),
+    ),
+    "execute-outline-pass": DomainEntryCommandSpec(
+        "execute_outline_pass",
+        ("input_path", "output_path"),
+    ),
+    "execute-drafting-pass": DomainEntryCommandSpec(
+        "execute_drafting_pass",
+        ("input_path", "output_path"),
+    ),
     "build-artifact-bundle": DomainEntryCommandSpec("build_artifact_bundle", ("input_path", "output_path")),
     "execute-critique-pass": DomainEntryCommandSpec("execute_critique_pass", ("input_path", "output_path")),
     "execute-revision-pass": DomainEntryCommandSpec("execute_revision_pass", ("input_path", "output_path")),
+    "execute-freeze-pass": DomainEntryCommandSpec("execute_freeze_pass", ("input_path", "output_path")),
     "build-final-package": DomainEntryCommandSpec(
         "build_final_package",
         ("input_path", "artifact_bundle_path", "output_path"),

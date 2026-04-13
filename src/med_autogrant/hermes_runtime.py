@@ -5,6 +5,15 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from med_autogrant.authoring_executor import (
+    build_argument_building_execution_document,
+    build_direction_screening_execution_document,
+    build_drafting_execution_document,
+    build_fit_alignment_execution_document,
+    build_freeze_execution_document,
+    build_outline_execution_document,
+    build_question_refinement_execution_document,
+)
 from med_autogrant.artifact_bundle import build_artifact_bundle_document
 from med_autogrant.control_plane import (
     CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
@@ -61,9 +70,16 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = (
     "stage-route-report",
     "run-local",
     "resume-local",
+    "execute-direction-screening-pass",
+    "execute-question-refinement-pass",
+    "execute-argument-building-pass",
+    "execute-fit-alignment-pass",
+    "execute-outline-pass",
+    "execute-drafting-pass",
     "build-artifact-bundle",
     "execute-critique-pass",
     "execute-revision-pass",
+    "execute-freeze-pass",
     "build-final-package",
     "build-hosted-contract-bundle",
 )
@@ -77,6 +93,36 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = (
     {"command": "run-local", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
     {"command": "resume-local", "required_fields": ["journal_path"], "optional_fields": []},
     {
+        "command": "execute-direction-screening-pass",
+        "required_fields": ["input_path", "output_path"],
+        "optional_fields": [],
+    },
+    {
+        "command": "execute-question-refinement-pass",
+        "required_fields": ["input_path", "output_path"],
+        "optional_fields": [],
+    },
+    {
+        "command": "execute-argument-building-pass",
+        "required_fields": ["input_path", "output_path"],
+        "optional_fields": [],
+    },
+    {
+        "command": "execute-fit-alignment-pass",
+        "required_fields": ["input_path", "output_path"],
+        "optional_fields": [],
+    },
+    {
+        "command": "execute-outline-pass",
+        "required_fields": ["input_path", "output_path"],
+        "optional_fields": [],
+    },
+    {
+        "command": "execute-drafting-pass",
+        "required_fields": ["input_path", "output_path"],
+        "optional_fields": [],
+    },
+    {
         "command": "build-artifact-bundle",
         "required_fields": ["input_path", "output_path"],
         "optional_fields": [],
@@ -88,6 +134,11 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = (
     },
     {
         "command": "execute-revision-pass",
+        "required_fields": ["input_path", "output_path"],
+        "optional_fields": [],
+    },
+    {
+        "command": "execute-freeze-pass",
         "required_fields": ["input_path", "output_path"],
         "optional_fields": [],
     },
@@ -421,6 +472,114 @@ class HermesRuntimeSubstrate:
             trigger="resume-local",
         )
 
+    def execute_direction_screening_pass(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path,
+    ) -> dict[str, Any]:
+        execution_document = build_direction_screening_execution_document(
+            document=self._load_workspace(input_path),
+            input_path=input_path,
+        )
+        return self._write_authoring_execution_output(
+            command="execute-direction-screening-pass",
+            output_path=output_path,
+            execution_document=execution_document,
+            execution_key="direction_screening_execution",
+            workspace_key="direction_screening_workspace",
+        )
+
+    def execute_question_refinement_pass(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path,
+    ) -> dict[str, Any]:
+        execution_document = build_question_refinement_execution_document(
+            document=self._load_workspace(input_path),
+            input_path=input_path,
+        )
+        return self._write_authoring_execution_output(
+            command="execute-question-refinement-pass",
+            output_path=output_path,
+            execution_document=execution_document,
+            execution_key="question_refinement_execution",
+            workspace_key="question_refinement_workspace",
+        )
+
+    def execute_argument_building_pass(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path,
+    ) -> dict[str, Any]:
+        execution_document = build_argument_building_execution_document(
+            document=self._load_workspace(input_path),
+            input_path=input_path,
+        )
+        return self._write_authoring_execution_output(
+            command="execute-argument-building-pass",
+            output_path=output_path,
+            execution_document=execution_document,
+            execution_key="argument_building_execution",
+            workspace_key="argument_building_workspace",
+        )
+
+    def execute_fit_alignment_pass(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path,
+    ) -> dict[str, Any]:
+        execution_document = build_fit_alignment_execution_document(
+            document=self._load_workspace(input_path),
+            input_path=input_path,
+        )
+        return self._write_authoring_execution_output(
+            command="execute-fit-alignment-pass",
+            output_path=output_path,
+            execution_document=execution_document,
+            execution_key="fit_alignment_execution",
+            workspace_key="fit_alignment_workspace",
+        )
+
+    def execute_outline_pass(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path,
+    ) -> dict[str, Any]:
+        execution_document = build_outline_execution_document(
+            document=self._load_workspace(input_path),
+            input_path=input_path,
+        )
+        return self._write_authoring_execution_output(
+            command="execute-outline-pass",
+            output_path=output_path,
+            execution_document=execution_document,
+            execution_key="outline_execution",
+            workspace_key="outline_workspace",
+        )
+
+    def execute_drafting_pass(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path,
+    ) -> dict[str, Any]:
+        execution_document = build_drafting_execution_document(
+            document=self._load_workspace(input_path),
+            input_path=input_path,
+        )
+        return self._write_authoring_execution_output(
+            command="execute-drafting-pass",
+            output_path=output_path,
+            execution_document=execution_document,
+            execution_key="drafting_execution",
+            workspace_key="drafting_workspace",
+        )
+
     def build_artifact_bundle(
         self,
         *,
@@ -517,6 +676,23 @@ class HermesRuntimeSubstrate:
             "critique_workspace": critique_document["critique_workspace"],
         }
 
+    def execute_freeze_pass(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path,
+    ) -> dict[str, Any]:
+        execution_document = build_freeze_execution_document(
+            document=self._load_workspace(input_path),
+        )
+        return self._write_authoring_execution_output(
+            command="execute-freeze-pass",
+            output_path=output_path,
+            execution_document=execution_document,
+            execution_key="freeze_execution",
+            workspace_key="frozen_workspace",
+        )
+
     def build_final_package(
         self,
         *,
@@ -606,6 +782,35 @@ class HermesRuntimeSubstrate:
 
     def _load_workspace(self, input_path: str | Path) -> dict[str, Any]:
         return load_workspace_document(Path(input_path).expanduser().resolve())
+
+    def _write_authoring_execution_output(
+        self,
+        *,
+        command: str,
+        output_path: str | Path,
+        execution_document: dict[str, Any],
+        execution_key: str,
+        workspace_key: str,
+    ) -> dict[str, Any]:
+        resolved_output_path = Path(output_path).expanduser().resolve()
+        workspace_document = execution_document[workspace_key]
+        _guard_workspace_output_identity(
+            resolved_output_path,
+            workspace_document=workspace_document,
+            draft_id=execution_document.get("draft_id"),
+        )
+        _write_revised_workspace_output(resolved_output_path, workspace_document)
+        return {
+            "ok": True,
+            "command": command,
+            "grant_run_id": execution_document["grant_run_id"],
+            "workspace_id": execution_document["workspace_id"],
+            "draft_id": execution_document.get("draft_id"),
+            "lifecycle_stage": execution_document["lifecycle_stage"],
+            "output_path": str(resolved_output_path),
+            execution_key: execution_document[execution_key],
+            workspace_key: workspace_document,
+        }
 
 
 def build_validation_failed_route_report(
@@ -1003,6 +1208,78 @@ def _guard_critique_output_identity(
     )
 
 
+def _guard_workspace_output_identity(
+    output_path: Path,
+    *,
+    workspace_document: dict[str, Any],
+    draft_id: str | None,
+) -> None:
+    if not output_path.exists():
+        return
+
+    grant_run_id = workspace_document.get("grant_run_id")
+    workspace_id = workspace_document.get("workspace_id")
+    lifecycle_stage = workspace_document.get("lifecycle_stage")
+    expected_selection = workspace_document.get("current_selection")
+    if not isinstance(expected_selection, dict):
+        expected_selection = {}
+
+    try:
+        existing_payload = json.loads(output_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise WorkspaceStateError(
+            f"workspace output identity 不匹配: {output_path} 已存在且不是可校验的 JSON object。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        ) from exc
+    except OSError as exc:
+        raise WorkspaceFileError(f"读取 workspace output 失败: {output_path}") from exc
+
+    if not isinstance(existing_payload, dict):
+        raise WorkspaceStateError(
+            f"workspace output identity 不匹配: {output_path} 已存在且顶层不是 JSON object。",
+            errors=[],
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+
+    existing_selection = existing_payload.get("current_selection")
+    if not isinstance(existing_selection, dict):
+        existing_selection = {}
+    existing_draft_id = existing_payload.get("draft_id")
+    if existing_draft_id is None:
+        existing_draft_id = existing_selection.get("active_draft_id")
+    expected_draft_id = draft_id if draft_id is not None else expected_selection.get("active_draft_id")
+
+    same_identity = (
+        existing_payload.get("grant_run_id") == grant_run_id
+        and existing_payload.get("workspace_id") == workspace_id
+        and existing_payload.get("lifecycle_stage") == lifecycle_stage
+        and existing_draft_id == expected_draft_id
+        and existing_selection == expected_selection
+    )
+    if same_identity:
+        return
+
+    raise WorkspaceStateError(
+        (
+            "workspace output identity 不匹配: "
+            f"{output_path} -> "
+            f"{existing_payload.get('grant_run_id')}/{existing_payload.get('workspace_id')}/{existing_payload.get('lifecycle_stage')} "
+            f"selection={existing_selection} draft_id={existing_draft_id} "
+            f"!= {grant_run_id}/{workspace_id}/{lifecycle_stage} "
+            f"selection={expected_selection} draft_id={expected_draft_id}"
+        ),
+        errors=[],
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+
+
 def _read_artifact_bundle(
     artifact_bundle_path: str | Path,
     *,
@@ -1270,18 +1547,21 @@ def _build_executor_routing_contract(
 
 def _build_stage_route_contract(stage: str, *, source_stage: str) -> dict[str, Any]:
     resolved_stage = _require_known_route_id(stage, context="executor routing stage")
-    if resolved_stage == "revision":
-        return _build_author_side_route_contract("revision", source_stage=source_stage)
-    if resolved_stage == "critique":
-        return _build_author_side_route_contract("critique", source_stage=source_stage)
-    return _build_pending_route_contract(resolved_stage, source_stage=source_stage)
+    return _build_author_side_route_contract(resolved_stage, source_stage=source_stage)
 
 
 def _build_author_side_route_contract(route_id: str, *, source_stage: str) -> dict[str, Any]:
     resolved_route_id = _require_known_route_id(route_id, context="executor routing route")
     execution_command = {
+        "direction_screening": "execute-direction-screening-pass",
+        "question_refinement": "execute-question-refinement-pass",
+        "argument_building": "execute-argument-building-pass",
+        "fit_alignment": "execute-fit-alignment-pass",
+        "outline": "execute-outline-pass",
+        "drafting": "execute-drafting-pass",
         "critique": "execute-critique-pass",
         "revision": "execute-revision-pass",
+        "frozen": "execute-freeze-pass",
         "artifact_bundle": "build-artifact-bundle",
         "final_package": "build-final-package",
         "hosted_contract_bundle": "build-hosted-contract-bundle",
@@ -1412,8 +1692,15 @@ def _build_operator_contract() -> dict[str, Any]:
             "stage-route-report",
         ],
         "canonical_export_surfaces": [
+            "execute-direction-screening-pass",
+            "execute-question-refinement-pass",
+            "execute-argument-building-pass",
+            "execute-fit-alignment-pass",
+            "execute-outline-pass",
+            "execute-drafting-pass",
             "execute-critique-pass",
             "execute-revision-pass",
+            "execute-freeze-pass",
             "build-artifact-bundle",
             "build-final-package",
             "build-hosted-contract-bundle",

@@ -6,7 +6,22 @@ Date: `2026-04-13`
 
 - Phase: `Upstream Hermes-Agent Fast Cutover`
 - Active tranche: `Pending authoring route handoff matrix`
-- Status: `landed / current truth`
+- Status: `historical snapshot / superseded on 2026-04-13`
+
+## Superseded Note
+
+这份文档保留的是 `2026-04-12` 当天仍存在 pending authoring route 时的 handoff matrix 快照。
+
+自 `2026-04-13` full authoring executor landing 起，当前主线已经把 `direction_screening -> frozen` 全部提升为 landed command，因此这份 matrix 只再承担两层意义：
+
+- 历史迁移说明
+- `pending-handoff-requirements.schema.json` 的兼容追溯背景
+
+当前 authoring 主线真相请以：
+
+- [docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md](/Users/gaofeng/workspace/med-autogrant/.worktrees/codex/full-grant-authoring-mainline-20260413/docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
+
+为准。
 
 ## Goal
 

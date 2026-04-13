@@ -63,7 +63,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             contract["runtime_owner"]["active_tranche"],
-            "P4.D critique Codex CLI autonomous executor landing",
+            "P4.D full grant authoring executor landing",
         )
         self.assertEqual(contract["executor_defaults"]["default_executor"], "codex_cli_autonomous")
         self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")

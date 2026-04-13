@@ -1,10 +1,16 @@
 # 决策记录
 
+## 2026-04-13：full authoring executor 升级为全链 landed route catalog
+
+- 决策：把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen` 从历史上的 `pending / handoff-required` 一次性提升为 landed 的 service-safe command surface，并与 `critique / revision / artifact_bundle / final_package / hosted_contract_bundle` 收敛成完整 author-side route catalog。
+- 理由：人工整理的国自然写作流程已经能稳定映射到现有 stage 梯子，而实现层、CLI、domain entry、product loop 与 hosted bundle 也都已经具备同一套 route truth；继续把前半程写成 pending，只会制造第二真相。
+- 影响：`current-program`、`mainline-status`、`status/project/architecture/current-truth specs`、`grant-user-loop`、`domain_entry_contract`、hosted bundle route catalog 与 tests 全部改写为 full landed truth；`pending-handoff-requirements.schema.json` 退为历史兼容与追溯材料，不再代表当前主线 route output。
+
 ## 2026-04-13：critique route 升级为 Codex CLI autonomous landed route
 
 - 决策：把 `critique` route 从历史上的 `pending / handoff-required` 正式提升为已 landed 的 `execute-critique-pass` route。
 - 理由：实现层 (`hermes_runtime.py` / `critique_executor.py` / `codex_cli.py`) 与现有 route tests 已经稳定落在 landed 口径；继续把它写成 pending 会制造第二真相。
-- 影响：`current-program`、status/architecture/current-truth specs、hosted bundle route catalog 与 meta tests 全部改写为 `critique = landed`；当前 landed author-side route 变成 `critique / revision / artifact_bundle / final_package / hosted_contract_bundle`。
+- 影响：`current-program`、status/architecture/current-truth specs、hosted bundle route catalog 与 meta tests 全部改写为 `critique = landed`；而在同日的 full authoring landing 之后，当前 landed author-side route 已进一步扩展成 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / revision / frozen / artifact_bundle / final_package / hosted_contract_bundle`。
 
 ## 2026-04-13：critique 的默认 concrete executor 继承本机 Codex 默认
 
@@ -66,7 +72,7 @@
 
 - 决策：`stage_action_envelope` 与 `build-product-entry` 必须共享同一份 `executor_routing_contract`，明确当前 stage、下一步 executor route，以及已 landed 的 author-side route catalog。
 - 理由：如果只写“substrate 已统一”，却不把 critique / revision / export 的 route status 显式冻结下来，后续最容易把 `pending` route 误写成“已 landed executor”。
-- 影响：这条 contract 仍是 route truth 的锚点；但其中关于 `critique = pending / handoff-required` 的历史表述，已被 `2026-04-13` 的 critique landed 决策 supersede。未来继续替换任何 route，都必须先改这份 contract truth。
+- 影响：这条 contract 仍是 route truth 的锚点；其中关于“前半程 pending、`critique = landed`”的 `2026-04-12` 快照，已经被 `2026-04-13` 的 full authoring executor landed 决策 supersede。未来继续替换任何 route，都必须先改对应 contract truth。
 
 ## 2026-04-12：为 critique pending route 冻结直接协作 handoff contract
 
@@ -78,7 +84,7 @@
 
 - 决策：不再只为 `critique` 单独定义 pending handoff，而是把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / frozen` 全部冻结成 route-specific `handoff_requirements`。
 - 理由：最终目标是让 `Hermes` 负责 substrate、让 `OPL` / domain 通过统一 envelope 直接协作，而不是继续脑补新的 repo-local executor。没有完整 matrix，future caller 仍会在其他未 landed route 上重新发明 handoff semantics。
-- 影响：`author_side_route_catalog` 继续保留完整 pending + landed route matrix；但 `critique` 已在 `2026-04-13` 被提升出 pending matrix，当前仍属 pending 的是 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen`。
+- 影响：这份 pending matrix 在 `2026-04-12` 为 future caller 提供了完整 handoff 语义；但到 `2026-04-13` full authoring executor landing 后，整份 matrix 已退为历史迁移说明，当前主线不再存在 remaining pending authoring route。
 
 ## 2026-04-12：冻结 schema-backed product entry / routing contract
 

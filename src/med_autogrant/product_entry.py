@@ -1409,6 +1409,36 @@ def _build_domain_surface_command(*, command: str, input_path: Path) -> str:
 
 def _build_route_execution_command(*, route_id: str, input_path: Path) -> str:
     resolved_input_path = input_path.expanduser().resolve()
+    if route_id == "direction_screening":
+        return (
+            "uv run python -m med_autogrant execute-direction-screening-pass "
+            f"--input {resolved_input_path} --output <direction-screening-output-path> --format json"
+        )
+    if route_id == "question_refinement":
+        return (
+            "uv run python -m med_autogrant execute-question-refinement-pass "
+            f"--input {resolved_input_path} --output <question-refinement-output-path> --format json"
+        )
+    if route_id == "argument_building":
+        return (
+            "uv run python -m med_autogrant execute-argument-building-pass "
+            f"--input {resolved_input_path} --output <argument-building-output-path> --format json"
+        )
+    if route_id == "fit_alignment":
+        return (
+            "uv run python -m med_autogrant execute-fit-alignment-pass "
+            f"--input {resolved_input_path} --output <fit-alignment-output-path> --format json"
+        )
+    if route_id == "outline":
+        return (
+            "uv run python -m med_autogrant execute-outline-pass "
+            f"--input {resolved_input_path} --output <outline-output-path> --format json"
+        )
+    if route_id == "drafting":
+        return (
+            "uv run python -m med_autogrant execute-drafting-pass "
+            f"--input {resolved_input_path} --output <drafting-output-path> --format json"
+        )
     if route_id == "critique":
         return (
             "uv run python -m med_autogrant execute-critique-pass "
@@ -1418,6 +1448,11 @@ def _build_route_execution_command(*, route_id: str, input_path: Path) -> str:
         return (
             "uv run python -m med_autogrant execute-revision-pass "
             f"--input {resolved_input_path} --output <revision-output-path> --format json"
+        )
+    if route_id == "frozen":
+        return (
+            "uv run python -m med_autogrant execute-freeze-pass "
+            f"--input {resolved_input_path} --output <freeze-output-path> --format json"
         )
     if route_id == "artifact_bundle":
         return (

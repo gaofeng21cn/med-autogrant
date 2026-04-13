@@ -222,8 +222,15 @@ def _expected_landed_route(route_id: str) -> dict[str, object]:
         "executor_owner": "med-autogrant",
         "execution_surface": _service_safe_surface(
             {
+                "direction_screening": "execute-direction-screening-pass",
+                "question_refinement": "execute-question-refinement-pass",
+                "argument_building": "execute-argument-building-pass",
+                "fit_alignment": "execute-fit-alignment-pass",
+                "outline": "execute-outline-pass",
+                "drafting": "execute-drafting-pass",
                 "critique": "execute-critique-pass",
                 "revision": "execute-revision-pass",
+                "frozen": "execute-freeze-pass",
                 "artifact_bundle": "build-artifact-bundle",
                 "final_package": "build-final-package",
                 "hosted_contract_bundle": "build-hosted-contract-bundle",
@@ -262,9 +269,8 @@ def _expected_pending_route(route_id: str, *, source_stage: str) -> dict[str, ob
 
 
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
-    if route_id in {"critique", "revision", "artifact_bundle", "final_package", "hosted_contract_bundle"}:
-        return _expected_landed_route(route_id)
-    return _expected_pending_route(route_id, source_stage=source_stage)
+    del source_stage
+    return _expected_landed_route(route_id)
 
 
 class HermesRuntimeCliDispatchTest(unittest.TestCase):
@@ -503,14 +509,7 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
             critique_reroute_contract["recommended_executor_route"],
             _expected_route("question_refinement", source_stage="critique"),
         )
-        self.assertEqual(
-            critique_reroute_contract["recommended_executor_route"]["handoff_requirements"]["required_domain_surfaces"],
-            [
-                _service_safe_surface("summarize-workspace"),
-                _service_safe_surface("critique-summary"),
-                _service_safe_surface("stage-route-report"),
-            ],
-        )
+        self.assertNotIn("handoff_requirements", critique_reroute_contract["recommended_executor_route"])
 
         self.assertEqual(
             [
