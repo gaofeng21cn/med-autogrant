@@ -1,0 +1,251 @@
+from __future__ import annotations
+
+import sys
+import unittest
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from med_autogrant.workspace import load_workspace_document, validate_workspace_document  # noqa: E402
+
+
+DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
+REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
+
+
+class CritiqueExecutionDocumentTest(unittest.TestCase):
+    def test_build_critique_execution_document_materializes_landed_critique_workspace(self) -> None:
+        from med_autogrant.critique_executor import build_critique_execution_document
+
+        document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
+
+        def fake_codex_runner(_prompt: str, *, cwd: Path) -> dict[str, object]:
+            self.assertEqual(cwd, DRAFTING_EXAMPLE_PATH.resolve().parent)
+            return {
+                "mentor_critique": {
+                    "metadata": {
+                        "schema_version": "v1",
+                        "created_at": "2026-04-13T12:00:00Z",
+                        "updated_at": "2026-04-13T12:00:00Z",
+                        "source_mode": "auto",
+                        "owner": "Codex CLI critique executor",
+                    },
+                    "critique_id": "critique-v1",
+                    "draft_id": "should-be-overridden",
+                    "overall_diagnosis": "草稿已经具备基本结构，但必要性链条仍需要收紧。",
+                    "current_scientific_question": "should-be-overridden",
+                    "suggested_question": "需要把关键科学问题改写得更聚焦机制级未知。",
+                    "verdict": "major_revision",
+                    "necessity_scientific_value": {
+                        "weight": 1,
+                        "score": 76,
+                        "judgment": "必要性主线方向正确，但机制未知和理论损失还需要更锋利。",
+                        "blocking_issues": [
+                            "尚未明确说明为什么现有现象学研究不能回答机制问题。"
+                        ],
+                    },
+                    "applicant_fit": {
+                        "weight": 1,
+                        "score": 81,
+                        "judgment": "申请人基础较好，但既有成果与当前问题映射还不够直接。",
+                        "blocking_issues": [
+                            "需要让前期成果直接回指当前机制验证路径。"
+                        ],
+                    },
+                    "feasibility": {
+                        "weight": 1,
+                        "score": 79,
+                        "judgment": "总体可行，但关键实验闭环还需要更明确。",
+                        "blocking_issues": [],
+                    },
+                    "logic_chain_repairs": [
+                        "补出从现象相关到机制未知的关键过渡段。"
+                    ],
+                    "applicant_fit_repairs": [
+                        "把申请人既有单细胞资源与关键验证节点逐点绑定。"
+                    ],
+                    "blocking_issues": [
+                        "必要性表述仍偏现象描述。"
+                    ],
+                },
+                "revision_plan": {
+                    "metadata": {
+                        "schema_version": "v1",
+                        "created_at": "2026-04-13T12:05:00Z",
+                        "updated_at": "2026-04-13T12:05:00Z",
+                        "source_mode": "auto",
+                        "owner": "Codex CLI critique executor",
+                    },
+                    "revision_plan_id": "revision-v1",
+                    "draft_id": "should-be-overridden",
+                    "critique_id": "should-be-overridden",
+                    "pre_revision_version_label": "should-be-overridden",
+                    "post_revision_version_label": "v0.2",
+                    "items": [
+                        {
+                            "item_id": "rev-item-1",
+                            "priority": "p0",
+                            "action_type": "rebuild_argument",
+                            "target_ref": "section:basis",
+                            "action": "收紧立项依据中从现象到机制缺口的推导。",
+                            "done_criteria": "读者能清楚理解知识边界、未知机制与理论损失。",
+                            "required_input_ids": [
+                                "arg-001",
+                                "question-immune-fibrosis"
+                            ],
+                            "mutation_payload": {
+                                "operation": "replace_draft_section",
+                                "target_section_key": "basis",
+                                "replacement_text": "当前关键知识缺口不在于心梗后炎症与纤维化是否相关，而在于炎症巨噬细胞如何通过时间窗依赖的旁分泌通讯触发成纤维细胞致纤维化重编程。",
+                                "replacement_core_claim": "本研究的必要性在于解释炎症巨噬细胞驱动纤维化重编程的时间窗机制缺口。",
+                                "linked_object_ids": [
+                                    "arg-001",
+                                    "question-immune-fibrosis"
+                                ],
+                            },
+                        }
+                    ],
+                    "next_review_focus": [
+                        "必要性链条是否真正闭合"
+                    ],
+                },
+            }
+
+        payload = build_critique_execution_document(
+            document=document,
+            input_path=DRAFTING_EXAMPLE_PATH,
+            codex_runner=fake_codex_runner,
+        )
+
+        critique_workspace = payload["critique_workspace"]
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["draft_id"], "draft-v1")
+        self.assertEqual(payload["active_revision_plan_id"], "revision-v1")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["critique_execution"]["critique_id"], "critique-v1")
+        self.assertEqual(payload["critique_execution"]["active_revision_plan_id"], "revision-v1")
+        self.assertEqual(payload["critique_execution"]["verdict"], "major_revision")
+        self.assertEqual(critique_workspace["lifecycle_stage"], "critique")
+        self.assertEqual(critique_workspace["current_selection"]["active_revision_plan_id"], "revision-v1")
+        self.assertEqual(critique_workspace["mentor_critiques"][-1]["draft_id"], "draft-v1")
+        self.assertEqual(
+            critique_workspace["mentor_critiques"][-1]["current_scientific_question"],
+            document["scientific_question_cards"][0]["core_question"],
+        )
+        self.assertEqual(critique_workspace["mentor_critiques"][-1]["necessity_scientific_value"]["weight"], 60)
+        self.assertEqual(critique_workspace["mentor_critiques"][-1]["applicant_fit"]["weight"], 30)
+        self.assertEqual(critique_workspace["mentor_critiques"][-1]["feasibility"]["weight"], 10)
+        self.assertEqual(critique_workspace["revision_plans"][-1]["draft_id"], "draft-v1")
+        self.assertEqual(critique_workspace["revision_plans"][-1]["critique_id"], "critique-v1")
+        self.assertEqual(critique_workspace["revision_plans"][-1]["pre_revision_version_label"], "v0.1")
+        self.assertEqual(validate_workspace_document(critique_workspace).ok, True)
+
+    def test_build_critique_execution_document_binds_completed_revision_evidence_on_rereview(self) -> None:
+        from med_autogrant.critique_executor import build_critique_execution_document
+
+        document = load_workspace_document(REVISION_EXAMPLE_PATH)
+
+        def fake_codex_runner(_prompt: str, *, cwd: Path) -> dict[str, object]:
+            self.assertEqual(cwd, REVISION_EXAMPLE_PATH.resolve().parent)
+            return {
+                "mentor_critique": {
+                    "metadata": {
+                        "schema_version": "v1",
+                        "created_at": "2026-04-13T13:00:00Z",
+                        "updated_at": "2026-04-13T13:00:00Z",
+                        "source_mode": "auto",
+                    },
+                    "critique_id": "critique-v2",
+                    "draft_id": "ignored",
+                    "reviewed_revision_plan_id": "ignored",
+                    "overall_diagnosis": "上一轮修订改善明显，但研究基础与验证路线还需继续收紧。",
+                    "current_scientific_question": "ignored",
+                    "suggested_question": "保持核心科学问题不变，继续收紧研究基础与验证路线的闭环。",
+                    "verdict": "major_revision",
+                    "necessity_scientific_value": {
+                        "weight": 0,
+                        "score": 81,
+                        "judgment": "必要性链条改善明显，但仍存在机制跳步。",
+                        "blocking_issues": [
+                            "需要继续压缩修订后机制跳步。"
+                        ],
+                    },
+                    "applicant_fit": {
+                        "weight": 0,
+                        "score": 85,
+                        "judgment": "申请人适配度较强，但仍需更直接回指关键验证节点。",
+                        "blocking_issues": [],
+                    },
+                    "feasibility": {
+                        "weight": 0,
+                        "score": 82,
+                        "judgment": "整体可行。",
+                        "blocking_issues": [],
+                    },
+                    "blocking_issues": [
+                        "re-review 必须保留上一轮 completed revision evidence。"
+                    ],
+                },
+                "revision_plan": {
+                    "metadata": {
+                        "schema_version": "v1",
+                        "created_at": "2026-04-13T13:05:00Z",
+                        "updated_at": "2026-04-13T13:05:00Z",
+                        "source_mode": "auto",
+                    },
+                    "revision_plan_id": "revision-v2",
+                    "draft_id": "ignored",
+                    "critique_id": "ignored",
+                    "pre_revision_version_label": "ignored",
+                    "post_revision_version_label": "v0.5",
+                    "items": [
+                        {
+                            "item_id": "rev2-item-1",
+                            "priority": "p0",
+                            "action_type": "rewrite_section",
+                            "target_ref": "section:foundation",
+                            "action": "让研究基础直接回指当前方案关键验证节点。",
+                            "done_criteria": "研究基础段落能直接解释为什么该团队能完成当前机制验证。",
+                            "required_input_ids": [
+                                "output-1",
+                                "project-1"
+                            ],
+                            "mutation_payload": {
+                                "operation": "replace_draft_section",
+                                "target_section_key": "foundation",
+                                "replacement_text": "申请人的单细胞时序资源、动物模型和既有验证路径可以直接承接当前机制验证假设，从而把研究基础与关键实验闭环为同一条执行链。",
+                                "replacement_core_claim": "研究基础能够直接支撑当前机制验证闭环。",
+                                "linked_object_ids": [
+                                    "output-1",
+                                    "project-1"
+                                ],
+                            },
+                        }
+                    ],
+                },
+            }
+
+        payload = build_critique_execution_document(
+            document=document,
+            input_path=REVISION_EXAMPLE_PATH,
+            codex_runner=fake_codex_runner,
+        )
+
+        critique_workspace = payload["critique_workspace"]
+        self.assertEqual(payload["active_revision_plan_id"], "revision-v2")
+        self.assertEqual(critique_workspace["current_selection"]["active_revision_plan_id"], "revision-v2")
+        self.assertEqual(critique_workspace["mentor_critiques"][-1]["critique_id"], "critique-v2")
+        self.assertEqual(critique_workspace["mentor_critiques"][-1]["reviewed_revision_plan_id"], "revision-v1")
+        self.assertEqual(critique_workspace["revision_plans"][-1]["revision_plan_id"], "revision-v2")
+        self.assertEqual(critique_workspace["revision_plans"][-1]["critique_id"], "critique-v2")
+        self.assertEqual(critique_workspace["revision_plans"][-1]["pre_revision_version_label"], "v0.4")
+        self.assertEqual(validate_workspace_document(critique_workspace).ok, True)
+
+
+if __name__ == "__main__":
+    unittest.main()

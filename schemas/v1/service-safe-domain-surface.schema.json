@@ -22,6 +22,7 @@
         "summarize-workspace",
         "critique-summary",
         "stage-route-report",
+        "execute-critique-pass",
         "execute-revision-pass",
         "build-artifact-bundle",
         "build-final-package",

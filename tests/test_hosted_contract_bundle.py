@@ -45,6 +45,7 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "run-local",
     "resume-local",
     "build-artifact-bundle",
+    "execute-critique-pass",
     "execute-revision-pass",
     "build-final-package",
     "build-hosted-contract-bundle",
@@ -59,6 +60,7 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "run-local", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
     {"command": "resume-local", "required_fields": ["journal_path"], "optional_fields": []},
     {"command": "build-artifact-bundle", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {"command": "execute-critique-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {"command": "execute-revision-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {
         "command": "build-final-package",
@@ -180,6 +182,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         "stage-route-report",
                     ],
                     "canonical_export_surfaces": [
+                        "execute-critique-pass",
                         "execute-revision-pass",
                         "build-artifact-bundle",
                         "build-final-package",
@@ -261,8 +264,9 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 route["route_id"]: route
                 for route in contract_bundle["authoring_contract"]["author_side_route_catalog"]
             }
-            self.assertEqual(route_catalog["critique"]["route_status"], "pending")
-            self.assertEqual(route_catalog["critique"]["handoff_contract_kind"], "handoff-required")
+            self.assertEqual(route_catalog["critique"]["route_status"], "landed")
+            self.assertEqual(route_catalog["critique"]["handoff_contract_kind"], "service-safe-domain-entry-command")
+            self.assertEqual(route_catalog["critique"]["execution_surface"]["command"], "execute-critique-pass")
             self.assertEqual(route_catalog["revision"]["route_status"], "landed")
             self.assertEqual(route_catalog["revision"]["execution_surface"]["command"], "execute-revision-pass")
             self.assertEqual(route_catalog["hosted_contract_bundle"]["route_status"], "landed")

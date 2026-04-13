@@ -215,6 +215,7 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "run-local",
     "resume-local",
     "build-artifact-bundle",
+    "execute-critique-pass",
     "execute-revision-pass",
     "build-final-package",
     "build-hosted-contract-bundle",
@@ -229,6 +230,7 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "run-local", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
     {"command": "resume-local", "required_fields": ["journal_path"], "optional_fields": []},
     {"command": "build-artifact-bundle", "required_fields": ["input_path", "output_path"], "optional_fields": []},
+    {"command": "execute-critique-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {"command": "execute-revision-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {
         "command": "build-final-package",
@@ -258,6 +260,7 @@ def _expected_landed_route(route_id: str) -> dict[str, object]:
         "executor_owner": "med-autogrant",
         "execution_surface": _service_safe_surface(
             {
+                "critique": "execute-critique-pass",
                 "revision": "execute-revision-pass",
                 "artifact_bundle": "build-artifact-bundle",
                 "final_package": "build-final-package",
@@ -297,7 +300,7 @@ def _expected_pending_route(route_id: str, *, source_stage: str) -> dict[str, ob
 
 
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
-    if route_id in {"revision", "artifact_bundle", "final_package", "hosted_contract_bundle"}:
+    if route_id in {"critique", "revision", "artifact_bundle", "final_package", "hosted_contract_bundle"}:
         return _expected_landed_route(route_id)
     return _expected_pending_route(route_id, source_stage=source_stage)
 
@@ -651,13 +654,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             drafting_contract["recommended_executor_route"],
             _expected_route("critique", source_stage="drafting"),
         )
-        self.assertEqual(
-            drafting_contract["recommended_executor_route"]["handoff_requirements"]["required_domain_surfaces"],
-            [
-                _service_safe_surface("summarize-workspace"),
-                _service_safe_surface("stage-route-report"),
-            ],
-        )
+        self.assertNotIn("handoff_requirements", drafting_contract["recommended_executor_route"])
         self.assertEqual(
             [
                 route["route_id"]
@@ -1001,6 +998,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "stage-route-report",
                             ],
                             "canonical_export_surfaces": [
+                                "execute-critique-pass",
                                 "execute-revision-pass",
                                 "build-artifact-bundle",
                                 "build-final-package",
@@ -1085,6 +1083,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "stage-route-report",
                             ],
                             "canonical_export_surfaces": [
+                                "execute-critique-pass",
                                 "execute-revision-pass",
                                 "build-artifact-bundle",
                                 "build-final-package",
@@ -1187,6 +1186,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                     "stage-route-report",
                                 ],
                                 "canonical_export_surfaces": [
+                                    "execute-critique-pass",
                                     "execute-revision-pass",
                                     "build-artifact-bundle",
                                     "build-final-package",
@@ -1281,6 +1281,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                     "stage-route-report",
                                 ],
                                 "canonical_export_surfaces": [
+                                    "execute-critique-pass",
                                     "execute-revision-pass",
                                     "build-artifact-bundle",
                                     "build-final-package",
@@ -1416,7 +1417,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
         )
 
-    def test_grant_user_loop_projects_pending_handoff_surfaces_without_inventing_executor(self) -> None:
+    def test_grant_user_loop_projects_landed_critique_route_when_drafting_can_execute_directly(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         payload = MedAutoGrantProductEntry().build_grant_user_loop(
@@ -1432,23 +1433,30 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             payload["grant_user_loop"]["next_action"]["action_kind"],
-            "prepare_pending_handoff",
+            "execute_landed_route",
         )
         self.assertEqual(payload["grant_user_loop"]["next_action"]["route_id"], "critique")
-        self.assertEqual(payload["grant_user_loop"]["next_action"]["route_status"], "pending")
-        self.assertIsNone(payload["grant_user_loop"]["next_action"]["command"])
+        self.assertEqual(payload["grant_user_loop"]["next_action"]["route_status"], "landed")
+        self.assertEqual(
+            payload["grant_user_loop"]["next_action"]["command"],
+            (
+                "uv run python -m med_autogrant execute-critique-pass "
+                f"--input {DRAFTING_EXAMPLE_PATH.resolve()} "
+                "--output <critique-output-path> --format json"
+            ),
+        )
         self.assertEqual(
             payload["grant_user_loop"]["next_action"]["handoff_surfaces"],
-            {
-                "summarize_workspace": (
-                    f"uv run python -m med_autogrant summarize-workspace --input {DRAFTING_EXAMPLE_PATH.resolve()} --format json"
-                ),
-                "stage_route_report": (
-                    f"uv run python -m med_autogrant stage-route-report --input {DRAFTING_EXAMPLE_PATH.resolve()} --format json"
-                ),
-            },
+            None,
         )
-        self.assertIsNone(payload["grant_user_loop"]["user_loop"]["run_recommended_route"])
+        self.assertEqual(
+            payload["grant_user_loop"]["user_loop"]["run_recommended_route"],
+            (
+                "uv run python -m med_autogrant execute-critique-pass "
+                f"--input {DRAFTING_EXAMPLE_PATH.resolve()} "
+                "--output <critique-output-path> --format json"
+            ),
+        )
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["open_grant_direct_entry"],
             (

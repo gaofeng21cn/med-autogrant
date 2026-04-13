@@ -24,6 +24,7 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "run-local": DomainEntryCommandSpec("run_local", ("input_path",), ("journal_path",)),
     "resume-local": DomainEntryCommandSpec("resume_local", ("journal_path",)),
     "build-artifact-bundle": DomainEntryCommandSpec("build_artifact_bundle", ("input_path", "output_path")),
+    "execute-critique-pass": DomainEntryCommandSpec("execute_critique_pass", ("input_path", "output_path")),
     "execute-revision-pass": DomainEntryCommandSpec("execute_revision_pass", ("input_path", "output_path")),
     "build-final-package": DomainEntryCommandSpec(
         "build_final_package",
