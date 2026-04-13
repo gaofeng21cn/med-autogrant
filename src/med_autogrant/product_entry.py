@@ -556,9 +556,15 @@ class MedAutoGrantProductEntry:
         resolved_input_path = Path(input_path).expanduser().resolve()
         progress_payload = self.read_grant_progress(input_path=resolved_input_path)
         mainline_payload = read_mainline_status()
+        mainline_snapshot = _build_mainline_snapshot(mainline_payload)
         current_runtime_owner = _require_mapping(
             mainline_payload,
             "current_runtime_owner",
+            context="mainline_status",
+        )
+        current_phase = _require_mapping(
+            mainline_payload,
+            "current_phase",
             context="mainline_status",
         )
         command_catalog = _build_product_command_catalog(resolved_input_path)
@@ -597,6 +603,26 @@ class MedAutoGrantProductEntry:
                         "program_id",
                         context="mainline_status",
                     ),
+                    "phase_id": _require_nonempty_string_from_mapping(
+                        current_phase,
+                        "phase_id",
+                        context="mainline_status.current_phase",
+                    ),
+                    "phase_name": _require_nonempty_string_from_mapping(
+                        current_phase,
+                        "phase_name",
+                        context="mainline_status.current_phase",
+                    ),
+                    "phase_status": _require_nonempty_string_from_mapping(
+                        current_phase,
+                        "status",
+                        context="mainline_status.current_phase",
+                    ),
+                    "phase_summary": _require_nonempty_string_from_mapping(
+                        current_phase,
+                        "summary",
+                        context="mainline_status.current_phase",
+                    ),
                     "active_phase": _require_nonempty_string_from_mapping(
                         current_runtime_owner,
                         "active_phase",
@@ -607,6 +633,7 @@ class MedAutoGrantProductEntry:
                         "active_tranche",
                         context="mainline_status.current_runtime_owner",
                     ),
+                    "next_focus": list(mainline_snapshot["next_focus"]),
                 },
                 "runtime": {
                     "current_owner_line": _require_nonempty_string_from_mapping(
@@ -651,6 +678,15 @@ class MedAutoGrantProductEntry:
                         "command": command_catalog["build_opl_handoff"],
                         "entry_mode": "opl-handoff",
                     },
+                },
+                "product_entry_status": {
+                    "summary": _require_nonempty_string_from_mapping(
+                        current_phase,
+                        "summary",
+                        context="mainline_status.current_phase",
+                    ),
+                    "next_focus": list(mainline_snapshot["next_focus"]),
+                    "remaining_gaps_count": len(mainline_snapshot["remaining_gaps"]),
                 },
                 "remaining_gaps": list(mainline_payload.get("remaining_gaps") or []),
                 "notes": [

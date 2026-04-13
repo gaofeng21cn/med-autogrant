@@ -1404,6 +1404,30 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(manifest["repo_mainline"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(manifest["repo_mainline"]["active_tranche"], "P4.C mainline status and grant user loop")
+        self.assertEqual(manifest["repo_mainline"]["phase_id"], "P4")
+        self.assertEqual(
+            manifest["repo_mainline"]["phase_summary"],
+            "把 direct grant product 面逐步收成当前用户 inbox shell，而不越界写成 mature Web UI 或 hosted runtime。",
+        )
+        self.assertEqual(
+            manifest["repo_mainline"]["next_focus"],
+            [
+                "继续把 `grant-user-loop` 当作当前 direct grant user inbox shell，并保持主线 snapshot / route action / product entry truth 对齐。",
+                "继续用 fresh proof 验证 critique / revision / final package / hosted contract bundle 在 Hermes substrate 上不漂移。",
+            ],
+        )
+        self.assertEqual(
+            manifest["product_entry_status"]["summary"],
+            "把 direct grant product 面逐步收成当前用户 inbox shell，而不越界写成 mature Web UI 或 hosted runtime。",
+        )
+        self.assertEqual(
+            manifest["product_entry_status"]["remaining_gaps_count"],
+            len(manifest["remaining_gaps"]),
+        )
+        self.assertEqual(
+            manifest["product_entry_status"]["next_focus"],
+            manifest["repo_mainline"]["next_focus"],
+        )
         self.assertEqual(
             manifest["product_entry_shell"]["grant_progress"]["command"],
             f"uv run python -m med_autogrant grant-progress --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
