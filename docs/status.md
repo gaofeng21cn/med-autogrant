@@ -1,6 +1,6 @@
 # 当前状态
 
-Date: `2026-04-12`
+Date: `2026-04-13`
 
 ## 当前角色
 
@@ -9,7 +9,7 @@ Date: `2026-04-12`
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
 - OMX 状态：已退场，仅保留历史入口。
-- 当前入口真相：`operator entry` 与 `agent entry` 已存在；共享 envelope 的 lightweight `product entry` shell 已由 `build-product-entry` 落地；`product-entry-manifest` 现在会把当前 shell、shared handoff 模板、mainline snapshot、`product_entry_status` 状态摘要，以及显式的 `operator_loop_surface` 与 `recommended_shell / recommended_command` 冻结成 machine-readable discovery surface；当前 operator loop 明确收口为 `grant-user-loop`；`grant-progress / grant-cockpit` 已把第一棒 controller-owned、read-only 的 direct-product projection 落地，而成熟的 grant-facing UX 仍未落地
+- 当前入口真相：`operator entry` 与 `agent entry` 已存在；共享 envelope 的 lightweight `product entry` shell 已由 `build-product-entry` 落地；`product-entry-manifest` 现在会把当前 shell、shared handoff 模板、mainline snapshot、`product_entry_status` 状态摘要，以及显式的 `operator_loop_surface`、`operator_loop_actions` 与 `recommended_shell / recommended_command` 冻结成 machine-readable discovery surface；当前 operator loop 明确收口为 `grant-user-loop`，并把 `open_loop / inspect_progress / inspect_cockpit / build_direct_entry` 冻结成当前用户动作面；`grant-progress / grant-cockpit` 已把第一棒 controller-owned、read-only 的 direct-product projection 落地，而成熟的 grant-facing UX 仍未落地
 - 当前 direct-entry 真相：`grant-direct-entry` 现在也已经 landed；它会把 `grant-progress`、`grant-cockpit` 与 direct / `opl-handoff` 两份 `product_entry` envelope 组合成新的 controller-owned product contract，但仍不是新的 domain executor
 - 当前 user-loop 真相：`mainline-status`、`mainline-phase` 与 `grant-user-loop` 现在也已经 landed；其中 `grant-user-loop` 会把 repo mainline snapshot、`grant-direct-entry` 与 route-derived next action 收成当前 inbox-like shell，但仍不是新的 domain executor、也不是成熟 Web UI
 - 当前统一协作模型：`Hermes-Agent` 持有 runtime substrate / orchestration，`Med Auto Grant` 持有 grant 对象边界、author-side domain truth 与 executor routing；单步 critique / revision / packaging 仍按 route 选择具体执行逻辑
@@ -18,6 +18,7 @@ Date: `2026-04-12`
 - 当前 direct-product projection 口径：`grant-progress / grant-cockpit` 当前只消费 `summarize-workspace`、`stage-route-report`、`critique-summary` 与 `build-product-entry` 的合同信息；它们通过 `grant-progress.schema.json` / `grant-cockpit.schema.json` 受 generation-time fail-closed 校验，且故意不进入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
 - 当前 direct-entry composition 口径：`grant-direct-entry` 当前会复用 `grant-progress`、`grant-cockpit`、`build-product-entry(entry_mode=direct)` 与 `build-product-entry(entry_mode=opl-handoff)`，并通过 `grant-direct-entry.schema.json` 受 generation-time fail-closed 校验；它同样故意不进入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
 - 当前 direct user loop 口径：`grant-user-loop` 当前会复用 `mainline-status`、`mainline-phase` 与 `grant-direct-entry`，并把推荐 route 的 landed command / pending-handoff surface 投影成当前 next-action 卡片；它通过 `grant-user-loop.schema.json` 受 generation-time fail-closed 校验，并且同样故意不进入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
+- 当前用户动作面口径：`product-entry-manifest` 新增的 `operator_loop_actions` 与 `grant-user-loop` 保持同一真相，外部 caller 可以直接消费 `open_loop / inspect_progress / inspect_cockpit / build_direct_entry`，而不必自己猜 grant-facing 第一棒命令组合
 
 ## 当前基线（repo-verified）
 

@@ -568,6 +568,43 @@ class MedAutoGrantProductEntry:
             context="mainline_status",
         )
         command_catalog = _build_product_command_catalog(resolved_input_path)
+        grant_user_loop_command = (
+            "uv run python -m med_autogrant grant-user-loop "
+            f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
+        )
+        grant_cockpit_command = (
+            f"uv run python -m med_autogrant grant-cockpit --input {resolved_input_path} --format json"
+        )
+        grant_direct_entry_command = (
+            "uv run python -m med_autogrant grant-direct-entry "
+            f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
+        )
+        operator_loop_actions = {
+            "open_loop": {
+                "command": grant_user_loop_command,
+                "surface_kind": GRANT_USER_LOOP_KIND,
+                "summary": "进入当前 direct grant user inbox shell。",
+                "requires": [],
+            },
+            "inspect_progress": {
+                "command": command_catalog["grant_progress"],
+                "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
+                "summary": "读取当前 workspace 的阶段摘要、checkpoint 与下一步。",
+                "requires": [],
+            },
+            "inspect_cockpit": {
+                "command": grant_cockpit_command,
+                "surface_kind": GRANT_COCKPIT_KIND,
+                "summary": "查看主线 snapshot、对象面和当前 route action 汇总。",
+                "requires": [],
+            },
+            "build_direct_entry": {
+                "command": grant_direct_entry_command,
+                "surface_kind": GRANT_DIRECT_ENTRY_KIND,
+                "summary": "把用户意图组合成当前 grant direct-entry contract。",
+                "requires": ["task_intent"],
+            },
+        }
 
         return {
             "ok": True,
@@ -593,22 +630,17 @@ class MedAutoGrantProductEntry:
                     "workspace_path": str(resolved_input_path),
                 },
                 "recommended_shell": "grant_user_loop",
-                "recommended_command": (
-                    "uv run python -m med_autogrant grant-user-loop "
-                    f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
-                ),
+                "recommended_command": grant_user_loop_command,
                 "operator_loop_surface": {
                     "shell_key": "grant_user_loop",
-                    "command": (
-                        "uv run python -m med_autogrant grant-user-loop "
-                        f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
-                    ),
+                    "command": grant_user_loop_command,
                     "surface_kind": GRANT_USER_LOOP_KIND,
                     "summary": (
                         "当前 operator loop 以 grant-user-loop 作为 direct grant user inbox shell，"
                         "在同一入口下汇总 progress、route action 与 mainline snapshot。"
                     ),
                 },
+                "operator_loop_actions": operator_loop_actions,
                 "repo_mainline": {
                     "program_id": _require_nonempty_string_from_mapping(
                         mainline_payload,
@@ -661,23 +693,15 @@ class MedAutoGrantProductEntry:
                         "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
                     },
                     "grant_cockpit": {
-                        "command": (
-                            f"uv run python -m med_autogrant grant-cockpit --input {resolved_input_path} --format json"
-                        ),
+                        "command": grant_cockpit_command,
                         "surface_kind": GRANT_COCKPIT_KIND,
                     },
                     "grant_direct_entry": {
-                        "command": (
-                            "uv run python -m med_autogrant grant-direct-entry "
-                            f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
-                        ),
+                        "command": grant_direct_entry_command,
                         "surface_kind": GRANT_DIRECT_ENTRY_KIND,
                     },
                     "grant_user_loop": {
-                        "command": (
-                            "uv run python -m med_autogrant grant-user-loop "
-                            f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
-                        ),
+                        "command": grant_user_loop_command,
                         "surface_kind": GRANT_USER_LOOP_KIND,
                     },
                 },
