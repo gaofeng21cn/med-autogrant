@@ -1389,11 +1389,14 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         manifest = payload["product_entry_manifest"]
+        self.assertEqual(manifest["surface_kind"], "product_entry_manifest")
         self.assertEqual(manifest["manifest_kind"], "med_auto_grant_product_entry_manifest")
         self.assertEqual(manifest["target_domain_id"], "med-autogrant")
         self.assertEqual(manifest["formal_entry"]["default"], "CLI")
         self.assertEqual(manifest["formal_entry"]["supported_protocols"], ["MCP"])
+        self.assertEqual(manifest["workspace_locator"]["workspace_root"], str(CRITIQUE_EXAMPLE_PATH.resolve()))
         self.assertEqual(manifest["workspace_locator"]["workspace_path"], str(CRITIQUE_EXAMPLE_PATH.resolve()))
+        self.assertEqual(manifest["recommended_shell"], "grant_user_loop")
         self.assertEqual(manifest["repo_mainline"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(manifest["repo_mainline"]["active_tranche"], "P4.C mainline status and grant user loop")
         self.assertEqual(

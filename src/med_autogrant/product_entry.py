@@ -572,6 +572,7 @@ class MedAutoGrantProductEntry:
             "lifecycle_stage": progress_payload["lifecycle_stage"],
             "input_path": progress_payload["input_path"],
             "product_entry_manifest": {
+                "surface_kind": "product_entry_manifest",
                 "manifest_version": 1,
                 "manifest_kind": PRODUCT_ENTRY_MANIFEST_KIND,
                 "target_domain_id": TARGET_DOMAIN_ID,
@@ -582,8 +583,10 @@ class MedAutoGrantProductEntry:
                 },
                 "workspace_locator": {
                     "workspace_surface_kind": "nsfc_workspace",
+                    "workspace_root": str(resolved_input_path),
                     "workspace_path": str(resolved_input_path),
                 },
+                "recommended_shell": "grant_user_loop",
                 "repo_mainline": {
                     "program_id": _require_nonempty_string_from_mapping(
                         mainline_payload,
