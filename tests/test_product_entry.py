@@ -1577,6 +1577,56 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["product_entry_quickstart"]["human_gate_ids"],
             ["mag_route_gate_revision"],
         )
+        self.assertEqual(manifest["product_entry_overview"]["surface_kind"], "product_entry_overview")
+        self.assertEqual(
+            manifest["product_entry_overview"]["summary"],
+            manifest["product_entry_status"]["summary"],
+        )
+        self.assertEqual(
+            manifest["product_entry_overview"]["frontdesk_command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(
+            manifest["product_entry_overview"]["recommended_command"],
+            "uv run python -m med_autogrant grant-user-loop "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(
+            manifest["product_entry_overview"]["progress_surface"],
+            {
+                "surface_kind": "grant_progress",
+                "command": (
+                    "uv run python -m med_autogrant grant-progress "
+                    f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json"
+                ),
+                "step_id": "inspect_progress",
+            },
+        )
+        self.assertEqual(
+            manifest["product_entry_overview"]["resume_surface"],
+            {
+                "surface_kind": "grant_user_loop",
+                "command": (
+                    "uv run python -m med_autogrant grant-user-loop "
+                    f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json"
+                ),
+                "session_locator_field": "grant_run_id",
+                "checkpoint_locator_field": "lifecycle_stage",
+            },
+        )
+        self.assertEqual(manifest["product_entry_overview"]["recommended_step_id"], "open_frontdesk")
+        self.assertEqual(
+            manifest["product_entry_overview"]["next_focus"],
+            manifest["product_entry_status"]["next_focus"],
+        )
+        self.assertEqual(
+            manifest["product_entry_overview"]["remaining_gaps_count"],
+            manifest["product_entry_status"]["remaining_gaps_count"],
+        )
+        self.assertEqual(
+            manifest["product_entry_overview"]["human_gate_ids"],
+            ["mag_route_gate_revision"],
+        )
 
     def test_family_orchestration_companion_is_projected_across_product_surfaces(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -1759,6 +1809,20 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(
             frontdesk["family_orchestration"]["event_envelope_surface"]["ref"],
             "/product_entry_manifest/recommended_command",
+        )
+        self.assertEqual(frontdesk["product_entry_overview"]["surface_kind"], "product_entry_overview")
+        self.assertEqual(
+            frontdesk["product_entry_overview"]["progress_surface"]["surface_kind"],
+            "grant_progress",
+        )
+        self.assertEqual(
+            frontdesk["product_entry_overview"]["resume_surface"]["surface_kind"],
+            "grant_user_loop",
+        )
+        self.assertEqual(
+            frontdesk["product_entry_overview"]["resume_surface"]["command"],
+            "uv run python -m med_autogrant grant-user-loop "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
         )
         self.assertEqual(frontdesk["product_entry_quickstart"]["recommended_step_id"], "open_frontdesk")
         self.assertEqual(frontdesk["product_entry_quickstart"]["steps"][2]["step_id"], "inspect_progress")

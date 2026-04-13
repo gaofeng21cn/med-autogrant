@@ -790,6 +790,32 @@ class MedAutoGrantProductEntry:
                 if isinstance(gate, dict) and gate.get("gate_id")
             ],
         }
+        product_entry_overview = {
+            "surface_kind": "product_entry_overview",
+            "summary": _require_nonempty_string_from_mapping(
+                current_phase,
+                "summary",
+                context="mainline_status.current_phase",
+            ),
+            "frontdesk_command": product_frontdesk_command,
+            "recommended_command": grant_user_loop_command,
+            "operator_loop_command": grant_user_loop_command,
+            "progress_surface": {
+                "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
+                "command": command_catalog["grant_progress"],
+                "step_id": "inspect_progress",
+            },
+            "resume_surface": {
+                "surface_kind": family_orchestration["resume_contract"]["surface_kind"],
+                "command": grant_user_loop_command,
+                "session_locator_field": family_orchestration["resume_contract"]["session_locator_field"],
+                "checkpoint_locator_field": family_orchestration["resume_contract"]["checkpoint_locator_field"],
+            },
+            "recommended_step_id": product_entry_quickstart["recommended_step_id"],
+            "next_focus": list(mainline_snapshot["next_focus"]),
+            "remaining_gaps_count": len(mainline_snapshot["remaining_gaps"]),
+            "human_gate_ids": list(product_entry_quickstart["human_gate_ids"]),
+        }
 
         return {
             "ok": True,
@@ -912,6 +938,7 @@ class MedAutoGrantProductEntry:
                         "entry_mode": "opl-handoff",
                     },
                 },
+                "product_entry_overview": product_entry_overview,
                 "product_entry_quickstart": product_entry_quickstart,
                 "family_orchestration": family_orchestration,
                 "product_entry_status": {
@@ -1002,6 +1029,11 @@ class MedAutoGrantProductEntry:
                 "operator_loop_actions": dict(_require_mapping(
                     manifest,
                     "operator_loop_actions",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "product_entry_overview": dict(_require_mapping(
+                    manifest,
+                    "product_entry_overview",
                     context="product_frontdesk.product_entry_manifest",
                 )),
                 "product_entry_quickstart": dict(_require_mapping(
