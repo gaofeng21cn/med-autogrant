@@ -955,6 +955,11 @@ class MedAutoGrantProductEntry:
                     "operator_loop_actions",
                     context="product_frontdesk.product_entry_manifest",
                 )),
+                "family_orchestration": dict(_require_mapping(
+                    manifest,
+                    "family_orchestration",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
                 "product_entry_manifest": dict(manifest),
                 "entry_surfaces": {
                     "frontdesk": dict(_require_mapping(

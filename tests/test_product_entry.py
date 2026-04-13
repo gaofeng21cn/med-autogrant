@@ -1512,6 +1512,23 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             "uv run python -m med_autogrant build-product-entry "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
         )
+        _assert_family_orchestration_companion(
+            self,
+            manifest.get("family_orchestration"),
+            expected_resume_surface="grant_user_loop",
+        )
+        self.assertEqual(
+            manifest["family_orchestration"]["human_gates"][0]["gate_id"],
+            "mag_route_gate_revision",
+        )
+        self.assertEqual(
+            manifest["family_orchestration"]["event_envelope_surface"]["ref"],
+            "/product_entry_manifest/recommended_command",
+        )
+        self.assertEqual(
+            manifest["family_orchestration"]["checkpoint_lineage_surface"]["ref"],
+            "/product_entry_manifest/repo_mainline/phase_status",
+        )
 
     def test_family_orchestration_companion_is_projected_across_product_surfaces(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -1648,7 +1665,18 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             "uv run python -m med_autogrant grant-user-loop "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
         )
+        _assert_family_orchestration_companion(
+            self,
+            frontdesk.get("family_orchestration"),
+            expected_resume_surface="grant_user_loop",
+        )
+        self.assertEqual(frontdesk["family_orchestration"]["human_gates"][0]["gate_id"], "mag_route_gate_revision")
+        self.assertEqual(
+            frontdesk["family_orchestration"]["event_envelope_surface"]["ref"],
+            "/product_entry_manifest/recommended_command",
+        )
         self.assertEqual(frontdesk["product_entry_manifest"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
+        self.assertEqual(frontdesk["product_entry_manifest"]["manifest_version"], 2)
 
     def test_grant_progress_fails_closed_on_invalid_projection_shape(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

@@ -9,7 +9,7 @@ Date: `2026-04-13`
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
 - OMX 状态：已退场，仅保留历史入口。
-- 当前入口真相：`operator entry` 与 `agent entry` 已存在；共享 envelope 的 lightweight `product entry` shell 已由 `build-product-entry` 落地；`product-entry-manifest` 现在会把当前 shell、shared handoff 模板、mainline snapshot、`product_entry_status` 状态摘要，以及显式的 `frontdesk_surface`、`operator_loop_surface`、`operator_loop_actions` 与 `recommended_shell / recommended_command` 冻结成 machine-readable discovery surface；当前 direct frontdesk 已明确收口为 controller-owned 的 `product-frontdesk`，而真实 operator loop 继续收口为 `grant-user-loop`，并把 `open_loop / inspect_progress / inspect_cockpit / build_direct_entry` 冻结成当前用户动作面；`grant-progress / grant-cockpit` 已把第一棒 controller-owned、read-only 的 direct-product projection 落地，而成熟的 grant-facing UX 仍未落地
+- 当前入口真相：`operator entry` 与 `agent entry` 已存在；共享 envelope 的 lightweight `product entry` shell 已由 `build-product-entry` 落地；`product-entry-manifest` 现在会把当前 shell、shared handoff 模板、mainline snapshot、`product_entry_status` 状态摘要，以及显式的 `frontdesk_surface`、`operator_loop_surface`、`operator_loop_actions` 与 `recommended_shell / recommended_command` 冻结成 machine-readable discovery surface；当前 direct frontdesk 已明确收口为 controller-owned 的 `product-frontdesk`，而真实 operator loop 继续收口为 `grant-user-loop`，并把 `open_loop / inspect_progress / inspect_cockpit / build_direct_entry` 冻结成当前用户动作面；当前 manifest 也已经开始带出 `family_orchestration` companion preview，用来暴露 grant frontdoor 的 human gate 与 resume 边界；`grant-progress / grant-cockpit` 已把第一棒 controller-owned、read-only 的 direct-product projection 落地，而成熟的 grant-facing UX 仍未落地
 - 当前 frontdoor 真相：`product-frontdesk` 现在也已经 landed；它会把 direct frontdoor、当前 user loop、projection 与 shared handoff builder 收成一份 controller-owned 的 product frontdesk contract，但仍不是新的 domain executor
 - 当前 direct-entry 真相：`grant-direct-entry` 现在也已经 landed；它会把 `grant-progress`、`grant-cockpit` 与 direct / `opl-handoff` 两份 `product_entry` envelope 组合成新的 controller-owned product contract，但仍不是新的 domain executor
 - 当前 user-loop 真相：`mainline-status`、`mainline-phase` 与 `grant-user-loop` 现在也已经 landed；其中 `grant-user-loop` 会把 repo mainline snapshot、`grant-direct-entry` 与 route-derived next action 收成当前 inbox-like shell，但仍不是新的 domain executor、也不是成熟 Web UI
@@ -26,7 +26,7 @@ Date: `2026-04-13`
 ## OPL family orchestration contracts（对齐方向）
 
 - `OPL` 顶层将冻结 5 类 family contracts：family event envelope、family checkpoint lineage、family action graph、family human gate、family product-entry manifest v2。
-- `Med Auto Grant` 当前优先对齐面：`grant-progress / grant-cockpit / grant-direct-entry / grant-user-loop`，并对齐到 family action graph / family human gate / family product-entry manifest v2；domain 侧继续保持 `workspace / draft / program` 的真相边界。
+- `Med Auto Grant` 当前优先对齐面：`grant-progress / grant-cockpit / grant-direct-entry / grant-user-loop`，并对齐到 family action graph / family human gate / family product-entry manifest v2；当前已先落下 `family_orchestration` companion preview，domain 侧继续保持 `workspace / draft / program` 的真相边界。
 - 本轮对齐不引入 `CrewAI` 依赖，不把 `OPL` 写成 runtime owner，也不宣称已完成跨仓 runtime core ingest；真实状态仍是上游 `Hermes-Agent` 作为 runtime substrate owner，MAG 维持 family-level contract-first 对齐与 domain-owned truth。
 
 ## 当前基线（repo-verified）
@@ -84,7 +84,7 @@ Date: `2026-04-13`
 ## 当前优先事项
 
 1. 保持真实 upstream substrate、service-safe domain entry、`build-product-entry`、`grant-progress / grant-cockpit`、`grant-direct-entry`、`grant-user-loop`、`build-hosted-contract-bundle`、external caller consumption proof 与 author-side artifact/export surface 持续全绿。
-2. 下一步：把 `grant-progress / grant-cockpit / grant-direct-entry / grant-user-loop` 对齐到 family action graph / family human gate / family product-entry manifest v2，并继续维护 domain-owned truth。
+2. 下一步：在已 landed 的 `family_orchestration` companion preview 基础上，继续把 `grant-progress / grant-cockpit / grant-direct-entry / grant-user-loop` 往 family action graph / family human gate / family product-entry manifest v2 深压，并继续维护 domain-owned truth。
 3. 继续沿 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` 的口径推进，不把 repo-local adapter 重新写回 runtime owner。
 4. 项目级 `.runtime-program/` 已退役；机器本地 session / log / report / prompt 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 5. 已 landed 的 lightweight `product entry` / `OPL -> Med Auto Grant` handoff shell 现在由 `build-product-entry` 承载；后续只允许沿同一 shared envelope 继续收口，不回头扩写 repo-local runtime owner 叙事。
