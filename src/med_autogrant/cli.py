@@ -97,6 +97,12 @@ def build_parser() -> argparse.ArgumentParser:
         handle_product_frontdesk,
         "输出 controller-owned 的 direct grant product frontdesk。",
     )
+    _add_workspace_command(
+        subparsers,
+        "product-preflight",
+        handle_product_preflight,
+        "输出 direct grant frontdoor 的前置检查。",
+    )
     _add_simple_command(
         subparsers,
         "probe-upstream-hermes",
@@ -310,6 +316,12 @@ def handle_product_frontdesk(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_product_frontdesk(
         input_path=args.input,
         funding_call=args.funding_call,
+    )
+
+
+def handle_product_preflight(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_product_entry_preflight(
+        input_path=args.input,
     )
 
 
@@ -838,6 +850,23 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         ]
         for name, item in frontdesk["entry_surfaces"].items():
             lines.append(f"- {name}: {item['command']}")
+        return "\n".join(lines)
+
+    if command == "product-preflight":
+        preflight = payload["product_entry_preflight"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"ready_to_try_now: {preflight['ready_to_try_now']}",
+            f"recommended_check_command: {preflight['recommended_check_command']}",
+            f"recommended_start_command: {preflight['recommended_start_command']}",
+        ]
+        for item in preflight["checks"]:
+            lines.append(
+                f"- {item['check_id']}: {item['status']} (blocking={item['blocking']}) -> {item['command']}"
+            )
         return "\n".join(lines)
 
     if command == "probe-upstream-hermes":

@@ -25,7 +25,12 @@ from med_autogrant.hermes_runtime import (
     _validate_executor_routing_contract,
 )
 from med_autogrant.mainline_status import read_mainline_status
-from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
+from med_autogrant.workspace import (
+    WorkspaceFileError,
+    WorkspaceStateError,
+    load_workspace_document,
+    validate_workspace_document,
+)
 
 
 PRODUCT_ENTRY_VERSION = 1
@@ -679,6 +684,8 @@ class MedAutoGrantProductEntry:
     ) -> dict[str, Any]:
         del funding_call
         resolved_input_path = Path(input_path).expanduser().resolve()
+        preflight_payload = self.build_product_entry_preflight(input_path=resolved_input_path)
+        product_entry_preflight = dict(preflight_payload["product_entry_preflight"])
         progress_payload = self.read_grant_progress(input_path=resolved_input_path)
         progress_projection = _require_mapping(
             progress_payload,
@@ -1070,6 +1077,7 @@ class MedAutoGrantProductEntry:
                     },
                 },
                 "product_entry_overview": product_entry_overview,
+                "product_entry_preflight": product_entry_preflight,
                 "product_entry_readiness": product_entry_readiness,
                 "grant_authoring_readiness": grant_authoring_readiness,
                 "product_entry_quickstart": product_entry_quickstart,
@@ -1176,6 +1184,11 @@ class MedAutoGrantProductEntry:
                     "product_entry_overview",
                     context="product_frontdesk.product_entry_manifest",
                 )),
+                "product_entry_preflight": dict(_require_mapping(
+                    manifest,
+                    "product_entry_preflight",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
                 "product_entry_readiness": dict(_require_mapping(
                     manifest,
                     "product_entry_readiness",
@@ -1264,6 +1277,115 @@ class MedAutoGrantProductEntry:
             lifecycle_stage=manifest_payload["lifecycle_stage"],
         )
         return payload
+
+    def build_product_entry_preflight(
+        self,
+        *,
+        input_path: str | Path,
+    ) -> dict[str, Any]:
+        resolved_input_path = Path(input_path).expanduser().resolve()
+        document = load_workspace_document(resolved_input_path)
+        validation = validate_workspace_document(document)
+        current_selection = document.get("current_selection") if isinstance(document.get("current_selection"), Mapping) else {}
+        draft_id = _require_optional_string(current_selection.get("active_draft_id"), field_name="draft_id")
+        mainline_payload = read_mainline_status()
+        current_runtime_owner = _require_mapping(
+            mainline_payload,
+            "current_runtime_owner",
+            context="mainline_status",
+        )
+        current_owner_line = _require_nonempty_string_from_mapping(
+            current_runtime_owner,
+            "current_owner_line",
+            context="mainline_status.current_runtime_owner",
+        )
+        validate_command = (
+            "uv run python -m med_autogrant validate-workspace "
+            f"--input {resolved_input_path} --format json"
+        )
+        start_command = (
+            "uv run python -m med_autogrant product-frontdesk "
+            f"--input {resolved_input_path} --format json"
+        )
+        mainline_command = "uv run python -m med_autogrant mainline-status --format json"
+        checks = [
+            {
+                "check_id": "workspace_document_valid",
+                "title": "Workspace Document Valid",
+                "status": "pass" if validation.ok else "fail",
+                "blocking": True,
+                "summary": (
+                    "workspace document schema 与 runtime constraints 均通过。"
+                    if validation.ok
+                    else "workspace document 仍有 schema 或 runtime constraint 问题。"
+                ),
+                "command": validate_command,
+            },
+            {
+                "check_id": "upstream_hermes_owner_line",
+                "title": "Upstream Hermes Owner Line",
+                "status": "pass" if "Hermes" in current_owner_line else "fail",
+                "blocking": True,
+                "summary": (
+                    "当前 runtime owner line 已对齐 upstream Hermes substrate。"
+                    if "Hermes" in current_owner_line
+                    else "当前 runtime owner line 尚未对齐 upstream Hermes substrate。"
+                ),
+                "command": mainline_command,
+            },
+            {
+                "check_id": "direct_frontdoor_contract_landed",
+                "title": "Direct Frontdoor Contract Landed",
+                "status": "pass",
+                "blocking": True,
+                "summary": "direct frontdoor contract 已 landed，可由 product-frontdesk / manifest 直接消费。",
+                "command": start_command,
+            },
+            {
+                "check_id": "submission_ready_export_gate",
+                "title": "Submission Ready Export Gate",
+                "status": "pass" if document.get("lifecycle_stage") == "frozen" else "warn",
+                "blocking": False,
+                "summary": (
+                    "当前 stage 已接近或进入 submission-ready export gate。"
+                    if document.get("lifecycle_stage") == "frozen"
+                    else "当前 stage 还未到 submission-ready export gate；这不阻止进入 frontdoor，但后续仍需继续主线推进。"
+                ),
+                "command": (
+                    "uv run python -m med_autogrant build-submission-ready-package "
+                    f"--input {resolved_input_path} --output-dir <output-dir> --format json"
+                ),
+            },
+        ]
+        blocking_check_ids = [
+            check["check_id"]
+            for check in checks
+            if check["blocking"] and check["status"] != "pass"
+        ]
+        ready_to_try_now = not blocking_check_ids
+        summary = (
+            "当前 direct grant frontdoor 的前置检查已通过，可以先复核 workspace 与主线，再进入 product frontdesk。"
+            if ready_to_try_now
+            else "当前 direct grant frontdoor 仍有 blocking preflight check；请先修复 workspace 或 runtime owner line 再进入 product frontdesk。"
+        )
+        return {
+            "ok": True,
+            "command": "product-preflight",
+            "grant_run_id": _require_nonempty_string(document.get("grant_run_id"), field_name="grant_run_id"),
+            "workspace_id": _require_nonempty_string(document.get("workspace_id"), field_name="workspace_id"),
+            "draft_id": draft_id,
+            "lifecycle_stage": _require_nonempty_string(document.get("lifecycle_stage"), field_name="lifecycle_stage"),
+            "input_path": str(resolved_input_path),
+            "product_entry_preflight": {
+                "surface_kind": "product_entry_preflight",
+                "summary": summary,
+                "ready_to_try_now": ready_to_try_now,
+                "recommended_check_command": validate_command,
+                "recommended_start_command": start_command,
+                "blocking_check_ids": blocking_check_ids,
+                "checks": checks,
+            },
+        }
 
     def _load_projection_context(
         self,

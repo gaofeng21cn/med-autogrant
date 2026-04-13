@@ -430,6 +430,83 @@
         }
       }
     },
+    "productEntryPreflightCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "title",
+        "status",
+        "blocking",
+        "summary",
+        "command"
+      ],
+      "properties": {
+        "check_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "title": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "warn",
+            "fail"
+          ]
+        },
+        "blocking": {
+          "type": "boolean"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "productEntryPreflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "summary",
+        "ready_to_try_now",
+        "recommended_check_command",
+        "recommended_start_command",
+        "blocking_check_ids",
+        "checks"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "product_entry_preflight"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ready_to_try_now": {
+          "type": "boolean"
+        },
+        "recommended_check_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_start_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "blocking_check_ids": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/productEntryPreflightCheck"
+          }
+        }
+      }
+    },
     "grantAuthoringWorkflowCoverageItem": {
       "type": "object",
       "additionalProperties": false,
@@ -620,6 +697,7 @@
         "product_entry_shell",
         "shared_handoff",
         "product_entry_overview",
+        "product_entry_preflight",
         "product_entry_readiness",
         "grant_authoring_readiness",
         "product_entry_quickstart",
@@ -677,6 +755,9 @@
         },
         "product_entry_overview": {
           "$ref": "#/$defs/productEntryOverview"
+        },
+        "product_entry_preflight": {
+          "$ref": "#/$defs/productEntryPreflight"
         },
         "product_entry_readiness": {
           "$ref": "#/$defs/productEntryReadiness"

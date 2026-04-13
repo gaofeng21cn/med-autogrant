@@ -617,6 +617,40 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             funding_call=None,
         )
 
+    def test_product_preflight_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "product-preflight",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "critique",
+            "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            "product_entry_preflight": {
+                "surface_kind": "product_entry_preflight",
+                "ready_to_try_now": True,
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.build_product_entry_preflight.return_value = expected_payload
+
+            exit_code, stdout, stderr = self.run_cli(
+                "product-preflight",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_product_entry_preflight.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
 
 class ProductEntryEnvelopeTest(unittest.TestCase):
     def test_product_entry_builds_shared_envelope_for_direct_and_opl_handoff(self) -> None:
@@ -1670,6 +1704,36 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["product_entry_overview"]["human_gate_ids"],
             ["mag_route_gate_revision"],
         )
+        preflight = manifest["product_entry_preflight"]
+        self.assertEqual(preflight["surface_kind"], "product_entry_preflight")
+        self.assertEqual(
+            preflight["summary"],
+            "当前 direct grant frontdoor 的前置检查已通过，可以先复核 workspace 与主线，再进入 product frontdesk。",
+        )
+        self.assertTrue(preflight["ready_to_try_now"])
+        self.assertEqual(
+            preflight["recommended_check_command"],
+            f"uv run python -m med_autogrant validate-workspace --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(
+            preflight["recommended_start_command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(preflight["blocking_check_ids"], [])
+        self.assertEqual(
+            [check["check_id"] for check in preflight["checks"]],
+            [
+                "workspace_document_valid",
+                "upstream_hermes_owner_line",
+                "direct_frontdoor_contract_landed",
+                "submission_ready_export_gate",
+            ],
+        )
+        self.assertEqual(preflight["checks"][0]["status"], "pass")
+        self.assertEqual(preflight["checks"][0]["blocking"], True)
+        self.assertEqual(preflight["checks"][1]["status"], "pass")
+        self.assertEqual(preflight["checks"][2]["status"], "pass")
+        self.assertEqual(preflight["checks"][3]["status"], "warn")
         product_readiness = manifest["product_entry_readiness"]
         self.assertEqual(product_readiness["surface_kind"], "product_entry_readiness")
         self.assertEqual(product_readiness["verdict"], "agent_assisted_ready_not_product_grade")
@@ -1923,6 +1987,16 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             frontdesk["product_entry_overview"]["resume_surface"]["command"],
             "uv run python -m med_autogrant grant-user-loop "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(frontdesk["product_entry_preflight"]["surface_kind"], "product_entry_preflight")
+        self.assertTrue(frontdesk["product_entry_preflight"]["ready_to_try_now"])
+        self.assertEqual(
+            frontdesk["product_entry_preflight"]["recommended_check_command"],
+            f"uv run python -m med_autogrant validate-workspace --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(
+            frontdesk["product_entry_preflight"],
+            frontdesk["product_entry_manifest"]["product_entry_preflight"],
         )
         self.assertEqual(frontdesk["product_entry_readiness"]["surface_kind"], "product_entry_readiness")
         self.assertTrue(frontdesk["product_entry_readiness"]["usable_now"])

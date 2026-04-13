@@ -146,6 +146,7 @@ class SchemaRegistryTest(unittest.TestCase):
         manifest_required = manifest_schema["$defs"]["productEntryManifest"]["required"]
         self.assertIn("family_orchestration", manifest_required)
         self.assertIn("product_entry_overview", manifest_required)
+        self.assertIn("product_entry_preflight", manifest_required)
         self.assertIn("product_entry_readiness", manifest_required)
         self.assertIn("grant_authoring_readiness", manifest_required)
         self.assertIn("product_entry_quickstart", manifest_required)
@@ -154,6 +155,7 @@ class SchemaRegistryTest(unittest.TestCase):
         frontdesk_required = frontdesk_schema["$defs"]["productFrontdesk"]["required"]
         self.assertIn("family_orchestration", frontdesk_required)
         self.assertIn("product_entry_overview", frontdesk_required)
+        self.assertIn("product_entry_preflight", frontdesk_required)
         self.assertIn("product_entry_readiness", frontdesk_required)
         self.assertIn("grant_authoring_readiness", frontdesk_required)
         self.assertIn("product_entry_quickstart", frontdesk_required)
@@ -191,6 +193,33 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(
             frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["product_entry_overview"]["$ref"],
             "product-entry-manifest.schema.json#/$defs/productEntryOverview",
+        )
+
+    def test_frontdoor_surface_schemas_pin_preflight_companion_shape(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        preflight = manifest_schema["$defs"]["productEntryPreflight"]
+        self.assertEqual(preflight["properties"]["surface_kind"]["const"], "product_entry_preflight")
+        self.assertEqual(
+            preflight["required"],
+            [
+                "surface_kind",
+                "summary",
+                "ready_to_try_now",
+                "recommended_check_command",
+                "recommended_start_command",
+                "blocking_check_ids",
+                "checks",
+            ],
+        )
+        self.assertEqual(
+            preflight["properties"]["checks"]["items"]["$ref"],
+            "#/$defs/productEntryPreflightCheck",
+        )
+
+        frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["product_entry_preflight"]["$ref"],
+            "product-entry-manifest.schema.json#/$defs/productEntryPreflight",
         )
 
     def test_frontdoor_surface_schemas_pin_authoring_readiness_companion_shape(self) -> None:

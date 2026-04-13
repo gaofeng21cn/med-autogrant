@@ -58,6 +58,7 @@
 - `agent entry`：由 `Codex` 或其他 host-agent 调用的 `CLI + MedAutoGrantDomainEntry`
 - `product entry`：`build-product-entry` 现在已经把 direct entry 与 `OPL` handoff 共用的轻量结构化 shell 落到仓库里，但更完整的 grant-facing 产品体验仍要继续补
 - `product frontdesk`：`product-frontdesk` 现在又把同一层 shell 上方的 controller-owned direct frontdoor 落到仓库里，而真实 operator loop 仍留在 `grant-user-loop`；它与 `product-entry-manifest` 现在都已经独立 schema-backed、generation-time fail-closed，配套 manifest/frontdesk 也会带出 `grant_authoring_readiness`、quickstart 以及 `build_submission_ready_package` 这个面向用户的本地交付动作，同时继续诚实暴露自动化成熟度、human gate 与 resume 语义
+- `product preflight`：`product-preflight` 现在又把同一层 direct frontdoor 的诚实开机前检查落到仓库里，而配套 manifest/frontdesk 也会带出同一份 `product_entry_preflight` companion，供 machine-readable 调用方直接判断
 - `product projection`：`grant-progress` 与 `grant-cockpit` 现在已经以 schema-backed、generation-time fail-closed 的 contract surface 落第一层 controller-owned、read-only 的 direct-product projection，但它们故意不是新的 `domain_entry_contract` executor command，也不进入 hosted contract bundle 的 command catalog，更不等于成熟前台
 - `direct entry composition`：`grant-direct-entry` 现在继续把 `grant-progress`、`grant-cockpit` 与 direct / `opl-handoff` 两份 `product_entry` envelope 收成一层 controller-owned 的 direct-entry 组合面，但它仍然不是新的 service-safe domain executor，也不进入 hosted contract bundle 的 command catalog
 - `current user loop`：`mainline-status`、`mainline-phase` 与 `grant-user-loop` 现在会把 repo 主线快照、direct-entry composition 与 route-derived next action 收成当前 inbox-like CLI shell，但这仍然不等于成熟 Web 前台或 hosted runtime
