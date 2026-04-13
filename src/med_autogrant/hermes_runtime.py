@@ -60,6 +60,8 @@ GRANT_PROGRESS_SCHEMA_FILE = "grant-progress.schema.json"
 GRANT_COCKPIT_SCHEMA_FILE = "grant-cockpit.schema.json"
 GRANT_DIRECT_ENTRY_SCHEMA_FILE = "grant-direct-entry.schema.json"
 GRANT_USER_LOOP_SCHEMA_FILE = "grant-user-loop.schema.json"
+PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE = "product-entry-manifest.schema.json"
+PRODUCT_FRONTDESK_SCHEMA_FILE = "product-frontdesk.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
 SUPPORTED_DOMAIN_ENTRY_COMMANDS = (
     "probe-upstream-hermes",

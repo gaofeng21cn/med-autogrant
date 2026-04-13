@@ -32,6 +32,8 @@ EXPECTED_SCHEMAS = {
     "grant-cockpit.schema.json",
     "grant-direct-entry.schema.json",
     "grant-user-loop.schema.json",
+    "product-entry-manifest.schema.json",
+    "product-frontdesk.schema.json",
     "hosted-contract-bundle.schema.json",
     "schema-index.json",
 }
@@ -119,6 +121,8 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["grant_cockpit_projection"], "grant-cockpit.schema.json")
         self.assertEqual(names["grant_direct_entry_surface"], "grant-direct-entry.schema.json")
         self.assertEqual(names["grant_user_loop_surface"], "grant-user-loop.schema.json")
+        self.assertEqual(names["product_entry_manifest_surface"], "product-entry-manifest.schema.json")
+        self.assertEqual(names["product_frontdesk_surface"], "product-frontdesk.schema.json")
         self.assertEqual(names["hosted_contract_bundle"], "hosted-contract-bundle.schema.json")
 
     def test_product_surface_schemas_require_family_orchestration_companion(self) -> None:
@@ -134,6 +138,19 @@ class SchemaRegistryTest(unittest.TestCase):
                 required = payload.get("required")
                 self.assertIsInstance(required, list)
                 self.assertIn("family_orchestration", required)
+
+    def test_frontdoor_surface_schemas_require_quickstart_companion(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        manifest_required = manifest_schema["$defs"]["productEntryManifest"]["required"]
+        self.assertIn("family_orchestration", manifest_required)
+        self.assertIn("product_entry_overview", manifest_required)
+        self.assertIn("product_entry_quickstart", manifest_required)
+
+        frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))
+        frontdesk_required = frontdesk_schema["$defs"]["productFrontdesk"]["required"]
+        self.assertIn("family_orchestration", frontdesk_required)
+        self.assertIn("product_entry_overview", frontdesk_required)
+        self.assertIn("product_entry_quickstart", frontdesk_required)
 
 
 if __name__ == "__main__":

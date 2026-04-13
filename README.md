@@ -38,6 +38,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - The current repository mainline is `Auto-only`; any future `Human-in-the-loop` product should reuse the same substrate as a compatible sibling or upper-layer product rather than split this repository into same-repo dual-mode logic.
 - Landed service-safe entry: `MedAutoGrantDomainEntry`, which preserves the CLI command surface as a structured domain-entry contract for future gateway callers.
 - The current `product entry` shell and `executor_routing_contract` are now also frozen as schema-backed contract surfaces under `schemas/v1/`, with fail-closed validation at generation time.
+- The current honest `P4.E` frontdoor-contract layer is now also landed through `product-entry-manifest` and `product-frontdesk`; both are now independently frozen by `product-entry-manifest.schema.json` and `product-frontdesk.schema.json`, with generation-time fail-closed validation.
 - The current controller-owned direct-product projections `grant-progress` and `grant-cockpit` are now also frozen as schema-backed contract surfaces under `schemas/v1/` through `grant-progress.schema.json` and `grant-cockpit.schema.json`, with fail-closed validation at generation time.
 - The next honest `P4.B` direct-entry layer is now also landed through `grant-direct-entry`, which composes `grant-progress`, `grant-cockpit`, and the already frozen direct / `opl-handoff` `product_entry` envelopes into one schema-backed, fail-closed direct-entry contract under `grant-direct-entry.schema.json`.
 - The current honest `P4.C` companion layer is now also landed through `mainline-status`, `mainline-phase`, and `grant-user-loop`; together they expose the repo mainline snapshot plus the current direct grant user loop without minting a new executor surface, and `grant-user-loop` is now frozen by `grant-user-loop.schema.json`.
@@ -46,7 +47,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - The shared `domain_entry_contract` now also exports `supported_commands` and `command_contracts`, so an external caller can construct requests from the frozen contract catalog without repo-local helper code.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 - Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
-- The ideal target is now explicit: `OPL` remains the family-level top entry, `Hermes-Agent` remains the runtime substrate owner, and `Med Auto Grant` remains the domain truth / authoring owner. The hosted caller / `OPL` consumption proof is now completed, `P4.A / P4.B / P4.C / P4.D` are now landed as the current shell / loop / executor tranches, and the mature direct grant product entry still remains the next full phase.
+- The ideal target is now explicit: `OPL` remains the family-level top entry, `Hermes-Agent` remains the runtime substrate owner, and `Med Auto Grant` remains the domain truth / authoring owner. The hosted caller / `OPL` consumption proof is now completed, `P4.A / P4.B / P4.C / P4.D / P4.E` are now landed as the current shell / loop / executor tranches, and the mature direct grant product entry still remains the next full phase.
 
 ## Entry Modes And Product Boundary
 
@@ -57,7 +58,7 @@ That means:
 - `operator entry`: human/operator commands, workspace preparation, inspection, and explicit gating
 - `agent entry`: `CLI` plus the landed `MedAutoGrantDomainEntry`, called by `Codex` or another host-agent
 - `product entry`: `build-product-entry` now lands the lightweight structured shell for both direct entry and `OPL` handoff, while richer grant-facing product UX still remains future work
-- `product frontdesk`: `product-frontdesk` now lands the controller-owned direct front door above the same shell, while the actual operator loop still lives in `grant-user-loop`; the paired manifest now also carries a family-orchestration companion preview for grant-facing human-gate and resume semantics
+- `product frontdesk`: `product-frontdesk` now lands the controller-owned direct front door above the same shell, while the actual operator loop still lives in `grant-user-loop`; together with `product-entry-manifest`, it is now independently schema-backed and fail-closed, and the paired manifest/frontdesk now also carry a family-orchestration companion preview for grant-facing human-gate and resume semantics
 - `product projection`: `grant-progress` and `grant-cockpit` now land the first controller-owned, read-only direct-product projection as schema-backed, generation-time fail-closed contract surfaces, but they are intentionally not new `domain_entry_contract` executor commands, do not enter the hosted contract bundle command catalog, and do not yet constitute a mature frontend
 - `direct entry composition`: `grant-direct-entry` now lands the next controller-owned direct-entry composition surface by reusing `grant-progress`, `grant-cockpit`, and both `build-product-entry` modes, but it still does not become a new service-safe domain executor or hosted bundle command
 - `current user loop`: `mainline-status`, `mainline-phase`, and `grant-user-loop` now package the repo mainline snapshot, current direct-entry composition, and route-derived next action into the current inbox-like CLI shell, but they still do not claim a mature web frontend or hosted runtime
@@ -134,7 +135,7 @@ Today, the runtime can:
 - export a hosted-friendly session / state / artifact / audit contract bundle from a landed local final package through `build-hosted-contract-bundle`, with explicit `domain_entry_contract`, `schema_contract`, and `authoring_contract` for future hosted / `OPL` callers
 - dispatch the same runtime command set through `MedAutoGrantDomainEntry` as a service-safe structured entry contract for future gateway callers
 - build a lightweight structured `product entry` shell through `build-product-entry`, reusing one shared envelope across `direct` and `opl-handoff`
-- freeze the landed `product entry`, `executor_routing_contract`, pending handoff surfaces, and hosted contract bundle as schema-backed contract surfaces for future `OPL` / gateway consumption
+- freeze the landed `product entry`, `product-entry-manifest`, `product-frontdesk`, `executor_routing_contract`, pending handoff surfaces, and hosted contract bundle as schema-backed contract surfaces for future `OPL` / gateway consumption
 
 Within the current repo-tracked truth, there is no further concrete post-`R5.A` local-runtime delta inside the old host-agent line. The current forward path is to keep the landed upstream substrate, service-safe domain entry, and author-side object boundaries green, not to reopen repo-local runtime ownership.
 

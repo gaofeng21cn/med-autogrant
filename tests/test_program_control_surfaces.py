@@ -63,7 +63,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             contract["runtime_owner"]["active_tranche"],
-            "P4.D full grant authoring executor landing",
+            "P4.E schema-backed frontdesk and manifest contract landing",
         )
         self.assertEqual(contract["executor_defaults"]["default_executor"], "codex_cli_autonomous")
         self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")
@@ -103,6 +103,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertIn(
             "docs/specs/2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertIn(
+            "docs/specs/2026-04-13-p4e-schema-backed-frontdesk-and-manifest-current-truth.md",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
@@ -198,9 +202,13 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("grant-cockpit.schema.json", architecture)
         self.assertIn("grant-direct-entry.schema.json", architecture)
         self.assertIn("grant-user-loop.schema.json", architecture)
+        self.assertIn("product-entry-manifest.schema.json", architecture)
+        self.assertIn("product-frontdesk.schema.json", architecture)
         self.assertIn("schema-backed", status)
         self.assertIn("fail-closed", status)
         self.assertIn("schema-backed", decisions)
+        self.assertIn("product-entry-manifest.schema.json", contracts_readme)
+        self.assertIn("product-frontdesk.schema.json", contracts_readme)
         self.assertIn("grant-progress.schema.json", contracts_readme)
         self.assertIn("grant-cockpit.schema.json", contracts_readme)
         self.assertIn("grant-direct-entry.schema.json", contracts_readme)

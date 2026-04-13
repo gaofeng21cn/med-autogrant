@@ -1,5 +1,17 @@
 # 决策记录
 
+## 2026-04-13：把 `product-entry-manifest` 与 `product-frontdesk` 升级为独立 schema-backed contract
+
+- 决策：把 `product-entry-manifest` 与 `product-frontdesk` 从“复用 product-entry shell 的 controller surface”进一步收口成独立 schema-backed、generation-time fail-closed 的 direct frontdoor contract，并把它们显式登记进 `schema-index.json`。
+- 理由：当前 direct grant frontdoor 已经不只是几段人话描述，而是 future caller / `OPL` 需要直接消费的 machine-readable frontdoor contract；如果没有独立 schema，manifest/frontdesk 的 shape、companion 字段与 quickstart 结构仍可能在不知不觉中漂移。
+- 影响：`product_entry.py` 现在会在生成 `product-entry-manifest` / `product-frontdesk` 后直接做 fail-closed schema 校验；`schemas/v1/product-entry-manifest.schema.json` 与 `schemas/v1/product-frontdesk.schema.json` 成为新的 repo-tracked truth surface；`current-program`、`mainline-status`、核心骨架、README 与测试都要同步进入 `P4.E` 口径。
+
+## 2026-04-13：`family_orchestration` 的 route status 统一回到共享 author-side route truth
+
+- 决策：`grant-progress`、`product-entry-manifest` 与 `product-frontdesk` 上的 `family_orchestration` companion，不再使用本地过期的 landed-route 集合判断 human gate 状态，而是统一读取共享 author-side route contract。
+- 理由：`direction_screening -> frozen` 已经在 `P4.D` 收口为 landed route catalog；如果 frontdoor companion 还继续看旧集合，就会把诸如 `question_refinement` 这类已 landed route 错标成 `pending/requested`，制造第二真相。
+- 影响：当前 frontdoor / projection / user loop 看到的是同一份 route status；后续继续向 family action graph / human gate / manifest v2 深压时，必须保持这种“共享 route truth 单源读取”的做法。
+
 ## 2026-04-13：full authoring executor 升级为全链 landed route catalog
 
 - 决策：把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen` 从历史上的 `pending / handoff-required` 一次性提升为 landed 的 service-safe command surface，并与 `critique / revision / artifact_bundle / final_package / hosted_contract_bundle` 收敛成完整 author-side route catalog。

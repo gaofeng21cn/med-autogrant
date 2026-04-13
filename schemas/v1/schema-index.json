@@ -108,6 +108,16 @@
       "status": "frozen"
     },
     {
+      "name": "product_entry_manifest_surface",
+      "file": "product-entry-manifest.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "product_frontdesk_surface",
+      "file": "product-frontdesk.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "hosted_contract_bundle",
       "file": "hosted-contract-bundle.schema.json",
       "status": "frozen"
