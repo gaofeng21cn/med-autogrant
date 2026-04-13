@@ -1529,6 +1529,28 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["family_orchestration"]["checkpoint_lineage_surface"]["ref"],
             "/product_entry_manifest/repo_mainline/phase_status",
         )
+        self.assertEqual(manifest["product_entry_quickstart"]["surface_kind"], "product_entry_quickstart")
+        self.assertEqual(manifest["product_entry_quickstart"]["recommended_step_id"], "open_frontdesk")
+        self.assertEqual(
+            [step["step_id"] for step in manifest["product_entry_quickstart"]["steps"]],
+            ["open_frontdesk", "continue_grant_loop", "inspect_progress", "inspect_cockpit"],
+        )
+        self.assertEqual(
+            manifest["product_entry_quickstart"]["steps"][0]["command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(
+            manifest["product_entry_quickstart"]["steps"][1]["requires"],
+            ["task_intent"],
+        )
+        self.assertEqual(
+            manifest["product_entry_quickstart"]["resume_contract"],
+            manifest["family_orchestration"]["resume_contract"],
+        )
+        self.assertEqual(
+            manifest["product_entry_quickstart"]["human_gate_ids"],
+            ["mag_route_gate_revision"],
+        )
 
     def test_family_orchestration_companion_is_projected_across_product_surfaces(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -1675,6 +1697,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             frontdesk["family_orchestration"]["event_envelope_surface"]["ref"],
             "/product_entry_manifest/recommended_command",
         )
+        self.assertEqual(frontdesk["product_entry_quickstart"]["recommended_step_id"], "open_frontdesk")
+        self.assertEqual(frontdesk["product_entry_quickstart"]["steps"][2]["step_id"], "inspect_progress")
+        self.assertEqual(frontdesk["product_entry_quickstart"]["steps"][2]["surface_kind"], "grant_progress")
         self.assertEqual(frontdesk["product_entry_manifest"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
         self.assertEqual(frontdesk["product_entry_manifest"]["manifest_version"], 2)
 

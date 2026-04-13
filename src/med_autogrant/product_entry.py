@@ -742,6 +742,54 @@ class MedAutoGrantProductEntry:
             checkpoint_lineage_surface_ref="/product_entry_manifest/repo_mainline/phase_status",
             resume_surface_kind=GRANT_USER_LOOP_KIND,
         )
+        product_entry_quickstart = {
+            "surface_kind": "product_entry_quickstart",
+            "recommended_step_id": "open_frontdesk",
+            "summary": (
+                "先从 direct grant product frontdesk 进入当前 frontdoor，"
+                "再回到 grant-user-loop，必要时读取 progress 或 cockpit projection。"
+            ),
+            "steps": [
+                {
+                    "step_id": "open_frontdesk",
+                    "title": "Open grant frontdesk",
+                    "command": product_frontdesk_command,
+                    "surface_kind": PRODUCT_FRONTDESK_KIND,
+                    "summary": "打开当前 direct grant frontdoor。",
+                    "requires": [],
+                },
+                {
+                    "step_id": "continue_grant_loop",
+                    "title": "Continue current grant loop",
+                    "command": grant_user_loop_command,
+                    "surface_kind": GRANT_USER_LOOP_KIND,
+                    "summary": operator_loop_actions["open_loop"]["summary"],
+                    "requires": ["task_intent"],
+                },
+                {
+                    "step_id": "inspect_progress",
+                    "title": "Inspect current progress",
+                    "command": command_catalog["grant_progress"],
+                    "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
+                    "summary": operator_loop_actions["inspect_progress"]["summary"],
+                    "requires": list(operator_loop_actions["inspect_progress"]["requires"]),
+                },
+                {
+                    "step_id": "inspect_cockpit",
+                    "title": "Inspect current cockpit",
+                    "command": grant_cockpit_command,
+                    "surface_kind": GRANT_COCKPIT_KIND,
+                    "summary": operator_loop_actions["inspect_cockpit"]["summary"],
+                    "requires": list(operator_loop_actions["inspect_cockpit"]["requires"]),
+                },
+            ],
+            "resume_contract": dict(family_orchestration["resume_contract"]),
+            "human_gate_ids": [
+                gate["gate_id"]
+                for gate in family_orchestration["human_gates"]
+                if isinstance(gate, dict) and gate.get("gate_id")
+            ],
+        }
 
         return {
             "ok": True,
@@ -864,6 +912,7 @@ class MedAutoGrantProductEntry:
                         "entry_mode": "opl-handoff",
                     },
                 },
+                "product_entry_quickstart": product_entry_quickstart,
                 "family_orchestration": family_orchestration,
                 "product_entry_status": {
                     "summary": _require_nonempty_string_from_mapping(
@@ -953,6 +1002,11 @@ class MedAutoGrantProductEntry:
                 "operator_loop_actions": dict(_require_mapping(
                     manifest,
                     "operator_loop_actions",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "product_entry_quickstart": dict(_require_mapping(
+                    manifest,
+                    "product_entry_quickstart",
                     context="product_frontdesk.product_entry_manifest",
                 )),
                 "family_orchestration": dict(_require_mapping(
