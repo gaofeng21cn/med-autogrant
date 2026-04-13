@@ -15,17 +15,17 @@
       Medical researchers, clinical teams, and faculty members preparing investigator-side grant applications
     </td>
     <td width="33%" valign="top">
-      <strong>What It Is</strong><br/>
-      An author-side, proposal-facing medical <code>Grant Ops</code> <code>Domain Harness OS</code> direction built on the shared <code>Unified Harness Engineering Substrate</code>
+      <strong>Public Role</strong><br/>
+      The medical grant-authoring <code>Grant Ops</code> <code>Domain Harness OS</code> on the shared <code>Unified Harness Engineering Substrate</code>
     </td>
     <td width="33%" valign="top">
-      <strong>Current Maturity</strong><br/>
-      A real upstream <code>Hermes-Agent</code> runtime substrate is now landed; the absorbed <code>R5.A</code> host-agent ladder survives only as a historical regression oracle, while the current <code>hermes_runtime.py</code> and <code>domain_entry.py</code> paths should be read as repo-side domain/entry adapters
+      <strong>Position In The Federation</strong><br/>
+      <code>One Person Lab -> Grant Foundry -> Med Auto Grant</code>; the active medical <code>Grant Ops</code> repository line, while top-level federation admission / handoff wording remains separately gated at <code>OPL</code>
     </td>
   </tr>
 </table>
 
-## One-Line Position
+## Product Position
 
 If your goal is to turn applicant background, prior work, preliminary evidence, and a candidate topic into a stronger `NSFC`-style proposal direction, `Med Auto Grant` is being built as a medical `Grant Ops` `Domain Harness OS` on the shared `Unified Harness Engineering Substrate` for governed question refinement, argument sharpening, draft expansion, mentor-style critique, structured revision, re-review evidence binding, and explicit verdict gating.
 

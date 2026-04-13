@@ -9,7 +9,7 @@ repo-tracked current-program truth 固定在 `contracts/runtime-program/current-
 当前 hosted-friendly contract bundle 也已经补出可机器读取的合同目录：`domain_entry_contract`、`schema_contract`、`authoring_contract` 一起进入 bundle，让 future hosted / `OPL` caller 能直接消费同一份 entry、schema 与 route truth。
 这份共享 `domain_entry_contract` 现在还会显式导出 `supported_commands` 与 `command_contracts`，而 hosted caller consumption proof 也已经 landed。
 
-## 先读核心骨架
+## 核心维护工作集
 
 - [项目概览](./project.md)
 - [当前状态](./status.md)
@@ -17,23 +17,35 @@ repo-tracked current-program truth 固定在 `contracts/runtime-program/current-
 - [不变量](./invariants.md)
 - [决策记录](./decisions.md)
 
-## 文档角色说明
-
-- `README*` 与 `docs/README*`：对外入口与索引。
-- 对外公开文档必须同步提供中英双语镜像。
-- 核心骨架（`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`）：项目真相与工作约束。
-- `docs/specs/**`：repo-tracked current truth、activation package 与设计冻结文档。
-- `docs/references/**`：仓库跟踪的内部参考文档，默认中文维护。
-- `docs/plans/**`：历史规划工件，仅用于追溯。
-- `docs/history/**`：历史归档入口（含 OMX）。
-
 ## 默认对外双语公开面
 
 - [仓库首页](../README.zh-CN.md)
 - [领域定位](./domain-positioning.zh-CN.md)
 - [MVP 范围](./mvp-scope.zh-CN.md)
 
-## Specs（current truth / activation package）
+这份索引和仓库首页共同构成默认 GitHub 对外双语入口。任何面向公众的细节说明，都应落在这里并提供中英双语镜像。
+
+## 当前基线、长线目标与任务层级
+
+- 当前 repo-verified 迁移基线：已 absorbed 的 `CLI-first + host-agent runtime` 线现在收口于 `R5.A` honest upper bound，只保留为 migration baseline / compatibility bridge / regression oracle。
+- 当前可执行 runtime 主线：`CLI-first` 形态下的真实 upstream Hermes substrate，repo-side 只保留 domain/entry adapter。
+- 产品入口 shell：`build-product-entry` 已经把可直接进入、也可被 `OPL` handoff 调起的轻量 grant `product entry` shell 落到仓库里。
+- 产品入口 preflight 面：`product-preflight` 现在会先暴露 direct grant frontdoor 的真实开机前检查，再决定是否进入当前 shell。
+- 产品入口发现面：`product-entry-manifest` 现在会把当前 grant shell、shared handoff 模板与当前 mainline snapshot 一起冻结成 machine-readable manifest，供 direct caller 与 `OPL` 一致消费；它现在也会带出同一份 `product_entry_preflight` companion，并由 `product-entry-manifest.schema.json` 保持 fail-closed。
+- 产品 frontdesk 面：`product-frontdesk` 现在会把 grant shell 上方的 controller-owned direct frontdoor 冻结成 machine-readable frontdesk contract，并同时带出家族统一的 `product_entry_preflight` / `product_entry_readiness` companion 与领域深层的 `grant_authoring_readiness` companion，由 `product-frontdesk.schema.json` 保持 fail-closed。
+- 本地 submission-ready 交付面：`build-submission-ready-package` 现在会对不完整 frozen workspace fail-closed，只有在必备章节、预实验、代表作、在研项目与冻结 gate 都对齐时，才导出本地 `submission_ready_package`。
+- direct-product projection：`grant-progress` 与 `grant-cockpit` 现在已经作为 controller-owned、read-only 的产品投影落地；它们只消费现有 route/audit truth 与 `build-product-entry` contract hint，由 `grant-progress.schema.json` 与 `grant-cockpit.schema.json` 冻结，并且故意不是新的 `domain_entry_contract` executor command，也不进入 hosted bundle command catalog。
+- direct-entry composition：`grant-direct-entry` 现在会把 `grant-progress`、`grant-cockpit` 与两种 `build-product-entry` mode 收成一份 controller-owned 的 direct-entry contract，由 `grant-direct-entry.schema.json` 冻结，并且继续不进入 service-safe domain command catalog。
+- current user loop：`mainline-status`、`mainline-phase` 与 `grant-user-loop` 现在会把 repo 主线快照、当前 direct-entry composition 与 route-derived next action 收成当前 inbox-like shell；其中 `grant-user-loop` 由 `grant-user-loop.schema.json` 冻结，并且继续不进入 service-safe domain command catalog。
+- schema-backed contract 收口：已 landed 的 `product entry` shell、`product-entry-manifest`、`product-frontdesk`、`executor_routing_contract`、全链 authoring command surface、`grant-progress`、`grant-cockpit`、`grant-direct-entry`、`grant-user-loop` 与 service-safe route surface 现在都已进入 `schemas/v1/`，并且会在生成时 fail-closed。
+- hosted contract bundle 收口：`build-hosted-contract-bundle` 现在会在既有 runtime/state/operator surface 之外，再显式导出 `domain_entry_contract`、`schema_contract` 与 `authoring_contract`，并统一受 `hosted-contract-bundle.schema.json` 约束。
+- hosted caller proof 收口：external caller 现在已经可以直接消费共享 `domain_entry_contract` 里的 `supported_commands` 与 `command_contracts`，不再依赖 repo-local helper。
+- 当前任务梯子：保持已 landed 的 Hermes substrate、service-safe domain entry、hosted caller proof 与 author-side object boundary 持续全绿；旧 host-agent 线只作为回归 oracle。
+- 历史 bridge / OMX 资料只负责追溯，不再构成当前入口。
+
+## 仓库跟踪的内部文档
+
+### Specs（current truth / activation package）
 
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md)
 - [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md)
@@ -58,28 +70,25 @@ repo-tracked current-program truth 固定在 `contracts/runtime-program/current-
 
 Specs 是 repo-tracked 的权威 current truth/activation package，但不替代核心骨架。
 
-## 当前基线、长线目标与任务层级
+### 内部参考说明
 
-- 当前 repo-verified 迁移基线：已 absorbed 的 `CLI-first + host-agent runtime` 线现在收口于 `R5.A` honest upper bound，只保留为 migration baseline / compatibility bridge / regression oracle。
-- 当前可执行 runtime 主线：`CLI-first` 形态下的真实 upstream Hermes substrate，repo-side 只保留 domain/entry adapter。
-- 产品入口 shell：`build-product-entry` 已经把可直接进入、也可被 `OPL` handoff 调起的轻量 grant `product entry` shell 落到仓库里。
-- 产品入口 preflight 面：`product-preflight` 现在会先暴露 direct grant frontdoor 的真实开机前检查，再决定是否进入当前 shell。
-- 产品入口发现面：`product-entry-manifest` 现在会把当前 grant shell、shared handoff 模板与当前 mainline snapshot 一起冻结成 machine-readable manifest，供 direct caller 与 `OPL` 一致消费；它现在也会带出同一份 `product_entry_preflight` companion，并由 `product-entry-manifest.schema.json` 保持 fail-closed。
-- 产品 frontdesk 面：`product-frontdesk` 现在会把 grant shell 上方的 controller-owned direct frontdoor 冻结成 machine-readable frontdesk contract，并同时带出家族统一的 `product_entry_preflight` / `product_entry_readiness` companion 与领域深层的 `grant_authoring_readiness` companion，由 `product-frontdesk.schema.json` 保持 fail-closed。
-- 本地 submission-ready 交付面：`build-submission-ready-package` 现在会对不完整 frozen workspace fail-closed，只有在必备章节、预实验、代表作、在研项目与冻结 gate 都对齐时，才导出本地 `submission_ready_package`。
-- direct-product projection：`grant-progress` 与 `grant-cockpit` 现在已经作为 controller-owned、read-only 的产品投影落地；它们只消费现有 route/audit truth 与 `build-product-entry` contract hint，由 `grant-progress.schema.json` 与 `grant-cockpit.schema.json` 冻结，并且故意不是新的 `domain_entry_contract` executor command，也不进入 hosted bundle command catalog。
-- direct-entry composition：`grant-direct-entry` 现在会把 `grant-progress`、`grant-cockpit` 与两种 `build-product-entry` mode 收成一份 controller-owned 的 direct-entry contract，由 `grant-direct-entry.schema.json` 冻结，并且继续不进入 service-safe domain command catalog。
-- current user loop：`mainline-status`、`mainline-phase` 与 `grant-user-loop` 现在会把 repo 主线快照、当前 direct-entry composition 与 route-derived next action 收成当前 inbox-like shell；其中 `grant-user-loop` 由 `grant-user-loop.schema.json` 冻结，并且继续不进入 service-safe domain command catalog。
-- schema-backed contract 收口：已 landed 的 `product entry` shell、`product-entry-manifest`、`product-frontdesk`、`executor_routing_contract`、全链 authoring command surface、`grant-progress`、`grant-cockpit`、`grant-direct-entry`、`grant-user-loop` 与 service-safe route surface 现在都已进入 `schemas/v1/`，并且会在生成时 fail-closed。
-- hosted contract bundle 收口：`build-hosted-contract-bundle` 现在会在既有 runtime/state/operator surface 之外，再显式导出 `domain_entry_contract`、`schema_contract` 与 `authoring_contract`，并统一受 `hosted-contract-bundle.schema.json` 约束。
-- hosted caller proof 收口：external caller 现在已经可以直接消费共享 `domain_entry_contract` 里的 `supported_commands` 与 `command_contracts`，不再依赖 repo-local helper。
-- 当前任务梯子：保持已 landed 的 Hermes substrate、service-safe domain entry、hosted caller proof 与 author-side object boundary 持续全绿；旧 host-agent 线只作为回归 oracle。
-- 历史 bridge / OMX 资料只负责追溯，不再构成当前入口。
+- [轻量产品入口与 OPL Handoff](./references/lightweight_product_entry_and_opl_handoff.md)
 
-## Plans 与历史归档
+### 历史计划工件
 
 - [最小 Scaffold 计划](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
 - [P1 Formal Entry And Durability Planning Brief](./plans/2026-04-07-p1-formal-entry-and-durability-planning-brief.md)
 - [OPL 对齐目标形态与 hosted caller 计划](./plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md)
-- [轻量产品入口与 OPL Handoff](./references/lightweight_product_entry_and_opl_handoff.md)
+
+## 仓库历史
+
 - [OMX 历史资料索引](./history/omx/README.zh-CN.md)
+
+## 文档边界
+
+- `README*` 与 `docs/README*`：默认双语对外公开面。
+- `docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`：AI / 维护者核心工作集。
+- `docs/specs/**`：repo-tracked current truth、activation package 与设计冻结文档。
+- `docs/references/**`：仓库跟踪的内部参考文档，默认中文维护。
+- `docs/plans/**`：历史规划工件，仅用于追溯。
+- `docs/history/**`：历史归档入口，含 OMX。

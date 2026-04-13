@@ -15,17 +15,17 @@
       需要准备基金申请的医学研究者、临床团队、青年教师与 PI
     </td>
     <td width="33%" valign="top">
-      <strong>它是什么</strong><br/>
-      共享 <code>Unified Harness Engineering Substrate</code> 之上，面向申请人侧、proposal-facing 的医学 <code>Grant Ops</code> <code>Domain Harness OS</code> 方向/系统
+      <strong>公开角色</strong><br/>
+      共享 <code>Unified Harness Engineering Substrate</code> 之上的医学基金 authoring <code>Grant Ops</code> <code>Domain Harness OS</code>
     </td>
     <td width="33%" valign="top">
-      <strong>当前成熟度</strong><br/>
-      当前已经有一条真实 upstream <code>Hermes-Agent</code> runtime substrate 主线；已 absorbed 的 <code>R5.A</code> host-agent ladder 只保留为历史 regression oracle，而当前 <code>hermes_runtime.py</code> 与 <code>domain_entry.py</code> 路径都应被理解成 repo-side domain/entry adapter
+      <strong>在联邦中的位置</strong><br/>
+      <code>One Person Lab -> Grant Foundry -> Med Auto Grant</code>；当前活跃的医学 <code>Grant Ops</code> 业务仓主线，而顶层 federation admission / handoff wording 仍在 <code>OPL</code> 单独门控
     </td>
   </tr>
 </table>
 
-## 一句话理解
+## 产品定位
 
 如果你的目标是把申请人履历、既有成果、在研项目、预实验结果和候选方向，收敛成一条更像样的 `NSFC` 风格基金申请主线，`Med Auto Grant` 正在被构建成共享 `Unified Harness Engineering Substrate` 之上的医学 `Grant Ops` `Domain Harness OS`，用于承载可治理、可审计、可持续修订、并能显式回看上一轮修订证据的主线流程。
 

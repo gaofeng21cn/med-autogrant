@@ -10,7 +10,7 @@ The current entry truth is also explicit: `operator entry` and `agent entry` are
 The hosted-friendly contract bundle now also ships a machine-readable catalog through `domain_entry_contract`, `schema_contract`, and `authoring_contract`, so future hosted / `OPL` callers can consume the same frozen entry, schema, and route truth.
 That shared `domain_entry_contract` now also exposes `supported_commands` and `command_contracts`, and the hosted caller consumption proof is now landed.
 
-## Start Here: Core Docs
+## Core Maintainer Working Set
 
 - [Project](./project.md)
 - [Status](./status.md)
@@ -18,23 +18,36 @@ That shared `domain_entry_contract` now also exposes `supported_commands` and `c
 - [Invariants](./invariants.md)
 - [Decisions](./decisions.md)
 
-## Document Roles
-
-- `README*` and `docs/README*`: public entry points and indexes.
-- Public docs must ship with synchronized English and Chinese mirrors.
-- Core skeleton (`docs/project.md`, `docs/status.md`, `docs/architecture.md`, `docs/invariants.md`, `docs/decisions.md`): canonical overview and working constraints.
-- `docs/specs/**`: repo-tracked current truth, activation packages, and design freezes.
-- `docs/references/**`: repo-tracked internal reference notes, Chinese by default.
-- `docs/plans/**`: historical planning artifacts only.
-- `docs/history/**`: archival material (including OMX).
-
-## Public Bilingual Surface
+## Default Public Bilingual Surface
 
 - [Repository home](../README.md)
 - [Domain Positioning](./domain-positioning.md)
 - [MVP Scope](./mvp-scope.md)
 
-## Specs (Current Truth / Activation Packages)
+This index together with the repository home forms the default GitHub-facing bilingual surface. Any externally presented detail should land here with mirrored English and Chinese variants.
+
+## Current Baseline, Long-Line Target, And Task Ladder
+
+- Current repo-verified migration baseline: the absorbed `CLI-first + host-agent runtime` line now closes at the `R5.A` honest upper bound and is retained only as a migration baseline / compatibility bridge / regression oracle.
+- Current executable runtime mainline: `CLI-first` runtime on real upstream Hermes substrate, with repo-side domain/entry adapters preserving Med Auto Grant semantics.
+- Product-entry shell: the lightweight grant `product entry` shell is now landed through `build-product-entry`, reusable both directly and through `OPL` handoff.
+- Product-entry preflight surface: `product-preflight` now exposes the real startup checks for the direct grant frontdoor before the operator enters the current shell.
+- Product-entry discovery surface: `product-entry-manifest` now freezes the current grant shell, shared handoff templates, and current mainline snapshot into one machine-readable manifest for direct callers and `OPL`, and it now also carries the same `product_entry_preflight` companion fail-closed by `product-entry-manifest.schema.json`.
+- Product frontdesk surface: `product-frontdesk` now freezes the controller-owned direct front door above the grant shell into one machine-readable frontdesk contract, including the family-level `product_entry_preflight` / `product_entry_readiness` companions plus the domain-deep `grant_authoring_readiness` companion, and it is now fail-closed by `product-frontdesk.schema.json`.
+- Local submission-ready delivery surface: `build-submission-ready-package` now fail-closes on incomplete frozen workspaces and exports a local `submission_ready_package` only when mandatory sections, evidence, outputs, projects, and freeze gates all line up.
+- Direct-product projection: `grant-progress` and `grant-cockpit` are now landed as controller-owned, read-only product projections. They consume existing route/audit truth and `build-product-entry` contract hints, are frozen by `grant-progress.schema.json` and `grant-cockpit.schema.json`, and are intentionally not new `domain_entry_contract` executor commands or hosted bundle command catalog entries.
+- Direct-entry composition: `grant-direct-entry` now packages `grant-progress`, `grant-cockpit`, and both `build-product-entry` modes into one controller-owned direct-entry contract. It is frozen by `grant-direct-entry.schema.json` and still remains outside the service-safe domain command catalog.
+- Current user loop: `mainline-status`, `mainline-phase`, and `grant-user-loop` now expose the repo mainline snapshot, current direct-entry composition, and route-derived next action as the current inbox-like shell. `grant-user-loop` is frozen by `grant-user-loop.schema.json` and still remains outside the service-safe domain command catalog.
+- Schema-backed contract closeout: the landed `product entry` shell, `product-entry-manifest`, `product-frontdesk`, `executor_routing_contract`, the full authoring command surface, `grant-progress`, `grant-cockpit`, `grant-direct-entry`, `grant-user-loop`, and service-safe route surfaces are now indexed under `schemas/v1/` and validated fail-closed at generation time.
+- Hosted contract bundle closeout: `build-hosted-contract-bundle` now exports `domain_entry_contract`, `schema_contract`, and `authoring_contract` alongside the existing runtime/state/operator surfaces, and the whole bundle is validated through `hosted-contract-bundle.schema.json`.
+- Hosted caller proof closeout: external caller consumption is now repo-verified through the shared `domain_entry_contract`, including `supported_commands` and `command_contracts`, without repo-local helper code.
+- Fastest cutover board: [Upstream Hermes-Agent fast cutover board](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md) (Chinese only)
+- Active task ladder: keep the landed Hermes substrate, service-safe domain entry, hosted caller proof, and author-side object boundaries green while the old host-agent line remains only as a regression oracle.
+- Historical bridge / OMX materials remain traceability aids only and must not be treated as current entrypoints.
+
+## Repo-Tracked Internal Docs
+
+### Specs (Current Truth / Activation Packages)
 
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md) (Chinese only)
 - [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md) (Chinese only)
@@ -60,29 +73,25 @@ That shared `domain_entry_contract` now also exposes `supported_commands` and `c
 
 Specs are repo-tracked and authoritative for activation packages and current truth, but they do not replace the core skeleton.
 
-## Current Baseline, Long-Line Target, And Task Ladder
+### Internal Reference Notes
 
-- Current repo-verified migration baseline: the absorbed `CLI-first + host-agent runtime` line now closes at the `R5.A` honest upper bound and is retained only as a migration baseline / compatibility bridge / regression oracle.
-- Current executable runtime mainline: `CLI-first` runtime on real upstream Hermes substrate, with repo-side domain/entry adapters preserving Med Auto Grant semantics.
-- Product-entry shell: the lightweight grant `product entry` shell is now landed through `build-product-entry`, reusable both directly and through `OPL` handoff.
-- Product-entry preflight surface: `product-preflight` now exposes the real startup checks for the direct grant frontdoor before the operator enters the current shell.
-- Product-entry discovery surface: `product-entry-manifest` now freezes the current grant shell, shared handoff templates, and current mainline snapshot into one machine-readable manifest for direct callers and `OPL`, and it now also carries the same `product_entry_preflight` companion fail-closed by `product-entry-manifest.schema.json`.
-- Product frontdesk surface: `product-frontdesk` now freezes the controller-owned direct front door above the grant shell into one machine-readable frontdesk contract, including the family-level `product_entry_preflight` / `product_entry_readiness` companions plus the domain-deep `grant_authoring_readiness` companion, and it is now fail-closed by `product-frontdesk.schema.json`.
-- Local submission-ready delivery surface: `build-submission-ready-package` now fail-closes on incomplete frozen workspaces and exports a local `submission_ready_package` only when mandatory sections, evidence, outputs, projects, and freeze gates all line up.
-- Direct-product projection: `grant-progress` and `grant-cockpit` are now landed as controller-owned, read-only product projections. They consume existing route/audit truth and `build-product-entry` contract hints, are frozen by `grant-progress.schema.json` and `grant-cockpit.schema.json`, and are intentionally not new `domain_entry_contract` executor commands or hosted bundle command catalog entries.
-- Direct-entry composition: `grant-direct-entry` now packages `grant-progress`, `grant-cockpit`, and both `build-product-entry` modes into one controller-owned direct-entry contract. It is frozen by `grant-direct-entry.schema.json` and still remains outside the service-safe domain command catalog.
-- Current user loop: `mainline-status`, `mainline-phase`, and `grant-user-loop` now expose the repo mainline snapshot, current direct-entry composition, and route-derived next action as the current inbox-like shell. `grant-user-loop` is frozen by `grant-user-loop.schema.json` and still remains outside the service-safe domain command catalog.
-- Schema-backed contract closeout: the landed `product entry` shell, `product-entry-manifest`, `product-frontdesk`, `executor_routing_contract`, the full authoring command surface, `grant-progress`, `grant-cockpit`, `grant-direct-entry`, `grant-user-loop`, and service-safe route surfaces are now indexed under `schemas/v1/` and validated fail-closed at generation time.
-- Hosted contract bundle closeout: `build-hosted-contract-bundle` now exports `domain_entry_contract`, `schema_contract`, and `authoring_contract` alongside the existing runtime/state/operator surfaces, and the whole bundle is validated through `hosted-contract-bundle.schema.json`.
-- Hosted caller proof closeout: external caller consumption is now repo-verified through the shared `domain_entry_contract`, including `supported_commands` and `command_contracts`, without repo-local helper code.
-- Fastest cutover board: [Upstream Hermes-Agent fast cutover board](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md) (Chinese only)
-- Active task ladder: keep the landed Hermes substrate, service-safe domain entry, hosted caller proof, and author-side object boundaries green while the old host-agent line remains only as a regression oracle.
-- Historical bridge / OMX materials remain traceability aids only and must not be treated as current entrypoints.
+- [Lightweight product entry and OPL handoff](./references/lightweight_product_entry_and_opl_handoff.md) (Chinese only)
 
-## Plans & History
+### Historical Plans
 
 - [Minimal Scaffold Plan](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
 - [P1 Formal Entry And Durability Planning Brief](./plans/2026-04-07-p1-formal-entry-and-durability-planning-brief.md)
 - [OPL-aligned target shape and hosted caller plan](./plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md)
-- [Lightweight product entry and OPL handoff](./references/lightweight_product_entry_and_opl_handoff.md) (Chinese only)
+
+## Repository History
+
 - [OMX historical archive](./history/omx/README.md)
+
+## Documentation Boundary
+
+- `README*` and `docs/README*`: default bilingual public surface.
+- `docs/project.md`, `docs/status.md`, `docs/architecture.md`, `docs/invariants.md`, `docs/decisions.md`: AI / maintainer core working set.
+- `docs/specs/**`: repo-tracked current truth, activation packages, and design freezes.
+- `docs/references/**`: repo-tracked internal reference notes, Chinese by default.
+- `docs/plans/**`: historical planning artifacts only.
+- `docs/history/**`: archival material, including OMX.
