@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 import json
 import sys
 import unittest
@@ -1052,7 +1053,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.D full grant authoring executor landing",
+                            "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1131,7 +1132,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.D full grant authoring executor landing",
+                            "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1228,7 +1229,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.D full grant authoring executor landing",
+                                "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1317,7 +1318,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.D full grant authoring executor landing",
+                                "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1402,7 +1403,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["grant_user_loop"]["entry_kind"], "grant_user_loop")
         self.assertEqual(
             payload["grant_user_loop"]["mainline_snapshot"]["active_tranche"],
-            "P4.D full grant authoring executor landing",
+            "P4.E schema-backed frontdesk and manifest contract landing",
         )
         self.assertEqual(
             payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
@@ -1489,7 +1490,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(manifest["repo_mainline"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             manifest["repo_mainline"]["active_tranche"],
-            "P4.D full grant authoring executor landing",
+            "P4.E schema-backed frontdesk and manifest contract landing",
         )
         self.assertEqual(manifest["repo_mainline"]["phase_id"], "P4")
         self.assertEqual(
@@ -1499,8 +1500,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(
             manifest["repo_mainline"]["next_focus"],
             [
-                "继续把 `grant-user-loop` 当作当前 direct grant user inbox shell，并保持全链 landed route catalog 与 mainline snapshot / product entry truth 对齐。",
-                "继续用 fresh proof 验证 direction_screening -> frozen 的 landed authoring executor 链条在 Hermes substrate 上不漂移。",
+                "继续把 `product-entry-manifest` / `product-frontdesk` 当作当前 direct grant frontdoor contract，并让 `grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop` 继续对齐同一份 frontdoor truth。",
+                "继续把 `family_orchestration` companion 从 action graph / human gate preview 深压到 family product-entry manifest v2、event envelope 与 checkpoint lineage contract，并保持 route status 直接读取共享 author-side route truth。",
             ],
         )
         self.assertEqual(
@@ -1765,6 +1766,60 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(frontdesk["product_entry_quickstart"]["steps"][2]["surface_kind"], "grant_progress")
         self.assertEqual(frontdesk["product_entry_manifest"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
         self.assertEqual(frontdesk["product_entry_manifest"]["manifest_version"], 2)
+
+    def test_product_entry_manifest_fails_closed_on_invalid_mainline_snapshot_shape(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with patch(
+            "med_autogrant.product_entry._build_mainline_snapshot",
+            return_value={
+                "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                "active_phase": "P4 mature direct grant product entry",
+                "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
+                "phase_map": [{"phase_id": "P4", "phase_name": "mature direct grant product entry", "status": "next"}],
+                "next_focus": [1],
+                "remaining_gaps": ["mature direct grant Web UI / hosted runtime 仍未 landed。"],
+            },
+        ):
+            with self.assertRaisesRegex(WorkspaceStateError, "product_entry_manifest"):
+                MedAutoGrantProductEntry().build_product_entry_manifest(
+                    input_path=str(CRITIQUE_EXAMPLE_PATH),
+                )
+
+    def test_product_frontdesk_fails_closed_on_invalid_operator_loop_action_shape(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        entry = MedAutoGrantProductEntry()
+        manifest_payload = deepcopy(
+            entry.build_product_entry_manifest(
+                input_path=str(CRITIQUE_EXAMPLE_PATH),
+            )
+        )
+        manifest_payload["product_entry_manifest"]["operator_loop_actions"]["open_loop"] = {
+            "command": "uv run python -m med_autogrant grant-user-loop --format json",
+        }
+
+        with patch.object(
+            MedAutoGrantProductEntry,
+            "build_product_entry_manifest",
+            return_value=manifest_payload,
+        ):
+            with self.assertRaisesRegex(WorkspaceStateError, "product_frontdesk"):
+                MedAutoGrantProductEntry().build_product_frontdesk(
+                    input_path=str(CRITIQUE_EXAMPLE_PATH),
+                )
+
+    def test_grant_progress_family_orchestration_marks_landed_authoring_route_as_approved(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().read_grant_progress(
+            input_path=str(DIRECTION_EXAMPLE_PATH),
+        )
+
+        family_orchestration = payload["family_orchestration"]
+        self.assertEqual(family_orchestration["human_gates"][0]["gate_id"], "mag_route_gate_question_refinement")
+        self.assertEqual(family_orchestration["human_gates"][0]["status"], "approved")
+        self.assertEqual(family_orchestration["action_graph"]["edges"][0]["on"], "success")
 
     def test_grant_progress_fails_closed_on_invalid_projection_shape(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

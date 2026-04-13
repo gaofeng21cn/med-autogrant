@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/product-frontdesk.schema.json",
+  "title": "Med Auto Grant Product Frontdesk",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "entrySurfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frontdesk",
+        "grant_progress",
+        "grant_cockpit",
+        "grant_direct_entry",
+        "grant_user_loop",
+        "direct_entry_builder",
+        "opl_handoff_builder"
+      ],
+      "properties": {
+        "frontdesk": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
+        },
+        "grant_progress": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
+        },
+        "grant_cockpit": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
+        },
+        "grant_direct_entry": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
+        },
+        "grant_user_loop": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
+        },
+        "direct_entry_builder": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/sharedHandoffBuilder"
+        },
+        "opl_handoff_builder": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/sharedHandoffBuilder"
+        }
+      }
+    },
+    "summarySurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frontdesk_command",
+        "recommended_command",
+        "operator_loop_command"
+      ],
+      "properties": {
+        "frontdesk_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "operator_loop_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "productFrontdesk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "recommended_action",
+        "target_domain_id",
+        "workspace_locator",
+        "runtime",
+        "product_entry_status",
+        "frontdesk_surface",
+        "operator_loop_surface",
+        "operator_loop_actions",
+        "product_entry_quickstart",
+        "family_orchestration",
+        "product_entry_manifest",
+        "entry_surfaces",
+        "summary",
+        "notes"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "product_frontdesk"
+        },
+        "recommended_action": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "workspace_locator": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/workspaceLocator"
+        },
+        "runtime": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/runtimeSummary"
+        },
+        "product_entry_status": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryStatus"
+        },
+        "frontdesk_surface": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/shellSurface"
+        },
+        "operator_loop_surface": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/shellSurface"
+        },
+        "operator_loop_actions": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/operatorLoopActions"
+        },
+        "product_entry_quickstart": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryQuickstart"
+        },
+        "family_orchestration": {
+          "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
+        },
+        "product_entry_manifest": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryManifest"
+        },
+        "entry_surfaces": {
+          "$ref": "#/$defs/entrySurfaces"
+        },
+        "summary": {
+          "$ref": "#/$defs/summarySurface"
+        },
+        "notes": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "product_frontdesk"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "product-frontdesk"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "lifecycle_stage": {
+      "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "product_frontdesk": {
+      "$ref": "#/$defs/productFrontdesk"
+    }
+  }
+}

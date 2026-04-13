@@ -133,6 +133,8 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "docs/specs/2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md",
                 "docs/specs/2026-04-12-p4b-direct-grant-entry-composition-current-truth.md",
                 "docs/specs/2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md",
+                "docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md",
+                "docs/specs/2026-04-13-p4e-schema-backed-frontdesk-and-manifest-current-truth.md",
             ],
         },
     }
@@ -175,6 +177,11 @@ def _completed_tranches() -> list[dict[str, str]]:
             "title": "full grant authoring executor landing",
             "summary": "direction_screening -> frozen 的全链 authoring executor 已 landed 到 service-safe command surface。",
         },
+        {
+            "tranche_id": "P4.E",
+            "title": "schema-backed frontdesk and manifest contract landing",
+            "summary": "product-entry-manifest / product-frontdesk 已 landed 为独立 schema-backed、generation-time fail-closed 的 direct frontdoor contract。",
+        },
     ]
 
 
@@ -196,8 +203,8 @@ def _explicitly_not_now() -> list[str]:
 
 def _next_focus() -> list[str]:
     return [
-        "继续把 `grant-user-loop` 当作当前 direct grant user inbox shell，并保持全链 landed route catalog 与 mainline snapshot / product entry truth 对齐。",
-        "继续用 fresh proof 验证 direction_screening -> frozen 的 landed authoring executor 链条在 Hermes substrate 上不漂移。",
+        "继续把 `product-entry-manifest` / `product-frontdesk` 当作当前 direct grant frontdoor contract，并让 `grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop` 继续对齐同一份 frontdoor truth。",
+        "继续把 `family_orchestration` companion 从 action graph / human gate preview 深压到 family product-entry manifest v2、event envelope 与 checkpoint lineage contract，并保持 route status 直接读取共享 author-side route truth。",
     ]
 
 

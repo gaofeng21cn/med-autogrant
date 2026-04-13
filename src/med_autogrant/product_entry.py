@@ -6,12 +6,15 @@ from typing import Any, Mapping
 
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.hermes_runtime import (
+    _build_author_side_route_contract,
     _build_domain_entry_contract,
     GRANT_COCKPIT_SCHEMA_FILE,
     GRANT_DIRECT_ENTRY_SCHEMA_FILE,
     GRANT_PROGRESS_SCHEMA_FILE,
     GRANT_USER_LOOP_SCHEMA_FILE,
+    PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
     PRODUCT_ENTRY_SCHEMA_FILE,
+    PRODUCT_FRONTDESK_SCHEMA_FILE,
     _build_executor_routing_contract,
     _build_operator_contract,
     _build_runtime_state_contract,
@@ -39,7 +42,6 @@ GRANT_DIRECT_ENTRY_KIND = "grant_direct_entry"
 GRANT_USER_LOOP_VERSION = 1
 GRANT_USER_LOOP_KIND = "grant_user_loop"
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
-LANDED_ROUTE_IDS = {"critique", "revision", "artifact_bundle", "final_package", "hosted_contract_bundle"}
 
 
 class MedAutoGrantProductEntry:
@@ -791,7 +793,7 @@ class MedAutoGrantProductEntry:
             ],
         }
 
-        return {
+        payload = {
             "ok": True,
             "command": "product-entry-manifest",
             "grant_run_id": progress_payload["grant_run_id"],
@@ -931,6 +933,13 @@ class MedAutoGrantProductEntry:
                 ],
             },
         }
+        _validate_product_entry_manifest_contract(
+            payload,
+            grant_run_id=progress_payload["grant_run_id"],
+            workspace_id=progress_payload["workspace_id"],
+            lifecycle_stage=progress_payload["lifecycle_stage"],
+        )
+        return payload
 
     def build_product_frontdesk(
         self,
@@ -958,7 +967,7 @@ class MedAutoGrantProductEntry:
             context="product_frontdesk.product_entry_manifest",
         )
 
-        return {
+        payload = {
             "ok": True,
             "command": "product-frontdesk",
             "grant_run_id": manifest_payload["grant_run_id"],
@@ -1075,6 +1084,13 @@ class MedAutoGrantProductEntry:
                 ],
             },
         }
+        _validate_product_frontdesk_contract(
+            payload,
+            grant_run_id=manifest_payload["grant_run_id"],
+            workspace_id=manifest_payload["workspace_id"],
+            lifecycle_stage=manifest_payload["lifecycle_stage"],
+        )
+        return payload
 
     def _load_projection_context(
         self,
@@ -1190,9 +1206,15 @@ def _read_nonempty_string_list(value: Any, *, context: str) -> list[str]:
 
 def _route_status_from_route_id(route_id: str) -> str:
     resolved_route_id = _require_nonempty_string(route_id, field_name="route_id")
-    if resolved_route_id in LANDED_ROUTE_IDS:
-        return "landed"
-    return "pending"
+    route_contract = _build_author_side_route_contract(
+        resolved_route_id,
+        source_stage=resolved_route_id,
+    )
+    return _require_nonempty_string_from_mapping(
+        route_contract,
+        "route_status",
+        context="author_side_route_contract",
+    )
 
 
 def _build_family_orchestration_companion(
@@ -1957,6 +1979,40 @@ def _validate_grant_user_loop_contract(
                 workspace_id=workspace_id,
                 lifecycle_stage=lifecycle_stage,
             )
+
+
+def _validate_product_entry_manifest_contract(
+    payload: dict[str, Any],
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+) -> None:
+    _validate_contract_schema(
+        payload,
+        schema_file=PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
+        context="product_entry_manifest",
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+
+
+def _validate_product_frontdesk_contract(
+    payload: dict[str, Any],
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+) -> None:
+    _validate_contract_schema(
+        payload,
+        schema_file=PRODUCT_FRONTDESK_SCHEMA_FILE,
+        context="product_frontdesk",
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+    )
 
 
 def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
