@@ -61,6 +61,7 @@ That means:
 - `product entry`: `build-product-entry` now lands the lightweight structured shell for both direct entry and `OPL` handoff, while richer grant-facing product UX still remains future work
 - `product frontdesk`: `product-frontdesk` now lands the controller-owned direct front door above the same shell, while the actual operator loop still lives in `grant-user-loop`; together with `product-entry-manifest`, it is now independently schema-backed and fail-closed, and the paired manifest/frontdesk now also carry `grant_authoring_readiness`, quickstart guidance, and `build_submission_ready_package` as a user-facing local delivery action while still keeping the maturity boundary honest
 - `product preflight`: `product-preflight` now lands the honest startup-check surface for that same direct frontdoor, and the paired manifest/frontdesk now also carry the same `product_entry_preflight` companion for machine-readable callers
+- `product start`: `product-start` now exposes one schema-backed start surface with the recommended mode, available modes, resume surface, and human-gate summary aligned with the same direct-entry shell
 - `product projection`: `grant-progress` and `grant-cockpit` now land the first controller-owned, read-only direct-product projection as schema-backed, generation-time fail-closed contract surfaces, but they are intentionally not new `domain_entry_contract` executor commands, do not enter the hosted contract bundle command catalog, and do not yet constitute a mature frontend
 - `direct entry composition`: `grant-direct-entry` now lands the next controller-owned direct-entry composition surface by reusing `grant-progress`, `grant-cockpit`, and both `build-product-entry` modes, but it still does not become a new service-safe domain executor or hosted bundle command
 - `current user loop`: `mainline-status`, `mainline-phase`, and `grant-user-loop` now package the repo mainline snapshot, current direct-entry composition, and route-derived next action into the current inbox-like CLI shell, but they still do not claim a mature web frontend or hosted runtime
@@ -166,6 +167,10 @@ Typical flow:
 2. Ask your agent to first organize them into a structured, auditable grant workspace.
 3. Ask your agent to use `Med Auto Grant` to refine the scientific question, tighten the argument chain, expand draft sections, produce critique, drive revision, and keep prior revision evidence visible during re-review.
 
+If you want one machine-readable start surface before entering that loop, read:
+
+`uv run python -m med_autogrant product-start --input <workspace.json> --format json`
+
 You can give your agent an instruction like this:
 
 > Read the applicant materials, prior outputs, active projects, preliminary evidence, and the target funding requirements in this workspace first. Organize them into a structured, auditable grant workspace. Then use Med Auto Grant as the medical Grant Ops mainline for an NSFC-style application. Prioritize scientific-question quality, necessity and scientific value, applicant-problem fit, draft consistency, mentor-style critique, and explicit revision evidence before trying to complete submission-facing packaging. If the direction is weak, stop, reframe, or request missing evidence instead of pushing a weak proposal forward.
@@ -216,6 +221,7 @@ uv run python -m med_autogrant grant-progress --input examples/nsfc_workspace_p2
 uv run python -m med_autogrant grant-cockpit --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant grant-direct-entry --input examples/nsfc_workspace_p2c_critique.json --task-intent tighten-grant-mainline --format json
 uv run python -m med_autogrant grant-user-loop --input examples/nsfc_workspace_p2c_critique.json --task-intent tighten-grant-mainline --format json
+uv run python -m med_autogrant product-start --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant build-product-entry --input examples/nsfc_workspace_p2c_critique.json --entry-mode direct --task-intent tighten-grant-mainline --format json
 
 # 2. Deterministic local revision pass

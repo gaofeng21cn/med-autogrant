@@ -50,6 +50,77 @@ GRANT_USER_LOOP_KIND = "grant_user_loop"
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 
 
+def _build_product_entry_start(
+    *,
+    product_frontdesk_command: str,
+    grant_user_loop_command: str,
+    grant_direct_entry_command: str,
+    operator_loop_actions: Mapping[str, Mapping[str, Any]],
+    family_orchestration: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "product_entry_start",
+        "summary": (
+            "先进入 direct grant frontdesk；需要继续当前写作主线时恢复 grant user loop，"
+            "需要把用户意图显式装配成入口合同时再构建 direct entry。"
+        ),
+        "recommended_mode_id": "open_frontdesk",
+        "modes": [
+            {
+                "mode_id": "open_frontdesk",
+                "title": "Open grant frontdesk",
+                "command": product_frontdesk_command,
+                "surface_kind": PRODUCT_FRONTDESK_KIND,
+                "summary": "打开当前 direct grant frontdoor。",
+                "requires": [],
+            },
+            {
+                "mode_id": "continue_grant_loop",
+                "title": "Continue current grant loop",
+                "command": grant_user_loop_command,
+                "surface_kind": GRANT_USER_LOOP_KIND,
+                "summary": _require_nonempty_string_from_mapping(
+                    operator_loop_actions["open_loop"],
+                    "summary",
+                    context="operator_loop_actions.open_loop",
+                ),
+                "requires": ["task_intent"],
+            },
+            {
+                "mode_id": "build_direct_entry",
+                "title": "Build direct entry",
+                "command": grant_direct_entry_command,
+                "surface_kind": GRANT_DIRECT_ENTRY_KIND,
+                "summary": _require_nonempty_string_from_mapping(
+                    operator_loop_actions["build_direct_entry"],
+                    "summary",
+                    context="operator_loop_actions.build_direct_entry",
+                ),
+                "requires": list(
+                    _require_mapping(
+                        operator_loop_actions,
+                        "build_direct_entry",
+                        context="operator_loop_actions",
+                    ).get("requires")
+                    or []
+                ),
+            },
+        ],
+        "resume_surface": dict(
+            _require_mapping(
+                family_orchestration,
+                "resume_contract",
+                context="family_orchestration",
+            )
+        ),
+        "human_gate_ids": [
+            gate["gate_id"]
+            for gate in list(family_orchestration.get("human_gates") or [])
+            if isinstance(gate, Mapping) and gate.get("gate_id")
+        ],
+    }
+
+
 class MedAutoGrantProductEntry:
     """轻量 grant product entry 壳，复用已 landed 的 domain entry 与 Hermes substrate contract。"""
 
@@ -772,6 +843,13 @@ class MedAutoGrantProductEntry:
             checkpoint_lineage_surface_ref="/product_entry_manifest/repo_mainline/phase_status",
             resume_surface_kind=GRANT_USER_LOOP_KIND,
         )
+        product_entry_start = _build_product_entry_start(
+            product_frontdesk_command=product_frontdesk_command,
+            grant_user_loop_command=grant_user_loop_command,
+            grant_direct_entry_command=grant_direct_entry_command,
+            operator_loop_actions=operator_loop_actions,
+            family_orchestration=family_orchestration,
+        )
         product_entry_quickstart = {
             "surface_kind": "product_entry_quickstart",
             "recommended_step_id": "open_frontdesk",
@@ -1076,6 +1154,7 @@ class MedAutoGrantProductEntry:
                         "entry_mode": "opl-handoff",
                     },
                 },
+                "product_entry_start": product_entry_start,
                 "product_entry_overview": product_entry_overview,
                 "product_entry_preflight": product_entry_preflight,
                 "product_entry_readiness": product_entry_readiness,
@@ -1179,6 +1258,11 @@ class MedAutoGrantProductEntry:
                     "operator_loop_actions",
                     context="product_frontdesk.product_entry_manifest",
                 )),
+                "product_entry_start": dict(_require_mapping(
+                    manifest,
+                    "product_entry_start",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
                 "product_entry_overview": dict(_require_mapping(
                     manifest,
                     "product_entry_overview",
@@ -1277,6 +1361,38 @@ class MedAutoGrantProductEntry:
             lifecycle_stage=manifest_payload["lifecycle_stage"],
         )
         return payload
+
+    def build_product_entry_start(
+        self,
+        *,
+        input_path: str | Path,
+        funding_call: str | None = None,
+    ) -> dict[str, Any]:
+        manifest_payload = self.build_product_entry_manifest(
+            input_path=input_path,
+            funding_call=funding_call,
+        )
+        manifest = _require_mapping(
+            manifest_payload,
+            "product_entry_manifest",
+            context="product_start",
+        )
+        return {
+            "ok": True,
+            "command": "product-start",
+            "grant_run_id": manifest_payload["grant_run_id"],
+            "workspace_id": manifest_payload["workspace_id"],
+            "draft_id": manifest_payload["draft_id"],
+            "lifecycle_stage": manifest_payload["lifecycle_stage"],
+            "input_path": manifest_payload["input_path"],
+            "product_entry_start": dict(
+                _require_mapping(
+                    manifest,
+                    "product_entry_start",
+                    context="product_start.product_entry_manifest",
+                )
+            ),
+        }
 
     def build_product_entry_preflight(
         self,

@@ -1654,6 +1654,24 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["product_entry_quickstart"]["human_gate_ids"],
             ["mag_route_gate_revision"],
         )
+        product_start = manifest["product_entry_start"]
+        self.assertEqual(product_start["surface_kind"], "product_entry_start")
+        self.assertEqual(product_start["recommended_mode_id"], "open_frontdesk")
+        self.assertEqual(
+            [mode["mode_id"] for mode in product_start["modes"]],
+            ["open_frontdesk", "continue_grant_loop", "build_direct_entry"],
+        )
+        self.assertEqual(
+            product_start["modes"][0]["command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(product_start["modes"][1]["requires"], ["task_intent"])
+        self.assertEqual(product_start["modes"][2]["surface_kind"], "grant_direct_entry")
+        self.assertEqual(
+            product_start["resume_surface"],
+            manifest["family_orchestration"]["resume_contract"],
+        )
+        self.assertEqual(product_start["human_gate_ids"], ["mag_route_gate_revision"])
         self.assertEqual(manifest["product_entry_overview"]["surface_kind"], "product_entry_overview")
         self.assertEqual(
             manifest["product_entry_overview"]["summary"],
@@ -1997,6 +2015,15 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(
             frontdesk["product_entry_preflight"],
             frontdesk["product_entry_manifest"]["product_entry_preflight"],
+        )
+        self.assertEqual(frontdesk["product_entry_start"]["surface_kind"], "product_entry_start")
+        self.assertEqual(frontdesk["product_entry_start"]["recommended_mode_id"], "open_frontdesk")
+        self.assertEqual(frontdesk["product_entry_start"]["modes"][1]["mode_id"], "continue_grant_loop")
+        self.assertEqual(frontdesk["product_entry_start"]["modes"][2]["mode_id"], "build_direct_entry")
+        self.assertEqual(frontdesk["product_entry_start"]["resume_surface"]["surface_kind"], "grant_user_loop")
+        self.assertEqual(
+            frontdesk["product_entry_start"],
+            frontdesk["product_entry_manifest"]["product_entry_start"],
         )
         self.assertEqual(frontdesk["product_entry_readiness"]["surface_kind"], "product_entry_readiness")
         self.assertTrue(frontdesk["product_entry_readiness"]["usable_now"])

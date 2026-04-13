@@ -79,6 +79,7 @@
         "frontdesk_surface",
         "operator_loop_surface",
         "operator_loop_actions",
+        "product_entry_start",
         "product_entry_overview",
         "product_entry_preflight",
         "product_entry_readiness",
@@ -117,6 +118,9 @@
         },
         "operator_loop_actions": {
           "$ref": "product-entry-manifest.schema.json#/$defs/operatorLoopActions"
+        },
+        "product_entry_start": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/productEntryStart"
         },
         "product_entry_overview": {
           "$ref": "product-entry-manifest.schema.json#/$defs/productEntryOverview"

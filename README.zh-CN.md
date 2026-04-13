@@ -59,6 +59,7 @@
 - `product entry`：`build-product-entry` 现在已经把 direct entry 与 `OPL` handoff 共用的轻量结构化 shell 落到仓库里，但更完整的 grant-facing 产品体验仍要继续补
 - `product frontdesk`：`product-frontdesk` 现在又把同一层 shell 上方的 controller-owned direct frontdoor 落到仓库里，而真实 operator loop 仍留在 `grant-user-loop`；它与 `product-entry-manifest` 现在都已经独立 schema-backed、generation-time fail-closed，配套 manifest/frontdesk 也会带出 `grant_authoring_readiness`、quickstart 以及 `build_submission_ready_package` 这个面向用户的本地交付动作，同时继续诚实暴露自动化成熟度、human gate 与 resume 语义
 - `product preflight`：`product-preflight` 现在又把同一层 direct frontdoor 的诚实开机前检查落到仓库里，而配套 manifest/frontdesk 也会带出同一份 `product_entry_preflight` companion，供 machine-readable 调用方直接判断
+- `product start`：`product-start` 现在又把同一层 shell 的统一启动面落到仓库里，会给出推荐模式、可选模式、resume surface 与 human gate 摘要，并与 manifest/frontdesk 保持同型
 - `product projection`：`grant-progress` 与 `grant-cockpit` 现在已经以 schema-backed、generation-time fail-closed 的 contract surface 落第一层 controller-owned、read-only 的 direct-product projection，但它们故意不是新的 `domain_entry_contract` executor command，也不进入 hosted contract bundle 的 command catalog，更不等于成熟前台
 - `direct entry composition`：`grant-direct-entry` 现在继续把 `grant-progress`、`grant-cockpit` 与 direct / `opl-handoff` 两份 `product_entry` envelope 收成一层 controller-owned 的 direct-entry 组合面，但它仍然不是新的 service-safe domain executor，也不进入 hosted contract bundle 的 command catalog
 - `current user loop`：`mainline-status`、`mainline-phase` 与 `grant-user-loop` 现在会把 repo 主线快照、direct-entry composition 与 route-derived next action 收成当前 inbox-like CLI shell，但这仍然不等于成熟 Web 前台或 hosted runtime
@@ -165,6 +166,10 @@
 2. 让 Agent 先把这些材料整理成结构化、可审计的 grant workspace。
 3. 再让 Agent 用 `Med Auto Grant` 去推进科学问题提纯、必要性链条收紧、草稿扩写、导师式批注、修订与 re-review 证据绑定。
 
+如果你想先拿到统一的 machine-readable 启动面，再进入这条 grant loop，可以先读：
+
+`uv run python -m med_autogrant product-start --input <workspace.json> --format json`
+
 你可以直接把下面这段话发给 Agent：
 
 > 请先读取这个工作区里的申请人材料、既有成果、在研项目、预实验结果和目标基金要求，并把它们整理成结构化、可审计的 grant workspace。然后使用 Med Auto Grant 作为医学 Grant Ops 主线来推进这份 NSFC 风格申请。请优先判断科学问题是否成立、必要性与科学价值是否足够、申请人与问题是否真正适配、草稿是否忠实继承已冻结问题、上一轮修订证据是否被当前批注显式承接，再进入 submission-facing 的更后段动作。如果当前方向偏弱，请及时止损、改题或指出缺失证据，而不是机械地把一条弱路线写到底。
@@ -215,6 +220,7 @@ uv run python -m med_autogrant grant-progress --input examples/nsfc_workspace_p2
 uv run python -m med_autogrant grant-cockpit --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant grant-direct-entry --input examples/nsfc_workspace_p2c_critique.json --task-intent tighten-grant-mainline --format json
 uv run python -m med_autogrant grant-user-loop --input examples/nsfc_workspace_p2c_critique.json --task-intent tighten-grant-mainline --format json
+uv run python -m med_autogrant product-start --input examples/nsfc_workspace_p2c_critique.json --format json
 uv run python -m med_autogrant build-product-entry --input examples/nsfc_workspace_p2c_critique.json --entry-mode direct --task-intent tighten-grant-mainline --format json
 
 # 2. 执行 deterministic local revision pass

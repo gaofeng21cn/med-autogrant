@@ -446,6 +446,27 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["product_frontdesk"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
         self.assertEqual(payload["product_frontdesk"]["operator_loop_surface"]["shell_key"], "grant_user_loop")
 
+    def test_product_start_projects_unified_start_surface(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "product-start",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "product-start")
+        self.assertEqual(payload["product_entry_start"]["surface_kind"], "product_entry_start")
+        self.assertEqual(payload["product_entry_start"]["recommended_mode_id"], "open_frontdesk")
+        self.assertEqual(
+            [mode["mode_id"] for mode in payload["product_entry_start"]["modes"]],
+            ["open_frontdesk", "continue_grant_loop", "build_direct_entry"],
+        )
+
     def test_next_step_routes_each_p2a_stage_forward(self) -> None:
         cases = [
             (INPUT_EXAMPLE_PATH, "input_intake", "direction_screening"),

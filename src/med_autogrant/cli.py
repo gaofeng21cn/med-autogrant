@@ -103,6 +103,12 @@ def build_parser() -> argparse.ArgumentParser:
         handle_product_preflight,
         "输出 direct grant frontdoor 的前置检查。",
     )
+    _add_manifest_command(
+        subparsers,
+        "product-start",
+        handle_product_start,
+        "输出当前 direct grant product-entry start surface。",
+    )
     _add_simple_command(
         subparsers,
         "probe-upstream-hermes",
@@ -322,6 +328,13 @@ def handle_product_frontdesk(args: argparse.Namespace) -> dict[str, Any]:
 def handle_product_preflight(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_product_entry_preflight(
         input_path=args.input,
+    )
+
+
+def handle_product_start(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_product_entry_start(
+        input_path=args.input,
+        funding_call=args.funding_call,
     )
 
 
@@ -869,6 +882,19 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             lines.append(
                 f"- {item['check_id']}: {item['status']} (blocking={item['blocking']}) -> {item['command']}"
             )
+        return "\n".join(lines)
+
+    if command == "product-start":
+        start_surface = payload["product_entry_start"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"recommended_mode_id: {start_surface['recommended_mode_id']}",
+        ]
+        for mode in start_surface["modes"]:
+            lines.append(f"- {mode['mode_id']}: {mode['command']}")
         return "\n".join(lines)
 
     if command == "probe-upstream-hermes":
