@@ -49,6 +49,20 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 当前并不宣称 `OPL Gateway` 已在本仓落地；当前只是在为 future caller 冻结稳定 contract。
 
+## OPL family orchestration contracts（adoption 方向）
+
+`OPL` 顶层计划冻结 5 类 family contracts：
+
+- family event envelope
+- family checkpoint lineage
+- family action graph
+- family human gate
+- family product-entry manifest v2
+
+对 `Med Auto Grant` 来说，优先 adoption 的面是 `grant-progress / grant-cockpit / grant-direct-entry / grant-user-loop`，并与 family action graph / family human gate / family product-entry manifest v2 对齐；domain 侧继续保持 `workspace / draft / program` 的真相边界。
+
+这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL` 写成 runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是上游 `Hermes-Agent` 作为 runtime substrate owner，MAG 聚焦 family-level contract-first 对齐与 domain-owned truth 维持。
+
 ## Hermes substrate 与 grant executor 的分工
 
 在当前架构里，`Hermes-Agent` 已经承担：
