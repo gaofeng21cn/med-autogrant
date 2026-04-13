@@ -1403,6 +1403,10 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             "uv run python -m med_autogrant grant-user-loop "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
         )
+        self.assertEqual(manifest["frontdesk_surface"]["shell_key"], "grant_user_loop")
+        self.assertEqual(manifest["frontdesk_surface"]["command"], manifest["recommended_command"])
+        self.assertEqual(manifest["frontdesk_surface"]["surface_kind"], "grant_user_loop")
+        self.assertIn("direct grant user inbox shell", manifest["frontdesk_surface"]["summary"])
         self.assertEqual(manifest["operator_loop_surface"]["shell_key"], "grant_user_loop")
         self.assertEqual(manifest["operator_loop_surface"]["command"], manifest["recommended_command"])
         self.assertEqual(manifest["operator_loop_surface"]["surface_kind"], "grant_user_loop")

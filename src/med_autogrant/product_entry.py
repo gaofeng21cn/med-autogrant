@@ -631,6 +631,15 @@ class MedAutoGrantProductEntry:
                 },
                 "recommended_shell": "grant_user_loop",
                 "recommended_command": grant_user_loop_command,
+                "frontdesk_surface": {
+                    "shell_key": "grant_user_loop",
+                    "command": grant_user_loop_command,
+                    "surface_kind": GRANT_USER_LOOP_KIND,
+                    "summary": (
+                        "当前 direct grant user inbox shell 仍以 grant-user-loop 为前台入口，"
+                        "先集中暴露 progress、route action 与 mainline snapshot。"
+                    ),
+                },
                 "operator_loop_surface": {
                     "shell_key": "grant_user_loop",
                     "command": grant_user_loop_command,
