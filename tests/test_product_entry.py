@@ -1403,10 +1403,13 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             "uv run python -m med_autogrant grant-user-loop "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
         )
-        self.assertEqual(manifest["frontdesk_surface"]["shell_key"], "grant_user_loop")
-        self.assertEqual(manifest["frontdesk_surface"]["command"], manifest["recommended_command"])
-        self.assertEqual(manifest["frontdesk_surface"]["surface_kind"], "grant_user_loop")
-        self.assertIn("direct grant user inbox shell", manifest["frontdesk_surface"]["summary"])
+        self.assertEqual(manifest["frontdesk_surface"]["shell_key"], "product_frontdesk")
+        self.assertEqual(
+            manifest["frontdesk_surface"]["command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(manifest["frontdesk_surface"]["surface_kind"], "product_frontdesk")
+        self.assertIn("direct grant product frontdesk", manifest["frontdesk_surface"]["summary"])
         self.assertEqual(manifest["operator_loop_surface"]["shell_key"], "grant_user_loop")
         self.assertEqual(manifest["operator_loop_surface"]["command"], manifest["recommended_command"])
         self.assertEqual(manifest["operator_loop_surface"]["surface_kind"], "grant_user_loop")
@@ -1452,6 +1455,10 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["product_entry_shell"]["grant_user_loop"]["command"],
             "uv run python -m med_autogrant grant-user-loop "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(
+            manifest["product_entry_shell"]["product_frontdesk"]["command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
         )
         self.assertEqual(
             manifest["shared_handoff"]["direct_entry_builder"]["command"],
@@ -1512,6 +1519,50 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "--task-intent prepare-critique-handoff --format json"
             ),
         )
+
+    def test_product_frontdesk_projects_frontdoor_over_current_grant_loop(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_product_frontdesk(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "product-frontdesk")
+        frontdesk = payload["product_frontdesk"]
+        self.assertEqual(frontdesk["surface_kind"], "product_frontdesk")
+        self.assertEqual(frontdesk["recommended_action"], "inspect_or_prepare_grant_loop")
+        self.assertEqual(frontdesk["target_domain_id"], "med-autogrant")
+        self.assertEqual(frontdesk["frontdesk_surface"]["shell_key"], "product_frontdesk")
+        self.assertEqual(
+            frontdesk["frontdesk_surface"]["command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(frontdesk["operator_loop_surface"]["shell_key"], "grant_user_loop")
+        self.assertEqual(
+            frontdesk["entry_surfaces"]["frontdesk"]["command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(
+            frontdesk["entry_surfaces"]["grant_user_loop"]["command"],
+            "uv run python -m med_autogrant grant-user-loop "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(
+            frontdesk["entry_surfaces"]["direct_entry_builder"]["command"],
+            "uv run python -m med_autogrant build-product-entry "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode direct --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(
+            frontdesk["summary"]["frontdesk_command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(
+            frontdesk["summary"]["operator_loop_command"],
+            "uv run python -m med_autogrant grant-user-loop "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(frontdesk["product_entry_manifest"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
 
     def test_grant_progress_fails_closed_on_invalid_projection_shape(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

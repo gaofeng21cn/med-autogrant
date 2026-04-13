@@ -339,6 +339,24 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             "revision",
         )
 
+    def test_product_frontdesk_projects_frontdoor_and_current_loop(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "product-frontdesk",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "product-frontdesk")
+        self.assertEqual(payload["product_frontdesk"]["surface_kind"], "product_frontdesk")
+        self.assertEqual(payload["product_frontdesk"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
+        self.assertEqual(payload["product_frontdesk"]["operator_loop_surface"]["shell_key"], "grant_user_loop")
+
     def test_next_step_routes_each_p2a_stage_forward(self) -> None:
         cases = [
             (INPUT_EXAMPLE_PATH, "input_intake", "direction_screening"),

@@ -27,6 +27,7 @@ from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 PRODUCT_ENTRY_VERSION = 1
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
 PRODUCT_ENTRY_MANIFEST_KIND = "med_auto_grant_product_entry_manifest"
+PRODUCT_FRONTDESK_KIND = "product_frontdesk"
 TARGET_DOMAIN_ID = "med-autogrant"
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
 GRANT_PROGRESS_PROJECTION_VERSION = 1
@@ -572,6 +573,10 @@ class MedAutoGrantProductEntry:
             "uv run python -m med_autogrant grant-user-loop "
             f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
         )
+        product_frontdesk_command = (
+            "uv run python -m med_autogrant product-frontdesk "
+            f"--input {resolved_input_path} --format json"
+        )
         grant_cockpit_command = (
             f"uv run python -m med_autogrant grant-cockpit --input {resolved_input_path} --format json"
         )
@@ -632,12 +637,11 @@ class MedAutoGrantProductEntry:
                 "recommended_shell": "grant_user_loop",
                 "recommended_command": grant_user_loop_command,
                 "frontdesk_surface": {
-                    "shell_key": "grant_user_loop",
-                    "command": grant_user_loop_command,
-                    "surface_kind": GRANT_USER_LOOP_KIND,
+                    "shell_key": "product_frontdesk",
+                    "command": product_frontdesk_command,
+                    "surface_kind": PRODUCT_FRONTDESK_KIND,
                     "summary": (
-                        "当前 direct grant user inbox shell 仍以 grant-user-loop 为前台入口，"
-                        "先集中暴露 progress、route action 与 mainline snapshot。"
+                        "当前 direct grant product frontdesk 先暴露前台入口、user loop、projection 与 shared handoff。"
                     ),
                 },
                 "operator_loop_surface": {
@@ -697,6 +701,10 @@ class MedAutoGrantProductEntry:
                     "runtime_owner": "upstream_hermes_agent",
                 },
                 "product_entry_shell": {
+                    "product_frontdesk": {
+                        "command": product_frontdesk_command,
+                        "surface_kind": PRODUCT_FRONTDESK_KIND,
+                    },
                     "grant_progress": {
                         "command": command_catalog["grant_progress"],
                         "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
@@ -738,6 +746,140 @@ class MedAutoGrantProductEntry:
                     "This manifest freezes the current repo-tracked grant product shell only.",
                     "It does not claim that mature hosted runtime or Web UI is already landed.",
                     "funding_call stays part of direct-entry build time rather than manifest discovery time.",
+                ],
+            },
+        }
+
+    def build_product_frontdesk(
+        self,
+        *,
+        input_path: str | Path,
+        funding_call: str | None = None,
+    ) -> dict[str, Any]:
+        manifest_payload = self.build_product_entry_manifest(
+            input_path=input_path,
+            funding_call=funding_call,
+        )
+        manifest = _require_mapping(
+            manifest_payload,
+            "product_entry_manifest",
+            context="product_frontdesk",
+        )
+        product_entry_shell = _require_mapping(
+            manifest,
+            "product_entry_shell",
+            context="product_frontdesk.product_entry_manifest",
+        )
+        shared_handoff = _require_mapping(
+            manifest,
+            "shared_handoff",
+            context="product_frontdesk.product_entry_manifest",
+        )
+
+        return {
+            "ok": True,
+            "command": "product-frontdesk",
+            "grant_run_id": manifest_payload["grant_run_id"],
+            "workspace_id": manifest_payload["workspace_id"],
+            "draft_id": manifest_payload["draft_id"],
+            "lifecycle_stage": manifest_payload["lifecycle_stage"],
+            "input_path": manifest_payload["input_path"],
+            "product_frontdesk": {
+                "surface_kind": PRODUCT_FRONTDESK_KIND,
+                "recommended_action": "inspect_or_prepare_grant_loop",
+                "target_domain_id": _require_nonempty_string_from_mapping(
+                    manifest,
+                    "target_domain_id",
+                    context="product_frontdesk.product_entry_manifest",
+                ),
+                "workspace_locator": dict(_require_mapping(
+                    manifest,
+                    "workspace_locator",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "runtime": dict(_require_mapping(
+                    manifest,
+                    "runtime",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "product_entry_status": dict(_require_mapping(
+                    manifest,
+                    "product_entry_status",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "frontdesk_surface": dict(_require_mapping(
+                    manifest,
+                    "frontdesk_surface",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "operator_loop_surface": dict(_require_mapping(
+                    manifest,
+                    "operator_loop_surface",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "operator_loop_actions": dict(_require_mapping(
+                    manifest,
+                    "operator_loop_actions",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "product_entry_manifest": dict(manifest),
+                "entry_surfaces": {
+                    "frontdesk": dict(_require_mapping(
+                        product_entry_shell,
+                        "product_frontdesk",
+                        context="product_frontdesk.product_entry_shell",
+                    )),
+                    "grant_progress": dict(_require_mapping(
+                        product_entry_shell,
+                        "grant_progress",
+                        context="product_frontdesk.product_entry_shell",
+                    )),
+                    "grant_cockpit": dict(_require_mapping(
+                        product_entry_shell,
+                        "grant_cockpit",
+                        context="product_frontdesk.product_entry_shell",
+                    )),
+                    "grant_direct_entry": dict(_require_mapping(
+                        product_entry_shell,
+                        "grant_direct_entry",
+                        context="product_frontdesk.product_entry_shell",
+                    )),
+                    "grant_user_loop": dict(_require_mapping(
+                        product_entry_shell,
+                        "grant_user_loop",
+                        context="product_frontdesk.product_entry_shell",
+                    )),
+                    "direct_entry_builder": dict(_require_mapping(
+                        shared_handoff,
+                        "direct_entry_builder",
+                        context="product_frontdesk.shared_handoff",
+                    )),
+                    "opl_handoff_builder": dict(_require_mapping(
+                        shared_handoff,
+                        "opl_handoff_builder",
+                        context="product_frontdesk.shared_handoff",
+                    )),
+                },
+                "summary": {
+                    "frontdesk_command": _require_nonempty_string_from_mapping(
+                        _require_mapping(manifest, "frontdesk_surface", context="product_frontdesk.product_entry_manifest"),
+                        "command",
+                        context="product_frontdesk.frontdesk_surface",
+                    ),
+                    "recommended_command": _require_nonempty_string_from_mapping(
+                        manifest,
+                        "recommended_command",
+                        context="product_frontdesk.product_entry_manifest",
+                    ),
+                    "operator_loop_command": _require_nonempty_string_from_mapping(
+                        _require_mapping(manifest, "operator_loop_surface", context="product_frontdesk.product_entry_manifest"),
+                        "command",
+                        context="product_frontdesk.operator_loop_surface",
+                    ),
+                },
+                "notes": [
+                    "This frontdesk surface is a controller-owned direct grant front door over the landed product-entry shell.",
+                    "It does not claim that mature Web UI or hosted runtime is already landed.",
                 ],
             },
         }
