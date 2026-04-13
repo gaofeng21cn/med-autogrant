@@ -91,6 +91,12 @@ def build_parser() -> argparse.ArgumentParser:
         handle_product_entry_manifest,
         "输出当前 direct grant product-entry manifest，收口 repo 主线、当前壳与 shared handoff 模板。",
     )
+    _add_manifest_command(
+        subparsers,
+        "product-frontdesk",
+        handle_product_frontdesk,
+        "输出 controller-owned 的 direct grant product frontdesk。",
+    )
     _add_simple_command(
         subparsers,
         "probe-upstream-hermes",
@@ -247,6 +253,13 @@ def handle_grant_user_loop(args: argparse.Namespace) -> dict[str, Any]:
 
 def handle_product_entry_manifest(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_product_entry_manifest(
+        input_path=args.input,
+        funding_call=args.funding_call,
+    )
+
+
+def handle_product_frontdesk(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_product_frontdesk(
         input_path=args.input,
         funding_call=args.funding_call,
     )
@@ -668,6 +681,21 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"active_tranche: {manifest['repo_mainline']['active_tranche']}",
         ]
         for name, item in manifest["product_entry_shell"].items():
+            lines.append(f"- {name}: {item['command']}")
+        return "\n".join(lines)
+
+    if command == "product-frontdesk":
+        frontdesk = payload["product_frontdesk"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"frontdesk_command: {frontdesk['summary']['frontdesk_command']}",
+            f"recommended_command: {frontdesk['summary']['recommended_command']}",
+            f"operator_loop_command: {frontdesk['summary']['operator_loop_command']}",
+        ]
+        for name, item in frontdesk["entry_surfaces"].items():
             lines.append(f"- {name}: {item['command']}")
         return "\n".join(lines)
 
