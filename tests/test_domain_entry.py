@@ -74,6 +74,29 @@ class DomainEntryDispatchTest(unittest.TestCase):
             output_path="/tmp/critique-output.json",
         )
 
+    def test_domain_entry_dispatches_execute_critique_pass_with_explicit_executor(self) -> None:
+        runtime = Mock()
+        runtime.execute_critique_pass.return_value = {
+            "ok": True,
+            "command": "execute-critique-pass",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "execute-critique-pass",
+                "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                "output_path": "/tmp/critique-output.json",
+                "executor_kind": "hermes_native_proof",
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "execute-critique-pass"})
+        runtime.execute_critique_pass.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            output_path="/tmp/critique-output.json",
+            executor_kind="hermes_native_proof",
+        )
+
     def test_domain_entry_dispatches_execute_direction_screening_pass(self) -> None:
         runtime = Mock()
         runtime.execute_direction_screening_pass.return_value = {

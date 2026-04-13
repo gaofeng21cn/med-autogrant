@@ -9,6 +9,7 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
+from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -199,6 +200,57 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
+
+    def test_execute_critique_pass_accepts_executor_override(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "execute-critique-pass",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "critique",
+            "output_path": "/tmp/critique-output.json",
+            "critique_execution": {
+                "critique_id": "critique-test",
+                "active_revision_plan_id": "revision-plan-test",
+                "verdict": "major_revision",
+                "executor": {
+                    "kind": "hermes_native_full_agent_loop",
+                },
+            },
+            "critique_workspace": {
+                "grant_run_id": "grant-run-test",
+                "workspace_id": "workspace-test",
+                "lifecycle_stage": "critique",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantDomainEntry") as entry_class:
+            entry = entry_class.return_value
+            entry.dispatch.return_value = expected_payload
+            exit_code, stdout, stderr = self.run_cli(
+                "execute-critique-pass",
+                "--input",
+                str(DRAFTING_EXAMPLE_PATH),
+                "--output",
+                "/tmp/critique-output.json",
+                "--executor",
+                "hermes_native_proof",
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        entry.dispatch.assert_called_once_with(
+            {
+                "command": "execute-critique-pass",
+                "input_path": str(DRAFTING_EXAMPLE_PATH),
+                "output_path": "/tmp/critique-output.json",
+                "executor_kind": "hermes_native_proof",
+            }
+        )
 
     def test_summarize_workspace_exposes_current_selection_for_question_refinement(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

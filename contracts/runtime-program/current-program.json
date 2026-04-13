@@ -22,6 +22,16 @@
     "chat_completion_only_executor_forbidden": true,
     "hermes_native_requires_full_agent_loop": true
   },
+  "experimental_executor_proofs": [
+    {
+      "route_id": "critique",
+      "executor_kind": "hermes_native_proof",
+      "entrypoint": "run_agent.AIAgent.run_conversation",
+      "status": "experimental",
+      "default_executor_unchanged": "codex_cli_autonomous",
+      "provider_reasoning_status": "not_repo_proved_keep_default"
+    }
+  ],
   "execution_identity": {
     "grant_run_id": "hydrated grant run execution handle",
     "workspace_id": "NSFCWorkspace aggregate-root identity",
@@ -44,6 +54,7 @@
     "docs/specs/2026-04-13-p4e-schema-backed-frontdesk-and-manifest-current-truth.md",
     "docs/specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md",
     "docs/specs/2026-04-13-critique-codex-cli-autonomous-executor-current-truth.md",
+    "docs/specs/2026-04-13-hermes-native-critique-proof-current-truth.md",
     "docs/specs/2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md",
     "docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md",
     "docs/specs/2026-04-07-formal-entry-matrix-current-truth.md",

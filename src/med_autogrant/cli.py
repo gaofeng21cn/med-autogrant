@@ -414,13 +414,14 @@ def handle_execute_drafting_pass(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def handle_execute_critique_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "execute-critique-pass",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
+    request = {
+        "command": "execute-critique-pass",
+        "input_path": args.input,
+        "output_path": args.output,
+    }
+    if args.executor is not None:
+        request["executor_kind"] = args.executor
+    return _domain_entry().dispatch(request)
 
 
 def handle_execute_revision_pass(args: argparse.Namespace) -> dict[str, Any]:
@@ -601,6 +602,7 @@ def _add_revision_executor_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
     command.add_argument("--output", required=True)
+    command.add_argument("--executor")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -926,16 +928,22 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
 
     if command == "execute-critique-pass":
         critique_execution = payload["critique_execution"]
+        executor = critique_execution.get("executor", {})
         lines = [
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"draft_id: {payload['draft_id']}",
             f"lifecycle_stage: {payload['lifecycle_stage']}",
             f"output_path: {payload['output_path']}",
+            f"executor_kind: {executor.get('kind')}",
             f"critique_id: {critique_execution['critique_id']}",
             f"active_revision_plan_id: {critique_execution['active_revision_plan_id']}",
             f"verdict: {critique_execution['verdict']}",
         ]
+        if executor.get("mode"):
+            lines.append(f"executor_mode: {executor['mode']}")
+        if executor.get("session_id"):
+            lines.append(f"executor_session_id: {executor['session_id']}")
         return "\n".join(lines)
 
     if command == "execute-revision-pass":

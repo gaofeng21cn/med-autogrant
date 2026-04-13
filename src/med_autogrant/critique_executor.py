@@ -8,11 +8,10 @@ from pathlib import Path
 from typing import Any, Callable
 
 from med_autogrant.codex_cli import (
-    DEFAULT_CODEX_MODEL,
-    DEFAULT_CODEX_REASONING_EFFORT,
     read_codex_cli_contract,
     run_codex_exec,
 )
+from med_autogrant.hermes_native_executor import run_hermes_agent_exec
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.workspace import (
     WorkspaceStateError,
@@ -24,6 +23,14 @@ from med_autogrant.workspace import (
 
 
 CodexRunner = Callable[[str], dict[str, Any]]
+HermesRunner = Callable[[str], dict[str, Any]]
+
+DEFAULT_CRITIQUE_EXECUTOR_KIND = "codex_cli_autonomous"
+HERMES_NATIVE_PROOF_EXECUTOR_KIND = "hermes_native_proof"
+SUPPORTED_CRITIQUE_EXECUTOR_KINDS = (
+    DEFAULT_CRITIQUE_EXECUTOR_KIND,
+    HERMES_NATIVE_PROOF_EXECUTOR_KIND,
+)
 
 CRITIQUE_WEIGHT_CONTRACT = {
     "necessity_scientific_value": 60,
@@ -42,24 +49,28 @@ def build_critique_execution_document(
     *,
     document: dict[str, Any],
     input_path: str | Path,
+    executor_kind: str | None = None,
     codex_runner: Callable[..., dict[str, Any]] = run_codex_exec,
+    hermes_runner: Callable[..., dict[str, Any]] = run_hermes_agent_exec,
 ) -> dict[str, Any]:
     state = _build_workspace_state(document)
     critique_context = _build_critique_context(document=document, state=state)
     prompt = _build_critique_prompt(context=critique_context, input_path=input_path)
-    codex_contract = read_codex_cli_contract()
-    codex_payload = codex_runner(
-        prompt,
-        cwd=Path(input_path).expanduser().resolve().parent,
+    payload, executor_payload = _run_critique_generation(
+        prompt=prompt,
+        input_path=input_path,
+        executor_kind=executor_kind,
+        codex_runner=codex_runner,
+        hermes_runner=hermes_runner,
     )
     critique = _normalize_mentor_critique(
         critique_context=critique_context,
-        payload=_require_object(codex_payload, "mentor_critique"),
+        payload=_require_object(payload, "mentor_critique"),
     )
     revision_plan = _normalize_revision_plan(
         critique_context=critique_context,
         critique=critique,
-        payload=_require_object(codex_payload, "revision_plan"),
+        payload=_require_object(payload, "revision_plan"),
     )
 
     critique_workspace = deepcopy(document)
@@ -87,17 +98,96 @@ def build_critique_execution_document(
         "active_revision_plan_id": revision_plan["revision_plan_id"],
         "lifecycle_stage": critique_workspace["lifecycle_stage"],
         "critique_execution": {
-            "executor": {
-                "kind": "codex_cli",
-                "model": codex_contract["model_selection"],
-                "reasoning_effort": codex_contract["reasoning_selection"],
-            },
+            "executor": executor_payload,
             "critique_id": critique["critique_id"],
             "active_revision_plan_id": revision_plan["revision_plan_id"],
             "reviewed_revision_plan_id": critique.get("reviewed_revision_plan_id"),
             "verdict": critique["verdict"],
         },
         "critique_workspace": critique_workspace,
+    }
+
+
+def _run_critique_generation(
+    *,
+    prompt: str,
+    input_path: str | Path,
+    executor_kind: str | None,
+    codex_runner: Callable[..., dict[str, Any]],
+    hermes_runner: Callable[..., dict[str, Any]],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    resolved_executor_kind = _resolve_critique_executor_kind(executor_kind)
+    resolved_cwd = Path(input_path).expanduser().resolve().parent
+
+    if resolved_executor_kind == DEFAULT_CRITIQUE_EXECUTOR_KIND:
+        codex_contract = read_codex_cli_contract()
+        payload = codex_runner(
+            prompt,
+            cwd=resolved_cwd,
+        )
+        if not isinstance(payload, dict):
+            raise WorkspaceStateError("Codex critique pass 返回值必须是 object。")
+        return payload, _build_codex_executor_payload(codex_contract)
+
+    hermes_result = hermes_runner(
+        prompt,
+        cwd=resolved_cwd,
+    )
+    if not isinstance(hermes_result, dict):
+        raise WorkspaceStateError("Hermes-native critique pass 返回值必须是 object。")
+    hermes_payload = _require_object(hermes_result, "payload")
+    hermes_contract = _require_object(hermes_result, "contract")
+    hermes_proof = _require_object(hermes_result, "proof")
+    return hermes_payload, _build_hermes_executor_payload(hermes_contract, hermes_proof)
+
+
+def _resolve_critique_executor_kind(executor_kind: str | None) -> str:
+    if executor_kind is None:
+        return DEFAULT_CRITIQUE_EXECUTOR_KIND
+    normalized = str(executor_kind).strip()
+    if normalized in SUPPORTED_CRITIQUE_EXECUTOR_KINDS:
+        return normalized
+    raise WorkspaceStateError(
+        "execute-critique-pass 不支持该 executor_kind："
+        f"{normalized}。当前只允许 {', '.join(SUPPORTED_CRITIQUE_EXECUTOR_KINDS)}。"
+    )
+
+
+def _build_codex_executor_payload(codex_contract: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "kind": "codex_cli",
+        "model": codex_contract["model_selection"],
+        "reasoning_effort": codex_contract["reasoning_selection"],
+    }
+
+
+def _build_hermes_executor_payload(
+    hermes_contract: dict[str, Any],
+    hermes_proof: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        "kind": "hermes_native_full_agent_loop",
+        "mode": "experimental_proof",
+        "entrypoint": _require_string(hermes_contract, "entrypoint", context="Hermes contract"),
+        "model": _require_string(hermes_contract, "model", context="Hermes contract"),
+        "provider": hermes_contract.get("provider"),
+        "api_mode": hermes_contract.get("api_mode"),
+        "reasoning_effort": hermes_contract.get("reasoning_effort"),
+        "full_agent_loop_proved": _require_bool(hermes_proof, "full_agent_loop_proved", context="Hermes proof"),
+        "session_id": hermes_proof.get("session_id"),
+        "api_calls": _require_nonnegative_int(hermes_proof, "api_calls", context="Hermes proof"),
+        "tool_call_count": _require_nonnegative_int(hermes_proof, "tool_call_count", context="Hermes proof"),
+        "event_count": _require_nonnegative_int(hermes_proof, "event_count", context="Hermes proof"),
+        "reasoning_semantics_status": _require_string(
+            hermes_proof,
+            "provider_reasoning_status",
+            context="Hermes proof",
+        ),
+        "event_stream": _require_object_list(
+            hermes_proof,
+            "event_stream",
+            context="Hermes proof",
+        ),
     }
 
 
@@ -231,6 +321,11 @@ def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -
             "- every revision item must include mutation_payload.operation=replace_draft_section",
             "- every mutation_payload.linked_object_ids must cover required_input_ids and use only known ids",
             "- mentor critique weights must be necessity_scientific_value=60, applicant_fit=30, feasibility=10",
+            (
+                "- mentor_critique.necessity_scientific_value / applicant_fit / feasibility must each be "
+                "an object with exactly weight, score, judgment"
+            ),
+            "- do not emit rationale or verdict inside these weighted score blocks",
             "- do not invent comparison_summary for a planned revision plan",
             "- set revision_plan.execution_status to planned",
             "- revision_plan.pre_revision_version_label must equal the current draft version_label",
@@ -457,7 +552,35 @@ def _validate_revision_item(
 def _require_object(payload: dict[str, Any], key: str) -> dict[str, Any]:
     value = payload.get(key)
     if not isinstance(value, dict):
-        raise WorkspaceStateError(f"Codex critique 输出缺少 object 字段: {key}")
+        raise WorkspaceStateError(f"critique executor 输出缺少 object 字段: {key}")
+    return value
+
+
+def _require_object_list(payload: dict[str, Any], key: str, *, context: str) -> list[dict[str, Any]]:
+    value = payload.get(key)
+    if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
+        raise WorkspaceStateError(f"{context} 缺少合法的 `{key}` object list。")
+    return value
+
+
+def _require_string(payload: dict[str, Any], key: str, *, context: str) -> str:
+    value = payload.get(key)
+    if not isinstance(value, str) or not value.strip():
+        raise WorkspaceStateError(f"{context} 缺少合法的 `{key}`。")
+    return value
+
+
+def _require_bool(payload: dict[str, Any], key: str, *, context: str) -> bool:
+    value = payload.get(key)
+    if not isinstance(value, bool):
+        raise WorkspaceStateError(f"{context} 缺少合法的 `{key}`。")
+    return value
+
+
+def _require_nonnegative_int(payload: dict[str, Any], key: str, *, context: str) -> int:
+    value = payload.get(key)
+    if not isinstance(value, int) or value < 0:
+        raise WorkspaceStateError(f"{context} 缺少合法的 `{key}`。")
     return value
 
 

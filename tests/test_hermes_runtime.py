@@ -689,6 +689,49 @@ class RevisionExecutionHandoffTest(unittest.TestCase):
         guard_output.assert_called_once()
         write_output.assert_called_once_with(workspace_path.resolve(), expected_critique_workspace)
 
+    def test_execute_critique_pass_forwards_explicit_executor_kind(self) -> None:
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+
+        runtime = HermesRuntimeSubstrate()
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            workspace_path = Path(tmp_dir) / "critique.json"
+            with patch(
+                "med_autogrant.hermes_runtime.build_critique_execution_document",
+                create=True,
+                return_value={
+                    "grant_run_id": "grant-run-test",
+                    "workspace_id": "workspace-test",
+                    "draft_id": "draft-test",
+                    "active_revision_plan_id": "revision-plan-test",
+                    "lifecycle_stage": "critique",
+                    "critique_execution": {
+                        "critique_id": "critique-test",
+                        "active_revision_plan_id": "revision-plan-test",
+                        "verdict": "major_revision",
+                    },
+                    "critique_workspace": {
+                        "grant_run_id": "grant-run-test",
+                        "workspace_id": "workspace-test",
+                        "lifecycle_stage": "critique",
+                    },
+                },
+            ) as build_document, patch(
+                "med_autogrant.hermes_runtime._guard_critique_output_identity",
+                create=True,
+            ), patch(
+                "med_autogrant.hermes_runtime._write_revised_workspace_output",
+                create=True,
+            ):
+                runtime.execute_critique_pass(
+                    input_path=str(REVISION_EXAMPLE_PATH),
+                    output_path=str(workspace_path),
+                    executor_kind="hermes_native_proof",
+                )
+
+        _, kwargs = build_document.call_args
+        self.assertEqual(kwargs["executor_kind"], "hermes_native_proof")
+
     def test_execute_revision_pass_uses_hermes_handoff_owner(self) -> None:
         from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
 

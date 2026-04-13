@@ -18,6 +18,21 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.js
 
 
 class CritiqueExecutionDocumentTest(unittest.TestCase):
+    def test_build_critique_prompt_spells_out_weighted_score_block_field_names(self) -> None:
+        from med_autogrant.critique_executor import _build_critique_context, _build_critique_prompt
+        from med_autogrant.workspace import _build_workspace_state
+
+        document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
+        context = _build_critique_context(
+            document=document,
+            state=_build_workspace_state(document),
+        )
+
+        prompt = _build_critique_prompt(context=context, input_path=DRAFTING_EXAMPLE_PATH)
+
+        self.assertIn("must each be an object with exactly weight, score, judgment", prompt)
+        self.assertIn("do not emit rationale or verdict inside these weighted score blocks", prompt)
+
     def test_build_critique_execution_document_materializes_landed_critique_workspace(self) -> None:
         from med_autogrant.critique_executor import build_critique_execution_document
 
@@ -244,6 +259,153 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(critique_workspace["revision_plans"][-1]["revision_plan_id"], "revision-v2")
         self.assertEqual(critique_workspace["revision_plans"][-1]["critique_id"], "critique-v2")
         self.assertEqual(critique_workspace["revision_plans"][-1]["pre_revision_version_label"], "v0.4")
+        self.assertEqual(validate_workspace_document(critique_workspace).ok, True)
+
+    def test_build_critique_execution_document_supports_experimental_hermes_native_proof_executor(self) -> None:
+        from med_autogrant.critique_executor import build_critique_execution_document
+
+        document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
+
+        def fake_hermes_runner(_prompt: str, *, cwd: Path) -> dict[str, object]:
+            self.assertEqual(cwd, DRAFTING_EXAMPLE_PATH.resolve().parent)
+            return {
+                "payload": {
+                    "mentor_critique": {
+                        "metadata": {
+                            "schema_version": "v1",
+                            "created_at": "2026-04-13T12:00:00Z",
+                            "updated_at": "2026-04-13T12:00:00Z",
+                            "source_mode": "auto",
+                            "owner": "Hermes-native critique proof executor",
+                        },
+                        "critique_id": "critique-v1",
+                        "draft_id": "should-be-overridden",
+                        "overall_diagnosis": "草稿已经具备基本结构，但必要性链条仍需要收紧。",
+                        "current_scientific_question": "should-be-overridden",
+                        "suggested_question": "需要把关键科学问题改写得更聚焦机制级未知。",
+                        "verdict": "major_revision",
+                        "necessity_scientific_value": {
+                            "weight": 1,
+                            "score": 76,
+                            "judgment": "必要性主线方向正确，但机制未知和理论损失还需要更锋利。",
+                            "blocking_issues": [
+                                "尚未明确说明为什么现有现象学研究不能回答机制问题。"
+                            ],
+                        },
+                        "applicant_fit": {
+                            "weight": 1,
+                            "score": 81,
+                            "judgment": "申请人基础较好，但既有成果与当前问题映射还不够直接。",
+                            "blocking_issues": [
+                                "需要让前期成果直接回指当前机制验证路径。"
+                            ],
+                        },
+                        "feasibility": {
+                            "weight": 1,
+                            "score": 79,
+                            "judgment": "总体可行，但关键实验闭环还需要更明确。",
+                            "blocking_issues": [],
+                        },
+                        "logic_chain_repairs": [
+                            "补出从现象相关到机制未知的关键过渡段。"
+                        ],
+                        "applicant_fit_repairs": [
+                            "把申请人既有单细胞资源与关键验证节点逐点绑定。"
+                        ],
+                        "blocking_issues": [
+                            "必要性表述仍偏现象描述。"
+                        ],
+                    },
+                    "revision_plan": {
+                        "metadata": {
+                            "schema_version": "v1",
+                            "created_at": "2026-04-13T12:05:00Z",
+                            "updated_at": "2026-04-13T12:05:00Z",
+                            "source_mode": "auto",
+                            "owner": "Hermes-native critique proof executor",
+                        },
+                        "revision_plan_id": "revision-v1",
+                        "draft_id": "should-be-overridden",
+                        "critique_id": "should-be-overridden",
+                        "pre_revision_version_label": "should-be-overridden",
+                        "post_revision_version_label": "v0.2",
+                        "items": [
+                            {
+                                "item_id": "rev-item-1",
+                                "priority": "p0",
+                                "action_type": "rebuild_argument",
+                                "target_ref": "section:basis",
+                                "action": "收紧立项依据中从现象到机制缺口的推导。",
+                                "done_criteria": "读者能清楚理解知识边界、未知机制与理论损失。",
+                                "required_input_ids": [
+                                    "arg-001",
+                                    "question-immune-fibrosis"
+                                ],
+                                "mutation_payload": {
+                                    "operation": "replace_draft_section",
+                                    "target_section_key": "basis",
+                                    "replacement_text": "当前关键知识缺口不在于心梗后炎症与纤维化是否相关，而在于炎症巨噬细胞如何通过时间窗依赖的旁分泌通讯触发成纤维细胞致纤维化重编程。",
+                                    "replacement_core_claim": "本研究的必要性在于解释炎症巨噬细胞驱动纤维化重编程的时间窗机制缺口。",
+                                    "linked_object_ids": [
+                                        "arg-001",
+                                        "question-immune-fibrosis"
+                                    ],
+                                },
+                            }
+                        ],
+                        "next_review_focus": [
+                            "必要性链条是否真正闭合"
+                        ],
+                    },
+                },
+                "contract": {
+                    "entrypoint": "run_agent.AIAgent.run_conversation",
+                    "model": "gpt-5.4",
+                    "provider": "custom",
+                    "api_mode": "chat_completions",
+                    "reasoning_effort": "xhigh",
+                },
+                "proof": {
+                    "proof_kind": "full_agent_loop_aiaagent",
+                    "full_agent_loop_proved": True,
+                    "session_id": "hermes-session-proof-001",
+                    "api_calls": 2,
+                    "tool_call_count": 1,
+                    "event_count": 4,
+                    "provider_reasoning_status": "unproven_custom_chat_completions",
+                    "event_stream": [
+                        {"type": "tool_start", "tool": "read_file"},
+                        {"type": "tool_complete", "tool": "read_file"},
+                    ],
+                },
+            }
+
+        payload = build_critique_execution_document(
+            document=document,
+            input_path=DRAFTING_EXAMPLE_PATH,
+            executor_kind="hermes_native_proof",
+            hermes_runner=fake_hermes_runner,
+        )
+
+        critique_workspace = payload["critique_workspace"]
+        executor = payload["critique_execution"]["executor"]
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["draft_id"], "draft-v1")
+        self.assertEqual(payload["active_revision_plan_id"], "revision-v1")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(executor["kind"], "hermes_native_full_agent_loop")
+        self.assertEqual(executor["mode"], "experimental_proof")
+        self.assertEqual(executor["entrypoint"], "run_agent.AIAgent.run_conversation")
+        self.assertEqual(executor["provider"], "custom")
+        self.assertEqual(executor["api_mode"], "chat_completions")
+        self.assertEqual(executor["reasoning_effort"], "xhigh")
+        self.assertTrue(executor["full_agent_loop_proved"])
+        self.assertEqual(executor["session_id"], "hermes-session-proof-001")
+        self.assertEqual(executor["tool_call_count"], 1)
+        self.assertEqual(executor["reasoning_semantics_status"], "unproven_custom_chat_completions")
+        self.assertEqual(critique_workspace["lifecycle_stage"], "critique")
+        self.assertEqual(critique_workspace["current_selection"]["active_revision_plan_id"], "revision-v1")
         self.assertEqual(validate_workspace_document(critique_workspace).ok, True)
 
 

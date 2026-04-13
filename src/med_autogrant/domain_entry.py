@@ -48,7 +48,11 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
         ("input_path", "output_path"),
     ),
     "build-artifact-bundle": DomainEntryCommandSpec("build_artifact_bundle", ("input_path", "output_path")),
-    "execute-critique-pass": DomainEntryCommandSpec("execute_critique_pass", ("input_path", "output_path")),
+    "execute-critique-pass": DomainEntryCommandSpec(
+        "execute_critique_pass",
+        ("input_path", "output_path"),
+        ("executor_kind",),
+    ),
     "execute-revision-pass": DomainEntryCommandSpec("execute_revision_pass", ("input_path", "output_path")),
     "execute-freeze-pass": DomainEntryCommandSpec("execute_freeze_pass", ("input_path", "output_path")),
     "build-final-package": DomainEntryCommandSpec(

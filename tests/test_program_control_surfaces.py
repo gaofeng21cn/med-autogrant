@@ -42,6 +42,9 @@ P4C_USER_LOOP_CURRENT_TRUTH = (
 P4F_SUBMISSION_READY_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-13-p4f-local-submission-ready-package-current-truth.md"
 )
+HERMES_NATIVE_CRITIQUE_PROOF_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-13-hermes-native-critique-proof-current-truth.md"
+)
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
 RUNTIME_STATE_ROOT = "$CODEX_HOME/projects/med-autogrant/runtime-state/"
@@ -76,6 +79,17 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertTrue(contract["executor_defaults"]["chat_completion_only_executor_forbidden"])
         self.assertTrue(contract["executor_defaults"]["hermes_native_requires_full_agent_loop"])
+        self.assertEqual(contract["experimental_executor_proofs"][0]["route_id"], "critique")
+        self.assertEqual(contract["experimental_executor_proofs"][0]["executor_kind"], "hermes_native_proof")
+        self.assertEqual(
+            contract["experimental_executor_proofs"][0]["entrypoint"],
+            "run_agent.AIAgent.run_conversation",
+        )
+        self.assertEqual(contract["experimental_executor_proofs"][0]["status"], "experimental")
+        self.assertEqual(
+            contract["experimental_executor_proofs"][0]["default_executor_unchanged"],
+            "codex_cli_autonomous",
+        )
         self.assertEqual(
             contract["runtime_owner"]["historical_baseline"],
             "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
@@ -116,6 +130,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "docs/specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md",
             contract["repo_tracked_truth_surfaces"],
         )
+        self.assertIn(
+            "docs/specs/2026-04-13-hermes-native-critique-proof-current-truth.md",
+            contract["repo_tracked_truth_surfaces"],
+        )
         self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
         self.assertEqual(contract["ideal_target"]["family_top_entry"], "OPL Gateway")
         self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
@@ -154,6 +172,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("grant-progress", decisions)
         self.assertIn("grant-user-loop", decisions)
         self.assertIn("build-submission-ready-package", decisions)
+        self.assertIn("executor_kind=hermes_native_proof", decisions)
 
     def test_current_truth_specs_align_with_repo_tracked_contract(self) -> None:
         contract = json.loads(_read(CURRENT_PROGRAM_CONTRACT))
@@ -164,6 +183,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         p4b_direct_entry = _read(P4B_DIRECT_ENTRY_CURRENT_TRUTH)
         p4c_user_loop = _read(P4C_USER_LOOP_CURRENT_TRUTH)
         p4f_submission_ready = _read(P4F_SUBMISSION_READY_CURRENT_TRUTH)
+        hermes_native_critique_proof = _read(HERMES_NATIVE_CRITIQUE_PROOF_CURRENT_TRUTH)
         formal_entry = _read(FORMAL_ENTRY_MATRIX)
         durability = _read(DURABILITY_MODEL)
 
@@ -204,6 +224,12 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("submission-ready-package.schema.json", p4f_submission_ready)
         self.assertIn("fail-closed", p4f_submission_ready)
         self.assertIn("外部官网提交", p4f_submission_ready)
+        self.assertIn("executor_kind = hermes_native_proof", hermes_native_critique_proof)
+        self.assertIn("run_agent.AIAgent.run_conversation", hermes_native_critique_proof)
+        self.assertIn("full agent loop", hermes_native_critique_proof)
+        self.assertIn("~/.hermes/config.yaml", hermes_native_critique_proof)
+        self.assertIn("MED_AUTOGRANT_HERMES_MODEL", hermes_native_critique_proof)
+        self.assertIn("tool_start / tool_complete", hermes_native_critique_proof)
 
     def test_core_docs_publish_schema_backed_projection_contract_boundary(self) -> None:
         architecture = _read(CORE_ARCHITECTURE)

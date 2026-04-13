@@ -35,6 +35,9 @@ EXECUTOR_ROUTING_CURRENT_TRUTH = (
 CRITIQUE_EXECUTOR_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-13-critique-codex-cli-autonomous-executor-current-truth.md"
 )
+HERMES_NATIVE_CRITIQUE_PROOF_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-13-hermes-native-critique-proof-current-truth.md"
+)
 PENDING_ROUTE_MATRIX_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md"
 )
@@ -169,6 +172,9 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert CRITIQUE_EXECUTOR_CURRENT_TRUTH.exists(), (
         f"Critique executor current truth 不存在: {CRITIQUE_EXECUTOR_CURRENT_TRUTH}"
     )
+    assert HERMES_NATIVE_CRITIQUE_PROOF_CURRENT_TRUTH.exists(), (
+        f"Hermes-native critique proof current truth 不存在: {HERMES_NATIVE_CRITIQUE_PROOF_CURRENT_TRUTH}"
+    )
     assert PENDING_ROUTE_MATRIX_CURRENT_TRUTH.exists(), (
         f"Pending route matrix current truth 不存在: {PENDING_ROUTE_MATRIX_CURRENT_TRUTH}"
     )
@@ -202,6 +208,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     schema_backed_entry_truth = _read(SCHEMA_BACKED_ENTRY_CURRENT_TRUTH)
     executor_routing_truth = _read(EXECUTOR_ROUTING_CURRENT_TRUTH)
     critique_executor_truth = _read(CRITIQUE_EXECUTOR_CURRENT_TRUTH)
+    hermes_native_critique_proof_truth = _read(HERMES_NATIVE_CRITIQUE_PROOF_CURRENT_TRUTH)
     pending_route_matrix_truth = _read(PENDING_ROUTE_MATRIX_CURRENT_TRUTH)
     hosted_contract_bundle_truth = _read(HOSTED_CONTRACT_BUNDLE_CURRENT_TRUTH)
     hosted_caller_consumption_truth = _read(HOSTED_CALLER_CONSUMPTION_PROOF_CURRENT_TRUTH)
@@ -265,6 +272,12 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "MED_AUTOGRANT_CODEX_REASONING_EFFORT" in critique_executor_truth
     assert "critique_execution.executor" in critique_executor_truth
     assert "full agent loop" in critique_executor_truth
+    assert "executor_kind = hermes_native_proof" in hermes_native_critique_proof_truth
+    assert "run_agent.AIAgent.run_conversation" in hermes_native_critique_proof_truth
+    assert "~/.hermes/config.yaml" in hermes_native_critique_proof_truth
+    assert "MED_AUTOGRANT_HERMES_MODEL" in hermes_native_critique_proof_truth
+    assert "tool_start / tool_complete" in hermes_native_critique_proof_truth
+    assert "PROVIDER_REASONING_NOT_PROVED_KEEP_DEFAULT" in hermes_native_critique_proof_truth
 
     assert "direction_screening" in pending_route_matrix_truth
     assert "question_refinement" in pending_route_matrix_truth

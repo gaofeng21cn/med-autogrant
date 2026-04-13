@@ -657,10 +657,12 @@ class HermesRuntimeSubstrate:
         *,
         input_path: str | Path,
         output_path: str | Path,
+        executor_kind: str | None = None,
     ) -> dict[str, Any]:
         critique_document = build_critique_execution_document(
             document=self._load_workspace(input_path),
             input_path=input_path,
+            executor_kind=executor_kind,
         )
         resolved_output_path = Path(output_path).expanduser().resolve()
         _guard_critique_output_identity(
