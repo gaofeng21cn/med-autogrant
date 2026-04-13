@@ -64,7 +64,24 @@ Date: `2026-04-13`
 
 这类在 `P4.D` 已经 landed 的 authoring route，不会再在 frontdoor companion 上被误投成 `pending / requested`。
 
-### 4. 当前 direct grant frontdoor 已形成一致的 contract 组合
+### 4. `product_entry_overview` 已进入同一份 frontdoor contract
+
+`product-entry-manifest` 与 `product-frontdesk` 现在还会共同暴露 `product_entry_overview` companion，用同一份结构收起：
+
+- 当前入口摘要
+- `frontdesk_command`
+- `recommended_command`
+- `operator_loop_command`
+- `progress_surface`
+- `resume_surface`
+- `recommended_step_id`
+- `next_focus`
+- `remaining_gaps_count`
+- `human_gate_ids`
+
+这层 overview 是 `product_entry_status`、`product_entry_quickstart` 与 `family_orchestration` companion 之上的用户侧摘要面，用来让 direct caller 不必再分别拼 progress / resume / gate id。
+
+### 5. 当前 direct grant frontdoor 已形成一致的 contract 组合
 
 现在 direct grant frontdoor 的 machine-readable 组合至少包括：
 
@@ -77,7 +94,7 @@ Date: `2026-04-13`
 
 其中：
 
-- `product-entry-manifest` 负责 discovery / quickstart / mainline snapshot
+- `product-entry-manifest` 负责 discovery / overview / quickstart / mainline snapshot
 - `product-frontdesk` 负责 direct frontdoor / operator loop / projection action surface
 - 其余 projection / loop surface 继续承载 progress、cockpit、composition 与 inbox-like user loop
 
@@ -99,6 +116,7 @@ Date: `2026-04-13`
 
 - 新 schema 已进入 `schema-index.json`
 - manifest / frontdesk 在生成时执行 fail-closed 校验
+- `product_entry_overview` 在 manifest / frontdesk schema 中保持同一份结构化 companion contract
 - `family_orchestration` companion 在 frontdoor / projection surface 上与 landed route truth 保持一致
 - `current-program`、`mainline-status`、README / docs / tests 对当前 `P4.E` 口径保持同步
 
@@ -107,6 +125,7 @@ Date: `2026-04-13`
 这条 current truth 只说明：
 
 - `product-entry-manifest` 与 `product-frontdesk` 已 landed 为独立 schema-backed contract
+- `product_entry_overview` 已成为 direct grant frontdoor contract 的结构化 companion
 - 当前 frontdoor / projection / user loop 看到的是同一份 shared route truth
 - 当前 direct grant frontdoor 的 machine-readable contract 边界已经进一步冻结
 

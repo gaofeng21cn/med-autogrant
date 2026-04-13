@@ -152,6 +152,41 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("product_entry_overview", frontdesk_required)
         self.assertIn("product_entry_quickstart", frontdesk_required)
 
+    def test_frontdoor_surface_schemas_pin_overview_companion_shape(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        overview = manifest_schema["$defs"]["productEntryOverview"]
+        self.assertEqual(overview["properties"]["surface_kind"]["const"], "product_entry_overview")
+        self.assertEqual(
+            overview["required"],
+            [
+                "surface_kind",
+                "summary",
+                "frontdesk_command",
+                "recommended_command",
+                "operator_loop_command",
+                "progress_surface",
+                "resume_surface",
+                "recommended_step_id",
+                "next_focus",
+                "remaining_gaps_count",
+                "human_gate_ids",
+            ],
+        )
+        self.assertEqual(
+            overview["properties"]["progress_surface"]["$ref"],
+            "#/$defs/productEntryOverviewProgressSurface",
+        )
+        self.assertEqual(
+            overview["properties"]["resume_surface"]["$ref"],
+            "#/$defs/productEntryOverviewResumeSurface",
+        )
+
+        frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["product_entry_overview"]["$ref"],
+            "product-entry-manifest.schema.json#/$defs/productEntryOverview",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
