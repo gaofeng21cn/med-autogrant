@@ -11,7 +11,7 @@
   "runtime_owner": {
     "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
     "active_phase": "P4 mature direct grant product entry",
-    "active_tranche": "P4.D critique Codex CLI autonomous executor landing",
+    "active_tranche": "P4.D full grant authoring executor landing",
     "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
     "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle"
   },
@@ -40,6 +40,7 @@
     "docs/specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md",
     "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",
     "docs/specs/2026-04-12-author-side-executor-routing-contract-current-truth.md",
+    "docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md",
     "docs/specs/2026-04-13-critique-codex-cli-autonomous-executor-current-truth.md",
     "docs/specs/2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md",
     "docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md",

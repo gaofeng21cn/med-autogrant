@@ -5,7 +5,7 @@ Date: `2026-04-13`
 ## Activation Status
 
 - Phase: `P4 mature direct grant product entry`
-- Active tranche: `P4.D critique Codex CLI autonomous executor landing`
+- Active tranche: `P4.D full grant authoring executor landing`
 - Status: `landed / current truth`
 
 ## Goal
@@ -123,5 +123,5 @@ Date: `2026-04-13`
 它不意味着：
 
 - `critique` 已经变成 Hermes-native full agent loop
-- 其他 pending authoring route 已经一起 landed
+- 这份文档单独定义了 full authoring route catalog；那部分真相应以 `2026-04-13-full-grant-authoring-executor-current-truth.md` 为准
 - actual hosted runtime 已完成

@@ -41,10 +41,11 @@
 - 当前 controller-owned 的 direct-product projection `grant-progress` 与 `grant-cockpit` 也已经通过 `grant-progress.schema.json` 与 `grant-cockpit.schema.json` 进一步冻结成 schema-backed contract surface，并在生成时 fail-closed。
 - 下一棒诚实的 `P4.B` direct-entry layer 也已经通过 `grant-direct-entry` 落地：它把 `grant-progress`、`grant-cockpit` 和已冻结的 direct / `opl-handoff` `product_entry` envelope 组合成一份 schema-backed、fail-closed 的 direct-entry contract，对应 `grant-direct-entry.schema.json`。
 - 当前诚实的 `P4.C` companion layer 也已经通过 `mainline-status`、`mainline-phase` 与 `grant-user-loop` 落地：它把 repo 主线快照和当前 direct grant user loop 收成一处，但仍不发明新的 executor surface；其中 `grant-user-loop` 由 `grant-user-loop.schema.json` 冻结。
+- 当前诚实的 `P4.D` authoring executor layer 也已经通过 `execute-direction-screening-pass`、`execute-question-refinement-pass`、`execute-argument-building-pass`、`execute-fit-alignment-pass`、`execute-outline-pass`、`execute-drafting-pass` 与 `execute-freeze-pass` 落地：从 `direction_screening` 到 `frozen` 的 author-side 主线现在都能直接投影为 landed command，而不再依赖 pending handoff。
 - `build-hosted-contract-bundle` 导出的托管友好合同现在也已经收口成 schema-backed contract bundle，并为 future hosted / `OPL` caller 显式补出 `domain_entry_contract`、`schema_contract`、`authoring_contract`。
 - 这份共享 `domain_entry_contract` 现在还会显式导出 `supported_commands` 与 `command_contracts`，因此外部 caller 已经可以直接按冻结合同拼 request，而不需要 repo-local helper。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
-- 当前理想目标也已经明确：`OPL` 继续是 family-level 顶层入口，`Hermes-Agent` 继续是 runtime substrate owner，`Med Auto Grant` 继续是 domain truth / authoring owner；其中 hosted caller / `OPL` consumption proof 现已完成，而第一棒诚实的 `P4.A` direct-product projection 也已通过 `grant-progress` / `grant-cockpit` 落地，但完整的 mature direct grant product entry 仍是下一阶段。
+- 当前理想目标也已经明确：`OPL` 继续是 family-level 顶层入口，`Hermes-Agent` 继续是 runtime substrate owner，`Med Auto Grant` 继续是 domain truth / authoring owner；其中 hosted caller / `OPL` consumption proof 现已完成，`P4.A / P4.B / P4.C / P4.D` 也都已经作为当前 repo-tracked shell / loop / executor tranche 落地，但完整的 mature direct grant product entry 仍是下一阶段。
 
 ## 入口分层与产品边界
 
@@ -132,7 +133,7 @@
 - 通过 hosted caller consumption proof 证明外部 caller 现在已经可以直接读取 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`，并在不依赖 repo-local helper 的前提下完成已 landed export chain
 - 通过 `MedAutoGrantDomainEntry` 把同一组 runtime command surface 暴露成 future gateway caller 可复用的 service-safe structured entry contract
 - 通过 `build-product-entry` 构建轻量结构化 `product entry` shell，让 `direct` 与 `opl-handoff` 共用同一套 envelope
-- 把已 landed 的 `product entry`、`executor_routing_contract`、pending handoff surface 与 hosted contract bundle 一起冻成可供 future `OPL` / gateway 消费的 schema-backed contract
+- 把已 landed 的 `product entry`、`executor_routing_contract`、全链 authoring command surface 与 hosted contract bundle 一起冻成可供 future `OPL` / gateway 消费的 schema-backed contract
 
 在当前 repo-tracked truth 下，旧的 host-agent 本地 ladder 内已经没有新的 concrete post-`R5.A` runtime delta 可继续隐式推进；因此当前主线前进方式是保持已 landed 的 upstream substrate、service-safe domain entry 与 author-side object boundary 持续全绿，而不是重新打开 repo-local runtime ownership。
 

@@ -22,6 +22,7 @@ CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.js
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
+INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
 
 
 class DomainEntryDispatchTest(unittest.TestCase):
@@ -71,6 +72,27 @@ class DomainEntryDispatchTest(unittest.TestCase):
         runtime.execute_critique_pass.assert_called_once_with(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             output_path="/tmp/critique-output.json",
+        )
+
+    def test_domain_entry_dispatches_execute_direction_screening_pass(self) -> None:
+        runtime = Mock()
+        runtime.execute_direction_screening_pass.return_value = {
+            "ok": True,
+            "command": "execute-direction-screening-pass",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "execute-direction-screening-pass",
+                "input_path": str(INPUT_EXAMPLE_PATH),
+                "output_path": "/tmp/direction-screening-output.json",
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "execute-direction-screening-pass"})
+        runtime.execute_direction_screening_pass.assert_called_once_with(
+            input_path=str(INPUT_EXAMPLE_PATH),
+            output_path="/tmp/direction-screening-output.json",
         )
 
     def test_domain_entry_rejects_missing_required_field(self) -> None:

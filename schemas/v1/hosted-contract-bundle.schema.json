@@ -192,9 +192,16 @@
             "stage-route-report",
             "run-local",
             "resume-local",
+            "execute-direction-screening-pass",
+            "execute-question-refinement-pass",
+            "execute-argument-building-pass",
+            "execute-fit-alignment-pass",
+            "execute-outline-pass",
+            "execute-drafting-pass",
             "build-artifact-bundle",
             "execute-critique-pass",
             "execute-revision-pass",
+            "execute-freeze-pass",
             "build-final-package",
             "build-hosted-contract-bundle"
           ]
@@ -204,7 +211,7 @@
           "items": {
             "$ref": "product-entry.schema.json#/$defs/domainEntryCommandContract"
           },
-          "minItems": 13
+          "minItems": 20
         }
       }
     },

@@ -170,13 +170,18 @@ def _completed_tranches() -> list[dict[str, str]]:
             "title": "mainline status and grant user loop",
             "summary": "mainline-status / mainline-phase / grant-user-loop 已 landed，收成当前 user inbox shell。",
         },
+        {
+            "tranche_id": "P4.D",
+            "title": "full grant authoring executor landing",
+            "summary": "direction_screening -> frozen 的全链 authoring executor 已 landed 到 service-safe command surface。",
+        },
     ]
 
 
 def _remaining_gaps() -> list[str]:
     return [
         "mature direct grant Web UI / hosted runtime 仍未 landed。",
-        "direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / frozen 这些 pending route 仍不能被写成已 landed executor。",
+        "repo 内仍未落地 OPL Gateway 与 family-level cross-domain frontdoor。",
         "当前 product 面仍然是 CLI/controller shell，而不是完整 standalone frontend。",
     ]
 
@@ -191,8 +196,8 @@ def _explicitly_not_now() -> list[str]:
 
 def _next_focus() -> list[str]:
     return [
-        "继续把 `grant-user-loop` 当作当前 direct grant user inbox shell，并保持主线 snapshot / route action / product entry truth 对齐。",
-        "继续用 fresh proof 验证 critique / revision / final package / hosted contract bundle 在 Hermes substrate 上不漂移。",
+        "继续把 `grant-user-loop` 当作当前 direct grant user inbox shell，并保持全链 landed route catalog 与 mainline snapshot / product entry truth 对齐。",
+        "继续用 fresh proof 验证 direction_screening -> frozen 的 landed authoring executor 链条在 Hermes substrate 上不漂移。",
     ]
 
 

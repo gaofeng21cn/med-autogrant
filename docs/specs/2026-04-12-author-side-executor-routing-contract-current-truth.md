@@ -6,7 +6,17 @@ Date: `2026-04-13`
 
 - Phase: `Upstream Hermes-Agent Fast Cutover`
 - Active tranche: `Author-side executor routing contract`
-- Status: `landed / current truth`
+- Status: `historical snapshot / superseded on 2026-04-13`
+
+## Superseded Note
+
+这份文档保留的是 `2026-04-12` 当天的 route contract 快照：当时 `critique / revision / export` 已 landed，而前半程 authoring route 仍在 `pending / handoff-required` matrix 中。
+
+自 `2026-04-13` 起，当前主线真相已经切到：
+
+- [docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md](/Users/gaofeng/workspace/med-autogrant/.worktrees/codex/full-grant-authoring-mainline-20260413/docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
+
+也就是说，下面保留的是历史迁移语义，不再代表当前 landed route catalog。
 
 ## Goal
 

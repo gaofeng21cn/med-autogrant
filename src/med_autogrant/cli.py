@@ -117,6 +117,42 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_artifact_bundle_command(
         subparsers,
+        "execute-direction-screening-pass",
+        handle_execute_direction_screening_pass,
+        "执行方向筛选 pass，生成 direction_screening workspace。",
+    )
+    _add_artifact_bundle_command(
+        subparsers,
+        "execute-question-refinement-pass",
+        handle_execute_question_refinement_pass,
+        "执行科学问题提纯 pass，生成 question_refinement workspace。",
+    )
+    _add_artifact_bundle_command(
+        subparsers,
+        "execute-argument-building-pass",
+        handle_execute_argument_building_pass,
+        "执行立项依据构建 pass，生成 argument_building workspace。",
+    )
+    _add_artifact_bundle_command(
+        subparsers,
+        "execute-fit-alignment-pass",
+        handle_execute_fit_alignment_pass,
+        "执行 applicant-problem fit 对齐 pass，生成 fit_alignment workspace。",
+    )
+    _add_artifact_bundle_command(
+        subparsers,
+        "execute-outline-pass",
+        handle_execute_outline_pass,
+        "执行提纲冻结 pass，生成 outline workspace。",
+    )
+    _add_artifact_bundle_command(
+        subparsers,
+        "execute-drafting-pass",
+        handle_execute_drafting_pass,
+        "执行正文起草 pass，生成 drafting workspace。",
+    )
+    _add_artifact_bundle_command(
+        subparsers,
         "build-artifact-bundle",
         handle_build_artifact_bundle,
         "把当前 workspace 的已冻结对象写成本地 artifact bundle。",
@@ -132,6 +168,12 @@ def build_parser() -> argparse.ArgumentParser:
         "execute-revision-pass",
         handle_execute_revision_pass,
         "按冻结的 section-level deterministic contract 执行 revision pass。",
+    )
+    _add_artifact_bundle_command(
+        subparsers,
+        "execute-freeze-pass",
+        handle_execute_freeze_pass,
+        "执行送审前冻结 pass，生成 frozen workspace。",
     )
     _add_final_package_command(
         subparsers,
@@ -293,6 +335,66 @@ def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
     )
 
 
+def handle_execute_direction_screening_pass(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "execute-direction-screening-pass",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
+
+
+def handle_execute_question_refinement_pass(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "execute-question-refinement-pass",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
+
+
+def handle_execute_argument_building_pass(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "execute-argument-building-pass",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
+
+
+def handle_execute_fit_alignment_pass(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "execute-fit-alignment-pass",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
+
+
+def handle_execute_outline_pass(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "execute-outline-pass",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
+
+
+def handle_execute_drafting_pass(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "execute-drafting-pass",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
+
+
 def handle_execute_critique_pass(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(
         {
@@ -307,6 +409,16 @@ def handle_execute_revision_pass(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(
         {
             "command": "execute-revision-pass",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
+
+
+def handle_execute_freeze_pass(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "execute-freeze-pass",
             "input_path": args.input,
             "output_path": args.output,
         }
@@ -733,6 +845,24 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"bundle_kind: {bundle['bundle_kind']}",
             f"outline_count: {bundle['bundle_summary']['outline_count']}",
             f"section_count: {bundle['bundle_summary']['section_count']}",
+        ]
+        return "\n".join(lines)
+
+    if command in {
+        "execute-direction-screening-pass",
+        "execute-question-refinement-pass",
+        "execute-argument-building-pass",
+        "execute-fit-alignment-pass",
+        "execute-outline-pass",
+        "execute-drafting-pass",
+        "execute-freeze-pass",
+    }:
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"output_path: {payload['output_path']}",
         ]
         return "\n".join(lines)
 
