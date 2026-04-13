@@ -117,6 +117,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_revision_executor_command(
         subparsers,
+        "execute-critique-pass",
+        handle_execute_critique_pass,
+        "通过 Codex CLI critique executor 生成导师式批注与 revision plan。",
+    )
+    _add_revision_executor_command(
+        subparsers,
         "execute-revision-pass",
         handle_execute_revision_pass,
         "按冻结的 section-level deterministic contract 执行 revision pass。",
@@ -268,6 +274,16 @@ def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(
         {
             "command": "build-artifact-bundle",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
+
+
+def handle_execute_critique_pass(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "execute-critique-pass",
             "input_path": args.input,
             "output_path": args.output,
         }
@@ -689,6 +705,20 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"bundle_kind: {bundle['bundle_kind']}",
             f"outline_count: {bundle['bundle_summary']['outline_count']}",
             f"section_count: {bundle['bundle_summary']['section_count']}",
+        ]
+        return "\n".join(lines)
+
+    if command == "execute-critique-pass":
+        critique_execution = payload["critique_execution"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"output_path: {payload['output_path']}",
+            f"critique_id: {critique_execution['critique_id']}",
+            f"active_revision_plan_id: {critique_execution['active_revision_plan_id']}",
+            f"verdict: {critique_execution['verdict']}",
         ]
         return "\n".join(lines)
 

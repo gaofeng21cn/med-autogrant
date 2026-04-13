@@ -222,6 +222,7 @@ def _expected_landed_route(route_id: str) -> dict[str, object]:
         "executor_owner": "med-autogrant",
         "execution_surface": _service_safe_surface(
             {
+                "critique": "execute-critique-pass",
                 "revision": "execute-revision-pass",
                 "artifact_bundle": "build-artifact-bundle",
                 "final_package": "build-final-package",
@@ -261,7 +262,7 @@ def _expected_pending_route(route_id: str, *, source_stage: str) -> dict[str, ob
 
 
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
-    if route_id in {"revision", "artifact_bundle", "final_package", "hosted_contract_bundle"}:
+    if route_id in {"critique", "revision", "artifact_bundle", "final_package", "hosted_contract_bundle"}:
         return _expected_landed_route(route_id)
     return _expected_pending_route(route_id, source_stage=source_stage)
 
@@ -476,7 +477,7 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
                 },
             )
 
-    def test_executor_routing_contract_contextualizes_pending_route_handoff_requirements(self) -> None:
+    def test_executor_routing_contract_contextualizes_landed_and_pending_route_requirements(self) -> None:
         from med_autogrant.hermes_runtime import _build_executor_routing_contract
 
         drafting_contract = _build_executor_routing_contract(
@@ -492,13 +493,7 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
             drafting_contract["recommended_executor_route"],
             _expected_route("critique", source_stage="drafting"),
         )
-        self.assertEqual(
-            drafting_contract["recommended_executor_route"]["handoff_requirements"]["required_domain_surfaces"],
-            [
-                _service_safe_surface("summarize-workspace"),
-                _service_safe_surface("stage-route-report"),
-            ],
-        )
+        self.assertNotIn("handoff_requirements", drafting_contract["recommended_executor_route"])
 
         critique_reroute_contract = _build_executor_routing_contract(
             current_stage="critique",
@@ -644,6 +639,57 @@ class ArtifactBundleHandoffTest(unittest.TestCase):
 
 
 class RevisionExecutionHandoffTest(unittest.TestCase):
+    def test_execute_critique_pass_uses_codex_cli_handoff_owner(self) -> None:
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+
+        runtime = HermesRuntimeSubstrate()
+        expected_critique_workspace = {
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "lifecycle_stage": "critique",
+            "current_selection": {
+                "active_draft_id": "draft-test",
+                "active_revision_plan_id": "revision-plan-test",
+            },
+        }
+        expected_critique_execution = {
+            "critique_id": "critique-test",
+            "active_revision_plan_id": "revision-plan-test",
+            "verdict": "major_revision",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            workspace_path = Path(tmp_dir) / "critique.json"
+            with patch(
+                "med_autogrant.hermes_runtime.build_critique_execution_document",
+                create=True,
+                return_value={
+                    "grant_run_id": "grant-run-test",
+                    "workspace_id": "workspace-test",
+                    "draft_id": "draft-test",
+                    "active_revision_plan_id": "revision-plan-test",
+                    "lifecycle_stage": "critique",
+                    "critique_execution": expected_critique_execution,
+                    "critique_workspace": expected_critique_workspace,
+                },
+            ) as build_document, patch(
+                "med_autogrant.hermes_runtime._guard_critique_output_identity",
+                create=True,
+            ) as guard_output, patch(
+                "med_autogrant.hermes_runtime._write_revised_workspace_output",
+                create=True,
+            ) as write_output:
+                payload = runtime.execute_critique_pass(
+                    input_path=str(REVISION_EXAMPLE_PATH),
+                    output_path=str(workspace_path),
+                )
+
+        self.assertEqual(payload["critique_workspace"], expected_critique_workspace)
+        self.assertEqual(payload["critique_execution"], expected_critique_execution)
+        build_document.assert_called_once()
+        guard_output.assert_called_once()
+        write_output.assert_called_once_with(workspace_path.resolve(), expected_critique_workspace)
+
     def test_execute_revision_pass_uses_hermes_handoff_owner(self) -> None:
         from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
 

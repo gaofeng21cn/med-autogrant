@@ -14,6 +14,7 @@ from med_autogrant.control_plane import (
     resolve_runtime_state_root,
     runtime_state_display_path,
 )
+from med_autogrant.critique_executor import build_critique_execution_document
 from med_autogrant.final_package import (
     _validate_required_artifact_bundle_fields,
     build_final_package_document,
@@ -61,6 +62,7 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = (
     "run-local",
     "resume-local",
     "build-artifact-bundle",
+    "execute-critique-pass",
     "execute-revision-pass",
     "build-final-package",
     "build-hosted-contract-bundle",
@@ -76,6 +78,11 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = (
     {"command": "resume-local", "required_fields": ["journal_path"], "optional_fields": []},
     {
         "command": "build-artifact-bundle",
+        "required_fields": ["input_path", "output_path"],
+        "optional_fields": [],
+    },
+    {
+        "command": "execute-critique-pass",
         "required_fields": ["input_path", "output_path"],
         "optional_fields": [],
     },
@@ -502,6 +509,41 @@ class HermesRuntimeSubstrate:
             "output_path": str(resolved_output_path),
             "revision_execution": revision_document["revision_execution"],
             "revised_workspace": revision_document["revised_workspace"],
+        }
+
+    def execute_critique_pass(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path,
+    ) -> dict[str, Any]:
+        critique_document = build_critique_execution_document(
+            document=self._load_workspace(input_path),
+            input_path=input_path,
+        )
+        resolved_output_path = Path(output_path).expanduser().resolve()
+        _guard_critique_output_identity(
+            resolved_output_path,
+            grant_run_id=critique_document["grant_run_id"],
+            workspace_id=critique_document["workspace_id"],
+            draft_id=critique_document["draft_id"],
+            active_revision_plan_id=critique_document["active_revision_plan_id"],
+            lifecycle_stage=critique_document["lifecycle_stage"],
+        )
+        _write_revised_workspace_output(
+            resolved_output_path,
+            critique_document["critique_workspace"],
+        )
+        return {
+            "ok": True,
+            "command": "execute-critique-pass",
+            "grant_run_id": critique_document["grant_run_id"],
+            "workspace_id": critique_document["workspace_id"],
+            "draft_id": critique_document["draft_id"],
+            "lifecycle_stage": critique_document["lifecycle_stage"],
+            "output_path": str(resolved_output_path),
+            "critique_execution": critique_document["critique_execution"],
+            "critique_workspace": critique_document["critique_workspace"],
         }
 
     def build_final_package(
@@ -971,6 +1013,25 @@ def _guard_revision_output_identity(
     )
 
 
+def _guard_critique_output_identity(
+    output_path: Path,
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    draft_id: str,
+    active_revision_plan_id: str,
+    lifecycle_stage: str | None,
+) -> None:
+    _guard_revision_output_identity(
+        output_path,
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        draft_id=draft_id,
+        active_revision_plan_id=active_revision_plan_id,
+        lifecycle_stage=lifecycle_stage,
+    )
+
+
 def _read_artifact_bundle(
     artifact_bundle_path: str | Path,
     *,
@@ -1248,6 +1309,7 @@ def _build_stage_route_contract(stage: str, *, source_stage: str) -> dict[str, A
 def _build_author_side_route_contract(route_id: str, *, source_stage: str) -> dict[str, Any]:
     resolved_route_id = _require_known_route_id(route_id, context="executor routing route")
     execution_command = {
+        "critique": "execute-critique-pass",
         "revision": "execute-revision-pass",
         "artifact_bundle": "build-artifact-bundle",
         "final_package": "build-final-package",
@@ -1379,6 +1441,7 @@ def _build_operator_contract() -> dict[str, Any]:
             "stage-route-report",
         ],
         "canonical_export_surfaces": [
+            "execute-critique-pass",
             "execute-revision-pass",
             "build-artifact-bundle",
             "build-final-package",

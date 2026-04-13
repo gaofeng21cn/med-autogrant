@@ -1222,6 +1222,11 @@ def _build_domain_surface_command(*, command: str, input_path: Path) -> str:
 
 def _build_route_execution_command(*, route_id: str, input_path: Path) -> str:
     resolved_input_path = input_path.expanduser().resolve()
+    if route_id == "critique":
+        return (
+            "uv run python -m med_autogrant execute-critique-pass "
+            f"--input {resolved_input_path} --output <critique-output-path> --format json"
+        )
     if route_id == "revision":
         return (
             "uv run python -m med_autogrant execute-revision-pass "

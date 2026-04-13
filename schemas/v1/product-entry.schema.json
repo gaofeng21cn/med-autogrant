@@ -124,6 +124,7 @@
         },
         "canonical_export_surfaces": {
           "const": [
+            "execute-critique-pass",
             "execute-revision-pass",
             "build-artifact-bundle",
             "build-final-package",
@@ -235,6 +236,7 @@
             "run-local",
             "resume-local",
             "build-artifact-bundle",
+            "execute-critique-pass",
             "execute-revision-pass",
             "build-final-package",
             "build-hosted-contract-bundle"
@@ -245,7 +247,7 @@
           "items": {
             "$ref": "#/$defs/domainEntryCommandContract"
           },
-          "minItems": 12
+          "minItems": 13
         }
       }
     },

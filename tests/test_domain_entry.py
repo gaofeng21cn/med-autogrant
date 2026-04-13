@@ -52,6 +52,27 @@ class DomainEntryDispatchTest(unittest.TestCase):
 
         self.assertEqual(payload, expected_payload)
 
+    def test_domain_entry_dispatches_execute_critique_pass(self) -> None:
+        runtime = Mock()
+        runtime.execute_critique_pass.return_value = {
+            "ok": True,
+            "command": "execute-critique-pass",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "execute-critique-pass",
+                "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                "output_path": "/tmp/critique-output.json",
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "execute-critique-pass"})
+        runtime.execute_critique_pass.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            output_path="/tmp/critique-output.json",
+        )
+
     def test_domain_entry_rejects_missing_required_field(self) -> None:
         with self.assertRaisesRegex(WorkspaceStateError, "缺少必填字段: output_path"):
             MedAutoGrantDomainEntry(runtime=Mock()).dispatch(
@@ -111,63 +132,14 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                     reroute_payload["stage_action_envelope"]["executor_routing_contract"]["recommended_executor_route"],
                     {
                         "route_id": "critique",
-                        "route_status": "pending",
+                        "route_status": "landed",
                         "executor_owner": "med-autogrant",
-                        "execution_surface": None,
-                        "handoff_contract_kind": "handoff-required",
-                        "handoff_requirements": {
-                            "contract_kind": "critique-pending-handoff",
-                            "workspace_surface_kind": "nsfc_workspace",
-                            "required_domain_surfaces": [
-                                {
-                                    "surface_kind": "service-safe-domain-entry-command",
-                                    "entry_adapter": "MedAutoGrantDomainEntry",
-                                    "command": "summarize-workspace",
-                                },
-                                {
-                                    "surface_kind": "service-safe-domain-entry-command",
-                                    "entry_adapter": "MedAutoGrantDomainEntry",
-                                    "command": "critique-summary",
-                                },
-                                {
-                                    "surface_kind": "service-safe-domain-entry-command",
-                                    "entry_adapter": "MedAutoGrantDomainEntry",
-                                    "command": "stage-route-report",
-                                },
-                            ],
-                            "required_identity_fields": [
-                                "grant_run_id",
-                                "workspace_id",
-                                "draft_id",
-                            ],
-                            "required_summary_fields": [
-                                "current_selection.selected_direction_id",
-                                "current_selection.selected_question_id",
-                                "current_selection.active_fit_mapping_id",
-                                "current_selection.active_draft_id",
-                                "current_selection.active_revision_plan_id",
-                                "selected_direction.id",
-                                "selected_question.id",
-                                "active_argument_chain.id",
-                                "active_fit_mapping.id",
-                                "active_draft.id",
-                                "active_draft.version_label",
-                                "active_draft.status",
-                                "active_revision_plan.id",
-                                "active_revision_plan.execution_status",
-                                "active_critique.id",
-                                "active_critique.verdict",
-                                "active_critique.blocking_issue_count",
-                            ],
-                            "required_gate_fields": [
-                                "gates.direction_frozen",
-                                "gates.scientific_question_frozen",
-                                "gates.argument_chain_frozen",
-                                "gates.fit_alignment_frozen",
-                                "gates.outline_frozen",
-                                "gates.presubmission_frozen",
-                            ],
+                        "execution_surface": {
+                            "surface_kind": "service-safe-domain-entry-command",
+                            "entry_adapter": "MedAutoGrantDomainEntry",
+                            "command": "execute-critique-pass",
                         },
+                        "handoff_contract_kind": "service-safe-domain-entry-command",
                     },
                 )
 
