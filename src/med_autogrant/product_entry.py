@@ -597,6 +597,18 @@ class MedAutoGrantProductEntry:
                     "uv run python -m med_autogrant grant-user-loop "
                     f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
                 ),
+                "operator_loop_surface": {
+                    "shell_key": "grant_user_loop",
+                    "command": (
+                        "uv run python -m med_autogrant grant-user-loop "
+                        f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
+                    ),
+                    "surface_kind": GRANT_USER_LOOP_KIND,
+                    "summary": (
+                        "当前 operator loop 以 grant-user-loop 作为 direct grant user inbox shell，"
+                        "在同一入口下汇总 progress、route action 与 mainline snapshot。"
+                    ),
+                },
                 "repo_mainline": {
                     "program_id": _require_nonempty_string_from_mapping(
                         mainline_payload,
