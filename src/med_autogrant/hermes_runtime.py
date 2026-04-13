@@ -33,6 +33,7 @@ from med_autogrant.hosted_contract_bundle import (
     _validate_required_final_package_fields,
     build_hosted_contract_bundle_document,
 )
+from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.upstream_hermes import HermesGrantRunLedger
 from med_autogrant.revision_executor import build_revision_execution_document
@@ -63,6 +64,7 @@ GRANT_USER_LOOP_SCHEMA_FILE = "grant-user-loop.schema.json"
 PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE = "product-entry-manifest.schema.json"
 PRODUCT_FRONTDESK_SCHEMA_FILE = "product-frontdesk.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
+SUBMISSION_READY_PACKAGE_SCHEMA_FILE = "submission-ready-package.schema.json"
 SUPPORTED_DOMAIN_ENTRY_COMMANDS = (
     "probe-upstream-hermes",
     "validate-workspace",
@@ -84,6 +86,7 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = (
     "execute-freeze-pass",
     "build-final-package",
     "build-hosted-contract-bundle",
+    "build-submission-ready-package",
 )
 DOMAIN_ENTRY_COMMAND_CONTRACTS = (
     {"command": "probe-upstream-hermes", "required_fields": [], "optional_fields": []},
@@ -154,6 +157,11 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = (
         "required_fields": ["final_package_path", "output_path"],
         "optional_fields": [],
     },
+    {
+        "command": "build-submission-ready-package",
+        "required_fields": ["input_path", "output_dir"],
+        "optional_fields": [],
+    },
 )
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
@@ -165,6 +173,7 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "executor-routing-contract.schema.json",
     "product-entry.schema.json",
     "hosted-contract-bundle.schema.json",
+    "submission-ready-package.schema.json",
 )
 AUTHOR_SIDE_ROUTE_IDS = (
     "direction_screening",
@@ -780,6 +789,123 @@ class HermesRuntimeSubstrate:
             "draft_id": final_package["draft_id"],
             "output_path": str(resolved_output_path),
             "hosted_contract_bundle": hosted_contract_bundle,
+        }
+
+    def build_submission_ready_package(
+        self,
+        *,
+        input_path: str | Path,
+        output_dir: str | Path,
+    ) -> dict[str, Any]:
+        document = self._load_workspace(input_path)
+        artifact_bundle = build_artifact_bundle_document(document=document)
+        final_package = build_final_package_document(
+            document=document,
+            artifact_bundle=artifact_bundle,
+        )
+        current_program_contract = _read_current_program_contract()
+        program_id = _read_program_id()
+        hosted_contract_bundle = build_hosted_contract_bundle_document(
+            final_package=final_package,
+            program_id=program_id,
+            runtime_substrate_contract=_build_runtime_substrate_contract(
+                current_program_contract=current_program_contract,
+            ),
+            runtime_state_contract=_build_runtime_state_contract(),
+            operator_contract=_build_operator_contract(),
+            domain_entry_contract=_build_domain_entry_contract(),
+            schema_contract=_build_schema_contract(),
+            authoring_contract=_build_hosted_authoring_contract(),
+        )
+        _validate_hosted_contract_bundle(
+            hosted_contract_bundle,
+            grant_run_id=final_package["grant_run_id"],
+            workspace_id=final_package["workspace_id"],
+            lifecycle_stage=final_package["lifecycle_stage"],
+        )
+        submission_ready_package = build_submission_ready_package_document(
+            document=document,
+            artifact_bundle=artifact_bundle,
+            final_package=final_package,
+            hosted_contract_bundle=hosted_contract_bundle,
+            program_id=program_id,
+        )
+        if not submission_ready_package["submission_ready"]:
+            issue_ids = [
+                item["issue_id"]
+                for item in submission_ready_package["blocking_issues"]
+                if isinstance(item, dict) and isinstance(item.get("issue_id"), str)
+            ]
+            raise WorkspaceStateError(
+                f"submission ready package blocked: {', '.join(issue_ids)}",
+                errors=[],
+                grant_run_id=final_package["grant_run_id"],
+                workspace_id=final_package["workspace_id"],
+                lifecycle_stage=final_package["lifecycle_stage"],
+            )
+        _validate_contract_schema(
+            submission_ready_package,
+            schema_file=SUBMISSION_READY_PACKAGE_SCHEMA_FILE,
+            context="submission_ready_package",
+            grant_run_id=final_package["grant_run_id"],
+            workspace_id=final_package["workspace_id"],
+            lifecycle_stage=final_package["lifecycle_stage"],
+        )
+
+        resolved_output_dir = Path(output_dir).expanduser().resolve()
+        artifact_bundle_path = resolved_output_dir / "artifact-bundle.json"
+        final_package_path = resolved_output_dir / "final-package.json"
+        hosted_contract_bundle_path = resolved_output_dir / "hosted-contract-bundle.json"
+        submission_ready_package_path = resolved_output_dir / "submission-ready-package.json"
+
+        _guard_artifact_bundle_output_identity(
+            artifact_bundle_path,
+            grant_run_id=artifact_bundle["grant_run_id"],
+            workspace_id=artifact_bundle["workspace_id"],
+            draft_id=artifact_bundle["draft_id"],
+            lifecycle_stage=artifact_bundle["lifecycle_stage"],
+        )
+        _guard_final_package_output_identity(
+            final_package_path,
+            grant_run_id=final_package["grant_run_id"],
+            workspace_id=final_package["workspace_id"],
+            draft_id=final_package["draft_id"],
+            lifecycle_stage=final_package["lifecycle_stage"],
+        )
+        _guard_hosted_contract_output_identity(
+            hosted_contract_bundle_path,
+            grant_run_id=final_package["grant_run_id"],
+            workspace_id=final_package["workspace_id"],
+            draft_id=final_package["draft_id"],
+            program_id=program_id,
+        )
+        _guard_submission_ready_package_output_identity(
+            submission_ready_package_path,
+            grant_run_id=final_package["grant_run_id"],
+            workspace_id=final_package["workspace_id"],
+            draft_id=final_package["draft_id"],
+            program_id=program_id,
+        )
+
+        _write_artifact_bundle_output(artifact_bundle_path, artifact_bundle)
+        _write_final_package_output(final_package_path, final_package)
+        _write_hosted_contract_bundle_output(hosted_contract_bundle_path, hosted_contract_bundle)
+        _write_submission_ready_package_output(submission_ready_package_path, submission_ready_package)
+        return {
+            "ok": True,
+            "command": "build-submission-ready-package",
+            "grant_run_id": final_package["grant_run_id"],
+            "workspace_id": final_package["workspace_id"],
+            "draft_id": final_package["draft_id"],
+            "lifecycle_stage": final_package["lifecycle_stage"],
+            "output_dir": str(resolved_output_dir),
+            "output_paths": {
+                "artifact_bundle": str(artifact_bundle_path),
+                "final_package": str(final_package_path),
+                "hosted_contract_bundle": str(hosted_contract_bundle_path),
+                "submission_ready_package": str(submission_ready_package_path),
+            },
+            "submission_ready_package": submission_ready_package,
         }
 
     def _load_workspace(self, input_path: str | Path) -> dict[str, Any]:
@@ -1706,6 +1832,7 @@ def _build_operator_contract() -> dict[str, Any]:
             "build-artifact-bundle",
             "build-final-package",
             "build-hosted-contract-bundle",
+            "build-submission-ready-package",
         ],
         "checkpoint_aggregation_surface": "stage-route-report",
     }
@@ -1925,6 +2052,52 @@ def _guard_hosted_contract_output_identity(
     )
 
 
+def _guard_submission_ready_package_output_identity(
+    output_path: Path,
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    draft_id: str,
+    program_id: str,
+) -> None:
+    if not output_path.exists():
+        return
+
+    try:
+        existing_payload = json.loads(output_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise WorkspaceStateError(
+            f"submission ready package output identity 不匹配: {output_path} 已存在且不是可校验的 JSON object。"
+        ) from exc
+    except OSError as exc:
+        raise WorkspaceFileError(f"读取 submission ready package output 失败: {output_path}") from exc
+
+    if not isinstance(existing_payload, dict):
+        raise WorkspaceStateError(
+            f"submission ready package output identity 不匹配: {output_path} 已存在且顶层不是 JSON object。"
+        )
+
+    same_identity = (
+        existing_payload.get("package_kind") == "submission_ready_package"
+        and existing_payload.get("grant_run_id") == grant_run_id
+        and existing_payload.get("workspace_id") == workspace_id
+        and existing_payload.get("draft_id") == draft_id
+        and existing_payload.get("program_id") == program_id
+    )
+    if same_identity:
+        return
+
+    raise WorkspaceStateError(
+        (
+            "submission ready package output identity 不匹配: "
+            f"{output_path} -> "
+            f"{existing_payload.get('grant_run_id')}/{existing_payload.get('workspace_id')}/"
+            f"{existing_payload.get('draft_id')}/{existing_payload.get('program_id')} "
+            f"!= {grant_run_id}/{workspace_id}/{draft_id}/{program_id}"
+        )
+    )
+
+
 def _write_hosted_contract_bundle_output(output_path: Path, hosted_contract_bundle: dict[str, Any]) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     try:
@@ -1955,3 +2128,17 @@ def _write_final_package_output(output_path: Path, final_package: dict[str, Any]
         output_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
     except OSError as exc:
         raise WorkspaceFileError(f"写入 final package output 失败: {output_path}") from exc
+
+
+def _write_submission_ready_package_output(
+    output_path: Path,
+    submission_ready_package: dict[str, Any],
+) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        output_path.write_text(
+            json.dumps(submission_ready_package, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except OSError as exc:
+        raise WorkspaceFileError(f"写入 submission ready package output 失败: {output_path}") from exc

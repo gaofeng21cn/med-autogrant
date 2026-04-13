@@ -108,7 +108,8 @@
         "open_loop",
         "inspect_progress",
         "inspect_cockpit",
-        "build_direct_entry"
+        "build_direct_entry",
+        "build_submission_ready_package"
       ],
       "properties": {
         "open_loop": {
@@ -121,6 +122,9 @@
           "$ref": "#/$defs/operatorLoopAction"
         },
         "build_direct_entry": {
+          "$ref": "#/$defs/operatorLoopAction"
+        },
+        "build_submission_ready_package": {
           "$ref": "#/$defs/operatorLoopAction"
         }
       }

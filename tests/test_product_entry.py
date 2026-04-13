@@ -230,6 +230,7 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "execute-freeze-pass",
     "build-final-package",
     "build-hosted-contract-bundle",
+    "build-submission-ready-package",
 ]
 DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "probe-upstream-hermes", "required_fields": [], "optional_fields": []},
@@ -260,6 +261,11 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
         "required_fields": ["final_package_path", "output_path"],
         "optional_fields": [],
     },
+    {
+        "command": "build-submission-ready-package",
+        "required_fields": ["input_path", "output_dir"],
+        "optional_fields": [],
+    },
 ]
 CANONICAL_EXPORT_SURFACES = [
     "execute-direction-screening-pass",
@@ -274,6 +280,7 @@ CANONICAL_EXPORT_SURFACES = [
     "build-artifact-bundle",
     "build-final-package",
     "build-hosted-contract-bundle",
+    "build-submission-ready-package",
 ]
 CANONICAL_EXPORT_SURFACES = [
     "execute-direction-screening-pass",
@@ -288,6 +295,7 @@ CANONICAL_EXPORT_SURFACES = [
     "build-artifact-bundle",
     "build-final-package",
     "build-hosted-contract-bundle",
+    "build-submission-ready-package",
 ]
 
 
@@ -984,6 +992,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "critique_summary": f"uv run python -m med_autogrant critique-summary --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
                 "build_direct_entry": f"uv run python -m med_autogrant build-product-entry --input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode direct --task-intent <describe-task-intent> --format json",
                 "build_opl_handoff": f"uv run python -m med_autogrant build-product-entry --input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
+                "build_submission_ready_package": f"uv run python -m med_autogrant build-submission-ready-package --input {CRITIQUE_EXAMPLE_PATH.resolve()} --output-dir <submission-ready-output-dir> --format json",
             },
         )
 
@@ -1073,7 +1082,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
+                            "active_tranche": "P4.F local submission-ready package landing",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1152,7 +1161,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
+                            "active_tranche": "P4.F local submission-ready package landing",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1249,7 +1258,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
+                                "active_tranche": "P4.F local submission-ready package landing",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1338,7 +1347,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
+                                "active_tranche": "P4.F local submission-ready package landing",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1423,7 +1432,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["grant_user_loop"]["entry_kind"], "grant_user_loop")
         self.assertEqual(
             payload["grant_user_loop"]["mainline_snapshot"]["active_tranche"],
-            "P4.E schema-backed frontdesk and manifest contract landing",
+            "P4.F local submission-ready package landing",
         )
         self.assertEqual(
             payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
@@ -1513,7 +1522,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(manifest["repo_mainline"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             manifest["repo_mainline"]["active_tranche"],
-            "P4.E schema-backed frontdesk and manifest contract landing",
+            "P4.F local submission-ready package landing",
         )
         self.assertEqual(manifest["repo_mainline"]["phase_id"], "P4")
         self.assertEqual(
@@ -1583,7 +1592,13 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(manifest["product_entry_quickstart"]["recommended_step_id"], "open_frontdesk")
         self.assertEqual(
             [step["step_id"] for step in manifest["product_entry_quickstart"]["steps"]],
-            ["open_frontdesk", "continue_grant_loop", "inspect_progress", "inspect_cockpit"],
+            [
+                "open_frontdesk",
+                "continue_grant_loop",
+                "inspect_progress",
+                "inspect_cockpit",
+                "build_submission_ready_package",
+            ],
         )
         self.assertEqual(
             manifest["product_entry_quickstart"]["steps"][0]["command"],
@@ -1592,6 +1607,10 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(
             manifest["product_entry_quickstart"]["steps"][1]["requires"],
             ["task_intent"],
+        )
+        self.assertEqual(
+            manifest["product_entry_quickstart"]["steps"][4]["requires"],
+            ["output_dir"],
         )
         self.assertEqual(
             manifest["product_entry_quickstart"]["resume_contract"],
@@ -1898,6 +1917,11 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(frontdesk["product_entry_quickstart"]["recommended_step_id"], "open_frontdesk")
         self.assertEqual(frontdesk["product_entry_quickstart"]["steps"][2]["step_id"], "inspect_progress")
         self.assertEqual(frontdesk["product_entry_quickstart"]["steps"][2]["surface_kind"], "grant_progress")
+        self.assertEqual(frontdesk["product_entry_quickstart"]["steps"][4]["step_id"], "build_submission_ready_package")
+        self.assertEqual(
+            frontdesk["product_entry_quickstart"]["steps"][4]["surface_kind"],
+            "submission_ready_package",
+        )
         self.assertEqual(frontdesk["product_entry_manifest"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
         self.assertEqual(frontdesk["product_entry_manifest"]["manifest_version"], 2)
 
@@ -1909,7 +1933,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             return_value={
                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                 "active_phase": "P4 mature direct grant product entry",
-                "active_tranche": "P4.E schema-backed frontdesk and manifest contract landing",
+                "active_tranche": "P4.F local submission-ready package landing",
                 "phase_map": [{"phase_id": "P4", "phase_name": "mature direct grant product entry", "status": "next"}],
                 "next_focus": [1],
                 "remaining_gaps": ["mature direct grant Web UI / hosted runtime 仍未 landed。"],

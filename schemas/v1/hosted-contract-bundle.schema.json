@@ -203,7 +203,8 @@
             "execute-revision-pass",
             "execute-freeze-pass",
             "build-final-package",
-            "build-hosted-contract-bundle"
+            "build-hosted-contract-bundle",
+            "build-submission-ready-package"
           ]
         },
         "command_contracts": {
@@ -211,7 +212,7 @@
           "items": {
             "$ref": "product-entry.schema.json#/$defs/domainEntryCommandContract"
           },
-          "minItems": 20
+          "minItems": 21
         }
       }
     },
@@ -240,7 +241,8 @@
             "pending-handoff-requirements.schema.json",
             "executor-routing-contract.schema.json",
             "product-entry.schema.json",
-            "hosted-contract-bundle.schema.json"
+            "hosted-contract-bundle.schema.json",
+            "submission-ready-package.schema.json"
           ]
         }
       }

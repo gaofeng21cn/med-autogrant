@@ -39,6 +39,9 @@ P4B_DIRECT_ENTRY_CURRENT_TRUTH = (
 P4C_USER_LOOP_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md"
 )
+P4F_SUBMISSION_READY_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-13-p4f-local-submission-ready-package-current-truth.md"
+)
 FORMAL_ENTRY_MATRIX = REPO_ROOT / "docs" / "specs" / "2026-04-07-formal-entry-matrix-current-truth.md"
 DURABILITY_MODEL = REPO_ROOT / "docs" / "specs" / "2026-04-07-durability-model-clarification.md"
 RUNTIME_STATE_ROOT = "$CODEX_HOME/projects/med-autogrant/runtime-state/"
@@ -63,7 +66,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             contract["runtime_owner"]["active_tranche"],
-            "P4.E schema-backed frontdesk and manifest contract landing",
+            "P4.F local submission-ready package landing",
         )
         self.assertEqual(contract["executor_defaults"]["default_executor"], "codex_cli_autonomous")
         self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")
@@ -109,6 +112,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "docs/specs/2026-04-13-p4e-schema-backed-frontdesk-and-manifest-current-truth.md",
             contract["repo_tracked_truth_surfaces"],
         )
+        self.assertIn(
+            "docs/specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md",
+            contract["repo_tracked_truth_surfaces"],
+        )
         self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
         self.assertEqual(contract["ideal_target"]["family_top_entry"], "OPL Gateway")
         self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
@@ -146,6 +153,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("上游 Hermes-Agent 目标", decisions)
         self.assertIn("grant-progress", decisions)
         self.assertIn("grant-user-loop", decisions)
+        self.assertIn("build-submission-ready-package", decisions)
 
     def test_current_truth_specs_align_with_repo_tracked_contract(self) -> None:
         contract = json.loads(_read(CURRENT_PROGRAM_CONTRACT))
@@ -155,6 +163,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         p4a_product_projection = _read(P4A_PRODUCT_PROJECTION_CURRENT_TRUTH)
         p4b_direct_entry = _read(P4B_DIRECT_ENTRY_CURRENT_TRUTH)
         p4c_user_loop = _read(P4C_USER_LOOP_CURRENT_TRUTH)
+        p4f_submission_ready = _read(P4F_SUBMISSION_READY_CURRENT_TRUTH)
         formal_entry = _read(FORMAL_ENTRY_MATRIX)
         durability = _read(DURABILITY_MODEL)
 
@@ -191,6 +200,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("mainline-phase", p4c_user_loop)
         self.assertIn("grant-user-loop", p4c_user_loop)
         self.assertIn("P4.C", p4c_user_loop)
+        self.assertIn("build-submission-ready-package", p4f_submission_ready)
+        self.assertIn("submission-ready-package.schema.json", p4f_submission_ready)
+        self.assertIn("fail-closed", p4f_submission_ready)
+        self.assertIn("外部官网提交", p4f_submission_ready)
 
     def test_core_docs_publish_schema_backed_projection_contract_boundary(self) -> None:
         architecture = _read(CORE_ARCHITECTURE)
@@ -213,6 +226,8 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("grant-cockpit.schema.json", contracts_readme)
         self.assertIn("grant-direct-entry.schema.json", contracts_readme)
         self.assertIn("grant-user-loop.schema.json", contracts_readme)
+        self.assertIn("submission-ready-package.schema.json", architecture)
+        self.assertIn("submission-ready-package.schema.json", contracts_readme)
 
     def test_public_surfaces_no_longer_require_project_runtime_program_directory(self) -> None:
         for path in (README_EN, README_ZH, DOCS_README_EN, DOCS_README_ZH):

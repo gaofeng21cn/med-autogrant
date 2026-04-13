@@ -187,6 +187,12 @@ def build_parser() -> argparse.ArgumentParser:
         handle_build_hosted_contract_bundle,
         "把 final package 写成 hosted-friendly contract bundle。",
     )
+    _add_submission_ready_package_command(
+        subparsers,
+        "build-submission-ready-package",
+        handle_build_submission_ready_package,
+        "把 frozen workspace 一次性写成 submission-ready 本地交付目录。",
+    )
     _add_product_entry_command(
         subparsers,
         "build-product-entry",
@@ -446,6 +452,16 @@ def handle_build_hosted_contract_bundle(args: argparse.Namespace) -> dict[str, A
     )
 
 
+def handle_build_submission_ready_package(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "build-submission-ready-package",
+            "input_path": args.input,
+            "output_dir": args.output_dir,
+        }
+    )
+
+
 def handle_build_product_entry(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build(
         input_path=args.input,
@@ -600,6 +616,19 @@ def _add_hosted_contract_bundle_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--final-package", required=True)
     command.add_argument("--output", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_submission_ready_package_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--output-dir", required=True)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -915,6 +944,19 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"output_path: {payload['output_path']}",
             f"bundle_kind: {hosted_contract_bundle['bundle_kind']}",
             f"program_id: {hosted_contract_bundle['execution_identity']['program_id']}",
+        ]
+        return "\n".join(lines)
+
+    if command == "build-submission-ready-package":
+        submission_ready_package = payload["submission_ready_package"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"output_dir: {payload['output_dir']}",
+            f"readiness_verdict: {submission_ready_package['readiness_verdict']}",
+            f"blocking_issue_count: {submission_ready_package['audit_summary']['blocking_issue_count']}",
         ]
         return "\n".join(lines)
 

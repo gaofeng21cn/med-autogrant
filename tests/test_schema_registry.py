@@ -35,6 +35,7 @@ EXPECTED_SCHEMAS = {
     "product-entry-manifest.schema.json",
     "product-frontdesk.schema.json",
     "hosted-contract-bundle.schema.json",
+    "submission-ready-package.schema.json",
     "schema-index.json",
 }
 
@@ -124,6 +125,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["product_entry_manifest_surface"], "product-entry-manifest.schema.json")
         self.assertEqual(names["product_frontdesk_surface"], "product-frontdesk.schema.json")
         self.assertEqual(names["hosted_contract_bundle"], "hosted-contract-bundle.schema.json")
+        self.assertEqual(names["submission_ready_package"], "submission-ready-package.schema.json")
 
     def test_product_surface_schemas_require_family_orchestration_companion(self) -> None:
         schema_files = [

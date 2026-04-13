@@ -6,7 +6,7 @@
 
 **An in-development medical grant authoring mainline for investigator-side `NSFC`-style applications**
 
-> Status: active development. The repository now runs on a real upstream `Hermes-Agent` runtime substrate while preserving the author-side grant domain in repo-local adapters and domain logic. The previously absorbed `CLI-first + host-agent` line remains only as a historical migration baseline / regression oracle. The project is still neither an actual hosted runtime nor a submission-ready autopilot.
+> Status: active development. The repository now runs on a real upstream `Hermes-Agent` runtime substrate while preserving the author-side grant domain in repo-local adapters and domain logic. The previously absorbed `CLI-first + host-agent` line remains only as a historical migration baseline / regression oracle. One-click local `submission-ready` package export is now landed for frozen, evidence-complete workspaces, but the project is still neither an actual hosted runtime nor an external-submission autopilot.
 
 <table>
   <tr>
@@ -39,6 +39,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - Landed service-safe entry: `MedAutoGrantDomainEntry`, which preserves the CLI command surface as a structured domain-entry contract for future gateway callers.
 - The current `product entry` shell and `executor_routing_contract` are now also frozen as schema-backed contract surfaces under `schemas/v1/`, with fail-closed validation at generation time.
 - The current honest `P4.E` frontdoor-contract layer is now also landed through `product-entry-manifest` and `product-frontdesk`; both are now independently frozen by `product-entry-manifest.schema.json` and `product-frontdesk.schema.json`, with generation-time fail-closed validation.
+- The current honest `P4.F` local-delivery layer is now also landed through `build-submission-ready-package`; it fail-closes on incomplete frozen workspaces and only exports a local `submission_ready_package` when mandatory sections, evidence, outputs, projects, and freeze gates are all satisfied.
 - The current controller-owned direct-product projections `grant-progress` and `grant-cockpit` are now also frozen as schema-backed contract surfaces under `schemas/v1/` through `grant-progress.schema.json` and `grant-cockpit.schema.json`, with fail-closed validation at generation time.
 - The next honest `P4.B` direct-entry layer is now also landed through `grant-direct-entry`, which composes `grant-progress`, `grant-cockpit`, and the already frozen direct / `opl-handoff` `product_entry` envelopes into one schema-backed, fail-closed direct-entry contract under `grant-direct-entry.schema.json`.
 - The current honest `P4.C` companion layer is now also landed through `mainline-status`, `mainline-phase`, and `grant-user-loop`; together they expose the repo mainline snapshot plus the current direct grant user loop without minting a new executor surface, and `grant-user-loop` is now frozen by `grant-user-loop.schema.json`; landed next-action commands now include concrete runtime-state output paths rather than `<output-path>` placeholders.
@@ -47,7 +48,7 @@ If your goal is to turn applicant background, prior work, preliminary evidence, 
 - The shared `domain_entry_contract` now also exports `supported_commands` and `command_contracts`, so an external caller can construct requests from the frozen contract catalog without repo-local helper code.
 - Future compatible shape: a managed web runtime on the same substrate, if the core domain contract stays unchanged.
 - Repo-tracked current-program truth now lives at `contracts/runtime-program/current-program.json`; machine-local session, report, prompt, and hook state live under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
-- The ideal target is now explicit: `OPL` remains the family-level top entry, `Hermes-Agent` remains the runtime substrate owner, and `Med Auto Grant` remains the domain truth / authoring owner. The hosted caller / `OPL` consumption proof is now completed, `P4.A / P4.B / P4.C / P4.D / P4.E` are now landed as the current shell / loop / executor tranches, and the mature direct grant product entry still remains the next full phase.
+- The ideal target is now explicit: `OPL` remains the family-level top entry, `Hermes-Agent` remains the runtime substrate owner, and `Med Auto Grant` remains the domain truth / authoring owner. The hosted caller / `OPL` consumption proof is now completed, `P4.A / P4.B / P4.C / P4.D / P4.E / P4.F` are now landed as the current shell / loop / executor tranches, and the mature direct grant product entry still remains the next full phase.
 
 ## Entry Modes And Product Boundary
 
@@ -58,7 +59,7 @@ That means:
 - `operator entry`: human/operator commands, workspace preparation, inspection, and explicit gating
 - `agent entry`: `CLI` plus the landed `MedAutoGrantDomainEntry`, called by `Codex` or another host-agent
 - `product entry`: `build-product-entry` now lands the lightweight structured shell for both direct entry and `OPL` handoff, while richer grant-facing product UX still remains future work
-- `product frontdesk`: `product-frontdesk` now lands the controller-owned direct front door above the same shell, while the actual operator loop still lives in `grant-user-loop`; together with `product-entry-manifest`, it is now independently schema-backed and fail-closed, and the paired manifest/frontdesk now also carry `grant_authoring_readiness` plus family-orchestration companion previews for user-facing automation maturity, human-gate, and resume semantics
+- `product frontdesk`: `product-frontdesk` now lands the controller-owned direct front door above the same shell, while the actual operator loop still lives in `grant-user-loop`; together with `product-entry-manifest`, it is now independently schema-backed and fail-closed, and the paired manifest/frontdesk now also carry `grant_authoring_readiness`, quickstart guidance, and `build_submission_ready_package` as a user-facing local delivery action while still keeping the maturity boundary honest
 - `product projection`: `grant-progress` and `grant-cockpit` now land the first controller-owned, read-only direct-product projection as schema-backed, generation-time fail-closed contract surfaces, but they are intentionally not new `domain_entry_contract` executor commands, do not enter the hosted contract bundle command catalog, and do not yet constitute a mature frontend
 - `direct entry composition`: `grant-direct-entry` now lands the next controller-owned direct-entry composition surface by reusing `grant-progress`, `grant-cockpit`, and both `build-product-entry` modes, but it still does not become a new service-safe domain executor or hosted bundle command
 - `current user loop`: `mainline-status`, `mainline-phase`, and `grant-user-loop` now package the repo mainline snapshot, current direct-entry composition, and route-derived next action into the current inbox-like CLI shell, but they still do not claim a mature web frontend or hosted runtime
@@ -95,7 +96,7 @@ So the current honest claim is: the Hermes-backed runtime substrate and the ligh
 - Current controller-owned read-only product projection surfaces are `grant-progress` and `grant-cockpit`; they only read the durable truth above plus `build-product-entry` contract hints, they are frozen by `schemas/v1/grant-progress.schema.json` and `schemas/v1/grant-cockpit.schema.json`, and they are intentionally separate from `domain_entry_contract.supported_commands` and the hosted contract bundle command catalog.
 - Current controller-owned direct-entry composition surface is `grant-direct-entry`; it packages the read-only projections above together with the direct / `opl-handoff` `product_entry` envelopes, is frozen by `schemas/v1/grant-direct-entry.schema.json`, and still stays outside `domain_entry_contract.supported_commands` and the hosted contract bundle command catalog.
 - Current controller-owned user-loop surface is `grant-user-loop`; it packages `grant-direct-entry` together with `mainline-status` / `mainline-phase` and a route-derived next-action card, is frozen by `schemas/v1/grant-user-loop.schema.json`, and still stays outside `domain_entry_contract.supported_commands` and the hosted contract bundle command catalog.
-- Current repo-verified runtime entry also includes `probe-upstream-hermes`, `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, `build-hosted-contract-bundle`, and `build-product-entry`; together they cover upstream dependency proof, local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, hosted-friendly contract export, and the shared direct / `OPL` handoff shell.
+- Current repo-verified runtime entry also includes `probe-upstream-hermes`, `run-local`, `resume-local`, `build-artifact-bundle`, `execute-revision-pass`, `build-final-package`, `build-hosted-contract-bundle`, `build-submission-ready-package`, and `build-product-entry`; together they cover upstream dependency proof, local loop entry and recovery, artifact-bundle production, section-level deterministic revision execution, local final-package export, hosted-friendly contract export, fail-closed local submission-ready package export, and the shared direct / `OPL` handoff shell.
 - `build-hosted-contract-bundle` now exports a hosted-friendly handoff contract that explicitly carries `runtime_substrate_contract`, `runtime_state_contract`, `operator_contract`, `domain_entry_contract`, `schema_contract`, and `authoring_contract` alongside execution identity, artifact, and audit surfaces.
 - `domain_entry_contract` now also exports `supported_commands` plus per-command `command_contracts`, so an external caller can consume the same catalog from `product_entry` and the hosted bundle.
 - `stage-route-report` is the current machine-readable verification/checkpoint aggregation surface and now emits `verification_checkpoint` plus `checkpoint_status`.
@@ -133,6 +134,7 @@ Today, the runtime can:
 - execute the frozen section-level deterministic revision contract through `execute-revision-pass` without breaking draft lineage, rollback semantics, or checkpoint boundaries
 - assemble a machine-readable local `final_package` through `build-final-package` for freeze-ready / submission-frozen workspaces
 - export a hosted-friendly session / state / artifact / audit contract bundle from a landed local final package through `build-hosted-contract-bundle`, with explicit `domain_entry_contract`, `schema_contract`, and `authoring_contract` for future hosted / `OPL` callers
+- export a fail-closed local `submission_ready_package` through `build-submission-ready-package` when the frozen workspace also has all mandatory sections, preliminary evidence, representative outputs, and active projects in place
 - dispatch the same runtime command set through `MedAutoGrantDomainEntry` as a service-safe structured entry contract for future gateway callers
 - build a lightweight structured `product entry` shell through `build-product-entry`, reusing one shared envelope across `direct` and `opl-handoff`
 - freeze the landed `product entry`, `product-entry-manifest`, `product-frontdesk`, `executor_routing_contract`, pending handoff surfaces, and hosted contract bundle as schema-backed contract surfaces for future `OPL` / gateway consumption
@@ -143,11 +145,13 @@ Within the current repo-tracked truth, there is no further concrete post-`R5.A` 
 
 The following areas still remain for further hardening or future scope:
 
-- the runtime still needs more submission-grade hardening and higher-density authoring judgment, even though the canonical local walkthrough and revised/final/hosted output-consistency truth are now frozen
+- the runtime still needs stronger submission-grade hardening and higher-density authoring judgment, even though the canonical local walkthrough and revised/final/hosted/submission-ready output-consistency truth is now frozen
 - any further submission-grade hardening or stronger authoring-runtime claims require newly frozen repo-tracked truth rather than another implicit post-`R5.A` continuation
 - actual hosted runtime, remote execution, Web UI, and multi-tenant hostedization
 - a richer grant-facing product experience beyond the landed lightweight structured shell
 - any future `Human-in-the-loop` sibling or upper-layer product surface
+- Word/PDF finalization, figure generation, and final format checking are still not productized
+- external funding-portal submission is still not performed; the landed scope stops at local submission-ready package export
 - submission-grade autopilot quality and stronger end-to-end runtime stability
 - broader grant-family expansion beyond the first `NSFC` generic skeleton, including `P5` federation
 
@@ -256,6 +260,7 @@ uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TM
 - a section-level deterministic local revision executor
 - a machine-readable local final package
 - hosted-friendly session / state / artifact / audit contract bundle export
+- fail-closed local submission-ready package export
 - a hosted caller contract proof that lets an external caller consume `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts` without repo-local helper code
 - controller-owned read-only direct-product projections through `grant-progress` and `grant-cockpit`
 - controller-owned mainline snapshot / current user loop surfaces through `mainline-status`, `mainline-phase`, and `grant-user-loop`

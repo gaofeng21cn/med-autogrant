@@ -307,7 +307,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["current_phase"]["phase_id"], "P4")
         self.assertEqual(
             payload["current_runtime_owner"]["active_tranche"],
-            "P4.E schema-backed frontdesk and manifest contract landing",
+            "P4.F local submission-ready package landing",
         )
 
     def test_mainline_phase_resolves_next_selector(self) -> None:

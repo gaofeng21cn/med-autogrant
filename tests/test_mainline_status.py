@@ -12,7 +12,7 @@ def test_mainline_status_projects_ideal_target_phase_ladder_and_remaining_gaps()
     assert payload["current_runtime_owner"]["active_phase"] == "P4 mature direct grant product entry"
     assert (
         payload["current_runtime_owner"]["active_tranche"]
-        == "P4.E schema-backed frontdesk and manifest contract landing"
+        == "P4.F local submission-ready package landing"
     )
     assert payload["ideal_target"]["family_top_entry"] == "OPL Gateway"
     assert payload["ideal_target"]["domain_direct_entry"] == "Med Auto Grant Product Entry"
@@ -25,6 +25,7 @@ def test_mainline_status_projects_ideal_target_phase_ladder_and_remaining_gaps()
     assert any(item["tranche_id"] == "P4.B" for item in payload["completed_tranches"])
     assert any(item["tranche_id"] == "P4.C" for item in payload["completed_tranches"])
     assert any(item["tranche_id"] == "P4.E" for item in payload["completed_tranches"])
+    assert any(item["tranche_id"] == "P4.F" for item in payload["completed_tranches"])
     assert any(
         item.endswith("2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md")
         for item in payload["phase_ladder"][3]["phase_docs"]
@@ -33,8 +34,14 @@ def test_mainline_status_projects_ideal_target_phase_ladder_and_remaining_gaps()
         item.endswith("2026-04-13-p4e-schema-backed-frontdesk-and-manifest-current-truth.md")
         for item in payload["phase_ladder"][3]["phase_docs"]
     )
+    assert any(
+        item.endswith("2026-04-13-p4f-local-submission-ready-package-current-truth.md")
+        for item in payload["phase_ladder"][3]["phase_docs"]
+    )
     assert any("Web UI" in item for item in payload["remaining_gaps"])
+    assert any("官网提交" in item for item in payload["remaining_gaps"])
     assert any("OPL Gateway" in item for item in payload["explicitly_not_now"])
+    assert any("官网提交" in item for item in payload["explicitly_not_now"])
     assert any("product-entry-manifest" in item for item in payload["next_focus"])
     assert any("family product-entry manifest v2" in item for item in payload["next_focus"])
 
@@ -64,6 +71,7 @@ def test_mainline_phase_status_resolves_current_and_next_phase() -> None:
     assert any(item["name"] == "mainline_status" for item in current_payload["phase"]["entry_points"])
     assert next_payload["phase"]["phase_id"] == "P4"
     assert any("grant-user-loop" in item["command"] for item in next_payload["phase"]["entry_points"])
+    assert any("build-submission-ready-package" in item["command"] for item in next_payload["phase"]["entry_points"])
 
 
 def test_render_mainline_phase_markdown_surfaces_entry_points_and_exit_criteria() -> None:

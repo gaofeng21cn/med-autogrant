@@ -56,6 +56,7 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "execute-freeze-pass",
     "build-final-package",
     "build-hosted-contract-bundle",
+    "build-submission-ready-package",
 ]
 DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "probe-upstream-hermes", "required_fields": [], "optional_fields": []},
@@ -86,6 +87,11 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
         "required_fields": ["final_package_path", "output_path"],
         "optional_fields": [],
     },
+    {
+        "command": "build-submission-ready-package",
+        "required_fields": ["input_path", "output_dir"],
+        "optional_fields": [],
+    },
 ]
 CANONICAL_EXPORT_SURFACES = [
     "execute-direction-screening-pass",
@@ -100,6 +106,7 @@ CANONICAL_EXPORT_SURFACES = [
     "build-artifact-bundle",
     "build-final-package",
     "build-hosted-contract-bundle",
+    "build-submission-ready-package",
 ]
 
 
@@ -273,6 +280,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         "executor-routing-contract.schema.json",
                         "product-entry.schema.json",
                         "hosted-contract-bundle.schema.json",
+                        "submission-ready-package.schema.json",
                     ],
                 },
             )

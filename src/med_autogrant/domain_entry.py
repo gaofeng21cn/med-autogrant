@@ -59,6 +59,10 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
         "build_hosted_contract_bundle",
         ("final_package_path", "output_path"),
     ),
+    "build-submission-ready-package": DomainEntryCommandSpec(
+        "build_submission_ready_package",
+        ("input_path", "output_dir"),
+    ),
 }
 
 

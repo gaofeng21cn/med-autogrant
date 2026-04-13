@@ -123,6 +123,11 @@
       "status": "frozen"
     },
     {
+      "name": "submission_ready_package",
+      "file": "submission-ready-package.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "nsfc_workspace",
       "file": "nsfc-workspace.schema.json",
       "status": "frozen"

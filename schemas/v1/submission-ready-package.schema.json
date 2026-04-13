@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/submission-ready-package.schema.json",
+  "title": "Med Auto Grant Submission-Ready Package",
+  "type": "object",
+  "$defs": {
+    "blockingIssue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issue_id",
+        "severity",
+        "message"
+      ],
+      "properties": {
+        "issue_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "severity": {
+          "const": "blocking"
+        },
+        "message": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "auditSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checkpoint_status",
+        "draft_status",
+        "presubmission_frozen",
+        "mandatory_sections",
+        "matched_mandatory_sections",
+        "missing_mandatory_sections",
+        "preliminary_evidence_count",
+        "unresolved_evidence_gap_count",
+        "representative_output_count",
+        "active_project_count",
+        "blocking_issue_count"
+      ],
+      "properties": {
+        "checkpoint_status": {
+          "$ref": "product-entry.schema.json#/$defs/checkpointStatus"
+        },
+        "draft_status": {
+          "type": "string",
+          "enum": [
+            "revised",
+            "frozen"
+          ]
+        },
+        "presubmission_frozen": {
+          "type": "boolean"
+        },
+        "mandatory_sections": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "matched_mandatory_sections": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "missing_mandatory_sections": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "preliminary_evidence_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unresolved_evidence_gap_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "representative_output_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "active_project_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocking_issue_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "artifactManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_bundle_kind",
+        "artifact_bundle_manifest",
+        "final_package_kind",
+        "final_package_manifest",
+        "hosted_contract_bundle_kind",
+        "hosted_execution_identity"
+      ],
+      "properties": {
+        "artifact_bundle_kind": {
+          "const": "artifact_bundle"
+        },
+        "artifact_bundle_manifest": {
+          "type": "object"
+        },
+        "final_package_kind": {
+          "const": "final_package"
+        },
+        "final_package_manifest": {
+          "type": "object"
+        },
+        "hosted_contract_bundle_kind": {
+          "const": "hosted_contract_bundle"
+        },
+        "hosted_execution_identity": {
+          "$ref": "hosted-contract-bundle.schema.json#/$defs/executionIdentity"
+        }
+      }
+    },
+    "evidenceIndexItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "title",
+        "source_type",
+        "supports",
+        "gaps"
+      ],
+      "properties": {
+        "item_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "title": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supports": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "gaps": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "formalChecklistItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "passed",
+        "detail"
+      ],
+      "properties": {
+        "check_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "detail": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "submissionDossier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project_title",
+        "final_draft_markdown",
+        "evidence_index",
+        "formal_checklist"
+      ],
+      "properties": {
+        "project_title": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "final_draft_markdown": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "evidence_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceIndexItem"
+          }
+        },
+        "formal_checklist": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/formalChecklistItem"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "package_version",
+    "package_kind",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "program_id",
+    "lifecycle_stage",
+    "automation_scope",
+    "readiness_verdict",
+    "fully_automatic",
+    "submission_ready",
+    "external_submission_performed",
+    "audit_summary",
+    "artifact_manifest",
+    "submission_dossier",
+    "blocking_issues"
+  ],
+  "properties": {
+    "package_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "package_kind": {
+      "const": "submission_ready_package"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "program_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "lifecycle_stage": {
+      "const": "frozen"
+    },
+    "automation_scope": {
+      "const": "local_submission_package"
+    },
+    "readiness_verdict": {
+      "type": "string",
+      "enum": [
+        "submission_ready",
+        "blocked"
+      ]
+    },
+    "fully_automatic": {
+      "type": "boolean"
+    },
+    "submission_ready": {
+      "type": "boolean"
+    },
+    "external_submission_performed": {
+      "const": false
+    },
+    "audit_summary": {
+      "$ref": "#/$defs/auditSummary"
+    },
+    "artifact_manifest": {
+      "$ref": "#/$defs/artifactManifest"
+    },
+    "submission_dossier": {
+      "$ref": "#/$defs/submissionDossier"
+    },
+    "blocking_issues": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blockingIssue"
+      }
+    }
+  }
+}

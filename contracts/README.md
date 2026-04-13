@@ -1,10 +1,11 @@
 # Contracts
 
 - `contracts/runtime-program/current-program.json`：当前 repo-tracked 的 Med Auto Grant 主线合同。
-- 当前 `product entry` / `product-entry-manifest` / `product-frontdesk` / `executor routing` / `pending handoff` / `grant-progress` / `grant-cockpit` / `grant-direct-entry` / `grant-user-loop` 也已经作为 schema-backed contract 固定在 `schemas/v1/`，并由 `schema-index.json` 统一索引；其中 `product-entry-manifest.schema.json`、`product-frontdesk.schema.json`、`grant-progress.schema.json`、`grant-cockpit.schema.json`、`grant-direct-entry.schema.json` 与 `grant-user-loop.schema.json` 会把 direct frontdoor / direct-product projection / composition / user loop 收口成 generation-time fail-closed contract。
+- 当前 `product entry` / `product-entry-manifest` / `product-frontdesk` / `executor routing` / `pending handoff` / `grant-progress` / `grant-cockpit` / `grant-direct-entry` / `grant-user-loop` / `submission-ready-package` 也已经作为 schema-backed contract 固定在 `schemas/v1/`，并由 `schema-index.json` 统一索引；其中 `product-entry-manifest.schema.json`、`product-frontdesk.schema.json`、`grant-progress.schema.json`、`grant-cockpit.schema.json`、`grant-direct-entry.schema.json`、`grant-user-loop.schema.json` 与 `submission-ready-package.schema.json` 会把 direct frontdoor / direct-product projection / composition / user loop / local submission-ready delivery 收口成 generation-time fail-closed contract。
 - 机器本地 session、log、report、prompt 与其他运行态不再落在仓库根目录，统一下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 - 本地 `run-local / resume-local` journal 默认写到 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/`。
 - `build-hosted-contract-bundle` 会把当前 `current-program` pointer、runtime-state durable surface 与 canonical operator surface 一起导出到 hosted-friendly contract bundle，并额外显式携带 `domain_entry_contract`、`schema_contract`、`authoring_contract`。
+- `build-submission-ready-package` 会把当前本地导出链进一步收口成 submission-ready delivery surface；它只在 frozen gate、必备章节、预实验、代表作和在研项目都满足时写出 `submission_ready_package`，不会宣称已执行外部官网提交。
 - 共享 `domain_entry_contract` 当前还会固定 `supported_commands` 与 `command_contracts`，供 external caller 直接消费。
 - `schemas/v1/hosted-contract-bundle.schema.json` 现在定义整份 hosted contract bundle 的 fail-closed 结构。
 - `contracts/runtime-program/current-program.json` 现在还额外固定了 `ideal_target` 与 `phase_map`，用于说明 `OPL` / `Hermes-Agent` / `Med Auto Grant` 的理想分工，以及当前已经完成到哪个阶段。

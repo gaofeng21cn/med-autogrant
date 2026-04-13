@@ -738,6 +738,12 @@ class MedAutoGrantProductEntry:
                 "summary": "把用户意图组合成当前 grant direct-entry contract。",
                 "requires": ["task_intent"],
             },
+            "build_submission_ready_package": {
+                "command": command_catalog["build_submission_ready_package"],
+                "surface_kind": "submission_ready_package",
+                "summary": "检查 submission-ready gate，并在通过时一次性导出本地交付目录。",
+                "requires": ["output_dir"],
+            },
         }
         current_route_id = _require_nonempty_string_from_mapping(
             progress_projection,
@@ -799,6 +805,14 @@ class MedAutoGrantProductEntry:
                     "summary": operator_loop_actions["inspect_cockpit"]["summary"],
                     "requires": list(operator_loop_actions["inspect_cockpit"]["requires"]),
                 },
+                {
+                    "step_id": "build_submission_ready_package",
+                    "title": "Build submission-ready package",
+                    "command": command_catalog["build_submission_ready_package"],
+                    "surface_kind": "submission_ready_package",
+                    "summary": operator_loop_actions["build_submission_ready_package"]["summary"],
+                    "requires": list(operator_loop_actions["build_submission_ready_package"]["requires"]),
+                },
             ],
             "resume_contract": dict(family_orchestration["resume_contract"]),
             "human_gate_ids": [
@@ -841,8 +855,9 @@ class MedAutoGrantProductEntry:
             "good_to_use_now": False,
             "user_experience_level": "usable_for_agent_assisted_cli_authoring_not_yet_polished_product",
             "summary": (
-                "当前可以作为 Agent 协同的 CLI/controller 标书写作主线使用，"
-                "但还不是无需人工材料、无需判断、可直接交付的全自动国自然标书产品。"
+                "当前可以作为 Agent 协同的 CLI/controller 标书写作主线使用；"
+                "对满足冻结与材料齐备条件的 workspace，已经能一键导出本地 submission-ready 交付包，"
+                "但还不是无需人工材料、无需判断、可直接官网提交的全自动国自然标书产品。"
             ),
             "recommended_start_surface": PRODUCT_FRONTDESK_KIND,
             "recommended_start_command": product_frontdesk_command,
@@ -909,14 +924,14 @@ class MedAutoGrantProductEntry:
                     "step_id": "final_review_figures_package",
                     "manual_flow_label": "全文反复检查并补图补结果",
                     "coverage_status": "partially_supported",
-                    "current_surface": "execute-critique-pass / execute-revision-pass / build-final-package",
-                    "remaining_gap": "配图生成、版式化 Word/PDF 标书、查重式 consistency review 与提交前格式审查仍未全自动产品化。",
+                    "current_surface": "execute-critique-pass / execute-revision-pass / build-submission-ready-package",
+                    "remaining_gap": "本地 submission-ready 交付包已可一键导出，但图件生成、Word/PDF 版式化、官网代投与最终格式审查仍未全自动产品化。",
                 },
             ],
             "blocking_gaps": [
                 "还不是 mature direct grant Web UI / hosted runtime。",
                 "还不能在缺少用户真实材料、前期结果和图片素材时全自动生成可信标书。",
-                "文献热点检索、引用证据绑定、图件生产和最终国自然格式化交付仍未完整产品化。",
+                "文献热点检索、引用证据绑定、图件生产、Word/PDF 定稿与外部官网提交仍未完整产品化。",
             ],
         }
 
@@ -2257,5 +2272,9 @@ def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
             "uv run python -m med_autogrant build-product-entry "
             f"--input {resolved_input_path} --entry-mode opl-handoff "
             "--task-intent <describe-task-intent> --format json"
+        ),
+        "build_submission_ready_package": (
+            "uv run python -m med_autogrant build-submission-ready-package "
+            f"--input {resolved_input_path} --output-dir <submission-ready-output-dir> --format json"
         ),
     }

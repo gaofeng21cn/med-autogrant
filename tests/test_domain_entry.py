@@ -95,6 +95,27 @@ class DomainEntryDispatchTest(unittest.TestCase):
             output_path="/tmp/direction-screening-output.json",
         )
 
+    def test_domain_entry_dispatches_build_submission_ready_package(self) -> None:
+        runtime = Mock()
+        runtime.build_submission_ready_package.return_value = {
+            "ok": True,
+            "command": "build-submission-ready-package",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "build-submission-ready-package",
+                "input_path": str(FROZEN_EXAMPLE_PATH),
+                "output_dir": "/tmp/submission-ready-output",
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "build-submission-ready-package"})
+        runtime.build_submission_ready_package.assert_called_once_with(
+            input_path=str(FROZEN_EXAMPLE_PATH),
+            output_dir="/tmp/submission-ready-output",
+        )
+
     def test_domain_entry_rejects_missing_required_field(self) -> None:
         with self.assertRaisesRegex(WorkspaceStateError, "缺少必填字段: output_path"):
             MedAutoGrantDomainEntry(runtime=Mock()).dispatch(
@@ -300,6 +321,20 @@ class HostedCallerConsumptionProofTest(unittest.TestCase):
             self.assertEqual(
                 hosted_payload["hosted_contract_bundle"]["domain_entry_contract"]["command_contracts"],
                 hosted_entry_contract["command_contracts"],
+            )
+            submission_ready_request = _build_request_from_contract(
+                hosted_entry_contract,
+                "build-submission-ready-package",
+                input_path=str(FROZEN_EXAMPLE_PATH),
+                output_dir=str(tmp_root / "submission-ready-output"),
+            )
+            self.assertEqual(
+                submission_ready_request,
+                {
+                    "command": "build-submission-ready-package",
+                    "input_path": str(FROZEN_EXAMPLE_PATH),
+                    "output_dir": str(tmp_root / "submission-ready-output"),
+                },
             )
 
 

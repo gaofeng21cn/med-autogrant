@@ -56,6 +56,9 @@ P4B_DIRECT_ENTRY_CURRENT_TRUTH = (
 P4C_USER_LOOP_CURRENT_TRUTH = (
     REPO_ROOT / "docs" / "specs" / "2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md"
 )
+P4F_SUBMISSION_READY_CURRENT_TRUTH = (
+    REPO_ROOT / "docs" / "specs" / "2026-04-13-p4f-local-submission-ready-package-current-truth.md"
+)
 IDEAL_TARGET_EXECUTION_PLAN = (
     REPO_ROOT / "docs" / "plans" / "2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md"
 )
@@ -187,6 +190,9 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert P4C_USER_LOOP_CURRENT_TRUTH.exists(), (
         f"P4.C grant user loop current truth 不存在: {P4C_USER_LOOP_CURRENT_TRUTH}"
     )
+    assert P4F_SUBMISSION_READY_CURRENT_TRUTH.exists(), (
+        f"P4.F submission-ready current truth 不存在: {P4F_SUBMISSION_READY_CURRENT_TRUTH}"
+    )
     assert IDEAL_TARGET_EXECUTION_PLAN.exists(), f"Ideal target execution plan 不存在: {IDEAL_TARGET_EXECUTION_PLAN}"
     assert HERMES_PROGRAM_TRUTH.exists(), f"Hermes runtime program truth 不存在: {HERMES_PROGRAM_TRUTH}"
     assert HERMES_MIGRATION_MAP.exists(), f"Hermes migration map 不存在: {HERMES_MIGRATION_MAP}"
@@ -203,6 +209,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     p4a_product_projection_truth = _read(P4A_PRODUCT_PROJECTION_CURRENT_TRUTH)
     p4b_direct_entry_truth = _read(P4B_DIRECT_ENTRY_CURRENT_TRUTH)
     p4c_user_loop_truth = _read(P4C_USER_LOOP_CURRENT_TRUTH)
+    p4f_submission_ready_truth = _read(P4F_SUBMISSION_READY_CURRENT_TRUTH)
     ideal_target_execution_plan = _read(IDEAL_TARGET_EXECUTION_PLAN)
     program_truth = _read(HERMES_PROGRAM_TRUTH)
     migration_map = _read(HERMES_MIGRATION_MAP)
@@ -343,6 +350,11 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "fail-closed" in p4c_user_loop_truth
     assert "不进入 `domain_entry_contract.supported_commands`" in p4c_user_loop_truth or "不进入 hosted contract bundle 的 command catalog" in p4c_user_loop_truth
 
+    assert "build-submission-ready-package" in p4f_submission_ready_truth
+    assert "submission-ready-package.schema.json" in p4f_submission_ready_truth
+    assert "fail-closed" in p4f_submission_ready_truth
+    assert "external submission" in p4f_submission_ready_truth.lower() or "官网提交" in p4f_submission_ready_truth
+
     assert "# Med Auto Grant OPL-Aligned Target Shape And Hosted Caller Plan" in ideal_target_execution_plan
     assert "Goal:" in ideal_target_execution_plan
     assert "Architecture:" in ideal_target_execution_plan
@@ -406,6 +418,13 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
     docs_readme_zh = _read(DOCS_README_ZH)
     architecture = _read(CORE_ARCHITECTURE)
     status = _read(CORE_STATUS)
+
+    assert "build-submission-ready-package" in readme_en
+    assert "build-submission-ready-package" in readme_zh
+    assert "./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md" in docs_readme_en
+    assert "./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md" in docs_readme_zh
+    assert "submission_ready_package" in architecture
+    assert "build-submission-ready-package" in status
 
     assert "lightweight structured `product entry` shell is now landed" in readme_en
     assert "`build-product-entry`" in readme_en

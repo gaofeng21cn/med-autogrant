@@ -135,7 +135,8 @@
             "execute-freeze-pass",
             "build-artifact-bundle",
             "build-final-package",
-            "build-hosted-contract-bundle"
+            "build-hosted-contract-bundle",
+            "build-submission-ready-package"
           ]
         },
         "checkpoint_aggregation_surface": {
@@ -253,7 +254,8 @@
             "execute-revision-pass",
             "execute-freeze-pass",
             "build-final-package",
-            "build-hosted-contract-bundle"
+            "build-hosted-contract-bundle",
+            "build-submission-ready-package"
           ]
         },
         "command_contracts": {
@@ -261,7 +263,7 @@
           "items": {
             "$ref": "#/$defs/domainEntryCommandContract"
           },
-          "minItems": 20
+          "minItems": 21
         }
       }
     },

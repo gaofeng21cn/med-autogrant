@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-04-13：把本地 submission-ready 交付导出收口成正式 command surface
+
+- 决策：新增 `build-submission-ready-package`，把 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链再向前收口成一个正式的本地交付命令，并新增 `submission-ready-package.schema.json` 作为独立的 repo-tracked contract。
+- 理由：从用户视角看，“能不能把当前冻结且材料齐备的国自然标书一次性导出成可交付目录”已经不该再靠人工拼三四个命令；同时这一步又必须 fail-closed，不能对缺章节、缺证据或有 gaps 的 frozen workspace 勉强导出。
+- 影响：`build-submission-ready-package` 现在已经进入 CLI / domain entry / hosted bundle / product frontdoor command catalog；`current-program`、`mainline-status`、核心骨架、README、`contracts/README` 与测试都要同步进入 `P4.F` 口径，并明确“本地 package 导出”不等于“外部官网提交已完成”。
+
 ## 2026-04-13：把 `product-entry-manifest` 与 `product-frontdesk` 升级为独立 schema-backed contract
 
 - 决策：把 `product-entry-manifest` 与 `product-frontdesk` 从“复用 product-entry shell 的 controller surface”进一步收口成独立 schema-backed、generation-time fail-closed 的 direct frontdoor contract，并把它们显式登记进 `schema-index.json`。

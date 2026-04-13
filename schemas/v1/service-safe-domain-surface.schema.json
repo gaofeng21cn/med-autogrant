@@ -33,7 +33,8 @@
         "execute-freeze-pass",
         "build-artifact-bundle",
         "build-final-package",
-        "build-hosted-contract-bundle"
+        "build-hosted-contract-bundle",
+        "build-submission-ready-package"
       ]
     }
   }

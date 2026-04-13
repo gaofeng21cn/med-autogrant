@@ -6,7 +6,7 @@
 
 **面向申请人侧 `NSFC` 风格申请的医学基金主线（开发中）**
 
-> 当前状态：仓库现在已经跑在真实上游 `Hermes-Agent` runtime substrate 上，同时把申请人侧 grant domain 语义保留在 repo-local adapter 与 domain logic 中。此前已 absorbed 的 `CLI-first + host-agent` 线继续只作为历史迁移基线 / regression oracle 保留。当前仍不是 actual hosted runtime，也不是 submission-ready 的自动驾驶产品。
+> 当前状态：仓库现在已经跑在真实上游 `Hermes-Agent` runtime substrate 上，同时把申请人侧 grant domain 语义保留在 repo-local adapter 与 domain logic 中。此前已 absorbed 的 `CLI-first + host-agent` 线继续只作为历史迁移基线 / regression oracle 保留。当前已经能对冻结且材料齐备的 workspace 一键导出本地 `submission-ready` 交付包，但仍不是 actual hosted runtime，也不是会替你完成外部官网提交的自动驾驶产品。
 
 <table>
   <tr>
@@ -39,6 +39,7 @@
 - 已落地的 service-safe entry：`MedAutoGrantDomainEntry`，它把 CLI 命令面保留成 future gateway caller 可复用的结构化 entry contract。
 - 当前 `product entry` shell 与 `executor_routing_contract` 也已经进一步冻结成 schema-backed contract surface，并在生成时 fail-closed。
 - 当前诚实的 `P4.E` frontdoor-contract layer 也已经通过 `product-entry-manifest` 与 `product-frontdesk` 落地：两者现在分别由 `product-entry-manifest.schema.json` 与 `product-frontdesk.schema.json` 独立冻结，并在生成时 fail-closed。
+- 当前诚实的 `P4.F` local-delivery layer 也已经通过 `build-submission-ready-package` 落地：它会对不完整 frozen workspace fail-closed，只有在必备章节、预实验、代表作、在研项目与冻结 gate 都满足时，才导出本地 `submission_ready_package`。
 - 当前 controller-owned 的 direct-product projection `grant-progress` 与 `grant-cockpit` 也已经通过 `grant-progress.schema.json` 与 `grant-cockpit.schema.json` 进一步冻结成 schema-backed contract surface，并在生成时 fail-closed。
 - 下一棒诚实的 `P4.B` direct-entry layer 也已经通过 `grant-direct-entry` 落地：它把 `grant-progress`、`grant-cockpit` 和已冻结的 direct / `opl-handoff` `product_entry` envelope 组合成一份 schema-backed、fail-closed 的 direct-entry contract，对应 `grant-direct-entry.schema.json`。
 - 当前诚实的 `P4.C` companion layer 也已经通过 `mainline-status`、`mainline-phase` 与 `grant-user-loop` 落地：它把 repo 主线快照和当前 direct grant user loop 收成一处，但仍不发明新的 executor surface；其中 `grant-user-loop` 由 `grant-user-loop.schema.json` 冻结；landed next-action command 现在会带出具体 runtime-state 输出路径，而不是 `<output-path>` 占位符。
@@ -46,7 +47,7 @@
 - `build-hosted-contract-bundle` 导出的托管友好合同现在也已经收口成 schema-backed contract bundle，并为 future hosted / `OPL` caller 显式补出 `domain_entry_contract`、`schema_contract`、`authoring_contract`。
 - 这份共享 `domain_entry_contract` 现在还会显式导出 `supported_commands` 与 `command_contracts`，因此外部 caller 已经可以直接按冻结合同拼 request，而不需要 repo-local helper。
 - 未来兼容形态：如果核心 domain contract 不变，可迁移到同一 substrate 上的 managed web runtime。
-- 当前理想目标也已经明确：`OPL` 继续是 family-level 顶层入口，`Hermes-Agent` 继续是 runtime substrate owner，`Med Auto Grant` 继续是 domain truth / authoring owner；其中 hosted caller / `OPL` consumption proof 现已完成，`P4.A / P4.B / P4.C / P4.D / P4.E` 也都已经作为当前 repo-tracked shell / loop / executor tranche 落地，但完整的 mature direct grant product entry 仍是下一阶段。
+- 当前理想目标也已经明确：`OPL` 继续是 family-level 顶层入口，`Hermes-Agent` 继续是 runtime substrate owner，`Med Auto Grant` 继续是 domain truth / authoring owner；其中 hosted caller / `OPL` consumption proof 现已完成，`P4.A / P4.B / P4.C / P4.D / P4.E / P4.F` 也都已经作为当前 repo-tracked shell / loop / executor tranche 落地，但完整的 mature direct grant product entry 仍是下一阶段。
 
 ## 入口分层与产品边界
 
@@ -56,7 +57,7 @@
 - `operator entry`：给人类操作同事使用的命令、workspace 准备、检查和显式 gate
 - `agent entry`：由 `Codex` 或其他 host-agent 调用的 `CLI + MedAutoGrantDomainEntry`
 - `product entry`：`build-product-entry` 现在已经把 direct entry 与 `OPL` handoff 共用的轻量结构化 shell 落到仓库里，但更完整的 grant-facing 产品体验仍要继续补
-- `product frontdesk`：`product-frontdesk` 现在又把同一层 shell 上方的 controller-owned direct frontdoor 落到仓库里，而真实 operator loop 仍留在 `grant-user-loop`；它与 `product-entry-manifest` 现在都已经独立 schema-backed、generation-time fail-closed，配套 manifest/frontdesk 也开始带出 `grant_authoring_readiness` 与 family-orchestration companion preview，用来暴露面向用户的自动化成熟度、human gate 与 resume 语义
+- `product frontdesk`：`product-frontdesk` 现在又把同一层 shell 上方的 controller-owned direct frontdoor 落到仓库里，而真实 operator loop 仍留在 `grant-user-loop`；它与 `product-entry-manifest` 现在都已经独立 schema-backed、generation-time fail-closed，配套 manifest/frontdesk 也会带出 `grant_authoring_readiness`、quickstart 以及 `build_submission_ready_package` 这个面向用户的本地交付动作，同时继续诚实暴露自动化成熟度、human gate 与 resume 语义
 - `product projection`：`grant-progress` 与 `grant-cockpit` 现在已经以 schema-backed、generation-time fail-closed 的 contract surface 落第一层 controller-owned、read-only 的 direct-product projection，但它们故意不是新的 `domain_entry_contract` executor command，也不进入 hosted contract bundle 的 command catalog，更不等于成熟前台
 - `direct entry composition`：`grant-direct-entry` 现在继续把 `grant-progress`、`grant-cockpit` 与 direct / `opl-handoff` 两份 `product_entry` envelope 收成一层 controller-owned 的 direct-entry 组合面，但它仍然不是新的 service-safe domain executor，也不进入 hosted contract bundle 的 command catalog
 - `current user loop`：`mainline-status`、`mainline-phase` 与 `grant-user-loop` 现在会把 repo 主线快照、direct-entry composition 与 route-derived next action 收成当前 inbox-like CLI shell，但这仍然不等于成熟 Web 前台或 hosted runtime
@@ -93,7 +94,7 @@
 - 当前 controller-owned 的只读 product projection surface：`grant-progress` 与 `grant-cockpit`；它们只读取上面的 durable truth 和 `build-product-entry` 的 contract hint，由 `schemas/v1/grant-progress.schema.json` 与 `schemas/v1/grant-cockpit.schema.json` 冻结，并且故意不混入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
 - 当前 controller-owned 的 direct-entry 组合面：`grant-direct-entry`；它会把上面的 projection 与 direct / `opl-handoff` 两份 `product_entry` envelope 组装到一起，由 `schemas/v1/grant-direct-entry.schema.json` 冻结，并且继续不混入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
 - 当前 controller-owned 的 user-loop 组合面：`grant-user-loop`；它会把 `grant-direct-entry`、`mainline-status / mainline-phase` 与 route-derived next action 收在一起，由 `schemas/v1/grant-user-loop.schema.json` 冻结，并且继续不混入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog
-- 当前 repo-verified 的 runtime entry 还包括 `probe-upstream-hermes`、`run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle` 与 `build-product-entry`；它们分别负责 upstream 依赖证明、本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出、hosted-friendly contract bundle 导出，以及 direct / `OPL` handoff 共用的 product shell
+- 当前 repo-verified 的 runtime entry 还包括 `probe-upstream-hermes`、`run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle`、`build-submission-ready-package` 与 `build-product-entry`；它们分别负责 upstream 依赖证明、本地主循环与恢复、artifact bundle 生产、section-level deterministic revision pass、本地 final package 导出、hosted-friendly contract bundle 导出、fail-closed 的本地 submission-ready 交付包导出，以及 direct / `OPL` handoff 共用的 product shell
 - `build-hosted-contract-bundle` 现在会额外导出托管友好的 handoff contract，其中显式携带 `runtime_substrate_contract`、`runtime_state_contract`、`operator_contract`、`domain_entry_contract`、`schema_contract` 与 `authoring_contract`，连同 execution identity、artifact 与 audit surface 一起进入导出面
 - `domain_entry_contract` 现在还会一起导出 `supported_commands` 与逐命令的 `command_contracts`，让 hosted caller / 外部 caller 能直接消费相同的 command catalog
 - `stage-route-report` 当前还是 machine-readable 的 verification / checkpoint 聚合面，并会输出 `verification_checkpoint` 与 `checkpoint_status`
@@ -131,6 +132,7 @@
 - 通过 `execute-revision-pass` 对冻结在 `RevisionPlan` 中的 section-level deterministic mutation 执行本地 revision pass，并保持 draft lineage、rollback gate 与 checkpoint 语义不漂移
 - 通过 `build-final-package` 把 freeze-ready / submission-frozen 的 workspace 与 artifact bundle 收成 machine-readable 本地 `final_package`
 - 通过 `build-hosted-contract-bundle` 从当前 `final_package` 导出 hosted-friendly 的 session / state / artifact / audit contract bundle，作为托管化 prep 的本地合同产物，并显式携带 `domain_entry_contract`、`schema_contract` 与 `authoring_contract`
+- 通过 `build-submission-ready-package` 在 frozen workspace 同时满足必备章节、预实验、代表作与在研项目条件时，一键导出 fail-closed 的本地 `submission_ready_package`
 - 通过 hosted caller consumption proof 证明外部 caller 现在已经可以直接读取 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`，并在不依赖 repo-local helper 的前提下完成已 landed export chain
 - 通过 `MedAutoGrantDomainEntry` 把同一组 runtime command surface 暴露成 future gateway caller 可复用的 service-safe structured entry contract
 - 通过 `build-product-entry` 构建轻量结构化 `product entry` shell，让 `direct` 与 `opl-handoff` 共用同一套 envelope
@@ -142,11 +144,13 @@
 
 下面这些能力仍处于后续 hardening 或 future scope：
 
-- 当前本地 runtime 仍需继续做 submission-grade hardening 与更高判断密度的 authoring runtime 收束，但 canonical 本地 walkthrough 与 revised/final/hosted 输出一致性 truth 已冻结
+- 当前本地 runtime 仍需继续做 submission-grade hardening 与更高判断密度的 authoring runtime 收束，但 canonical 本地 walkthrough 与 revised/final/hosted/submission-ready 输出一致性 truth 已冻结
 - 任何进一步的 submission-grade hardening 或更强 authoring-runtime 结论，都需要先新增并冻结 repo-tracked truth，而不是继续沿用隐式的 post-`R5.A` hardening 叙事
 - actual hosted runtime、remote execution、Web UI 与 multi-tenant 托管化
 - 超出已 landed 轻量结构化 shell 之外、更完整的 grant-facing 产品体验
 - 未来 `Human-in-the-loop` sibling 或 upper-layer product 相关表面
+- 图件生成、Word/PDF 定稿与最终版式审查仍未产品化
+- 外部官网提交流程仍未执行；当前已 landed 的范围止于本地 submission-ready package 导出
 - submission-grade 自动驾驶质量与更强的端到端 authoring/runtime 稳定性
 - 超出首个 `NSFC` 通用骨架之外的更多基金 family 扩展，以及 `P5` federation
 
@@ -255,6 +259,7 @@ uv run python -m med_autogrant build-hosted-contract-bundle --final-package "$TM
 - section-level deterministic 本地 revision executor
 - machine-readable 的本地 final package
 - hosted-friendly session / state / artifact / audit contract bundle 导出
+- fail-closed 的本地 submission-ready package 导出
 - controller-owned、read-only 的 direct-product projection：`grant-progress` 与 `grant-cockpit`
 - controller-owned 的主线快照 / 当前 user loop surface：`mainline-status`、`mainline-phase` 与 `grant-user-loop`
 - 供 CLI 等价 runtime 调用复用的 service-safe structured domain entry

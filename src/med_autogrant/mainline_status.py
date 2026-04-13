@@ -122,10 +122,19 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                     ),
                     "purpose": "把 mainline snapshot、direct-entry composition 与推荐动作回路收成一处。",
                 },
+                {
+                    "name": "build_submission_ready_package",
+                    "command": (
+                        "uv run python -m med_autogrant build-submission-ready-package "
+                        "--input <workspace-path> --output-dir <submission-ready-output-dir> --format json"
+                    ),
+                    "purpose": "对已冻结且材料齐备的 workspace 一次性导出本地 submission-ready 交付目录。",
+                },
             ],
             "exit_criteria": [
                 "用户不再需要自己拼 program docs 与 route commands 才能理解当前 grant 主线。",
                 "当前 direct grant user loop 已能稳定暴露 mainline snapshot、entry shell 与 next action。",
+                "对满足冻结 gate 与材料完备条件的 workspace，当前系统已能 fail-closed 地一键导出本地 submission-ready 包。",
                 "这层 shell 仍然诚实保持 controller-owned，不越界声称 mature frontend / hosted runtime 已完成。",
             ],
             "phase_docs": [
@@ -135,6 +144,7 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "docs/specs/2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md",
                 "docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md",
                 "docs/specs/2026-04-13-p4e-schema-backed-frontdesk-and-manifest-current-truth.md",
+                "docs/specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md",
             ],
         },
     }
@@ -182,6 +192,11 @@ def _completed_tranches() -> list[dict[str, str]]:
             "title": "schema-backed frontdesk and manifest contract landing",
             "summary": "product-entry-manifest / product-frontdesk 已 landed 为独立 schema-backed、generation-time fail-closed 的 direct frontdoor contract。",
         },
+        {
+            "tranche_id": "P4.F",
+            "title": "local submission-ready package landing",
+            "summary": "build-submission-ready-package 已 landed，可对满足冻结与材料完备条件的 workspace 一键导出本地 submission-ready 交付目录。",
+        },
     ]
 
 
@@ -190,6 +205,9 @@ def _remaining_gaps() -> list[str]:
         "mature direct grant Web UI / hosted runtime 仍未 landed。",
         "repo 内仍未落地 OPL Gateway 与 family-level cross-domain frontdoor。",
         "当前 product 面仍然是 CLI/controller shell，而不是完整 standalone frontend。",
+        "图件生成、Word/PDF 定稿与最终版式审查仍未产品化。",
+        "不会凭空补齐真实预实验、代表作、在研项目与图片素材。",
+        "外部官网提交流程仍未执行，当前只导出本地 submission-ready package。",
     ]
 
 
@@ -198,6 +216,7 @@ def _explicitly_not_now() -> list[str]:
         "把 OPL Gateway 写成本仓已 landed。",
         "提前扩 family、提前做 Human-in-the-loop sibling。",
         "把 repo-local helper 重新写回 runtime owner。",
+        "把本地 submission-ready package 写成已完成外部官网提交。",
     ]
 
 
