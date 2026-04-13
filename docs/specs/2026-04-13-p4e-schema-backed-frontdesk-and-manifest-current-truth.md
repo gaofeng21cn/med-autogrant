@@ -81,7 +81,33 @@ Date: `2026-04-13`
 
 这层 overview 是 `product_entry_status`、`product_entry_quickstart` 与 `family_orchestration` companion 之上的用户侧摘要面，用来让 direct caller 不必再分别拼 progress / resume / gate id。
 
-### 5. 当前 direct grant frontdoor 已形成一致的 contract 组合
+### 5. `grant_authoring_readiness` 现在显式回答“全自动 / 能用 / 好用”
+
+`product-entry-manifest` 与 `product-frontdesk` 现在还会共同暴露 `grant_authoring_readiness` companion，用同一份 machine-readable 结构回答用户视角的成熟度问题：
+
+- `fully_automatic = false`
+- `usable_now = true`
+- `good_to_use_now = false`
+- 当前 verdict：`agent_assisted_cli_ready_not_full_autopilot`
+- 当前体验层级：`usable_for_agent_assisted_cli_authoring_not_yet_polished_product`
+
+这条 verdict 的含义是：当前系统可以作为 Agent 协同的 CLI/controller 标书写作主线使用，但还不是无需人工材料、无需判断、可直接交付的全自动国自然标书产品。
+
+`grant_authoring_readiness.workflow_coverage` 会把人工国自然写作流程映射到当前能力面：
+
+- 从已有积累中筛选方向：landed route
+- 筛选可嵌入的热点：partially supported
+- 锚定具体临床问题：landed route
+- 设计创新点和跨尺度框架：landed route
+- 搭建整体课题并反复校验主线：landed route
+- 先写研究意义，再写研究背景：landed route
+- 补足预实验、研究基础和前期结果：partially supported
+- 完善预期结果与研究进度：partially supported
+- 全文反复检查并补图补结果：partially supported
+
+因此后续不能再笼统宣称“已经全自动写标书”；必须用这份 readiness companion 区分“可用的 Agent-assisted CLI 主线”和“尚未完成的 mature product / submission-ready autopilot”。
+
+### 6. 当前 direct grant frontdoor 已形成一致的 contract 组合
 
 现在 direct grant frontdoor 的 machine-readable 组合至少包括：
 
@@ -94,7 +120,7 @@ Date: `2026-04-13`
 
 其中：
 
-- `product-entry-manifest` 负责 discovery / overview / quickstart / mainline snapshot
+- `product-entry-manifest` 负责 discovery / overview / readiness / quickstart / mainline snapshot
 - `product-frontdesk` 负责 direct frontdoor / operator loop / projection action surface
 - 其余 projection / loop surface 继续承载 progress、cockpit、composition 与 inbox-like user loop
 
@@ -117,6 +143,7 @@ Date: `2026-04-13`
 - 新 schema 已进入 `schema-index.json`
 - manifest / frontdesk 在生成时执行 fail-closed 校验
 - `product_entry_overview` 在 manifest / frontdesk schema 中保持同一份结构化 companion contract
+- `grant_authoring_readiness` 在 manifest / frontdesk schema 中保持同一份“全自动 / 能用 / 好用”成熟度判断 contract
 - `family_orchestration` companion 在 frontdoor / projection surface 上与 landed route truth 保持一致
 - `current-program`、`mainline-status`、README / docs / tests 对当前 `P4.E` 口径保持同步
 
@@ -126,6 +153,7 @@ Date: `2026-04-13`
 
 - `product-entry-manifest` 与 `product-frontdesk` 已 landed 为独立 schema-backed contract
 - `product_entry_overview` 已成为 direct grant frontdoor contract 的结构化 companion
+- `grant_authoring_readiness` 已成为 direct grant frontdoor contract 的结构化成熟度 companion
 - 当前 frontdoor / projection / user loop 看到的是同一份 shared route truth
 - 当前 direct grant frontdoor 的 machine-readable contract 边界已经进一步冻结
 

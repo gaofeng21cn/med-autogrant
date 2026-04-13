@@ -1628,6 +1628,35 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["product_entry_overview"]["human_gate_ids"],
             ["mag_route_gate_revision"],
         )
+        readiness = manifest["grant_authoring_readiness"]
+        self.assertEqual(readiness["surface_kind"], "grant_authoring_readiness")
+        self.assertEqual(readiness["verdict"], "agent_assisted_cli_ready_not_full_autopilot")
+        self.assertFalse(readiness["fully_automatic"])
+        self.assertTrue(readiness["usable_now"])
+        self.assertFalse(readiness["good_to_use_now"])
+        self.assertEqual(readiness["recommended_start_surface"], "product_frontdesk")
+        self.assertEqual(
+            readiness["recommended_start_command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(readiness["recommended_loop_surface"], "grant_user_loop")
+        self.assertEqual(
+            [item["step_id"] for item in readiness["workflow_coverage"]],
+            [
+                "accumulation_direction_screening",
+                "hotspot_literature_fit",
+                "clinical_question_refinement",
+                "innovation_framework",
+                "mainline_closure",
+                "significance_background_drafting",
+                "preliminary_evidence_and_basis",
+                "expected_results_timeline",
+                "final_review_figures_package",
+            ],
+        )
+        self.assertEqual(readiness["workflow_coverage"][0]["coverage_status"], "landed_route")
+        self.assertEqual(readiness["workflow_coverage"][1]["coverage_status"], "partially_supported")
+        self.assertIn("还不是 mature direct grant Web UI / hosted runtime。", readiness["blocking_gaps"])
 
     def test_family_orchestration_companion_is_projected_across_product_surfaces(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -1824,6 +1853,14 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             frontdesk["product_entry_overview"]["resume_surface"]["command"],
             "uv run python -m med_autogrant grant-user-loop "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(frontdesk["grant_authoring_readiness"]["surface_kind"], "grant_authoring_readiness")
+        self.assertFalse(frontdesk["grant_authoring_readiness"]["fully_automatic"])
+        self.assertTrue(frontdesk["grant_authoring_readiness"]["usable_now"])
+        self.assertFalse(frontdesk["grant_authoring_readiness"]["good_to_use_now"])
+        self.assertEqual(
+            frontdesk["grant_authoring_readiness"],
+            frontdesk["product_entry_manifest"]["grant_authoring_readiness"],
         )
         self.assertEqual(frontdesk["product_entry_quickstart"]["recommended_step_id"], "open_frontdesk")
         self.assertEqual(frontdesk["product_entry_quickstart"]["steps"][2]["step_id"], "inspect_progress")

@@ -80,6 +80,7 @@
         "operator_loop_surface",
         "operator_loop_actions",
         "product_entry_overview",
+        "grant_authoring_readiness",
         "product_entry_quickstart",
         "family_orchestration",
         "product_entry_manifest",
@@ -117,6 +118,9 @@
         },
         "product_entry_overview": {
           "$ref": "product-entry-manifest.schema.json#/$defs/productEntryOverview"
+        },
+        "grant_authoring_readiness": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/grantAuthoringReadiness"
         },
         "product_entry_quickstart": {
           "$ref": "product-entry-manifest.schema.json#/$defs/productEntryQuickstart"
