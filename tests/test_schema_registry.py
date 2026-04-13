@@ -146,6 +146,7 @@ class SchemaRegistryTest(unittest.TestCase):
         manifest_required = manifest_schema["$defs"]["productEntryManifest"]["required"]
         self.assertIn("family_orchestration", manifest_required)
         self.assertIn("product_entry_overview", manifest_required)
+        self.assertIn("product_entry_readiness", manifest_required)
         self.assertIn("grant_authoring_readiness", manifest_required)
         self.assertIn("product_entry_quickstart", manifest_required)
 
@@ -153,6 +154,7 @@ class SchemaRegistryTest(unittest.TestCase):
         frontdesk_required = frontdesk_schema["$defs"]["productFrontdesk"]["required"]
         self.assertIn("family_orchestration", frontdesk_required)
         self.assertIn("product_entry_overview", frontdesk_required)
+        self.assertIn("product_entry_readiness", frontdesk_required)
         self.assertIn("grant_authoring_readiness", frontdesk_required)
         self.assertIn("product_entry_quickstart", frontdesk_required)
 
@@ -193,6 +195,28 @@ class SchemaRegistryTest(unittest.TestCase):
 
     def test_frontdoor_surface_schemas_pin_authoring_readiness_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        product_readiness = manifest_schema["$defs"]["productEntryReadiness"]
+        self.assertEqual(product_readiness["properties"]["surface_kind"]["const"], "product_entry_readiness")
+        self.assertEqual(
+            product_readiness["properties"]["verdict"]["const"],
+            "agent_assisted_ready_not_product_grade",
+        )
+        self.assertEqual(
+            product_readiness["required"],
+            [
+                "surface_kind",
+                "verdict",
+                "usable_now",
+                "good_to_use_now",
+                "fully_automatic",
+                "summary",
+                "recommended_start_surface",
+                "recommended_start_command",
+                "recommended_loop_surface",
+                "recommended_loop_command",
+                "blocking_gaps",
+            ],
+        )
         readiness = manifest_schema["$defs"]["grantAuthoringReadiness"]
         self.assertEqual(readiness["properties"]["surface_kind"]["const"], "grant_authoring_readiness")
         self.assertEqual(
@@ -228,6 +252,10 @@ class SchemaRegistryTest(unittest.TestCase):
         )
 
         frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["product_entry_readiness"]["$ref"],
+            "product-entry-manifest.schema.json#/$defs/productEntryReadiness",
+        )
         self.assertEqual(
             frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["grant_authoring_readiness"]["$ref"],
             "product-entry-manifest.schema.json#/$defs/grantAuthoringReadiness",

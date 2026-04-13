@@ -64,7 +64,7 @@ Specs 是 repo-tracked 的权威 current truth/activation package，但不替代
 - 当前可执行 runtime 主线：`CLI-first` 形态下的真实 upstream Hermes substrate，repo-side 只保留 domain/entry adapter。
 - 产品入口 shell：`build-product-entry` 已经把可直接进入、也可被 `OPL` handoff 调起的轻量 grant `product entry` shell 落到仓库里。
 - 产品入口发现面：`product-entry-manifest` 现在会把当前 grant shell、shared handoff 模板与当前 mainline snapshot 一起冻结成 machine-readable manifest，供 direct caller 与 `OPL` 一致消费，并由 `product-entry-manifest.schema.json` 保持 fail-closed。
-- 产品 frontdesk 面：`product-frontdesk` 现在会把 grant shell 上方的 controller-owned direct frontdoor 冻结成 machine-readable frontdesk contract，并带出 `grant_authoring_readiness` 成熟度 companion，由 `product-frontdesk.schema.json` 保持 fail-closed。
+- 产品 frontdesk 面：`product-frontdesk` 现在会把 grant shell 上方的 controller-owned direct frontdoor 冻结成 machine-readable frontdesk contract，并同时带出家族统一的 `product_entry_readiness` companion 与领域深层的 `grant_authoring_readiness` companion，由 `product-frontdesk.schema.json` 保持 fail-closed。
 - 本地 submission-ready 交付面：`build-submission-ready-package` 现在会对不完整 frozen workspace fail-closed，只有在必备章节、预实验、代表作、在研项目与冻结 gate 都对齐时，才导出本地 `submission_ready_package`。
 - direct-product projection：`grant-progress` 与 `grant-cockpit` 现在已经作为 controller-owned、read-only 的产品投影落地；它们只消费现有 route/audit truth 与 `build-product-entry` contract hint，由 `grant-progress.schema.json` 与 `grant-cockpit.schema.json` 冻结，并且故意不是新的 `domain_entry_contract` executor command，也不进入 hosted bundle command catalog。
 - direct-entry composition：`grant-direct-entry` 现在会把 `grant-progress`、`grant-cockpit` 与两种 `build-product-entry` mode 收成一份 controller-owned 的 direct-entry contract，由 `grant-direct-entry.schema.json` 冻结，并且继续不进入 service-safe domain command catalog。

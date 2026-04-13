@@ -463,6 +463,58 @@
         }
       }
     },
+    "productEntryReadiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "verdict",
+        "usable_now",
+        "good_to_use_now",
+        "fully_automatic",
+        "summary",
+        "recommended_start_surface",
+        "recommended_start_command",
+        "recommended_loop_surface",
+        "recommended_loop_command",
+        "blocking_gaps"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "product_entry_readiness"
+        },
+        "verdict": {
+          "const": "agent_assisted_ready_not_product_grade"
+        },
+        "usable_now": {
+          "type": "boolean"
+        },
+        "good_to_use_now": {
+          "type": "boolean"
+        },
+        "fully_automatic": {
+          "type": "boolean"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_start_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_start_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_loop_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_loop_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "blocking_gaps": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
     "grantAuthoringReadiness": {
       "type": "object",
       "additionalProperties": false,
@@ -568,6 +620,7 @@
         "product_entry_shell",
         "shared_handoff",
         "product_entry_overview",
+        "product_entry_readiness",
         "grant_authoring_readiness",
         "product_entry_quickstart",
         "family_orchestration",
@@ -624,6 +677,9 @@
         },
         "product_entry_overview": {
           "$ref": "#/$defs/productEntryOverview"
+        },
+        "product_entry_readiness": {
+          "$ref": "#/$defs/productEntryReadiness"
         },
         "grant_authoring_readiness": {
           "$ref": "#/$defs/grantAuthoringReadiness"

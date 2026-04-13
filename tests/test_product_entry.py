@@ -1670,6 +1670,24 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["product_entry_overview"]["human_gate_ids"],
             ["mag_route_gate_revision"],
         )
+        product_readiness = manifest["product_entry_readiness"]
+        self.assertEqual(product_readiness["surface_kind"], "product_entry_readiness")
+        self.assertEqual(product_readiness["verdict"], "agent_assisted_ready_not_product_grade")
+        self.assertTrue(product_readiness["usable_now"])
+        self.assertFalse(product_readiness["good_to_use_now"])
+        self.assertFalse(product_readiness["fully_automatic"])
+        self.assertEqual(product_readiness["recommended_start_surface"], "product_frontdesk")
+        self.assertEqual(
+            product_readiness["recommended_start_command"],
+            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+        )
+        self.assertEqual(product_readiness["recommended_loop_surface"], "grant_user_loop")
+        self.assertEqual(
+            product_readiness["recommended_loop_command"],
+            "uv run python -m med_autogrant grant-user-loop "
+            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
+        self.assertIn("还不是 mature direct grant Web UI / hosted runtime。", product_readiness["blocking_gaps"])
         readiness = manifest["grant_authoring_readiness"]
         self.assertEqual(readiness["surface_kind"], "grant_authoring_readiness")
         self.assertEqual(readiness["verdict"], "agent_assisted_cli_ready_not_full_autopilot")
@@ -1905,6 +1923,13 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             frontdesk["product_entry_overview"]["resume_surface"]["command"],
             "uv run python -m med_autogrant grant-user-loop "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(frontdesk["product_entry_readiness"]["surface_kind"], "product_entry_readiness")
+        self.assertTrue(frontdesk["product_entry_readiness"]["usable_now"])
+        self.assertFalse(frontdesk["product_entry_readiness"]["good_to_use_now"])
+        self.assertEqual(
+            frontdesk["product_entry_readiness"],
+            frontdesk["product_entry_manifest"]["product_entry_readiness"],
         )
         self.assertEqual(frontdesk["grant_authoring_readiness"]["surface_kind"], "grant_authoring_readiness")
         self.assertFalse(frontdesk["grant_authoring_readiness"]["fully_automatic"])

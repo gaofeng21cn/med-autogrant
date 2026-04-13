@@ -934,6 +934,19 @@ class MedAutoGrantProductEntry:
                 "文献热点检索、引用证据绑定、图件生产、Word/PDF 定稿与外部官网提交仍未完整产品化。",
             ],
         }
+        product_entry_readiness = {
+            "surface_kind": "product_entry_readiness",
+            "verdict": "agent_assisted_ready_not_product_grade",
+            "usable_now": True,
+            "good_to_use_now": False,
+            "fully_automatic": False,
+            "summary": grant_authoring_readiness["summary"],
+            "recommended_start_surface": grant_authoring_readiness["recommended_start_surface"],
+            "recommended_start_command": grant_authoring_readiness["recommended_start_command"],
+            "recommended_loop_surface": grant_authoring_readiness["recommended_loop_surface"],
+            "recommended_loop_command": grant_authoring_readiness["recommended_loop_command"],
+            "blocking_gaps": list(grant_authoring_readiness["blocking_gaps"]),
+        }
 
         payload = {
             "ok": True,
@@ -1057,6 +1070,7 @@ class MedAutoGrantProductEntry:
                     },
                 },
                 "product_entry_overview": product_entry_overview,
+                "product_entry_readiness": product_entry_readiness,
                 "grant_authoring_readiness": grant_authoring_readiness,
                 "product_entry_quickstart": product_entry_quickstart,
                 "family_orchestration": family_orchestration,
@@ -1160,6 +1174,11 @@ class MedAutoGrantProductEntry:
                 "product_entry_overview": dict(_require_mapping(
                     manifest,
                     "product_entry_overview",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "product_entry_readiness": dict(_require_mapping(
+                    manifest,
+                    "product_entry_readiness",
                     context="product_frontdesk.product_entry_manifest",
                 )),
                 "grant_authoring_readiness": dict(_require_mapping(
