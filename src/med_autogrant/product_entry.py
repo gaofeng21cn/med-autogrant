@@ -610,6 +610,23 @@ class MedAutoGrantProductEntry:
                 "requires": ["task_intent"],
             },
         }
+        family_orchestration = {
+            "human_gates": [
+                {
+                    "gate_id": "author_decision_gate",
+                    "title": "Author decision gate",
+                },
+                {
+                    "gate_id": "submission_release_gate",
+                    "title": "Submission release gate",
+                },
+            ],
+            "resume_contract": {
+                "surface_kind": GRANT_USER_LOOP_KIND,
+                "session_locator_field": "input_path",
+                "checkpoint_locator_field": "grant_run_id",
+            },
+        }
 
         return {
             "ok": True,
@@ -621,7 +638,7 @@ class MedAutoGrantProductEntry:
             "input_path": progress_payload["input_path"],
             "product_entry_manifest": {
                 "surface_kind": "product_entry_manifest",
-                "manifest_version": 1,
+                "manifest_version": 2,
                 "manifest_kind": PRODUCT_ENTRY_MANIFEST_KIND,
                 "target_domain_id": TARGET_DOMAIN_ID,
                 "formal_entry": {
@@ -732,6 +749,7 @@ class MedAutoGrantProductEntry:
                         "entry_mode": "opl-handoff",
                     },
                 },
+                "family_orchestration": family_orchestration,
                 "product_entry_status": {
                     "summary": _require_nonempty_string_from_mapping(
                         current_phase,
@@ -820,6 +838,11 @@ class MedAutoGrantProductEntry:
                 "operator_loop_actions": dict(_require_mapping(
                     manifest,
                     "operator_loop_actions",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "family_orchestration": dict(_require_mapping(
+                    manifest,
+                    "family_orchestration",
                     context="product_frontdesk.product_entry_manifest",
                 )),
                 "product_entry_manifest": dict(manifest),

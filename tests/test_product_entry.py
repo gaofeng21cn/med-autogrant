@@ -1391,6 +1391,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         manifest = payload["product_entry_manifest"]
         self.assertEqual(manifest["surface_kind"], "product_entry_manifest")
+        self.assertEqual(manifest["manifest_version"], 2)
         self.assertEqual(manifest["manifest_kind"], "med_auto_grant_product_entry_manifest")
         self.assertEqual(manifest["target_domain_id"], "med-autogrant")
         self.assertEqual(manifest["formal_entry"]["default"], "CLI")
@@ -1469,6 +1470,27 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["shared_handoff"]["opl_handoff_builder"]["command"],
             "uv run python -m med_autogrant build-product-entry "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
+        )
+        self.assertEqual(
+            manifest["family_orchestration"]["human_gates"],
+            [
+                {
+                    "gate_id": "author_decision_gate",
+                    "title": "Author decision gate",
+                },
+                {
+                    "gate_id": "submission_release_gate",
+                    "title": "Submission release gate",
+                },
+            ],
+        )
+        self.assertEqual(
+            manifest["family_orchestration"]["resume_contract"],
+            {
+                "surface_kind": "grant_user_loop",
+                "session_locator_field": "input_path",
+                "checkpoint_locator_field": "grant_run_id",
+            },
         )
 
     def test_grant_user_loop_projects_landed_critique_route_when_drafting_can_execute_directly(self) -> None:
@@ -1562,7 +1584,10 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             "uv run python -m med_autogrant grant-user-loop "
             f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
         )
+        self.assertEqual(frontdesk["family_orchestration"]["human_gates"][0]["gate_id"], "author_decision_gate")
+        self.assertEqual(frontdesk["family_orchestration"]["resume_contract"]["surface_kind"], "grant_user_loop")
         self.assertEqual(frontdesk["product_entry_manifest"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
+        self.assertEqual(frontdesk["product_entry_manifest"]["manifest_version"], 2)
 
     def test_grant_progress_fails_closed_on_invalid_projection_shape(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
