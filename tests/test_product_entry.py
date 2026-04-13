@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.control_plane import read_program_id, resolve_runtime_state_root  # noqa: E402
 from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
 
 
@@ -354,6 +355,25 @@ def _expected_pending_route(route_id: str, *, source_stage: str) -> dict[str, ob
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
     del source_stage
     return _expected_landed_route(route_id)
+
+
+def _expected_runtime_output_path(
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    draft_id: str | None,
+    file_name: str,
+) -> Path:
+    draft_path_segment = draft_id or "no-draft"
+    return (
+        resolve_runtime_state_root()
+        / "reports"
+        / read_program_id(repo_root=REPO_ROOT)
+        / grant_run_id
+        / workspace_id
+        / draft_path_segment
+        / file_name
+    )
 
 
 def _assert_family_orchestration_companion(
@@ -1422,9 +1442,12 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             (
                 "uv run python -m med_autogrant execute-revision-pass "
                 f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} "
-                "--output <revision-output-path> --format json"
+                "--output "
+                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id='draft-v1', file_name='revision-workspace.json')} "
+                "--format json"
             ),
         )
+        self.assertNotIn("<", payload["grant_user_loop"]["next_action"]["command"])
         self.assertIsNone(payload["grant_user_loop"]["next_action"]["handoff_surfaces"])
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["mainline_status"],
@@ -1727,9 +1750,12 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             (
                 "uv run python -m med_autogrant execute-critique-pass "
                 f"--input {DRAFTING_EXAMPLE_PATH.resolve()} "
-                "--output <critique-output-path> --format json"
+                "--output "
+                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id='draft-v1', file_name='critique-workspace.json')} "
+                "--format json"
             ),
         )
+        self.assertNotIn("<", payload["grant_user_loop"]["next_action"]["command"])
         self.assertEqual(
             payload["grant_user_loop"]["next_action"]["handoff_surfaces"],
             None,
@@ -1739,7 +1765,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             (
                 "uv run python -m med_autogrant execute-critique-pass "
                 f"--input {DRAFTING_EXAMPLE_PATH.resolve()} "
-                "--output <critique-output-path> --format json"
+                "--output "
+                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id='draft-v1', file_name='critique-workspace.json')} "
+                "--format json"
             ),
         )
         self.assertEqual(
@@ -1776,15 +1804,20 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             (
                 "uv run python -m med_autogrant execute-question-refinement-pass "
                 f"--input {DIRECTION_EXAMPLE_PATH.resolve()} "
-                "--output <question-refinement-output-path> --format json"
+                "--output "
+                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id=None, file_name='question-refinement-workspace.json')} "
+                "--format json"
             ),
         )
+        self.assertNotIn("<", payload["grant_user_loop"]["next_action"]["command"])
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["run_recommended_route"],
             (
                 "uv run python -m med_autogrant execute-question-refinement-pass "
                 f"--input {DIRECTION_EXAMPLE_PATH.resolve()} "
-                "--output <question-refinement-output-path> --format json"
+                "--output "
+                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id=None, file_name='question-refinement-workspace.json')} "
+                "--format json"
             ),
         )
 

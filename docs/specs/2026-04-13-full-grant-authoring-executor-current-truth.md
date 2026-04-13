@@ -53,6 +53,7 @@ Date: `2026-04-13`
 
 - `action_kind = execute_landed_route`
 - 对应的 `uv run python -m med_autogrant <command> ... --format json`
+- `--output` 不再是 `<...-output-path>` 占位符，而是指向 `$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/<grant_run_id>/<workspace_id>/<draft_id-or-no-draft>/...` 的具体建议输出文件
 
 因此从 `direction_screening` 开始，当前 direct grant user loop 就能一路把用户送到：
 
@@ -114,7 +115,7 @@ Date: `2026-04-13`
 
 - 前半程 executor 能产出合法 workspace
 - landed route catalog 与 schema / product entry / hosted bundle 保持一致
-- `grant-user-loop` 对前半程 route 直接投影 landed command
+- `grant-user-loop` 对前半程 route 直接投影带 runtime-state 输出路径的 landed command，而不是要求用户手填 output path 占位符
 - rerun 后失效的下游对象与 `preliminary_evidence_pack.supports` 会被显式清理
 
 ## Honest Boundary

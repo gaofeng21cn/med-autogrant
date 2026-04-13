@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
+from med_autogrant.control_plane import read_program_id, resolve_runtime_state_root
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.hermes_runtime import (
     _build_author_side_route_contract,
@@ -572,9 +573,23 @@ class MedAutoGrantProductEntry:
             "recommended_executor_route",
             context="grant_user_loop.grant_direct_entry",
         )
+        grant_run_id = _require_nonempty_string_from_mapping(
+            direct_entry_payload,
+            "grant_run_id",
+            context="grant_user_loop",
+        )
+        workspace_id = _require_nonempty_string_from_mapping(
+            direct_entry_payload,
+            "workspace_id",
+            context="grant_user_loop",
+        )
+        draft_id = _optional_string_from_mapping(direct_entry_payload, "draft_id")
         next_action = _build_next_action_payload(
             recommended_executor_route=recommended_executor_route,
             input_path=resolved_input_path,
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            draft_id=draft_id,
         )
         user_loop = _build_grant_user_loop_commands(
             input_path=resolved_input_path,
@@ -1827,6 +1842,9 @@ def _build_next_action_payload(
     *,
     recommended_executor_route: Mapping[str, Any],
     input_path: Path,
+    grant_run_id: str,
+    workspace_id: str,
+    draft_id: str | None,
 ) -> dict[str, Any]:
     route_id = _require_nonempty_string_from_mapping(
         recommended_executor_route,
@@ -1844,7 +1862,13 @@ def _build_next_action_payload(
             "route_id": route_id,
             "route_status": route_status,
             "summary": f"当前推荐 route {route_id} 已 landed，可直接调用现有 author-side executor surface。",
-            "command": _build_route_execution_command(route_id=route_id, input_path=input_path),
+            "command": _build_route_execution_command(
+                route_id=route_id,
+                input_path=input_path,
+                grant_run_id=grant_run_id,
+                workspace_id=workspace_id,
+                draft_id=draft_id,
+            ),
             "handoff_surfaces": None,
         }
 
@@ -1896,71 +1920,141 @@ def _build_domain_surface_command(*, command: str, input_path: Path) -> str:
     return f"uv run python -m med_autogrant {command} --input {resolved_input_path} --format json"
 
 
-def _build_route_execution_command(*, route_id: str, input_path: Path) -> str:
+def _build_route_execution_command(
+    *,
+    route_id: str,
+    input_path: Path,
+    grant_run_id: str,
+    workspace_id: str,
+    draft_id: str | None,
+) -> str:
     resolved_input_path = input_path.expanduser().resolve()
+    output_path = _build_runtime_route_output_path(
+        route_id=route_id,
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        draft_id=draft_id,
+    )
     if route_id == "direction_screening":
         return (
             "uv run python -m med_autogrant execute-direction-screening-pass "
-            f"--input {resolved_input_path} --output <direction-screening-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "question_refinement":
         return (
             "uv run python -m med_autogrant execute-question-refinement-pass "
-            f"--input {resolved_input_path} --output <question-refinement-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "argument_building":
         return (
             "uv run python -m med_autogrant execute-argument-building-pass "
-            f"--input {resolved_input_path} --output <argument-building-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "fit_alignment":
         return (
             "uv run python -m med_autogrant execute-fit-alignment-pass "
-            f"--input {resolved_input_path} --output <fit-alignment-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "outline":
         return (
             "uv run python -m med_autogrant execute-outline-pass "
-            f"--input {resolved_input_path} --output <outline-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "drafting":
         return (
             "uv run python -m med_autogrant execute-drafting-pass "
-            f"--input {resolved_input_path} --output <drafting-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "critique":
         return (
             "uv run python -m med_autogrant execute-critique-pass "
-            f"--input {resolved_input_path} --output <critique-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "revision":
         return (
             "uv run python -m med_autogrant execute-revision-pass "
-            f"--input {resolved_input_path} --output <revision-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "frozen":
         return (
             "uv run python -m med_autogrant execute-freeze-pass "
-            f"--input {resolved_input_path} --output <freeze-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "artifact_bundle":
         return (
             "uv run python -m med_autogrant build-artifact-bundle "
-            f"--input {resolved_input_path} --output <artifact-bundle-output-path> --format json"
+            f"--input {resolved_input_path} --output {output_path} --format json"
         )
     if route_id == "final_package":
+        artifact_bundle_path = _build_runtime_route_output_path(
+            route_id="artifact_bundle",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            draft_id=draft_id,
+        )
         return (
             "uv run python -m med_autogrant build-final-package "
-            f"--input {resolved_input_path} --artifact-bundle <artifact-bundle-output-path> "
-            "--output <final-package-output-path> --format json"
+            f"--input {resolved_input_path} --artifact-bundle {artifact_bundle_path} "
+            f"--output {output_path} --format json"
         )
     if route_id == "hosted_contract_bundle":
+        final_package_path = _build_runtime_route_output_path(
+            route_id="final_package",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            draft_id=draft_id,
+        )
         return (
             "uv run python -m med_autogrant build-hosted-contract-bundle "
-            "--final-package <final-package-output-path> "
-            "--output <hosted-contract-bundle-output-path> --format json"
+            f"--final-package {final_package_path} "
+            f"--output {output_path} --format json"
         )
     raise WorkspaceStateError(f"grant_user_loop 不支持 landed route command: {route_id}")
+
+
+def _build_runtime_route_output_path(
+    *,
+    route_id: str,
+    grant_run_id: str,
+    workspace_id: str,
+    draft_id: str | None,
+) -> Path:
+    output_file = {
+        "direction_screening": "direction-screening-workspace.json",
+        "question_refinement": "question-refinement-workspace.json",
+        "argument_building": "argument-building-workspace.json",
+        "fit_alignment": "fit-alignment-workspace.json",
+        "outline": "outline-workspace.json",
+        "drafting": "drafting-workspace.json",
+        "critique": "critique-workspace.json",
+        "revision": "revision-workspace.json",
+        "frozen": "frozen-workspace.json",
+        "artifact_bundle": "artifact-bundle.json",
+        "final_package": "final-package.json",
+        "hosted_contract_bundle": "hosted-contract-bundle.json",
+    }.get(route_id)
+    if output_file is None:
+        raise WorkspaceStateError(f"grant_user_loop 不支持 runtime output path route: {route_id}")
+
+    program_id = _require_runtime_path_segment(read_program_id(), field_name="program_id")
+    return (
+        resolve_runtime_state_root()
+        / "reports"
+        / program_id
+        / _require_runtime_path_segment(grant_run_id, field_name="grant_run_id")
+        / _require_runtime_path_segment(workspace_id, field_name="workspace_id")
+        / _require_runtime_path_segment(draft_id or "no-draft", field_name="draft_id")
+        / output_file
+    ).resolve()
+
+
+def _require_runtime_path_segment(value: str, *, field_name: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise WorkspaceStateError(f"grant_user_loop runtime output path 缺少合法字段: {field_name}")
+    resolved_value = value.strip()
+    if resolved_value in {".", ".."} or "/" in resolved_value or "\\" in resolved_value:
+        raise WorkspaceStateError(f"grant_user_loop runtime output path 字段不能包含路径分隔符: {field_name}")
+    return resolved_value
 
 
 def _build_grant_user_loop_commands(
