@@ -44,6 +44,21 @@ class RepositoryHygieneTest(unittest.TestCase):
         checklist = (REPO_ROOT / "docs/references/series-doc-governance-checklist.md").read_text(encoding="utf-8")
         docs_readme = (REPO_ROOT / "docs/README.md").read_text(encoding="utf-8")
         docs_readme_zh = (REPO_ROOT / "docs/README.zh-CN.md").read_text(encoding="utf-8")
+        previous_index = -1
+
+        for heading in (
+            "## 目标",
+            "## 一、默认入口",
+            "## 二、核心五件套",
+            "## 三、公开层与内部层",
+            "## 四、系列一致性检查",
+            "## 五、默认验证",
+        ):
+            with self.subTest(heading=heading):
+                current_index = checklist.find(heading)
+                self.assertGreaterEqual(current_index, 0)
+                self.assertGreater(current_index, previous_index)
+                previous_index = current_index
 
         for label in ("One Person Lab", "Med Auto Science", "Med Auto Grant", "RedCube AI"):
             with self.subTest(label=label):
@@ -56,6 +71,9 @@ class RepositoryHygieneTest(unittest.TestCase):
         self.assertIn("docs/specs/**", checklist)
         self.assertIn("schemas/v1/", checklist)
         self.assertIn("contracts/runtime-program/", checklist)
+        self.assertIn("Hermes-Agent", checklist)
+        self.assertIn("AGENTS.md", checklist)
+        self.assertIn("第二真相源", checklist)
         self.assertIn("scripts/verify.sh meta", checklist)
         self.assertIn("make test-meta", checklist)
         self.assertIn("series-doc-governance-checklist.md", docs_readme)

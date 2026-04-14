@@ -29,6 +29,7 @@
 - `docs/references/**` 承担内部参考说明；默认中文维护。
 - `docs/plans/**` 与 `docs/history/**` 继续只承担追溯与归档，不得重新回灌成当前公开入口。
 - `schemas/v1/` 与 `contracts/runtime-program/` 继续只承载 machine-readable contract，不承载 narrative second source。
+- 长期规则要冻结进核心文档、repo-tracked current truth、reference 或 contract surface；不要把 `AGENTS.md` 继续当第二真相源。
 
 ## 四、系列一致性检查
 
