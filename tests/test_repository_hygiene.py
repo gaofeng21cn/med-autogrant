@@ -40,6 +40,27 @@ class RepositoryHygieneTest(unittest.TestCase):
         self.assertEqual(completed.returncode, 0)
         self.assertEqual(completed.stdout.strip(), "")
 
+    def test_series_doc_governance_checklist_is_repo_tracked_and_linked_from_docs_indexes(self) -> None:
+        checklist = (REPO_ROOT / "docs/references/series-doc-governance-checklist.md").read_text(encoding="utf-8")
+        docs_readme = (REPO_ROOT / "docs/README.md").read_text(encoding="utf-8")
+        docs_readme_zh = (REPO_ROOT / "docs/README.zh-CN.md").read_text(encoding="utf-8")
+
+        for label in ("One Person Lab", "Med Auto Science", "Med Auto Grant", "RedCube AI"):
+            with self.subTest(label=label):
+                self.assertIn(label, checklist)
+
+        for doc_name in ("project.md", "status.md", "architecture.md", "invariants.md", "decisions.md"):
+            with self.subTest(doc_name=doc_name):
+                self.assertIn(doc_name, checklist)
+
+        self.assertIn("docs/specs/**", checklist)
+        self.assertIn("schemas/v1/", checklist)
+        self.assertIn("contracts/runtime-program/", checklist)
+        self.assertIn("scripts/verify.sh meta", checklist)
+        self.assertIn("make test-meta", checklist)
+        self.assertIn("series-doc-governance-checklist.md", docs_readme)
+        self.assertIn("series-doc-governance-checklist.md", docs_readme_zh)
+
 
 if __name__ == "__main__":
     unittest.main()

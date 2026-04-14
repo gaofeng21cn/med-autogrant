@@ -76,6 +76,7 @@ Specs are repo-tracked and authoritative for activation packages and current tru
 ### Internal Reference Notes
 
 - [Lightweight product entry and OPL handoff](./references/lightweight_product_entry_and_opl_handoff.md) (Chinese only)
+- [Series doc governance checklist](./references/series-doc-governance-checklist.md) (Chinese only)
 
 ### Historical Plans
 
@@ -95,3 +96,4 @@ Specs are repo-tracked and authoritative for activation packages and current tru
 - `docs/references/**`: repo-tracked internal reference notes, Chinese by default.
 - `docs/plans/**`: historical planning artifacts only.
 - `docs/history/**`: archival material, including OMX.
+- `docs/references/series-doc-governance-checklist.md`: repo-scoped checklist for keeping this repository aligned with the four-repo series.

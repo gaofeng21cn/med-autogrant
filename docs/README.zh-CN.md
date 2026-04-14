@@ -73,6 +73,7 @@ Specs 是 repo-tracked 的权威 current truth/activation package，但不替代
 ### 内部参考说明
 
 - [轻量产品入口与 OPL Handoff](./references/lightweight_product_entry_and_opl_handoff.md)
+- [系列项目文档治理清单](./references/series-doc-governance-checklist.md)
 
 ### 历史计划工件
 
@@ -92,3 +93,4 @@ Specs 是 repo-tracked 的权威 current truth/activation package，但不替代
 - `docs/references/**`：仓库跟踪的内部参考文档，默认中文维护。
 - `docs/plans/**`：历史规划工件，仅用于追溯。
 - `docs/history/**`：历史归档入口，含 OMX。
+- `docs/references/series-doc-governance-checklist.md`：当前仓与四仓系列项目保持一致时使用的 repo-scope 文档巡检清单。
