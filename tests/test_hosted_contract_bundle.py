@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.public_cli import public_cli_argv, public_command_label  # noqa: E402
 from med_autogrant import hosted_contract_bundle as hosted_contract_bundle_module  # noqa: E402
 
 
@@ -109,6 +110,8 @@ CANONICAL_EXPORT_SURFACES = [
     "build-submission-ready-package",
 ]
 
+PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND = public_command_label("build-product-entry")
+
 
 class HostedContractBundleCliTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
@@ -116,7 +119,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
         stderr = StringIO()
         with redirect_stdout(stdout), redirect_stderr(stderr):
             try:
-                exit_code = main(list(args))
+                exit_code = main(public_cli_argv(args))
             except SystemExit as exc:
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
@@ -258,7 +261,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 {
                     "entry_adapter": "MedAutoGrantDomainEntry",
                     "service_safe_surface_kind": "service-safe-domain-entry-command",
-                    "product_entry_builder_command": "build-product-entry",
+                    "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
                     "product_entry_kind": "med_auto_grant_product_entry",
                     "supported_entry_modes": [
                         "direct",

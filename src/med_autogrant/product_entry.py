@@ -25,6 +25,7 @@ from med_autogrant.hermes_runtime import (
     _validate_executor_routing_contract,
 )
 from med_autogrant.mainline_status import read_mainline_status
+from med_autogrant.public_cli import public_cli_command, public_command_label
 from med_autogrant.workspace import (
     WorkspaceFileError,
     WorkspaceStateError,
@@ -354,7 +355,7 @@ class MedAutoGrantProductEntry:
                 critique_summary=critique_summary,
             ),
             "product_entry_surface": {
-                "builder_command": "build-product-entry",
+                "builder_command": public_command_label("build-product-entry"),
                 "target_domain_id": TARGET_DOMAIN_ID,
                 "supported_entry_modes": list(SUPPORTED_ENTRY_MODES),
                 "task_intent_required": True,
@@ -776,20 +777,29 @@ class MedAutoGrantProductEntry:
             context="mainline_status",
         )
         command_catalog = _build_product_command_catalog(resolved_input_path)
-        grant_user_loop_command = (
-            "uv run python -m med_autogrant grant-user-loop "
-            f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
+        grant_user_loop_command = public_cli_command(
+            "grant-user-loop",
+            "--input",
+            str(resolved_input_path),
+            "--task-intent",
+            "<describe-task-intent>",
+            "--format",
+            "json",
         )
-        product_frontdesk_command = (
-            "uv run python -m med_autogrant product-frontdesk "
-            f"--input {resolved_input_path} --format json"
+        product_frontdesk_command = public_cli_command(
+            "product-frontdesk", "--input", str(resolved_input_path), "--format", "json"
         )
-        grant_cockpit_command = (
-            f"uv run python -m med_autogrant grant-cockpit --input {resolved_input_path} --format json"
+        grant_cockpit_command = public_cli_command(
+            "grant-cockpit", "--input", str(resolved_input_path), "--format", "json"
         )
-        grant_direct_entry_command = (
-            "uv run python -m med_autogrant grant-direct-entry "
-            f"--input {resolved_input_path} --task-intent <describe-task-intent> --format json"
+        grant_direct_entry_command = public_cli_command(
+            "grant-direct-entry",
+            "--input",
+            str(resolved_input_path),
+            "--task-intent",
+            "<describe-task-intent>",
+            "--format",
+            "json",
         )
         operator_loop_actions = {
             "open_loop": {
@@ -1415,15 +1425,13 @@ class MedAutoGrantProductEntry:
             "current_owner_line",
             context="mainline_status.current_runtime_owner",
         )
-        validate_command = (
-            "uv run python -m med_autogrant validate-workspace "
-            f"--input {resolved_input_path} --format json"
+        validate_command = public_cli_command(
+            "validate-workspace", "--input", str(resolved_input_path), "--format", "json"
         )
-        start_command = (
-            "uv run python -m med_autogrant product-frontdesk "
-            f"--input {resolved_input_path} --format json"
+        start_command = public_cli_command(
+            "product-frontdesk", "--input", str(resolved_input_path), "--format", "json"
         )
-        mainline_command = "uv run python -m med_autogrant mainline-status --format json"
+        mainline_command = public_cli_command("mainline-status", "--format", "json")
         checks = [
             {
                 "check_id": "workspace_document_valid",
@@ -1467,9 +1475,14 @@ class MedAutoGrantProductEntry:
                     if document.get("lifecycle_stage") == "frozen"
                     else "当前 stage 还未到 submission-ready export gate；这不阻止进入 frontdoor，但后续仍需继续主线推进。"
                 ),
-                "command": (
-                    "uv run python -m med_autogrant build-submission-ready-package "
-                    f"--input {resolved_input_path} --output-dir <output-dir> --format json"
+                "command": public_cli_command(
+                    "build-submission-ready-package",
+                    "--input",
+                    str(resolved_input_path),
+                    "--output-dir",
+                    "<output-dir>",
+                    "--format",
+                    "json",
                 ),
             },
         ]
@@ -2189,7 +2202,7 @@ def _command_name_to_catalog_key(command: str) -> str:
 
 def _build_domain_surface_command(*, command: str, input_path: Path) -> str:
     resolved_input_path = input_path.expanduser().resolve()
-    return f"uv run python -m med_autogrant {command} --input {resolved_input_path} --format json"
+    return public_cli_command(command, "--input", str(resolved_input_path), "--format", "json")
 
 
 def _build_route_execution_command(
@@ -2208,54 +2221,104 @@ def _build_route_execution_command(
         draft_id=draft_id,
     )
     if route_id == "direction_screening":
-        return (
-            "uv run python -m med_autogrant execute-direction-screening-pass "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "execute-direction-screening-pass",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "question_refinement":
-        return (
-            "uv run python -m med_autogrant execute-question-refinement-pass "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "execute-question-refinement-pass",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "argument_building":
-        return (
-            "uv run python -m med_autogrant execute-argument-building-pass "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "execute-argument-building-pass",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "fit_alignment":
-        return (
-            "uv run python -m med_autogrant execute-fit-alignment-pass "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "execute-fit-alignment-pass",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "outline":
-        return (
-            "uv run python -m med_autogrant execute-outline-pass "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "execute-outline-pass",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "drafting":
-        return (
-            "uv run python -m med_autogrant execute-drafting-pass "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "execute-drafting-pass",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "critique":
-        return (
-            "uv run python -m med_autogrant execute-critique-pass "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "execute-critique-pass",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "revision":
-        return (
-            "uv run python -m med_autogrant execute-revision-pass "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "execute-revision-pass",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "frozen":
-        return (
-            "uv run python -m med_autogrant execute-freeze-pass "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "execute-freeze-pass",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "artifact_bundle":
-        return (
-            "uv run python -m med_autogrant build-artifact-bundle "
-            f"--input {resolved_input_path} --output {output_path} --format json"
+        return public_cli_command(
+            "build-artifact-bundle",
+            "--input",
+            str(resolved_input_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "final_package":
         artifact_bundle_path = _build_runtime_route_output_path(
@@ -2264,10 +2327,16 @@ def _build_route_execution_command(
             workspace_id=workspace_id,
             draft_id=draft_id,
         )
-        return (
-            "uv run python -m med_autogrant build-final-package "
-            f"--input {resolved_input_path} --artifact-bundle {artifact_bundle_path} "
-            f"--output {output_path} --format json"
+        return public_cli_command(
+            "build-final-package",
+            "--input",
+            str(resolved_input_path),
+            "--artifact-bundle",
+            str(artifact_bundle_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     if route_id == "hosted_contract_bundle":
         final_package_path = _build_runtime_route_output_path(
@@ -2276,10 +2345,14 @@ def _build_route_execution_command(
             workspace_id=workspace_id,
             draft_id=draft_id,
         )
-        return (
-            "uv run python -m med_autogrant build-hosted-contract-bundle "
-            f"--final-package {final_package_path} "
-            f"--output {output_path} --format json"
+        return public_cli_command(
+            "build-hosted-contract-bundle",
+            "--final-package",
+            str(final_package_path),
+            "--output",
+            str(output_path),
+            "--format",
+            "json",
         )
     raise WorkspaceStateError(f"grant_user_loop 不支持 landed route command: {route_id}")
 
@@ -2337,30 +2410,47 @@ def _build_grant_user_loop_commands(
 ) -> dict[str, Any]:
     resolved_input_path = input_path.expanduser().resolve()
     return {
-        "mainline_status": "uv run python -m med_autogrant mainline-status --format json",
-        "phase_status_current": "uv run python -m med_autogrant mainline-phase --phase current --format json",
-        "phase_status_next": "uv run python -m med_autogrant mainline-phase --phase next --format json",
-        "open_grant_cockpit": (
-            f"uv run python -m med_autogrant grant-cockpit --input {resolved_input_path} --format json"
+        "mainline_status": public_cli_command("mainline-status", "--format", "json"),
+        "phase_status_current": public_cli_command("mainline-phase", "--phase", "current", "--format", "json"),
+        "phase_status_next": public_cli_command("mainline-phase", "--phase", "next", "--format", "json"),
+        "open_grant_cockpit": public_cli_command(
+            "grant-cockpit", "--input", str(resolved_input_path), "--format", "json"
         ),
-        "open_grant_direct_entry": (
-            "uv run python -m med_autogrant grant-direct-entry "
-            f"--input {resolved_input_path} --task-intent {task_intent} --format json"
+        "open_grant_direct_entry": public_cli_command(
+            "grant-direct-entry",
+            "--input",
+            str(resolved_input_path),
+            "--task-intent",
+            task_intent,
+            "--format",
+            "json",
         ),
         "run_recommended_route": (
             _require_nonempty_string(run_recommended_route, field_name="run_recommended_route")
             if run_recommended_route is not None
             else None
         ),
-        "build_direct_entry": (
-            "uv run python -m med_autogrant build-product-entry "
-            f"--input {resolved_input_path} --entry-mode direct "
-            f"--task-intent {task_intent} --format json"
+        "build_direct_entry": public_cli_command(
+            "build-product-entry",
+            "--input",
+            str(resolved_input_path),
+            "--entry-mode",
+            "direct",
+            "--task-intent",
+            task_intent,
+            "--format",
+            "json",
         ),
-        "build_opl_handoff": (
-            "uv run python -m med_autogrant build-product-entry "
-            f"--input {resolved_input_path} --entry-mode opl-handoff "
-            f"--task-intent {task_intent} --format json"
+        "build_opl_handoff": public_cli_command(
+            "build-product-entry",
+            "--input",
+            str(resolved_input_path),
+            "--entry-mode",
+            "opl-handoff",
+            "--task-intent",
+            task_intent,
+            "--format",
+            "json",
         ),
     }
 
@@ -2508,30 +2598,47 @@ def _validate_product_frontdesk_contract(
 def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
     resolved_input_path = input_path.expanduser().resolve()
     return {
-        "grant_progress": (
-            f"uv run python -m med_autogrant grant-progress --input {resolved_input_path} --format json"
+        "grant_progress": public_cli_command(
+            "grant-progress", "--input", str(resolved_input_path), "--format", "json"
         ),
-        "summarize_workspace": (
-            f"uv run python -m med_autogrant summarize-workspace --input {resolved_input_path} --format json"
+        "summarize_workspace": public_cli_command(
+            "summarize-workspace", "--input", str(resolved_input_path), "--format", "json"
         ),
-        "stage_route_report": (
-            f"uv run python -m med_autogrant stage-route-report --input {resolved_input_path} --format json"
+        "stage_route_report": public_cli_command(
+            "stage-route-report", "--input", str(resolved_input_path), "--format", "json"
         ),
-        "critique_summary": (
-            f"uv run python -m med_autogrant critique-summary --input {resolved_input_path} --format json"
+        "critique_summary": public_cli_command(
+            "critique-summary", "--input", str(resolved_input_path), "--format", "json"
         ),
-        "build_direct_entry": (
-            "uv run python -m med_autogrant build-product-entry "
-            f"--input {resolved_input_path} --entry-mode direct "
-            "--task-intent <describe-task-intent> --format json"
+        "build_direct_entry": public_cli_command(
+            "build-product-entry",
+            "--input",
+            str(resolved_input_path),
+            "--entry-mode",
+            "direct",
+            "--task-intent",
+            "<describe-task-intent>",
+            "--format",
+            "json",
         ),
-        "build_opl_handoff": (
-            "uv run python -m med_autogrant build-product-entry "
-            f"--input {resolved_input_path} --entry-mode opl-handoff "
-            "--task-intent <describe-task-intent> --format json"
+        "build_opl_handoff": public_cli_command(
+            "build-product-entry",
+            "--input",
+            str(resolved_input_path),
+            "--entry-mode",
+            "opl-handoff",
+            "--task-intent",
+            "<describe-task-intent>",
+            "--format",
+            "json",
         ),
-        "build_submission_ready_package": (
-            "uv run python -m med_autogrant build-submission-ready-package "
-            f"--input {resolved_input_path} --output-dir <submission-ready-output-dir> --format json"
+        "build_submission_ready_package": public_cli_command(
+            "build-submission-ready-package",
+            "--input",
+            str(resolved_input_path),
+            "--output-dir",
+            "<submission-ready-output-dir>",
+            "--format",
+            "json",
         ),
     }

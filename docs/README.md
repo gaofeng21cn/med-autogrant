@@ -24,7 +24,8 @@ This guide is for readers who need the repo-tracked contracts, current-truth spe
 - The current product-facing shell, projections, and local `submission-ready` package are landed, while a mature hosted grant frontend is still future work.
 - Top-level federation admission and handoff wording remain separately gated at `OPL`.
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
-- Current controller-owned, read-only projections continue to include `grant-progress`, `grant-cockpit`, `grant-direct-entry`, and `grant-user-loop`, with schema-backed boundaries above the author-side line.
+- Current controller-owned, read-only projections continue to include `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`, with schema-backed boundaries above the author-side line.
+- The current grouped public shell also exposes `product build-entry`, `product manifest`, `product frontdesk`, and `package submission-ready` as the public CLI-facing entry surface.
 - The current lightweight grant `product entry` shell is the active Product-entry shell, while richer hosted product work remains future-facing.
 
 ## Technical Working Set

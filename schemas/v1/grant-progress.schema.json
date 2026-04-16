@@ -54,7 +54,7 @@
       ],
       "properties": {
         "builder_command": {
-          "const": "build-product-entry"
+          "const": "product build-entry"
         },
         "target_domain_id": {
           "const": "med-autogrant"

@@ -18,6 +18,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.public_cli import public_cli_argv  # noqa: E402
 
 
 EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
@@ -42,7 +43,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         stdout = StringIO()
         stderr = StringIO()
         with redirect_stdout(stdout), redirect_stderr(stderr):
-            exit_code = main(list(args))
+            exit_code = main(public_cli_argv(args))
         return exit_code, stdout.getvalue(), stderr.getvalue()
 
     def run_json_cli(self, *args: str) -> dict[str, object]:
@@ -1311,7 +1312,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
                 sys.executable,
                 "-m",
                 "med_autogrant.cli",
-                "summarize-workspace",
+                "workspace",
+                "summarize",
                 "--input",
                 str(EXAMPLE_PATH),
                 "--format",

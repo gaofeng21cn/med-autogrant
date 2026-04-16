@@ -33,6 +33,7 @@ from med_autogrant.hosted_contract_bundle import (
     _validate_required_final_package_fields,
     build_hosted_contract_bundle_document,
 )
+from med_autogrant.public_cli import public_command_label
 from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.upstream_hermes import HermesGrantRunLedger
@@ -165,7 +166,7 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = (
 )
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
-PRODUCT_ENTRY_BUILD_COMMAND = "build-product-entry"
+PRODUCT_ENTRY_BUILD_COMMAND = public_command_label("build-product-entry")
 SUPPORTED_PRODUCT_ENTRY_MODES = ("direct", "opl-handoff")
 HOSTED_CONTRACT_SCHEMA_FILES = (
     "service-safe-domain-surface.schema.json",

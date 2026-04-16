@@ -98,9 +98,9 @@ The current ideal target keeps `OPL` above the domain line while the grant surfa
 The current landed product-facing surfaces now include:
 
 - `MedAutoGrantDomainEntry` as the service-safe domain entry contract
-- `build-product-entry`, `product-preflight`, `product-start`, `product-entry-manifest`, and `product-frontdesk`
-- `grant-progress`, `grant-cockpit`, `grant-direct-entry`, and `grant-user-loop`
-- `build-submission-ready-package` for local fail-closed submission packaging
+- `product build-entry`, `product preflight`, `product start`, `product manifest`, and `product frontdesk`
+- `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`
+- `package submission-ready` for local fail-closed submission packaging
 - `hosted contract bundle` output for hosted caller / external caller consumption
 - `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts` as the machine-readable handoff catalog
 

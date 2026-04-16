@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from med_autogrant.control_plane import read_current_program_contract
+from med_autogrant.public_cli import public_cli_command
 from med_autogrant.workspace import WorkspaceStateError
 
 
@@ -27,12 +28,12 @@ def _phase_details() -> dict[str, dict[str, Any]]:
             "entry_points": [
                 {
                     "name": "probe_upstream_hermes",
-                    "command": "uv run python -m med_autogrant probe-upstream-hermes --format json",
+                    "command": public_cli_command("probe-upstream-hermes", "--format", "json"),
                     "purpose": "核对真实 upstream Hermes-Agent 依赖、入口与 session substrate 证据。",
                 },
                 {
                     "name": "run_local",
-                    "command": "uv run python -m med_autogrant run-local --input <workspace-path> --format json",
+                    "command": public_cli_command("run-local", "--input", "<workspace-path>", "--format", "json"),
                     "purpose": "走当前 Hermes-backed substrate 的单次本地主循环。",
                 },
             ],
@@ -50,14 +51,23 @@ def _phase_details() -> dict[str, dict[str, Any]]:
             "entry_points": [
                 {
                     "name": "stage_route_report",
-                    "command": "uv run python -m med_autogrant stage-route-report --input <workspace-path> --format json",
+                    "command": public_cli_command(
+                        "stage-route-report", "--input", "<workspace-path>", "--format", "json"
+                    ),
                     "purpose": "查看当前 grant route truth 与推荐 route。",
                 },
                 {
                     "name": "build_product_entry",
-                    "command": (
-                        "uv run python -m med_autogrant build-product-entry "
-                        "--input <workspace-path> --entry-mode direct --task-intent <task-intent> --format json"
+                    "command": public_cli_command(
+                        "build-product-entry",
+                        "--input",
+                        "<workspace-path>",
+                        "--entry-mode",
+                        "direct",
+                        "--task-intent",
+                        "<task-intent>",
+                        "--format",
+                        "json",
                     ),
                     "purpose": "生成 direct / OPL 共用的 lightweight product entry envelope。",
                 },
@@ -77,17 +87,29 @@ def _phase_details() -> dict[str, dict[str, Any]]:
             "entry_points": [
                 {
                     "name": "build_hosted_contract_bundle",
-                    "command": (
-                        "uv run python -m med_autogrant build-hosted-contract-bundle "
-                        "--final-package <final-package-path> --output <hosted-bundle-path> --format json"
+                    "command": public_cli_command(
+                        "build-hosted-contract-bundle",
+                        "--final-package",
+                        "<final-package-path>",
+                        "--output",
+                        "<hosted-bundle-path>",
+                        "--format",
+                        "json",
                     ),
                     "purpose": "构造 hosted-friendly contract bundle 给外部 caller 消费。",
                 },
                 {
                     "name": "build_opl_handoff_entry",
-                    "command": (
-                        "uv run python -m med_autogrant build-product-entry "
-                        "--input <workspace-path> --entry-mode opl-handoff --task-intent <task-intent> --format json"
+                    "command": public_cli_command(
+                        "build-product-entry",
+                        "--input",
+                        "<workspace-path>",
+                        "--entry-mode",
+                        "opl-handoff",
+                        "--task-intent",
+                        "<task-intent>",
+                        "--format",
+                        "json",
                     ),
                     "purpose": "输出 future OPL handoff 可直接消费的 lightweight envelope。",
                 },
@@ -106,27 +128,39 @@ def _phase_details() -> dict[str, dict[str, Any]]:
             "entry_points": [
                 {
                     "name": "mainline_status",
-                    "command": "uv run python -m med_autogrant mainline-status --format json",
+                    "command": public_cli_command("mainline-status", "--format", "json"),
                     "purpose": "先看理想目标、阶段梯子、当前 tranche 与 remaining gaps。",
                 },
                 {
                     "name": "grant_cockpit",
-                    "command": "uv run python -m med_autogrant grant-cockpit --input <workspace-path> --format json",
+                    "command": public_cli_command(
+                        "grant-cockpit", "--input", "<workspace-path>", "--format", "json"
+                    ),
                     "purpose": "看 grant 当前 workspace overview、alerts 与只读 projection。",
                 },
                 {
                     "name": "grant_user_loop",
-                    "command": (
-                        "uv run python -m med_autogrant grant-user-loop "
-                        "--input <workspace-path> --task-intent <task-intent> --format json"
+                    "command": public_cli_command(
+                        "grant-user-loop",
+                        "--input",
+                        "<workspace-path>",
+                        "--task-intent",
+                        "<task-intent>",
+                        "--format",
+                        "json",
                     ),
                     "purpose": "把 mainline snapshot、direct-entry composition 与推荐动作回路收成一处。",
                 },
                 {
                     "name": "build_submission_ready_package",
-                    "command": (
-                        "uv run python -m med_autogrant build-submission-ready-package "
-                        "--input <workspace-path> --output-dir <submission-ready-output-dir> --format json"
+                    "command": public_cli_command(
+                        "build-submission-ready-package",
+                        "--input",
+                        "<workspace-path>",
+                        "--output-dir",
+                        "<submission-ready-output-dir>",
+                        "--format",
+                        "json",
                     ),
                     "purpose": "对已冻结且材料齐备的 workspace 一次性导出本地 submission-ready 交付目录。",
                 },

@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.public_cli import public_cli_argv  # noqa: E402
 
 
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
@@ -27,7 +28,7 @@ class SubmissionReadyPackageCliTest(unittest.TestCase):
         stderr = StringIO()
         with redirect_stdout(stdout), redirect_stderr(stderr):
             try:
-                exit_code = main(list(args))
+                exit_code = main(public_cli_argv(args))
             except SystemExit as exc:
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
