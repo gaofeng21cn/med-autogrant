@@ -139,10 +139,10 @@ def test_core_docs_publish_p4a_direct_product_projection_boundary() -> None:
         CORE_STATUS,
     ):
         text = _read(path)
-        assert "grant-progress" in text
-        assert "grant-cockpit" in text
-        assert "grant-direct-entry" in text or "P4.B" in text
-        assert "grant-user-loop" in text or "P4.C" in text
+        assert "workspace progress" in text
+        assert "workspace cockpit" in text
+        assert "product direct-entry" in text or "P4.B" in text
+        assert "product user-loop" in text or "P4.C" in text
 
     architecture = _read(CORE_ARCHITECTURE)
     assert "controller-owned" in architecture
@@ -432,18 +432,18 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
     architecture = _read(CORE_ARCHITECTURE)
     status = _read(CORE_STATUS)
 
-    assert "build-submission-ready-package" in readme_en
-    assert "build-submission-ready-package" in readme_zh
+    assert "package submission-ready" in readme_en
+    assert "package submission-ready" in readme_zh
     assert "./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md" in docs_readme_en
     assert "./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md" in docs_readme_zh
     assert "submission_ready_package" in architecture
-    assert "build-submission-ready-package" in status
+    assert "package submission-ready" in status
 
     assert "lightweight structured `product entry` shell is now landed" in readme_en
-    assert "`build-product-entry`" in readme_en
+    assert "`product build-entry`" in readme_en
     assert "richer grant-facing product experience still remains future work" in readme_en
     assert "轻量结构化 `product entry` shell 已经落地" in readme_zh
-    assert "`build-product-entry`" in readme_zh
+    assert "`product build-entry`" in readme_zh
     assert "更完整的 grant-facing 产品体验仍要继续补" in readme_zh
 
     assert "lightweight grant `product entry` shell" in docs_readme_en
@@ -456,13 +456,13 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
     assert "./references/lightweight_product_entry_and_opl_handoff.md" in docs_readme_zh
 
     assert "User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry" in architecture
-    assert "build-product-entry" in architecture
+    assert "product build-entry" in architecture
     assert "workspace_id" in architecture
     assert "draft_id" in architecture
     assert "funding_call" in architecture
     assert "schema-backed contract" in architecture
     assert "OPL -> Med Auto Grant" in status
-    assert "build-product-entry" in status
+    assert "product build-entry" in status
     assert "schema-backed" in status
 
     assert "target_domain_id" in reference_text
@@ -475,7 +475,7 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
     assert "draft_id" in reference_text
     assert "funding_call" in reference_text
     assert "runtime substrate 已经真正落在上游 `Hermes-Agent` 上" in reference_text
-    assert "build-product-entry" in reference_text
+    assert "product build-entry" in reference_text
 
 
 @pytest.mark.meta

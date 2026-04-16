@@ -8,6 +8,14 @@ from typing import Any
 from med_autogrant import mainline_status
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.product_entry import MedAutoGrantProductEntry
+from med_autogrant.public_cli import (
+    INTERNAL_TO_PUBLIC_COMMAND,
+    PUBLIC_COMMAND_GROUP_SUMMARIES,
+    PUBLIC_COMMAND_ORDER,
+    PUBLIC_GROUP_COMMANDS,
+    PUBLIC_TO_INTERNAL_COMMAND,
+    public_command_label,
+)
 from med_autogrant.workspace import (
     WorkspaceError,
     WorkspaceStateError,
@@ -214,13 +222,79 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND)
+
+
+def _print_public_help() -> None:
+    lines = [
+        "Usage: medautogrant <group> <command> [options]",
+        "",
+        "Public command groups:",
+    ]
+    for group in PUBLIC_COMMAND_ORDER:
+        lines.append(f"  {group:<10}{PUBLIC_COMMAND_GROUP_SUMMARIES[group]}")
+    lines.extend(
+        [
+            "",
+            "Examples:",
+            "  medautogrant workspace validate --input <workspace-path> --format json",
+            "  medautogrant product build-entry --input <workspace-path> --entry-mode direct --task-intent <task-intent> --format json",
+            "  medautogrant runtime probe-hermes --format json",
+            "",
+            "Use `medautogrant <group>` to inspect the available commands in that group.",
+        ]
+    )
+    print("\n".join(lines))
+
+
+def _print_public_group_help(group: str) -> None:
+    summary = PUBLIC_COMMAND_GROUP_SUMMARIES[group]
+    lines = [
+        f"Usage: medautogrant {group} <command> [options]",
+        "",
+        summary,
+        "",
+        "Commands:",
+    ]
+    for subcommand in PUBLIC_GROUP_COMMANDS[group]:
+        lines.append(f"  {subcommand}")
+    print("\n".join(lines))
+
+
+def _maybe_handle_public_help(argv: list[str]) -> int | None:
+    if not argv or argv[0] in {"-h", "--help", "help"}:
+        _print_public_help()
+        return 0
+    group = argv[0]
+    if group in PUBLIC_GROUP_COMMANDS and (len(argv) == 1 or argv[1] in {"-h", "--help", "help"}):
+        _print_public_group_help(group)
+        return 0
+    return None
+
+
+def _normalize_public_command_argv(argv: list[str]) -> list[str]:
+    if not argv:
+        return argv
+    if argv[0] in LEGACY_PUBLIC_COMMANDS:
+        raise SystemExit(
+            f"Legacy flat command `{argv[0]}` has been removed. Use `{public_command_label(argv[0])}` instead."
+        )
+    if len(argv) >= 2 and (argv[0], argv[1]) in PUBLIC_TO_INTERNAL_COMMAND:
+        return [PUBLIC_TO_INTERNAL_COMMAND[(argv[0], argv[1])], *argv[2:]]
+    return argv
+
+
 def entrypoint() -> None:
     raise SystemExit(main())
 
 
 def main(argv: list[str] | None = None) -> int:
+    resolved_argv = list(argv) if argv is not None else sys.argv[1:]
+    help_result = _maybe_handle_public_help(resolved_argv)
+    if help_result is not None:
+        return help_result
     parser = build_parser()
-    args = parser.parse_args(argv)
+    args = parser.parse_args(_normalize_public_command_argv(resolved_argv))
     try:
         payload = args.handler(args)
     except WorkspaceError as exc:

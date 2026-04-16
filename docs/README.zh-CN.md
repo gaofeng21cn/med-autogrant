@@ -24,7 +24,8 @@
 - 当前产品相关 shell、projection 与本地 `submission-ready` package 已落地，但成熟 hosted 基金前台仍是后续工作。
 - 顶层 federation admission / handoff wording 仍在 `OPL` 单独门控。
 - 当前 formal-entry matrix 仍是 `CLI`、`MCP` 与 `controller`。
-- 当前 controller-owned、read-only 的 projection 继续包括 `grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop`，并在作者侧主线之上保持 schema-backed 边界。
+- 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`，并在作者侧主线之上保持 schema-backed 边界。
+- 当前 grouped public shell 也已经把 `product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready` 暴露成公开 CLI 入口面。
 - 当前轻量 grant `product entry` shell 就是现在的产品入口 shell，更完整的 hosted 产品形态仍属后续工作。
 
 ## 技术工作集

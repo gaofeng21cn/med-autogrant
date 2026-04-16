@@ -222,7 +222,7 @@
           "const": "service-safe-domain-entry-command"
         },
         "product_entry_builder_command": {
-          "const": "build-product-entry"
+          "const": "product build-entry"
         },
         "product_entry_kind": {
           "const": "med_auto_grant_product_entry"

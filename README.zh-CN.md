@@ -98,9 +98,9 @@ repo-tracked truth 里也继续显式保留真实上游 `Hermes-Agent` runtime s
 当前已 landed 的产品相关表面主要包括：
 
 - 作为 service-safe domain entry contract 的 `MedAutoGrantDomainEntry`
-- `build-product-entry`、`product-preflight`、`product-start`、`product-entry-manifest`、`product-frontdesk`
-- `grant-progress`、`grant-cockpit`、`grant-direct-entry`、`grant-user-loop`
-- 用于本地 fail-closed submission packaging 的 `build-submission-ready-package`
+- `product build-entry`、`product preflight`、`product start`、`product manifest`、`product frontdesk`
+- `workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`
+- 用于本地 fail-closed submission packaging 的 `package submission-ready`
 - 面向 hosted caller / 外部 caller 的 `hosted contract bundle`
 - 机器可读的 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`
 

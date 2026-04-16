@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.public_cli import public_cli_argv, public_cli_command, public_command_label  # noqa: E402
 from med_autogrant.control_plane import read_program_id, resolve_runtime_state_root  # noqa: E402
 from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
 
@@ -209,6 +210,8 @@ PENDING_ROUTE_REQUIREMENTS = {
         ],
     },
 }
+
+PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND = public_command_label("build-product-entry")
 SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "probe-upstream-hermes",
     "validate-workspace",
@@ -431,7 +434,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
         stderr = StringIO()
         with redirect_stdout(stdout), redirect_stderr(stderr):
             try:
-                exit_code = main(list(args))
+                exit_code = main(public_cli_argv(args))
             except SystemExit as exc:
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
@@ -717,7 +720,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             {
                 "entry_adapter": "MedAutoGrantDomainEntry",
                 "service_safe_surface_kind": "service-safe-domain-entry-command",
-                "product_entry_builder_command": "build-product-entry",
+                "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
                 "product_entry_kind": "med_auto_grant_product_entry",
                 "supported_entry_modes": [
                     "direct",
@@ -933,7 +936,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                     "critique_verdict": "major_revision",
                 },
                 "product_entry_surface": {
-                    "builder_command": "build-product-entry",
+                    "builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
                     "target_domain_id": "med-autogrant",
                     "supported_entry_modes": ["direct", "opl-handoff"],
                     "task_intent_required": True,
@@ -973,7 +976,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                     "critique_verdict": "ready_for_submission",
                 },
                 "product_entry_surface": {
-                    "builder_command": "build-product-entry",
+                    "builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
                     "target_domain_id": "med-autogrant",
                     "supported_entry_modes": ["direct", "opl-handoff"],
                     "task_intent_required": True,
@@ -1020,13 +1023,49 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(
             payload["grant_cockpit"]["commands"],
             {
-                "grant_progress": f"uv run python -m med_autogrant grant-progress --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
-                "summarize_workspace": f"uv run python -m med_autogrant summarize-workspace --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
-                "stage_route_report": f"uv run python -m med_autogrant stage-route-report --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
-                "critique_summary": f"uv run python -m med_autogrant critique-summary --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
-                "build_direct_entry": f"uv run python -m med_autogrant build-product-entry --input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode direct --task-intent <describe-task-intent> --format json",
-                "build_opl_handoff": f"uv run python -m med_autogrant build-product-entry --input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
-                "build_submission_ready_package": f"uv run python -m med_autogrant build-submission-ready-package --input {CRITIQUE_EXAMPLE_PATH.resolve()} --output-dir <submission-ready-output-dir> --format json",
+                "grant_progress": public_cli_command(
+                    "grant-progress", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                ),
+                "summarize_workspace": public_cli_command(
+                    "summarize-workspace", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                ),
+                "stage_route_report": public_cli_command(
+                    "stage-route-report", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                ),
+                "critique_summary": public_cli_command(
+                    "critique-summary", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                ),
+                "build_direct_entry": public_cli_command(
+                    "build-product-entry",
+                    "--input",
+                    str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                    "--entry-mode",
+                    "direct",
+                    "--task-intent",
+                    "<describe-task-intent>",
+                    "--format",
+                    "json",
+                ),
+                "build_opl_handoff": public_cli_command(
+                    "build-product-entry",
+                    "--input",
+                    str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                    "--entry-mode",
+                    "opl-handoff",
+                    "--task-intent",
+                    "<describe-task-intent>",
+                    "--format",
+                    "json",
+                ),
+                "build_submission_ready_package": public_cli_command(
+                    "build-submission-ready-package",
+                    "--input",
+                    str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                    "--output-dir",
+                    "<submission-ready-output-dir>",
+                    "--format",
+                    "json",
+                ),
             },
         )
 
@@ -1088,7 +1127,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "critique_verdict": "major_revision",
                     },
                     "product_entry_surface": {
-                        "builder_command": "build-product-entry",
+                        "builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
                         "target_domain_id": "med-autogrant",
                         "supported_entry_modes": ["direct", "opl-handoff"],
                         "task_intent_required": True,
@@ -1137,7 +1176,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "domain_entry_contract": {
                             "entry_adapter": "MedAutoGrantDomainEntry",
                             "service_safe_surface_kind": "service-safe-domain-entry-command",
-                            "product_entry_builder_command": "build-product-entry",
+                            "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
                             "product_entry_kind": "med_auto_grant_product_entry",
                             "supported_entry_modes": ["direct", "opl-handoff"],
                             "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
@@ -1216,7 +1255,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "domain_entry_contract": {
                             "entry_adapter": "MedAutoGrantDomainEntry",
                             "service_safe_surface_kind": "service-safe-domain-entry-command",
-                            "product_entry_builder_command": "build-product-entry",
+                            "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
                             "product_entry_kind": "med_auto_grant_product_entry",
                             "supported_entry_modes": ["direct", "opl-handoff"],
                             "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
@@ -1313,7 +1352,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "domain_entry_contract": {
                                 "entry_adapter": "MedAutoGrantDomainEntry",
                                 "service_safe_surface_kind": "service-safe-domain-entry-command",
-                                "product_entry_builder_command": "build-product-entry",
+                                "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
                                 "product_entry_kind": "med_auto_grant_product_entry",
                                 "supported_entry_modes": ["direct", "opl-handoff"],
                                 "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
@@ -1402,7 +1441,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "domain_entry_contract": {
                                 "entry_adapter": "MedAutoGrantDomainEntry",
                                 "service_safe_surface_kind": "service-safe-domain-entry-command",
-                                "product_entry_builder_command": "build-product-entry",
+                                "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
                                 "product_entry_kind": "med_auto_grant_product_entry",
                                 "supported_entry_modes": ["direct", "opl-handoff"],
                                 "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
@@ -1482,34 +1521,49 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             payload["grant_user_loop"]["next_action"]["command"],
-            (
-                "uv run python -m med_autogrant execute-revision-pass "
-                f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} "
-                "--output "
-                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id='draft-v1', file_name='revision-workspace.json')} "
-                "--format json"
+            public_cli_command(
+                "execute-revision-pass",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--output",
+                str(
+                    _expected_runtime_output_path(
+                        grant_run_id="grant-run-nsfc-demo-001-baseline-001",
+                        workspace_id="nsfc-demo-001",
+                        draft_id="draft-v1",
+                        file_name="revision-workspace.json",
+                    )
+                ),
+                "--format",
+                "json",
             ),
         )
         self.assertNotIn("<", payload["grant_user_loop"]["next_action"]["command"])
         self.assertIsNone(payload["grant_user_loop"]["next_action"]["handoff_surfaces"])
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["mainline_status"],
-            "uv run python -m med_autogrant mainline-status --format json",
+            public_cli_command("mainline-status", "--format", "json"),
         )
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["phase_status_current"],
-            "uv run python -m med_autogrant mainline-phase --phase current --format json",
+            public_cli_command("mainline-phase", "--phase", "current", "--format", "json"),
         )
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["open_grant_cockpit"],
-            f"uv run python -m med_autogrant grant-cockpit --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "grant-cockpit", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["open_grant_direct_entry"],
-            (
-                "uv run python -m med_autogrant grant-direct-entry "
-                f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} "
-                "--task-intent tighten-grant-mainline --format json"
+            public_cli_command(
+                "grant-direct-entry",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "tighten-grant-mainline",
+                "--format",
+                "json",
             ),
         )
 
@@ -1535,13 +1589,22 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(manifest["recommended_shell"], "grant_user_loop")
         self.assertEqual(
             manifest["recommended_command"],
-            "uv run python -m med_autogrant grant-user-loop "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         self.assertEqual(manifest["frontdesk_surface"]["shell_key"], "product_frontdesk")
         self.assertEqual(
             manifest["frontdesk_surface"]["command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(manifest["frontdesk_surface"]["surface_kind"], "product_frontdesk")
         self.assertIn("direct grant product frontdesk", manifest["frontdesk_surface"]["summary"])
@@ -1584,26 +1647,55 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             manifest["product_entry_shell"]["grant_progress"]["command"],
-            f"uv run python -m med_autogrant grant-progress --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "grant-progress", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(
             manifest["product_entry_shell"]["grant_user_loop"]["command"],
-            "uv run python -m med_autogrant grant-user-loop "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         self.assertEqual(
             manifest["product_entry_shell"]["product_frontdesk"]["command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(
             manifest["shared_handoff"]["direct_entry_builder"]["command"],
-            "uv run python -m med_autogrant build-product-entry "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode direct --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "build-product-entry",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--entry-mode",
+                "direct",
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         self.assertEqual(
             manifest["shared_handoff"]["opl_handoff_builder"]["command"],
-            "uv run python -m med_autogrant build-product-entry "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode opl-handoff --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "build-product-entry",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--entry-mode",
+                "opl-handoff",
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         _assert_family_orchestration_companion(
             self,
@@ -1636,7 +1728,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             manifest["product_entry_quickstart"]["steps"][0]["command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(
             manifest["product_entry_quickstart"]["steps"][1]["requires"],
@@ -1663,7 +1757,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             product_start["modes"][0]["command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(product_start["modes"][1]["requires"], ["task_intent"])
         self.assertEqual(product_start["modes"][2]["surface_kind"], "grant_direct_entry")
@@ -1679,20 +1775,28 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             manifest["product_entry_overview"]["frontdesk_command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(
             manifest["product_entry_overview"]["recommended_command"],
-            "uv run python -m med_autogrant grant-user-loop "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         self.assertEqual(
             manifest["product_entry_overview"]["progress_surface"],
             {
                 "surface_kind": "grant_progress",
-                "command": (
-                    "uv run python -m med_autogrant grant-progress "
-                    f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json"
+                "command": public_cli_command(
+                    "grant-progress", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
                 ),
                 "step_id": "inspect_progress",
             },
@@ -1701,9 +1805,14 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["product_entry_overview"]["resume_surface"],
             {
                 "surface_kind": "grant_user_loop",
-                "command": (
-                    "uv run python -m med_autogrant grant-user-loop "
-                    f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json"
+                "command": public_cli_command(
+                    "grant-user-loop",
+                    "--input",
+                    str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                    "--task-intent",
+                    "<describe-task-intent>",
+                    "--format",
+                    "json",
                 ),
                 "session_locator_field": "grant_run_id",
                 "checkpoint_locator_field": "lifecycle_stage",
@@ -1731,11 +1840,15 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertTrue(preflight["ready_to_try_now"])
         self.assertEqual(
             preflight["recommended_check_command"],
-            f"uv run python -m med_autogrant validate-workspace --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "validate-workspace", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(
             preflight["recommended_start_command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(preflight["blocking_check_ids"], [])
         self.assertEqual(
@@ -1761,13 +1874,22 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(product_readiness["recommended_start_surface"], "product_frontdesk")
         self.assertEqual(
             product_readiness["recommended_start_command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(product_readiness["recommended_loop_surface"], "grant_user_loop")
         self.assertEqual(
             product_readiness["recommended_loop_command"],
-            "uv run python -m med_autogrant grant-user-loop "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         self.assertIn("还不是 mature direct grant Web UI / hosted runtime。", product_readiness["blocking_gaps"])
         readiness = manifest["grant_authoring_readiness"]
@@ -1779,7 +1901,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(readiness["recommended_start_surface"], "product_frontdesk")
         self.assertEqual(
             readiness["recommended_start_command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(readiness["recommended_loop_surface"], "grant_user_loop")
         self.assertEqual(
@@ -1866,12 +1990,21 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["grant_user_loop"]["next_action"]["route_status"], "landed")
         self.assertEqual(
             payload["grant_user_loop"]["next_action"]["command"],
-            (
-                "uv run python -m med_autogrant execute-critique-pass "
-                f"--input {DRAFTING_EXAMPLE_PATH.resolve()} "
-                "--output "
-                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id='draft-v1', file_name='critique-workspace.json')} "
-                "--format json"
+            public_cli_command(
+                "execute-critique-pass",
+                "--input",
+                str(DRAFTING_EXAMPLE_PATH.resolve()),
+                "--output",
+                str(
+                    _expected_runtime_output_path(
+                        grant_run_id="grant-run-nsfc-demo-001-baseline-001",
+                        workspace_id="nsfc-demo-001",
+                        draft_id="draft-v1",
+                        file_name="critique-workspace.json",
+                    )
+                ),
+                "--format",
+                "json",
             ),
         )
         self.assertNotIn("<", payload["grant_user_loop"]["next_action"]["command"])
@@ -1881,20 +2014,33 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["run_recommended_route"],
-            (
-                "uv run python -m med_autogrant execute-critique-pass "
-                f"--input {DRAFTING_EXAMPLE_PATH.resolve()} "
-                "--output "
-                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id='draft-v1', file_name='critique-workspace.json')} "
-                "--format json"
+            public_cli_command(
+                "execute-critique-pass",
+                "--input",
+                str(DRAFTING_EXAMPLE_PATH.resolve()),
+                "--output",
+                str(
+                    _expected_runtime_output_path(
+                        grant_run_id="grant-run-nsfc-demo-001-baseline-001",
+                        workspace_id="nsfc-demo-001",
+                        draft_id="draft-v1",
+                        file_name="critique-workspace.json",
+                    )
+                ),
+                "--format",
+                "json",
             ),
         )
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["open_grant_direct_entry"],
-            (
-                "uv run python -m med_autogrant grant-direct-entry "
-                f"--input {DRAFTING_EXAMPLE_PATH.resolve()} "
-                "--task-intent prepare-critique-handoff --format json"
+            public_cli_command(
+                "grant-direct-entry",
+                "--input",
+                str(DRAFTING_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "prepare-critique-handoff",
+                "--format",
+                "json",
             ),
         )
 
@@ -1920,23 +2066,41 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["grant_user_loop"]["next_action"]["route_status"], "landed")
         self.assertEqual(
             payload["grant_user_loop"]["next_action"]["command"],
-            (
-                "uv run python -m med_autogrant execute-question-refinement-pass "
-                f"--input {DIRECTION_EXAMPLE_PATH.resolve()} "
-                "--output "
-                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id=None, file_name='question-refinement-workspace.json')} "
-                "--format json"
+            public_cli_command(
+                "execute-question-refinement-pass",
+                "--input",
+                str(DIRECTION_EXAMPLE_PATH.resolve()),
+                "--output",
+                str(
+                    _expected_runtime_output_path(
+                        grant_run_id="grant-run-nsfc-demo-001-baseline-001",
+                        workspace_id="nsfc-demo-001",
+                        draft_id=None,
+                        file_name="question-refinement-workspace.json",
+                    )
+                ),
+                "--format",
+                "json",
             ),
         )
         self.assertNotIn("<", payload["grant_user_loop"]["next_action"]["command"])
         self.assertEqual(
             payload["grant_user_loop"]["user_loop"]["run_recommended_route"],
-            (
-                "uv run python -m med_autogrant execute-question-refinement-pass "
-                f"--input {DIRECTION_EXAMPLE_PATH.resolve()} "
-                "--output "
-                f"{_expected_runtime_output_path(grant_run_id='grant-run-nsfc-demo-001-baseline-001', workspace_id='nsfc-demo-001', draft_id=None, file_name='question-refinement-workspace.json')} "
-                "--format json"
+            public_cli_command(
+                "execute-question-refinement-pass",
+                "--input",
+                str(DIRECTION_EXAMPLE_PATH.resolve()),
+                "--output",
+                str(
+                    _expected_runtime_output_path(
+                        grant_run_id="grant-run-nsfc-demo-001-baseline-001",
+                        workspace_id="nsfc-demo-001",
+                        draft_id=None,
+                        file_name="question-refinement-workspace.json",
+                    )
+                ),
+                "--format",
+                "json",
             ),
         )
 
@@ -1956,31 +2120,60 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(frontdesk["frontdesk_surface"]["shell_key"], "product_frontdesk")
         self.assertEqual(
             frontdesk["frontdesk_surface"]["command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(frontdesk["operator_loop_surface"]["shell_key"], "grant_user_loop")
         self.assertEqual(
             frontdesk["entry_surfaces"]["frontdesk"]["command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(
             frontdesk["entry_surfaces"]["grant_user_loop"]["command"],
-            "uv run python -m med_autogrant grant-user-loop "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         self.assertEqual(
             frontdesk["entry_surfaces"]["direct_entry_builder"]["command"],
-            "uv run python -m med_autogrant build-product-entry "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --entry-mode direct --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "build-product-entry",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--entry-mode",
+                "direct",
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         self.assertEqual(
             frontdesk["summary"]["frontdesk_command"],
-            f"uv run python -m med_autogrant product-frontdesk --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(
             frontdesk["summary"]["operator_loop_command"],
-            "uv run python -m med_autogrant grant-user-loop "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         _assert_family_orchestration_companion(
             self,
@@ -2003,14 +2196,23 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             frontdesk["product_entry_overview"]["resume_surface"]["command"],
-            "uv run python -m med_autogrant grant-user-loop "
-            f"--input {CRITIQUE_EXAMPLE_PATH.resolve()} --task-intent <describe-task-intent> --format json",
+            public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "<describe-task-intent>",
+                "--format",
+                "json",
+            ),
         )
         self.assertEqual(frontdesk["product_entry_preflight"]["surface_kind"], "product_entry_preflight")
         self.assertTrue(frontdesk["product_entry_preflight"]["ready_to_try_now"])
         self.assertEqual(
             frontdesk["product_entry_preflight"]["recommended_check_command"],
-            f"uv run python -m med_autogrant validate-workspace --input {CRITIQUE_EXAMPLE_PATH.resolve()} --format json",
+            public_cli_command(
+                "validate-workspace", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+            ),
         )
         self.assertEqual(
             frontdesk["product_entry_preflight"],
@@ -2080,7 +2282,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             )
         )
         manifest_payload["product_entry_manifest"]["operator_loop_actions"]["open_loop"] = {
-            "command": "uv run python -m med_autogrant grant-user-loop --format json",
+            "command": public_cli_command("grant-user-loop", "--format", "json"),
         }
 
         with patch.object(
@@ -2125,7 +2327,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         with patch(
             "med_autogrant.product_entry._build_product_command_catalog",
             return_value={
-                "grant_progress": "uv run python -m med_autogrant grant-progress --format json",
+                "grant_progress": public_cli_command("grant-progress", "--format", "json"),
             },
         ):
             with self.assertRaisesRegex(WorkspaceStateError, "grant_cockpit"):

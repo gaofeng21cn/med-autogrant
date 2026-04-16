@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.public_cli import public_cli_argv  # noqa: E402
 from med_autogrant.route_report import build_stage_route_report  # noqa: E402
 from med_autogrant.workspace import validate_workspace_document  # noqa: E402
 
@@ -33,7 +34,7 @@ class RevisionExecutorCliTest(unittest.TestCase):
         stderr = StringIO()
         with redirect_stdout(stdout), redirect_stderr(stderr):
             try:
-                exit_code = main(list(args))
+                exit_code = main(public_cli_argv(args))
             except SystemExit as exc:
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
