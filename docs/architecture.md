@@ -63,7 +63,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL` 写成 runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是上游 `Hermes-Agent` 作为 runtime substrate owner，MAG 聚焦 family-level contract-first 对齐与 domain-owned truth 维持。
 
-## Hermes substrate 与 grant executor 的分工
+## Hermes-Agent、Med Auto Grant 与 concrete executor 的分工
 
 在当前架构里，`Hermes-Agent` 已经承担：
 
@@ -77,10 +77,17 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - author-side object model 与 identity guard
 - stage routing、artifact assembly 与 hosted handoff contract
 
+当前 route-selected concrete executor 继续承担：
+
+- 具体 authoring pass 的执行
+- 由 route / executor adapter 选中的单步运行时
+- 当前默认 `Codex CLI autonomous executor`，以及 opt-in `hermes_native_proof`
+
 因此，这里真实成立的是：
 
 - runtime substrate owner 已切到上游 `Hermes-Agent`
-- repo-side `domain logic + executor adapter` 仍然负责 grant authoring 流程
+- domain governance / truth owner 仍是 `Med Auto Grant`
+- concrete executor owner 仍按 route 单独选择，当前默认是 `Codex CLI`
 
 这不等于“所有单步 authoring 都已经迁成 Hermes-native executor”。
 如果未来某条 critique / revision / export route 要替换执行器，也必须按 route 单独冻结 truth 与 proof，而不是因为 substrate 已统一就自动把 authoring semantics 一起改掉。

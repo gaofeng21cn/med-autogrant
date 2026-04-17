@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-04-17：冻结托管运行时三层 owner contract
+
+- 决策：把当前主线统一明确成三层 owner：`Hermes-Agent` 只持有长期运行与托管能力，`Med Auto Grant` 只持有 grant-domain governance / progress / review / package gate truth，而 route-selected executor 只持有具体 authoring execution。
+- 理由：如果只写成“上游 Hermes substrate + repo-side domain logic”，仍然容易把 domain supervision 和具体 executor 混成一层，后续跨仓对齐时也会反复漂移。
+- 影响：文档、spec 与入口 wording 都必须显式区分 runtime owner、domain owner 与 executor owner；这轮只冻结 contract / 文档 / 入口同构，不宣称跨仓共享代码模块已抽离完成。
+
 ## 2026-04-13：把本地 submission-ready 交付导出收口成正式 command surface
 
 - 决策：新增 `build-submission-ready-package`，把 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链再向前收口成一个正式的本地交付命令，并新增 `submission-ready-package.schema.json` 作为独立的 repo-tracked contract。

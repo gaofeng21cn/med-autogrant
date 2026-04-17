@@ -18,6 +18,7 @@
 
 - `Med Auto Grant` 是当前活跃的医学 `Grant Ops` 申请人侧业务仓主线。
 - 当前可执行 runtime 主线是 `CLI-first + real upstream Hermes-Agent runtime substrate`。
+- 当前 owner 分工已经按三层 contract 冻结：`Hermes-Agent` 持有长期托管与 managed-runtime owner，`Med Auto Grant` 持有 grant-domain governance / truth，route-selected executor 持有具体 authoring execution。
 - repo-tracked truth 里也继续显式保留 real upstream `Hermes-Agent` runtime substrate 这句主线表述。
 - 遗留 repo-local helper 现在只保留为 compatibility bridge 与 regression oracle。
 - 仓内 repo-local adapter 保留的是 grant-domain truth 和入口语义，不是 runtime substrate owner。
@@ -39,6 +40,8 @@
 - [决策记录](./decisions.md)
 - [合同说明](../contracts/README.md)
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
+
+机器本地 runtime state 继续统一放在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 
 ## 默认公开入口
 
@@ -74,6 +77,7 @@
 ### 内部参考说明
 
 - [轻量产品入口与 OPL Handoff](./references/lightweight_product_entry_and_opl_handoff.md)
+- [OPL 托管运行时三层合同](./references/opl_managed_runtime_three_layer_contract.md)
 - [系列项目文档治理清单](./references/series-doc-governance-checklist.md)
 
 ### Plans 与历史

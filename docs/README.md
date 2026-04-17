@@ -18,6 +18,7 @@ This guide is for readers who need the repo-tracked contracts, current-truth spe
 
 - `Med Auto Grant` is the active medical `Grant Ops` repository line on the applicant side.
 - The current executable runtime line is `CLI-first + real upstream Hermes-Agent runtime substrate`.
+- The current owner split is a three-layer contract: `Hermes-Agent` owns long-running managed-runtime hosting, `Med Auto Grant` owns grant-domain governance/truth, and route-selected executors own concrete authoring execution.
 - Repo-tracked truth also keeps the phrase real upstream `Hermes-Agent` runtime substrate explicit for this line.
 - Legacy repo-local helpers survive only as a compatibility bridge and regression oracle.
 - Repo-local adapters preserve grant-domain truth and entry semantics, but they are not the runtime substrate owner.
@@ -39,6 +40,8 @@ Read these first before changing repo state:
 - [Decisions](./decisions.md)
 - [Contracts Overview](../contracts/README.md)
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
+
+Machine-local runtime state stays under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 
 ## Default Public Surface
 
@@ -74,6 +77,7 @@ The lightweight grant `product entry` shell is the current Product-entry shell, 
 ### Internal references
 
 - [Lightweight product entry and OPL handoff](./references/lightweight_product_entry_and_opl_handoff.md)
+- [OPL managed runtime three-layer contract](./references/opl_managed_runtime_three_layer_contract.md)
 - [Series doc governance checklist](./references/series-doc-governance-checklist.md)
 
 ### Plans and history

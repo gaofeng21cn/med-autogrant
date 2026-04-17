@@ -84,6 +84,8 @@ In plain language:
 
 The current executable mainline is `CLI-first + real upstream Hermes-Agent runtime substrate`.
 The repo-tracked truth set also keeps the phrase real upstream `Hermes-Agent` runtime substrate explicit for this mainline.
+The repo-tracked current-program pointer remains `contracts/runtime-program/current-program.json`.
+Machine-local runtime state remains under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 Legacy repo-local runtime helpers now survive only as a compatibility bridge and regression oracle rather than the substrate owner.
 Repo-local adapters such as `hermes_runtime.py` and `domain_entry.py` preserve domain semantics, but they are not the runtime substrate owner.
 

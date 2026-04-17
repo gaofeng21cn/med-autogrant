@@ -4,15 +4,15 @@ Date: `2026-04-11`
 
 ## Goal
 
-把当前 runtime 主线中哪些能力迁入 `Hermes substrate`、哪些继续保留在 `Grant domain logic`、以及 revision / final package / hosted contract bundle 如何挂到新 runtime 上，冻结成可执行 current truth。
+把当前 runtime 主线中哪些能力归 `Hermes-Agent`、哪些继续保留在 `Med Auto Grant` domain supervision、以及哪些由 route-selected executor 承担，冻结成可执行 current truth。
 
 当前 repo-tracked current-program pointer 固定为 `contracts/runtime-program/current-program.json`；机器本地 runtime state 固定下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 
 ## Capability Split
 
-### A. Hermes substrate owner
+### A. Hermes-Agent runtime owner
 
-下面这些能力当前迁入 `Hermes substrate`：
+下面这些能力当前由 `Hermes-Agent` 持有：
 
 - `validate-workspace` dispatch
 - `summarize-workspace` dispatch
@@ -24,9 +24,9 @@ Date: `2026-04-11`
 - revision / artifact / final / hosted export execution dispatch
 - runtime input loading、output-path handoff、fail-closed orchestration
 
-### B. Grant domain logic
+### B. Med Auto Grant domain supervision owner
 
-下面这些能力继续保留在 `Grant domain logic`：
+下面这些能力继续保留在 `Med Auto Grant` domain supervision：
 
 - `validate_workspace_document`
 - `summarize_workspace_document`
@@ -38,13 +38,22 @@ Date: `2026-04-11`
 - `build_final_package_document`
 - `build_hosted_contract_bundle_document`
 
+### C. Route-selected concrete executor
+
+下面这些能力继续由 route-selected concrete executor 承担：
+
+- 单步 authoring pass 的具体执行
+- 默认 `Codex CLI autonomous executor`
+- 显式 opt-in 的 `Hermes-native` proof lane
+
 换句话说：
 
-- Hermes 负责 runtime path owner；
-- MedAutoGrant 继续拥有 author-side semantics。
+- `Hermes-Agent` 负责 runtime path owner；
+- `Med Auto Grant` 继续拥有 author-side semantics 与 supervision truth；
+- concrete executor 只负责把被放行的 authoring route 跑出来。
 - `build_revision_execution_payload / build_artifact_bundle_payload / build_final_package_payload / build_hosted_contract_bundle_payload` 仅保留为 compatibility bridge / regression oracle wrapper，不再拥有产品 runtime path。
 
-### C. migration baseline / bridge / oracle
+### D. migration baseline / bridge / oracle
 
 下面这些内容只保留为 migration baseline、compatibility bridge、regression oracle：
 

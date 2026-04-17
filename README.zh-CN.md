@@ -84,6 +84,8 @@ User / Agent
 
 当前可执行主线是 `CLI-first + real upstream Hermes-Agent runtime substrate`。
 repo-tracked truth 里也继续显式保留真实上游 `Hermes-Agent` runtime substrate 这句主线表述。
+repo-tracked 的 current-program 指针继续固定为 `contracts/runtime-program/current-program.json`。
+机器本地 runtime state 继续统一放在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 遗留的 repo-local runtime helper 现在只保留为 compatibility bridge 与 regression oracle，而不是 substrate owner。
 仓内 `hermes_runtime.py`、`domain_entry.py` 这一类 repo-local adapter 保留的是 domain 语义，不是 runtime substrate owner。
 
