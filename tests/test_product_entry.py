@@ -1608,6 +1608,32 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(manifest["frontdesk_surface"]["surface_kind"], "product_frontdesk")
         self.assertIn("direct grant product frontdesk", manifest["frontdesk_surface"]["summary"])
+        self.assertEqual(
+            manifest["managed_runtime_contract"],
+            {
+                "shared_contract_ref": "contracts/opl-gateway/managed-runtime-three-layer-contract.json",
+                "runtime_owner": "upstream_hermes_agent",
+                "domain_owner": "med-autogrant",
+                "executor_owner": "med-autogrant",
+                "supervision_status_surface": {
+                    "surface_kind": "grant_progress",
+                    "owner": "med-autogrant",
+                },
+                "attention_queue_surface": {
+                    "surface_kind": "grant_user_loop",
+                    "owner": "med-autogrant",
+                },
+                "recovery_contract_surface": {
+                    "surface_kind": "grant_user_loop",
+                    "owner": "med-autogrant",
+                },
+                "fail_closed_rules": [
+                    "domain_supervision_cannot_bypass_runtime",
+                    "executor_cannot_declare_global_gate_clear",
+                    "runtime_cannot_invent_domain_publishability_truth",
+                ],
+            },
+        )
         self.assertEqual(manifest["operator_loop_surface"]["shell_key"], "grant_user_loop")
         self.assertEqual(manifest["operator_loop_surface"]["command"], manifest["recommended_command"])
         self.assertEqual(manifest["operator_loop_surface"]["surface_kind"], "grant_user_loop")

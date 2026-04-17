@@ -144,6 +144,7 @@ class SchemaRegistryTest(unittest.TestCase):
     def test_frontdoor_surface_schemas_require_quickstart_companion(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         manifest_required = manifest_schema["$defs"]["productEntryManifest"]["required"]
+        self.assertIn("managed_runtime_contract", manifest_required)
         self.assertIn("family_orchestration", manifest_required)
         self.assertIn("product_entry_start", manifest_required)
         self.assertIn("product_entry_overview", manifest_required)
@@ -161,6 +162,30 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("product_entry_readiness", frontdesk_required)
         self.assertIn("grant_authoring_readiness", frontdesk_required)
         self.assertIn("product_entry_quickstart", frontdesk_required)
+
+    def test_frontdoor_surface_schemas_pin_managed_runtime_contract_shape(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        managed_runtime = manifest_schema["$defs"]["managedRuntimeContractSurface"]
+        self.assertEqual(
+            managed_runtime["required"],
+            [
+                "shared_contract_ref",
+                "runtime_owner",
+                "domain_owner",
+                "executor_owner",
+                "supervision_status_surface",
+                "attention_queue_surface",
+                "recovery_contract_surface",
+                "fail_closed_rules",
+            ],
+        )
+        self.assertEqual(
+            managed_runtime["properties"]["shared_contract_ref"]["const"],
+            "contracts/opl-gateway/managed-runtime-three-layer-contract.json",
+        )
+        self.assertEqual(managed_runtime["properties"]["runtime_owner"]["const"], "upstream_hermes_agent")
+        self.assertEqual(managed_runtime["properties"]["domain_owner"]["const"], "med-autogrant")
+        self.assertEqual(managed_runtime["properties"]["executor_owner"]["const"], "med-autogrant")
 
     def test_frontdoor_surface_schemas_pin_start_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))

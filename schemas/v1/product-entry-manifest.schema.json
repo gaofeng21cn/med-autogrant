@@ -185,6 +185,72 @@
         }
       }
     },
+    "managedRuntimeNamedSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "owner"
+      ],
+      "properties": {
+        "surface_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "owner": {
+          "const": "med-autogrant"
+        }
+      }
+    },
+    "managedRuntimeContractSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shared_contract_ref",
+        "runtime_owner",
+        "domain_owner",
+        "executor_owner",
+        "supervision_status_surface",
+        "attention_queue_surface",
+        "recovery_contract_surface",
+        "fail_closed_rules"
+      ],
+      "properties": {
+        "shared_contract_ref": {
+          "const": "contracts/opl-gateway/managed-runtime-three-layer-contract.json"
+        },
+        "runtime_owner": {
+          "const": "upstream_hermes_agent"
+        },
+        "domain_owner": {
+          "const": "med-autogrant"
+        },
+        "executor_owner": {
+          "const": "med-autogrant"
+        },
+        "supervision_status_surface": {
+          "$ref": "#/$defs/managedRuntimeNamedSurface"
+        },
+        "attention_queue_surface": {
+          "$ref": "#/$defs/managedRuntimeNamedSurface"
+        },
+        "recovery_contract_surface": {
+          "$ref": "#/$defs/managedRuntimeNamedSurface"
+        },
+        "fail_closed_rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "domain_supervision_cannot_bypass_runtime",
+              "executor_cannot_declare_global_gate_clear",
+              "runtime_cannot_invent_domain_publishability_truth"
+            ]
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    },
     "productShellSurface": {
       "type": "object",
       "additionalProperties": false,
@@ -765,6 +831,7 @@
         "operator_loop_actions",
         "repo_mainline",
         "runtime",
+        "managed_runtime_contract",
         "product_entry_shell",
         "shared_handoff",
         "product_entry_start",
@@ -818,6 +885,9 @@
         },
         "runtime": {
           "$ref": "#/$defs/runtimeSummary"
+        },
+        "managed_runtime_contract": {
+          "$ref": "#/$defs/managedRuntimeContractSurface"
         },
         "product_entry_shell": {
           "$ref": "#/$defs/productEntryShell"
