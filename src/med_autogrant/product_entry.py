@@ -32,6 +32,7 @@ from med_autogrant.workspace import (
     load_workspace_document,
     validate_workspace_document,
 )
+from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
 
 
 PRODUCT_ENTRY_VERSION = 1
@@ -40,12 +41,6 @@ PRODUCT_ENTRY_MANIFEST_KIND = "med_auto_grant_product_entry_manifest"
 PRODUCT_ENTRY_MANIFEST_VERSION = 2
 PRODUCT_FRONTDESK_KIND = "product_frontdesk"
 TARGET_DOMAIN_ID = "med-autogrant"
-MANAGED_RUNTIME_CONTRACT_REF = "contracts/opl-gateway/managed-runtime-three-layer-contract.json"
-MANAGED_RUNTIME_FAIL_CLOSED_RULES = [
-    "domain_supervision_cannot_bypass_runtime",
-    "executor_cannot_declare_global_gate_clear",
-    "runtime_cannot_invent_domain_publishability_truth",
-]
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
 GRANT_PROGRESS_PROJECTION_VERSION = 1
 GRANT_PROGRESS_PROJECTION_KIND = "grant_progress"
@@ -58,25 +53,13 @@ REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 
 
 def _build_managed_runtime_contract() -> dict[str, Any]:
-    return {
-        "shared_contract_ref": MANAGED_RUNTIME_CONTRACT_REF,
-        "runtime_owner": "upstream_hermes_agent",
-        "domain_owner": TARGET_DOMAIN_ID,
-        "executor_owner": "med-autogrant",
-        "supervision_status_surface": {
-            "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
-            "owner": TARGET_DOMAIN_ID,
-        },
-        "attention_queue_surface": {
-            "surface_kind": GRANT_USER_LOOP_KIND,
-            "owner": TARGET_DOMAIN_ID,
-        },
-        "recovery_contract_surface": {
-            "surface_kind": GRANT_USER_LOOP_KIND,
-            "owner": TARGET_DOMAIN_ID,
-        },
-        "fail_closed_rules": list(MANAGED_RUNTIME_FAIL_CLOSED_RULES),
-    }
+    return _build_shared_managed_runtime_contract(
+        domain_owner=TARGET_DOMAIN_ID,
+        executor_owner="med-autogrant",
+        supervision_status_surface=GRANT_PROGRESS_PROJECTION_KIND,
+        attention_queue_surface=GRANT_USER_LOOP_KIND,
+        recovery_contract_surface=GRANT_USER_LOOP_KIND,
+    )
 
 
 def _build_product_entry_start(

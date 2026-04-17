@@ -830,6 +830,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "hermes-agent", extra = ["acp"] },
+    { name = "opl-harness-shared" },
 ]
 
 [package.dev-dependencies]
@@ -838,7 +839,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "hermes-agent", extras = ["acp"], git = "https://github.com/NousResearch/hermes-agent.git?rev=96051955755a83f22afed5e3501d447462fbe9c8" }]
+requires-dist = [
+    { name = "hermes-agent", extras = ["acp"], git = "https://github.com/NousResearch/hermes-agent.git?rev=96051955755a83f22afed5e3501d447462fbe9c8" },
+    { name = "opl-harness-shared", git = "https://github.com/gaofeng21cn/one-person-lab.git?subdirectory=python%2Fopl-harness-shared&rev=3933df75d80473d4cf1831353e479333f823a4ae" },
+]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=9,<10" }]
@@ -1013,6 +1017,11 @@ sdist = { url = "https://files.pythonhosted.org/packages/94/fe/64b3d035780b3188f
 wheels = [
     { url = "https://files.pythonhosted.org/packages/66/bc/a8f7c3aa03452fedbb9af8be83e959adba96a6b4a35e416faffcc959c568/openai-2.31.0-py3-none-any.whl", hash = "sha256:44e1344d87e56a493d649b17e2fac519d1368cbb0745f59f1957c4c26de50a0a", size = 1153479, upload-time = "2026-04-08T21:01:39.217Z" },
 ]
+
+[[package]]
+name = "opl-harness-shared"
+version = "0.1.0"
+source = { git = "https://github.com/gaofeng21cn/one-person-lab.git?subdirectory=python%2Fopl-harness-shared&rev=3933df75d80473d4cf1831353e479333f823a4ae#3933df75d80473d4cf1831353e479333f823a4ae" }
 
 [[package]]
 name = "packaging"
