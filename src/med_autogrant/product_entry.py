@@ -58,6 +58,10 @@ from opl_harness_shared.runtime_task_companions import (
     build_runtime_inventory as _build_shared_runtime_inventory,
     build_task_lifecycle as _build_shared_task_lifecycle,
 )
+from opl_harness_shared.status_narration import (
+    PROGRESS_ANSWER_CHECKLIST,
+    build_status_narration_contract,
+)
 from opl_harness_shared.skill_catalog import (
     build_skill_catalog as _build_shared_skill_catalog,
     build_skill_descriptor as _build_shared_skill_descriptor,
@@ -397,6 +401,26 @@ class MedAutoGrantProductEntry:
                 "workspace_path": str(resolved_input_path),
             },
         }
+        progress_projection["status_narration_contract"] = build_status_narration_contract(
+            contract_id=f"grant-progress::{workspace_id}",
+            surface_kind="grant_progress",
+            stage={
+                "current_stage": lifecycle_stage,
+                "recommended_next_stage": recommended_next_stage,
+                "checkpoint_status": checkpoint_status,
+            },
+            readiness={
+                "needs_author_decision": bool(next_step.get("requires_human_confirmation")),
+            },
+            current_blockers=(progress_projection.get("current_blockers") or [])[:8],
+            latest_update=str(progress_projection.get("current_stage_summary") or "").strip() or None,
+            next_step=str(progress_projection.get("next_system_action") or "").strip() or None,
+            facts={
+                "workspace_id": workspace_id,
+                "grant_run_id": grant_run_id,
+            },
+            answer_checklist=PROGRESS_ANSWER_CHECKLIST,
+        )
         family_orchestration = _build_family_orchestration_companion(
             current_route_id=lifecycle_stage,
             recommended_route_id=recommended_next_stage,
