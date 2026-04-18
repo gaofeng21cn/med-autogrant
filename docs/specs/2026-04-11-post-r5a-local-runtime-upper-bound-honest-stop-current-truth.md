@@ -34,8 +34,8 @@ Date: `2026-04-11`
   - `critique-summary`
   - `stage-route-report`
 - local runtime entry / recovery：
-  - `run-local`
-  - `resume-local`
+  - `runtime-run`
+  - `runtime-resume`
 - local artifact / revision / finalization / hostedization-prep surfaces：
   - `build-artifact-bundle`
   - `execute-revision-pass`

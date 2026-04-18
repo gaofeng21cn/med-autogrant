@@ -32,7 +32,7 @@
 只有同时满足下面几项，才可以把这条线写成完成：
 
 1. 能给出真实上游 `Hermes-Agent` 依赖与连接证据。
-2. `run-local`、`resume-local`、local run journal、session / resume / interrupt / recovery、hosted-friendly session boundary 不再由 repo-local helper 自己主责。
+2. `runtime-run`、`runtime-resume`、local run journal、session / resume / interrupt / recovery、hosted-friendly session boundary 不再由 repo-local helper 自己主责。
 3. `grant_run_id`、`workspace_id`、`draft_id`、`program_id`、`critique-summary`、`stage-route-report`、`artifact bundle / final package / hosted contract bundle` 继续保持 canonical。
 4. 形成可被未来 `OPL Gateway` 调用的 service-safe domain entry surface。
 
@@ -60,8 +60,8 @@
 
 把当前本地梯子切过去：
 
-- `run-local`
-- `resume-local`
+- `runtime-run`
+- `runtime-resume`
 - local run journal / stop reason
 - revision pass / final package / hosted contract bundle 所需的 session / run substrate
 

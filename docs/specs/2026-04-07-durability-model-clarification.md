@@ -77,8 +77,8 @@ Date: `2026-04-07`
 
 ### 1. local run journal
 
-- `run-local --journal ...`
-- `resume-local --journal ...`
+- `runtime-run --journal ...`
+- `runtime-resume --journal ...`
 - local run journal JSON
 - 默认 durable root：`$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`
 
@@ -87,7 +87,7 @@ Date: `2026-04-07`
 - 为同一 `grant_run_id` durable 回写 `latest_stop_reason`
 - 为 `stage_action_required` 类 stop reason durable 回写 `latest_stage_action_envelope`
 - durable 回写 `latest_route_report`
-- 通过 `attempts` 记录 `run-local / resume-local` 的本地 runtime 进入历史
+- 通过 `attempts` 记录 `runtime-run / runtime-resume` 的本地 runtime 进入历史
 
 这层不负责：
 
@@ -218,5 +218,5 @@ Date: `2026-04-07`
 - formal entry 真相已进入 repo-durable current truth
 - durability model 真相已进入 repo-durable current truth
 - `grant_run_id / workspace_id / draft_id / program_id` 边界已在 docs / examples / CLI / tests / local outputs 中持续收紧
-- `run-local / resume-local / build-artifact-bundle / execute-revision-pass / build-final-package / build-hosted-contract-bundle` 已构成当前 landed local runtime ladder
+- `runtime-run / runtime-resume / build-artifact-bundle / execute-revision-pass / build-final-package / build-hosted-contract-bundle` 已构成当前 landed local runtime ladder
 - post-`R5.A` local runtime hardening 已在当前 truth 下收口为 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`；任何 further productization 都必须先冻结新的 repo-tracked tranche truth，而不是默认继续当前 ladder

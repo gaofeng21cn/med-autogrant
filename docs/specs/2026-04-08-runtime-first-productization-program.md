@@ -94,7 +94,7 @@ Date: `2026-04-08`
 当前推荐冻结的 runtime entry：
 
 - `CLI-first`
-- 新的本地主循环 entry 可以由 `run-local` 类命令承载，但必须保持旧五个 CLI surfaces 继续作为 verifier / audit surfaces
+- 新的本地主循环 entry 可以由 `runtime-run` 类命令承载，但必须保持旧五个 CLI surfaces 继续作为 verifier / audit surfaces
 
 验收重点：
 

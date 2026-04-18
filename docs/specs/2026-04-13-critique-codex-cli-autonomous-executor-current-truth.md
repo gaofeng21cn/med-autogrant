@@ -34,7 +34,7 @@ Date: `2026-04-13`
 
 这同时适用于：
 
-- `run-local.stage_action_envelope.executor_routing_contract.current_stage_route`
+- `runtime-run.stage_action_envelope.executor_routing_contract.current_stage_route`
 - `build-product-entry.product_entry.executor_routing_contract.current_stage_route`
 - `drafting -> critique` 的 `recommended_executor_route`
 - `revision(completed revised switch) -> critique` 的 `recommended_executor_route`

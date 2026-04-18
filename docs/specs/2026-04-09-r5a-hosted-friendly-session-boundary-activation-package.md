@@ -56,8 +56,8 @@ Date: `2026-04-09`
    - `lineage`
    - `checkpoint_summary`
 2. 从 absorbed local runtime surface 读取：
-   - `run-local`
-   - `resume-local`
+   - `runtime-run`
+   - `runtime-resume`
    - `build-artifact-bundle`
    - `build-final-package`
    - `run journal`
@@ -144,8 +144,8 @@ Date: `2026-04-09`
 
 `R5.A` 必须继续围绕以下 surfaces 聚合，不得重写它们的 canonical 语义：
 
-- `run-local`
-- `resume-local`
+- `runtime-run`
+- `runtime-resume`
 - `build-artifact-bundle`
 - `build-final-package`
 - `verification_checkpoint`

@@ -34,8 +34,8 @@ Date: `2026-04-08`
 
 当前已 landed 的 surface：
 
-- `run-local`
-- `resume-local`
+- `runtime-run`
+- `runtime-resume`
 - machine-readable `stop_reason`
 - durable JSON run journal
 - machine-readable `stage_action_envelope`
@@ -96,7 +96,7 @@ Date: `2026-04-08`
 
 ## Scope
 
-- 把 `run-local` 已得到的 `stage_action_required` 类 stop reason 收紧成 machine-readable `stage_action_envelope`
+- 把 `runtime-run` 已得到的 `stage_action_required` 类 stop reason 收紧成 machine-readable `stage_action_envelope`
 - 让 runtime 能对“下一动作是什么”形成稳定、结构化、可恢复的执行 envelope
 - 只处理 runtime 编排、route continuation、journal append、resume decision
 
@@ -110,7 +110,7 @@ Date: `2026-04-08`
 ## Required Verification
 
 - 新的 action envelope contract regression tests
-- canonical `run-local / resume-local` examples 保持全绿
+- canonical `runtime-run / runtime-resume` examples 保持全绿
 - `stage_action_required` 对应的 envelope 字段与 stop reason 对齐
 - `git diff --check`
 
