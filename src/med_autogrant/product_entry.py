@@ -33,6 +33,13 @@ from med_autogrant.workspace import (
     validate_workspace_document,
 )
 from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
+from opl_harness_shared.product_entry_companions import (
+    build_product_entry_overview as _build_shared_product_entry_overview,
+    build_product_entry_quickstart as _build_shared_product_entry_quickstart,
+    build_product_entry_readiness as _build_shared_product_entry_readiness,
+    build_product_entry_resume_surface as _build_shared_product_entry_resume_surface,
+    collect_family_human_gate_ids as _collect_family_human_gate_ids,
+)
 
 
 PRODUCT_ENTRY_VERSION = 1
@@ -871,14 +878,13 @@ class MedAutoGrantProductEntry:
             operator_loop_actions=operator_loop_actions,
             family_orchestration=family_orchestration,
         )
-        product_entry_quickstart = {
-            "surface_kind": "product_entry_quickstart",
-            "recommended_step_id": "open_frontdesk",
-            "summary": (
+        product_entry_quickstart = _build_shared_product_entry_quickstart(
+            summary=(
                 "先从 direct grant product frontdesk 进入当前 frontdoor，"
                 "再回到 grant-user-loop，必要时读取 progress 或 cockpit projection。"
             ),
-            "steps": [
+            recommended_step_id="open_frontdesk",
+            steps=[
                 {
                     "step_id": "open_frontdesk",
                     "title": "Open grant frontdesk",
@@ -920,39 +926,32 @@ class MedAutoGrantProductEntry:
                     "requires": list(operator_loop_actions["build_submission_ready_package"]["requires"]),
                 },
             ],
-            "resume_contract": dict(family_orchestration["resume_contract"]),
-            "human_gate_ids": [
-                gate["gate_id"]
-                for gate in family_orchestration["human_gates"]
-                if isinstance(gate, dict) and gate.get("gate_id")
-            ],
-        }
-        product_entry_overview = {
-            "surface_kind": "product_entry_overview",
-            "summary": _require_nonempty_string_from_mapping(
+            resume_contract=dict(family_orchestration["resume_contract"]),
+            human_gate_ids=_collect_family_human_gate_ids(family_orchestration),
+        )
+        product_entry_overview = _build_shared_product_entry_overview(
+            summary=_require_nonempty_string_from_mapping(
                 current_phase,
                 "summary",
                 context="mainline_status.current_phase",
             ),
-            "frontdesk_command": product_frontdesk_command,
-            "recommended_command": grant_user_loop_command,
-            "operator_loop_command": grant_user_loop_command,
-            "progress_surface": {
+            frontdesk_command=product_frontdesk_command,
+            recommended_command=grant_user_loop_command,
+            operator_loop_command=grant_user_loop_command,
+            progress_surface={
                 "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
                 "command": command_catalog["grant_progress"],
                 "step_id": "inspect_progress",
             },
-            "resume_surface": {
-                "surface_kind": family_orchestration["resume_contract"]["surface_kind"],
-                "command": grant_user_loop_command,
-                "session_locator_field": family_orchestration["resume_contract"]["session_locator_field"],
-                "checkpoint_locator_field": family_orchestration["resume_contract"]["checkpoint_locator_field"],
-            },
-            "recommended_step_id": product_entry_quickstart["recommended_step_id"],
-            "next_focus": list(mainline_snapshot["next_focus"]),
-            "remaining_gaps_count": len(mainline_snapshot["remaining_gaps"]),
-            "human_gate_ids": list(product_entry_quickstart["human_gate_ids"]),
-        }
+            resume_surface=_build_shared_product_entry_resume_surface(
+                command=grant_user_loop_command,
+                resume_contract=family_orchestration["resume_contract"],
+            ),
+            recommended_step_id=product_entry_quickstart["recommended_step_id"],
+            next_focus=list(mainline_snapshot["next_focus"]),
+            remaining_gaps_count=len(mainline_snapshot["remaining_gaps"]),
+            human_gate_ids=list(product_entry_quickstart["human_gate_ids"]),
+        )
         grant_authoring_readiness = {
             "surface_kind": "grant_authoring_readiness",
             "verdict": "agent_assisted_cli_ready_not_full_autopilot",
@@ -1040,19 +1039,18 @@ class MedAutoGrantProductEntry:
                 "文献热点检索、引用证据绑定、图件生产、Word/PDF 定稿与外部官网提交仍未完整产品化。",
             ],
         }
-        product_entry_readiness = {
-            "surface_kind": "product_entry_readiness",
-            "verdict": "agent_assisted_ready_not_product_grade",
-            "usable_now": True,
-            "good_to_use_now": False,
-            "fully_automatic": False,
-            "summary": grant_authoring_readiness["summary"],
-            "recommended_start_surface": grant_authoring_readiness["recommended_start_surface"],
-            "recommended_start_command": grant_authoring_readiness["recommended_start_command"],
-            "recommended_loop_surface": grant_authoring_readiness["recommended_loop_surface"],
-            "recommended_loop_command": grant_authoring_readiness["recommended_loop_command"],
-            "blocking_gaps": list(grant_authoring_readiness["blocking_gaps"]),
-        }
+        product_entry_readiness = _build_shared_product_entry_readiness(
+            verdict="agent_assisted_ready_not_product_grade",
+            usable_now=True,
+            good_to_use_now=False,
+            fully_automatic=False,
+            summary=grant_authoring_readiness["summary"],
+            recommended_start_surface=grant_authoring_readiness["recommended_start_surface"],
+            recommended_start_command=grant_authoring_readiness["recommended_start_command"],
+            recommended_loop_surface=grant_authoring_readiness["recommended_loop_surface"],
+            recommended_loop_command=grant_authoring_readiness["recommended_loop_command"],
+            blocking_gaps=list(grant_authoring_readiness["blocking_gaps"]),
+        )
 
         payload = {
             "ok": True,
