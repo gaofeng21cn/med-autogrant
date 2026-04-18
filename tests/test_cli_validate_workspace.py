@@ -380,6 +380,22 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             "P4.F local submission-ready package landing",
         )
 
+    def test_mainline_status_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "mainline-status",
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前阶段: P4", stdout)
+        self.assertIn("当前 tranche: P4.F local submission-ready package landing", stdout)
+        self.assertIn("当前判断:", stdout)
+        self.assertIn("- 下一步关注:", stdout)
+        self.assertNotIn("active_phase:", stdout)
+        self.assertNotIn("active_tranche:", stdout)
+
     def test_mainline_phase_resolves_next_selector(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "mainline-phase",
@@ -476,6 +492,26 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["product_frontdesk"]["surface_kind"], "product_frontdesk")
         self.assertEqual(payload["product_frontdesk"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
         self.assertEqual(payload["product_frontdesk"]["operator_loop_surface"]["shell_key"], "grant_user_loop")
+
+    def test_product_frontdesk_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "product-frontdesk",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("前台入口命令:", stdout)
+        self.assertIn("推荐继续命令:", stdout)
+        self.assertIn("当前 loop 命令:", stdout)
+        self.assertIn("- 可用入口 frontdesk:", stdout)
+        self.assertNotIn("frontdesk_command:", stdout)
+        self.assertNotIn("recommended_command:", stdout)
+        self.assertNotIn("operator_loop_command:", stdout)
 
     def test_product_start_projects_unified_start_surface(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -693,6 +729,43 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         )
         self.assertNotIn("critique_summary", payload["route"])
 
+    def test_stage_route_report_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "stage-route-report",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("下一阶段: 修订落实", stdout)
+        self.assertIn("当前 checkpoint: 继续向前推进", stdout)
+        self.assertIn("当前判断: 批注结论 major_revision", stdout)
+        self.assertNotIn("recommended_stage:", stdout)
+        self.assertNotIn("checkpoint_status:", stdout)
+
+    def test_next_step_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "next-step",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("下一阶段: 修订落实", stdout)
+        self.assertIn("当前判断: 导师批注 verdict=major_revision，应先执行结构化修订。", stdout)
+        self.assertIn("- 建议动作: 执行 revision plan 中的 P0/P1 项。", stdout)
+        self.assertNotIn("current_stage:", stdout)
+        self.assertNotIn("recommended_stage:", stdout)
+        self.assertNotIn("reason:", stdout)
+
     def test_stage_route_report_aggregates_p2b_outline_without_critique_summary(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "stage-route-report",
@@ -747,6 +820,44 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["revision_plan_id"], "revision-v1")
         self.assertEqual(payload["execution_status"], "planned")
         self.assertEqual(payload["recommended_next_stage"], "revision")
+
+    def test_grant_cockpit_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-cockpit",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前状态: 需要处理", stdout)
+        self.assertIn("当前判断: 必要性表述仍略偏现象描述。", stdout)
+        self.assertIn("- 可用命令 build_direct_entry:", stdout)
+        self.assertNotIn("workspace_status:", stdout)
+        self.assertNotIn("- alert:", stdout)
+
+    def test_grant_direct_entry_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-direct-entry",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--task-intent",
+            "tighten-grant-mainline",
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("当前状态: 需要处理", stdout)
+        self.assertIn("推荐执行路径: 修订落实", stdout)
+        self.assertIn("当前判断: 必要性表述仍略偏现象描述。", stdout)
+        self.assertNotIn("workspace_status:", stdout)
+        self.assertNotIn("recommended_route:", stdout)
+        self.assertNotIn("- alert:", stdout)
 
     def test_critique_summary_exposes_completed_revision_evidence_for_p2c_revision(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

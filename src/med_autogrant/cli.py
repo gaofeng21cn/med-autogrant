@@ -24,6 +24,25 @@ from med_autogrant.workspace import (
 )
 
 
+_WORKSPACE_STATUS_LABELS = {
+    "attention_required": "需要处理",
+    "healthy": "运行正常",
+}
+
+
+def _human_token_label(value: object) -> str | None:
+    view = build_status_narration_human_view(None, fallback_current_stage=str(value or "").strip() or None)
+    label = view.get("current_stage_label")
+    return str(label).strip() or None
+
+
+def _workspace_status_label(value: object) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return "未知"
+    return _WORKSPACE_STATUS_LABELS.get(text, text)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="medautogrant")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -792,12 +811,12 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         lines = [
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
-            f"current_stage: {payload['current_stage']}",
-            f"recommended_stage: {payload['recommended_stage']}",
-            f"reason: {payload['reason']}",
+            f"当前阶段: {_human_token_label(payload['current_stage']) or payload['current_stage']}",
+            f"下一阶段: {_human_token_label(payload['recommended_stage']) or payload['recommended_stage']}",
+            f"当前判断: {payload['reason']}",
         ]
         for action in payload["actions"]:
-            lines.append(f"- {action}")
+            lines.append(f"- 建议动作: {action}")
         return "\n".join(lines)
 
     if command == "critique-summary":
@@ -817,14 +836,16 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
     if command == "stage-route-report":
         critique_summary = payload["route"].get("critique_summary")
         critique_verdict = critique_summary["verdict"] if isinstance(critique_summary, dict) else "n/a"
+        lifecycle_stage = payload["lifecycle_stage"]
+        recommended_stage = payload["route"]["next_step"]["recommended_stage"]
+        checkpoint_status = payload["verification_checkpoint"]["checkpoint_status"]
         lines = [
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
-            f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"route_ok: {payload['ok']}",
-            f"checkpoint_status: {payload['verification_checkpoint']['checkpoint_status']}",
-            f"recommended_stage: {payload['route']['next_step']['recommended_stage']}",
-            f"critique_verdict: {critique_verdict}",
+            f"当前阶段: {_human_token_label(lifecycle_stage) or lifecycle_stage}",
+            f"下一阶段: {_human_token_label(recommended_stage) or recommended_stage}",
+            f"当前 checkpoint: {_human_token_label(checkpoint_status) or checkpoint_status}",
+            f"当前判断: 批注结论 {critique_verdict}",
         ]
         return "\n".join(lines)
 
@@ -853,27 +874,32 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
 
     if command == "grant-cockpit":
         cockpit = payload["grant_cockpit"]
+        workspace_alerts = list(cockpit["workspace_alerts"])
         lines = [
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"draft_id: {payload['draft_id']}",
             f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"workspace_status: {cockpit['workspace_status']}",
+            f"当前状态: {_workspace_status_label(cockpit['workspace_status'])}",
         ]
-        for item in cockpit["workspace_alerts"]:
-            lines.append(f"- alert: {item}")
+        if workspace_alerts:
+            lines.append(f"当前判断: {workspace_alerts[0]}")
+        for item in workspace_alerts[1:]:
+            lines.append(f"- 关注项: {item}")
         for name, command_line in cockpit["commands"].items():
-            lines.append(f"- {name}: {command_line}")
+            lines.append(f"- 可用命令 {name}: {command_line}")
         return "\n".join(lines)
 
     if command == "mainline-status":
+        current_phase = payload["current_phase"]
         lines = [
             f"program_id: {payload['program_id']}",
-            f"active_phase: {payload['current_runtime_owner']['active_phase']}",
-            f"active_tranche: {payload['current_runtime_owner']['active_tranche']}",
+            f"当前阶段: {current_phase['phase_id']}",
+            f"当前 tranche: {payload['current_runtime_owner']['active_tranche']}",
+            f"当前判断: {current_phase['summary']}",
         ]
         for item in payload["next_focus"]:
-            lines.append(f"- next_focus: {item}")
+            lines.append(f"- 下一步关注: {item}")
         return "\n".join(lines)
 
     if command == "mainline-phase":
@@ -893,13 +919,19 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"draft_id: {payload['draft_id']}",
-            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"当前阶段: {_human_token_label(payload['lifecycle_stage']) or payload['lifecycle_stage']}",
             f"task_intent: {direct_entry['task_intent']}",
-            f"workspace_status: {direct_entry['workspace_status']}",
-            f"recommended_route: {direct_entry['recommended_executor_route']['route_id']}",
+            f"当前状态: {_workspace_status_label(direct_entry['workspace_status'])}",
+            (
+                f"推荐执行路径: "
+                f"{_human_token_label(direct_entry['recommended_executor_route']['route_id']) or direct_entry['recommended_executor_route']['route_id']}"
+            ),
         ]
-        for item in direct_entry["workspace_alerts"]:
-            lines.append(f"- alert: {item}")
+        workspace_alerts = list(direct_entry["workspace_alerts"])
+        if workspace_alerts:
+            lines.append(f"当前判断: {workspace_alerts[0]}")
+        for item in workspace_alerts[1:]:
+            lines.append(f"- 关注项: {item}")
         return "\n".join(lines)
 
     if command == "grant-user-loop":
@@ -940,13 +972,14 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"draft_id: {payload['draft_id']}",
-            f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"frontdesk_command: {frontdesk['summary']['frontdesk_command']}",
-            f"recommended_command: {frontdesk['summary']['recommended_command']}",
-            f"operator_loop_command: {frontdesk['summary']['operator_loop_command']}",
+            f"当前阶段: {_human_token_label(payload['lifecycle_stage']) or payload['lifecycle_stage']}",
+            f"当前判断: {frontdesk['product_entry_status']['summary']}",
+            f"前台入口命令: {frontdesk['summary']['frontdesk_command']}",
+            f"推荐继续命令: {frontdesk['summary']['recommended_command']}",
+            f"当前 loop 命令: {frontdesk['summary']['operator_loop_command']}",
         ]
         for name, item in frontdesk["entry_surfaces"].items():
-            lines.append(f"- {name}: {item['command']}")
+            lines.append(f"- 可用入口 {name}: {item['command']}")
         return "\n".join(lines)
 
     if command == "product-preflight":
