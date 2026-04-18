@@ -411,6 +411,25 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["phase"]["phase_id"], "P4")
         self.assertEqual(payload["phase"]["status"], "next")
 
+    def test_mainline_phase_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "mainline-phase",
+            "--phase",
+            "next",
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前阶段: P4", stdout)
+        self.assertIn("阶段名称:", stdout)
+        self.assertIn("当前状态:", stdout)
+        self.assertIn("- 可用入口", stdout)
+        self.assertNotRegex(stdout, r"(?m)^phase_id:")
+        self.assertNotRegex(stdout, r"(?m)^phase_name:")
+        self.assertNotRegex(stdout, r"(?m)^status:")
+
     def test_grant_user_loop_projects_mainline_snapshot_and_route_action(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "grant-user-loop",
@@ -533,6 +552,24 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             [mode["mode_id"] for mode in payload["product_entry_start"]["modes"]],
             ["open_frontdesk", "continue_grant_loop", "build_direct_entry"],
         )
+
+    def test_product_start_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "product-start",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("建议入口:", stdout)
+        self.assertIn("- 可用入口", stdout)
+        self.assertNotIn("lifecycle_stage:", stdout)
+        self.assertNotIn("recommended_mode_id:", stdout)
+        self.assertNotIn("- open_frontdesk:", stdout)
 
     def test_next_step_routes_each_p2a_stage_forward(self) -> None:
         cases = [

@@ -29,6 +29,18 @@ _WORKSPACE_STATUS_LABELS = {
     "healthy": "运行正常",
 }
 
+_PHASE_STATUS_LABELS = {
+    "current": "当前阶段",
+    "next": "下一阶段",
+    "completed": "已完成",
+}
+
+_START_MODE_LABELS = {
+    "open_frontdesk": "打开 frontdesk",
+    "continue_grant_loop": "继续 grant loop",
+    "build_direct_entry": "构建 direct entry",
+}
+
 
 def _human_token_label(value: object) -> str | None:
     view = build_status_narration_human_view(None, fallback_current_stage=str(value or "").strip() or None)
@@ -41,6 +53,30 @@ def _workspace_status_label(value: object) -> str:
     if not text:
         return "未知"
     return _WORKSPACE_STATUS_LABELS.get(text, text)
+
+
+def _phase_status_label(value: object) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return "未知"
+    return _PHASE_STATUS_LABELS.get(text, text)
+
+
+def _start_mode_label(value: object) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return "未命名入口"
+    return _START_MODE_LABELS.get(text, text.replace("_", " "))
+
+
+def _entry_surface_label(value: object) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return "未命名入口"
+    public_label = public_command_label(text.replace("_", "-"))
+    if public_label != text.replace("_", "-"):
+        return public_label
+    return text.replace("_", " ")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -905,12 +941,12 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
     if command == "mainline-phase":
         phase = payload["phase"]
         lines = [
-            f"phase_id: {phase['phase_id']}",
-            f"phase_name: {phase['phase_name']}",
-            f"status: {phase['status']}",
+            f"当前阶段: {phase['phase_id']}",
+            f"阶段名称: {phase['phase_name']}",
+            f"当前状态: {_phase_status_label(phase['status'])}",
         ]
         for item in phase["entry_points"]:
-            lines.append(f"- {item['name']}: {item['command']}")
+            lines.append(f"- 可用入口 {_entry_surface_label(item['name'])}: {item['command']}")
         return "\n".join(lines)
 
     if command == "grant-direct-entry":
@@ -1005,11 +1041,11 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"draft_id: {payload['draft_id']}",
-            f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"recommended_mode_id: {start_surface['recommended_mode_id']}",
+            f"当前阶段: {_human_token_label(payload['lifecycle_stage']) or payload['lifecycle_stage']}",
+            f"建议入口: {_start_mode_label(start_surface['recommended_mode_id'])}",
         ]
         for mode in start_surface["modes"]:
-            lines.append(f"- {mode['mode_id']}: {mode['command']}")
+            lines.append(f"- 可用入口 {_start_mode_label(mode['mode_id'])}: {mode['command']}")
         return "\n".join(lines)
 
     if command == "probe-upstream-hermes":
