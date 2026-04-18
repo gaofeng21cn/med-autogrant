@@ -389,12 +389,85 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
+        self.assertIn("当前 program:", stdout)
         self.assertIn("当前阶段: P4", stdout)
         self.assertIn("当前 tranche: P4.F local submission-ready package landing", stdout)
         self.assertIn("当前判断:", stdout)
         self.assertIn("- 下一步关注:", stdout)
+        self.assertNotIn("program_id:", stdout)
         self.assertNotIn("active_phase:", stdout)
         self.assertNotIn("active_tranche:", stdout)
+
+    def test_validate_workspace_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前 grant run:", stdout)
+        self.assertIn("当前 workspace:", stdout)
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("校验结果: True", stdout)
+        self.assertIn("错误数量: 0", stdout)
+        self.assertNotIn("grant_run_id:", stdout)
+        self.assertNotIn("workspace_id:", stdout)
+        self.assertNotIn("lifecycle_stage:", stdout)
+        self.assertNotIn("error_count:", stdout)
+
+    def test_summarize_workspace_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "summarize-workspace",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前 grant run:", stdout)
+        self.assertIn("当前 workspace:", stdout)
+        self.assertIn("当前模式:", stdout)
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("当前方向:", stdout)
+        self.assertIn("当前问题:", stdout)
+        self.assertIn("当前 fit 映射:", stdout)
+        self.assertIn("当前草稿:", stdout)
+        self.assertIn("当前批注结论:", stdout)
+        self.assertNotIn("selected_direction:", stdout)
+        self.assertNotIn("selected_question:", stdout)
+        self.assertNotIn("active_fit_mapping:", stdout)
+        self.assertNotIn("active_draft:", stdout)
+        self.assertNotIn("active_critique_verdict:", stdout)
+
+    def test_critique_summary_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "critique-summary",
+            "--input",
+            str(EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前 grant run:", stdout)
+        self.assertIn("当前 workspace:", stdout)
+        self.assertIn("当前批注编号:", stdout)
+        self.assertIn("当前草稿编号:", stdout)
+        self.assertIn("当前结论:", stdout)
+        self.assertIn("整体诊断:", stdout)
+        self.assertIn("建议下一阶段:", stdout)
+        self.assertNotIn("critique_id:", stdout)
+        self.assertNotIn("draft_id:", stdout)
+        self.assertNotIn("verdict:", stdout)
+        self.assertNotIn("overall_diagnosis:", stdout)
+        self.assertNotIn("recommended_next_stage:", stdout)
 
     def test_mainline_phase_resolves_next_selector(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -460,6 +533,30 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("human_gates", payload["family_orchestration"])
         self.assertIn("resume_contract", payload["family_orchestration"])
 
+    def test_grant_user_loop_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-user-loop",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--task-intent",
+            "tighten-grant-mainline",
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前 grant run:", stdout)
+        self.assertIn("当前 workspace:", stdout)
+        self.assertIn("当前草稿编号:", stdout)
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("当前 tranche:", stdout)
+        self.assertIn("当前动作:", stdout)
+        self.assertIn("推荐执行命令:", stdout)
+        self.assertNotIn("active_tranche:", stdout)
+        self.assertNotIn("next_action:", stdout)
+        self.assertNotIn("run_recommended_route:", stdout)
+
     def test_product_entry_manifest_exposes_family_orchestration_v2(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "product-entry-manifest",
@@ -493,6 +590,50 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("automation", manifest)
         self.assertEqual(manifest["automation"]["surface_kind"], "automation")
         self.assertGreaterEqual(len(manifest["automation"]["automations"]), 1)
+
+    def test_product_entry_manifest_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "product-entry-manifest",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前 grant run:", stdout)
+        self.assertIn("当前 workspace:", stdout)
+        self.assertIn("当前草稿编号:", stdout)
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("manifest 类型:", stdout)
+        self.assertIn("当前主线 phase:", stdout)
+        self.assertIn("当前 tranche:", stdout)
+        self.assertNotIn("manifest_kind:", stdout)
+        self.assertNotIn("active_phase:", stdout)
+        self.assertNotIn("active_tranche:", stdout)
+
+    def test_product_preflight_plain_text_prefers_human_facing_labels(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "product-preflight",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前 grant run:", stdout)
+        self.assertIn("当前 workspace:", stdout)
+        self.assertIn("当前草稿编号:", stdout)
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("当前可直接尝试:", stdout)
+        self.assertIn("前置检查命令:", stdout)
+        self.assertIn("推荐启动命令:", stdout)
+        self.assertNotIn("ready_to_try_now:", stdout)
+        self.assertNotIn("recommended_check_command:", stdout)
+        self.assertNotIn("recommended_start_command:", stdout)
 
     def test_product_frontdesk_projects_frontdoor_and_current_loop(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -552,6 +693,40 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             [mode["mode_id"] for mode in payload["product_entry_start"]["modes"]],
             ["open_frontdesk", "continue_grant_loop", "build_direct_entry"],
         )
+
+    def test_build_product_entry_plain_text_prefers_human_facing_labels(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_path = Path(tmp_dir) / "product-entry.json"
+            exit_code, stdout, stderr = self.run_cli(
+                "build-product-entry",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--entry-mode",
+                "direct",
+                "--task-intent",
+                "tighten-grant-mainline",
+                "--output",
+                str(output_path),
+                "--format",
+                "text",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前 grant run:", stdout)
+        self.assertIn("当前 workspace:", stdout)
+        self.assertIn("当前草稿编号:", stdout)
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("当前入口模式:", stdout)
+        self.assertIn("当前任务意图:", stdout)
+        self.assertIn("目标域:", stdout)
+        self.assertIn("当前 checkpoint:", stdout)
+        self.assertIn("输出位置:", stdout)
+        self.assertNotIn("entry_mode:", stdout)
+        self.assertNotIn("task_intent:", stdout)
+        self.assertNotIn("target_domain_id:", stdout)
+        self.assertNotIn("checkpoint_status:", stdout)
+        self.assertNotIn("output_path:", stdout)
 
     def test_product_start_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

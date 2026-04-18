@@ -364,9 +364,9 @@ def render_mainline_status_markdown(payload: dict[str, Any]) -> str:
     lines = [
         "# Mainline Status",
         "",
-        f"- program_id: `{payload.get('program_id')}`",
-        f"- active_phase: `{((payload.get('current_runtime_owner') or {}).get('active_phase') or 'unknown')}`",
-        f"- active_tranche: `{((payload.get('current_runtime_owner') or {}).get('active_tranche') or 'unknown')}`",
+        f"- 当前 program: `{payload.get('program_id')}`",
+        f"- 当前阶段: `{((payload.get('current_runtime_owner') or {}).get('active_phase') or 'unknown')}`",
+        f"- 当前 tranche: `{((payload.get('current_runtime_owner') or {}).get('active_tranche') or 'unknown')}`",
         "",
         "## Ideal Target",
         "",
@@ -378,7 +378,7 @@ def render_mainline_status_markdown(payload: dict[str, Any]) -> str:
     lines.extend(["", "## Phase Ladder", ""])
     for item in payload.get("phase_ladder") or []:
         lines.append(
-            f"- `{item.get('phase_id')}` `{item.get('phase_name')}`: status=`{item.get('status')}`; {item.get('summary')}"
+            f"- 当前阶段: `{item.get('phase_id')}` `{item.get('phase_name')}`; 当前状态: `{item.get('status')}`; 当前摘要: {item.get('summary')}"
         )
     lines.extend(["", "## Completed Tranches", ""])
     for item in payload.get("completed_tranches") or []:
@@ -397,12 +397,12 @@ def render_mainline_phase_markdown(payload: dict[str, Any]) -> str:
     lines = [
         "# Mainline Phase",
         "",
-        f"- phase_id: `{phase.get('phase_id')}`",
-        f"- phase_name: `{phase.get('phase_name')}`",
-        f"- status: `{phase.get('status')}`",
+        f"- 当前阶段: `{phase.get('phase_id')}`",
+        f"- 阶段名称: `{phase.get('phase_name')}`",
+        f"- 当前状态: `{phase.get('status')}`",
     ]
     if phase.get("summary"):
-        lines.append(f"- summary: {phase.get('summary')}")
+        lines.append(f"- 当前摘要: {phase.get('summary')}")
     lines.extend(["", "## Entry Points", ""])
     for item in phase.get("entry_points") or []:
         lines.append(f"- `{item.get('name')}`: `{item.get('command')}`")

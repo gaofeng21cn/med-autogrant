@@ -54,12 +54,16 @@ def test_render_mainline_status_markdown_surfaces_phase_ladder_and_next_focus() 
     markdown = module.render_mainline_status_markdown(module.read_mainline_status())
 
     assert "# Mainline Status" in markdown
+    assert "- 当前 program:" in markdown
+    assert "- 当前阶段:" in markdown
+    assert "- 当前 tranche:" in markdown
     assert "P4" in markdown
     assert "Ideal Target" in markdown
     assert "Phase Ladder" in markdown
     assert "Completed Tranches" in markdown
     assert "Remaining Gaps" in markdown
     assert "Next Focus" in markdown
+    assert "program_id:" not in markdown
 
 
 def test_mainline_phase_status_resolves_current_and_next_phase() -> None:
@@ -106,6 +110,14 @@ def test_render_mainline_phase_markdown_surfaces_entry_points_and_exit_criteria(
     markdown = module.render_mainline_phase_markdown(module.read_mainline_phase_status("P4"))
 
     assert "# Mainline Phase" in markdown
+    assert "- 当前阶段:" in markdown
+    assert "- 阶段名称:" in markdown
+    assert "- 当前状态:" in markdown
+    assert "- 当前摘要:" in markdown
     assert "P4" in markdown
     assert "Entry Points" in markdown
     assert "Exit Criteria" in markdown
+    assert "phase_id:" not in markdown
+    assert "phase_name:" not in markdown
+    assert "status:" not in markdown
+    assert "summary:" not in markdown

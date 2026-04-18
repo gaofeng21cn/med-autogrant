@@ -41,6 +41,46 @@ _START_MODE_LABELS = {
     "build_direct_entry": "构建 direct entry",
 }
 
+_HUMAN_FIELD_LABELS = {
+    "grant_run_id": "当前 grant run",
+    "workspace_id": "当前 workspace",
+    "lifecycle_stage": "当前阶段",
+    "ok": "校验结果",
+    "error_count": "错误数量",
+    "mode": "当前模式",
+    "selected_direction": "当前方向",
+    "selected_question": "当前问题",
+    "active_fit_mapping": "当前 fit 映射",
+    "active_draft": "当前草稿",
+    "active_critique_verdict": "当前批注结论",
+    "critique_id": "当前批注编号",
+    "draft_id": "当前草稿编号",
+    "verdict": "当前结论",
+    "overall_diagnosis": "整体诊断",
+    "recommended_next_stage": "建议下一阶段",
+    "active_tranche": "当前 tranche",
+    "next_action": "当前动作",
+    "run_recommended_route": "推荐执行命令",
+    "ready_to_try_now": "当前可直接尝试",
+    "recommended_check_command": "前置检查命令",
+    "recommended_start_command": "推荐启动命令",
+    "manifest_kind": "manifest 类型",
+    "active_phase": "当前主线 phase",
+    "entry_mode": "当前入口模式",
+    "task_intent": "当前任务意图",
+    "target_domain_id": "目标域",
+    "checkpoint_status": "当前 checkpoint",
+    "output_path": "输出位置",
+    "output_dir": "输出位置",
+    "program_id": "当前 program",
+}
+
+_HUMAN_TOKEN_FIELDS = {
+    "lifecycle_stage",
+    "recommended_next_stage",
+    "checkpoint_status",
+}
+
 
 def _human_token_label(value: object) -> str | None:
     view = build_status_narration_human_view(None, fallback_current_stage=str(value or "").strip() or None)
@@ -77,6 +117,29 @@ def _entry_surface_label(value: object) -> str:
     if public_label != text.replace("_", "-"):
         return public_label
     return text.replace("_", " ")
+
+
+def _field_label(field: str) -> str:
+    return _HUMAN_FIELD_LABELS.get(field, field)
+
+
+def _field_value(field: str, value: object) -> object:
+    if field in _HUMAN_TOKEN_FIELDS:
+        return _human_token_label(value) or value
+    return value
+
+
+def _render_field(field: str, value: object) -> str:
+    return f"{_field_label(field)}: {_field_value(field, value)}"
+
+
+def _render_shell_name(name: str) -> str:
+    if name in _HUMAN_FIELD_LABELS:
+        return _field_label(name)
+    public_label = public_command_label(name.replace("_", "-"))
+    if public_label != name.replace("_", "-"):
+        return public_label
+    return name
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -809,11 +872,11 @@ def _add_product_entry_command(
 def _render_text(command: str, payload: dict[str, Any]) -> str:
     if command == "validate-workspace":
         lines = [
-            f"grant_run_id: {payload['grant_run_id']}",
-            f"workspace_id: {payload['workspace_id']}",
-            f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"ok: {payload['ok']}",
-            f"error_count: {payload['error_count']}",
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+            _render_field("ok", payload["ok"]),
+            _render_field("error_count", payload["error_count"]),
         ]
         for item in payload["errors"]:
             lines.append(f"- {item['path']}: {item['message']}")
@@ -831,15 +894,15 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         active_critique_verdict = payload["active_critique"]["verdict"] if payload["active_critique"] is not None else "none"
         return "\n".join(
             [
-                f"grant_run_id: {payload['grant_run_id']}",
-                f"workspace_id: {payload['workspace_id']}",
-                f"mode: {payload['mode']}",
-                f"lifecycle_stage: {payload['lifecycle_stage']}",
-                f"selected_direction: {selected_direction}",
-                f"selected_question: {selected_question}",
-                f"active_fit_mapping: {active_fit_mapping}",
-                f"active_draft: {active_draft}",
-                f"active_critique_verdict: {active_critique_verdict}",
+                _render_field("grant_run_id", payload["grant_run_id"]),
+                _render_field("workspace_id", payload["workspace_id"]),
+                _render_field("mode", payload["mode"]),
+                _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+                _render_field("selected_direction", selected_direction),
+                _render_field("selected_question", selected_question),
+                _render_field("active_fit_mapping", active_fit_mapping),
+                _render_field("active_draft", active_draft),
+                _render_field("active_critique_verdict", active_critique_verdict),
             ]
         )
 
@@ -857,13 +920,13 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
 
     if command == "critique-summary":
         lines = [
-            f"grant_run_id: {payload['grant_run_id']}",
-            f"workspace_id: {payload['workspace_id']}",
-            f"critique_id: {payload['critique_id']}",
-            f"draft_id: {payload['draft_id']}",
-            f"verdict: {payload['verdict']}",
-            f"overall_diagnosis: {payload['overall_diagnosis']}",
-            f"recommended_next_stage: {payload['recommended_next_stage']}",
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("critique_id", payload["critique_id"]),
+            _render_field("draft_id", payload["draft_id"]),
+            _render_field("verdict", payload["verdict"]),
+            _render_field("overall_diagnosis", payload["overall_diagnosis"]),
+            _render_field("recommended_next_stage", payload["recommended_next_stage"]),
         ]
         for item in payload["blocking_issues"]:
             lines.append(f"- {item}")
@@ -929,7 +992,7 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
     if command == "mainline-status":
         current_phase = payload["current_phase"]
         lines = [
-            f"program_id: {payload['program_id']}",
+            _render_field("program_id", payload["program_id"]),
             f"当前阶段: {current_phase['phase_id']}",
             f"当前 tranche: {payload['current_runtime_owner']['active_tranche']}",
             f"当前判断: {current_phase['summary']}",
@@ -973,33 +1036,33 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
     if command == "grant-user-loop":
         user_loop = payload["grant_user_loop"]
         lines = [
-            f"grant_run_id: {payload['grant_run_id']}",
-            f"workspace_id: {payload['workspace_id']}",
-            f"draft_id: {payload['draft_id']}",
-            f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"active_tranche: {user_loop['mainline_snapshot']['active_tranche']}",
-            f"next_action: {user_loop['next_action']['action_kind']}",
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("draft_id", payload["draft_id"]),
+            _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+            _render_field("active_tranche", user_loop["mainline_snapshot"]["active_tranche"]),
+            _render_field("next_action", user_loop["next_action"]["action_kind"]),
         ]
         if user_loop["next_action"]["command"] is not None:
-            lines.append(f"- run_recommended_route: {user_loop['next_action']['command']}")
+            lines.append(f"- {_field_label('run_recommended_route')}: {user_loop['next_action']['command']}")
         for name, command_line in user_loop["user_loop"].items():
             if command_line is not None:
-                lines.append(f"- {name}: {command_line}")
+                lines.append(f"- {_render_shell_name(name)}: {command_line}")
         return "\n".join(lines)
 
     if command == "product-entry-manifest":
         manifest = payload["product_entry_manifest"]
         lines = [
-            f"grant_run_id: {payload['grant_run_id']}",
-            f"workspace_id: {payload['workspace_id']}",
-            f"draft_id: {payload['draft_id']}",
-            f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"manifest_kind: {manifest['manifest_kind']}",
-            f"active_phase: {manifest['repo_mainline']['active_phase']}",
-            f"active_tranche: {manifest['repo_mainline']['active_tranche']}",
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("draft_id", payload["draft_id"]),
+            _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+            _render_field("manifest_kind", manifest["manifest_kind"]),
+            _render_field("active_phase", manifest["repo_mainline"]["active_phase"]),
+            _render_field("active_tranche", manifest["repo_mainline"]["active_tranche"]),
         ]
         for name, item in manifest["product_entry_shell"].items():
-            lines.append(f"- {name}: {item['command']}")
+            lines.append(f"- {_render_shell_name(name)}: {item['command']}")
         return "\n".join(lines)
 
     if command == "product-frontdesk":
@@ -1021,13 +1084,13 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
     if command == "product-preflight":
         preflight = payload["product_entry_preflight"]
         lines = [
-            f"grant_run_id: {payload['grant_run_id']}",
-            f"workspace_id: {payload['workspace_id']}",
-            f"draft_id: {payload['draft_id']}",
-            f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"ready_to_try_now: {preflight['ready_to_try_now']}",
-            f"recommended_check_command: {preflight['recommended_check_command']}",
-            f"recommended_start_command: {preflight['recommended_start_command']}",
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("draft_id", payload["draft_id"]),
+            _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+            _render_field("ready_to_try_now", preflight["ready_to_try_now"]),
+            _render_field("recommended_check_command", preflight["recommended_check_command"]),
+            _render_field("recommended_start_command", preflight["recommended_start_command"]),
         ]
         for item in preflight["checks"]:
             lines.append(
@@ -1177,15 +1240,15 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
     if command == "build-product-entry":
         product_entry = payload["product_entry"]
         lines = [
-            f"grant_run_id: {payload['grant_run_id']}",
-            f"workspace_id: {payload['workspace_id']}",
-            f"draft_id: {payload['draft_id']}",
-            f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"entry_mode: {product_entry['entry_mode']}",
-            f"task_intent: {product_entry['task_intent']}",
-            f"target_domain_id: {product_entry['target_domain_id']}",
-            f"checkpoint_status: {product_entry['stage_snapshot']['checkpoint_status']}",
-            f"output_path: {payload['output_path']}",
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("draft_id", payload["draft_id"]),
+            _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+            _render_field("entry_mode", product_entry["entry_mode"]),
+            _render_field("task_intent", product_entry["task_intent"]),
+            _render_field("target_domain_id", product_entry["target_domain_id"]),
+            _render_field("checkpoint_status", product_entry["stage_snapshot"]["checkpoint_status"]),
+            _render_field("output_path", payload["output_path"]),
         ]
         return "\n".join(lines)
 
