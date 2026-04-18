@@ -8,6 +8,7 @@ from typing import Any
 from med_autogrant import mainline_status
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.product_entry import MedAutoGrantProductEntry
+from opl_harness_shared.status_narration import build_status_narration_human_view
 from med_autogrant.public_cli import (
     INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,
@@ -829,15 +830,22 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
 
     if command == "grant-progress":
         projection = payload["progress_projection"]
+        human_view = build_status_narration_human_view(
+            projection,
+            fallback_current_stage=projection.get("current_stage"),
+            fallback_latest_update=projection.get("current_stage_summary"),
+            fallback_next_step=projection.get("next_system_action"),
+            fallback_blockers=projection.get("current_blockers") or [],
+        )
         lines = [
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"draft_id: {payload['draft_id']}",
             f"lifecycle_stage: {payload['lifecycle_stage']}",
             f"checkpoint_status: {projection['checkpoint_status']}",
-            f"recommended_next_stage: {projection['recommended_next_stage']}",
-            f"current_stage_summary: {projection['current_stage_summary']}",
-            f"next_system_action: {projection['next_system_action']}",
+            f"当前阶段: {human_view.get('current_stage_label') or projection['current_stage']}",
+            f"当前判断: {human_view.get('status_summary') or human_view.get('latest_update') or projection['current_stage_summary']}",
+            f"下一步建议: {human_view.get('next_step') or projection['next_system_action']}",
         ]
         for item in projection["current_blockers"]:
             lines.append(f"- blocker: {item}")

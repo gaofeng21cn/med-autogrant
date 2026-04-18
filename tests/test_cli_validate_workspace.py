@@ -294,6 +294,23 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("human_gates", payload["family_orchestration"])
         self.assertIn("resume_contract", payload["family_orchestration"])
 
+    def test_grant_progress_plain_text_prefers_shared_human_status_narration(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-progress",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "text",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("当前阶段: 批注审阅", stdout)
+        self.assertIn("当前判断: 当前状态：批注审阅；下一阶段：修订落实；当前卡点：必要性表述仍略偏现象描述。", stdout)
+        self.assertIn("下一步建议: 执行 revision plan 中的 P0/P1 项。", stdout)
+        self.assertNotIn("current_stage_summary:", stdout)
+        self.assertNotIn("next_system_action:", stdout)
+
     def test_grant_cockpit_projects_workspace_alerts_and_commands(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "grant-cockpit",
