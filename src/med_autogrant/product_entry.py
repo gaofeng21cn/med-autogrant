@@ -34,12 +34,7 @@ from med_autogrant.workspace import (
 )
 from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
 from opl_harness_shared.family_orchestration import (
-    build_explicit_checkpoint_policy as _build_shared_explicit_checkpoint_policy,
-    build_family_action_graph as _build_shared_family_action_graph,
-    build_family_action_graph_edge as _build_shared_family_action_graph_edge,
-    build_family_action_graph_human_gate as _build_shared_family_action_graph_human_gate,
-    build_family_action_graph_node as _build_shared_family_action_graph_node,
-    build_family_orchestration_template as _build_shared_family_orchestration_template,
+    build_family_product_entry_orchestration as _build_shared_family_product_entry_orchestration,
 )
 from opl_harness_shared.automation_companions import (
     build_automation_catalog as _build_shared_automation_catalog,
@@ -1948,19 +1943,46 @@ def _build_family_orchestration_companion(
 
     gate_status = "requested" if needs_author_decision or route_status == "pending" else "approved"
     gate_id = f"mag_route_gate_{resolved_recommended_route_id}"
-    return _build_shared_family_orchestration_template(
-        action_graph_ref={
-            "ref_kind": "json_pointer",
-            "ref": "/family_orchestration/action_graph",
-            "label": "mag family action graph",
-        },
-        action_graph=_build_family_action_graph(
-            current_route_id=resolved_current_route_id,
-            recommended_route_id=resolved_recommended_route_id,
-            gate_id=gate_id,
-            gate_status=gate_status,
-        ),
+    current_node_id = f"route:{resolved_current_route_id}"
+    recommended_node_id = f"route:{resolved_recommended_route_id}"
+    edge_on = "decision" if gate_status == "requested" else "success"
+    return _build_shared_family_product_entry_orchestration(
+        graph_id=f"mag_{resolved_current_route_id}_to_{resolved_recommended_route_id}_graph",
+        target_domain_id=TARGET_DOMAIN_ID,
+        graph_kind="grant_route_orchestration",
+        graph_version="2026-04-13",
+        nodes=[
+            {
+                "node_id": current_node_id,
+                "node_kind": _route_to_action_node_kind(resolved_current_route_id),
+                "title": f"Current route: {resolved_current_route_id}",
+                "produces_checkpoint": True,
+            },
+            {
+                "node_id": recommended_node_id,
+                "node_kind": _route_to_action_node_kind(resolved_recommended_route_id),
+                "title": f"Recommended route: {resolved_recommended_route_id}",
+                "produces_checkpoint": True,
+            },
+        ],
+        edges=[
+            {
+                "from": current_node_id,
+                "to": recommended_node_id,
+                "on": edge_on,
+            }
+        ],
+        entry_nodes=[current_node_id],
+        exit_nodes=[recommended_node_id],
         human_gates=[
+            {
+                "gate_id": gate_id,
+                "trigger_nodes": [recommended_node_id],
+                "blocking": gate_status == "requested",
+            }
+        ],
+        checkpoint_nodes=[current_node_id, recommended_node_id],
+        human_gate_previews=[
             {
                 "gate_id": gate_id,
                 "title": f"确认 {resolved_recommended_route_id} route 执行决策",
@@ -1972,6 +1994,11 @@ def _build_family_orchestration_companion(
                 },
             }
         ],
+        action_graph_ref={
+            "ref_kind": "json_pointer",
+            "ref": "/family_orchestration/action_graph",
+            "label": "mag family action graph",
+        },
         resume_surface_kind=resolved_resume_surface_kind,
         session_locator_field="grant_run_id",
         checkpoint_locator_field="lifecycle_stage",
@@ -1985,57 +2012,6 @@ def _build_family_orchestration_companion(
             "ref": resolved_checkpoint_lineage_surface_ref,
             "label": "family checkpoint lineage surface",
         },
-    )
-
-
-def _build_family_action_graph(
-    *,
-    current_route_id: str,
-    recommended_route_id: str,
-    gate_id: str,
-    gate_status: str,
-) -> dict[str, Any]:
-    current_node_id = f"route:{current_route_id}"
-    recommended_node_id = f"route:{recommended_route_id}"
-    edge_on = "decision" if gate_status == "requested" else "success"
-    return _build_shared_family_action_graph(
-        graph_id=f"mag_{current_route_id}_to_{recommended_route_id}_graph",
-        target_domain_id=TARGET_DOMAIN_ID,
-        graph_kind="grant_route_orchestration",
-        graph_version="2026-04-13",
-        nodes=[
-            _build_shared_family_action_graph_node(
-                node_id=current_node_id,
-                node_kind=_route_to_action_node_kind(current_route_id),
-                title=f"Current route: {current_route_id}",
-                produces_checkpoint=True,
-            ),
-            _build_shared_family_action_graph_node(
-                node_id=recommended_node_id,
-                node_kind=_route_to_action_node_kind(recommended_route_id),
-                title=f"Recommended route: {recommended_route_id}",
-                produces_checkpoint=True,
-            ),
-        ],
-        edges=[
-            _build_shared_family_action_graph_edge(
-                from_node=current_node_id,
-                to_node=recommended_node_id,
-                on=edge_on,
-            ),
-        ],
-        entry_nodes=[current_node_id],
-        exit_nodes=[recommended_node_id],
-        human_gates=[
-            _build_shared_family_action_graph_human_gate(
-                gate_id=gate_id,
-                trigger_nodes=[recommended_node_id],
-                blocking=gate_status == "requested",
-            )
-        ],
-        checkpoint_policy=_build_shared_explicit_checkpoint_policy(
-            checkpoint_nodes=[current_node_id, recommended_node_id]
-        ),
     )
 
 

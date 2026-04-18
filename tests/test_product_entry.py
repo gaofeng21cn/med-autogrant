@@ -2198,28 +2198,47 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             expected_resume_surface="grant_user_loop",
         )
 
-    def test_family_orchestration_action_graph_uses_shared_builder(self) -> None:
+    def test_family_orchestration_action_graph_uses_shared_product_entry_orchestration(self) -> None:
         from med_autogrant import product_entry as module
 
         captured: dict[str, object] = {}
 
-        def _fake_build_family_action_graph(**kwargs: object) -> dict[str, object]:
+        def _fake_build_family_product_entry_orchestration(**kwargs: object) -> dict[str, object]:
             captured.update(kwargs)
             return {
-                "version": "family-action-graph.v1",
-                "graph_id": str(kwargs["graph_id"]),
-                "target_domain_id": str(kwargs["target_domain_id"]),
-                "graph_kind": str(kwargs["graph_kind"]),
-                "graph_version": str(kwargs["graph_version"]),
-                "nodes": list(kwargs["nodes"]),
-                "edges": list(kwargs["edges"]),
-                "entry_nodes": list(kwargs["entry_nodes"]),
-                "exit_nodes": list(kwargs["exit_nodes"]),
-                "human_gates": list(kwargs["human_gates"]),
-                "checkpoint_policy": dict(kwargs["checkpoint_policy"]),
+                "action_graph_ref": {
+                    "ref_kind": "json_pointer",
+                    "ref": "/family_orchestration/action_graph",
+                    "label": "mag family action graph",
+                },
+                "action_graph": {
+                    "graph_id": str(kwargs["graph_id"]),
+                    "target_domain_id": str(kwargs["target_domain_id"]),
+                    "graph_kind": str(kwargs["graph_kind"]),
+                    "graph_version": str(kwargs["graph_version"]),
+                    "nodes": list(kwargs["nodes"]),
+                    "edges": list(kwargs["edges"]),
+                    "entry_nodes": list(kwargs["entry_nodes"]),
+                    "exit_nodes": list(kwargs["exit_nodes"]),
+                    "human_gates": list(kwargs["human_gates"]),
+                    "checkpoint_policy": {
+                        "mode": "explicit_nodes",
+                        "checkpoint_nodes": list(kwargs["checkpoint_nodes"]),
+                    },
+                },
+                "human_gates": list(kwargs["human_gate_previews"]),
+                "resume_contract": {
+                    "surface_kind": str(kwargs["resume_surface_kind"]),
+                    "session_locator_field": str(kwargs["session_locator_field"]),
+                    "checkpoint_locator_field": str(kwargs["checkpoint_locator_field"]),
+                },
             }
 
-        with patch.object(module, "_build_shared_family_action_graph", side_effect=_fake_build_family_action_graph):
+        with patch.object(
+            module,
+            "_build_shared_family_product_entry_orchestration",
+            side_effect=_fake_build_family_product_entry_orchestration,
+        ):
             payload = module._build_family_orchestration_companion(
                 current_route_id="drafting",
                 recommended_route_id="critique",
@@ -2237,6 +2256,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual([edge["on"] for edge in captured["edges"]], ["decision"])
         self.assertEqual(captured["entry_nodes"], ["route:drafting"])
         self.assertEqual(captured["exit_nodes"], ["route:critique"])
+        self.assertEqual(captured["checkpoint_nodes"], ["route:drafting", "route:critique"])
+        self.assertEqual(captured["human_gate_previews"][0]["gate_id"], "mag_route_gate_critique")
 
     def test_grant_user_loop_projects_landed_critique_route_when_drafting_can_execute_directly(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
