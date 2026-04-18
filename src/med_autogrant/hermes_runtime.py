@@ -51,6 +51,13 @@ from med_autogrant.workspace import (
     summarize_workspace_document,
     validate_workspace_document,
 )
+from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
+
+_editable_shared_bootstrap.ensure_editable_dependency_paths()
+
+from opl_harness_shared.family_entry_contracts import (
+    build_family_domain_entry_contract as _build_shared_family_domain_entry_contract,
+)
 
 
 JOURNAL_VERSION = 1
@@ -1842,15 +1849,15 @@ def _build_operator_contract() -> dict[str, Any]:
 
 
 def _build_domain_entry_contract() -> dict[str, Any]:
-    return {
-        "entry_adapter": SERVICE_SAFE_ENTRY_ADAPTER,
-        "service_safe_surface_kind": SERVICE_SAFE_ENTRY_SURFACE_KIND,
-        "product_entry_builder_command": PRODUCT_ENTRY_BUILD_COMMAND,
-        "product_entry_kind": PRODUCT_ENTRY_KIND,
-        "supported_entry_modes": list(SUPPORTED_PRODUCT_ENTRY_MODES),
-        "supported_commands": list(SUPPORTED_DOMAIN_ENTRY_COMMANDS),
-        "command_contracts": [dict(contract) for contract in DOMAIN_ENTRY_COMMAND_CONTRACTS],
-    }
+    return _build_shared_family_domain_entry_contract(
+        entry_adapter=SERVICE_SAFE_ENTRY_ADAPTER,
+        service_safe_surface_kind=SERVICE_SAFE_ENTRY_SURFACE_KIND,
+        product_entry_builder_command=PRODUCT_ENTRY_BUILD_COMMAND,
+        product_entry_kind=PRODUCT_ENTRY_KIND,
+        supported_entry_modes=list(SUPPORTED_PRODUCT_ENTRY_MODES),
+        supported_commands=list(SUPPORTED_DOMAIN_ENTRY_COMMANDS),
+        command_contracts=[dict(contract) for contract in DOMAIN_ENTRY_COMMAND_CONTRACTS],
+    )
 
 
 def _build_schema_contract() -> dict[str, Any]:

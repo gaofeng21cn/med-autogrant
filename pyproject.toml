@@ -13,7 +13,7 @@ authors = [
 ]
 dependencies = [
     "hermes-agent[acp]",
-    "opl-harness-shared @ git+https://github.com/gaofeng21cn/one-person-lab.git@2f61c205090c6675bdc7293b20dbf10f5e04e556#subdirectory=python/opl-harness-shared",
+    "opl-harness-shared @ git+https://github.com/gaofeng21cn/one-person-lab.git@68ea8e2d0694a1e9b4b37682d22fb4c4733c7518#subdirectory=python/opl-harness-shared",
 ]
 
 [project.scripts]
