@@ -73,6 +73,102 @@
         }
       }
     },
+    "statusNarrationContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "contract_kind",
+        "contract_id",
+        "surface_kind",
+        "audience",
+        "milestone",
+        "stage",
+        "readiness",
+        "remaining_scope",
+        "current_blockers",
+        "latest_update",
+        "next_step",
+        "human_gate",
+        "facts",
+        "narration_policy"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "contract_kind": {
+          "const": "ai_status_narration"
+        },
+        "contract_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "surface_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "audience": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "milestone": {
+          "type": "object"
+        },
+        "stage": {
+          "type": "object"
+        },
+        "readiness": {
+          "type": "object"
+        },
+        "remaining_scope": {
+          "type": "object"
+        },
+        "current_blockers": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "latest_update": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "next_step": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "human_gate": {
+          "type": "object"
+        },
+        "facts": {
+          "type": "object"
+        },
+        "narration_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "legacy_summary_role",
+            "style",
+            "answer_checklist"
+          ],
+          "properties": {
+            "mode": {
+              "const": "ai_first"
+            },
+            "legacy_summary_role": {
+              "const": "fallback_only"
+            },
+            "style": {
+              "const": "plain_language"
+            },
+            "answer_checklist": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              }
+            }
+          }
+        }
+      }
+    },
     "grantProgressProjection": {
       "type": "object",
       "additionalProperties": false,
@@ -128,6 +224,9 @@
         },
         "author_decision_summary": {
           "$ref": "#/$defs/nullableString"
+        },
+        "status_narration_contract": {
+          "$ref": "#/$defs/statusNarrationContract"
         },
         "focus": {
           "$ref": "#/$defs/focusPayload"

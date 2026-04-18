@@ -927,6 +927,39 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "next_system_action": "执行 revision plan 中的 P0/P1 项。",
                 "needs_author_decision": False,
                 "author_decision_summary": None,
+                "status_narration_contract": {
+                    "schema_version": 1,
+                    "contract_kind": "ai_status_narration",
+                    "contract_id": "grant-progress::nsfc-demo-001",
+                    "surface_kind": "grant_progress",
+                    "audience": "human_user",
+                    "milestone": {},
+                    "stage": {
+                        "current_stage": "critique",
+                        "recommended_next_stage": "revision",
+                        "checkpoint_status": "forward_progress",
+                    },
+                    "readiness": {
+                        "needs_author_decision": False,
+                    },
+                    "remaining_scope": {},
+                    "current_blockers": [
+                        "必要性表述仍略偏现象描述。",
+                    ],
+                    "latest_update": "当前 grant 已进入 critique 阶段；导师批注 verdict=major_revision，应先执行结构化修订。",
+                    "next_step": "执行 revision plan 中的 P0/P1 项。",
+                    "human_gate": {},
+                    "facts": {
+                        "workspace_id": "nsfc-demo-001",
+                        "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                    },
+                    "narration_policy": {
+                        "mode": "ai_first",
+                        "legacy_summary_role": "fallback_only",
+                        "style": "plain_language",
+                        "answer_checklist": ["current_stage", "current_blockers", "next_step"],
+                    },
+                },
                 "focus": {
                     "applicant_name": "示例申请人",
                     "funding_program": "nsfc-2026-general",
@@ -967,6 +1000,37 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "next_system_action": "沿当前阶段继续执行主线任务。",
                 "needs_author_decision": False,
                 "author_decision_summary": None,
+                "status_narration_contract": {
+                    "schema_version": 1,
+                    "contract_kind": "ai_status_narration",
+                    "contract_id": "grant-progress::nsfc-demo-001",
+                    "surface_kind": "grant_progress",
+                    "audience": "human_user",
+                    "milestone": {},
+                    "stage": {
+                        "current_stage": "frozen",
+                        "recommended_next_stage": "frozen",
+                        "checkpoint_status": "submission_frozen",
+                    },
+                    "readiness": {
+                        "needs_author_decision": False,
+                    },
+                    "remaining_scope": {},
+                    "current_blockers": [],
+                    "latest_update": "当前 grant 已进入 frozen 阶段；送审前冻结 gate 已闭合，可保持当前阶段继续推进。",
+                    "next_step": "沿当前阶段继续执行主线任务。",
+                    "human_gate": {},
+                    "facts": {
+                        "workspace_id": "nsfc-demo-001",
+                        "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                    },
+                    "narration_policy": {
+                        "mode": "ai_first",
+                        "legacy_summary_role": "fallback_only",
+                        "style": "plain_language",
+                        "answer_checklist": ["current_stage", "current_blockers", "next_step"],
+                    },
+                },
                 "focus": {
                     "applicant_name": "示例申请人",
                     "funding_program": "nsfc-2026-general",
@@ -1118,6 +1182,39 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                     "next_system_action": "执行 revision plan 中的 P0/P1 项。",
                     "needs_author_decision": False,
                     "author_decision_summary": None,
+                    "status_narration_contract": {
+                        "schema_version": 1,
+                        "contract_kind": "ai_status_narration",
+                        "contract_id": "grant-progress::nsfc-demo-001",
+                        "surface_kind": "grant_progress",
+                        "audience": "human_user",
+                        "milestone": {},
+                        "stage": {
+                            "current_stage": "critique",
+                            "recommended_next_stage": "revision",
+                            "checkpoint_status": "forward_progress",
+                        },
+                        "readiness": {
+                            "needs_author_decision": False,
+                        },
+                        "remaining_scope": {},
+                        "current_blockers": [
+                            "必要性表述仍略偏现象描述。",
+                        ],
+                        "latest_update": "当前 grant 已进入 critique 阶段；导师批注 verdict=major_revision，应先执行结构化修订。",
+                        "next_step": "执行 revision plan 中的 P0/P1 项。",
+                        "human_gate": {},
+                        "facts": {
+                            "workspace_id": "nsfc-demo-001",
+                            "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                        },
+                        "narration_policy": {
+                            "mode": "ai_first",
+                            "legacy_summary_role": "fallback_only",
+                            "style": "plain_language",
+                            "answer_checklist": ["current_stage", "current_blockers", "next_step"],
+                        },
+                    },
                     "focus": {
                         "applicant_name": "示例申请人",
                         "funding_program": "nsfc-2026-general",
