@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib
 
+from med_autogrant.public_cli import public_cli_command
+
 
 def test_mainline_status_projects_ideal_target_phase_ladder_and_remaining_gaps() -> None:
     module = importlib.import_module("med_autogrant.mainline_status")
@@ -70,8 +72,32 @@ def test_mainline_phase_status_resolves_current_and_next_phase() -> None:
     assert current_payload["phase"]["status"] == "next"
     assert any(item["name"] == "mainline_status" for item in current_payload["phase"]["entry_points"])
     assert next_payload["phase"]["phase_id"] == "P4"
-    assert any("grant-user-loop" in item["command"] for item in next_payload["phase"]["entry_points"])
-    assert any("build-submission-ready-package" in item["command"] for item in next_payload["phase"]["entry_points"])
+    assert any(
+        item["command"]
+        == public_cli_command(
+            "grant-user-loop",
+            "--input",
+            "<workspace-path>",
+            "--task-intent",
+            "<task-intent>",
+            "--format",
+            "json",
+        )
+        for item in next_payload["phase"]["entry_points"]
+    )
+    assert any(
+        item["command"]
+        == public_cli_command(
+            "build-submission-ready-package",
+            "--input",
+            "<workspace-path>",
+            "--output-dir",
+            "<submission-ready-output-dir>",
+            "--format",
+            "json",
+        )
+        for item in next_payload["phase"]["entry_points"]
+    )
 
 
 def test_render_mainline_phase_markdown_surfaces_entry_points_and_exit_criteria() -> None:

@@ -33,6 +33,9 @@ from med_autogrant.workspace import (
     validate_workspace_document,
 )
 from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
+from opl_harness_shared.family_orchestration import (
+    build_family_orchestration_template as _build_shared_family_orchestration_template,
+)
 from opl_harness_shared.automation_companions import (
     build_automation_catalog as _build_shared_automation_catalog,
     build_automation_descriptor as _build_shared_automation_descriptor,
@@ -1997,19 +2000,19 @@ def _build_family_orchestration_companion(
 
     gate_status = "requested" if needs_author_decision or route_status == "pending" else "approved"
     gate_id = f"mag_route_gate_{resolved_recommended_route_id}"
-    return {
-        "action_graph_ref": {
+    return _build_shared_family_orchestration_template(
+        action_graph_ref={
             "ref_kind": "json_pointer",
             "ref": "/family_orchestration/action_graph",
             "label": "mag family action graph",
         },
-        "action_graph": _build_family_action_graph(
+        action_graph=_build_family_action_graph(
             current_route_id=resolved_current_route_id,
             recommended_route_id=resolved_recommended_route_id,
             gate_id=gate_id,
             gate_status=gate_status,
         ),
-        "human_gates": [
+        human_gates=[
             {
                 "gate_id": gate_id,
                 "title": f"确认 {resolved_recommended_route_id} route 执行决策",
@@ -2021,22 +2024,20 @@ def _build_family_orchestration_companion(
                 },
             }
         ],
-        "resume_contract": {
-            "surface_kind": resolved_resume_surface_kind,
-            "session_locator_field": "grant_run_id",
-            "checkpoint_locator_field": "lifecycle_stage",
-        },
-        "event_envelope_surface": {
+        resume_surface_kind=resolved_resume_surface_kind,
+        session_locator_field="grant_run_id",
+        checkpoint_locator_field="lifecycle_stage",
+        event_envelope_surface={
             "ref_kind": "json_pointer",
             "ref": resolved_event_envelope_surface_ref,
             "label": "family event envelope surface",
         },
-        "checkpoint_lineage_surface": {
+        checkpoint_lineage_surface={
             "ref_kind": "json_pointer",
             "ref": resolved_checkpoint_lineage_surface_ref,
             "label": "family checkpoint lineage surface",
         },
-    }
+    )
 
 
 def _build_family_action_graph(
