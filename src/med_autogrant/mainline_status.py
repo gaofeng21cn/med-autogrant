@@ -33,13 +33,13 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 },
                 {
                     "name": "run_local",
-                    "command": public_cli_command("run-local", "--input", "<workspace-path>", "--format", "json"),
+                    "command": public_cli_command("runtime-run", "--input", "<workspace-path>", "--format", "json"),
                     "purpose": "走当前 Hermes-backed substrate 的单次本地主循环。",
                 },
             ],
             "exit_criteria": [
                 "真实 upstream Hermes-Agent 依赖与连接证据已经冻结。",
-                "run-local / resume-local 不再由 repo-local helper 主责 substrate durability。",
+                "runtime-run / runtime-resume 不再由 repo-local helper 主责 substrate durability。",
             ],
             "phase_docs": [
                 "docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md",

@@ -235,15 +235,13 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "return_surface_contract" in product_entry_truth
     assert "MedAutoGrantDomainEntry" in product_entry_truth
     assert "executor_routing_contract" in product_entry_truth
-    assert "handoff_requirements" in product_entry_truth
     assert "author_side_route_catalog" in product_entry_truth
     assert "domain_entry_contract" in product_entry_truth
     assert "supported_commands" in product_entry_truth
     assert "command_contracts" in product_entry_truth
-    assert (
-        "direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen"
-        in product_entry_truth
-    )
+    assert "execute-direction-screening-pass" in product_entry_truth
+    assert "execute-drafting-pass" in product_entry_truth
+    assert "execute-freeze-pass" in product_entry_truth
     assert "schema-backed" in schema_backed_entry_truth
     assert "executor-routing-contract.schema.json" in schema_backed_entry_truth
     assert "product-entry.schema.json" in schema_backed_entry_truth
@@ -257,12 +255,11 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "build-artifact-bundle" in executor_routing_truth
     assert "build-final-package" in executor_routing_truth
     assert "build-hosted-contract-bundle" in executor_routing_truth
-    assert "handoff_requirements" in executor_routing_truth
     assert "direction_screening" in executor_routing_truth
     assert "drafting" in executor_routing_truth
     assert "frozen" in executor_routing_truth
-    assert "required_summary_fields" in executor_routing_truth
-    assert "required_gate_fields" in executor_routing_truth
+    assert "execute-direction-screening-pass" in executor_routing_truth
+    assert "execute-freeze-pass" in executor_routing_truth
 
     assert "execute-critique-pass" in critique_executor_truth
     assert "run_codex_exec" in critique_executor_truth
@@ -377,7 +374,7 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
 
     assert "还没有**真正完成上游 `Hermes-Agent` 集成" in truth_reset or "还没有" in truth_reset
     assert "repo-local code" in truth_reset
-    assert "run-local" in truth_reset
+    assert "runtime-run" in truth_reset
     assert "build-hosted-contract-bundle" in truth_reset
 
     assert "Hermes-backed runtime substrate" in program_truth
@@ -398,8 +395,8 @@ def test_repo_tracks_truth_reset_surface_and_historical_migration_map() -> None:
     assert "next-step" in migration_map
     assert "critique-summary" in migration_map
     assert "stage-route-report" in migration_map
-    assert "run-local" in migration_map
-    assert "resume-local" in migration_map
+    assert "runtime-run" in migration_map
+    assert "runtime-resume" in migration_map
     assert "execute-revision-pass" in migration_map
     assert "build-final-package" in migration_map
     assert "build-hosted-contract-bundle" in migration_map

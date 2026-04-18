@@ -28,17 +28,17 @@ INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.j
 class DomainEntryDispatchTest(unittest.TestCase):
     def test_domain_entry_dispatches_runtime_command(self) -> None:
         runtime = Mock()
-        runtime.run_local.return_value = {"ok": True, "command": "run-local"}
+        runtime.run_local.return_value = {"ok": True, "command": "runtime-run"}
 
         payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
             {
-                "command": "run-local",
+                "command": "runtime-run",
                 "input_path": str(CRITIQUE_EXAMPLE_PATH),
                 "journal_path": "/tmp/test-journal.json",
             }
         )
 
-        self.assertEqual(payload, {"ok": True, "command": "run-local"})
+        self.assertEqual(payload, {"ok": True, "command": "runtime-run"})
         runtime.run_local.assert_called_once_with(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             journal_path="/tmp/test-journal.json",
@@ -187,7 +187,7 @@ class DomainEntryFreshProofTest(unittest.TestCase):
 
                 reroute_payload = entry.dispatch(
                     {
-                        "command": "run-local",
+                        "command": "runtime-run",
                         "input_path": str(REVISION_EXAMPLE_PATH),
                         "journal_path": str(reroute_journal_path),
                     }
@@ -221,7 +221,7 @@ class DomainEntryFreshProofTest(unittest.TestCase):
 
                 run_payload = entry.dispatch(
                     {
-                        "command": "run-local",
+                        "command": "runtime-run",
                         "input_path": str(revised_workspace_path),
                         "journal_path": str(revised_journal_path),
                     }
@@ -232,7 +232,7 @@ class DomainEntryFreshProofTest(unittest.TestCase):
 
                 resume_payload = entry.dispatch(
                     {
-                        "command": "resume-local",
+                        "command": "runtime-resume",
                         "journal_path": str(revised_journal_path),
                     }
                 )

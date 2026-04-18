@@ -32,7 +32,7 @@ Date: `2026-04-13`
 - `Med Auto Grant` 继续持有 grant author-side route truth
 - 哪些 executor route 已经 landed
 - 哪些 route 已经是 landed command surface
-- 哪些 route 仍然只是 `pending / handoff-required`
+- 当前 author-side route catalog 的 landed command truth
 
 ## Landed Facts
 
@@ -40,7 +40,7 @@ Date: `2026-04-13`
 
 下面两个 surface 现在都会输出 `executor_routing_contract`：
 
-- `run-local` 返回的 `stage_action_envelope`
+- `runtime-run` 返回的 `stage_action_envelope`
 - `build-product-entry` 返回的 `product_entry`
 
 当前最小合同字段是：
@@ -99,34 +99,28 @@ Date: `2026-04-13`
 - `recommended_executor_route.route_status = landed`
 - `recommended_executor_route.execution_surface.command = execute-critique-pass`
 
-### 3. landed 与 pending 的 author-side route 口径已经冻结
+### 3. 全部 author-side route 已经冻结为 landed route catalog
 
 当前 `author_side_route_catalog` 的真实状态是：
 
 - `direction_screening`
-  - `route_status = pending`
-  - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements.contract_kind = direction_screening-pending-handoff`
+  - `route_status = landed`
+  - `execution_surface.command = execute-direction-screening-pass`
 - `question_refinement`
-  - `route_status = pending`
-  - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements.contract_kind = question_refinement-pending-handoff`
+  - `route_status = landed`
+  - `execution_surface.command = execute-question-refinement-pass`
 - `argument_building`
-  - `route_status = pending`
-  - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements.contract_kind = argument_building-pending-handoff`
+  - `route_status = landed`
+  - `execution_surface.command = execute-argument-building-pass`
 - `fit_alignment`
-  - `route_status = pending`
-  - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements.contract_kind = fit_alignment-pending-handoff`
+  - `route_status = landed`
+  - `execution_surface.command = execute-fit-alignment-pass`
 - `outline`
-  - `route_status = pending`
-  - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements.contract_kind = outline-pending-handoff`
+  - `route_status = landed`
+  - `execution_surface.command = execute-outline-pass`
 - `drafting`
-  - `route_status = pending`
-  - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements.contract_kind = drafting-pending-handoff`
+  - `route_status = landed`
+  - `execution_surface.command = execute-drafting-pass`
 - `critique`
   - `route_status = landed`
   - `execution_surface.command = execute-critique-pass`
@@ -137,9 +131,8 @@ Date: `2026-04-13`
   - `route_status = landed`
   - `execution_surface.command = execute-revision-pass`
 - `frozen`
-  - `route_status = pending`
-  - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements.contract_kind = frozen-pending-handoff`
+  - `route_status = landed`
+  - `execution_surface.command = execute-freeze-pass`
 - `artifact_bundle`
   - `route_status = landed`
   - `execution_surface.command = build-artifact-bundle`
@@ -155,29 +148,9 @@ Date: `2026-04-13`
 - `surface_kind = service-safe-domain-entry-command`
 - `entry_adapter = MedAutoGrantDomainEntry`
 
-来表达 handoff surface。
+### 4. 非 landed stage 不再出现在当前主线 route truth
 
-对所有 pending route，`handoff_requirements` 现在还会继续列出：
-
-- `required_identity_fields`
-- `required_summary_fields`
-- `required_gate_fields`
-
-并且都只允许引用当前 repo 已有的 `summarize-workspace` / `stage-route-report` / `critique-summary` 字段。
-
-### 4. 非 landed stage 不再被误写成已有 executor
-
-当前所有没有 repo-tracked executor surface 的 route/stage，都只允许输出：
-
-- `route_status = pending`
-- `handoff_contract_kind = handoff-required`
-
-但现在不再只是“空 pending”。
-它们必须继续带：
-
-- route-specific `handoff_requirements`
-- 对应的 `required_summary_fields / required_gate_fields`
-- 以及按 source stage fail-closed 的 `required_domain_surfaces`
+当前 route contract 只承认已经 repo-tracked、可直接调用的 landed command surface；历史 pending handoff matrix 已经退到 superseded 历史材料。
 
 而不能因为 substrate 已统一，就自动被写成“已有 landed executor route”。
 
@@ -201,9 +174,8 @@ Date: `2026-04-13`
 
 - `stage_action_envelope` 会输出 `executor_routing_contract`
 - `build-product-entry` 会输出 `executor_routing_contract`
-- `critique / revision / artifact_bundle / final_package / hosted_contract_bundle` 继续保持当前 landed surface
+- `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / revision / frozen / artifact_bundle / final_package / hosted_contract_bundle` 都继续保持当前 landed surface
 - `drafting -> critique` 与 `revision(completed revised switch) -> critique` 都会落到 `execute-critique-pass`
-- 其余 pending authoring route 继续显式列出 route-specific `handoff_requirements`
 - 当前默认 `critique` executor 会显式继承本机 Codex 默认配置
 
 ## Honest Boundary

@@ -10,6 +10,7 @@ from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.product_entry import MedAutoGrantProductEntry
 from opl_harness_shared.status_narration import build_status_narration_human_view
 from med_autogrant.public_cli import (
+    COMMAND_ALIASES,
     INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,
     PUBLIC_COMMAND_ORDER,
@@ -244,14 +245,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_runtime_entry_command(
         subparsers,
-        "run-local",
-        handle_run_local,
+        "runtime-run",
+        handle_runtime_run,
         "运行本地 runtime 单次主循环。",
     )
     _add_resume_runtime_command(
         subparsers,
-        "resume-local",
-        handle_resume_local,
+        "runtime-resume",
+        handle_runtime_resume,
         "从 durable run journal 恢复本地 runtime 单次主循环。",
     )
     _add_artifact_bundle_command(
@@ -341,7 +342,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND)
+LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND) | set(COMMAND_ALIASES)
 
 
 def _print_public_help() -> None:
@@ -395,9 +396,11 @@ def _normalize_public_command_argv(argv: list[str]) -> list[str]:
     if not argv:
         return argv
     if argv[0] in LEGACY_PUBLIC_COMMANDS:
-        raise SystemExit(
-            f"Legacy flat command `{argv[0]}` has been removed. Use `{public_command_label(argv[0])}` instead."
-        )
+        normalized = COMMAND_ALIASES.get(argv[0], argv[0])
+        if normalized in INTERNAL_TO_PUBLIC_COMMAND:
+            raise SystemExit(
+                f"Legacy flat command `{argv[0]}` has been removed. Use `{public_command_label(normalized)}` instead."
+            )
     if len(argv) >= 2 and (argv[0], argv[1]) in PUBLIC_TO_INTERNAL_COMMAND:
         return [PUBLIC_TO_INTERNAL_COMMAND[(argv[0], argv[1])], *argv[2:]]
     return argv
@@ -535,18 +538,18 @@ def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 
 
-def handle_run_local(args: argparse.Namespace) -> dict[str, Any]:
+def handle_runtime_run(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(
         {
-            "command": "run-local",
+            "command": "runtime-run",
             "input_path": args.input,
             "journal_path": args.journal,
         }
     )
 
 
-def handle_resume_local(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "resume-local", "journal_path": args.journal})
+def handle_runtime_resume(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch({"command": "runtime-resume", "journal_path": args.journal})
 
 
 def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
@@ -1122,7 +1125,7 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             lines.append(f"- {name}: {target}")
         return "\n".join(lines)
 
-    if command in {"run-local", "resume-local"}:
+    if command in {"runtime-run", "runtime-resume"}:
         lines = [
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",

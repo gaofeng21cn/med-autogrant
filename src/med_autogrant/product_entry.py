@@ -272,8 +272,8 @@ class MedAutoGrantProductEntry:
             "runtime_session_contract": {
                 "grant_run_id": grant_run_id,
                 "session_handle_kind": "grant_run_id",
-                "start_entry": "run-local",
-                "resume_entry": "resume-local",
+                "start_entry": "runtime-run",
+                "resume_entry": "runtime-resume",
                 "runtime_substrate_contract": _build_runtime_substrate_contract(
                     current_program_contract=current_program_contract,
                 ),
@@ -770,14 +770,7 @@ class MedAutoGrantProductEntry:
             "route_status",
             context="grant_user_loop.next_action",
         )
-        needs_author_decision = bool(progress_projection.get("needs_author_decision")) or (
-            _require_nonempty_string_from_mapping(
-                next_action,
-                "action_kind",
-                context="grant_user_loop.next_action",
-            )
-            == "prepare_pending_handoff"
-        )
+        needs_author_decision = bool(progress_projection.get("needs_author_decision"))
         family_orchestration = _build_family_orchestration_companion(
             current_route_id=current_route_id,
             recommended_route_id=recommended_route_id,
@@ -2397,52 +2390,12 @@ def _build_next_action_payload(
             "handoff_surfaces": None,
         }
 
-    handoff_requirements = _optional_mapping(recommended_executor_route, "handoff_requirements")
-    handoff_surfaces = _build_handoff_surface_commands(
-        handoff_requirements=handoff_requirements,
-        input_path=input_path,
+    raise WorkspaceStateError(
+        f"grant_user_loop 只接受已 landed 的 route contract，收到 {route_id}({route_status})。",
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=route_id,
     )
-    return {
-        "action_kind": "prepare_pending_handoff",
-        "route_id": route_id,
-        "route_status": route_status,
-        "summary": f"当前推荐 route {route_id} 仍未 landed，应先按 handoff contract 准备所需 domain surfaces。",
-        "command": None,
-        "handoff_surfaces": handoff_surfaces,
-    }
-
-
-def _build_handoff_surface_commands(
-    *,
-    handoff_requirements: Mapping[str, Any] | None,
-    input_path: Path,
-) -> dict[str, str] | None:
-    if not isinstance(handoff_requirements, Mapping):
-        return None
-    required_domain_surfaces = handoff_requirements.get("required_domain_surfaces")
-    if not isinstance(required_domain_surfaces, list):
-        return None
-    commands: dict[str, str] = {}
-    for item in required_domain_surfaces:
-        if not isinstance(item, Mapping):
-            continue
-        command = _optional_string_from_mapping(item, "command")
-        if command is None:
-            continue
-        commands[_command_name_to_catalog_key(command)] = _build_domain_surface_command(
-            command=command,
-            input_path=input_path,
-        )
-    return commands or None
-
-
-def _command_name_to_catalog_key(command: str) -> str:
-    return command.replace("-", "_")
-
-
-def _build_domain_surface_command(*, command: str, input_path: Path) -> str:
-    resolved_input_path = input_path.expanduser().resolve()
-    return public_cli_command(command, "--input", str(resolved_input_path), "--format", "json")
 
 
 def _build_route_execution_command(
@@ -2784,21 +2737,13 @@ def _validate_grant_user_loop_contract(
                 workspace_id=workspace_id,
                 lifecycle_stage=lifecycle_stage,
             )
-    if action_kind == "prepare_pending_handoff":
-        if command is not None:
-            raise WorkspaceStateError(
-                "grant_user_loop.next_action.command 必须在 pending handoff 时为空。",
-                grant_run_id=grant_run_id,
-                workspace_id=workspace_id,
-                lifecycle_stage=lifecycle_stage,
-            )
-        if not isinstance(handoff_surfaces, Mapping) or not handoff_surfaces:
-            raise WorkspaceStateError(
-                "grant_user_loop.next_action.handoff_surfaces 必须在 pending handoff 时非空。",
-                grant_run_id=grant_run_id,
-                workspace_id=workspace_id,
-                lifecycle_stage=lifecycle_stage,
-            )
+    elif action_kind != "execute_landed_route":
+        raise WorkspaceStateError(
+            f"grant_user_loop.next_action.action_kind 非法: {action_kind}",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
 
 
 def _validate_product_entry_manifest_contract(

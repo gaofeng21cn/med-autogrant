@@ -117,7 +117,12 @@ class HermesGrantRunLedger:
         count = 0
         expected_journal_path = str(journal_path)
         for message in messages:
-            if message.get("tool_name") not in {"run-local", "resume-local"}:
+            if message.get("tool_name") not in {
+                "run-local",
+                "resume-local",
+                "runtime-run",
+                "runtime-resume",
+            }:
                 continue
             content = message.get("content")
             if not isinstance(content, str) or not content:

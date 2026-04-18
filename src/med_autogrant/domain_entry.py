@@ -21,8 +21,8 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "next-step": DomainEntryCommandSpec("next_step", ("input_path",)),
     "critique-summary": DomainEntryCommandSpec("critique_summary", ("input_path",)),
     "stage-route-report": DomainEntryCommandSpec("stage_route_report", ("input_path",)),
-    "run-local": DomainEntryCommandSpec("run_local", ("input_path",), ("journal_path",)),
-    "resume-local": DomainEntryCommandSpec("resume_local", ("journal_path",)),
+    "runtime-run": DomainEntryCommandSpec("run_local", ("input_path",), ("journal_path",)),
+    "runtime-resume": DomainEntryCommandSpec("resume_local", ("journal_path",)),
     "execute-direction-screening-pass": DomainEntryCommandSpec(
         "execute_direction_screening_pass",
         ("input_path", "output_path"),
@@ -69,6 +69,11 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     ),
 }
 
+COMPATIBILITY_COMMAND_ALIASES: dict[str, str] = {
+    "run-local": "runtime-run",
+    "resume-local": "runtime-resume",
+}
+
 
 class MedAutoGrantDomainEntry:
     """给 CLI 与未来 service caller 共用的结构化 domain entry。"""
@@ -83,7 +88,7 @@ class MedAutoGrantDomainEntry:
         self._probe = probe or probe_upstream_hermes
 
     def dispatch(self, request: Mapping[str, Any]) -> dict[str, Any]:
-        command = _require_command(request)
+        command = _normalize_command(_require_command(request))
         if command == "probe-upstream-hermes":
             return self._probe()
 
@@ -112,6 +117,10 @@ class MedAutoGrantDomainEntry:
         if "command" not in payload:
             return {"command": command, **payload}
         return payload
+
+
+def _normalize_command(command: str) -> str:
+    return COMPATIBILITY_COMMAND_ALIASES.get(command, command)
 
 
 def _require_command(request: Mapping[str, Any]) -> str:

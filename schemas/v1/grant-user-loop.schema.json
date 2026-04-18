@@ -93,21 +93,13 @@
       ],
       "properties": {
         "action_kind": {
-          "type": "string",
-          "enum": [
-            "execute_landed_route",
-            "prepare_pending_handoff"
-          ]
+          "const": "execute_landed_route"
         },
         "route_id": {
           "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
         },
         "route_status": {
-          "type": "string",
-          "enum": [
-            "landed",
-            "pending"
-          ]
+          "const": "landed"
         },
         "summary": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"

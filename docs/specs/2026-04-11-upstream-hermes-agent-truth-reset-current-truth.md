@@ -7,7 +7,7 @@
 ## 当前真实状态
 
 - 当前仓库已经有可运行的本地 `CLI` grant runtime 基线。
-- `run-local`、`resume-local`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle` 都是 repo-local runtime / export surface。
+- `runtime-run`、`runtime-resume`、`build-artifact-bundle`、`execute-revision-pass`、`build-final-package`、`build-hosted-contract-bundle` 都是 repo-local runtime / export surface。
 - `src/med_autogrant/hermes_runtime.py` 当前仍是仓内自写的 local runtime helper / migration scaffold，不等于上游 `Hermes-Agent` runtime。
 - 因此，当前仓库**还没有**真正完成上游 `Hermes-Agent` 集成。
 

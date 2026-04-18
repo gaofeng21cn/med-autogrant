@@ -38,7 +38,6 @@ Date: `2026-04-12`
 它和下面这些已冻结 contract 共享同一套 repo-tracked schema registry：
 
 - `service-safe-domain-surface.schema.json`
-- `pending-handoff-requirements.schema.json`
 - `executor-routing-contract.schema.json`
 - `product-entry.schema.json`
 - `nsfc-workspace.schema.json`
@@ -82,7 +81,6 @@ Date: `2026-04-12`
   - `aggregate_root_schema = nsfc-workspace.schema.json`
   - `contract_schema_files`
     - `service-safe-domain-surface.schema.json`
-    - `pending-handoff-requirements.schema.json`
     - `executor-routing-contract.schema.json`
     - `product-entry.schema.json`
     - `hosted-contract-bundle.schema.json`
@@ -95,7 +93,7 @@ Date: `2026-04-12`
 
 - 怎么调用已 landed 的 service-safe entry
 - 应该读哪套 schema registry
-- 当前 author-side route 哪些是 landed、哪些仍是 pending / handoff-required
+- 当前 author-side route catalog 已经全部 landed
 - 以及当前每个 landed command 需要哪些字段才能由 external caller 直接发起调用
 
 ### 4. authoring_contract 只打包已经冻结的 route truth

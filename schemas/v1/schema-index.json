@@ -73,11 +73,6 @@
       "status": "frozen"
     },
     {
-      "name": "pending_handoff_requirements",
-      "file": "pending-handoff-requirements.schema.json",
-      "status": "frozen"
-    },
-    {
       "name": "executor_routing_contract",
       "file": "executor-routing-contract.schema.json",
       "status": "frozen"

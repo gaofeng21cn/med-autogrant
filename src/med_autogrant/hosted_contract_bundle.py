@@ -70,11 +70,11 @@ def build_hosted_contract_bundle_document(
         "runtime_state_contract": runtime_state_contract,
         "session_contract": {
             "session_handle_kind": "grant_run_id",
-            "start_entry": "run-local",
-            "resume_entry": "resume-local",
+            "start_entry": "runtime-run",
+            "resume_entry": "runtime-resume",
             "required_local_surfaces": [
-                "run-local",
-                "resume-local",
+                "runtime-run",
+                "runtime-resume",
                 "build-artifact-bundle",
                 "build-final-package",
                 "run_journal",

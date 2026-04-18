@@ -21,9 +21,9 @@ Date: `2026-04-12`
 
 这条 current truth 解决的是：
 
-- `product_entry`、`executor_routing_contract`、`pending_handoff_requirements` 不再只是“代码里手工拼 dict + 文档约定”
+- `product_entry` 与 `executor_routing_contract` 不再只是“代码里手工拼 dict + 文档约定”
 - future `OPL Gateway` / domain caller 可以直接消费 repo-tracked schema
-- pending route、route catalog、nullability 与 landed/pending 边界不会悄悄漂移
+- landed route catalog、nullability 与 route truth 边界不会悄悄漂移
 
 ## Landed Facts
 
@@ -32,7 +32,6 @@ Date: `2026-04-12`
 当前 `schemas/v1/schema-index.json` 已显式索引：
 
 - `service-safe-domain-surface.schema.json`
-- `pending-handoff-requirements.schema.json`
 - `executor-routing-contract.schema.json`
 - `product-entry.schema.json`
 
@@ -49,13 +48,12 @@ Date: `2026-04-12`
 
 因此当前 contract 已经可以诚实表达：
 
-- pending route 的 `execution_surface = null`
 - early-stage `product_entry.domain_payload.draft_id = null`
-- 非空 route catalog / required_domain_surfaces / required_gate_fields
+- 非空 route catalog
 
-### 3. `run-local` 的 routing surface 现在会 schema-backed fail-closed
+### 3. `runtime-run` 的 routing surface 现在会 schema-backed fail-closed
 
-当前 `run-local.stage_action_envelope.executor_routing_contract` 在返回前会同时通过：
+当前 `runtime-run.stage_action_envelope.executor_routing_contract` 在返回前会同时通过：
 
 - `executor-routing-contract.schema.json`
 - 冻结 truth 比对
@@ -69,7 +67,6 @@ Date: `2026-04-12`
 
 如果有人误把：
 
-- `pending` route 写成 `landed`
 - critique handoff surface 写错
 - `current_stage_route` / `recommended_executor_route` 对调
 
@@ -120,7 +117,7 @@ Date: `2026-04-12`
 
 - schema registry 会追踪四份新 contract schema
 - `product_entry` 遇到非法 `executor_routing_contract` 会 fail-closed
-- `run-local` 遇到非法 `executor_routing_contract` 会 fail-closed
+- `runtime-run` 遇到非法 `executor_routing_contract` 会 fail-closed
 - `author_side_route_catalog` 必须继续等于当前冻结 route matrix
 - current `product_entry` / route handoff 仍保持 direct + `OPL` envelope truth 不漂移
 
@@ -128,7 +125,7 @@ Date: `2026-04-12`
 
 这条 current truth 只说明：
 
-- 当前 `product_entry` / `executor_routing_contract` / `pending_handoff_requirements` 已经升级成 schema-backed contract
+- 当前 `product_entry` / `executor_routing_contract` 已经升级成 schema-backed contract
 - repo 现在会在生成时 fail-closed，阻止 contract drift
 
 它不意味着：

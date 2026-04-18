@@ -219,8 +219,8 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "next-step",
     "critique-summary",
     "stage-route-report",
-    "run-local",
-    "resume-local",
+    "runtime-run",
+    "runtime-resume",
     "execute-direction-screening-pass",
     "execute-question-refinement-pass",
     "execute-argument-building-pass",
@@ -242,8 +242,8 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "next-step", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "critique-summary", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "stage-route-report", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "run-local", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
-    {"command": "resume-local", "required_fields": ["journal_path"], "optional_fields": []},
+    {"command": "runtime-run", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
+    {"command": "runtime-resume", "required_fields": ["journal_path"], "optional_fields": []},
     {"command": "execute-direction-screening-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {"command": "execute-question-refinement-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {"command": "execute-argument-building-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
@@ -709,8 +709,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             direct_envelope["runtime_session_contract"]["grant_run_id"],
             "grant-run-nsfc-demo-001-baseline-001",
         )
-        self.assertEqual(direct_envelope["runtime_session_contract"]["start_entry"], "run-local")
-        self.assertEqual(direct_envelope["runtime_session_contract"]["resume_entry"], "resume-local")
+        self.assertEqual(direct_envelope["runtime_session_contract"]["start_entry"], "runtime-run")
+        self.assertEqual(direct_envelope["runtime_session_contract"]["resume_entry"], "runtime-resume")
         self.assertEqual(
             direct_envelope["return_surface_contract"]["entry_adapter"],
             "MedAutoGrantDomainEntry",
@@ -1246,8 +1246,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                     "runtime_session_contract": {
                         "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
                         "session_handle_kind": "grant_run_id",
-                        "start_entry": "run-local",
-                        "resume_entry": "resume-local",
+                        "start_entry": "runtime-run",
+                        "resume_entry": "runtime-resume",
                         "runtime_substrate_contract": {
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
@@ -1325,8 +1325,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                     "runtime_session_contract": {
                         "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
                         "session_handle_kind": "grant_run_id",
-                        "start_entry": "run-local",
-                        "resume_entry": "resume-local",
+                        "start_entry": "runtime-run",
+                        "resume_entry": "runtime-resume",
                         "runtime_substrate_contract": {
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
@@ -1422,8 +1422,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "runtime_session_contract": {
                             "grant_run_id": "grant-run-test",
                             "session_handle_kind": "grant_run_id",
-                            "start_entry": "run-local",
-                            "resume_entry": "resume-local",
+                            "start_entry": "runtime-run",
+                            "resume_entry": "runtime-resume",
                             "runtime_substrate_contract": {
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
@@ -1511,8 +1511,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "runtime_session_contract": {
                             "grant_run_id": "grant-run-test",
                             "session_handle_kind": "grant_run_id",
-                            "start_entry": "run-local",
-                            "resume_entry": "resume-local",
+                            "start_entry": "runtime-run",
+                            "resume_entry": "runtime-resume",
                             "runtime_substrate_contract": {
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",

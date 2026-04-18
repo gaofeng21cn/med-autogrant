@@ -90,7 +90,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(stderr, "")
             payload = json.loads(stdout)
             self.assertTrue(payload["ok"])
-            self.assertEqual(payload["command"], "run-local")
+            self.assertEqual(payload["command"], "runtime-run")
             self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
             self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
             self.assertEqual(payload["draft_id"], "draft-v1")
@@ -111,7 +111,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
                 "forward_progress",
             )
             self.assertEqual(len(journal["attempts"]), 1)
-            self.assertEqual(journal["attempts"][0]["trigger"], "run-local")
+            self.assertEqual(journal["attempts"][0]["trigger"], "runtime-run")
             self.assertEqual(journal["attempts"][0]["attempt_index"], 1)
 
     def test_run_local_adds_stage_action_envelope_for_revision_workspace(self) -> None:
@@ -169,7 +169,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(
                 envelope["resume_decision"],
                 {
-                    "command": "resume-local",
+                    "command": "runtime-resume",
                     "journal_path": str(journal_path.resolve()),
                     "append_attempt": True,
                     "reuse_grant_run_id": True,
@@ -386,7 +386,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(stderr, "")
             payload = json.loads(stdout)
             self.assertFalse(payload["ok"])
-            self.assertEqual(payload["command"], "run-local")
+            self.assertEqual(payload["command"], "runtime-run")
             self.assertEqual(payload["attempt_index"], 1)
             self.assertEqual(payload["stop_reason"]["code"], "validation_failed")
             self.assertIsNone(payload["stop_reason"]["checkpoint_status"])
@@ -455,7 +455,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(second_stderr, "")
             payload = json.loads(second_stdout)
             self.assertFalse(payload["ok"])
-            self.assertEqual(payload["command"], "resume-local")
+            self.assertEqual(payload["command"], "runtime-resume")
             self.assertEqual(payload["attempt_index"], 2)
             self.assertEqual(payload["stop_reason"]["code"], "validation_failed")
             self.assertIsNone(payload["stop_reason"]["checkpoint_status"])
@@ -468,7 +468,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
 
             journal = json.loads(journal_path.read_text(encoding="utf-8"))
             self.assertEqual(len(journal["attempts"]), 2)
-            self.assertEqual(journal["attempts"][1]["trigger"], "resume-local")
+            self.assertEqual(journal["attempts"][1]["trigger"], "runtime-resume")
             self.assertEqual(journal["attempts"][1]["attempt_index"], 2)
             self.assertEqual(journal["latest_stop_reason"]["code"], "validation_failed")
             self.assertIsInstance(journal["latest_route_report"]["verification_checkpoint"], dict)
@@ -503,7 +503,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(second_stderr, "")
             second_payload = json.loads(second_stdout)
             self.assertTrue(second_payload["ok"])
-            self.assertEqual(second_payload["command"], "resume-local")
+            self.assertEqual(second_payload["command"], "runtime-resume")
             self.assertEqual(second_payload["grant_run_id"], first_payload["grant_run_id"])
             self.assertEqual(second_payload["workspace_id"], first_payload["workspace_id"])
             self.assertEqual(second_payload["stop_reason"]["code"], "stage_action_required")
@@ -513,8 +513,8 @@ class LocalRuntimeCliTest(unittest.TestCase):
 
             journal = json.loads(journal_path.read_text(encoding="utf-8"))
             self.assertEqual(len(journal["attempts"]), 2)
-            self.assertEqual(journal["attempts"][0]["trigger"], "run-local")
-            self.assertEqual(journal["attempts"][1]["trigger"], "resume-local")
+            self.assertEqual(journal["attempts"][0]["trigger"], "runtime-run")
+            self.assertEqual(journal["attempts"][1]["trigger"], "runtime-resume")
             self.assertEqual(journal["attempts"][1]["attempt_index"], 2)
             self.assertEqual(
                 journal["attempts"][1]["stage_action_envelope"]["resume_decision"]["journal_path"],
@@ -555,7 +555,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(second_stderr, "")
             payload = json.loads(second_stdout)
             self.assertFalse(payload["ok"])
-            self.assertEqual(payload["command"], "run-local")
+            self.assertEqual(payload["command"], "runtime-run")
             self.assertIn("input_path", payload["error"])
 
 

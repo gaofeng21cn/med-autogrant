@@ -80,8 +80,8 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = (
     "next-step",
     "critique-summary",
     "stage-route-report",
-    "run-local",
-    "resume-local",
+    "runtime-run",
+    "runtime-resume",
     "execute-direction-screening-pass",
     "execute-question-refinement-pass",
     "execute-argument-building-pass",
@@ -103,8 +103,8 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = (
     {"command": "next-step", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "critique-summary", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "stage-route-report", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "run-local", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
-    {"command": "resume-local", "required_fields": ["journal_path"], "optional_fields": []},
+    {"command": "runtime-run", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
+    {"command": "runtime-resume", "required_fields": ["journal_path"], "optional_fields": []},
     {
         "command": "execute-direction-screening-pass",
         "required_fields": ["input_path", "output_path"],
@@ -177,7 +177,6 @@ PRODUCT_ENTRY_BUILD_COMMAND = public_command_label("build-product-entry")
 SUPPORTED_PRODUCT_ENTRY_MODES = ("direct", "opl-handoff")
 HOSTED_CONTRACT_SCHEMA_FILES = (
     "service-safe-domain-surface.schema.json",
-    "pending-handoff-requirements.schema.json",
     "executor-routing-contract.schema.json",
     "product-entry.schema.json",
     "hosted-contract-bundle.schema.json",
@@ -200,145 +199,6 @@ AUTHOR_SIDE_ROUTE_IDS = (
 SERVICE_SAFE_ENTRY_ADAPTER = "MedAutoGrantDomainEntry"
 SERVICE_SAFE_ENTRY_SURFACE_KIND = "service-safe-domain-entry-command"
 EXECUTOR_ROUTE_OWNER = "med-autogrant"
-REVIEW_CONTEXT_STAGES = frozenset({"critique", "revision", "frozen"})
-DRAFT_ID_CONTEXT_STAGES = frozenset({"outline", "drafting", "critique", "revision", "frozen"})
-PENDING_ROUTE_HANDOFF_REQUIREMENTS: dict[str, dict[str, list[str]]] = {
-    "direction_screening": {
-        "required_summary_fields": [
-            "current_selection.selected_direction_id",
-            "selected_direction.id",
-            "selected_direction.title",
-            "selected_direction.decision_status",
-        ],
-        "required_gate_fields": ["gates.direction_frozen"],
-    },
-    "question_refinement": {
-        "required_summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "selected_direction.id",
-            "selected_direction.title",
-            "selected_question.id",
-            "selected_question.core_question",
-            "selected_question.knowledge_boundary",
-        ],
-        "required_gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-        ],
-    },
-    "argument_building": {
-        "required_summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "selected_question.core_question",
-            "active_argument_chain.id",
-            "active_argument_chain.necessity_claim",
-        ],
-        "required_gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-        ],
-    },
-    "fit_alignment": {
-        "required_summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "current_selection.active_fit_mapping_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "active_argument_chain.id",
-            "active_fit_mapping.id",
-            "active_fit_mapping.applicant_fit_summary",
-            "active_fit_mapping.unique_advantage",
-        ],
-        "required_gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-            "gates.fit_alignment_frozen",
-        ],
-    },
-    "outline": {
-        "required_summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "current_selection.active_fit_mapping_id",
-            "current_selection.active_draft_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "active_argument_chain.id",
-            "active_fit_mapping.id",
-            "active_draft.id",
-            "active_draft.version_label",
-            "active_draft.status",
-            "active_draft.outline_count",
-        ],
-        "required_gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-            "gates.fit_alignment_frozen",
-            "gates.outline_frozen",
-        ],
-    },
-    "drafting": {
-        "required_summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "current_selection.active_fit_mapping_id",
-            "current_selection.active_draft_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "active_argument_chain.id",
-            "active_fit_mapping.id",
-            "active_draft.id",
-            "active_draft.version_label",
-            "active_draft.status",
-            "active_draft.outline_count",
-            "active_draft.section_count",
-        ],
-        "required_gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-            "gates.fit_alignment_frozen",
-            "gates.outline_frozen",
-        ],
-    },
-    "frozen": {
-        "required_summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "current_selection.active_fit_mapping_id",
-            "current_selection.active_draft_id",
-            "current_selection.active_revision_plan_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "active_argument_chain.id",
-            "active_fit_mapping.id",
-            "active_draft.id",
-            "active_draft.version_label",
-            "active_draft.status",
-            "active_draft.section_count",
-            "active_revision_plan.id",
-            "active_revision_plan.execution_status",
-            "active_critique.id",
-            "active_critique.verdict",
-        ],
-        "required_gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-            "gates.fit_alignment_frozen",
-            "gates.outline_frozen",
-            "gates.presubmission_frozen",
-        ],
-    },
-}
 
 
 class LocalRuntimeStateError(WorkspaceError):
@@ -396,7 +256,7 @@ class HermesRuntimeSubstrate:
         *,
         input_path: str | Path,
         journal_path: str | Path | None = None,
-        trigger: str = "run-local",
+        trigger: str = "runtime-run",
     ) -> dict[str, Any]:
         resolved_input_path = Path(input_path).expanduser().resolve()
         document = self._load_workspace(resolved_input_path)
@@ -470,7 +330,7 @@ class HermesRuntimeSubstrate:
             "stage_action_envelope": stage_action_envelope,
             "route_report": route_report,
             "resume": {
-                "command": "resume-local",
+                "command": "runtime-resume",
                 "journal_path": str(resolved_journal_path),
             },
         }
@@ -488,7 +348,7 @@ class HermesRuntimeSubstrate:
         return self.run_local(
             input_path=input_path,
             journal_path=resolved_journal_path,
-            trigger="resume-local",
+            trigger="runtime-resume",
         )
 
     def execute_direction_screening_pass(
@@ -1094,7 +954,7 @@ def derive_stage_action_envelope(
         "route_reason": next_step["reason"],
         "executor_routing_contract": executor_routing_contract,
         "resume_decision": {
-            "command": "resume-local",
+            "command": "runtime-resume",
             "journal_path": str(journal_path),
             "append_attempt": True,
             "reuse_grant_run_id": True,
@@ -1705,9 +1565,9 @@ def _build_author_side_route_contract(route_id: str, *, source_stage: str) -> di
         "hosted_contract_bundle": "build-hosted-contract-bundle",
     }.get(resolved_route_id)
     if execution_command is None:
-        return _build_pending_route_contract(
-            resolved_route_id,
-            source_stage=source_stage,
+        raise WorkspaceStateError(
+            f"未找到已 landed 的 author-side route command: {resolved_route_id}",
+            lifecycle_stage=source_stage,
         )
     return {
         "route_id": resolved_route_id,
@@ -1719,52 +1579,6 @@ def _build_author_side_route_contract(route_id: str, *, source_stage: str) -> di
             "command": execution_command,
         },
         "handoff_contract_kind": SERVICE_SAFE_ENTRY_SURFACE_KIND,
-    }
-
-
-def _build_pending_route_contract(route_id: str, *, source_stage: str) -> dict[str, Any]:
-    resolved_route_id = _require_known_route_id(route_id, context="pending executor route")
-    contract = {
-        "route_id": resolved_route_id,
-        "route_status": "pending",
-        "executor_owner": EXECUTOR_ROUTE_OWNER,
-        "execution_surface": None,
-        "handoff_contract_kind": "handoff-required",
-    }
-    handoff_requirements = _build_pending_route_handoff_requirements(
-        resolved_route_id,
-        source_stage=source_stage,
-    )
-    if handoff_requirements is not None:
-        contract["handoff_requirements"] = handoff_requirements
-    return contract
-
-
-def _build_pending_route_handoff_requirements(
-    route_id: str,
-    *,
-    source_stage: str,
-) -> dict[str, Any] | None:
-    requirements = PENDING_ROUTE_HANDOFF_REQUIREMENTS.get(route_id)
-    if requirements is None:
-        return None
-
-    required_domain_surfaces = [_build_service_safe_domain_surface("summarize-workspace")]
-    if source_stage in REVIEW_CONTEXT_STAGES:
-        required_domain_surfaces.append(_build_service_safe_domain_surface("critique-summary"))
-    required_domain_surfaces.append(_build_service_safe_domain_surface("stage-route-report"))
-
-    required_identity_fields = ["grant_run_id", "workspace_id"]
-    if source_stage in DRAFT_ID_CONTEXT_STAGES:
-        required_identity_fields.append("draft_id")
-
-    return {
-        "contract_kind": f"{route_id}-pending-handoff",
-        "workspace_surface_kind": "nsfc_workspace",
-        "required_domain_surfaces": required_domain_surfaces,
-        "required_identity_fields": required_identity_fields,
-        "required_summary_fields": list(requirements["required_summary_fields"]),
-        "required_gate_fields": list(requirements["required_gate_fields"]),
     }
 
 

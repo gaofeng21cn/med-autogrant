@@ -62,15 +62,15 @@
           "const": "grant_run_id"
         },
         "start_entry": {
-          "const": "run-local"
+          "const": "runtime-run"
         },
         "resume_entry": {
-          "const": "resume-local"
+          "const": "runtime-resume"
         },
         "required_local_surfaces": {
           "const": [
-            "run-local",
-            "resume-local",
+            "runtime-run",
+            "runtime-resume",
             "build-artifact-bundle",
             "build-final-package",
             "run_journal",
@@ -190,8 +190,8 @@
             "next-step",
             "critique-summary",
             "stage-route-report",
-            "run-local",
-            "resume-local",
+            "runtime-run",
+            "runtime-resume",
             "execute-direction-screening-pass",
             "execute-question-refinement-pass",
             "execute-argument-building-pass",
@@ -238,7 +238,6 @@
         "contract_schema_files": {
           "const": [
             "service-safe-domain-surface.schema.json",
-            "pending-handoff-requirements.schema.json",
             "executor-routing-contract.schema.json",
             "product-entry.schema.json",
             "hosted-contract-bundle.schema.json",

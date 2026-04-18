@@ -10,7 +10,7 @@ def run_local_runtime(
     *,
     input_path: str | Path,
     journal_path: str | Path | None = None,
-    trigger: str = "run-local",
+    trigger: str = "runtime-run",
 ) -> dict[str, Any]:
     return HermesRuntimeSubstrate().run_local(
         input_path=input_path,

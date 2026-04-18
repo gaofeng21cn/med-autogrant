@@ -93,11 +93,11 @@ Date: `2026-04-13`
 
 因此当前 landed 的是“完整可执行 route truth”，不是“所有单步都已经 Hermes-native”。
 
-### 5. `pending_handoff_requirements` 退为历史兼容 schema，而不是当前主线 route output
+### 5. `pending_handoff_requirements` 已退出当前主线 route output
 
-`pending-handoff-requirements.schema.json` 仍保留在 schema contract 中，作为历史兼容与旧真相追溯材料。
+`pending-handoff-requirements.schema.json` 继续只保留为历史兼容与旧真相追溯材料。
 
-但当前主线 route output 已不再依赖它来表达 authoring 主线推进；真实口径已经是：
+当前主线 route output 的真实口径已经是：
 
 - full landed route catalog
 - full service-safe command surface

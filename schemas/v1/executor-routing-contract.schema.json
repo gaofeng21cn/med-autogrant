@@ -36,35 +36,16 @@
           "$ref": "#/$defs/authorSideRouteId"
         },
         "route_status": {
-          "type": "string",
-          "enum": [
-            "landed",
-            "pending"
-          ]
+          "const": "landed"
         },
         "executor_owner": {
           "const": "med-autogrant"
         },
         "execution_surface": {
-          "$ref": "service-safe-domain-surface.schema.json",
-          "type": [
-            "object",
-            "null"
-          ]
+          "$ref": "service-safe-domain-surface.schema.json"
         },
         "handoff_contract_kind": {
-          "type": "string",
-          "enum": [
-            "service-safe-domain-entry-command",
-            "handoff-required"
-          ]
-        },
-        "handoff_requirements": {
-          "$ref": "pending-handoff-requirements.schema.json",
-          "type": [
-            "object",
-            "null"
-          ]
+          "const": "service-safe-domain-entry-command"
         }
       }
     }

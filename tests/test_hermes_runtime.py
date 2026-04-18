@@ -241,34 +241,6 @@ def _expected_landed_route(route_id: str) -> dict[str, object]:
     }
 
 
-def _expected_pending_route(route_id: str, *, source_stage: str) -> dict[str, object]:
-    requirements = PENDING_ROUTE_REQUIREMENTS[route_id]
-    required_domain_surfaces = [_service_safe_surface("summarize-workspace")]
-    if source_stage in REVIEW_CONTEXT_STAGES:
-        required_domain_surfaces.append(_service_safe_surface("critique-summary"))
-    required_domain_surfaces.append(_service_safe_surface("stage-route-report"))
-
-    required_identity_fields = ["grant_run_id", "workspace_id"]
-    if source_stage in DRAFT_ID_CONTEXT_STAGES:
-        required_identity_fields.append("draft_id")
-
-    return {
-        "route_id": route_id,
-        "route_status": "pending",
-        "executor_owner": "med-autogrant",
-        "execution_surface": None,
-        "handoff_contract_kind": "handoff-required",
-        "handoff_requirements": {
-            "contract_kind": f"{route_id}-pending-handoff",
-            "workspace_surface_kind": "nsfc_workspace",
-            "required_domain_surfaces": required_domain_surfaces,
-            "required_identity_fields": required_identity_fields,
-            "required_summary_fields": requirements["summary_fields"],
-            "required_gate_fields": requirements["gate_fields"],
-        },
-    }
-
-
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
     del source_stage
     return _expected_landed_route(route_id)
@@ -323,7 +295,7 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "journal.json"
             expected_payload = {
                 "ok": True,
-                "command": "run-local",
+                "command": "runtime-run",
                 "grant_run_id": "grant-run-test",
                 "workspace_id": "workspace-test",
                 "draft_id": "draft-test",
@@ -344,7 +316,7 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
                 "stage_action_envelope": None,
                 "route_report": {"ok": True},
                 "resume": {
-                    "command": "resume-local",
+                    "command": "runtime-resume",
                     "journal_path": str(journal_path),
                 },
             }
@@ -354,7 +326,7 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
                 entry.dispatch.return_value = expected_payload
 
                 exit_code, stdout, stderr = self.run_cli(
-                    "run-local",
+                    "runtime-run",
                     "--input",
                     str(CRITIQUE_EXAMPLE_PATH),
                     "--journal",
@@ -368,7 +340,7 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
             self.assertEqual(json.loads(stdout), expected_payload)
             entry.dispatch.assert_called_once_with(
                 {
-                    "command": "run-local",
+                    "command": "runtime-run",
                     "input_path": str(CRITIQUE_EXAMPLE_PATH),
                     "journal_path": str(journal_path),
                 }
@@ -484,7 +456,7 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
                 },
             )
 
-    def test_executor_routing_contract_contextualizes_landed_and_pending_route_requirements(self) -> None:
+    def test_executor_routing_contract_publishes_landed_route_catalog_only(self) -> None:
         from med_autogrant.hermes_runtime import _build_executor_routing_contract
 
         drafting_contract = _build_executor_routing_contract(
@@ -548,7 +520,7 @@ class LocalRuntimeBridgeTest(unittest.TestCase):
     def test_run_local_runtime_uses_hermes_runtime_as_compatibility_bridge(self) -> None:
         from med_autogrant.local_runtime import run_local_runtime
 
-        expected_payload = {"ok": True, "command": "run-local"}
+        expected_payload = {"ok": True, "command": "runtime-run"}
         with patch("med_autogrant.local_runtime.HermesRuntimeSubstrate") as substrate_class:
             substrate = substrate_class.return_value
             substrate.run_local.return_value = expected_payload
@@ -562,13 +534,13 @@ class LocalRuntimeBridgeTest(unittest.TestCase):
         substrate.run_local.assert_called_once_with(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             journal_path="/tmp/test-journal.json",
-            trigger="run-local",
+            trigger="runtime-run",
         )
 
     def test_resume_local_runtime_uses_hermes_runtime_as_compatibility_bridge(self) -> None:
         from med_autogrant.local_runtime import resume_local_runtime
 
-        expected_payload = {"ok": True, "command": "resume-local"}
+        expected_payload = {"ok": True, "command": "runtime-resume"}
         with patch("med_autogrant.local_runtime.HermesRuntimeSubstrate") as substrate_class:
             substrate = substrate_class.return_value
             substrate.resume_local.return_value = expected_payload

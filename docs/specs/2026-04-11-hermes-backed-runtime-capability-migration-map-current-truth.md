@@ -19,8 +19,8 @@ Date: `2026-04-11`
 - `next-step` dispatch
 - `critique-summary` dispatch
 - `stage-route-report` dispatch
-- `run-local` runtime orchestration
-- `resume-local` runtime orchestration
+- `runtime-run` runtime orchestration
+- `runtime-resume` runtime orchestration
 - revision / artifact / final / hosted export execution dispatch
 - runtime input loading、output-path handoff、fail-closed orchestration
 
@@ -84,11 +84,11 @@ Date: `2026-04-11`
 
 ### runtime entry
 
-- `run-local`
+- `runtime-run`
   - Hermes substrate：run handle、journal、stop reason、stage action envelope、resume pointer
   - Hermes substrate：默认 journal durable root 解析到 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/`
   - Grant domain logic：route report / checkpoint source
-- `resume-local`
+- `runtime-resume`
   - Hermes substrate：journal re-entry 与同一 `grant_run_id` continuation
   - Hermes substrate：显式 `--journal` 缺省时沿用 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/`
   - Grant domain logic：route report / checkpoint source
@@ -123,7 +123,7 @@ Date: `2026-04-11`
 6. `execute-revision-pass`
 7. revised workspace fresh `validate-workspace`
 8. revised workspace fresh `stage-route-report`
-9. revised workspace `run-local`
+9. revised workspace `runtime-run`
 10. revised workspace `build-artifact-bundle`
 
 ### 2. frozen -> final -> hosted export path

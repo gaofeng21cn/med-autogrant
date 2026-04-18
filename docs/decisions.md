@@ -28,7 +28,7 @@
 
 - 决策：把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen` 从历史上的 `pending / handoff-required` 一次性提升为 landed 的 service-safe command surface，并与 `critique / revision / artifact_bundle / final_package / hosted_contract_bundle` 收敛成完整 author-side route catalog。
 - 理由：人工整理的国自然写作流程已经能稳定映射到现有 stage 梯子，而实现层、CLI、domain entry、product loop 与 hosted bundle 也都已经具备同一套 route truth；继续把前半程写成 pending，只会制造第二真相。
-- 影响：`current-program`、`mainline-status`、`status/project/architecture/current-truth specs`、`grant-user-loop`、`domain_entry_contract`、hosted bundle route catalog 与 tests 全部改写为 full landed truth；`pending-handoff-requirements.schema.json` 退为历史兼容与追溯材料，不再代表当前主线 route output。
+- 影响：`current-program`、`mainline-status`、`status/project/architecture/current-truth specs`、`grant-user-loop`、`domain_entry_contract`、hosted bundle route catalog 与 tests 全部改写为 full landed truth；`pending-handoff-requirements.schema.json` 退为历史兼容与追溯材料，并退出 schema index 与当前 contract surface。
 
 ## 2026-04-13：critique route 升级为 Codex CLI autonomous landed route
 
@@ -124,9 +124,9 @@
 
 ## 2026-04-12：冻结 schema-backed product entry / routing contract
 
-- 决策：把已 landed 的 `service-safe domain surface`、`pending_handoff_requirements`、`executor_routing_contract` 与 `product_entry` 从“文档冻结 + 运行时 dict”进一步收口成 schema-backed contract，并在 `run-local` / `build-product-entry` 生成时 fail-closed。
+- 决策：把已 landed 的 `service-safe domain surface`、`executor_routing_contract` 与 `product_entry` 从“文档冻结 + 运行时 dict”进一步收口成 schema-backed contract，并在 `runtime-run` / `build-product-entry` 生成时 fail-closed。
 - 理由：`OPL Gateway` 与 future domain caller 最终消费的是 machine-readable contract，而不是 repo 内部约定。如果这些 surface 只有 current truth 没有 schema，后续最容易在 pending route、route catalog、draft-bearing/nullability 边界上悄悄漂移。
-- 影响：`schemas/v1/schema-index.json` 现在会显式索引这四份 schema；`product_entry` 与 `stage_action_envelope.executor_routing_contract` 必须同时满足 schema 校验和冻结 truth 比对；后续任何 contract 变更都必须同步更新 schema、tests、docs 与 current-program pointer。
+- 影响：`schemas/v1/schema-index.json` 现在会显式索引当前主线正在公开承诺的 contract schema；`product_entry` 与 `stage_action_envelope.executor_routing_contract` 必须同时满足 schema 校验和冻结 truth 比对；后续任何 contract 变更都必须同步更新 schema、tests、docs 与 current-program pointer。
 
 ## 2026-04-12：冻结 hosted contract bundle entry and route catalog
 
@@ -179,7 +179,7 @@
 
 ## 2026-04-11：旧 Hermes 命名材料降级为历史本地迁移工件
 
-- `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report / run-local / resume-local` 当前仍运行在 repo-local runtime path 上。
+- `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report / runtime-run / runtime-resume` 当前仍运行在 repo-local runtime path 上。
 - 旧的 Hermes 命名 program/spec 文档继续保留为历史迁移材料，但不再作为“上游 Hermes-Agent 已落地”的 current truth。
 
 ## 2026-04-11：final package / hosted contract 继续保持本地 owner，等待真实上游集成

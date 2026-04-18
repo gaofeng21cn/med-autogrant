@@ -81,7 +81,7 @@ class RunLocalUpstreamLedgerTest(unittest.TestCase):
         self.assertEqual(payload["attempt_index"], 7)
         ledger.record_attempt.assert_called_once()
         _, kwargs = ledger.record_attempt.call_args
-        self.assertEqual(kwargs["trigger"], "run-local")
+        self.assertEqual(kwargs["trigger"], "runtime-run")
         self.assertEqual(kwargs["journal_path"], journal_path.resolve())
         self.assertEqual(kwargs["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(kwargs["workspace_id"], "nsfc-demo-001")
@@ -122,7 +122,7 @@ class RunLocalUpstreamLedgerTest(unittest.TestCase):
                 first_attempt = ledger.record_attempt(
                     grant_run_id=None,
                     workspace_id="nsfc-demo-001",
-                    trigger="run-local",
+                    trigger="runtime-run",
                     journal_path=journal_path,
                     lifecycle_stage="revision",
                     stop_reason=stop_reason,
@@ -132,7 +132,7 @@ class RunLocalUpstreamLedgerTest(unittest.TestCase):
                 second_attempt = ledger.record_attempt(
                     grant_run_id=None,
                     workspace_id="nsfc-demo-001",
-                    trigger="resume-local",
+                    trigger="runtime-resume",
                     journal_path=journal_path,
                     lifecycle_stage="revision",
                     stop_reason=stop_reason,

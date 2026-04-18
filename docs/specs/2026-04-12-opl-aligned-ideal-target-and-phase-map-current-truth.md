@@ -43,7 +43,7 @@ Date: `2026-04-12`
 这阶段当前已完成：
 
 - 真实 upstream `Hermes-Agent` substrate 已接住 runtime owner
-- `run-local / resume-local` 与 attempt durability 已切到 Hermes session substrate
+- `runtime-run / runtime-resume` 与 attempt durability 已切到 Hermes session substrate
 - `grant_run_id / workspace_id / draft_id / program_id` 边界保持 canonical
 - `NSFCWorkspace`、critique / revision / final package / hosted contract bundle 没有漂移
 
@@ -54,7 +54,6 @@ Date: `2026-04-12`
 - `MedAutoGrantDomainEntry` 已 landed
 - `build-product-entry` 已 landed
 - `executor_routing_contract` 已冻结
-- `pending_handoff_requirements` 已冻结
 - `build-hosted-contract-bundle` 已显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`
 - `product_entry` 与 hosted bundle 都已经 schema-backed、fail-closed
 

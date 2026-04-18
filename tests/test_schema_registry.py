@@ -115,7 +115,6 @@ class SchemaRegistryTest(unittest.TestCase):
         names = {item["name"]: item["file"] for item in payload["schemas"]}
 
         self.assertEqual(names["service_safe_domain_surface"], "service-safe-domain-surface.schema.json")
-        self.assertEqual(names["pending_handoff_requirements"], "pending-handoff-requirements.schema.json")
         self.assertEqual(names["executor_routing_contract"], "executor-routing-contract.schema.json")
         self.assertEqual(names["product_entry"], "product-entry.schema.json")
         self.assertEqual(names["grant_progress_projection"], "grant-progress.schema.json")

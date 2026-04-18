@@ -19,7 +19,7 @@ Date: `2026-04-11`
 - `CLI / MCP / controller / Hermes substrate / MedAutoGrant domain logic` 的边界；
 - `contracts/runtime-program/current-program.json` 成为 repo-tracked current-program pointer；
 - 机器本地 session / log / report / prompt 状态统一下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`；
-- `run-local / resume-local` 的默认 journal durable surface 固定为 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`；
+- `runtime-run / runtime-resume` 的默认 journal durable surface 固定为 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`；
 - `build-hosted-contract-bundle` 必须继续显式导出 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract`，作为 future Hermes host 的兼容 handoff contract；
 - 在当前 repo 内哪些能力可以诚实迁入 Hermes，哪些必须继续留在 domain logic。
 
@@ -77,8 +77,8 @@ Date: `2026-04-11`
   - `next-step`
   - `critique-summary`
   - `stage-route-report`
-- `run-local / resume-local` 的 runtime handle、journal、stop reason、stage action envelope orchestration；
-- `run-local / resume-local` 默认 journal 根解析到 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/`，且显式 `--journal` 继续保持优先；
+- `runtime-run / runtime-resume` 的 runtime handle、journal、stop reason、stage action envelope orchestration；
+- `runtime-run / runtime-resume` 默认 journal 根解析到 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/`，且显式 `--journal` 继续保持优先；
 - revision / artifact / final / hosted contract 的 execution dispatch；
 - `build-hosted-contract-bundle` 继续由 Hermes substrate 注入 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 所需的 substrate/runtime-state/operator truth；
 - 保持 fail-closed runtime path，不允许 hidden fallback 或 silent downgrade。

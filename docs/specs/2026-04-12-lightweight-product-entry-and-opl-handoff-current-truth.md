@@ -55,8 +55,8 @@ grant 域在这层共享 envelope 之上继续补充：
   - `summarize-workspace`
 - `runtime_session_contract` 继续复用：
   - `grant_run_id`
-  - `start_entry=run-local`
-  - `resume_entry=resume-local`
+  - `start_entry=runtime-run`
+  - `resume_entry=runtime-resume`
   - `runtime_substrate_contract`
   - `runtime_state_contract`
 - `return_surface_contract` 继续复用：
@@ -71,17 +71,26 @@ grant 域在这层共享 envelope 之上继续补充：
   - `recommended_executor_route`
   - `author_side_route_catalog`
 
-### 4. 当前 critique / revision / export route 的状态已经诚实冻结
+### 4. 当前 author-side route catalog 已经全部收口为 landed route
 
-- 所有未 landed 的 authoring route
-  - `route_status = pending`
-  - `handoff_contract_kind = handoff-required`
-  - `handoff_requirements`
-    - 至少会列出：
-      - `required_domain_surfaces`
-      - `required_identity_fields`
-      - `required_summary_fields`
-      - `required_gate_fields`
+- `direction_screening`
+  - `route_status = landed`
+  - `execution_surface.command = execute-direction-screening-pass`
+- `question_refinement`
+  - `route_status = landed`
+  - `execution_surface.command = execute-question-refinement-pass`
+- `argument_building`
+  - `route_status = landed`
+  - `execution_surface.command = execute-argument-building-pass`
+- `fit_alignment`
+  - `route_status = landed`
+  - `execution_surface.command = execute-fit-alignment-pass`
+- `outline`
+  - `route_status = landed`
+  - `execution_surface.command = execute-outline-pass`
+- `drafting`
+  - `route_status = landed`
+  - `execution_surface.command = execute-drafting-pass`
 - `critique`
   - `route_status = landed`
   - `execution_surface.command = execute-critique-pass`
@@ -90,6 +99,9 @@ grant 域在这层共享 envelope 之上继续补充：
 - `revision`
   - `route_status = landed`
   - `execution_surface.command = execute-revision-pass`
+- `frozen`
+  - `route_status = landed`
+  - `execution_surface.command = execute-freeze-pass`
 - `artifact_bundle`
   - `route_status = landed`
   - `execution_surface.command = build-artifact-bundle`
@@ -128,11 +140,10 @@ grant 域在这层共享 envelope 之上继续补充：
 
 - 轻量结构化 `product entry` shell 已 landed
 - `direct` 与 `opl-handoff` 现在共享同一套 envelope
+- `opl-handoff` 继续保留为 internal compatibility / bridge entry mode
 - 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与真实 Hermes substrate contract 之上
 - external caller 现在还可以直接从 `return_surface_contract.domain_entry_contract` 读取 `supported_commands` / `command_contracts`
-- 这层 shell 还能显式告诉 caller：当前哪些 author-side route 已 landed，哪些还只是 `pending / handoff-required`
-- 对当前仍 pending 的 route，这层 shell 现在还会直接导出 `handoff_requirements`，告诉 caller 应先读取哪些 domain surfaces 再协作
-- 这层 shell 现在还会把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen` 一并纳入同一份 `author_side_route_catalog`
+- 这层 shell 会显式告诉 caller：当前 author-side route catalog 已经全部 landed，并且都收口到同一份 service-safe command surface
 - 对 canonical 的 `revision(completed revised switch) -> critique` 返场路径，这层 shell 也已经能在 `recommended_executor_route` 里稳定导出 landed `execute-critique-pass`
 
 它不意味着：

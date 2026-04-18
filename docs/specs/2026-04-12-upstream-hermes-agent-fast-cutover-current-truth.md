@@ -42,7 +42,7 @@ Date: `2026-04-12`
 
 ### 2. runtime substrate owner 已切到上游 Hermes session substrate
 
-- `run-local` / `resume-local` 的 attempt ledger 不再由 repo-local journal 长度主责。
+- `runtime-run` / `runtime-resume` 的 attempt ledger 不再由 repo-local journal 长度主责。
 - `src/med_autogrant/upstream_hermes.py` 现在通过真实上游 `hermes_state.SessionDB` 记录 attempt。
 - 默认 Hermes runtime root 固定到：
   - `$CODEX_HOME/projects/med-autogrant/runtime-state/hermes/`
@@ -81,8 +81,8 @@ Date: `2026-04-12`
   - `critique-summary`
   - `stage-route-report`
   - `probe-upstream-hermes`
-  - `run-local`
-  - `resume-local`
+  - `runtime-run`
+  - `runtime-resume`
   - `build-artifact-bundle`
   - `execute-revision-pass`
   - `build-final-package`
@@ -102,25 +102,18 @@ Date: `2026-04-12`
   - `artifact_bundle -> build-artifact-bundle`
   - `final_package -> build-final-package`
   - `hosted_contract_bundle -> build-hosted-contract-bundle`
-- 当前所有未 landed 的 authoring route 都继续诚实保持：
-  - `route_status = pending`
-  - `handoff_contract_kind = handoff-required`
-  - route-specific `handoff_requirements`
-- `critique` 的 `handoff_requirements.required_domain_surfaces`
-  - 基础是：`summarize-workspace / stage-route-report`
-  - 只有 source workspace 已经进入 `critique / revision / frozen` review context 时，才额外要求 `critique-summary`
+- 当前 `author_side_route_catalog` 已经全部收口为 landed service-safe command surface。
 
 ### 6. product-entry / routing / hosted bundle surface 现在已经收口成 schema-backed contract
 
 - `schemas/v1/service-safe-domain-surface.schema.json`
-- `schemas/v1/pending-handoff-requirements.schema.json`
 - `schemas/v1/executor-routing-contract.schema.json`
 - `schemas/v1/product-entry.schema.json`
 - `schemas/v1/hosted-contract-bundle.schema.json`
 
 这些 schema 现在已经进入 `schemas/v1/schema-index.json`，并且：
 
-- `run-local.stage_action_envelope.executor_routing_contract` 会先过 schema 校验，再对照冻结 route truth 做 fail-closed 比对
+- `runtime-run.stage_action_envelope.executor_routing_contract` 会先过 schema 校验，再对照冻结 route truth 做 fail-closed 比对
 - `build-product-entry.product_entry` 也会先过 schema 校验，并且内嵌的 `executor_routing_contract` 同样必须与当前冻结 truth 完全一致
 - `build-hosted-contract-bundle.hosted_contract_bundle` 现在也会先过 schema 校验，并且要求 bundle 内的 `domain_entry_contract`、`schema_contract`、`authoring_contract` 与当前冻结 truth 完全一致
 - 当前这层 schema-backed closeout 只是在把 author-side contract 机器可读化，不是在新增本地 executor surface
@@ -139,7 +132,7 @@ Date: `2026-04-12`
 repo 现在至少有下面这些 fresh proof：
 
 1. `probe-upstream-hermes` 能返回真实 upstream entrypoints 与 runtime root/state db 证据
-2. `run-local` / `resume-local` 能把 attempt ledger 写入真实上游 `SessionDB`
+2. `runtime-run` / `runtime-resume` 能把 attempt ledger 写入真实上游 `SessionDB`
 3. `validation_failed` path 仍保留 canonical route/checkpoint shape，并可继续 durable resume
 4. `MedAutoGrantDomainEntry` 能在真实 upstream substrate 上完成：
    - critique route proof
@@ -147,10 +140,9 @@ repo 现在至少有下面这些 fresh proof：
    - run/resume
    - final package
    - hosted contract bundle
-5. `executor_routing_contract` 已把 critique 收口成 landed `execute-critique-pass`，并把其余 pending route 与 landed critique/revision/export route 明确区分出来
-6. 所有 remaining pending authoring route 现在都会显式导出 route-specific `handoff_requirements`
-7. `drafting -> critique` 已经证明会稳定落到 landed `execute-critique-pass`
-8. `revision(completed revised switch) -> critique` 返场路径也已经在 `run-local` / `build-product-entry` 上给出一致的 landed critique proof
+5. `executor_routing_contract` 已把完整 author-side route catalog 收口成 landed command surface
+6. `drafting -> critique` 已经证明会稳定落到 landed `execute-critique-pass`
+7. `revision(completed revised switch) -> critique` 返场路径也已经在 `runtime-run` / `build-product-entry` 上给出一致的 landed critique proof
 
 ## Verification
 
@@ -158,7 +150,7 @@ repo 现在至少有下面这些 fresh proof：
 
 - `uv run pytest tests/test_upstream_hermes.py tests/test_local_runtime.py tests/test_hermes_runtime.py tests/test_domain_entry.py -q`
 - `uv run pytest tests/test_program_control_surfaces.py tests/test_hosted_contract_bundle.py -q`
-- invalid workspace 的 `run-local / resume-local` 实际手工证明
+- invalid workspace 的 `runtime-run / runtime-resume` 实际手工证明
 
 ## Honest Boundary
 
