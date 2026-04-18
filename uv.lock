@@ -841,7 +841,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "hermes-agent", extras = ["acp"], git = "https://github.com/NousResearch/hermes-agent.git?rev=96051955755a83f22afed5e3501d447462fbe9c8" },
-    { name = "opl-harness-shared", git = "https://github.com/gaofeng21cn/one-person-lab.git?subdirectory=python%2Fopl-harness-shared&rev=68ea8e2d0694a1e9b4b37682d22fb4c4733c7518" },
+    { name = "opl-harness-shared", git = "https://github.com/gaofeng21cn/one-person-lab.git?subdirectory=python%2Fopl-harness-shared&rev=3c18b723491ca11f6455402c089b0013d93b830c" },
 ]
 
 [package.metadata.requires-dev]
@@ -1021,7 +1021,7 @@ wheels = [
 [[package]]
 name = "opl-harness-shared"
 version = "0.1.0"
-source = { git = "https://github.com/gaofeng21cn/one-person-lab.git?subdirectory=python%2Fopl-harness-shared&rev=68ea8e2d0694a1e9b4b37682d22fb4c4733c7518#68ea8e2d0694a1e9b4b37682d22fb4c4733c7518" }
+source = { git = "https://github.com/gaofeng21cn/one-person-lab.git?subdirectory=python%2Fopl-harness-shared&rev=3c18b723491ca11f6455402c089b0013d93b830c#3c18b723491ca11f6455402c089b0013d93b830c" }
 
 [[package]]
 name = "packaging"

@@ -1749,6 +1749,10 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
 
     def test_product_entry_manifest_projects_current_grant_shell_and_shared_handoff(self) -> None:
+        from med_autogrant.domain_entry_contract import (
+            build_domain_entry_contract,
+            build_gateway_interaction_contract,
+        )
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         payload = MedAutoGrantProductEntry().build_product_entry_manifest(
@@ -1833,6 +1837,11 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(manifest["skill_catalog"]["surface_kind"], "skill_catalog")
         self.assertIn("validate-workspace", manifest["skill_catalog"]["supported_commands"])
         self.assertTrue(manifest["skill_catalog"]["command_contracts"])
+        self.assertEqual(manifest["domain_entry_contract"], build_domain_entry_contract())
+        self.assertEqual(
+            manifest["gateway_interaction_contract"],
+            build_gateway_interaction_contract(),
+        )
         self.assertEqual(manifest["automation"]["surface_kind"], "automation")
         self.assertEqual(
             [item["automation_id"] for item in manifest["automation"]["automations"]],
@@ -2396,6 +2405,10 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
 
     def test_product_frontdesk_projects_frontdoor_over_current_grant_loop(self) -> None:
+        from med_autogrant.domain_entry_contract import (
+            build_domain_entry_contract,
+            build_gateway_interaction_contract,
+        )
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         payload = MedAutoGrantProductEntry().build_product_frontdesk(
@@ -2543,6 +2556,19 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(frontdesk["product_entry_manifest"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
         self.assertEqual(frontdesk["product_entry_manifest"]["manifest_version"], 2)
+        self.assertEqual(frontdesk["domain_entry_contract"], build_domain_entry_contract())
+        self.assertEqual(
+            frontdesk["gateway_interaction_contract"],
+            build_gateway_interaction_contract(),
+        )
+        self.assertEqual(
+            frontdesk["domain_entry_contract"],
+            frontdesk["product_entry_manifest"]["domain_entry_contract"],
+        )
+        self.assertEqual(
+            frontdesk["gateway_interaction_contract"],
+            frontdesk["product_entry_manifest"]["gateway_interaction_contract"],
+        )
 
     def test_product_entry_manifest_fails_closed_on_invalid_mainline_snapshot_shape(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

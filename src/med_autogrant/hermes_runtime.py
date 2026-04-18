@@ -33,13 +33,17 @@ from med_autogrant.hosted_contract_bundle import (
     _validate_required_final_package_fields,
     build_hosted_contract_bundle_document,
 )
-from med_autogrant.public_cli import public_command_label
 from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.upstream_hermes import HermesGrantRunLedger
 from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.stage_router import determine_next_step
+from med_autogrant.domain_entry_contract import (
+    SERVICE_SAFE_ENTRY_ADAPTER,
+    SERVICE_SAFE_ENTRY_SURFACE_KIND,
+    build_domain_entry_contract,
+)
 from med_autogrant.workspace import (
     WorkspaceError,
     WorkspaceFileError,
@@ -55,10 +59,6 @@ from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstra
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
-from opl_harness_shared.family_entry_contracts import (
-    build_family_domain_entry_contract as _build_shared_family_domain_entry_contract,
-)
-
 
 JOURNAL_VERSION = 1
 CURRENT_PROGRAM_RELATIVE_PATH = CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH
@@ -73,108 +73,8 @@ PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE = "product-entry-manifest.schema.json"
 PRODUCT_FRONTDESK_SCHEMA_FILE = "product-frontdesk.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
 SUBMISSION_READY_PACKAGE_SCHEMA_FILE = "submission-ready-package.schema.json"
-SUPPORTED_DOMAIN_ENTRY_COMMANDS = (
-    "probe-upstream-hermes",
-    "validate-workspace",
-    "summarize-workspace",
-    "next-step",
-    "critique-summary",
-    "stage-route-report",
-    "runtime-run",
-    "runtime-resume",
-    "execute-direction-screening-pass",
-    "execute-question-refinement-pass",
-    "execute-argument-building-pass",
-    "execute-fit-alignment-pass",
-    "execute-outline-pass",
-    "execute-drafting-pass",
-    "build-artifact-bundle",
-    "execute-critique-pass",
-    "execute-revision-pass",
-    "execute-freeze-pass",
-    "build-final-package",
-    "build-hosted-contract-bundle",
-    "build-submission-ready-package",
-)
-DOMAIN_ENTRY_COMMAND_CONTRACTS = (
-    {"command": "probe-upstream-hermes", "required_fields": [], "optional_fields": []},
-    {"command": "validate-workspace", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "summarize-workspace", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "next-step", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "critique-summary", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "stage-route-report", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "runtime-run", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
-    {"command": "runtime-resume", "required_fields": ["journal_path"], "optional_fields": []},
-    {
-        "command": "execute-direction-screening-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-question-refinement-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-argument-building-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-fit-alignment-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-outline-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-drafting-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "build-artifact-bundle",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-critique-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-revision-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "execute-freeze-pass",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "build-final-package",
-        "required_fields": ["input_path", "artifact_bundle_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "build-hosted-contract-bundle",
-        "required_fields": ["final_package_path", "output_path"],
-        "optional_fields": [],
-    },
-    {
-        "command": "build-submission-ready-package",
-        "required_fields": ["input_path", "output_dir"],
-        "optional_fields": [],
-    },
-)
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
-PRODUCT_ENTRY_BUILD_COMMAND = public_command_label("build-product-entry")
-SUPPORTED_PRODUCT_ENTRY_MODES = ("direct", "opl-handoff")
 HOSTED_CONTRACT_SCHEMA_FILES = (
     "service-safe-domain-surface.schema.json",
     "executor-routing-contract.schema.json",
@@ -196,8 +96,6 @@ AUTHOR_SIDE_ROUTE_IDS = (
     "final_package",
     "hosted_contract_bundle",
 )
-SERVICE_SAFE_ENTRY_ADAPTER = "MedAutoGrantDomainEntry"
-SERVICE_SAFE_ENTRY_SURFACE_KIND = "service-safe-domain-entry-command"
 EXECUTOR_ROUTE_OWNER = "med-autogrant"
 
 
@@ -632,7 +530,7 @@ class HermesRuntimeSubstrate:
             ),
             runtime_state_contract=_build_runtime_state_contract(),
             operator_contract=_build_operator_contract(),
-            domain_entry_contract=_build_domain_entry_contract(),
+            domain_entry_contract=build_domain_entry_contract(),
             schema_contract=_build_schema_contract(),
             authoring_contract=_build_hosted_authoring_contract(),
         )
@@ -683,7 +581,7 @@ class HermesRuntimeSubstrate:
             ),
             runtime_state_contract=_build_runtime_state_contract(),
             operator_contract=_build_operator_contract(),
-            domain_entry_contract=_build_domain_entry_contract(),
+            domain_entry_contract=build_domain_entry_contract(),
             schema_contract=_build_schema_contract(),
             authoring_contract=_build_hosted_authoring_contract(),
         )
@@ -1492,7 +1390,7 @@ def _validate_hosted_contract_bundle(
         workspace_id=workspace_id,
         lifecycle_stage=lifecycle_stage,
     )
-    if bundle.get("domain_entry_contract") != _build_domain_entry_contract():
+    if bundle.get("domain_entry_contract") != build_domain_entry_contract():
         raise WorkspaceStateError(
             "hosted_contract_bundle.domain_entry_contract 与当前冻结 entry contract 不一致。",
             errors=[],
@@ -1660,20 +1558,6 @@ def _build_operator_contract() -> dict[str, Any]:
         ],
         "checkpoint_aggregation_surface": "stage-route-report",
     }
-
-
-def _build_domain_entry_contract() -> dict[str, Any]:
-    return _build_shared_family_domain_entry_contract(
-        entry_adapter=SERVICE_SAFE_ENTRY_ADAPTER,
-        service_safe_surface_kind=SERVICE_SAFE_ENTRY_SURFACE_KIND,
-        product_entry_builder_command=PRODUCT_ENTRY_BUILD_COMMAND,
-        product_entry_kind=PRODUCT_ENTRY_KIND,
-        supported_entry_modes=list(SUPPORTED_PRODUCT_ENTRY_MODES),
-        supported_commands=list(SUPPORTED_DOMAIN_ENTRY_COMMANDS),
-        command_contracts=[dict(contract) for contract in DOMAIN_ENTRY_COMMAND_CONTRACTS],
-    )
-
-
 def _build_schema_contract() -> dict[str, Any]:
     return {
         "schema_version": SchemaStore().load_schema_index()["schema_version"],

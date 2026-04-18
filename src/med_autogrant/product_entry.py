@@ -6,9 +6,12 @@ from typing import Any, Mapping
 
 from med_autogrant.control_plane import read_program_id, resolve_runtime_state_root
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
+from med_autogrant.domain_entry_contract import (
+    build_domain_entry_contract,
+    build_gateway_interaction_contract,
+)
 from med_autogrant.hermes_runtime import (
     _build_author_side_route_contract,
-    _build_domain_entry_contract,
     GRANT_COCKPIT_SCHEMA_FILE,
     GRANT_DIRECT_ENTRY_SCHEMA_FILE,
     GRANT_PROGRESS_SCHEMA_FILE,
@@ -283,7 +286,7 @@ class MedAutoGrantProductEntry:
                 "entry_adapter": "MedAutoGrantDomainEntry",
                 "default_formal_entry": "CLI",
                 "supported_entry_modes": list(SUPPORTED_ENTRY_MODES),
-                "domain_entry_contract": _build_domain_entry_contract(),
+                "domain_entry_contract": build_domain_entry_contract(),
                 "checkpoint_aggregation_surface": "stage-route-report",
                 "operator_contract": _build_operator_contract(),
             },
@@ -1127,7 +1130,8 @@ class MedAutoGrantProductEntry:
                 "surface_kind": GRANT_USER_LOOP_KIND,
             },
         }
-        domain_entry_contract = _build_domain_entry_contract()
+        domain_entry_contract = build_domain_entry_contract()
+        gateway_interaction_contract = build_gateway_interaction_contract()
         grant_authoring_readiness = _build_shared_detailed_readiness(
             surface_kind="grant_authoring_readiness",
             verdict="agent_assisted_cli_ready_not_full_autopilot",
@@ -1490,6 +1494,7 @@ class MedAutoGrantProductEntry:
                 task_lifecycle=task_lifecycle,
                 skill_catalog=skill_catalog,
                 automation=automation,
+                schema_ref=f"contracts/schemas/v1/{PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE}",
                 product_entry_shell=product_entry_shell,
                 shared_handoff={
                     "direct_entry_builder": {
@@ -1522,6 +1527,8 @@ class MedAutoGrantProductEntry:
                     "It does not claim that mature hosted runtime or Web UI is already landed.",
                     "funding_call stays part of direct-entry build time rather than manifest discovery time.",
                 ],
+                domain_entry_contract=domain_entry_contract,
+                gateway_interaction_contract=gateway_interaction_contract,
                 extra_payload={
                     "grant_authoring_readiness": grant_authoring_readiness,
                 },
@@ -1561,6 +1568,60 @@ class MedAutoGrantProductEntry:
             context="product_frontdesk.product_entry_manifest",
         )
 
+        product_frontdesk = _build_shared_family_product_frontdesk(
+            recommended_action="inspect_or_prepare_grant_loop",
+            product_entry_manifest=dict(manifest),
+            entry_surfaces={
+                "frontdesk": dict(_require_mapping(
+                    product_entry_shell,
+                    "product_frontdesk",
+                    context="product_frontdesk.product_entry_shell",
+                )),
+                "grant_progress": dict(_require_mapping(
+                    product_entry_shell,
+                    "grant_progress",
+                    context="product_frontdesk.product_entry_shell",
+                )),
+                "grant_cockpit": dict(_require_mapping(
+                    product_entry_shell,
+                    "grant_cockpit",
+                    context="product_frontdesk.product_entry_shell",
+                )),
+                "grant_direct_entry": dict(_require_mapping(
+                    product_entry_shell,
+                    "grant_direct_entry",
+                    context="product_frontdesk.product_entry_shell",
+                )),
+                "grant_user_loop": dict(_require_mapping(
+                    product_entry_shell,
+                    "grant_user_loop",
+                    context="product_frontdesk.product_entry_shell",
+                )),
+                "direct_entry_builder": dict(_require_mapping(
+                    shared_handoff,
+                    "direct_entry_builder",
+                    context="product_frontdesk.shared_handoff",
+                )),
+                "opl_handoff_builder": dict(_require_mapping(
+                    shared_handoff,
+                    "opl_handoff_builder",
+                    context="product_frontdesk.shared_handoff",
+                )),
+            },
+            notes=[
+                "This frontdesk surface is a controller-owned direct grant front door over the landed product-entry shell.",
+                "It does not claim that mature Web UI or hosted runtime is already landed.",
+            ],
+            extra_payload={
+                "grant_authoring_readiness": dict(_require_mapping(
+                    manifest,
+                    "grant_authoring_readiness",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+            },
+        )
+        product_frontdesk["schema_ref"] = f"contracts/schemas/v1/{PRODUCT_FRONTDESK_SCHEMA_FILE}"
+
         payload = {
             "ok": True,
             "command": "product-frontdesk",
@@ -1569,58 +1630,7 @@ class MedAutoGrantProductEntry:
             "draft_id": manifest_payload["draft_id"],
             "lifecycle_stage": manifest_payload["lifecycle_stage"],
             "input_path": manifest_payload["input_path"],
-            "product_frontdesk": _build_shared_family_product_frontdesk(
-                recommended_action="inspect_or_prepare_grant_loop",
-                product_entry_manifest=dict(manifest),
-                entry_surfaces={
-                    "frontdesk": dict(_require_mapping(
-                        product_entry_shell,
-                        "product_frontdesk",
-                        context="product_frontdesk.product_entry_shell",
-                    )),
-                    "grant_progress": dict(_require_mapping(
-                        product_entry_shell,
-                        "grant_progress",
-                        context="product_frontdesk.product_entry_shell",
-                    )),
-                    "grant_cockpit": dict(_require_mapping(
-                        product_entry_shell,
-                        "grant_cockpit",
-                        context="product_frontdesk.product_entry_shell",
-                    )),
-                    "grant_direct_entry": dict(_require_mapping(
-                        product_entry_shell,
-                        "grant_direct_entry",
-                        context="product_frontdesk.product_entry_shell",
-                    )),
-                    "grant_user_loop": dict(_require_mapping(
-                        product_entry_shell,
-                        "grant_user_loop",
-                        context="product_frontdesk.product_entry_shell",
-                    )),
-                    "direct_entry_builder": dict(_require_mapping(
-                        shared_handoff,
-                        "direct_entry_builder",
-                        context="product_frontdesk.shared_handoff",
-                    )),
-                    "opl_handoff_builder": dict(_require_mapping(
-                        shared_handoff,
-                        "opl_handoff_builder",
-                        context="product_frontdesk.shared_handoff",
-                    )),
-                },
-                notes=[
-                    "This frontdesk surface is a controller-owned direct grant front door over the landed product-entry shell.",
-                    "It does not claim that mature Web UI or hosted runtime is already landed.",
-                ],
-                extra_payload={
-                    "grant_authoring_readiness": dict(_require_mapping(
-                        manifest,
-                        "grant_authoring_readiness",
-                        context="product_frontdesk.product_entry_manifest",
-                    )),
-                },
-            ),
+            "product_frontdesk": product_frontdesk,
         }
         _validate_product_frontdesk_contract(
             payload,
@@ -2755,11 +2765,11 @@ def _validate_product_entry_manifest_contract(
 ) -> None:
     _validate_shared_family_product_entry_manifest(
         payload["product_entry_manifest"],
-        require_contract_bundle=False,
+        require_contract_bundle=True,
         require_runtime_companions=True,
     )
     _validate_contract_schema(
-        payload,
+        _schema_payload_without_contract_bundle(payload, surface_key="product_entry_manifest"),
         schema_file=PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
         context="product_entry_manifest",
         grant_run_id=grant_run_id,
@@ -2777,17 +2787,46 @@ def _validate_product_frontdesk_contract(
 ) -> None:
     _validate_shared_family_product_frontdesk(
         payload["product_frontdesk"],
-        require_contract_bundle=False,
+        require_contract_bundle=True,
         require_runtime_companions=True,
     )
     _validate_contract_schema(
-        payload,
+        _schema_payload_without_contract_bundle(payload, surface_key="product_frontdesk"),
         schema_file=PRODUCT_FRONTDESK_SCHEMA_FILE,
         context="product_frontdesk",
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
         lifecycle_stage=lifecycle_stage,
     )
+
+
+def _schema_payload_without_contract_bundle(
+    payload: Mapping[str, Any],
+    *,
+    surface_key: str,
+) -> dict[str, Any]:
+    normalized_payload = dict(payload)
+    surface = dict(
+        _require_mapping(
+            payload,
+            surface_key,
+            context=f"{surface_key}_schema_validation",
+        )
+    )
+    _strip_contract_bundle_fields(surface)
+    nested_manifest = surface.get("product_entry_manifest")
+    if isinstance(nested_manifest, Mapping):
+        normalized_manifest = dict(nested_manifest)
+        _strip_contract_bundle_fields(normalized_manifest)
+        surface["product_entry_manifest"] = normalized_manifest
+    normalized_payload[surface_key] = surface
+    return normalized_payload
+
+
+def _strip_contract_bundle_fields(surface: dict[str, Any]) -> None:
+    surface.pop("schema_ref", None)
+    surface.pop("domain_entry_contract", None)
+    surface.pop("gateway_interaction_contract", None)
 
 
 def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
