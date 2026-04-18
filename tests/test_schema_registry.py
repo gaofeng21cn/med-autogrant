@@ -145,6 +145,10 @@ class SchemaRegistryTest(unittest.TestCase):
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         manifest_required = manifest_schema["$defs"]["productEntryManifest"]["required"]
         self.assertIn("managed_runtime_contract", manifest_required)
+        self.assertIn("runtime_inventory", manifest_required)
+        self.assertIn("task_lifecycle", manifest_required)
+        self.assertIn("skill_catalog", manifest_required)
+        self.assertIn("automation", manifest_required)
         self.assertIn("family_orchestration", manifest_required)
         self.assertIn("product_entry_start", manifest_required)
         self.assertIn("product_entry_overview", manifest_required)

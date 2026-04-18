@@ -251,6 +251,364 @@
         }
       }
     },
+    "surfaceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_kind",
+        "ref"
+      ],
+      "properties": {
+        "ref_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "role": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "taskSurfaceDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "summary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ref": {
+          "$ref": "#/$defs/surfaceRef"
+        },
+        "step_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "locator_fields": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "checkpointSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "status",
+        "summary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "checkpoint_summary"
+        },
+        "status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "checkpoint_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recorded_at": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lineage_ref": {
+          "$ref": "#/$defs/surfaceRef"
+        },
+        "verification_ref": {
+          "$ref": "#/$defs/surfaceRef"
+        }
+      }
+    },
+    "runtimeInventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "summary",
+        "runtime_owner",
+        "domain_owner",
+        "executor_owner",
+        "substrate",
+        "availability",
+        "health_status"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "runtime_inventory"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "runtime_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "domain_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "executor_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "substrate": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "availability": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "health_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "status_surface": {
+          "$ref": "#/$defs/surfaceRef"
+        },
+        "attention_surface": {
+          "$ref": "#/$defs/surfaceRef"
+        },
+        "recovery_surface": {
+          "$ref": "#/$defs/surfaceRef"
+        },
+        "workspace_binding": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "domain_projection": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "taskLifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "task_kind",
+        "task_id",
+        "status",
+        "summary",
+        "human_gate_ids"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "task_lifecycle"
+        },
+        "task_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "task_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "session_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "run_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "progress_surface": {
+          "$ref": "#/$defs/taskSurfaceDescriptor"
+        },
+        "resume_surface": {
+          "$ref": "#/$defs/taskSurfaceDescriptor"
+        },
+        "checkpoint_summary": {
+          "$ref": "#/$defs/checkpointSummary"
+        },
+        "human_gate_ids": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "domain_projection": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "skillDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "skill_id",
+        "title",
+        "owner",
+        "distribution_mode",
+        "target_surface_kind",
+        "description",
+        "readiness",
+        "tags"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "skill_descriptor"
+        },
+        "skill_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "title": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "distribution_mode": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_surface_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "description": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "readiness": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "tags": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "domain_projection": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "skillCatalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "summary",
+        "skills",
+        "supported_commands",
+        "command_contracts"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "skill_catalog"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "skills": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/skillDescriptor"
+          }
+        },
+        "supported_commands": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "command_contracts": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "automationDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "automation_id",
+        "title",
+        "owner",
+        "trigger_kind",
+        "target_surface_kind",
+        "summary",
+        "readiness_status",
+        "gate_policy",
+        "output_expectation"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "automation_descriptor"
+        },
+        "automation_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "title": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "trigger_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_surface_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "readiness_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "gate_policy": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "output_expectation": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "target_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "domain_projection": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "automationCatalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "summary",
+        "automations"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "automation"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "automations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/automationDescriptor"
+          }
+        },
+        "readiness_summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
     "productShellSurface": {
       "type": "object",
       "additionalProperties": false,
@@ -832,6 +1190,10 @@
         "repo_mainline",
         "runtime",
         "managed_runtime_contract",
+        "runtime_inventory",
+        "task_lifecycle",
+        "skill_catalog",
+        "automation",
         "product_entry_shell",
         "shared_handoff",
         "product_entry_start",
@@ -888,6 +1250,18 @@
         },
         "managed_runtime_contract": {
           "$ref": "#/$defs/managedRuntimeContractSurface"
+        },
+        "runtime_inventory": {
+          "$ref": "#/$defs/runtimeInventory"
+        },
+        "task_lifecycle": {
+          "$ref": "#/$defs/taskLifecycle"
+        },
+        "skill_catalog": {
+          "$ref": "#/$defs/skillCatalog"
+        },
+        "automation": {
+          "$ref": "#/$defs/automationCatalog"
         },
         "product_entry_shell": {
           "$ref": "#/$defs/productEntryShell"

@@ -428,6 +428,19 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("action_graph_ref", manifest["family_orchestration"])
         self.assertIn("human_gates", manifest["family_orchestration"])
         self.assertIn("resume_contract", manifest["family_orchestration"])
+        self.assertIn("runtime_inventory", manifest)
+        self.assertEqual(manifest["runtime_inventory"]["surface_kind"], "runtime_inventory")
+        self.assertIn("runtime_owner", manifest["runtime_inventory"])
+        self.assertIn("task_lifecycle", manifest)
+        self.assertEqual(manifest["task_lifecycle"]["surface_kind"], "task_lifecycle")
+        self.assertIn("checkpoint_summary", manifest["task_lifecycle"])
+        self.assertIn("skill_catalog", manifest)
+        self.assertEqual(manifest["skill_catalog"]["surface_kind"], "skill_catalog")
+        self.assertIn("supported_commands", manifest["skill_catalog"])
+        self.assertIn("command_contracts", manifest["skill_catalog"])
+        self.assertIn("automation", manifest)
+        self.assertEqual(manifest["automation"]["surface_kind"], "automation")
+        self.assertGreaterEqual(len(manifest["automation"]["automations"]), 1)
 
     def test_product_frontdesk_projects_frontdoor_and_current_loop(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

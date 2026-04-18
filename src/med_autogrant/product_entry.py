@@ -33,12 +33,24 @@ from med_autogrant.workspace import (
     validate_workspace_document,
 )
 from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
+from opl_harness_shared.automation_companions import (
+    build_automation_catalog as _build_shared_automation_catalog,
+    build_automation_descriptor as _build_shared_automation_descriptor,
+)
 from opl_harness_shared.product_entry_companions import (
     build_product_entry_overview as _build_shared_product_entry_overview,
     build_product_entry_quickstart as _build_shared_product_entry_quickstart,
     build_product_entry_readiness as _build_shared_product_entry_readiness,
     build_product_entry_resume_surface as _build_shared_product_entry_resume_surface,
     collect_family_human_gate_ids as _collect_family_human_gate_ids,
+)
+from opl_harness_shared.runtime_task_companions import (
+    build_runtime_inventory as _build_shared_runtime_inventory,
+    build_task_lifecycle as _build_shared_task_lifecycle,
+)
+from opl_harness_shared.skill_catalog import (
+    build_skill_catalog as _build_shared_skill_catalog,
+    build_skill_descriptor as _build_shared_skill_descriptor,
 )
 
 
@@ -794,13 +806,14 @@ class MedAutoGrantProductEntry:
             "current_phase",
             context="mainline_status",
         )
+        task_intent_placeholder = "<describe-task-intent>"
         command_catalog = _build_product_command_catalog(resolved_input_path)
         grant_user_loop_command = public_cli_command(
             "grant-user-loop",
             "--input",
             str(resolved_input_path),
             "--task-intent",
-            "<describe-task-intent>",
+            task_intent_placeholder,
             "--format",
             "json",
         )
@@ -815,7 +828,7 @@ class MedAutoGrantProductEntry:
             "--input",
             str(resolved_input_path),
             "--task-intent",
-            "<describe-task-intent>",
+            task_intent_placeholder,
             "--format",
             "json",
         )
@@ -870,6 +883,75 @@ class MedAutoGrantProductEntry:
             event_envelope_surface_ref="/product_entry_manifest/recommended_command",
             checkpoint_lineage_surface_ref="/product_entry_manifest/repo_mainline/phase_status",
             resume_surface_kind=GRANT_USER_LOOP_KIND,
+        )
+        route_report = self._domain_entry.dispatch(
+            {
+                "command": "stage-route-report",
+                "input_path": str(resolved_input_path),
+            }
+        )
+        verification_checkpoint = _require_mapping(
+            route_report,
+            "verification_checkpoint",
+            context="stage-route-report",
+        )
+        verification_identity = _require_mapping(
+            verification_checkpoint,
+            "identity",
+            context="stage-route-report.verification_checkpoint",
+        )
+        checkpoint_status = _require_nonempty_string_from_mapping(
+            verification_checkpoint,
+            "checkpoint_status",
+            context="stage-route-report.verification_checkpoint",
+        )
+        route_snapshot = _require_mapping(
+            route_report,
+            "route",
+            context="stage-route-report",
+        )
+        route_next_step = _require_mapping(
+            route_snapshot,
+            "next_step",
+            context="stage-route-report.route",
+        )
+        continuation_route_id = _require_nonempty_string_from_mapping(
+            route_next_step,
+            "recommended_stage",
+            context="stage-route-report.route.next_step",
+        )
+        continuation_route_contract = _build_author_side_route_contract(
+            continuation_route_id,
+            source_stage=_require_nonempty_string_from_mapping(
+                route_report,
+                "lifecycle_stage",
+                context="stage-route-report",
+            ),
+        )
+        continuation_next_action = _build_next_action_payload(
+            recommended_executor_route=continuation_route_contract,
+            input_path=resolved_input_path,
+            grant_run_id=_require_nonempty_string_from_mapping(
+                route_report,
+                "grant_run_id",
+                context="stage-route-report",
+            ),
+            workspace_id=_require_nonempty_string_from_mapping(
+                route_report,
+                "workspace_id",
+                context="stage-route-report",
+            ),
+            draft_id=_optional_string_from_mapping(verification_identity, "draft_id"),
+        )
+        continuation_route_status = _require_nonempty_string_from_mapping(
+            continuation_next_action,
+            "route_status",
+            context="product_entry_manifest.continuation_next_action",
+        )
+        continuation_action_kind = _require_nonempty_string_from_mapping(
+            continuation_next_action,
+            "action_kind",
+            context="product_entry_manifest.continuation_next_action",
         )
         product_entry_start = _build_product_entry_start(
             product_frontdesk_command=product_frontdesk_command,
@@ -952,6 +1034,76 @@ class MedAutoGrantProductEntry:
             remaining_gaps_count=len(mainline_snapshot["remaining_gaps"]),
             human_gate_ids=list(product_entry_quickstart["human_gate_ids"]),
         )
+        repo_mainline = {
+            "program_id": _require_nonempty_string_from_mapping(
+                mainline_payload,
+                "program_id",
+                context="mainline_status",
+            ),
+            "phase_id": _require_nonempty_string_from_mapping(
+                current_phase,
+                "phase_id",
+                context="mainline_status.current_phase",
+            ),
+            "phase_name": _require_nonempty_string_from_mapping(
+                current_phase,
+                "phase_name",
+                context="mainline_status.current_phase",
+            ),
+            "phase_status": _require_nonempty_string_from_mapping(
+                current_phase,
+                "status",
+                context="mainline_status.current_phase",
+            ),
+            "phase_summary": _require_nonempty_string_from_mapping(
+                current_phase,
+                "summary",
+                context="mainline_status.current_phase",
+            ),
+            "active_phase": _require_nonempty_string_from_mapping(
+                current_runtime_owner,
+                "active_phase",
+                context="mainline_status.current_runtime_owner",
+            ),
+            "active_tranche": _require_nonempty_string_from_mapping(
+                current_runtime_owner,
+                "active_tranche",
+                context="mainline_status.current_runtime_owner",
+            ),
+            "next_focus": list(mainline_snapshot["next_focus"]),
+        }
+        runtime_summary = {
+            "current_owner_line": _require_nonempty_string_from_mapping(
+                current_runtime_owner,
+                "current_owner_line",
+                context="mainline_status.current_runtime_owner",
+            ),
+            "runtime_owner": "upstream_hermes_agent",
+        }
+        managed_runtime_contract = _build_managed_runtime_contract()
+        product_entry_shell = {
+            "product_frontdesk": {
+                "command": product_frontdesk_command,
+                "surface_kind": PRODUCT_FRONTDESK_KIND,
+            },
+            "grant_progress": {
+                "command": command_catalog["grant_progress"],
+                "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
+            },
+            "grant_cockpit": {
+                "command": grant_cockpit_command,
+                "surface_kind": GRANT_COCKPIT_KIND,
+            },
+            "grant_direct_entry": {
+                "command": grant_direct_entry_command,
+                "surface_kind": GRANT_DIRECT_ENTRY_KIND,
+            },
+            "grant_user_loop": {
+                "command": grant_user_loop_command,
+                "surface_kind": GRANT_USER_LOOP_KIND,
+            },
+        }
+        domain_entry_contract = _build_domain_entry_contract()
         grant_authoring_readiness = {
             "surface_kind": "grant_authoring_readiness",
             "verdict": "agent_assisted_cli_ready_not_full_autopilot",
@@ -1051,6 +1203,220 @@ class MedAutoGrantProductEntry:
             recommended_loop_command=grant_authoring_readiness["recommended_loop_command"],
             blocking_gaps=list(grant_authoring_readiness["blocking_gaps"]),
         )
+        human_gate_ids = _collect_family_human_gate_ids(family_orchestration)
+        runtime_inventory = _build_shared_runtime_inventory(
+            summary=(
+                "当前 runtime inventory 由 mainline runtime owner、managed runtime contract 与 grant projection "
+                "surface 共同构成。"
+            ),
+            runtime_owner=_require_nonempty_string_from_mapping(
+                runtime_summary,
+                "runtime_owner",
+                context="product_entry_manifest.runtime",
+            ),
+            domain_owner=_require_nonempty_string_from_mapping(
+                managed_runtime_contract,
+                "domain_owner",
+                context="product_entry_manifest.managed_runtime_contract",
+            ),
+            executor_owner=_require_nonempty_string_from_mapping(
+                managed_runtime_contract,
+                "executor_owner",
+                context="product_entry_manifest.managed_runtime_contract",
+            ),
+            substrate="hermes_agent_managed_runtime",
+            availability="ready_to_try_now" if bool(product_entry_preflight.get("ready_to_try_now")) else "preflight_blocked",
+            health_status="attention_required" if checkpoint_status == "blocked" else "healthy",
+            status_surface={
+                "ref_kind": "json_pointer",
+                "ref": "/product_entry_manifest/product_entry_shell/grant_progress",
+                "role": "runtime_status",
+                "label": "grant progress projection surface",
+            },
+            attention_surface={
+                "ref_kind": "json_pointer",
+                "ref": "/product_entry_manifest/operator_loop_surface",
+                "role": "attention_queue",
+                "label": "grant user loop attention surface",
+            },
+            recovery_surface={
+                "ref_kind": "json_pointer",
+                "ref": "/product_entry_manifest/family_orchestration/resume_contract",
+                "role": "recovery_contract",
+                "label": "family resume contract surface",
+            },
+            workspace_binding={
+                "workspace_surface_kind": "nsfc_workspace",
+                "workspace_path": str(resolved_input_path),
+                "grant_run_id": progress_payload["grant_run_id"],
+                "workspace_id": progress_payload["workspace_id"],
+                "draft_id": progress_payload["draft_id"],
+                "lifecycle_stage": progress_payload["lifecycle_stage"],
+            },
+            domain_projection={
+                "runtime": dict(runtime_summary),
+                "managed_runtime_contract": dict(managed_runtime_contract),
+                "checkpoint_status": checkpoint_status,
+                "repo_mainline": dict(repo_mainline),
+            },
+        )
+        task_lifecycle = _build_shared_task_lifecycle(
+            task_kind="grant_authoring_mainline",
+            task_id=(
+                f"{progress_payload['workspace_id']}:"
+                f"{_optional_string_from_mapping(verification_identity, 'draft_id') or 'no-draft'}"
+            ),
+            status=checkpoint_status,
+            summary=(
+                f"当前 checkpoint_status={checkpoint_status}，"
+                f"continuation 指向 {continuation_route_id}({continuation_route_status})。"
+            ),
+            session_id=progress_payload["grant_run_id"],
+            run_id=progress_payload["grant_run_id"],
+            progress_surface={
+                "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
+                "summary": operator_loop_actions["inspect_progress"]["summary"],
+                "command": command_catalog["grant_progress"],
+                "step_id": "inspect_progress",
+                "locator_fields": ["grant_run_id", "workspace_id", "lifecycle_stage"],
+            },
+            resume_surface={
+                "surface_kind": GRANT_USER_LOOP_KIND,
+                "summary": operator_loop_actions["open_loop"]["summary"],
+                "command": grant_user_loop_command,
+                "step_id": "continue_grant_loop",
+                "locator_fields": ["grant_run_id", "lifecycle_stage"],
+            },
+            checkpoint_summary={
+                "status": checkpoint_status,
+                "summary": (
+                    f"verification checkpoint 对齐 {continuation_route_id} route，"
+                    f"route_status={continuation_route_status}。"
+                ),
+                "checkpoint_id": (
+                    f"{progress_payload['workspace_id']}:"
+                    f"{_optional_string_from_mapping(verification_identity, 'draft_id') or 'no-draft'}:"
+                    f"{progress_payload['lifecycle_stage']}"
+                ),
+                "lineage_ref": dict(
+                    _require_mapping(
+                        family_orchestration,
+                        "checkpoint_lineage_surface",
+                        context="family_orchestration",
+                    )
+                ),
+                "verification_ref": {
+                    "ref_kind": "json_pointer",
+                    "ref": "/product_entry_manifest/task_lifecycle/domain_projection/verification_checkpoint",
+                    "label": "stage route verification checkpoint",
+                },
+            },
+            human_gate_ids=human_gate_ids,
+            domain_projection={
+                "verification_checkpoint": dict(verification_checkpoint),
+                "verification_identity": dict(verification_identity),
+                "repo_mainline": dict(repo_mainline),
+                "family_orchestration": dict(family_orchestration),
+                "continuation_next_action": dict(continuation_next_action),
+                "continuation_action_kind": continuation_action_kind,
+            },
+        )
+        skill_catalog = _build_shared_skill_catalog(
+            summary="skill catalog 聚合 domain entry command catalog 与当前 product-entry shells。",
+            skills=[
+                _build_shared_skill_descriptor(
+                    skill_id=f"mag.{shell_key}",
+                    title=shell_key.replace("_", " ").title(),
+                    owner=TARGET_DOMAIN_ID,
+                    distribution_mode="repo_tracked_cli_surface",
+                    surface_kind=_require_nonempty_string_from_mapping(
+                        shell_surface,
+                        "surface_kind",
+                        context=f"product_entry_shell.{shell_key}",
+                    ),
+                    description=f"{shell_key} shell 的当前 product-entry command surface。",
+                    command=_require_nonempty_string_from_mapping(
+                        shell_surface,
+                        "command",
+                        context=f"product_entry_shell.{shell_key}",
+                    ),
+                    readiness="landed",
+                    tags=[TARGET_DOMAIN_ID, "product-entry-shell", shell_key],
+                    domain_projection={"shell_key": shell_key},
+                )
+                for shell_key, shell_surface in product_entry_shell.items()
+            ],
+            supported_commands=list(domain_entry_contract.get("supported_commands") or []),
+            command_contracts=list(domain_entry_contract.get("command_contracts") or []),
+        )
+        automation = _build_shared_automation_catalog(
+            summary="automation companion 聚合 submission-ready 导出 gate 与 authoring loop continuation 提示。",
+            readiness_summary=(
+                f"submission_ready={grant_authoring_readiness['fully_automatic']}; "
+                f"good_to_use_now={grant_authoring_readiness['good_to_use_now']}"
+            ),
+            automations=[
+                _build_shared_automation_descriptor(
+                    automation_id="mag.submission_ready_export",
+                    title="Submission-ready export",
+                    owner=TARGET_DOMAIN_ID,
+                    trigger_kind="manual_submission_gate",
+                    target_surface_kind="submission_ready_package",
+                    summary=operator_loop_actions["build_submission_ready_package"]["summary"],
+                    readiness_status=(
+                        "agent_assisted"
+                        if grant_authoring_readiness["fully_automatic"] is False
+                        else "fully_automatic"
+                    ),
+                    gate_policy="fail_closed_submission_ready_gate",
+                    output_expectation=[
+                        "输出 submission-ready-package.json",
+                        "输出 fail-closed audit summary",
+                        "保持 external_submission_performed=false",
+                    ],
+                    target_command=command_catalog["build_submission_ready_package"],
+                    domain_projection={
+                        "automation_scope": "local_submission_package",
+                        "readiness_verdict": (
+                            "submission_ready"
+                            if grant_authoring_readiness["fully_automatic"]
+                            else "agent_assisted_ready_not_product_grade"
+                        ),
+                        "requires": ["output_dir", "submission_ready_export_gate"],
+                    },
+                ),
+                _build_shared_automation_descriptor(
+                    automation_id="mag.authoring_loop_continuation",
+                    title="Authoring loop continuation",
+                    owner=TARGET_DOMAIN_ID,
+                    trigger_kind="manual_authoring_resume",
+                    target_surface_kind=GRANT_USER_LOOP_KIND,
+                    summary=(
+                        f"继续 grant user loop 并推进 {continuation_route_id} route "
+                        f"({continuation_route_status})。"
+                    ),
+                    readiness_status="landed",
+                    gate_policy="family_human_gate_resume_contract",
+                    output_expectation=[
+                        "返回 next_action command 或 handoff_surfaces",
+                        "保持 route_status 与 checkpoint_status 对齐",
+                        "在 human gate 请求时保留人工决策位",
+                    ],
+                    target_command=grant_user_loop_command,
+                    domain_projection={
+                        "next_action": dict(continuation_next_action),
+                        "human_gate_ids": human_gate_ids,
+                        "resume_contract": dict(
+                            _require_mapping(
+                                family_orchestration,
+                                "resume_contract",
+                                context="family_orchestration",
+                            )
+                        ),
+                    },
+                ),
+            ],
+        )
 
         payload = {
             "ok": True,
@@ -1095,75 +1461,14 @@ class MedAutoGrantProductEntry:
                     ),
                 },
                 "operator_loop_actions": operator_loop_actions,
-                "repo_mainline": {
-                    "program_id": _require_nonempty_string_from_mapping(
-                        mainline_payload,
-                        "program_id",
-                        context="mainline_status",
-                    ),
-                    "phase_id": _require_nonempty_string_from_mapping(
-                        current_phase,
-                        "phase_id",
-                        context="mainline_status.current_phase",
-                    ),
-                    "phase_name": _require_nonempty_string_from_mapping(
-                        current_phase,
-                        "phase_name",
-                        context="mainline_status.current_phase",
-                    ),
-                    "phase_status": _require_nonempty_string_from_mapping(
-                        current_phase,
-                        "status",
-                        context="mainline_status.current_phase",
-                    ),
-                    "phase_summary": _require_nonempty_string_from_mapping(
-                        current_phase,
-                        "summary",
-                        context="mainline_status.current_phase",
-                    ),
-                    "active_phase": _require_nonempty_string_from_mapping(
-                        current_runtime_owner,
-                        "active_phase",
-                        context="mainline_status.current_runtime_owner",
-                    ),
-                    "active_tranche": _require_nonempty_string_from_mapping(
-                        current_runtime_owner,
-                        "active_tranche",
-                        context="mainline_status.current_runtime_owner",
-                    ),
-                    "next_focus": list(mainline_snapshot["next_focus"]),
-                },
-                "runtime": {
-                    "current_owner_line": _require_nonempty_string_from_mapping(
-                        current_runtime_owner,
-                        "current_owner_line",
-                        context="mainline_status.current_runtime_owner",
-                    ),
-                    "runtime_owner": "upstream_hermes_agent",
-                },
-                "managed_runtime_contract": _build_managed_runtime_contract(),
-                "product_entry_shell": {
-                    "product_frontdesk": {
-                        "command": product_frontdesk_command,
-                        "surface_kind": PRODUCT_FRONTDESK_KIND,
-                    },
-                    "grant_progress": {
-                        "command": command_catalog["grant_progress"],
-                        "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
-                    },
-                    "grant_cockpit": {
-                        "command": grant_cockpit_command,
-                        "surface_kind": GRANT_COCKPIT_KIND,
-                    },
-                    "grant_direct_entry": {
-                        "command": grant_direct_entry_command,
-                        "surface_kind": GRANT_DIRECT_ENTRY_KIND,
-                    },
-                    "grant_user_loop": {
-                        "command": grant_user_loop_command,
-                        "surface_kind": GRANT_USER_LOOP_KIND,
-                    },
-                },
+                "repo_mainline": repo_mainline,
+                "runtime": runtime_summary,
+                "managed_runtime_contract": managed_runtime_contract,
+                "runtime_inventory": runtime_inventory,
+                "task_lifecycle": task_lifecycle,
+                "skill_catalog": skill_catalog,
+                "automation": automation,
+                "product_entry_shell": product_entry_shell,
                 "shared_handoff": {
                     "direct_entry_builder": {
                         "command": command_catalog["build_direct_entry"],

@@ -1634,6 +1634,29 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 ],
             },
         )
+        self.assertEqual(manifest["runtime_inventory"]["surface_kind"], "runtime_inventory")
+        self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "upstream_hermes_agent")
+        self.assertEqual(
+            manifest["runtime_inventory"]["domain_owner"],
+            manifest["managed_runtime_contract"]["domain_owner"],
+        )
+        self.assertEqual(manifest["task_lifecycle"]["surface_kind"], "task_lifecycle")
+        self.assertEqual(
+            manifest["task_lifecycle"]["status"],
+            "forward_progress",
+        )
+        self.assertEqual(
+            manifest["task_lifecycle"]["progress_surface"]["surface_kind"],
+            "grant_progress",
+        )
+        self.assertEqual(manifest["skill_catalog"]["surface_kind"], "skill_catalog")
+        self.assertIn("validate-workspace", manifest["skill_catalog"]["supported_commands"])
+        self.assertTrue(manifest["skill_catalog"]["command_contracts"])
+        self.assertEqual(manifest["automation"]["surface_kind"], "automation")
+        self.assertEqual(
+            [item["automation_id"] for item in manifest["automation"]["automations"]],
+            ["mag.submission_ready_export", "mag.authoring_loop_continuation"],
+        )
         self.assertEqual(manifest["operator_loop_surface"]["shell_key"], "grant_user_loop")
         self.assertEqual(manifest["operator_loop_surface"]["command"], manifest["recommended_command"])
         self.assertEqual(manifest["operator_loop_surface"]["surface_kind"], "grant_user_loop")
