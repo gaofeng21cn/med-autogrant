@@ -34,6 +34,11 @@ from med_autogrant.workspace import (
 )
 from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
 from opl_harness_shared.family_orchestration import (
+    build_explicit_checkpoint_policy as _build_shared_explicit_checkpoint_policy,
+    build_family_action_graph as _build_shared_family_action_graph,
+    build_family_action_graph_edge as _build_shared_family_action_graph_edge,
+    build_family_action_graph_human_gate as _build_shared_family_action_graph_human_gate,
+    build_family_action_graph_node as _build_shared_family_action_graph_node,
     build_family_orchestration_template as _build_shared_family_orchestration_template,
 )
 from opl_harness_shared.automation_companions import (
@@ -2075,47 +2080,45 @@ def _build_family_action_graph(
     current_node_id = f"route:{current_route_id}"
     recommended_node_id = f"route:{recommended_route_id}"
     edge_on = "decision" if gate_status == "requested" else "success"
-    return {
-        "version": "family-action-graph.v1",
-        "graph_id": f"mag_{current_route_id}_to_{recommended_route_id}_graph",
-        "target_domain_id": TARGET_DOMAIN_ID,
-        "graph_kind": "grant_route_orchestration",
-        "graph_version": "2026-04-13",
-        "nodes": [
-            {
-                "node_id": current_node_id,
-                "node_kind": _route_to_action_node_kind(current_route_id),
-                "title": f"Current route: {current_route_id}",
-                "produces_checkpoint": True,
-            },
-            {
-                "node_id": recommended_node_id,
-                "node_kind": _route_to_action_node_kind(recommended_route_id),
-                "title": f"Recommended route: {recommended_route_id}",
-                "produces_checkpoint": True,
-            },
+    return _build_shared_family_action_graph(
+        graph_id=f"mag_{current_route_id}_to_{recommended_route_id}_graph",
+        target_domain_id=TARGET_DOMAIN_ID,
+        graph_kind="grant_route_orchestration",
+        graph_version="2026-04-13",
+        nodes=[
+            _build_shared_family_action_graph_node(
+                node_id=current_node_id,
+                node_kind=_route_to_action_node_kind(current_route_id),
+                title=f"Current route: {current_route_id}",
+                produces_checkpoint=True,
+            ),
+            _build_shared_family_action_graph_node(
+                node_id=recommended_node_id,
+                node_kind=_route_to_action_node_kind(recommended_route_id),
+                title=f"Recommended route: {recommended_route_id}",
+                produces_checkpoint=True,
+            ),
         ],
-        "edges": [
-            {
-                "from": current_node_id,
-                "to": recommended_node_id,
-                "on": edge_on,
-            },
+        edges=[
+            _build_shared_family_action_graph_edge(
+                from_node=current_node_id,
+                to_node=recommended_node_id,
+                on=edge_on,
+            ),
         ],
-        "entry_nodes": [current_node_id],
-        "exit_nodes": [recommended_node_id],
-        "human_gates": [
-            {
-                "gate_id": gate_id,
-                "trigger_nodes": [recommended_node_id],
-                "blocking": gate_status == "requested",
-            }
+        entry_nodes=[current_node_id],
+        exit_nodes=[recommended_node_id],
+        human_gates=[
+            _build_shared_family_action_graph_human_gate(
+                gate_id=gate_id,
+                trigger_nodes=[recommended_node_id],
+                blocking=gate_status == "requested",
+            )
         ],
-        "checkpoint_policy": {
-            "mode": "explicit_nodes",
-            "checkpoint_nodes": [current_node_id, recommended_node_id],
-        },
-    }
+        checkpoint_policy=_build_shared_explicit_checkpoint_policy(
+            checkpoint_nodes=[current_node_id, recommended_node_id]
+        ),
+    )
 
 
 def _route_to_action_node_kind(route_id: str) -> str:

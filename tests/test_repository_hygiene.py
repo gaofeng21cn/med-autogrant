@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -39,6 +40,19 @@ class RepositoryHygieneTest(unittest.TestCase):
 
         self.assertEqual(completed.returncode, 0)
         self.assertEqual(completed.stdout.strip(), "")
+
+    def test_pyproject_pins_opl_harness_shared_to_a_full_commit(self) -> None:
+        pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+        dependency = next(
+            item
+            for item in pyproject["project"]["dependencies"]
+            if item.startswith("opl-harness-shared @ ")
+        )
+
+        self.assertRegex(
+            dependency,
+            r"^opl-harness-shared @ git\+https://github\.com/gaofeng21cn/one-person-lab\.git@[0-9a-f]{40}#subdirectory=python/opl-harness-shared$",
+        )
 
     def test_series_doc_governance_checklist_is_repo_tracked_and_linked_from_docs_indexes(self) -> None:
         checklist = (REPO_ROOT / "docs/references/series-doc-governance-checklist.md").read_text(encoding="utf-8")

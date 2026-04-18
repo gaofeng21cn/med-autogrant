@@ -2198,6 +2198,46 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             expected_resume_surface="grant_user_loop",
         )
 
+    def test_family_orchestration_action_graph_uses_shared_builder(self) -> None:
+        from med_autogrant import product_entry as module
+
+        captured: dict[str, object] = {}
+
+        def _fake_build_family_action_graph(**kwargs: object) -> dict[str, object]:
+            captured.update(kwargs)
+            return {
+                "version": "family-action-graph.v1",
+                "graph_id": str(kwargs["graph_id"]),
+                "target_domain_id": str(kwargs["target_domain_id"]),
+                "graph_kind": str(kwargs["graph_kind"]),
+                "graph_version": str(kwargs["graph_version"]),
+                "nodes": list(kwargs["nodes"]),
+                "edges": list(kwargs["edges"]),
+                "entry_nodes": list(kwargs["entry_nodes"]),
+                "exit_nodes": list(kwargs["exit_nodes"]),
+                "human_gates": list(kwargs["human_gates"]),
+                "checkpoint_policy": dict(kwargs["checkpoint_policy"]),
+            }
+
+        with patch.object(module, "_build_shared_family_action_graph", side_effect=_fake_build_family_action_graph):
+            payload = module._build_family_orchestration_companion(
+                current_route_id="drafting",
+                recommended_route_id="critique",
+                recommended_route_status="pending",
+                needs_author_decision=True,
+                review_surface_ref="/review",
+                event_envelope_surface_ref="/events",
+                checkpoint_lineage_surface_ref="/lineage",
+                resume_surface_kind="grant_user_loop",
+            )
+
+        self.assertEqual(payload["action_graph"]["graph_id"], "mag_drafting_to_critique_graph")
+        self.assertEqual(captured["graph_kind"], "grant_route_orchestration")
+        self.assertEqual([node["node_id"] for node in captured["nodes"]], ["route:drafting", "route:critique"])
+        self.assertEqual([edge["on"] for edge in captured["edges"]], ["decision"])
+        self.assertEqual(captured["entry_nodes"], ["route:drafting"])
+        self.assertEqual(captured["exit_nodes"], ["route:critique"])
+
     def test_grant_user_loop_projects_landed_critique_route_when_drafting_can_execute_directly(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
