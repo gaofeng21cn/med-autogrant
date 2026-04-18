@@ -41,6 +41,8 @@ from opl_harness_shared.automation_companions import (
     build_automation_descriptor as _build_shared_automation_descriptor,
 )
 from opl_harness_shared.product_entry_companions import (
+    build_product_entry_start as _build_shared_product_entry_start,
+    build_product_frontdesk as _build_shared_product_frontdesk,
     build_product_entry_overview as _build_shared_product_entry_overview,
     build_product_entry_quickstart as _build_shared_product_entry_quickstart,
     build_product_entry_readiness as _build_shared_product_entry_readiness,
@@ -92,14 +94,13 @@ def _build_product_entry_start(
     operator_loop_actions: Mapping[str, Mapping[str, Any]],
     family_orchestration: Mapping[str, Any],
 ) -> dict[str, Any]:
-    return {
-        "surface_kind": "product_entry_start",
-        "summary": (
+    return _build_shared_product_entry_start(
+        summary=(
             "先进入 direct grant frontdesk；需要继续当前写作主线时恢复 grant user loop，"
             "需要把用户意图显式装配成入口合同时再构建 direct entry。"
         ),
-        "recommended_mode_id": "open_frontdesk",
-        "modes": [
+        recommended_mode_id="open_frontdesk",
+        modes=[
             {
                 "mode_id": "open_frontdesk",
                 "title": "Open grant frontdesk",
@@ -140,19 +141,15 @@ def _build_product_entry_start(
                 ),
             },
         ],
-        "resume_surface": dict(
+        resume_surface=dict(
             _require_mapping(
                 family_orchestration,
                 "resume_contract",
                 context="family_orchestration",
             )
         ),
-        "human_gate_ids": [
-            gate["gate_id"]
-            for gate in list(family_orchestration.get("human_gates") or [])
-            if isinstance(gate, Mapping) and gate.get("gate_id")
-        ],
-    }
+        human_gate_ids=_collect_family_human_gate_ids(family_orchestration),
+    )
 
 
 class MedAutoGrantProductEntry:
@@ -1548,81 +1545,75 @@ class MedAutoGrantProductEntry:
             "draft_id": manifest_payload["draft_id"],
             "lifecycle_stage": manifest_payload["lifecycle_stage"],
             "input_path": manifest_payload["input_path"],
-            "product_frontdesk": {
-                "surface_kind": PRODUCT_FRONTDESK_KIND,
-                "recommended_action": "inspect_or_prepare_grant_loop",
-                "target_domain_id": _require_nonempty_string_from_mapping(
+            "product_frontdesk": _build_shared_product_frontdesk(
+                recommended_action="inspect_or_prepare_grant_loop",
+                target_domain_id=_require_nonempty_string_from_mapping(
                     manifest,
                     "target_domain_id",
                     context="product_frontdesk.product_entry_manifest",
                 ),
-                "workspace_locator": dict(_require_mapping(
+                workspace_locator=dict(_require_mapping(
                     manifest,
                     "workspace_locator",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "runtime": dict(_require_mapping(
+                runtime=dict(_require_mapping(
                     manifest,
                     "runtime",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "product_entry_status": dict(_require_mapping(
+                product_entry_status=dict(_require_mapping(
                     manifest,
                     "product_entry_status",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "frontdesk_surface": dict(_require_mapping(
+                frontdesk_surface=dict(_require_mapping(
                     manifest,
                     "frontdesk_surface",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "operator_loop_surface": dict(_require_mapping(
+                operator_loop_surface=dict(_require_mapping(
                     manifest,
                     "operator_loop_surface",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "operator_loop_actions": dict(_require_mapping(
+                operator_loop_actions=dict(_require_mapping(
                     manifest,
                     "operator_loop_actions",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "product_entry_start": dict(_require_mapping(
+                product_entry_start=dict(_require_mapping(
                     manifest,
                     "product_entry_start",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "product_entry_overview": dict(_require_mapping(
+                product_entry_overview=dict(_require_mapping(
                     manifest,
                     "product_entry_overview",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "product_entry_preflight": dict(_require_mapping(
+                product_entry_preflight=dict(_require_mapping(
                     manifest,
                     "product_entry_preflight",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "product_entry_readiness": dict(_require_mapping(
+                product_entry_readiness=dict(_require_mapping(
                     manifest,
                     "product_entry_readiness",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "grant_authoring_readiness": dict(_require_mapping(
-                    manifest,
-                    "grant_authoring_readiness",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                "product_entry_quickstart": dict(_require_mapping(
+                product_entry_quickstart=dict(_require_mapping(
                     manifest,
                     "product_entry_quickstart",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "family_orchestration": dict(_require_mapping(
+                family_orchestration=dict(_require_mapping(
                     manifest,
                     "family_orchestration",
                     context="product_frontdesk.product_entry_manifest",
                 )),
-                "product_entry_manifest": dict(manifest),
-                "entry_surfaces": {
+                product_entry_manifest=dict(manifest),
+                entry_surfaces={
                     "frontdesk": dict(_require_mapping(
                         product_entry_shell,
                         "product_frontdesk",
@@ -1659,7 +1650,7 @@ class MedAutoGrantProductEntry:
                         context="product_frontdesk.shared_handoff",
                     )),
                 },
-                "summary": {
+                summary={
                     "frontdesk_command": _require_nonempty_string_from_mapping(
                         _require_mapping(manifest, "frontdesk_surface", context="product_frontdesk.product_entry_manifest"),
                         "command",
@@ -1676,11 +1667,18 @@ class MedAutoGrantProductEntry:
                         context="product_frontdesk.operator_loop_surface",
                     ),
                 },
-                "notes": [
+                notes=[
                     "This frontdesk surface is a controller-owned direct grant front door over the landed product-entry shell.",
                     "It does not claim that mature Web UI or hosted runtime is already landed.",
                 ],
-            },
+                extra_payload={
+                    "grant_authoring_readiness": dict(_require_mapping(
+                        manifest,
+                        "grant_authoring_readiness",
+                        context="product_frontdesk.product_entry_manifest",
+                    )),
+                },
+            ),
         }
         _validate_product_frontdesk_contract(
             payload,
