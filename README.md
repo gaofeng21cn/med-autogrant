@@ -4,52 +4,54 @@
 
 # Med Auto Grant
 
-**A medical grant-authoring mainline for investigator-side `NSFC`-style applications**
+**A medical grant-writing workspace for investigators preparing structured proposal packages**
 
-> `Med Auto Grant` is the medical grant line in the broader `Grant Foundry` family. It is built to help applicants turn background, prior work, preliminary evidence, and topic ideas into a governed authoring and revision process instead of a pile of disconnected drafts.
+> `Med Auto Grant` keeps topic selection, evidence gathering, drafting, critique, revision, and local submission preparation on one line for investigator-side medical grant applications.
 
 <table>
   <tr>
     <td width="33%" valign="top">
       <strong>Who It Serves</strong><br/>
-      Medical researchers, clinical teams, faculty members, and PIs preparing investigator-side grant applications
+      Doctors, PIs, faculty members, and medical research teams preparing investigator-side grant applications
     </td>
     <td width="33%" valign="top">
-      <strong>What It Helps With</strong><br/>
-      Question refinement, applicant-fit checking, structured drafting, mentor-style critique, revision, and local submission packaging
+      <strong>What It Organizes</strong><br/>
+      Topic ideas, prior work, pilot evidence, draft versions, review comments, and application files inside one workspace
     </td>
     <td width="33%" valign="top">
-      <strong>Public Role</strong><br/>
-      A first-level medical grant domain module / agent under the `OPL` management shell
+      <strong>How To Start</strong><br/>
+      Tell it the grant program, the direction you want to pursue, the materials you already have, and the package you want to prepare
     </td>
   </tr>
 </table>
 
+## One-Sentence Quick Start
+
+You can start with prompts like:
+
+- "Help me turn this idea into an NSFC-style application. First judge whether the question is worth writing, then draft the title, abstract, and research aims."
+- "Based on my papers, pilot data, and background, give me three grant directions worth pursuing and explain the upside and risk of each."
+- "Review this draft like a grant reviewer, tell me the biggest weaknesses, and show me how to revise them."
+
 ## What It Helps With
 
-- Turn applicant materials, prior work, ongoing projects, and preliminary evidence into a clearer `NSFC`-style grant line.
-- Keep question refinement, argument building, drafting, critique, and revision on one governed author-side path.
-- Preserve revision evidence and verdict checkpoints instead of losing them across scattered documents and chat history.
-- Export a local `submission-ready` package once the workspace is frozen and evidence-complete.
+- Narrowing several possible directions into a proposal line worth writing.
+- Turning prior work, pilot data, and applicant materials into a stronger title, abstract, aims, and research plan.
+- Keeping revision rounds, reviewer-style critique, and version changes traceable inside one workspace.
+- Preparing a more complete local package before final human review and portal submission.
 
-## Current Public Path
+## How It Works
 
-| Path | Status | What it means |
-| --- | --- | --- |
-| Structured grant authoring mainline | Active | The current honest path from topic refinement to draft and freeze |
-| Mentor-style critique and revision evidence | Active | Review, revision, and re-review evidence stay on the same author-side line |
-| `OPL` managed entry | Active contract surface | `OPL` is the top-level GUI and management shell; `Med Auto Grant` stays the grant-domain module underneath it |
-| Codex default interaction and execution | Active default | Codex is the default authoring executor and operator interaction path |
-| Hermes-Agent backup and always-on gateway | Explicit route | Available for backup mode, long-running gateway work, and route-specific proof lanes when explicitly selected |
-| Local `submission-ready` package export | Active local output | Landed for frozen, evidence-complete workspaces; this is still not external website submission |
-| Mature hosted runtime or external-submission autopilot | Not landed | Still future work |
+- Applicants provide the target program, existing evidence, constraints, and final judgment.
+- The AI operator helps with topic refinement, structure, drafting, critique, and revision.
+- The workspace keeps comments, versions, and deliverable files together so the proposal line stays reviewable.
 
-## Best-Fit Use Cases
+## Current Boundary
 
-- You are preparing an investigator-side medical grant application with reusable author materials.
-- You need stronger question refinement before committing to full drafting.
-- You want critique and revision to stay structured and auditable rather than informal.
-- You want a local package that is closer to submission readiness before final human review.
+- `Med Auto Grant` focuses on investigator-side medical grant writing inside the broader `OPL` workspace.
+- It covers topic refinement, proposal drafting, revision, and local submission-package preparation.
+- Final direction choice, application strategy, and submission decisions stay with the applicant team.
+- External funding portal submission stays under human supervision.
 
 ## How To Read This Repository
 
@@ -57,63 +59,16 @@
 2. Technical readers and planners should read [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
 3. Developers and maintainers should continue into `docs/specs/`, `docs/references/`, `docs/plans/`, and `docs/history/omx/`.
 
-## Plain-Language Boundary
+## Technical Notes For Maintainers
 
-`Med Auto Grant` is the first-level medical grant domain module / agent under the `OPL` shell.
-Its job is to own applicant-side grant truth, authoring routes, revision evidence, and local delivery.
+The repository home stays user-facing on purpose.
+Runtime truth, product-entry contracts, hosted bundle records, and phase documents live in the technical docs:
 
-```text
-User / Agent
-  -> OPL GUI / management shell
-      -> Med Auto Grant domain module / agent
-          -> Codex default interaction + execution
-          -> Hermes-Agent backup mode / always-on gateway
-              -> Grant-domain truth, routes, checkpoints, packages
-```
-
-In plain language:
-
-- `OPL` owns the top-level GUI, management shell, family navigation, and domain-module visibility.
-- `Med Auto Grant` owns the grant authoring workflow, revision logic, route catalog, and grant-domain truth.
-- Codex is the default interaction and execution surface for authoring passes.
-- `Hermes-Agent` is the backup mode and long-running online gateway when a route explicitly asks for that mode.
-
-## Current Boundaries
-
-- The landed user path is local and contract-backed: frontdesk, user loop, workspace progress, cockpit, route execution, and local package export.
-- External funding website submission remains a human/external system boundary.
-- A richer hosted grant product experience remains future-facing.
-
-<details>
-  <summary><strong>Maintainer Notes And Contract Truth</strong></summary>
-
-The user-facing default is Codex-first under the `OPL` management shell.
-The repo-tracked historical runtime line still records `CLI-first + real upstream Hermes-Agent runtime substrate`.
-The repo-tracked truth set also keeps the phrase real upstream `Hermes-Agent` runtime substrate explicit for this mainline.
-The repo-tracked current-program pointer remains `contracts/runtime-program/current-program.json`.
-Machine-local runtime state remains under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
-Legacy repo-local runtime helpers now survive as compatibility bridge and regression oracle material.
-Repo-local adapters such as `hermes_runtime.py` and `domain_entry.py` preserve domain semantics and route contracts.
-
-The current formal-entry matrix remains `CLI`, `MCP`, and `controller`.
-The repository mainline remains `Auto-only`.
-
-The lightweight structured `product entry` shell is now landed.
-That shell is already schema-backed where the contract surfaces have been frozen, and it feeds the hosted contract bundle, hosted caller, and external caller catalog through `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts`.
-These repo-tracked surfaces are contract surfaces; actual hosted runtime work and a richer grant-facing product experience still remains future work.
-The current ideal target keeps `OPL` as the management shell above the MAG domain module while the grant surface stays applicant-side and machine-readable.
-
-The current landed product-facing surfaces now include:
-
-- `MedAutoGrantDomainEntry` as the service-safe domain entry contract
-- `product build-entry`, `product preflight`, `product start`, `product manifest`, and `product frontdesk`
-- `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`
-- `package submission-ready` for local fail-closed submission packaging
-- `hosted contract bundle` output for hosted caller / external caller consumption
-- `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts` as the machine-readable domain/API catalog
-
-These surfaces make the grant line more navigable and machine-readable, but they do not mean a mature hosted product frontend or external-submission autopilot has landed.
-</details>
+- [Docs Guide](./docs/README.md)
+- [Project](./docs/project.md)
+- [Status](./docs/status.md)
+- [Contracts Overview](./contracts/README.md)
+- [Specs directory](./docs/specs/)
 
 ## Development Verification
 

@@ -4,116 +4,71 @@
 
 # Med Auto Grant
 
-**面向申请人侧 `NSFC` 风格申请的医学基金主线**
+**面向申请人侧医学基金申请的写作工作台，用来持续推进题目、结构和正式申请稿**
 
-> `Med Auto Grant` 是 `Grant Foundry` 家族中的医学基金主线。它的目标，是帮助申请人把个人基础、既有成果、预实验和候选方向收成一条可治理的 authoring / revision 流程，而不是继续在零散草稿和临时对话里反复打补丁。
+> `Med Auto Grant` 把选题、既有成果、预实验、草稿、批注、修订和本地提交准备放在同一条申请线上，方便持续推进和审阅。
 
 <table>
   <tr>
     <td width="33%" valign="top">
-      <strong>面向谁</strong><br/>
-      准备申请人侧医学基金的研究者、临床团队、青年教师与 PI
+      <strong>适用人群</strong><br/>
+      准备申请人侧医学基金的医生、课题负责人、青年教师、医学研究者和临床团队
     </td>
     <td width="33%" valign="top">
-      <strong>能帮什么</strong><br/>
-      问题提纯、申请人与方向匹配判断、结构化写作、导师式批注、修订，以及本地 submission package 整理
+      <strong>适用问题</strong><br/>
+      方向很多、材料不少、修改轮次也多，希望把题目、草稿、批注和版本收在同一个工作区里
     </td>
     <td width="33%" valign="top">
-      <strong>公开角色</strong><br/>
-      `OPL` 管理壳下的一级医学基金 domain module / agent
+      <strong>如何开始</strong><br/>
+      直接说明准备申请的项目、题目方向、已有成果、预实验和希望形成的申请包
     </td>
   </tr>
 </table>
 
-## 它能帮你做什么
+## 一句话快速启动
 
-- 把申请人材料、既有成果、在研项目、预实验和候选方向收成更清楚的 `NSFC` 风格申请主线。
-- 让问题提纯、论证搭建、草稿写作、导师式批注和修订保持在同一条 author-side 路线上。
-- 把修订证据和 verdict checkpoint 保留下来，而不是散落在文档版本和聊天记录里。
-- 在 workspace 冻结且证据齐备后，导出本地 `submission-ready` package。
+你可以直接这样说：
 
-## 当前公开可走的路径
+- “帮我把这个方向整理成一份国自然申请，先判断题目值不值得做，再给我标题、摘要和研究内容框架。”
+- “根据我现有论文、预实验和个人基础，帮我筛三个最值得写的申请方向，并说明各自的创新点和风险。”
+- “按评审视角审一遍这份草稿，指出最影响中标的硬伤，并直接给我一版修改建议。”
 
-| 路径 | 状态 | 含义 |
-| --- | --- | --- |
-| 结构化基金 authoring 主线 | Active | 当前从问题提纯到草稿冻结的诚实主路径 |
-| 导师式批注与修订证据 | Active | review、revision 和 re-review evidence 已能收在同一条作者侧主线里 |
-| `OPL` 管理入口 | Active contract surface | `OPL` 是顶层 GUI 与管理壳；`Med Auto Grant` 是其下的基金领域模块 |
-| Codex 默认交互与执行 | Active default | Codex 是默认 authoring executor 与操作者交互路径 |
-| Hermes-Agent 备用与长久在线网关 | Explicit route | 显式选择时用于备用模式、长期在线网关和 route-specific proof lane |
-| 本地 `submission-ready` package 导出 | Active local output | 对 frozen 且证据齐备的 workspace 已落地；但这仍不是外部官网提交流程 |
-| 成熟 hosted runtime / 自动官网提交 | Not landed | 仍是后续工作 |
+## 适合处理的工作
 
-## 更适合什么场景
+- 从多个方向里筛出值得正式写作的申请题目。
+- 把既有论文、预实验和个人基础收成更清楚的标题、摘要、研究内容和技术路线。
+- 在同一工作区里持续跟踪批注、修订轮次和版本变化。
+- 在终审前整理出更完整的本地申请包，方便团队继续审稿和收口。
 
-- 你在准备申请人侧医学基金，且已有可复用的申请材料。
-- 你需要在正式写作前先把科学问题和方向收紧。
-- 你希望批注与修订保持结构化、可审计，而不是靠口头感觉推进。
-- 你希望先拿到更接近 submission readiness 的本地 package，再做人类最终审阅。
+## 工作方式
 
-## 这个仓库应该怎么读
-
-1. 潜在用户先读当前首页，再继续看 [文档索引](./docs/README.zh-CN.md)、[领域定位](./docs/domain-positioning.zh-CN.md) 和 [MVP 范围](./docs/mvp-scope.zh-CN.md)。
-2. 技术规划、架构判断和方向同步，继续读 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 以及 [合同说明](./contracts/README.md)。
-3. 开发者和维护者再进入 `docs/specs/`、`docs/references/`、`docs/plans/` 与 `docs/history/omx/`。
-
-## 用人话解释它的边界
-
-`Med Auto Grant` 是 `OPL` 管理壳下的一级医学基金 domain module / agent。
-它负责申请人侧 grant truth、authoring route、修订证据与本地交付。
-
-```text
-User / Agent
-  -> OPL GUI / management shell
-      -> Med Auto Grant domain module / agent
-          -> Codex 默认交互 + 执行
-          -> Hermes-Agent 备用模式 / 长久在线网关
-              -> Grant-domain truth、routes、checkpoints、packages
-```
-
-更直白地说：
-
-- `OPL` 负责顶层 GUI、管理壳、family 导航与 domain module 可见性。
-- `Med Auto Grant` 负责基金写作 workflow、修订逻辑和申请人侧 grant truth。
-- Codex 是默认交互与执行表面。
-- `Hermes-Agent` 是显式路由时使用的备用模式与长久在线网关。
+- 申请人提供目标项目、已有材料、限制条件和最终判断。
+- AI 助手负责题目提纯、结构整理、正文草拟、批注整合和修订推进。
+- 工作区持续保存版本、评审意见和交付文件，方便回看与比较。
 
 ## 当前边界
 
-- 已落地用户路径是本地、合同化路径：frontdesk、user loop、workspace progress、cockpit、route execution 和本地 package export。
-- 外部基金官网提交仍是人类/外部系统边界。
-- 更完整的 hosted grant 产品体验仍属于后续工作。
+- `Med Auto Grant` 聚焦申请人侧医学基金写作，位于更大 `OPL` 工作区内部。
+- 它负责题目收敛、申请书写作、批注修订和本地提交包准备。
+- 最终题目取舍、申报策略和是否正式提交由申请人团队决定。
+- 外部基金官网提交由人工监督完成。
 
-<details>
-  <summary><strong>面向维护者的合同真相说明</strong></summary>
+## 这个仓库应该怎么读
 
-面向用户的默认路径是 `OPL` 管理壳下的 Codex-first 路径。
-repo-tracked 历史运行时主线仍记录 `CLI-first + real upstream Hermes-Agent runtime substrate`。
-repo-tracked truth 里也继续显式保留真实上游 `Hermes-Agent` runtime substrate 这句主线表述。
-repo-tracked 的 current-program 指针继续固定为 `contracts/runtime-program/current-program.json`。
-机器本地 runtime state 继续统一放在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-遗留的 repo-local runtime helper 现在保留为 compatibility bridge 与 regression oracle 材料。
-仓内 `hermes_runtime.py`、`domain_entry.py` 这一类 repo-local adapter 保留 domain 语义与 route contract。
+1. 潜在用户先读当前首页，再继续看 [文档索引](./docs/README.zh-CN.md)、[领域定位](./docs/domain-positioning.zh-CN.md) 和 [最小可用范围](./docs/mvp-scope.zh-CN.md)。
+2. 技术规划、架构判断和方向同步，继续读 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 以及 [合同说明](./contracts/README.md)。
+3. 开发者和维护者再进入 `docs/specs/`、`docs/references/`、`docs/plans/` 与 `docs/history/omx/`。
 
-当前 formal-entry matrix 仍然是 `CLI`、`MCP` 和 `controller`。
-仓库主线仍按 `Auto-only` 理解。
+## 给维护者的技术入口
 
-轻量结构化 `product entry` shell 已经落地。
-当前已经冻结好的产品相关合同里，`product entry`、projection 与 hosted contract bundle 都按 schema-backed 收口；历史命名里的托管友好的 handoff contract 已收敛为通过 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts` 暴露给 hosted caller / 外部 caller 的 domain/API catalog。
-这些 repo-tracked surface 是合同表面；actual hosted runtime 和更完整的 grant-facing 产品体验仍要继续补。
-当前理想目标是让 `OPL` 作为管理壳位于 MAG domain module 之上，而申请人侧 grant truth 继续保持 machine-readable。
+首页会故意保持成申请人入口。
+运行时真相、产品入口合同、托管包记录和阶段文档都放在下面这些技术文档里：
 
-当前已 landed 的产品相关表面主要包括：
-
-- 作为 service-safe domain entry contract 的 `MedAutoGrantDomainEntry`
-- `product build-entry`、`product preflight`、`product start`、`product manifest`、`product frontdesk`
-- `workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`
-- 用于本地 fail-closed submission packaging 的 `package submission-ready`
-- 面向 hosted caller / 外部 caller 的 `hosted contract bundle`
-- 机器可读的 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`
-
-这些表面已经让 grant 主线更可发现、更机器可读，但并不等于成熟 hosted 产品前台或官网自动提交流程已经落地。
-</details>
+- [文档索引](./docs/README.zh-CN.md)
+- [项目概览](./docs/project.md)
+- [当前状态](./docs/status.md)
+- [合同说明](./contracts/README.md)
+- [规格文档目录](./docs/specs/)
 
 ## 开发验证
 
@@ -126,7 +81,7 @@ repo-tracked 的 current-program 指针继续固定为 `contracts/runtime-progra
 
 - [文档索引](./docs/README.zh-CN.md)
 - [领域定位](./docs/domain-positioning.zh-CN.md)
-- [MVP 范围](./docs/mvp-scope.zh-CN.md)
+- [最小可用范围](./docs/mvp-scope.zh-CN.md)
 - [项目概览](./docs/project.md)
 - [当前状态](./docs/status.md)
 - [架构](./docs/architecture.md)

@@ -150,7 +150,6 @@ class ProgramControlSurfaceTest(unittest.TestCase):
 
     def test_core_docs_publish_repo_tracked_contract_and_user_level_runtime_state(self) -> None:
         for path in (
-            README_EN,
             DOCS_README_EN,
             CORE_ARCHITECTURE,
             CORE_INVARIANTS,

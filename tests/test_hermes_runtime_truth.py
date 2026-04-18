@@ -81,8 +81,6 @@ def _read(path: Path) -> str:
 @pytest.mark.meta
 def test_core_docs_publish_truth_reset_runtime_topology_and_bridge_boundary() -> None:
     for path in (
-        README_EN,
-        README_ZH,
         DOCS_README_EN,
         DOCS_README_ZH,
         CORE_PROJECT,
@@ -114,24 +112,20 @@ def test_domain_positioning_public_docs_follow_truth_reset_mainline() -> None:
 
 
 @pytest.mark.meta
-def test_readme_current_maturity_cards_follow_truth_reset_status() -> None:
-    readme_en = _read(README_EN)
-    readme_zh = _read(README_ZH)
+def test_core_docs_current_maturity_cards_follow_truth_reset_status() -> None:
+    docs_readme_en = _read(DOCS_README_EN)
+    docs_readme_zh = _read(DOCS_README_ZH)
+    project = _read(CORE_PROJECT)
 
-    assert "real upstream `Hermes-Agent` runtime substrate" in readme_en
-    assert "MedAutoGrantDomainEntry" in readme_en
-    assert "actual hosted runtime" in readme_en
-
-    assert "真实上游 `Hermes-Agent` runtime substrate" in readme_zh
-    assert "MedAutoGrantDomainEntry" in readme_zh
-    assert "submission-ready" in readme_zh
+    assert "real upstream `Hermes-Agent` runtime substrate" in docs_readme_en
+    assert "real upstream `Hermes-Agent` runtime substrate" in docs_readme_zh
+    assert "MedAutoGrantDomainEntry" in project
+    assert "submission-ready" in docs_readme_zh
 
 
 @pytest.mark.meta
 def test_core_docs_publish_p4a_direct_product_projection_boundary() -> None:
     for path in (
-        README_EN,
-        README_ZH,
         DOCS_README_EN,
         DOCS_README_ZH,
         CORE_PROJECT,
@@ -417,31 +411,20 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
     reference = REPO_ROOT / "docs" / "references" / "lightweight_product_entry_and_opl_handoff.md"
     reference_text = _read(reference)
 
-    for path in (README_EN, README_ZH, DOCS_README_EN, DOCS_README_ZH, CORE_PROJECT, CORE_ARCHITECTURE, CORE_STATUS):
+    for path in (DOCS_README_EN, DOCS_README_ZH, CORE_PROJECT, CORE_ARCHITECTURE, CORE_STATUS):
         text = _read(path)
         assert "product entry" in text
         assert "OPL" in text
 
-    readme_en = _read(README_EN)
-    readme_zh = _read(README_ZH)
     docs_readme_en = _read(DOCS_README_EN)
     docs_readme_zh = _read(DOCS_README_ZH)
     architecture = _read(CORE_ARCHITECTURE)
     status = _read(CORE_STATUS)
 
-    assert "package submission-ready" in readme_en
-    assert "package submission-ready" in readme_zh
     assert "./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md" in docs_readme_en
     assert "./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md" in docs_readme_zh
     assert "submission_ready_package" in architecture
     assert "package submission-ready" in status
-
-    assert "lightweight structured `product entry` shell is now landed" in readme_en
-    assert "`product build-entry`" in readme_en
-    assert "richer grant-facing product experience still remains future work" in readme_en
-    assert "轻量结构化 `product entry` shell 已经落地" in readme_zh
-    assert "`product build-entry`" in readme_zh
-    assert "更完整的 grant-facing 产品体验仍要继续补" in readme_zh
 
     assert "lightweight grant `product entry` shell" in docs_readme_en
     assert "Product-entry shell" in docs_readme_en
@@ -477,16 +460,12 @@ def test_entry_docs_freeze_product_entry_and_opl_handoff_on_top_of_landed_runtim
 
 @pytest.mark.meta
 def test_docs_and_contracts_index_schema_backed_product_entry_and_routing_contract() -> None:
-    readme_en = _read(README_EN)
-    readme_zh = _read(README_ZH)
     docs_readme_en = _read(DOCS_README_EN)
     docs_readme_zh = _read(DOCS_README_ZH)
     decisions = _read(CORE_DECISIONS)
     current_program = (REPO_ROOT / "contracts" / "runtime-program" / "current-program.json").read_text(encoding="utf-8")
     contracts_readme = (REPO_ROOT / "contracts" / "README.md").read_text(encoding="utf-8")
 
-    assert "schema-backed" in readme_en
-    assert "schema-backed" in readme_zh
     assert "./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md" in docs_readme_en
     assert "./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md" in docs_readme_zh
     assert "schema-backed" in decisions
@@ -496,8 +475,6 @@ def test_docs_and_contracts_index_schema_backed_product_entry_and_routing_contra
 
 @pytest.mark.meta
 def test_docs_publish_schema_backed_p4a_projection_contract_boundary() -> None:
-    readme_en = _read(README_EN)
-    readme_zh = _read(README_ZH)
     docs_readme_en = _read(DOCS_README_EN)
     docs_readme_zh = _read(DOCS_README_ZH)
     project = _read(CORE_PROJECT)
@@ -506,8 +483,6 @@ def test_docs_publish_schema_backed_p4a_projection_contract_boundary() -> None:
     decisions = _read(CORE_DECISIONS)
     contracts_readme = (REPO_ROOT / "contracts" / "README.md").read_text(encoding="utf-8")
 
-    assert "schema-backed" in readme_en
-    assert "schema-backed" in readme_zh
     assert "schema-backed" in docs_readme_en
     assert "schema-backed" in docs_readme_zh
     assert "schema-backed" in project
@@ -526,8 +501,6 @@ def test_docs_publish_schema_backed_p4a_projection_contract_boundary() -> None:
 
 @pytest.mark.meta
 def test_docs_and_contracts_index_hosted_contract_bundle_contract_catalog_truth() -> None:
-    readme_en = _read(README_EN)
-    readme_zh = _read(README_ZH)
     docs_readme_en = _read(DOCS_README_EN)
     docs_readme_zh = _read(DOCS_README_ZH)
     architecture = _read(CORE_ARCHITECTURE)
@@ -536,28 +509,26 @@ def test_docs_and_contracts_index_hosted_contract_bundle_contract_catalog_truth(
     current_program = (REPO_ROOT / "contracts" / "runtime-program" / "current-program.json").read_text(encoding="utf-8")
     contracts_readme = (REPO_ROOT / "contracts" / "README.md").read_text(encoding="utf-8")
 
-    for text in (readme_en, readme_zh, architecture, status, decisions, contracts_readme):
+    for text in (architecture, status, decisions, contracts_readme):
         assert "domain_entry_contract" in text
         assert "schema_contract" in text
         assert "authoring_contract" in text
 
     assert "./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md" in docs_readme_en
     assert "./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md" in docs_readme_zh
-    assert "hosted contract bundle" in readme_en.lower()
-    assert "托管友好的 handoff contract" in readme_zh
+    assert "hosted contract bundle" in docs_readme_en.lower()
+    assert "hosted caller / 外部 caller" in docs_readme_zh
     assert "hosted-contract-bundle.schema.json" in architecture
     assert "hosted_contract_bundle" in status
     assert "2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md" in current_program
-    assert "supported_commands" in readme_en
-    assert "supported_commands" in readme_zh
+    assert "supported_commands" in docs_readme_en
+    assert "supported_commands" in docs_readme_zh
     assert "command_contracts" in architecture
     assert "command_contracts" in decisions
 
 
 @pytest.mark.meta
 def test_docs_and_contracts_index_hosted_caller_consumption_proof_truth() -> None:
-    readme_en = _read(README_EN)
-    readme_zh = _read(README_ZH)
     docs_readme_en = _read(DOCS_README_EN)
     docs_readme_zh = _read(DOCS_README_ZH)
     project = _read(CORE_PROJECT)
@@ -565,7 +536,7 @@ def test_docs_and_contracts_index_hosted_caller_consumption_proof_truth() -> Non
     architecture = _read(CORE_ARCHITECTURE)
     current_program = (REPO_ROOT / "contracts" / "runtime-program" / "current-program.json").read_text(encoding="utf-8")
 
-    for text in (readme_en, readme_zh, project, status, architecture):
+    for text in (docs_readme_en, docs_readme_zh, project, status, architecture):
         assert "external caller" in text or "外部 caller" in text or "hosted caller" in text or "hosted caller" in text.lower()
         assert "domain_entry_contract" in text
         assert "command_contracts" in text
@@ -577,8 +548,6 @@ def test_docs_and_contracts_index_hosted_caller_consumption_proof_truth() -> Non
 
 @pytest.mark.meta
 def test_docs_and_contracts_index_opl_aligned_ideal_target_and_phase_map() -> None:
-    readme_en = _read(README_EN)
-    readme_zh = _read(README_ZH)
     docs_readme_en = _read(DOCS_README_EN)
     docs_readme_zh = _read(DOCS_README_ZH)
     project = _read(CORE_PROJECT)
@@ -586,7 +555,7 @@ def test_docs_and_contracts_index_opl_aligned_ideal_target_and_phase_map() -> No
     architecture = _read(CORE_ARCHITECTURE)
     current_program = (REPO_ROOT / "contracts" / "runtime-program" / "current-program.json").read_text(encoding="utf-8")
 
-    for text in (readme_en, readme_zh, project, status, architecture):
+    for text in (docs_readme_en, docs_readme_zh, project, status, architecture):
         assert "ideal target" in text.lower() or "理想目标" in text
         assert "OPL" in text
 
