@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>公开角色</strong><br/>
-      当前活跃的医学 `Grant Ops` 业务仓主线，而顶层 federation admission / handoff wording 仍在 `OPL` 单独门控
+      `OPL` 管理壳下的一级医学基金 domain module / agent
     </td>
   </tr>
 </table>
@@ -38,6 +38,9 @@
 | --- | --- | --- |
 | 结构化基金 authoring 主线 | Active | 当前从问题提纯到草稿冻结的诚实主路径 |
 | 导师式批注与修订证据 | Active | review、revision 和 re-review evidence 已能收在同一条作者侧主线里 |
+| `OPL` 管理入口 | Active contract surface | `OPL` 是顶层 GUI 与管理壳；`Med Auto Grant` 是其下的基金领域模块 |
+| Codex 默认交互与执行 | Active default | Codex 是默认 authoring executor 与操作者交互路径 |
+| Hermes-Agent 备用与长久在线网关 | Explicit route | 显式选择时用于备用模式、长期在线网关和 route-specific proof lane |
 | 本地 `submission-ready` package 导出 | Active local output | 对 frozen 且证据齐备的 workspace 已落地；但这仍不是外部官网提交流程 |
 | 成熟 hosted runtime / 自动官网提交 | Not landed | 仍是后续工作 |
 
@@ -56,46 +59,49 @@
 
 ## 用人话解释它的边界
 
-`Med Auto Grant` 不是整个顶层联邦，也不是外部提交官网。
-它的职责，是对申请人侧的 grant truth 负责。
+`Med Auto Grant` 是 `OPL` 管理壳下的一级医学基金 domain module / agent。
+它负责申请人侧 grant truth、authoring route、修订证据与本地交付。
 
 ```text
 User / Agent
-  -> OPL Gateway（可选）
-      -> Med Auto Grant
-          -> Runtime Substrate
-              -> Grant-Domain Truth
+  -> OPL GUI / management shell
+      -> Med Auto Grant domain module / agent
+          -> Codex 默认交互 + 执行
+          -> Hermes-Agent 备用模式 / 长久在线网关
+              -> Grant-domain truth、routes、checkpoints、packages
 ```
 
 更直白地说：
 
-- `OPL` 在这个仓之上，负责 family-level 的 admission 和 handoff wording。
+- `OPL` 负责顶层 GUI、管理壳、family 导航与 domain module 可见性。
 - `Med Auto Grant` 负责基金写作 workflow、修订逻辑和申请人侧 grant truth。
-- runtime substrate 不应和公开产品入口混成一层。
+- Codex 是默认交互与执行表面。
+- `Hermes-Agent` 是显式路由时使用的备用模式与长久在线网关。
 
-## 这个仓库不是什么
+## 当前边界
 
-- 它不是“成熟 hosted 基金前台已经落地”的宣传口径。
-- 它不是“会替你自动完成外部官网提交”的自动驾驶产品。
-- 它不是把 `OPL`、runtime substrate 和申请人侧 grant truth 混成一层的理由。
+- 已落地用户路径是本地、合同化路径：frontdesk、user loop、workspace progress、cockpit、route execution 和本地 package export。
+- 外部基金官网提交仍是人类/外部系统边界。
+- 更完整的 hosted grant 产品体验仍属于后续工作。
 
 <details>
-  <summary><strong>面向技术读者的运行时真相说明</strong></summary>
+  <summary><strong>面向维护者的合同真相说明</strong></summary>
 
-当前可执行主线是 `CLI-first + real upstream Hermes-Agent runtime substrate`。
+面向用户的默认路径是 `OPL` 管理壳下的 Codex-first 路径。
+repo-tracked 历史运行时主线仍记录 `CLI-first + real upstream Hermes-Agent runtime substrate`。
 repo-tracked truth 里也继续显式保留真实上游 `Hermes-Agent` runtime substrate 这句主线表述。
 repo-tracked 的 current-program 指针继续固定为 `contracts/runtime-program/current-program.json`。
 机器本地 runtime state 继续统一放在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-遗留的 repo-local runtime helper 现在只保留为 compatibility bridge 与 regression oracle，而不是 substrate owner。
-仓内 `hermes_runtime.py`、`domain_entry.py` 这一类 repo-local adapter 保留的是 domain 语义，不是 runtime substrate owner。
+遗留的 repo-local runtime helper 现在保留为 compatibility bridge 与 regression oracle 材料。
+仓内 `hermes_runtime.py`、`domain_entry.py` 这一类 repo-local adapter 保留 domain 语义与 route contract。
 
 当前 formal-entry matrix 仍然是 `CLI`、`MCP` 和 `controller`。
 仓库主线仍按 `Auto-only` 理解。
 
 轻量结构化 `product entry` shell 已经落地。
-当前已经冻结好的产品相关合同里，`product entry`、projection 与 hosted contract bundle 都按 schema-backed 收口；对应的托管友好的 handoff contract 会继续通过 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts` 暴露给 hosted caller / 外部 caller。
-这些 repo-tracked surface 仍不等于 actual hosted runtime 已经落地，更完整的 grant-facing 产品体验仍要继续补。
-当前理想目标仍是让 `OPL` 保持在 domain 之上，而申请人侧 grant truth 继续保持 machine-readable。
+当前已经冻结好的产品相关合同里，`product entry`、projection 与 hosted contract bundle 都按 schema-backed 收口；历史命名里的托管友好的 handoff contract 已收敛为通过 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts` 暴露给 hosted caller / 外部 caller 的 domain/API catalog。
+这些 repo-tracked surface 是合同表面；actual hosted runtime 和更完整的 grant-facing 产品体验仍要继续补。
+当前理想目标是让 `OPL` 作为管理壳位于 MAG domain module 之上，而申请人侧 grant truth 继续保持 machine-readable。
 
 当前已 landed 的产品相关表面主要包括：
 

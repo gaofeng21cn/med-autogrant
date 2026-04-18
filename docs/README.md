@@ -16,18 +16,18 @@ This guide is for readers who need the repo-tracked contracts, current-truth spe
 
 ## Current Baseline
 
-- `Med Auto Grant` is the active medical `Grant Ops` repository line on the applicant side.
-- The current executable runtime line is `CLI-first + real upstream Hermes-Agent runtime substrate`.
-- The current owner split is a three-layer contract: `Hermes-Agent` owns long-running managed-runtime hosting, `Med Auto Grant` owns grant-domain governance/truth, and route-selected executors own concrete authoring execution.
-- Repo-tracked truth also keeps the phrase real upstream `Hermes-Agent` runtime substrate explicit for this line.
-- Legacy repo-local helpers survive only as a compatibility bridge and regression oracle.
-- Repo-local adapters preserve grant-domain truth and entry semantics, but they are not the runtime substrate owner.
-- The current product-facing shell, projections, and local `submission-ready` package are landed, while a mature hosted grant frontend is still future work.
-- Top-level federation admission and handoff wording remain separately gated at `OPL`.
+- `Med Auto Grant` is the first-level medical grant domain module / agent under the `OPL` GUI and management shell.
+- Codex is the default interaction and execution path for grant authoring routes.
+- `Hermes-Agent` is the explicit backup mode and always-on gateway for long-running or route-specific proof work.
+- The archived cutover line still uses the phrase real upstream `Hermes-Agent` runtime substrate in repo-tracked current-truth records.
+- Legacy repo-local helpers survive as compatibility bridge and regression oracle material for maintainers.
+- Repo-local adapters preserve grant-domain truth, entry semantics, and route contracts.
+- The current frontdesk, user-loop, projections, and local `submission-ready` package are landed, while a mature hosted grant frontend is still future work.
+- `OPL` owns family navigation and management-shell visibility; MAG owns grant-domain truth and execution routing.
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
 - Current controller-owned, read-only projections continue to include `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`, with schema-backed boundaries above the author-side line.
 - The current grouped public shell also exposes `product build-entry`, `product manifest`, `product frontdesk`, and `package submission-ready` as the public CLI-facing entry surface.
-- The current lightweight grant `product entry` shell is the active Product-entry shell, while richer hosted product work remains future-facing.
+- The current lightweight grant `product entry` shell is the active Product-entry shell and internal domain/API catalog builder, while richer hosted product work remains future-facing.
 
 ## Technical Working Set
 
@@ -66,7 +66,7 @@ These files are the default public-facing entry surfaces and should stay mirrore
 - [Full grant authoring executor current truth](./specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
 - [P4.F local submission-ready package current truth](./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md)
 
-The lightweight grant `product entry` shell is the current Product-entry shell, and the current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible for hosted caller / external caller consumption.
+The lightweight grant `product entry` shell remains available as the current Product-entry shell and domain/API catalog builder. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible for hosted caller / external caller consumption.
 
 ### Contracts and schemas
 
@@ -76,8 +76,8 @@ The lightweight grant `product entry` shell is the current Product-entry shell, 
 
 ### Internal references
 
-- [Lightweight product entry and OPL handoff](./references/lightweight_product_entry_and_opl_handoff.md)
-- [OPL managed runtime three-layer contract](./references/opl_managed_runtime_three_layer_contract.md)
+- [Lightweight product entry and OPL handoff](./references/lightweight_product_entry_and_opl_handoff.md) as legacy/internal entry-mode reference
+- [OPL managed runtime three-layer contract](./references/opl_managed_runtime_three_layer_contract.md) as historical owner-split reference
 - [Series doc governance checklist](./references/series-doc-governance-checklist.md)
 
 ### Plans and history

@@ -20,7 +20,7 @@
     </td>
     <td width="33%" valign="top">
       <strong>Public Role</strong><br/>
-      The active medical `Grant Ops` repository line, with top-level federation admission and handoff wording still separately gated at `OPL`
+      A first-level medical grant domain module / agent under the `OPL` management shell
     </td>
   </tr>
 </table>
@@ -38,6 +38,9 @@
 | --- | --- | --- |
 | Structured grant authoring mainline | Active | The current honest path from topic refinement to draft and freeze |
 | Mentor-style critique and revision evidence | Active | Review, revision, and re-review evidence stay on the same author-side line |
+| `OPL` managed entry | Active contract surface | `OPL` is the top-level GUI and management shell; `Med Auto Grant` stays the grant-domain module underneath it |
+| Codex default interaction and execution | Active default | Codex is the default authoring executor and operator interaction path |
+| Hermes-Agent backup and always-on gateway | Explicit route | Available for backup mode, long-running gateway work, and route-specific proof lanes when explicitly selected |
 | Local `submission-ready` package export | Active local output | Landed for frozen, evidence-complete workspaces; this is still not external website submission |
 | Mature hosted runtime or external-submission autopilot | Not landed | Still future work |
 
@@ -56,46 +59,49 @@
 
 ## Plain-Language Boundary
 
-`Med Auto Grant` is not the whole top-level federation and it is not the external submission website.
-Its job is to own grant-domain truth on the applicant side.
+`Med Auto Grant` is the first-level medical grant domain module / agent under the `OPL` shell.
+Its job is to own applicant-side grant truth, authoring routes, revision evidence, and local delivery.
 
 ```text
 User / Agent
-  -> OPL Gateway (optional)
-      -> Med Auto Grant
-          -> Runtime Substrate
-              -> Grant-Domain Truth
+  -> OPL GUI / management shell
+      -> Med Auto Grant domain module / agent
+          -> Codex default interaction + execution
+          -> Hermes-Agent backup mode / always-on gateway
+              -> Grant-domain truth, routes, checkpoints, packages
 ```
 
 In plain language:
 
-- `OPL` stays above this repository and governs family-level admission and handoff wording.
-- `Med Auto Grant` owns the grant authoring workflow, revision logic, and grant-domain truth.
-- The runtime substrate should not be confused with the public product surface.
+- `OPL` owns the top-level GUI, management shell, family navigation, and domain-module visibility.
+- `Med Auto Grant` owns the grant authoring workflow, revision logic, route catalog, and grant-domain truth.
+- Codex is the default interaction and execution surface for authoring passes.
+- `Hermes-Agent` is the backup mode and long-running online gateway when a route explicitly asks for that mode.
 
-## What This Repository Is Not
+## Current Boundaries
 
-- It is not a claim that a mature hosted grant frontend has landed.
-- It is not a claim that the system will automatically submit to external funding websites for you.
-- It is not a reason to blur `OPL`, runtime substrate, and applicant-side grant truth into one layer.
+- The landed user path is local and contract-backed: frontdesk, user loop, workspace progress, cockpit, route execution, and local package export.
+- External funding website submission remains a human/external system boundary.
+- A richer hosted grant product experience remains future-facing.
 
 <details>
-  <summary><strong>Technical Notes And Current Runtime Truth</strong></summary>
+  <summary><strong>Maintainer Notes And Contract Truth</strong></summary>
 
-The current executable mainline is `CLI-first + real upstream Hermes-Agent runtime substrate`.
+The user-facing default is Codex-first under the `OPL` management shell.
+The repo-tracked historical runtime line still records `CLI-first + real upstream Hermes-Agent runtime substrate`.
 The repo-tracked truth set also keeps the phrase real upstream `Hermes-Agent` runtime substrate explicit for this mainline.
 The repo-tracked current-program pointer remains `contracts/runtime-program/current-program.json`.
 Machine-local runtime state remains under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
-Legacy repo-local runtime helpers now survive only as a compatibility bridge and regression oracle rather than the substrate owner.
-Repo-local adapters such as `hermes_runtime.py` and `domain_entry.py` preserve domain semantics, but they are not the runtime substrate owner.
+Legacy repo-local runtime helpers now survive as compatibility bridge and regression oracle material.
+Repo-local adapters such as `hermes_runtime.py` and `domain_entry.py` preserve domain semantics and route contracts.
 
 The current formal-entry matrix remains `CLI`, `MCP`, and `controller`.
 The repository mainline remains `Auto-only`.
 
 The lightweight structured `product entry` shell is now landed.
-That shell is already schema-backed where the contract surfaces have been frozen, and it also feeds the hosted contract bundle, hosted caller, and external caller handoff path through `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts`.
-These repo-tracked surfaces still do not mean an actual hosted runtime has landed, and a richer grant-facing product experience still remains future work.
-The current ideal target keeps `OPL` above the domain line while the grant surface stays applicant-side and machine-readable.
+That shell is already schema-backed where the contract surfaces have been frozen, and it feeds the hosted contract bundle, hosted caller, and external caller catalog through `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts`.
+These repo-tracked surfaces are contract surfaces; actual hosted runtime work and a richer grant-facing product experience still remains future work.
+The current ideal target keeps `OPL` as the management shell above the MAG domain module while the grant surface stays applicant-side and machine-readable.
 
 The current landed product-facing surfaces now include:
 
@@ -104,7 +110,7 @@ The current landed product-facing surfaces now include:
 - `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`
 - `package submission-ready` for local fail-closed submission packaging
 - `hosted contract bundle` output for hosted caller / external caller consumption
-- `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts` as the machine-readable handoff catalog
+- `domain_entry_contract`, `schema_contract`, `authoring_contract`, `supported_commands`, and `command_contracts` as the machine-readable domain/API catalog
 
 These surfaces make the grant line more navigable and machine-readable, but they do not mean a mature hosted product frontend or external-submission autopilot has landed.
 </details>
