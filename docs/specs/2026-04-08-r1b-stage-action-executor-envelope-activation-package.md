@@ -16,9 +16,9 @@ Date: `2026-04-08`
 
 在不改写 `CLI` formal entry、不把 `MCP / controller` 写成已支持 public runtime、不破坏 `grant_run_id / workspace_id / draft_id / program_id` 边界、也不把 author-side mainline 改写成 reviewer / HITL / hosted runtime 产品的前提下，冻结 `R1.B` 的最小实现合同：
 
-- 把 `run-local` 已得到的 `stage_action_required` 类 stop reason 收紧成 machine-readable `stage_action_envelope`
+- 把 `runtime-run` 已得到的 `stage_action_required` 类 stop reason 收紧成 machine-readable `stage_action_envelope`
 - 让 runtime 对“下一动作是什么”形成稳定、结构化、可恢复的执行 envelope
-- 把 envelope durable 写入当前 run journal，供后续 `resume-local` 与 runtime orchestration 使用
+- 把 envelope durable 写入当前 run journal，供后续 `runtime-resume` 与 runtime orchestration 使用
 
 这里的 formal-entry 口径继续固定为：
 
@@ -46,7 +46,7 @@ Date: `2026-04-08`
 
 `R1.B` 冻结的对象边界是一个 **runtime-only stage action envelope pass**：
 
-1. 从现有 `run-local / resume-local` 产出的 `route_report + stop_reason` 中识别 `stage_action_required`
+1. 从现有 `runtime-run / runtime-resume` 产出的 `route_report + stop_reason` 中识别 `stage_action_required`
 2. 仅在 `stop_reason.code=stage_action_required` 时派生 machine-readable `stage_action_envelope`
 3. 把 envelope 与当前 run journal append 绑定，使恢复与后续编排有稳定 durable surface
 4. 不执行任何 stage action 本身，不生成新的 artifact，不改写 workspace 内容对象
@@ -60,8 +60,8 @@ Date: `2026-04-08`
 
 `R1.B` 一旦进入实现，只允许扩展现有两个 `CLI-first` runtime commands 的输出：
 
-1. `run-local`
-2. `resume-local`
+1. `runtime-run`
+2. `runtime-resume`
 
 允许新增的 surface 仅限：
 
@@ -107,7 +107,7 @@ Date: `2026-04-08`
 - `draft_id` 必须来自 `verification_checkpoint.identity.draft_id`
 - `selection` 必须来自当前 workspace 的 `current_selection`
 - `action_items` 只能结构化 `next-step.actions`，不得发明新的执行内容
-- `resume_decision.command` 当前固定为 `resume-local`
+- `resume_decision.command` 当前固定为 `runtime-resume`
 - `resume_decision.append_attempt` 当前固定为 `true`
 - `resume_decision.reuse_grant_run_id` 当前固定为 `true`
 
@@ -167,7 +167,7 @@ Date: `2026-04-08`
 2. revision canonical example 必须证明 `stage_action_required` 会生成 `stage_action_envelope`
 3. critique-major-revision canonical example 必须证明 `stage_action_required` 会生成 `stage_action_envelope`
 4. rollback / freeze-ready / presubmission-frozen canonical examples 必须证明 `stage_action_envelope` 为 `null`
-5. `resume-local` 必须证明 envelope 可随 journal 继续 durable 回写
+5. `runtime-resume` 必须证明 envelope 可随 journal 继续 durable 回写
 
 ## Promotion Invariants
 

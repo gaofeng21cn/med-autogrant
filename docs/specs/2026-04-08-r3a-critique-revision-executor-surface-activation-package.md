@@ -90,7 +90,7 @@ Date: `2026-04-08`
 约束：
 
 - 新命令仍属于 `CLI` formal entry，不新增第二 formal entry
-- 旧五个 commands、`run-local / resume-local` 与 `build-artifact-bundle` 继续作为 verifier / audit baseline
+- 旧五个 commands、`runtime-run / runtime-resume` 与 `build-artifact-bundle` 继续作为 verifier / audit baseline
 - `execute-revision-pass` 不得替代 `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report`
 - `execute-revision-pass` 只写 revised workspace candidate output，不写 `.runtime-program/**`
 
@@ -153,8 +153,8 @@ Date: `2026-04-08`
 - `next-step`
 - `critique-summary`
 - `stage-route-report`
-- `run-local`
-- `resume-local`
+- `runtime-run`
+- `runtime-resume`
 - `build-artifact-bundle`
 - `verification_checkpoint`
 - `checkpoint_status`
@@ -162,7 +162,7 @@ Date: `2026-04-08`
 关系冻结如下：
 
 - `stage-route-report` 继续是 route / checkpoint aggregation 的 canonical baseline
-- `run-local / resume-local / stage_action_envelope` 继续只处理 runtime orchestration
+- `runtime-run / runtime-resume / stage_action_envelope` 继续只处理 runtime orchestration
 - `build-artifact-bundle` 继续只打包当前对象，不执行 revision mutation
 - `execute-revision-pass` 只负责 revision-side workspace mutation contract，不覆盖 checkpoint / stop reason / artifact bundle semantics
 
@@ -178,7 +178,7 @@ Date: `2026-04-08`
    - `python3 -m unittest discover -s tests -p 'test_*.py'`
    - `python3 -m unittest discover -s tests -p 'test_program_control_surfaces.py'`
    - `python3 -m unittest discover -s tests -p 'test_local_runtime.py'`
-   - 当前 canonical CLI examples（旧五个 surfaces + `run-local / resume-local` + `build-artifact-bundle`）
+   - 当前 canonical CLI examples（旧五个 surfaces + `runtime-run / runtime-resume` + `build-artifact-bundle`）
    - `git diff --check`
 
 ### Implementation Promotion Gate

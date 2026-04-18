@@ -31,7 +31,7 @@
 
 1. `stage-route-report` 成功 JSON payload 的 output consistency tightening
 2. baseline critique workspace 与 generated revised workspace 的回归测试
-3. 保持 `run-local / build-final-package` 等现有 consumers 继续基于 `verification_checkpoint` 工作，不引入第二套 canonical source
+3. 保持 `runtime-run / build-final-package` 等现有 consumers 继续基于 `verification_checkpoint` 工作，不引入第二套 canonical source
 
 ## Out Of Scope
 

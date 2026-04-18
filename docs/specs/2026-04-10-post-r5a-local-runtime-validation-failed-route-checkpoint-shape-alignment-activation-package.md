@@ -6,7 +6,7 @@ Date: `2026-04-10`
 
 - Phase: `Runtime Productization Program`
 - Active tranche: `post-R5A local runtime hardening`
-- Active slice: `run-local / resume-local validation-failed route + checkpoint shape alignment`
+- Active slice: `runtime-run / runtime-resume validation-failed route + checkpoint shape alignment`
 - Status: `frozen / ready for implementation`
 - Upstream prerequisite:
   - `R1.A / R1.B / R2.A / R3.A / R4.A / R5.A` 已 absorbed
@@ -15,9 +15,9 @@ Date: `2026-04-10`
 
 ## Goal
 
-在不打开 actual hosted runtime、不改写 `stage-route-report` 的 canonical success contract、也不发明新的 formal entry / `P5` 语义的前提下，把 `run-local / resume-local` 在 `validation_failed` 路径上的 output shape 收紧为与当前 route/checkpoint surface 一致的 fail-closed contract：
+在不打开 actual hosted runtime、不改写 `stage-route-report` 的 canonical success contract、也不发明新的 formal entry / `P5` 语义的前提下，把 `runtime-run / runtime-resume` 在 `validation_failed` 路径上的 output shape 收紧为与当前 route/checkpoint surface 一致的 fail-closed contract：
 
-- `run-local` / `resume-local` 遇到 invalid workspace 时，`route_report` 仍必须显式保留 `route`、`verification_checkpoint`、顶层 `checkpoint_status`
+- `runtime-run` / `runtime-resume` 遇到 invalid workspace 时，`route_report` 仍必须显式保留 `route`、`verification_checkpoint`、顶层 `checkpoint_status`
 - 该失败态仍必须保持：
   - `stop_reason.code = validation_failed`
   - `stage_action_envelope = null`
@@ -26,7 +26,7 @@ Date: `2026-04-10`
 
 ## Trigger Evidence
 
-当前 landed 实现中，`run-local` / `resume-local` 的 valid path 走：
+当前 landed 实现中，`runtime-run` / `runtime-resume` 的 valid path 走：
 
 - `build_stage_route_report(document)`
 - `route_report.route`
@@ -44,7 +44,7 @@ Date: `2026-04-10`
 
 这会导致：
 
-1. `run-local` / `resume-local` 在失败态不再沿用当前 canonical route/checkpoint shape；
+1. `runtime-run` / `runtime-resume` 在失败态不再沿用当前 canonical route/checkpoint shape；
 2. journal 中的 `latest_route_report` 与 valid path drift；
 3. post-`R5.A` 本地 output consistency 审计无法把 local runtime fail path 视为同一条诚实的 control surface。
 
@@ -52,7 +52,7 @@ Date: `2026-04-10`
 
 ### 1. invalid local runtime route_report shape tightening
 
-对 `run-local` / `resume-local` 的 `validation_failed` 路径，`route_report` 最小必须显式保留：
+对 `runtime-run` / `runtime-resume` 的 `validation_failed` 路径，`route_report` 最小必须显式保留：
 
 - `ok = false`
 - `grant_run_id`
@@ -96,7 +96,7 @@ Date: `2026-04-10`
 
 当前 slice 只允许收紧：
 
-- `src/med_autogrant/local_runtime.py`
+- `src/med_autogrant/hermes_runtime.py`
 - `tests/test_local_runtime.py`
 - 如有必要：`tests/test_program_control_surfaces.py`
 
@@ -116,8 +116,8 @@ Date: `2026-04-10`
 2. `python3 -m unittest discover -s tests -p 'test_local_runtime.py'`
 3. `python3 -m unittest discover -s tests -p 'test_*.py'`
 4. 构造一个 invalid workspace，执行：
-   - `PYTHONPATH=src python3 -m med_autogrant run-local --input <invalid> --journal <journal> --format json`
-   - `PYTHONPATH=src python3 -m med_autogrant resume-local --journal <journal> --format json`
+   - `PYTHONPATH=src python3 -m med_autogrant runtime run --input <invalid> --journal <journal> --format json`
+   - `PYTHONPATH=src python3 -m med_autogrant runtime resume --journal <journal> --format json`
 5. 断言 invalid path 上：
    - `route_report.route.validate_workspace` 存在
    - `route_report.checkpoint_status is null`
@@ -129,7 +129,7 @@ Date: `2026-04-10`
 
 ## Promotion Invariants
 
-- `run-local / resume-local` 继续只是 local runtime loop entry / recovery
+- `runtime-run / runtime-resume` 继续只是 local runtime loop entry / recovery
 - `validation_failed` 继续是 stop-reason vocabulary，而不是新的 hosted/runtime tranche
 - `checkpoint_status` 在 invalid path 只能保持 `null` mirror；不得被偷偷扩成新的 semantic enum
 - `stage-route-report` 仍是 success-path 的唯一 canonical route/checkpoint aggregation surface

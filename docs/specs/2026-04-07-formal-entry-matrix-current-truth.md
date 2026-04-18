@@ -29,8 +29,8 @@ Date: `2026-04-07`
     - `PYTHONPATH=src python3 -m med_autogrant critique-summary --input ...`
     - `PYTHONPATH=src python3 -m med_autogrant stage-route-report --input ...`
   - local runtime entry / recovery
-    - `PYTHONPATH=src python3 -m med_autogrant run-local --input ... --journal ...`
-    - `PYTHONPATH=src python3 -m med_autogrant resume-local --journal ...`
+    - `PYTHONPATH=src python3 -m med_autogrant runtime run --input ... --journal ...`
+    - `PYTHONPATH=src python3 -m med_autogrant runtime resume --journal ...`
   - local artifact / revision / finalization / hostedization-prep surfaces
     - `PYTHONPATH=src python3 -m med_autogrant build-artifact-bundle --input ... --output ...`
     - `PYTHONPATH=src python3 -m med_autogrant execute-revision-pass --input ... --output ...`
@@ -44,8 +44,8 @@ Date: `2026-04-07`
 - 所有 CLI 输出都必须稳定回显同一 `grant_run_id`，并保持与 `workspace_id`、`draft_id`、`program_id` 分离。
 - `grant_run_id` 是 execution handle，不是新的 formal entry family，也不是新的 controller pointer。
 - `stage-route-report` 继续是 canonical route / checkpoint aggregation surface，并稳定输出 `verification_checkpoint / checkpoint_status`。
-- `run-local` 只在既有 route / checkpoint surface 之上增加 machine-readable `stop_reason`、`stage_action_envelope` 与 local run journal。
-- `resume-local` 只允许从同一 journal 恢复 `input_path`、沿用同一 `grant_run_id` 重新进入一次 local runtime pass。
+- `runtime-run` 只在既有 route / checkpoint surface 之上增加 machine-readable `stop_reason`、`stage_action_envelope` 与 local run journal。
+- `runtime-resume` 只允许从同一 journal 恢复 `input_path`、沿用同一 `grant_run_id` 重新进入一次 local runtime pass。
 - `build-artifact-bundle` 只允许把当前 active workspace 的 canonical objects 写成 machine-readable local bundle，不写回 workspace，不写 `.runtime-program/**`。
 - `execute-revision-pass` 已 landed，但仍只允许在 repo-frozen `R3.A` deterministic mutation contract 内写出 revised workspace candidate；它不扩成 question / argument 级 mutation，不改写 formal entry。
 - `build-final-package` 已 landed，但仍只允许在 `freeze_ready / submission_frozen` gate 上组装 machine-readable local `final_package`；它不替代 validator / route / revision surfaces。
@@ -85,12 +85,12 @@ Date: `2026-04-07`
 
 - 正式支持：是
 - 当前入口：
-  - `PYTHONPATH=src python3 -m med_autogrant resume-local --journal ...`
+  - `PYTHONPATH=src python3 -m med_autogrant runtime resume --journal ...`
   - developer control-plane recovery 改为依赖 repo-tracked `contracts/runtime-program/current-program.json` 与用户级 `$CODEX_HOME/projects/med-autogrant/runtime-state/`
 
 当前 contract：
 
-- `resume-local` 是当前产品 runtime 的本地 recovery / resume entry；它从 journal 恢复 `input_path`、沿用同一 `grant_run_id`，并 append 新 `attempt`。
+- `runtime-resume` 是当前产品 runtime 的本地 recovery / resume entry；它从 journal 恢复 `input_path`、沿用同一 `grant_run_id`，并 append 新 `attempt`。
 - 当当前 stop reason 为 `stage_action_required` 时，恢复入口必须继续 durable 回写 machine-readable `stage_action_envelope`。
 - developer control-plane entry 的恢复读取顺序仍是：
   1. `CURRENT_PROGRAM.md`

@@ -21,8 +21,8 @@
 
 截至当前 absorbed baseline：
 
-- `run-local`
-- `resume-local`
+- `runtime-run`
+- `runtime-resume`
 - `build-artifact-bundle`
 - `execute-revision-pass`
 - `build-final-package`

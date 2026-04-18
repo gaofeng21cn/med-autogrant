@@ -81,7 +81,7 @@ Date: `2026-04-08`
 约束：
 
 - 新命令仍属于 `CLI` formal entry，不新增第二 formal entry
-- 旧五个 commands 与 `run-local / resume-local` 继续作为 verifier / audit baseline
+- 旧五个 commands 与 `runtime-run / runtime-resume` 继续作为 verifier / audit baseline
 - `build-artifact-bundle` 不得替代 `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report`
 - `build-artifact-bundle` 只写 bundle output，不写回 workspace，不写 `.runtime-program/**`
 
@@ -150,15 +150,15 @@ Date: `2026-04-08`
 - `next-step`
 - `critique-summary`
 - `stage-route-report`
-- `run-local`
-- `resume-local`
+- `runtime-run`
+- `runtime-resume`
 - `verification_checkpoint`
 - `checkpoint_status`
 
 关系冻结如下：
 
 - `stage-route-report` 继续是 route / checkpoint aggregation 的 canonical baseline
-- `run-local / resume-local / stage_action_envelope` 继续只处理 runtime orchestration
+- `runtime-run / runtime-resume / stage_action_envelope` 继续只处理 runtime orchestration
 - `build-artifact-bundle` 只把已存在对象写成 bundle，不覆盖 checkpoint / stop reason / stage_action_envelope
 
 ## Required Verification

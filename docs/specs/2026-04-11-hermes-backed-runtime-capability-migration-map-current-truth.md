@@ -60,7 +60,7 @@ Date: `2026-04-11`
 - post-`R5.A` honest-stop closeout truth
 - 旧 `CLI-first + host-agent runtime` 叙事
 - 旧 local operator walkthrough 中的 host-agent framing
-- `src/med_autogrant/local_runtime.py` 作为 legacy module wrapper 的桥接入口
+- 历史 runtime alias / wrapper 线作为 bridge 追溯材料
 
 ## Command Mapping
 

@@ -90,7 +90,7 @@ Date: `2026-04-09`
 
 - 新命令仍属于 `CLI` formal entry，不新增第二 formal entry
 - `build-final-package` 不得替代旧五个 canonical CLI surfaces
-- `build-final-package` 不得替代 `run-local / resume-local / build-artifact-bundle / execute-revision-pass`
+- `build-final-package` 不得替代 `runtime-run / runtime-resume / build-artifact-bundle / execute-revision-pass`
 - `build-final-package` 只写 final package output，不写 `.runtime-program/**`
 
 ## Final Package Contract
@@ -156,8 +156,8 @@ Date: `2026-04-09`
 - `next-step`
 - `critique-summary`
 - `stage-route-report`
-- `run-local`
-- `resume-local`
+- `runtime-run`
+- `runtime-resume`
 - `build-artifact-bundle`
 - `execute-revision-pass`
 - `verification_checkpoint`

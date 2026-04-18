@@ -26,6 +26,15 @@ INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.j
 
 
 class DomainEntryDispatchTest(unittest.TestCase):
+    def test_domain_entry_rejects_legacy_runtime_alias(self) -> None:
+        with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: run-local"):
+            MedAutoGrantDomainEntry(runtime=Mock()).dispatch(
+                {
+                    "command": "run-local",
+                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                }
+            )
+
     def test_domain_entry_dispatches_runtime_command(self) -> None:
         runtime = Mock()
         runtime.run_local.return_value = {"ok": True, "command": "runtime-run"}

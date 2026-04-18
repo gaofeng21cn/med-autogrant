@@ -69,12 +69,6 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     ),
 }
 
-COMPATIBILITY_COMMAND_ALIASES: dict[str, str] = {
-    "run-local": "runtime-run",
-    "resume-local": "runtime-resume",
-}
-
-
 class MedAutoGrantDomainEntry:
     """给 CLI 与未来 service caller 共用的结构化 domain entry。"""
 
@@ -120,7 +114,7 @@ class MedAutoGrantDomainEntry:
 
 
 def _normalize_command(command: str) -> str:
-    return COMPATIBILITY_COMMAND_ALIASES.get(command, command)
+    return command
 
 
 def _require_command(request: Mapping[str, Any]) -> str:

@@ -516,41 +516,6 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
                     )
 
 
-class LocalRuntimeBridgeTest(unittest.TestCase):
-    def test_run_local_runtime_uses_hermes_runtime_as_compatibility_bridge(self) -> None:
-        from med_autogrant.local_runtime import run_local_runtime
-
-        expected_payload = {"ok": True, "command": "runtime-run"}
-        with patch("med_autogrant.local_runtime.HermesRuntimeSubstrate") as substrate_class:
-            substrate = substrate_class.return_value
-            substrate.run_local.return_value = expected_payload
-
-            payload = run_local_runtime(
-                input_path=str(CRITIQUE_EXAMPLE_PATH),
-                journal_path="/tmp/test-journal.json",
-            )
-
-        self.assertEqual(payload, expected_payload)
-        substrate.run_local.assert_called_once_with(
-            input_path=str(CRITIQUE_EXAMPLE_PATH),
-            journal_path="/tmp/test-journal.json",
-            trigger="runtime-run",
-        )
-
-    def test_resume_local_runtime_uses_hermes_runtime_as_compatibility_bridge(self) -> None:
-        from med_autogrant.local_runtime import resume_local_runtime
-
-        expected_payload = {"ok": True, "command": "runtime-resume"}
-        with patch("med_autogrant.local_runtime.HermesRuntimeSubstrate") as substrate_class:
-            substrate = substrate_class.return_value
-            substrate.resume_local.return_value = expected_payload
-
-            payload = resume_local_runtime(journal_path="/tmp/test-journal.json")
-
-        self.assertEqual(payload, expected_payload)
-        substrate.resume_local.assert_called_once_with(journal_path="/tmp/test-journal.json")
-
-
 class HostedContractBundleBridgeTest(unittest.TestCase):
     def test_hosted_contract_bundle_payload_uses_hermes_runtime_as_handoff_owner(self) -> None:
         from med_autogrant.hosted_contract_bundle import build_hosted_contract_bundle_payload

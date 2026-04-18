@@ -14,8 +14,8 @@ Date: `2026-04-08`
 
 在不改写 `CLI` formal entry、不把 `MCP / controller` 写成已支持 public runtime、不破坏 `grant_run_id / workspace_id / draft_id / program_id` 边界、也不把 author-side mainline 改写成 reviewer / HITL / hosted runtime 产品的前提下，冻结 `R1.A` 的最小实现合同：
 
-- 增加一个本地 `run-local` 主循环入口
-- 增加一个 `resume-local` 恢复入口
+- 增加一个本地 `runtime-run` 主循环入口
+- 增加一个 `runtime-resume` 恢复入口
 - 把 stop reason 冻结成 machine-readable object
 - 把同一 `grant_run_id` 的本地 run journal 冻结成 durable machine-readable journal surface
 
@@ -46,7 +46,7 @@ Date: `2026-04-08`
 1. 调用并聚合旧五个 canonical CLI surfaces 的既有语义
 2. 从 `stage-route-report` 与 `verification_checkpoint` 派生 machine-readable `stop_reason`
 3. 把本次 run 的 route snapshot、checkpoint 与 stop_reason durable 写入 run journal
-4. 允许之后通过 `resume-local` 沿用同一 journal 与同一 `grant_run_id` 重新进入
+4. 允许之后通过 `runtime-resume` 沿用同一 journal 与同一 `grant_run_id` 重新进入
 
 它当前**不**负责：
 
@@ -60,11 +60,11 @@ Date: `2026-04-08`
 
 `R1.A` 一旦进入实现，只允许增加以下两个新的 `CLI-first` runtime commands：
 
-1. `run-local`
+1. `runtime-run`
    - 输入：`--input <workspace-json>`
    - 可选 durable output：`--journal <journal-json-path>`
    - 输出：本次 local runtime pass 的 machine-readable payload
-2. `resume-local`
+2. `runtime-resume`
    - 输入：`--journal <journal-json-path>`
    - 输出：沿用 journal 中的 workspace input 与 `grant_run_id` 重新执行一次 local runtime pass 的 machine-readable payload
 
@@ -72,7 +72,7 @@ Date: `2026-04-08`
 
 - 新命令仍属于 `CLI` formal entry，不新增第二 formal entry
 - 旧五个 commands 继续作为 verifier / audit baseline
-- `run-local` / `resume-local` 不能替代 `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report`
+- `runtime-run` / `runtime-resume` 不能替代 `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report`
 - `MCP / controller` 继续属于 `not-yet-supported / future scope`
 
 ## Stop Reason Contract
@@ -127,7 +127,7 @@ Date: `2026-04-08`
 其中每个 `attempt` 至少包含：
 
 - `attempt_index`
-- `trigger`（`run-local` 或 `resume-local`）
+- `trigger`（`runtime-run` 或 `runtime-resume`）
 - `timestamp`
 - `lifecycle_stage`
 - `checkpoint_status`
@@ -141,7 +141,7 @@ Date: `2026-04-08`
 
 ## Resume Contract
 
-`resume-local` 必须只依赖 journal 本身即可恢复：
+`runtime-resume` 必须只依赖 journal 本身即可恢复：
 
 1. 从 journal 读取 `input_path`
 2. 重新运行同一条 `R1.A` local runtime pass
@@ -169,8 +169,8 @@ Date: `2026-04-08`
 更具体地说：
 
 - `stage-route-report` 继续是 route / checkpoint aggregation 的 canonical baseline
-- `run-local` 只是在其上增加 runtime entry、stop reason 与 journal
-- `resume-local` 只是在 `run-local` 的 journal contract 上增加恢复入口
+- `runtime-run` 只是在其上增加 runtime entry、stop reason 与 journal
+- `runtime-resume` 只是在 `runtime-run` 的 journal contract 上增加恢复入口
 
 ## Required Verification
 
@@ -190,11 +190,11 @@ Date: `2026-04-08`
 当 `R1.A` 进入实现时，必须补齐并通过以下新增验证：
 
 1. `python3 -m unittest discover -s tests -p 'test_local_runtime.py'`
-2. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json" --format json`
-3. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --journal "$TMPDIR/r1a-rollback.json" --format json`
-4. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3a_ready_for_submission.json --journal "$TMPDIR/r1a-freeze-ready.json" --format json`
-5. `PYTHONPATH=src python3 -m med_autogrant run-local --input examples/nsfc_workspace_p3c_presubmission_frozen.json --journal "$TMPDIR/r1a-frozen.json" --format json`
-6. `PYTHONPATH=src python3 -m med_autogrant resume-local --journal "$TMPDIR/r1a-revision.json" --format json`
+2. `PYTHONPATH=src python3 -m med_autogrant runtime run --input examples/nsfc_workspace_p2c_revision.json --journal "$TMPDIR/r1a-revision.json" --format json`
+3. `PYTHONPATH=src python3 -m med_autogrant runtime run --input examples/nsfc_workspace_p3c_forced_rollback_argument.json --journal "$TMPDIR/r1a-rollback.json" --format json`
+4. `PYTHONPATH=src python3 -m med_autogrant runtime run --input examples/nsfc_workspace_p3a_ready_for_submission.json --journal "$TMPDIR/r1a-freeze-ready.json" --format json`
+5. `PYTHONPATH=src python3 -m med_autogrant runtime run --input examples/nsfc_workspace_p3c_presubmission_frozen.json --journal "$TMPDIR/r1a-frozen.json" --format json`
+6. `PYTHONPATH=src python3 -m med_autogrant runtime resume --journal "$TMPDIR/r1a-revision.json" --format json`
 
 这里的 `$TMPDIR` 指一个调用方显式提供的临时目录；`R1.A` 不得依赖 repo 内临时写入来通过验证。
 
@@ -214,7 +214,7 @@ Date: `2026-04-08`
 只有以下条件全部满足，才允许进入 `R1.A` implementation：
 
 1. baseline hard gate 全绿
-2. active `PRD / test-spec / implementation` 已写清楚 `run-local / resume-local / stop_reason / journal` 的最小合同
+2. active `PRD / test-spec / implementation` 已写清楚 `runtime-run / runtime-resume / stop_reason / journal` 的最小合同
 3. 继续推进不需要新的 formal entry、external credentials、web runtime、hosted runtime、same-repo HITL、second-family 或 federation truth
 
 ## Stop Conditions
@@ -224,7 +224,7 @@ Date: `2026-04-08`
 - 识别到的“下一步”其实需要新的 public formal entry 或新的平台语义
 - 必须新增 schema field 才能让 `R1.A` 成立
 - 需要把 `.runtime-program/reports/**` 误写成产品 run journal
-- 需要把 `run-local` 混写成 artifact writing、revision execution、export、web runtime 或 federation surface
+- 需要把 `runtime-run` 混写成 artifact writing、revision execution、export、web runtime 或 federation surface
 
 ## Excluded Scope
 

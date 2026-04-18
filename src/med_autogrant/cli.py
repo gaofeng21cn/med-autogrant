@@ -10,7 +10,6 @@ from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.product_entry import MedAutoGrantProductEntry
 from opl_harness_shared.status_narration import build_status_narration_human_view
 from med_autogrant.public_cli import (
-    COMMAND_ALIASES,
     INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,
     PUBLIC_COMMAND_ORDER,
@@ -342,7 +341,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND) | set(COMMAND_ALIASES)
+LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND)
 
 
 def _print_public_help() -> None:
@@ -396,11 +395,9 @@ def _normalize_public_command_argv(argv: list[str]) -> list[str]:
     if not argv:
         return argv
     if argv[0] in LEGACY_PUBLIC_COMMANDS:
-        normalized = COMMAND_ALIASES.get(argv[0], argv[0])
-        if normalized in INTERNAL_TO_PUBLIC_COMMAND:
-            raise SystemExit(
-                f"Legacy flat command `{argv[0]}` has been removed. Use `{public_command_label(normalized)}` instead."
-            )
+        raise SystemExit(
+            f"Legacy flat command `{argv[0]}` has been removed. Use `{public_command_label(argv[0])}` instead."
+        )
     if len(argv) >= 2 and (argv[0], argv[1]) in PUBLIC_TO_INTERNAL_COMMAND:
         return [PUBLIC_TO_INTERNAL_COMMAND[(argv[0], argv[1])], *argv[2:]]
     return argv

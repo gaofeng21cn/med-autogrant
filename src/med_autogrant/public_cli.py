@@ -21,11 +21,6 @@ PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
     "package",
 )
 
-COMMAND_ALIASES: Final[dict[str, str]] = {
-    "run-local": "runtime-run",
-    "resume-local": "runtime-resume",
-}
-
 INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "validate-workspace": ("workspace", "validate"),
     "summarize-workspace": ("workspace", "summarize"),
@@ -76,7 +71,7 @@ PUBLIC_GROUP_COMMANDS: Final[dict[str, tuple[str, ...]]] = {
 
 
 def public_command_tokens(command: str) -> tuple[str, str] | None:
-    return INTERNAL_TO_PUBLIC_COMMAND.get(COMMAND_ALIASES.get(command, command))
+    return INTERNAL_TO_PUBLIC_COMMAND.get(command)
 
 
 def public_command_label(command: str) -> str:
@@ -95,7 +90,7 @@ def public_cli_command(command: str, *args: str) -> str:
 def public_cli_argv(argv: list[str] | tuple[str, ...]) -> list[str]:
     resolved = list(argv)
     if len(resolved) >= 1:
-        command = COMMAND_ALIASES.get(resolved[0], resolved[0])
+        command = resolved[0]
         if command in INTERNAL_TO_PUBLIC_COMMAND:
             group, subcommand = INTERNAL_TO_PUBLIC_COMMAND[command]
             return [group, subcommand, *resolved[1:]]

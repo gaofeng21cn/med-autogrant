@@ -107,7 +107,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `runtime run` 与 `runtime resume` 继续以 journal 串联多次 pass，但 attempt index 现在来自真实上游 Hermes session substrate。
 - 对 valid workspace，Hermes session handle 继续沿用 `grant_run_id`；对 `validation_failed` path，只允许使用 journal-scoped substrate session handle 持续 durability，不得伪造新的 domain `grant_run_id`。
 - `src/med_autogrant/hermes_runtime.py` 现在应被理解为 repo-side domain adapter / orchestrator，而不是 runtime substrate owner。
-- `src/med_autogrant/local_runtime.py` 只保留 compatibility bridge 责任。
+- `runtime run` / `runtime resume` 直接通过 `MedAutoGrantDomainEntry -> HermesRuntimeSubstrate` 落到当前 runtime loop。
 - `pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting`、`pass critique`、`pass revision`、`pass freeze`、`package artifact-bundle`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
 - `pass critique` 当前默认走 `Codex CLI autonomous executor`：具体由 `critique_executor.py -> run_codex_exec(...)` 调起 `codex exec`，默认 `model / reasoning` 都继承本机 Codex 默认（`inherit_local_codex_default`），只有显式环境变量覆盖才会传 override。
 - 同一条 `pass critique` 现在也支持显式 `executor_kind=hermes_native_proof`：这条 experimental lane 会通过 `hermes_native_executor.py -> read_hermes_agent_contract(...) -> run_agent.AIAgent.run_conversation(...)` 真实调用上游 Hermes full agent loop；它会显式读取本机 `~/.hermes/config.yaml` 的 model/provider/base_url/api_mode/reasoning_effort，并且只有在完成整轮 loop、拿到真实工具事件和合法 JSON 结果时才通过，否则 fail-closed。
