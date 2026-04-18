@@ -46,6 +46,7 @@ from opl_harness_shared.automation_companions import (
     build_automation_descriptor as _build_shared_automation_descriptor,
 )
 from opl_harness_shared.product_entry_companions import (
+    build_family_product_entry_manifest as _build_shared_family_product_entry_manifest,
     build_product_entry_start as _build_shared_product_entry_start,
     build_product_frontdesk as _build_shared_product_frontdesk,
     build_product_entry_overview as _build_shared_product_entry_overview,
@@ -76,7 +77,6 @@ from opl_harness_shared.skill_catalog import (
 PRODUCT_ENTRY_VERSION = 1
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
 PRODUCT_ENTRY_MANIFEST_KIND = "med_auto_grant_product_entry_manifest"
-PRODUCT_ENTRY_MANIFEST_VERSION = 2
 PRODUCT_FRONTDESK_KIND = "product_frontdesk"
 TARGET_DOMAIN_ID = "med-autogrant"
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
@@ -1460,24 +1460,22 @@ class MedAutoGrantProductEntry:
             "draft_id": progress_payload["draft_id"],
             "lifecycle_stage": progress_payload["lifecycle_stage"],
             "input_path": progress_payload["input_path"],
-            "product_entry_manifest": {
-                "surface_kind": "product_entry_manifest",
-                "manifest_version": PRODUCT_ENTRY_MANIFEST_VERSION,
-                "manifest_kind": PRODUCT_ENTRY_MANIFEST_KIND,
-                "target_domain_id": TARGET_DOMAIN_ID,
-                "formal_entry": {
+            "product_entry_manifest": _build_shared_family_product_entry_manifest(
+                manifest_kind=PRODUCT_ENTRY_MANIFEST_KIND,
+                target_domain_id=TARGET_DOMAIN_ID,
+                formal_entry={
                     "default": "CLI",
                     "supported_protocols": ["MCP"],
                     "internal_surface": "MedAutoGrantDomainEntry",
                 },
-                "workspace_locator": {
+                workspace_locator={
                     "workspace_surface_kind": "nsfc_workspace",
                     "workspace_root": str(resolved_input_path),
                     "workspace_path": str(resolved_input_path),
                 },
-                "recommended_shell": "grant_user_loop",
-                "recommended_command": grant_user_loop_command,
-                "frontdesk_surface": {
+                recommended_shell="grant_user_loop",
+                recommended_command=grant_user_loop_command,
+                frontdesk_surface={
                     "shell_key": "product_frontdesk",
                     "command": product_frontdesk_command,
                     "surface_kind": PRODUCT_FRONTDESK_KIND,
@@ -1485,7 +1483,7 @@ class MedAutoGrantProductEntry:
                         "当前 direct grant product frontdesk 先暴露前台入口、user loop、projection 与 shared handoff。"
                     ),
                 },
-                "operator_loop_surface": {
+                operator_loop_surface={
                     "shell_key": "grant_user_loop",
                     "command": grant_user_loop_command,
                     "surface_kind": GRANT_USER_LOOP_KIND,
@@ -1494,16 +1492,16 @@ class MedAutoGrantProductEntry:
                         "在同一入口下汇总 progress、route action 与 mainline snapshot。"
                     ),
                 },
-                "operator_loop_actions": operator_loop_actions,
-                "repo_mainline": repo_mainline,
-                "runtime": runtime_summary,
-                "managed_runtime_contract": managed_runtime_contract,
-                "runtime_inventory": runtime_inventory,
-                "task_lifecycle": task_lifecycle,
-                "skill_catalog": skill_catalog,
-                "automation": automation,
-                "product_entry_shell": product_entry_shell,
-                "shared_handoff": {
+                operator_loop_actions=operator_loop_actions,
+                repo_mainline=repo_mainline,
+                runtime=runtime_summary,
+                managed_runtime_contract=managed_runtime_contract,
+                runtime_inventory=runtime_inventory,
+                task_lifecycle=task_lifecycle,
+                skill_catalog=skill_catalog,
+                automation=automation,
+                product_entry_shell=product_entry_shell,
+                shared_handoff={
                     "direct_entry_builder": {
                         "command": command_catalog["build_direct_entry"],
                         "entry_mode": "direct",
@@ -1513,14 +1511,11 @@ class MedAutoGrantProductEntry:
                         "entry_mode": "opl-handoff",
                     },
                 },
-                "product_entry_start": product_entry_start,
-                "product_entry_overview": product_entry_overview,
-                "product_entry_preflight": product_entry_preflight,
-                "product_entry_readiness": product_entry_readiness,
-                "grant_authoring_readiness": grant_authoring_readiness,
-                "product_entry_quickstart": product_entry_quickstart,
-                "family_orchestration": family_orchestration,
-                "product_entry_status": {
+                product_entry_start=product_entry_start,
+                product_entry_overview=product_entry_overview,
+                product_entry_preflight=product_entry_preflight,
+                product_entry_readiness=product_entry_readiness,
+                product_entry_status={
                     "summary": _require_nonempty_string_from_mapping(
                         current_phase,
                         "summary",
@@ -1529,13 +1524,18 @@ class MedAutoGrantProductEntry:
                     "next_focus": list(mainline_snapshot["next_focus"]),
                     "remaining_gaps_count": len(mainline_snapshot["remaining_gaps"]),
                 },
-                "remaining_gaps": list(mainline_payload.get("remaining_gaps") or []),
-                "notes": [
+                product_entry_quickstart=product_entry_quickstart,
+                family_orchestration=family_orchestration,
+                remaining_gaps=list(mainline_payload.get("remaining_gaps") or []),
+                notes=[
                     "This manifest freezes the current repo-tracked grant product shell only.",
                     "It does not claim that mature hosted runtime or Web UI is already landed.",
                     "funding_call stays part of direct-entry build time rather than manifest discovery time.",
                 ],
-            },
+                extra_payload={
+                    "grant_authoring_readiness": grant_authoring_readiness,
+                },
+            ),
         }
         _validate_product_entry_manifest_contract(
             payload,
