@@ -49,6 +49,8 @@ from opl_harness_shared.product_entry_companions import (
     build_product_entry_readiness as _build_shared_product_entry_readiness,
     build_product_entry_resume_surface as _build_shared_product_entry_resume_surface,
     collect_family_human_gate_ids as _collect_family_human_gate_ids,
+    validate_family_product_frontdesk as _validate_shared_family_product_frontdesk,
+    validate_family_product_entry_manifest as _validate_shared_family_product_entry_manifest,
 )
 from opl_harness_shared.product_entry_program_companions import (
     build_detailed_readiness as _build_shared_detailed_readiness,
@@ -2806,6 +2808,11 @@ def _validate_product_entry_manifest_contract(
     workspace_id: str,
     lifecycle_stage: str,
 ) -> None:
+    _validate_shared_family_product_entry_manifest(
+        payload["product_entry_manifest"],
+        require_contract_bundle=False,
+        require_runtime_companions=True,
+    )
     _validate_contract_schema(
         payload,
         schema_file=PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
@@ -2823,6 +2830,11 @@ def _validate_product_frontdesk_contract(
     workspace_id: str,
     lifecycle_stage: str,
 ) -> None:
+    _validate_shared_family_product_frontdesk(
+        payload["product_frontdesk"],
+        require_contract_bundle=False,
+        require_runtime_companions=True,
+    )
     _validate_contract_schema(
         payload,
         schema_file=PRODUCT_FRONTDESK_SCHEMA_FILE,
