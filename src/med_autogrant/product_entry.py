@@ -46,9 +46,9 @@ from opl_harness_shared.automation_companions import (
     build_automation_descriptor as _build_shared_automation_descriptor,
 )
 from opl_harness_shared.product_entry_companions import (
+    build_family_product_frontdesk as _build_shared_family_product_frontdesk,
     build_family_product_entry_manifest as _build_shared_family_product_entry_manifest,
     build_product_entry_start as _build_shared_product_entry_start,
-    build_product_frontdesk as _build_shared_product_frontdesk,
     build_product_entry_overview as _build_shared_product_entry_overview,
     build_product_entry_quickstart as _build_shared_product_entry_quickstart,
     build_product_entry_readiness as _build_shared_product_entry_readiness,
@@ -1579,73 +1579,8 @@ class MedAutoGrantProductEntry:
             "draft_id": manifest_payload["draft_id"],
             "lifecycle_stage": manifest_payload["lifecycle_stage"],
             "input_path": manifest_payload["input_path"],
-            "product_frontdesk": _build_shared_product_frontdesk(
+            "product_frontdesk": _build_shared_family_product_frontdesk(
                 recommended_action="inspect_or_prepare_grant_loop",
-                target_domain_id=_require_nonempty_string_from_mapping(
-                    manifest,
-                    "target_domain_id",
-                    context="product_frontdesk.product_entry_manifest",
-                ),
-                workspace_locator=dict(_require_mapping(
-                    manifest,
-                    "workspace_locator",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                runtime=dict(_require_mapping(
-                    manifest,
-                    "runtime",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                product_entry_status=dict(_require_mapping(
-                    manifest,
-                    "product_entry_status",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                frontdesk_surface=dict(_require_mapping(
-                    manifest,
-                    "frontdesk_surface",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                operator_loop_surface=dict(_require_mapping(
-                    manifest,
-                    "operator_loop_surface",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                operator_loop_actions=dict(_require_mapping(
-                    manifest,
-                    "operator_loop_actions",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                product_entry_start=dict(_require_mapping(
-                    manifest,
-                    "product_entry_start",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                product_entry_overview=dict(_require_mapping(
-                    manifest,
-                    "product_entry_overview",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                product_entry_preflight=dict(_require_mapping(
-                    manifest,
-                    "product_entry_preflight",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                product_entry_readiness=dict(_require_mapping(
-                    manifest,
-                    "product_entry_readiness",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                product_entry_quickstart=dict(_require_mapping(
-                    manifest,
-                    "product_entry_quickstart",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
-                family_orchestration=dict(_require_mapping(
-                    manifest,
-                    "family_orchestration",
-                    context="product_frontdesk.product_entry_manifest",
-                )),
                 product_entry_manifest=dict(manifest),
                 entry_surfaces={
                     "frontdesk": dict(_require_mapping(
@@ -1683,23 +1618,6 @@ class MedAutoGrantProductEntry:
                         "opl_handoff_builder",
                         context="product_frontdesk.shared_handoff",
                     )),
-                },
-                summary={
-                    "frontdesk_command": _require_nonempty_string_from_mapping(
-                        _require_mapping(manifest, "frontdesk_surface", context="product_frontdesk.product_entry_manifest"),
-                        "command",
-                        context="product_frontdesk.frontdesk_surface",
-                    ),
-                    "recommended_command": _require_nonempty_string_from_mapping(
-                        manifest,
-                        "recommended_command",
-                        context="product_frontdesk.product_entry_manifest",
-                    ),
-                    "operator_loop_command": _require_nonempty_string_from_mapping(
-                        _require_mapping(manifest, "operator_loop_surface", context="product_frontdesk.product_entry_manifest"),
-                        "command",
-                        context="product_frontdesk.operator_loop_surface",
-                    ),
                 },
                 notes=[
                     "This frontdesk surface is a controller-owned direct grant front door over the landed product-entry shell.",
