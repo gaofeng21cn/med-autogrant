@@ -29,8 +29,6 @@ Date: `2026-04-18`
 ## 当前基线（repo-verified）
 
 - Latest absorbed runtime slice：`Upstream Hermes-Agent Fast Cutover`
-- Historical owner line：`post-R5A local runtime closeout / honest stop`
-- Previous truthful closeout baseline：`NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
 - repo-tracked current truth 入口：
   - `contracts/runtime-program/current-program.json`
   - `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md`
@@ -95,7 +93,7 @@ Date: `2026-04-18`
 5. 已 landed 的 lightweight `product entry` / `OPL -> Med Auto Grant` shell 现在由 `product build-entry` 承载；后续把这层作为内部兼容 entry mode 与 domain/API catalog 维护。
 6. `stage_action_envelope` 与 `product build-entry` 现在都带同一份 `executor_routing_contract`；其中 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / revision / frozen / artifact_bundle / final_package / hosted_contract_bundle` 都已经是已 landed route。
 7. `pass critique` 当前默认执行器固定为 `Codex CLI autonomous executor`；默认 `model / reasoning` 继承本机 Codex 默认（`inherit_local_codex_default`），显式环境变量覆盖仍受控保留；同时现在新增了 `executor_kind=hermes_native_proof` 的 experimental proof lane，但它不改写默认执行器。
-8. `pending-handoff-requirements.schema.json` 现在只保留历史兼容与旧真相追溯用途；当前主线 route output 已完全收口为 landed route catalog。
+8. `pending-handoff-requirements.schema.json` 现在只保留历史追溯用途；当前主线 route output 已完全收口为 landed route catalog。
 9. Hermes-native 口径只认 full agent loop，不认 chat relay；当前 `critique` 的 experimental proof lane 已经通过 `run_agent.AIAgent.run_conversation(...)` 落到一条真实 full-loop route，但若本机 Hermes 仍走 `custom + chat_completions`，当前只承认 `FULL_AGENT_LOOP_PRESENT_BUT_NOT_YET_EQUIVALENT_TO_CODEX / PROVIDER_REASONING_NOT_PROVED_KEEP_DEFAULT`，不会把它误写成默认 executor 已替代。
 10. `service-safe-domain-surface.schema.json`、`executor-routing-contract.schema.json`、`product-entry.schema.json`、`product-entry-manifest.schema.json`、`product-frontdesk.schema.json` 与 `hosted-contract-bundle.schema.json` 现在已经进入 repo-tracked schema index；任何后续 product-entry / frontdoor / routing / hosted contract bundle 变更都必须同步更新 schema、tests 与 current truth。
 11. `P3` 已经证明 external hosted caller / `OPL` caller 可以直接消费已冻结的 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`；后续继续沿 `P4` 的诚实 product 面推进。

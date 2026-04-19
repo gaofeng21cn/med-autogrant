@@ -3,7 +3,7 @@
 ## 项目定位
 
 `Med Auto Grant` 是共享 `Unified Harness Engineering Substrate` 上、面向医学 `Grant Ops` 的 author-side、proposal-facing `Domain Harness OS` 方向。
-当前仓库主线按 `Auto-only` 理解，formal entry 仍是 `CLI`，但 runtime substrate 已切到真实上游 `Hermes-Agent`；旧 `CLI-first + host-agent` 线只保留为历史迁移基线，而当前 `hermes_runtime.py` 路径应被理解为 repo-side domain adapter。
+当前仓库主线按 `Auto-only` 理解，formal entry 仍是 `CLI`，runtime substrate 已切到真实上游 `Hermes-Agent`；历史本地 runtime 线只留在归档 current-truth 与 closeout 材料里，而当前 `hermes_runtime.py` 路径应被理解为 repo-side domain adapter。
 当前入口真相是：`CLI + MedAutoGrantDomainEntry` 已经构成稳定的 `agent entry`，`product build-entry` 也已经把轻量结构化 `product entry` shell 落到仓库里，`product manifest` 则把这层 shell、shared handoff 模板与当前 mainline snapshot 一起冻结成 machine-readable discovery surface；`product frontdesk` 现在又把其上方的 controller-owned direct frontdoor 冻结下来。当前这层 shell、`product manifest`、`product frontdesk` 及其 `executor_routing_contract` 都已经进一步收口成 schema-backed contract，并在生成时 fail-closed；`package hosted-contract-bundle` 现在也会把 `domain_entry_contract`、`schema_contract`、`authoring_contract` 一起冻结进 hosted-friendly 合同目录；`workspace progress / workspace cockpit` 已经把第一棒 controller-owned、read-only 的 direct grant product projection 落地，并通过 `schemas/v1/grant-progress.schema.json` 与 `schemas/v1/grant-cockpit.schema.json` 收口成 schema-backed、generation-time fail-closed 的 projection contract；`product direct-entry` 已把 direct product entry 的第二棒组合面落地，并通过 `schemas/v1/grant-direct-entry.schema.json` 收口成 schema-backed、generation-time fail-closed 的 direct-entry contract；`mainline status`、`mainline phase` 与 `product user-loop` 则把第三棒 mainline snapshot / current user loop 收到当前 inbox-like shell，并通过 `schemas/v1/grant-user-loop.schema.json` 保持 fail-closed；当前 `P4.D` 已把 `direction_screening -> frozen` 的 author-side 主线收成 landed command catalog，`P4.E` 又进一步把 direct frontdoor manifest / frontdesk 提升成独立 schema-backed contract，而 `P4.F` 继续把 `package submission-ready` 收口成 fail-closed 的本地 submission-ready 交付面，使 direct grant loop、frontdoor discovery、route contract、local delivery 与 hosted bundle 看到同一份可机读的 authoring truth，但更完整的 grant-facing 产品体验仍未落地。
 按 `OPL` 对齐后的理想目标，这个仓最终应收敛成：`OPL` 继续负责 family-level 顶层入口与 gateway，`Hermes-Agent` 继续负责 runtime substrate，`Med Auto Grant` 继续负责 grant authoring truth、domain entry 与 direct grant product entry。
 当前统一协作模型是：`Hermes-Agent` 持有 runtime substrate / orchestration，`Med Auto Grant` 持有 grant 对象边界、author-side contract 与 export truth，而 route-selected executor 持有具体 authoring execution；`direction_screening -> frozen`、`revision` 与 packaging/export 继续通过 repo-side domain logic 与 executor adapter 落地，而不是被强行收缩成单一 runtime 脑。
@@ -17,7 +17,7 @@
 
 - 明确 `CLI / MCP / controller` 的 formal-entry matrix。
 - 稳定 `grant_run_id`、`workspace_id`、`draft_id`、`program_id` 与相关 artifact/export surface。
-- 在 `R1 -> R5.A` 已 absorbed 的前提下，把当前 post-`R5.A` honest stop 作为迁移基线保留，并在真实上游 `Hermes-Agent` substrate 上延续 author-side grant mainline。
+- 在真实上游 `Hermes-Agent` substrate 上延续 author-side grant mainline，并把历史本地 runtime closeout 只保留给归档追溯材料。
 - 在已落地 runtime substrate 之上，保持 `product build-entry` 这层共享-envelope lightweight grant `product entry` shell 稳定，并让它同时服务 direct entry 与 `OPL` handoff。
 - 在已落地 runtime substrate 与 lightweight shell 之上，先通过 `workspace progress / workspace cockpit` 落第一棒 controller-owned、read-only 的 direct grant product projection，再继续向更成熟的 grant-facing UX 推进。
 - 在 `P4.A` 已 landed 的基础上，通过 `product direct-entry` 把 direct grant entry 继续推进到组合式 product contract，而不是另起新的 repo-local helper 或 executor surface。
@@ -41,6 +41,4 @@
 - Active tranche：`P4.F local submission-ready package landing`
 - Latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
 - Current owner line：`CLI-first with real upstream Hermes-Agent runtime substrate`
-- Historical owner line：`post-R5A local runtime closeout / honest stop`
-- Previous truthful closeout baseline：`NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
 - 默认入口：CLI（validator、summary、route、controller-owned product projection + service-safe domain entry dispatch）

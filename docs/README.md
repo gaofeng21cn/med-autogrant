@@ -19,8 +19,7 @@ This guide is for readers who need the repo-tracked contracts, current-truth spe
 - `Med Auto Grant` is the first-level medical grant domain module / agent under the `OPL` GUI and management shell.
 - Codex is the default interaction and execution path for grant authoring routes.
 - `Hermes-Agent` is the explicit backup mode and always-on gateway for long-running or route-specific proof work.
-- The archived cutover line still uses the phrase real upstream `Hermes-Agent` runtime substrate in repo-tracked current-truth records.
-- Legacy repo-local helpers survive as compatibility bridge and regression oracle material for maintainers.
+- Historical local-runtime closeout material stays in `docs/specs/` and `docs/history/` for traceability.
 - Repo-local adapters preserve grant-domain truth, entry semantics, and route contracts.
 - The current frontdesk, user-loop, projections, and local `submission-ready` package are landed, while a mature hosted grant frontend is still future work.
 - `OPL` owns family navigation and management-shell visibility; MAG owns grant-domain truth and execution routing.
@@ -66,7 +65,7 @@ These files are the default public-facing entry surfaces and should stay mirrore
 - [Full grant authoring executor current truth](./specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
 - [P4.F local submission-ready package current truth](./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md)
 
-The lightweight grant `product entry` shell remains available as the current Product-entry shell and domain/API catalog builder. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible for hosted caller / external caller consumption.
+The current grant product-entry shell remains available as the domain/API catalog builder. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible for hosted caller / external caller consumption.
 
 ### Contracts and schemas
 

@@ -82,16 +82,16 @@
 
 - `scripts/verify.sh` 作为默认最小验证入口，保持分层 lane 与 `Makefile` 一致。
 
-## 2026-04-11：冻结 post-R5A 本地 runtime 上限与 honest stop
+## 2026-04-11：冻结历史本地 runtime closeout 边界
 
 - 在当前 repo-tracked truth 下，`R1 -> R5.A` 本地 runtime ladder 与 post-`R5.A` fail-closed hardening 已达到当前可验证上限。
-- 当前 owner line 固定为 `post-R5A local runtime closeout / honest stop`，closeout verdict 固定为 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`。
+- 当天 closeout 材料固定了一组历史本地 runtime closeout label 与 baseline，用于归档追溯。
 - 继续推进时必须先新增并冻结 tranche truth；不得把未冻结的 hosted/runtime/submission-grade reality 写成当前已有主线。
 
 ## 2026-04-11：目标 substrate 优先于旧本地 runtime 延长线
 
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态，而不是继续把旧本地 runtime 深磨成长期产品终态。
-- 当前本地 runtime 保留为迁移桥、兼容层与回归 oracle；任何新 tranche 都必须显式说明是在延续旧基线，还是在服务新的目标形态。
+- 当前本地 runtime 只保留在归档追溯材料里；任何新 tranche 都必须显式说明是在延续旧基线，还是在服务新的目标形态。
 
 ## 2026-04-11：`Hermes-Agent` 只指上游外部 runtime substrate
 
@@ -173,7 +173,7 @@
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 当前可执行 runtime owner 仍是 repo-local code。
-- 旧 `CLI-first + host-agent runtime` 线只保留为 compatibility bridge / regression oracle。
+- 旧 `CLI-first + host-agent runtime` 线只保留为归档参考材料。
 - 当前 `hermes_runtime.py` 路径只保留为本地迁移 scaffold。
 - `CLI / MCP / controller / upstream Hermes-Agent target / MedAutoGrant domain logic` 的边界必须显式保留，不得偷换 formal entry 或 authoring semantics。
 
