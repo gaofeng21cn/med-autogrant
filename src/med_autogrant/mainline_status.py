@@ -184,50 +184,50 @@ def _phase_details() -> dict[str, dict[str, Any]]:
     }
 
 
-def _completed_tranches() -> list[dict[str, str]]:
+def _completed_records() -> list[dict[str, str]]:
     return [
         {
-            "tranche_id": "P1",
+            "record_id": "P1",
             "title": "Hermes substrate cutover",
             "summary": "真实上游 Hermes-Agent substrate 已接住 runtime owner。",
         },
         {
-            "tranche_id": "P2",
+            "record_id": "P2",
             "title": "service-safe domain contract convergence",
             "summary": "domain entry / product entry / executor routing 已共同冻结。",
         },
         {
-            "tranche_id": "P3",
+            "record_id": "P3",
             "title": "hosted caller / OPL consumption proof",
             "summary": "external caller 已可直接消费 hosted bundle 与 domain entry contract。",
         },
         {
-            "tranche_id": "P4.A",
+            "record_id": "P4.A",
             "title": "direct grant progress / cockpit projection",
             "summary": "grant-progress / grant-cockpit 已 landed 为 controller-owned projection。",
         },
         {
-            "tranche_id": "P4.B",
+            "record_id": "P4.B",
             "title": "direct grant entry composition",
             "summary": "grant-direct-entry 已 landed，收成 direct / OPL 两份 shared envelope。",
         },
         {
-            "tranche_id": "P4.C",
+            "record_id": "P4.C",
             "title": "mainline status and grant user loop",
             "summary": "mainline-status / mainline-phase / grant-user-loop 已 landed，收成当前 user inbox shell。",
         },
         {
-            "tranche_id": "P4.D",
+            "record_id": "P4.D",
             "title": "full grant authoring executor landing",
             "summary": "direction_screening -> frozen 的全链 authoring executor 已 landed 到 service-safe command surface。",
         },
         {
-            "tranche_id": "P4.E",
+            "record_id": "P4.E",
             "title": "schema-backed frontdesk and manifest contract landing",
             "summary": "product-entry-manifest / product-frontdesk 已 landed 为独立 schema-backed、generation-time fail-closed 的 direct frontdoor contract。",
         },
         {
-            "tranche_id": "P4.F",
+            "record_id": "P4.F",
             "title": "local submission-ready package landing",
             "summary": "build-submission-ready-package 已 landed，可对满足冻结与材料完备条件的 workspace 一键导出本地 submission-ready 交付目录。",
         },
@@ -314,59 +314,79 @@ def read_mainline_status() -> dict[str, Any]:
         phase_ladder=phase_ladder,
         active_phase=_nonempty_string(runtime_owner.get("active_phase"), context="CURRENT_PROGRAM.runtime_owner.active_phase"),
     )
+    current_owner_line = _nonempty_string(
+        runtime_owner.get("current_owner_line"),
+        context="CURRENT_PROGRAM.runtime_owner.current_owner_line",
+    )
+    active_phase = _nonempty_string(runtime_owner.get("active_phase"), context="CURRENT_PROGRAM.runtime_owner.active_phase")
+    active_tranche = _nonempty_string(
+        runtime_owner.get("active_tranche"),
+        context="CURRENT_PROGRAM.runtime_owner.active_tranche",
+    )
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": _utc_now(),
         "program_id": _nonempty_string(current_program.get("program_id"), context="CURRENT_PROGRAM.program_id"),
         "ideal_target": dict(ideal_target),
-        "current_runtime_owner": {
-            "current_owner_line": _nonempty_string(
-                runtime_owner.get("current_owner_line"),
-                context="CURRENT_PROGRAM.runtime_owner.current_owner_line",
-            ),
-            "active_phase": _nonempty_string(runtime_owner.get("active_phase"), context="CURRENT_PROGRAM.runtime_owner.active_phase"),
-            "active_tranche": _nonempty_string(
-                runtime_owner.get("active_tranche"),
-                context="CURRENT_PROGRAM.runtime_owner.active_tranche",
-            ),
+        "current_line": {
+            "current_owner_line": current_owner_line,
         },
-        "current_phase": current_phase,
-        "phase_ladder": phase_ladder,
-        "completed_tranches": _completed_tranches(),
+        "current_focus": {
+            "summary": _nonempty_string(current_phase.get("summary"), context="mainline.current_focus.summary"),
+            "focus_items": _next_focus(),
+        },
+        "completed_records": _completed_records(),
         "remaining_gaps": _remaining_gaps(),
-        "explicitly_not_now": _explicitly_not_now(),
-        "next_focus": _next_focus(),
+        "maintainer_references": {
+            "runtime_owner": {
+                "current_owner_line": current_owner_line,
+                "active_phase": active_phase,
+                "active_tranche": active_tranche,
+            },
+            "current_record_detail": current_phase,
+            "phase_ladder": phase_ladder,
+            "explicitly_not_now": _explicitly_not_now(),
+        },
     }
 
 
 def read_mainline_phase_status(selector: str) -> dict[str, Any]:
     resolved_selector = _nonempty_string(selector, context="mainline_phase.selector")
     status_payload = read_mainline_status()
-    phase_ladder = list(status_payload["phase_ladder"])
+    maintainer_references = dict(status_payload["maintainer_references"])
+    current_record_detail = dict(maintainer_references["current_record_detail"])
+    phase_ladder = list(maintainer_references["phase_ladder"])
     if resolved_selector == "current":
-        phase = dict(status_payload["current_phase"])
+        record_detail = dict(current_record_detail)
     elif resolved_selector == "next":
-        phase = next((dict(item) for item in phase_ladder if item["status"] == "next"), dict(status_payload["current_phase"]))
+        record_detail = next((dict(item) for item in phase_ladder if item["status"] == "next"), dict(current_record_detail))
     else:
-        phase = next((dict(item) for item in phase_ladder if item["phase_id"] == resolved_selector), None)
-        if phase is None:
+        record_detail = next((dict(item) for item in phase_ladder if item["phase_id"] == resolved_selector), None)
+        if record_detail is None:
             raise WorkspaceStateError(f"mainline-phase 不支持 selector: {resolved_selector}")
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": _utc_now(),
         "program_id": status_payload["program_id"],
-        "current_runtime_owner": dict(status_payload["current_runtime_owner"]),
-        "phase": phase,
+        "current_line": dict(status_payload["current_line"]),
+        "maintainer_reference": {
+            "selector": resolved_selector,
+            "record_detail": record_detail,
+        },
     }
 
 
 def render_mainline_status_markdown(payload: dict[str, Any]) -> str:
+    current_line = dict(payload.get("current_line") or {})
+    current_focus = dict(payload.get("current_focus") or {})
+    maintainer_references = dict(payload.get("maintainer_references") or {})
+    runtime_owner = dict(maintainer_references.get("runtime_owner") or {})
     lines = [
         "# Mainline Status",
         "",
         f"- 当前 program: `{payload.get('program_id')}`",
-        f"- 当前阶段: `{((payload.get('current_runtime_owner') or {}).get('active_phase') or 'unknown')}`",
-        f"- 当前 tranche: `{((payload.get('current_runtime_owner') or {}).get('active_tranche') or 'unknown')}`",
+        f"- 当前 line: `{current_line.get('current_owner_line') or 'unknown'}`",
+        f"- 当前 focus: `{current_focus.get('summary') or 'unknown'}`",
         "",
         "## Ideal Target",
         "",
@@ -375,38 +395,43 @@ def render_mainline_status_markdown(payload: dict[str, Any]) -> str:
     for key in ("family_top_entry", "domain_direct_entry", "runtime_substrate_owner", "authoring_truth_owner"):
         if ideal_target.get(key):
             lines.append(f"- {key}: `{ideal_target.get(key)}`")
-    lines.extend(["", "## Phase Ladder", ""])
-    for item in payload.get("phase_ladder") or []:
-        lines.append(
-            f"- 当前阶段: `{item.get('phase_id')}` `{item.get('phase_name')}`; 当前状态: `{item.get('status')}`; 当前摘要: {item.get('summary')}"
-        )
-    lines.extend(["", "## Completed Tranches", ""])
-    for item in payload.get("completed_tranches") or []:
-        lines.append(f"- `{item.get('tranche_id')}`: {item.get('summary')}")
+    lines.extend(["", "## Current Focus Items", ""])
+    for item in current_focus.get("focus_items") or []:
+        lines.append(f"- {item}")
+    lines.extend(["", "## Completed Records", ""])
+    for item in payload.get("completed_records") or []:
+        lines.append(f"- `{item.get('record_id')}`: {item.get('summary')}")
     lines.extend(["", "## Remaining Gaps", ""])
     for item in payload.get("remaining_gaps") or []:
         lines.append(f"- {item}")
-    lines.extend(["", "## Next Focus", ""])
-    for item in payload.get("next_focus") or []:
-        lines.append(f"- {item}")
+    lines.extend(["", "## Maintainer References", ""])
+    lines.append(f"- active_phase: `{runtime_owner.get('active_phase') or 'unknown'}`")
+    lines.append(f"- active_tranche: `{runtime_owner.get('active_tranche') or 'unknown'}`")
+    lines.append(
+        f"- detail query: `{public_cli_command('mainline-phase', '--phase', 'current', '--format', 'json')}`"
+    )
     return "\n".join(lines)
 
 
 def render_mainline_phase_markdown(payload: dict[str, Any]) -> str:
-    phase = dict(payload.get("phase") or {})
+    reference = dict(payload.get("maintainer_reference") or {})
+    record_detail = dict(reference.get("record_detail") or {})
+    current_line = dict(payload.get("current_line") or {})
     lines = [
-        "# Mainline Phase",
+        "# Mainline Maintainer Reference",
         "",
-        f"- 当前阶段: `{phase.get('phase_id')}`",
-        f"- 阶段名称: `{phase.get('phase_name')}`",
-        f"- 当前状态: `{phase.get('status')}`",
+        f"- 当前 line: `{current_line.get('current_owner_line') or 'unknown'}`",
+        f"- 维护参考 selector: `{reference.get('selector') or 'unknown'}`",
+        f"- 维护参考记录: `{record_detail.get('phase_id')}`",
+        f"- 记录名称: `{record_detail.get('phase_name')}`",
+        f"- 记录状态: `{record_detail.get('status')}`",
     ]
-    if phase.get("summary"):
-        lines.append(f"- 当前摘要: {phase.get('summary')}")
+    if record_detail.get("summary"):
+        lines.append(f"- 当前摘要: {record_detail.get('summary')}")
     lines.extend(["", "## Entry Points", ""])
-    for item in phase.get("entry_points") or []:
+    for item in record_detail.get("entry_points") or []:
         lines.append(f"- `{item.get('name')}`: `{item.get('command')}`")
     lines.extend(["", "## Exit Criteria", ""])
-    for item in phase.get("exit_criteria") or []:
+    for item in record_detail.get("exit_criteria") or []:
         lines.append(f"- {item}")
     return "\n".join(lines)

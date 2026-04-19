@@ -824,14 +824,29 @@ class MedAutoGrantProductEntry:
         )
         mainline_payload = read_mainline_status()
         mainline_snapshot = _build_mainline_snapshot(mainline_payload)
-        current_runtime_owner = _require_mapping(
+        current_line = _require_mapping(
             mainline_payload,
-            "current_runtime_owner",
+            "current_line",
             context="mainline_status",
         )
-        current_phase = _require_mapping(
+        current_focus = _require_mapping(
             mainline_payload,
-            "current_phase",
+            "current_focus",
+            context="mainline_status",
+        )
+        maintainer_references = _require_mapping(
+            mainline_payload,
+            "maintainer_references",
+            context="mainline_status",
+        )
+        current_runtime_owner = _require_mapping(
+            maintainer_references,
+            "runtime_owner",
+            context="mainline_status.maintainer_references",
+        )
+        current_phase = _require_mapping(
+            maintainer_references,
+            "current_record_detail",
             context="mainline_status",
         )
         task_intent_placeholder = "<describe-task-intent>"
@@ -909,7 +924,7 @@ class MedAutoGrantProductEntry:
             needs_author_decision=bool(progress_projection.get("needs_author_decision")),
             review_surface_ref="/product_entry_manifest/operator_loop_surface",
             event_envelope_surface_ref="/product_entry_manifest/recommended_command",
-            checkpoint_lineage_surface_ref="/product_entry_manifest/repo_mainline/phase_status",
+            checkpoint_lineage_surface_ref="/product_entry_manifest/repo_mainline/active_phase",
             resume_surface_kind=GRANT_USER_LOOP_KIND,
         )
         route_report = self._domain_entry.dispatch(
@@ -1041,9 +1056,9 @@ class MedAutoGrantProductEntry:
         )
         product_entry_overview = _build_shared_product_entry_overview(
             summary=_require_nonempty_string_from_mapping(
-                current_phase,
+                current_focus,
                 "summary",
-                context="mainline_status.current_phase",
+                context="mainline_status.current_focus",
             ),
             frontdesk_command=product_frontdesk_command,
             recommended_command=grant_user_loop_command,
@@ -1084,27 +1099,27 @@ class MedAutoGrantProductEntry:
                 context="mainline_status.current_phase",
             ),
             "phase_summary": _require_nonempty_string_from_mapping(
-                current_phase,
+                current_focus,
                 "summary",
-                context="mainline_status.current_phase",
+                context="mainline_status.current_focus",
             ),
             "active_phase": _require_nonempty_string_from_mapping(
                 current_runtime_owner,
                 "active_phase",
-                context="mainline_status.current_runtime_owner",
+                context="mainline_status.maintainer_references.runtime_owner",
             ),
             "active_tranche": _require_nonempty_string_from_mapping(
                 current_runtime_owner,
                 "active_tranche",
-                context="mainline_status.current_runtime_owner",
+                context="mainline_status.maintainer_references.runtime_owner",
             ),
             "next_focus": list(mainline_snapshot["next_focus"]),
         }
         runtime_summary = {
             "current_owner_line": _require_nonempty_string_from_mapping(
-                current_runtime_owner,
+                current_line,
                 "current_owner_line",
-                context="mainline_status.current_runtime_owner",
+                context="mainline_status.current_line",
             ),
             "runtime_owner": "upstream_hermes_agent",
         }
@@ -1507,9 +1522,9 @@ class MedAutoGrantProductEntry:
                 product_entry_readiness=product_entry_readiness,
                 product_entry_status={
                     "summary": _require_nonempty_string_from_mapping(
-                        current_phase,
+                        current_focus,
                         "summary",
-                        context="mainline_status.current_phase",
+                        context="mainline_status.current_focus",
                     ),
                     "next_focus": list(mainline_snapshot["next_focus"]),
                     "remaining_gaps_count": len(mainline_snapshot["remaining_gaps"]),
@@ -1680,15 +1695,15 @@ class MedAutoGrantProductEntry:
         current_selection = document.get("current_selection") if isinstance(document.get("current_selection"), Mapping) else {}
         draft_id = _require_optional_string(current_selection.get("active_draft_id"), field_name="draft_id")
         mainline_payload = read_mainline_status()
-        current_runtime_owner = _require_mapping(
+        current_line = _require_mapping(
             mainline_payload,
-            "current_runtime_owner",
+            "current_line",
             context="mainline_status",
         )
         current_owner_line = _require_nonempty_string_from_mapping(
-            current_runtime_owner,
+            current_line,
             "current_owner_line",
-            context="mainline_status.current_runtime_owner",
+            context="mainline_status.current_line",
         )
         validate_command = public_cli_command(
             "validate-workspace", "--input", str(resolved_input_path), "--format", "json"
@@ -2319,29 +2334,44 @@ def _validate_grant_direct_entry_contract(
 
 
 def _build_mainline_snapshot(mainline_status: Mapping[str, Any]) -> dict[str, Any]:
-    current_runtime_owner = _require_mapping(
+    current_line = _require_mapping(
         mainline_status,
-        "current_runtime_owner",
+        "current_line",
         context="mainline_status",
     )
-    phase_ladder = mainline_status.get("phase_ladder")
+    current_focus = _require_mapping(
+        mainline_status,
+        "current_focus",
+        context="mainline_status",
+    )
+    maintainer_references = _require_mapping(
+        mainline_status,
+        "maintainer_references",
+        context="mainline_status",
+    )
+    current_runtime_owner = _require_mapping(
+        maintainer_references,
+        "runtime_owner",
+        context="mainline_status.maintainer_references",
+    )
+    phase_ladder = maintainer_references.get("phase_ladder")
     if not isinstance(phase_ladder, list):
-        raise WorkspaceStateError("mainline_status.phase_ladder 必须为 list。")
+        raise WorkspaceStateError("mainline_status.maintainer_references.phase_ladder 必须为 list。")
     return {
         "current_owner_line": _require_nonempty_string_from_mapping(
-            current_runtime_owner,
+            current_line,
             "current_owner_line",
-            context="mainline_status.current_runtime_owner",
+            context="mainline_status.current_line",
         ),
         "active_phase": _require_nonempty_string_from_mapping(
             current_runtime_owner,
             "active_phase",
-            context="mainline_status.current_runtime_owner",
+            context="mainline_status.maintainer_references.runtime_owner",
         ),
         "active_tranche": _require_nonempty_string_from_mapping(
             current_runtime_owner,
             "active_tranche",
-            context="mainline_status.current_runtime_owner",
+            context="mainline_status.maintainer_references.runtime_owner",
         ),
         "phase_map": [
             {
@@ -2353,8 +2383,8 @@ def _build_mainline_snapshot(mainline_status: Mapping[str, Any]) -> dict[str, An
             if isinstance(item, Mapping)
         ],
         "next_focus": _read_nonempty_string_list(
-            mainline_status.get("next_focus"),
-            context="mainline_status.next_focus",
+            current_focus.get("focus_items"),
+            context="mainline_status.current_focus.focus_items",
         ),
         "remaining_gaps": _read_nonempty_string_list(
             mainline_status.get("remaining_gaps"),

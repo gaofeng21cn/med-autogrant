@@ -5,7 +5,7 @@ from typing import Final
 
 PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
     "workspace": "工作区诊断、摘要、阶段路由与 progress cockpit。",
-    "mainline": "主线阶段、当前 tranche 与 phase 梯子。",
+    "mainline": "当前 line/current focus 概览与维护者参考记录。",
     "product": "grant direct entry、frontdesk 与 product-entry contract。",
     "runtime": "Hermes substrate 探测与本地 runtime 运行/恢复。",
     "pass": "authoring pass 执行入口。",

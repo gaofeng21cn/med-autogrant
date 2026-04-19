@@ -58,14 +58,14 @@ _HUMAN_FIELD_LABELS = {
     "verdict": "当前结论",
     "overall_diagnosis": "整体诊断",
     "recommended_next_stage": "建议下一阶段",
-    "active_tranche": "当前 tranche",
+    "active_tranche": "维护者参考 tranche",
     "next_action": "当前动作",
     "run_recommended_route": "推荐执行命令",
     "ready_to_try_now": "当前可直接尝试",
     "recommended_check_command": "前置检查命令",
     "recommended_start_command": "推荐启动命令",
     "manifest_kind": "manifest 类型",
-    "active_phase": "当前主线 phase",
+    "active_phase": "维护者参考 phase",
     "entry_mode": "当前入口模式",
     "task_intent": "当前任务意图",
     "target_domain_id": "目标域",
@@ -73,6 +73,8 @@ _HUMAN_FIELD_LABELS = {
     "output_path": "输出位置",
     "output_dir": "输出位置",
     "program_id": "当前 program",
+    "current_line": "当前 line",
+    "current_focus": "当前 focus",
 }
 
 _HUMAN_TOKEN_FIELDS = {
@@ -192,13 +194,13 @@ def build_parser() -> argparse.ArgumentParser:
         subparsers,
         "mainline-status",
         handle_mainline_status,
-        "输出当前 repo 主线阶段、理想目标与 remaining gaps。",
+        "输出当前 repo 主线的 current line / current focus / completed records / remaining gaps。",
     )
     _add_phase_command(
         subparsers,
         "mainline-phase",
         handle_mainline_phase,
-        "输出某个 mainline phase 的当前入口与退出条件。",
+        "输出 maintainer reference 下某个记录卡片的入口与退出条件。",
     )
     _add_direct_entry_command(
         subparsers,
@@ -990,23 +992,30 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         return "\n".join(lines)
 
     if command == "mainline-status":
-        current_phase = payload["current_phase"]
+        current_line = payload["current_line"]
+        current_focus = payload["current_focus"]
         lines = [
             _render_field("program_id", payload["program_id"]),
-            f"当前阶段: {current_phase['phase_id']}",
-            f"当前 tranche: {payload['current_runtime_owner']['active_tranche']}",
-            f"当前判断: {current_phase['summary']}",
+            _render_field("current_line", current_line["current_owner_line"]),
+            _render_field("current_focus", current_focus["summary"]),
         ]
-        for item in payload["next_focus"]:
-            lines.append(f"- 下一步关注: {item}")
+        for item in current_focus["focus_items"]:
+            lines.append(f"- 当前 focus 项: {item}")
+        for item in payload["completed_records"]:
+            lines.append(f"- 已完成 record {item['record_id']}: {item['summary']}")
+        for item in payload["remaining_gaps"]:
+            lines.append(f"- 剩余 gap: {item}")
         return "\n".join(lines)
 
     if command == "mainline-phase":
-        phase = payload["phase"]
+        reference = payload["maintainer_reference"]
+        phase = reference["record_detail"]
         lines = [
-            f"当前阶段: {phase['phase_id']}",
-            f"阶段名称: {phase['phase_name']}",
-            f"当前状态: {_phase_status_label(phase['status'])}",
+            f"当前 line: {payload['current_line']['current_owner_line']}",
+            f"维护参考 selector: {reference['selector']}",
+            f"维护参考记录: {phase['phase_id']}",
+            f"记录名称: {phase['phase_name']}",
+            f"记录状态: {_phase_status_label(phase['status'])}",
         ]
         for item in phase["entry_points"]:
             lines.append(f"- 可用入口 {_entry_surface_label(item['name'])}: {item['command']}")
@@ -1035,12 +1044,13 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
 
     if command == "grant-user-loop":
         user_loop = payload["grant_user_loop"]
+        focus_items = list(user_loop["mainline_snapshot"]["next_focus"])
         lines = [
             _render_field("grant_run_id", payload["grant_run_id"]),
             _render_field("workspace_id", payload["workspace_id"]),
             _render_field("draft_id", payload["draft_id"]),
             _render_field("lifecycle_stage", payload["lifecycle_stage"]),
-            _render_field("active_tranche", user_loop["mainline_snapshot"]["active_tranche"]),
+            _render_field("current_focus", focus_items[0] if focus_items else user_loop["mainline_snapshot"]["active_tranche"]),
             _render_field("next_action", user_loop["next_action"]["action_kind"]),
         ]
         if user_loop["next_action"]["command"] is not None:
@@ -1058,8 +1068,9 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             _render_field("draft_id", payload["draft_id"]),
             _render_field("lifecycle_stage", payload["lifecycle_stage"]),
             _render_field("manifest_kind", manifest["manifest_kind"]),
+            _render_field("current_line", manifest["runtime"]["current_owner_line"]),
+            _render_field("current_focus", manifest["repo_mainline"]["phase_summary"]),
             _render_field("active_phase", manifest["repo_mainline"]["active_phase"]),
-            _render_field("active_tranche", manifest["repo_mainline"]["active_tranche"]),
         ]
         for name, item in manifest["product_entry_shell"].items():
             lines.append(f"- {_render_shell_name(name)}: {item['command']}")

@@ -1951,7 +1951,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             manifest["family_orchestration"]["checkpoint_lineage_surface"]["ref"],
-            "/product_entry_manifest/repo_mainline/phase_status",
+            "/product_entry_manifest/repo_mainline/active_phase",
         )
         self.assertEqual(manifest["product_entry_quickstart"]["surface_kind"], "product_entry_quickstart")
         self.assertEqual(manifest["product_entry_quickstart"]["recommended_step_id"], "open_frontdesk")

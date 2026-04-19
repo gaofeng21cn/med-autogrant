@@ -363,7 +363,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("human_gates", payload["family_orchestration"])
         self.assertIn("resume_contract", payload["family_orchestration"])
 
-    def test_mainline_status_projects_current_phase_and_tranche(self) -> None:
+    def test_mainline_status_projects_current_line_focus_and_maintainer_references(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "mainline-status",
             "--format",
@@ -374,9 +374,13 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(stderr, "")
         payload = json.loads(stdout)
         self.assertEqual(payload["program_id"], "med-autogrant-mainline")
-        self.assertEqual(payload["current_phase"]["phase_id"], "P4")
         self.assertEqual(
-            payload["current_runtime_owner"]["active_tranche"],
+            payload["current_line"]["current_owner_line"],
+            "CLI-first with real upstream Hermes-Agent runtime substrate",
+        )
+        self.assertTrue(payload["current_focus"]["summary"])
+        self.assertEqual(
+            payload["maintainer_references"]["runtime_owner"]["active_tranche"],
             "P4.F local submission-ready package landing",
         )
 
@@ -390,10 +394,11 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         self.assertIn("当前 program:", stdout)
-        self.assertIn("当前阶段: P4", stdout)
-        self.assertIn("当前 tranche: P4.F local submission-ready package landing", stdout)
-        self.assertIn("当前判断:", stdout)
-        self.assertIn("- 下一步关注:", stdout)
+        self.assertIn("当前 line:", stdout)
+        self.assertIn("当前 focus:", stdout)
+        self.assertIn("- 当前 focus 项:", stdout)
+        self.assertIn("- 已完成 record P4.F:", stdout)
+        self.assertIn("- 剩余 gap:", stdout)
         self.assertNotIn("program_id:", stdout)
         self.assertNotIn("active_phase:", stdout)
         self.assertNotIn("active_tranche:", stdout)
@@ -481,8 +486,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
         payload = json.loads(stdout)
-        self.assertEqual(payload["phase"]["phase_id"], "P4")
-        self.assertEqual(payload["phase"]["status"], "next")
+        self.assertEqual(payload["maintainer_reference"]["record_detail"]["phase_id"], "P4")
+        self.assertEqual(payload["maintainer_reference"]["record_detail"]["status"], "next")
 
     def test_mainline_phase_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -495,9 +500,11 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
-        self.assertIn("当前阶段: P4", stdout)
-        self.assertIn("阶段名称:", stdout)
-        self.assertIn("当前状态:", stdout)
+        self.assertIn("当前 line:", stdout)
+        self.assertIn("维护参考 selector:", stdout)
+        self.assertIn("维护参考记录: P4", stdout)
+        self.assertIn("记录名称:", stdout)
+        self.assertIn("记录状态:", stdout)
         self.assertIn("- 可用入口", stdout)
         self.assertNotRegex(stdout, r"(?m)^phase_id:")
         self.assertNotRegex(stdout, r"(?m)^phase_name:")
