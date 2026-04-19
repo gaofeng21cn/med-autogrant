@@ -15,14 +15,14 @@
 - 稳定 `grant_run_id`、`workspace_id`、`draft_id`、`program_id` 与相关 artifact/export surface。
 - 在真实上游 `Hermes-Agent` substrate 上延续 author-side grant mainline，并把历史本地 runtime closeout 只保留给归档追溯材料。
 - 在已落地 runtime substrate 之上，保持 `product build-entry` 这层共享-envelope lightweight grant `product entry` shell 稳定，并让它同时服务 direct entry 与 `OPL` handoff。
-- 在已落地 runtime substrate 与 lightweight shell 之上，先通过 `workspace progress / workspace cockpit` 落第一棒 controller-owned、read-only 的 direct grant product projection，再继续向更成熟的 grant-facing UX 推进。
+- 在已落地 runtime substrate 与 lightweight shell 之上，通过 `workspace progress / workspace cockpit` 维持 controller-owned、read-only 的 direct grant product projection。
 - 通过 `product direct-entry` 把 direct grant entry 继续推进到组合式 product contract，并保持当前 controller-owned direct-entry 语义稳定。
 - 通过 `mainline status`、维护者参考记录与 `product user-loop` 把 repo 主线快照与当前 direct grant user loop 收成当前 inbox-like shell。
 - 把 `direction_screening -> frozen` 的 author-side 主线持续收口为 landed service-safe command surface，让人工国自然写作流程里的方向筛选、问题提纯、立项依据、适配度、提纲、正文起草与送审前冻结都能直接落到同一套 route truth 上。
 - 通过 `product manifest` 与 `product frontdesk` 把 direct grant frontdoor 收口成独立 schema-backed、generation-time fail-closed 的 contract，并把 `family_orchestration` companion 的 route status 严格对齐到共享 author-side route truth。
 - 通过 `package submission-ready` 把本地 submission-ready 交付目录收口成正式 command surface，并保持“缺材料就 fail-closed、不对外宣称官网已提交”的边界。
-- 把 hosted-friendly handoff contract 收口成 future caller 可直接消费的 entry / schema / route catalog，而不是在 bundle 外重新发明协作语义。
-- 明确这条主线从当前技术记录，到 hosted caller / `OPL` contract consumption proof，再到下一阶段 mature direct product entry 的推进顺序。
+- 把 hosted-friendly handoff contract 收口成 caller 可直接消费的 entry / schema / route catalog，并保持与当前 bundle 同步。
+- 更远期的 hosted 产品入口演进统一留在 `docs/plans/`，不写进当前主线口径。
 
 ## 范围与非目标
 

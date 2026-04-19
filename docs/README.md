@@ -21,12 +21,12 @@ This guide is for readers who need the technical records, trace records, referen
 - `Hermes-Agent` is the explicit backup mode and always-on gateway for long-running or route-specific proof work.
 - Historical program records and migration notes stay in `docs/specs/` and `docs/history/` for traceability.
 - Repo-local adapters preserve grant-domain truth, entry semantics, and route contracts.
-- The frontdesk, user-loop, projections, and local `submission-ready` package are landed, while a mature hosted grant frontend remains future work.
+- The frontdesk, user-loop, projections, and local `submission-ready` package are landed. Future hosted product expansion lives in `docs/plans/`.
 - `OPL` owns family navigation and management-shell visibility; MAG owns grant-domain truth and execution routing.
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
 - Current controller-owned, read-only projections continue to include `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`, with schema-backed boundaries above the author-side line.
 - The current grouped public shell also exposes `product build-entry`, `product manifest`, `product frontdesk`, and `package submission-ready` as the public CLI-facing entry surface.
-- The current lightweight grant `product entry` shell is the active Product-entry shell and internal domain/API catalog builder, while richer hosted product work remains future-facing.
+- The current lightweight grant `product entry` shell is the active product-entry shell and internal domain/API catalog builder. Future hosted product work stays in `docs/plans/`.
 
 ## Technical Working Set
 

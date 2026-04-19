@@ -21,12 +21,12 @@
 - `Hermes-Agent` 是显式选择时的备用模式与长久在线网关，用于长期运行或 route-specific proof 工作。
 - 历史 program 记录与迁移说明继续留在 `docs/specs/` 与 `docs/history/` 中供追溯。
 - 仓内 repo-local adapter 保留 grant-domain truth、入口语义与 route contract。
-- frontdesk、user-loop、projection 与本地 `submission-ready` package 已落地，成熟 hosted 基金前台仍是后续工作。
+- frontdesk、user-loop、projection 与本地 `submission-ready` package 已落地；未来 hosted 产品扩展统一留在 `docs/plans/`。
 - `OPL` 负责 family navigation 与 management-shell 可见性；MAG 负责 grant-domain truth 与 execution routing。
 - 当前 formal-entry matrix 仍是 `CLI`、`MCP` 与 `controller`。
 - 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`，并在作者侧主线之上保持 schema-backed 边界。
 - 当前 grouped public shell 也已经把 `product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready` 暴露成公开 CLI 入口面。
-- 当前轻量 grant `product entry` shell 就是现在的产品入口 shell 与内部 domain/API catalog builder，更完整的 hosted 产品形态仍属后续工作。
+- 当前轻量 grant `product entry` shell 就是现在的产品入口 shell 与内部 domain/API catalog builder；未来 hosted 产品形态统一留在 `docs/plans/`。
 
 ## 技术工作集
 
