@@ -8,6 +8,7 @@ from med_autogrant.public_cli import public_command_label
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 from opl_harness_shared.family_entry_contracts import (
+    build_domain_entry_command_catalog as _build_shared_domain_entry_command_catalog,
     build_family_direct_opl_shared_handoff as _build_shared_family_direct_opl_shared_handoff,
     build_family_domain_entry_contract as _build_shared_family_domain_entry_contract,
     build_family_gateway_interaction_contract as _build_shared_family_gateway_interaction_contract,
@@ -19,30 +20,7 @@ PRODUCT_ENTRY_BUILD_COMMAND = public_command_label("build-product-entry")
 SUPPORTED_PRODUCT_ENTRY_MODES = ("direct", "opl-handoff")
 SERVICE_SAFE_ENTRY_ADAPTER = "MedAutoGrantDomainEntry"
 SERVICE_SAFE_ENTRY_SURFACE_KIND = "service-safe-domain-entry-command"
-SUPPORTED_DOMAIN_ENTRY_COMMANDS = (
-    "probe-upstream-hermes",
-    "validate-workspace",
-    "summarize-workspace",
-    "next-step",
-    "critique-summary",
-    "stage-route-report",
-    "runtime-run",
-    "runtime-resume",
-    "execute-direction-screening-pass",
-    "execute-question-refinement-pass",
-    "execute-argument-building-pass",
-    "execute-fit-alignment-pass",
-    "execute-outline-pass",
-    "execute-drafting-pass",
-    "build-artifact-bundle",
-    "execute-critique-pass",
-    "execute-revision-pass",
-    "execute-freeze-pass",
-    "build-final-package",
-    "build-hosted-contract-bundle",
-    "build-submission-ready-package",
-)
-DOMAIN_ENTRY_COMMAND_CONTRACTS = (
+DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES: list[dict[str, Any]] = [
     {"command": "probe-upstream-hermes", "required_fields": [], "optional_fields": []},
     {"command": "validate-workspace", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "summarize-workspace", "required_fields": ["input_path"], "optional_fields": []},
@@ -116,18 +94,18 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = (
         "required_fields": ["input_path", "output_dir"],
         "optional_fields": [],
     },
-)
+]
 
 
 def build_domain_entry_contract() -> dict[str, Any]:
+    catalog = _build_shared_domain_entry_command_catalog(DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES)
     return _build_shared_family_domain_entry_contract(
         entry_adapter=SERVICE_SAFE_ENTRY_ADAPTER,
         service_safe_surface_kind=SERVICE_SAFE_ENTRY_SURFACE_KIND,
         product_entry_builder_command=PRODUCT_ENTRY_BUILD_COMMAND,
         product_entry_kind=PRODUCT_ENTRY_KIND,
         supported_entry_modes=list(SUPPORTED_PRODUCT_ENTRY_MODES),
-        supported_commands=list(SUPPORTED_DOMAIN_ENTRY_COMMANDS),
-        command_contracts=[dict(contract) for contract in DOMAIN_ENTRY_COMMAND_CONTRACTS],
+        **catalog,
     )
 
 
