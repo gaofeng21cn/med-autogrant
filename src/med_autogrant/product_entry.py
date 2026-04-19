@@ -45,8 +45,7 @@ from opl_harness_shared.automation_companions import (
     build_automation_descriptor as _build_shared_automation_descriptor,
 )
 from opl_harness_shared.product_entry_companions import (
-    build_family_frontdesk_entry_surfaces as _build_shared_family_frontdesk_entry_surfaces,
-    build_family_product_frontdesk as _build_shared_family_product_frontdesk,
+    build_family_product_frontdesk_from_manifest as _build_shared_family_product_frontdesk_from_manifest,
     build_family_product_entry_manifest as _build_shared_family_product_entry_manifest,
     build_product_entry_start as _build_shared_product_entry_start,
     build_product_entry_overview as _build_shared_product_entry_overview,
@@ -1568,19 +1567,9 @@ class MedAutoGrantProductEntry:
             "product_entry_manifest",
             context="product_frontdesk",
         )
-        product_entry_shell = _require_mapping(
-            manifest,
-            "product_entry_shell",
-            context="product_frontdesk.product_entry_manifest",
-        )
-        shared_handoff = _require_mapping(
-            manifest,
-            "shared_handoff",
-            context="product_frontdesk.product_entry_manifest",
-        )
-
-        entry_surfaces = _build_shared_family_frontdesk_entry_surfaces(
-            product_entry_shell=dict(product_entry_shell),
+        product_frontdesk = _build_shared_family_product_frontdesk_from_manifest(
+            recommended_action="inspect_or_prepare_grant_loop",
+            product_entry_manifest=dict(manifest),
             shell_aliases={
                 "frontdesk": "product_frontdesk",
                 "grant_progress": "grant_progress",
@@ -1588,13 +1577,7 @@ class MedAutoGrantProductEntry:
                 "grant_direct_entry": "grant_direct_entry",
                 "grant_user_loop": "grant_user_loop",
             },
-            shared_handoff=dict(shared_handoff),
-        )
-
-        product_frontdesk = _build_shared_family_product_frontdesk(
-            recommended_action="inspect_or_prepare_grant_loop",
-            product_entry_manifest=dict(manifest),
-            entry_surfaces=entry_surfaces,
+            schema_ref=f"contracts/schemas/v1/{PRODUCT_FRONTDESK_SCHEMA_FILE}",
             notes=[
                 "This frontdesk surface is a controller-owned direct grant front door over the landed product-entry shell.",
                 "It does not claim that mature Web UI or hosted runtime is already landed.",
@@ -1607,7 +1590,6 @@ class MedAutoGrantProductEntry:
                 )),
             },
         )
-        product_frontdesk["schema_ref"] = f"contracts/schemas/v1/{PRODUCT_FRONTDESK_SCHEMA_FILE}"
 
         payload = {
             "ok": True,

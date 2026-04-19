@@ -8,9 +8,9 @@ from med_autogrant.public_cli import public_command_label
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 from opl_harness_shared.family_entry_contracts import (
+    build_family_direct_opl_shared_handoff as _build_shared_family_direct_opl_shared_handoff,
     build_family_domain_entry_contract as _build_shared_family_domain_entry_contract,
-    build_gateway_interaction_contract as _build_shared_gateway_interaction_contract,
-    build_shared_handoff as _build_shared_handoff,
+    build_family_gateway_interaction_contract as _build_shared_family_gateway_interaction_contract,
 )
 
 
@@ -135,20 +135,8 @@ def build_gateway_interaction_contract(
     *,
     extra_payload: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    return _build_shared_gateway_interaction_contract(
-        frontdoor_owner="opl_gateway_or_domain_gui",
-        user_interaction_mode="natural_language_frontdoor",
-        user_commands_required=False,
-        command_surfaces_for_agent_consumption_only=True,
+    return _build_shared_family_gateway_interaction_contract(
         shared_downstream_entry=SERVICE_SAFE_ENTRY_ADAPTER,
-        shared_handoff_envelope=[
-            "target_domain_id",
-            "task_intent",
-            "entry_mode",
-            "workspace_locator",
-            "runtime_session_contract",
-            "return_surface_contract",
-        ],
         extra_payload=extra_payload,
     )
 
@@ -158,13 +146,7 @@ def build_shared_handoff(
     direct_entry_builder_command: str,
     opl_handoff_builder_command: str,
 ) -> dict[str, Any]:
-    return _build_shared_handoff(
-        direct_entry_builder={
-            "command": direct_entry_builder_command,
-            "entry_mode": "direct",
-        },
-        opl_handoff_builder={
-            "command": opl_handoff_builder_command,
-            "entry_mode": "opl-handoff",
-        },
+    return _build_shared_family_direct_opl_shared_handoff(
+        direct_entry_builder_command=direct_entry_builder_command,
+        opl_handoff_builder_command=opl_handoff_builder_command,
     )
