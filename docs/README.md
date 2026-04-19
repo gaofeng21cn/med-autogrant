@@ -19,7 +19,7 @@ This guide is for readers who need the repo-tracked contracts, current-truth spe
 - `Med Auto Grant` is the first-level medical grant domain module / agent under the `OPL` GUI and management shell.
 - Codex is the default interaction and execution path for grant authoring routes.
 - `Hermes-Agent` is the explicit backup mode and always-on gateway for long-running or route-specific proof work.
-- Historical closeout and migration records stay in `docs/specs/` and `docs/history/` for traceability.
+- Historical program records and migration notes stay in `docs/specs/` and `docs/history/` for traceability.
 - Repo-local adapters preserve grant-domain truth, entry semantics, and route contracts.
 - The current frontdesk, user-loop, projections, and local `submission-ready` package are landed, while a mature hosted grant frontend is still future work.
 - `OPL` owns family navigation and management-shell visibility; MAG owns grant-domain truth and execution routing.

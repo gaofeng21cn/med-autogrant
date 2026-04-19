@@ -26,7 +26,7 @@ Date: `2026-04-18`
 - `Med Auto Grant` 是一级 grant domain module / agent，优先对齐 `workspace progress / workspace cockpit / product direct-entry / product user-loop`，并把 `workspace / draft / program` 作为 domain truth 边界。
 - `Codex` 是默认交互与执行路径；`Hermes-Agent` 是备用模式与长期在线网关；MAG 继续保留 grant 质量门控、review gate、package gate 与 route truth。
 
-## 当前基线（repo-verified）
+## 当前 repo-tracked truth 入口
 
 - Latest absorbed runtime slice：`Upstream Hermes-Agent Fast Cutover`
 - repo-tracked current truth 入口：
@@ -51,31 +51,20 @@ Date: `2026-04-18`
   - `docs/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`
   - `docs/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
 
-## 当前阶段（active mainline）
+## 当前公开执行线
 
-- Current phase：`P4 mature direct grant frontdesk / user-loop`
-- Active tranche：`P4.F local submission-ready package landing`
 - Current execution line：`OPL shell + MAG domain agent + Codex default execution + Hermes-Agent backup gateway`
+- 当前公开用户回路收口为 `product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`。
+- 当前公开 CLI 入口面继续围绕 `product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready`。
+- 当前 controller-owned projection 继续围绕 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`。
+- `pass critique --executor hermes_native_proof` 继续作为显式 proof lane；默认执行器继续保持 `Codex CLI autonomous executor`。
 
-## OPL 对齐的理想目标与阶段图
+## 追溯入口
 
-- 理想目标：
-  - `OPL` 保持 family-level 顶层 GUI / management shell
-  - `Med Auto Grant` 作为一级 domain module / agent
-  - `Codex` 保持默认交互与执行路径
-  - `Hermes-Agent` 保持备用模式与长期在线网关
-  - `Med Auto Grant` 保持 author-side grant truth / route / export owner
-- 阶段图：
-  - `P1` `Hermes substrate cutover`：已完成，作为内部运行时历史与备用网关基础保留
-  - `P2` `service-safe domain contract convergence`：已完成
-  - `P3` `hosted caller / OPL consumption proof`：已完成
-  - `P4` `mature direct grant frontdesk / user-loop`：下一阶段
-  - 当前已 landed 的第一棒：`P4.A direct grant progress / cockpit projection`
-  - 当前已 landed 的第二棒：`P4.B direct grant entry composition`
-  - 当前已 landed 的第三棒：`P4.C mainline status and grant user loop`
-  - 当前已 landed 的第四棒：`P4.D full grant authoring executor landing`
-  - 当前已 landed 的第五棒：`P4.E schema-backed frontdesk and manifest contract landing`
-  - 当前已 landed 的第六棒：`P4.F local submission-ready package landing`
+- `docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md` 继续记录理想目标与阶段图。
+- `docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md` 继续记录 hosted caller / `OPL` caller 的可消费性证明。
+- `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` 与 `docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md` 继续记录 runtime substrate 对齐过程。
+- `docs/specs/2026-04-07-*`、`docs/specs/2026-04-10-*`、`docs/specs/2026-04-11-*` 与 superseded 快照继续保留为历史追溯材料。
 
 ## 长线目标（规划层）
 
@@ -96,8 +85,8 @@ Date: `2026-04-18`
 8. `pending-handoff-requirements.schema.json` 现在只保留历史追溯用途；当前主线 route output 已完全收口为 landed route catalog。
 9. Hermes-native 口径只认 full agent loop，不认 chat relay；当前 `critique` 的 experimental proof lane 已经通过 `run_agent.AIAgent.run_conversation(...)` 落到一条真实 full-loop route，但若本机 Hermes 仍走 `custom + chat_completions`，当前只承认 `FULL_AGENT_LOOP_PRESENT_BUT_NOT_YET_EQUIVALENT_TO_CODEX / PROVIDER_REASONING_NOT_PROVED_KEEP_DEFAULT`，不会把它误写成默认 executor 已替代。
 10. `service-safe-domain-surface.schema.json`、`executor-routing-contract.schema.json`、`product-entry.schema.json`、`product-entry-manifest.schema.json`、`product-frontdesk.schema.json` 与 `hosted-contract-bundle.schema.json` 现在已经进入 repo-tracked schema index；任何后续 product-entry / frontdoor / routing / hosted contract bundle 变更都必须同步更新 schema、tests 与 current truth。
-11. `P3` 已经证明 external hosted caller / `OPL` caller 可以直接消费已冻结的 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`；后续继续沿 `P4` 的诚实 product 面推进。
-12. `P4.A / P4.B / P4.C / P4.D / P4.E / P4.F` 当前只允许沿 controller-owned 的 product 面与已冻结的 service-safe route catalog 继续推进：`workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`、`product manifest`、`product frontdesk`、`package submission-ready` 与 `pass direction-screening` 到 `package hosted-contract-bundle` 这一整套 surface 现在都是 schema-backed、generation-time fail-closed 的 product contract、controller surface 或 landed command；Web UI、hosted runtime、`OPL Gateway` 和官网自动提交器继续作为外部产品边界管理。
+11. Hosted caller / `OPL` caller 现在可以直接消费已冻结的 `domain_entry_contract`、`schema_contract`、`authoring_contract`、`supported_commands` 与 `command_contracts`；后续推进继续沿当前 controller-owned product surfaces 与 service-safe route catalog 收口。
+12. `workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`、`product manifest`、`product frontdesk`、`package submission-ready` 与 `pass direction-screening` 到 `package hosted-contract-bundle` 这一整套 surface 继续作为 schema-backed、generation-time fail-closed 的 product contract、controller surface 或 landed command；Web UI、hosted runtime、`OPL Gateway` 和官网自动提交器继续作为外部产品边界管理。
 
 ## 默认验证
 

@@ -62,7 +62,7 @@ You can start with prompts like:
 ## Technical Notes For Maintainers
 
 The repository home stays user-facing on purpose.
-Runtime truth, product-entry contracts, hosted bundle records, and phase documents live in the technical docs:
+Runtime truth, product-entry contracts, hosted bundle records, and runtime-program records live in the technical docs:
 
 - [Docs Guide](./docs/README.md)
 - [Project](./docs/project.md)
