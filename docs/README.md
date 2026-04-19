@@ -19,7 +19,7 @@ This guide is for readers who need the repo-tracked contracts, current-truth spe
 - `Med Auto Grant` is the first-level medical grant domain module / agent under the `OPL` GUI and management shell.
 - Codex is the default interaction and execution path for grant authoring routes.
 - `Hermes-Agent` is the explicit backup mode and always-on gateway for long-running or route-specific proof work.
-- Historical local-runtime closeout material stays in `docs/specs/` and `docs/history/` for traceability.
+- Historical closeout and migration records stay in `docs/specs/` and `docs/history/` for traceability.
 - Repo-local adapters preserve grant-domain truth, entry semantics, and route contracts.
 - The current frontdesk, user-loop, projections, and local `submission-ready` package are landed, while a mature hosted grant frontend is still future work.
 - `OPL` owns family navigation and management-shell visibility; MAG owns grant-domain truth and execution routing.
@@ -52,20 +52,23 @@ These files are the default public-facing entry surfaces and should stay mirrore
 
 ## Repo-Tracked Technical Docs
 
-### Current truth and activation records
+### Current truth and active frontdoor records
 
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
 - [Specs directory](./specs/)
+- [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md)
+- [P4.F local submission-ready package current truth](./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md)
+
+The current grant product-entry shell remains available as the domain/API catalog builder. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible for hosted caller / external caller consumption.
+
+### Traceability records
+
 - [Upstream Hermes-Agent fast cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md)
 - [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md)
-- [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md)
 - [Hosted contract bundle entry and route catalog current truth](./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md)
 - [Hosted caller consumption proof current truth](./specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md)
 - [OPL-aligned ideal target and phase map current truth](./specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md)
 - [Full grant authoring executor current truth](./specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
-- [P4.F local submission-ready package current truth](./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md)
-
-The current grant product-entry shell remains available as the domain/API catalog builder. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible for hosted caller / external caller consumption.
 
 ### Contracts and schemas
 

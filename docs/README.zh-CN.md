@@ -19,7 +19,7 @@
 - `Med Auto Grant` 是 `OPL` GUI / management shell 下的一级医学基金 domain module / agent。
 - Codex 是基金 authoring route 的默认交互与执行路径。
 - `Hermes-Agent` 是显式选择时的备用模式与长久在线网关，用于长期运行或 route-specific proof 工作。
-- 历史本地 runtime closeout 材料继续留在 `docs/specs/` 与 `docs/history/` 中供追溯。
+- 历史 closeout 与迁移记录继续留在 `docs/specs/` 与 `docs/history/` 中供追溯。
 - 仓内 repo-local adapter 保留 grant-domain truth、入口语义与 route contract。
 - 当前 frontdesk、user-loop、projection 与本地 `submission-ready` package 已落地，但成熟 hosted 基金前台仍是后续工作。
 - `OPL` 负责 family navigation 与 management-shell 可见性；MAG 负责 grant-domain truth 与 execution routing。
@@ -52,20 +52,23 @@
 
 ## 仓库跟踪的技术文档
 
-### Current truth 与 activation 记录
+### 当前真相与活跃 frontdoor 记录
 
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
 - [Specs 目录](./specs/)
+- [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md)
+- [P4.F local submission-ready package current truth](./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md)
+
+当前 grant product-entry shell 继续作为 domain/API catalog builder；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 继续暴露给 hosted caller / 外部 caller 使用。
+
+### 追溯记录
+
 - [Upstream Hermes-Agent Fast Cutover current truth](./specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md)
 - [Lightweight product entry and OPL handoff current truth](./specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md)
-- [Schema-backed product entry and routing contract current truth](./specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md)
 - [Hosted contract bundle entry and route catalog current truth](./specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md)
 - [Hosted caller consumption proof current truth](./specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md)
 - [OPL-aligned ideal target and phase map current truth](./specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md)
 - [Full grant authoring executor current truth](./specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
-- [P4.F local submission-ready package current truth](./specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md)
-
-当前 grant product-entry shell 继续作为 domain/API catalog builder；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 继续暴露给 hosted caller / 外部 caller 使用。
 
 ### Contracts 与 schema
 
