@@ -45,6 +45,7 @@ from opl_harness_shared.automation_companions import (
     build_automation_descriptor as _build_shared_automation_descriptor,
 )
 from opl_harness_shared.product_entry_companions import (
+    build_family_frontdesk_entry_surfaces as _build_shared_family_frontdesk_entry_surfaces,
     build_family_product_frontdesk as _build_shared_family_product_frontdesk,
     build_family_product_entry_manifest as _build_shared_family_product_entry_manifest,
     build_product_entry_start as _build_shared_product_entry_start,
@@ -1578,42 +1579,16 @@ class MedAutoGrantProductEntry:
             context="product_frontdesk.product_entry_manifest",
         )
 
-        entry_surfaces = {
-            "frontdesk": dict(_require_mapping(
-                product_entry_shell,
-                "product_frontdesk",
-                context="product_frontdesk.product_entry_shell",
-            )),
-            "grant_progress": dict(_require_mapping(
-                product_entry_shell,
-                "grant_progress",
-                context="product_frontdesk.product_entry_shell",
-            )),
-            "grant_cockpit": dict(_require_mapping(
-                product_entry_shell,
-                "grant_cockpit",
-                context="product_frontdesk.product_entry_shell",
-            )),
-            "grant_direct_entry": dict(_require_mapping(
-                product_entry_shell,
-                "grant_direct_entry",
-                context="product_frontdesk.product_entry_shell",
-            )),
-            "grant_user_loop": dict(_require_mapping(
-                product_entry_shell,
-                "grant_user_loop",
-                context="product_frontdesk.product_entry_shell",
-            )),
-        }
-        entry_surfaces.update(
-            {
-                key: dict(_require_mapping(
-                    shared_handoff,
-                    key,
-                    context="product_frontdesk.shared_handoff",
-                ))
-                for key in ("direct_entry_builder", "opl_handoff_builder")
-            }
+        entry_surfaces = _build_shared_family_frontdesk_entry_surfaces(
+            product_entry_shell=dict(product_entry_shell),
+            shell_aliases={
+                "frontdesk": "product_frontdesk",
+                "grant_progress": "grant_progress",
+                "grant_cockpit": "grant_cockpit",
+                "grant_direct_entry": "grant_direct_entry",
+                "grant_user_loop": "grant_user_loop",
+            },
+            shared_handoff=dict(shared_handoff),
         )
 
         product_frontdesk = _build_shared_family_product_frontdesk(

@@ -557,10 +557,10 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("当前 workspace:", stdout)
         self.assertIn("当前草稿编号:", stdout)
         self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("当前 tranche:", stdout)
+        self.assertIn("当前 focus:", stdout)
         self.assertIn("当前动作:", stdout)
         self.assertIn("推荐执行命令:", stdout)
-        self.assertNotIn("active_tranche:", stdout)
+        self.assertNotIn("current_focus:", stdout)
         self.assertNotIn("next_action:", stdout)
         self.assertNotIn("run_recommended_route:", stdout)
 
@@ -614,11 +614,11 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("当前草稿编号:", stdout)
         self.assertIn("当前阶段: 批注审阅", stdout)
         self.assertIn("manifest 类型:", stdout)
-        self.assertIn("当前主线 phase:", stdout)
-        self.assertIn("当前 tranche:", stdout)
+        self.assertIn("维护者参考 phase:", stdout)
+        self.assertIn("当前 focus:", stdout)
         self.assertNotIn("manifest_kind:", stdout)
         self.assertNotIn("active_phase:", stdout)
-        self.assertNotIn("active_tranche:", stdout)
+        self.assertNotIn("current_focus:", stdout)
 
     def test_product_preflight_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
