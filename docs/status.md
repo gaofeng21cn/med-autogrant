@@ -27,15 +27,9 @@ Date: `2026-04-18`
 - 当前 repo 级投影：`mainline status` 输出 current line / current focus；`mainline phase` 只承担维护者参考记录。
 - `pass critique --executor hermes_native_proof` 继续作为显式 proof lane；默认执行器继续保持 `Codex CLI autonomous executor`
 
-## 默认验证
-
-- 最小验证：`scripts/verify.sh`
-- meta 验证：`scripts/verify.sh meta`
-- CLI smoke：`scripts/verify.sh cli-smoke`
-- full 验证：`scripts/verify.sh full`
-
 ## 参考入口
 
 - 当前技术记录：`docs/specs/` 与 `contracts/runtime-program/current-program.json`
 - 追溯记录：`docs/references/` 与 `docs/history/`
 - 当前规范与边界：`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`
+- 维护者验证与文档治理：`docs/references/series-doc-governance-checklist.md`
