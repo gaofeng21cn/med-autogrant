@@ -9,6 +9,7 @@ from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.domain_entry_contract import (
     build_domain_entry_contract,
     build_gateway_interaction_contract,
+    build_shared_handoff,
 )
 from med_autogrant.hermes_runtime import (
     _build_author_side_route_contract,
@@ -1496,16 +1497,10 @@ class MedAutoGrantProductEntry:
                 automation=automation,
                 schema_ref=f"contracts/schemas/v1/{PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE}",
                 product_entry_shell=product_entry_shell,
-                shared_handoff={
-                    "direct_entry_builder": {
-                        "command": command_catalog["build_direct_entry"],
-                        "entry_mode": "direct",
-                    },
-                    "opl_handoff_builder": {
-                        "command": command_catalog["build_opl_handoff"],
-                        "entry_mode": "opl-handoff",
-                    },
-                },
+                shared_handoff=build_shared_handoff(
+                    direct_entry_builder_command=command_catalog["build_direct_entry"],
+                    opl_handoff_builder_command=command_catalog["build_opl_handoff"],
+                ),
                 product_entry_start=product_entry_start,
                 product_entry_overview=product_entry_overview,
                 product_entry_preflight=product_entry_preflight,
@@ -1568,46 +1563,48 @@ class MedAutoGrantProductEntry:
             context="product_frontdesk.product_entry_manifest",
         )
 
+        entry_surfaces = {
+            "frontdesk": dict(_require_mapping(
+                product_entry_shell,
+                "product_frontdesk",
+                context="product_frontdesk.product_entry_shell",
+            )),
+            "grant_progress": dict(_require_mapping(
+                product_entry_shell,
+                "grant_progress",
+                context="product_frontdesk.product_entry_shell",
+            )),
+            "grant_cockpit": dict(_require_mapping(
+                product_entry_shell,
+                "grant_cockpit",
+                context="product_frontdesk.product_entry_shell",
+            )),
+            "grant_direct_entry": dict(_require_mapping(
+                product_entry_shell,
+                "grant_direct_entry",
+                context="product_frontdesk.product_entry_shell",
+            )),
+            "grant_user_loop": dict(_require_mapping(
+                product_entry_shell,
+                "grant_user_loop",
+                context="product_frontdesk.product_entry_shell",
+            )),
+        }
+        entry_surfaces.update(
+            {
+                key: dict(_require_mapping(
+                    shared_handoff,
+                    key,
+                    context="product_frontdesk.shared_handoff",
+                ))
+                for key in ("direct_entry_builder", "opl_handoff_builder")
+            }
+        )
+
         product_frontdesk = _build_shared_family_product_frontdesk(
             recommended_action="inspect_or_prepare_grant_loop",
             product_entry_manifest=dict(manifest),
-            entry_surfaces={
-                "frontdesk": dict(_require_mapping(
-                    product_entry_shell,
-                    "product_frontdesk",
-                    context="product_frontdesk.product_entry_shell",
-                )),
-                "grant_progress": dict(_require_mapping(
-                    product_entry_shell,
-                    "grant_progress",
-                    context="product_frontdesk.product_entry_shell",
-                )),
-                "grant_cockpit": dict(_require_mapping(
-                    product_entry_shell,
-                    "grant_cockpit",
-                    context="product_frontdesk.product_entry_shell",
-                )),
-                "grant_direct_entry": dict(_require_mapping(
-                    product_entry_shell,
-                    "grant_direct_entry",
-                    context="product_frontdesk.product_entry_shell",
-                )),
-                "grant_user_loop": dict(_require_mapping(
-                    product_entry_shell,
-                    "grant_user_loop",
-                    context="product_frontdesk.product_entry_shell",
-                )),
-                "direct_entry_builder": dict(_require_mapping(
-                    shared_handoff,
-                    "direct_entry_builder",
-                    context="product_frontdesk.shared_handoff",
-                )),
-                "opl_handoff_builder": dict(_require_mapping(
-                    shared_handoff,
-                    "opl_handoff_builder",
-                    context="product_frontdesk.shared_handoff",
-                )),
-            },
+            entry_surfaces=entry_surfaces,
             notes=[
                 "This frontdesk surface is a controller-owned direct grant front door over the landed product-entry shell.",
                 "It does not claim that mature Web UI or hosted runtime is already landed.",
