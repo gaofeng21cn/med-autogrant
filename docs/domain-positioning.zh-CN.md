@@ -62,5 +62,7 @@
 - 顶层公开文档已建立
 - 中文内部设计与 current-truth 文档已建立
 - 真实 upstream-Hermes-backed runtime substrate 已落地
-- 当前仓库处在 `Upstream Hermes-Agent Fast Cutover`；旧的 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` 只作为 host-agent 历史基线保留，而不是当前产品 runtime 主线
-- future managed web runtime 只是同一 substrate 上的后续部署演进，不代表项目仍停留在前置筹备期
+- 当前活跃 phase 是 `P4 mature direct grant product entry`
+- 当前活跃 tranche 是 `P4.F local submission-ready package landing`
+- `P3 hosted caller / OPL consumption proof` 已经完成，现只作为历史落地上下文保留
+- future hosted 产品部署继续作为同一 substrate 上的后续演进

@@ -59,24 +59,6 @@ You can start with prompts like:
 2. Technical readers and planners should read [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
 3. Developers and maintainers should continue into `docs/specs/`, `docs/references/`, `docs/plans/`, and `docs/history/omx/`.
 
-## Technical Notes For Maintainers
-
-The repository home stays user-facing on purpose.
-Runtime truth, product-entry contracts, hosted bundle records, and runtime-program records live in the technical docs:
-
-- [Docs Guide](./docs/README.md)
-- [Project](./docs/project.md)
-- [Status](./docs/status.md)
-- [Contracts Overview](./contracts/README.md)
-- [Specs directory](./docs/specs/)
-
-## Development Verification
-
-- `make test-fast`
-- `make test-meta`
-- `make test-cli-smoke`
-- `make test-full`
-
 ## Further Reading
 
 - [Docs Guide](./docs/README.md)

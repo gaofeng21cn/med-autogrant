@@ -1,10 +1,12 @@
 # Grant Writing Full Coverage Landing Plan
 
-## 目标
+> Historical completed plan. The full `direction_screening -> frozen` authoring route is already landed. Current truth now lives in `docs/decisions.md`, `docs/project.md`, and `contracts/runtime-program/current-program.json`.
+
+## 历史目标
 
 把当前只在合同层冻结的前半程 authoring 路线，补齐为可执行、可验证、可审计的 landed executor surface，使 `Med Auto Grant` 能从 `input_intake` 之后一路推进到 `frozen`，覆盖人工国自然写作流程中的主线收敛、问题提纯、立项依据、适配度、提纲、正文起草与送审前冻结。
 
-## 范围
+## 历史范围
 
 - landed 下列 authoring route：
   - `direction_screening`
@@ -28,14 +30,14 @@
   - 核心骨架与 current truth
   - 相关测试与验证入口
 
-## 非目标
+## 历史非目标
 
 - 不把 `MCP` 写成已公开 formal entry。
 - 不把当前仓库写成 mature Web UI 或 hosted runtime。
 - 不引入新的 repo-local runtime owner 叙事。
 - 不为了“全覆盖”引入不可验证的兜底或启发式后处理。
 
-## 设计原则
+## 当时的设计原则
 
 ### 1. 继续沿现有 stage 梯子落地
 
@@ -87,7 +89,7 @@
 - 适配度重建后清空草稿/批注/修订
 - drafting 重跑后清空批注/修订
 
-## 实施分块
+## 当时的实施分块
 
 ### A. 文档与 current truth
 
@@ -129,7 +131,7 @@
 - 更新 `tests/test_stage_router.py`
 - 必要时补充 executor 级测试
 
-## 验证策略
+## 当时的验证策略
 
 - 最小验证：`scripts/verify.sh`
 - 重点回归：
@@ -138,7 +140,7 @@
   - hosted contract bundle 导出新的 command catalog
   - current truth / status / README 与测试一致
 
-## 吸收策略
+## 当时的吸收策略
 
 在独立 worktree 完成实现与验证后：
 

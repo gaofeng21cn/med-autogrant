@@ -59,24 +59,6 @@
 2. 技术规划、架构判断和方向同步，继续读 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 以及 [合同说明](./contracts/README.md)。
 3. 开发者和维护者再进入 `docs/specs/`、`docs/references/`、`docs/plans/` 与 `docs/history/omx/`。
 
-## 给维护者的技术入口
-
-首页会故意保持成申请人入口。
-运行时真相、产品入口合同、托管包记录和 runtime-program 记录都放在下面这些技术文档里：
-
-- [文档索引](./docs/README.zh-CN.md)
-- [项目概览](./docs/project.md)
-- [当前状态](./docs/status.md)
-- [合同说明](./contracts/README.md)
-- [规格文档目录](./docs/specs/)
-
-## 开发验证
-
-- `make test-fast`
-- `make test-meta`
-- `make test-cli-smoke`
-- `make test-full`
-
 ## 延伸阅读
 
 - [文档索引](./docs/README.zh-CN.md)

@@ -16,14 +16,12 @@
 
 ## 当前技术图景
 
-- `Med Auto Grant` 是 `OPL` GUI / management shell 下的一级医学基金 domain module / agent。
-- Codex 是基金 authoring route 的默认交互与执行路径。
-- `Hermes-Agent` 是显式选择时的备用模式与长久在线网关，用于长期运行或 route-specific proof 工作。
+- `Med Auto Grant` 是位于 `OPL` family gateway 与 handoff surface 之下的 author-side 医学基金 domain gateway。
+- formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
+- `Hermes-Agent` 指外部 runtime substrate owner；repo-side grant adapter 继续在其上方稳定 grant truth、direct entry 与 route contract。
 - 历史 program 记录与迁移说明继续留在 `docs/specs/` 与 `docs/history/` 中供追溯。
-- 仓内 repo-local adapter 保留 grant-domain truth、入口语义与 route contract。
 - frontdesk、user-loop、projection 与本地 `submission-ready` package 已落地；未来 hosted 产品扩展统一留在 `docs/plans/`。
-- `OPL` 负责 family navigation 与 management-shell 可见性；MAG 负责 grant-domain truth 与 execution routing。
-- 当前 formal-entry matrix 仍是 `CLI`、`MCP` 与 `controller`。
+- `OPL` 负责 family navigation 与 domain handoff；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。
 - 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`，并在作者侧主线之上保持 schema-backed 边界。
 - 当前 grouped public shell 也已经把 `product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready` 暴露成公开 CLI 入口面。
 - 当前轻量 grant `product entry` shell 就是现在的产品入口 shell 与内部 domain/API catalog builder；未来 hosted 产品形态统一留在 `docs/plans/`。
@@ -63,11 +61,12 @@
 - [References 目录](./references/)
 - [历史归档](./history/omx/README.zh-CN.md)
 
-## 未来工作
+## Plans 与历史规划工件
 
 - [Plans 目录](./plans/)
-- [OPL 对齐目标形态与 hosted caller 计划](./plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md)
-- [最小 Scaffold 计划](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
+
+已完成的规划工件继续保留在 `docs/plans/` 中供追溯，直到后续被吸收到更长期的历史层。
+当前主线真相继续以核心文档、`docs/specs/` 和 [`current-program.json`](../contracts/runtime-program/current-program.json) 为准。
 
 ## 文档规则
 

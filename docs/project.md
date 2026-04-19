@@ -33,7 +33,7 @@
 
 ## 当前形态
 
-- Current public execution line：`OPL shell + MAG domain agent + Codex default execution + Hermes-Agent backup gateway`
+- Current public execution line：`direct MAG entry / OPL handoff -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> service-safe pass/package commands`
 - Current frontdoor shape：`product frontdesk + product user-loop + workspace progress/workspace cockpit + product direct-entry + package submission-ready`
 - Latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
 - Current owner line：`CLI-first with real upstream Hermes-Agent runtime substrate`

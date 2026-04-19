@@ -62,5 +62,7 @@ Current status:
 - top-level public docs exist
 - internal Chinese design and current-truth artifacts exist
 - a real upstream-Hermes-backed runtime substrate is landed
-- the repository is now in `Upstream Hermes-Agent Fast Cutover`, with the old `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` closeout retained only as the historical host-agent baseline
-- a future managed web runtime remains a later deployment evolution on the same substrate, not proof that the project has not started yet
+- the current active phase is `P4 mature direct grant product entry`
+- the current active tranche is `P4.F local submission-ready package landing`
+- `P3 hosted caller / OPL consumption proof` is already completed and retained as historical landing context
+- future hosted product deployment remains a later evolution on the same substrate

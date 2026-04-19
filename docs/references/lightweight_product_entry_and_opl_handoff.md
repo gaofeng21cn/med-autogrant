@@ -1,5 +1,7 @@
 # Med Auto Grant 轻量产品入口与 OPL Handoff
 
+> Historical reference. The current landed route catalog and direct-entry truth now live in `docs/project.md`, `docs/decisions.md`, and `contracts/runtime-program/current-program.json`.
+
 ## 1. 当前真相
 
 `Med Auto Grant` 现在已经有稳定的：
@@ -77,30 +79,7 @@
 - `recommended_executor_route`
 - `author_side_route_catalog`
 
-显式带出来，避免 future caller 误把 `critique` 写成“已有 landed executor”。
-
-如果当前 route 还没有 landed executor：
-
-- `direction_screening`
-- `question_refinement`
-- `argument_building`
-- `fit_alignment`
-- `outline`
-- `drafting`
-- `critique`
-- `frozen`
-
-那 `executor_routing_contract` 都应额外带出：
-
-- `handoff_requirements`
-
-并且：
-
-- 基础上始终要求 caller 先读取：
-  - `workspace summarize`
-  - `workspace route-report`
-- 只有 source workspace 已经进入 `critique / revision / frozen` review context 时，才额外要求：
-    - `workspace critique-summary`
+显式带出来。`direction_screening -> frozen` 这一组 author-side route 现已全部进入 landed command catalog，旧的 `handoff_requirements` 假设只保留为历史形成过程。
 
 ## 5. 当前不应过度宣称的事
 

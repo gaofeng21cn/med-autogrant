@@ -1,16 +1,16 @@
 # Med Auto Grant OPL-Aligned Target Shape And Hosted Caller Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> Historical completed plan. `P3 hosted caller / OPL consumption proof` is already completed. Current mainline truth now lives in `docs/project.md`, `docs/decisions.md`, and `contracts/runtime-program/current-program.json`.
 
-**Goal:** Prove the next honest `P3` phase without inventing new repo-local hosted helpers: external hosted callers and future `OPL Gateway` must consume the already frozen `domain_entry_contract`, `schema_contract`, and `authoring_contract`.
+**Historical goal:** Prove the then-next honest `P3` phase without inventing new repo-local hosted helpers: external hosted callers and future `OPL Gateway` must consume the already frozen `domain_entry_contract`, `schema_contract`, and `authoring_contract`.
 
-**Architecture:** Keep `Hermes-Agent` as substrate owner, keep `Med Auto Grant` as authoring-truth owner, and make the next phase a caller-consumption proof rather than another local runtime rewrite. Reuse `build-product-entry`, `build-hosted-contract-bundle`, and `MedAutoGrantDomainEntry` as the only contract sources.
+**Historical architecture:** Keep `Hermes-Agent` as substrate owner, keep `Med Auto Grant` as authoring-truth owner, and make the next phase a caller-consumption proof rather than another local runtime rewrite. Reuse `build-product-entry`, `build-hosted-contract-bundle`, and `MedAutoGrantDomainEntry` as the only contract sources.
 
-**Tech Stack:** Python CLI, repo-tracked markdown current truth, JSON contracts, pytest meta tests
+**Historical tech stack:** Python CLI, repo-tracked markdown current truth, JSON contracts, pytest meta tests
 
 ---
 
-### Task 1: Freeze The P3 Proof Boundary
+### Historical Task 1: Freeze The P3 Proof Boundary
 
 **Files:**
 - Modify: `docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md`
@@ -52,7 +52,7 @@ git add docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-tru
 git commit -m "Freeze OPL-aligned ideal target and phase map"
 ```
 
-### Task 2: Add Hosted Caller Consumption Truth
+### Historical Task 2: Add Hosted Caller Consumption Truth
 
 **Files:**
 - Modify: `docs/architecture.md`
@@ -93,7 +93,7 @@ git add docs/architecture.md docs/project.md docs/specs/2026-04-12-hosted-contra
 git commit -m "Freeze hosted caller proof boundary"
 ```
 
-### Task 3: Prepare The Next Honest Proof Lane
+### Historical Task 3: Prepare The Next Honest Proof Lane
 
 **Files:**
 - Modify: `docs/plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md`

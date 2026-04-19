@@ -16,14 +16,12 @@ This guide is for readers who need the technical records, trace records, referen
 
 ## Current Technical Picture
 
-- `Med Auto Grant` is the first-level medical grant domain module / agent under the `OPL` GUI and management shell.
-- Codex is the default interaction and execution path for grant authoring routes.
-- `Hermes-Agent` is the explicit backup mode and always-on gateway for long-running or route-specific proof work.
-- Historical program records and migration notes stay in `docs/specs/` and `docs/history/` for traceability.
-- Repo-local adapters preserve grant-domain truth, entry semantics, and route contracts.
-- The frontdesk, user-loop, projections, and local `submission-ready` package are landed. Future hosted product expansion lives in `docs/plans/`.
-- `OPL` owns family navigation and management-shell visibility; MAG owns grant-domain truth and execution routing.
+- `Med Auto Grant` is the author-side medical grant domain gateway under the `OPL` family gateway and handoff surface.
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
+- `Hermes-Agent` names the external runtime substrate owner; repo-side grant adapters keep authoring truth, direct entry, and route contracts stable above that substrate.
+- Historical program records and migration notes stay in `docs/specs/` and `docs/history/` for traceability.
+- The frontdesk, user-loop, projections, and local `submission-ready` package are landed. Future hosted product expansion lives in `docs/plans/`.
+- `OPL` owns family navigation and domain handoff; MAG owns grant-domain truth, direct grant entry, and execution routing.
 - Current controller-owned, read-only projections continue to include `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`, with schema-backed boundaries above the author-side line.
 - The current grouped public shell also exposes `product build-entry`, `product manifest`, `product frontdesk`, and `package submission-ready` as the public CLI-facing entry surface.
 - The current lightweight grant `product entry` shell is the active product-entry shell and internal domain/API catalog builder. Future hosted product work stays in `docs/plans/`.
@@ -63,11 +61,12 @@ The current grant product-entry shell remains available as the domain/API catalo
 - [References directory](./references/)
 - [History archive](./history/omx/README.md)
 
-## Future Work
+## Plans And Historical Planning Artifacts
 
 - [Plans directory](./plans/)
-- [OPL-aligned target shape and hosted caller plan](./plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md)
-- [Minimal Scaffold Plan](./plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md)
+
+Completed planning artifacts stay in `docs/plans/` for traceability until they are absorbed into longer-term history layers.
+Current mainline truth continues to live in the core docs, `docs/specs/`, and [`current-program.json`](../contracts/runtime-program/current-program.json).
 
 ## Documentation Rules
 
