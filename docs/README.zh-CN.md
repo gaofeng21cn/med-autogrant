@@ -12,7 +12,7 @@
 | --- | --- | --- |
 | 潜在用户与领域专家 | [仓库首页](../README.zh-CN.md)、[领域定位](./domain-positioning.zh-CN.md)、[MVP 范围](./mvp-scope.zh-CN.md) | 先理解这条基金主线是干什么的，再决定是否进入技术细节 |
 | 技术规划者、架构读者、方向同步读者 | [项目概览](./project.md)、[当前状态](./status.md)、[架构](./architecture.md)、[不变量](./invariants.md)、[决策记录](./decisions.md)、[合同说明](../contracts/README.md) | 快速抓住当前技术形态、边界和主线方向 |
-| 开发者与维护者 | [Specs 目录](./specs/)、[References 目录](./references/)、[Plans 目录](./plans/)、[历史归档](./history/omx/README.zh-CN.md) | 查看技术记录、内部参考、未来工作和归档材料 |
+| 开发者与维护者 | [Specs 目录](./specs/)、[References 目录](./references/)、[Plans 目录](./plans/)、[历史归档](./history/README.zh-CN.md) | 查看技术记录、内部参考、未来工作和归档材料 |
 
 ## 当前技术图景
 
@@ -59,7 +59,7 @@
 ## 追溯记录
 
 - [References 目录](./references/)
-- [历史归档](./history/omx/README.zh-CN.md)
+- [历史归档](./history/README.zh-CN.md)
 
 ## Plans 与历史规划工件
 

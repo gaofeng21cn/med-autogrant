@@ -57,7 +57,7 @@ You can start with prompts like:
 
 1. Potential users should start here, then continue to the [Docs Guide](./docs/README.md), [Domain Positioning](./docs/domain-positioning.md), and [MVP Scope](./docs/mvp-scope.md).
 2. Technical readers and planners should read [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
-3. Developers and maintainers should continue into `docs/specs/`, `docs/references/`, `docs/plans/`, and `docs/history/omx/`.
+3. Developers and maintainers should continue into `docs/specs/`, `docs/references/`, `docs/plans/`, and [History Archive](./docs/history/README.md).
 
 ## Further Reading
 

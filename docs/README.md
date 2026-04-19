@@ -12,7 +12,7 @@ This guide is for readers who need the technical records, trace records, referen
 | --- | --- | --- |
 | Potential users and domain experts | [Repository home](../README.md), [Domain Positioning](./domain-positioning.md), [MVP Scope](./mvp-scope.md) | Understand what the grant line is for before reading technical internals |
 | Technical readers and planners | [Project](./project.md), [Status](./status.md), [Architecture](./architecture.md), [Invariants](./invariants.md), [Decisions](./decisions.md), [Contracts Overview](../contracts/README.md) | Get the current technical shape, boundaries, and mainline direction quickly |
-| Developers and maintainers | [Specs directory](./specs/), [References directory](./references/), [Plans directory](./plans/), [History archive](./history/omx/README.md) | Inspect technical records, reference notes, future work, and archival material |
+| Developers and maintainers | [Specs directory](./specs/), [References directory](./references/), [Plans directory](./plans/), [History archive](./history/README.md) | Inspect technical records, reference notes, future work, and archival material |
 
 ## Current Technical Picture
 
@@ -59,7 +59,7 @@ The current grant product-entry shell remains available as the domain/API catalo
 ## Trace Records
 
 - [References directory](./references/)
-- [History archive](./history/omx/README.md)
+- [History archive](./history/README.md)
 
 ## Plans And Historical Planning Artifacts
 
