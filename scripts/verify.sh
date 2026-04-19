@@ -7,6 +7,9 @@ case "$lane" in
   fast|smoke)
     make test-fast
     ;;
+  family)
+    make test-family
+    ;;
   meta)
     make test-meta
     ;;
@@ -18,7 +21,7 @@ case "$lane" in
     ;;
   *)
     echo "Unknown lane: $lane" >&2
-    echo "Usage: $0 [fast|meta|cli-smoke|full]" >&2
+    echo "Usage: $0 [fast|family|meta|cli-smoke|full]" >&2
     exit 2
     ;;
 esac

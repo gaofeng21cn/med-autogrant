@@ -16,6 +16,11 @@ def test_makefile_exposes_layered_test_entrypoints() -> None:
 
     assert "test-fast:" in makefile
     assert 'uv run pytest -q -m "not meta"' in makefile
+    assert "test-family:" in makefile
+    assert (
+        "uv run pytest tests/test_repository_hygiene.py tests/test_test_command_surfaces.py "
+        "tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q"
+    ) in makefile
     assert "test-meta:" in makefile
     assert "uv run pytest -q -m meta" in makefile
     assert "test-cli-smoke:" in makefile
@@ -38,6 +43,7 @@ def test_verify_script_wraps_canonical_make_lanes() -> None:
     verify_script = _read("scripts/verify.sh")
 
     assert "make test-fast" in verify_script
+    assert "make test-family" in verify_script
     assert "make test-meta" in verify_script
     assert "make test-cli-smoke" in verify_script
     assert "make test-full" in verify_script

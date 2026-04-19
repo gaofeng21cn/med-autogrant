@@ -32,6 +32,7 @@ def test_bootstrap_adds_repo_venv_site_packages_when_shared_helper_imports_from_
 
     monkeypatch.setattr(module, "_candidate_repo_site_packages_roots", lambda: (fake_site_packages,))
     monkeypatch.setattr(module, "_candidate_shared_helper_module_paths", lambda: ())
+    monkeypatch.setattr(module, "_candidate_shared_src_roots", lambda: ())
     monkeypatch.setattr(module, "_module_spec", fake_module_spec)
     monkeypatch.setattr(
         module.importlib,
@@ -49,7 +50,7 @@ def test_bootstrap_adds_repo_venv_site_packages_when_shared_helper_imports_from_
 
 
 def test_bootstrap_delegates_to_shared_helper_when_sibling_owner_is_present(monkeypatch, tmp_path: Path) -> None:
-    fake_repo_root = tmp_path / "med-autogrant" / ".worktrees" / "family-final-reuse-mag"
+    fake_repo_root = tmp_path / "med-autogrant" / ".worktrees" / "codex" / "family-final-reuse-mag"
     fake_repo_root.mkdir(parents=True)
     helper_path = (
         tmp_path
@@ -71,6 +72,7 @@ def test_bootstrap_delegates_to_shared_helper_when_sibling_owner_is_present(monk
     )
     monkeypatch.setattr(module, "_repo_root", lambda: fake_repo_root)
     monkeypatch.setattr(module, "_candidate_repo_site_packages_roots", lambda: ())
+    monkeypatch.setattr(module, "_candidate_shared_src_roots", lambda: (helper_path.parent.parent,))
     monkeypatch.setattr(module, "_module_spec", lambda module_name: None)
 
     added = module.ensure_editable_dependency_paths()
@@ -86,6 +88,7 @@ def test_bootstrap_delegates_to_importable_shared_helper_without_touching_sys_pa
         ensure_consumer_editable_dependency_paths=lambda **_: (),
     )
     monkeypatch.setattr(module, "_candidate_shared_helper_module_paths", lambda: ())
+    monkeypatch.setattr(module, "_candidate_shared_src_roots", lambda: ())
     monkeypatch.setattr(
         module,
         "_module_spec",
@@ -109,7 +112,7 @@ def test_bootstrap_delegates_to_importable_shared_helper_without_touching_sys_pa
 
 
 def test_bootstrap_prefers_sibling_owner_helper_over_importable_site_packages(monkeypatch, tmp_path: Path) -> None:
-    fake_repo_root = tmp_path / "med-autogrant" / ".worktrees" / "family-final-reuse-mag"
+    fake_repo_root = tmp_path / "med-autogrant" / ".worktrees" / "codex" / "family-final-reuse-mag"
     fake_repo_root.mkdir(parents=True)
     helper_path = (
         tmp_path
@@ -131,12 +134,13 @@ def test_bootstrap_prefers_sibling_owner_helper_over_importable_site_packages(mo
     )
     monkeypatch.setattr(module, "_repo_root", lambda: fake_repo_root)
     monkeypatch.setattr(module, "_candidate_repo_site_packages_roots", lambda: ())
+    monkeypatch.setattr(module, "_candidate_shared_src_roots", lambda: (helper_path.parent.parent,))
     monkeypatch.setattr(module, "_module_spec", lambda module_name: object())
     monkeypatch.setattr(module.importlib, "import_module", lambda module_name: (_ for _ in ()).throw(AssertionError()))
 
     added = module.ensure_editable_dependency_paths()
 
-    assert added == ()
+    assert added == (helper_path.parent.parent,)
     assert (fake_repo_root / "sibling-owner-wins.txt").read_text(encoding="utf-8") == "opl_harness_shared"
 
 
@@ -152,6 +156,7 @@ def test_bootstrap_returns_added_site_packages_when_shared_helper_remains_unavai
 
     monkeypatch.setattr(module, "_candidate_repo_site_packages_roots", lambda: (fake_site_packages,))
     monkeypatch.setattr(module, "_candidate_shared_helper_module_paths", lambda: ())
+    monkeypatch.setattr(module, "_candidate_shared_src_roots", lambda: ())
     monkeypatch.setattr(module, "_module_spec", lambda module_name: None)
 
     try:
@@ -169,6 +174,7 @@ def test_required_shared_entrypoints_are_resolvable_from_current_checkout() -> N
         required_modules = (
             "opl_harness_shared.editable_consumer_bootstrap",
             "opl_harness_shared.family_entry_contracts",
+            "opl_harness_shared.family_shared_release",
             "opl_harness_shared.product_entry_companions",
         )
         for module_name in required_modules:

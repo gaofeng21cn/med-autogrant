@@ -5,8 +5,11 @@ import tomllib
 import unittest
 from pathlib import Path
 
+from med_autogrant.family_shared_release import inspect_current_repo_family_shared_alignment
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_OWNER_COMMIT = "cc1afc47ea2baca840e742155348f22de94ca50a"
 
 
 class RepositoryHygieneTest(unittest.TestCase):
@@ -41,6 +44,18 @@ class RepositoryHygieneTest(unittest.TestCase):
             dependency,
             r"^opl-harness-shared @ git\+https://github\.com/gaofeng21cn/one-person-lab\.git@[0-9a-f]{40}#subdirectory=python/opl-harness-shared$",
         )
+
+    def test_family_shared_release_alignment_is_fail_closed_for_repo_truth(self) -> None:
+        inspection = inspect_current_repo_family_shared_alignment()
+
+        self.assertEqual(inspection["owner_commit"], EXPECTED_OWNER_COMMIT)
+        self.assertEqual(inspection["status"], "aligned")
+        self.assertEqual(
+            [item["file"] for item in inspection["findings"]],
+            ["pyproject.toml", "uv.lock"],
+        )
+        self.assertTrue(all(item["status"] == "aligned" for item in inspection["findings"]))
+        self.assertTrue(all(item["pins"] == [EXPECTED_OWNER_COMMIT] for item in inspection["findings"]))
 
 
 if __name__ == "__main__":

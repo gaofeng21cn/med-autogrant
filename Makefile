@@ -1,9 +1,12 @@
-.PHONY: test test-fast test-meta test-cli-smoke test-full
+.PHONY: test test-fast test-family test-meta test-cli-smoke test-full
 
 test: test-fast
 
 test-fast:
 	uv run pytest -q -m "not meta"
+
+test-family:
+	uv run pytest tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q
 
 test-meta:
 	uv run pytest -q -m meta
