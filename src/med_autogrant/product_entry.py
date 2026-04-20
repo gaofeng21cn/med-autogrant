@@ -47,11 +47,14 @@ from opl_harness_shared.automation_companions import (
 from opl_harness_shared.product_entry_companions import (
     build_family_product_frontdesk_from_manifest as _build_shared_family_product_frontdesk_from_manifest,
     build_family_product_entry_manifest as _build_shared_family_product_entry_manifest,
+    build_operator_loop_action_catalog as _build_shared_operator_loop_action_catalog,
     build_product_entry_start as _build_shared_product_entry_start,
     build_product_entry_overview as _build_shared_product_entry_overview,
     build_product_entry_quickstart as _build_shared_product_entry_quickstart,
     build_product_entry_readiness as _build_shared_product_entry_readiness,
     build_product_entry_resume_surface as _build_shared_product_entry_resume_surface,
+    build_product_entry_shell_catalog as _build_shared_product_entry_shell_catalog,
+    build_product_entry_shell_linked_surface as _build_shared_product_entry_shell_linked_surface,
     collect_family_human_gate_ids as _collect_family_human_gate_ids,
     validate_family_product_frontdesk as _validate_shared_family_product_frontdesk,
     validate_family_product_entry_manifest as _validate_shared_family_product_entry_manifest,
@@ -875,7 +878,7 @@ class MedAutoGrantProductEntry:
             "--format",
             "json",
         )
-        operator_loop_actions = {
+        operator_loop_actions = _build_shared_operator_loop_action_catalog({
             "open_loop": {
                 "command": grant_user_loop_command,
                 "surface_kind": GRANT_USER_LOOP_KIND,
@@ -906,7 +909,7 @@ class MedAutoGrantProductEntry:
                 "summary": "检查 submission-ready gate，并在通过时一次性导出本地交付目录。",
                 "requires": ["output_dir"],
             },
-        }
+        })
         current_route_id = _require_nonempty_string_from_mapping(
             progress_projection,
             "current_stage",
@@ -1124,7 +1127,7 @@ class MedAutoGrantProductEntry:
             "runtime_owner": "upstream_hermes_agent",
         }
         managed_runtime_contract = _build_managed_runtime_contract()
-        product_entry_shell = {
+        product_entry_shell = _build_shared_product_entry_shell_catalog({
             "product_frontdesk": {
                 "command": product_frontdesk_command,
                 "surface_kind": PRODUCT_FRONTDESK_KIND,
@@ -1145,7 +1148,22 @@ class MedAutoGrantProductEntry:
                 "command": grant_user_loop_command,
                 "surface_kind": GRANT_USER_LOOP_KIND,
             },
-        }
+        })
+        frontdesk_surface = _build_shared_product_entry_shell_linked_surface(
+            shell_key="product_frontdesk",
+            shell_surface=product_entry_shell["product_frontdesk"],
+            summary=(
+                "当前 direct grant product frontdesk 先暴露前台入口、user loop、projection 与 shared handoff。"
+            ),
+        )
+        operator_loop_surface = _build_shared_product_entry_shell_linked_surface(
+            shell_key="grant_user_loop",
+            shell_surface=product_entry_shell["grant_user_loop"],
+            summary=(
+                "当前 operator loop 以 grant-user-loop 作为 direct grant user inbox shell，"
+                "在同一入口下汇总 progress、route action 与 mainline snapshot。"
+            ),
+        )
         domain_entry_contract = build_domain_entry_contract()
         gateway_interaction_contract = build_gateway_interaction_contract()
         grant_authoring_readiness = _build_shared_detailed_readiness(
@@ -1485,23 +1503,8 @@ class MedAutoGrantProductEntry:
                 },
                 recommended_shell="grant_user_loop",
                 recommended_command=grant_user_loop_command,
-                frontdesk_surface={
-                    "shell_key": "product_frontdesk",
-                    "command": product_frontdesk_command,
-                    "surface_kind": PRODUCT_FRONTDESK_KIND,
-                    "summary": (
-                        "当前 direct grant product frontdesk 先暴露前台入口、user loop、projection 与 shared handoff。"
-                    ),
-                },
-                operator_loop_surface={
-                    "shell_key": "grant_user_loop",
-                    "command": grant_user_loop_command,
-                    "surface_kind": GRANT_USER_LOOP_KIND,
-                    "summary": (
-                        "当前 operator loop 以 grant-user-loop 作为 direct grant user inbox shell，"
-                        "在同一入口下汇总 progress、route action 与 mainline snapshot。"
-                    ),
-                },
+                frontdesk_surface=frontdesk_surface,
+                operator_loop_surface=operator_loop_surface,
                 operator_loop_actions=operator_loop_actions,
                 repo_mainline=repo_mainline,
                 runtime=runtime_summary,
