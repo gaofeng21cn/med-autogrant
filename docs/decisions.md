@@ -30,7 +30,7 @@
 - 理由：人工整理的国自然写作流程已经能稳定映射到现有 stage 梯子，而实现层、CLI、domain entry、product loop 与 hosted bundle 也都已经具备同一套 route truth；继续把前半程写成 pending，只会制造第二真相。
 - 影响：`current-program`、`mainline-status`、`status/project/architecture/current-truth specs`、`grant-user-loop`、`domain_entry_contract`、hosted bundle route catalog 与 tests 全部改写为 full landed truth；`pending-handoff-requirements.schema.json` 退为历史兼容与追溯材料，并退出 schema index 与当前 contract surface。
 
-## 2026-04-13：critique route 升级为 Codex CLI autonomous landed route
+## 2026-04-13：critique route 升级为 Codex CLI landed route
 
 - 决策：把 `critique` route 从历史上的 `pending / handoff-required` 正式提升为已 landed 的 `execute-critique-pass` route。
 - 理由：实现层 (`hermes_runtime.py` / `critique_executor.py` / `codex_cli.py`) 与现有 route tests 已经稳定落在 landed 口径；继续把它写成 pending 会制造第二真相。
@@ -46,13 +46,13 @@
 
 - 决策：文档层统一声明，只有带 session substrate、route orchestration、domain mutation 与 durable state transition 的 full agent loop 才算 `Hermes-native`。
 - 理由：如果把 chat relay / 单次 chat completion 也写成 `Hermes-native`，就会把 substrate owner 与单步 executor 混写，误导后续跨仓收敛。
-- 影响：当前 `critique` landed 只能写成 `Codex CLI autonomous executor landed`，不能写成 `Hermes-native landed`；后续若切到 Hermes executor，必须额外拿 full-loop truth 与 proof。
+- 影响：当前 `critique` landed 只能写成 `Codex CLI` landed route，默认模式是 `autonomous`，不能写成 `Hermes-native landed`；后续若切到 Hermes executor，必须额外拿 full-loop truth 与 proof。
 
 ## 2026-04-13：先在 critique route 落一条 Hermes-native experimental proof lane
 
 - 决策：不新增第二条 critique command，也不改默认执行器；而是在现有 `execute-critique-pass` 上增加显式 `executor_kind=hermes_native_proof` 的 experimental proof lane。
 - 理由：这样既能保持 service-safe command surface、route catalog 与 hosted contract 不漂移，也能在同一条 route 上真实验证 `Hermes-native` 是否具备 full agent loop 能力，而不是继续停留在纯文档讨论。
-- 影响：当前 `execute-critique-pass` 默认仍是 `Codex CLI autonomous`；只有显式 opt-in 时才会走 `run_agent.AIAgent.run_conversation(...)`，并且必须以“读取本机 Hermes config + 真实工具事件 + 完整 loop + 合法 JSON”四重 fail-closed 门槛来证明自己。
+- 影响：当前 `execute-critique-pass` 默认仍是 `Codex CLI`，默认模式是 `autonomous`；只有显式 opt-in 时才会走 `run_agent.AIAgent.run_conversation(...)`，并且必须以“读取本机 Hermes config + 真实工具事件 + 完整 loop + 合法 JSON”四重 fail-closed 门槛来证明自己。
 
 ## 2026-04-13：Hermes-native proof 必须显式读取本机 Hermes 默认配置
 

@@ -81,7 +81,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 - 具体 authoring pass 的执行
 - 由 route / executor adapter 选中的单步运行时
-- 当前默认 `Codex CLI autonomous executor`，以及 opt-in `hermes_native_proof`
+- 当前默认 `Codex CLI` 执行器，默认模式是 `autonomous`；另有 opt-in `hermes_native_proof`
 
 因此，这里真实成立的是：
 
@@ -109,7 +109,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `src/med_autogrant/hermes_runtime.py` 现在应被理解为 repo-side domain adapter / orchestrator，而不是 runtime substrate owner。
 - `runtime run` / `runtime resume` 直接通过 `MedAutoGrantDomainEntry -> HermesRuntimeSubstrate` 落到当前 runtime loop。
 - `pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting`、`pass critique`、`pass revision`、`pass freeze`、`package artifact-bundle`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
-- `pass critique` 当前默认走 `Codex CLI autonomous executor`：具体由 `critique_executor.py -> run_codex_exec(...)` 调起 `codex exec`，默认 `model / reasoning` 都继承本机 Codex 默认（`inherit_local_codex_default`），只有显式环境变量覆盖才会传 override。
+- `pass critique` 当前默认走 `Codex CLI` 的 `autonomous` 模式：具体由 `critique_executor.py -> run_codex_exec(...)` 调起 `codex exec`，默认 `model / reasoning` 都继承本机 Codex 默认（`inherit_local_codex_default`），只有显式环境变量覆盖才会传 override。
 - 同一条 `pass critique` 现在也支持显式 `executor_kind=hermes_native_proof`：这条 experimental lane 会通过 `hermes_native_executor.py -> read_hermes_agent_contract(...) -> run_agent.AIAgent.run_conversation(...)` 真实调用上游 Hermes full agent loop；它会显式读取本机 `~/.hermes/config.yaml` 的 model/provider/base_url/api_mode/reasoning_effort，并且只有在完成整轮 loop、拿到真实工具事件和合法 JSON 结果时才通过，否则 fail-closed。
 - `package hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 hosted contract catalog。
 - `package submission-ready` 继续复用 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链，但会额外对 mandatory sections、evidence gaps、representative outputs、active projects 与 freeze gate 做 fail-closed 审核，只在全部满足时写出本地 `submission_ready_package`；它不替代外部官网提交。
@@ -119,7 +119,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - 当前 author-side executor routing 继续按 route 单独冻结：`direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / revision / frozen / artifact_bundle / final_package / hosted_contract_bundle` 现在都已经有 landed service-safe command surface，并共享同一份 route catalog truth。
 - `pending-handoff-requirements.schema.json` 继续只承担历史兼容与旧真相追溯角色；当前 schema contract 与 route output 都已经收口为 landed route catalog。
 - `workspace critique-summary` 继续只在 source workspace 已经位于 `critique / revision / frozen` review context 时作为 review-context audit surface 有意义；当前 full landed authoring catalog 不再依赖 pending handoff contract 才能进入 `critique`。
-- 这里的 `critique` landed 只表示当前默认 concrete executor 已统一到 `Codex CLI autonomous`；现在虽然已经有一条 `hermes_native_proof` 的 experimental critique lane，但只有带 session substrate、route orchestration、domain mutation 与 durable state transition 的 full agent loop 才算 `Hermes-native`，chat relay 不算。若本机 Hermes 当前仍走 `custom + chat_completions`，这条 lane 也只证明 full-loop 存在，不证明 provider 侧 reasoning 语义已经等价于 Codex CLI。
+- 这里的 `critique` landed 只表示当前默认 concrete executor 已统一到 `Codex CLI`，默认模式是 `autonomous`；现在虽然已经有一条 `hermes_native_proof` 的 experimental critique lane，但只有带 session substrate、route orchestration、domain mutation 与 durable state transition 的 full agent loop 才算 `Hermes-native`，chat relay 不算。若本机 Hermes 当前仍走 `custom + chat_completions`，这条 lane 也只证明 full-loop 存在，不证明 provider 侧 reasoning 语义已经等价于 Codex CLI。
 - 产物面：`package artifact-bundle`、`pass revision`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready`。
 
 ## 数据与对象模型

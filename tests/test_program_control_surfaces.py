@@ -31,14 +31,31 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["runtime_owner"]["active_tranche"],
             "P4.F local submission-ready package landing",
         )
-        self.assertEqual(contract["executor_defaults"]["default_executor"], "codex_cli_autonomous")
+        self.assertEqual(contract["executor_defaults"]["default_executor_name"], "codex_cli")
+        self.assertEqual(contract["executor_defaults"]["default_executor_mode"], "autonomous")
         self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")
         self.assertEqual(
             contract["executor_defaults"]["default_reasoning_effort"],
             "inherit_local_codex_default",
         )
+        self.assertEqual(
+            contract["executor_defaults"]["executor_labels"],
+            {
+                "codex_cli": "Codex CLI",
+                "hermes_agent": "Hermes-Agent",
+            },
+        )
+        self.assertEqual(
+            contract["executor_defaults"]["executor_statuses"],
+            {
+                "codex_cli": "default",
+                "hermes_agent": "experimental",
+            },
+        )
         self.assertTrue(contract["executor_defaults"]["chat_completion_only_executor_forbidden"])
-        self.assertTrue(contract["executor_defaults"]["hermes_native_requires_full_agent_loop"])
+        self.assertTrue(contract["executor_defaults"]["hermes_agent_requires_full_agent_loop"])
+        self.assertNotIn("default_executor", contract["executor_defaults"])
+        self.assertNotIn("hermes_native_requires_full_agent_loop", contract["executor_defaults"])
         self.assertEqual(contract["experimental_executor_proofs"][0]["route_id"], "critique")
         self.assertEqual(contract["experimental_executor_proofs"][0]["executor_kind"], "hermes_native_proof")
         self.assertEqual(
@@ -47,8 +64,12 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertEqual(contract["experimental_executor_proofs"][0]["status"], "experimental")
         self.assertEqual(
-            contract["experimental_executor_proofs"][0]["default_executor_unchanged"],
-            "codex_cli_autonomous",
+            contract["experimental_executor_proofs"][0]["default_executor_name_unchanged"],
+            "codex_cli",
+        )
+        self.assertEqual(
+            contract["experimental_executor_proofs"][0]["default_executor_mode_unchanged"],
+            "autonomous",
         )
         self.assertEqual(
             contract["runtime_owner"]["historical_baseline"],
