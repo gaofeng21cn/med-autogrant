@@ -59,6 +59,18 @@ You can start with prompts like:
 2. Technical readers and planners should read [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
 3. Developers and maintainers should continue into `docs/specs/`, `docs/references/`, `docs/plans/`, and [History Archive](./docs/history/README.md).
 
+## Agent And Operator Quick Start
+
+<details>
+  <summary><strong>Start here if you are handing this repo to Codex or another agent</strong></summary>
+
+- Read the [Docs Guide](./docs/README.md) first. It summarizes the current technical picture, the formal-entry matrix, and where repo-tracked truth lives.
+- Then read [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json). That is the fastest path to the active product-entry shell, schema-backed surfaces, and current mainline pointer.
+- Treat [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the public and technical truth set before changing routes or wording.
+- The current formal-entry matrix is `CLI`, `MCP`, and `controller`. The main machine-readable public shell centers on `product build-entry`, `product manifest`, `product frontdesk`, `product direct-entry`, `product user-loop`, and `package submission-ready`.
+
+</details>
+
 ## Further Reading
 
 - [Docs Guide](./docs/README.md)

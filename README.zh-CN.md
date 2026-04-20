@@ -59,6 +59,18 @@
 2. 技术规划、架构判断和方向同步，继续读 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 以及 [合同说明](./contracts/README.md)。
 3. 开发者和维护者再进入 `docs/specs/`、`docs/references/`、`docs/plans/` 与 [历史归档索引](./docs/history/README.zh-CN.md)。
 
+## 给 Agent 和技术操作者的快速入口
+
+<details>
+  <summary><strong>如果你准备把这个仓直接交给 Codex 或其他 Agent，先看这里</strong></summary>
+
+- 先读 [文档索引](./docs/README.zh-CN.md)。这里已经把当前技术全景、formal-entry matrix 和 repo-tracked 真相所在位置收口好了。
+- 然后读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。这是恢复 active product-entry shell、schema-backed surface 和当前 mainline 指针的最快路径。
+- 在改 route、入口 wording 或公开表述前，把 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 当成公开与技术真相集。
+- 当前 formal-entry matrix 是 `CLI`、`MCP` 和 `controller`。主要 machine-readable public shell 围绕 `product build-entry`、`product manifest`、`product frontdesk`、`product direct-entry`、`product user-loop` 和 `package submission-ready`。
+
+</details>
+
 ## 延伸阅读
 
 - [文档索引](./docs/README.zh-CN.md)
