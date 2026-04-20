@@ -46,6 +46,7 @@ class RepositoryHygieneTest(unittest.TestCase):
         inspection = inspect_current_repo_family_shared_alignment()
 
         self.assertEqual(len(inspection["owner_commit"]), 40)
+        self.assertEqual(inspection["verify_command"], "scripts/verify.sh family")
         self.assertEqual(inspection["status"], "aligned")
         self.assertEqual(
             [item["file"] for item in inspection["findings"]],
