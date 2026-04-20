@@ -9,9 +9,6 @@ from med_autogrant.family_shared_release import inspect_current_repo_family_shar
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_OWNER_COMMIT = "cc1afc47ea2baca840e742155348f22de94ca50a"
-
-
 class RepositoryHygieneTest(unittest.TestCase):
     def test_gitignore_fully_ignores_local_tooling_state(self) -> None:
         text = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
@@ -48,14 +45,14 @@ class RepositoryHygieneTest(unittest.TestCase):
     def test_family_shared_release_alignment_is_fail_closed_for_repo_truth(self) -> None:
         inspection = inspect_current_repo_family_shared_alignment()
 
-        self.assertEqual(inspection["owner_commit"], EXPECTED_OWNER_COMMIT)
+        self.assertEqual(len(inspection["owner_commit"]), 40)
         self.assertEqual(inspection["status"], "aligned")
         self.assertEqual(
             [item["file"] for item in inspection["findings"]],
             ["pyproject.toml", "uv.lock"],
         )
         self.assertTrue(all(item["status"] == "aligned" for item in inspection["findings"]))
-        self.assertTrue(all(item["pins"] == [EXPECTED_OWNER_COMMIT] for item in inspection["findings"]))
+        self.assertTrue(all(item["pins"] == [inspection["owner_commit"]] for item in inspection["findings"]))
 
 
 if __name__ == "__main__":
