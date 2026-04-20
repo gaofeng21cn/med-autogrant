@@ -20,9 +20,16 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def inspect_current_repo_family_shared_alignment() -> dict[str, Any]:
+def inspect_current_repo_family_shared_alignment(
+    *,
+    repo_root_override: Path | str | None = None,
+    owner_repo_root: Path | str | None = None,
+    owner_repo: str = OWNER_REPO,
+) -> dict[str, Any]:
+    resolved_repo_root = Path(repo_root_override).expanduser().resolve() if repo_root_override else _repo_root()
     return _inspect_current_repo_family_shared_alignment(
-        repo_root=_repo_root(),
+        repo_root=resolved_repo_root,
         consumer_repo_id=CONSUMER_REPO_ID,
-        owner_repo=OWNER_REPO,
+        owner_repo_root=owner_repo_root,
+        owner_repo=owner_repo,
     )
