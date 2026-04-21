@@ -96,7 +96,7 @@ PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
             {
                 "rule_id": "rule.program_family",
                 "opportunity_field": "program_family",
-                "allowed_values": ("NHLBI R21",),
+                "allowed_values": ("NHLBI R21", "NIH R21 Parent"),
             },
             {
                 "rule_id": "rule.project_types",

@@ -4,20 +4,58 @@
   "title": "FundingLandscapeDiscovery",
   "type": "object",
   "$defs": {
+    "sourceReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_kind",
+        "source_url",
+        "fetched_at",
+        "item_count"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_url": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "fetched_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "item_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
     "discoverySummary": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "decision",
+        "discovery_source",
         "evaluated_catalog_count",
         "post_filter_catalog_count",
         "blocked_by_rules_count",
+        "source_receipt_count",
         "applied_filters",
         "required_input_fields"
       ],
       "properties": {
         "decision": {
           "const": "discovered"
+        },
+        "discovery_source": {
+          "type": "string",
+          "enum": [
+            "catalog_static",
+            "official_live"
+          ]
         },
         "evaluated_catalog_count": {
           "type": "integer",
@@ -28,6 +66,10 @@
           "minimum": 0
         },
         "blocked_by_rules_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_receipt_count": {
           "type": "integer",
           "minimum": 0
         },
@@ -50,6 +92,7 @@
     "discovery_input_id",
     "funding_opportunity_pool",
     "candidate_count",
+    "source_receipts",
     "discovery_summary"
   ],
   "properties": {
@@ -73,6 +116,12 @@
     "candidate_count": {
       "type": "integer",
       "minimum": 1
+    },
+    "source_receipts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sourceReceipt"
+      }
     },
     "discovery_summary": {
       "$ref": "#/$defs/discoverySummary"

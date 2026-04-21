@@ -30,6 +30,16 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 `discovery_input materials -> discover-funding-opportunities -> funding_opportunity_pool -> select-project-profile`
 
+当前 `discover-funding-opportunities` 有两种 source mode：
+
+- `catalog_static`
+  使用 repo 内冻结 catalog，保证离线稳定与测试可重复。
+- `official_live`
+  直接读取官方页面并即时形成候选池。当前接入的官方入口是：
+  - NIH Parent Announcements: [grants.nih.gov/funding/explore-nih-opportunities/parent-announcements](https://grants.nih.gov/funding/explore-nih-opportunities/parent-announcements)
+  - NSFC 项目指南列表: [nsfc.gov.cn/p1/3381/2824/zntg.html](https://www.nsfc.gov.cn/p1/3381/2824/zntg.html)
+  - NSFC 医学科学部指南页: [nsfc.gov.cn/p1/2931/3971/3975/3991/yxkxb22222.html](https://www.nsfc.gov.cn/p1/2931/3971/3975/3991/yxkxb22222.html)
+
 这层入口的职责是：
 
 - 先在材料池与 funding opportunity pool 之间做 profile 选择，而不是要求 caller 预先写死 `project_profile`

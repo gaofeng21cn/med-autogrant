@@ -22,6 +22,13 @@
     "mode": {
       "$ref": "common.schema.json#/$defs/mode"
     },
+    "discovery_source": {
+      "type": "string",
+      "enum": [
+        "catalog_static",
+        "official_live"
+      ]
+    },
     "rough_direction_hint": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
