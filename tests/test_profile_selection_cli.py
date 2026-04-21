@@ -1,0 +1,89 @@
+from __future__ import annotations
+
+import json
+import sys
+import tempfile
+import unittest
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.public_cli import public_cli_argv  # noqa: E402
+
+
+NSFC_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_nsfc_general.json"
+NIH_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_nih_r21.json"
+
+
+class ProjectProfileSelectionCliTest(unittest.TestCase):
+    def run_cli(self, *args: str) -> tuple[int, str, str]:
+        stdout = StringIO()
+        stderr = StringIO()
+        with redirect_stdout(stdout), redirect_stderr(stderr):
+            exit_code = main(public_cli_argv(args))
+        return exit_code, stdout.getvalue(), stderr.getvalue()
+
+    def test_select_project_profile_returns_nsfc_recommendation(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "select-project-profile",
+            "--input",
+            str(NSFC_SELECTION_INPUT),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["project_profile_selection"]["recommended_project_profile"]["preset_id"], "nsfc_general_medical_v1")
+        self.assertEqual(payload["project_profile_selection"]["recommended_funding_opportunity"]["brief_id"], "nsfc-2026-general")
+
+    def test_select_project_profile_returns_nih_r21_recommendation(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "select-project-profile",
+            "--input",
+            str(NIH_SELECTION_INPUT),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["project_profile_selection"]["recommended_project_profile"]["preset_id"], "nih_r21_translational_v1")
+        self.assertEqual(payload["project_profile_selection"]["recommended_funding_opportunity"]["brief_id"], "nih-r21-2026-nhlbi")
+
+    def test_initialize_intake_workspace_materializes_input_intake_workspace(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_path = Path(tmp_dir) / "initialized-workspace.json"
+
+            exit_code, stdout, stderr = self.run_cli(
+                "initialize-intake-workspace",
+                "--input",
+                str(NSFC_SELECTION_INPUT),
+                "--output",
+                str(output_path),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertTrue(payload["ok"])
+            self.assertEqual(payload["initialized_workspace"]["lifecycle_stage"], "input_intake")
+            self.assertEqual(
+                payload["initialized_workspace"]["project_profile"]["preset_id"],
+                "nsfc_general_medical_v1",
+            )
+            self.assertTrue(output_path.exists())
+

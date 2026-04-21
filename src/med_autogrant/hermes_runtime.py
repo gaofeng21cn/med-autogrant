@@ -24,6 +24,7 @@ from med_autogrant.control_plane import (
     runtime_state_display_path,
 )
 from med_autogrant.critique_executor import build_critique_execution_document
+from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop
 from med_autogrant.final_package import (
     _validate_required_artifact_bundle_fields,
     build_final_package_document,
@@ -38,6 +39,10 @@ from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.upstream_hermes import HermesGrantRunLedger
 from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
+from med_autogrant.project_profile_selector import (
+    build_initialized_intake_workspace,
+    select_project_profile,
+)
 from med_autogrant.stage_router import determine_next_step
 from med_autogrant.domain_entry_contract import (
     SERVICE_SAFE_ENTRY_ADAPTER,
@@ -78,6 +83,9 @@ GRANT_INTAKE_AUDIT_SCHEMA_FILE = "grant-intake-audit.schema.json"
 GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE = "grant-evidence-grounding.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
 SUBMISSION_READY_PACKAGE_SCHEMA_FILE = "submission-ready-package.schema.json"
+PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE = "project-profile-selection-input.schema.json"
+PROJECT_PROFILE_SELECTION_SCHEMA_FILE = "project-profile-selection.schema.json"
+CRITIQUE_LOOP_REPORT_SCHEMA_FILE = "critique-loop-report.schema.json"
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
 HOSTED_CONTRACT_SCHEMA_FILES = (
@@ -86,6 +94,9 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "product-entry.schema.json",
     "grant-intake-audit.schema.json",
     "grant-evidence-grounding.schema.json",
+    "project-profile-selection-input.schema.json",
+    "project-profile-selection.schema.json",
+    "critique-loop-report.schema.json",
     "hosted-contract-bundle.schema.json",
     "submission-ready-package.schema.json",
 )
@@ -185,6 +196,71 @@ class HermesRuntimeSubstrate:
             lifecycle_stage=document["lifecycle_stage"],
         )
         return payload
+
+    def select_project_profile(self, *, input_path: str | Path) -> dict[str, Any]:
+        selection_input = _load_json_object(input_path, context="project profile selection input")
+        _validate_schema_payload(
+            selection_input,
+            schema_file=PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE,
+            context="project_profile_selection_input",
+        )
+        selection = select_project_profile(selection_input)
+        _validate_schema_payload(
+            selection,
+            schema_file=PROJECT_PROFILE_SELECTION_SCHEMA_FILE,
+            context="project_profile_selection",
+        )
+        return {
+            "ok": True,
+            "command": "select-project-profile",
+            "selection_input_id": selection_input["selection_input_id"],
+            "input_path": str(Path(input_path).expanduser().resolve()),
+            "project_profile_selection": selection,
+        }
+
+    def initialize_intake_workspace(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path,
+    ) -> dict[str, Any]:
+        selection_input = _load_json_object(input_path, context="project profile selection input")
+        _validate_schema_payload(
+            selection_input,
+            schema_file=PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE,
+            context="project_profile_selection_input",
+        )
+        workspace, selection = build_initialized_intake_workspace(selection_input)
+        validation = validate_workspace_document(workspace)
+        if not validation.ok:
+            first_issue = validation.errors[0]
+            raise WorkspaceStateError(
+                f"{first_issue.path}: {first_issue.message}",
+                errors=validation.errors,
+                grant_run_id=workspace.get("grant_run_id"),
+                workspace_id=workspace.get("workspace_id"),
+                lifecycle_stage=workspace.get("lifecycle_stage"),
+            )
+
+        resolved_output_path = Path(output_path).expanduser().resolve()
+        _guard_workspace_output_identity(
+            resolved_output_path,
+            workspace_document=workspace,
+            draft_id=None,
+        )
+        _write_revised_workspace_output(resolved_output_path, workspace)
+        return {
+            "ok": True,
+            "command": "initialize-intake-workspace",
+            "selection_input_id": selection_input["selection_input_id"],
+            "grant_run_id": workspace["grant_run_id"],
+            "workspace_id": workspace["workspace_id"],
+            "draft_id": None,
+            "lifecycle_stage": workspace["lifecycle_stage"],
+            "output_path": str(resolved_output_path),
+            "project_profile_selection": selection,
+            "initialized_workspace": workspace,
+        }
 
     def next_step(self, *, input_path: str | Path) -> dict[str, Any]:
         document = self._load_workspace(input_path)
@@ -504,6 +580,131 @@ class HermesRuntimeSubstrate:
             "output_path": str(resolved_output_path),
             "critique_execution": critique_document["critique_execution"],
             "critique_workspace": critique_document["critique_workspace"],
+        }
+
+    def execute_critique_revision_loop(
+        self,
+        *,
+        input_path: str | Path,
+        output_dir: str | Path,
+        max_rounds: int = 3,
+        executor_kind: str | None = None,
+    ) -> dict[str, Any]:
+        resolved_input_path = Path(input_path).expanduser().resolve()
+        starting_document = self._load_workspace(resolved_input_path)
+        starting_stage = str(starting_document.get("lifecycle_stage") or "").strip()
+        if starting_stage not in {"drafting", "revision"}:
+            raise WorkspaceStateError("execute-critique-revision-loop 只允许从 drafting 或 revision 进入。")
+        resolved_output_dir = Path(output_dir).expanduser().resolve()
+        resolved_output_dir.mkdir(parents=True, exist_ok=True)
+
+        current_round = {"index": 0}
+
+        def critique_runner(document: dict[str, Any]) -> dict[str, Any]:
+            current_round["index"] += 1
+            critique_document = build_critique_execution_document(
+                document=document,
+                input_path=resolved_input_path,
+                executor_kind=executor_kind,
+            )
+            critique_path = resolved_output_dir / f"round-{current_round['index']:02d}-critique-workspace.json"
+            _guard_critique_output_identity(
+                critique_path,
+                grant_run_id=critique_document["grant_run_id"],
+                workspace_id=critique_document["workspace_id"],
+                draft_id=critique_document["draft_id"],
+                active_revision_plan_id=critique_document["active_revision_plan_id"],
+                lifecycle_stage=critique_document["lifecycle_stage"],
+            )
+            _write_revised_workspace_output(critique_path, critique_document["critique_workspace"])
+            return {
+                "critique_workspace": critique_document["critique_workspace"],
+            }
+
+        def revision_runner(document: dict[str, Any]) -> dict[str, Any]:
+            revision_document = build_revision_execution_document(document=document)
+            revision_path = resolved_output_dir / f"round-{current_round['index']:02d}-revision-workspace.json"
+            _guard_revision_output_identity(
+                revision_path,
+                grant_run_id=revision_document["grant_run_id"],
+                workspace_id=revision_document["workspace_id"],
+                draft_id=revision_document["draft_id"],
+                active_revision_plan_id=revision_document["active_revision_plan_id"],
+                lifecycle_stage=revision_document["lifecycle_stage"],
+            )
+            _write_revised_workspace_output(revision_path, revision_document["revised_workspace"])
+            return {
+                "revised_workspace": revision_document["revised_workspace"],
+            }
+
+        loop = run_critique_revision_closed_loop(
+            current_document=starting_document,
+            max_rounds=max_rounds,
+            critique_runner=critique_runner,
+            revision_runner=revision_runner,
+            route_resolver=determine_next_step,
+        )
+        final_workspace = loop["final_workspace"]
+        final_route = loop["final_route"]
+        final_workspace_path = resolved_output_dir / "critique-loop-final-workspace.json"
+        _guard_workspace_output_identity(
+            final_workspace_path,
+            workspace_document=final_workspace,
+            draft_id=_require_workspace_context(final_workspace).active_draft["draft_id"]
+            if final_workspace.get("lifecycle_stage") in {"outline", "drafting", "critique", "revision", "frozen"}
+            and final_workspace.get("current_selection", {}).get("active_draft_id")
+            else None,
+        )
+        _write_revised_workspace_output(final_workspace_path, final_workspace)
+        loop_report = {
+            "surface_kind": "critique_loop_report",
+            "loop_version": 1,
+            "loop_status": loop["loop_status"],
+            "started_from_stage": starting_stage,
+            "completed_rounds": len(loop["rounds"]),
+            "max_rounds": max_rounds,
+            "termination_reason": loop["termination_reason"],
+            "final_stage": final_workspace["lifecycle_stage"],
+            "final_recommended_stage": final_route.get("recommended_stage"),
+            "rounds": [
+                {
+                    "round": item["round"],
+                    "decision": item["decision"],
+                    "critique_stage": item["critique_workspace"]["lifecycle_stage"],
+                    "revision_stage": (
+                        item["revision_workspace"]["lifecycle_stage"]
+                        if isinstance(item.get("revision_workspace"), dict)
+                        else None
+                    ),
+                    "recommended_stage": item["route"].get("recommended_stage"),
+                    "route_reason": item["route"].get("reason") or "unknown",
+                }
+                for item in loop["rounds"]
+            ],
+        }
+        _validate_schema_payload(
+            loop_report,
+            schema_file=CRITIQUE_LOOP_REPORT_SCHEMA_FILE,
+            context="critique_loop_report",
+        )
+        loop_report_path = resolved_output_dir / "critique-loop-report.json"
+        _write_json_output(loop_report_path, loop_report, label="critique loop report")
+        return {
+            "ok": True,
+            "command": "execute-critique-revision-loop",
+            "grant_run_id": final_workspace["grant_run_id"],
+            "workspace_id": final_workspace["workspace_id"],
+            "draft_id": (
+                _require_workspace_context(final_workspace).active_draft["draft_id"]
+                if final_workspace.get("current_selection", {}).get("active_draft_id")
+                else None
+            ),
+            "lifecycle_stage": final_workspace["lifecycle_stage"],
+            "output_dir": str(resolved_output_dir),
+            "loop_report_path": str(loop_report_path),
+            "final_workspace_path": str(final_workspace_path),
+            "loop_report": loop_report,
+            "final_workspace": final_workspace,
         }
 
     def execute_freeze_pass(
@@ -1356,6 +1557,19 @@ def _validate_contract_schema(
     )
 
 
+def _validate_schema_payload(
+    payload: dict[str, Any],
+    *,
+    schema_file: str,
+    context: str,
+) -> None:
+    _validate_contract_schema(
+        payload,
+        schema_file=schema_file,
+        context=context,
+    )
+
+
 def _validate_executor_routing_contract(
     contract: dict[str, Any],
     *,
@@ -1904,3 +2118,24 @@ def _write_submission_ready_package_output(
         )
     except OSError as exc:
         raise WorkspaceFileError(f"写入 submission ready package output 失败: {output_path}") from exc
+
+
+def _write_json_output(output_path: Path, payload: dict[str, Any], *, label: str) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    except OSError as exc:
+        raise WorkspaceFileError(f"写入 {label} 失败: {output_path}") from exc
+
+
+def _load_json_object(input_path: str | Path, *, context: str) -> dict[str, Any]:
+    resolved_input_path = Path(input_path).expanduser().resolve()
+    try:
+        payload = json.loads(resolved_input_path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise WorkspaceFileError(f"未找到 {context} 文件: {resolved_input_path}") from exc
+    except json.JSONDecodeError as exc:
+        raise WorkspaceFileError(f"{context} JSON 解析失败: {resolved_input_path}") from exc
+    if not isinstance(payload, dict):
+        raise WorkspaceFileError(f"{context} 顶层必须是 JSON object。")
+    return payload

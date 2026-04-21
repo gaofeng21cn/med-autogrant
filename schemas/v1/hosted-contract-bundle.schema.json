@@ -189,6 +189,8 @@
             "summarize-workspace",
             "grant-intake-audit",
             "grant-evidence-grounding",
+            "select-project-profile",
+            "initialize-intake-workspace",
             "next-step",
             "critique-summary",
             "stage-route-report",
@@ -202,6 +204,7 @@
             "execute-drafting-pass",
             "build-artifact-bundle",
             "execute-critique-pass",
+            "execute-critique-revision-loop",
             "execute-revision-pass",
             "execute-freeze-pass",
             "build-final-package",
@@ -214,7 +217,7 @@
           "items": {
             "$ref": "product-entry.schema.json#/$defs/domainEntryCommandContract"
           },
-          "minItems": 23
+          "minItems": 26
         }
       }
     },
@@ -244,6 +247,9 @@
             "product-entry.schema.json",
             "grant-intake-audit.schema.json",
             "grant-evidence-grounding.schema.json",
+            "project-profile-selection-input.schema.json",
+            "project-profile-selection.schema.json",
+            "critique-loop-report.schema.json",
             "hosted-contract-bundle.schema.json",
             "submission-ready-package.schema.json"
           ]

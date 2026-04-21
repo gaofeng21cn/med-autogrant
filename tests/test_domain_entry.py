@@ -24,6 +24,7 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.js
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
+NSFC_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_nsfc_general.json"
 
 
 class DomainEntryDispatchTest(unittest.TestCase):
@@ -164,6 +165,69 @@ class DomainEntryDispatchTest(unittest.TestCase):
         runtime.execute_direction_screening_pass.assert_called_once_with(
             input_path=str(INPUT_EXAMPLE_PATH),
             output_path="/tmp/direction-screening-output.json",
+        )
+
+    def test_domain_entry_dispatches_select_project_profile(self) -> None:
+        runtime = Mock()
+        runtime.select_project_profile.return_value = {
+            "ok": True,
+            "command": "select-project-profile",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "select-project-profile",
+                "input_path": str(NSFC_SELECTION_INPUT),
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "select-project-profile"})
+        runtime.select_project_profile.assert_called_once_with(
+            input_path=str(NSFC_SELECTION_INPUT),
+        )
+
+    def test_domain_entry_dispatches_initialize_intake_workspace(self) -> None:
+        runtime = Mock()
+        runtime.initialize_intake_workspace.return_value = {
+            "ok": True,
+            "command": "initialize-intake-workspace",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "initialize-intake-workspace",
+                "input_path": str(NSFC_SELECTION_INPUT),
+                "output_path": "/tmp/initialized-workspace.json",
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "initialize-intake-workspace"})
+        runtime.initialize_intake_workspace.assert_called_once_with(
+            input_path=str(NSFC_SELECTION_INPUT),
+            output_path="/tmp/initialized-workspace.json",
+        )
+
+    def test_domain_entry_dispatches_execute_critique_revision_loop(self) -> None:
+        runtime = Mock()
+        runtime.execute_critique_revision_loop.return_value = {
+            "ok": True,
+            "command": "execute-critique-revision-loop",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "execute-critique-revision-loop",
+                "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                "output_dir": "/tmp/critique-loop",
+                "max_rounds": 4,
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "execute-critique-revision-loop"})
+        runtime.execute_critique_revision_loop.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            output_dir="/tmp/critique-loop",
+            max_rounds=4,
         )
 
     def test_domain_entry_dispatches_build_submission_ready_package(self) -> None:

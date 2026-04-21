@@ -1,0 +1,162 @@
+{
+  "metadata": {
+    "schema_version": "v1",
+    "created_at": "2026-04-21T10:00:00Z",
+    "updated_at": "2026-04-21T10:00:00Z",
+    "source_mode": "auto",
+    "owner": "Med Auto Grant profile selector"
+  },
+  "selection_input_id": "profile-select-nih-demo",
+  "mode": "auto",
+  "rough_direction_hint": "心梗后炎症窗口的可转化干预探索",
+  "applicant_profile": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "applicant_id": "applicant-gaofeng",
+    "applicant_name": "示例申请人",
+    "institution": "示例医学院",
+    "career_stage": "faculty",
+    "research_domains": [
+      "心血管医学",
+      "炎症与纤维化"
+    ],
+    "clinical_domains": [
+      "心力衰竭"
+    ],
+    "methods_stack": [
+      "单细胞测序",
+      "空间转录组",
+      "动物模型"
+    ],
+    "training_background": [
+      "临床医学",
+      "转化医学"
+    ],
+    "strengths": [
+      "有心血管队列资源",
+      "有跨组学分析经验"
+    ],
+    "constraints": [
+      "功能验证链仍需补齐"
+    ]
+  },
+  "track_record": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "track_record_id": "track-001",
+    "representative_outputs": [
+      {
+        "output_id": "output-1",
+        "title": "单细胞图谱揭示心肌梗死后免疫重塑",
+        "output_type": "paper",
+        "year": 2024,
+        "relevance_summary": "提供炎症细胞动态和可转化干预窗口线索。",
+        "evidence": {
+          "evidence_id": "evi-output-1",
+          "label": "代表作 1",
+          "source_type": "publication",
+          "uri": "https://example.org/paper-1"
+        }
+      }
+    ],
+    "prior_grants": [
+      "省部级青年项目"
+    ],
+    "awards": [
+      "青年拔尖人才"
+    ]
+  },
+  "active_project_set": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "project_set_id": "projects-001",
+    "projects": [
+      {
+        "project_id": "project-1",
+        "title": "心梗后炎症消退的单细胞时序研究",
+        "status": "ongoing",
+        "role": "负责人",
+        "relevance_to_grant": "可直接支撑 exploratory/developmental aims 的可行性。",
+        "reusable_assets": [
+          "小鼠模型流程",
+          "时序样本库"
+        ],
+        "linked_evidence": [
+          {
+            "evidence_id": "evi-project-1",
+            "label": "在研项目 1",
+            "source_type": "project"
+          }
+        ]
+      }
+    ]
+  },
+  "preliminary_evidence_pack": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "evidence_pack_id": "prelim-001",
+    "evidence_items": [
+      {
+        "item_id": "prelim-item-1",
+        "title": "预实验提示心梗后炎症巨噬细胞时序变化关联后续纤维化风险",
+        "finding_summary": "第 3 天至第 7 天出现可干预的炎症通讯窗口。",
+        "modality": "omics",
+        "strength": "moderate",
+        "gaps": [
+          "缺少功能阻断与转化终点连接"
+        ],
+        "evidence": {
+          "evidence_id": "evi-prelim-1",
+          "label": "预实验 1",
+          "source_type": "preliminary_result"
+        }
+      }
+    ]
+  },
+  "funding_opportunity_pool": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-07T12:00:00Z",
+        "source_mode": "auto"
+      },
+      "brief_id": "nih-r21-2026-nhlbi",
+      "funder": "NIH",
+      "program_family": "NHLBI R21",
+      "project_types": [
+        "exploratory_developmental"
+      ],
+      "application_year": 2026,
+      "mandatory_sections": [
+        "Significance",
+        "Innovation",
+        "Approach",
+        "Investigator",
+        "Environment"
+      ],
+      "formal_constraints": [
+        "Exploratory aims should stay scoped to R21 expectations"
+      ],
+      "evaluation_notes": [
+        "Significance and innovation carry the highest review weight"
+      ]
+    }
+  ]
+}

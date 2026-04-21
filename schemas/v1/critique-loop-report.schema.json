@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/critique-loop-report.schema.json",
+  "title": "CritiqueLoopReport",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "loopRoundSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "round",
+        "decision",
+        "critique_stage",
+        "recommended_stage",
+        "route_reason"
+      ],
+      "properties": {
+        "round": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "ready_for_submission",
+            "revision_required",
+            "rollback_required"
+          ]
+        },
+        "critique_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "revision_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "recommended_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "route_reason": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "surface_kind",
+    "loop_version",
+    "loop_status",
+    "started_from_stage",
+    "completed_rounds",
+    "max_rounds",
+    "termination_reason",
+    "final_stage",
+    "final_recommended_stage",
+    "rounds"
+  ],
+  "properties": {
+    "surface_kind": {
+      "const": "critique_loop_report"
+    },
+    "loop_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "loop_status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "rollback_required",
+        "failed_closed"
+      ]
+    },
+    "started_from_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "completed_rounds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "max_rounds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "termination_reason": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "final_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "final_recommended_stage": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "rounds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/loopRoundSummary"
+      }
+    }
+  }
+}

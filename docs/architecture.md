@@ -21,6 +21,16 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 当前真实状态是：前两层已经存在，第三层的轻量结构化 shell 与第一棒 read-only product projection 也已经 landed，但成熟用户级前台仍未落地。
 
+在进入 repo-tracked workspace 之前，现在还多了一层 pre-workspace intake 入口：
+
+`selection_input materials -> select-project-profile -> initialize-intake-workspace -> input_intake workspace`
+
+这层入口的职责是：
+
+- 先在材料池与 funding opportunity pool 之间做 profile 选择，而不是要求 caller 预先写死 `project_profile`
+- 输出可直接落到现有 `input_intake -> ... -> frozen` 主线的 workspace 真相
+- 保持 `project_profile`、`funding_opportunity_brief` 与 critique policy 三者同源
+
 目标中的 domain 级链路应是：
 
 `User -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant Domain Harness OS`
@@ -109,7 +119,9 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `src/med_autogrant/hermes_runtime.py` 现在应被理解为 repo-side domain adapter / orchestrator，而不是 runtime substrate owner。
 - `runtime run` / `runtime resume` 直接通过 `MedAutoGrantDomainEntry -> HermesRuntimeSubstrate` 落到当前 runtime loop。
 - `pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting`、`pass critique`、`pass revision`、`pass freeze`、`package artifact-bundle`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
+- `select-project-profile` 与 `initialize-intake-workspace` 由 repo-side selector/initializer contract 持有材料池解析、profile/funding 匹配与 input-intake workspace 生成。
 - `pass critique` 当前默认走 `Codex CLI` 的 `autonomous` 模式：具体由 `critique_executor.py -> run_codex_exec(...)` 调起 `codex exec`，默认 `model / reasoning` 都继承本机 Codex 默认（`inherit_local_codex_default`），只有显式环境变量覆盖才会传 override。
+- `execute-critique-revision-loop` 在现有 `execute-critique-pass` 与 `execute-revision-pass` 之上复用同一份 route truth；它不会改写单步 pass 语义，只负责多轮闭环调度、每轮产物落盘与 stop condition 汇总。
 - 同一条 `pass critique` 现在也支持显式 `executor_kind=hermes_native_proof`：这条 experimental lane 会通过 `hermes_native_executor.py -> read_hermes_agent_contract(...) -> run_agent.AIAgent.run_conversation(...)` 真实调用上游 Hermes full agent loop；它会显式读取本机 `~/.hermes/config.yaml` 的 model/provider/base_url/api_mode/reasoning_effort，并且只有在完成整轮 loop、拿到真实工具事件和合法 JSON 结果时才通过，否则 fail-closed。
 - `package hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 hosted contract catalog。
 - `package submission-ready` 继续复用 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链，但会额外对 mandatory sections、evidence gaps、representative outputs、active projects 与 freeze gate 做 fail-closed 审核，只在全部满足时写出本地 `submission_ready_package`；它不替代外部官网提交。
@@ -125,6 +137,8 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 ## 数据与对象模型
 
 - `schemas/v1/nsfc-workspace.schema.json` 定义 workspace 结构与关键对象。
+- `schemas/v1/project-profile-selection-input.schema.json` 与 `schemas/v1/project-profile-selection.schema.json` 定义 pre-workspace profile selection 输入/输出。
+- `schemas/v1/critique-loop-report.schema.json` 定义多轮 critique/revision loop 的报告面。
 - `schemas/v1/service-safe-domain-surface.schema.json`、`schemas/v1/executor-routing-contract.schema.json`、`schemas/v1/product-entry.schema.json`、`schemas/v1/product-entry-manifest.schema.json`、`schemas/v1/product-frontdesk.schema.json`、`schemas/v1/grant-progress.schema.json`、`schemas/v1/grant-cockpit.schema.json`、`schemas/v1/grant-direct-entry.schema.json`、`schemas/v1/grant-user-loop.schema.json`、`schemas/v1/hosted-contract-bundle.schema.json` 与 `schemas/v1/submission-ready-package.schema.json` 定义当前 product entry / frontdoor discovery / landed route catalog / direct projection / direct-entry composition / direct user loop / hosted bundle / local submission-ready delivery / service-safe surface 的 schema-backed contract。
 - `grant_run_id` 仅作为执行句柄；`workspace_id`、`draft_id`、`program_id` 保持边界分离。
 - `workspace.py`、`stage_router.py`、`revision_executor.py`、`final_package.py` 等继续承载 MedAutoGrant 的 author-side domain logic；它们不应被未来的上游 substrate 目标或当前 repo-local helper 偷换成新的 authoring semantics。

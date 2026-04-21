@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/project-profile-selection-input.schema.json",
+  "title": "ProjectProfileSelectionInput",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "selection_input_id",
+    "mode",
+    "applicant_profile",
+    "track_record",
+    "active_project_set",
+    "preliminary_evidence_pack",
+    "funding_opportunity_pool"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "selection_input_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "mode": {
+      "$ref": "common.schema.json#/$defs/mode"
+    },
+    "rough_direction_hint": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "applicant_profile": {
+      "$ref": "applicant-profile.schema.json"
+    },
+    "track_record": {
+      "$ref": "track-record.schema.json"
+    },
+    "active_project_set": {
+      "$ref": "active-project-set.schema.json"
+    },
+    "preliminary_evidence_pack": {
+      "$ref": "preliminary-evidence-pack.schema.json"
+    },
+    "funding_opportunity_pool": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "funding-opportunity-brief.schema.json"
+      }
+    }
+  }
+}

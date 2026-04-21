@@ -20,6 +20,11 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "summarize-workspace": DomainEntryCommandSpec("summarize_workspace", ("input_path",)),
     "grant-intake-audit": DomainEntryCommandSpec("grant_intake_audit", ("input_path",)),
     "grant-evidence-grounding": DomainEntryCommandSpec("grant_evidence_grounding", ("input_path",)),
+    "select-project-profile": DomainEntryCommandSpec("select_project_profile", ("input_path",)),
+    "initialize-intake-workspace": DomainEntryCommandSpec(
+        "initialize_intake_workspace",
+        ("input_path", "output_path"),
+    ),
     "next-step": DomainEntryCommandSpec("next_step", ("input_path",)),
     "critique-summary": DomainEntryCommandSpec("critique_summary", ("input_path",)),
     "stage-route-report": DomainEntryCommandSpec("stage_route_report", ("input_path",)),
@@ -54,6 +59,11 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
         "execute_critique_pass",
         ("input_path", "output_path"),
         ("executor_kind",),
+    ),
+    "execute-critique-revision-loop": DomainEntryCommandSpec(
+        "execute_critique_revision_loop",
+        ("input_path", "output_dir"),
+        ("max_rounds", "executor_kind"),
     ),
     "execute-revision-pass": DomainEntryCommandSpec("execute_revision_pass", ("input_path", "output_path")),
     "execute-freeze-pass": DomainEntryCommandSpec("execute_freeze_pass", ("input_path", "output_path")),

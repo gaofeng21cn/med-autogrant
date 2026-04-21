@@ -26,6 +26,12 @@ DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES: list[dict[str, Any]] = [
     {"command": "summarize-workspace", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "grant-intake-audit", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "grant-evidence-grounding", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "select-project-profile", "required_fields": ["input_path"], "optional_fields": []},
+    {
+        "command": "initialize-intake-workspace",
+        "required_fields": ["input_path", "output_path"],
+        "optional_fields": [],
+    },
     {"command": "next-step", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "critique-summary", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "stage-route-report", "required_fields": ["input_path"], "optional_fields": []},
@@ -69,7 +75,12 @@ DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES: list[dict[str, Any]] = [
     {
         "command": "execute-critique-pass",
         "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
+        "optional_fields": ["executor_kind"],
+    },
+    {
+        "command": "execute-critique-revision-loop",
+        "required_fields": ["input_path", "output_dir"],
+        "optional_fields": ["max_rounds", "executor_kind"],
     },
     {
         "command": "execute-revision-pass",

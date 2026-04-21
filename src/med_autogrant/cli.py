@@ -179,6 +179,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_workspace_command(
         subparsers,
+        "select-project-profile",
+        handle_select_project_profile,
+        "从材料池与 funding pool 中选择推荐 project profile。",
+    )
+    _add_output_workspace_command(
+        subparsers,
+        "initialize-intake-workspace",
+        handle_initialize_intake_workspace,
+        "根据推荐 project profile 初始化 input_intake workspace。",
+    )
+    _add_workspace_command(
+        subparsers,
         "next-step",
         handle_next_step,
         "输出当前 workspace 的下一步建议。",
@@ -320,6 +332,12 @@ def build_parser() -> argparse.ArgumentParser:
         "execute-critique-pass",
         handle_execute_critique_pass,
         "通过 Codex CLI critique executor 生成导师式批注与 revision plan。",
+    )
+    _add_critique_loop_command(
+        subparsers,
+        "execute-critique-revision-loop",
+        handle_execute_critique_revision_loop,
+        "执行多轮 critique/revision closed loop，直到通过或 fail-closed 停止。",
     )
     _add_revision_executor_command(
         subparsers,
@@ -485,6 +503,20 @@ def handle_grant_intake_audit(args: argparse.Namespace) -> dict[str, Any]:
 
 def handle_grant_evidence_grounding(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "grant-evidence-grounding", "input_path": args.input})
+
+
+def handle_select_project_profile(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch({"command": "select-project-profile", "input_path": args.input})
+
+
+def handle_initialize_intake_workspace(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "initialize-intake-workspace",
+            "input_path": args.input,
+            "output_path": args.output,
+        }
+    )
 
 
 def handle_next_step(args: argparse.Namespace) -> dict[str, Any]:
@@ -657,6 +689,18 @@ def handle_execute_critique_pass(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(request)
 
 
+def handle_execute_critique_revision_loop(args: argparse.Namespace) -> dict[str, Any]:
+    request: dict[str, Any] = {
+        "command": "execute-critique-revision-loop",
+        "input_path": args.input,
+        "output_dir": args.output_dir,
+        "max_rounds": args.max_rounds,
+    }
+    if args.executor is not None:
+        request["executor_kind"] = args.executor
+    return _domain_entry().dispatch(request)
+
+
 def handle_execute_revision_pass(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(
         {
@@ -734,6 +778,19 @@ def _add_workspace_command(
 ) -> None:
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_output_workspace_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--output", required=True)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -835,6 +892,21 @@ def _add_revision_executor_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
     command.add_argument("--output", required=True)
+    command.add_argument("--executor")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_critique_loop_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--output-dir", required=True)
+    command.add_argument("--max-rounds", type=int, default=3)
     command.add_argument("--executor")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
@@ -957,6 +1029,29 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         ]
         for item in grounding["evidence_gaps"]:
             lines.append(f"- gap: {item}")
+        return "\n".join(lines)
+
+    if command == "select-project-profile":
+        selection = payload["project_profile_selection"]
+        lines = [
+            f"selection_input_id: {payload['selection_input_id']}",
+            f"推荐 profile: {selection['recommended_project_profile']['profile_label']}",
+            f"推荐 funding: {selection['recommended_funding_opportunity']['brief_id']}",
+            f"当前判断: {selection['selection_summary']['selected_profile_preset_id']}",
+        ]
+        for code in selection["selection_summary"]["reason_codes"]:
+            lines.append(f"- reason_code: {code}")
+        return "\n".join(lines)
+
+    if command == "initialize-intake-workspace":
+        lines = [
+            f"selection_input_id: {payload['selection_input_id']}",
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"output_path: {payload['output_path']}",
+            f"推荐 profile: {payload['project_profile_selection']['recommended_project_profile']['profile_label']}",
+        ]
         return "\n".join(lines)
 
     if command == "next-step":
@@ -1246,6 +1341,20 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             lines.append(f"executor_mode: {executor['mode']}")
         if executor.get("session_id"):
             lines.append(f"executor_session_id: {executor['session_id']}")
+        return "\n".join(lines)
+
+    if command == "execute-critique-revision-loop":
+        loop_report = payload["loop_report"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"loop_status: {loop_report['loop_status']}",
+            f"termination_reason: {loop_report['termination_reason']}",
+            f"completed_rounds: {loop_report['completed_rounds']}",
+            f"output_dir: {payload['output_dir']}",
+        ]
         return "\n".join(lines)
 
     if command == "execute-revision-pass":
