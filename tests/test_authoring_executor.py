@@ -89,6 +89,11 @@ class AuthoringExecutorTest(unittest.TestCase):
         self.assertEqual(workspace["application_drafts"], [])
         self.assertEqual(workspace["mentor_critiques"], [])
         self.assertEqual(workspace["revision_plans"], [])
+        self.assertEqual(workspace["grant_intake_audit"]["audit_kind"], "grant_intake_audit")
+        self.assertEqual(
+            workspace["grant_evidence_grounding"]["selection_context"]["selected_direction_id"],
+            "direction-v2",
+        )
         self.assert_workspace_valid(workspace, "direction_screening")
 
     def test_question_refinement_builds_question_and_clears_downstream_state(self) -> None:

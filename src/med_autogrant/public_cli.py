@@ -24,6 +24,8 @@ PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
 INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "validate-workspace": ("workspace", "validate"),
     "summarize-workspace": ("workspace", "summarize"),
+    "grant-intake-audit": ("workspace", "intake-audit"),
+    "grant-evidence-grounding": ("workspace", "evidence-grounding"),
     "next-step": ("workspace", "next-step"),
     "critique-summary": ("workspace", "critique-summary"),
     "stage-route-report": ("workspace", "route-report"),

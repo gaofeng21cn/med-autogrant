@@ -63,6 +63,44 @@ class DomainEntryDispatchTest(unittest.TestCase):
 
         self.assertEqual(payload, expected_payload)
 
+    def test_domain_entry_dispatches_grant_intake_audit(self) -> None:
+        runtime = Mock()
+        runtime.grant_intake_audit.return_value = {
+            "ok": True,
+            "command": "grant-intake-audit",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "grant-intake-audit",
+                "input_path": str(INPUT_EXAMPLE_PATH),
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "grant-intake-audit"})
+        runtime.grant_intake_audit.assert_called_once_with(
+            input_path=str(INPUT_EXAMPLE_PATH),
+        )
+
+    def test_domain_entry_dispatches_grant_evidence_grounding(self) -> None:
+        runtime = Mock()
+        runtime.grant_evidence_grounding.return_value = {
+            "ok": True,
+            "command": "grant-evidence-grounding",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "grant-evidence-grounding",
+                "input_path": str(INPUT_EXAMPLE_PATH),
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "grant-evidence-grounding"})
+        runtime.grant_evidence_grounding.assert_called_once_with(
+            input_path=str(INPUT_EXAMPLE_PATH),
+        )
+
     def test_domain_entry_dispatches_execute_critique_pass(self) -> None:
         runtime = Mock()
         runtime.execute_critique_pass.return_value = {

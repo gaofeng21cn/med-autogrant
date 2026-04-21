@@ -362,6 +362,135 @@
         }
       }
     },
+    "evidenceTrustLevel": {
+      "type": "string",
+      "enum": [
+        "trusted",
+        "usable_with_verification",
+        "reference_only",
+        "stale_or_conflicting",
+        "missing_context"
+      ]
+    },
+    "familyTrustRankedEvidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_kind",
+        "ref",
+        "trust_rank"
+      ],
+      "properties": {
+        "ref_kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "trust_rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "trust_note": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "supports": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "familyGroundingScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_kind",
+        "summary",
+        "scope_refs"
+      ],
+      "properties": {
+        "scope_kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "scope_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/familyReferenceRef"
+          }
+        }
+      }
+    },
+    "familyIntakeEvidenceAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "verdict": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "audited_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "summary_ref": {
+          "$ref": "#/$defs/familyReferenceRef"
+        }
+      }
+    },
+    "familyIntakeEvidenceCompanion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "target_domain_id",
+        "intake_audit",
+        "trust_ranked_evidence_refs",
+        "grounding_scope"
+      ],
+      "properties": {
+        "version": {
+          "const": "family-intake-evidence-companion.v1"
+        },
+        "target_domain_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "intake_audit": {
+          "$ref": "#/$defs/familyIntakeEvidenceAudit"
+        },
+        "trust_ranked_evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/familyTrustRankedEvidenceRef"
+          }
+        },
+        "grounding_scope": {
+          "$ref": "#/$defs/familyGroundingScope"
+        },
+        "human_gate_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/familyReferenceRef"
+          }
+        },
+        "checkpoint_lineage_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/familyReferenceRef"
+          }
+        }
+      }
+    },
     "familyOrchestrationCompanion": {
       "type": "object",
       "additionalProperties": false,
@@ -392,6 +521,9 @@
         },
         "checkpoint_lineage_surface": {
           "$ref": "#/$defs/familyReferenceRef"
+        },
+        "intake_evidence_companion": {
+          "$ref": "#/$defs/familyIntakeEvidenceCompanion"
         }
       }
     }

@@ -3,6 +3,14 @@
   "$id": "https://schemas.med-autogrant.local/v1/nsfc-workspace.schema.json",
   "title": "NSFCWorkspace",
   "type": "object",
+  "$defs": {
+    "grantIntakeAuditCommandSurfaceSchema": {
+      "$ref": "grant-intake-audit.schema.json"
+    },
+    "grantEvidenceGroundingCommandSurfaceSchema": {
+      "$ref": "grant-evidence-grounding.schema.json"
+    }
+  },
   "additionalProperties": false,
   "required": [
     "metadata",
@@ -59,6 +67,12 @@
     },
     "preliminary_evidence_pack": {
       "$ref": "preliminary-evidence-pack.schema.json"
+    },
+    "grant_intake_audit": {
+      "$ref": "grant-intake-audit.schema.json#/$defs/grantIntakeAudit"
+    },
+    "grant_evidence_grounding": {
+      "$ref": "grant-evidence-grounding.schema.json#/$defs/grantEvidenceGrounding"
     },
     "funding_opportunity_brief": {
       "$ref": "funding-opportunity-brief.schema.json"

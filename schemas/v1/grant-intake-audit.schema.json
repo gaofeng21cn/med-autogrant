@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-intake-audit.schema.json",
+  "title": "Med Auto Grant Intake Audit Surface",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "linkedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_kind",
+        "ref",
+        "label"
+      ],
+      "properties": {
+        "ref_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "trustSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trusted",
+        "usable_with_verification",
+        "reference_only",
+        "stale_or_conflicting",
+        "missing_context"
+      ],
+      "properties": {
+        "trusted": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "usable_with_verification": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reference_only": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stale_or_conflicting": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missing_context": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "representative_output_count",
+        "active_project_count",
+        "preliminary_evidence_count",
+        "primary_evidence_count"
+      ],
+      "properties": {
+        "representative_output_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "active_project_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "preliminary_evidence_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "primary_evidence_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicant_profile_ready",
+        "track_record_ready",
+        "active_project_set_ready",
+        "preliminary_evidence_ready",
+        "funding_opportunity_ready",
+        "ready_for_direction_screening"
+      ],
+      "properties": {
+        "applicant_profile_ready": {
+          "type": "boolean"
+        },
+        "track_record_ready": {
+          "type": "boolean"
+        },
+        "active_project_set_ready": {
+          "type": "boolean"
+        },
+        "preliminary_evidence_ready": {
+          "type": "boolean"
+        },
+        "funding_opportunity_ready": {
+          "type": "boolean"
+        },
+        "ready_for_direction_screening": {
+          "type": "boolean"
+        }
+      }
+    },
+    "intakeSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "section_id",
+        "status",
+        "trust_level",
+        "summary",
+        "linked_refs",
+        "missing_items"
+      ],
+      "properties": {
+        "section_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "trust_level": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "linked_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/linkedRef"
+          }
+        },
+        "missing_items": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "grantIntakeAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "audit_kind",
+        "audit_version",
+        "workspace_surface_kind",
+        "grant_run_id",
+        "workspace_id",
+        "lifecycle_stage",
+        "applicant_profile_id",
+        "track_record_id",
+        "active_project_set_id",
+        "preliminary_evidence_pack_id",
+        "funding_opportunity_id",
+        "intake_status",
+        "inventory",
+        "readiness",
+        "summary",
+        "overall_readiness",
+        "blocking_gaps",
+        "trust_summary",
+        "intake_sections"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "grant_intake_audit"
+        },
+        "audit_kind": {
+          "const": "grant_intake_audit"
+        },
+        "audit_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "grant_run_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "applicant_profile_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "track_record_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "active_project_set_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "preliminary_evidence_pack_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "funding_opportunity_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "intake_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "inventory": {
+          "$ref": "#/$defs/inventory"
+        },
+        "readiness": {
+          "$ref": "#/$defs/readiness"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "overall_readiness": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "blocking_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "trust_summary": {
+          "$ref": "#/$defs/trustSummary"
+        },
+        "intake_sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/intakeSection"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "grant_intake_audit"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "grant-intake-audit"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "lifecycle_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_intake_audit": {
+      "$ref": "#/$defs/grantIntakeAudit"
+    }
+  }
+}

@@ -246,6 +246,8 @@
     "draft_id",
     "lifecycle_stage",
     "input_path",
+    "grant_intake_audit",
+    "grant_evidence_grounding",
     "progress_projection",
     "family_orchestration"
   ],
@@ -270,6 +272,12 @@
     },
     "input_path": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_intake_audit": {
+      "$ref": "grant-intake-audit.schema.json#/$defs/grantIntakeAudit"
+    },
+    "grant_evidence_grounding": {
+      "$ref": "grant-evidence-grounding.schema.json#/$defs/grantEvidenceGrounding"
     },
     "progress_projection": {
       "$ref": "#/$defs/grantProgressProjection"

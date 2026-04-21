@@ -14,6 +14,7 @@ from med_autogrant.workspace import (
     _SchemaSubsetValidator,
     _build_workspace_state,
     _collect_known_ids,
+    materialize_workspace_surfaces,
     validate_workspace_document,
 )
 
@@ -116,8 +117,7 @@ def build_direction_screening_execution_document(
         "outline_frozen": False,
         "presubmission_frozen": False,
     }
-    _prune_invalid_preliminary_supports(next_workspace)
-    _validate_workspace_or_raise(next_workspace)
+    next_workspace = _finalize_execution_workspace(next_workspace)
 
     return {
         "grant_run_id": next_workspace["grant_run_id"],
@@ -235,8 +235,7 @@ def build_question_refinement_execution_document(
         "outline_frozen": False,
         "presubmission_frozen": False,
     }
-    _prune_invalid_preliminary_supports(next_workspace)
-    _validate_workspace_or_raise(next_workspace)
+    next_workspace = _finalize_execution_workspace(next_workspace)
 
     return {
         "grant_run_id": next_workspace["grant_run_id"],
@@ -333,8 +332,7 @@ def build_argument_building_execution_document(
         "outline_frozen": False,
         "presubmission_frozen": False,
     }
-    _prune_invalid_preliminary_supports(next_workspace)
-    _validate_workspace_or_raise(next_workspace)
+    next_workspace = _finalize_execution_workspace(next_workspace)
 
     return {
         "grant_run_id": next_workspace["grant_run_id"],
@@ -451,8 +449,7 @@ def build_fit_alignment_execution_document(
         "outline_frozen": False,
         "presubmission_frozen": False,
     }
-    _prune_invalid_preliminary_supports(next_workspace)
-    _validate_workspace_or_raise(next_workspace)
+    next_workspace = _finalize_execution_workspace(next_workspace)
 
     return {
         "grant_run_id": next_workspace["grant_run_id"],
@@ -564,8 +561,7 @@ def build_outline_execution_document(
         "outline_frozen": True,
         "presubmission_frozen": False,
     }
-    _prune_invalid_preliminary_supports(next_workspace)
-    _validate_workspace_or_raise(next_workspace)
+    next_workspace = _finalize_execution_workspace(next_workspace)
 
     return {
         "grant_run_id": next_workspace["grant_run_id"],
@@ -671,8 +667,7 @@ def build_drafting_execution_document(
         "outline_frozen": True,
         "presubmission_frozen": False,
     }
-    _prune_invalid_preliminary_supports(next_workspace)
-    _validate_workspace_or_raise(next_workspace)
+    next_workspace = _finalize_execution_workspace(next_workspace)
 
     return {
         "grant_run_id": next_workspace["grant_run_id"],
@@ -732,8 +727,7 @@ def build_freeze_execution_document(
         if isinstance(draft, dict) and draft.get("draft_id") == active_draft["draft_id"]:
             draft["metadata"] = _fresh_metadata(document)
             draft["status"] = "frozen"
-    _prune_invalid_preliminary_supports(next_workspace)
-    _validate_workspace_or_raise(next_workspace)
+    next_workspace = _finalize_execution_workspace(next_workspace)
 
     return {
         "grant_run_id": next_workspace["grant_run_id"],
@@ -1067,6 +1061,13 @@ def _validate_workspace_or_raise(document: dict[str, Any]) -> None:
         workspace_id=document.get("workspace_id"),
         lifecycle_stage=document.get("lifecycle_stage"),
     )
+
+
+def _finalize_execution_workspace(workspace: dict[str, Any]) -> dict[str, Any]:
+    _prune_invalid_preliminary_supports(workspace)
+    materialized_workspace = materialize_workspace_surfaces(workspace)
+    _validate_workspace_or_raise(materialized_workspace)
+    return materialized_workspace
 
 
 def _validate_schema_payload(

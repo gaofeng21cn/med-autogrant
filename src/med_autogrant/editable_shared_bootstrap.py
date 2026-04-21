@@ -80,6 +80,28 @@ def _prefer_existing_package_path(candidate_root: Path) -> None:
     package.__path__[:] = [package_root, *existing]
 
 
+def _evict_stale_package_modules(candidate_root: Path) -> None:
+    preferred_package_root = (candidate_root / _SHARED_PACKAGE_NAME).resolve()
+    stale_module_names: list[str] = []
+    for module_name, module in list(sys.modules.items()):
+        if module_name != _SHARED_PACKAGE_NAME and not module_name.startswith(f"{_SHARED_PACKAGE_NAME}."):
+            continue
+        module_file = getattr(module, "__file__", None)
+        if not isinstance(module_file, str) or not module_file.strip():
+            continue
+        try:
+            resolved_module_file = Path(module_file).resolve()
+        except OSError:
+            stale_module_names.append(module_name)
+            continue
+        if preferred_package_root not in resolved_module_file.parents and resolved_module_file != preferred_package_root:
+            stale_module_names.append(module_name)
+    for module_name in stale_module_names:
+        sys.modules.pop(module_name, None)
+    if stale_module_names:
+        importlib.invalidate_caches()
+
+
 def _load_shared_helper_module_from_path(helper_path: Path):
     spec = importlib.util.spec_from_file_location(
         f"{_SHARED_PACKAGE_NAME}_editable_consumer_launcher_{abs(hash(helper_path))}",
@@ -99,6 +121,7 @@ def _load_sibling_shared_helper(added_paths: list[Path]):
         shared_src_root = helper_path.parent.parent
         inserted = _prepend_path(shared_src_root)
         _prefer_existing_package_path(shared_src_root)
+        _evict_stale_package_modules(shared_src_root)
         if inserted:
             added_paths.append(shared_src_root)
         return _load_shared_helper_module_from_path(helper_path)

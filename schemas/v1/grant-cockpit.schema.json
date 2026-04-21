@@ -55,6 +55,8 @@
       "additionalProperties": false,
       "required": [
         "grant_progress",
+        "grant_intake_audit",
+        "grant_evidence_grounding",
         "summarize_workspace",
         "stage_route_report",
         "critique_summary",
@@ -64,6 +66,12 @@
       ],
       "properties": {
         "grant_progress": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "grant_intake_audit": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "grant_evidence_grounding": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "summarize_workspace": {
@@ -135,6 +143,8 @@
     "draft_id",
     "lifecycle_stage",
     "input_path",
+    "grant_intake_audit",
+    "grant_evidence_grounding",
     "grant_cockpit",
     "family_orchestration"
   ],
@@ -159,6 +169,12 @@
     },
     "input_path": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_intake_audit": {
+      "$ref": "grant-intake-audit.schema.json#/$defs/grantIntakeAudit"
+    },
+    "grant_evidence_grounding": {
+      "$ref": "grant-evidence-grounding.schema.json#/$defs/grantEvidenceGrounding"
     },
     "grant_cockpit": {
       "$ref": "#/$defs/grantCockpit"

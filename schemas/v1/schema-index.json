@@ -83,6 +83,16 @@
       "status": "frozen"
     },
     {
+      "name": "grant_intake_audit_surface",
+      "file": "grant-intake-audit.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "grant_evidence_grounding_surface",
+      "file": "grant-evidence-grounding.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "grant_progress_projection",
       "file": "grant-progress.schema.json",
       "status": "frozen"

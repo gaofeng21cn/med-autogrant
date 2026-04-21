@@ -24,6 +24,8 @@ EXPECTED_SCHEMAS = {
     "mentor-critique.schema.json",
     "revision-plan.schema.json",
     "nsfc-workspace.schema.json",
+    "grant-intake-audit.schema.json",
+    "grant-evidence-grounding.schema.json",
     "service-safe-domain-surface.schema.json",
     "pending-handoff-requirements.schema.json",
     "executor-routing-contract.schema.json",
@@ -106,6 +108,8 @@ class SchemaRegistryTest(unittest.TestCase):
             "application-draft.schema.json",
             "mentor-critique.schema.json",
             "revision-plan.schema.json",
+            "grant-intake-audit.schema.json#/$defs/grantIntakeAudit",
+            "grant-evidence-grounding.schema.json#/$defs/grantEvidenceGrounding",
         }
         for ref in expected_refs:
             self.assertIn(ref, refs)
@@ -117,6 +121,8 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["service_safe_domain_surface"], "service-safe-domain-surface.schema.json")
         self.assertEqual(names["executor_routing_contract"], "executor-routing-contract.schema.json")
         self.assertEqual(names["product_entry"], "product-entry.schema.json")
+        self.assertEqual(names["grant_intake_audit_surface"], "grant-intake-audit.schema.json")
+        self.assertEqual(names["grant_evidence_grounding_surface"], "grant-evidence-grounding.schema.json")
         self.assertEqual(names["grant_progress_projection"], "grant-progress.schema.json")
         self.assertEqual(names["grant_cockpit_projection"], "grant-cockpit.schema.json")
         self.assertEqual(names["grant_direct_entry_surface"], "grant-direct-entry.schema.json")

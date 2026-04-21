@@ -1,0 +1,285 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-evidence-grounding.schema.json",
+  "title": "Med Auto Grant Evidence Grounding Surface",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "selectionContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_direction_id",
+        "selected_question_id",
+        "active_fit_mapping_id",
+        "active_draft_id",
+        "active_revision_plan_id"
+      ],
+      "properties": {
+        "selected_direction_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "selected_question_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "active_fit_mapping_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "active_draft_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "active_revision_plan_id": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "evidenceInventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "representative_output_evidence_ids",
+        "active_project_evidence_ids",
+        "preliminary_evidence_ids",
+        "preliminary_evidence_item_ids",
+        "primary_evidence_ids"
+      ],
+      "properties": {
+        "representative_output_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "active_project_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "preliminary_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "preliminary_evidence_item_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "primary_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "selectionEvidenceMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_direction_evidence_ids",
+        "selected_question_evidence_ids",
+        "active_argument_chain_evidence_ids",
+        "active_fit_mapping_evidence_ids"
+      ],
+      "properties": {
+        "selected_direction_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "selected_question_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "active_argument_chain_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "active_fit_mapping_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "trustRankedEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref_kind",
+        "ref",
+        "label",
+        "trust_level",
+        "trust_rank",
+        "trust_note",
+        "source_type",
+        "supports"
+      ],
+      "properties": {
+        "ref_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "trust_level": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "trust_rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "trust_note": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_type": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "supports": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "grantEvidenceGrounding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "grounding_kind",
+        "grounding_version",
+        "workspace_surface_kind",
+        "grant_run_id",
+        "workspace_id",
+        "lifecycle_stage",
+        "scope_kind",
+        "funding_program",
+        "summary",
+        "grounding_status",
+        "ready_for_direction_screening",
+        "selection_context",
+        "evidence_inventory",
+        "selection_evidence_map",
+        "trust_ranked_evidence",
+        "evidence_gaps"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "grant_evidence_grounding"
+        },
+        "grounding_kind": {
+          "const": "grant_evidence_grounding"
+        },
+        "grounding_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "grant_run_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "scope_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "funding_program": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "grounding_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ready_for_direction_screening": {
+          "type": "boolean"
+        },
+        "selection_context": {
+          "$ref": "#/$defs/selectionContext"
+        },
+        "evidence_inventory": {
+          "$ref": "#/$defs/evidenceInventory"
+        },
+        "selection_evidence_map": {
+          "$ref": "#/$defs/selectionEvidenceMap"
+        },
+        "trust_ranked_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/trustRankedEvidence"
+          }
+        },
+        "evidence_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "grant_evidence_grounding"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "grant-evidence-grounding"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "lifecycle_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_evidence_grounding": {
+      "$ref": "#/$defs/grantEvidenceGrounding"
+    }
+  }
+}

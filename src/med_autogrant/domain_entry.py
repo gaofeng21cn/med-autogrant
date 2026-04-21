@@ -18,6 +18,8 @@ class DomainEntryCommandSpec:
 SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "validate-workspace": DomainEntryCommandSpec("validate_workspace", ("input_path",)),
     "summarize-workspace": DomainEntryCommandSpec("summarize_workspace", ("input_path",)),
+    "grant-intake-audit": DomainEntryCommandSpec("grant_intake_audit", ("input_path",)),
+    "grant-evidence-grounding": DomainEntryCommandSpec("grant_evidence_grounding", ("input_path",)),
     "next-step": DomainEntryCommandSpec("next_step", ("input_path",)),
     "critique-summary": DomainEntryCommandSpec("critique_summary", ("input_path",)),
     "stage-route-report": DomainEntryCommandSpec("stage_route_report", ("input_path",)),

@@ -202,6 +202,78 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "critique")
 
+    def test_grant_intake_audit_dispatches_workspace_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "grant-intake-audit",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": None,
+            "lifecycle_stage": "input_intake",
+            "input_path": str(INPUT_EXAMPLE_PATH),
+            "grant_intake_audit": {
+                "audit_kind": "grant_intake_audit",
+                "intake_status": "ready",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantDomainEntry") as entry_class:
+            entry = entry_class.return_value
+            entry.dispatch.return_value = expected_payload
+            exit_code, stdout, stderr = self.run_cli(
+                "grant-intake-audit",
+                "--input",
+                str(INPUT_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        entry.dispatch.assert_called_once_with(
+            {
+                "command": "grant-intake-audit",
+                "input_path": str(INPUT_EXAMPLE_PATH),
+            }
+        )
+
+    def test_grant_evidence_grounding_dispatches_workspace_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "grant-evidence-grounding",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": None,
+            "lifecycle_stage": "input_intake",
+            "input_path": str(INPUT_EXAMPLE_PATH),
+            "grant_evidence_grounding": {
+                "grounding_kind": "grant_evidence_grounding",
+                "grounding_status": "intake_grounded",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantDomainEntry") as entry_class:
+            entry = entry_class.return_value
+            entry.dispatch.return_value = expected_payload
+            exit_code, stdout, stderr = self.run_cli(
+                "grant-evidence-grounding",
+                "--input",
+                str(INPUT_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        entry.dispatch.assert_called_once_with(
+            {
+                "command": "grant-evidence-grounding",
+                "input_path": str(INPUT_EXAMPLE_PATH),
+            }
+        )
+
     def test_execute_critique_pass_accepts_executor_override(self) -> None:
         expected_payload = {
             "ok": True,
@@ -270,6 +342,59 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["current_selection"]["selected_question_id"], "question-immune-fibrosis")
         self.assertIsNone(payload["active_argument_chain"])
 
+    def test_summarize_workspace_exposes_intake_and_evidence_surfaces_for_input_intake(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "summarize-workspace",
+            "--input",
+            str(INPUT_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["grant_intake_audit"]["audit_kind"], "grant_intake_audit")
+        self.assertTrue(payload["grant_intake_audit"]["readiness"]["ready_for_direction_screening"])
+        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "intake_grounded")
+
+    def test_grant_intake_audit_projects_machine_readable_intake_surface(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-intake-audit",
+            "--input",
+            str(INPUT_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "grant-intake-audit")
+        self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
+        self.assertEqual(payload["grant_intake_audit"]["applicant_profile_id"], "applicant-gaofeng")
+
+    def test_grant_evidence_grounding_projects_machine_readable_grounding_surface(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "grant-evidence-grounding",
+            "--input",
+            str(INPUT_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "grant-evidence-grounding")
+        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "intake_grounded")
+        self.assertEqual(
+            payload["grant_evidence_grounding"]["evidence_inventory"]["primary_evidence_ids"],
+            ["evi-output-1", "evi-prelim-1", "evi-project-1"],
+        )
+
     def test_grant_progress_projects_user_facing_stage_summary_for_critique_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "grant-progress",
@@ -289,6 +414,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["progress_projection"]["recommended_next_stage"], "revision")
         self.assertEqual(payload["progress_projection"]["current_blockers"], ["必要性表述仍略偏现象描述。"])
         self.assertEqual(payload["progress_projection"]["needs_author_decision"], False)
+        self.assertEqual(payload["grant_intake_audit"]["audit_kind"], "grant_intake_audit")
+        self.assertEqual(payload["grant_evidence_grounding"]["grounding_kind"], "grant_evidence_grounding")
         self.assertIn("family_orchestration", payload)
         self.assertIn("action_graph_ref", payload["family_orchestration"])
         self.assertIn("human_gates", payload["family_orchestration"])
@@ -328,6 +455,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["grant_cockpit"]["workspace_status"], "attention_required")
         self.assertIn("必要性表述仍略偏现象描述。", payload["grant_cockpit"]["workspace_alerts"])
+        self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
+        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
         self.assertIn("build_direct_entry", payload["grant_cockpit"]["commands"])
         self.assertIn("family_orchestration", payload)
         self.assertIn("action_graph_ref", payload["family_orchestration"])
@@ -358,6 +487,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             payload["grant_direct_entry"]["recommended_executor_route"]["route_id"],
             "revision",
         )
+        self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
+        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
         self.assertIn("family_orchestration", payload)
         self.assertIn("action_graph_ref", payload["family_orchestration"])
         self.assertIn("human_gates", payload["family_orchestration"])

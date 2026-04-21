@@ -72,6 +72,57 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertTrue(result.ok)
         self.assertEqual(result.errors, [])
 
+    def test_summary_exposes_intake_audit_and_evidence_grounding_for_input_intake(self) -> None:
+        document = load_workspace_document(INPUT_EXAMPLE_PATH)
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["grant_intake_audit"]["audit_kind"], "grant_intake_audit")
+        self.assertEqual(summary["grant_intake_audit"]["applicant_profile_id"], "applicant-gaofeng")
+        self.assertTrue(summary["grant_intake_audit"]["readiness"]["ready_for_direction_screening"])
+        self.assertEqual(summary["grant_evidence_grounding"]["grounding_kind"], "grant_evidence_grounding")
+        self.assertEqual(summary["grant_evidence_grounding"]["grounding_status"], "intake_grounded")
+        self.assertEqual(
+            summary["grant_evidence_grounding"]["evidence_inventory"]["primary_evidence_ids"],
+            ["evi-output-1", "evi-prelim-1", "evi-project-1"],
+        )
+
+    def test_summary_exposes_grant_intake_audit_and_evidence_grounding_for_input_intake(self) -> None:
+        document = load_workspace_document(INPUT_EXAMPLE_PATH)
+
+        summary = summarize_workspace_document(document)
+
+        intake_audit = summary["grant_intake_audit"]
+        self.assertEqual(intake_audit["surface_kind"], "grant_intake_audit")
+        self.assertEqual(intake_audit["overall_readiness"], "ready_for_direction_screening")
+        self.assertEqual(intake_audit["trust_summary"]["trusted"], 2)
+        self.assertEqual(intake_audit["trust_summary"]["usable_with_verification"], 1)
+        self.assertEqual(
+            [section["section_id"] for section in intake_audit["intake_sections"]],
+            [
+                "applicant_profile",
+                "track_record",
+                "active_project_set",
+                "preliminary_evidence_pack",
+                "funding_opportunity_brief",
+            ],
+        )
+        self.assertEqual(intake_audit["blocking_gaps"], [])
+
+        evidence_grounding = summary["grant_evidence_grounding"]
+        self.assertEqual(evidence_grounding["surface_kind"], "grant_evidence_grounding")
+        self.assertEqual(evidence_grounding["grounding_status"], "intake_grounded")
+        self.assertTrue(evidence_grounding["ready_for_direction_screening"])
+        self.assertEqual(
+            [item["trust_level"] for item in evidence_grounding["trust_ranked_evidence"]],
+            ["trusted", "trusted", "usable_with_verification"],
+        )
+        self.assertEqual(
+            evidence_grounding["trust_ranked_evidence"][0]["supports"],
+            ["applicant_fit", "scientific_question", "technical_route"],
+        )
+        self.assertEqual(evidence_grounding["evidence_gaps"], [])
+
     def test_validation_accepts_direction_screening_with_selected_direction_only(self) -> None:
         document = load_workspace_document(DIRECTION_EXAMPLE_PATH)
 

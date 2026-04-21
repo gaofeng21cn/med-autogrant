@@ -50,8 +50,11 @@ from med_autogrant.workspace import (
     WorkspaceStateError,
     _SchemaSubsetValidator,
     _require_workspace_context,
+    build_grant_evidence_grounding,
+    build_grant_intake_audit,
     build_critique_summary,
     load_workspace_document,
+    materialize_workspace_surfaces,
     summarize_workspace_document,
     validate_workspace_document,
 )
@@ -71,6 +74,8 @@ GRANT_DIRECT_ENTRY_SCHEMA_FILE = "grant-direct-entry.schema.json"
 GRANT_USER_LOOP_SCHEMA_FILE = "grant-user-loop.schema.json"
 PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE = "product-entry-manifest.schema.json"
 PRODUCT_FRONTDESK_SCHEMA_FILE = "product-frontdesk.schema.json"
+GRANT_INTAKE_AUDIT_SCHEMA_FILE = "grant-intake-audit.schema.json"
+GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE = "grant-evidence-grounding.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
 SUBMISSION_READY_PACKAGE_SCHEMA_FILE = "submission-ready-package.schema.json"
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
@@ -79,6 +84,8 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "service-safe-domain-surface.schema.json",
     "executor-routing-contract.schema.json",
     "product-entry.schema.json",
+    "grant-intake-audit.schema.json",
+    "grant-evidence-grounding.schema.json",
     "hosted-contract-bundle.schema.json",
     "submission-ready-package.schema.json",
 )
@@ -134,6 +141,50 @@ class HermesRuntimeSubstrate:
     def summarize_workspace(self, *, input_path: str | Path) -> dict[str, Any]:
         document = self._load_workspace(input_path)
         return summarize_workspace_document(document)
+
+    def grant_intake_audit(self, *, input_path: str | Path) -> dict[str, Any]:
+        document = self._load_workspace(input_path)
+        payload = {
+            "ok": True,
+            "command": "grant-intake-audit",
+            "grant_run_id": document["grant_run_id"],
+            "workspace_id": document["workspace_id"],
+            "draft_id": None,
+            "lifecycle_stage": document["lifecycle_stage"],
+            "input_path": str(Path(input_path).expanduser().resolve()),
+            "grant_intake_audit": build_grant_intake_audit(document),
+        }
+        _validate_contract_schema(
+            payload,
+            schema_file=GRANT_INTAKE_AUDIT_SCHEMA_FILE,
+            context="grant_intake_audit",
+            grant_run_id=document["grant_run_id"],
+            workspace_id=document["workspace_id"],
+            lifecycle_stage=document["lifecycle_stage"],
+        )
+        return payload
+
+    def grant_evidence_grounding(self, *, input_path: str | Path) -> dict[str, Any]:
+        document = self._load_workspace(input_path)
+        payload = {
+            "ok": True,
+            "command": "grant-evidence-grounding",
+            "grant_run_id": document["grant_run_id"],
+            "workspace_id": document["workspace_id"],
+            "draft_id": None,
+            "lifecycle_stage": document["lifecycle_stage"],
+            "input_path": str(Path(input_path).expanduser().resolve()),
+            "grant_evidence_grounding": build_grant_evidence_grounding(document),
+        }
+        _validate_contract_schema(
+            payload,
+            schema_file=GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE,
+            context="grant_evidence_grounding",
+            grant_run_id=document["grant_run_id"],
+            workspace_id=document["workspace_id"],
+            lifecycle_stage=document["lifecycle_stage"],
+        )
+        return payload
 
     def next_step(self, *, input_path: str | Path) -> dict[str, Any]:
         document = self._load_workspace(input_path)
@@ -1533,14 +1584,16 @@ def _build_runtime_state_contract() -> dict[str, Any]:
 
 
 def _build_operator_contract() -> dict[str, Any]:
-    return {
-        "canonical_audit_surfaces": [
-            "validate-workspace",
-            "summarize-workspace",
-            "next-step",
-            "critique-summary",
-            "stage-route-report",
-        ],
+        return {
+            "canonical_audit_surfaces": [
+                "validate-workspace",
+                "summarize-workspace",
+                "grant-intake-audit",
+                "grant-evidence-grounding",
+                "next-step",
+                "critique-summary",
+                "stage-route-report",
+            ],
         "canonical_export_surfaces": [
             "execute-direction-screening-pass",
             "execute-question-refinement-pass",
@@ -1824,8 +1877,9 @@ def _write_artifact_bundle_output(output_path: Path, bundle: dict[str, Any]) -> 
 
 def _write_revised_workspace_output(output_path: Path, revised_workspace: dict[str, Any]) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    materialized_workspace = materialize_workspace_surfaces(revised_workspace)
     try:
-        output_path.write_text(json.dumps(revised_workspace, ensure_ascii=False, indent=2), encoding="utf-8")
+        output_path.write_text(json.dumps(materialized_workspace, ensure_ascii=False, indent=2), encoding="utf-8")
     except OSError as exc:
         raise WorkspaceFileError(f"写入 revised workspace output 失败: {output_path}") from exc
 

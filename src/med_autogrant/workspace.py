@@ -105,6 +105,18 @@ class WorkspaceState:
     reviewed_revision_plan: dict[str, Any] | None
 
 
+_EVIDENCE_TRUST_LEVELS: tuple[str, ...] = (
+    "trusted",
+    "usable_with_verification",
+    "reference_only",
+    "stale_or_conflicting",
+    "missing_context",
+)
+_EVIDENCE_TRUST_RANK: dict[str, int] = {
+    trust_level: index + 1 for index, trust_level in enumerate(_EVIDENCE_TRUST_LEVELS)
+}
+
+
 def load_workspace_document(path: str | Path) -> dict[str, Any]:
     workspace_path = Path(path)
     try:
@@ -128,6 +140,8 @@ def validate_workspace_document(document: dict[str, Any]) -> ValidationResult:
 
 def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
     state = _build_workspace_state(document)
+    grant_intake_audit = build_grant_intake_audit(document)
+    grant_evidence_grounding = build_grant_evidence_grounding(document)
     return {
         "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
@@ -149,6 +163,8 @@ def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
             "preliminary_evidence_count": len(document["preliminary_evidence_pack"].get("evidence_items", [])),
             "funding_program": document["funding_opportunity_brief"]["brief_id"],
         },
+        "grant_intake_audit": grant_intake_audit,
+        "grant_evidence_grounding": grant_evidence_grounding,
         "direction_hypotheses": {
             "count": len(document.get("direction_hypotheses", [])),
             "selected_direction_id": state.current_selection.get("selected_direction_id"),
@@ -166,6 +182,200 @@ def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
         "active_critique": _serialize_critique(state.active_critique),
         "reviewed_revision_evidence": _serialize_reviewed_revision_evidence(state.reviewed_revision_plan),
     }
+
+
+def build_grant_intake_audit(document: dict[str, Any]) -> dict[str, Any]:
+    workspace_id = document["workspace_id"]
+    grant_run_id = document["grant_run_id"]
+    lifecycle_stage = document["lifecycle_stage"]
+
+    representative_outputs = document["track_record"].get("representative_outputs", [])
+    active_projects = document["active_project_set"].get("projects", [])
+    preliminary_items = document["preliminary_evidence_pack"].get("evidence_items", [])
+    mandatory_sections = document["funding_opportunity_brief"].get("mandatory_sections", [])
+
+    blocking_gaps: list[str] = []
+    if not representative_outputs:
+        blocking_gaps.append("缺少可直接回指申请人基础的代表性成果。")
+    if not active_projects:
+        blocking_gaps.append("缺少可直接支撑当前申请的在研项目与资源锚点。")
+    if not preliminary_items:
+        blocking_gaps.append("缺少可支撑方向筛选的前期证据。")
+    if not mandatory_sections:
+        blocking_gaps.append("FundingOpportunityBrief 缺少 mandatory_sections。")
+
+    evidence_entries = _collect_trust_ranked_evidence(document)
+    trust_summary = {
+        trust_level: sum(1 for item in evidence_entries if item["trust_level"] == trust_level)
+        for trust_level in _EVIDENCE_TRUST_LEVELS
+    }
+
+    intake_sections = [
+        _build_intake_section(
+            workspace_id=workspace_id,
+            section_id="applicant_profile",
+            status="ready",
+            trust_level="trusted",
+            summary="申请人身份、研究方向与方法栈已具备基础 framing 条件。",
+        ),
+        _build_intake_section(
+            workspace_id=workspace_id,
+            section_id="track_record",
+            status="ready" if representative_outputs else "needs_completion",
+            trust_level="trusted" if representative_outputs else "missing_context",
+            summary=(
+                f"已绑定 {len(representative_outputs)} 条代表性成果，可回指申请人前期积累。"
+                if representative_outputs
+                else "尚未绑定可直接回指当前申请的代表性成果。"
+            ),
+            missing_items=[] if representative_outputs else ["representative_outputs"],
+        ),
+        _build_intake_section(
+            workspace_id=workspace_id,
+            section_id="active_project_set",
+            status="ready" if active_projects else "needs_completion",
+            trust_level="trusted" if active_projects else "missing_context",
+            summary=(
+                f"已绑定 {len(active_projects)} 个在研项目/资源锚点。"
+                if active_projects
+                else "尚未绑定可复用的在研项目或资源。"
+            ),
+            missing_items=[] if active_projects else ["projects"],
+        ),
+        _build_intake_section(
+            workspace_id=workspace_id,
+            section_id="preliminary_evidence_pack",
+            status="ready" if preliminary_items else "needs_completion",
+            trust_level=(
+                _trust_level_from_preliminary_item(preliminary_items[0]) if preliminary_items else "missing_context"
+            ),
+            summary=(
+                f"已绑定 {len(preliminary_items)} 条前期证据，可进入方向筛选。"
+                if preliminary_items
+                else "尚未形成可用于方向筛选的前期证据。"
+            ),
+            missing_items=[] if preliminary_items else ["evidence_items"],
+        ),
+        _build_intake_section(
+            workspace_id=workspace_id,
+            section_id="funding_opportunity_brief",
+            status="ready" if mandatory_sections else "needs_completion",
+            trust_level="trusted" if mandatory_sections else "missing_context",
+            summary=(
+                f"已冻结 {len(mandatory_sections)} 项申报硬约束。"
+                if mandatory_sections
+                else "FundingOpportunityBrief 尚未冻结 mandatory_sections。"
+            ),
+            missing_items=[] if mandatory_sections else ["mandatory_sections"],
+        ),
+    ]
+
+    overall_readiness = "ready_for_direction_screening" if not blocking_gaps else "needs_intake_completion"
+    readiness_summary = (
+        "intake 已具备方向筛选与证据 grounding 的最小闭环。"
+        if overall_readiness == "ready_for_direction_screening"
+        else "intake 仍有关键缺口，需先补齐基础材料再进入方向筛选。"
+    )
+    readiness = {
+        "applicant_profile_ready": True,
+        "track_record_ready": bool(representative_outputs),
+        "active_project_set_ready": bool(active_projects),
+        "preliminary_evidence_ready": bool(preliminary_items),
+        "funding_opportunity_ready": bool(mandatory_sections),
+        "ready_for_direction_screening": overall_readiness == "ready_for_direction_screening",
+    }
+    return {
+        "surface_kind": "grant_intake_audit",
+        "audit_kind": "grant_intake_audit",
+        "audit_version": 1,
+        "workspace_surface_kind": "nsfc_workspace",
+        "grant_run_id": grant_run_id,
+        "workspace_id": workspace_id,
+        "lifecycle_stage": lifecycle_stage,
+        "applicant_profile_id": document["applicant_profile"]["applicant_id"],
+        "track_record_id": document["track_record"]["track_record_id"],
+        "active_project_set_id": document["active_project_set"]["project_set_id"],
+        "preliminary_evidence_pack_id": document["preliminary_evidence_pack"]["evidence_pack_id"],
+        "funding_opportunity_id": document["funding_opportunity_brief"]["brief_id"],
+        "intake_status": "ready" if readiness["ready_for_direction_screening"] else "needs_completion",
+        "inventory": {
+            "representative_output_count": len(representative_outputs),
+            "active_project_count": len(active_projects),
+            "preliminary_evidence_count": len(preliminary_items),
+            "primary_evidence_count": len(_collect_primary_evidence_ids(document)),
+        },
+        "readiness": readiness,
+        "summary": readiness_summary,
+        "overall_readiness": overall_readiness,
+        "blocking_gaps": blocking_gaps,
+        "trust_summary": trust_summary,
+        "intake_sections": intake_sections,
+    }
+
+
+def build_grant_evidence_grounding(document: dict[str, Any]) -> dict[str, Any]:
+    grant_run_id = document["grant_run_id"]
+    workspace_id = document["workspace_id"]
+    lifecycle_stage = document["lifecycle_stage"]
+    funding_program = document["funding_opportunity_brief"]["brief_id"]
+    evidence_entries = _collect_trust_ranked_evidence(document)
+    selection_context = _selection_context(document)
+
+    evidence_gaps: list[str] = []
+    if not any(item["source_type"] == "publication" for item in evidence_entries):
+        evidence_gaps.append("缺少可直接代表申请人积累的 publication 级证据。")
+    if not any(item["source_type"] == "project" for item in evidence_entries):
+        evidence_gaps.append("缺少可直接约束技术路线的 project 级证据。")
+    if not any(item["source_type"] == "preliminary_result" for item in evidence_entries):
+        evidence_gaps.append("缺少可直接锚定科学问题的前期结果证据。")
+
+    ready_for_direction_screening = not evidence_gaps
+    has_selection_context = any(value is not None for value in selection_context.values())
+    if ready_for_direction_screening:
+        grounding_status = "selection_grounded" if has_selection_context else "intake_grounded"
+    else:
+        grounding_status = "grounding_incomplete"
+    summary = (
+        "证据 grounding 已能同时支撑科学问题、申请人适配度与技术路线三条主线。"
+        if ready_for_direction_screening
+        else "证据 grounding 仍不完整，尚未同时覆盖科学问题、申请人适配度与技术路线。"
+    )
+    return {
+        "surface_kind": "grant_evidence_grounding",
+        "grounding_kind": "grant_evidence_grounding",
+        "grounding_version": 1,
+        "workspace_surface_kind": "nsfc_workspace",
+        "grant_run_id": grant_run_id,
+        "workspace_id": workspace_id,
+        "lifecycle_stage": lifecycle_stage,
+        "scope_kind": "grant_route_scope",
+        "funding_program": funding_program,
+        "summary": summary,
+        "grounding_status": grounding_status,
+        "ready_for_direction_screening": ready_for_direction_screening,
+        "selection_context": selection_context,
+        "evidence_inventory": {
+            "representative_output_evidence_ids": _track_record_evidence_ids(document),
+            "active_project_evidence_ids": _active_project_evidence_ids(document),
+            "preliminary_evidence_ids": _preliminary_evidence_ids(document),
+            "preliminary_evidence_item_ids": _preliminary_evidence_item_ids(document),
+            "primary_evidence_ids": _collect_primary_evidence_ids(document),
+        },
+        "selection_evidence_map": {
+            "selected_direction_evidence_ids": _selected_direction_evidence_ids(document, selection_context),
+            "selected_question_evidence_ids": _selected_question_evidence_ids(document, selection_context),
+            "active_argument_chain_evidence_ids": _active_argument_chain_evidence_ids(document, selection_context),
+            "active_fit_mapping_evidence_ids": _active_fit_mapping_evidence_ids(document, selection_context),
+        },
+        "trust_ranked_evidence": evidence_entries,
+        "evidence_gaps": evidence_gaps,
+    }
+
+
+def materialize_workspace_surfaces(document: dict[str, Any]) -> dict[str, Any]:
+    document["grant_intake_audit"] = build_grant_intake_audit(document)
+    document["grant_evidence_grounding"] = build_grant_evidence_grounding(document)
+    return document
 
 
 def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
@@ -1252,6 +1462,256 @@ def _serialize_reviewed_revision_evidence(revision_plan: dict[str, Any] | None) 
         "post_revision_version_label": revision_plan.get("post_revision_version_label"),
         "comparison_summary": revision_plan.get("comparison_summary"),
     }
+
+
+def _build_intake_section(
+    *,
+    workspace_id: str,
+    section_id: str,
+    status: str,
+    trust_level: str,
+    summary: str,
+    missing_items: list[str] | None = None,
+) -> dict[str, Any]:
+    return {
+        "section_id": section_id,
+        "status": status,
+        "trust_level": trust_level,
+        "summary": summary,
+        "linked_refs": [
+            {
+                "ref_kind": "workspace_locator",
+                "ref": f"grant_workspace::{workspace_id}::{section_id}",
+                "label": section_id,
+            }
+        ],
+        "missing_items": list(missing_items or []),
+    }
+
+
+def _selection_context(document: dict[str, Any]) -> dict[str, Any]:
+    selection = document.get("current_selection")
+    if not isinstance(selection, dict):
+        selection = {}
+    return {
+        "selected_direction_id": selection.get("selected_direction_id"),
+        "selected_question_id": selection.get("selected_question_id"),
+        "active_fit_mapping_id": selection.get("active_fit_mapping_id"),
+        "active_draft_id": selection.get("active_draft_id"),
+        "active_revision_plan_id": selection.get("active_revision_plan_id"),
+    }
+
+
+def _track_record_evidence_ids(document: dict[str, Any]) -> list[str]:
+    evidence_ids: set[str] = set()
+    for output in document.get("track_record", {}).get("representative_outputs", []):
+        if not isinstance(output, dict):
+            continue
+        evidence = output.get("evidence")
+        evidence_id = evidence.get("evidence_id") if isinstance(evidence, dict) else None
+        if isinstance(evidence_id, str) and evidence_id.strip():
+            evidence_ids.add(evidence_id.strip())
+    return sorted(evidence_ids)
+
+
+def _active_project_evidence_ids(document: dict[str, Any]) -> list[str]:
+    evidence_ids: set[str] = set()
+    for project in document.get("active_project_set", {}).get("projects", []):
+        if not isinstance(project, dict):
+            continue
+        for evidence in project.get("linked_evidence", []):
+            if not isinstance(evidence, dict):
+                continue
+            evidence_id = evidence.get("evidence_id")
+            if isinstance(evidence_id, str) and evidence_id.strip():
+                evidence_ids.add(evidence_id.strip())
+    return sorted(evidence_ids)
+
+
+def _preliminary_evidence_ids(document: dict[str, Any]) -> list[str]:
+    evidence_ids: set[str] = set()
+    for item in document.get("preliminary_evidence_pack", {}).get("evidence_items", []):
+        if not isinstance(item, dict):
+            continue
+        evidence = item.get("evidence")
+        evidence_id = evidence.get("evidence_id") if isinstance(evidence, dict) else None
+        if isinstance(evidence_id, str) and evidence_id.strip():
+            evidence_ids.add(evidence_id.strip())
+    return sorted(evidence_ids)
+
+
+def _preliminary_evidence_item_ids(document: dict[str, Any]) -> list[str]:
+    item_ids: set[str] = set()
+    for item in document.get("preliminary_evidence_pack", {}).get("evidence_items", []):
+        if not isinstance(item, dict):
+            continue
+        item_id = item.get("item_id")
+        if isinstance(item_id, str) and item_id.strip():
+            item_ids.add(item_id.strip())
+    return sorted(item_ids)
+
+
+def _collect_primary_evidence_ids(document: dict[str, Any]) -> list[str]:
+    return sorted(
+        set(
+            _track_record_evidence_ids(document)
+            + _active_project_evidence_ids(document)
+            + _preliminary_evidence_ids(document)
+        )
+    )
+
+
+def _selected_direction_evidence_ids(document: dict[str, Any], selection_context: dict[str, Any]) -> list[str]:
+    selected_direction_id = selection_context.get("selected_direction_id")
+    if not isinstance(selected_direction_id, str) or not selected_direction_id.strip():
+        return []
+    for item in document.get("direction_hypotheses", []):
+        if isinstance(item, dict) and item.get("direction_id") == selected_direction_id:
+            return _string_list(item.get("required_evidence_ids"))
+    return []
+
+
+def _selected_question_evidence_ids(document: dict[str, Any], selection_context: dict[str, Any]) -> list[str]:
+    selected_question_id = selection_context.get("selected_question_id")
+    if not isinstance(selected_question_id, str) or not selected_question_id.strip():
+        return []
+    for item in document.get("scientific_question_cards", []):
+        if isinstance(item, dict) and item.get("question_id") == selected_question_id:
+            return _string_list(item.get("linked_evidence_ids"))
+    return []
+
+
+def _active_argument_chain_evidence_ids(document: dict[str, Any], selection_context: dict[str, Any]) -> list[str]:
+    selected_question_id = selection_context.get("selected_question_id")
+    if not isinstance(selected_question_id, str) or not selected_question_id.strip():
+        return []
+    for item in document.get("argument_chains", []):
+        if isinstance(item, dict) and item.get("scientific_question_id") == selected_question_id:
+            return _string_list(item.get("linked_evidence_ids"))
+    return []
+
+
+def _active_fit_mapping_evidence_ids(document: dict[str, Any], selection_context: dict[str, Any]) -> list[str]:
+    active_fit_mapping_id = selection_context.get("active_fit_mapping_id")
+    if not isinstance(active_fit_mapping_id, str) or not active_fit_mapping_id.strip():
+        return []
+    for item in document.get("applicant_fit_mappings", []):
+        if isinstance(item, dict) and item.get("fit_mapping_id") == active_fit_mapping_id:
+            return _string_list(item.get("linked_evidence_ids"))
+    return []
+
+
+def _string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return sorted({item.strip() for item in value if isinstance(item, str) and item.strip()})
+
+
+def _collect_trust_ranked_evidence(document: dict[str, Any]) -> list[dict[str, Any]]:
+    workspace_id = document["workspace_id"]
+    entries: list[dict[str, Any]] = []
+
+    for output in document["track_record"].get("representative_outputs", []):
+        output_id = output.get("output_id")
+        if not isinstance(output_id, str) or not output_id.strip():
+            continue
+        evidence = output.get("evidence")
+        trust_level = "trusted" if isinstance(evidence, dict) else "missing_context"
+        entries.append(
+            {
+                "ref_kind": "workspace_locator",
+                "ref": f"grant_workspace::{workspace_id}::track_record.representative_outputs::{output_id}",
+                "label": output.get("title") or output_id,
+                "trust_level": trust_level,
+                "trust_rank": _EVIDENCE_TRUST_RANK[trust_level],
+                "trust_note": (
+                    "代表性成果可直接回指申请人既有积累。"
+                    if isinstance(evidence, dict)
+                    else "代表性成果缺少结构化 evidence 指针。"
+                ),
+                "source_type": (evidence or {}).get("source_type", "publication") if isinstance(evidence, dict) else "publication",
+                "supports": ["applicant_fit", "scientific_question", "technical_route"],
+                "_source_priority": 1,
+            }
+        )
+
+    for project in document["active_project_set"].get("projects", []):
+        project_id = project.get("project_id")
+        if not isinstance(project_id, str) or not project_id.strip():
+            continue
+        linked_evidence = project.get("linked_evidence")
+        has_linked_evidence = isinstance(linked_evidence, list) and bool(linked_evidence)
+        trust_level = "trusted" if has_linked_evidence else "missing_context"
+        entries.append(
+            {
+                "ref_kind": "workspace_locator",
+                "ref": f"grant_workspace::{workspace_id}::active_project_set.projects::{project_id}",
+                "label": project.get("title") or project_id,
+                "trust_level": trust_level,
+                "trust_rank": _EVIDENCE_TRUST_RANK[trust_level],
+                "trust_note": (
+                    "在研项目可直接约束技术路线与资源可用性。"
+                    if has_linked_evidence
+                    else "在研项目缺少结构化 linked_evidence。"
+                ),
+                "source_type": "project",
+                "supports": ["applicant_fit", "technical_route"],
+                "_source_priority": 2,
+            }
+        )
+
+    for item in document["preliminary_evidence_pack"].get("evidence_items", []):
+        item_id = item.get("item_id")
+        if not isinstance(item_id, str) or not item_id.strip():
+            continue
+        trust_level = _trust_level_from_preliminary_item(item)
+        entries.append(
+            {
+                "ref_kind": "workspace_locator",
+                "ref": f"grant_workspace::{workspace_id}::preliminary_evidence_pack.evidence_items::{item_id}",
+                "label": item.get("title") or item_id,
+                "trust_level": trust_level,
+                "trust_rank": _EVIDENCE_TRUST_RANK[trust_level],
+                "trust_note": _trust_note_from_preliminary_item(item),
+                "source_type": "preliminary_result",
+                "supports": ["scientific_question", "technical_route"],
+                "_source_priority": 3,
+            }
+        )
+
+    ordered_entries = sorted(
+        entries,
+        key=lambda item: (
+            int(item["trust_rank"]),
+            int(item["_source_priority"]),
+            str(item["ref"]),
+        ),
+    )
+    for item in ordered_entries:
+        item.pop("_source_priority", None)
+    return ordered_entries
+
+
+def _trust_level_from_preliminary_item(item: dict[str, Any]) -> str:
+    strength = item.get("strength")
+    if strength == "strong":
+        return "trusted"
+    if strength == "moderate":
+        return "usable_with_verification"
+    if strength == "weak":
+        return "reference_only"
+    return "missing_context"
+
+
+def _trust_note_from_preliminary_item(item: dict[str, Any]) -> str:
+    trust_level = _trust_level_from_preliminary_item(item)
+    if trust_level == "trusted":
+        return "前期结果强度足够，可直接进入 route grounding。"
+    if trust_level == "usable_with_verification":
+        return "前期结果可用，但仍需在后续论证中显式补足功能验证。"
+    if trust_level == "reference_only":
+        return "前期结果强度偏弱，仅适合作为方向线索。"
+    return "前期结果缺少可判定的强度信息。"
 
 
 def _index_objects(

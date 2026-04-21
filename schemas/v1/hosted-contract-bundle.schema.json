@@ -187,6 +187,8 @@
             "probe-upstream-hermes",
             "validate-workspace",
             "summarize-workspace",
+            "grant-intake-audit",
+            "grant-evidence-grounding",
             "next-step",
             "critique-summary",
             "stage-route-report",
@@ -212,7 +214,7 @@
           "items": {
             "$ref": "product-entry.schema.json#/$defs/domainEntryCommandContract"
           },
-          "minItems": 21
+          "minItems": 23
         }
       }
     },
@@ -240,6 +242,8 @@
             "service-safe-domain-surface.schema.json",
             "executor-routing-contract.schema.json",
             "product-entry.schema.json",
+            "grant-intake-audit.schema.json",
+            "grant-evidence-grounding.schema.json",
             "hosted-contract-bundle.schema.json",
             "submission-ready-package.schema.json"
           ]

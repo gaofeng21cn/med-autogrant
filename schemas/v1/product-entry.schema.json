@@ -117,6 +117,8 @@
           "const": [
             "validate-workspace",
             "summarize-workspace",
+            "grant-intake-audit",
+            "grant-evidence-grounding",
             "next-step",
             "critique-summary",
             "stage-route-report"
@@ -238,6 +240,8 @@
             "probe-upstream-hermes",
             "validate-workspace",
             "summarize-workspace",
+            "grant-intake-audit",
+            "grant-evidence-grounding",
             "next-step",
             "critique-summary",
             "stage-route-report",
@@ -263,7 +267,7 @@
           "items": {
             "$ref": "#/$defs/domainEntryCommandContract"
           },
-          "minItems": 21
+          "minItems": 23
         }
       }
     },

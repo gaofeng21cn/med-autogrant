@@ -4,13 +4,17 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
+from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
+
+_editable_shared_bootstrap.ensure_editable_dependency_paths()
+
 from med_autogrant.control_plane import read_program_id, resolve_runtime_state_root
-from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.domain_entry_contract import (
     build_domain_entry_contract,
     build_gateway_interaction_contract,
     build_shared_handoff,
 )
+from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.hermes_runtime import (
     _build_author_side_route_contract,
     GRANT_COCKPIT_SCHEMA_FILE,
@@ -36,8 +40,10 @@ from med_autogrant.workspace import (
     load_workspace_document,
     validate_workspace_document,
 )
+
 from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
 from opl_harness_shared.family_orchestration import (
+    buildFamilyIntakeEvidenceCompanion as _build_shared_family_intake_evidence_companion,
     build_family_product_entry_orchestration as _build_shared_family_product_entry_orchestration,
 )
 from opl_harness_shared.automation_companions import (
@@ -394,7 +400,10 @@ class MedAutoGrantProductEntry:
             ),
             "checkpoint_status": checkpoint_status,
             "recommended_next_stage": recommended_next_stage,
-            "current_blockers": _read_blocking_issues(critique_summary),
+            "current_blockers": _read_projection_blockers(
+                workspace_summary=workspace_summary,
+                critique_summary=critique_summary,
+            ),
             "next_system_action": _read_next_system_action(next_step),
             "needs_author_decision": bool(next_step.get("requires_human_confirmation")),
             "author_decision_summary": _build_author_decision_summary(next_step),
@@ -435,6 +444,7 @@ class MedAutoGrantProductEntry:
             recommended_route_id=recommended_next_stage,
             recommended_route_status=_route_status_from_route_id(recommended_next_stage),
             needs_author_decision=bool(next_step.get("requires_human_confirmation")),
+            workspace_summary=workspace_summary,
             review_surface_ref="/progress_projection/product_entry_surface",
             event_envelope_surface_ref="/progress_projection/next_system_action",
             checkpoint_lineage_surface_ref="/progress_projection/checkpoint_status",
@@ -448,6 +458,12 @@ class MedAutoGrantProductEntry:
             "draft_id": draft_id,
             "lifecycle_stage": lifecycle_stage,
             "input_path": str(resolved_input_path),
+            "grant_intake_audit": dict(
+                _require_mapping(workspace_summary, "grant_intake_audit", context="summarize-workspace")
+            ),
+            "grant_evidence_grounding": dict(
+                _require_mapping(workspace_summary, "grant_evidence_grounding", context="summarize-workspace")
+            ),
             "progress_projection": progress_projection,
             "family_orchestration": family_orchestration,
         }
@@ -502,6 +518,7 @@ class MedAutoGrantProductEntry:
             recommended_route_id=recommended_next_stage,
             recommended_route_status=_route_status_from_route_id(recommended_next_stage),
             needs_author_decision=bool(progress_projection.get("needs_author_decision")),
+            workspace_summary=workspace_summary,
             review_surface_ref="/grant_cockpit/commands/build_direct_entry",
             event_envelope_surface_ref="/grant_cockpit/progress_projection/next_system_action",
             checkpoint_lineage_surface_ref="/grant_cockpit/progress_projection/checkpoint_status",
@@ -516,6 +533,12 @@ class MedAutoGrantProductEntry:
             "draft_id": progress_payload["draft_id"],
             "lifecycle_stage": progress_payload["lifecycle_stage"],
             "input_path": str(resolved_input_path),
+            "grant_intake_audit": dict(
+                _require_mapping(progress_payload, "grant_intake_audit", context="grant-progress")
+            ),
+            "grant_evidence_grounding": dict(
+                _require_mapping(progress_payload, "grant_evidence_grounding", context="grant-progress")
+            ),
             "grant_cockpit": {
                 "cockpit_kind": GRANT_COCKPIT_KIND,
                 "workspace_overview": _build_workspace_overview(
@@ -668,6 +691,10 @@ class MedAutoGrantProductEntry:
             recommended_route_id=recommended_route_id,
             recommended_route_status=recommended_route_status,
             needs_author_decision=needs_author_decision,
+            intake_evidence_companion=_optional_mapping(
+                _require_mapping(cockpit_payload, "family_orchestration", context="grant_direct_entry.grant_cockpit"),
+                "intake_evidence_companion",
+            ),
             review_surface_ref="/grant_direct_entry/recommended_executor_route",
             event_envelope_surface_ref="/grant_direct_entry/progress_projection/next_system_action",
             checkpoint_lineage_surface_ref="/grant_direct_entry/progress_projection/checkpoint_status",
@@ -681,6 +708,12 @@ class MedAutoGrantProductEntry:
             "draft_id": direct_payload["draft_id"],
             "lifecycle_stage": direct_payload["lifecycle_stage"],
             "input_path": direct_payload["input_path"],
+            "grant_intake_audit": dict(
+                _require_mapping(cockpit_payload, "grant_intake_audit", context="grant-cockpit")
+            ),
+            "grant_evidence_grounding": dict(
+                _require_mapping(cockpit_payload, "grant_evidence_grounding", context="grant-cockpit")
+            ),
             "grant_direct_entry": grant_direct_entry,
             "family_orchestration": family_orchestration,
         }
@@ -783,6 +816,10 @@ class MedAutoGrantProductEntry:
             recommended_route_id=recommended_route_id,
             recommended_route_status=recommended_route_status,
             needs_author_decision=needs_author_decision,
+            intake_evidence_companion=_optional_mapping(
+                _require_mapping(direct_entry_payload, "family_orchestration", context="grant_user_loop.grant_direct_entry"),
+                "intake_evidence_companion",
+            ),
             review_surface_ref="/grant_user_loop/next_action",
             event_envelope_surface_ref="/grant_user_loop/next_action",
             checkpoint_lineage_surface_ref=(
@@ -925,6 +962,10 @@ class MedAutoGrantProductEntry:
             recommended_route_id=recommended_route_id,
             recommended_route_status=_route_status_from_route_id(recommended_route_id),
             needs_author_decision=bool(progress_projection.get("needs_author_decision")),
+            intake_evidence_companion=_optional_mapping(
+                _require_mapping(progress_payload, "family_orchestration", context="grant-progress"),
+                "intake_evidence_companion",
+            ),
             review_surface_ref="/product_entry_manifest/operator_loop_surface",
             event_envelope_surface_ref="/product_entry_manifest/recommended_command",
             checkpoint_lineage_surface_ref="/product_entry_manifest/repo_mainline/active_phase",
@@ -1885,6 +1926,8 @@ def _build_family_orchestration_companion(
     recommended_route_id: str,
     recommended_route_status: str,
     needs_author_decision: bool,
+    workspace_summary: Mapping[str, Any] | None = None,
+    intake_evidence_companion: Mapping[str, Any] | None = None,
     review_surface_ref: str,
     event_envelope_surface_ref: str,
     checkpoint_lineage_surface_ref: str,
@@ -1923,6 +1966,11 @@ def _build_family_orchestration_companion(
     current_node_id = f"route:{resolved_current_route_id}"
     recommended_node_id = f"route:{resolved_recommended_route_id}"
     edge_on = "decision" if gate_status == "requested" else "success"
+    resolved_intake_evidence_companion = (
+        dict(intake_evidence_companion)
+        if isinstance(intake_evidence_companion, Mapping)
+        else _build_intake_evidence_companion(workspace_summary)
+    )
     return _build_shared_family_product_entry_orchestration(
         graph_id=f"mag_{resolved_current_route_id}_to_{resolved_recommended_route_id}_graph",
         target_domain_id=TARGET_DOMAIN_ID,
@@ -1989,6 +2037,7 @@ def _build_family_orchestration_companion(
             "ref": resolved_checkpoint_lineage_surface_ref,
             "label": "family checkpoint lineage surface",
         },
+        intake_evidence_companion=resolved_intake_evidence_companion,
     )
 
 
@@ -2015,6 +2064,153 @@ def _read_blocking_issues(critique_summary: Mapping[str, Any] | None) -> list[st
     if not isinstance(blocking_issues, list):
         return []
     return [item for item in blocking_issues if isinstance(item, str) and item.strip()]
+
+
+def _read_projection_blockers(
+    *,
+    workspace_summary: Mapping[str, Any],
+    critique_summary: Mapping[str, Any] | None,
+) -> list[str]:
+    critique_blockers = _read_blocking_issues(critique_summary)
+    if critique_blockers:
+        return critique_blockers
+
+    blockers: list[str] = []
+    intake_audit = _optional_mapping(workspace_summary, "grant_intake_audit")
+    evidence_grounding = _optional_mapping(workspace_summary, "grant_evidence_grounding")
+    if isinstance(intake_audit, Mapping):
+        blockers.extend(_read_nonempty_string_list(intake_audit.get("blocking_gaps"), context="grant_intake_audit"))
+    if isinstance(evidence_grounding, Mapping):
+        blockers.extend(
+            _read_nonempty_string_list(
+                evidence_grounding.get("evidence_gaps"),
+                context="grant_evidence_grounding",
+            )
+        )
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for blocker in blockers:
+        if blocker not in seen:
+            seen.add(blocker)
+            ordered.append(blocker)
+    return ordered
+
+
+def _build_intake_evidence_companion(workspace_summary: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(workspace_summary, Mapping):
+        return None
+    intake_audit = _optional_mapping(workspace_summary, "grant_intake_audit")
+    evidence_grounding = _optional_mapping(workspace_summary, "grant_evidence_grounding")
+    intake_snapshot = _optional_mapping(workspace_summary, "intake_snapshot")
+    if not isinstance(intake_audit, Mapping) or not isinstance(evidence_grounding, Mapping):
+        return None
+    trust_ranked_evidence = [
+        entry
+        for entry in evidence_grounding.get("trust_ranked_evidence", [])
+        if isinstance(entry, Mapping)
+    ]
+    if not trust_ranked_evidence:
+        return None
+
+    workspace_id = _require_nonempty_string_from_mapping(
+        workspace_summary,
+        "workspace_id",
+        context="summarize-workspace",
+    )
+    funding_program = (
+        _require_nonempty_string_from_mapping(
+            intake_snapshot,
+            "funding_program",
+            context="summarize-workspace.intake_snapshot",
+        )
+        if isinstance(intake_snapshot, Mapping)
+        else _require_nonempty_string_from_mapping(
+            evidence_grounding,
+            "funding_program",
+            context="grant_evidence_grounding",
+        )
+    )
+    return _build_shared_family_intake_evidence_companion(
+        target_domain_id=TARGET_DOMAIN_ID,
+        intake_audit={
+            "summary": _require_nonempty_string_from_mapping(
+                intake_audit,
+                "summary",
+                context="grant_intake_audit",
+            ),
+            "verdict": _require_nonempty_string_from_mapping(
+                intake_audit,
+                "overall_readiness",
+                context="grant_intake_audit",
+            ),
+            "summary_ref": {
+                "ref_kind": "workspace_locator",
+                "ref": f"grant_workspace::{workspace_id}::grant_intake_audit",
+                "label": "grant intake audit",
+            },
+        },
+        trust_ranked_evidence_refs=[
+            {
+                "ref_kind": _require_nonempty_string_from_mapping(
+                    entry,
+                    "ref_kind",
+                    context="grant_evidence_grounding.trust_ranked_evidence",
+                ),
+                "ref": _require_nonempty_string_from_mapping(
+                    entry,
+                    "ref",
+                    context="grant_evidence_grounding.trust_ranked_evidence",
+                ),
+                "label": _require_nonempty_string_from_mapping(
+                    entry,
+                    "label",
+                    context="grant_evidence_grounding.trust_ranked_evidence",
+                ),
+                "trust_rank": int(entry["trust_rank"]),
+                "trust_note": _optional_string_from_mapping(entry, "trust_note"),
+                "supports": list(entry.get("supports") or []),
+            }
+            for entry in trust_ranked_evidence
+        ],
+        grounding_scope={
+            "scope_kind": _require_nonempty_string_from_mapping(
+                evidence_grounding,
+                "scope_kind",
+                context="grant_evidence_grounding",
+            ),
+            "summary": _require_nonempty_string_from_mapping(
+                evidence_grounding,
+                "summary",
+                context="grant_evidence_grounding",
+            ),
+            "scope_refs": [
+                {
+                    "ref_kind": "workspace_locator",
+                    "ref": f"grant_workspace::{workspace_id}::grant_evidence_grounding",
+                    "label": "grant evidence grounding",
+                },
+                {
+                    "ref_kind": "workspace_locator",
+                    "ref": f"grant_workspace::{workspace_id}::funding_opportunity_brief::{funding_program}",
+                    "label": "funding opportunity brief",
+                },
+            ],
+        },
+        human_gate_refs=[
+            {
+                "ref_kind": "workspace_locator",
+                "ref": f"grant_workspace::{workspace_id}::family_human_gate",
+                "label": "grant route gate",
+            }
+        ],
+        checkpoint_lineage_refs=[
+            {
+                "ref_kind": "workspace_locator",
+                "ref": f"grant_workspace::{workspace_id}::checkpoint_lineage",
+                "label": "grant checkpoint lineage",
+            }
+        ],
+    )
 
 
 def _read_next_system_action(next_step: Mapping[str, Any]) -> str:
@@ -2821,6 +3017,12 @@ def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
     return {
         "grant_progress": public_cli_command(
             "grant-progress", "--input", str(resolved_input_path), "--format", "json"
+        ),
+        "grant_intake_audit": public_cli_command(
+            "grant-intake-audit", "--input", str(resolved_input_path), "--format", "json"
+        ),
+        "grant_evidence_grounding": public_cli_command(
+            "grant-evidence-grounding", "--input", str(resolved_input_path), "--format", "json"
         ),
         "summarize_workspace": public_cli_command(
             "summarize-workspace", "--input", str(resolved_input_path), "--format", "json"

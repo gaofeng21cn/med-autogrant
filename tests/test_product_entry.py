@@ -216,6 +216,8 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "probe-upstream-hermes",
     "validate-workspace",
     "summarize-workspace",
+    "grant-intake-audit",
+    "grant-evidence-grounding",
     "next-step",
     "critique-summary",
     "stage-route-report",
@@ -239,6 +241,8 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "probe-upstream-hermes", "required_fields": [], "optional_fields": []},
     {"command": "validate-workspace", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "summarize-workspace", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "grant-intake-audit", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "grant-evidence-grounding", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "next-step", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "critique-summary", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "stage-route-report", "required_fields": ["input_path"], "optional_fields": []},
@@ -426,6 +430,22 @@ def _assert_family_orchestration_companion(
     test_case.assertEqual(action_graph["target_domain_id"], "med-autogrant")
     test_case.assertGreaterEqual(len(action_graph["nodes"]), 2)
     test_case.assertGreaterEqual(len(action_graph["entry_nodes"]), 1)
+    test_case.assertIn("intake_evidence_companion", companion)
+    intake_evidence_companion = companion["intake_evidence_companion"]
+    test_case.assertIsInstance(intake_evidence_companion, dict)
+    test_case.assertEqual(
+        intake_evidence_companion["version"],
+        "family-intake-evidence-companion.v1",
+    )
+    test_case.assertEqual(
+        intake_evidence_companion["target_domain_id"],
+        "med-autogrant",
+    )
+    test_case.assertEqual(
+        intake_evidence_companion["intake_audit"]["verdict"],
+        "ready_for_direction_screening",
+    )
+    test_case.assertGreaterEqual(len(intake_evidence_companion["trust_ranked_evidence_refs"]), 1)
 
 
 class ProductEntryCliDispatchTest(unittest.TestCase):
@@ -911,6 +931,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["draft_id"], "draft-v1")
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["input_path"], str(CRITIQUE_EXAMPLE_PATH.resolve()))
+        self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
+        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
         self.assertEqual(
             payload["progress_projection"],
             {
@@ -1060,6 +1082,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["draft_id"], "draft-v1")
+        self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
+        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
         self.assertEqual(
             payload["grant_cockpit"]["workspace_overview"],
             {
@@ -1089,6 +1113,12 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             {
                 "grant_progress": public_cli_command(
                     "grant-progress", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                ),
+                "grant_intake_audit": public_cli_command(
+                    "grant-intake-audit", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                ),
+                "grant_evidence_grounding": public_cli_command(
+                    "grant-evidence-grounding", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
                 ),
                 "summarize_workspace": public_cli_command(
                     "summarize-workspace", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
@@ -1146,6 +1176,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
         self.assertEqual(payload["draft_id"], "draft-v1")
         self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
+        self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
         self.assertEqual(
             payload["grant_direct_entry"],
             {
@@ -1284,6 +1316,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "canonical_audit_surfaces": [
                                 "validate-workspace",
                                 "summarize-workspace",
+                                "grant-intake-audit",
+                                "grant-evidence-grounding",
                                 "next-step",
                                 "critique-summary",
                                 "stage-route-report",
@@ -1363,6 +1397,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "canonical_audit_surfaces": [
                                 "validate-workspace",
                                 "summarize-workspace",
+                                "grant-intake-audit",
+                                "grant-evidence-grounding",
                                 "next-step",
                                 "critique-summary",
                                 "stage-route-report",
@@ -1460,6 +1496,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "canonical_audit_surfaces": [
                                     "validate-workspace",
                                     "summarize-workspace",
+                                    "grant-intake-audit",
+                                    "grant-evidence-grounding",
                                     "next-step",
                                     "critique-summary",
                                     "stage-route-report",
@@ -1549,6 +1587,8 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "canonical_audit_surfaces": [
                                     "validate-workspace",
                                     "summarize-workspace",
+                                    "grant-intake-audit",
+                                    "grant-evidence-grounding",
                                     "next-step",
                                     "critique-summary",
                                     "stage-route-report",

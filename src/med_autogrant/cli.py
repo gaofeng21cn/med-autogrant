@@ -5,10 +5,13 @@ import json
 import sys
 from typing import Any
 
+from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
+
+_editable_shared_bootstrap.ensure_editable_dependency_paths()
+
 from med_autogrant import mainline_status
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.product_entry import MedAutoGrantProductEntry
-from opl_harness_shared.status_narration import build_status_narration_human_view
 from med_autogrant.public_cli import (
     INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,
@@ -22,6 +25,8 @@ from med_autogrant.workspace import (
     WorkspaceStateError,
     load_workspace_document,
 )
+
+from opl_harness_shared.status_narration import build_status_narration_human_view
 
 
 _WORKSPACE_STATUS_LABELS = {
@@ -159,6 +164,18 @@ def build_parser() -> argparse.ArgumentParser:
         "summarize-workspace",
         handle_summarize_workspace,
         "输出当前 workspace 摘要。",
+    )
+    _add_workspace_command(
+        subparsers,
+        "grant-intake-audit",
+        handle_grant_intake_audit,
+        "输出 grant intake audit surface。",
+    )
+    _add_workspace_command(
+        subparsers,
+        "grant-evidence-grounding",
+        handle_grant_evidence_grounding,
+        "输出 grant evidence grounding surface。",
     )
     _add_workspace_command(
         subparsers,
@@ -460,6 +477,14 @@ def handle_validate_workspace(args: argparse.Namespace) -> dict[str, Any]:
 
 def handle_summarize_workspace(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "summarize-workspace", "input_path": args.input})
+
+
+def handle_grant_intake_audit(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch({"command": "grant-intake-audit", "input_path": args.input})
+
+
+def handle_grant_evidence_grounding(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch({"command": "grant-evidence-grounding", "input_path": args.input})
 
 
 def handle_next_step(args: argparse.Namespace) -> dict[str, Any]:
@@ -907,6 +932,32 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
                 _render_field("active_critique_verdict", active_critique_verdict),
             ]
         )
+
+    if command == "grant-intake-audit":
+        audit = payload["grant_intake_audit"]
+        lines = [
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+            f"intake_status: {audit['intake_status']}",
+            f"当前判断: {audit['summary']}",
+        ]
+        for item in audit["blocking_gaps"]:
+            lines.append(f"- blocker: {item}")
+        return "\n".join(lines)
+
+    if command == "grant-evidence-grounding":
+        grounding = payload["grant_evidence_grounding"]
+        lines = [
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+            f"grounding_status: {grounding['grounding_status']}",
+            f"当前判断: {grounding['summary']}",
+        ]
+        for item in grounding["evidence_gaps"]:
+            lines.append(f"- gap: {item}")
+        return "\n".join(lines)
 
     if command == "next-step":
         lines = [
