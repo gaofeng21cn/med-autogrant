@@ -15,6 +15,7 @@ EXPECTED_SCHEMAS = {
     "track-record.schema.json",
     "active-project-set.schema.json",
     "preliminary-evidence-pack.schema.json",
+    "project-profile.schema.json",
     "funding-opportunity-brief.schema.json",
     "direction-hypothesis.schema.json",
     "scientific-question-card.schema.json",
@@ -100,6 +101,7 @@ class SchemaRegistryTest(unittest.TestCase):
             "track-record.schema.json",
             "active-project-set.schema.json",
             "preliminary-evidence-pack.schema.json",
+            "project-profile.schema.json",
             "funding-opportunity-brief.schema.json",
             "direction-hypothesis.schema.json",
             "scientific-question-card.schema.json",
@@ -123,6 +125,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["product_entry"], "product-entry.schema.json")
         self.assertEqual(names["grant_intake_audit_surface"], "grant-intake-audit.schema.json")
         self.assertEqual(names["grant_evidence_grounding_surface"], "grant-evidence-grounding.schema.json")
+        self.assertEqual(names["project_profile"], "project-profile.schema.json")
         self.assertEqual(names["grant_progress_projection"], "grant-progress.schema.json")
         self.assertEqual(names["grant_cockpit_projection"], "grant-cockpit.schema.json")
         self.assertEqual(names["grant_direct_entry_surface"], "grant-direct-entry.schema.json")
@@ -238,6 +241,9 @@ class SchemaRegistryTest(unittest.TestCase):
                 "frontdesk_command",
                 "recommended_command",
                 "operator_loop_command",
+                "project_profile_label",
+                "template_label",
+                "critique_policy_id",
                 "progress_surface",
                 "resume_surface",
                 "recommended_step_id",

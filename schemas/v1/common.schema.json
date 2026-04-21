@@ -491,6 +491,224 @@
         }
       }
     },
+    "projectProfileTemplateProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "template_id",
+        "template_label",
+        "required_section_strategy",
+        "narrative_style"
+      ],
+      "properties": {
+        "template_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "required_section_strategy": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "narrative_style": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "projectProfileCollaborationPreferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collaboration_mode",
+        "author_touchpoints",
+        "evidence_policy",
+        "drafting_voice"
+      ],
+      "properties": {
+        "collaboration_mode": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "author_touchpoints": {
+          "$ref": "#/$defs/stringList"
+        },
+        "evidence_policy": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "drafting_voice": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "projectProfileCritiquePolicyRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preset_id",
+        "policy_id"
+      ],
+      "properties": {
+        "preset_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "policy_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "projectProfileSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "preset_id",
+        "profile_label",
+        "project_kind",
+        "template_family",
+        "selection_mode",
+        "summary",
+        "funding_program",
+        "funder",
+        "program_family",
+        "template_id",
+        "template_label",
+        "collaboration_mode",
+        "author_touchpoints",
+        "evidence_policy",
+        "drafting_voice",
+        "critique_policy_preset_id",
+        "critique_policy_id"
+      ],
+      "properties": {
+        "profile_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "preset_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "profile_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "project_kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_family": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "selection_mode": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funding_program": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funder": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "program_family": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "collaboration_mode": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "author_touchpoints": {
+          "$ref": "#/$defs/stringList"
+        },
+        "evidence_policy": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "drafting_voice": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "critique_policy_preset_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "critique_policy_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "projectProfileCompanion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "profile_id",
+        "preset_id",
+        "profile_label",
+        "funding_program",
+        "funder",
+        "program_family",
+        "template_profile",
+        "collaboration_preferences",
+        "critique_policy",
+        "profile_ref",
+        "funding_opportunity_ref"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "project_profile_companion"
+        },
+        "version": {
+          "type": "integer",
+          "const": 1
+        },
+        "profile_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "preset_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "profile_label": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funding_program": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "funder": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "program_family": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "template_profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "template_id",
+            "template_label"
+          ],
+          "properties": {
+            "template_id": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "template_label": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "collaboration_preferences": {
+          "$ref": "#/$defs/projectProfileCollaborationPreferences"
+        },
+        "critique_policy": {
+          "$ref": "#/$defs/projectProfileCritiquePolicyRef"
+        },
+        "profile_ref": {
+          "$ref": "#/$defs/familyReferenceRef"
+        },
+        "funding_opportunity_ref": {
+          "$ref": "#/$defs/familyReferenceRef"
+        }
+      }
+    },
     "familyOrchestrationCompanion": {
       "type": "object",
       "additionalProperties": false,
@@ -524,6 +742,9 @@
         },
         "intake_evidence_companion": {
           "$ref": "#/$defs/familyIntakeEvidenceCompanion"
+        },
+        "project_profile_companion": {
+          "$ref": "#/$defs/projectProfileCompanion"
         }
       }
     }

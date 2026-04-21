@@ -881,6 +881,9 @@
         "frontdesk_command",
         "recommended_command",
         "operator_loop_command",
+        "project_profile_label",
+        "template_label",
+        "critique_policy_id",
         "progress_surface",
         "resume_surface",
         "recommended_step_id",
@@ -902,6 +905,15 @@
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "operator_loop_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "project_profile_label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "template_label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "critique_policy_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "progress_surface": {

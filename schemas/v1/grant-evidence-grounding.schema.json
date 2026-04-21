@@ -174,6 +174,7 @@
         "lifecycle_stage",
         "scope_kind",
         "funding_program",
+        "project_profile_summary",
         "summary",
         "grounding_status",
         "ready_for_direction_screening",
@@ -211,6 +212,9 @@
         },
         "funding_program": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "project_profile_summary": {
+          "$ref": "common.schema.json#/$defs/projectProfileSummary"
         },
         "summary": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"

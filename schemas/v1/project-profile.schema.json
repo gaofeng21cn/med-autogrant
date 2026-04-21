@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/project-profile.schema.json",
+  "title": "ProjectProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "profile_id",
+    "preset_id",
+    "profile_label",
+    "project_kind",
+    "template_family",
+    "selection_mode",
+    "summary",
+    "template_profile",
+    "collaboration_preferences",
+    "critique_policy"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "profile_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "preset_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "profile_label": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "project_kind": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "template_family": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "selection_mode": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "summary": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "template_profile": {
+      "$ref": "common.schema.json#/$defs/projectProfileTemplateProfile"
+    },
+    "collaboration_preferences": {
+      "$ref": "common.schema.json#/$defs/projectProfileCollaborationPreferences"
+    },
+    "critique_policy": {
+      "$ref": "common.schema.json#/$defs/projectProfileCritiquePolicyRef"
+    }
+  }
+}

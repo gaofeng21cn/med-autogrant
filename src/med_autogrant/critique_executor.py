@@ -12,9 +12,9 @@ from med_autogrant.codex_cli import (
     run_codex_exec,
 )
 from med_autogrant.critique_policy import (
-    DEFAULT_NSFC_CRITIQUE_POLICY,
     build_policy_prompt_lines,
     build_weight_contract,
+    resolve_critique_policy_from_document,
 )
 from med_autogrant.hermes_native_executor import run_hermes_agent_exec
 from med_autogrant.schema_loader import SchemaStore
@@ -37,7 +37,6 @@ SUPPORTED_CRITIQUE_EXECUTOR_KINDS = (
     HERMES_NATIVE_PROOF_EXECUTOR_KIND,
 )
 
-CRITIQUE_POLICY_CONTRACT = DEFAULT_NSFC_CRITIQUE_POLICY
 EXECUTABLE_REVISION_ACTION_TYPES = (
     "rebuild_argument",
     "add_evidence",
@@ -56,6 +55,7 @@ def build_critique_execution_document(
 ) -> dict[str, Any]:
     state = _build_workspace_state(document)
     critique_context = _build_critique_context(document=document, state=state)
+    critique_policy = resolve_critique_policy_from_document(document)
     prompt = _build_critique_prompt(context=critique_context, input_path=input_path)
     payload, executor_payload = _run_critique_generation(
         prompt=prompt,
@@ -66,6 +66,7 @@ def build_critique_execution_document(
     )
     critique = _normalize_mentor_critique(
         critique_context=critique_context,
+        critique_policy=critique_policy,
         payload=_require_object(payload, "mentor_critique"),
     )
     revision_plan = _normalize_revision_plan(
@@ -291,8 +292,9 @@ def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -
     input_file = Path(input_path).expanduser().resolve()
     mentor_schema = (SchemaStore().root / "mentor-critique.schema.json").resolve()
     revision_schema = (SchemaStore().root / "revision-plan.schema.json").resolve()
-    policy_lines = build_policy_prompt_lines(CRITIQUE_POLICY_CONTRACT)
-    weight_contract = build_weight_contract(CRITIQUE_POLICY_CONTRACT)
+    critique_policy = resolve_critique_policy_from_document(_require_object(context, "document"))
+    policy_lines = build_policy_prompt_lines(critique_policy)
+    weight_contract = build_weight_contract(critique_policy)
     weight_split = ", ".join(f"{field}={weight}" for field, weight in weight_contract.items())
     weighted_score_fields = " / ".join(weight_contract)
     reviewed_revision_id = None
@@ -354,6 +356,7 @@ def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -
 def _normalize_mentor_critique(
     *,
     critique_context: dict[str, Any],
+    critique_policy: dict[str, Any],
     payload: dict[str, Any],
 ) -> dict[str, Any]:
     critique = deepcopy(payload)
@@ -364,7 +367,7 @@ def _normalize_mentor_critique(
         critique["reviewed_revision_plan_id"] = critique_context["active_revision_plan"]["revision_plan_id"]
     else:
         critique.pop("reviewed_revision_plan_id", None)
-    for field_name, expected_weight in build_weight_contract(CRITIQUE_POLICY_CONTRACT).items():
+    for field_name, expected_weight in build_weight_contract(critique_policy).items():
         criterion = _require_object(critique, field_name)
         criterion["weight"] = expected_weight
     _validate_schema_payload(

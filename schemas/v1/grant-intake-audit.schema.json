@@ -96,6 +96,7 @@
       "additionalProperties": false,
       "required": [
         "applicant_profile_ready",
+        "project_profile_ready",
         "track_record_ready",
         "active_project_set_ready",
         "preliminary_evidence_ready",
@@ -104,6 +105,9 @@
       ],
       "properties": {
         "applicant_profile_ready": {
+          "type": "boolean"
+        },
+        "project_profile_ready": {
           "type": "boolean"
         },
         "track_record_ready": {
@@ -173,10 +177,12 @@
         "workspace_id",
         "lifecycle_stage",
         "applicant_profile_id",
+        "project_profile_id",
         "track_record_id",
         "active_project_set_id",
         "preliminary_evidence_pack_id",
         "funding_opportunity_id",
+        "project_profile_summary",
         "intake_status",
         "inventory",
         "readiness",
@@ -212,6 +218,9 @@
         "applicant_profile_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
+        "project_profile_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
         "track_record_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
@@ -223,6 +232,9 @@
         },
         "funding_opportunity_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "project_profile_summary": {
+          "$ref": "common.schema.json#/$defs/projectProfileSummary"
         },
         "intake_status": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"

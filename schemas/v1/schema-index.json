@@ -28,6 +28,11 @@
       "status": "frozen"
     },
     {
+      "name": "project_profile",
+      "file": "project-profile.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "funding_opportunity_brief",
       "file": "funding-opportunity-brief.schema.json",
       "status": "frozen"

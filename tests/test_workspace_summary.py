@@ -34,6 +34,7 @@ READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FORCED_ROLLBACK_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_forced_rollback_argument.json"
 PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
+NON_NSFC_INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nih_r21_workspace_p2a_input_intake.json"
 
 
 class WorkspaceSummaryTest(unittest.TestCase):
@@ -77,11 +78,25 @@ class WorkspaceSummaryTest(unittest.TestCase):
 
         summary = summarize_workspace_document(document)
 
+        self.assertEqual(summary["project_profile"]["profile_id"], "profile-nsfc-general-medical")
+        self.assertEqual(summary["project_profile"]["preset_id"], "nsfc_general_medical_v1")
+        self.assertEqual(summary["project_profile"]["template_id"], "nsfc_general_grant_template_v1")
+        self.assertEqual(summary["project_profile"]["collaboration_mode"], "applicant_led_agent_copilot")
+        self.assertEqual(summary["project_profile"]["critique_policy_id"], "nsfc_mentor_critique_v1")
         self.assertEqual(summary["grant_intake_audit"]["audit_kind"], "grant_intake_audit")
         self.assertEqual(summary["grant_intake_audit"]["applicant_profile_id"], "applicant-gaofeng")
+        self.assertEqual(summary["grant_intake_audit"]["project_profile_id"], "profile-nsfc-general-medical")
+        self.assertEqual(
+            summary["grant_intake_audit"]["project_profile_summary"]["critique_policy_id"],
+            "nsfc_mentor_critique_v1",
+        )
         self.assertTrue(summary["grant_intake_audit"]["readiness"]["ready_for_direction_screening"])
         self.assertEqual(summary["grant_evidence_grounding"]["grounding_kind"], "grant_evidence_grounding")
         self.assertEqual(summary["grant_evidence_grounding"]["grounding_status"], "intake_grounded")
+        self.assertEqual(
+            summary["grant_evidence_grounding"]["project_profile_summary"]["template_id"],
+            "nsfc_general_grant_template_v1",
+        )
         self.assertEqual(
             summary["grant_evidence_grounding"]["evidence_inventory"]["primary_evidence_ids"],
             ["evi-output-1", "evi-prelim-1", "evi-project-1"],
@@ -101,6 +116,7 @@ class WorkspaceSummaryTest(unittest.TestCase):
             [section["section_id"] for section in intake_audit["intake_sections"]],
             [
                 "applicant_profile",
+                "project_profile",
                 "track_record",
                 "active_project_set",
                 "preliminary_evidence_pack",
@@ -108,11 +124,16 @@ class WorkspaceSummaryTest(unittest.TestCase):
             ],
         )
         self.assertEqual(intake_audit["blocking_gaps"], [])
+        self.assertTrue(intake_audit["readiness"]["project_profile_ready"])
 
         evidence_grounding = summary["grant_evidence_grounding"]
         self.assertEqual(evidence_grounding["surface_kind"], "grant_evidence_grounding")
         self.assertEqual(evidence_grounding["grounding_status"], "intake_grounded")
         self.assertTrue(evidence_grounding["ready_for_direction_screening"])
+        self.assertEqual(
+            evidence_grounding["project_profile_summary"]["collaboration_mode"],
+            "applicant_led_agent_copilot",
+        )
         self.assertEqual(
             [item["trust_level"] for item in evidence_grounding["trust_ranked_evidence"]],
             ["trusted", "trusted", "usable_with_verification"],
@@ -122,6 +143,24 @@ class WorkspaceSummaryTest(unittest.TestCase):
             ["applicant_fit", "scientific_question", "technical_route"],
         )
         self.assertEqual(evidence_grounding["evidence_gaps"], [])
+
+    def test_validation_accepts_non_nsfc_profiled_workspace(self) -> None:
+        document = load_workspace_document(NON_NSFC_INPUT_EXAMPLE_PATH)
+
+        result = validate_workspace_document(document)
+
+        self.assertTrue(result.ok)
+        self.assertEqual(result.errors, [])
+
+    def test_summary_exposes_non_nsfc_project_profile(self) -> None:
+        document = load_workspace_document(NON_NSFC_INPUT_EXAMPLE_PATH)
+
+        summary = summarize_workspace_document(document)
+
+        self.assertEqual(summary["project_profile"]["preset_id"], "nih_r21_translational_v1")
+        self.assertEqual(summary["project_profile"]["funder"], "NIH")
+        self.assertEqual(summary["project_profile"]["program_family"], "NHLBI R21")
+        self.assertEqual(summary["project_profile"]["critique_policy_id"], "nih_r21_significance_innovation_v1")
 
     def test_validation_accepts_direction_screening_with_selected_direction_only(self) -> None:
         document = load_workspace_document(DIRECTION_EXAMPLE_PATH)

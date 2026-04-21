@@ -36,6 +36,7 @@ READY_FOR_SUBMISSION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3a
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FORCED_ROLLBACK_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_forced_rollback_argument.json"
 PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
+NON_NSFC_INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nih_r21_workspace_p2a_input_intake.json"
 
 
 class CliValidateWorkspaceTest(unittest.TestCase):
@@ -81,6 +82,21 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["lifecycle_stage"], "direction_screening")
+
+    def test_validate_workspace_accepts_non_nsfc_profiled_workspace(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(NON_NSFC_INPUT_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["workspace_id"], "nih-r21-demo-001")
 
     def test_validate_workspace_accepts_p2b_argument_building_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import Any
 
 
@@ -37,6 +38,46 @@ DEFAULT_NSFC_CRITIQUE_POLICY: dict[str, Any] = {
     ],
 }
 
+DEFAULT_NIH_R21_CRITIQUE_POLICY: dict[str, Any] = {
+    "policy_id": "nih_r21_significance_innovation_v1",
+    "persona": {
+        "role": "NIH R21 scientific reviewer",
+        "style": "significance-innovation first, translational, fail-closed",
+    },
+    "weighted_dimensions": [
+        {
+            "field": "significance",
+            "weight": 45,
+            "focus": "diagnose whether the project addresses an important translational problem",
+        },
+        {
+            "field": "innovation",
+            "weight": 35,
+            "focus": "assess whether the approach creates a credible conceptual or technical jump",
+        },
+        {
+            "field": "investigator_environment_fit",
+            "weight": 20,
+            "focus": "assess whether the team and environment can execute the proposed work",
+        },
+    ],
+    "hard_rules": [
+        "separate near-term exploratory aims from long-term mechanistic claims",
+    ],
+    "required_outputs": [
+        {"field": "overall_diagnosis", "description": "global diagnosis of draft readiness"},
+        {"field": "significance_repairs", "description": "repairs for significance framing and unmet need"},
+        {"field": "innovation_repairs", "description": "repairs for innovation framing and novelty claim"},
+        {"field": "investigator_environment_repairs", "description": "repairs for execution fit and environment"},
+    ],
+}
+
+
+CRITIQUE_POLICY_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
+    DEFAULT_NSFC_CRITIQUE_POLICY["policy_id"]: DEFAULT_NSFC_CRITIQUE_POLICY,
+    DEFAULT_NIH_R21_CRITIQUE_POLICY["policy_id"]: DEFAULT_NIH_R21_CRITIQUE_POLICY,
+}
+
 
 def build_weight_contract(policy: dict[str, Any]) -> dict[str, int]:
     weighted_dimensions = policy.get("weighted_dimensions")
@@ -54,6 +95,32 @@ def build_weight_contract(policy: dict[str, Any]) -> dict[str, int]:
             raise ValueError("critique policy weighted_dimensions.weight 必须是整数。")
         contract[field] = weight
     return contract
+
+
+def resolve_critique_policy_from_document(document: dict[str, Any]) -> dict[str, Any]:
+    project_profile = document.get("project_profile")
+    if not isinstance(project_profile, dict):
+        raise ValueError("workspace 缺少 project_profile。")
+    critique_policy = project_profile.get("critique_policy")
+    if not isinstance(critique_policy, dict):
+        raise ValueError("project_profile 缺少 critique_policy。")
+
+    preset_id = critique_policy.get("preset_id")
+    declared_policy_id = critique_policy.get("policy_id")
+    if not isinstance(preset_id, str) or not preset_id.strip():
+        raise ValueError("project_profile.critique_policy.preset_id 必须是非空字符串。")
+    if not isinstance(declared_policy_id, str) or not declared_policy_id.strip():
+        raise ValueError("project_profile.critique_policy.policy_id 必须是非空字符串。")
+
+    policy = CRITIQUE_POLICY_PRESET_REGISTRY.get(preset_id)
+    if policy is None:
+        raise ValueError(f"未知 critique policy preset: {preset_id}")
+    if policy["policy_id"] != declared_policy_id:
+        raise ValueError(
+            "project_profile.critique_policy.policy_id 与 preset registry 不一致："
+            f"{declared_policy_id} != {policy['policy_id']}"
+        )
+    return deepcopy(policy)
 
 
 def build_policy_prompt_lines(policy: dict[str, Any]) -> list[str]:

@@ -6,8 +6,8 @@
     "source_mode": "auto",
     "owner": "Med Auto Grant scaffold"
   },
-  "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
-  "workspace_id": "nsfc-demo-001",
+  "grant_run_id": "grant-run-nih-r21-demo-001-baseline-001",
+  "workspace_id": "nih-r21-demo-001",
   "mode": "auto",
   "lifecycle_stage": "input_intake",
   "applicant_profile": {
@@ -42,7 +42,7 @@
       "有跨组学分析经验"
     ],
     "constraints": [
-      "时序预实验仍需补足"
+      "功能验证链仍需补齐"
     ]
   },
   "track_record": {
@@ -59,7 +59,7 @@
         "title": "单细胞图谱揭示心肌梗死后免疫重塑",
         "output_type": "paper",
         "year": 2024,
-        "relevance_summary": "提供免疫细胞时序变化和成纤维细胞通讯线索。",
+        "relevance_summary": "提供炎症细胞动态和可转化干预窗口线索。",
         "evidence": {
           "evidence_id": "evi-output-1",
           "label": "代表作 1",
@@ -89,7 +89,7 @@
         "title": "心梗后炎症消退的单细胞时序研究",
         "status": "ongoing",
         "role": "负责人",
-        "relevance_to_grant": "可直接支撑免疫-纤维化窗口期判断。",
+        "relevance_to_grant": "可直接支撑 exploratory/developmental aims 的可行性。",
         "reusable_assets": [
           "小鼠模型流程",
           "时序样本库"
@@ -115,12 +115,12 @@
     "evidence_items": [
       {
         "item_id": "prelim-item-1",
-        "title": "单细胞预实验提示炎症巨噬细胞驱动纤维化相关成纤维细胞扩增",
-        "finding_summary": "心梗后第 3 天至第 7 天出现关键跨细胞通讯信号增强。",
+        "title": "预实验提示心梗后炎症巨噬细胞时序变化关联后续纤维化风险",
+        "finding_summary": "第 3 天至第 7 天出现可干预的炎症通讯窗口。",
         "modality": "omics",
         "strength": "moderate",
         "gaps": [
-          "缺乏功能阻断实验"
+          "缺少功能阻断与转化终点连接"
         ],
         "evidence": {
           "evidence_id": "evi-prelim-1",
@@ -137,32 +137,32 @@
       "updated_at": "2026-04-07T12:00:00Z",
       "source_mode": "auto"
     },
-    "profile_id": "profile-nsfc-general-medical",
-    "preset_id": "nsfc_general_medical_v1",
-    "profile_label": "NSFC general medical grant profile",
-    "project_kind": "medical_grant_application",
-    "template_family": "nsfc_general_medical_grant",
+    "profile_id": "profile-nih-r21-translational",
+    "preset_id": "nih_r21_translational_v1",
+    "profile_label": "NIH R21 translational profile",
+    "project_kind": "translational_grant_application",
+    "template_family": "nih_r21_exploratory_grant",
     "selection_mode": "preset_aligned_to_funding_opportunity",
-    "summary": "面向 NSFC 医学口申请，强调科学问题提纯、立项必要性与申请人前期基础适配。",
+    "summary": "面向 NIH R21 exploratory/developmental grant，强调 significance、innovation 与可落地的 exploratory aims。",
     "template_profile": {
-      "template_id": "nsfc_general_grant_template_v1",
-      "template_label": "NSFC general medical grant template",
+      "template_id": "nih_r21_template_v1",
+      "template_label": "NIH R21 exploratory grant template",
       "required_section_strategy": "mirror_funding_brief_mandatory_sections",
-      "narrative_style": "science_first_mechanism_driven"
+      "narrative_style": "significance_innovation_translational"
     },
     "collaboration_preferences": {
-      "collaboration_mode": "applicant_led_agent_copilot",
+      "collaboration_mode": "agent_led_author_checkpoints",
       "author_touchpoints": [
-        "direction_confirmation",
-        "scientific_question_lock",
+        "aims_lock",
+        "innovation_claim_lock",
         "presubmission_freeze"
       ],
-      "evidence_policy": "claim_must_bind_to_track_record_or_preliminary_evidence",
-      "drafting_voice": "mentor_style_precise_academic_chinese"
+      "evidence_policy": "significance_and_innovation_claims_require_direct_grounding",
+      "drafting_voice": "reviewer_facing_translational_grant_style"
     },
     "critique_policy": {
-      "preset_id": "nsfc_mentor_critique_v1",
-      "policy_id": "nsfc_mentor_critique_v1"
+      "preset_id": "nih_r21_significance_innovation_v1",
+      "policy_id": "nih_r21_significance_innovation_v1"
     }
   },
   "funding_opportunity_brief": {
@@ -172,26 +172,25 @@
       "updated_at": "2026-04-07T12:00:00Z",
       "source_mode": "auto"
     },
-    "brief_id": "nsfc-2026-general",
-    "funder": "NSFC",
-    "program_family": "医学科学部",
+    "brief_id": "nih-r21-2026-nhlbi",
+    "funder": "NIH",
+    "program_family": "NHLBI R21",
     "project_types": [
-      "young_scientist",
-      "general"
+      "exploratory_developmental"
     ],
     "application_year": 2026,
     "mandatory_sections": [
-      "立项依据",
-      "研究内容",
-      "研究方案",
-      "创新点",
-      "研究基础"
+      "Significance",
+      "Innovation",
+      "Approach",
+      "Investigator",
+      "Environment"
     ],
     "formal_constraints": [
-      "题目需与核心科学问题一致"
+      "Exploratory aims should stay scoped to R21 expectations"
     ],
     "evaluation_notes": [
-      "必要性与科学价值优先"
+      "Significance and innovation carry the highest review weight"
     ]
   },
   "direction_hypotheses": [],

@@ -22,6 +22,7 @@
     "track_record",
     "active_project_set",
     "preliminary_evidence_pack",
+    "project_profile",
     "funding_opportunity_brief",
     "direction_hypotheses",
     "scientific_question_cards",
@@ -67,6 +68,9 @@
     },
     "preliminary_evidence_pack": {
       "$ref": "preliminary-evidence-pack.schema.json"
+    },
+    "project_profile": {
+      "$ref": "project-profile.schema.json"
     },
     "grant_intake_audit": {
       "$ref": "grant-intake-audit.schema.json#/$defs/grantIntakeAudit"

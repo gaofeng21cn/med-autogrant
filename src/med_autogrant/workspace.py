@@ -138,16 +138,46 @@ def validate_workspace_document(document: dict[str, Any]) -> ValidationResult:
     return ValidationResult(errors=issues)
 
 
+def _build_project_profile_summary(document: dict[str, Any]) -> dict[str, Any]:
+    project_profile = document["project_profile"]
+    template_profile = project_profile["template_profile"]
+    collaboration_preferences = project_profile["collaboration_preferences"]
+    critique_policy = project_profile["critique_policy"]
+    funding_brief = document["funding_opportunity_brief"]
+    return {
+        "profile_id": project_profile["profile_id"],
+        "preset_id": project_profile["preset_id"],
+        "profile_label": project_profile["profile_label"],
+        "project_kind": project_profile["project_kind"],
+        "template_family": project_profile["template_family"],
+        "selection_mode": project_profile["selection_mode"],
+        "summary": project_profile["summary"],
+        "funding_program": funding_brief["brief_id"],
+        "funder": funding_brief["funder"],
+        "program_family": funding_brief["program_family"],
+        "template_id": template_profile["template_id"],
+        "template_label": template_profile["template_label"],
+        "collaboration_mode": collaboration_preferences["collaboration_mode"],
+        "author_touchpoints": list(collaboration_preferences.get("author_touchpoints", [])),
+        "evidence_policy": collaboration_preferences["evidence_policy"],
+        "drafting_voice": collaboration_preferences["drafting_voice"],
+        "critique_policy_preset_id": critique_policy["preset_id"],
+        "critique_policy_id": critique_policy["policy_id"],
+    }
+
+
 def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
     state = _build_workspace_state(document)
     grant_intake_audit = build_grant_intake_audit(document)
     grant_evidence_grounding = build_grant_evidence_grounding(document)
+    project_profile_summary = _build_project_profile_summary(document)
     return {
         "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
         "mode": document["mode"],
         "lifecycle_stage": document["lifecycle_stage"],
         "gates": dict(document["gates"]),
+        "project_profile": project_profile_summary,
         "current_selection": {
             "selected_direction_id": state.current_selection.get("selected_direction_id"),
             "selected_question_id": state.current_selection.get("selected_question_id"),
@@ -158,6 +188,9 @@ def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:
         "intake_snapshot": {
             "applicant_id": document["applicant_profile"]["applicant_id"],
             "applicant_name": document["applicant_profile"]["applicant_name"],
+            "project_profile_id": project_profile_summary["profile_id"],
+            "project_profile_preset_id": project_profile_summary["preset_id"],
+            "project_profile_label": project_profile_summary["profile_label"],
             "representative_output_count": len(document["track_record"].get("representative_outputs", [])),
             "active_project_count": len(document["active_project_set"].get("projects", [])),
             "preliminary_evidence_count": len(document["preliminary_evidence_pack"].get("evidence_items", [])),
@@ -188,6 +221,7 @@ def build_grant_intake_audit(document: dict[str, Any]) -> dict[str, Any]:
     workspace_id = document["workspace_id"]
     grant_run_id = document["grant_run_id"]
     lifecycle_stage = document["lifecycle_stage"]
+    project_profile_summary = _build_project_profile_summary(document)
 
     representative_outputs = document["track_record"].get("representative_outputs", [])
     active_projects = document["active_project_set"].get("projects", [])
@@ -217,6 +251,17 @@ def build_grant_intake_audit(document: dict[str, Any]) -> dict[str, Any]:
             status="ready",
             trust_level="trusted",
             summary="申请人身份、研究方向与方法栈已具备基础 framing 条件。",
+        ),
+        _build_intake_section(
+            workspace_id=workspace_id,
+            section_id="project_profile",
+            status="ready",
+            trust_level="trusted",
+            summary=(
+                f"当前采用 {project_profile_summary['profile_label']}，模板为 "
+                f"{project_profile_summary['template_label']}，批注口径为 "
+                f"{project_profile_summary['critique_policy_id']}。"
+            ),
         ),
         _build_intake_section(
             workspace_id=workspace_id,
@@ -278,6 +323,7 @@ def build_grant_intake_audit(document: dict[str, Any]) -> dict[str, Any]:
     )
     readiness = {
         "applicant_profile_ready": True,
+        "project_profile_ready": True,
         "track_record_ready": bool(representative_outputs),
         "active_project_set_ready": bool(active_projects),
         "preliminary_evidence_ready": bool(preliminary_items),
@@ -293,10 +339,12 @@ def build_grant_intake_audit(document: dict[str, Any]) -> dict[str, Any]:
         "workspace_id": workspace_id,
         "lifecycle_stage": lifecycle_stage,
         "applicant_profile_id": document["applicant_profile"]["applicant_id"],
+        "project_profile_id": project_profile_summary["profile_id"],
         "track_record_id": document["track_record"]["track_record_id"],
         "active_project_set_id": document["active_project_set"]["project_set_id"],
         "preliminary_evidence_pack_id": document["preliminary_evidence_pack"]["evidence_pack_id"],
         "funding_opportunity_id": document["funding_opportunity_brief"]["brief_id"],
+        "project_profile_summary": project_profile_summary,
         "intake_status": "ready" if readiness["ready_for_direction_screening"] else "needs_completion",
         "inventory": {
             "representative_output_count": len(representative_outputs),
@@ -318,6 +366,7 @@ def build_grant_evidence_grounding(document: dict[str, Any]) -> dict[str, Any]:
     workspace_id = document["workspace_id"]
     lifecycle_stage = document["lifecycle_stage"]
     funding_program = document["funding_opportunity_brief"]["brief_id"]
+    project_profile_summary = _build_project_profile_summary(document)
     evidence_entries = _collect_trust_ranked_evidence(document)
     selection_context = _selection_context(document)
 
@@ -350,6 +399,7 @@ def build_grant_evidence_grounding(document: dict[str, Any]) -> dict[str, Any]:
         "lifecycle_stage": lifecycle_stage,
         "scope_kind": "grant_route_scope",
         "funding_program": funding_program,
+        "project_profile_summary": project_profile_summary,
         "summary": summary,
         "grounding_status": grounding_status,
         "ready_for_direction_screening": ready_for_direction_screening,

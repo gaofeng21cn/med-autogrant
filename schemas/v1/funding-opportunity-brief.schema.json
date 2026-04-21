@@ -19,22 +19,13 @@
       "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
     "funder": {
-      "const": "NSFC"
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
     "program_family": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
     "project_types": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "young_scientist",
-          "general",
-          "regional",
-          "other"
-        ]
-      },
+      "$ref": "common.schema.json#/$defs/stringList",
       "default": []
     },
     "application_year": {

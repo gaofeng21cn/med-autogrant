@@ -431,6 +431,7 @@ def _assert_family_orchestration_companion(
     test_case.assertGreaterEqual(len(action_graph["nodes"]), 2)
     test_case.assertGreaterEqual(len(action_graph["entry_nodes"]), 1)
     test_case.assertIn("intake_evidence_companion", companion)
+    test_case.assertIn("project_profile_companion", companion)
     intake_evidence_companion = companion["intake_evidence_companion"]
     test_case.assertIsInstance(intake_evidence_companion, dict)
     test_case.assertEqual(
@@ -446,6 +447,15 @@ def _assert_family_orchestration_companion(
         "ready_for_direction_screening",
     )
     test_case.assertGreaterEqual(len(intake_evidence_companion["trust_ranked_evidence_refs"]), 1)
+    project_profile_companion = companion["project_profile_companion"]
+    test_case.assertIsInstance(project_profile_companion, dict)
+    test_case.assertEqual(project_profile_companion["surface_kind"], "project_profile_companion")
+    test_case.assertEqual(project_profile_companion["profile_id"], "profile-nsfc-general-medical")
+    test_case.assertEqual(project_profile_companion["preset_id"], "nsfc_general_medical_v1")
+    test_case.assertEqual(
+        project_profile_companion["critique_policy"]["policy_id"],
+        "nsfc_mentor_critique_v1",
+    )
 
 
 class ProductEntryCliDispatchTest(unittest.TestCase):
@@ -985,6 +995,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "focus": {
                     "applicant_name": "示例申请人",
                     "funding_program": "nsfc-2026-general",
+                    "project_profile_label": "NSFC general medical grant profile",
+                    "template_label": "NSFC general medical grant template",
+                    "critique_policy_id": "nsfc_mentor_critique_v1",
                     "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
                     "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
                     "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
@@ -1056,6 +1069,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "focus": {
                     "applicant_name": "示例申请人",
                     "funding_program": "nsfc-2026-general",
+                    "project_profile_label": "NSFC general medical grant profile",
+                    "template_label": "NSFC general medical grant template",
+                    "critique_policy_id": "nsfc_mentor_critique_v1",
                     "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
                     "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
                     "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
@@ -1089,6 +1105,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             {
                 "applicant_name": "示例申请人",
                 "funding_program": "nsfc-2026-general",
+                "project_profile_label": "NSFC general medical grant profile",
+                "template_label": "NSFC general medical grant template",
+                "critique_policy_id": "nsfc_mentor_critique_v1",
                 "lifecycle_stage": "critique",
                 "checkpoint_status": "forward_progress",
                 "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
@@ -1189,6 +1208,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "workspace_overview": {
                     "applicant_name": "示例申请人",
                     "funding_program": "nsfc-2026-general",
+                    "project_profile_label": "NSFC general medical grant profile",
+                    "template_label": "NSFC general medical grant template",
+                    "critique_policy_id": "nsfc_mentor_critique_v1",
                     "lifecycle_stage": "critique",
                     "checkpoint_status": "forward_progress",
                     "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
@@ -1250,6 +1272,9 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                     "focus": {
                         "applicant_name": "示例申请人",
                         "funding_program": "nsfc-2026-general",
+                        "project_profile_label": "NSFC general medical grant profile",
+                        "template_label": "NSFC general medical grant template",
+                        "critique_policy_id": "nsfc_mentor_critique_v1",
                         "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
                         "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
                         "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
@@ -2533,6 +2558,14 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(
             frontdesk["product_entry_overview"]["progress_surface"]["surface_kind"],
             "grant_progress",
+        )
+        self.assertEqual(
+            frontdesk["product_entry_overview"]["project_profile_label"],
+            "NSFC general medical grant profile",
+        )
+        self.assertEqual(
+            frontdesk["product_entry_overview"]["critique_policy_id"],
+            "nsfc_mentor_critique_v1",
         )
         self.assertEqual(
             frontdesk["product_entry_overview"]["resume_surface"]["surface_kind"],

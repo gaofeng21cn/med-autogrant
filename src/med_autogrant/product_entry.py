@@ -695,6 +695,10 @@ class MedAutoGrantProductEntry:
                 _require_mapping(cockpit_payload, "family_orchestration", context="grant_direct_entry.grant_cockpit"),
                 "intake_evidence_companion",
             ),
+            project_profile_companion=_optional_mapping(
+                _require_mapping(cockpit_payload, "family_orchestration", context="grant_direct_entry.grant_cockpit"),
+                "project_profile_companion",
+            ),
             review_surface_ref="/grant_direct_entry/recommended_executor_route",
             event_envelope_surface_ref="/grant_direct_entry/progress_projection/next_system_action",
             checkpoint_lineage_surface_ref="/grant_direct_entry/progress_projection/checkpoint_status",
@@ -820,6 +824,10 @@ class MedAutoGrantProductEntry:
                 _require_mapping(direct_entry_payload, "family_orchestration", context="grant_user_loop.grant_direct_entry"),
                 "intake_evidence_companion",
             ),
+            project_profile_companion=_optional_mapping(
+                _require_mapping(direct_entry_payload, "family_orchestration", context="grant_user_loop.grant_direct_entry"),
+                "project_profile_companion",
+            ),
             review_surface_ref="/grant_user_loop/next_action",
             event_envelope_surface_ref="/grant_user_loop/next_action",
             checkpoint_lineage_surface_ref=(
@@ -861,6 +869,12 @@ class MedAutoGrantProductEntry:
             progress_payload,
             "progress_projection",
             context="grant-progress",
+        )
+        workspace_summary = self._domain_entry.dispatch(
+            {
+                "command": "summarize-workspace",
+                "input_path": str(resolved_input_path),
+            }
         )
         mainline_payload = read_mainline_status()
         mainline_snapshot = _build_mainline_snapshot(mainline_payload)
@@ -965,6 +979,10 @@ class MedAutoGrantProductEntry:
             intake_evidence_companion=_optional_mapping(
                 _require_mapping(progress_payload, "family_orchestration", context="grant-progress"),
                 "intake_evidence_companion",
+            ),
+            project_profile_companion=_optional_mapping(
+                _require_mapping(progress_payload, "family_orchestration", context="grant-progress"),
+                "project_profile_companion",
             ),
             review_surface_ref="/product_entry_manifest/operator_loop_surface",
             event_envelope_surface_ref="/product_entry_manifest/recommended_command",
@@ -1120,6 +1138,25 @@ class MedAutoGrantProductEntry:
             next_focus=list(mainline_snapshot["next_focus"]),
             remaining_gaps_count=len(mainline_snapshot["remaining_gaps"]),
             human_gate_ids=list(product_entry_quickstart["human_gate_ids"]),
+        )
+        product_entry_overview.update(
+            {
+                "project_profile_label": _require_nonempty_string_from_mapping(
+                    _require_mapping(workspace_summary, "project_profile", context="summarize-workspace"),
+                    "profile_label",
+                    context="summarize-workspace.project_profile",
+                ),
+                "template_label": _require_nonempty_string_from_mapping(
+                    _require_mapping(workspace_summary, "project_profile", context="summarize-workspace"),
+                    "template_label",
+                    context="summarize-workspace.project_profile",
+                ),
+                "critique_policy_id": _require_nonempty_string_from_mapping(
+                    _require_mapping(workspace_summary, "project_profile", context="summarize-workspace"),
+                    "critique_policy_id",
+                    context="summarize-workspace.project_profile",
+                ),
+            }
         )
         repo_mainline = {
             "program_id": _require_nonempty_string_from_mapping(
@@ -1928,6 +1965,7 @@ def _build_family_orchestration_companion(
     needs_author_decision: bool,
     workspace_summary: Mapping[str, Any] | None = None,
     intake_evidence_companion: Mapping[str, Any] | None = None,
+    project_profile_companion: Mapping[str, Any] | None = None,
     review_surface_ref: str,
     event_envelope_surface_ref: str,
     checkpoint_lineage_surface_ref: str,
@@ -1971,7 +2009,12 @@ def _build_family_orchestration_companion(
         if isinstance(intake_evidence_companion, Mapping)
         else _build_intake_evidence_companion(workspace_summary)
     )
-    return _build_shared_family_product_entry_orchestration(
+    resolved_project_profile_companion = (
+        dict(project_profile_companion)
+        if isinstance(project_profile_companion, Mapping)
+        else _build_project_profile_companion(workspace_summary)
+    )
+    payload = _build_shared_family_product_entry_orchestration(
         graph_id=f"mag_{resolved_current_route_id}_to_{resolved_recommended_route_id}_graph",
         target_domain_id=TARGET_DOMAIN_ID,
         graph_kind="grant_route_orchestration",
@@ -2039,6 +2082,9 @@ def _build_family_orchestration_companion(
         },
         intake_evidence_companion=resolved_intake_evidence_companion,
     )
+    if resolved_project_profile_companion is not None:
+        payload["project_profile_companion"] = resolved_project_profile_companion
+    return payload
 
 
 def _route_to_action_node_kind(route_id: str) -> str:
@@ -2213,6 +2259,109 @@ def _build_intake_evidence_companion(workspace_summary: Mapping[str, Any] | None
     )
 
 
+def _build_project_profile_companion(workspace_summary: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(workspace_summary, Mapping):
+        return None
+    workspace_id = _require_nonempty_string_from_mapping(
+        workspace_summary,
+        "workspace_id",
+        context="summarize-workspace",
+    )
+    project_profile = _require_mapping(
+        workspace_summary,
+        "project_profile",
+        context="summarize-workspace",
+    )
+    profile_id = _require_nonempty_string_from_mapping(
+        project_profile,
+        "profile_id",
+        context="summarize-workspace.project_profile",
+    )
+    funding_program = _require_nonempty_string_from_mapping(
+        project_profile,
+        "funding_program",
+        context="summarize-workspace.project_profile",
+    )
+    return {
+        "surface_kind": "project_profile_companion",
+        "version": 1,
+        "profile_id": profile_id,
+        "preset_id": _require_nonempty_string_from_mapping(
+            project_profile,
+            "preset_id",
+            context="summarize-workspace.project_profile",
+        ),
+        "profile_label": _require_nonempty_string_from_mapping(
+            project_profile,
+            "profile_label",
+            context="summarize-workspace.project_profile",
+        ),
+        "funding_program": funding_program,
+        "funder": _require_nonempty_string_from_mapping(
+            project_profile,
+            "funder",
+            context="summarize-workspace.project_profile",
+        ),
+        "program_family": _require_nonempty_string_from_mapping(
+            project_profile,
+            "program_family",
+            context="summarize-workspace.project_profile",
+        ),
+        "template_profile": {
+            "template_id": _require_nonempty_string_from_mapping(
+                project_profile,
+                "template_id",
+                context="summarize-workspace.project_profile",
+            ),
+            "template_label": _require_nonempty_string_from_mapping(
+                project_profile,
+                "template_label",
+                context="summarize-workspace.project_profile",
+            ),
+        },
+        "collaboration_preferences": {
+            "collaboration_mode": _require_nonempty_string_from_mapping(
+                project_profile,
+                "collaboration_mode",
+                context="summarize-workspace.project_profile",
+            ),
+            "author_touchpoints": list(project_profile.get("author_touchpoints") or []),
+            "evidence_policy": _require_nonempty_string_from_mapping(
+                project_profile,
+                "evidence_policy",
+                context="summarize-workspace.project_profile",
+            ),
+            "drafting_voice": _require_nonempty_string_from_mapping(
+                project_profile,
+                "drafting_voice",
+                context="summarize-workspace.project_profile",
+            ),
+        },
+        "critique_policy": {
+            "preset_id": _require_nonempty_string_from_mapping(
+                project_profile,
+                "critique_policy_preset_id",
+                context="summarize-workspace.project_profile",
+            ),
+            "policy_id": _require_nonempty_string_from_mapping(
+                project_profile,
+                "critique_policy_id",
+                context="summarize-workspace.project_profile",
+            ),
+        },
+        "profile_ref": {
+            "ref_kind": "workspace_locator",
+            "ref": f"grant_workspace::{workspace_id}::project_profile::{profile_id}",
+            "label": "project profile",
+        },
+        "funding_opportunity_ref": {
+            "ref_kind": "workspace_locator",
+            "ref": f"grant_workspace::{workspace_id}::funding_opportunity_brief::{funding_program}",
+            "label": "funding opportunity brief",
+        },
+    }
+
+
 def _read_next_system_action(next_step: Mapping[str, Any]) -> str:
     actions = next_step.get("actions")
     if isinstance(actions, list):
@@ -2263,6 +2412,11 @@ def _build_focus_payload(
         "intake_snapshot",
         context="summarize-workspace",
     )
+    project_profile = _require_mapping(
+        workspace_summary,
+        "project_profile",
+        context="summarize-workspace",
+    )
     selected_direction = _optional_mapping(workspace_summary, "selected_direction")
     selected_question = _optional_mapping(workspace_summary, "selected_question")
     active_draft = _optional_mapping(workspace_summary, "active_draft")
@@ -2280,6 +2434,21 @@ def _build_focus_payload(
             intake_snapshot,
             "funding_program",
             context="summarize-workspace.intake_snapshot",
+        ),
+        "project_profile_label": _require_nonempty_string_from_mapping(
+            project_profile,
+            "profile_label",
+            context="summarize-workspace.project_profile",
+        ),
+        "template_label": _require_nonempty_string_from_mapping(
+            project_profile,
+            "template_label",
+            context="summarize-workspace.project_profile",
+        ),
+        "critique_policy_id": _require_nonempty_string_from_mapping(
+            project_profile,
+            "critique_policy_id",
+            context="summarize-workspace.project_profile",
         ),
         "selected_direction_title": _optional_string_from_mapping(selected_direction, "title"),
         "selected_question": _optional_string_from_mapping(selected_question, "core_question"),
@@ -2301,6 +2470,9 @@ def _build_workspace_overview(
     return {
         "applicant_name": focus["applicant_name"],
         "funding_program": focus["funding_program"],
+        "project_profile_label": focus["project_profile_label"],
+        "template_label": focus["template_label"],
+        "critique_policy_id": focus["critique_policy_id"],
         "lifecycle_stage": _require_nonempty_string_from_mapping(
             progress_projection,
             "current_stage",

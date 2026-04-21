@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 import unittest
+from copy import deepcopy
 from pathlib import Path
 
 
@@ -40,6 +41,29 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertIn("suggested_question", prompt)
         self.assertIn("logic_chain_repairs", prompt)
         self.assertIn("applicant_fit_repairs", prompt)
+
+    def test_build_critique_prompt_uses_project_profile_policy_resolver(self) -> None:
+        from med_autogrant.critique_executor import _build_critique_context, _build_critique_prompt
+        from med_autogrant.workspace import _build_workspace_state
+
+        document = deepcopy(load_workspace_document(DRAFTING_EXAMPLE_PATH))
+        document["project_profile"]["preset_id"] = "nih_r21_translational_v1"
+        document["project_profile"]["profile_label"] = "NIH R21 translational profile"
+        document["project_profile"]["critique_policy"] = {
+            "preset_id": "nih_r21_significance_innovation_v1",
+            "policy_id": "nih_r21_significance_innovation_v1",
+        }
+
+        context = _build_critique_context(
+            document=document,
+            state=_build_workspace_state(document),
+        )
+
+        prompt = _build_critique_prompt(context=context, input_path=DRAFTING_EXAMPLE_PATH)
+
+        self.assertIn("policy_id: nih_r21_significance_innovation_v1", prompt)
+        self.assertIn("persona role: NIH R21 scientific reviewer", prompt)
+        self.assertIn("significance=45, innovation=35, investigator_environment_fit=20", prompt)
 
     def test_build_critique_execution_document_materializes_landed_critique_workspace(self) -> None:
         from med_autogrant.critique_executor import build_critique_execution_document

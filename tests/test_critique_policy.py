@@ -36,6 +36,28 @@ class CritiquePolicyContractTest(unittest.TestCase):
             [item["field"] for item in DEFAULT_NSFC_CRITIQUE_POLICY["required_outputs"]],
         )
 
+    def test_resolve_critique_policy_reads_nsfc_preset_from_project_profile(self) -> None:
+        from med_autogrant.critique_policy import resolve_critique_policy_from_document
+        from med_autogrant.workspace import load_workspace_document
+
+        document = load_workspace_document(REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json")
+
+        policy = resolve_critique_policy_from_document(document)
+
+        self.assertEqual(policy["policy_id"], "nsfc_mentor_critique_v1")
+        self.assertEqual(policy["persona"]["role"], "NSFC mentor reviewer")
+
+    def test_resolve_critique_policy_reads_non_nsfc_preset_from_project_profile(self) -> None:
+        from med_autogrant.critique_policy import resolve_critique_policy_from_document
+        from med_autogrant.workspace import load_workspace_document
+
+        document = load_workspace_document(REPO_ROOT / "examples" / "nih_r21_workspace_p2a_input_intake.json")
+
+        policy = resolve_critique_policy_from_document(document)
+
+        self.assertEqual(policy["policy_id"], "nih_r21_significance_innovation_v1")
+        self.assertEqual(policy["persona"]["role"], "NIH R21 scientific reviewer")
+
 
 if __name__ == "__main__":
     unittest.main()
