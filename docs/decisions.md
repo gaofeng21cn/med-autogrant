@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-04-21：公开主语收口为独立 medical grant domain agent
+
+- 决策：公开文案与 machine-readable 描述统一收口为 `Med Auto Grant` 是独立 medical grant domain agent，可被 `Codex` / `OPL` / 其他通用 agent 直接调用；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
+- 理由：此前公开叙述里仍混入了“位于 OPL 内部 workspace”或把 `gateway / harness` 作为第一身份的表达，容易让 caller 误判 MAG 的独立边界与 direct-entry 能力。
+- 影响：`CLI` / `MedAutoGrantDomainEntry` 继续固定为 agent entry；`product entry/frontdesk/direct-entry/user-loop` 继续固定为 lightweight direct entry / projection；`gateway / harness` 继续保留为内部架构层级术语，避免对外身份漂移。
+
 ## 2026-04-17：冻结托管运行时三层 owner contract
 
 - 决策：把当前主线统一明确成三层 owner：`Hermes-Agent` 只持有长期运行与托管能力，`Med Auto Grant` 只持有 grant-domain governance / progress / review / package gate truth，而 route-selected executor 只持有具体 authoring execution。

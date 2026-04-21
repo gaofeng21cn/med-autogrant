@@ -4,8 +4,8 @@
 
 ## 它是什么
 
-`Med Auto Grant` 是共享 `Unified Harness Engineering Substrate` 上、面向申请人侧且 proposal-facing 的医学 `Grant Ops` 主线。
-它的角色是医学 `Grant Ops` 的 domain gateway 与 harness，当前产品 runtime 主线冻结为 `CLI-first + real upstream Hermes-Agent runtime substrate`。
+`Med Auto Grant` 是独立的、面向申请人侧且 proposal-facing 的医学 `Grant Ops` domain agent。
+它对外提供稳定 agent entry 与 lightweight direct-entry/projection，当前产品 runtime 主线冻结为 `CLI-first + real upstream Hermes-Agent runtime substrate`。
 此前已 absorbed 的 `Codex-default host-agent` 线现在只保留为 compatibility bridge / regression oracle；repo-side adapter 继续在已落地的 upstream substrate 之上保留 Med Auto Grant 的领域语义。
 
 ## 它不是什么
@@ -54,6 +54,8 @@
 - `default_formal_entry`：`CLI`
 - `supported_protocol_layer`：`MCP`（当前保留为 future layer，尚未 repo-verified）
 - `internal_controller_surface`：`controller`
+- `CLI` / `MedAutoGrantDomainEntry`：agent entry
+- `product entry/frontdesk/direct-entry/user-loop`：lightweight direct entry / projection
 
 ## 当前公开面状态
 
@@ -62,6 +64,7 @@
 - 顶层公开文档已建立
 - 中文内部设计与 current-truth 文档已建立
 - 真实 upstream-Hermes-backed runtime substrate 已落地
+- 对外第一身份已收口为独立 medical grant domain agent（可 direct，也可被 `OPL` federate）
 - 当前活跃 phase 是 `P4 mature direct grant product entry`
 - 当前活跃 tranche 是 `P4.F local submission-ready package landing`
 - `P3 hosted caller / OPL consumption proof` 已经完成，现只作为历史落地上下文保留

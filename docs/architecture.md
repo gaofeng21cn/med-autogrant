@@ -4,7 +4,7 @@
 
 当前主链路是 `CLI-first + real upstream Hermes-Agent runtime substrate`：
 
-`operator / agent / direct product projection / future gateway caller -> CLI or MedAutoGrantDomainEntry -> upstream Hermes session substrate -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
+`operator / Codex / OPL / generic agent caller -> CLI or MedAutoGrantDomainEntry -> upstream Hermes session substrate -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
 
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 
@@ -20,6 +20,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
   - 给最终用户直接进入的产品入口
 
 当前真实状态是：前两层已经存在，第三层的轻量结构化 shell 与第一棒 read-only product projection 也已经 landed，但成熟用户级前台仍未落地。
+`gateway / harness` 在这里继续作为内部架构分层术语，不作为对外第一身份。
 
 在进入 repo-tracked workspace 之前，现在还多了一层 pre-workspace intake 入口：
 
@@ -37,11 +38,11 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 目标中的 domain 级链路应是：
 
-`User -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant Domain Harness OS`
+`User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant domain logic`
 
 与 `OPL` 的家族级衔接应是：
 
-`User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+`User or agent caller -> OPL Product Entry -> OPL family orchestration surface -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
 
 `OPL -> Med Auto Grant` 的最小 handoff envelope 至少包括：
 
@@ -54,18 +55,18 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 在这层公共 envelope 之上，grant 域继续补充 `workspace_id`、`draft_id`、`funding_call` 等 domain payload。
 
-按 `OPL` 对齐后的理想目标，这条链路的 owner 固定为：
+按当前定位，这条链路的 owner 固定为：
 
-- `OPL Gateway`：family-level route / gateway owner
+- `OPL`：family-level session/runtime/projection 与 shared modules/contracts/indexes owner
 - `Med Auto Grant Product Entry`：domain direct entry owner
 - `Hermes-Agent`：runtime substrate owner
 - `Med Auto Grant`：author-side grant truth / route / export owner
 
-当前并不宣称 `OPL Gateway` 已在本仓落地；当前只是在为 future caller 冻结稳定 contract。
+当前并不宣称 `OPL` family orchestration surface 已在本仓实现；当前只是在为 future caller 冻结稳定 contract。
 
 ## OPL family orchestration contracts（adoption 方向）
 
-`OPL` 顶层计划冻结 5 类 family contracts：
+`OPL` 在 family-level 继续冻结 5 类 contracts：
 
 - family event envelope
 - family checkpoint lineage
@@ -75,7 +76,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 对 `Med Auto Grant` 来说，优先 adoption 的面是 `workspace progress / workspace cockpit / product direct-entry / product user-loop`，并与 family action graph / family human gate / family product-entry manifest v2 对齐；domain 侧继续保持 `workspace / draft / program` 的真相边界。
 
-这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL` 写成 runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是上游 `Hermes-Agent` 作为 runtime substrate owner，MAG 聚焦 family-level contract-first 对齐与 domain-owned truth 维持。
+这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL` 写成 runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是上游 `Hermes-Agent` 作为 runtime substrate owner，MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持。
 
 ## Hermes-Agent、Med Auto Grant 与 concrete executor 的分工
 

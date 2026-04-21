@@ -2,6 +2,9 @@
 
 ## Runtime 与 formal-entry
 
+- `Med Auto Grant` 对外第一身份固定为独立 medical grant domain agent，不写成 `OPL` 内部 workspace 模块。
+- `CLI` / `MedAutoGrantDomainEntry` 固定为 agent entry；`product entry/frontdesk/direct-entry/user-loop` 固定为 lightweight direct entry / projection。
+- `gateway / harness` 继续保留为内部架构分层术语，不作为对外第一身份。
 - formal-entry matrix 当前固定为：默认正式入口 `CLI`、支持协议层 `MCP`（future layer）、内部控制面 `controller`。
 - 不得把 `supported_protocol_layer=MCP` 解释成“当前 public runtime 已正式支持 MCP”。
 - 不得把 developer control-plane entry 的存在解释成“产品 controller 已正式支持”。
@@ -22,6 +25,7 @@
 
 ## 目标优先级
 
+- `OPL` 当前固定只承担 family-level session/runtime/projection 与 shared modules/contracts/indexes，不承担本仓 domain truth owner 身份。
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态，而不是继续深磨已放弃的旧本地宿主路线。
 - 当前 `CLI-first + host-agent runtime` 是历史 repo-verified baseline，但它只允许留在归档追溯材料中，不应再被误写为长期终态。
 - 当前 Hermes substrate 已落地主线时，不得把 repo-side adapter 重新写回“runtime 仍由本地 helper 主责”。

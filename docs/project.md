@@ -2,10 +2,10 @@
 
 ## 项目定位
 
-`Med Auto Grant` 是共享 `Unified Harness Engineering Substrate` 上、面向医学 `Grant Ops` 的 author-side、proposal-facing `Domain Harness OS` 方向。
+`Med Auto Grant` 是独立的医学 `Grant Ops` domain agent，面向 author-side、proposal-facing 的申请人侧写作主线。
 当前仓库主线按 `Auto-only` 理解，formal entry 仍是 `CLI`，runtime substrate 已切到真实上游 `Hermes-Agent`；历史本地 runtime 线只保留在归档材料里，而当前 `hermes_runtime.py` 路径应被理解为 repo-side domain adapter。
 当前入口已经形成稳定的 `CLI + MedAutoGrantDomainEntry`，`product build-entry` 负责轻量结构化 `product entry` shell，`product manifest` 把这层 shell、shared handoff 模板与当前主线快照冻结成 machine-readable discovery surface；`product frontdesk` 进一步把其上方的 controller-owned direct frontdoor 冻结下来。这层 shell、`product manifest`、`product frontdesk` 及其 `executor_routing_contract` 都已经进一步收口成 schema-backed contract，并在生成时 fail-closed；`package hosted-contract-bundle` 会把 `domain_entry_contract`、`schema_contract`、`authoring_contract` 一起冻结进 hosted-friendly 合同目录；`workspace progress / workspace cockpit`、`product direct-entry`、`mainline status`、维护者参考记录与 `product user-loop` 已经共同构成当前 direct grant product projection 与用户回路；`direction_screening -> frozen` 已进入 landed command catalog；`package submission-ready` 已收口为 fail-closed 的本地 submission-ready 交付面。当前 direct grant loop、frontdoor discovery、route contract、local delivery 与 hosted bundle 已经共享同一份可机读的 authoring record。
-按 `OPL` 对齐后的理想目标，这个仓最终应收敛成：`OPL` 继续负责 family-level 顶层入口与 gateway，`Hermes-Agent` 继续负责 runtime substrate，`Med Auto Grant` 继续负责 grant authoring record、domain entry 与 direct grant product entry。
+按当前定位，这个仓的对外第一身份是“可被通用 agent 直接调用的医学基金 domain agent”：`OPL` 只保留 family-level 的 session/runtime/projection 与 shared modules/contracts/indexes；`Hermes-Agent` 继续负责 runtime substrate；`Med Auto Grant` 继续负责 grant authoring record、domain entry 与 direct grant product entry。
 当前统一协作模型是：`Hermes-Agent` 持有 runtime substrate / orchestration，`Med Auto Grant` 持有 grant 对象边界、author-side contract 与 export record，而 route-selected executor 持有具体 authoring execution；`direction_screening -> frozen`、`revision` 与 packaging/export 继续通过 repo-side domain logic 与 executor adapter 落地。
 当前 hosted caller / `OPL` caller 已经可以直接消费 `domain_entry_contract`、`schema_contract`、`authoring_contract`，并按 `supported_commands` / `command_contracts` 构造请求。`workspace progress / workspace cockpit` 保持 product-facing read-only projection，`product direct-entry` 负责组合 direct-entry contract，`mainline status`、维护者参考记录与 `product user-loop` 负责投影 repo 主线快照与 route-derived next action。`pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting` 与 `pass freeze` 已经收口成 landed command catalog，并被 route contract、`product user-loop` 与 hosted bundle 复用。
 
@@ -14,6 +14,7 @@
 - 明确 `CLI / MCP / controller` 的 formal-entry matrix。
 - 稳定 `grant_run_id`、`workspace_id`、`draft_id`、`program_id` 与相关 artifact/export surface。
 - 在真实上游 `Hermes-Agent` substrate 上延续 author-side grant mainline，并把历史本地 runtime closeout 只保留给归档追溯材料。
+- 保持 `CLI` / `MedAutoGrantDomainEntry` 作为稳定 agent entry，使 `Codex`、`OPL` 和其他通用 agent 都能直接按 contract 调用。
 - 在已落地 runtime substrate 之上，保持 `product build-entry` 这层共享-envelope lightweight grant `product entry` shell 稳定，并让它同时服务 direct entry 与 `OPL` handoff。
 - 在已落地 runtime substrate 与 lightweight shell 之上，通过 `workspace progress / workspace cockpit` 维持 controller-owned、read-only 的 direct grant product projection。
 - 通过 `select-project-profile` 与 `initialize-intake-workspace` 把“材料池 -> funding/profile 选择 -> input_intake workspace”收口成 pre-workspace 入口，避免把 `NSFC` 预设写死成唯一起点。
@@ -26,6 +27,7 @@
 - 通过 `product manifest` 与 `product frontdesk` 把 direct grant frontdoor 收口成独立 schema-backed、generation-time fail-closed 的 contract，并把 `family_orchestration` companion 的 route status 严格对齐到共享 author-side route truth。
 - 通过 `package submission-ready` 把本地 submission-ready 交付目录收口成正式 command surface，并保持“缺材料就 fail-closed、不对外宣称官网已提交”的边界。
 - 把 hosted-friendly handoff contract 收口成 caller 可直接消费的 entry / schema / route catalog，并保持与当前 bundle 同步。
+- 保持 `gateway / harness` 作为内部架构分层术语，不作为公开第一身份。
 - 更远期的 hosted 产品入口演进统一留在 `docs/plans/`，不写进当前主线口径。
 
 ## 范围与非目标
@@ -37,7 +39,7 @@
 
 ## 当前形态
 
-- Current public execution line：`direct MAG entry / OPL handoff -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> service-safe pass/package commands`
+- Current public execution line：`direct MAG agent entry / OPL federation handoff -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> service-safe pass/package commands`
 - Current frontdoor shape：`product frontdesk + product user-loop + workspace progress/workspace cockpit + product direct-entry + package submission-ready`
 - Latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
 - Current owner line：`CLI-first with real upstream Hermes-Agent runtime substrate`

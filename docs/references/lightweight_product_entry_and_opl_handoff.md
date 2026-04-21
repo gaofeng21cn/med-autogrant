@@ -21,16 +21,16 @@
 
 这个仓理想中的 domain 级产品链路应是：
 
-`User -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant Domain Harness OS`
+`User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant domain logic`
 
 在 `OPL` 家族级入口下，则应兼容：
 
-`User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+`User or agent caller -> OPL Product Entry -> OPL family orchestration surface -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
 
 这意味着：
 
-- `OPL` 是 family-level 总入口
-- `Med Auto Grant` 是 grant domain 自己的 lightweight direct entry
+- `Med Auto Grant` 是独立 grant domain agent，可 direct entry，也可被 `OPL` federation
+- `OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes
 - runtime substrate 已经具备，当前剩下的是产品入口层和 handoff 层
 
 ## 3. 为什么现在重点不再是 runtime substrate

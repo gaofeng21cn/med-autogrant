@@ -1,6 +1,6 @@
 {
   "program_id": "med-autogrant-mainline",
-  "date_anchor": "2026-04-13",
+  "date_anchor": "2026-04-21",
   "formal_entry": {
     "default_formal_entry": "CLI",
     "supported_protocol_layer": [
@@ -82,12 +82,13 @@
     ]
   },
   "ideal_target": {
-    "family_top_entry": "OPL Gateway",
+    "family_top_entry": "OPL family-level orchestration surface",
     "domain_direct_entry": "Med Auto Grant Product Entry",
     "runtime_substrate_owner": "Hermes-Agent",
     "authoring_truth_owner": "Med Auto Grant",
-    "direct_user_route": "User -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant Domain Harness OS",
-    "opl_gateway_route": "User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry"
+    "direct_user_route": "User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant domain logic",
+    "opl_gateway_route": "User or agent caller -> OPL Product Entry -> OPL family-level orchestration surface -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry",
+    "opl_family_scope": "family-level session/runtime/projection plus shared modules/contracts/indexes"
   },
   "phase_map": [
     {
@@ -102,7 +103,7 @@
     },
     {
       "phase_id": "P3",
-      "phase_name": "hosted caller / OPL consumption proof",
+      "phase_name": "hosted caller / OPL family-level consumption proof",
       "status": "completed"
     },
     {

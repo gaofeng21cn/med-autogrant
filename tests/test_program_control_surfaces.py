@@ -116,7 +116,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
-        self.assertEqual(contract["ideal_target"]["family_top_entry"], "OPL Gateway")
+        self.assertEqual(
+            contract["ideal_target"]["family_top_entry"],
+            "OPL family-level orchestration surface",
+        )
         self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
         self.assertEqual(contract["ideal_target"]["runtime_substrate_owner"], "Hermes-Agent")
         self.assertEqual(contract["ideal_target"]["authoring_truth_owner"], "Med Auto Grant")

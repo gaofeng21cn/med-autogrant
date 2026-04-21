@@ -4,9 +4,9 @@
 
 # Med Auto Grant
 
-**面向申请人侧医学基金申请的写作工作台，用来持续推进题目、结构和正式申请稿**
+**面向申请人侧医学基金申请的独立 domain agent，用来持续推进题目、结构和正式申请稿**
 
-> `Med Auto Grant` 把选题、既有成果、预实验、草稿、批注、修订和本地提交准备放在同一条申请线上，方便持续推进和审阅。
+> `Med Auto Grant` 是独立的医学基金领域 agent。它把选题、既有成果、预实验、草稿、批注、修订和本地提交准备放在同一条申请线上，方便持续推进和审阅。
 
 <table>
   <tr>
@@ -48,8 +48,10 @@
 
 ## 当前边界
 
-- `Med Auto Grant` 聚焦申请人侧医学基金写作，位于更大 `OPL` 工作区内部。
+- `Med Auto Grant` 是独立的医学基金 domain agent，不是 `OPL` 内部工作区模块。
+- 它可以通过 `CLI` / `MedAutoGrantDomainEntry` 被 `Codex` 或其他通用 agent 直接调用，也可以被 `OPL` 以 federation 方式调用。
 - 它负责题目收敛、申请书写作、批注修订和本地提交包准备。
+- `OPL` 只保留 family-level 的 session/runtime/projection 与 shared modules/contracts/indexes。
 - 最终题目取舍、申报策略和是否正式提交由申请人团队决定。
 - 外部基金官网提交由人工监督完成。
 
@@ -67,7 +69,7 @@
 - 先读 [文档索引](./docs/README.zh-CN.md)。这里已经把当前技术全景、formal-entry matrix 和 repo-tracked 真相所在位置收口好了。
 - 然后读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。这是恢复 active product-entry shell、schema-backed surface 和当前 mainline 指针的最快路径。
 - 在改 route、入口 wording 或公开表述前，把 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 当成公开与技术真相集。
-- 当前 formal-entry matrix 是 `CLI`、`MCP` 和 `controller`。主要 machine-readable public shell 围绕 `product build-entry`、`product manifest`、`product frontdesk`、`product direct-entry`、`product user-loop` 和 `package submission-ready`。
+- 当前 formal-entry matrix 是 `CLI`、`MCP` 和 `controller`。`CLI` / `MedAutoGrantDomainEntry` 是 agent entry，`product entry/frontdesk/direct-entry/user-loop` 是 lightweight direct entry / projection shell。
 
 </details>
 

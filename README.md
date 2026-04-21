@@ -4,9 +4,9 @@
 
 # Med Auto Grant
 
-**A medical grant-writing workspace for investigators preparing structured proposal packages**
+**An independent medical grant domain agent for investigators preparing structured proposal packages**
 
-> `Med Auto Grant` keeps topic selection, evidence gathering, drafting, critique, revision, and local submission preparation on one line for investigator-side medical grant applications.
+> `Med Auto Grant` is an independent medical grant domain agent. It keeps topic selection, evidence gathering, drafting, critique, revision, and local submission preparation on one line for investigator-side medical grant applications.
 
 <table>
   <tr>
@@ -48,8 +48,10 @@ You can start with prompts like:
 
 ## Current Boundary
 
-- `Med Auto Grant` focuses on investigator-side medical grant writing inside the broader `OPL` workspace.
+- `Med Auto Grant` is an independent medical grant domain agent, not an internal module inside the `OPL` workspace.
+- It can be called directly by `Codex` or other general agents through `CLI` / `MedAutoGrantDomainEntry`, and can also be federated by `OPL`.
 - It covers topic refinement, proposal drafting, revision, and local submission-package preparation.
+- `OPL` keeps family-level session/runtime/projection and shared modules/contracts/indexes.
 - Final direction choice, application strategy, and submission decisions stay with the applicant team.
 - External funding portal submission stays under human supervision.
 
@@ -67,7 +69,7 @@ You can start with prompts like:
 - Read the [Docs Guide](./docs/README.md) first. It summarizes the current technical picture, the formal-entry matrix, and where repo-tracked truth lives.
 - Then read [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json). That is the fastest path to the active product-entry shell, schema-backed surfaces, and current mainline pointer.
 - Treat [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the public and technical truth set before changing routes or wording.
-- The current formal-entry matrix is `CLI`, `MCP`, and `controller`. The main machine-readable public shell centers on `product build-entry`, `product manifest`, `product frontdesk`, `product direct-entry`, `product user-loop`, and `package submission-ready`.
+- The current formal-entry matrix is `CLI`, `MCP`, and `controller`. `CLI` / `MedAutoGrantDomainEntry` are the agent-entry surfaces; `product entry/frontdesk/direct-entry/user-loop` are the lightweight direct-entry and projection shell.
 
 </details>
 

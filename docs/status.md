@@ -1,11 +1,12 @@
 # 当前状态
 
-Date: `2026-04-18`
+Date: `2026-04-21`
 
 ## 当前角色
 
-- 仓库角色：`OPL` 是位于 MAG 之上的 family gateway 与 handoff surface；`Med Auto Grant` 负责 author-side grant truth、route、review gate 与 package export。
+- 仓库角色：`Med Auto Grant` 是独立 medical grant domain agent，负责 author-side grant truth、route、review gate 与 package export；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
 - 当前执行口径：`Hermes-Agent` 作为外部 runtime substrate owner 持有长期在线与 proof 语义；repo-side grant adapter 继续持有 direct entry、route contract 与导出边界。
+- 当前 agent entry：`CLI` / `MedAutoGrantDomainEntry` 可被 `Codex`、`OPL` 和其他通用 agent 直接调用。
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
 - OMX 状态：已退场，仅保留历史入口。
@@ -21,7 +22,7 @@ Date: `2026-04-18`
 
 ## 当前执行线
 
-- 当前公开执行线：`direct MAG entry / OPL handoff -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`
+- 当前公开执行线：`direct MAG agent entry / OPL federation handoff -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`
 - 当前 pre-workspace intake 线：`selection_input materials -> select-project-profile -> initialize-intake-workspace -> input_intake workspace`
 - 当前 funding discovery 线：`discovery_input materials -> discover-funding-opportunities -> funding_opportunity_pool`
 - 当前公开用户回路：`product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`
