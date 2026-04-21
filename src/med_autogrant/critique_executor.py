@@ -11,6 +11,11 @@ from med_autogrant.codex_cli import (
     read_codex_cli_contract,
     run_codex_exec,
 )
+from med_autogrant.critique_policy import (
+    DEFAULT_NSFC_CRITIQUE_POLICY,
+    build_policy_prompt_lines,
+    build_weight_contract,
+)
 from med_autogrant.hermes_native_executor import run_hermes_agent_exec
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.workspace import (
@@ -32,11 +37,7 @@ SUPPORTED_CRITIQUE_EXECUTOR_KINDS = (
     HERMES_NATIVE_PROOF_EXECUTOR_KIND,
 )
 
-CRITIQUE_WEIGHT_CONTRACT = {
-    "necessity_scientific_value": 60,
-    "applicant_fit": 30,
-    "feasibility": 10,
-}
+CRITIQUE_POLICY_CONTRACT = DEFAULT_NSFC_CRITIQUE_POLICY
 EXECUTABLE_REVISION_ACTION_TYPES = (
     "rebuild_argument",
     "add_evidence",
@@ -290,6 +291,10 @@ def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -
     input_file = Path(input_path).expanduser().resolve()
     mentor_schema = (SchemaStore().root / "mentor-critique.schema.json").resolve()
     revision_schema = (SchemaStore().root / "revision-plan.schema.json").resolve()
+    policy_lines = build_policy_prompt_lines(CRITIQUE_POLICY_CONTRACT)
+    weight_contract = build_weight_contract(CRITIQUE_POLICY_CONTRACT)
+    weight_split = ", ".join(f"{field}={weight}" for field, weight in weight_contract.items())
+    weighted_score_fields = " / ".join(weight_contract)
     reviewed_revision_id = None
     if isinstance(context["active_revision_plan"], dict) and context["lifecycle_stage"] == "revision":
         reviewed_revision_id = context["active_revision_plan"]["revision_plan_id"]
@@ -307,6 +312,9 @@ def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -
             "Output contract:",
             'Return exactly one JSON object with keys "mentor_critique" and "revision_plan".',
             "",
+            "Critique policy/persona contract:",
+            *policy_lines,
+            "",
             "Hard constraints:",
             f"- lifecycle stage entering critique pass: {context['lifecycle_stage']}",
             f"- draft_id must be {context['draft_id']}",
@@ -320,9 +328,9 @@ def _build_critique_prompt(*, context: dict[str, Any], input_path: str | Path) -
             "- every revision item must target an existing section via target_ref=section:<section_key>",
             "- every revision item must include mutation_payload.operation=replace_draft_section",
             "- every mutation_payload.linked_object_ids must cover required_input_ids and use only known ids",
-            "- mentor critique weights must be necessity_scientific_value=60, applicant_fit=30, feasibility=10",
+            f"- mentor critique weights must be {weight_split}",
             (
-                "- mentor_critique.necessity_scientific_value / applicant_fit / feasibility must each be "
+                f"- mentor_critique.{weighted_score_fields} must each be "
                 "an object with exactly weight, score, judgment"
             ),
             "- do not emit rationale or verdict inside these weighted score blocks",
@@ -356,7 +364,7 @@ def _normalize_mentor_critique(
         critique["reviewed_revision_plan_id"] = critique_context["active_revision_plan"]["revision_plan_id"]
     else:
         critique.pop("reviewed_revision_plan_id", None)
-    for field_name, expected_weight in CRITIQUE_WEIGHT_CONTRACT.items():
+    for field_name, expected_weight in build_weight_contract(CRITIQUE_POLICY_CONTRACT).items():
         criterion = _require_object(critique, field_name)
         criterion["weight"] = expected_weight
     _validate_schema_payload(

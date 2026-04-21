@@ -32,6 +32,14 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
 
         self.assertIn("must each be an object with exactly weight, score, judgment", prompt)
         self.assertIn("do not emit rationale or verdict inside these weighted score blocks", prompt)
+        self.assertIn("Critique policy/persona contract:", prompt)
+        self.assertIn("weight split: necessity_scientific_value=60, applicant_fit=30, feasibility=10", prompt)
+        self.assertIn("diagnose necessity and scientific question first", prompt)
+        self.assertIn("clearly separate scientific question framing from engineering task decomposition", prompt)
+        self.assertIn("overall_diagnosis", prompt)
+        self.assertIn("suggested_question", prompt)
+        self.assertIn("logic_chain_repairs", prompt)
+        self.assertIn("applicant_fit_repairs", prompt)
 
     def test_build_critique_execution_document_materializes_landed_critique_workspace(self) -> None:
         from med_autogrant.critique_executor import build_critique_execution_document
