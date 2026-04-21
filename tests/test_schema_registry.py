@@ -16,9 +16,12 @@ EXPECTED_SCHEMAS = {
     "active-project-set.schema.json",
     "preliminary-evidence-pack.schema.json",
     "project-profile.schema.json",
+    "funding-landscape-discovery-input.schema.json",
+    "funding-landscape-discovery.schema.json",
     "project-profile-selection-input.schema.json",
     "project-profile-selection.schema.json",
     "critique-loop-report.schema.json",
+    "authoring-mainline-loop-report.schema.json",
     "funding-opportunity-brief.schema.json",
     "direction-hypothesis.schema.json",
     "scientific-question-card.schema.json",
@@ -129,9 +132,12 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["grant_intake_audit_surface"], "grant-intake-audit.schema.json")
         self.assertEqual(names["grant_evidence_grounding_surface"], "grant-evidence-grounding.schema.json")
         self.assertEqual(names["project_profile"], "project-profile.schema.json")
+        self.assertEqual(names["funding_landscape_discovery_input"], "funding-landscape-discovery-input.schema.json")
+        self.assertEqual(names["funding_landscape_discovery"], "funding-landscape-discovery.schema.json")
         self.assertEqual(names["project_profile_selection_input"], "project-profile-selection-input.schema.json")
         self.assertEqual(names["project_profile_selection"], "project-profile-selection.schema.json")
         self.assertEqual(names["critique_loop_report"], "critique-loop-report.schema.json")
+        self.assertEqual(names["authoring_mainline_loop_report"], "authoring-mainline-loop-report.schema.json")
         self.assertEqual(names["grant_progress_projection"], "grant-progress.schema.json")
         self.assertEqual(names["grant_cockpit_projection"], "grant-cockpit.schema.json")
         self.assertEqual(names["grant_direct_entry_surface"], "grant-direct-entry.schema.json")

@@ -33,6 +33,16 @@
       "status": "frozen"
     },
     {
+      "name": "funding_landscape_discovery_input",
+      "file": "funding-landscape-discovery-input.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "funding_landscape_discovery",
+      "file": "funding-landscape-discovery.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "project_profile_selection_input",
       "file": "project-profile-selection-input.schema.json",
       "status": "frozen"
@@ -85,6 +95,11 @@
     {
       "name": "critique_loop_report",
       "file": "critique-loop-report.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "authoring_mainline_loop_report",
+      "file": "authoring-mainline-loop-report.schema.json",
       "status": "frozen"
     },
     {

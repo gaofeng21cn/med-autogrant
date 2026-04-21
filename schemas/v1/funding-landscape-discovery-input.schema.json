@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/funding-landscape-discovery-input.schema.json",
+  "title": "FundingLandscapeDiscoveryInput",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "discovery_input_id",
+    "mode",
+    "applicant_profile",
+    "track_record",
+    "rough_direction_hint"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "common.schema.json#/$defs/metadata"
+    },
+    "discovery_input_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "mode": {
+      "$ref": "common.schema.json#/$defs/mode"
+    },
+    "rough_direction_hint": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "program_family_hints": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "include_funders": {
+      "$ref": "common.schema.json#/$defs/stringList"
+    },
+    "applicant_profile": {
+      "$ref": "applicant-profile.schema.json"
+    },
+    "track_record": {
+      "$ref": "track-record.schema.json"
+    },
+    "active_project_set": {
+      "$ref": "active-project-set.schema.json"
+    },
+    "preliminary_evidence_pack": {
+      "$ref": "preliminary-evidence-pack.schema.json"
+    }
+  }
+}

@@ -25,6 +25,7 @@ RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
 NSFC_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_nsfc_general.json"
+DISCOVERY_INPUT = REPO_ROOT / "examples" / "funding_discovery_input_cardiovascular.json"
 
 
 class DomainEntryDispatchTest(unittest.TestCase):
@@ -207,6 +208,25 @@ class DomainEntryDispatchTest(unittest.TestCase):
             output_path="/tmp/initialized-workspace.json",
         )
 
+    def test_domain_entry_dispatches_discover_funding_opportunities(self) -> None:
+        runtime = Mock()
+        runtime.discover_funding_opportunities.return_value = {
+            "ok": True,
+            "command": "discover-funding-opportunities",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "discover-funding-opportunities",
+                "input_path": str(DISCOVERY_INPUT),
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "discover-funding-opportunities"})
+        runtime.discover_funding_opportunities.assert_called_once_with(
+            input_path=str(DISCOVERY_INPUT),
+        )
+
     def test_domain_entry_dispatches_execute_critique_revision_loop(self) -> None:
         runtime = Mock()
         runtime.execute_critique_revision_loop.return_value = {
@@ -228,6 +248,29 @@ class DomainEntryDispatchTest(unittest.TestCase):
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             output_dir="/tmp/critique-loop",
             max_rounds=4,
+        )
+
+    def test_domain_entry_dispatches_execute_authoring_mainline_loop(self) -> None:
+        runtime = Mock()
+        runtime.execute_authoring_mainline_loop.return_value = {
+            "ok": True,
+            "command": "execute-authoring-mainline-loop",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "execute-authoring-mainline-loop",
+                "input_path": str(INPUT_EXAMPLE_PATH),
+                "output_dir": "/tmp/mainline-loop",
+                "max_cycles": 6,
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "execute-authoring-mainline-loop"})
+        runtime.execute_authoring_mainline_loop.assert_called_once_with(
+            input_path=str(INPUT_EXAMPLE_PATH),
+            output_dir="/tmp/mainline-loop",
+            max_cycles=6,
         )
 
     def test_domain_entry_dispatches_build_submission_ready_package(self) -> None:

@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/authoring-mainline-loop-report.schema.json",
+  "title": "AuthoringMainlineLoopReport",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "loopCycleSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cycle",
+        "decision",
+        "input_stage",
+        "recommended_stage",
+        "route_reason",
+        "output_stage"
+      ],
+      "properties": {
+        "cycle": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "ready_for_submission",
+            "progressed",
+            "rollback_rebuild",
+            "fail_closed"
+          ]
+        },
+        "input_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "route_reason": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "output_stage": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "surface_kind",
+    "loop_version",
+    "loop_status",
+    "started_from_stage",
+    "completed_cycles",
+    "max_cycles",
+    "termination_reason",
+    "final_stage",
+    "final_recommended_stage",
+    "cycles"
+  ],
+  "properties": {
+    "surface_kind": {
+      "const": "authoring_mainline_loop_report"
+    },
+    "loop_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "loop_status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed_closed"
+      ]
+    },
+    "started_from_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "completed_cycles": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "max_cycles": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "termination_reason": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "final_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "final_recommended_stage": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "cycles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/loopCycleSummary"
+      }
+    }
+  }
+}

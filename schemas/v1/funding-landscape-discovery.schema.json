@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/funding-landscape-discovery.schema.json",
+  "title": "FundingLandscapeDiscovery",
+  "type": "object",
+  "$defs": {
+    "discoverySummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision",
+        "evaluated_catalog_count",
+        "post_filter_catalog_count",
+        "blocked_by_rules_count",
+        "applied_filters",
+        "required_input_fields"
+      ],
+      "properties": {
+        "decision": {
+          "const": "discovered"
+        },
+        "evaluated_catalog_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "post_filter_catalog_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocked_by_rules_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "applied_filters": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "common.schema.json#/$defs/stringList"
+          }
+        },
+        "required_input_fields": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "surface_kind",
+    "discovery_version",
+    "discovery_input_id",
+    "funding_opportunity_pool",
+    "candidate_count",
+    "discovery_summary"
+  ],
+  "properties": {
+    "surface_kind": {
+      "const": "funding_landscape_discovery"
+    },
+    "discovery_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "discovery_input_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "funding_opportunity_pool": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "funding-opportunity-brief.schema.json"
+      }
+    },
+    "candidate_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "discovery_summary": {
+      "$ref": "#/$defs/discoverySummary"
+    }
+  }
+}

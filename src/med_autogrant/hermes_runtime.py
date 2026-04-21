@@ -25,6 +25,7 @@ from med_autogrant.control_plane import (
 )
 from med_autogrant.critique_executor import build_critique_execution_document
 from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop
+from med_autogrant.authoring_mainline_controller import run_authoring_mainline_controller
 from med_autogrant.final_package import (
     _validate_required_artifact_bundle_fields,
     build_final_package_document,
@@ -39,6 +40,7 @@ from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.upstream_hermes import HermesGrantRunLedger
 from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
+from med_autogrant.funding_landscape_discovery import discover_funding_landscape
 from med_autogrant.project_profile_selector import (
     build_initialized_intake_workspace,
     select_project_profile,
@@ -86,6 +88,9 @@ SUBMISSION_READY_PACKAGE_SCHEMA_FILE = "submission-ready-package.schema.json"
 PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE = "project-profile-selection-input.schema.json"
 PROJECT_PROFILE_SELECTION_SCHEMA_FILE = "project-profile-selection.schema.json"
 CRITIQUE_LOOP_REPORT_SCHEMA_FILE = "critique-loop-report.schema.json"
+FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE = "funding-landscape-discovery-input.schema.json"
+FUNDING_LANDSCAPE_DISCOVERY_SCHEMA_FILE = "funding-landscape-discovery.schema.json"
+AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE = "authoring-mainline-loop-report.schema.json"
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
 HOSTED_CONTRACT_SCHEMA_FILES = (
@@ -94,9 +99,12 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "product-entry.schema.json",
     "grant-intake-audit.schema.json",
     "grant-evidence-grounding.schema.json",
+    "funding-landscape-discovery-input.schema.json",
+    "funding-landscape-discovery.schema.json",
     "project-profile-selection-input.schema.json",
     "project-profile-selection.schema.json",
     "critique-loop-report.schema.json",
+    "authoring-mainline-loop-report.schema.json",
     "hosted-contract-bundle.schema.json",
     "submission-ready-package.schema.json",
 )
@@ -197,6 +205,33 @@ class HermesRuntimeSubstrate:
         )
         return payload
 
+    def discover_funding_opportunities(self, *, input_path: str | Path) -> dict[str, Any]:
+        discovery_input = _load_json_object(input_path, context="funding landscape discovery input")
+        _validate_schema_payload(
+            discovery_input,
+            schema_file=FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE,
+            context="funding_landscape_discovery_input",
+        )
+        discovery = discover_funding_landscape(discovery_input)
+        discovery_surface = {
+            "surface_kind": "funding_landscape_discovery",
+            "discovery_version": 1,
+            "discovery_input_id": discovery_input["discovery_input_id"],
+            **discovery,
+        }
+        _validate_schema_payload(
+            discovery_surface,
+            schema_file=FUNDING_LANDSCAPE_DISCOVERY_SCHEMA_FILE,
+            context="funding_landscape_discovery",
+        )
+        return {
+            "ok": True,
+            "command": "discover-funding-opportunities",
+            "discovery_input_id": discovery_input["discovery_input_id"],
+            "input_path": str(Path(input_path).expanduser().resolve()),
+            "funding_landscape_discovery": discovery_surface,
+        }
+
     def select_project_profile(self, *, input_path: str | Path) -> dict[str, Any]:
         selection_input = _load_json_object(input_path, context="project profile selection input")
         _validate_schema_payload(
@@ -224,12 +259,26 @@ class HermesRuntimeSubstrate:
         input_path: str | Path,
         output_path: str | Path,
     ) -> dict[str, Any]:
-        selection_input = _load_json_object(input_path, context="project profile selection input")
-        _validate_schema_payload(
-            selection_input,
-            schema_file=PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE,
-            context="project_profile_selection_input",
-        )
+        raw_input = _load_json_object(input_path, context="intake initialization input")
+        if "funding_opportunity_pool" in raw_input:
+            selection_input = raw_input
+            _validate_schema_payload(
+                selection_input,
+                schema_file=PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE,
+                context="project_profile_selection_input",
+            )
+        else:
+            _validate_schema_payload(
+                raw_input,
+                schema_file=FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE,
+                context="funding_landscape_discovery_input",
+            )
+            discovered = discover_funding_landscape(raw_input)
+            selection_input = _build_selection_input_from_discovery(
+                discovery_input=raw_input,
+                funding_opportunity_pool=discovered["funding_opportunity_pool"],
+            )
+
         workspace, selection = build_initialized_intake_workspace(selection_input)
         validation = validate_workspace_document(workspace)
         if not validation.ok:
@@ -704,6 +753,172 @@ class HermesRuntimeSubstrate:
             "loop_report_path": str(loop_report_path),
             "final_workspace_path": str(final_workspace_path),
             "loop_report": loop_report,
+            "final_workspace": final_workspace,
+        }
+
+    def execute_authoring_mainline_loop(
+        self,
+        *,
+        input_path: str | Path,
+        output_dir: str | Path,
+        max_cycles: int = 8,
+        executor_kind: str | None = None,
+    ) -> dict[str, Any]:
+        resolved_input_path = Path(input_path).expanduser().resolve()
+        starting_workspace = self._load_workspace(resolved_input_path)
+        resolved_output_dir = Path(output_dir).expanduser().resolve()
+        resolved_output_dir.mkdir(parents=True, exist_ok=True)
+
+        loop_state = {"cycle": 0}
+
+        def _materialize_loop_input(workspace: dict[str, Any]) -> Path:
+            input_path_for_cycle = resolved_output_dir / f"cycle-{loop_state['cycle'] + 1:02d}-input-workspace.json"
+            _write_revised_workspace_output(input_path_for_cycle, workspace)
+            return input_path_for_cycle
+
+        def _extract_draft_id(workspace: dict[str, Any]) -> str | None:
+            selection = workspace.get("current_selection") or {}
+            draft_id = selection.get("active_draft_id")
+            if isinstance(draft_id, str) and draft_id.strip():
+                return draft_id
+            return None
+
+        def _write_cycle_workspace(path: Path, workspace: dict[str, Any]) -> None:
+            _guard_workspace_output_identity(
+                path,
+                workspace_document=workspace,
+                draft_id=_extract_draft_id(workspace),
+            )
+            _write_revised_workspace_output(path, workspace)
+
+        def _stage_runner(stage_name: str):
+            def _runner(workspace: dict[str, Any]) -> dict[str, Any]:
+                loop_state["cycle"] += 1
+                current_input_path = _materialize_loop_input(workspace)
+                if stage_name == "direction_screening":
+                    execution_document = build_direction_screening_execution_document(
+                        document=workspace,
+                        input_path=current_input_path,
+                    )
+                    next_workspace = execution_document["direction_screening_workspace"]
+                elif stage_name == "question_refinement":
+                    execution_document = build_question_refinement_execution_document(
+                        document=workspace,
+                        input_path=current_input_path,
+                    )
+                    next_workspace = execution_document["question_refinement_workspace"]
+                elif stage_name == "argument_building":
+                    execution_document = build_argument_building_execution_document(
+                        document=workspace,
+                        input_path=current_input_path,
+                    )
+                    next_workspace = execution_document["argument_building_workspace"]
+                elif stage_name == "fit_alignment":
+                    execution_document = build_fit_alignment_execution_document(
+                        document=workspace,
+                        input_path=current_input_path,
+                    )
+                    next_workspace = execution_document["fit_alignment_workspace"]
+                elif stage_name == "outline":
+                    execution_document = build_outline_execution_document(
+                        document=workspace,
+                        input_path=current_input_path,
+                    )
+                    next_workspace = execution_document["outline_workspace"]
+                elif stage_name == "drafting":
+                    execution_document = build_drafting_execution_document(
+                        document=workspace,
+                        input_path=current_input_path,
+                    )
+                    next_workspace = execution_document["drafting_workspace"]
+                elif stage_name == "critique":
+                    execution_document = build_critique_execution_document(
+                        document=workspace,
+                        input_path=current_input_path,
+                        executor_kind=executor_kind,
+                    )
+                    next_workspace = execution_document["critique_workspace"]
+                elif stage_name == "revision":
+                    execution_document = build_revision_execution_document(document=workspace)
+                    next_workspace = execution_document["revised_workspace"]
+                elif stage_name == "frozen":
+                    execution_document = build_freeze_execution_document(document=workspace)
+                    next_workspace = execution_document["frozen_workspace"]
+                else:
+                    raise WorkspaceStateError(f"execute-authoring-mainline-loop 不支持 stage runner: {stage_name}")
+
+                output_path_for_cycle = resolved_output_dir / f"cycle-{loop_state['cycle']:02d}-{stage_name}-workspace.json"
+                _write_cycle_workspace(output_path_for_cycle, next_workspace)
+                return {
+                    "workspace": next_workspace,
+                }
+
+            return _runner
+
+        loop = run_authoring_mainline_controller(
+            current_workspace=starting_workspace,
+            max_cycles=max_cycles,
+            route_resolver=determine_next_step,
+            stage_runners={
+                "direction_screening": _stage_runner("direction_screening"),
+                "question_refinement": _stage_runner("question_refinement"),
+                "argument_building": _stage_runner("argument_building"),
+                "fit_alignment": _stage_runner("fit_alignment"),
+                "outline": _stage_runner("outline"),
+                "drafting": _stage_runner("drafting"),
+                "critique": _stage_runner("critique"),
+                "revision": _stage_runner("revision"),
+                "frozen": _stage_runner("frozen"),
+            },
+        )
+        final_workspace = loop["final_workspace"]
+        final_route = loop["final_route"]
+        final_workspace_path = resolved_output_dir / "authoring-mainline-final-workspace.json"
+        _write_cycle_workspace(final_workspace_path, final_workspace)
+        mainline_loop_report = {
+            "surface_kind": "authoring_mainline_loop_report",
+            "loop_version": 1,
+            "loop_status": loop["loop_status"],
+            "started_from_stage": starting_workspace["lifecycle_stage"],
+            "completed_cycles": len(loop["cycles"]),
+            "max_cycles": max_cycles,
+            "termination_reason": loop["termination_reason"],
+            "final_stage": final_workspace["lifecycle_stage"],
+            "final_recommended_stage": final_route.get("recommended_stage"),
+            "cycles": [
+                {
+                    "cycle": item["cycle"],
+                    "decision": item["decision"],
+                    "input_stage": item["input_workspace"]["lifecycle_stage"],
+                    "recommended_stage": item["route"].get("recommended_stage"),
+                    "route_reason": item["route"].get("reason") or "unknown",
+                    "output_stage": (
+                        item["output_workspace"]["lifecycle_stage"]
+                        if isinstance(item.get("output_workspace"), dict)
+                        else None
+                    ),
+                }
+                for item in loop["cycles"]
+            ],
+        }
+        _validate_schema_payload(
+            mainline_loop_report,
+            schema_file=AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE,
+            context="authoring_mainline_loop_report",
+        )
+        report_path = resolved_output_dir / "authoring-mainline-loop-report.json"
+        _write_json_output(report_path, mainline_loop_report, label="authoring mainline loop report")
+        return {
+            "ok": True,
+            "command": "execute-authoring-mainline-loop",
+            "grant_run_id": final_workspace["grant_run_id"],
+            "workspace_id": final_workspace["workspace_id"],
+            "draft_id": _extract_draft_id(final_workspace),
+            "lifecycle_stage": final_workspace["lifecycle_stage"],
+            "output_dir": str(resolved_output_dir),
+            "mainline_loop_report_path": str(report_path),
+            "final_workspace_path": str(final_workspace_path),
+            "mainline_loop_report": mainline_loop_report,
             "final_workspace": final_workspace,
         }
 
@@ -2139,3 +2354,35 @@ def _load_json_object(input_path: str | Path, *, context: str) -> dict[str, Any]
     if not isinstance(payload, dict):
         raise WorkspaceFileError(f"{context} 顶层必须是 JSON object。")
     return payload
+
+
+def _build_selection_input_from_discovery(
+    *,
+    discovery_input: dict[str, Any],
+    funding_opportunity_pool: list[dict[str, Any]],
+) -> dict[str, Any]:
+    return {
+        "metadata": dict(discovery_input["metadata"]),
+        "selection_input_id": discovery_input["discovery_input_id"],
+        "mode": discovery_input.get("mode", "auto"),
+        "rough_direction_hint": discovery_input.get("rough_direction_hint"),
+        "applicant_profile": dict(discovery_input["applicant_profile"]),
+        "track_record": dict(discovery_input["track_record"]),
+        "active_project_set": dict(
+            discovery_input.get("active_project_set")
+            or {
+                "metadata": dict(discovery_input["metadata"]),
+                "project_set_id": f"{discovery_input['discovery_input_id']}-projects",
+                "projects": [],
+            }
+        ),
+        "preliminary_evidence_pack": dict(
+            discovery_input.get("preliminary_evidence_pack")
+            or {
+                "metadata": dict(discovery_input["metadata"]),
+                "evidence_pack_id": f"{discovery_input['discovery_input_id']}-prelim",
+                "evidence_items": [],
+            }
+        ),
+        "funding_opportunity_pool": [dict(item) for item in funding_opportunity_pool],
+    }

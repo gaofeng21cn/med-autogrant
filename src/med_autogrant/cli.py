@@ -179,6 +179,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_workspace_command(
         subparsers,
+        "discover-funding-opportunities",
+        handle_discover_funding_opportunities,
+        "从材料与方向 hint 发现 funding opportunity pool。",
+    )
+    _add_workspace_command(
+        subparsers,
         "select-project-profile",
         handle_select_project_profile,
         "从材料池与 funding pool 中选择推荐 project profile。",
@@ -338,6 +344,12 @@ def build_parser() -> argparse.ArgumentParser:
         "execute-critique-revision-loop",
         handle_execute_critique_revision_loop,
         "执行多轮 critique/revision closed loop，直到通过或 fail-closed 停止。",
+    )
+    _add_mainline_loop_command(
+        subparsers,
+        "execute-authoring-mainline-loop",
+        handle_execute_authoring_mainline_loop,
+        "执行跨 question/argument/fit/drafting/critique/revision/frozen 的全链路主线 loop。",
     )
     _add_revision_executor_command(
         subparsers,
@@ -503,6 +515,10 @@ def handle_grant_intake_audit(args: argparse.Namespace) -> dict[str, Any]:
 
 def handle_grant_evidence_grounding(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "grant-evidence-grounding", "input_path": args.input})
+
+
+def handle_discover_funding_opportunities(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch({"command": "discover-funding-opportunities", "input_path": args.input})
 
 
 def handle_select_project_profile(args: argparse.Namespace) -> dict[str, Any]:
@@ -695,6 +711,18 @@ def handle_execute_critique_revision_loop(args: argparse.Namespace) -> dict[str,
         "input_path": args.input,
         "output_dir": args.output_dir,
         "max_rounds": args.max_rounds,
+    }
+    if args.executor is not None:
+        request["executor_kind"] = args.executor
+    return _domain_entry().dispatch(request)
+
+
+def handle_execute_authoring_mainline_loop(args: argparse.Namespace) -> dict[str, Any]:
+    request: dict[str, Any] = {
+        "command": "execute-authoring-mainline-loop",
+        "input_path": args.input,
+        "output_dir": args.output_dir,
+        "max_cycles": args.max_cycles,
     }
     if args.executor is not None:
         request["executor_kind"] = args.executor
@@ -912,6 +940,21 @@ def _add_critique_loop_command(
     command.set_defaults(handler=handler)
 
 
+def _add_mainline_loop_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--output-dir", required=True)
+    command.add_argument("--max-cycles", type=int, default=8)
+    command.add_argument("--executor")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
 def _add_final_package_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -1029,6 +1072,17 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         ]
         for item in grounding["evidence_gaps"]:
             lines.append(f"- gap: {item}")
+        return "\n".join(lines)
+
+    if command == "discover-funding-opportunities":
+        discovery = payload["funding_landscape_discovery"]
+        lines = [
+            f"discovery_input_id: {payload['discovery_input_id']}",
+            f"candidate_count: {discovery['candidate_count']}",
+            f"当前判断: {discovery['discovery_summary']['decision']}",
+        ]
+        for item in discovery["funding_opportunity_pool"]:
+            lines.append(f"- candidate: {item['brief_id']}")
         return "\n".join(lines)
 
     if command == "select-project-profile":
@@ -1353,6 +1407,20 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"loop_status: {loop_report['loop_status']}",
             f"termination_reason: {loop_report['termination_reason']}",
             f"completed_rounds: {loop_report['completed_rounds']}",
+            f"output_dir: {payload['output_dir']}",
+        ]
+        return "\n".join(lines)
+
+    if command == "execute-authoring-mainline-loop":
+        loop_report = payload["mainline_loop_report"]
+        lines = [
+            f"grant_run_id: {payload['grant_run_id']}",
+            f"workspace_id: {payload['workspace_id']}",
+            f"draft_id: {payload['draft_id']}",
+            f"lifecycle_stage: {payload['lifecycle_stage']}",
+            f"loop_status: {loop_report['loop_status']}",
+            f"termination_reason: {loop_report['termination_reason']}",
+            f"completed_cycles: {loop_report['completed_cycles']}",
             f"output_dir: {payload['output_dir']}",
         ]
         return "\n".join(lines)
