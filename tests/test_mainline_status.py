@@ -14,7 +14,7 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     assert payload["current_line"]["current_owner_line"] == "CLI-first with real upstream Hermes-Agent runtime substrate"
     assert payload["current_focus"]["summary"]
     assert payload["current_focus"]["focus_items"]
-    assert payload["ideal_target"]["family_top_entry"] == "OPL Gateway"
+    assert payload["ideal_target"]["family_top_entry"] == "OPL family-level orchestration surface"
     assert payload["ideal_target"]["domain_direct_entry"] == "Med Auto Grant Product Entry"
     assert any(item["record_id"] == "P4.B" for item in payload["completed_records"])
     assert any(item["record_id"] == "P4.C" for item in payload["completed_records"])
