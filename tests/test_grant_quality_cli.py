@@ -100,3 +100,39 @@ class GrantQualityCliTest(unittest.TestCase):
                 "previous_input_path": str(CRITIQUE_EXAMPLE_PATH),
             }
         )
+
+    def test_quality_closure_dossier_dispatches_domain_entry_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "grant-quality-closure-dossier",
+            "grant_quality_closure_dossier": {
+                "surface_kind": "grant_quality_closure_dossier",
+                "quality_summary": {
+                    "overall_status": "blocked",
+                    "overall_score": 82,
+                },
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantDomainEntry") as entry_class:
+            entry = entry_class.return_value
+            entry.dispatch.return_value = expected_payload
+
+            exit_code, stdout, stderr = self.run_cli(
+                "workspace",
+                "quality-closure-dossier",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        entry.dispatch.assert_called_once_with(
+            {
+                "command": "grant-quality-closure-dossier",
+                "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            }
+        )

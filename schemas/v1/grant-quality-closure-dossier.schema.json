@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-quality-closure-dossier.schema.json",
+  "title": "Grant Quality Closure Dossier Surface",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "qualitySummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overall_status",
+        "overall_score",
+        "summary",
+        "loop_gate"
+      ],
+      "properties": {
+        "overall_status": {
+          "type": "string",
+          "enum": [
+            "blocked",
+            "near_submission_candidate",
+            "submission_grade_candidate"
+          ]
+        },
+        "overall_score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "loop_gate": {
+          "$ref": "grant-quality-scorecard.schema.json#/$defs/loopGate"
+        }
+      }
+    },
+    "supplyStatusCount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supply_status",
+        "count",
+        "gap_ids"
+      ],
+      "properties": {
+        "supply_status": {
+          "type": "string",
+          "enum": [
+            "blocked",
+            "evidence_required",
+            "mixed",
+            "reselection_required"
+          ]
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gap_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "supplyKindCount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_kind",
+        "count",
+        "gap_ids"
+      ],
+      "properties": {
+        "gap_kind": {
+          "type": "string",
+          "enum": [
+            "hard_blocker",
+            "evidence_gap",
+            "mixed_gap",
+            "funding_profile_mismatch"
+          ]
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gap_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "evidenceSupplyQueueSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_gap_count",
+        "outstanding_gap_ids",
+        "status_counts",
+        "kind_counts"
+      ],
+      "properties": {
+        "total_gap_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "outstanding_gap_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "status_counts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/supplyStatusCount"
+          }
+        },
+        "kind_counts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/supplyKindCount"
+          }
+        }
+      }
+    },
+    "acceptanceSignal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signal_id",
+        "signal_kind",
+        "summary",
+        "source_surface",
+        "required_input_ids",
+        "evidence_refs"
+      ],
+      "properties": {
+        "signal_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "signal_kind": {
+          "type": "string",
+          "enum": [
+            "evidence_obligation",
+            "supply_action",
+            "controller_action"
+          ]
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "closurePackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "closure_id",
+        "summary",
+        "severity",
+        "target_stage",
+        "action",
+        "required_input_ids",
+        "evidence_refs",
+        "linked_issue_ids",
+        "blocking_reasons",
+        "evidence_obligations",
+        "acceptance_signals"
+      ],
+      "properties": {
+        "closure_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "hard",
+            "gap"
+          ]
+        },
+        "target_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "continue_mainline",
+            "rollback_upstream",
+            "reselect_project_profile",
+            "fail_closed"
+          ]
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "linked_issue_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "blocking_reasons": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "evidence_obligations": {
+          "type": "array",
+          "items": {
+            "$ref": "grant-quality-scorecard.schema.json#/$defs/evidenceObligation"
+          }
+        },
+        "acceptance_signals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/acceptanceSignal"
+          }
+        }
+      }
+    },
+    "grantQualityClosureDossier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "dossier_version",
+        "workspace_surface_kind",
+        "grant_run_id",
+        "workspace_id",
+        "lifecycle_stage",
+        "draft_id",
+        "quality_summary",
+        "unclosed_hard_issues",
+        "evidence_supply_queue_summary",
+        "closure_packages"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "grant_quality_closure_dossier"
+        },
+        "dossier_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "grant_run_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "draft_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "quality_summary": {
+          "$ref": "#/$defs/qualitySummary"
+        },
+        "unclosed_hard_issues": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "evidence_supply_queue_summary": {
+          "$ref": "#/$defs/evidenceSupplyQueueSummary"
+        },
+        "closure_packages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/closurePackage"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "grant_run_id",
+    "workspace_id",
+    "draft_id",
+    "lifecycle_stage",
+    "input_path",
+    "grant_quality_closure_dossier"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "grant-quality-closure-dossier"
+    },
+    "grant_run_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "workspace_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "draft_id": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "lifecycle_stage": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "input_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "grant_quality_closure_dossier": {
+      "$ref": "#/$defs/grantQualityClosureDossier"
+    }
+  }
+}

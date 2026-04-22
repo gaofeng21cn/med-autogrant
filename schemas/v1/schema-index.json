@@ -163,6 +163,11 @@
       "status": "frozen"
     },
     {
+      "name": "grant_quality_closure_dossier_surface",
+      "file": "grant-quality-closure-dossier.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "grant_progress_projection",
       "file": "grant-progress.schema.json",
       "status": "frozen"

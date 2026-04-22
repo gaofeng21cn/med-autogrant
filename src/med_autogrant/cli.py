@@ -183,6 +183,12 @@ def build_parser() -> argparse.ArgumentParser:
         handle_grant_quality_scorecard,
         "输出当前版本的质量治理 scorecard。",
     )
+    _add_workspace_command(
+        subparsers,
+        "grant-quality-closure-dossier",
+        handle_grant_quality_closure_dossier,
+        "输出当前版本的质量 closure dossier。",
+    )
     _add_quality_diff_command(
         subparsers,
         "grant-quality-diff",
@@ -543,6 +549,10 @@ def handle_grant_evidence_grounding(args: argparse.Namespace) -> dict[str, Any]:
 
 def handle_grant_quality_scorecard(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "grant-quality-scorecard", "input_path": args.input})
+
+
+def handle_grant_quality_closure_dossier(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch({"command": "grant-quality-closure-dossier", "input_path": args.input})
 
 
 def handle_grant_quality_diff(args: argparse.Namespace) -> dict[str, Any]:
@@ -1184,6 +1194,21 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"当前判断: {scorecard['summary']}",
         ]
         for item in scorecard["unresolved_hard_issues"]:
+            lines.append(f"- hard_issue: {item}")
+        return "\n".join(lines)
+
+    if command == "grant-quality-closure-dossier":
+        dossier = payload["grant_quality_closure_dossier"]
+        lines = [
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+            f"overall_status: {dossier['quality_summary']['overall_status']}",
+            f"overall_score: {dossier['quality_summary']['overall_score']}",
+            f"closure_package_count: {len(dossier['closure_packages'])}",
+            f"当前判断: {dossier['quality_summary']['summary']}",
+        ]
+        for item in dossier["unclosed_hard_issues"]:
             lines.append(f"- hard_issue: {item}")
         return "\n".join(lines)
 

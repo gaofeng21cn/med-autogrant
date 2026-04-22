@@ -211,6 +211,125 @@ class GrantQualityScorecardTest(unittest.TestCase):
         )
         self.assertIn("profile-nsfc-general-medical", mismatch_gap["required_input_ids"])
 
+    def test_closure_dossier_turns_open_issue_lineages_into_closure_packages(self) -> None:
+        from med_autogrant.grant_quality import (
+            build_grant_quality_closure_dossier,
+            build_grant_quality_scorecard,
+        )
+
+        critique_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
+        scorecard = build_grant_quality_scorecard(critique_workspace)
+        dossier = build_grant_quality_closure_dossier(critique_workspace)
+
+        self.assertEqual(dossier["surface_kind"], "grant_quality_closure_dossier")
+        self.assertEqual(dossier["workspace_id"], scorecard["workspace_id"])
+        self.assertEqual(dossier["quality_summary"]["overall_status"], scorecard["overall_status"])
+        self.assertEqual(dossier["quality_summary"]["overall_score"], scorecard["overall_score"])
+        self.assertEqual(dossier["quality_summary"]["loop_gate"], scorecard["loop_gate"])
+        self.assertEqual(
+            dossier["evidence_supply_queue_summary"]["total_gap_count"],
+            len(scorecard["evidence_supply_queue"]),
+        )
+
+        necessity_issue = next(
+            item
+            for item in scorecard["tracked_issues"]
+            if item["summary"] == "尚未充分说明为什么现有现象学研究不能回答该机制问题。"
+        )
+        necessity_package = next(
+            item
+            for item in dossier["closure_packages"]
+            if item["closure_id"] == necessity_issue["lineage_id"]
+        )
+        self.assertEqual(
+            necessity_package["action"],
+            necessity_issue["recommended_closure_action"]["action"],
+        )
+        self.assertEqual(
+            necessity_package["target_stage"],
+            necessity_issue["recommended_closure_action"]["target_stage"],
+        )
+        self.assertEqual(
+            necessity_package["linked_issue_ids"],
+            [necessity_issue["issue_id"]],
+        )
+        self.assertTrue(necessity_package["blocking_reasons"])
+        self.assertTrue(necessity_package["evidence_obligations"])
+        self.assertTrue(necessity_package["acceptance_signals"])
+
+    def test_closure_dossier_keeps_queue_only_reselection_gap_as_package(self) -> None:
+        from med_autogrant.grant_quality import build_grant_quality_closure_dossier
+
+        critique_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
+        critique_workspace["project_profile"]["grant_family_grammar"] = {
+            "family_id": "nih_r21_translational_family_v1",
+            "family_label": "NIH R21 translational family",
+            "funder": "NIH",
+            "admission_status": "admitted",
+            "template_strategy": {
+                "required_section_strategy": "mirror_funding_brief_mandatory_sections",
+                "narrative_style": "significance_innovation_translational",
+            },
+            "review_grammar": {
+                "review_focus": "significance_and_innovation_weighted_review",
+                "critique_policy": {
+                    "preset_id": "nih_r21_significance_innovation_v1",
+                    "policy_id": "nih_r21_significance_innovation_v1",
+                },
+            },
+            "evidence_policy": {
+                "policy_id": "significance_and_innovation_claims_require_direct_grounding",
+            },
+            "governance_policy": {
+                "default_tranche": "aims_significance_innovation_loop",
+                "preferred_stop_target": "ready_for_submission_after_significance_innovation_lock",
+                "quality_bar": {
+                    "minimum_score": 78,
+                    "blocker_policy": "critical_blockers_must_close",
+                    "required_signal_coverage": ["significance", "innovation", "approach_feasibility"],
+                },
+                "rollback_bias": {
+                    "default_rollback_stage": "fit_alignment",
+                    "trigger_mode": "innovation_gap_sensitive",
+                },
+                "evidence_escalation_policy": {
+                    "trigger": "significance_or_innovation_claim_unbounded",
+                    "escalation_action": "tighten_aim_scope_and_add_translational_anchor",
+                    "required_evidence_types": ["publication", "preliminary_result"],
+                },
+                "controller_defaults": {
+                    "target_status": "near_submission_candidate",
+                    "require_zero_blockers": True,
+                    "require_zero_evidence_gaps": False,
+                },
+            },
+            "family_compatibility_hooks": [
+                {
+                    "rule_id": "rule.funder",
+                    "opportunity_field": "funder",
+                    "allowed_values": ["NIH"],
+                }
+            ],
+            "governance_entry_points": [
+                "grant-quality-scorecard",
+                "grant-quality-diff",
+                "execute-grant-autonomy-controller",
+            ],
+        }
+
+        dossier = build_grant_quality_closure_dossier(critique_workspace)
+
+        mismatch_package = next(
+            item
+            for item in dossier["closure_packages"]
+            if item["closure_id"] == "funding_profile_mismatch:nsfc-demo-001:nih_r21_translational_family_v1"
+        )
+        self.assertEqual(mismatch_package["action"], "reselect_project_profile")
+        self.assertIsNone(mismatch_package["target_stage"])
+        self.assertEqual(mismatch_package["evidence_obligations"], [])
+        self.assertIn("funding_profile_mismatch:rule.funder", mismatch_package["linked_issue_ids"])
+        self.assertTrue(mismatch_package["acceptance_signals"])
+
 
 class GrantQualityDiffTest(unittest.TestCase):
     def test_quality_diff_reports_closed_and_remaining_issues(self) -> None:

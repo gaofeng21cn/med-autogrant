@@ -37,6 +37,7 @@ EXPECTED_SCHEMAS = {
     "grant-evidence-grounding.schema.json",
     "grant-quality-scorecard.schema.json",
     "grant-quality-diff.schema.json",
+    "grant-quality-closure-dossier.schema.json",
     "grant-autonomy-controller-input.schema.json",
     "grant-autonomy-controller-report.schema.json",
     "service-safe-domain-surface.schema.json",
@@ -139,6 +140,10 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["grant_evidence_grounding_surface"], "grant-evidence-grounding.schema.json")
         self.assertEqual(names["grant_quality_scorecard_surface"], "grant-quality-scorecard.schema.json")
         self.assertEqual(names["grant_quality_diff_surface"], "grant-quality-diff.schema.json")
+        self.assertEqual(
+            names["grant_quality_closure_dossier_surface"],
+            "grant-quality-closure-dossier.schema.json",
+        )
         self.assertEqual(names["project_profile"], "project-profile.schema.json")
         self.assertEqual(names["funding_landscape_discovery_input"], "funding-landscape-discovery-input.schema.json")
         self.assertEqual(names["funding_landscape_discovery"], "funding-landscape-discovery.schema.json")
@@ -457,6 +462,25 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("transition", gap_progress_item_required)
         self.assertIn("supply_delta", gap_progress_item_required)
         self.assertIn("action", diff_schema["$defs"]["controllerActionHint"]["required"])
+
+        dossier_schema = json.loads(
+            (SCHEMA_ROOT / "grant-quality-closure-dossier.schema.json").read_text(encoding="utf-8")
+        )
+        dossier_required = dossier_schema["$defs"]["grantQualityClosureDossier"]["required"]
+        self.assertIn("quality_summary", dossier_required)
+        self.assertIn("unclosed_hard_issues", dossier_required)
+        self.assertIn("evidence_supply_queue_summary", dossier_required)
+        self.assertIn("closure_packages", dossier_required)
+        closure_package_required = dossier_schema["$defs"]["closurePackage"]["required"]
+        self.assertIn("closure_id", closure_package_required)
+        self.assertIn("severity", closure_package_required)
+        self.assertIn("target_stage", closure_package_required)
+        self.assertIn("action", closure_package_required)
+        self.assertIn("required_input_ids", closure_package_required)
+        self.assertIn("linked_issue_ids", closure_package_required)
+        self.assertIn("blocking_reasons", closure_package_required)
+        self.assertIn("evidence_obligations", closure_package_required)
+        self.assertIn("acceptance_signals", closure_package_required)
 
     def test_frontdoor_surface_schemas_pin_preflight_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))

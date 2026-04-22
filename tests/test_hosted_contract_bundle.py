@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.domain_entry_contract import build_domain_entry_contract  # noqa: E402
 from med_autogrant.public_cli import public_cli_argv, public_command_label  # noqa: E402
 from med_autogrant import hosted_contract_bundle as hosted_contract_bundle_module  # noqa: E402
 
@@ -44,6 +45,7 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "grant-evidence-grounding",
     "grant-quality-scorecard",
     "grant-quality-diff",
+    "grant-quality-closure-dossier",
     "discover-funding-opportunities",
     "refresh-funding-opportunities-cache",
     "select-project-profile",
@@ -77,6 +79,7 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "grant-intake-audit", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "grant-evidence-grounding", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "grant-quality-scorecard", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "grant-quality-closure-dossier", "required_fields": ["input_path"], "optional_fields": []},
     {
         "command": "grant-quality-diff",
         "required_fields": ["input_path", "previous_input_path"],
@@ -268,6 +271,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         "grant-intake-audit",
                         "grant-evidence-grounding",
                         "grant-quality-scorecard",
+                        "grant-quality-closure-dossier",
                         "grant-quality-diff",
                         "next-step",
                         "critique-summary",
@@ -312,40 +316,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
             )
             self.assertEqual(
                 contract_bundle["domain_entry_contract"],
-                {
-                    "entry_adapter": "MedAutoGrantDomainEntry",
-                    "service_safe_surface_kind": "service-safe-domain-entry-command",
-                    "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
-                    "product_entry_kind": "med_auto_grant_product_entry",
-                    "supported_entry_modes": [
-                        "direct",
-                        "opl-handoff",
-                    ],
-                    "domain_agent_entry_spec": {
-                        "surface_kind": "domain_agent_entry_spec",
-                        "agent_id": "mag",
-                        "title": "Med Auto Grant Domain Agent",
-                        "description": "Grant authoring domain truth owner surface for Med Auto Grant.",
-                        "default_engine": "codex",
-                        "workspace_requirement": "required",
-                        "locator_schema": {
-                            "required_fields": ["input_path"],
-                            "optional_fields": ["workspace_id", "grant_run_id", "draft_id"],
-                            "workspace_field": "input_path",
-                            "workspace_kind": "nsfc_workspace",
-                            "workspace_id_field": "workspace_id",
-                            "run_id_field": "grant_run_id",
-                            "draft_id_field": "draft_id",
-                        },
-                        "codex_entry_strategy": "domain_agent_entry",
-                        "artifact_conventions": "grant_proposal_package",
-                        "progress_conventions": "grant_workloop_narration",
-                        "entry_command": "product-frontdesk",
-                        "manifest_command": "product-entry-manifest",
-                    },
-                    "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
-                    "command_contracts": DOMAIN_ENTRY_COMMAND_CONTRACTS,
-                },
+                build_domain_entry_contract(),
             )
             self.assertEqual(
                 contract_bundle["schema_contract"],
@@ -360,6 +331,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         "grant-intake-audit.schema.json",
                         "grant-evidence-grounding.schema.json",
                         "grant-quality-scorecard.schema.json",
+                        "grant-quality-closure-dossier.schema.json",
                         "grant-quality-diff.schema.json",
                         "grant-autonomy-controller-input.schema.json",
                         "grant-autonomy-controller-report.schema.json",

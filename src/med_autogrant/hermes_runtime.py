@@ -27,7 +27,11 @@ from med_autogrant.critique_executor import build_critique_execution_document
 from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop
 from med_autogrant.authoring_mainline_controller import run_authoring_mainline_controller
 from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller
-from med_autogrant.grant_quality import build_grant_quality_diff, build_grant_quality_scorecard
+from med_autogrant.grant_quality import (
+    build_grant_quality_closure_dossier,
+    build_grant_quality_diff,
+    build_grant_quality_scorecard,
+)
 from med_autogrant.final_package import (
     _validate_required_artifact_bundle_fields,
     build_final_package_document,
@@ -89,6 +93,7 @@ GRANT_INTAKE_AUDIT_SCHEMA_FILE = "grant-intake-audit.schema.json"
 GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE = "grant-evidence-grounding.schema.json"
 GRANT_QUALITY_SCORECARD_SCHEMA_FILE = "grant-quality-scorecard.schema.json"
 GRANT_QUALITY_DIFF_SCHEMA_FILE = "grant-quality-diff.schema.json"
+GRANT_QUALITY_CLOSURE_DOSSIER_SCHEMA_FILE = "grant-quality-closure-dossier.schema.json"
 GRANT_AUTONOMY_CONTROLLER_INPUT_SCHEMA_FILE = "grant-autonomy-controller-input.schema.json"
 GRANT_AUTONOMY_CONTROLLER_REPORT_SCHEMA_FILE = "grant-autonomy-controller-report.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
@@ -110,6 +115,7 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "grant-intake-audit.schema.json",
     "grant-evidence-grounding.schema.json",
     "grant-quality-scorecard.schema.json",
+    "grant-quality-closure-dossier.schema.json",
     "grant-quality-diff.schema.json",
     "grant-autonomy-controller-input.schema.json",
     "grant-autonomy-controller-report.schema.json",
@@ -272,6 +278,28 @@ class HermesRuntimeSubstrate:
             grant_run_id=current_document["grant_run_id"],
             workspace_id=current_document["workspace_id"],
             lifecycle_stage=current_document["lifecycle_stage"],
+        )
+        return payload
+
+    def grant_quality_closure_dossier(self, *, input_path: str | Path) -> dict[str, Any]:
+        document = self._load_workspace(input_path)
+        payload = {
+            "ok": True,
+            "command": "grant-quality-closure-dossier",
+            "grant_run_id": document["grant_run_id"],
+            "workspace_id": document["workspace_id"],
+            "draft_id": _read_active_draft_id(document),
+            "lifecycle_stage": document["lifecycle_stage"],
+            "input_path": str(Path(input_path).expanduser().resolve()),
+            "grant_quality_closure_dossier": build_grant_quality_closure_dossier(document),
+        }
+        _validate_contract_schema(
+            payload,
+            schema_file=GRANT_QUALITY_CLOSURE_DOSSIER_SCHEMA_FILE,
+            context="grant_quality_closure_dossier",
+            grant_run_id=document["grant_run_id"],
+            workspace_id=document["workspace_id"],
+            lifecycle_stage=document["lifecycle_stage"],
         )
         return payload
 
@@ -2374,6 +2402,7 @@ def _build_operator_contract() -> dict[str, Any]:
                 "grant-intake-audit",
                 "grant-evidence-grounding",
                 "grant-quality-scorecard",
+                "grant-quality-closure-dossier",
                 "grant-quality-diff",
                 "next-step",
                 "critique-summary",

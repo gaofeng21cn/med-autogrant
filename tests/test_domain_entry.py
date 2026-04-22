@@ -144,6 +144,25 @@ class DomainEntryDispatchTest(unittest.TestCase):
             previous_input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
 
+    def test_domain_entry_dispatches_grant_quality_closure_dossier(self) -> None:
+        runtime = Mock()
+        runtime.grant_quality_closure_dossier.return_value = {
+            "ok": True,
+            "command": "grant-quality-closure-dossier",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "grant-quality-closure-dossier",
+                "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "grant-quality-closure-dossier"})
+        runtime.grant_quality_closure_dossier.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
     def test_domain_entry_dispatches_execute_critique_pass(self) -> None:
         runtime = Mock()
         runtime.execute_critique_pass.return_value = {
