@@ -61,6 +61,35 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         self.assertEqual(result["recommended_funding_opportunity"]["brief_id"], "nih-r21-2026-nhlbi")
         self.assertEqual(result["selection_summary"]["selected_profile_preset_id"], "nih_r21_translational_v1")
 
+    def test_selector_picks_wellcome_profile_when_wellcome_pool_is_compatible(self) -> None:
+        from med_autogrant.project_profile_selector import build_initialized_intake_workspace, select_project_profile
+
+        selection_input = self._base_selection_input()
+        selection_input["selection_input_id"] = "wellcome-proof-001"
+        selection_input["funding_opportunity_pool"] = [
+            {
+                "brief_id": "wellcome-discovery-2026",
+                "funder": "Wellcome",
+                "program_family": "Discovery Award",
+                "project_types": ["discovery"],
+            }
+        ]
+
+        result = select_project_profile(selection_input)
+
+        self.assertEqual(result["recommended_project_profile"]["preset_id"], "wellcome_discovery_v1")
+        self.assertEqual(result["recommended_funding_opportunity"]["brief_id"], "wellcome-discovery-2026")
+        self.assertEqual(result["selection_summary"]["selected_profile_preset_id"], "wellcome_discovery_v1")
+        grammar = result["recommended_project_profile"]["grant_family_grammar"]
+        self.assertEqual(grammar["family_id"], "wellcome_discovery_family_v1")
+        self.assertEqual(grammar["review_grammar"]["review_focus"], "transformative_potential_and_execution_readiness")
+        self.assertEqual(grammar["governance_policy"]["controller_defaults"]["target_status"], "near_submission_candidate")
+        workspace, _selection = build_initialized_intake_workspace(selection_input)
+        self.assertEqual(
+            workspace["project_profile"]["grant_family_grammar"]["family_id"],
+            "wellcome_discovery_family_v1",
+        )
+
     def test_selector_attaches_family_grammar_contract_to_nih_profile(self) -> None:
         from med_autogrant.project_profile_selector import build_initialized_intake_workspace, select_project_profile
 
@@ -142,7 +171,10 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         )
 
         preset_ids = {preset["preset_id"] for preset in iter_project_profile_presets()}
-        self.assertEqual(preset_ids, {"nsfc_general_medical_v1", "nih_r21_translational_v1"})
+        self.assertEqual(
+            preset_ids,
+            {"nsfc_general_medical_v1", "nih_r21_translational_v1", "wellcome_discovery_v1"},
+        )
 
         nsfc_preset = get_project_profile_preset("nsfc_general_medical_v1")
         nsfc_grammar = nsfc_preset["common_grant_grammar"]
@@ -168,6 +200,11 @@ class ProjectProfileSelectorTest(unittest.TestCase):
                 and item["status"] == "placeholder"
                 for item in placeholders
             )
+        )
+        wellcome_preset = get_project_profile_preset("wellcome_discovery_v1")
+        self.assertEqual(
+            wellcome_preset["common_grant_grammar"]["review_grammar"]["critique_policy"]["policy_id"],
+            "wellcome_discovery_transformative_value_v1",
         )
 
     def test_selector_profile_document_keeps_existing_values_from_common_grammar(self) -> None:

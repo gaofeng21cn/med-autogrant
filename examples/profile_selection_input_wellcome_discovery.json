@@ -1,0 +1,161 @@
+{
+  "metadata": {
+    "schema_version": "v1",
+    "created_at": "2026-04-22T10:00:00Z",
+    "updated_at": "2026-04-22T10:00:00Z",
+    "source_mode": "auto",
+    "owner": "Med Auto Grant profile selector"
+  },
+  "selection_input_id": "profile-select-wellcome-demo",
+  "mode": "auto",
+  "rough_direction_hint": "心肌损伤后免疫重塑的 discovery biology 问题",
+  "applicant_profile": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "applicant_id": "applicant-gaofeng",
+    "applicant_name": "示例申请人",
+    "institution": "示例医学院",
+    "career_stage": "faculty",
+    "research_domains": [
+      "心血管医学",
+      "炎症与纤维化"
+    ],
+    "clinical_domains": [
+      "心力衰竭"
+    ],
+    "methods_stack": [
+      "单细胞测序",
+      "空间转录组",
+      "动物模型"
+    ],
+    "training_background": [
+      "临床医学",
+      "转化医学"
+    ],
+    "strengths": [
+      "具备 discovery biology 选题基础",
+      "有机制探索与多组学整合经验"
+    ],
+    "constraints": [
+      "高风险方向需要更清晰的 milestone 设计"
+    ]
+  },
+  "track_record": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "track_record_id": "track-001",
+    "representative_outputs": [
+      {
+        "output_id": "output-1",
+        "title": "单细胞研究揭示心肌损伤后免疫-基质互作的新机制线索",
+        "output_type": "paper",
+        "year": 2024,
+        "relevance_summary": "提供 discovery 套路下的重要问题与初步机制边界。",
+        "evidence": {
+          "evidence_id": "evi-output-1",
+          "label": "代表作 1",
+          "source_type": "publication",
+          "uri": "https://example.org/paper-1"
+        }
+      }
+    ],
+    "prior_grants": [
+      "省部级青年项目"
+    ],
+    "awards": [
+      "青年拔尖人才"
+    ]
+  },
+  "active_project_set": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "project_set_id": "projects-001",
+    "projects": [
+      {
+        "project_id": "project-1",
+        "title": "心肌损伤后免疫微环境重塑的时序研究",
+        "status": "ongoing",
+        "role": "负责人",
+        "relevance_to_grant": "可直接支撑 discovery problem framing 与 milestone 设计。",
+        "reusable_assets": [
+          "小鼠模型流程",
+          "单细胞分析流程"
+        ],
+        "linked_evidence": [
+          {
+            "evidence_id": "evi-project-1",
+            "label": "在研项目 1",
+            "source_type": "project"
+          }
+        ]
+      }
+    ]
+  },
+  "preliminary_evidence_pack": {
+    "metadata": {
+      "schema_version": "v1",
+      "created_at": "2026-04-06T10:00:00Z",
+      "updated_at": "2026-04-07T12:00:00Z",
+      "source_mode": "auto"
+    },
+    "evidence_pack_id": "prelim-001",
+    "evidence_items": [
+      {
+        "item_id": "prelim-item-1",
+        "title": "预实验提示炎症细胞与基质细胞之间存在未解释的新通讯轴",
+        "finding_summary": "心肌损伤后第 3 天至第 7 天出现一组高风险高价值的候选 discovery signal。",
+        "modality": "omics",
+        "strength": "moderate",
+        "gaps": [
+          "缺少 milestone-linked validation"
+        ],
+        "evidence": {
+          "evidence_id": "evi-prelim-1",
+          "label": "预实验 1",
+          "source_type": "preliminary_result"
+        }
+      }
+    ]
+  },
+  "funding_opportunity_pool": [
+    {
+      "metadata": {
+        "schema_version": "v1",
+        "created_at": "2026-04-06T10:00:00Z",
+        "updated_at": "2026-04-07T12:00:00Z",
+        "source_mode": "auto"
+      },
+      "brief_id": "wellcome-discovery-2026",
+      "funder": "Wellcome",
+      "program_family": "Discovery Award",
+      "project_types": [
+        "discovery"
+      ],
+      "application_year": 2026,
+      "mandatory_sections": [
+        "Problem",
+        "Approach",
+        "Why this matters",
+        "Team and environment"
+      ],
+      "formal_constraints": [
+        "Need a clear discovery question and milestone logic"
+      ],
+      "evaluation_notes": [
+        "Transformative value and execution readiness are jointly assessed"
+      ]
+    }
+  ]
+}

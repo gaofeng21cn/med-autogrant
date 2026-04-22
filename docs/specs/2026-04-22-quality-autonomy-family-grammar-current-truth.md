@@ -32,4 +32,4 @@ The report is fail-closed: success returns a `submission_grade_candidate` or `ne
 ## Family Grammar Contract
 
 `grant_family_registry.py` separates common grant grammar from funder-specific profile choices.
-The landed registry preserves the existing NSFC and NIH R21 profile behavior and adds a formal Wellcome discovery placeholder so future funder additions can land through family profile / review grammar / template strategy rather than a rewritten process.
+The landed registry now preserves NSFC, NIH R21, and Wellcome Discovery admitted profile behavior, while still keeping a formal Wellcome discovery placeholder so future funder additions can land through family profile / review grammar / template strategy rather than a rewritten process.

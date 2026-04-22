@@ -183,6 +183,96 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
             ),
         },
     },
+    "wellcome_discovery_v1": {
+        "grant_family": {
+            "family_id": "wellcome_discovery_family_v1",
+            "family_label": "Wellcome discovery family",
+            "funder": "Wellcome",
+            "admission_status": "admitted",
+        },
+        "profile_id": "profile-wellcome-discovery",
+        "preset_id": "wellcome_discovery_v1",
+        "profile_label": "Wellcome discovery profile",
+        "project_kind": "discovery_grant_application",
+        "template_family": "wellcome_discovery_grant",
+        "selection_mode": "preset_aligned_to_funding_opportunity",
+        "summary": "面向 Wellcome Discovery Awards，强调问题重要性、transformative potential 与阶段化 execution strategy。",
+        "template_id": "wellcome_discovery_template_v1",
+        "template_label": "Wellcome discovery grant template",
+        "collaboration_mode": "agent_led_author_checkpoints",
+        "author_touchpoints": (
+            "problem_lock",
+            "transformative_value_lock",
+            "presubmission_freeze",
+        ),
+        "drafting_voice": "problem_focused_discovery_grant_style",
+        "common_grant_grammar": {
+            "template_strategy": {
+                "required_section_strategy": "mirror_funding_brief_mandatory_sections",
+                "narrative_style": "high_risk_high_gain_problem_focused",
+            },
+            "review_grammar": {
+                "review_focus": "transformative_potential_and_execution_readiness",
+                "critique_policy": {
+                    "preset_id": "wellcome_discovery_transformative_value_v1",
+                    "policy_id": "wellcome_discovery_transformative_value_v1",
+                },
+            },
+            "evidence_policy": {
+                "policy_id": "claims_require_milestone_linked_evidence",
+            },
+            "governance_policy": {
+                "default_tranche": "discovery_framing_first",
+                "preferred_stop_target": "transformative_hypothesis_locked",
+                "quality_bar": {
+                    "minimum_score": 80,
+                    "blocker_policy": "transformative_value_and_execution_risk_balanced",
+                    "required_signal_coverage": (
+                        "transformative_potential",
+                        "execution_readiness",
+                    ),
+                },
+                "rollback_bias": {
+                    "default_rollback_stage": "question_refinement",
+                    "trigger_mode": "novelty_execution_balance",
+                },
+                "evidence_escalation_policy": {
+                    "trigger": "high_risk_claim_without_milestone_anchor",
+                    "escalation_action": "add_milestone_guardrails_or_reduce_scope",
+                    "required_evidence_types": (
+                        "publication",
+                        "project",
+                    ),
+                },
+                "controller_defaults": {
+                    "target_status": "near_submission_candidate",
+                    "require_zero_blockers": True,
+                    "require_zero_evidence_gaps": False,
+                    "acceptance_criteria": (
+                        "transformative_value_case_closed",
+                        "milestone_and_execution_risks_bounded",
+                    ),
+                },
+            },
+            "family_compatibility_hooks": (
+                {
+                    "rule_id": "rule.funder",
+                    "opportunity_field": "funder",
+                    "allowed_values": ("Wellcome",),
+                },
+                {
+                    "rule_id": "rule.program_family",
+                    "opportunity_field": "program_family",
+                    "allowed_values": ("Discovery Award",),
+                },
+                {
+                    "rule_id": "rule.project_types",
+                    "opportunity_field": "project_types",
+                    "allowed_values": ("discovery",),
+                },
+            ),
+        },
+    },
 }
 
 

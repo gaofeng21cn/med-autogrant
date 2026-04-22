@@ -27,7 +27,7 @@
 - 当前轻量 grant `product entry` shell 就是现在的产品入口 shell 与内部 domain/API catalog builder；未来 hosted 产品形态统一留在 `docs/plans/`。
 - 质量治理已经通过 `workspace quality-scorecard` 与 `workspace quality-diff` 收成 schema-backed surface。
 - 长时间自治已经通过 `pass autonomy-controller` 暴露为正式入口，并输出结构化 blocker 与 evidence-gap report。
-- 通用 grant grammar 与 funder-specific family profile 规则已在 `grant_family_registry.py` 分层；NSFC、NIH R21 和 Wellcome placeholder 共用同一套 registry 形状。
+- 通用 grant grammar 与 funder-specific family profile 规则已在 `grant_family_registry.py` 分层；NSFC、NIH R21 和 Wellcome Discovery 已共用同一套 admitted registry 形状，同时保留 Wellcome placeholder 作为后续 family scaffold。
 
 ## 技术工作集
 

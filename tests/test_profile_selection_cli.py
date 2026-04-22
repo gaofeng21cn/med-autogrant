@@ -56,6 +56,7 @@ from med_autogrant.public_cli import public_cli_argv  # noqa: E402
 
 NSFC_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_nsfc_general.json"
 NIH_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_nih_r21.json"
+WELLCOME_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_wellcome_discovery.json"
 
 
 class ProjectProfileSelectionCliTest(unittest.TestCase):
@@ -87,7 +88,7 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
         )
         self.assertEqual(
             payload["project_profile_selection"]["selection_summary"]["evaluated_profile_preset_count"],
-            2,
+            3,
         )
 
     def test_select_project_profile_returns_nih_r21_recommendation(self) -> None:
@@ -115,7 +116,37 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
         )
         self.assertEqual(
             payload["project_profile_selection"]["selection_summary"]["evaluated_profile_preset_count"],
-            2,
+            3,
+        )
+
+    def test_select_project_profile_returns_wellcome_recommendation(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "select-project-profile",
+            "--input",
+            str(WELLCOME_SELECTION_INPUT),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(
+            payload["project_profile_selection"]["recommended_project_profile"]["preset_id"],
+            "wellcome_discovery_v1",
+        )
+        self.assertEqual(
+            payload["project_profile_selection"]["recommended_funding_opportunity"]["brief_id"],
+            "wellcome-discovery-2026",
+        )
+        self.assertEqual(
+            payload["project_profile_selection"]["recommended_project_profile"]["grant_family_grammar"]["family_id"],
+            "wellcome_discovery_family_v1",
+        )
+        self.assertEqual(
+            payload["project_profile_selection"]["selection_summary"]["evaluated_profile_preset_count"],
+            3,
         )
 
     def test_initialize_intake_workspace_materializes_input_intake_workspace(self) -> None:

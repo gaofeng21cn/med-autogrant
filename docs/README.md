@@ -27,7 +27,7 @@ This guide is for readers who need the technical records, trace records, referen
 - The current lightweight grant `product entry` shell is the active product-entry shell and internal domain/API catalog builder. Future hosted product work stays in `docs/plans/`.
 - Quality governance is now schema-backed through `workspace quality-scorecard` and `workspace quality-diff`.
 - Long-horizon autonomy is now exposed as `pass autonomy-controller`, with structured blocker and evidence-gap reporting.
-- Common grant grammar and funder-specific family profile rules are separated in `grant_family_registry.py`; NSFC, NIH R21, and a Wellcome placeholder now share the same registry shape.
+- Common grant grammar and funder-specific family profile rules are separated in `grant_family_registry.py`; NSFC, NIH R21, and Wellcome Discovery now share the same admitted registry shape, while a Wellcome placeholder remains available as future scaffold.
 
 ## Technical Working Set
 

@@ -40,7 +40,7 @@ Date: `2026-04-22`
 - 当前新增长期 controller 入口：`pass autonomy-controller`（internal command: `execute-grant-autonomy-controller`）
 - 当前新增质量治理入口：`workspace quality-scorecard` 与 `workspace quality-diff`
 - 当前质量治理已补齐 `issue lineage` 合同：同一问题在 revision 后即使摘要改写，`quality diff` 也会优先按 lineage 跟踪关闭进度，而不是把它误记成“旧问题关闭 + 新问题打开”。
-- 当前 funder family 抽象：`grant_family_registry.py` 持有 common grant grammar、review grammar、template strategy 与 family compatibility hooks；NSFC / NIH R21 已在 registry 中，Wellcome discovery 为正式 placeholder。
+- 当前 funder family 抽象：`grant_family_registry.py` 持有 common grant grammar、review grammar、template strategy 与 family compatibility hooks；NSFC / NIH R21 / Wellcome Discovery 已作为 admitted family preset 进入 registry，同时保留 Wellcome discovery placeholder 作为 future family scaffold。
 - 当前 controller-owned projection：`workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`
 - 当前 repo 级投影：`mainline status` 输出 current line / current focus；`mainline phase` 只承担维护者参考记录。
 - `pass critique --executor hermes_native_proof` 继续作为显式 proof lane；默认执行器继续保持 `Codex CLI`，默认模式是 `autonomous`
