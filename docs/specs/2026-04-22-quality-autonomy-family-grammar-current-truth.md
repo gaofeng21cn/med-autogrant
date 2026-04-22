@@ -14,9 +14,11 @@ Date: `2026-04-22`
 The quality scorecard is schema-backed by `schemas/v1/grant-quality-scorecard.schema.json`.
 It covers scientific question validity, necessity/value closure, applicant fit, technical feasibility, claim-evidence coverage, unresolved hard issues, and version issue closure.
 It emits structured tracked issues, evidence gaps, unresolved hard issues, and a loop gate that can force rollback or block a stop decision.
+Each tracked issue now also carries a formal `lineage_id` plus `lineage_basis`, so quality governance can compare issue continuity through revision rounds without depending only on the current wording of the issue summary.
 
 The quality diff is schema-backed by `schemas/v1/grant-quality-diff.schema.json`.
 It reports score deltas, dimension deltas, closed issues, remaining open issues, and newly opened issues.
+It compares open issues by lineage first, then surfaces per-version `previous_issue_id` / `current_issue_id` and `previous_summary` / `current_summary`, so a rephrased but still-open hard issue remains part of the same closure line instead of being misreported as a close-and-reopen pair.
 
 ## Autonomy Contract
 

@@ -385,6 +385,8 @@ class SchemaRegistryTest(unittest.TestCase):
     def test_grant_quality_schemas_require_issue_closure_contract(self) -> None:
         scorecard_schema = json.loads((SCHEMA_ROOT / "grant-quality-scorecard.schema.json").read_text(encoding="utf-8"))
         tracked_issue_required = scorecard_schema["$defs"]["trackedIssue"]["required"]
+        self.assertIn("lineage_id", tracked_issue_required)
+        self.assertIn("lineage_basis", tracked_issue_required)
         self.assertIn("closure_status", tracked_issue_required)
         self.assertIn("blocking_reason", tracked_issue_required)
         self.assertIn("evidence_obligations", tracked_issue_required)
@@ -394,6 +396,12 @@ class SchemaRegistryTest(unittest.TestCase):
         issue_progress_required = diff_schema["$defs"]["issueProgress"]["required"]
         self.assertIn("issue_closure_progress", issue_progress_required)
         issue_closure_required = diff_schema["$defs"]["issueClosureProgress"]["required"]
+        self.assertIn("lineage_id", issue_closure_required)
+        self.assertIn("lineage_basis", issue_closure_required)
+        self.assertIn("previous_issue_id", issue_closure_required)
+        self.assertIn("current_issue_id", issue_closure_required)
+        self.assertIn("previous_summary", issue_closure_required)
+        self.assertIn("current_summary", issue_closure_required)
         self.assertIn("previous_closure_status", issue_closure_required)
         self.assertIn("current_closure_status", issue_closure_required)
         self.assertIn("closure_delta", issue_closure_required)

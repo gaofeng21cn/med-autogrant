@@ -100,6 +100,12 @@ class GrantQualityScorecardTest(unittest.TestCase):
                 for obligation in necessity_issue["evidence_obligations"]
             )
         )
+        self.assertIn("lineage_id", necessity_issue)
+        self.assertEqual(necessity_issue["lineage_basis"]["anchor_kind"], "revision_item")
+        self.assertEqual(
+            necessity_issue["lineage_basis"]["anchor_ref"],
+            "necessity_value_closure:rev-item-1",
+        )
 
 
 class GrantQualityDiffTest(unittest.TestCase):
@@ -157,3 +163,47 @@ class GrantQualityDiffTest(unittest.TestCase):
         self.assertIsNone(new_issue_progress["previous_closure_status"])
         self.assertEqual(new_issue_progress["current_closure_status"], "blocked")
         self.assertEqual(new_issue_progress["closure_delta"], "new_blocker_opened")
+
+    def test_quality_diff_tracks_same_lineage_when_issue_summary_is_rephrased(self) -> None:
+        from med_autogrant.grant_quality import build_grant_quality_diff
+
+        previous_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
+        current_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
+        current_workspace["mentor_critiques"][0]["necessity_scientific_value"]["blocking_issues"][0] = (
+            "现有现象学证据仍未解释该机制缺口。"
+        )
+
+        diff = build_grant_quality_diff(
+            current_document=current_workspace,
+            previous_document=previous_workspace,
+        )
+
+        self.assertEqual(diff["overall_progression"], "stable")
+        self.assertEqual(diff["issue_progress"]["closed_issues"], [])
+        self.assertEqual(diff["issue_progress"]["newly_opened_issues"], [])
+        self.assertIn(
+            "现有现象学证据仍未解释该机制缺口。",
+            diff["issue_progress"]["remaining_open_issues"],
+        )
+        lineage_progress = next(
+            item
+            for item in diff["issue_progress"]["issue_closure_progress"]
+            if item["lineage_basis"]["anchor_ref"] == "necessity_value_closure:rev-item-1"
+        )
+        self.assertEqual(lineage_progress["transition"], "still_open")
+        self.assertEqual(
+            lineage_progress["previous_summary"],
+            "尚未充分说明为什么现有现象学研究不能回答该机制问题。",
+        )
+        self.assertEqual(
+            lineage_progress["current_summary"],
+            "现有现象学证据仍未解释该机制缺口。",
+        )
+        self.assertNotEqual(
+            lineage_progress["previous_issue_id"],
+            lineage_progress["current_issue_id"],
+        )
+        self.assertEqual(
+            lineage_progress["previous_issue_id"].split(":")[0],
+            lineage_progress["current_issue_id"].split(":")[0],
+        )

@@ -35,6 +35,44 @@
         }
       }
     },
+    "lineageBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "anchor_kind",
+        "anchor_ref",
+        "source_surface",
+        "target_stage",
+        "required_input_ids"
+      ],
+      "properties": {
+        "anchor_kind": {
+          "type": "string",
+          "enum": [
+            "revision_item",
+            "critique_repair",
+            "required_input_set",
+            "closure_action",
+            "summary_fallback"
+          ]
+        },
+        "anchor_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
     "dimensionDelta": {
       "type": "object",
       "additionalProperties": false,
@@ -76,6 +114,12 @@
       "additionalProperties": false,
       "required": [
         "issue_id",
+        "lineage_id",
+        "lineage_basis",
+        "previous_issue_id",
+        "current_issue_id",
+        "previous_summary",
+        "current_summary",
         "dimension_id",
         "summary",
         "severity",
@@ -88,6 +132,24 @@
       "properties": {
         "issue_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lineage_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lineage_basis": {
+          "$ref": "#/$defs/lineageBasis"
+        },
+        "previous_issue_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_issue_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "previous_summary": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_summary": {
+          "$ref": "#/$defs/nullableString"
         },
         "dimension_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"

@@ -144,8 +144,8 @@ def build_grant_quality_diff(
     current_scorecard = build_grant_quality_scorecard(current_document)
     previous_scorecard = build_grant_quality_scorecard(previous_document)
 
-    current_open_issues = _open_issue_map(current_scorecard["tracked_issues"])
-    previous_open_issues = _open_issue_map(previous_scorecard["tracked_issues"])
+    current_open_issues = _open_issue_lineage_map(current_scorecard["tracked_issues"])
+    previous_open_issues = _open_issue_lineage_map(previous_scorecard["tracked_issues"])
 
     closed_issue_ids = [issue_id for issue_id in previous_open_issues if issue_id not in current_open_issues]
     remaining_issue_ids = [issue_id for issue_id in previous_open_issues if issue_id in current_open_issues]
@@ -779,8 +779,17 @@ def _build_issue(
         evidence_refs=evidence_refs,
         context=context,
     )
+    lineage_basis = _build_issue_lineage_basis(
+        dimension_id=dimension_id,
+        summary=summary,
+        severity=severity,
+        recommended_closure_action=recommended_closure_action,
+        evidence_obligations=evidence_obligations,
+    )
     return {
         "issue_id": f"{dimension_id}:{digest}",
+        "lineage_id": _build_issue_lineage_id(lineage_basis),
+        "lineage_basis": lineage_basis,
         "dimension_id": dimension_id,
         "summary": summary,
         "status": "open",
@@ -882,6 +891,70 @@ def _build_issue_evidence_obligations(
     ]
 
 
+def _build_issue_lineage_basis(
+    *,
+    dimension_id: str,
+    summary: str,
+    severity: str,
+    recommended_closure_action: dict[str, Any],
+    evidence_obligations: list[dict[str, Any]],
+) -> dict[str, Any]:
+    obligation_ids = [
+        obligation_id
+        for item in evidence_obligations
+        if isinstance(item, dict)
+        for obligation_id in [_nonempty_string(item.get("obligation_id"))]
+        if obligation_id is not None
+    ]
+    required_input_ids = _dedupe_preserve_order(
+        input_id
+        for item in evidence_obligations
+        if isinstance(item, dict)
+        for input_id in _read_nonempty_string_list(item.get("required_input_ids"))
+    )
+    target_stage = _nonempty_string(recommended_closure_action.get("target_stage"))
+    source_surface = _nonempty_string(recommended_closure_action.get("source_surface")) or dimension_id
+    action_summary = _nonempty_string(recommended_closure_action.get("summary"))
+
+    if obligation_ids:
+        anchor_ref = obligation_ids[0]
+        if ":rev-item-" in anchor_ref:
+            anchor_kind = "revision_item"
+        elif ":repair:" in anchor_ref:
+            anchor_kind = "critique_repair"
+        else:
+            anchor_kind = "required_input_set"
+            anchor_ref = _required_input_anchor_ref(dimension_id=dimension_id, required_input_ids=required_input_ids)
+    elif required_input_ids:
+        anchor_kind = "required_input_set"
+        anchor_ref = _required_input_anchor_ref(dimension_id=dimension_id, required_input_ids=required_input_ids)
+    elif action_summary is not None:
+        anchor_kind = "closure_action"
+        anchor_ref = (
+            f"{dimension_id}:action:{_stable_digest('|'.join([source_surface, target_stage or '', action_summary, severity]))}"
+        )
+    else:
+        anchor_kind = "summary_fallback"
+        anchor_ref = f"{dimension_id}:summary:{_stable_digest(summary)}"
+
+    return {
+        "anchor_kind": anchor_kind,
+        "anchor_ref": anchor_ref,
+        "source_surface": source_surface,
+        "target_stage": target_stage,
+        "required_input_ids": required_input_ids,
+    }
+
+
+def _build_issue_lineage_id(lineage_basis: dict[str, Any]) -> str:
+    return f"{lineage_basis['anchor_kind']}:{lineage_basis['anchor_ref']}"
+
+
+def _required_input_anchor_ref(*, dimension_id: str, required_input_ids: list[str]) -> str:
+    normalized_inputs = "|".join(required_input_ids)
+    return f"{dimension_id}:inputs:{_stable_digest(normalized_inputs)}"
+
+
 def _relevant_revision_items(dimension_id: str, *, context: dict[str, Any]) -> list[dict[str, Any]]:
     revision_plan = _active_revision_plan(context)
     if revision_plan is None:
@@ -975,15 +1048,15 @@ def _stable_digest(value: str) -> str:
     return hashlib.sha1(value.encode("utf-8")).hexdigest()[:12]
 
 
-def _open_issue_map(tracked_issues: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
+def _open_issue_lineage_map(tracked_issues: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
     result: dict[str, dict[str, Any]] = {}
     for item in tracked_issues:
         if _nonempty_string(item.get("status")) != "open":
             continue
-        issue_id = _nonempty_string(item.get("issue_id"))
-        if issue_id is None:
+        lineage_id = _nonempty_string(item.get("lineage_id"))
+        if lineage_id is None:
             continue
-        result[issue_id] = dict(item)
+        result[lineage_id] = dict(item)
     return result
 
 
@@ -996,7 +1069,7 @@ def _build_issue_closure_progress_entries(
     ordered_issue_ids.extend(issue_id for issue_id in current_open_issues if issue_id not in previous_open_issues)
     return [
         _build_issue_closure_progress_entry(
-            issue_id=issue_id,
+            lineage_id=issue_id,
             previous_issue=previous_open_issues.get(issue_id),
             current_issue=current_open_issues.get(issue_id),
         )
@@ -1006,11 +1079,15 @@ def _build_issue_closure_progress_entries(
 
 def _build_issue_closure_progress_entry(
     *,
-    issue_id: str,
+    lineage_id: str,
     previous_issue: dict[str, Any] | None,
     current_issue: dict[str, Any] | None,
 ) -> dict[str, Any]:
     issue = current_issue or previous_issue or {}
+    previous_issue_id = _nonempty_string(previous_issue.get("issue_id")) if previous_issue else None
+    current_issue_id = _nonempty_string(current_issue.get("issue_id")) if current_issue else None
+    previous_summary = _nonempty_string(previous_issue.get("summary")) if previous_issue else None
+    current_summary = _nonempty_string(current_issue.get("summary")) if current_issue else None
     previous_closure_status = _nonempty_string(previous_issue.get("closure_status")) if previous_issue else None
     current_closure_status = _nonempty_string(current_issue.get("closure_status")) if current_issue else None
     if previous_issue is not None and current_issue is None:
@@ -1026,9 +1103,15 @@ def _build_issue_closure_progress_entry(
             current_closure_status=current_closure_status,
         )
     return {
-        "issue_id": issue_id,
+        "issue_id": current_issue_id or previous_issue_id,
+        "lineage_id": lineage_id,
+        "lineage_basis": dict(issue.get("lineage_basis") or {}),
+        "previous_issue_id": previous_issue_id,
+        "current_issue_id": current_issue_id,
+        "previous_summary": previous_summary,
+        "current_summary": current_summary,
         "dimension_id": issue.get("dimension_id"),
-        "summary": issue.get("summary"),
+        "summary": current_summary or previous_summary,
         "severity": issue.get("severity"),
         "transition": transition,
         "previous_closure_status": previous_closure_status,

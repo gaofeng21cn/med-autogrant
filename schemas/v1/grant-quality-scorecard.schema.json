@@ -68,11 +68,51 @@
         }
       }
     },
+    "lineageBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "anchor_kind",
+        "anchor_ref",
+        "source_surface",
+        "target_stage",
+        "required_input_ids"
+      ],
+      "properties": {
+        "anchor_kind": {
+          "type": "string",
+          "enum": [
+            "revision_item",
+            "critique_repair",
+            "required_input_set",
+            "closure_action",
+            "summary_fallback"
+          ]
+        },
+        "anchor_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
     "trackedIssue": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "issue_id",
+        "lineage_id",
+        "lineage_basis",
         "dimension_id",
         "summary",
         "status",
@@ -87,6 +127,12 @@
       "properties": {
         "issue_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lineage_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lineage_basis": {
+          "$ref": "#/$defs/lineageBasis"
         },
         "dimension_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
