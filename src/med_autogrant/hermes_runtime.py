@@ -42,6 +42,7 @@ from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.funding_landscape_discovery import discover_funding_landscape
 from med_autogrant.funding_landscape_discovery import build_funding_landscape_cache
+from med_autogrant.funding_landscape_discovery import build_funding_landscape_diff_report
 from med_autogrant.project_profile_selector import (
     build_initialized_intake_workspace,
     select_project_profile,
@@ -92,6 +93,7 @@ CRITIQUE_LOOP_REPORT_SCHEMA_FILE = "critique-loop-report.schema.json"
 FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE = "funding-landscape-discovery-input.schema.json"
 FUNDING_LANDSCAPE_DISCOVERY_SCHEMA_FILE = "funding-landscape-discovery.schema.json"
 FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE = "funding-landscape-cache.schema.json"
+FUNDING_LANDSCAPE_DIFF_REPORT_SCHEMA_FILE = "funding-landscape-diff-report.schema.json"
 AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE = "authoring-mainline-loop-report.schema.json"
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
@@ -104,6 +106,7 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "funding-landscape-discovery-input.schema.json",
     "funding-landscape-discovery.schema.json",
     "funding-landscape-cache.schema.json",
+    "funding-landscape-diff-report.schema.json",
     "project-profile-selection-input.schema.json",
     "project-profile-selection.schema.json",
     "critique-loop-report.schema.json",
@@ -260,18 +263,31 @@ class HermesRuntimeSubstrate:
             discovery_input,
             existing_snapshot=existing_snapshot,
         )
+        diff_report = build_funding_landscape_diff_report(
+            previous_snapshot=existing_snapshot,
+            current_snapshot=cache_snapshot,
+        )
         _validate_schema_payload(
             cache_snapshot,
             schema_file=FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
             context="funding_landscape_cache",
         )
+        _validate_schema_payload(
+            diff_report,
+            schema_file=FUNDING_LANDSCAPE_DIFF_REPORT_SCHEMA_FILE,
+            context="funding_landscape_diff_report",
+        )
         _write_json_output(resolved_output_path, cache_snapshot, label="funding landscape cache")
+        diff_report_path = _derive_funding_landscape_diff_report_path(resolved_output_path)
+        _write_json_output(diff_report_path, diff_report, label="funding landscape diff report")
         return {
             "ok": True,
             "command": "refresh-funding-opportunities-cache",
             "discovery_input_id": cache_snapshot["discovery_input_id"],
             "cache_path": str(resolved_output_path),
+            "diff_report_path": str(diff_report_path),
             "cache_snapshot": cache_snapshot,
+            "diff_report": diff_report,
         }
 
     def select_project_profile(self, *, input_path: str | Path) -> dict[str, Any]:
@@ -2403,6 +2419,10 @@ def _load_json_object(input_path: str | Path, *, context: str) -> dict[str, Any]
 
 def _default_funding_landscape_cache_path() -> Path:
     return resolve_runtime_state_root() / "funding-landscape" / "cache" / "latest.json"
+
+
+def _derive_funding_landscape_diff_report_path(cache_path: Path) -> Path:
+    return cache_path.with_name(f"{cache_path.stem}.diff.json")
 
 
 def _load_existing_cache_snapshot(cache_path: Path) -> dict[str, Any] | None:

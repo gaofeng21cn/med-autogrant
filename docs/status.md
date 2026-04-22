@@ -29,6 +29,7 @@ Date: `2026-04-21`
 - 当前 `official_live` 官方入口：
   NIH Parent Announcements + NSFC 项目指南列表 + NSFC 医学科学部指南页。
 - 当前 funding sync 已支持 `refresh-funding-opportunities-cache` 与 `official_cached`；默认 cache 落点是 `$CODEX_HOME/projects/med-autogrant/runtime-state/funding-landscape/cache/latest.json`。
+- 当前 funding sync 会同时生成 `latest.diff.json`，并对消失条目标记 `withdrawn_or_not_listed`。
 - 当前公开用户回路：`product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`
 - 当前公开 CLI 入口面：`product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready`
 - 当前新增自治入口：`pass critique-loop`（internal command: `execute-critique-revision-loop`）

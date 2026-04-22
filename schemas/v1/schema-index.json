@@ -48,6 +48,16 @@
       "status": "frozen"
     },
     {
+      "name": "funding_landscape_diff_report",
+      "file": "funding-landscape-diff-report.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "funding_landscape_diff_report",
+      "file": "funding-landscape-diff-report.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "project_profile_selection_input",
       "file": "project-profile-selection-input.schema.json",
       "status": "frozen"

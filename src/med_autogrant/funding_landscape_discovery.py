@@ -232,6 +232,77 @@ def build_funding_landscape_cache(
     }
 
 
+def build_funding_landscape_diff_report(
+    *,
+    previous_snapshot: dict[str, Any] | None,
+    current_snapshot: dict[str, Any],
+) -> dict[str, Any]:
+    previous_snapshot = previous_snapshot if isinstance(previous_snapshot, dict) else None
+    previous_pool = _opportunity_index(_snapshot_funding_opportunity_pool(previous_snapshot))
+    current_pool = _opportunity_index(_snapshot_funding_opportunity_pool(current_snapshot))
+    previous_sources = _source_map(previous_snapshot.get("sources") if previous_snapshot else [])
+    current_sources = _source_map(current_snapshot.get("sources") or [])
+
+    added_count = 0
+    updated_count = 0
+    withdrawn_count = 0
+    unchanged_count = 0
+    changes: list[dict[str, Any]] = []
+
+    all_brief_ids = sorted(set(previous_pool) | set(current_pool))
+    for brief_id in all_brief_ids:
+        previous_item = previous_pool.get(brief_id)
+        current_item = current_pool.get(brief_id)
+        previous_source_ids = sorted(previous_sources.get(brief_id, []))
+        current_source_ids = sorted(current_sources.get(brief_id, []))
+        if previous_item is None and current_item is not None:
+            added_count += 1
+            changes.append(
+                {
+                    "brief_id": brief_id,
+                    "change_status": "added",
+                    "previous_source_ids": previous_source_ids,
+                    "current_source_ids": current_source_ids,
+                }
+            )
+            continue
+        if previous_item is not None and current_item is None:
+            withdrawn_count += 1
+            changes.append(
+                {
+                    "brief_id": brief_id,
+                    "change_status": "withdrawn_or_not_listed",
+                    "previous_source_ids": previous_source_ids,
+                    "current_source_ids": current_source_ids,
+                }
+            )
+            continue
+        if previous_item != current_item:
+            updated_count += 1
+            changes.append(
+                {
+                    "brief_id": brief_id,
+                    "change_status": "updated",
+                    "previous_source_ids": previous_source_ids,
+                    "current_source_ids": current_source_ids,
+                }
+            )
+            continue
+        unchanged_count += 1
+
+    return {
+        "report_version": 1,
+        "report_kind": "funding_landscape_diff_report",
+        "previous_refreshed_at": previous_snapshot.get("refreshed_at") if previous_snapshot else None,
+        "current_refreshed_at": current_snapshot["refreshed_at"],
+        "added_count": added_count,
+        "updated_count": updated_count,
+        "withdrawn_count": withdrawn_count,
+        "unchanged_count": unchanged_count,
+        "changes": changes,
+    }
+
+
 def _build_official_live_catalog(
     *,
     fetch_text: FetchText,
@@ -583,6 +654,56 @@ def _dedupe_funding_opportunities(opportunities: Any) -> list[dict[str, Any]]:
             continue
         deduped[brief_id] = _sanitize_funding_opportunity(opportunity)
     return [deduped[key] for key in sorted(deduped)]
+
+
+def _opportunity_index(opportunities: Any) -> dict[str, dict[str, Any]]:
+    indexed: dict[str, dict[str, Any]] = {}
+    for item in opportunities or []:
+        if not isinstance(item, dict):
+            continue
+        brief_id = _normalize_string(item.get("brief_id"))
+        if not brief_id:
+            continue
+        indexed[brief_id] = _sanitize_funding_opportunity(item)
+    return indexed
+
+
+def _snapshot_funding_opportunity_pool(snapshot: dict[str, Any] | None) -> list[dict[str, Any]]:
+    if not isinstance(snapshot, dict):
+        return []
+    top_level_pool = snapshot.get("funding_opportunity_pool")
+    if isinstance(top_level_pool, list) and top_level_pool:
+        return top_level_pool
+    sources = snapshot.get("sources")
+    if not isinstance(sources, list):
+        return []
+    return [
+        item
+        for source in sources
+        if isinstance(source, dict)
+        for item in source.get("funding_opportunity_pool") or []
+        if isinstance(item, dict)
+    ]
+
+
+def _source_map(sources: Any) -> dict[str, list[str]]:
+    mapping: dict[str, list[str]] = {}
+    for source in sources or []:
+        if not isinstance(source, dict):
+            continue
+        source_id = _normalize_string(source.get("source_id"))
+        if not source_id:
+            continue
+        for item in source.get("funding_opportunity_pool") or []:
+            if not isinstance(item, dict):
+                continue
+            brief_id = _normalize_string(item.get("brief_id"))
+            if not brief_id:
+                continue
+            mapping.setdefault(brief_id, [])
+            if source_id not in mapping[brief_id]:
+                mapping[brief_id].append(source_id)
+    return mapping
 
 
 def _build_source_entry(

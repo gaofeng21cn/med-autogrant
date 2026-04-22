@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/funding-landscape-diff-report.schema.json",
+  "title": "FundingLandscapeDiffReport",
+  "type": "object",
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "diffChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "brief_id",
+        "change_status",
+        "previous_source_ids",
+        "current_source_ids"
+      ],
+      "properties": {
+        "brief_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "change_status": {
+          "type": "string",
+          "enum": [
+            "added",
+            "updated",
+            "withdrawn_or_not_listed"
+          ]
+        },
+        "previous_source_ids": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "current_source_ids": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "report_version",
+    "report_kind",
+    "previous_refreshed_at",
+    "current_refreshed_at",
+    "added_count",
+    "updated_count",
+    "withdrawn_count",
+    "unchanged_count",
+    "changes"
+  ],
+  "properties": {
+    "report_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "report_kind": {
+      "const": "funding_landscape_diff_report"
+    },
+    "previous_refreshed_at": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "current_refreshed_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "added_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "updated_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "withdrawn_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unchanged_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/diffChange"
+      }
+    }
+  }
+}

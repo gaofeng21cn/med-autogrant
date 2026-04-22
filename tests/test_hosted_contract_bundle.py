@@ -324,6 +324,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         "funding-landscape-discovery-input.schema.json",
                         "funding-landscape-discovery.schema.json",
                         "funding-landscape-cache.schema.json",
+                        "funding-landscape-diff-report.schema.json",
                         "project-profile-selection-input.schema.json",
                         "project-profile-selection.schema.json",
                         "critique-loop-report.schema.json",

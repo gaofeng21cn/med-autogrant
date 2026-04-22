@@ -41,6 +41,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
   - NSFC 医学科学部指南页: [nsfc.gov.cn/p1/2931/3971/3975/3991/yxkxb22222.html](https://www.nsfc.gov.cn/p1/2931/3971/3975/3991/yxkxb22222.html)
 - `official_cached`
   读取 machine-local funding cache，而不是再次访问网络。缓存通过 `refresh-funding-opportunities-cache` 刷新，默认落点是 `$CODEX_HOME/projects/med-autogrant/runtime-state/funding-landscape/cache/latest.json`。
+  refresh 同时会写出同目录的 `latest.diff.json`，用于对比本轮和上一轮 cache。
 
 这层入口的职责是：
 
@@ -139,6 +140,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `select-project-profile` 与 `initialize-intake-workspace` 由 repo-side selector/initializer contract 持有材料池解析、profile/funding 匹配与 input-intake workspace 生成。
 - `discover-funding-opportunities` 由 repo-side funding landscape discovery contract 持有显式 catalog、机器可读过滤规则与候选池输出。
 - `refresh-funding-opportunities-cache` 由 repo-side funding sync contract 持有官方来源抓取、按 source 增量刷新、cache snapshot 写入与 provenance 证据保留。
+- `funding_landscape_diff_report` 则承担 refresh 前后差异、`withdrawn_or_not_listed` 检测与变化摘要。
 - `pass critique` 当前默认走 `Codex CLI` 的 `autonomous` 模式：具体由 `critique_executor.py -> run_codex_exec(...)` 调起 `codex exec`，默认 `model / reasoning` 都继承本机 Codex 默认（`inherit_local_codex_default`），只有显式环境变量覆盖才会传 override。
 - `execute-critique-revision-loop` 在现有 `execute-critique-pass` 与 `execute-revision-pass` 之上复用同一份 route truth；它不会改写单步 pass 语义，只负责多轮闭环调度、每轮产物落盘与 stop condition 汇总。
 - `execute-authoring-mainline-loop` 在 `determine_next_step(...)` 与单步 pass builder 之上进一步向上扩，把 rollback 到 `direction_screening / question_refinement / argument_building / fit_alignment` 的重建也纳入同一条自治调度线。

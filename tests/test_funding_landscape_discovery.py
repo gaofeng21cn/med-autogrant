@@ -183,3 +183,66 @@ class FundingLandscapeDiscoveryTest(unittest.TestCase):
         provenance = {item["brief_id"]: item for item in result["funding_opportunity_provenance"]}
         self.assertEqual(provenance["nsfc-2026-general"]["provenance_status"], "repo_catalog_static")
         self.assertEqual(provenance["nsfc-2026-general"]["provenance_score"], 50)
+
+    def test_refresh_cache_diff_report_marks_withdrawn_entries(self) -> None:
+        from med_autogrant.funding_landscape_discovery import (
+            build_funding_landscape_cache,
+            build_funding_landscape_diff_report,
+        )
+
+        previous_snapshot = self._cache_snapshot()
+        current_snapshot = build_funding_landscape_cache(
+            self._base_discovery_input(),
+            fetch_text=lambda url: {
+                "https://grants.nih.gov/funding/explore-nih-opportunities/parent-announcements": self.NIH_R21_PARENT_HTML,
+                "https://www.nsfc.gov.cn/p1/3381/2824/zntg.html": self.NSFC_GUIDE_LIST_HTML,
+                "https://www.nsfc.gov.cn/p1/2931/3971/3975/3991/yxkxb22222.html": self.NSFC_MEDICAL_HTML,
+            }[url],
+            existing_snapshot=previous_snapshot,
+        )
+
+        diff_report = build_funding_landscape_diff_report(
+            previous_snapshot=previous_snapshot,
+            current_snapshot=current_snapshot,
+        )
+
+        self.assertEqual(diff_report["report_kind"], "funding_landscape_diff_report")
+        self.assertGreaterEqual(diff_report["added_count"], 1)
+        self.assertGreaterEqual(diff_report["withdrawn_count"], 0)
+        change_statuses = {item["change_status"] for item in diff_report["changes"]}
+        self.assertIn("added", change_statuses)
+
+    def test_refresh_cache_diff_report_detects_withdrawn_when_previous_item_disappears(self) -> None:
+        from med_autogrant.funding_landscape_discovery import build_funding_landscape_diff_report
+
+        previous_snapshot = self._cache_snapshot()
+        previous_snapshot["sources"][0]["funding_opportunity_pool"].append(
+            {
+                "metadata": {
+                    "schema_version": "v1",
+                    "created_at": "2026-04-22T08:00:00Z",
+                    "updated_at": "2026-04-22T08:00:00Z",
+                    "source_mode": "auto"
+                },
+                "brief_id": "nih-r21-pa-24-001",
+                "funder": "NIH",
+                "program_family": "NIH R21 Parent",
+                "project_types": ["exploratory_developmental"],
+                "application_year": 2024,
+                "mandatory_sections": ["Significance"],
+                "formal_constraints": ["historical item"],
+                "evaluation_notes": ["historical item"]
+            }
+        )
+        previous_snapshot["sources"][0]["item_count"] = 2
+        previous_snapshot["funding_opportunity_pool"] = list(previous_snapshot["sources"][0]["funding_opportunity_pool"])
+
+        current_snapshot = self._cache_snapshot()
+        diff_report = build_funding_landscape_diff_report(
+            previous_snapshot=previous_snapshot,
+            current_snapshot=current_snapshot,
+        )
+
+        self.assertEqual(diff_report["withdrawn_count"], 1)
+        withdrawn = [item for item in diff_report["changes"] if item["change_status"] == "withdrawn_or_not_listed"]
+        self.assertEqual(withdrawn[0]["brief_id"], "nih-r21-pa-24-001")

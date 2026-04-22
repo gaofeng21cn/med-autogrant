@@ -21,6 +21,7 @@
 - 通过 `discover-funding-opportunities` 把“方向 hint/申请人材料 -> funding opportunity pool”收口成独立 discovery 入口，使 profile 选择不再依赖人工先给候选池。
   当前该入口支持两种模式：repo 内静态 catalog，以及基于官方 NIH / NSFC 页面抓取的 `official_live`。
   当前还支持 `official_cached` 与 `refresh-funding-opportunities-cache`，用于把官方来源同步成可复用的 machine-local funding cache。
+  当前 refresh 还会同时生成 `funding_landscape_diff_report`，显式标记新增、更新与 `withdrawn_or_not_listed`。
 - 通过 `product direct-entry` 把 direct grant entry 继续推进到组合式 product contract，并保持当前 controller-owned direct-entry 语义稳定。
 - 通过 `mainline status`、维护者参考记录与 `product user-loop` 把 repo 主线快照与当前 direct grant user loop 收成当前 inbox-like shell。
 - 把 `direction_screening -> frozen` 的 author-side 主线持续收口为 landed service-safe command surface，让人工国自然写作流程里的方向筛选、问题提纯、立项依据、适配度、提纲、正文起草与送审前冻结都能直接落到同一套 route truth 上。

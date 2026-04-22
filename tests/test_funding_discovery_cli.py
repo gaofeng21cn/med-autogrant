@@ -52,9 +52,14 @@ class FundingDiscoveryCliTest(unittest.TestCase):
             "ok": True,
             "command": "refresh-funding-opportunities-cache",
             "cache_path": "/tmp/funding-cache.json",
+            "diff_report_path": "/tmp/funding-cache.diff.json",
             "cache_snapshot": {
                 "cache_kind": "funding_landscape_cache",
                 "source_count": 2
+            },
+            "diff_report": {
+                "report_kind": "funding_landscape_diff_report",
+                "withdrawn_count": 1
             }
         }
 
