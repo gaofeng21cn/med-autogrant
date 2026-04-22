@@ -26,6 +26,7 @@ from med_autogrant.control_plane import (
 from med_autogrant.critique_executor import build_critique_execution_document
 from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop
 from med_autogrant.authoring_mainline_controller import run_authoring_mainline_controller
+from med_autogrant.grant_quality import build_grant_quality_diff, build_grant_quality_scorecard
 from med_autogrant.final_package import (
     _validate_required_artifact_bundle_fields,
     build_final_package_document,
@@ -47,7 +48,7 @@ from med_autogrant.project_profile_selector import (
     build_initialized_intake_workspace,
     select_project_profile,
 )
-from med_autogrant.stage_router import determine_next_step
+from med_autogrant.stage_router import _build_forced_rollback_actions, determine_next_step
 from med_autogrant.domain_entry_contract import (
     SERVICE_SAFE_ENTRY_ADAPTER,
     SERVICE_SAFE_ENTRY_SURFACE_KIND,
@@ -85,6 +86,8 @@ PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE = "product-entry-manifest.schema.json"
 PRODUCT_FRONTDESK_SCHEMA_FILE = "product-frontdesk.schema.json"
 GRANT_INTAKE_AUDIT_SCHEMA_FILE = "grant-intake-audit.schema.json"
 GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE = "grant-evidence-grounding.schema.json"
+GRANT_QUALITY_SCORECARD_SCHEMA_FILE = "grant-quality-scorecard.schema.json"
+GRANT_QUALITY_DIFF_SCHEMA_FILE = "grant-quality-diff.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
 SUBMISSION_READY_PACKAGE_SCHEMA_FILE = "submission-ready-package.schema.json"
 PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE = "project-profile-selection-input.schema.json"
@@ -103,6 +106,8 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "product-entry.schema.json",
     "grant-intake-audit.schema.json",
     "grant-evidence-grounding.schema.json",
+    "grant-quality-scorecard.schema.json",
+    "grant-quality-diff.schema.json",
     "funding-landscape-discovery-input.schema.json",
     "funding-landscape-discovery.schema.json",
     "funding-landscape-cache.schema.json",
@@ -208,6 +213,60 @@ class HermesRuntimeSubstrate:
             grant_run_id=document["grant_run_id"],
             workspace_id=document["workspace_id"],
             lifecycle_stage=document["lifecycle_stage"],
+        )
+        return payload
+
+    def grant_quality_scorecard(self, *, input_path: str | Path) -> dict[str, Any]:
+        document = self._load_workspace(input_path)
+        payload = {
+            "ok": True,
+            "command": "grant-quality-scorecard",
+            "grant_run_id": document["grant_run_id"],
+            "workspace_id": document["workspace_id"],
+            "draft_id": _read_active_draft_id(document),
+            "lifecycle_stage": document["lifecycle_stage"],
+            "input_path": str(Path(input_path).expanduser().resolve()),
+            "grant_quality_scorecard": build_grant_quality_scorecard(document),
+        }
+        _validate_contract_schema(
+            payload,
+            schema_file=GRANT_QUALITY_SCORECARD_SCHEMA_FILE,
+            context="grant_quality_scorecard",
+            grant_run_id=document["grant_run_id"],
+            workspace_id=document["workspace_id"],
+            lifecycle_stage=document["lifecycle_stage"],
+        )
+        return payload
+
+    def grant_quality_diff(
+        self,
+        *,
+        input_path: str | Path,
+        previous_input_path: str | Path,
+    ) -> dict[str, Any]:
+        current_document = self._load_workspace(input_path)
+        previous_document = self._load_workspace(previous_input_path)
+        payload = {
+            "ok": True,
+            "command": "grant-quality-diff",
+            "grant_run_id": current_document["grant_run_id"],
+            "workspace_id": current_document["workspace_id"],
+            "draft_id": _read_active_draft_id(current_document),
+            "lifecycle_stage": current_document["lifecycle_stage"],
+            "input_path": str(Path(input_path).expanduser().resolve()),
+            "previous_input_path": str(Path(previous_input_path).expanduser().resolve()),
+            "grant_quality_diff": build_grant_quality_diff(
+                current_document=current_document,
+                previous_document=previous_document,
+            ),
+        }
+        _validate_contract_schema(
+            payload,
+            schema_file=GRANT_QUALITY_DIFF_SCHEMA_FILE,
+            context="grant_quality_diff",
+            grant_run_id=current_document["grant_run_id"],
+            workspace_id=current_document["workspace_id"],
+            lifecycle_stage=current_document["lifecycle_stage"],
         )
         return payload
 
@@ -916,10 +975,15 @@ class HermesRuntimeSubstrate:
 
             return _runner
 
+        def _quality_aware_route_resolver(workspace: dict[str, Any]) -> dict[str, Any]:
+            route = determine_next_step(workspace)
+            quality_scorecard = build_grant_quality_scorecard(workspace)
+            return _apply_quality_gate_to_route(route=route, quality_scorecard=quality_scorecard)
+
         loop = run_authoring_mainline_controller(
             current_workspace=starting_workspace,
             max_cycles=max_cycles,
-            route_resolver=determine_next_step,
+            route_resolver=_quality_aware_route_resolver,
             stage_runners={
                 "direction_screening": _stage_runner("direction_screening"),
                 "question_refinement": _stage_runner("question_refinement"),
@@ -1401,6 +1465,43 @@ def _default_journal_root() -> Path:
     return resolve_runtime_state_root() / "sessions"
 
 
+def _apply_quality_gate_to_route(
+    *,
+    route: dict[str, Any],
+    quality_scorecard: dict[str, Any] | None,
+) -> dict[str, Any]:
+    resolved_route = dict(route)
+    quality_payload = quality_scorecard if isinstance(quality_scorecard, dict) else {}
+    quality_gate = quality_payload.get("loop_gate")
+    if not isinstance(quality_gate, dict):
+        return resolved_route
+
+    resolved_route["quality_gate"] = dict(quality_gate)
+    gate_action = str(quality_gate.get("action") or "").strip()
+    gate_reason = str(quality_gate.get("reason") or "").strip()
+    gate_stage = str(quality_gate.get("recommended_stage") or "").strip()
+    route_stage = str(resolved_route.get("recommended_stage") or "").strip()
+
+    if gate_action == "rollback_required" and gate_stage and gate_stage != route_stage:
+        resolved_route["recommended_stage"] = gate_stage
+        resolved_route["reason"] = f"{resolved_route.get('reason') or ''} 质量 gate 要求回退：{gate_reason}".strip()
+        resolved_route["actions"] = _build_forced_rollback_actions(gate_stage)
+        resolved_route["requires_human_confirmation"] = gate_stage in {
+            "direction_screening",
+            "question_refinement",
+        }
+        return resolved_route
+
+    if gate_action == "continue" and route_stage in {"frozen", "ready_for_submission"} and gate_stage:
+        resolved_route["recommended_stage"] = gate_stage
+        resolved_route["reason"] = f"{resolved_route.get('reason') or ''} 质量 gate 暂不允许停止：{gate_reason}".strip()
+        return resolved_route
+
+    if gate_action == "ready_for_submission" and gate_reason:
+        resolved_route["reason"] = f"{resolved_route.get('reason') or ''} {gate_reason}".strip()
+    return resolved_route
+
+
 def _read_journal(journal_path: Path) -> dict[str, Any]:
     try:
         payload = json.loads(journal_path.read_text(encoding="utf-8"))
@@ -1411,6 +1512,12 @@ def _read_journal(journal_path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise WorkspaceFileError(f"journal 顶层必须是 JSON object: {journal_path}")
     return payload
+
+
+def _read_active_draft_id(document: dict[str, Any]) -> str | None:
+    selection = document.get("current_selection") or {}
+    draft_id = selection.get("active_draft_id")
+    return draft_id if isinstance(draft_id, str) and draft_id.strip() else None
 
 
 def _load_or_initialize_journal(

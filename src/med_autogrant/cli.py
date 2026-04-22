@@ -179,6 +179,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_workspace_command(
         subparsers,
+        "grant-quality-scorecard",
+        handle_grant_quality_scorecard,
+        "输出当前版本的质量治理 scorecard。",
+    )
+    _add_quality_diff_command(
+        subparsers,
+        "grant-quality-diff",
+        handle_grant_quality_diff,
+        "对比两个版本的质量 scorecard 与问题关闭进度。",
+    )
+    _add_workspace_command(
+        subparsers,
         "discover-funding-opportunities",
         handle_discover_funding_opportunities,
         "从材料与方向 hint 发现 funding opportunity pool。",
@@ -523,6 +535,20 @@ def handle_grant_evidence_grounding(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "grant-evidence-grounding", "input_path": args.input})
 
 
+def handle_grant_quality_scorecard(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch({"command": "grant-quality-scorecard", "input_path": args.input})
+
+
+def handle_grant_quality_diff(args: argparse.Namespace) -> dict[str, Any]:
+    return _domain_entry().dispatch(
+        {
+            "command": "grant-quality-diff",
+            "input_path": args.input,
+            "previous_input_path": args.previous_input,
+        }
+    )
+
+
 def handle_discover_funding_opportunities(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "discover-funding-opportunities", "input_path": args.input})
 
@@ -852,6 +878,19 @@ def _add_refresh_cache_command(
     command.set_defaults(handler=handler)
 
 
+def _add_quality_diff_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--previous-input", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
 def _add_simple_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -1101,6 +1140,36 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         ]
         for item in grounding["evidence_gaps"]:
             lines.append(f"- gap: {item}")
+        return "\n".join(lines)
+
+    if command == "grant-quality-scorecard":
+        scorecard = payload["grant_quality_scorecard"]
+        lines = [
+            _render_field("grant_run_id", payload["grant_run_id"]),
+            _render_field("workspace_id", payload["workspace_id"]),
+            _render_field("lifecycle_stage", payload["lifecycle_stage"]),
+            f"overall_status: {scorecard['overall_status']}",
+            f"overall_score: {scorecard['overall_score']}",
+            f"当前判断: {scorecard['summary']}",
+        ]
+        for item in scorecard["unresolved_hard_issues"]:
+            lines.append(f"- hard_issue: {item}")
+        return "\n".join(lines)
+
+    if command == "grant-quality-diff":
+        diff = payload["grant_quality_diff"]
+        lines = [
+            f"current_workspace_id: {diff['current_workspace_id']}",
+            f"previous_workspace_id: {diff['previous_workspace_id']}",
+            f"overall_progression: {diff['overall_progression']}",
+            f"score_delta: {diff['score_delta']}",
+        ]
+        for item in diff["issue_progress"]["closed_issues"]:
+            lines.append(f"- closed_issue: {item}")
+        for item in diff["issue_progress"]["remaining_open_issues"]:
+            lines.append(f"- remaining_issue: {item}")
+        for item in diff["issue_progress"]["newly_opened_issues"]:
+            lines.append(f"- new_issue: {item}")
         return "\n".join(lines)
 
     if command == "discover-funding-opportunities":

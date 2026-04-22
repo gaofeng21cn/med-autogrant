@@ -335,6 +335,8 @@
             "summarize-workspace",
             "grant-intake-audit",
             "grant-evidence-grounding",
+            "grant-quality-scorecard",
+            "grant-quality-diff",
             "discover-funding-opportunities",
             "refresh-funding-opportunities-cache",
             "select-project-profile",
@@ -366,7 +368,7 @@
           "items": {
             "$ref": "#/$defs/domainEntryCommandContract"
           },
-          "minItems": 29
+          "minItems": 31
         }
       }
     },

@@ -46,6 +46,12 @@ DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES: list[dict[str, Any]] = [
     {"command": "summarize-workspace", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "grant-intake-audit", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "grant-evidence-grounding", "required_fields": ["input_path"], "optional_fields": []},
+    {"command": "grant-quality-scorecard", "required_fields": ["input_path"], "optional_fields": []},
+    {
+        "command": "grant-quality-diff",
+        "required_fields": ["input_path", "previous_input_path"],
+        "optional_fields": [],
+    },
     {"command": "discover-funding-opportunities", "required_fields": ["input_path"], "optional_fields": []},
     {
         "command": "refresh-funding-opportunities-cache",

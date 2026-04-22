@@ -193,6 +193,8 @@
             "summarize-workspace",
             "grant-intake-audit",
             "grant-evidence-grounding",
+            "grant-quality-scorecard",
+            "grant-quality-diff",
             "discover-funding-opportunities",
             "refresh-funding-opportunities-cache",
             "select-project-profile",
@@ -224,7 +226,7 @@
           "items": {
             "$ref": "product-entry.schema.json#/$defs/domainEntryCommandContract"
           },
-          "minItems": 29
+          "minItems": 31
         }
       }
     },
@@ -254,6 +256,8 @@
             "product-entry.schema.json",
             "grant-intake-audit.schema.json",
             "grant-evidence-grounding.schema.json",
+            "grant-quality-scorecard.schema.json",
+            "grant-quality-diff.schema.json",
             "funding-landscape-discovery-input.schema.json",
             "funding-landscape-discovery.schema.json",
             "funding-landscape-cache.schema.json",

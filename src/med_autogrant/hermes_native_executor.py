@@ -5,10 +5,6 @@ import os
 from pathlib import Path
 from typing import Any, Callable
 
-from hermes_cli.config import load_config
-from hermes_constants import parse_reasoning_effort
-from run_agent import AIAgent
-
 from med_autogrant.workspace import WorkspaceStateError
 
 
@@ -19,10 +15,11 @@ AgentFactory = Callable[..., Any]
 def read_hermes_agent_contract(
     env: dict[str, str] | None = None,
     *,
-    config_loader: ConfigLoader = load_config,
+    config_loader: ConfigLoader | None = None,
 ) -> dict[str, Any]:
     resolved_env = env or os.environ
-    config = config_loader() if callable(config_loader) else {}
+    resolved_config_loader = config_loader or _load_hermes_config
+    config = resolved_config_loader() if callable(resolved_config_loader) else {}
     model_config = config.get("model", {})
     agent_config = config.get("agent", {})
 
@@ -54,7 +51,7 @@ def read_hermes_agent_contract(
         "base_url": base_url_override or default_base_url,
         "api_mode": api_mode_override or default_api_mode,
         "reasoning_effort": reasoning_effort,
-        "reasoning_config": parse_reasoning_effort(reasoning_effort or ""),
+        "reasoning_config": _parse_reasoning_effort(reasoning_effort or ""),
         "resolution": {
             "model": "env_override" if model_override else "local_config",
             "reasoning_effort": "env_override" if reasoning_override else "local_config",
@@ -67,8 +64,8 @@ def run_hermes_agent_exec(
     *,
     cwd: str | Path,
     env: dict[str, str] | None = None,
-    config_loader: ConfigLoader = load_config,
-    agent_factory: AgentFactory = AIAgent,
+    config_loader: ConfigLoader | None = None,
+    agent_factory: AgentFactory | None = None,
 ) -> dict[str, Any]:
     contract = read_hermes_agent_contract(env, config_loader=config_loader)
     resolved_cwd = Path(cwd).expanduser().resolve()
@@ -80,7 +77,8 @@ def run_hermes_agent_exec(
     def _append_event(event_type: str, **payload: Any) -> None:
         events.append({"type": event_type, **payload})
 
-    agent = agent_factory(
+    resolved_agent_factory = agent_factory or _load_ai_agent_factory()
+    agent = resolved_agent_factory(
         quiet_mode=True,
         model=contract["model"],
         provider=contract["provider"] or None,
@@ -212,3 +210,27 @@ def _resolve_reasoning_status(*, provider: str | None, api_mode: str | None) -> 
     if provider == "custom" and api_mode == "chat_completions":
         return "unproven_custom_chat_completions"
     return "not_proved"
+
+
+def _load_hermes_config() -> dict[str, Any]:
+    from hermes_cli.config import load_config
+
+    return load_config()
+
+
+def _parse_reasoning_effort(value: str) -> dict[str, Any]:
+    try:
+        from hermes_constants import parse_reasoning_effort
+    except ModuleNotFoundError:
+        text = str(value or "").strip()
+        return {
+            "enabled": bool(text),
+            "effort": text,
+        }
+    return parse_reasoning_effort(value)
+
+
+def _load_ai_agent_factory() -> AgentFactory:
+    from run_agent import AIAgent
+
+    return AIAgent

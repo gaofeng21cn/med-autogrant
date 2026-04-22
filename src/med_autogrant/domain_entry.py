@@ -20,6 +20,11 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "summarize-workspace": DomainEntryCommandSpec("summarize_workspace", ("input_path",)),
     "grant-intake-audit": DomainEntryCommandSpec("grant_intake_audit", ("input_path",)),
     "grant-evidence-grounding": DomainEntryCommandSpec("grant_evidence_grounding", ("input_path",)),
+    "grant-quality-scorecard": DomainEntryCommandSpec("grant_quality_scorecard", ("input_path",)),
+    "grant-quality-diff": DomainEntryCommandSpec(
+        "grant_quality_diff",
+        ("input_path", "previous_input_path"),
+    ),
     "discover-funding-opportunities": DomainEntryCommandSpec("discover_funding_opportunities", ("input_path",)),
     "refresh-funding-opportunities-cache": DomainEntryCommandSpec(
         "refresh_funding_opportunities_cache",

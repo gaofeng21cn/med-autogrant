@@ -133,6 +133,8 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["product_entry"], "product-entry.schema.json")
         self.assertEqual(names["grant_intake_audit_surface"], "grant-intake-audit.schema.json")
         self.assertEqual(names["grant_evidence_grounding_surface"], "grant-evidence-grounding.schema.json")
+        self.assertEqual(names["grant_quality_scorecard_surface"], "grant-quality-scorecard.schema.json")
+        self.assertEqual(names["grant_quality_diff_surface"], "grant-quality-diff.schema.json")
         self.assertEqual(names["project_profile"], "project-profile.schema.json")
         self.assertEqual(names["funding_landscape_discovery_input"], "funding-landscape-discovery-input.schema.json")
         self.assertEqual(names["funding_landscape_discovery"], "funding-landscape-discovery.schema.json")

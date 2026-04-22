@@ -143,6 +143,16 @@
       "status": "frozen"
     },
     {
+      "name": "grant_quality_scorecard_surface",
+      "file": "grant-quality-scorecard.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "grant_quality_diff_surface",
+      "file": "grant-quality-diff.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "grant_progress_projection",
       "file": "grant-progress.schema.json",
       "status": "frozen"

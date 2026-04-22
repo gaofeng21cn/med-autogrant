@@ -104,6 +104,46 @@ class DomainEntryDispatchTest(unittest.TestCase):
             input_path=str(INPUT_EXAMPLE_PATH),
         )
 
+    def test_domain_entry_dispatches_grant_quality_scorecard(self) -> None:
+        runtime = Mock()
+        runtime.grant_quality_scorecard.return_value = {
+            "ok": True,
+            "command": "grant-quality-scorecard",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "grant-quality-scorecard",
+                "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "grant-quality-scorecard"})
+        runtime.grant_quality_scorecard.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
+    def test_domain_entry_dispatches_grant_quality_diff(self) -> None:
+        runtime = Mock()
+        runtime.grant_quality_diff.return_value = {
+            "ok": True,
+            "command": "grant-quality-diff",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "grant-quality-diff",
+                "input_path": str(FROZEN_EXAMPLE_PATH),
+                "previous_input_path": str(CRITIQUE_EXAMPLE_PATH),
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "grant-quality-diff"})
+        runtime.grant_quality_diff.assert_called_once_with(
+            input_path=str(FROZEN_EXAMPLE_PATH),
+            previous_input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
     def test_domain_entry_dispatches_execute_critique_pass(self) -> None:
         runtime = Mock()
         runtime.execute_critique_pass.return_value = {

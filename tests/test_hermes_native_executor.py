@@ -12,6 +12,13 @@ if str(SRC_ROOT) not in sys.path:
 
 
 class HermesNativeExecutorContractTest(unittest.TestCase):
+    def test_module_imports_without_hermes_cli_installed_until_call_site(self) -> None:
+        import importlib
+
+        module = importlib.import_module("med_autogrant.hermes_native_executor")
+
+        self.assertTrue(hasattr(module, "read_hermes_agent_contract"))
+
     def test_read_hermes_agent_contract_resolves_local_config_defaults(self) -> None:
         from med_autogrant.hermes_native_executor import read_hermes_agent_contract
 
