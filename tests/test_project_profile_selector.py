@@ -76,3 +76,64 @@ class ProjectProfileSelectorTest(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "未找到兼容的 project profile preset"):
             select_project_profile(selection_input)
+
+    def test_registry_exposes_common_grammar_and_non_nsfc_placeholder_contract(self) -> None:
+        from med_autogrant.grant_family_registry import (
+            get_project_profile_preset,
+            iter_project_profile_presets,
+            list_family_profile_placeholders,
+        )
+
+        preset_ids = {preset["preset_id"] for preset in iter_project_profile_presets()}
+        self.assertEqual(preset_ids, {"nsfc_general_medical_v1", "nih_r21_translational_v1"})
+
+        nsfc_preset = get_project_profile_preset("nsfc_general_medical_v1")
+        nsfc_grammar = nsfc_preset["common_grant_grammar"]
+        self.assertEqual(
+            nsfc_grammar["template_strategy"]["required_section_strategy"],
+            "mirror_funding_brief_mandatory_sections",
+        )
+        self.assertEqual(
+            nsfc_grammar["evidence_policy"]["policy_id"],
+            "claim_must_bind_to_track_record_or_preliminary_evidence",
+        )
+        self.assertEqual(
+            nsfc_grammar["review_grammar"]["critique_policy"]["policy_id"],
+            "nsfc_mentor_critique_v1",
+        )
+        self.assertEqual(nsfc_grammar["family_compatibility_hooks"][0]["rule_id"], "rule.funder")
+
+        placeholders = list_family_profile_placeholders()
+        self.assertTrue(
+            any(
+                item["family_id"] == "wellcome_discovery_placeholder_v1"
+                and item["funder"] == "Wellcome"
+                and item["status"] == "placeholder"
+                for item in placeholders
+            )
+        )
+
+    def test_selector_profile_document_keeps_existing_values_from_common_grammar(self) -> None:
+        from med_autogrant.project_profile_selector import select_project_profile
+
+        selection_input = self._base_selection_input()
+        selection_input["funding_opportunity_pool"] = [
+            {
+                "brief_id": "nih-r21-2026-nhlbi",
+                "funder": "NIH",
+                "program_family": "NHLBI R21",
+                "project_types": ["exploratory_developmental"],
+            }
+        ]
+
+        result = select_project_profile(selection_input)
+        profile = result["recommended_project_profile"]
+        self.assertEqual(
+            profile["template_profile"]["required_section_strategy"],
+            "mirror_funding_brief_mandatory_sections",
+        )
+        self.assertEqual(
+            profile["collaboration_preferences"]["evidence_policy"],
+            "significance_and_innovation_claims_require_direct_grounding",
+        )
+        self.assertEqual(profile["critique_policy"]["policy_id"], "nih_r21_significance_innovation_v1")
