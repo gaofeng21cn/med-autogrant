@@ -858,6 +858,8 @@ class HermesRuntimeSubstrate:
             else None,
         )
         _write_revised_workspace_output(final_workspace_path, final_workspace)
+        quality_scorecard = build_grant_quality_scorecard(final_workspace)
+        quality_closure_dossier = build_grant_quality_closure_dossier(final_workspace)
         loop_report = {
             "surface_kind": "critique_loop_report",
             "loop_version": 1,
@@ -883,6 +885,8 @@ class HermesRuntimeSubstrate:
                 }
                 for item in loop["rounds"]
             ],
+            "grant_quality_scorecard": quality_scorecard,
+            "grant_quality_closure_dossier": quality_closure_dossier,
         }
         _validate_schema_payload(
             loop_report,
@@ -1033,6 +1037,8 @@ class HermesRuntimeSubstrate:
         final_route = loop["final_route"]
         final_workspace_path = resolved_output_dir / "authoring-mainline-final-workspace.json"
         _write_cycle_workspace(final_workspace_path, final_workspace)
+        quality_scorecard = build_grant_quality_scorecard(final_workspace)
+        quality_closure_dossier = build_grant_quality_closure_dossier(final_workspace)
         mainline_loop_report = {
             "surface_kind": "authoring_mainline_loop_report",
             "loop_version": 1,
@@ -1058,6 +1064,8 @@ class HermesRuntimeSubstrate:
                 }
                 for item in loop["cycles"]
             ],
+            "grant_quality_scorecard": quality_scorecard,
+            "grant_quality_closure_dossier": quality_closure_dossier,
         }
         _validate_schema_payload(
             mainline_loop_report,

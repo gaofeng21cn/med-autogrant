@@ -61,7 +61,9 @@
     "termination_reason",
     "final_stage",
     "final_recommended_stage",
-    "cycles"
+    "cycles",
+    "grant_quality_scorecard",
+    "grant_quality_closure_dossier"
   ],
   "properties": {
     "surface_kind": {
@@ -103,6 +105,12 @@
       "items": {
         "$ref": "#/$defs/loopCycleSummary"
       }
+    },
+    "grant_quality_scorecard": {
+      "$ref": "grant-quality-scorecard.schema.json#/$defs/grantQualityScorecard"
+    },
+    "grant_quality_closure_dossier": {
+      "$ref": "grant-quality-closure-dossier.schema.json#/$defs/grantQualityClosureDossier"
     }
   }
 }

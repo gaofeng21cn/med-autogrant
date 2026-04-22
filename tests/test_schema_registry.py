@@ -164,6 +164,33 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["hosted_contract_bundle"], "hosted-contract-bundle.schema.json")
         self.assertEqual(names["submission_ready_package"], "submission-ready-package.schema.json")
 
+    def test_loop_report_schemas_require_quality_surfaces(self) -> None:
+        critique_schema = json.loads((SCHEMA_ROOT / "critique-loop-report.schema.json").read_text(encoding="utf-8"))
+        critique_required = critique_schema["required"]
+        self.assertIn("grant_quality_scorecard", critique_required)
+        self.assertIn("grant_quality_closure_dossier", critique_required)
+        self.assertEqual(
+            critique_schema["properties"]["grant_quality_scorecard"]["$ref"],
+            "grant-quality-scorecard.schema.json#/$defs/grantQualityScorecard",
+        )
+        self.assertEqual(
+            critique_schema["properties"]["grant_quality_closure_dossier"]["$ref"],
+            "grant-quality-closure-dossier.schema.json#/$defs/grantQualityClosureDossier",
+        )
+
+        mainline_schema = json.loads((SCHEMA_ROOT / "authoring-mainline-loop-report.schema.json").read_text(encoding="utf-8"))
+        mainline_required = mainline_schema["required"]
+        self.assertIn("grant_quality_scorecard", mainline_required)
+        self.assertIn("grant_quality_closure_dossier", mainline_required)
+        self.assertEqual(
+            mainline_schema["properties"]["grant_quality_scorecard"]["$ref"],
+            "grant-quality-scorecard.schema.json#/$defs/grantQualityScorecard",
+        )
+        self.assertEqual(
+            mainline_schema["properties"]["grant_quality_closure_dossier"]["$ref"],
+            "grant-quality-closure-dossier.schema.json#/$defs/grantQualityClosureDossier",
+        )
+
     def test_autonomy_controller_schemas_require_tranche_planning_surface(self) -> None:
         input_schema = json.loads((SCHEMA_ROOT / "grant-autonomy-controller-input.schema.json").read_text(encoding="utf-8"))
         self.assertIn("controller_plan", input_schema["properties"])

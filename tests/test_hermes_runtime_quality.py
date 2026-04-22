@@ -1,14 +1,25 @@
 from __future__ import annotations
 
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
+
+REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
+CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
+DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
+
+
+def _load_json(path: Path) -> dict[str, object]:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 class HermesRuntimeQualityGateTest(unittest.TestCase):
@@ -55,3 +66,102 @@ class HermesRuntimeQualityGateTest(unittest.TestCase):
         self.assertEqual(resolved["recommended_stage"], "revision")
         self.assertEqual(resolved["quality_gate"]["action"], "continue")
         self.assertIn("仍有未关闭问题", resolved["reason"])
+
+    def test_execute_critique_revision_loop_report_embeds_quality_surfaces(self) -> None:
+        from med_autogrant.grant_quality import (
+            build_grant_quality_closure_dossier as build_closure_dossier_impl,
+        )
+        from med_autogrant.grant_quality import build_grant_quality_scorecard as build_scorecard_impl
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+
+        runtime = HermesRuntimeSubstrate()
+        starting_workspace = _load_json(REVISION_EXAMPLE_PATH)
+        critique_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            with patch.object(runtime, "_load_workspace", return_value=starting_workspace), patch(
+                "med_autogrant.hermes_runtime.run_critique_revision_closed_loop",
+                return_value={
+                    "rounds": [
+                        {
+                            "round": 1,
+                            "decision": "ready_for_submission",
+                            "critique_workspace": critique_workspace,
+                            "route": {"recommended_stage": "frozen", "reason": "ready"},
+                        }
+                    ],
+                    "loop_status": "passed",
+                    "termination_reason": "ready_for_submission",
+                    "final_workspace": critique_workspace,
+                    "final_route": {"recommended_stage": "frozen", "reason": "ready"},
+                },
+            ), patch(
+                "med_autogrant.hermes_runtime.build_grant_quality_scorecard",
+                wraps=build_scorecard_impl,
+            ) as build_scorecard, patch(
+                "med_autogrant.hermes_runtime.build_grant_quality_closure_dossier",
+                wraps=build_closure_dossier_impl,
+            ) as build_dossier:
+                payload = runtime.execute_critique_revision_loop(
+                    input_path="/tmp/input.json",
+                    output_dir=tmp_dir,
+                    max_rounds=2,
+                )
+
+        loop_report = payload["loop_report"]
+        self.assertEqual(loop_report["grant_quality_scorecard"]["surface_kind"], "grant_quality_scorecard")
+        self.assertEqual(
+            loop_report["grant_quality_closure_dossier"]["surface_kind"],
+            "grant_quality_closure_dossier",
+        )
+        build_scorecard.assert_called_once_with(critique_workspace)
+        build_dossier.assert_called_once_with(critique_workspace)
+
+    def test_execute_authoring_mainline_loop_report_embeds_quality_surfaces(self) -> None:
+        from med_autogrant.grant_quality import (
+            build_grant_quality_closure_dossier as build_closure_dossier_impl,
+        )
+        from med_autogrant.grant_quality import build_grant_quality_scorecard as build_scorecard_impl
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+
+        runtime = HermesRuntimeSubstrate()
+        workspace = _load_json(DRAFTING_EXAMPLE_PATH)
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            with patch.object(runtime, "_load_workspace", return_value=workspace), patch(
+                "med_autogrant.hermes_runtime.run_authoring_mainline_controller",
+                return_value={
+                    "cycles": [
+                        {
+                            "cycle": 1,
+                            "decision": "ready_for_submission",
+                            "input_workspace": workspace,
+                            "route": {"recommended_stage": "frozen", "reason": "ready"},
+                        }
+                    ],
+                    "loop_status": "passed",
+                    "termination_reason": "ready_for_submission",
+                    "final_workspace": workspace,
+                    "final_route": {"recommended_stage": "frozen", "reason": "ready"},
+                },
+            ), patch(
+                "med_autogrant.hermes_runtime.build_grant_quality_scorecard",
+                wraps=build_scorecard_impl,
+            ) as build_scorecard, patch(
+                "med_autogrant.hermes_runtime.build_grant_quality_closure_dossier",
+                wraps=build_closure_dossier_impl,
+            ) as build_dossier:
+                payload = runtime.execute_authoring_mainline_loop(
+                    input_path="/tmp/input.json",
+                    output_dir=tmp_dir,
+                    max_cycles=3,
+                )
+
+        loop_report = payload["mainline_loop_report"]
+        self.assertEqual(loop_report["grant_quality_scorecard"]["surface_kind"], "grant_quality_scorecard")
+        self.assertEqual(
+            loop_report["grant_quality_closure_dossier"]["surface_kind"],
+            "grant_quality_closure_dossier",
+        )
+        build_scorecard.assert_called_once_with(workspace)
+        build_dossier.assert_called_once_with(workspace)
