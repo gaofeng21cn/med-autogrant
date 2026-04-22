@@ -41,8 +41,11 @@ Date: `2026-04-22`
 - 当前新增质量治理入口：`workspace quality-scorecard`、`workspace quality-closure-dossier` 与 `workspace quality-diff`
 - 当前质量治理已补齐 `issue lineage` 合同：同一问题在 revision 后即使摘要改写，`quality diff` 也会优先按 lineage 跟踪关闭进度，而不是把它误记成“旧问题关闭 + 新问题打开”。
 - 当前质量治理已补齐 `closure dossier` 合同：同一轮 quality evaluation 会把 open issue lineage、evidence supply queue 与 queue-only reselection gap 收口成 formal closure package，供 controller / human operator 直接消费。
+- 当前 `pass critique-loop` 与 `pass mainline-loop` 的 loop report 已正式携带 `grant_quality_scorecard` 与 `grant_quality_closure_dossier`，每轮质量状态、closure package 与 stop/continue 依据不再只停留在 route reason。
 - 当前 autonomy controller 已支持从 prior `controller_report` 恢复：`start.mode=controller_report` 会继续沿用已有 workspace、blocker/evidence gap 队列、action trace、reselection/rollback 决策与 tranche history，并通过 `controller_checkpoint` 输出下一次 resume 的稳定锚点。
+- 当前 autonomy controller 已升级为 dossier-driven planning：`grant-autonomy-controller-report` 现在正式输出 `latest_quality_closure_dossier`、`closure_package_queue`、`active_closure_package`，并把 active package / quality summary 写入 tranche history 与 decision basis，作为 stop / continue / fail-closed 的正式治理依据。
 - 当前 funder family 抽象：`grant_family_registry.py` 持有 common grant grammar、review grammar、template strategy 与 family compatibility hooks；NSFC / NIH R21 / Wellcome Discovery 已作为 admitted family preset 进入 registry，同时保留 Wellcome discovery placeholder 作为 future family scaffold。
+- 当前 family grammar 已补齐 `grant_governance_adapter.py`：family-specific governance policy 现在会显式影响 controller plan hydration 与 closure package ordering，不再散落在 controller 私有 helper 中。
 - 当前 controller-owned projection：`workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`
 - 当前 repo 级投影：`mainline status` 输出 current line / current focus；`mainline phase` 只承担维护者参考记录。
 - `pass critique --executor hermes_native_proof` 继续作为显式 proof lane；默认执行器继续保持 `Codex CLI`，默认模式是 `autonomous`

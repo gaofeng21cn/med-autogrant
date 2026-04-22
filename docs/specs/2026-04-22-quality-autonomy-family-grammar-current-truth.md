@@ -8,7 +8,9 @@ Date: `2026-04-22`
 - `grant-quality-closure-dossier` is a formal closure surface derived from the current quality scorecard.
 - `grant-quality-diff` is a formal comparison surface for two workspace versions.
 - `execute-grant-autonomy-controller` is a formal long-horizon controller command that can start from `workspace`, `selection_input`, or `discovery_input`, then schedule existing discovery, profile selection, intake initialization, authoring mainline, and quality evaluation callbacks.
-- `grant_family_registry.py` owns the common grant grammar / family profile split for profile presets and non-NSFC placeholders.
+- `execute-critique-revision-loop` and `execute-authoring-mainline-loop` now emit `grant_quality_scorecard` plus `grant_quality_closure_dossier` directly in their loop reports.
+- `grant-autonomy-controller-report` now carries dossier-driven planning state: `latest_quality_closure_dossier`, `closure_package_queue`, `active_closure_package`, and per-tranche quality summary / active-package refs.
+- `grant_family_registry.py` plus `grant_governance_adapter.py` own the common grant grammar / family profile split and the family-aware governance adapter for profile presets and non-NSFC placeholders.
 
 ## Quality Contract
 
@@ -24,6 +26,7 @@ It compares open issues by lineage first, then surfaces per-version `previous_is
 The quality closure dossier is schema-backed by `schemas/v1/grant-quality-closure-dossier.schema.json`.
 It is derived directly from the scorecard instead of introducing a second scoring path.
 It emits `quality_summary`, `evidence_supply_queue_summary`, and `closure_packages`, where each closure package is keyed by issue lineage or queue-only gap id and carries the action, target stage, required inputs, evidence refs, blocking reasons, evidence obligations, and acceptance signals needed to close that package.
+The critique-loop and mainline-loop reports now embed this same scorecard plus dossier surface, so each loop round/cycle exposes the same quality ledger instead of only a route decision summary.
 
 ## Autonomy Contract
 
@@ -35,8 +38,10 @@ The controller input and report are schema-backed by:
 The report is fail-closed: success returns a `submission_grade_candidate` or `near_submission_candidate`; failure returns a structured blocker report, unresolved blocker queue, evidence gap queue, action trace, and reselection / rollback decisions.
 The controller now also supports `start.mode=controller_report`, so a later run can resume from a prior report instead of restarting from workspace / selection / discovery inputs.
 The report now emits `controller_checkpoint`, which freezes the resume start mode, workspace identity, completed cycle count, and next controller action as a stable checkpoint surface.
+The controller now consumes `grant_quality_closure_dossier` as its primary quality-planning input, prioritizes a formal closure package queue, and records the active closure package plus quality summary in `controller_plan`, `decision_basis`, and `tranche_history`.
 
 ## Family Grammar Contract
 
 `grant_family_registry.py` separates common grant grammar from funder-specific profile choices.
+`grant_governance_adapter.py` now hydrates controller defaults and closure-package ordering from the workspace family governance policy, so family-specific stop targets, rollback preference, and governance entry points are consumed through one adapter surface rather than controller-local branching.
 The landed registry now preserves NSFC, NIH R21, and Wellcome Discovery admitted profile behavior, while still keeping a formal Wellcome discovery placeholder so future funder additions can land through family profile / review grammar / template strategy rather than a rewritten process.
