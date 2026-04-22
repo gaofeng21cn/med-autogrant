@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/funding-landscape-cache.schema.json",
+  "title": "FundingLandscapeCache",
+  "type": "object",
+  "$defs": {
+    "cachedSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_kind",
+        "source_url",
+        "fetched_at",
+        "item_count",
+        "funding_opportunity_pool"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_url": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "fetched_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "item_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "funding_opportunity_pool": {
+          "type": "array",
+          "items": {
+            "$ref": "funding-opportunity-brief.schema.json"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "cache_version",
+    "cache_kind",
+    "discovery_input_id",
+    "refreshed_at",
+    "source_count",
+    "sources",
+    "funding_opportunity_pool"
+  ],
+  "properties": {
+    "cache_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "cache_kind": {
+      "const": "funding_landscape_cache"
+    },
+    "discovery_input_id": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "refreshed_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "source_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cachedSource"
+      }
+    },
+    "funding_opportunity_pool": {
+      "type": "array",
+      "items": {
+        "$ref": "funding-opportunity-brief.schema.json"
+      }
+    }
+  }
+}

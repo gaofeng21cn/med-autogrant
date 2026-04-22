@@ -219,6 +219,7 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "grant-intake-audit",
     "grant-evidence-grounding",
     "discover-funding-opportunities",
+    "refresh-funding-opportunities-cache",
     "select-project-profile",
     "initialize-intake-workspace",
     "next-step",
@@ -249,6 +250,11 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "grant-intake-audit", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "grant-evidence-grounding", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "discover-funding-opportunities", "required_fields": ["input_path"], "optional_fields": []},
+    {
+        "command": "refresh-funding-opportunities-cache",
+        "required_fields": ["input_path"],
+        "optional_fields": ["output_path"],
+    },
     {"command": "select-project-profile", "required_fields": ["input_path"], "optional_fields": []},
     {
         "command": "initialize-intake-workspace",

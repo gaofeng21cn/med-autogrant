@@ -37,6 +37,41 @@ class FundingLandscapeDiscoveryTest(unittest.TestCase):
     </html>
     """
 
+    def _cache_snapshot(self) -> dict:
+        return {
+            "cache_version": 1,
+            "cache_kind": "funding_landscape_cache",
+            "discovery_input_id": "discovery-001",
+            "refreshed_at": "2026-04-22T08:00:00Z",
+            "sources": [
+                {
+                    "source_id": "nih_parent_announcements",
+                    "source_kind": "official_html",
+                    "source_url": "https://grants.nih.gov/funding/explore-nih-opportunities/parent-announcements",
+                    "fetched_at": "2026-04-22T08:00:00Z",
+                    "item_count": 1,
+                    "funding_opportunity_pool": [
+                        {
+                            "metadata": {
+                                "schema_version": "v1",
+                                "created_at": "2026-04-22T08:00:00Z",
+                                "updated_at": "2026-04-22T08:00:00Z",
+                                "source_mode": "auto"
+                            },
+                            "brief_id": "nih-r21-pa-25-304",
+                            "funder": "NIH",
+                            "program_family": "NIH R21 Parent",
+                            "project_types": ["exploratory_developmental"],
+                            "application_year": 2025,
+                            "mandatory_sections": ["Significance", "Innovation", "Approach", "Investigator", "Environment"],
+                            "formal_constraints": ["Official opportunity URL: https://simpler.grants.gov/opportunity/357807"],
+                            "evaluation_notes": ["Significance and innovation carry major review weight"]
+                        }
+                    ]
+                }
+            ]
+        }
+
     def _base_discovery_input(self) -> dict:
         return {
             "discovery_input_id": "discovery-001",
@@ -121,3 +156,30 @@ class FundingLandscapeDiscoveryTest(unittest.TestCase):
         brief_ids = {item["brief_id"] for item in result["funding_opportunity_pool"]}
         self.assertIn("nsfc-2026-general-medical-live", brief_ids)
         self.assertIn("nih-r21-pa-25-304", brief_ids)
+
+    def test_official_cached_discovery_reads_from_cache_snapshot(self) -> None:
+        from med_autogrant.funding_landscape_discovery import discover_funding_landscape
+
+        discovery_input = self._base_discovery_input()
+        discovery_input["discovery_source"] = "official_cached"
+
+        result = discover_funding_landscape(
+            discovery_input,
+            cached_snapshot=self._cache_snapshot(),
+        )
+
+        self.assertEqual(result["discovery_summary"]["discovery_source"], "official_cached")
+        self.assertEqual(result["candidate_count"], 1)
+        self.assertEqual(result["funding_opportunity_pool"][0]["brief_id"], "nih-r21-pa-25-304")
+        self.assertEqual(result["discovery_summary"]["source_receipt_count"], 1)
+
+    def test_discovery_exposes_provenance_scores(self) -> None:
+        from med_autogrant.funding_landscape_discovery import discover_funding_landscape
+
+        discovery_input = self._base_discovery_input()
+        result = discover_funding_landscape(discovery_input)
+
+        self.assertTrue(result["funding_opportunity_provenance"])
+        provenance = {item["brief_id"]: item for item in result["funding_opportunity_provenance"]}
+        self.assertEqual(provenance["nsfc-2026-general"]["provenance_status"], "repo_catalog_static")
+        self.assertEqual(provenance["nsfc-2026-general"]["provenance_score"], 50)

@@ -18,6 +18,7 @@ REQUIRED_DISCOVERY_INPUT_FIELDS: tuple[str, ...] = (
 SUPPORTED_DISCOVERY_SOURCES: tuple[str, ...] = (
     "catalog_static",
     "official_live",
+    "official_cached",
 )
 
 OFFICIAL_NIH_PARENT_ANNOUNCEMENTS_URL = (
@@ -110,6 +111,7 @@ def discover_funding_landscape(
     discovery_input: dict[str, Any],
     *,
     fetch_text: FetchText | None = None,
+    cached_snapshot: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     _validate_discovery_input(discovery_input)
     discovery_source = _normalize_string(discovery_input.get("discovery_source")) or "catalog_static"
@@ -127,13 +129,18 @@ def discover_funding_landscape(
         "combined_direction_tokens": _build_direction_tokens(discovery_input),
     }
     if discovery_source == "official_live":
-        catalog, source_receipts = _build_official_live_catalog(
+        catalog, source_entries = _build_official_live_catalog(
             fetch_text=fetch_text or _fetch_url_text,
+            include_funders=include_funders,
+        )
+    elif discovery_source == "official_cached":
+        catalog, source_entries = _build_cached_catalog(
+            cached_snapshot=_require_cache_snapshot(cached_snapshot),
             include_funders=include_funders,
         )
     else:
         catalog = list(FUNDING_OPPORTUNITY_CATALOG)
-        source_receipts = []
+        source_entries = []
 
     catalog_filtered = _apply_catalog_filters(
         catalog=catalog,
@@ -160,8 +167,24 @@ def discover_funding_landscape(
     if program_family_hints is not None:
         applied_filters["program_family_hints"] = program_family_hints
 
+    source_receipts = [
+        {
+            "source_id": entry["source_id"],
+            "source_kind": entry["source_kind"],
+            "source_url": entry["source_url"],
+            "fetched_at": entry["fetched_at"],
+            "item_count": entry["item_count"],
+        }
+        for entry in source_entries
+    ]
+
     return {
         "funding_opportunity_pool": matched,
+        "funding_opportunity_provenance": _build_provenance_records(
+            funding_opportunity_pool=matched,
+            source_entries=source_entries,
+            discovery_source=discovery_source,
+        ),
         "candidate_count": len(matched),
         "source_receipts": source_receipts,
         "discovery_summary": {
@@ -170,10 +193,42 @@ def discover_funding_landscape(
             "evaluated_catalog_count": len(catalog),
             "post_filter_catalog_count": len(catalog_filtered),
             "blocked_by_rules_count": blocked_count,
-            "source_receipt_count": len(source_receipts),
+            "source_receipt_count": len(source_entries),
             "applied_filters": applied_filters,
             "required_input_fields": list(REQUIRED_DISCOVERY_INPUT_FIELDS),
         },
+    }
+
+
+def build_funding_landscape_cache(
+    discovery_input: dict[str, Any],
+    *,
+    fetch_text: FetchText | None = None,
+    existing_snapshot: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    _validate_discovery_input(discovery_input)
+    include_funders = _normalize_optional_string_list(discovery_input.get("include_funders"))
+    catalog, source_entries = _build_official_live_catalog(
+        fetch_text=fetch_text or _fetch_url_text,
+        include_funders=include_funders,
+    )
+    existing_sources = _index_existing_sources(existing_snapshot)
+    for entry in source_entries:
+        existing_sources[entry["source_id"]] = copy.deepcopy(entry)
+    merged_sources = sorted(existing_sources.values(), key=lambda item: item["source_id"])
+    merged_pool = _dedupe_funding_opportunities(
+        opportunity
+        for entry in merged_sources
+        for opportunity in entry["funding_opportunity_pool"]
+    )
+    return {
+        "cache_version": 1,
+        "cache_kind": "funding_landscape_cache",
+        "discovery_input_id": discovery_input.get("discovery_input_id") or "unknown_discovery_input",
+        "refreshed_at": _utc_now(),
+        "source_count": len(merged_sources),
+        "sources": merged_sources,
+        "funding_opportunity_pool": merged_pool,
     }
 
 
@@ -184,18 +239,18 @@ def _build_official_live_catalog(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     allowed_funders = {item.casefold() for item in include_funders} if include_funders else None
     catalog: list[dict[str, Any]] = []
-    receipts: list[dict[str, Any]] = []
+    source_entries: list[dict[str, Any]] = []
 
     if allowed_funders is None or "nih" in allowed_funders:
         nih_html = fetch_text(OFFICIAL_NIH_PARENT_ANNOUNCEMENTS_URL)
         nih_items = _parse_nih_r21_parent_announcements(nih_html)
         catalog.extend(nih_items)
-        receipts.append(
-            _build_source_receipt(
+        source_entries.append(
+            _build_source_entry(
                 source_id="nih_parent_announcements",
                 source_kind="official_html",
                 source_url=OFFICIAL_NIH_PARENT_ANNOUNCEMENTS_URL,
-                item_count=len(nih_items),
+                funding_opportunity_pool=nih_items,
             )
         )
 
@@ -204,24 +259,54 @@ def _build_official_live_catalog(
         nsfc_medical_html = fetch_text(OFFICIAL_NSFC_MEDICAL_GUIDE_URL)
         nsfc_items = _parse_nsfc_medical_guide(nsfc_list_html, nsfc_medical_html)
         catalog.extend(nsfc_items)
-        receipts.append(
-            _build_source_receipt(
+        source_entries.append(
+            _build_source_entry(
                 source_id="nsfc_project_guide_listing",
                 source_kind="official_html",
                 source_url=OFFICIAL_NSFC_GUIDE_LIST_URL,
-                item_count=len(nsfc_items),
+                funding_opportunity_pool=nsfc_items,
             )
         )
-        receipts.append(
-            _build_source_receipt(
+        source_entries.append(
+            _build_source_entry(
                 source_id="nsfc_medical_sciences_guide",
                 source_kind="official_html",
                 source_url=OFFICIAL_NSFC_MEDICAL_GUIDE_URL,
-                item_count=len(nsfc_items),
+                funding_opportunity_pool=nsfc_items,
             )
         )
 
-    return catalog, receipts
+    return catalog, source_entries
+
+
+def _build_cached_catalog(
+    *,
+    cached_snapshot: dict[str, Any],
+    include_funders: list[str] | None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    allowed_funders = {item.casefold() for item in include_funders} if include_funders else None
+    source_entries: list[dict[str, Any]] = []
+    catalog: list[dict[str, Any]] = []
+    for entry in cached_snapshot["sources"]:
+        if allowed_funders is not None:
+            entry_funders = {
+                _normalize_string(item.get("funder")).casefold()
+                for item in entry.get("funding_opportunity_pool", [])
+                if _normalize_string(item.get("funder"))
+            }
+            if not (entry_funders & allowed_funders):
+                continue
+        normalized_entry = {
+            "source_id": entry["source_id"],
+            "source_kind": "official_cached",
+            "source_url": entry["source_url"],
+            "fetched_at": entry["fetched_at"],
+            "item_count": entry["item_count"],
+            "funding_opportunity_pool": [copy.deepcopy(item) for item in entry["funding_opportunity_pool"]],
+        }
+        source_entries.append(normalized_entry)
+        catalog.extend(normalized_entry["funding_opportunity_pool"])
+    return catalog, source_entries
 
 
 def _parse_nih_r21_parent_announcements(page_html: str) -> list[dict[str, Any]]:
@@ -412,9 +497,7 @@ def _apply_catalog_filters(
 def _build_direction_tokens(discovery_input: dict[str, Any]) -> str:
     applicant_profile = discovery_input["applicant_profile"]
     track_record = discovery_input["track_record"]
-    segments: list[str] = [
-        discovery_input["rough_direction_hint"],
-    ]
+    segments: list[str] = [discovery_input["rough_direction_hint"]]
 
     for field in ("research_domains", "clinical_domains", "methods_stack"):
         values = applicant_profile.get(field)
@@ -435,7 +518,13 @@ def _build_direction_tokens(discovery_input: dict[str, Any]) -> str:
 
 
 def _evaluate_opportunity_rules(*, opportunity: dict[str, Any], context: dict[str, str]) -> dict[str, Any]:
-    rules = opportunity["discovery_rules"]["all_of"]
+    discovery_rules = opportunity.get("discovery_rules")
+    if not isinstance(discovery_rules, dict):
+        return {
+            "matched": True,
+            "rule_results": [],
+        }
+    rules = discovery_rules["all_of"]
     results = [_evaluate_single_rule(rule, context) for rule in rules]
     return {
         "matched": all(result["matched"] for result in results),
@@ -456,6 +545,105 @@ def _evaluate_single_rule(rule: dict[str, Any], context: dict[str, str]) -> dict
     }
 
 
+def _require_cache_snapshot(cached_snapshot: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(cached_snapshot, dict):
+        raise ValueError("official_cached 模式要求提供 cache snapshot。")
+    if cached_snapshot.get("cache_kind") != "funding_landscape_cache":
+        raise ValueError("缓存快照缺少 cache_kind=funding_landscape_cache。")
+    sources = cached_snapshot.get("sources")
+    if not isinstance(sources, list):
+        raise ValueError("缓存快照缺少合法 sources 列表。")
+    return cached_snapshot
+
+
+def _index_existing_sources(existing_snapshot: dict[str, Any] | None) -> dict[str, dict[str, Any]]:
+    if not isinstance(existing_snapshot, dict):
+        return {}
+    sources = existing_snapshot.get("sources")
+    if not isinstance(sources, list):
+        return {}
+    indexed: dict[str, dict[str, Any]] = {}
+    for item in sources:
+        if not isinstance(item, dict):
+            continue
+        source_id = _normalize_string(item.get("source_id"))
+        if not source_id:
+            continue
+        indexed[source_id] = copy.deepcopy(item)
+    return indexed
+
+
+def _dedupe_funding_opportunities(opportunities: Any) -> list[dict[str, Any]]:
+    deduped: dict[str, dict[str, Any]] = {}
+    for opportunity in opportunities:
+        if not isinstance(opportunity, dict):
+            continue
+        brief_id = _normalize_string(opportunity.get("brief_id"))
+        if not brief_id:
+            continue
+        deduped[brief_id] = _sanitize_funding_opportunity(opportunity)
+    return [deduped[key] for key in sorted(deduped)]
+
+
+def _build_source_entry(
+    *,
+    source_id: str,
+    source_kind: str,
+    source_url: str,
+    funding_opportunity_pool: list[dict[str, Any]],
+) -> dict[str, Any]:
+    sanitized_pool = [_sanitize_funding_opportunity(item) for item in funding_opportunity_pool]
+    return {
+        "source_id": source_id,
+        "source_kind": source_kind,
+        "source_url": source_url,
+        "fetched_at": _utc_now(),
+        "item_count": len(sanitized_pool),
+        "funding_opportunity_pool": sanitized_pool,
+    }
+
+
+def _build_provenance_records(
+    *,
+    funding_opportunity_pool: list[dict[str, Any]],
+    source_entries: list[dict[str, Any]],
+    discovery_source: str,
+) -> list[dict[str, Any]]:
+    source_map: dict[str, list[str]] = {}
+    for entry in source_entries:
+        source_id = entry["source_id"]
+        for item in entry["funding_opportunity_pool"]:
+            brief_id = item["brief_id"]
+            source_map.setdefault(brief_id, []).append(source_id)
+
+    provenance_records: list[dict[str, Any]] = []
+    for opportunity in funding_opportunity_pool:
+        brief_id = opportunity["brief_id"]
+        source_ids = sorted(source_map.get(brief_id, []))
+        if discovery_source == "catalog_static":
+            provenance_status = "repo_catalog_static"
+            provenance_score = 50
+        elif discovery_source == "official_live":
+            provenance_status = (
+                "official_live_multi_source" if len(source_ids) >= 2 else "official_live_single_source"
+            )
+            provenance_score = 100 if len(source_ids) >= 2 else 90
+        else:
+            provenance_status = (
+                "official_cached_multi_source" if len(source_ids) >= 2 else "official_cached_single_source"
+            )
+            provenance_score = 85 if len(source_ids) >= 2 else 75
+        provenance_records.append(
+            {
+                "brief_id": brief_id,
+                "provenance_status": provenance_status,
+                "provenance_score": provenance_score,
+                "source_ids": source_ids,
+            }
+        )
+    return provenance_records
+
+
 def _fetch_url_text(url: str) -> str:
     request = Request(
         url,
@@ -465,22 +653,6 @@ def _fetch_url_text(url: str) -> str:
     )
     with urlopen(request, timeout=20) as response:
         return response.read().decode("utf-8", errors="ignore")
-
-
-def _build_source_receipt(
-    *,
-    source_id: str,
-    source_kind: str,
-    source_url: str,
-    item_count: int,
-) -> dict[str, Any]:
-    return {
-        "source_id": source_id,
-        "source_kind": source_kind,
-        "source_url": source_url,
-        "fetched_at": _utc_now(),
-        "item_count": item_count,
-    }
 
 
 def _fresh_metadata() -> dict[str, str]:

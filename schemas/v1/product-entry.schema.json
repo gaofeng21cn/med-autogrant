@@ -243,6 +243,7 @@
             "grant-intake-audit",
             "grant-evidence-grounding",
             "discover-funding-opportunities",
+            "refresh-funding-opportunities-cache",
             "select-project-profile",
             "initialize-intake-workspace",
             "next-step",
@@ -272,7 +273,7 @@
           "items": {
             "$ref": "#/$defs/domainEntryCommandContract"
           },
-          "minItems": 28
+          "minItems": 29
         }
       }
     },

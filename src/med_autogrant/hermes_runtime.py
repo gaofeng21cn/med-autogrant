@@ -41,6 +41,7 @@ from med_autogrant.upstream_hermes import HermesGrantRunLedger
 from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.funding_landscape_discovery import discover_funding_landscape
+from med_autogrant.funding_landscape_discovery import build_funding_landscape_cache
 from med_autogrant.project_profile_selector import (
     build_initialized_intake_workspace,
     select_project_profile,
@@ -90,6 +91,7 @@ PROJECT_PROFILE_SELECTION_SCHEMA_FILE = "project-profile-selection.schema.json"
 CRITIQUE_LOOP_REPORT_SCHEMA_FILE = "critique-loop-report.schema.json"
 FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE = "funding-landscape-discovery-input.schema.json"
 FUNDING_LANDSCAPE_DISCOVERY_SCHEMA_FILE = "funding-landscape-discovery.schema.json"
+FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE = "funding-landscape-cache.schema.json"
 AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE = "authoring-mainline-loop-report.schema.json"
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
@@ -101,6 +103,7 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "grant-evidence-grounding.schema.json",
     "funding-landscape-discovery-input.schema.json",
     "funding-landscape-discovery.schema.json",
+    "funding-landscape-cache.schema.json",
     "project-profile-selection-input.schema.json",
     "project-profile-selection.schema.json",
     "critique-loop-report.schema.json",
@@ -212,7 +215,10 @@ class HermesRuntimeSubstrate:
             schema_file=FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE,
             context="funding_landscape_discovery_input",
         )
-        discovery = discover_funding_landscape(discovery_input)
+        discovery = discover_funding_landscape(
+            discovery_input,
+            cached_snapshot=_load_funding_landscape_cache_if_needed(discovery_input),
+        )
         discovery_surface = {
             "surface_kind": "funding_landscape_discovery",
             "discovery_version": 1,
@@ -230,6 +236,42 @@ class HermesRuntimeSubstrate:
             "discovery_input_id": discovery_input["discovery_input_id"],
             "input_path": str(Path(input_path).expanduser().resolve()),
             "funding_landscape_discovery": discovery_surface,
+        }
+
+    def refresh_funding_opportunities_cache(
+        self,
+        *,
+        input_path: str | Path,
+        output_path: str | Path | None = None,
+    ) -> dict[str, Any]:
+        discovery_input = _load_json_object(input_path, context="funding landscape discovery input")
+        _validate_schema_payload(
+            discovery_input,
+            schema_file=FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE,
+            context="funding_landscape_discovery_input",
+        )
+        resolved_output_path = (
+            Path(output_path).expanduser().resolve()
+            if output_path is not None
+            else _default_funding_landscape_cache_path()
+        )
+        existing_snapshot = _load_existing_cache_snapshot(resolved_output_path)
+        cache_snapshot = build_funding_landscape_cache(
+            discovery_input,
+            existing_snapshot=existing_snapshot,
+        )
+        _validate_schema_payload(
+            cache_snapshot,
+            schema_file=FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
+            context="funding_landscape_cache",
+        )
+        _write_json_output(resolved_output_path, cache_snapshot, label="funding landscape cache")
+        return {
+            "ok": True,
+            "command": "refresh-funding-opportunities-cache",
+            "discovery_input_id": cache_snapshot["discovery_input_id"],
+            "cache_path": str(resolved_output_path),
+            "cache_snapshot": cache_snapshot,
         }
 
     def select_project_profile(self, *, input_path: str | Path) -> dict[str, Any]:
@@ -273,7 +315,10 @@ class HermesRuntimeSubstrate:
                 schema_file=FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE,
                 context="funding_landscape_discovery_input",
             )
-            discovered = discover_funding_landscape(raw_input)
+            discovered = discover_funding_landscape(
+                raw_input,
+                cached_snapshot=_load_funding_landscape_cache_if_needed(raw_input),
+            )
             selection_input = _build_selection_input_from_discovery(
                 discovery_input=raw_input,
                 funding_opportunity_pool=discovered["funding_opportunity_pool"],
@@ -2354,6 +2399,36 @@ def _load_json_object(input_path: str | Path, *, context: str) -> dict[str, Any]
     if not isinstance(payload, dict):
         raise WorkspaceFileError(f"{context} 顶层必须是 JSON object。")
     return payload
+
+
+def _default_funding_landscape_cache_path() -> Path:
+    return resolve_runtime_state_root() / "funding-landscape" / "cache" / "latest.json"
+
+
+def _load_existing_cache_snapshot(cache_path: Path) -> dict[str, Any] | None:
+    if not cache_path.exists():
+        return None
+    return _load_json_object(cache_path, context="funding landscape cache")
+
+
+def _load_funding_landscape_cache_if_needed(discovery_input: dict[str, Any]) -> dict[str, Any] | None:
+    if discovery_input.get("discovery_source") != "official_cached":
+        return None
+    cache_path_value = discovery_input.get("cache_path")
+    cache_path = (
+        Path(str(cache_path_value)).expanduser().resolve()
+        if isinstance(cache_path_value, str) and cache_path_value.strip()
+        else _default_funding_landscape_cache_path()
+    )
+    if not cache_path.exists():
+        raise WorkspaceFileError(f"official_cached 模式缺少 funding cache: {cache_path}")
+    snapshot = _load_json_object(cache_path, context="funding landscape cache")
+    _validate_schema_payload(
+        snapshot,
+        schema_file=FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
+        context="funding_landscape_cache",
+    )
+    return snapshot
 
 
 def _build_selection_input_from_discovery(

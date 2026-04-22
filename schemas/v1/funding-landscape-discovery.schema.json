@@ -33,6 +33,32 @@
         }
       }
     },
+    "fundingOpportunityProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "brief_id",
+        "provenance_status",
+        "provenance_score",
+        "source_ids"
+      ],
+      "properties": {
+        "brief_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "provenance_status": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "provenance_score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "source_ids": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
     "discoverySummary": {
       "type": "object",
       "additionalProperties": false,
@@ -54,7 +80,8 @@
           "type": "string",
           "enum": [
             "catalog_static",
-            "official_live"
+            "official_live",
+            "official_cached"
           ]
         },
         "evaluated_catalog_count": {
@@ -91,6 +118,7 @@
     "discovery_version",
     "discovery_input_id",
     "funding_opportunity_pool",
+    "funding_opportunity_provenance",
     "candidate_count",
     "source_receipts",
     "discovery_summary"
@@ -111,6 +139,12 @@
       "minItems": 1,
       "items": {
         "$ref": "funding-opportunity-brief.schema.json"
+      }
+    },
+    "funding_opportunity_provenance": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fundingOpportunityProvenance"
       }
     },
     "candidate_count": {

@@ -27,6 +27,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "grant-intake-audit": ("workspace", "intake-audit"),
     "grant-evidence-grounding": ("workspace", "evidence-grounding"),
     "discover-funding-opportunities": ("workspace", "discover-funding"),
+    "refresh-funding-opportunities-cache": ("workspace", "refresh-funding-cache"),
     "select-project-profile": ("workspace", "select-profile"),
     "initialize-intake-workspace": ("workspace", "initialize-intake"),
     "next-step": ("workspace", "next-step"),

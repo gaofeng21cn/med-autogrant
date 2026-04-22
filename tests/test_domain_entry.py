@@ -227,6 +227,27 @@ class DomainEntryDispatchTest(unittest.TestCase):
             input_path=str(DISCOVERY_INPUT),
         )
 
+    def test_domain_entry_dispatches_refresh_funding_opportunities_cache(self) -> None:
+        runtime = Mock()
+        runtime.refresh_funding_opportunities_cache.return_value = {
+            "ok": True,
+            "command": "refresh-funding-opportunities-cache",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "refresh-funding-opportunities-cache",
+                "input_path": str(DISCOVERY_INPUT),
+                "output_path": "/tmp/funding-cache.json",
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "refresh-funding-opportunities-cache"})
+        runtime.refresh_funding_opportunities_cache.assert_called_once_with(
+            input_path=str(DISCOVERY_INPUT),
+            output_path="/tmp/funding-cache.json",
+        )
+
     def test_domain_entry_dispatches_execute_critique_revision_loop(self) -> None:
         runtime = Mock()
         runtime.execute_critique_revision_loop.return_value = {

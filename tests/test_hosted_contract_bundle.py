@@ -43,6 +43,7 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "grant-intake-audit",
     "grant-evidence-grounding",
     "discover-funding-opportunities",
+    "refresh-funding-opportunities-cache",
     "select-project-profile",
     "initialize-intake-workspace",
     "next-step",
@@ -73,6 +74,11 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "grant-intake-audit", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "grant-evidence-grounding", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "discover-funding-opportunities", "required_fields": ["input_path"], "optional_fields": []},
+    {
+        "command": "refresh-funding-opportunities-cache",
+        "required_fields": ["input_path"],
+        "optional_fields": ["output_path"],
+    },
     {"command": "select-project-profile", "required_fields": ["input_path"], "optional_fields": []},
     {
         "command": "initialize-intake-workspace",
@@ -317,6 +323,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                         "grant-evidence-grounding.schema.json",
                         "funding-landscape-discovery-input.schema.json",
                         "funding-landscape-discovery.schema.json",
+                        "funding-landscape-cache.schema.json",
                         "project-profile-selection-input.schema.json",
                         "project-profile-selection.schema.json",
                         "critique-loop-report.schema.json",

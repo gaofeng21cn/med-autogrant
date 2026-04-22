@@ -26,8 +26,12 @@
       "type": "string",
       "enum": [
         "catalog_static",
-        "official_live"
+        "official_live",
+        "official_cached"
       ]
+    },
+    "cache_path": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
     "rough_direction_hint": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"

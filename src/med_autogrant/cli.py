@@ -183,6 +183,12 @@ def build_parser() -> argparse.ArgumentParser:
         handle_discover_funding_opportunities,
         "从材料与方向 hint 发现 funding opportunity pool。",
     )
+    _add_refresh_cache_command(
+        subparsers,
+        "refresh-funding-opportunities-cache",
+        handle_refresh_funding_opportunities_cache,
+        "刷新官方 funding discovery cache，支持默认 runtime-state 落点。",
+    )
     _add_workspace_command(
         subparsers,
         "select-project-profile",
@@ -521,6 +527,16 @@ def handle_discover_funding_opportunities(args: argparse.Namespace) -> dict[str,
     return _domain_entry().dispatch({"command": "discover-funding-opportunities", "input_path": args.input})
 
 
+def handle_refresh_funding_opportunities_cache(args: argparse.Namespace) -> dict[str, Any]:
+    request: dict[str, Any] = {
+        "command": "refresh-funding-opportunities-cache",
+        "input_path": args.input,
+    }
+    if args.output is not None:
+        request["output_path"] = args.output
+    return _domain_entry().dispatch(request)
+
+
 def handle_select_project_profile(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "select-project-profile", "input_path": args.input})
 
@@ -823,6 +839,19 @@ def _add_output_workspace_command(
     command.set_defaults(handler=handler)
 
 
+def _add_refresh_cache_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--output")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
 def _add_simple_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -1083,6 +1112,16 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
         ]
         for item in discovery["funding_opportunity_pool"]:
             lines.append(f"- candidate: {item['brief_id']}")
+        return "\n".join(lines)
+
+    if command == "refresh-funding-opportunities-cache":
+        snapshot = payload["cache_snapshot"]
+        lines = [
+            f"discovery_input_id: {payload['discovery_input_id']}",
+            f"cache_path: {payload['cache_path']}",
+            f"source_count: {snapshot['source_count']}",
+            f"当前判断: cache refreshed",
+        ]
         return "\n".join(lines)
 
     if command == "select-project-profile":

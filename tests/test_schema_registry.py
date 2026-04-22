@@ -18,6 +18,7 @@ EXPECTED_SCHEMAS = {
     "project-profile.schema.json",
     "funding-landscape-discovery-input.schema.json",
     "funding-landscape-discovery.schema.json",
+    "funding-landscape-cache.schema.json",
     "project-profile-selection-input.schema.json",
     "project-profile-selection.schema.json",
     "critique-loop-report.schema.json",
@@ -134,6 +135,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["project_profile"], "project-profile.schema.json")
         self.assertEqual(names["funding_landscape_discovery_input"], "funding-landscape-discovery-input.schema.json")
         self.assertEqual(names["funding_landscape_discovery"], "funding-landscape-discovery.schema.json")
+        self.assertEqual(names["funding_landscape_cache"], "funding-landscape-cache.schema.json")
         self.assertEqual(names["project_profile_selection_input"], "project-profile-selection-input.schema.json")
         self.assertEqual(names["project_profile_selection"], "project-profile-selection.schema.json")
         self.assertEqual(names["critique_loop_report"], "critique-loop-report.schema.json")

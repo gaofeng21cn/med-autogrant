@@ -15,6 +15,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from med_autogrant.cli import main  # noqa: E402
 from med_autogrant.public_cli import public_cli_argv  # noqa: E402
+from unittest.mock import patch  # noqa: E402
 
 
 DISCOVERY_INPUT = REPO_ROOT / "examples" / "funding_discovery_input_cardiovascular.json"
@@ -46,3 +47,38 @@ class FundingDiscoveryCliTest(unittest.TestCase):
         self.assertIn("nsfc-2026-general", brief_ids)
         self.assertIn("nih-r21-2026-nhlbi", brief_ids)
 
+    def test_refresh_funding_opportunities_cache_dispatches_runtime_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "refresh-funding-opportunities-cache",
+            "cache_path": "/tmp/funding-cache.json",
+            "cache_snapshot": {
+                "cache_kind": "funding_landscape_cache",
+                "source_count": 2
+            }
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantDomainEntry") as entry_class:
+            entry = entry_class.return_value
+            entry.dispatch.return_value = expected_payload
+            exit_code, stdout, stderr = self.run_cli(
+                "refresh-funding-opportunities-cache",
+                "--input",
+                str(DISCOVERY_INPUT),
+                "--output",
+                "/tmp/funding-cache.json",
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload, expected_payload)
+        entry.dispatch.assert_called_once_with(
+            {
+                "command": "refresh-funding-opportunities-cache",
+                "input_path": str(DISCOVERY_INPUT),
+                "output_path": "/tmp/funding-cache.json",
+            }
+        )

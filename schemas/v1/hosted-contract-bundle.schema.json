@@ -190,6 +190,7 @@
             "grant-intake-audit",
             "grant-evidence-grounding",
             "discover-funding-opportunities",
+            "refresh-funding-opportunities-cache",
             "select-project-profile",
             "initialize-intake-workspace",
             "next-step",
@@ -219,7 +220,7 @@
           "items": {
             "$ref": "product-entry.schema.json#/$defs/domainEntryCommandContract"
           },
-          "minItems": 28
+          "minItems": 29
         }
       }
     },
@@ -251,6 +252,7 @@
             "grant-evidence-grounding.schema.json",
             "funding-landscape-discovery-input.schema.json",
             "funding-landscape-discovery.schema.json",
+            "funding-landscape-cache.schema.json",
             "project-profile-selection-input.schema.json",
             "project-profile-selection.schema.json",
             "critique-loop-report.schema.json",
