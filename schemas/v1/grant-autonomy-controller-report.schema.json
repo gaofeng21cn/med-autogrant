@@ -166,6 +166,183 @@
           "type": "string"
         }
       }
+    },
+    "qualityStatus": {
+      "type": "string",
+      "enum": [
+        "submission_grade_candidate",
+        "near_submission_candidate",
+        "not_ready",
+        "unknown"
+      ]
+    },
+    "controllerAction": {
+      "type": "string",
+      "enum": [
+        "continue_mainline",
+        "stop_success",
+        "rollback_upstream",
+        "reselect_project_profile",
+        "fail_closed"
+      ]
+    },
+    "gateStatus": {
+      "type": "string",
+      "enum": [
+        "open",
+        "passed",
+        "blocked",
+        "failed_closed"
+      ]
+    },
+    "trancheSuccessGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_status",
+        "requires_zero_blockers",
+        "requires_zero_evidence_gaps"
+      ],
+      "properties": {
+        "target_status": {
+          "type": "string",
+          "enum": [
+            "submission_grade_candidate",
+            "near_submission_candidate"
+          ]
+        },
+        "requires_zero_blockers": {
+          "type": "boolean"
+        },
+        "requires_zero_evidence_gaps": {
+          "type": "boolean"
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "controllerDecisionBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cycle",
+        "gate_status",
+        "quality_status",
+        "unresolved_blockers",
+        "evidence_gaps",
+        "decision_reason",
+        "termination_reason"
+      ],
+      "properties": {
+        "cycle": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gate_status": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "quality_status": {
+          "$ref": "#/$defs/qualityStatus"
+        },
+        "unresolved_blockers": {
+          "$ref": "#/$defs/stringQueue"
+        },
+        "evidence_gaps": {
+          "$ref": "#/$defs/stringQueue"
+        },
+        "decision_reason": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "termination_reason": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "controllerPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "current_tranche",
+        "tranche_objective",
+        "tranche_success_gate",
+        "next_controller_action",
+        "decision_basis"
+      ],
+      "properties": {
+        "current_tranche": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "tranche_objective": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "tranche_success_gate": {
+          "$ref": "#/$defs/trancheSuccessGate"
+        },
+        "next_controller_action": {
+          "$ref": "#/$defs/controllerAction"
+        },
+        "decision_basis": {
+          "$ref": "#/$defs/controllerDecisionBasis"
+        }
+      }
+    },
+    "trancheHistoryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cycle",
+        "current_tranche",
+        "tranche_objective",
+        "tranche_success_gate",
+        "gate_status",
+        "next_controller_action",
+        "decision_reason",
+        "quality_status",
+        "unresolved_blockers",
+        "evidence_gaps",
+        "termination_reason"
+      ],
+      "properties": {
+        "cycle": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "current_tranche": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "tranche_objective": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "tranche_success_gate": {
+          "$ref": "#/$defs/trancheSuccessGate"
+        },
+        "gate_status": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "next_controller_action": {
+          "$ref": "#/$defs/controllerAction"
+        },
+        "decision_reason": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "quality_status": {
+          "$ref": "#/$defs/qualityStatus"
+        },
+        "unresolved_blockers": {
+          "$ref": "#/$defs/stringQueue"
+        },
+        "evidence_gaps": {
+          "$ref": "#/$defs/stringQueue"
+        },
+        "termination_reason": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
     }
   },
   "required": [
@@ -185,6 +362,8 @@
     "action_trace",
     "reselection_decisions",
     "rollback_decisions",
+    "controller_plan",
+    "tranche_history",
     "final_workspace"
   ],
   "properties": {
@@ -257,6 +436,15 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/decisionEntry"
+      }
+    },
+    "controller_plan": {
+      "$ref": "#/$defs/controllerPlan"
+    },
+    "tranche_history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/trancheHistoryEntry"
       }
     },
     "final_workspace": {

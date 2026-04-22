@@ -20,6 +20,19 @@ _QUALITY_STATUSES = {
     "near_submission_candidate",
     "not_ready",
 }
+_CONTROLLER_ACTIONS = {
+    "continue_mainline",
+    "stop_success",
+    "rollback_upstream",
+    "reselect_project_profile",
+    "fail_closed",
+}
+_GATE_STATUSES = {
+    "open",
+    "passed",
+    "blocked",
+    "failed_closed",
+}
 
 
 def run_grant_autonomy_controller(
@@ -119,6 +132,12 @@ def run_grant_autonomy_controller(
         )
     require_zero_blockers = bool(stop_conditions.get("require_zero_blockers", True))
     require_zero_evidence_gaps = bool(stop_conditions.get("require_zero_evidence_gaps", True))
+    controller_plan = _normalize_controller_plan(
+        request.get("controller_plan"),
+        goal=goal,
+        require_zero_blockers=require_zero_blockers,
+        require_zero_evidence_gaps=require_zero_evidence_gaps,
+    )
 
     initial_blockers = _string_list(request.get("blocker_queue"))
     initial_evidence_gaps = _string_list(request.get("evidence_gap_queue"))
@@ -162,6 +181,7 @@ def run_grant_autonomy_controller(
     action_trace: list[dict[str, Any]] = []
     reselection_decisions: list[dict[str, Any]] = []
     rollback_decisions: list[dict[str, Any]] = []
+    tranche_history: list[dict[str, Any]] = []
     spent_steps = 0
     reselection_count = 0
     rollback_count = 0
@@ -502,6 +522,19 @@ def run_grant_autonomy_controller(
 
         if _goal_satisfied(goal_target=goal_target, quality_status=quality_status):
             if require_zero_blockers and unresolved_blockers:
+                tranche_history.append(
+                    _build_tranche_history_entry(
+                        cycle=cycle,
+                        controller_plan=controller_plan,
+                        quality_status=quality_status,
+                        unresolved_blockers=unresolved_blockers,
+                        evidence_gaps=evidence_gaps,
+                        next_controller_action="fail_closed",
+                        gate_status="failed_closed",
+                        decision_reason="blockers_not_cleared",
+                        termination_reason="blockers_not_cleared",
+                    )
+                )
                 return _fail_closed_report(
                     request_id=request_id,
                     started_from_mode=start_mode,
@@ -520,8 +553,23 @@ def run_grant_autonomy_controller(
                     blocker_report=latest_blocker_report,
                     unresolved_blockers=unresolved_blockers,
                     evidence_gaps=evidence_gaps,
+                    controller_plan=controller_plan,
+                    tranche_history=tranche_history,
                 )
             if require_zero_evidence_gaps and evidence_gaps:
+                tranche_history.append(
+                    _build_tranche_history_entry(
+                        cycle=cycle,
+                        controller_plan=controller_plan,
+                        quality_status=quality_status,
+                        unresolved_blockers=unresolved_blockers,
+                        evidence_gaps=evidence_gaps,
+                        next_controller_action="fail_closed",
+                        gate_status="failed_closed",
+                        decision_reason="evidence_gaps_not_cleared",
+                        termination_reason="evidence_gaps_not_cleared",
+                    )
+                )
                 return _fail_closed_report(
                     request_id=request_id,
                     started_from_mode=start_mode,
@@ -540,7 +588,22 @@ def run_grant_autonomy_controller(
                     blocker_report=latest_blocker_report,
                     unresolved_blockers=unresolved_blockers,
                     evidence_gaps=evidence_gaps,
+                    controller_plan=controller_plan,
+                    tranche_history=tranche_history,
                 )
+            tranche_history.append(
+                _build_tranche_history_entry(
+                    cycle=cycle,
+                    controller_plan=controller_plan,
+                    quality_status=quality_status,
+                    unresolved_blockers=unresolved_blockers,
+                    evidence_gaps=evidence_gaps,
+                    next_controller_action="stop_success",
+                    gate_status="passed",
+                    decision_reason="tranche_success_gate_satisfied",
+                    termination_reason="goal_reached",
+                )
+            )
             return _build_report(
                 request_id=request_id,
                 started_from_mode=start_mode,
@@ -558,11 +621,27 @@ def run_grant_autonomy_controller(
                 action_trace=action_trace,
                 reselection_decisions=reselection_decisions,
                 rollback_decisions=rollback_decisions,
+                controller_plan=controller_plan,
+                tranche_history=tranche_history,
                 completed_cycles=completed_cycles,
                 final_workspace=workspace,
             )
 
         if cycle == max_rounds_or_cycles:
+            terminal_reason = _resolve_terminal_reason(unresolved_blockers, evidence_gaps)
+            tranche_history.append(
+                _build_tranche_history_entry(
+                    cycle=cycle,
+                    controller_plan=controller_plan,
+                    quality_status=quality_status,
+                    unresolved_blockers=unresolved_blockers,
+                    evidence_gaps=evidence_gaps,
+                    next_controller_action="fail_closed",
+                    gate_status="blocked" if terminal_reason != "max_rounds_or_cycles_exhausted" else "failed_closed",
+                    decision_reason=terminal_reason,
+                    termination_reason=terminal_reason,
+                )
+            )
             return _fail_closed_report(
                 request_id=request_id,
                 started_from_mode=start_mode,
@@ -570,7 +649,7 @@ def run_grant_autonomy_controller(
                 max_rounds_or_cycles=max_rounds_or_cycles,
                 budget_max=budget_max,
                 spent_steps=spent_steps,
-                termination_reason=_resolve_terminal_reason(unresolved_blockers, evidence_gaps),
+                termination_reason=terminal_reason,
                 blocker_queue=initial_blockers,
                 evidence_gap_queue=initial_evidence_gaps,
                 action_trace=action_trace,
@@ -581,6 +660,8 @@ def run_grant_autonomy_controller(
                 blocker_report=latest_blocker_report,
                 unresolved_blockers=unresolved_blockers,
                 evidence_gaps=evidence_gaps,
+                controller_plan=controller_plan,
+                tranche_history=tranche_history,
             )
 
         if not spend_budget(step_action="mainline_runner", cycle=cycle):
@@ -609,6 +690,7 @@ def run_grant_autonomy_controller(
                     "workspace": deepcopy(workspace),
                     "cycle": cycle,
                     "goal": deepcopy(goal),
+                    "controller_plan": deepcopy(controller_plan),
                     "blocker_queue": list(unresolved_blockers),
                     "evidence_gap_queue": list(evidence_gaps),
                 }
@@ -652,20 +734,35 @@ def run_grant_autonomy_controller(
                 blocker_report=latest_blocker_report,
                 unresolved_blockers=unresolved_blockers,
                 evidence_gaps=evidence_gaps,
-            )
+                )
 
+        rollback_reason = ""
         rollback_action = _decision_action(mainline_output.get("rollback_decision"))
         if rollback_action == "rollback":
+            rollback_reason = _decision_reason(mainline_output.get("rollback_decision"))
             allowed = rollback_enabled and rollback_count < max_rollbacks
             rollback_decisions.append(
                 {
                     "cycle": cycle,
                     "action": rollback_action,
                     "accepted": allowed,
-                    "reason": _decision_reason(mainline_output.get("rollback_decision")),
+                    "reason": rollback_reason,
                 }
             )
             if not rollback_enabled:
+                tranche_history.append(
+                    _build_tranche_history_entry(
+                        cycle=cycle,
+                        controller_plan=controller_plan,
+                        quality_status=quality_status,
+                        unresolved_blockers=unresolved_blockers,
+                        evidence_gaps=evidence_gaps,
+                        next_controller_action="rollback_upstream",
+                        gate_status="failed_closed",
+                        decision_reason=rollback_reason,
+                        termination_reason="rollback_policy_disallowed",
+                    )
+                )
                 return _fail_closed_report(
                     request_id=request_id,
                     started_from_mode=start_mode,
@@ -684,8 +781,23 @@ def run_grant_autonomy_controller(
                     blocker_report=latest_blocker_report,
                     unresolved_blockers=unresolved_blockers,
                     evidence_gaps=evidence_gaps,
+                    controller_plan=controller_plan,
+                    tranche_history=tranche_history,
                 )
             if rollback_count >= max_rollbacks:
+                tranche_history.append(
+                    _build_tranche_history_entry(
+                        cycle=cycle,
+                        controller_plan=controller_plan,
+                        quality_status=quality_status,
+                        unresolved_blockers=unresolved_blockers,
+                        evidence_gaps=evidence_gaps,
+                        next_controller_action="rollback_upstream",
+                        gate_status="failed_closed",
+                        decision_reason=rollback_reason,
+                        termination_reason="rollback_budget_exhausted",
+                    )
+                )
                 return _fail_closed_report(
                     request_id=request_id,
                     started_from_mode=start_mode,
@@ -704,6 +816,8 @@ def run_grant_autonomy_controller(
                     blocker_report=latest_blocker_report,
                     unresolved_blockers=unresolved_blockers,
                     evidence_gaps=evidence_gaps,
+                    controller_plan=controller_plan,
+                    tranche_history=tranche_history,
                 )
             rollback_count += 1
 
@@ -720,6 +834,19 @@ def run_grant_autonomy_controller(
                 }
             )
             if not reselection_enabled:
+                tranche_history.append(
+                    _build_tranche_history_entry(
+                        cycle=cycle,
+                        controller_plan=controller_plan,
+                        quality_status=quality_status,
+                        unresolved_blockers=unresolved_blockers,
+                        evidence_gaps=evidence_gaps,
+                        next_controller_action="reselect_project_profile",
+                        gate_status="failed_closed",
+                        decision_reason=decision_reason,
+                        termination_reason="reselection_policy_disallowed",
+                    )
+                )
                 return _fail_closed_report(
                     request_id=request_id,
                     started_from_mode=start_mode,
@@ -738,8 +865,23 @@ def run_grant_autonomy_controller(
                     blocker_report=latest_blocker_report,
                     unresolved_blockers=unresolved_blockers,
                     evidence_gaps=evidence_gaps,
+                    controller_plan=controller_plan,
+                    tranche_history=tranche_history,
                 )
             if selection_input is None:
+                tranche_history.append(
+                    _build_tranche_history_entry(
+                        cycle=cycle,
+                        controller_plan=controller_plan,
+                        quality_status=quality_status,
+                        unresolved_blockers=unresolved_blockers,
+                        evidence_gaps=evidence_gaps,
+                        next_controller_action="reselect_project_profile",
+                        gate_status="failed_closed",
+                        decision_reason=decision_reason,
+                        termination_reason="reselection_requires_selection_input",
+                    )
+                )
                 return _fail_closed_report(
                     request_id=request_id,
                     started_from_mode=start_mode,
@@ -758,8 +900,23 @@ def run_grant_autonomy_controller(
                     blocker_report=latest_blocker_report,
                     unresolved_blockers=unresolved_blockers,
                     evidence_gaps=evidence_gaps,
+                    controller_plan=controller_plan,
+                    tranche_history=tranche_history,
                 )
             if reselection_count >= max_reselections:
+                tranche_history.append(
+                    _build_tranche_history_entry(
+                        cycle=cycle,
+                        controller_plan=controller_plan,
+                        quality_status=quality_status,
+                        unresolved_blockers=unresolved_blockers,
+                        evidence_gaps=evidence_gaps,
+                        next_controller_action="reselect_project_profile",
+                        gate_status="failed_closed",
+                        decision_reason=decision_reason,
+                        termination_reason="reselection_budget_exhausted",
+                    )
+                )
                 return _fail_closed_report(
                     request_id=request_id,
                     started_from_mode=start_mode,
@@ -778,6 +935,8 @@ def run_grant_autonomy_controller(
                     blocker_report=latest_blocker_report,
                     unresolved_blockers=unresolved_blockers,
                     evidence_gaps=evidence_gaps,
+                    controller_plan=controller_plan,
+                    tranche_history=tranche_history,
                 )
 
             if not spend_budget(step_action="selector", cycle=cycle):
@@ -909,6 +1068,19 @@ def run_grant_autonomy_controller(
                     unresolved_blockers=unresolved_blockers,
                     evidence_gaps=evidence_gaps,
                 )
+            tranche_history.append(
+                _build_tranche_history_entry(
+                    cycle=cycle,
+                    controller_plan=controller_plan,
+                    quality_status=quality_status,
+                    unresolved_blockers=unresolved_blockers,
+                    evidence_gaps=evidence_gaps,
+                    next_controller_action="reselect_project_profile",
+                    gate_status="open",
+                    decision_reason=decision_reason,
+                    termination_reason="in_progress",
+                )
+            )
             workspace = reselected_workspace
             reselection_count += 1
             continue
@@ -934,6 +1106,19 @@ def run_grant_autonomy_controller(
                 unresolved_blockers=unresolved_blockers,
                 evidence_gaps=evidence_gaps,
             )
+        tranche_history.append(
+            _build_tranche_history_entry(
+                cycle=cycle,
+                controller_plan=controller_plan,
+                quality_status=quality_status,
+                unresolved_blockers=unresolved_blockers,
+                evidence_gaps=evidence_gaps,
+                next_controller_action="rollback_upstream" if rollback_reason else "continue_mainline",
+                gate_status="open",
+                decision_reason=rollback_reason or _default_progress_reason(quality_status, unresolved_blockers, evidence_gaps),
+                termination_reason="in_progress",
+            )
+        )
         workspace = next_workspace
 
     return _fail_closed_report(
@@ -954,6 +1139,8 @@ def run_grant_autonomy_controller(
         blocker_report=latest_blocker_report,
         unresolved_blockers=unresolved_blockers,
         evidence_gaps=evidence_gaps,
+        controller_plan=controller_plan,
+        tranche_history=tranche_history,
     )
 
 
@@ -975,6 +1162,8 @@ def _build_report(
     action_trace: list[dict[str, Any]] | None = None,
     reselection_decisions: list[dict[str, Any]] | None = None,
     rollback_decisions: list[dict[str, Any]] | None = None,
+    controller_plan: dict[str, Any] | None = None,
+    tranche_history: list[dict[str, Any]] | None = None,
     completed_cycles: int = 0,
     final_workspace: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -984,6 +1173,16 @@ def _build_report(
     unresolved = list(unresolved_blockers or [])
     gaps = list(evidence_gaps or [])
     latest_report = deepcopy(blocker_report) if isinstance(blocker_report, dict) else {}
+    tranche_plan_payload = _finalize_controller_plan(
+        controller_plan,
+        goal=goal_payload,
+        controller_status=controller_status,
+        termination_reason=termination_reason,
+        completed_cycles=completed_cycles,
+        unresolved_blockers=unresolved,
+        evidence_gaps=gaps,
+        tranche_history=tranche_history or [],
+    )
     return {
         "surface_kind": "grant_autonomy_controller_report",
         "controller_version": 1,
@@ -1012,6 +1211,8 @@ def _build_report(
         "action_trace": deepcopy(action_trace or []),
         "reselection_decisions": deepcopy(reselection_decisions or []),
         "rollback_decisions": deepcopy(rollback_decisions or []),
+        "controller_plan": tranche_plan_payload,
+        "tranche_history": deepcopy(tranche_history or []),
         "final_workspace": deepcopy(final_workspace) if isinstance(final_workspace, dict) else {},
     }
 
@@ -1033,6 +1234,8 @@ def _fail_closed_report(
     action_trace: list[dict[str, Any]] | None = None,
     reselection_decisions: list[dict[str, Any]] | None = None,
     rollback_decisions: list[dict[str, Any]] | None = None,
+    controller_plan: dict[str, Any] | None = None,
+    tranche_history: list[dict[str, Any]] | None = None,
     completed_cycles: int = 0,
     final_workspace: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -1053,6 +1256,8 @@ def _fail_closed_report(
         action_trace=action_trace,
         reselection_decisions=reselection_decisions,
         rollback_decisions=rollback_decisions,
+        controller_plan=controller_plan,
+        tranche_history=tranche_history,
         completed_cycles=completed_cycles,
         final_workspace=final_workspace,
     )
@@ -1149,6 +1354,124 @@ def _resolve_terminal_reason(unresolved_blockers: list[str], evidence_gaps: list
     if evidence_gaps:
         return "evidence_gaps_not_cleared"
     return "max_rounds_or_cycles_exhausted"
+
+
+def _normalize_controller_plan(
+    payload: Any,
+    *,
+    goal: dict[str, Any],
+    require_zero_blockers: bool,
+    require_zero_evidence_gaps: bool,
+) -> dict[str, Any]:
+    goal_payload = _normalize_goal(goal)
+    source = payload if isinstance(payload, dict) else {}
+    current_tranche = _normalized_string(source.get("current_tranche"))
+    if not current_tranche:
+        current_tranche = (
+            "submission_readiness"
+            if goal_payload["target_status"] == "submission_grade_candidate"
+            else "quality_closure"
+        )
+    tranche_objective = _normalized_string(source.get("tranche_objective"))
+    if not tranche_objective:
+        tranche_objective = f"advance_to_{goal_payload['target_status']}"
+    gate_source = source.get("tranche_success_gate") if isinstance(source.get("tranche_success_gate"), dict) else {}
+    gate_target = _normalized_string(gate_source.get("target_status"))
+    if gate_target not in {"submission_grade_candidate", "near_submission_candidate"}:
+        gate_target = goal_payload["target_status"]
+    acceptance = gate_source.get("acceptance_criteria")
+    if not isinstance(acceptance, list):
+        acceptance = goal_payload.get("acceptance_criteria")
+    normalized_acceptance = [item for item in (_normalized_string(v) for v in (acceptance or [])) if item]
+    tranche_success_gate: dict[str, Any] = {
+        "target_status": gate_target,
+        "requires_zero_blockers": bool(gate_source.get("requires_zero_blockers", require_zero_blockers)),
+        "requires_zero_evidence_gaps": bool(gate_source.get("requires_zero_evidence_gaps", require_zero_evidence_gaps)),
+    }
+    if normalized_acceptance:
+        tranche_success_gate["acceptance_criteria"] = normalized_acceptance
+    return {
+        "current_tranche": current_tranche,
+        "tranche_objective": tranche_objective,
+        "tranche_success_gate": tranche_success_gate,
+    }
+
+
+def _build_tranche_history_entry(
+    *,
+    cycle: int,
+    controller_plan: dict[str, Any],
+    quality_status: str,
+    unresolved_blockers: list[str],
+    evidence_gaps: list[str],
+    next_controller_action: str,
+    gate_status: str,
+    decision_reason: str,
+    termination_reason: str,
+) -> dict[str, Any]:
+    action = next_controller_action if next_controller_action in _CONTROLLER_ACTIONS else "continue_mainline"
+    normalized_gate_status = gate_status if gate_status in _GATE_STATUSES else "open"
+    normalized_quality_status = quality_status if quality_status in _QUALITY_STATUSES else "unknown"
+    reason = _normalized_string(decision_reason) or termination_reason or "controller_progression"
+    tranche_success_gate = controller_plan.get("tranche_success_gate")
+    return {
+        "cycle": cycle,
+        "current_tranche": controller_plan.get("current_tranche") or "submission_readiness",
+        "tranche_objective": controller_plan.get("tranche_objective") or "advance_to_submission_grade_candidate",
+        "tranche_success_gate": deepcopy(tranche_success_gate) if isinstance(tranche_success_gate, dict) else {},
+        "gate_status": normalized_gate_status,
+        "next_controller_action": action,
+        "decision_reason": reason,
+        "quality_status": normalized_quality_status,
+        "unresolved_blockers": list(unresolved_blockers),
+        "evidence_gaps": list(evidence_gaps),
+        "termination_reason": termination_reason or "in_progress",
+    }
+
+
+def _default_progress_reason(quality_status: str, unresolved_blockers: list[str], evidence_gaps: list[str]) -> str:
+    if unresolved_blockers:
+        return unresolved_blockers[0]
+    if evidence_gaps:
+        return evidence_gaps[0]
+    if quality_status == "not_ready":
+        return "quality_gate_open"
+    return "controller_progression"
+
+
+def _finalize_controller_plan(
+    payload: dict[str, Any] | None,
+    *,
+    goal: dict[str, Any],
+    controller_status: str,
+    termination_reason: str,
+    completed_cycles: int,
+    unresolved_blockers: list[str],
+    evidence_gaps: list[str],
+    tranche_history: list[dict[str, Any]],
+) -> dict[str, Any]:
+    base_plan = _normalize_controller_plan(
+        payload,
+        goal=goal,
+        require_zero_blockers=True,
+        require_zero_evidence_gaps=True,
+    )
+    latest_history = tranche_history[-1] if tranche_history else {}
+    decision_basis = {
+        "cycle": int(latest_history.get("cycle") or completed_cycles or 0),
+        "gate_status": latest_history.get("gate_status") or ("passed" if controller_status != "failed_closed" else "failed_closed"),
+        "quality_status": latest_history.get("quality_status") or "unknown",
+        "unresolved_blockers": list(latest_history.get("unresolved_blockers") or unresolved_blockers),
+        "evidence_gaps": list(latest_history.get("evidence_gaps") or evidence_gaps),
+        "decision_reason": _normalized_string(latest_history.get("decision_reason"))
+        or termination_reason
+        or "controller_not_started",
+        "termination_reason": termination_reason or "controller_not_started",
+    }
+    next_action = "stop_success" if controller_status != "failed_closed" else "fail_closed"
+    base_plan["next_controller_action"] = next_action
+    base_plan["decision_basis"] = decision_basis
+    return base_plan
 
 
 def _normalize_goal(goal: dict[str, Any]) -> dict[str, Any]:

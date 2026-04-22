@@ -159,6 +159,33 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["hosted_contract_bundle"], "hosted-contract-bundle.schema.json")
         self.assertEqual(names["submission_ready_package"], "submission-ready-package.schema.json")
 
+    def test_autonomy_controller_schemas_require_tranche_planning_surface(self) -> None:
+        input_schema = json.loads((SCHEMA_ROOT / "grant-autonomy-controller-input.schema.json").read_text(encoding="utf-8"))
+        self.assertIn("controller_plan", input_schema["properties"])
+        self.assertEqual(
+            input_schema["$defs"]["controllerPlan"]["required"],
+            ["current_tranche", "tranche_objective", "tranche_success_gate"],
+        )
+
+        report_schema = json.loads((SCHEMA_ROOT / "grant-autonomy-controller-report.schema.json").read_text(encoding="utf-8"))
+        report_required = report_schema["required"]
+        self.assertIn("controller_plan", report_required)
+        self.assertIn("tranche_history", report_required)
+        self.assertEqual(
+            report_schema["$defs"]["controllerPlan"]["required"],
+            [
+                "current_tranche",
+                "tranche_objective",
+                "tranche_success_gate",
+                "next_controller_action",
+                "decision_basis",
+            ],
+        )
+        self.assertEqual(
+            report_schema["$defs"]["trancheHistoryEntry"]["properties"]["next_controller_action"]["$ref"],
+            "#/$defs/controllerAction",
+        )
+
     def test_product_surface_schemas_require_family_orchestration_companion(self) -> None:
         schema_files = [
             "grant-progress.schema.json",

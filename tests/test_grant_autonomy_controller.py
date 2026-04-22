@@ -79,6 +79,63 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             },
         }
 
+    def test_report_exposes_tranche_plan_and_final_next_action(self) -> None:
+        request = self._workspace_start_request()
+        request["controller_plan"] = {
+            "current_tranche": "quality_closure",
+            "tranche_objective": "关闭质量硬伤并形成 near-submission candidate",
+            "tranche_success_gate": {
+                "target_status": "near_submission_candidate",
+                "requires_zero_blockers": True,
+                "requires_zero_evidence_gaps": True,
+                "acceptance_criteria": ["质量硬伤清零"],
+            },
+        }
+        quality_calls = {"count": 0}
+
+        def mainline_runner(payload: dict[str, Any]) -> dict[str, Any]:
+            self.assertEqual(payload["controller_plan"]["current_tranche"], "quality_closure")
+            return {"workspace": {"workspace_id": "ws-001", "lifecycle_stage": "revision"}}
+
+        def quality_evaluator(_workspace: dict[str, Any]) -> dict[str, Any]:
+            quality_calls["count"] += 1
+            if quality_calls["count"] == 1:
+                return {
+                    "quality_status": "not_ready",
+                    "blocker_report": {"report_kind": "quality_snapshot"},
+                    "unresolved_blockers": ["科学问题尚未闭合"],
+                    "evidence_gaps": ["申请人适配证据不足"],
+                }
+            return {
+                "quality_status": "near_submission_candidate",
+                "blocker_report": {"report_kind": "quality_snapshot"},
+                "unresolved_blockers": [],
+                "evidence_gaps": [],
+            }
+
+        result = run_grant_autonomy_controller(
+            request=request,
+            selector=lambda selection_input: selection_input,
+            initializer=lambda selection_input, selection: {"workspace": {"selection": selection_input, "meta": selection}},
+            mainline_runner=mainline_runner,
+            quality_evaluator=quality_evaluator,
+        )
+
+        self.assertEqual(result["controller_status"], "near_submission_candidate")
+        self.assertEqual(result["termination_reason"], "goal_reached")
+        self.assertEqual(result["controller_plan"]["current_tranche"], "quality_closure")
+        self.assertEqual(
+            result["controller_plan"]["tranche_objective"],
+            "关闭质量硬伤并形成 near-submission candidate",
+        )
+        self.assertEqual(result["controller_plan"]["tranche_success_gate"]["target_status"], "near_submission_candidate")
+        self.assertEqual(result["controller_plan"]["next_controller_action"], "stop_success")
+        self.assertEqual(result["controller_plan"]["decision_basis"]["quality_status"], "near_submission_candidate")
+        self.assertEqual(result["tranche_history"][0]["next_controller_action"], "continue_mainline")
+        self.assertEqual(result["tranche_history"][0]["gate_status"], "open")
+        self.assertEqual(result["tranche_history"][1]["next_controller_action"], "stop_success")
+        self.assertEqual(result["tranche_history"][1]["gate_status"], "passed")
+
     def test_selection_input_path_runs_selector_initializer_mainline_quality(self) -> None:
         call_order: list[str] = []
         quality_calls = {"count": 0}
@@ -282,6 +339,8 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(selection_calls["count"], 2)
         self.assertEqual(len(result["reselection_decisions"]), 1)
         self.assertTrue(result["reselection_decisions"][0]["accepted"])
+        self.assertEqual(result["tranche_history"][0]["next_controller_action"], "reselect_project_profile")
+        self.assertEqual(result["tranche_history"][0]["decision_reason"], "方向与机会不匹配")
 
     def test_fail_closed_when_rollback_policy_disallows_request(self) -> None:
         request = self._workspace_start_request()
@@ -306,6 +365,9 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(result["termination_reason"], "rollback_policy_disallowed")
         self.assertEqual(len(result["rollback_decisions"]), 1)
         self.assertFalse(result["rollback_decisions"][0]["accepted"])
+        self.assertEqual(result["controller_plan"]["next_controller_action"], "fail_closed")
+        self.assertEqual(result["tranche_history"][0]["next_controller_action"], "rollback_upstream")
+        self.assertEqual(result["tranche_history"][0]["decision_reason"], "证据冲突")
 
 
 if __name__ == "__main__":

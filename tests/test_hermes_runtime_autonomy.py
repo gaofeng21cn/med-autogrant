@@ -90,6 +90,44 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
             ],
             "reselection_decisions": [],
             "rollback_decisions": [],
+            "controller_plan": {
+                "current_tranche": "submission_readiness",
+                "tranche_objective": "advance_to_submission_grade_candidate",
+                "tranche_success_gate": {
+                    "target_status": "submission_grade_candidate",
+                    "requires_zero_blockers": True,
+                    "requires_zero_evidence_gaps": True,
+                },
+                "next_controller_action": "stop_success",
+                "decision_basis": {
+                    "cycle": 1,
+                    "gate_status": "passed",
+                    "quality_status": "submission_grade_candidate",
+                    "unresolved_blockers": [],
+                    "evidence_gaps": [],
+                    "decision_reason": "tranche_success_gate_satisfied",
+                    "termination_reason": "goal_reached",
+                },
+            },
+            "tranche_history": [
+                {
+                    "cycle": 1,
+                    "current_tranche": "submission_readiness",
+                    "tranche_objective": "advance_to_submission_grade_candidate",
+                    "tranche_success_gate": {
+                        "target_status": "submission_grade_candidate",
+                        "requires_zero_blockers": True,
+                        "requires_zero_evidence_gaps": True,
+                    },
+                    "gate_status": "passed",
+                    "next_controller_action": "stop_success",
+                    "decision_reason": "tranche_success_gate_satisfied",
+                    "quality_status": "submission_grade_candidate",
+                    "unresolved_blockers": [],
+                    "evidence_gaps": [],
+                    "termination_reason": "goal_reached",
+                }
+            ],
             "final_workspace": workspace,
         }
 
