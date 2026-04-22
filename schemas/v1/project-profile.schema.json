@@ -42,6 +42,12 @@
     "summary": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
+    "grant_family_grammar": {
+      "$ref": "common.schema.json#/$defs/projectProfileGrantFamilyGrammar"
+    },
+    "family_grammar_trace": {
+      "$ref": "common.schema.json#/$defs/projectProfileFamilyGrammarTrace"
+    },
     "template_profile": {
       "$ref": "common.schema.json#/$defs/projectProfileTemplateProfile"
     },

@@ -161,6 +161,33 @@ class WorkspaceSummaryTest(unittest.TestCase):
         self.assertEqual(summary["project_profile"]["funder"], "NIH")
         self.assertEqual(summary["project_profile"]["program_family"], "NHLBI R21")
         self.assertEqual(summary["project_profile"]["critique_policy_id"], "nih_r21_significance_innovation_v1")
+        self.assertEqual(
+            summary["project_profile"]["grant_family_grammar"]["family_id"],
+            "nih_r21_translational_family_v1",
+        )
+        self.assertEqual(
+            summary["project_profile"]["grant_family_grammar"]["governance_entry_points"],
+            [
+                "grant-quality-scorecard",
+                "grant-quality-diff",
+                "execute-grant-autonomy-controller",
+            ],
+        )
+        self.assertEqual(
+            summary["project_profile"]["family_grammar_trace"]["family_id"],
+            "nih_r21_translational_family_v1",
+        )
+        self.assertEqual(
+            summary["project_profile"]["family_grammar_trace"]["review_grammar"]["review_focus"],
+            "significance_and_innovation_weighted_review",
+        )
+        self.assertTrue(
+            any(
+                item["rule_id"] == "rule.project_types"
+                and "exploratory_developmental" in item["allowed_values"]
+                for item in summary["project_profile"]["family_grammar_trace"]["family_compatibility_hooks"]
+            )
+        )
 
     def test_validation_accepts_direction_screening_with_selected_direction_only(self) -> None:
         document = load_workspace_document(DIRECTION_EXAMPLE_PATH)

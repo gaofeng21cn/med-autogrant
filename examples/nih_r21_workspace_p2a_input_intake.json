@@ -144,6 +144,104 @@
     "template_family": "nih_r21_exploratory_grant",
     "selection_mode": "preset_aligned_to_funding_opportunity",
     "summary": "面向 NIH R21 exploratory/developmental grant，强调 significance、innovation 与可落地的 exploratory aims。",
+    "grant_family_grammar": {
+      "family_id": "nih_r21_translational_family_v1",
+      "family_label": "NIH R21 translational family",
+      "funder": "NIH",
+      "admission_status": "admitted",
+      "template_strategy": {
+        "required_section_strategy": "mirror_funding_brief_mandatory_sections",
+        "narrative_style": "significance_innovation_translational"
+      },
+      "review_grammar": {
+        "review_focus": "significance_and_innovation_weighted_review",
+        "critique_policy": {
+          "preset_id": "nih_r21_significance_innovation_v1",
+          "policy_id": "nih_r21_significance_innovation_v1"
+        }
+      },
+      "evidence_policy": {
+        "policy_id": "significance_and_innovation_claims_require_direct_grounding"
+      },
+      "family_compatibility_hooks": [
+        {
+          "rule_id": "rule.funder",
+          "opportunity_field": "funder",
+          "allowed_values": [
+            "NIH"
+          ]
+        },
+        {
+          "rule_id": "rule.program_family",
+          "opportunity_field": "program_family",
+          "allowed_values": [
+            "NHLBI R21",
+            "NIH R21 Parent"
+          ]
+        },
+        {
+          "rule_id": "rule.project_types",
+          "opportunity_field": "project_types",
+          "allowed_values": [
+            "exploratory_developmental"
+          ]
+        }
+      ],
+      "governance_entry_points": [
+        "grant-quality-scorecard",
+        "grant-quality-diff",
+        "execute-grant-autonomy-controller"
+      ]
+    },
+    "family_grammar_trace": {
+      "family_id": "nih_r21_translational_family_v1",
+      "family_label": "NIH R21 translational family",
+      "funder": "NIH",
+      "admission_status": "admitted",
+      "template_strategy": {
+        "required_section_strategy": "mirror_funding_brief_mandatory_sections",
+        "narrative_style": "significance_innovation_translational"
+      },
+      "review_grammar": {
+        "review_focus": "significance_and_innovation_weighted_review",
+        "critique_policy": {
+          "preset_id": "nih_r21_significance_innovation_v1",
+          "policy_id": "nih_r21_significance_innovation_v1"
+        }
+      },
+      "evidence_policy": {
+        "policy_id": "significance_and_innovation_claims_require_direct_grounding"
+      },
+      "family_compatibility_hooks": [
+        {
+          "rule_id": "rule.funder",
+          "opportunity_field": "funder",
+          "allowed_values": [
+            "NIH"
+          ]
+        },
+        {
+          "rule_id": "rule.program_family",
+          "opportunity_field": "program_family",
+          "allowed_values": [
+            "NHLBI R21",
+            "NIH R21 Parent"
+          ]
+        },
+        {
+          "rule_id": "rule.project_types",
+          "opportunity_field": "project_types",
+          "allowed_values": [
+            "exploratory_developmental"
+          ]
+        }
+      ],
+      "governance_entry_points": [
+        "grant-quality-scorecard",
+        "grant-quality-diff",
+        "execute-grant-autonomy-controller"
+      ]
+    },
     "template_profile": {
       "template_id": "nih_r21_template_v1",
       "template_label": "NIH R21 exploratory grant template",

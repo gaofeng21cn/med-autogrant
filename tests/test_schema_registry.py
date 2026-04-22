@@ -186,6 +186,20 @@ class SchemaRegistryTest(unittest.TestCase):
             "#/$defs/controllerAction",
         )
 
+    def test_project_profile_schema_supports_family_grammar_contract(self) -> None:
+        payload = json.loads((SCHEMA_ROOT / "project-profile.schema.json").read_text(encoding="utf-8"))
+        properties = payload["properties"]
+        self.assertIn("grant_family_grammar", properties)
+        self.assertIn("family_grammar_trace", properties)
+        self.assertEqual(
+            properties["grant_family_grammar"]["$ref"],
+            "common.schema.json#/$defs/projectProfileGrantFamilyGrammar",
+        )
+        self.assertEqual(
+            properties["family_grammar_trace"]["$ref"],
+            "common.schema.json#/$defs/projectProfileFamilyGrammarTrace",
+        )
+
     def test_product_surface_schemas_require_family_orchestration_companion(self) -> None:
         schema_files = [
             "grant-progress.schema.json",

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 from dataclasses import dataclass
 from datetime import datetime
@@ -144,7 +145,7 @@ def _build_project_profile_summary(document: dict[str, Any]) -> dict[str, Any]:
     collaboration_preferences = project_profile["collaboration_preferences"]
     critique_policy = project_profile["critique_policy"]
     funding_brief = document["funding_opportunity_brief"]
-    return {
+    summary = {
         "profile_id": project_profile["profile_id"],
         "preset_id": project_profile["preset_id"],
         "profile_label": project_profile["profile_label"],
@@ -164,6 +165,29 @@ def _build_project_profile_summary(document: dict[str, Any]) -> dict[str, Any]:
         "critique_policy_preset_id": critique_policy["preset_id"],
         "critique_policy_id": critique_policy["policy_id"],
     }
+    family_trace = project_profile.get("family_grammar_trace")
+    if isinstance(family_trace, dict):
+        summary["family_grammar_trace"] = copy.deepcopy(family_trace)
+    family_grammar = project_profile.get("grant_family_grammar")
+    if isinstance(family_grammar, dict):
+        summary["grant_family_grammar"] = copy.deepcopy(family_grammar)
+    elif isinstance(family_trace, dict):
+        summary["grant_family_grammar"] = {
+            "family_id": family_trace["family_id"],
+            "family_label": family_trace["family_label"],
+            "funder": family_trace["funder"],
+            "admission_status": family_trace["admission_status"],
+            "template_strategy": copy.deepcopy(family_trace["template_strategy"]),
+            "review_grammar": copy.deepcopy(family_trace["review_grammar"]),
+            "evidence_policy": copy.deepcopy(family_trace["evidence_policy"]),
+            "family_compatibility_hooks": copy.deepcopy(family_trace["family_compatibility_hooks"]),
+            "governance_entry_points": [
+                "grant-quality-scorecard",
+                "grant-quality-diff",
+                "execute-grant-autonomy-controller",
+            ],
+        }
+    return summary
 
 
 def summarize_workspace_document(document: dict[str, Any]) -> dict[str, Any]:

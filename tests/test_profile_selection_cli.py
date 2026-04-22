@@ -102,6 +102,10 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
         self.assertEqual(payload["project_profile_selection"]["recommended_project_profile"]["preset_id"], "nih_r21_translational_v1")
         self.assertEqual(payload["project_profile_selection"]["recommended_funding_opportunity"]["brief_id"], "nih-r21-2026-nhlbi")
         self.assertEqual(
+            payload["project_profile_selection"]["recommended_project_profile"]["grant_family_grammar"]["family_id"],
+            "nih_r21_translational_family_v1",
+        )
+        self.assertEqual(
             payload["project_profile_selection"]["selection_summary"]["evaluated_profile_preset_count"],
             2,
         )

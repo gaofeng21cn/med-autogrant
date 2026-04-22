@@ -19,6 +19,11 @@ REQUIRED_SELECTION_INPUT_FIELDS: tuple[str, ...] = (
     "preliminary_evidence_pack",
     "funding_opportunity_pool",
 )
+GOVERNANCE_ENTRY_POINTS: tuple[str, ...] = (
+    "grant-quality-scorecard",
+    "grant-quality-diff",
+    "execute-grant-autonomy-controller",
+)
 
 
 def select_project_profile(selection_input: dict[str, Any]) -> dict[str, Any]:
@@ -170,6 +175,8 @@ def _build_project_profile_document(*, preset: dict[str, Any]) -> dict[str, Any]
         "template_family": preset["template_family"],
         "selection_mode": preset["selection_mode"],
         "summary": preset["summary"],
+        "grant_family_grammar": _build_grant_family_grammar(preset),
+        "family_grammar_trace": _build_family_grammar_trace(preset),
         "template_profile": {
             "template_id": preset["template_id"],
             "template_label": preset["template_label"],
@@ -183,6 +190,39 @@ def _build_project_profile_document(*, preset: dict[str, Any]) -> dict[str, Any]
             "drafting_voice": preset["drafting_voice"],
         },
         "critique_policy": copy.deepcopy(review_grammar["critique_policy"]),
+    }
+
+
+def _build_grant_family_grammar(preset: dict[str, Any]) -> dict[str, Any]:
+    family_trace = _build_family_grammar_trace(preset)
+    family_trace["governance_entry_points"] = list(GOVERNANCE_ENTRY_POINTS)
+    return family_trace
+
+
+def _build_family_grammar_trace(preset: dict[str, Any]) -> dict[str, Any]:
+    grant_family = preset["grant_family"]
+    common_grammar = preset["common_grant_grammar"]
+    review_grammar = common_grammar["review_grammar"]
+    return {
+        "family_id": grant_family["family_id"],
+        "family_label": grant_family["family_label"],
+        "funder": grant_family["funder"],
+        "admission_status": grant_family["admission_status"],
+        "template_strategy": copy.deepcopy(common_grammar["template_strategy"]),
+        "review_grammar": {
+            "review_focus": review_grammar["review_focus"],
+            "critique_policy": copy.deepcopy(review_grammar["critique_policy"]),
+        },
+        "evidence_policy": copy.deepcopy(common_grammar["evidence_policy"]),
+        "family_compatibility_hooks": [
+            {
+                "rule_id": item["rule_id"],
+                "opportunity_field": item["opportunity_field"],
+                "allowed_values": list(item["allowed_values"]),
+            }
+            for item in common_grammar["family_compatibility_hooks"]
+        ],
+        "governance_entry_points": list(GOVERNANCE_ENTRY_POINTS),
     }
 
 

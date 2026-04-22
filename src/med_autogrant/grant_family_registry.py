@@ -6,6 +6,12 @@ from typing import Any
 
 _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
     "nsfc_general_medical_v1": {
+        "grant_family": {
+            "family_id": "nsfc_general_medical_family_v1",
+            "family_label": "NSFC general medical grant family",
+            "funder": "NSFC",
+            "admission_status": "admitted",
+        },
         "profile_id": "profile-nsfc-general-medical",
         "preset_id": "nsfc_general_medical_v1",
         "profile_label": "NSFC general medical grant profile",
@@ -52,6 +58,12 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
         },
     },
     "nih_r21_translational_v1": {
+        "grant_family": {
+            "family_id": "nih_r21_translational_family_v1",
+            "family_label": "NIH R21 translational family",
+            "funder": "NIH",
+            "admission_status": "admitted",
+        },
         "profile_id": "profile-nih-r21-translational",
         "preset_id": "nih_r21_translational_v1",
         "profile_label": "NIH R21 translational profile",
