@@ -174,12 +174,24 @@ class WorkspaceSummaryTest(unittest.TestCase):
             ],
         )
         self.assertEqual(
+            summary["project_profile"]["grant_family_grammar"]["governance_policy"]["default_tranche"],
+            "aims_significance_innovation_loop",
+        )
+        self.assertEqual(
+            summary["project_profile"]["grant_family_grammar"]["governance_policy"]["quality_bar"]["minimum_score"],
+            78,
+        )
+        self.assertEqual(
             summary["project_profile"]["family_grammar_trace"]["family_id"],
             "nih_r21_translational_family_v1",
         )
         self.assertEqual(
             summary["project_profile"]["family_grammar_trace"]["review_grammar"]["review_focus"],
             "significance_and_innovation_weighted_review",
+        )
+        self.assertEqual(
+            summary["project_profile"]["family_grammar_trace"]["governance_policy"]["rollback_bias"]["default_rollback_stage"],
+            "fit_alignment",
         )
         self.assertTrue(
             any(

@@ -43,6 +43,32 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
             "evidence_policy": {
                 "policy_id": "claim_must_bind_to_track_record_or_preliminary_evidence",
             },
+            "governance_policy": {
+                "default_tranche": "direction_screening_to_argument_closure",
+                "preferred_stop_target": "fit_alignment_locked_before_outline",
+                "quality_bar": {
+                    "minimum_score": 85,
+                    "blocker_policy": "zero_blocking_issues_required",
+                    "required_signal_coverage": (
+                        "scientific_question_clarity",
+                        "mechanistic_rationale",
+                        "applicant_track_record_fit",
+                    ),
+                },
+                "rollback_bias": {
+                    "default_rollback_stage": "argument_building",
+                    "trigger_mode": "mechanism_first_strict",
+                },
+                "evidence_escalation_policy": {
+                    "trigger": "mechanistic_claim_without_preliminary_support",
+                    "escalation_action": "require_preliminary_validation_or_scope_downgrade",
+                    "required_evidence_types": (
+                        "publication",
+                        "project",
+                        "preliminary_result",
+                    ),
+                },
+            },
             "family_compatibility_hooks": (
                 {
                     "rule_id": "rule.funder",
@@ -95,6 +121,31 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
             "evidence_policy": {
                 "policy_id": "significance_and_innovation_claims_require_direct_grounding",
             },
+            "governance_policy": {
+                "default_tranche": "aims_significance_innovation_loop",
+                "preferred_stop_target": "ready_for_submission_after_significance_innovation_lock",
+                "quality_bar": {
+                    "minimum_score": 78,
+                    "blocker_policy": "critical_blockers_must_close",
+                    "required_signal_coverage": (
+                        "significance",
+                        "innovation",
+                        "approach_feasibility",
+                    ),
+                },
+                "rollback_bias": {
+                    "default_rollback_stage": "fit_alignment",
+                    "trigger_mode": "innovation_gap_sensitive",
+                },
+                "evidence_escalation_policy": {
+                    "trigger": "significance_or_innovation_claim_unbounded",
+                    "escalation_action": "tighten_aim_scope_and_add_translational_anchor",
+                    "required_evidence_types": (
+                        "publication",
+                        "preliminary_result",
+                    ),
+                },
+            },
             "family_compatibility_hooks": (
                 {
                     "rule_id": "rule.funder",
@@ -137,6 +188,30 @@ _FAMILY_PROFILE_PLACEHOLDERS: tuple[dict[str, Any], ...] = (
             },
             "evidence_policy": {
                 "policy_id": "claims_require_milestone_linked_evidence",
+            },
+            "governance_policy": {
+                "default_tranche": "discovery_framing_first",
+                "preferred_stop_target": "transformative_hypothesis_locked",
+                "quality_bar": {
+                    "minimum_score": 80,
+                    "blocker_policy": "transformative_value_and_execution_risk_balanced",
+                    "required_signal_coverage": (
+                        "transformative_potential",
+                        "execution_readiness",
+                    ),
+                },
+                "rollback_bias": {
+                    "default_rollback_stage": "question_refinement",
+                    "trigger_mode": "novelty_execution_balance",
+                },
+                "evidence_escalation_policy": {
+                    "trigger": "high_risk_claim_without_milestone_anchor",
+                    "escalation_action": "add_milestone_guardrails_or_reduce_scope",
+                    "required_evidence_types": (
+                        "publication",
+                        "project",
+                    ),
+                },
             },
             "family_compatibility_hooks": (
                 {

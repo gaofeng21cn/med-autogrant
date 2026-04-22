@@ -172,21 +172,34 @@ def _build_project_profile_summary(document: dict[str, Any]) -> dict[str, Any]:
     if isinstance(family_grammar, dict):
         summary["grant_family_grammar"] = copy.deepcopy(family_grammar)
     elif isinstance(family_trace, dict):
-        summary["grant_family_grammar"] = {
-            "family_id": family_trace["family_id"],
-            "family_label": family_trace["family_label"],
-            "funder": family_trace["funder"],
-            "admission_status": family_trace["admission_status"],
-            "template_strategy": copy.deepcopy(family_trace["template_strategy"]),
-            "review_grammar": copy.deepcopy(family_trace["review_grammar"]),
-            "evidence_policy": copy.deepcopy(family_trace["evidence_policy"]),
-            "family_compatibility_hooks": copy.deepcopy(family_trace["family_compatibility_hooks"]),
-            "governance_entry_points": [
-                "grant-quality-scorecard",
-                "grant-quality-diff",
-                "execute-grant-autonomy-controller",
-            ],
+        required_trace_fields = {
+            "family_id",
+            "family_label",
+            "funder",
+            "admission_status",
+            "template_strategy",
+            "review_grammar",
+            "evidence_policy",
+            "governance_policy",
+            "family_compatibility_hooks",
         }
+        if required_trace_fields.issubset(family_trace):
+            summary["grant_family_grammar"] = {
+                "family_id": family_trace["family_id"],
+                "family_label": family_trace["family_label"],
+                "funder": family_trace["funder"],
+                "admission_status": family_trace["admission_status"],
+                "template_strategy": copy.deepcopy(family_trace["template_strategy"]),
+                "review_grammar": copy.deepcopy(family_trace["review_grammar"]),
+                "evidence_policy": copy.deepcopy(family_trace["evidence_policy"]),
+                "governance_policy": copy.deepcopy(family_trace["governance_policy"]),
+                "family_compatibility_hooks": copy.deepcopy(family_trace["family_compatibility_hooks"]),
+                "governance_entry_points": [
+                    "grant-quality-scorecard",
+                    "grant-quality-diff",
+                    "execute-grant-autonomy-controller",
+                ],
+            }
     return summary
 
 

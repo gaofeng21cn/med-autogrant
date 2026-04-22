@@ -214,6 +214,7 @@ def _build_family_grammar_trace(preset: dict[str, Any]) -> dict[str, Any]:
             "critique_policy": copy.deepcopy(review_grammar["critique_policy"]),
         },
         "evidence_policy": copy.deepcopy(common_grammar["evidence_policy"]),
+        "governance_policy": _build_governance_policy(common_grammar["governance_policy"]),
         "family_compatibility_hooks": [
             {
                 "rule_id": item["rule_id"],
@@ -223,6 +224,37 @@ def _build_family_grammar_trace(preset: dict[str, Any]) -> dict[str, Any]:
             for item in common_grammar["family_compatibility_hooks"]
         ],
         "governance_entry_points": list(GOVERNANCE_ENTRY_POINTS),
+    }
+
+
+def _build_governance_policy(governance_policy: dict[str, Any]) -> dict[str, Any]:
+    quality_bar = governance_policy["quality_bar"]
+    evidence_escalation_policy = governance_policy["evidence_escalation_policy"]
+    return {
+        "default_tranche": _normalize_string(governance_policy["default_tranche"]),
+        "preferred_stop_target": _normalize_string(governance_policy["preferred_stop_target"]),
+        "quality_bar": {
+            "minimum_score": int(quality_bar["minimum_score"]),
+            "blocker_policy": _normalize_string(quality_bar["blocker_policy"]),
+            "required_signal_coverage": [
+                _normalize_string(item)
+                for item in quality_bar["required_signal_coverage"]
+                if _normalize_string(item)
+            ],
+        },
+        "rollback_bias": {
+            "default_rollback_stage": _normalize_string(governance_policy["rollback_bias"]["default_rollback_stage"]),
+            "trigger_mode": _normalize_string(governance_policy["rollback_bias"]["trigger_mode"]),
+        },
+        "evidence_escalation_policy": {
+            "trigger": _normalize_string(evidence_escalation_policy["trigger"]),
+            "escalation_action": _normalize_string(evidence_escalation_policy["escalation_action"]),
+            "required_evidence_types": [
+                _normalize_string(item)
+                for item in evidence_escalation_policy["required_evidence_types"]
+                if _normalize_string(item)
+            ],
+        },
     }
 
 

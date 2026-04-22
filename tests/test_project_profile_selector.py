@@ -96,6 +96,18 @@ class ProjectProfileSelectorTest(unittest.TestCase):
                 "execute-grant-autonomy-controller",
             ],
         )
+        self.assertEqual(
+            grammar["governance_policy"]["default_tranche"],
+            "aims_significance_innovation_loop",
+        )
+        self.assertEqual(
+            grammar["governance_policy"]["preferred_stop_target"],
+            "ready_for_submission_after_significance_innovation_lock",
+        )
+        self.assertEqual(
+            grammar["governance_policy"]["quality_bar"]["minimum_score"],
+            78,
+        )
         workspace, _selection = build_initialized_intake_workspace(selection_input)
         self.assertEqual(
             workspace["project_profile"]["grant_family_grammar"]["family_id"],
@@ -211,10 +223,61 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             family_trace["evidence_policy"]["policy_id"],
             "significance_and_innovation_claims_require_direct_grounding",
         )
+        self.assertEqual(
+            family_trace["governance_policy"]["rollback_bias"]["default_rollback_stage"],
+            "fit_alignment",
+        )
+        self.assertEqual(
+            family_trace["governance_policy"]["evidence_escalation_policy"]["trigger"],
+            "significance_or_innovation_claim_unbounded",
+        )
         self.assertTrue(
             any(
                 item["rule_id"] == "rule.program_family"
                 and "NHLBI R21" in item["allowed_values"]
                 for item in family_trace["family_compatibility_hooks"]
             )
+        )
+
+    def test_selector_emits_distinct_family_governance_policy_for_nsfc_and_nih_r21(self) -> None:
+        from med_autogrant.project_profile_selector import select_project_profile
+
+        nsfc_input = self._base_selection_input()
+        nsfc_input["selection_input_id"] = "nsfc-governance-001"
+        nsfc_input["funding_opportunity_pool"] = [
+            {
+                "brief_id": "nsfc-2026-general",
+                "funder": "NSFC",
+                "program_family": "医学科学部",
+                "project_types": ["general"],
+            }
+        ]
+        nih_input = self._base_selection_input()
+        nih_input["selection_input_id"] = "nih-governance-001"
+        nih_input["funding_opportunity_pool"] = [
+            {
+                "brief_id": "nih-r21-2026-nhlbi",
+                "funder": "NIH",
+                "program_family": "NHLBI R21",
+                "project_types": ["exploratory_developmental"],
+            }
+        ]
+
+        nsfc_profile = select_project_profile(nsfc_input)["recommended_project_profile"]
+        nih_profile = select_project_profile(nih_input)["recommended_project_profile"]
+        nsfc_policy = nsfc_profile["grant_family_grammar"]["governance_policy"]
+        nih_policy = nih_profile["grant_family_grammar"]["governance_policy"]
+
+        self.assertEqual(nsfc_policy["default_tranche"], "direction_screening_to_argument_closure")
+        self.assertEqual(nih_policy["default_tranche"], "aims_significance_innovation_loop")
+        self.assertEqual(nsfc_policy["preferred_stop_target"], "fit_alignment_locked_before_outline")
+        self.assertEqual(
+            nih_policy["preferred_stop_target"],
+            "ready_for_submission_after_significance_innovation_lock",
+        )
+        self.assertEqual(nsfc_policy["rollback_bias"]["default_rollback_stage"], "argument_building")
+        self.assertEqual(nih_policy["rollback_bias"]["default_rollback_stage"], "fit_alignment")
+        self.assertGreater(
+            nsfc_policy["quality_bar"]["minimum_score"],
+            nih_policy["quality_bar"]["minimum_score"],
         )

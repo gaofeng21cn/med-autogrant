@@ -200,6 +200,37 @@ class SchemaRegistryTest(unittest.TestCase):
             "common.schema.json#/$defs/projectProfileFamilyGrammarTrace",
         )
 
+    def test_common_schema_supports_structured_family_governance_policy(self) -> None:
+        payload = json.loads((SCHEMA_ROOT / "common.schema.json").read_text(encoding="utf-8"))
+        defs = payload["$defs"]
+
+        self.assertIn("projectProfileFamilyGovernancePolicy", defs)
+        governance_policy = defs["projectProfileFamilyGovernancePolicy"]
+        self.assertEqual(
+            governance_policy["required"],
+            [
+                "default_tranche",
+                "preferred_stop_target",
+                "quality_bar",
+                "rollback_bias",
+                "evidence_escalation_policy",
+            ],
+        )
+
+        family_trace = defs["projectProfileFamilyGrammarTrace"]
+        self.assertIn("governance_policy", family_trace["required"])
+        self.assertEqual(
+            family_trace["properties"]["governance_policy"]["$ref"],
+            "#/$defs/projectProfileFamilyGovernancePolicy",
+        )
+
+        family_grammar = defs["projectProfileGrantFamilyGrammar"]
+        self.assertIn("governance_policy", family_grammar["required"])
+        self.assertEqual(
+            family_grammar["properties"]["governance_policy"]["$ref"],
+            "#/$defs/projectProfileFamilyGovernancePolicy",
+        )
+
     def test_product_surface_schemas_require_family_orchestration_companion(self) -> None:
         schema_files = [
             "grant-progress.schema.json",

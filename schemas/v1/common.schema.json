@@ -575,6 +575,100 @@
         }
       }
     },
+    "projectProfileFamilyGovernanceQualityBar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_score",
+        "blocker_policy",
+        "required_signal_coverage"
+      ],
+      "properties": {
+        "minimum_score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "blocker_policy": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "required_signal_coverage": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "projectProfileFamilyGovernanceRollbackBias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_rollback_stage",
+        "trigger_mode"
+      ],
+      "properties": {
+        "default_rollback_stage": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "trigger_mode": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "projectProfileFamilyGovernanceEvidenceEscalationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trigger",
+        "escalation_action",
+        "required_evidence_types"
+      ],
+      "properties": {
+        "trigger": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "escalation_action": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "required_evidence_types": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "projectProfileFamilyGovernancePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_tranche",
+        "preferred_stop_target",
+        "quality_bar",
+        "rollback_bias",
+        "evidence_escalation_policy"
+      ],
+      "properties": {
+        "default_tranche": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "preferred_stop_target": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "quality_bar": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceQualityBar"
+        },
+        "rollback_bias": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceRollbackBias"
+        },
+        "evidence_escalation_policy": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceEvidenceEscalationPolicy"
+        }
+      }
+    },
     "projectProfileFamilyGrammarTrace": {
       "type": "object",
       "additionalProperties": false,
@@ -586,6 +680,7 @@
         "template_strategy",
         "review_grammar",
         "evidence_policy",
+        "governance_policy",
         "family_compatibility_hooks",
         "governance_entry_points"
       ],
@@ -649,6 +744,9 @@
               "$ref": "#/$defs/nonEmptyString"
             }
           }
+        },
+        "governance_policy": {
+          "$ref": "#/$defs/projectProfileFamilyGovernancePolicy"
         },
         "family_compatibility_hooks": {
           "type": "array",
@@ -673,6 +771,7 @@
         "template_strategy",
         "review_grammar",
         "evidence_policy",
+        "governance_policy",
         "family_compatibility_hooks",
         "governance_entry_points"
       ],
@@ -736,6 +835,9 @@
               "$ref": "#/$defs/nonEmptyString"
             }
           }
+        },
+        "governance_policy": {
+          "$ref": "#/$defs/projectProfileFamilyGovernancePolicy"
         },
         "family_compatibility_hooks": {
           "type": "array",

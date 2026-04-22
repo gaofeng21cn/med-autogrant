@@ -163,6 +163,31 @@
       "evidence_policy": {
         "policy_id": "significance_and_innovation_claims_require_direct_grounding"
       },
+      "governance_policy": {
+        "default_tranche": "aims_significance_innovation_loop",
+        "preferred_stop_target": "ready_for_submission_after_significance_innovation_lock",
+        "quality_bar": {
+          "minimum_score": 78,
+          "blocker_policy": "critical_blockers_must_close",
+          "required_signal_coverage": [
+            "significance",
+            "innovation",
+            "approach_feasibility"
+          ]
+        },
+        "rollback_bias": {
+          "default_rollback_stage": "fit_alignment",
+          "trigger_mode": "innovation_gap_sensitive"
+        },
+        "evidence_escalation_policy": {
+          "trigger": "significance_or_innovation_claim_unbounded",
+          "escalation_action": "tighten_aim_scope_and_add_translational_anchor",
+          "required_evidence_types": [
+            "publication",
+            "preliminary_result"
+          ]
+        }
+      },
       "family_compatibility_hooks": [
         {
           "rule_id": "rule.funder",
@@ -211,6 +236,31 @@
       },
       "evidence_policy": {
         "policy_id": "significance_and_innovation_claims_require_direct_grounding"
+      },
+      "governance_policy": {
+        "default_tranche": "aims_significance_innovation_loop",
+        "preferred_stop_target": "ready_for_submission_after_significance_innovation_lock",
+        "quality_bar": {
+          "minimum_score": 78,
+          "blocker_policy": "critical_blockers_must_close",
+          "required_signal_coverage": [
+            "significance",
+            "innovation",
+            "approach_feasibility"
+          ]
+        },
+        "rollback_bias": {
+          "default_rollback_stage": "fit_alignment",
+          "trigger_mode": "innovation_gap_sensitive"
+        },
+        "evidence_escalation_policy": {
+          "trigger": "significance_or_innovation_claim_unbounded",
+          "escalation_action": "tighten_aim_scope_and_add_translational_anchor",
+          "required_evidence_types": [
+            "publication",
+            "preliminary_result"
+          ]
+        }
       },
       "family_compatibility_hooks": [
         {

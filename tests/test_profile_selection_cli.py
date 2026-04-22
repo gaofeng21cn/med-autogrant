@@ -82,6 +82,10 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
         self.assertEqual(payload["project_profile_selection"]["recommended_project_profile"]["preset_id"], "nsfc_general_medical_v1")
         self.assertEqual(payload["project_profile_selection"]["recommended_funding_opportunity"]["brief_id"], "nsfc-2026-general")
         self.assertEqual(
+            payload["project_profile_selection"]["recommended_project_profile"]["grant_family_grammar"]["governance_policy"]["default_tranche"],
+            "direction_screening_to_argument_closure",
+        )
+        self.assertEqual(
             payload["project_profile_selection"]["selection_summary"]["evaluated_profile_preset_count"],
             2,
         )
@@ -104,6 +108,10 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
         self.assertEqual(
             payload["project_profile_selection"]["recommended_project_profile"]["grant_family_grammar"]["family_id"],
             "nih_r21_translational_family_v1",
+        )
+        self.assertEqual(
+            payload["project_profile_selection"]["recommended_project_profile"]["grant_family_grammar"]["governance_policy"]["preferred_stop_target"],
+            "ready_for_submission_after_significance_innovation_lock",
         )
         self.assertEqual(
             payload["project_profile_selection"]["selection_summary"]["evaluated_profile_preset_count"],
