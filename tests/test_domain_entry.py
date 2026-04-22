@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry  # noqa: E402
+from med_autogrant.domain_entry_contract import build_domain_entry_contract  # noqa: E402
 from med_autogrant.family_shared_release import inspect_current_repo_family_shared_alignment  # noqa: E402
 from med_autogrant.product_entry import MedAutoGrantProductEntry  # noqa: E402
 from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
@@ -323,6 +324,40 @@ class DomainEntryDispatchTest(unittest.TestCase):
                     "input_path": str(CRITIQUE_EXAMPLE_PATH),
                 }
             )
+
+
+class DomainEntryContractSurfaceTest(unittest.TestCase):
+    def test_domain_entry_contract_exports_mag_domain_agent_entry_spec_v1(self) -> None:
+        contract = build_domain_entry_contract()
+        self.assertIsInstance(contract.get("domain_agent_entry_spec"), dict)
+        domain_agent_entry_spec = contract["domain_agent_entry_spec"]
+
+        self.assertEqual(domain_agent_entry_spec["surface_kind"], "domain_agent_entry_spec")
+        self.assertEqual(domain_agent_entry_spec["agent_id"], "mag")
+        self.assertEqual(domain_agent_entry_spec["title"], "Med Auto Grant Domain Agent")
+        self.assertEqual(
+            domain_agent_entry_spec["description"],
+            "Grant authoring domain truth owner surface for Med Auto Grant.",
+        )
+        self.assertEqual(domain_agent_entry_spec["default_engine"], "codex")
+        self.assertEqual(domain_agent_entry_spec["workspace_requirement"], "required")
+        self.assertEqual(
+            domain_agent_entry_spec["locator_schema"],
+            {
+                "required_fields": ["input_path"],
+                "optional_fields": ["workspace_id", "grant_run_id", "draft_id"],
+                "workspace_field": "input_path",
+                "workspace_kind": "nsfc_workspace",
+                "workspace_id_field": "workspace_id",
+                "run_id_field": "grant_run_id",
+                "draft_id_field": "draft_id",
+            },
+        )
+        self.assertEqual(domain_agent_entry_spec["codex_entry_strategy"], "domain_agent_entry")
+        self.assertEqual(domain_agent_entry_spec["artifact_conventions"], "grant_proposal_package")
+        self.assertEqual(domain_agent_entry_spec["progress_conventions"], "grant_workloop_narration")
+        self.assertEqual(domain_agent_entry_spec["entry_command"], "product-frontdesk")
+        self.assertEqual(domain_agent_entry_spec["manifest_command"], "product-entry-manifest")
 
 
 class DomainEntryFreshProofTest(unittest.TestCase):

@@ -1936,6 +1936,31 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertTrue(manifest["skill_catalog"]["command_contracts"])
         self.assertEqual(manifest["domain_entry_contract"], build_domain_entry_contract())
         self.assertEqual(
+            manifest["domain_entry_contract"]["domain_agent_entry_spec"],
+            {
+                "surface_kind": "domain_agent_entry_spec",
+                "agent_id": "mag",
+                "title": "Med Auto Grant Domain Agent",
+                "description": "Grant authoring domain truth owner surface for Med Auto Grant.",
+                "default_engine": "codex",
+                "workspace_requirement": "required",
+                "locator_schema": {
+                    "required_fields": ["input_path"],
+                    "optional_fields": ["workspace_id", "grant_run_id", "draft_id"],
+                    "workspace_field": "input_path",
+                    "workspace_kind": "nsfc_workspace",
+                    "workspace_id_field": "workspace_id",
+                    "run_id_field": "grant_run_id",
+                    "draft_id_field": "draft_id",
+                },
+                "codex_entry_strategy": "domain_agent_entry",
+                "artifact_conventions": "grant_proposal_package",
+                "progress_conventions": "grant_workloop_narration",
+                "entry_command": "product-frontdesk",
+                "manifest_command": "product-entry-manifest",
+            },
+        )
+        self.assertEqual(
             manifest["gateway_interaction_contract"],
             build_gateway_interaction_contract(),
         )
@@ -2662,6 +2687,18 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(frontdesk["product_entry_manifest"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
         self.assertEqual(frontdesk["product_entry_manifest"]["manifest_version"], 2)
         self.assertEqual(frontdesk["domain_entry_contract"], build_domain_entry_contract())
+        self.assertEqual(
+            frontdesk["domain_entry_contract"]["domain_agent_entry_spec"]["codex_entry_strategy"],
+            "domain_agent_entry",
+        )
+        self.assertEqual(
+            frontdesk["domain_entry_contract"]["domain_agent_entry_spec"]["entry_command"],
+            "product-frontdesk",
+        )
+        self.assertEqual(
+            frontdesk["domain_entry_contract"]["domain_agent_entry_spec"]["manifest_command"],
+            "product-entry-manifest",
+        )
         self.assertEqual(
             frontdesk["gateway_interaction_contract"],
             build_gateway_interaction_contract(),
