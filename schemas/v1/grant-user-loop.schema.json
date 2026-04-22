@@ -164,7 +164,11 @@
         "mainline_snapshot",
         "grant_direct_entry",
         "next_action",
-        "user_loop"
+        "user_loop",
+        "session_continuity",
+        "progress_projection",
+        "artifact_inventory",
+        "runtime_control"
       ],
       "properties": {
         "entry_version": {
@@ -194,6 +198,18 @@
         },
         "user_loop": {
           "$ref": "#/$defs/userLoop"
+        },
+        "session_continuity": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/sessionContinuitySurface"
+        },
+        "progress_projection": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/progressProjectionSurface"
+        },
+        "artifact_inventory": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/artifactInventorySurface"
+        },
+        "runtime_control": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/runtimeControlSurface"
         }
       }
     }

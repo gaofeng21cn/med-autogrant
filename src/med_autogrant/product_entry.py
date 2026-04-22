@@ -570,15 +570,16 @@ class MedAutoGrantProductEntry:
         task_intent: str,
         funding_call: str | None = None,
     ) -> dict[str, Any]:
+        resolved_input_path = Path(input_path).expanduser().resolve()
         resolved_task_intent = _require_nonempty_string(task_intent, field_name="task_intent")
         direct_payload = self.build(
-            input_path=input_path,
+            input_path=resolved_input_path,
             entry_mode="direct",
             task_intent=resolved_task_intent,
             funding_call=funding_call,
         )
         opl_handoff_payload = self.build(
-            input_path=input_path,
+            input_path=resolved_input_path,
             entry_mode="opl-handoff",
             task_intent=resolved_task_intent,
             funding_call=funding_call,
@@ -603,7 +604,7 @@ class MedAutoGrantProductEntry:
             expected_entry_mode="opl-handoff",
             context="grant_direct_entry.opl_handoff_entry",
         )
-        cockpit_payload = self.read_grant_cockpit(input_path=input_path)
+        cockpit_payload = self.read_grant_cockpit(input_path=resolved_input_path)
 
         _require_matching_top_level_identity(
             direct_payload,
@@ -630,6 +631,74 @@ class MedAutoGrantProductEntry:
             cockpit,
             "workspace_overview",
             context="grant_direct_entry.grant_cockpit",
+        )
+        command_catalog = _build_product_command_catalog(resolved_input_path)
+        workspace_summary = self._domain_entry.dispatch(
+            {
+                "command": "summarize-workspace",
+                "input_path": str(resolved_input_path),
+            }
+        )
+        mainline_payload = read_mainline_status()
+        current_line = _require_mapping(
+            mainline_payload,
+            "current_line",
+            context="mainline_status",
+        )
+        runtime_summary = {
+            "current_owner_line": _require_nonempty_string_from_mapping(
+                current_line,
+                "current_owner_line",
+                context="mainline_status.current_line",
+            ),
+            "runtime_owner": "upstream_hermes_agent",
+        }
+        managed_runtime_contract = _build_managed_runtime_contract()
+        grant_run_id = _require_nonempty_string_from_mapping(
+            direct_payload,
+            "grant_run_id",
+            context="grant_direct_entry",
+        )
+        workspace_id = _require_nonempty_string_from_mapping(
+            direct_payload,
+            "workspace_id",
+            context="grant_direct_entry",
+        )
+        lifecycle_stage = _require_nonempty_string_from_mapping(
+            direct_payload,
+            "lifecycle_stage",
+            context="grant_direct_entry",
+        )
+        continuity_surfaces = _build_runtime_continuity_surfaces(
+            progress_projection=progress_projection,
+            workspace_summary=workspace_summary,
+            runtime_summary=runtime_summary,
+            managed_runtime_contract=managed_runtime_contract,
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+            input_path=str(resolved_input_path),
+            grant_progress_command=command_catalog["grant_progress"],
+            summarize_workspace_command=command_catalog["summarize_workspace"],
+            stage_route_report_command=command_catalog["stage_route_report"],
+            grant_user_loop_command=public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(resolved_input_path),
+                "--task-intent",
+                resolved_task_intent,
+                "--format",
+                "json",
+            ),
+            grant_direct_entry_command=public_cli_command(
+                "grant-direct-entry",
+                "--input",
+                str(resolved_input_path),
+                "--task-intent",
+                resolved_task_intent,
+                "--format",
+                "json",
+            ),
         )
         direct_executor_routing_contract = _require_mapping(
             direct_entry,
@@ -719,6 +788,10 @@ class MedAutoGrantProductEntry:
                 _require_mapping(cockpit_payload, "grant_evidence_grounding", context="grant-cockpit")
             ),
             "grant_direct_entry": grant_direct_entry,
+            "session_continuity": dict(continuity_surfaces["session_continuity"]),
+            "progress_projection": dict(continuity_surfaces["progress_projection"]),
+            "artifact_inventory": dict(continuity_surfaces["artifact_inventory"]),
+            "runtime_control": dict(continuity_surfaces["runtime_control"]),
             "family_orchestration": family_orchestration,
         }
         _validate_grant_direct_entry_contract(
@@ -789,6 +862,30 @@ class MedAutoGrantProductEntry:
             "next_action": next_action,
             "user_loop": user_loop,
         }
+        session_continuity = _require_mapping(
+            direct_entry_payload,
+            "session_continuity",
+            context="grant_user_loop.grant_direct_entry",
+        )
+        progress_surface = _require_mapping(
+            direct_entry_payload,
+            "progress_projection",
+            context="grant_user_loop.grant_direct_entry",
+        )
+        artifact_inventory = _require_mapping(
+            direct_entry_payload,
+            "artifact_inventory",
+            context="grant_user_loop.grant_direct_entry",
+        )
+        runtime_control = _require_mapping(
+            direct_entry_payload,
+            "runtime_control",
+            context="grant_user_loop.grant_direct_entry",
+        )
+        grant_user_loop["session_continuity"] = dict(session_continuity)
+        grant_user_loop["progress_projection"] = dict(progress_surface)
+        grant_user_loop["artifact_inventory"] = dict(artifact_inventory)
+        grant_user_loop["runtime_control"] = dict(runtime_control)
         current_stage_route = _require_mapping(
             grant_direct_entry,
             "current_stage_route",
@@ -1775,6 +1872,26 @@ class MedAutoGrantProductEntry:
                 "grant_authoring_readiness": dict(_require_mapping(
                     manifest,
                     "grant_authoring_readiness",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "session_continuity": dict(_require_mapping(
+                    manifest,
+                    "session_continuity",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "progress_projection": dict(_require_mapping(
+                    manifest,
+                    "progress_projection",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "artifact_inventory": dict(_require_mapping(
+                    manifest,
+                    "artifact_inventory",
+                    context="product_frontdesk.product_entry_manifest",
+                )),
+                "runtime_control": dict(_require_mapping(
+                    manifest,
+                    "runtime_control",
                     context="product_frontdesk.product_entry_manifest",
                 )),
             },
@@ -2767,6 +2884,37 @@ def _validate_grant_direct_entry_contract(
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
         )
+    _validate_runtime_continuity_alignment(
+        session_continuity=_require_mapping(
+            payload,
+            "session_continuity",
+            context="grant_direct_entry",
+        ),
+        progress_surface=_require_mapping(
+            payload,
+            "progress_projection",
+            context="grant_direct_entry",
+        ),
+        artifact_inventory=_require_mapping(
+            payload,
+            "artifact_inventory",
+            context="grant_direct_entry",
+        ),
+        runtime_control=_require_mapping(
+            payload,
+            "runtime_control",
+            context="grant_direct_entry",
+        ),
+        projection_truth=_require_mapping(
+            grant_direct_entry,
+            "progress_projection",
+            context="grant_direct_entry",
+        ),
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+        context_prefix="grant_direct_entry",
+    )
 
 
 def _build_mainline_snapshot(mainline_status: Mapping[str, Any]) -> dict[str, Any]:
@@ -3174,6 +3322,37 @@ def _validate_grant_user_loop_contract(
         "recommended_executor_route",
         context="grant_user_loop.grant_direct_entry",
     )
+    _validate_runtime_continuity_alignment(
+        session_continuity=_require_mapping(
+            grant_user_loop,
+            "session_continuity",
+            context="grant_user_loop.session_continuity",
+        ),
+        progress_surface=_require_mapping(
+            grant_user_loop,
+            "progress_projection",
+            context="grant_user_loop.progress_projection",
+        ),
+        artifact_inventory=_require_mapping(
+            grant_user_loop,
+            "artifact_inventory",
+            context="grant_user_loop.artifact_inventory",
+        ),
+        runtime_control=_require_mapping(
+            grant_user_loop,
+            "runtime_control",
+            context="grant_user_loop.runtime_control",
+        ),
+        projection_truth=_require_mapping(
+            grant_direct_entry,
+            "progress_projection",
+            context="grant_user_loop.grant_direct_entry",
+        ),
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+        context_prefix="grant_user_loop",
+    )
     if next_action.get("route_id") != recommended_executor_route.get("route_id"):
         raise WorkspaceStateError(
             "grant_user_loop.next_action.route_id 与 grant_direct_entry.recommended_executor_route.route_id 不一致。",
@@ -3261,6 +3440,125 @@ def _validate_product_frontdesk_contract(
         workspace_id=workspace_id,
         lifecycle_stage=lifecycle_stage,
     )
+    product_frontdesk = _require_mapping(
+        payload,
+        "product_frontdesk",
+        context="product_frontdesk",
+    )
+    manifest = _require_mapping(
+        product_frontdesk,
+        "product_entry_manifest",
+        context="product_frontdesk.product_entry_manifest",
+    )
+    for surface_key in ("session_continuity", "progress_projection", "artifact_inventory", "runtime_control"):
+        if product_frontdesk.get(surface_key) != manifest.get(surface_key):
+            raise WorkspaceStateError(
+                f"product_frontdesk.{surface_key} 与 product_entry_manifest.{surface_key} 不一致。",
+                grant_run_id=grant_run_id,
+                workspace_id=workspace_id,
+                lifecycle_stage=lifecycle_stage,
+            )
+
+
+def _validate_runtime_continuity_alignment(
+    *,
+    session_continuity: Mapping[str, Any],
+    progress_surface: Mapping[str, Any],
+    artifact_inventory: Mapping[str, Any],
+    runtime_control: Mapping[str, Any],
+    projection_truth: Mapping[str, Any],
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+    context_prefix: str,
+) -> None:
+    if progress_surface.get("projection") != projection_truth:
+        raise WorkspaceStateError(
+            f"{context_prefix}.progress_projection 与 continuity progress surface 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if (
+        _require_nonempty_string_from_mapping(
+            session_continuity,
+            "session_id",
+            context=f"{context_prefix}.session_continuity",
+        )
+        != grant_run_id
+    ):
+        raise WorkspaceStateError(
+            f"{context_prefix}.session_continuity.session_id 与 grant_run_id 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if (
+        _require_nonempty_string_from_mapping(
+            progress_surface,
+            "grant_run_id",
+            context=f"{context_prefix}.progress_projection",
+        )
+        != grant_run_id
+    ):
+        raise WorkspaceStateError(
+            f"{context_prefix}.progress_projection.grant_run_id 与 grant_run_id 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    if (
+        _require_nonempty_string_from_mapping(
+            artifact_inventory,
+            "grant_run_id",
+            context=f"{context_prefix}.artifact_inventory",
+        )
+        != grant_run_id
+    ):
+        raise WorkspaceStateError(
+            f"{context_prefix}.artifact_inventory.grant_run_id 与 grant_run_id 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    runtime_control_session_locator = _require_mapping(
+        runtime_control,
+        "session_locator",
+        context=f"{context_prefix}.runtime_control",
+    )
+    if (
+        _require_nonempty_string_from_mapping(
+            runtime_control_session_locator,
+            "locator_value",
+            context=f"{context_prefix}.runtime_control.session_locator",
+        )
+        != grant_run_id
+    ):
+        raise WorkspaceStateError(
+            f"{context_prefix}.runtime_control.session_locator.locator_value 与 grant_run_id 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
+    runtime_control_restore_point = _require_mapping(
+        runtime_control,
+        "restore_point",
+        context=f"{context_prefix}.runtime_control",
+    )
+    if (
+        _require_nonempty_string_from_mapping(
+            runtime_control_restore_point,
+            "session_id",
+            context=f"{context_prefix}.runtime_control.restore_point",
+        )
+        != grant_run_id
+    ):
+        raise WorkspaceStateError(
+            f"{context_prefix}.runtime_control.restore_point.session_id 与 grant_run_id 不一致。",
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+        )
 
 
 def _schema_payload_without_contract_bundle(
@@ -3284,6 +3582,82 @@ def _schema_payload_without_contract_bundle(
         surface["product_entry_manifest"] = normalized_manifest
     normalized_payload[surface_key] = surface
     return normalized_payload
+
+
+def _build_runtime_continuity_surfaces(
+    *,
+    progress_projection: Mapping[str, Any],
+    workspace_summary: Mapping[str, Any],
+    runtime_summary: Mapping[str, Any],
+    managed_runtime_contract: Mapping[str, Any],
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+    input_path: str,
+    grant_progress_command: str,
+    summarize_workspace_command: str,
+    stage_route_report_command: str,
+    grant_user_loop_command: str,
+    grant_direct_entry_command: str,
+) -> dict[str, dict[str, Any]]:
+    session_continuity = _build_session_continuity_surface(
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+        input_path=input_path,
+    )
+    progress_surface = _build_progress_projection_surface(
+        projection=dict(progress_projection),
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+        input_path=input_path,
+        inspect_progress_command=grant_progress_command,
+        summarize_workspace_command=summarize_workspace_command,
+        stage_route_report_command=stage_route_report_command,
+    )
+    artifact_inventory = _build_artifact_inventory_surface(
+        workspace_summary=workspace_summary,
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+        input_path=input_path,
+    )
+    runtime_control = _build_runtime_control_surface(
+        runtime_summary=runtime_summary,
+        managed_runtime_contract=managed_runtime_contract,
+        grant_run_id=grant_run_id,
+        workspace_id=workspace_id,
+        lifecycle_stage=lifecycle_stage,
+        journal_path=_require_nonempty_string_from_mapping(
+            session_continuity,
+            "journal_path",
+            context="session_continuity",
+        ),
+        runtime_resume_command=_require_nonempty_string_from_mapping(
+            _require_mapping(
+                _require_mapping(
+                    session_continuity,
+                    "runtime_entries",
+                    context="session_continuity",
+                ),
+                "runtime_resume",
+                context="session_continuity.runtime_entries",
+            ),
+            "command",
+            context="session_continuity.runtime_entries.runtime_resume",
+        ),
+        grant_progress_command=grant_progress_command,
+        summarize_workspace_command=summarize_workspace_command,
+        grant_user_loop_command=grant_user_loop_command,
+        grant_direct_entry_command=grant_direct_entry_command,
+    )
+    return {
+        "session_continuity": session_continuity,
+        "progress_projection": progress_surface,
+        "artifact_inventory": artifact_inventory,
+        "runtime_control": runtime_control,
+    }
 
 
 def _build_session_continuity_surface(

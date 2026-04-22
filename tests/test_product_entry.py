@@ -1234,6 +1234,29 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
         self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
+        self.assertEqual(payload["session_continuity"]["surface_kind"], "session_continuity")
+        self.assertEqual(payload["session_continuity"]["session_id"], payload["grant_run_id"])
+        self.assertEqual(payload["progress_projection"]["surface_kind"], "progress_projection")
+        self.assertEqual(
+            payload["progress_projection"]["projection"]["projection_kind"],
+            "grant_progress",
+        )
+        self.assertEqual(payload["artifact_inventory"]["surface_kind"], "artifact_inventory")
+        runtime_control = payload["runtime_control"]
+        self.assertEqual(runtime_control["surface_kind"], "runtime_control")
+        self.assertEqual(runtime_control["runtime_owner"], "upstream_hermes_agent")
+        self.assertEqual(runtime_control["domain_owner"], "med-autogrant")
+        self.assertEqual(runtime_control["executor_owner"], "med-autogrant")
+        self.assertEqual(runtime_control["session_locator"]["locator_value"], payload["grant_run_id"])
+        self.assertEqual(runtime_control["restore_point"]["lifecycle_stage"], payload["lifecycle_stage"])
+        self.assertIn(
+            "--task-intent tighten-grant-mainline",
+            runtime_control["approval_control_surface"]["command"],
+        )
+        self.assertIn(
+            "--task-intent tighten-grant-mainline",
+            runtime_control["direct_entry"]["command"],
+        )
         self.assertEqual(
             payload["grant_direct_entry"],
             {
@@ -1756,6 +1779,46 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                 "--format",
                 "json",
             ),
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["session_continuity"]["surface_kind"],
+            "session_continuity",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["session_continuity"]["session_id"],
+            payload["grant_run_id"],
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["progress_projection"]["surface_kind"],
+            "progress_projection",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["artifact_inventory"]["surface_kind"],
+            "artifact_inventory",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["runtime_control"]["surface_kind"],
+            "runtime_control",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["runtime_control"]["runtime_owner"],
+            "upstream_hermes_agent",
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["runtime_control"]["approval_control_surface"]["command"],
+            public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                "--task-intent",
+                "tighten-grant-mainline",
+                "--format",
+                "json",
+            ),
+        )
+        self.assertEqual(
+            payload["grant_user_loop"]["runtime_control"]["direct_entry"]["command"],
+            payload["grant_user_loop"]["user_loop"]["open_grant_direct_entry"],
         )
 
     def test_product_preflight_uses_shared_program_companion_builder(self) -> None:
@@ -2734,6 +2797,26 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(
             frontdesk["grant_authoring_readiness"],
             frontdesk["product_entry_manifest"]["grant_authoring_readiness"],
+        )
+        self.assertEqual(frontdesk["session_continuity"]["surface_kind"], "session_continuity")
+        self.assertEqual(frontdesk["progress_projection"]["surface_kind"], "progress_projection")
+        self.assertEqual(frontdesk["artifact_inventory"]["surface_kind"], "artifact_inventory")
+        self.assertEqual(frontdesk["runtime_control"]["surface_kind"], "runtime_control")
+        self.assertEqual(
+            frontdesk["session_continuity"],
+            frontdesk["product_entry_manifest"]["session_continuity"],
+        )
+        self.assertEqual(
+            frontdesk["progress_projection"],
+            frontdesk["product_entry_manifest"]["progress_projection"],
+        )
+        self.assertEqual(
+            frontdesk["artifact_inventory"],
+            frontdesk["product_entry_manifest"]["artifact_inventory"],
+        )
+        self.assertEqual(
+            frontdesk["runtime_control"],
+            frontdesk["product_entry_manifest"]["runtime_control"],
         )
         self.assertEqual(frontdesk["product_entry_quickstart"]["recommended_step_id"], "open_frontdesk")
         self.assertEqual(frontdesk["product_entry_quickstart"]["steps"][2]["step_id"], "inspect_progress")

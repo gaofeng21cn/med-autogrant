@@ -88,6 +88,10 @@
     "grant_intake_audit",
     "grant_evidence_grounding",
     "grant_direct_entry",
+    "session_continuity",
+    "progress_projection",
+    "artifact_inventory",
+    "runtime_control",
     "family_orchestration"
   ],
   "properties": {
@@ -124,6 +128,18 @@
     },
     "grant_direct_entry": {
       "$ref": "#/$defs/grantDirectEntry"
+    },
+    "session_continuity": {
+      "$ref": "product-entry-manifest.schema.json#/$defs/sessionContinuitySurface"
+    },
+    "progress_projection": {
+      "$ref": "product-entry-manifest.schema.json#/$defs/progressProjectionSurface"
+    },
+    "artifact_inventory": {
+      "$ref": "product-entry-manifest.schema.json#/$defs/artifactInventorySurface"
+    },
+    "runtime_control": {
+      "$ref": "product-entry-manifest.schema.json#/$defs/runtimeControlSurface"
     },
     "family_orchestration": {
       "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"

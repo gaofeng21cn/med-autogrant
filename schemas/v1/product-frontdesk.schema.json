@@ -85,6 +85,10 @@
         "product_entry_readiness",
         "grant_authoring_readiness",
         "product_entry_quickstart",
+        "session_continuity",
+        "progress_projection",
+        "artifact_inventory",
+        "runtime_control",
         "family_orchestration",
         "product_entry_manifest",
         "entry_surfaces",
@@ -136,6 +140,18 @@
         },
         "product_entry_quickstart": {
           "$ref": "product-entry-manifest.schema.json#/$defs/productEntryQuickstart"
+        },
+        "session_continuity": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/sessionContinuitySurface"
+        },
+        "progress_projection": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/progressProjectionSurface"
+        },
+        "artifact_inventory": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/artifactInventorySurface"
+        },
+        "runtime_control": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/runtimeControlSurface"
         },
         "family_orchestration": {
           "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
