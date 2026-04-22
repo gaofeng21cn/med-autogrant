@@ -119,6 +119,8 @@
             "summarize-workspace",
             "grant-intake-audit",
             "grant-evidence-grounding",
+            "grant-quality-scorecard",
+            "grant-quality-diff",
             "next-step",
             "critique-summary",
             "stage-route-report"
@@ -356,6 +358,7 @@
             "execute-critique-pass",
             "execute-critique-revision-loop",
             "execute-authoring-mainline-loop",
+            "execute-grant-autonomy-controller",
             "execute-revision-pass",
             "execute-freeze-pass",
             "build-final-package",
@@ -368,7 +371,7 @@
           "items": {
             "$ref": "#/$defs/domainEntryCommandContract"
           },
-          "minItems": 31
+          "minItems": 32
         }
       }
     },

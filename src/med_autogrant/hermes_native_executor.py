@@ -219,15 +219,21 @@ def _load_hermes_config() -> dict[str, Any]:
 
 
 def _parse_reasoning_effort(value: str) -> dict[str, Any]:
+    text = str(value or "").strip()
     try:
         from hermes_constants import parse_reasoning_effort
     except ModuleNotFoundError:
-        text = str(value or "").strip()
         return {
             "enabled": bool(text),
             "effort": text,
         }
-    return parse_reasoning_effort(value)
+    parsed = parse_reasoning_effort(value)
+    if isinstance(parsed, dict) and parsed:
+        return parsed
+    return {
+        "enabled": bool(text),
+        "effort": text,
+    }
 
 
 def _load_ai_agent_factory() -> AgentFactory:

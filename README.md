@@ -38,6 +38,9 @@ You can start with prompts like:
 - Narrowing several possible directions into a proposal line worth writing.
 - Turning prior work, pilot data, and applicant materials into a stronger title, abstract, aims, and research plan.
 - Keeping revision rounds, reviewer-style critique, and version changes traceable inside one workspace.
+- Comparing proposal quality across versions through structured scorecards, issue closure, and evidence-gap reports.
+- Running longer controller-led authoring cycles that can continue, roll back, or stop with a blocker report.
+- Separating common medical grant grammar from funder-specific family profiles, so NSFC and non-NSFC programs share one process shape.
 - Preparing a more complete local package before final human review and portal submission.
 
 ## How It Works
@@ -70,6 +73,7 @@ You can start with prompts like:
 - Then read [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json). That is the fastest path to the active product-entry shell, schema-backed surfaces, and current mainline pointer.
 - Treat [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the public and technical truth set before changing routes or wording.
 - The current formal-entry matrix is `CLI`, `MCP`, and `controller`. `CLI` / `MedAutoGrantDomainEntry` are the agent-entry surfaces; `product entry/frontdesk/direct-entry/user-loop` are the lightweight direct-entry and projection shell.
+- Current machine-readable governance surfaces include `workspace quality-scorecard`, `workspace quality-diff`, and `pass autonomy-controller`.
 
 </details>
 

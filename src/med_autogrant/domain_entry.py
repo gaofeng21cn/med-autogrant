@@ -81,6 +81,11 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
         ("input_path", "output_dir"),
         ("max_cycles", "executor_kind"),
     ),
+    "execute-grant-autonomy-controller": DomainEntryCommandSpec(
+        "execute_grant_autonomy_controller",
+        ("input_path", "output_dir"),
+        ("executor_kind",),
+    ),
     "execute-revision-pass": DomainEntryCommandSpec("execute_revision_pass", ("input_path", "output_path")),
     "execute-freeze-pass": DomainEntryCommandSpec("execute_freeze_pass", ("input_path", "output_path")),
     "build-final-package": DomainEntryCommandSpec(

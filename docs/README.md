@@ -25,6 +25,9 @@ This guide is for readers who need the technical records, trace records, referen
 - Current controller-owned, read-only projections continue to include `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`, with schema-backed boundaries above the author-side line.
 - The current grouped public shell also exposes `product build-entry`, `product manifest`, `product frontdesk`, and `package submission-ready` as the public CLI-facing entry surface.
 - The current lightweight grant `product entry` shell is the active product-entry shell and internal domain/API catalog builder. Future hosted product work stays in `docs/plans/`.
+- Quality governance is now schema-backed through `workspace quality-scorecard` and `workspace quality-diff`.
+- Long-horizon autonomy is now exposed as `pass autonomy-controller`, with structured blocker and evidence-gap reporting.
+- Common grant grammar and funder-specific family profile rules are separated in `grant_family_registry.py`; NSFC, NIH R21, and a Wellcome placeholder now share the same registry shape.
 
 ## Technical Working Set
 
@@ -55,6 +58,7 @@ These files are the default public-facing entry surfaces and should stay mirrore
 - [Contracts Overview](../contracts/README.md)
 
 The current grant product-entry shell remains available as the domain/API catalog builder. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible for hosted caller / external caller consumption.
+The quality and autonomy schemas are tracked in [`schema-index.json`](../schemas/v1/schema-index.json) and in the current-program truth surface.
 
 ## Trace Records
 

@@ -25,6 +25,9 @@
 - 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`，并在作者侧主线之上保持 schema-backed 边界。
 - 当前 grouped public shell 也已经把 `product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready` 暴露成公开 CLI 入口面。
 - 当前轻量 grant `product entry` shell 就是现在的产品入口 shell 与内部 domain/API catalog builder；未来 hosted 产品形态统一留在 `docs/plans/`。
+- 质量治理已经通过 `workspace quality-scorecard` 与 `workspace quality-diff` 收成 schema-backed surface。
+- 长时间自治已经通过 `pass autonomy-controller` 暴露为正式入口，并输出结构化 blocker 与 evidence-gap report。
+- 通用 grant grammar 与 funder-specific family profile 规则已在 `grant_family_registry.py` 分层；NSFC、NIH R21 和 Wellcome placeholder 共用同一套 registry 形状。
 
 ## 技术工作集
 
@@ -55,6 +58,7 @@
 - [合同说明](../contracts/README.md)
 
 当前 grant product-entry shell 继续作为 domain/API catalog builder；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 继续暴露给 hosted caller / 外部 caller 使用。
+质量治理与自治 controller schema 已进入 [`schema-index.json`](../schemas/v1/schema-index.json) 和 current-program truth surface。
 
 ## 追溯记录
 

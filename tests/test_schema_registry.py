@@ -35,6 +35,10 @@ EXPECTED_SCHEMAS = {
     "nsfc-workspace.schema.json",
     "grant-intake-audit.schema.json",
     "grant-evidence-grounding.schema.json",
+    "grant-quality-scorecard.schema.json",
+    "grant-quality-diff.schema.json",
+    "grant-autonomy-controller-input.schema.json",
+    "grant-autonomy-controller-report.schema.json",
     "service-safe-domain-surface.schema.json",
     "pending-handoff-requirements.schema.json",
     "executor-routing-contract.schema.json",
@@ -144,6 +148,8 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["project_profile_selection"], "project-profile-selection.schema.json")
         self.assertEqual(names["critique_loop_report"], "critique-loop-report.schema.json")
         self.assertEqual(names["authoring_mainline_loop_report"], "authoring-mainline-loop-report.schema.json")
+        self.assertEqual(names["grant_autonomy_controller_input"], "grant-autonomy-controller-input.schema.json")
+        self.assertEqual(names["grant_autonomy_controller_report"], "grant-autonomy-controller-report.schema.json")
         self.assertEqual(names["grant_progress_projection"], "grant-progress.schema.json")
         self.assertEqual(names["grant_cockpit_projection"], "grant-cockpit.schema.json")
         self.assertEqual(names["grant_direct_entry_surface"], "grant-direct-entry.schema.json")

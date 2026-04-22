@@ -122,7 +122,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 ## 入口与执行
 
-- CLI 仍是唯一 formal entry：`workspace validate`、`workspace summarize`、`workspace next-step`、`workspace critique-summary`、`workspace route-report`、`mainline status`、`mainline phase`、`workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`，以及 `pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting`、`pass critique`、`pass revision`、`pass freeze`、`package artifact-bundle`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready`。
+- CLI 仍是唯一 formal entry：`workspace validate`、`workspace summarize`、`workspace intake-audit`、`workspace evidence-grounding`、`workspace quality-scorecard`、`workspace quality-diff`、`workspace next-step`、`workspace critique-summary`、`workspace route-report`、`mainline status`、`mainline phase`、`workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`，以及 `pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting`、`pass critique`、`pass critique-loop`、`pass mainline-loop`、`pass autonomy-controller`、`pass revision`、`pass freeze`、`package artifact-bundle`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready`。
 - `src/med_autogrant/domain_entry.py` 现在提供结构化 `MedAutoGrantDomainEntry`，把 CLI 与 future gateway caller 收口到同一条 service-safe command contract。
 - `src/med_autogrant/product_entry.py` 现在提供 `MedAutoGrantProductEntry`；`product build-entry` 通过 `MedAutoGrantDomainEntry` 复用已 landed 的 route / summary / runtime contract，统一生成 `direct` 与 `opl-handoff` 共用的 shared envelope，并显式导出 `executor_routing_contract`。
 - `MedAutoGrantProductEntry` 现在还提供 `workspace progress` 与 `workspace cockpit`：它们是 controller-owned、read-only 的 product projection，复用 `workspace summarize`、`workspace route-report`、`workspace critique-summary` 与 `product build-entry` contract 信息，并分别受 `schemas/v1/grant-progress.schema.json` 与 `schemas/v1/grant-cockpit.schema.json` 约束、在生成时 fail-closed，但故意不进入 `domain_entry_contract.supported_commands` 或 hosted contract bundle 的 command catalog。
@@ -144,6 +144,8 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `pass critique` 当前默认走 `Codex CLI` 的 `autonomous` 模式：具体由 `critique_executor.py -> run_codex_exec(...)` 调起 `codex exec`，默认 `model / reasoning` 都继承本机 Codex 默认（`inherit_local_codex_default`），只有显式环境变量覆盖才会传 override。
 - `execute-critique-revision-loop` 在现有 `execute-critique-pass` 与 `execute-revision-pass` 之上复用同一份 route truth；它不会改写单步 pass 语义，只负责多轮闭环调度、每轮产物落盘与 stop condition 汇总。
 - `execute-authoring-mainline-loop` 在 `determine_next_step(...)` 与单步 pass builder 之上进一步向上扩，把 rollback 到 `direction_screening / question_refinement / argument_building / fit_alignment` 的重建也纳入同一条自治调度线。
+- `grant-quality-scorecard` 与 `grant-quality-diff` 在 intake/evidence/critique truth 之上形成质量治理层，并把质量 gate 注入 `execute-authoring-mainline-loop` 的 route resolver，作为 stop / continue / rollback 的依据之一。
+- `execute-grant-autonomy-controller` 位于已有 discovery / selector / initializer / mainline loop / quality surface 之上，负责预算、轮次、blocker 队列、evidence gap 队列、rollback/reselection 决策记录与 fail-closed 报告，不替代下游单步 pass。
 - 同一条 `pass critique` 现在也支持显式 `executor_kind=hermes_native_proof`：这条 experimental lane 会通过 `hermes_native_executor.py -> read_hermes_agent_contract(...) -> run_agent.AIAgent.run_conversation(...)` 真实调用上游 Hermes full agent loop；它会显式读取本机 `~/.hermes/config.yaml` 的 model/provider/base_url/api_mode/reasoning_effort，并且只有在完成整轮 loop、拿到真实工具事件和合法 JSON 结果时才通过，否则 fail-closed。
 - `package hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 hosted contract catalog。
 - `package submission-ready` 继续复用 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链，但会额外对 mandatory sections、evidence gaps、representative outputs、active projects 与 freeze gate 做 fail-closed 审核，只在全部满足时写出本地 `submission_ready_package`；它不替代外部官网提交。
@@ -163,6 +165,8 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `schemas/v1/funding-landscape-discovery-input.schema.json` 与 `schemas/v1/funding-landscape-discovery.schema.json` 定义 funding discovery 输入/输出。
 - `schemas/v1/critique-loop-report.schema.json` 定义多轮 critique/revision loop 的报告面。
 - `schemas/v1/authoring-mainline-loop-report.schema.json` 定义跨 rollback 重建的 mainline loop 报告面。
+- `schemas/v1/grant-quality-scorecard.schema.json` 与 `schemas/v1/grant-quality-diff.schema.json` 定义质量治理与版本比较报告面。
+- `schemas/v1/grant-autonomy-controller-input.schema.json` 与 `schemas/v1/grant-autonomy-controller-report.schema.json` 定义长期自治 controller 的请求与 fail-closed 报告面。
 - `schemas/v1/service-safe-domain-surface.schema.json`、`schemas/v1/executor-routing-contract.schema.json`、`schemas/v1/product-entry.schema.json`、`schemas/v1/product-entry-manifest.schema.json`、`schemas/v1/product-frontdesk.schema.json`、`schemas/v1/grant-progress.schema.json`、`schemas/v1/grant-cockpit.schema.json`、`schemas/v1/grant-direct-entry.schema.json`、`schemas/v1/grant-user-loop.schema.json`、`schemas/v1/hosted-contract-bundle.schema.json` 与 `schemas/v1/submission-ready-package.schema.json` 定义当前 product entry / frontdoor discovery / landed route catalog / direct projection / direct-entry composition / direct user loop / hosted bundle / local submission-ready delivery / service-safe surface 的 schema-backed contract。
 - `grant_run_id` 仅作为执行句柄；`workspace_id`、`draft_id`、`program_id` 保持边界分离。
 - `workspace.py`、`stage_router.py`、`revision_executor.py`、`final_package.py` 等继续承载 MedAutoGrant 的 author-side domain logic；它们不应被未来的上游 substrate 目标或当前 repo-local helper 偷换成新的 authoring semantics。
@@ -172,6 +176,8 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `contracts/runtime-program/current-program.json` 是 repo-tracked current-program pointer。
 - 机器本地 runtime state 统一下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`，用于 session / log / report / prompt 等非仓库真相面状态。
 - `workspace progress / workspace cockpit` 当前属于 controller-owned / read-only product projection；它们不替代 durable truth surface，也不构成新的 service-safe domain entry contract，并且不会被镜像进 hosted contract bundle 的 command catalog。
+- `workspace quality-scorecard / workspace quality-diff` 当前属于正式 domain entry audit surface，并会进入 hosted contract bundle 的 command catalog 与 schema contract。
+- `pass autonomy-controller` 当前属于 formal CLI/domain-entry command surface；它输出 controller-owned report，不改变 `controller` 仍为 internal surface 的 formal-entry matrix。
 - `product direct-entry` 当前属于 controller-owned 的 direct-entry composition；它不会改写 route owner，也不会被镜像进 hosted contract bundle 的 command catalog。
 - `product user-loop` 当前属于 controller-owned 的 user-loop composition；它不会改写 route owner，也不会被镜像进 hosted contract bundle 的 command catalog。
 - `runtime run / runtime resume` 的默认 local run journal 落点固定为 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`；显式 `--journal` 仍可覆盖该默认值。

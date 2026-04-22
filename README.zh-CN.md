@@ -38,6 +38,9 @@
 - 从多个方向里筛出值得正式写作的申请题目。
 - 把既有论文、预实验和个人基础收成更清楚的标题、摘要、研究内容和技术路线。
 - 在同一工作区里持续跟踪批注、修订轮次和版本变化。
+- 用结构化 scorecard、版本差异和证据缺口报告比较申请书质量。
+- 运行更长的 controller-led 写作周期，按质量 gate 判断继续、回退或带 blocker 停止。
+- 把通用医学基金 grammar 与 funder-specific family profile 分开，让 NSFC 与非 NSFC 项目共用同一套流程形状。
 - 在终审前整理出更完整的本地申请包，方便团队继续审稿和收口。
 
 ## 工作方式
@@ -70,6 +73,7 @@
 - 然后读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。这是恢复 active product-entry shell、schema-backed surface 和当前 mainline 指针的最快路径。
 - 在改 route、入口 wording 或公开表述前，把 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 当成公开与技术真相集。
 - 当前 formal-entry matrix 是 `CLI`、`MCP` 和 `controller`。`CLI` / `MedAutoGrantDomainEntry` 是 agent entry，`product entry/frontdesk/direct-entry/user-loop` 是 lightweight direct entry / projection shell。
+- 当前可机读治理面包括 `workspace quality-scorecard`、`workspace quality-diff` 和 `pass autonomy-controller`。
 
 </details>
 

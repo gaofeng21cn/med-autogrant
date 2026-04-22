@@ -369,6 +369,12 @@ def build_parser() -> argparse.ArgumentParser:
         handle_execute_authoring_mainline_loop,
         "执行跨 question/argument/fit/drafting/critique/revision/frozen 的全链路主线 loop。",
     )
+    _add_grant_autonomy_controller_command(
+        subparsers,
+        "execute-grant-autonomy-controller",
+        handle_execute_grant_autonomy_controller,
+        "执行长期自治 controller，调度 pre-workspace、mainline 与 quality gate。",
+    )
     _add_revision_executor_command(
         subparsers,
         "execute-revision-pass",
@@ -771,6 +777,17 @@ def handle_execute_authoring_mainline_loop(args: argparse.Namespace) -> dict[str
     return _domain_entry().dispatch(request)
 
 
+def handle_execute_grant_autonomy_controller(args: argparse.Namespace) -> dict[str, Any]:
+    request: dict[str, Any] = {
+        "command": "execute-grant-autonomy-controller",
+        "input_path": args.input,
+        "output_dir": args.output_dir,
+    }
+    if args.executor is not None:
+        request["executor_kind"] = args.executor
+    return _domain_entry().dispatch(request)
+
+
 def handle_execute_revision_pass(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(
         {
@@ -1018,6 +1035,20 @@ def _add_mainline_loop_command(
     command.add_argument("--input", required=True)
     command.add_argument("--output-dir", required=True)
     command.add_argument("--max-cycles", type=int, default=8)
+    command.add_argument("--executor")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_grant_autonomy_controller_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--output-dir", required=True)
     command.add_argument("--executor")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
@@ -1529,6 +1560,18 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"loop_status: {loop_report['loop_status']}",
             f"termination_reason: {loop_report['termination_reason']}",
             f"completed_cycles: {loop_report['completed_cycles']}",
+            f"output_dir: {payload['output_dir']}",
+        ]
+        return "\n".join(lines)
+
+    if command == "execute-grant-autonomy-controller":
+        report = payload["grant_autonomy_controller_report"]
+        lines = [
+            f"controller_status: {report['controller_status']}",
+            f"termination_reason: {report['termination_reason']}",
+            f"completed_cycles: {report['completed_cycles']}",
+            f"unresolved_blockers: {len(report['unresolved_blockers'])}",
+            f"evidence_gaps: {len(report['evidence_gaps'])}",
             f"output_dir: {payload['output_dir']}",
         ]
         return "\n".join(lines)

@@ -335,6 +335,27 @@ class DomainEntryDispatchTest(unittest.TestCase):
             max_cycles=6,
         )
 
+    def test_domain_entry_dispatches_execute_grant_autonomy_controller(self) -> None:
+        runtime = Mock()
+        runtime.execute_grant_autonomy_controller.return_value = {
+            "ok": True,
+            "command": "execute-grant-autonomy-controller",
+        }
+
+        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
+            {
+                "command": "execute-grant-autonomy-controller",
+                "input_path": "/tmp/autonomy-request.json",
+                "output_dir": "/tmp/autonomy-output",
+            }
+        )
+
+        self.assertEqual(payload, {"ok": True, "command": "execute-grant-autonomy-controller"})
+        runtime.execute_grant_autonomy_controller.assert_called_once_with(
+            input_path="/tmp/autonomy-request.json",
+            output_dir="/tmp/autonomy-output",
+        )
+
     def test_domain_entry_dispatches_build_submission_ready_package(self) -> None:
         runtime = Mock()
         runtime.build_submission_ready_package.return_value = {

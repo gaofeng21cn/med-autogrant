@@ -27,6 +27,9 @@
 - 把 `direction_screening -> frozen` 的 author-side 主线持续收口为 landed service-safe command surface，让人工国自然写作流程里的方向筛选、问题提纯、立项依据、适配度、提纲、正文起草与送审前冻结都能直接落到同一套 route truth 上。
 - 通过 `execute-critique-revision-loop` 把“批注 -> 修订 -> re-review”的长时自治闭环收口成可机读 command surface，并保持 major reframe / forced rollback / max rounds 的 fail-closed 语义。
 - 通过 `execute-authoring-mainline-loop` 把 rollback 后的 `question_refinement / argument_building / fit_alignment` 重建也纳入同一条自治主线，而不是只在 critique/revision 层内循环。
+- 通过 `grant-quality-scorecard` 与 `grant-quality-diff` 把申请书质量收口成可机读治理面，覆盖科学问题、必要性/价值闭合、申请人适配、技术路线、claim-evidence coverage、未关闭硬伤和版本间问题关闭进度。
+- 通过 `execute-grant-autonomy-controller` 把长期自治控制层收口成正式 command surface，使系统可以从 workspace / selection input / discovery input 出发，调度已有 discovery、profile selection、intake initialization、mainline loop 与 quality gate，并在失败时输出结构化 blocker report。
+- 通过 `grant_family_registry.py` 把通用 grant grammar、review grammar、template strategy 与 funder-specific family profile 分开，避免把新增基金类型散落进主流程。
 - 通过 `product manifest` 与 `product frontdesk` 把 direct grant frontdoor 收口成独立 schema-backed、generation-time fail-closed 的 contract，并把 `family_orchestration` companion 的 route status 严格对齐到共享 author-side route truth。
 - 通过 `package submission-ready` 把本地 submission-ready 交付目录收口成正式 command surface，并保持“缺材料就 fail-closed、不对外宣称官网已提交”的边界。
 - 把 hosted-friendly handoff contract 收口成 caller 可直接消费的 entry / schema / route catalog，并保持与当前 bundle 同步。
@@ -42,7 +45,7 @@
 
 ## 当前形态
 
-- Current public execution line：`direct MAG agent entry / OPL federation handoff -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> service-safe pass/package commands`
+- Current public execution line：`direct MAG agent entry / OPL federation handoff -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> quality governance / autonomy controller -> service-safe pass/package commands`
 - Current frontdoor shape：`product frontdesk + product user-loop + workspace progress/workspace cockpit + product direct-entry + package submission-ready`
 - Latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
 - Current owner line：`CLI-first with real upstream Hermes-Agent runtime substrate`

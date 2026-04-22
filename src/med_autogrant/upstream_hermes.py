@@ -137,12 +137,28 @@ class HermesGrantRunLedger:
 
 
 def _import_upstream_module(module_name: str) -> Any:
+    if module_name == "hermes_state":
+        _ensure_hermes_constants_runtime_root()
     try:
         return importlib.import_module(module_name)
     except ModuleNotFoundError as exc:
         raise HermesDependencyError(
             f"缺少上游 Hermes-Agent 依赖模块 `{module_name}`。请先在当前 Python 环境安装真实上游 Hermes-Agent。"
         ) from exc
+
+
+def _ensure_hermes_constants_runtime_root() -> None:
+    try:
+        hermes_constants = importlib.import_module("hermes_constants")
+    except ModuleNotFoundError:
+        return
+    if hasattr(hermes_constants, "get_hermes_home"):
+        return
+
+    def get_hermes_home() -> Path:
+        return resolve_upstream_hermes_runtime_root()
+
+    setattr(hermes_constants, "get_hermes_home", get_hermes_home)
 
 
 def _resolve_hermes_command() -> Path | None:

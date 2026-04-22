@@ -50,6 +50,7 @@
   },
   "repo_tracked_truth_surfaces": [
     "contracts/runtime-program/current-program.json",
+    "docs/specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md",
     "docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md",
     "docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md",
     "docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md",

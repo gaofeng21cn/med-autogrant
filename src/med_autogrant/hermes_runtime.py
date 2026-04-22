@@ -26,6 +26,7 @@ from med_autogrant.control_plane import (
 from med_autogrant.critique_executor import build_critique_execution_document
 from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop
 from med_autogrant.authoring_mainline_controller import run_authoring_mainline_controller
+from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller
 from med_autogrant.grant_quality import build_grant_quality_diff, build_grant_quality_scorecard
 from med_autogrant.final_package import (
     _validate_required_artifact_bundle_fields,
@@ -88,6 +89,8 @@ GRANT_INTAKE_AUDIT_SCHEMA_FILE = "grant-intake-audit.schema.json"
 GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE = "grant-evidence-grounding.schema.json"
 GRANT_QUALITY_SCORECARD_SCHEMA_FILE = "grant-quality-scorecard.schema.json"
 GRANT_QUALITY_DIFF_SCHEMA_FILE = "grant-quality-diff.schema.json"
+GRANT_AUTONOMY_CONTROLLER_INPUT_SCHEMA_FILE = "grant-autonomy-controller-input.schema.json"
+GRANT_AUTONOMY_CONTROLLER_REPORT_SCHEMA_FILE = "grant-autonomy-controller-report.schema.json"
 HOSTED_CONTRACT_BUNDLE_SCHEMA_FILE = "hosted-contract-bundle.schema.json"
 SUBMISSION_READY_PACKAGE_SCHEMA_FILE = "submission-ready-package.schema.json"
 PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE = "project-profile-selection-input.schema.json"
@@ -108,6 +111,8 @@ HOSTED_CONTRACT_SCHEMA_FILES = (
     "grant-evidence-grounding.schema.json",
     "grant-quality-scorecard.schema.json",
     "grant-quality-diff.schema.json",
+    "grant-autonomy-controller-input.schema.json",
+    "grant-autonomy-controller-report.schema.json",
     "funding-landscape-discovery-input.schema.json",
     "funding-landscape-discovery.schema.json",
     "funding-landscape-cache.schema.json",
@@ -1047,6 +1052,121 @@ class HermesRuntimeSubstrate:
             "final_workspace": final_workspace,
         }
 
+    def execute_grant_autonomy_controller(
+        self,
+        *,
+        input_path: str | Path,
+        output_dir: str | Path,
+        executor_kind: str | None = None,
+    ) -> dict[str, Any]:
+        request = _load_json_object(input_path, context="grant autonomy controller input")
+        _validate_schema_payload(
+            request,
+            schema_file=GRANT_AUTONOMY_CONTROLLER_INPUT_SCHEMA_FILE,
+            context="grant_autonomy_controller_input",
+        )
+        resolved_output_dir = Path(output_dir).expanduser().resolve()
+        resolved_output_dir.mkdir(parents=True, exist_ok=True)
+
+        def _discoverer(discovery_input: dict[str, Any]) -> dict[str, Any]:
+            discovery = discover_funding_landscape(
+                discovery_input,
+                cached_snapshot=_load_funding_landscape_cache_if_needed(discovery_input),
+            )
+            selection_input = _build_selection_input_from_discovery(
+                discovery_input=discovery_input,
+                funding_opportunity_pool=discovery["funding_opportunity_pool"],
+            )
+            return {
+                "selection_input": selection_input,
+                "funding_landscape_discovery": discovery,
+            }
+
+        def _selector(selection_input: dict[str, Any]) -> dict[str, Any]:
+            return select_project_profile(selection_input)
+
+        def _initializer(selection_input: dict[str, Any], _selection: dict[str, Any]) -> dict[str, Any]:
+            workspace, selection = build_initialized_intake_workspace(selection_input)
+            validation = validate_workspace_document(workspace)
+            if not validation.ok:
+                first_issue = validation.errors[0]
+                raise WorkspaceStateError(
+                    f"{first_issue.path}: {first_issue.message}",
+                    errors=validation.errors,
+                    grant_run_id=workspace.get("grant_run_id"),
+                    workspace_id=workspace.get("workspace_id"),
+                    lifecycle_stage=workspace.get("lifecycle_stage"),
+                )
+            return {
+                "workspace": workspace,
+                "project_profile_selection": selection,
+            }
+
+        def _mainline_runner(payload: dict[str, Any]) -> dict[str, Any]:
+            workspace = payload.get("workspace")
+            if not isinstance(workspace, dict):
+                raise WorkspaceStateError("grant autonomy mainline runner 缺少 workspace。")
+            cycle = payload.get("cycle")
+            cycle_index = cycle if isinstance(cycle, int) and cycle > 0 else 0
+            cycle_output_dir = resolved_output_dir / f"controller-cycle-{cycle_index:02d}-mainline"
+            cycle_input_path = cycle_output_dir / "mainline-input-workspace.json"
+            _write_revised_workspace_output(cycle_input_path, workspace)
+            mainline_payload = self.execute_authoring_mainline_loop(
+                input_path=cycle_input_path,
+                output_dir=cycle_output_dir,
+                max_cycles=1,
+                executor_kind=executor_kind,
+            )
+            return {
+                "workspace": mainline_payload["final_workspace"],
+                "final_workspace": mainline_payload["final_workspace"],
+                "mainline_loop_report": mainline_payload["mainline_loop_report"],
+            }
+
+        report = run_grant_autonomy_controller(
+            request=request,
+            selector=_selector,
+            initializer=_initializer,
+            mainline_runner=_mainline_runner,
+            quality_evaluator=_build_autonomy_quality_evaluator_output,
+            discoverer=_discoverer,
+        )
+        _validate_schema_payload(
+            report,
+            schema_file=GRANT_AUTONOMY_CONTROLLER_REPORT_SCHEMA_FILE,
+            context="grant_autonomy_controller_report",
+        )
+
+        report_path = resolved_output_dir / "grant-autonomy-controller-report.json"
+        _write_json_output(report_path, report, label="grant autonomy controller report")
+
+        final_workspace = report.get("final_workspace") if isinstance(report.get("final_workspace"), dict) else {}
+        final_workspace_path: Path | None = None
+        if _looks_like_workspace(final_workspace):
+            final_workspace_path = resolved_output_dir / "grant-autonomy-final-workspace.json"
+            _guard_workspace_output_identity(
+                final_workspace_path,
+                workspace_document=final_workspace,
+                draft_id=_read_active_draft_id(final_workspace),
+            )
+            _write_revised_workspace_output(final_workspace_path, final_workspace)
+
+        return {
+            "ok": True,
+            "command": "execute-grant-autonomy-controller",
+            "grant_run_id": final_workspace.get("grant_run_id") if final_workspace else None,
+            "workspace_id": final_workspace.get("workspace_id") if final_workspace else None,
+            "draft_id": _read_active_draft_id(final_workspace) if final_workspace else None,
+            "lifecycle_stage": final_workspace.get("lifecycle_stage") if final_workspace else None,
+            "controller_status": report["controller_status"],
+            "termination_reason": report["termination_reason"],
+            "output_dir": str(resolved_output_dir),
+            "grant_autonomy_controller_report_path": str(report_path),
+            "final_workspace_path": str(final_workspace_path) if final_workspace_path else None,
+            "grant_autonomy_controller_report": report,
+            "final_workspace": final_workspace,
+        }
+
     def execute_freeze_pass(
         self,
         *,
@@ -1500,6 +1620,59 @@ def _apply_quality_gate_to_route(
     if gate_action == "ready_for_submission" and gate_reason:
         resolved_route["reason"] = f"{resolved_route.get('reason') or ''} {gate_reason}".strip()
     return resolved_route
+
+
+def _build_autonomy_quality_evaluator_output(workspace: dict[str, Any]) -> dict[str, Any]:
+    scorecard = build_grant_quality_scorecard(workspace)
+    overall_status = str(scorecard.get("overall_status") or "")
+    quality_status = overall_status if overall_status in {
+        "submission_grade_candidate",
+        "near_submission_candidate",
+    } else "not_ready"
+    tracked_issues = scorecard.get("tracked_issues") if isinstance(scorecard.get("tracked_issues"), list) else []
+    unresolved_blockers = list(scorecard.get("unresolved_hard_issues") or [])
+    unresolved_blockers.extend(
+        str(issue.get("summary") or "")
+        for issue in tracked_issues
+        if isinstance(issue, dict)
+        and issue.get("status") == "open"
+        and issue.get("severity") == "hard"
+    )
+    dimensions = scorecard.get("dimensions") if isinstance(scorecard.get("dimensions"), list) else []
+    evidence_gaps: list[str] = []
+    for dimension in dimensions:
+        if not isinstance(dimension, dict):
+            continue
+        for gap in dimension.get("evidence_gaps") or []:
+            if isinstance(gap, str) and gap.strip():
+                evidence_gaps.append(gap.strip())
+
+    return {
+        "quality_status": quality_status,
+        "blocker_report": scorecard,
+        "unresolved_blockers": _dedupe_strings(unresolved_blockers),
+        "evidence_gaps": _dedupe_strings(evidence_gaps),
+    }
+
+
+def _dedupe_strings(values: list[str]) -> list[str]:
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        text = str(value or "").strip()
+        if not text or text in seen:
+            continue
+        seen.add(text)
+        deduped.append(text)
+    return deduped
+
+
+def _looks_like_workspace(payload: dict[str, Any]) -> bool:
+    return all(isinstance(payload.get(field), str) and payload[field] for field in (
+        "grant_run_id",
+        "workspace_id",
+        "lifecycle_stage",
+    ))
 
 
 def _read_journal(journal_path: Path) -> dict[str, Any]:
@@ -2187,6 +2360,8 @@ def _build_operator_contract() -> dict[str, Any]:
                 "summarize-workspace",
                 "grant-intake-audit",
                 "grant-evidence-grounding",
+                "grant-quality-scorecard",
+                "grant-quality-diff",
                 "next-step",
                 "critique-summary",
                 "stage-route-report",

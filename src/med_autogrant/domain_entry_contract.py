@@ -120,6 +120,11 @@ DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES: list[dict[str, Any]] = [
         "optional_fields": ["max_cycles", "executor_kind"],
     },
     {
+        "command": "execute-grant-autonomy-controller",
+        "required_fields": ["input_path", "output_dir"],
+        "optional_fields": ["executor_kind"],
+    },
+    {
         "command": "execute-revision-pass",
         "required_fields": ["input_path", "output_path"],
         "optional_fields": [],
