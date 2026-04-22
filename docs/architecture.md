@@ -8,6 +8,8 @@
 
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 
+当前任务语义固定为“指定基金任务正文 authoring”。架构层显式区分两类完成态：科学完成可待审包，以及形式/客观补件完成。
+
 ## 入口 taxonomy 与 OPL handoff
 
 当前需要明确区分三层入口：
@@ -22,11 +24,11 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 当前真实状态是：前两层已经存在，第三层的轻量结构化 shell 与第一棒 read-only product projection 也已经 landed，但成熟用户级前台仍未落地。
 `gateway / harness` 在这里继续作为内部架构分层术语，不作为对外第一身份。
 
-在进入 repo-tracked workspace 之前，现在还多了一层 pre-workspace intake 入口：
+在进入 repo-tracked workspace 之前，仍保留 pre-workspace intake 入口作为可选辅助：
 
 `selection_input materials -> select-project-profile -> initialize-intake-workspace -> input_intake workspace`
 
-在这层之前，现在又补了一层 funding discovery：
+在这层之前，也保留 funding discovery 作为可选辅助：
 
 `discovery_input materials -> discover-funding-opportunities -> funding_opportunity_pool -> select-project-profile`
 
@@ -45,9 +47,9 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 这层入口的职责是：
 
-- 先在材料池与 funding opportunity pool 之间做 profile 选择，而不是要求 caller 预先写死 `project_profile`
-- 输出可直接落到现有 `input_intake -> ... -> frozen` 主线的 workspace 真相
-- 保持 `project_profile`、`funding_opportunity_brief` 与 critique policy 三者同源
+- 作为 pre-authoring 准备工具，为 caller 提供可复用材料池、profile 与 funding 线索
+- 输出可落到 `input_intake -> ... -> frozen` 主线的 workspace 真相
+- 在任务已锁定指定基金后，不再作为默认阻塞链路触发跨 funder 重选
 
 目标中的 domain 级链路应是：
 
@@ -137,18 +139,18 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `src/med_autogrant/hermes_runtime.py` 现在应被理解为 repo-side domain adapter / orchestrator，而不是 runtime substrate owner。
 - `runtime run` / `runtime resume` 直接通过 `MedAutoGrantDomainEntry -> HermesRuntimeSubstrate` 落到当前 runtime loop。
 - `pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting`、`pass critique`、`pass revision`、`pass freeze`、`package artifact-bundle`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
-- `select-project-profile` 与 `initialize-intake-workspace` 由 repo-side selector/initializer contract 持有材料池解析、profile/funding 匹配与 input-intake workspace 生成。
-- `discover-funding-opportunities` 由 repo-side funding landscape discovery contract 持有显式 catalog、机器可读过滤规则与候选池输出。
-- `refresh-funding-opportunities-cache` 由 repo-side funding sync contract 持有官方来源抓取、按 source 增量刷新、cache snapshot 写入与 provenance 证据保留。
+- `select-project-profile` 与 `initialize-intake-workspace` 由 repo-side selector/initializer contract 持有材料池解析、profile/funding 匹配与 input-intake workspace 生成；在任务已锁定指定基金后，它们只作为显式唤醒的准备工具。
+- `discover-funding-opportunities` 由 repo-side funding landscape discovery contract 持有显式 catalog、机器可读过滤规则与候选池输出；默认不进入已锁定任务的正文 authoring gate。
+- `refresh-funding-opportunities-cache` 由 repo-side funding sync contract 持有官方来源抓取、按 source 增量刷新、cache snapshot 写入与 provenance 证据保留；它服务候选池维护，不直接定义正文完成态。
 - `funding_landscape_diff_report` 则承担 refresh 前后差异、`withdrawn_or_not_listed` 检测与变化摘要。
 - `pass critique` 当前默认走 `Codex CLI` 的 `autonomous` 模式：具体由 `critique_executor.py -> run_codex_exec(...)` 调起 `codex exec`，默认 `model / reasoning` 都继承本机 Codex 默认（`inherit_local_codex_default`），只有显式环境变量覆盖才会传 override。
 - `execute-critique-revision-loop` 在现有 `execute-critique-pass` 与 `execute-revision-pass` 之上复用同一份 route truth；它不会改写单步 pass 语义，只负责多轮闭环调度、每轮产物落盘与 stop condition 汇总。
 - `execute-authoring-mainline-loop` 在 `determine_next_step(...)` 与单步 pass builder 之上进一步向上扩，把 rollback 到 `direction_screening / question_refinement / argument_building / fit_alignment` 的重建也纳入同一条自治调度线。
 - `grant-quality-scorecard` 与 `grant-quality-diff` 在 intake/evidence/critique truth 之上形成质量治理层，并把质量 gate 注入 `execute-authoring-mainline-loop` 的 route resolver，作为 stop / continue / rollback 的依据之一。
-- `execute-grant-autonomy-controller` 位于已有 discovery / selector / initializer / mainline loop / quality surface 之上，负责预算、轮次、blocker 队列、evidence gap 队列、rollback/reselection 决策记录与 fail-closed 报告，不替代下游单步 pass。
+- `execute-grant-autonomy-controller` 位于已有 discovery / selector / initializer / mainline loop / quality surface 之上，负责预算、轮次、blocker 队列、evidence gap 队列、同一基金任务内的 rollback/continue 决策记录与 fail-closed 报告，不替代下游单步 pass。
 - 同一条 `pass critique` 现在也支持显式 `executor_kind=hermes_native_proof`：这条 experimental lane 会通过 `hermes_native_executor.py -> read_hermes_agent_contract(...) -> run_agent.AIAgent.run_conversation(...)` 真实调用上游 Hermes full agent loop；它会显式读取本机 `~/.hermes/config.yaml` 的 model/provider/base_url/api_mode/reasoning_effort，并且只有在完成整轮 loop、拿到真实工具事件和合法 JSON 结果时才通过，否则 fail-closed。
 - `package hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 hosted contract catalog。
-- `package submission-ready` 继续复用 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链，但会额外对 mandatory sections、evidence gaps、representative outputs、active projects 与 freeze gate 做 fail-closed 审核，只在全部满足时写出本地 `submission_ready_package`；它不替代外部官网提交。
+- `package submission-ready` 继续复用 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链；当前默认先保障“科学完成可待审包”的 fail-closed 审核，再把形式/客观补件写入显式 `TODO + wakeup` 队列。只有补件缺口直接破坏正文科学成立时，才升级为正文 blocker；它不替代外部官网提交。
 - 当前 external caller 只需要读取 `domain_entry_contract.supported_commands` 与 `domain_entry_contract.command_contracts`，就能按统一 contract 构造 request，而不需要 repo-local helper。
 - 当前 direct-product projection caller 则可以读取 `workspace progress / workspace cockpit` 的只读投影结果，先看当前 grant 主线、blocker 与 direct / `OPL` entry command catalog，再决定是否进入真正的 domain entry / product entry 调用。
 - `package hosted-contract-bundle.hosted_contract_bundle` 现在也受 `schemas/v1/hosted-contract-bundle.schema.json` 约束，并在写出前执行 schema + 冻结 truth 的 fail-closed 校验。
@@ -180,6 +182,8 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `pass autonomy-controller` 当前属于 formal CLI/domain-entry command surface；它输出 controller-owned report，不改变 `controller` 仍为 internal surface 的 formal-entry matrix。
 - `product direct-entry` 当前属于 controller-owned 的 direct-entry composition；它不会改写 route owner，也不会被镜像进 hosted contract bundle 的 command catalog。
 - `product user-loop` 当前属于 controller-owned 的 user-loop composition；它不会改写 route owner，也不会被镜像进 hosted contract bundle 的 command catalog。
+- 人工 gate 当前只覆盖同一基金任务内的作者决策，不把 gate 语义扩展成跨 funder 的重新选题/重选项目流程。
+- 形式/客观补件默认是 `TODO + 显式唤醒` 队列项；默认不阻塞正文 authoring 主线。
 - `runtime run / runtime resume` 的默认 local run journal 落点固定为 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`；显式 `--journal` 仍可覆盖该默认值。
 - Hermes substrate state db 默认落在 `$CODEX_HOME/projects/med-autogrant/runtime-state/hermes/state.db`；如需显式隔离，可通过 `MED_AUTOGRANT_HERMES_HOME` 覆盖。
 - 历史 local host-agent runtime 只保留在归档与 provenance 材料里，不再作为长期产品 runtime owner。

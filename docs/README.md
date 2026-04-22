@@ -20,14 +20,18 @@ This guide is for readers who need the technical records, trace records, referen
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
 - `Hermes-Agent` names the external runtime substrate owner; repo-side grant adapters keep authoring truth, direct entry, and route contracts stable above that substrate.
 - Historical program records and migration notes stay in `docs/specs/` and `docs/history/` for traceability.
-- The frontdesk, user-loop, projections, and local `submission-ready` package are landed. Future hosted product expansion lives in `docs/plans/`.
+- The frontdesk, user-loop, projections, and local review-package surfaces are landed. Future hosted product expansion lives in `docs/plans/`.
 - `OPL` owns family navigation and domain handoff; MAG owns grant-domain truth, direct grant entry, and execution routing.
+- The active MAG task boundary is specified-funder body authoring; scientific completion and formal/objective supplement completion are explicitly separated layers.
+- The scientific completion layer delivers a review-ready package for author and reviewer decision flow.
+- Formal/objective supplements default to `TODO + explicit wakeup`; they are not body-authoring blockers unless they directly invalidate scientific claims.
+- Human gates are scoped to author decisions within the same funding-call task, not cross-funder reselection.
 - Current controller-owned, read-only projections continue to include `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`, with schema-backed boundaries above the author-side line.
 - The current grouped public shell also exposes `product build-entry`, `product manifest`, `product frontdesk`, and `package submission-ready` as the public CLI-facing entry surface.
 - The current lightweight grant `product entry` shell is the active product-entry shell and internal domain/API catalog builder. Future hosted product work stays in `docs/plans/`.
 - Quality governance is now schema-backed through `workspace quality-scorecard` and `workspace quality-diff`.
 - Long-horizon autonomy is now exposed as `pass autonomy-controller`, with structured blocker and evidence-gap reporting.
-- Common grant grammar and funder-specific family profile rules are separated in `grant_family_registry.py`; NSFC, NIH R21, and Wellcome Discovery now share the same admitted registry shape, while a Wellcome placeholder remains available as future scaffold.
+- Common grant grammar and funder-specific family profile rules remain separated in `grant_family_registry.py`, while cross-funder reselection stays outside default body-authoring gate semantics.
 
 ## Technical Working Set
 

@@ -31,6 +31,13 @@
 - 当前 Hermes substrate 已落地主线时，不得把 repo-side adapter 重新写回“runtime 仍由本地 helper 主责”。
 - 当前 landed substrate、兼容桥与 future scope 必须在 `docs/status.md` 与 `docs/README*` 中显式拆开。
 
+## 任务边界与 gate 语义
+
+- MAG 当前任务边界固定为“指定基金任务正文 authoring”，不把跨 funder 重选写成默认主线动作。
+- “科学完成可待审包”与“形式/客观补件完成”必须分层表达，禁止合并成单一完成态。
+- 形式/客观补件默认进入 `TODO + 显式唤醒` 队列；除非直接破坏正文科学成立，否则不得升级为正文 authoring blocker。
+- 人工 gate 只覆盖同一基金任务内的作者决策，不跨任务改写 funding 目标。
+
 ## 执行句柄边界
 
 - `grant_run_id` 是执行句柄，不替代或污染 `workspace_id`、`draft_id`、`program_id`。

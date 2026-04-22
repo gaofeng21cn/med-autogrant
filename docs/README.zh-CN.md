@@ -20,14 +20,18 @@
 - formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
 - `Hermes-Agent` 指外部 runtime substrate owner；repo-side grant adapter 继续在其上方稳定 grant truth、direct entry 与 route contract。
 - 历史 program 记录与迁移说明继续留在 `docs/specs/` 与 `docs/history/` 中供追溯。
-- frontdesk、user-loop、projection 与本地 `submission-ready` package 已落地；未来 hosted 产品扩展统一留在 `docs/plans/`。
+- frontdesk、user-loop、projection 与本地待审包交付面已落地；未来 hosted 产品扩展统一留在 `docs/plans/`。
 - `OPL` 负责 family navigation 与 domain handoff；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。
+- MAG 当前任务边界锁定在“指定基金任务正文 authoring”；“科学完成”与“形式/客观补件完成”是显式分层。
+- 科学层交付的是可待审包，用于同任务内作者/评审决策。
+- 形式/客观补件默认按 `TODO + 显式唤醒` 管理；除非直接破坏正文科学成立，否则不作为正文 authoring blocker。
+- 人工 gate 只作用于同一基金任务内的作者决策，不扩展成跨 funder 重选。
 - 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`，并在作者侧主线之上保持 schema-backed 边界。
 - 当前 grouped public shell 也已经把 `product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready` 暴露成公开 CLI 入口面。
 - 当前轻量 grant `product entry` shell 就是现在的产品入口 shell 与内部 domain/API catalog builder；未来 hosted 产品形态统一留在 `docs/plans/`。
 - 质量治理已经通过 `workspace quality-scorecard` 与 `workspace quality-diff` 收成 schema-backed surface。
 - 长时间自治已经通过 `pass autonomy-controller` 暴露为正式入口，并输出结构化 blocker 与 evidence-gap report。
-- 通用 grant grammar 与 funder-specific family profile 规则已在 `grant_family_registry.py` 分层；NSFC、NIH R21 和 Wellcome Discovery 已共用同一套 admitted registry 形状，同时保留 Wellcome placeholder 作为后续 family scaffold。
+- 通用 grant grammar 与 funder-specific family profile 规则继续在 `grant_family_registry.py` 分层；跨 funder 重选不进入默认正文 authoring gate 语义。
 
 ## 技术工作集
 

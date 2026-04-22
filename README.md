@@ -4,9 +4,9 @@
 
 # Med Auto Grant
 
-**An independent medical grant domain agent for investigators preparing structured proposal packages**
+**An independent medical grant domain agent for investigator-side authoring on a specified funding call**
 
-> `Med Auto Grant` is an independent medical grant domain agent. It keeps topic selection, evidence gathering, drafting, critique, revision, and local submission preparation on one line for investigator-side medical grant applications.
+> `Med Auto Grant` is an independent medical grant domain agent. It keeps specified-funder body authoring, critique, revision, and scientific review-package delivery on one line for investigator-side medical grant applications.
 
 <table>
   <tr>
@@ -16,11 +16,11 @@
     </td>
     <td width="33%" valign="top">
       <strong>What It Organizes</strong><br/>
-      Topic ideas, prior work, pilot evidence, draft versions, review comments, and application files inside one workspace
+      A specified funding call, prior work, pilot evidence, draft versions, review comments, and review-package files inside one workspace
     </td>
     <td width="33%" valign="top">
       <strong>How To Start</strong><br/>
-      Tell it the grant program, the direction you want to pursue, the materials you already have, and the package you want to prepare
+      Tell it the target funding call, your current draft/materials, scientific claims to defend, and the review package you need
     </td>
   </tr>
 </table>
@@ -29,33 +29,34 @@
 
 You can start with prompts like:
 
-- "Help me turn this idea into an NSFC-style application. First judge whether the question is worth writing, then draft the title, abstract, and research aims."
-- "Based on my papers, pilot data, and background, give me three grant directions worth pursuing and explain the upside and risk of each."
+- "Use this NSFC call and this draft to rebuild title, abstract, aims, and methods so the scientific story is internally consistent."
+- "Review this current draft for claim-evidence gaps and rewrite the weak sections without changing the target funding call."
 - "Review this draft like a grant reviewer, tell me the biggest weaknesses, and show me how to revise them."
 
 ## What It Helps With
 
-- Narrowing several possible directions into a proposal line worth writing.
-- Turning prior work, pilot data, and applicant materials into a stronger title, abstract, aims, and research plan.
+- Turning prior work, pilot data, and applicant materials into a stronger title, abstract, aims, and research plan under a specified funding call.
 - Keeping revision rounds, reviewer-style critique, and version changes traceable inside one workspace.
 - Comparing proposal quality across versions through structured scorecards, issue closure, and evidence-gap reports.
 - Running longer controller-led authoring cycles that can continue, roll back, or stop with a blocker report.
-- Separating common medical grant grammar from funder-specific family profiles, so NSFC and non-NSFC programs share one process shape.
-- Preparing a more complete local package before final human review and portal submission.
+- Delivering a scientifically complete review-ready package before portal-facing formal checks.
+- Tracking formal/objective supplements as explicit TODO wakeups, instead of blocking body authoring by default.
 
 ## How It Works
 
-- Applicants provide the target program, existing evidence, constraints, and final judgment.
-- The AI operator helps with topic refinement, structure, drafting, critique, and revision.
+- Applicants provide the target funding call, existing evidence, constraints, and final judgment.
+- The AI operator helps with scientific structure, drafting, critique, and revision within that call.
 - The workspace keeps comments, versions, and deliverable files together so the proposal line stays reviewable.
 
 ## Current Boundary
 
 - `Med Auto Grant` is an independent medical grant domain agent, not an internal module inside the `OPL` workspace.
 - It can be called directly by `Codex` or other general agents through `CLI` / `MedAutoGrantDomainEntry`, and can also be federated by `OPL`.
-- It covers topic refinement, proposal drafting, revision, and local submission-package preparation.
+- MAG task scope is locked to body authoring for a specified funding call.
+- Scientific completion is delivered as a review-ready package; formal/objective supplements are tracked separately.
+- Formal/objective supplements default to `TODO + explicit wakeup` and do not block body authoring unless they directly break scientific validity.
 - `OPL` keeps family-level session/runtime/projection and shared modules/contracts/indexes.
-- Final direction choice, application strategy, and submission decisions stay with the applicant team.
+- Human gate decisions stay inside the same funding-call task and are author decisions, not cross-funder reselection.
 - External funding portal submission stays under human supervision.
 
 ## How To Read This Repository
