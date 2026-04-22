@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/grant-autonomy-controller-input.schema.json",
+  "title": "GrantAutonomyControllerInput",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "nonEmptyString": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "stringQueue": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
+      "uniqueItems": true
+    },
+    "goal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_status",
+        "summary"
+      ],
+      "properties": {
+        "target_status": {
+          "type": "string",
+          "enum": [
+            "submission_grade_candidate",
+            "near_submission_candidate"
+          ]
+        },
+        "summary": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_total_steps"
+      ],
+      "properties": {
+        "max_total_steps": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "budget_notes": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "stopConditions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "require_zero_blockers",
+        "require_zero_evidence_gaps"
+      ],
+      "properties": {
+        "require_zero_blockers": {
+          "type": "boolean"
+        },
+        "require_zero_evidence_gaps": {
+          "type": "boolean"
+        }
+      }
+    },
+    "reselectionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "max_reselections"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "max_reselections": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "rollbackPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "max_rollbacks"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "max_rollbacks": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "selectionInputStart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "selection_input"
+      ],
+      "properties": {
+        "mode": {
+          "const": "selection_input"
+        },
+        "selection_input": {
+          "$ref": "project-profile-selection-input.schema.json"
+        }
+      }
+    },
+    "workspaceStart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "workspace"
+      ],
+      "properties": {
+        "mode": {
+          "const": "workspace"
+        },
+        "workspace": {
+          "$ref": "nsfc-workspace.schema.json"
+        }
+      }
+    },
+    "discoveryInputStart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "discovery_input"
+      ],
+      "properties": {
+        "mode": {
+          "const": "discovery_input"
+        },
+        "discovery_input": {
+          "$ref": "funding-landscape-discovery-input.schema.json"
+        }
+      }
+    }
+  },
+  "required": [
+    "request_id",
+    "start",
+    "goal",
+    "max_rounds_or_cycles",
+    "budget",
+    "stop_conditions",
+    "blocker_queue",
+    "evidence_gap_queue",
+    "reselection_policy",
+    "rollback_policy"
+  ],
+  "properties": {
+    "request_id": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "start": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/selectionInputStart"
+        },
+        {
+          "$ref": "#/$defs/workspaceStart"
+        },
+        {
+          "$ref": "#/$defs/discoveryInputStart"
+        }
+      ]
+    },
+    "goal": {
+      "$ref": "#/$defs/goal"
+    },
+    "max_rounds_or_cycles": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "budget": {
+      "$ref": "#/$defs/budget"
+    },
+    "stop_conditions": {
+      "$ref": "#/$defs/stopConditions"
+    },
+    "blocker_queue": {
+      "$ref": "#/$defs/stringQueue"
+    },
+    "evidence_gap_queue": {
+      "$ref": "#/$defs/stringQueue"
+    },
+    "reselection_policy": {
+      "$ref": "#/$defs/reselectionPolicy"
+    },
+    "rollback_policy": {
+      "$ref": "#/$defs/rollbackPolicy"
+    }
+  }
+}

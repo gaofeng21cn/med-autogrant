@@ -118,6 +118,16 @@
       "status": "frozen"
     },
     {
+      "name": "grant_autonomy_controller_input",
+      "file": "grant-autonomy-controller-input.schema.json",
+      "status": "frozen"
+    },
+    {
+      "name": "grant_autonomy_controller_report",
+      "file": "grant-autonomy-controller-report.schema.json",
+      "status": "frozen"
+    },
+    {
       "name": "service_safe_domain_surface",
       "file": "service-safe-domain-surface.schema.json",
       "status": "frozen"
