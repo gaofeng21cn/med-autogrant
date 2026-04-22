@@ -386,7 +386,11 @@
         "supported_entry_modes",
         "domain_entry_contract",
         "checkpoint_aggregation_surface",
-        "operator_contract"
+        "operator_contract",
+        "session_continuity",
+        "progress_projection",
+        "artifact_inventory",
+        "runtime_control"
       ],
       "properties": {
         "entry_adapter": {
@@ -409,6 +413,18 @@
         },
         "operator_contract": {
           "$ref": "#/$defs/operatorContract"
+        },
+        "session_continuity": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/sessionContinuitySurface"
+        },
+        "progress_projection": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/progressProjectionSurface"
+        },
+        "artifact_inventory": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/artifactInventorySurface"
+        },
+        "runtime_control": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/runtimeControlSurface"
         }
       }
     },

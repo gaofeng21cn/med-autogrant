@@ -272,6 +272,58 @@ class MedAutoGrantProductEntry:
             workspace_id=workspace_id,
             lifecycle_stage=lifecycle_stage,
         )
+        command_catalog = _build_product_command_catalog(resolved_input_path)
+        progress_payload = self.read_grant_progress(input_path=resolved_input_path)
+        progress_projection = _require_mapping(
+            progress_payload,
+            "progress_projection",
+            context="build-product-entry.grant_progress",
+        )
+        mainline_payload = read_mainline_status()
+        current_line = _require_mapping(
+            mainline_payload,
+            "current_line",
+            context="mainline_status",
+        )
+        runtime_summary = {
+            "current_owner_line": _require_nonempty_string_from_mapping(
+                current_line,
+                "current_owner_line",
+                context="mainline_status.current_line",
+            ),
+            "runtime_owner": "upstream_hermes_agent",
+        }
+        continuity_surfaces = _build_runtime_continuity_surfaces(
+            progress_projection=progress_projection,
+            workspace_summary=workspace_summary,
+            runtime_summary=runtime_summary,
+            managed_runtime_contract=_build_managed_runtime_contract(),
+            grant_run_id=grant_run_id,
+            workspace_id=workspace_id,
+            lifecycle_stage=lifecycle_stage,
+            input_path=str(resolved_input_path),
+            grant_progress_command=command_catalog["grant_progress"],
+            summarize_workspace_command=command_catalog["summarize_workspace"],
+            stage_route_report_command=command_catalog["stage_route_report"],
+            grant_user_loop_command=public_cli_command(
+                "grant-user-loop",
+                "--input",
+                str(resolved_input_path),
+                "--task-intent",
+                resolved_task_intent,
+                "--format",
+                "json",
+            ),
+            grant_direct_entry_command=public_cli_command(
+                "grant-direct-entry",
+                "--input",
+                str(resolved_input_path),
+                "--task-intent",
+                resolved_task_intent,
+                "--format",
+                "json",
+            ),
+        )
         product_entry = {
             "entry_version": PRODUCT_ENTRY_VERSION,
             "entry_kind": PRODUCT_ENTRY_KIND,
@@ -299,6 +351,10 @@ class MedAutoGrantProductEntry:
                 "domain_entry_contract": build_domain_entry_contract(),
                 "checkpoint_aggregation_surface": "stage-route-report",
                 "operator_contract": _build_operator_contract(),
+                "session_continuity": dict(continuity_surfaces["session_continuity"]),
+                "progress_projection": dict(continuity_surfaces["progress_projection"]),
+                "artifact_inventory": dict(continuity_surfaces["artifact_inventory"]),
+                "runtime_control": dict(continuity_surfaces["runtime_control"]),
             },
             "domain_payload": {
                 "workspace_id": workspace_id,

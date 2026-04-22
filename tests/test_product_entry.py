@@ -803,6 +803,22 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             "stage-route-report",
         )
         self.assertEqual(
+            direct_envelope["return_surface_contract"]["session_continuity"]["surface_kind"],
+            "session_continuity",
+        )
+        self.assertEqual(
+            direct_envelope["return_surface_contract"]["progress_projection"]["surface_kind"],
+            "progress_projection",
+        )
+        self.assertEqual(
+            direct_envelope["return_surface_contract"]["artifact_inventory"]["surface_kind"],
+            "artifact_inventory",
+        )
+        self.assertEqual(
+            direct_envelope["return_surface_contract"]["runtime_control"]["surface_kind"],
+            "runtime_control",
+        )
+        self.assertEqual(
             direct_envelope["domain_payload"],
             {
                 "workspace_id": "nsfc-demo-001",
@@ -1259,6 +1275,33 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             "--task-intent tighten-grant-mainline",
             runtime_control["direct_entry"]["command"],
         )
+        expected_return_surface_contract = {
+            "entry_adapter": "MedAutoGrantDomainEntry",
+            "default_formal_entry": "CLI",
+            "supported_entry_modes": ["direct", "opl-handoff"],
+            "domain_entry_contract": build_domain_entry_contract(),
+            "checkpoint_aggregation_surface": "stage-route-report",
+            "operator_contract": {
+                "canonical_audit_surfaces": [
+                    "validate-workspace",
+                    "summarize-workspace",
+                    "grant-intake-audit",
+                    "grant-evidence-grounding",
+                    "grant-quality-scorecard",
+                    "grant-quality-closure-dossier",
+                    "grant-quality-diff",
+                    "next-step",
+                    "critique-summary",
+                    "stage-route-report",
+                ],
+                "canonical_export_surfaces": CANONICAL_EXPORT_SURFACES,
+                "checkpoint_aggregation_surface": "stage-route-report",
+            },
+            "session_continuity": payload["session_continuity"],
+            "progress_projection": payload["progress_projection"],
+            "artifact_inventory": payload["artifact_inventory"],
+            "runtime_control": payload["runtime_control"],
+        }
         self.assertEqual(
             payload["grant_direct_entry"],
             {
@@ -1386,27 +1429,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         },
                     },
                     "return_surface_contract": {
-                        "entry_adapter": "MedAutoGrantDomainEntry",
-                        "default_formal_entry": "CLI",
-                        "supported_entry_modes": ["direct", "opl-handoff"],
-                        "domain_entry_contract": build_domain_entry_contract(),
-                        "checkpoint_aggregation_surface": "stage-route-report",
-                        "operator_contract": {
-                            "canonical_audit_surfaces": [
-                                "validate-workspace",
-                                "summarize-workspace",
-                                "grant-intake-audit",
-                                "grant-evidence-grounding",
-                                "grant-quality-scorecard",
-                                "grant-quality-closure-dossier",
-                                "grant-quality-diff",
-                                "next-step",
-                                "critique-summary",
-                                "stage-route-report",
-                            ],
-                            "canonical_export_surfaces": CANONICAL_EXPORT_SURFACES,
-                            "checkpoint_aggregation_surface": "stage-route-report",
-                        },
+                        **expected_return_surface_contract,
                     },
                     "domain_payload": {
                         "workspace_id": "nsfc-demo-001",
@@ -1462,27 +1485,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         },
                     },
                     "return_surface_contract": {
-                        "entry_adapter": "MedAutoGrantDomainEntry",
-                        "default_formal_entry": "CLI",
-                        "supported_entry_modes": ["direct", "opl-handoff"],
-                        "domain_entry_contract": build_domain_entry_contract(),
-                        "checkpoint_aggregation_surface": "stage-route-report",
-                        "operator_contract": {
-                            "canonical_audit_surfaces": [
-                                "validate-workspace",
-                                "summarize-workspace",
-                                "grant-intake-audit",
-                                "grant-evidence-grounding",
-                                "grant-quality-scorecard",
-                                "grant-quality-closure-dossier",
-                                "grant-quality-diff",
-                                "next-step",
-                                "critique-summary",
-                                "stage-route-report",
-                            ],
-                            "canonical_export_surfaces": CANONICAL_EXPORT_SURFACES,
-                            "checkpoint_aggregation_surface": "stage-route-report",
-                        },
+                        **expected_return_surface_contract,
                     },
                     "domain_payload": {
                         "workspace_id": "nsfc-demo-001",
