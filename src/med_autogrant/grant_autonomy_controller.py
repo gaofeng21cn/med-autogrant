@@ -3,6 +3,11 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Callable
 
+from med_autogrant.grant_governance_adapter import (
+    apply_family_governance_to_controller_plan,
+    prioritize_closure_package_queue,
+)
+
 
 Discoverer = Callable[[dict[str, Any]], dict[str, Any]]
 Selector = Callable[[dict[str, Any]], dict[str, Any]]
@@ -32,24 +37,6 @@ _GATE_STATUSES = {
     "passed",
     "blocked",
     "failed_closed",
-}
-_CLOSURE_PACKAGE_SEVERITIES = {"hard", "gap"}
-_STAGE_PRIORITY = {
-    "direction_screening": 0,
-    "question_refinement": 1,
-    "argument_building": 2,
-    "fit_alignment": 3,
-    "outline": 4,
-    "drafting": 5,
-    "critique": 6,
-    "revision": 7,
-    "frozen": 8,
-}
-_CLOSURE_ACTION_PRIORITY = {
-    "fail_closed": 0,
-    "reselect_project_profile": 1,
-    "rollback_upstream": 2,
-    "continue_mainline": 3,
 }
 
 
@@ -561,7 +548,7 @@ def run_grant_autonomy_controller(
         require_zero_blockers=require_zero_blockers,
         require_zero_evidence_gaps=require_zero_evidence_gaps,
     )
-    controller_plan = _apply_workspace_governance_policy(
+    controller_plan = apply_family_governance_to_controller_plan(
         controller_plan,
         workspace=workspace,
         explicit_controller_plan=explicit_controller_plan,
@@ -637,8 +624,9 @@ def run_grant_autonomy_controller(
 
         latest_blocker_report = normalized_quality["blocker_report"]
         latest_quality_closure_dossier = normalized_quality["quality_closure_dossier"]
-        closure_package_queue = _prioritize_closure_package_queue(
+        closure_package_queue = prioritize_closure_package_queue(
             latest_quality_closure_dossier.get("closure_packages"),
+            workspace=workspace,
         )
         active_closure_package = deepcopy(closure_package_queue[0]) if closure_package_queue else None
         normalized_quality["active_closure_package"] = deepcopy(active_closure_package)
@@ -1296,7 +1284,7 @@ def run_grant_autonomy_controller(
                 )
             )
             workspace = reselected_workspace
-            controller_plan = _apply_workspace_governance_policy(
+            controller_plan = apply_family_governance_to_controller_plan(
                 controller_plan,
                 workspace=workspace,
                 explicit_controller_plan=explicit_controller_plan,
@@ -1706,7 +1694,7 @@ def _normalize_closure_package(payload: Any) -> dict[str, Any] | None:
     acceptance_signals = payload.get("acceptance_signals")
     if not closure_id or not summary:
         return None
-    if severity not in _CLOSURE_PACKAGE_SEVERITIES:
+    if severity not in {"hard", "gap"}:
         return None
     if action not in _CONTROLLER_ACTIONS - {"stop_success"}:
         return None
@@ -1955,59 +1943,6 @@ def _normalize_controller_plan(
     }
 
 
-def _apply_workspace_governance_policy(
-    controller_plan: dict[str, Any],
-    *,
-    workspace: dict[str, Any] | None,
-    explicit_controller_plan: bool,
-) -> dict[str, Any]:
-    if explicit_controller_plan or not isinstance(workspace, dict):
-        return deepcopy(controller_plan)
-    family_policy = _extract_family_governance_policy(workspace)
-    if not family_policy:
-        return deepcopy(controller_plan)
-    hydrated = deepcopy(controller_plan)
-    default_tranche = _normalized_string(family_policy.get("default_tranche"))
-    if default_tranche:
-        hydrated["current_tranche"] = default_tranche
-    controller_defaults = family_policy.get("controller_defaults")
-    normalized_defaults = controller_defaults if isinstance(controller_defaults, dict) else {}
-    target_status = _normalized_string(normalized_defaults.get("target_status"))
-    if target_status not in {"submission_grade_candidate", "near_submission_candidate"}:
-        target_status = _normalized_string(family_policy.get("preferred_stop_target"))
-    if target_status in {"submission_grade_candidate", "near_submission_candidate"}:
-        hydrated["tranche_success_gate"]["target_status"] = target_status
-    if "require_zero_blockers" in normalized_defaults:
-        hydrated["tranche_success_gate"]["requires_zero_blockers"] = bool(normalized_defaults["require_zero_blockers"])
-    elif "requires_zero_blockers" in family_policy:
-        hydrated["tranche_success_gate"]["requires_zero_blockers"] = bool(family_policy["requires_zero_blockers"])
-    if "require_zero_evidence_gaps" in normalized_defaults:
-        hydrated["tranche_success_gate"]["requires_zero_evidence_gaps"] = bool(
-            normalized_defaults["require_zero_evidence_gaps"]
-        )
-    elif "requires_zero_evidence_gaps" in family_policy:
-        hydrated["tranche_success_gate"]["requires_zero_evidence_gaps"] = bool(family_policy["requires_zero_evidence_gaps"])
-    acceptance = normalized_defaults.get("acceptance_criteria")
-    if not isinstance(acceptance, list):
-        acceptance = family_policy.get("acceptance_criteria")
-    if isinstance(acceptance, list):
-        normalized_acceptance = [item for item in (_normalized_string(v) for v in acceptance) if item]
-        if normalized_acceptance:
-            hydrated["tranche_success_gate"]["acceptance_criteria"] = normalized_acceptance
-    return hydrated
-
-
-def _extract_family_governance_policy(workspace: dict[str, Any]) -> dict[str, Any]:
-    project_profile = workspace.get("project_profile")
-    if not isinstance(project_profile, dict):
-        return {}
-    family_grammar = project_profile.get("grant_family_grammar")
-    if not isinstance(family_grammar, dict):
-        return {}
-    governance_policy = family_grammar.get("governance_policy")
-    return deepcopy(governance_policy) if isinstance(governance_policy, dict) else {}
-
-
 def _normalize_evidence_supply_queue(payload: Any) -> list[dict[str, Any]] | None:
     if payload is None:
         return []
@@ -2056,22 +1991,6 @@ def _normalize_controller_action_hint(payload: Any) -> dict[str, Any] | None:
         "target_stage": _normalized_string(payload.get("target_stage")) or None,
         "source_surface": source_surface,
     }
-
-
-def _prioritize_closure_package_queue(payload: Any) -> list[dict[str, Any]]:
-    packages = _normalize_closure_package_queue(payload)
-    if packages is None:
-        return []
-    enumerated = list(enumerate(packages))
-    enumerated.sort(
-        key=lambda item: (
-            _CLOSURE_ACTION_PRIORITY.get(item[1]["action"], 99),
-            0 if item[1]["severity"] == "hard" else 1,
-            _STAGE_PRIORITY.get(item[1].get("target_stage"), 99),
-            item[0],
-        )
-    )
-    return [deepcopy(item[1]) for item in enumerated]
 
 
 def _active_closure_package_action(active_closure_package: dict[str, Any] | None) -> str | None:
