@@ -444,6 +444,12 @@ def run_grant_autonomy_controller(
             rollback_decisions=rollback_decisions,
         )
 
+    controller_plan = _apply_workspace_governance_policy(
+        controller_plan,
+        workspace=workspace,
+        explicit_controller_plan=isinstance(request.get("controller_plan"), dict),
+    )
+
     for cycle in range(1, max_rounds_or_cycles + 1):
         completed_cycles = cycle
 
@@ -519,9 +525,11 @@ def run_grant_autonomy_controller(
             unresolved_blockers = _dedupe(normalized_quality["unresolved_blockers"])
             evidence_gaps = _dedupe(normalized_quality["evidence_gaps"])
         quality_status = normalized_quality["quality_status"]
+        effective_require_zero_blockers = bool(controller_plan["tranche_success_gate"]["requires_zero_blockers"])
+        effective_require_zero_evidence_gaps = bool(controller_plan["tranche_success_gate"]["requires_zero_evidence_gaps"])
 
         if _goal_satisfied(goal_target=goal_target, quality_status=quality_status):
-            if require_zero_blockers and unresolved_blockers:
+            if effective_require_zero_blockers and unresolved_blockers:
                 tranche_history.append(
                     _build_tranche_history_entry(
                         cycle=cycle,
@@ -556,7 +564,7 @@ def run_grant_autonomy_controller(
                     controller_plan=controller_plan,
                     tranche_history=tranche_history,
                 )
-            if require_zero_evidence_gaps and evidence_gaps:
+            if effective_require_zero_evidence_gaps and evidence_gaps:
                 tranche_history.append(
                     _build_tranche_history_entry(
                         cycle=cycle,
@@ -627,6 +635,24 @@ def run_grant_autonomy_controller(
                 final_workspace=workspace,
             )
 
+        inline_controller_action = _resolve_inline_controller_action(
+            normalized_quality=normalized_quality,
+        )
+        if inline_controller_action == "reselect_project_profile":
+            mainline_output = {
+                "reselection_decision": {
+                    "action": "reselect",
+                    "reason": _resolve_inline_controller_reason(
+                        normalized_quality=normalized_quality,
+                        unresolved_blockers=unresolved_blockers,
+                        evidence_gaps=evidence_gaps,
+                    ),
+                },
+                "workspace": deepcopy(workspace),
+            }
+        else:
+            mainline_output = None
+
         if cycle == max_rounds_or_cycles:
             terminal_reason = _resolve_terminal_reason(unresolved_blockers, evidence_gaps)
             tranche_history.append(
@@ -664,77 +690,78 @@ def run_grant_autonomy_controller(
                 tranche_history=tranche_history,
             )
 
-        if not spend_budget(step_action="mainline_runner", cycle=cycle):
-            return _fail_closed_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
-                spent_steps=spent_steps,
-                termination_reason="budget_exhausted",
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
-                blocker_report=latest_blocker_report,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
-            )
-        try:
-            mainline_output = mainline_runner(
-                {
-                    "workspace": deepcopy(workspace),
-                    "cycle": cycle,
-                    "goal": deepcopy(goal),
-                    "controller_plan": deepcopy(controller_plan),
-                    "blocker_queue": list(unresolved_blockers),
-                    "evidence_gap_queue": list(evidence_gaps),
-                }
-            )
-        except Exception:
-            return _fail_closed_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
-                spent_steps=spent_steps,
-                termination_reason="mainline_runner_callback_error",
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
-                blocker_report=latest_blocker_report,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
-            )
-        if not isinstance(mainline_output, dict):
-            return _fail_closed_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
-                spent_steps=spent_steps,
-                termination_reason="mainline_runner_unstructured_result",
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
-                blocker_report=latest_blocker_report,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
+        if mainline_output is None:
+            if not spend_budget(step_action="mainline_runner", cycle=cycle):
+                return _fail_closed_report(
+                    request_id=request_id,
+                    started_from_mode=start_mode,
+                    goal=deepcopy(goal),
+                    max_rounds_or_cycles=max_rounds_or_cycles,
+                    budget_max=budget_max,
+                    spent_steps=spent_steps,
+                    termination_reason="budget_exhausted",
+                    blocker_queue=initial_blockers,
+                    evidence_gap_queue=initial_evidence_gaps,
+                    action_trace=action_trace,
+                    reselection_decisions=reselection_decisions,
+                    rollback_decisions=rollback_decisions,
+                    completed_cycles=completed_cycles,
+                    final_workspace=workspace,
+                    blocker_report=latest_blocker_report,
+                    unresolved_blockers=unresolved_blockers,
+                    evidence_gaps=evidence_gaps,
                 )
+            try:
+                mainline_output = mainline_runner(
+                    {
+                        "workspace": deepcopy(workspace),
+                        "cycle": cycle,
+                        "goal": deepcopy(goal),
+                        "controller_plan": deepcopy(controller_plan),
+                        "blocker_queue": list(unresolved_blockers),
+                        "evidence_gap_queue": list(evidence_gaps),
+                    }
+                )
+            except Exception:
+                return _fail_closed_report(
+                    request_id=request_id,
+                    started_from_mode=start_mode,
+                    goal=deepcopy(goal),
+                    max_rounds_or_cycles=max_rounds_or_cycles,
+                    budget_max=budget_max,
+                    spent_steps=spent_steps,
+                    termination_reason="mainline_runner_callback_error",
+                    blocker_queue=initial_blockers,
+                    evidence_gap_queue=initial_evidence_gaps,
+                    action_trace=action_trace,
+                    reselection_decisions=reselection_decisions,
+                    rollback_decisions=rollback_decisions,
+                    completed_cycles=completed_cycles,
+                    final_workspace=workspace,
+                    blocker_report=latest_blocker_report,
+                    unresolved_blockers=unresolved_blockers,
+                    evidence_gaps=evidence_gaps,
+                )
+            if not isinstance(mainline_output, dict):
+                return _fail_closed_report(
+                    request_id=request_id,
+                    started_from_mode=start_mode,
+                    goal=deepcopy(goal),
+                    max_rounds_or_cycles=max_rounds_or_cycles,
+                    budget_max=budget_max,
+                    spent_steps=spent_steps,
+                    termination_reason="mainline_runner_unstructured_result",
+                    blocker_queue=initial_blockers,
+                    evidence_gap_queue=initial_evidence_gaps,
+                    action_trace=action_trace,
+                    reselection_decisions=reselection_decisions,
+                    rollback_decisions=rollback_decisions,
+                    completed_cycles=completed_cycles,
+                    final_workspace=workspace,
+                    blocker_report=latest_blocker_report,
+                    unresolved_blockers=unresolved_blockers,
+                    evidence_gaps=evidence_gaps,
+                    )
 
         rollback_reason = ""
         rollback_action = _decision_action(mainline_output.get("rollback_decision"))
@@ -1082,6 +1109,11 @@ def run_grant_autonomy_controller(
                 )
             )
             workspace = reselected_workspace
+            controller_plan = _apply_workspace_governance_policy(
+                controller_plan,
+                workspace=workspace,
+                explicit_controller_plan=isinstance(request.get("controller_plan"), dict),
+            )
             reselection_count += 1
             continue
 
@@ -1317,11 +1349,15 @@ def _normalize_quality_output(payload: Any) -> dict[str, Any] | None:
         return None
     if unresolved_blockers is None or evidence_gaps is None:
         return None
+    evidence_supply_queue = _normalize_evidence_supply_queue(payload.get("evidence_supply_queue"))
+    if evidence_supply_queue is None:
+        return None
     return {
         "quality_status": quality_status,
         "blocker_report": deepcopy(blocker_report),
         "unresolved_blockers": unresolved_blockers,
         "evidence_gaps": evidence_gaps,
+        "evidence_supply_queue": evidence_supply_queue,
     }
 
 
@@ -1395,6 +1431,104 @@ def _normalize_controller_plan(
         "tranche_objective": tranche_objective,
         "tranche_success_gate": tranche_success_gate,
     }
+
+
+def _apply_workspace_governance_policy(
+    controller_plan: dict[str, Any],
+    *,
+    workspace: dict[str, Any] | None,
+    explicit_controller_plan: bool,
+) -> dict[str, Any]:
+    if explicit_controller_plan or not isinstance(workspace, dict):
+        return deepcopy(controller_plan)
+    family_policy = _extract_family_governance_policy(workspace)
+    if not family_policy:
+        return deepcopy(controller_plan)
+    hydrated = deepcopy(controller_plan)
+    default_tranche = _normalized_string(family_policy.get("default_tranche"))
+    if default_tranche:
+        hydrated["current_tranche"] = default_tranche
+    preferred_stop_target = _normalized_string(family_policy.get("preferred_stop_target"))
+    if preferred_stop_target in {"submission_grade_candidate", "near_submission_candidate"}:
+        hydrated["tranche_success_gate"]["target_status"] = preferred_stop_target
+    if "requires_zero_blockers" in family_policy:
+        hydrated["tranche_success_gate"]["requires_zero_blockers"] = bool(family_policy["requires_zero_blockers"])
+    if "requires_zero_evidence_gaps" in family_policy:
+        hydrated["tranche_success_gate"]["requires_zero_evidence_gaps"] = bool(family_policy["requires_zero_evidence_gaps"])
+    acceptance = family_policy.get("acceptance_criteria")
+    if isinstance(acceptance, list):
+        normalized_acceptance = [item for item in (_normalized_string(v) for v in acceptance) if item]
+        if normalized_acceptance:
+            hydrated["tranche_success_gate"]["acceptance_criteria"] = normalized_acceptance
+    return hydrated
+
+
+def _extract_family_governance_policy(workspace: dict[str, Any]) -> dict[str, Any]:
+    project_profile = workspace.get("project_profile")
+    if not isinstance(project_profile, dict):
+        return {}
+    family_grammar = project_profile.get("grant_family_grammar")
+    if not isinstance(family_grammar, dict):
+        return {}
+    governance_policy = family_grammar.get("governance_policy")
+    return deepcopy(governance_policy) if isinstance(governance_policy, dict) else {}
+
+
+def _normalize_evidence_supply_queue(payload: Any) -> list[dict[str, Any]] | None:
+    if payload is None:
+        return []
+    if not isinstance(payload, list):
+        return None
+    normalized: list[dict[str, Any]] = []
+    for item in payload:
+        if not isinstance(item, dict):
+            return None
+        gap_id = _normalized_string(item.get("gap_id"))
+        controller_action_hint = _normalized_string(item.get("controller_action_hint"))
+        gap_kind = _normalized_string(item.get("gap_kind"))
+        required_input_ids = _string_list(item.get("required_input_ids"))
+        linked_issue_ids = _string_list(item.get("linked_issue_ids"))
+        if not gap_id or not controller_action_hint or not gap_kind:
+            return None
+        if required_input_ids is None or linked_issue_ids is None:
+            return None
+        normalized.append(
+            {
+                "gap_id": gap_id,
+                "controller_action_hint": controller_action_hint,
+                "gap_kind": gap_kind,
+                "required_input_ids": required_input_ids,
+                "linked_issue_ids": linked_issue_ids,
+            }
+        )
+    return normalized
+
+
+def _resolve_inline_controller_action(
+    *,
+    normalized_quality: dict[str, Any],
+) -> str:
+    action_hints = [
+        item["controller_action_hint"]
+        for item in normalized_quality.get("evidence_supply_queue", [])
+        if item["controller_action_hint"] in {"reselect_project_profile"}
+    ]
+    return action_hints[0] if action_hints else ""
+
+
+def _resolve_inline_controller_reason(
+    *,
+    normalized_quality: dict[str, Any],
+    unresolved_blockers: list[str],
+    evidence_gaps: list[str],
+) -> str:
+    supply_queue = normalized_quality.get("evidence_supply_queue", [])
+    if supply_queue:
+        first = supply_queue[0]
+        if first["gap_kind"] == "funding_opportunity_mismatch":
+            return "quality_supply_requires_reselection"
+        return first["gap_kind"]
+    return _default_progress_reason(normalized_quality["quality_status"], unresolved_blockers, evidence_gaps)
 
 
 def _build_tranche_history_entry(

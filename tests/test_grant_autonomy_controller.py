@@ -136,6 +136,124 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(result["tranche_history"][1]["next_controller_action"], "stop_success")
         self.assertEqual(result["tranche_history"][1]["gate_status"], "passed")
 
+    def test_family_governance_policy_shapes_default_controller_plan(self) -> None:
+        request = self._workspace_start_request()
+        request["start"]["workspace"] = {
+            "workspace_id": "ws-nih-001",
+            "lifecycle_stage": "critique",
+            "project_profile": {
+                "grant_family_grammar": {
+                    "family_id": "nih_r21_translational_family_v1",
+                    "governance_policy": {
+                        "policy_id": "nih_r21_governance_v1",
+                        "default_tranche": "quality_closure",
+                        "preferred_stop_target": "near_submission_candidate",
+                        "requires_zero_blockers": True,
+                        "requires_zero_evidence_gaps": False,
+                        "acceptance_criteria": ["significance / innovation 风险关闭"],
+                    },
+                }
+            },
+        }
+
+        def quality_evaluator(_workspace: dict[str, Any]) -> dict[str, Any]:
+            return {
+                "quality_status": "near_submission_candidate",
+                "blocker_report": {"report_kind": "quality_snapshot"},
+                "unresolved_blockers": [],
+                "evidence_gaps": ["仍需补一条次级 supporting evidence"],
+            }
+
+        result = run_grant_autonomy_controller(
+            request=request,
+            selector=lambda selection_input: selection_input,
+            initializer=lambda selection_input, selection: {"workspace": {"selection": selection_input, "meta": selection}},
+            mainline_runner=lambda payload: payload,
+            quality_evaluator=quality_evaluator,
+        )
+
+        self.assertEqual(result["controller_status"], "near_submission_candidate")
+        self.assertEqual(result["controller_plan"]["current_tranche"], "quality_closure")
+        self.assertEqual(result["controller_plan"]["tranche_success_gate"]["target_status"], "near_submission_candidate")
+        self.assertFalse(result["controller_plan"]["tranche_success_gate"]["requires_zero_evidence_gaps"])
+        self.assertEqual(
+            result["controller_plan"]["tranche_success_gate"]["acceptance_criteria"],
+            ["significance / innovation 风险关闭"],
+        )
+
+    def test_quality_supply_queue_can_trigger_inline_reselection(self) -> None:
+        request = self._selection_start_request()
+        request["goal"]["target_status"] = "near_submission_candidate"
+        request["max_rounds_or_cycles"] = 2
+        selector_calls = {"count": 0}
+        initializer_calls = {"count": 0}
+        quality_calls = {"count": 0}
+
+        def selector(selection_input: dict[str, Any]) -> dict[str, Any]:
+            selector_calls["count"] += 1
+            return {"selected_profile_id": f"profile-{selector_calls['count']}"}
+
+        def initializer(selection_input: dict[str, Any], selection: dict[str, Any]) -> dict[str, Any]:
+            initializer_calls["count"] += 1
+            return {
+                "workspace": {
+                    "workspace_id": f"{selection_input['selection_input_id']}-v{initializer_calls['count']}",
+                    "lifecycle_stage": "input_intake",
+                    "project_profile": {
+                        "grant_family_grammar": {
+                            "family_id": "nsfc_general_medical_family_v1",
+                        }
+                    },
+                }
+            }
+
+        def quality_evaluator(workspace: dict[str, Any]) -> dict[str, Any]:
+            quality_calls["count"] += 1
+            if quality_calls["count"] == 1:
+                self.assertEqual(workspace["workspace_id"], "sel-001-v1")
+                return {
+                    "quality_status": "not_ready",
+                    "blocker_report": {"report_kind": "quality_snapshot"},
+                    "unresolved_blockers": ["当前 funding opportunity 与问题不匹配"],
+                    "evidence_gaps": ["需要重选可兼容的 funding family"],
+                    "evidence_supply_queue": [
+                        {
+                            "gap_id": "gap-opportunity-fit",
+                            "controller_action_hint": "reselect_project_profile",
+                            "gap_kind": "funding_opportunity_mismatch",
+                            "required_input_ids": ["sel-001"],
+                            "linked_issue_ids": ["unresolved_hard_issues:opportunity-fit"],
+                        }
+                    ],
+                }
+            self.assertEqual(workspace["workspace_id"], "sel-001-v2")
+            return {
+                "quality_status": "near_submission_candidate",
+                "blocker_report": {"report_kind": "quality_snapshot"},
+                "unresolved_blockers": [],
+                "evidence_gaps": [],
+                "evidence_supply_queue": [],
+            }
+
+        def mainline_runner(_payload: dict[str, Any]) -> dict[str, Any]:
+            raise AssertionError("inline reselection 应在 quality signal 后直接发生，不应先进入 mainline_runner")
+
+        result = run_grant_autonomy_controller(
+            request=request,
+            selector=selector,
+            initializer=initializer,
+            mainline_runner=mainline_runner,
+            quality_evaluator=quality_evaluator,
+        )
+
+        self.assertEqual(result["controller_status"], "near_submission_candidate")
+        self.assertEqual(selector_calls["count"], 2)
+        self.assertEqual(initializer_calls["count"], 2)
+        self.assertEqual(quality_calls["count"], 2)
+        self.assertEqual(result["reselection_decisions"][0]["action"], "reselect")
+        self.assertTrue(result["reselection_decisions"][0]["accepted"])
+        self.assertEqual(result["tranche_history"][0]["next_controller_action"], "reselect_project_profile")
+
     def test_selection_input_path_runs_selector_initializer_mainline_quality(self) -> None:
         call_order: list[str] = []
         quality_calls = {"count": 0}
