@@ -15,7 +15,7 @@ Date: `2026-04-22`
 
 - 用户路径收口为 `product frontdesk` -> `product user-loop` -> `workspace progress / workspace cockpit` -> `product direct-entry` -> landed `pass` / `package` commands。
 - pre-workspace 入口现在增加 `discover-funding-opportunities` -> `select-project-profile` -> `initialize-intake-workspace`，用于先发现候选池，再选 funding/profile，最后落到 `input_intake` workspace。
-- 质量治理入口现在包括 `workspace quality-scorecard` 与 `workspace quality-diff`，用于当前版本质量评估与版本间问题关闭比较。
+- 质量治理入口现在包括 `workspace quality-scorecard`、`workspace quality-closure-dossier` 与 `workspace quality-diff`，用于当前版本质量评估、closure package 收口与版本间问题关闭比较。
 - 长时间自治入口现在包括 `pass autonomy-controller`（internal command: `execute-grant-autonomy-controller`），用于在预算、轮次、blocker 队列和 evidence gap 队列约束下调度既有主线。
 - `product build-entry` 与 lightweight `product entry` shell 继续作为 machine-readable domain/API catalog 的构建层。
 - `product frontdesk` 是 controller-owned direct frontdoor contract，读取当前 user loop、projection 与 route truth，并通过 `product-frontdesk.schema.json` generation-time fail-closed 校验。
@@ -38,8 +38,10 @@ Date: `2026-04-22`
 - 当前新增自治入口：`pass critique-loop`（internal command: `execute-critique-revision-loop`）
 - 当前新增全链路自治入口：`pass mainline-loop`（internal command: `execute-authoring-mainline-loop`）
 - 当前新增长期 controller 入口：`pass autonomy-controller`（internal command: `execute-grant-autonomy-controller`）
-- 当前新增质量治理入口：`workspace quality-scorecard` 与 `workspace quality-diff`
+- 当前新增质量治理入口：`workspace quality-scorecard`、`workspace quality-closure-dossier` 与 `workspace quality-diff`
 - 当前质量治理已补齐 `issue lineage` 合同：同一问题在 revision 后即使摘要改写，`quality diff` 也会优先按 lineage 跟踪关闭进度，而不是把它误记成“旧问题关闭 + 新问题打开”。
+- 当前质量治理已补齐 `closure dossier` 合同：同一轮 quality evaluation 会把 open issue lineage、evidence supply queue 与 queue-only reselection gap 收口成 formal closure package，供 controller / human operator 直接消费。
+- 当前 autonomy controller 已支持从 prior `controller_report` 恢复：`start.mode=controller_report` 会继续沿用已有 workspace、blocker/evidence gap 队列、action trace、reselection/rollback 决策与 tranche history，并通过 `controller_checkpoint` 输出下一次 resume 的稳定锚点。
 - 当前 funder family 抽象：`grant_family_registry.py` 持有 common grant grammar、review grammar、template strategy 与 family compatibility hooks；NSFC / NIH R21 / Wellcome Discovery 已作为 admitted family preset 进入 registry，同时保留 Wellcome discovery placeholder 作为 future family scaffold。
 - 当前 controller-owned projection：`workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`
 - 当前 repo 级投影：`mainline status` 输出 current line / current focus；`mainline phase` 只承担维护者参考记录。

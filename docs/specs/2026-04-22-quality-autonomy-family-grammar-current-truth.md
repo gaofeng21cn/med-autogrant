@@ -5,6 +5,7 @@ Date: `2026-04-22`
 ## Landed Scope
 
 - `grant-quality-scorecard` is a formal quality governance surface for a current workspace version.
+- `grant-quality-closure-dossier` is a formal closure surface derived from the current quality scorecard.
 - `grant-quality-diff` is a formal comparison surface for two workspace versions.
 - `execute-grant-autonomy-controller` is a formal long-horizon controller command that can start from `workspace`, `selection_input`, or `discovery_input`, then schedule existing discovery, profile selection, intake initialization, authoring mainline, and quality evaluation callbacks.
 - `grant_family_registry.py` owns the common grant grammar / family profile split for profile presets and non-NSFC placeholders.
@@ -20,6 +21,10 @@ The quality diff is schema-backed by `schemas/v1/grant-quality-diff.schema.json`
 It reports score deltas, dimension deltas, closed issues, remaining open issues, and newly opened issues.
 It compares open issues by lineage first, then surfaces per-version `previous_issue_id` / `current_issue_id` and `previous_summary` / `current_summary`, so a rephrased but still-open hard issue remains part of the same closure line instead of being misreported as a close-and-reopen pair.
 
+The quality closure dossier is schema-backed by `schemas/v1/grant-quality-closure-dossier.schema.json`.
+It is derived directly from the scorecard instead of introducing a second scoring path.
+It emits `quality_summary`, `evidence_supply_queue_summary`, and `closure_packages`, where each closure package is keyed by issue lineage or queue-only gap id and carries the action, target stage, required inputs, evidence refs, blocking reasons, evidence obligations, and acceptance signals needed to close that package.
+
 ## Autonomy Contract
 
 The controller input and report are schema-backed by:
@@ -28,6 +33,8 @@ The controller input and report are schema-backed by:
 - `schemas/v1/grant-autonomy-controller-report.schema.json`
 
 The report is fail-closed: success returns a `submission_grade_candidate` or `near_submission_candidate`; failure returns a structured blocker report, unresolved blocker queue, evidence gap queue, action trace, and reselection / rollback decisions.
+The controller now also supports `start.mode=controller_report`, so a later run can resume from a prior report instead of restarting from workspace / selection / discovery inputs.
+The report now emits `controller_checkpoint`, which freezes the resume start mode, workspace identity, completed cycle count, and next controller action as a stable checkpoint surface.
 
 ## Family Grammar Contract
 
