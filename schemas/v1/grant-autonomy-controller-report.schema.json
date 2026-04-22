@@ -186,6 +186,36 @@
         "fail_closed"
       ]
     },
+    "nullableControllerAction": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/controllerAction"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableQualitySummary": {
+      "anyOf": [
+        {
+          "$ref": "grant-quality-closure-dossier.schema.json#/$defs/qualitySummary"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableClosurePackage": {
+      "anyOf": [
+        {
+          "$ref": "grant-quality-closure-dossier.schema.json#/$defs/closurePackage"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "controllerCheckpoint": {
       "type": "object",
       "additionalProperties": false,
@@ -264,6 +294,11 @@
         "quality_status",
         "unresolved_blockers",
         "evidence_gaps",
+        "quality_summary",
+        "closure_package_queue_ids",
+        "active_closure_package_id",
+        "active_closure_package_action",
+        "active_closure_package_target_stage",
         "decision_reason",
         "termination_reason"
       ],
@@ -284,6 +319,21 @@
         "evidence_gaps": {
           "$ref": "#/$defs/stringQueue"
         },
+        "quality_summary": {
+          "$ref": "#/$defs/nullableQualitySummary"
+        },
+        "closure_package_queue_ids": {
+          "$ref": "#/$defs/stringQueue"
+        },
+        "active_closure_package_id": {
+          "$ref": "grant-quality-closure-dossier.schema.json#/$defs/nullableString"
+        },
+        "active_closure_package_action": {
+          "$ref": "#/$defs/nullableControllerAction"
+        },
+        "active_closure_package_target_stage": {
+          "$ref": "grant-quality-closure-dossier.schema.json#/$defs/nullableString"
+        },
         "decision_reason": {
           "$ref": "#/$defs/nonEmptyString"
         },
@@ -299,6 +349,11 @@
         "current_tranche",
         "tranche_objective",
         "tranche_success_gate",
+        "quality_summary",
+        "closure_package_queue_ids",
+        "active_closure_package_id",
+        "active_closure_package_action",
+        "active_closure_package_target_stage",
         "next_controller_action",
         "decision_basis"
       ],
@@ -311,6 +366,21 @@
         },
         "tranche_success_gate": {
           "$ref": "#/$defs/trancheSuccessGate"
+        },
+        "quality_summary": {
+          "$ref": "#/$defs/nullableQualitySummary"
+        },
+        "closure_package_queue_ids": {
+          "$ref": "#/$defs/stringQueue"
+        },
+        "active_closure_package_id": {
+          "$ref": "grant-quality-closure-dossier.schema.json#/$defs/nullableString"
+        },
+        "active_closure_package_action": {
+          "$ref": "#/$defs/nullableControllerAction"
+        },
+        "active_closure_package_target_stage": {
+          "$ref": "grant-quality-closure-dossier.schema.json#/$defs/nullableString"
         },
         "next_controller_action": {
           "$ref": "#/$defs/controllerAction"
@@ -334,6 +404,11 @@
         "quality_status",
         "unresolved_blockers",
         "evidence_gaps",
+        "quality_summary",
+        "closure_package_queue_ids",
+        "active_closure_package_id",
+        "active_closure_package_action",
+        "active_closure_package_target_stage",
         "termination_reason"
       ],
       "properties": {
@@ -368,6 +443,21 @@
         "evidence_gaps": {
           "$ref": "#/$defs/stringQueue"
         },
+        "quality_summary": {
+          "$ref": "#/$defs/nullableQualitySummary"
+        },
+        "closure_package_queue_ids": {
+          "$ref": "#/$defs/stringQueue"
+        },
+        "active_closure_package_id": {
+          "$ref": "grant-quality-closure-dossier.schema.json#/$defs/nullableString"
+        },
+        "active_closure_package_action": {
+          "$ref": "#/$defs/nullableControllerAction"
+        },
+        "active_closure_package_target_stage": {
+          "$ref": "grant-quality-closure-dossier.schema.json#/$defs/nullableString"
+        },
         "termination_reason": {
           "$ref": "#/$defs/nonEmptyString"
         }
@@ -392,6 +482,9 @@
     "action_trace",
     "reselection_decisions",
     "rollback_decisions",
+    "latest_quality_closure_dossier",
+    "closure_package_queue",
+    "active_closure_package",
     "controller_plan",
     "tranche_history",
     "final_workspace"
@@ -402,7 +495,7 @@
     },
     "controller_version": {
       "type": "integer",
-      "const": 2
+      "const": 3
     },
     "controller_checkpoint": {
       "$ref": "#/$defs/controllerCheckpoint"
@@ -471,6 +564,25 @@
       "items": {
         "$ref": "#/$defs/decisionEntry"
       }
+    },
+    "latest_quality_closure_dossier": {
+      "anyOf": [
+        {
+          "$ref": "grant-quality-closure-dossier.schema.json#/$defs/grantQualityClosureDossier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "closure_package_queue": {
+      "type": "array",
+      "items": {
+        "$ref": "grant-quality-closure-dossier.schema.json#/$defs/closurePackage"
+      }
+    },
+    "active_closure_package": {
+      "$ref": "#/$defs/nullableClosurePackage"
     },
     "controller_plan": {
       "$ref": "#/$defs/controllerPlan"

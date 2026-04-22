@@ -1660,6 +1660,7 @@ def _apply_quality_gate_to_route(
 
 def _build_autonomy_quality_evaluator_output(workspace: dict[str, Any]) -> dict[str, Any]:
     scorecard = build_grant_quality_scorecard(workspace)
+    closure_dossier = build_grant_quality_closure_dossier(workspace)
     overall_status = str(scorecard.get("overall_status") or "")
     quality_status = overall_status if overall_status in {
         "submission_grade_candidate",
@@ -1701,6 +1702,7 @@ def _build_autonomy_quality_evaluator_output(workspace: dict[str, Any]) -> dict[
         "unresolved_blockers": _dedupe_strings(unresolved_blockers),
         "evidence_gaps": _dedupe_strings(evidence_gaps),
         "evidence_supply_queue": evidence_supply_queue,
+        "quality_closure_dossier": closure_dossier,
     }
 
 

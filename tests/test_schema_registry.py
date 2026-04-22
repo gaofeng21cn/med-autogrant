@@ -204,19 +204,44 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("controller_checkpoint", report_required)
         self.assertIn("controller_plan", report_required)
         self.assertIn("tranche_history", report_required)
+        self.assertIn("latest_quality_closure_dossier", report_required)
+        self.assertIn("closure_package_queue", report_required)
+        self.assertIn("active_closure_package", report_required)
         self.assertEqual(
             report_schema["$defs"]["controllerPlan"]["required"],
             [
                 "current_tranche",
                 "tranche_objective",
                 "tranche_success_gate",
+                "quality_summary",
+                "closure_package_queue_ids",
+                "active_closure_package_id",
+                "active_closure_package_action",
+                "active_closure_package_target_stage",
                 "next_controller_action",
                 "decision_basis",
             ],
         )
+        decision_basis_required = report_schema["$defs"]["controllerDecisionBasis"]["required"]
+        self.assertIn("quality_summary", decision_basis_required)
+        self.assertIn("closure_package_queue_ids", decision_basis_required)
+        self.assertIn("active_closure_package_id", decision_basis_required)
+        self.assertIn("active_closure_package_action", decision_basis_required)
+        self.assertIn("active_closure_package_target_stage", decision_basis_required)
+        tranche_history_required = report_schema["$defs"]["trancheHistoryEntry"]["required"]
+        self.assertIn("quality_summary", tranche_history_required)
+        self.assertIn("closure_package_queue_ids", tranche_history_required)
+        self.assertIn("active_closure_package_id", tranche_history_required)
+        self.assertIn("active_closure_package_action", tranche_history_required)
+        self.assertIn("active_closure_package_target_stage", tranche_history_required)
         self.assertEqual(
             report_schema["$defs"]["trancheHistoryEntry"]["properties"]["next_controller_action"]["$ref"],
             "#/$defs/controllerAction",
+        )
+        dossier_any_of = report_schema["properties"]["latest_quality_closure_dossier"]["anyOf"]
+        self.assertEqual(
+            dossier_any_of[0]["$ref"],
+            "grant-quality-closure-dossier.schema.json#/$defs/grantQualityClosureDossier",
         )
 
     def test_project_profile_schema_supports_family_grammar_contract(self) -> None:

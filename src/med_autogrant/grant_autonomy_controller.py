@@ -33,6 +33,24 @@ _GATE_STATUSES = {
     "blocked",
     "failed_closed",
 }
+_CLOSURE_PACKAGE_SEVERITIES = {"hard", "gap"}
+_STAGE_PRIORITY = {
+    "direction_screening": 0,
+    "question_refinement": 1,
+    "argument_building": 2,
+    "fit_alignment": 3,
+    "outline": 4,
+    "drafting": 5,
+    "critique": 6,
+    "revision": 7,
+    "frozen": 8,
+}
+_CLOSURE_ACTION_PRIORITY = {
+    "fail_closed": 0,
+    "reselect_project_profile": 1,
+    "rollback_upstream": 2,
+    "continue_mainline": 3,
+}
 
 
 def run_grant_autonomy_controller(
@@ -184,6 +202,9 @@ def run_grant_autonomy_controller(
     latest_blocker_report: dict[str, Any] = {}
     unresolved_blockers = list(initial_blockers)
     evidence_gaps = list(initial_evidence_gaps)
+    latest_quality_closure_dossier: dict[str, Any] | None = None
+    closure_package_queue: list[dict[str, Any]] = []
+    active_closure_package: dict[str, Any] | None = None
 
     selection_input: dict[str, Any] | None = None
     workspace: dict[str, Any] | None = None
@@ -253,6 +274,9 @@ def run_grant_autonomy_controller(
         latest_blocker_report = resume_seed["latest_quality_blocker_report"]
         unresolved_blockers = resume_seed["unresolved_blockers"]
         evidence_gaps = resume_seed["evidence_gaps"]
+        latest_quality_closure_dossier = resume_seed["latest_quality_closure_dossier"]
+        closure_package_queue = resume_seed["closure_package_queue"]
+        active_closure_package = resume_seed["active_closure_package"]
         reselection_count = resume_seed["reselection_count"]
         rollback_count = resume_seed["rollback_count"]
         workspace = resume_seed["final_workspace"]
@@ -612,6 +636,12 @@ def run_grant_autonomy_controller(
             )
 
         latest_blocker_report = normalized_quality["blocker_report"]
+        latest_quality_closure_dossier = normalized_quality["quality_closure_dossier"]
+        closure_package_queue = _prioritize_closure_package_queue(
+            latest_quality_closure_dossier.get("closure_packages"),
+        )
+        active_closure_package = deepcopy(closure_package_queue[0]) if closure_package_queue else None
+        normalized_quality["active_closure_package"] = deepcopy(active_closure_package)
         if cycle == 1:
             unresolved_blockers = _dedupe(initial_blockers + normalized_quality["unresolved_blockers"])
             evidence_gaps = _dedupe(initial_evidence_gaps + normalized_quality["evidence_gaps"])
@@ -619,11 +649,63 @@ def run_grant_autonomy_controller(
             unresolved_blockers = _dedupe(normalized_quality["unresolved_blockers"])
             evidence_gaps = _dedupe(normalized_quality["evidence_gaps"])
         quality_status = normalized_quality["quality_status"]
+        controller_plan = _hydrate_controller_plan_quality_state(
+            controller_plan,
+            quality_closure_dossier=latest_quality_closure_dossier,
+            closure_package_queue=closure_package_queue,
+            active_closure_package=active_closure_package,
+        )
         effective_require_zero_blockers = bool(controller_plan["tranche_success_gate"]["requires_zero_blockers"])
         effective_require_zero_evidence_gaps = bool(controller_plan["tranche_success_gate"]["requires_zero_evidence_gaps"])
         inline_controller_action = _resolve_inline_controller_action(
             normalized_quality=normalized_quality,
         )
+        if inline_controller_action == "fail_closed":
+            failure_reason = _resolve_inline_controller_reason(
+                normalized_quality=normalized_quality,
+                unresolved_blockers=unresolved_blockers,
+                evidence_gaps=evidence_gaps,
+            )
+            tranche_history.append(
+                _build_tranche_history_entry(
+                    cycle=cycle,
+                    controller_plan=controller_plan,
+                    quality_status=quality_status,
+                    unresolved_blockers=unresolved_blockers,
+                    evidence_gaps=evidence_gaps,
+                    next_controller_action="fail_closed",
+                    gate_status="failed_closed",
+                    decision_reason=failure_reason,
+                    termination_reason="quality_fail_closed",
+                    quality_closure_dossier=latest_quality_closure_dossier,
+                    closure_package_queue=closure_package_queue,
+                    active_closure_package=active_closure_package,
+                )
+            )
+            return _fail_closed_report(
+                request_id=request_id,
+                started_from_mode=start_mode,
+                goal=deepcopy(goal),
+                max_rounds_or_cycles=max_rounds_or_cycles,
+                budget_max=budget_max,
+                spent_steps=spent_steps,
+                termination_reason="quality_fail_closed",
+                blocker_queue=initial_blockers,
+                evidence_gap_queue=initial_evidence_gaps,
+                action_trace=action_trace,
+                reselection_decisions=reselection_decisions,
+                rollback_decisions=rollback_decisions,
+                completed_cycles=completed_cycles,
+                final_workspace=workspace,
+                blocker_report=latest_blocker_report,
+                unresolved_blockers=unresolved_blockers,
+                evidence_gaps=evidence_gaps,
+                controller_plan=controller_plan,
+                tranche_history=tranche_history,
+                latest_quality_closure_dossier=latest_quality_closure_dossier,
+                closure_package_queue=closure_package_queue,
+                active_closure_package=active_closure_package,
+            )
         if inline_controller_action == "reselect_project_profile":
             mainline_output = {
                 "reselection_decision": {
@@ -674,6 +756,9 @@ def run_grant_autonomy_controller(
                     evidence_gaps=evidence_gaps,
                     controller_plan=controller_plan,
                     tranche_history=tranche_history,
+                    latest_quality_closure_dossier=latest_quality_closure_dossier,
+                    closure_package_queue=closure_package_queue,
+                    active_closure_package=active_closure_package,
                 )
             if effective_require_zero_evidence_gaps and evidence_gaps:
                 tranche_history.append(
@@ -709,6 +794,9 @@ def run_grant_autonomy_controller(
                     evidence_gaps=evidence_gaps,
                     controller_plan=controller_plan,
                     tranche_history=tranche_history,
+                    latest_quality_closure_dossier=latest_quality_closure_dossier,
+                    closure_package_queue=closure_package_queue,
+                    active_closure_package=active_closure_package,
                 )
             tranche_history.append(
                 _build_tranche_history_entry(
@@ -744,6 +832,9 @@ def run_grant_autonomy_controller(
                 tranche_history=tranche_history,
                 completed_cycles=completed_cycles,
                 final_workspace=workspace,
+                latest_quality_closure_dossier=latest_quality_closure_dossier,
+                closure_package_queue=closure_package_queue,
+                active_closure_package=active_closure_package,
             )
 
         if cycle == max_rounds_or_cycles:
@@ -781,6 +872,9 @@ def run_grant_autonomy_controller(
                 evidence_gaps=evidence_gaps,
                 controller_plan=controller_plan,
                 tranche_history=tranche_history,
+                latest_quality_closure_dossier=latest_quality_closure_dossier,
+                closure_package_queue=closure_package_queue,
+                active_closure_package=active_closure_package,
             )
 
         if mainline_output is None:
@@ -1314,6 +1408,9 @@ def _build_report(
     tranche_history: list[dict[str, Any]] | None = None,
     completed_cycles: int = 0,
     final_workspace: dict[str, Any] | None = None,
+    latest_quality_closure_dossier: dict[str, Any] | None = None,
+    closure_package_queue: list[dict[str, Any]] | None = None,
+    active_closure_package: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if controller_status not in _CONTROLLER_STATUSES:
         controller_status = "failed_closed"
@@ -1322,6 +1419,13 @@ def _build_report(
     gaps = list(evidence_gaps or [])
     latest_report = deepcopy(blocker_report) if isinstance(blocker_report, dict) else {}
     final_workspace_payload = deepcopy(final_workspace) if isinstance(final_workspace, dict) else {}
+    latest_dossier_payload = (
+        deepcopy(latest_quality_closure_dossier)
+        if isinstance(latest_quality_closure_dossier, dict)
+        else None
+    )
+    closure_queue_payload = deepcopy(closure_package_queue or [])
+    active_closure_payload = deepcopy(active_closure_package) if isinstance(active_closure_package, dict) else None
     tranche_plan_payload = _finalize_controller_plan(
         controller_plan,
         goal=goal_payload,
@@ -1331,6 +1435,9 @@ def _build_report(
         unresolved_blockers=unresolved,
         evidence_gaps=gaps,
         tranche_history=tranche_history or [],
+        latest_quality_closure_dossier=latest_dossier_payload,
+        closure_package_queue=closure_queue_payload,
+        active_closure_package=active_closure_payload,
     )
     controller_checkpoint = _build_controller_checkpoint(
         request_id=request_id,
@@ -1341,7 +1448,7 @@ def _build_report(
     )
     return {
         "surface_kind": "grant_autonomy_controller_report",
-        "controller_version": 2,
+        "controller_version": 3,
         "controller_checkpoint": controller_checkpoint,
         "request_id": request_id,
         "controller_status": controller_status,
@@ -1368,6 +1475,9 @@ def _build_report(
         "action_trace": deepcopy(action_trace or []),
         "reselection_decisions": deepcopy(reselection_decisions or []),
         "rollback_decisions": deepcopy(rollback_decisions or []),
+        "latest_quality_closure_dossier": latest_dossier_payload,
+        "closure_package_queue": closure_queue_payload,
+        "active_closure_package": active_closure_payload,
         "controller_plan": tranche_plan_payload,
         "tranche_history": deepcopy(tranche_history or []),
         "final_workspace": final_workspace_payload,
@@ -1395,6 +1505,9 @@ def _fail_closed_report(
     tranche_history: list[dict[str, Any]] | None = None,
     completed_cycles: int = 0,
     final_workspace: dict[str, Any] | None = None,
+    latest_quality_closure_dossier: dict[str, Any] | None = None,
+    closure_package_queue: list[dict[str, Any]] | None = None,
+    active_closure_package: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     return _build_report(
         request_id=request_id,
@@ -1417,6 +1530,9 @@ def _fail_closed_report(
         tranche_history=tranche_history,
         completed_cycles=completed_cycles,
         final_workspace=final_workspace,
+        latest_quality_closure_dossier=latest_quality_closure_dossier,
+        closure_package_queue=closure_package_queue,
+        active_closure_package=active_closure_package,
     )
 
 
@@ -1475,7 +1591,8 @@ def _normalize_quality_output(payload: Any) -> dict[str, Any] | None:
     if unresolved_blockers is None or evidence_gaps is None:
         return None
     evidence_supply_queue = _normalize_evidence_supply_queue(payload.get("evidence_supply_queue"))
-    if evidence_supply_queue is None:
+    quality_closure_dossier = _normalize_quality_closure_dossier(payload.get("quality_closure_dossier"))
+    if evidence_supply_queue is None or quality_closure_dossier is None:
         return None
     return {
         "quality_status": quality_status,
@@ -1483,6 +1600,141 @@ def _normalize_quality_output(payload: Any) -> dict[str, Any] | None:
         "unresolved_blockers": unresolved_blockers,
         "evidence_gaps": evidence_gaps,
         "evidence_supply_queue": evidence_supply_queue,
+        "quality_closure_dossier": quality_closure_dossier,
+    }
+
+
+def _normalize_quality_closure_dossier(payload: Any) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return None
+    if payload.get("surface_kind") != "grant_quality_closure_dossier":
+        return None
+    if payload.get("dossier_version") != 1:
+        return None
+    workspace_surface_kind = _normalized_string(payload.get("workspace_surface_kind"))
+    grant_run_id = _normalized_string(payload.get("grant_run_id"))
+    workspace_id = _normalized_string(payload.get("workspace_id"))
+    lifecycle_stage = _normalized_string(payload.get("lifecycle_stage"))
+    draft_id_raw = payload.get("draft_id")
+    draft_id = None
+    if draft_id_raw is not None:
+        draft_id = _normalized_string(draft_id_raw) or None
+    quality_summary = _normalize_quality_summary(payload.get("quality_summary"))
+    unclosed_hard_issues = _string_list(payload.get("unclosed_hard_issues"))
+    evidence_supply_queue_summary = payload.get("evidence_supply_queue_summary")
+    closure_packages = _normalize_closure_package_queue(payload.get("closure_packages"))
+    if workspace_surface_kind != "nsfc_workspace":
+        return None
+    if not grant_run_id or not workspace_id or not lifecycle_stage:
+        return None
+    if quality_summary is None or unclosed_hard_issues is None:
+        return None
+    if not isinstance(evidence_supply_queue_summary, dict) or closure_packages is None:
+        return None
+    return {
+        "surface_kind": "grant_quality_closure_dossier",
+        "dossier_version": 1,
+        "workspace_surface_kind": "nsfc_workspace",
+        "grant_run_id": grant_run_id,
+        "workspace_id": workspace_id,
+        "lifecycle_stage": lifecycle_stage,
+        "draft_id": draft_id,
+        "quality_summary": quality_summary,
+        "unclosed_hard_issues": unclosed_hard_issues,
+        "evidence_supply_queue_summary": deepcopy(evidence_supply_queue_summary),
+        "closure_packages": closure_packages,
+    }
+
+
+def _normalize_quality_summary(payload: Any) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return None
+    overall_status = _normalized_string(payload.get("overall_status"))
+    overall_score = payload.get("overall_score")
+    summary = _normalized_string(payload.get("summary"))
+    loop_gate = payload.get("loop_gate")
+    if overall_status not in {"blocked", "near_submission_candidate", "submission_grade_candidate"}:
+        return None
+    if not isinstance(overall_score, int):
+        return None
+    if not summary or not isinstance(loop_gate, dict):
+        return None
+    gate_action = _normalized_string(loop_gate.get("action"))
+    gate_reason = _normalized_string(loop_gate.get("reason"))
+    gate_stage = _normalized_string(loop_gate.get("recommended_stage")) or None
+    if gate_action not in {"ready_for_submission", "continue", "rollback_required"}:
+        return None
+    if not gate_reason:
+        return None
+    return {
+        "overall_status": overall_status,
+        "overall_score": max(0, min(overall_score, 100)),
+        "summary": summary,
+        "loop_gate": {
+            "action": gate_action,
+            "recommended_stage": gate_stage,
+            "reason": gate_reason,
+        },
+    }
+
+
+def _normalize_closure_package_queue(payload: Any) -> list[dict[str, Any]] | None:
+    if not isinstance(payload, list):
+        return None
+    normalized: list[dict[str, Any]] = []
+    for item in payload:
+        package = _normalize_closure_package(item)
+        if package is None:
+            return None
+        normalized.append(package)
+    return normalized
+
+
+def _normalize_closure_package(payload: Any) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return None
+    closure_id = _normalized_string(payload.get("closure_id"))
+    summary = _normalized_string(payload.get("summary"))
+    severity = _normalized_string(payload.get("severity"))
+    action = _normalized_string(payload.get("action"))
+    target_stage = _normalized_string(payload.get("target_stage")) or None
+    required_input_ids = _string_list(payload.get("required_input_ids"))
+    evidence_refs = _string_list(payload.get("evidence_refs"))
+    linked_issue_ids = _string_list(payload.get("linked_issue_ids"))
+    blocking_reasons = _string_list(payload.get("blocking_reasons"))
+    evidence_obligations = payload.get("evidence_obligations")
+    acceptance_signals = payload.get("acceptance_signals")
+    if not closure_id or not summary:
+        return None
+    if severity not in _CLOSURE_PACKAGE_SEVERITIES:
+        return None
+    if action not in _CONTROLLER_ACTIONS - {"stop_success"}:
+        return None
+    if (
+        required_input_ids is None
+        or evidence_refs is None
+        or linked_issue_ids is None
+        or blocking_reasons is None
+    ):
+        return None
+    if not isinstance(evidence_obligations, list) or not isinstance(acceptance_signals, list):
+        return None
+    if any(not isinstance(item, dict) for item in evidence_obligations):
+        return None
+    if any(not isinstance(item, dict) for item in acceptance_signals):
+        return None
+    return {
+        "closure_id": closure_id,
+        "summary": summary,
+        "severity": severity,
+        "target_stage": target_stage,
+        "action": action,
+        "required_input_ids": required_input_ids,
+        "evidence_refs": evidence_refs,
+        "linked_issue_ids": linked_issue_ids,
+        "blocking_reasons": blocking_reasons,
+        "evidence_obligations": deepcopy(evidence_obligations),
+        "acceptance_signals": deepcopy(acceptance_signals),
     }
 
 
@@ -1491,7 +1743,8 @@ def _normalize_resume_seed_from_report(payload: Any) -> dict[str, Any] | None:
         return None
     if payload.get("surface_kind") != "grant_autonomy_controller_report":
         return None
-    if payload.get("controller_version") != 2:
+    controller_version = payload.get("controller_version")
+    if controller_version not in {2, 3}:
         return None
 
     final_workspace = payload.get("final_workspace")
@@ -1591,6 +1844,22 @@ def _normalize_resume_seed_from_report(payload: Any) -> dict[str, Any] | None:
         for item in copied_rollback
         if item.get("action") == "rollback" and item.get("accepted") is True
     )
+    latest_quality_closure_dossier = None
+    closure_package_queue: list[dict[str, Any]] = []
+    active_closure_package = None
+    if controller_version >= 3:
+        latest_quality_closure_dossier = _normalize_quality_closure_dossier(payload.get("latest_quality_closure_dossier"))
+        if payload.get("latest_quality_closure_dossier") is not None and latest_quality_closure_dossier is None:
+            return None
+        normalized_queue = _normalize_closure_package_queue(payload.get("closure_package_queue"))
+        if normalized_queue is None:
+            return None
+        closure_package_queue = normalized_queue
+        active_payload = payload.get("active_closure_package")
+        if active_payload is not None:
+            active_closure_package = _normalize_closure_package(active_payload)
+            if active_closure_package is None:
+                return None
     return {
         "final_workspace": deepcopy(final_workspace),
         "controller_plan_input": controller_plan_input,
@@ -1607,6 +1876,9 @@ def _normalize_resume_seed_from_report(payload: Any) -> dict[str, Any] | None:
         "latest_quality_blocker_report": deepcopy(latest_quality_blocker_report),
         "unresolved_blockers": unresolved_blockers,
         "evidence_gaps": evidence_gaps,
+        "latest_quality_closure_dossier": latest_quality_closure_dossier,
+        "closure_package_queue": closure_package_queue,
+        "active_closure_package": active_closure_package,
         "selection_input": selection_input,
     }
 
@@ -1786,10 +2058,76 @@ def _normalize_controller_action_hint(payload: Any) -> dict[str, Any] | None:
     }
 
 
+def _prioritize_closure_package_queue(payload: Any) -> list[dict[str, Any]]:
+    packages = _normalize_closure_package_queue(payload)
+    if packages is None:
+        return []
+    enumerated = list(enumerate(packages))
+    enumerated.sort(
+        key=lambda item: (
+            _CLOSURE_ACTION_PRIORITY.get(item[1]["action"], 99),
+            0 if item[1]["severity"] == "hard" else 1,
+            _STAGE_PRIORITY.get(item[1].get("target_stage"), 99),
+            item[0],
+        )
+    )
+    return [deepcopy(item[1]) for item in enumerated]
+
+
+def _active_closure_package_action(active_closure_package: dict[str, Any] | None) -> str | None:
+    if not isinstance(active_closure_package, dict):
+        return None
+    action = _normalized_string(active_closure_package.get("action"))
+    if action not in _CONTROLLER_ACTIONS - {"stop_success"}:
+        return None
+    return action
+
+
+def _closure_package_queue_ids(closure_package_queue: list[dict[str, Any]] | None) -> list[str]:
+    return [
+        closure_id
+        for item in closure_package_queue or []
+        for closure_id in [_normalized_string(item.get("closure_id"))]
+        if closure_id
+    ]
+
+
+def _hydrate_controller_plan_quality_state(
+    controller_plan: dict[str, Any] | None,
+    *,
+    quality_closure_dossier: dict[str, Any] | None,
+    closure_package_queue: list[dict[str, Any]] | None,
+    active_closure_package: dict[str, Any] | None,
+) -> dict[str, Any]:
+    hydrated = deepcopy(controller_plan) if isinstance(controller_plan, dict) else {}
+    quality_summary = deepcopy(hydrated.get("quality_summary"))
+    if isinstance(quality_closure_dossier, dict):
+        quality_summary = deepcopy(quality_closure_dossier.get("quality_summary"))
+    closure_ids = list(hydrated.get("closure_package_queue_ids") or [])
+    if closure_package_queue is not None:
+        closure_ids = _closure_package_queue_ids(closure_package_queue)
+    active_closure_package_id = hydrated.get("active_closure_package_id")
+    active_closure_package_action = hydrated.get("active_closure_package_action")
+    active_closure_package_target_stage = hydrated.get("active_closure_package_target_stage")
+    if isinstance(active_closure_package, dict):
+        active_closure_package_id = _normalized_string(active_closure_package.get("closure_id")) or None
+        active_closure_package_action = _active_closure_package_action(active_closure_package)
+        active_closure_package_target_stage = _normalized_string(active_closure_package.get("target_stage")) or None
+    hydrated["quality_summary"] = deepcopy(quality_summary)
+    hydrated["closure_package_queue_ids"] = closure_ids
+    hydrated["active_closure_package_id"] = active_closure_package_id
+    hydrated["active_closure_package_action"] = active_closure_package_action
+    hydrated["active_closure_package_target_stage"] = active_closure_package_target_stage
+    return hydrated
+
+
 def _resolve_inline_controller_action(
     *,
     normalized_quality: dict[str, Any],
 ) -> str:
+    active_action = _active_closure_package_action(normalized_quality.get("active_closure_package"))
+    if active_action in {"fail_closed", "reselect_project_profile"}:
+        return active_action
     action_hints = [
         item["controller_action_hint"]["action"]
         for item in normalized_quality.get("evidence_supply_queue", [])
@@ -1804,6 +2142,14 @@ def _resolve_inline_controller_reason(
     unresolved_blockers: list[str],
     evidence_gaps: list[str],
 ) -> str:
+    active_closure_package = normalized_quality.get("active_closure_package")
+    if isinstance(active_closure_package, dict):
+        summary = _normalized_string(active_closure_package.get("summary"))
+        if summary:
+            return summary
+        blocking_reasons = _string_list(active_closure_package.get("blocking_reasons"))
+        if blocking_reasons:
+            return blocking_reasons[0]
     supply_queue = normalized_quality.get("evidence_supply_queue", [])
     if supply_queue:
         first = supply_queue[0]
@@ -1830,16 +2176,25 @@ def _build_tranche_history_entry(
     gate_status: str,
     decision_reason: str,
     termination_reason: str,
+    quality_closure_dossier: dict[str, Any] | None = None,
+    closure_package_queue: list[dict[str, Any]] | None = None,
+    active_closure_package: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    hydrated_plan = _hydrate_controller_plan_quality_state(
+        controller_plan,
+        quality_closure_dossier=quality_closure_dossier,
+        closure_package_queue=closure_package_queue,
+        active_closure_package=active_closure_package,
+    )
     action = next_controller_action if next_controller_action in _CONTROLLER_ACTIONS else "continue_mainline"
     normalized_gate_status = gate_status if gate_status in _GATE_STATUSES else "open"
     normalized_quality_status = quality_status if quality_status in _QUALITY_STATUSES else "unknown"
     reason = _normalized_string(decision_reason) or termination_reason or "controller_progression"
-    tranche_success_gate = controller_plan.get("tranche_success_gate")
+    tranche_success_gate = hydrated_plan.get("tranche_success_gate")
     return {
         "cycle": cycle,
-        "current_tranche": controller_plan.get("current_tranche") or "submission_readiness",
-        "tranche_objective": controller_plan.get("tranche_objective") or "advance_to_submission_grade_candidate",
+        "current_tranche": hydrated_plan.get("current_tranche") or "submission_readiness",
+        "tranche_objective": hydrated_plan.get("tranche_objective") or "advance_to_submission_grade_candidate",
         "tranche_success_gate": deepcopy(tranche_success_gate) if isinstance(tranche_success_gate, dict) else {},
         "gate_status": normalized_gate_status,
         "next_controller_action": action,
@@ -1847,6 +2202,11 @@ def _build_tranche_history_entry(
         "quality_status": normalized_quality_status,
         "unresolved_blockers": list(unresolved_blockers),
         "evidence_gaps": list(evidence_gaps),
+        "quality_summary": deepcopy(hydrated_plan.get("quality_summary")),
+        "closure_package_queue_ids": list(hydrated_plan.get("closure_package_queue_ids") or []),
+        "active_closure_package_id": hydrated_plan.get("active_closure_package_id"),
+        "active_closure_package_action": hydrated_plan.get("active_closure_package_action"),
+        "active_closure_package_target_stage": hydrated_plan.get("active_closure_package_target_stage"),
         "termination_reason": termination_reason or "in_progress",
     }
 
@@ -1871,12 +2231,21 @@ def _finalize_controller_plan(
     unresolved_blockers: list[str],
     evidence_gaps: list[str],
     tranche_history: list[dict[str, Any]],
+    latest_quality_closure_dossier: dict[str, Any] | None = None,
+    closure_package_queue: list[dict[str, Any]] | None = None,
+    active_closure_package: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     base_plan = _normalize_controller_plan(
         payload,
         goal=goal,
         require_zero_blockers=True,
         require_zero_evidence_gaps=True,
+    )
+    base_plan = _hydrate_controller_plan_quality_state(
+        base_plan,
+        quality_closure_dossier=latest_quality_closure_dossier,
+        closure_package_queue=closure_package_queue,
+        active_closure_package=active_closure_package,
     )
     latest_history = tranche_history[-1] if tranche_history else {}
     decision_basis = {
@@ -1885,6 +2254,18 @@ def _finalize_controller_plan(
         "quality_status": latest_history.get("quality_status") or "unknown",
         "unresolved_blockers": list(latest_history.get("unresolved_blockers") or unresolved_blockers),
         "evidence_gaps": list(latest_history.get("evidence_gaps") or evidence_gaps),
+        "quality_summary": deepcopy(latest_history.get("quality_summary")) if latest_history else deepcopy(base_plan.get("quality_summary")),
+        "closure_package_queue_ids": list(
+            latest_history.get("closure_package_queue_ids")
+            or base_plan.get("closure_package_queue_ids")
+            or []
+        ),
+        "active_closure_package_id": latest_history.get("active_closure_package_id", base_plan.get("active_closure_package_id")),
+        "active_closure_package_action": latest_history.get("active_closure_package_action", base_plan.get("active_closure_package_action")),
+        "active_closure_package_target_stage": latest_history.get(
+            "active_closure_package_target_stage",
+            base_plan.get("active_closure_package_target_stage"),
+        ),
         "decision_reason": _normalized_string(latest_history.get("decision_reason"))
         or termination_reason
         or "controller_not_started",

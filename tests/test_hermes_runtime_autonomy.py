@@ -23,10 +23,91 @@ def _load_json(path: Path) -> dict[str, object]:
 
 
 class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
+    def _quality_summary(
+        self,
+        *,
+        overall_status: str,
+        overall_score: int,
+        recommended_stage: str | None,
+        reason: str,
+    ) -> dict[str, object]:
+        return {
+            "overall_status": overall_status,
+            "overall_score": overall_score,
+            "summary": f"quality:{overall_status}",
+            "loop_gate": {
+                "action": "ready_for_submission" if overall_status == "submission_grade_candidate" else "continue",
+                "recommended_stage": recommended_stage,
+                "reason": reason,
+            },
+        }
+
+    def _quality_dossier(
+        self,
+        *,
+        workspace: dict[str, object],
+        overall_status: str,
+        overall_score: int,
+        recommended_stage: str | None,
+        reason: str,
+    ) -> dict[str, object]:
+        summary = self._quality_summary(
+            overall_status=overall_status,
+            overall_score=overall_score,
+            recommended_stage=recommended_stage,
+            reason=reason,
+        )
+        current_selection = workspace.get("current_selection") if isinstance(workspace, dict) else {}
+        draft_id = current_selection.get("active_draft_id") if isinstance(current_selection, dict) else None
+        return {
+            "surface_kind": "grant_quality_closure_dossier",
+            "dossier_version": 1,
+            "workspace_surface_kind": "nsfc_workspace",
+            "grant_run_id": workspace["grant_run_id"],
+            "workspace_id": workspace["workspace_id"],
+            "lifecycle_stage": workspace["lifecycle_stage"],
+            "draft_id": draft_id,
+            "quality_summary": summary,
+            "unclosed_hard_issues": [],
+            "evidence_supply_queue_summary": {
+                "total_gap_count": 0,
+                "outstanding_gap_ids": [],
+                "status_counts": [],
+                "kind_counts": [],
+            },
+            "closure_packages": [],
+        }
+
+    def _controller_plan_quality_fields(
+        self,
+        *,
+        quality_summary: dict[str, object],
+    ) -> dict[str, object]:
+        return {
+            "quality_summary": quality_summary,
+            "closure_package_queue_ids": [],
+            "active_closure_package_id": None,
+            "active_closure_package_action": None,
+            "active_closure_package_target_stage": None,
+        }
+
     def test_execute_grant_autonomy_controller_validates_and_writes_report(self) -> None:
         from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
 
         workspace = _load_json(FROZEN_EXAMPLE_PATH)
+        quality_summary = self._quality_summary(
+            overall_status="submission_grade_candidate",
+            overall_score=90,
+            recommended_stage="frozen",
+            reason="ready",
+        )
+        quality_dossier = self._quality_dossier(
+            workspace=workspace,
+            overall_status="submission_grade_candidate",
+            overall_score=90,
+            recommended_stage="frozen",
+            reason="ready",
+        )
         request = {
             "request_id": "autonomy-req-001",
             "start": {
@@ -58,7 +139,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
         }
         report = {
             "surface_kind": "grant_autonomy_controller_report",
-            "controller_version": 2,
+            "controller_version": 3,
             "controller_checkpoint": {
                 "checkpoint_id": "checkpoint-001",
                 "resume_start_mode": "controller_report",
@@ -98,6 +179,9 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
             ],
             "reselection_decisions": [],
             "rollback_decisions": [],
+            "latest_quality_closure_dossier": quality_dossier,
+            "closure_package_queue": [],
+            "active_closure_package": None,
             "controller_plan": {
                 "current_tranche": "submission_readiness",
                 "tranche_objective": "advance_to_submission_grade_candidate",
@@ -106,6 +190,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
                     "requires_zero_blockers": True,
                     "requires_zero_evidence_gaps": True,
                 },
+                **self._controller_plan_quality_fields(quality_summary=quality_summary),
                 "next_controller_action": "stop_success",
                 "decision_basis": {
                     "cycle": 1,
@@ -113,6 +198,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
                     "quality_status": "submission_grade_candidate",
                     "unresolved_blockers": [],
                     "evidence_gaps": [],
+                    **self._controller_plan_quality_fields(quality_summary=quality_summary),
                     "decision_reason": "tranche_success_gate_satisfied",
                     "termination_reason": "goal_reached",
                 },
@@ -133,6 +219,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
                     "quality_status": "submission_grade_candidate",
                     "unresolved_blockers": [],
                     "evidence_gaps": [],
+                    **self._controller_plan_quality_fields(quality_summary=quality_summary),
                     "termination_reason": "goal_reached",
                 }
             ],
@@ -163,6 +250,20 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
         from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
 
         selection_input = _load_json(NIH_SELECTION_INPUT_PATH)
+        final_workspace = _load_json(FROZEN_EXAMPLE_PATH)
+        quality_summary = self._quality_summary(
+            overall_status="near_submission_candidate",
+            overall_score=78,
+            recommended_stage="revision",
+            reason="keep improving",
+        )
+        quality_dossier = self._quality_dossier(
+            workspace=final_workspace,
+            overall_status="near_submission_candidate",
+            overall_score=78,
+            recommended_stage="revision",
+            reason="keep improving",
+        )
         request = {
             "request_id": "autonomy-req-nih-001",
             "start": {
@@ -194,7 +295,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
         }
         report = {
             "surface_kind": "grant_autonomy_controller_report",
-            "controller_version": 2,
+            "controller_version": 3,
             "controller_checkpoint": {
                 "checkpoint_id": "checkpoint-nih-001",
                 "resume_start_mode": "controller_report",
@@ -227,6 +328,9 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
             "action_trace": [],
             "reselection_decisions": [],
             "rollback_decisions": [],
+            "latest_quality_closure_dossier": quality_dossier,
+            "closure_package_queue": [],
+            "active_closure_package": None,
             "controller_plan": {
                 "current_tranche": "quality_closure",
                 "tranche_objective": "advance_to_near_submission_candidate",
@@ -235,6 +339,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
                     "requires_zero_blockers": True,
                     "requires_zero_evidence_gaps": True,
                 },
+                **self._controller_plan_quality_fields(quality_summary=quality_summary),
                 "next_controller_action": "stop_success",
                 "decision_basis": {
                     "cycle": 1,
@@ -242,6 +347,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
                     "quality_status": "near_submission_candidate",
                     "unresolved_blockers": [],
                     "evidence_gaps": [],
+                    **self._controller_plan_quality_fields(quality_summary=quality_summary),
                     "decision_reason": "tranche_success_gate_satisfied",
                     "termination_reason": "goal_reached",
                 },
@@ -262,10 +368,11 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
                     "quality_status": "near_submission_candidate",
                     "unresolved_blockers": [],
                     "evidence_gaps": [],
+                    **self._controller_plan_quality_fields(quality_summary=quality_summary),
                     "termination_reason": "goal_reached",
                 }
             ],
-            "final_workspace": _load_json(FROZEN_EXAMPLE_PATH),
+            "final_workspace": final_workspace,
         }
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -363,4 +470,20 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
                 and "NIH R21 Parent" in item["allowed_values"]
                 for item in family_trace["family_compatibility_hooks"]
             )
+        )
+
+    def test_autonomy_quality_evaluator_output_includes_closure_dossier(self) -> None:
+        from med_autogrant.hermes_runtime import _build_autonomy_quality_evaluator_output
+
+        workspace = _load_json(FROZEN_EXAMPLE_PATH)
+        payload = _build_autonomy_quality_evaluator_output(workspace)
+
+        self.assertIn("quality_closure_dossier", payload)
+        dossier = payload["quality_closure_dossier"]
+        self.assertEqual(dossier["surface_kind"], "grant_quality_closure_dossier")
+        self.assertEqual(dossier["workspace_id"], workspace["workspace_id"])
+        self.assertIsInstance(dossier["closure_packages"], list)
+        self.assertEqual(
+            dossier["quality_summary"]["overall_status"],
+            payload["blocker_report"]["overall_status"],
         )
