@@ -160,6 +160,7 @@
         "product_entry_builder_command",
         "product_entry_kind",
         "supported_entry_modes",
+        "domain_agent_entry_spec",
         "supported_commands",
         "command_contracts"
       ],
@@ -181,6 +182,9 @@
             "direct",
             "opl-handoff"
           ]
+        },
+        "domain_agent_entry_spec": {
+          "$ref": "product-entry.schema.json#/$defs/domainAgentEntrySpec"
         },
         "supported_commands": {
           "const": [

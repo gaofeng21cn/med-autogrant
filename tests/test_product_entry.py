@@ -719,6 +719,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
 
 class ProductEntryEnvelopeTest(unittest.TestCase):
     def test_product_entry_builds_shared_envelope_for_direct_and_opl_handoff(self) -> None:
+        from med_autogrant.domain_entry_contract import build_domain_entry_contract
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         entry = MedAutoGrantProductEntry()
@@ -779,18 +780,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
         self.assertEqual(
             direct_envelope["return_surface_contract"]["domain_entry_contract"],
-            {
-                "entry_adapter": "MedAutoGrantDomainEntry",
-                "service_safe_surface_kind": "service-safe-domain-entry-command",
-                "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
-                "product_entry_kind": "med_auto_grant_product_entry",
-                "supported_entry_modes": [
-                    "direct",
-                    "opl-handoff",
-                ],
-                "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
-                "command_contracts": DOMAIN_ENTRY_COMMAND_CONTRACTS,
-            },
+            build_domain_entry_contract(),
         )
         self.assertEqual(
             direct_envelope["return_surface_contract"]["checkpoint_aggregation_surface"],
@@ -1215,6 +1205,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         )
 
     def test_grant_direct_entry_composes_projection_and_entry_envelopes(self) -> None:
+        from med_autogrant.domain_entry_contract import build_domain_entry_contract
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         payload = MedAutoGrantProductEntry().build_grant_direct_entry(
@@ -1359,15 +1350,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "entry_adapter": "MedAutoGrantDomainEntry",
                         "default_formal_entry": "CLI",
                         "supported_entry_modes": ["direct", "opl-handoff"],
-                        "domain_entry_contract": {
-                            "entry_adapter": "MedAutoGrantDomainEntry",
-                            "service_safe_surface_kind": "service-safe-domain-entry-command",
-                            "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
-                            "product_entry_kind": "med_auto_grant_product_entry",
-                            "supported_entry_modes": ["direct", "opl-handoff"],
-                            "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
-                            "command_contracts": DOMAIN_ENTRY_COMMAND_CONTRACTS,
-                        },
+                        "domain_entry_contract": build_domain_entry_contract(),
                         "checkpoint_aggregation_surface": "stage-route-report",
                         "operator_contract": {
                             "canonical_audit_surfaces": [
@@ -1440,15 +1423,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "entry_adapter": "MedAutoGrantDomainEntry",
                         "default_formal_entry": "CLI",
                         "supported_entry_modes": ["direct", "opl-handoff"],
-                        "domain_entry_contract": {
-                            "entry_adapter": "MedAutoGrantDomainEntry",
-                            "service_safe_surface_kind": "service-safe-domain-entry-command",
-                            "product_entry_builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
-                            "product_entry_kind": "med_auto_grant_product_entry",
-                            "supported_entry_modes": ["direct", "opl-handoff"],
-                            "supported_commands": SUPPORTED_DOMAIN_ENTRY_COMMANDS,
-                            "command_contracts": DOMAIN_ENTRY_COMMAND_CONTRACTS,
-                        },
+                        "domain_entry_contract": build_domain_entry_contract(),
                         "checkpoint_aggregation_surface": "stage-route-report",
                         "operator_contract": {
                             "canonical_audit_surfaces": [

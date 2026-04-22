@@ -204,6 +204,95 @@
         }
       }
     },
+    "domainAgentEntrySpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "agent_id",
+        "title",
+        "description",
+        "default_engine",
+        "workspace_requirement",
+        "locator_schema",
+        "codex_entry_strategy",
+        "artifact_conventions",
+        "progress_conventions",
+        "entry_command",
+        "manifest_command"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "domain_agent_entry_spec"
+        },
+        "agent_id": {
+          "const": "mag"
+        },
+        "title": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "description": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "default_engine": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_requirement": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "locator_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required_fields",
+            "optional_fields",
+            "workspace_field",
+            "workspace_kind",
+            "workspace_id_field",
+            "run_id_field",
+            "draft_id_field"
+          ],
+          "properties": {
+            "required_fields": {
+              "$ref": "common.schema.json#/$defs/stringList"
+            },
+            "optional_fields": {
+              "$ref": "common.schema.json#/$defs/stringList"
+            },
+            "workspace_field": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "workspace_kind": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "workspace_id_field": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "run_id_field": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "draft_id_field": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "codex_entry_strategy": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "artifact_conventions": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "progress_conventions": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "entry_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "manifest_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
     "domainEntryContract": {
       "type": "object",
       "additionalProperties": false,
@@ -213,6 +302,7 @@
         "product_entry_builder_command",
         "product_entry_kind",
         "supported_entry_modes",
+        "domain_agent_entry_spec",
         "supported_commands",
         "command_contracts"
       ],
@@ -234,6 +324,9 @@
             "direct",
             "opl-handoff"
           ]
+        },
+        "domain_agent_entry_spec": {
+          "$ref": "#/$defs/domainAgentEntrySpec"
         },
         "supported_commands": {
           "const": [
