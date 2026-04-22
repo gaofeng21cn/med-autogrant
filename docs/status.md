@@ -26,6 +26,8 @@ Date: `2026-04-21`
 - 当前 pre-workspace intake 线：`selection_input materials -> select-project-profile -> initialize-intake-workspace -> input_intake workspace`
 - 当前 funding discovery 线：`discovery_input materials -> discover-funding-opportunities -> funding_opportunity_pool`
 - 当前 funding discovery 已支持 `official_live`，会记录 source receipts，便于后续 profile 选择和材料 provenance 回溯。
+- 当前 `official_live` 官方入口：
+  NIH Parent Announcements + NSFC 项目指南列表 + NSFC 医学科学部指南页。
 - 当前公开用户回路：`product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`
 - 当前公开 CLI 入口面：`product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready`
 - 当前新增自治入口：`pass critique-loop`（internal command: `execute-critique-revision-loop`）
