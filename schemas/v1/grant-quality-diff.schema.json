@@ -73,6 +73,36 @@
         }
       }
     },
+    "controllerActionHint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "target_stage",
+        "source_surface"
+      ],
+      "properties": {
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "nullableControllerActionHint": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/controllerActionHint"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "dimensionDelta": {
       "type": "object",
       "additionalProperties": false,
@@ -230,6 +260,126 @@
         }
       }
     },
+    "evidenceSupplyGapProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_id",
+        "transition",
+        "previous_gap_kind",
+        "current_gap_kind",
+        "previous_supply_status",
+        "current_supply_status",
+        "previous_required_input_ids",
+        "current_required_input_ids",
+        "previous_linked_issue_ids",
+        "current_linked_issue_ids",
+        "previous_controller_action_hint",
+        "current_controller_action_hint",
+        "supply_delta"
+      ],
+      "properties": {
+        "gap_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "closed",
+            "still_open",
+            "newly_opened"
+          ]
+        },
+        "previous_gap_kind": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_gap_kind": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "previous_supply_status": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_supply_status": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "previous_required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "current_required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "previous_linked_issue_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "current_linked_issue_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "previous_controller_action_hint": {
+          "$ref": "#/$defs/nullableControllerActionHint"
+        },
+        "current_controller_action_hint": {
+          "$ref": "#/$defs/nullableControllerActionHint"
+        },
+        "supply_delta": {
+          "type": "string",
+          "enum": [
+            "supply_closed",
+            "new_gap_opened",
+            "progressed",
+            "regressed",
+            "unchanged"
+          ]
+        }
+      }
+    },
+    "evidenceSupplyProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "closed_gaps",
+        "remaining_open_gaps",
+        "newly_opened_gaps",
+        "gap_progress"
+      ],
+      "properties": {
+        "closed_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "remaining_open_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "newly_opened_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "gap_progress": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceSupplyGapProgress"
+          }
+        }
+      }
+    },
     "grantQualityDiff": {
       "type": "object",
       "additionalProperties": false,
@@ -249,6 +399,7 @@
         "overall_progression",
         "dimension_deltas",
         "issue_progress",
+        "evidence_supply_progress",
         "current_loop_gate",
         "previous_loop_gate"
       ],
@@ -307,6 +458,9 @@
         },
         "issue_progress": {
           "$ref": "#/$defs/issueProgress"
+        },
+        "evidence_supply_progress": {
+          "$ref": "#/$defs/evidenceSupplyProgress"
         },
         "current_loop_gate": {
           "$ref": "#/$defs/loopGate"

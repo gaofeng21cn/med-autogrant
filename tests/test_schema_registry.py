@@ -391,6 +391,14 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("blocking_reason", tracked_issue_required)
         self.assertIn("evidence_obligations", tracked_issue_required)
         self.assertIn("recommended_closure_action", tracked_issue_required)
+        scorecard_required = scorecard_schema["$defs"]["grantQualityScorecard"]["required"]
+        self.assertIn("evidence_supply_queue", scorecard_required)
+        supply_item_required = scorecard_schema["$defs"]["evidenceSupplyQueueItem"]["required"]
+        self.assertIn("gap_id", supply_item_required)
+        self.assertIn("gap_kind", supply_item_required)
+        self.assertIn("controller_action_hint", supply_item_required)
+        self.assertIn("required_input_ids", supply_item_required)
+        self.assertIn("linked_issue_ids", supply_item_required)
 
         diff_schema = json.loads((SCHEMA_ROOT / "grant-quality-diff.schema.json").read_text(encoding="utf-8"))
         issue_progress_required = diff_schema["$defs"]["issueProgress"]["required"]
@@ -405,6 +413,17 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("previous_closure_status", issue_closure_required)
         self.assertIn("current_closure_status", issue_closure_required)
         self.assertIn("closure_delta", issue_closure_required)
+        diff_required = diff_schema["$defs"]["grantQualityDiff"]["required"]
+        self.assertIn("evidence_supply_progress", diff_required)
+        supply_progress_required = diff_schema["$defs"]["evidenceSupplyProgress"]["required"]
+        self.assertIn("closed_gaps", supply_progress_required)
+        self.assertIn("remaining_open_gaps", supply_progress_required)
+        self.assertIn("newly_opened_gaps", supply_progress_required)
+        self.assertIn("gap_progress", supply_progress_required)
+        gap_progress_item_required = diff_schema["$defs"]["evidenceSupplyGapProgress"]["required"]
+        self.assertIn("gap_id", gap_progress_item_required)
+        self.assertIn("transition", gap_progress_item_required)
+        self.assertIn("supply_delta", gap_progress_item_required)
 
     def test_frontdoor_surface_schemas_pin_preflight_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))

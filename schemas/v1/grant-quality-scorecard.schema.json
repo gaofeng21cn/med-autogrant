@@ -177,6 +177,93 @@
         }
       }
     },
+    "evidenceSupplyQueueItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_id",
+        "gap_kind",
+        "gap_summary",
+        "supply_status",
+        "controller_action_hint",
+        "required_input_ids",
+        "linked_issue_ids",
+        "linked_issue_summaries",
+        "blocking_reasons",
+        "supply_actions",
+        "evidence_refs",
+        "source_surfaces"
+      ],
+      "properties": {
+        "gap_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "gap_kind": {
+          "type": "string",
+          "enum": [
+            "hard_blocker",
+            "evidence_gap",
+            "mixed_gap"
+          ]
+        },
+        "gap_summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "supply_status": {
+          "type": "string",
+          "enum": [
+            "blocked",
+            "evidence_required",
+            "mixed"
+          ]
+        },
+        "controller_action_hint": {
+          "$ref": "#/$defs/closureAction"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "linked_issue_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "linked_issue_summaries": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "blocking_reasons": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "supply_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceObligation"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "source_surfaces": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
     "dimension": {
       "type": "object",
       "additionalProperties": false,
@@ -280,6 +367,7 @@
         "dimensions",
         "unresolved_hard_issues",
         "tracked_issues",
+        "evidence_supply_queue",
         "loop_gate"
       ],
       "properties": {
@@ -337,6 +425,12 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/trackedIssue"
+          }
+        },
+        "evidence_supply_queue": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceSupplyQueueItem"
           }
         },
         "loop_gate": {

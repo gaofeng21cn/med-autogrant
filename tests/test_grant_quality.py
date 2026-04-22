@@ -107,6 +107,32 @@ class GrantQualityScorecardTest(unittest.TestCase):
             "necessity_value_closure:rev-item-1",
         )
 
+    def test_scorecard_exposes_formal_evidence_supply_queue(self) -> None:
+        from med_autogrant.grant_quality import build_grant_quality_scorecard
+
+        critique_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
+        scorecard = build_grant_quality_scorecard(critique_workspace)
+
+        supply_queue = scorecard["evidence_supply_queue"]
+        self.assertTrue(supply_queue)
+        necessity_gap = next(
+            item
+            for item in supply_queue
+            if item["gap_id"] == "revision_item:necessity_value_closure:rev-item-1"
+        )
+        self.assertEqual(necessity_gap["gap_kind"], "hard_blocker")
+        self.assertIn("arg-001", necessity_gap["required_input_ids"])
+        self.assertIn("question-immune-fibrosis", necessity_gap["required_input_ids"])
+        self.assertTrue(
+            any(issue_id.startswith("necessity_value_closure:") for issue_id in necessity_gap["linked_issue_ids"])
+        )
+        self.assertEqual(
+            necessity_gap["controller_action_hint"]["target_stage"],
+            "argument_building",
+        )
+        self.assertEqual(necessity_gap["supply_status"], "blocked")
+        self.assertTrue(necessity_gap["supply_actions"])
+
 
 class GrantQualityDiffTest(unittest.TestCase):
     def test_quality_diff_reports_closed_and_remaining_issues(self) -> None:
@@ -207,3 +233,31 @@ class GrantQualityDiffTest(unittest.TestCase):
             lineage_progress["previous_issue_id"].split(":")[0],
             lineage_progress["current_issue_id"].split(":")[0],
         )
+
+    def test_quality_diff_reports_evidence_supply_progress(self) -> None:
+        from med_autogrant.grant_quality import build_grant_quality_diff
+
+        current_workspace = _load_json(FROZEN_EXAMPLE_PATH)
+        previous_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
+        diff = build_grant_quality_diff(
+            current_document=current_workspace,
+            previous_document=previous_workspace,
+        )
+
+        supply_progress = diff["evidence_supply_progress"]
+        self.assertIn(
+            "revision_item:necessity_value_closure:rev-item-1",
+            supply_progress["closed_gaps"],
+        )
+        self.assertEqual(supply_progress["remaining_open_gaps"], [])
+        progress_entry = next(
+            item
+            for item in supply_progress["gap_progress"]
+            if item["gap_id"] == "revision_item:necessity_value_closure:rev-item-1"
+        )
+        self.assertEqual(progress_entry["transition"], "closed")
+        self.assertEqual(progress_entry["previous_gap_kind"], "hard_blocker")
+        self.assertIsNone(progress_entry["current_gap_kind"])
+        self.assertIn("arg-001", progress_entry["previous_required_input_ids"])
+        self.assertEqual(progress_entry["current_required_input_ids"], [])
+        self.assertEqual(progress_entry["supply_delta"], "supply_closed")

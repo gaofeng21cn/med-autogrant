@@ -80,6 +80,7 @@ def build_grant_quality_scorecard(document: dict[str, Any]) -> dict[str, Any]:
         for dimension in dimensions
         for issue in dimension["tracked_issues"]
     ]
+    evidence_supply_queue = _build_evidence_supply_queue(tracked_issues)
     unresolved_hard_issues = [
         issue["summary"]
         for issue in tracked_issues
@@ -132,6 +133,7 @@ def build_grant_quality_scorecard(document: dict[str, Any]) -> dict[str, Any]:
         ],
         "unresolved_hard_issues": unresolved_hard_issues,
         "tracked_issues": tracked_issues,
+        "evidence_supply_queue": evidence_supply_queue,
         "loop_gate": loop_gate,
     }
 
@@ -153,6 +155,10 @@ def build_grant_quality_diff(
     issue_closure_progress = _build_issue_closure_progress_entries(
         previous_open_issues=previous_open_issues,
         current_open_issues=current_open_issues,
+    )
+    evidence_supply_progress = _build_evidence_supply_progress(
+        previous_queue=previous_scorecard["evidence_supply_queue"],
+        current_queue=current_scorecard["evidence_supply_queue"],
     )
 
     score_delta = current_scorecard["overall_score"] - previous_scorecard["overall_score"]
@@ -207,6 +213,7 @@ def build_grant_quality_diff(
             "newly_opened_issues": [current_open_issues[issue_id]["summary"] for issue_id in new_issue_ids],
             "issue_closure_progress": issue_closure_progress,
         },
+        "evidence_supply_progress": evidence_supply_progress,
         "current_loop_gate": current_scorecard["loop_gate"],
         "previous_loop_gate": previous_scorecard["loop_gate"],
     }
@@ -1046,6 +1053,299 @@ def _active_revision_plan(context: dict[str, Any]) -> dict[str, Any] | None:
 
 def _stable_digest(value: str) -> str:
     return hashlib.sha1(value.encode("utf-8")).hexdigest()[:12]
+
+
+def _build_evidence_supply_queue(tracked_issues: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    grouped_issues: dict[str, list[dict[str, Any]]] = {}
+    ordered_gap_ids: list[str] = []
+    for tracked_issue in tracked_issues:
+        issue = dict(tracked_issue)
+        gap_id = _nonempty_string(issue.get("lineage_id")) or _nonempty_string(issue.get("issue_id"))
+        if gap_id is None:
+            continue
+        if gap_id not in grouped_issues:
+            grouped_issues[gap_id] = []
+            ordered_gap_ids.append(gap_id)
+        grouped_issues[gap_id].append(issue)
+    return [
+        _build_evidence_supply_queue_item(
+            gap_id=gap_id,
+            issues=grouped_issues[gap_id],
+        )
+        for gap_id in ordered_gap_ids
+    ]
+
+
+def _build_evidence_supply_queue_item(*, gap_id: str, issues: list[dict[str, Any]]) -> dict[str, Any]:
+    severities = _dedupe_preserve_order(
+        severity
+        for issue in issues
+        for severity in [_nonempty_string(issue.get("severity"))]
+        if severity is not None
+    )
+    if severities == ["hard"]:
+        gap_kind = "hard_blocker"
+    elif severities == ["gap"]:
+        gap_kind = "evidence_gap"
+    else:
+        gap_kind = "mixed_gap"
+
+    issue_summaries = _dedupe_preserve_order(
+        summary
+        for issue in issues
+        for summary in [_nonempty_string(issue.get("summary"))]
+        if summary is not None
+    )
+    linked_issue_ids = _dedupe_preserve_order(
+        issue_id
+        for issue in issues
+        for issue_id in [_nonempty_string(issue.get("issue_id"))]
+        if issue_id is not None
+    )
+    blocking_reasons = _dedupe_preserve_order(
+        reason
+        for issue in issues
+        for reason in [_nonempty_string(issue.get("blocking_reason"))]
+        if reason is not None
+    )
+    source_surfaces = _dedupe_preserve_order(
+        source_surface
+        for issue in issues
+        for source_surface in [_nonempty_string(issue.get("source_surface"))]
+        if source_surface is not None
+    )
+    closure_statuses = _dedupe_preserve_order(
+        closure_status
+        for issue in issues
+        for closure_status in [_nonempty_string(issue.get("closure_status"))]
+        if closure_status is not None
+    )
+    if closure_statuses == ["blocked"]:
+        supply_status = "blocked"
+    elif closure_statuses == ["evidence_required"]:
+        supply_status = "evidence_required"
+    else:
+        supply_status = "mixed"
+
+    required_input_ids: list[str] = []
+    evidence_refs: list[str] = []
+    supply_actions = _collect_supply_actions(
+        issues=issues,
+        required_input_ids=required_input_ids,
+        evidence_refs=evidence_refs,
+    )
+    required_input_ids = _dedupe_preserve_order(required_input_ids)
+    evidence_refs = _dedupe_preserve_order(evidence_refs)
+    controller_action_hint = _resolve_controller_action_hint(issues)
+    if not supply_actions:
+        supply_actions = [
+            {
+                "obligation_id": f"{gap_id}:fallback-action",
+                "summary": controller_action_hint["summary"],
+                "required_input_ids": list(required_input_ids),
+                "evidence_refs": list(evidence_refs),
+                "satisfaction_criteria": None,
+                "source_surface": controller_action_hint["source_surface"],
+            }
+        ]
+
+    return {
+        "gap_id": gap_id,
+        "gap_kind": gap_kind,
+        "gap_summary": issue_summaries[0] if issue_summaries else gap_id,
+        "supply_status": supply_status,
+        "controller_action_hint": controller_action_hint,
+        "required_input_ids": required_input_ids,
+        "linked_issue_ids": linked_issue_ids,
+        "linked_issue_summaries": issue_summaries,
+        "blocking_reasons": blocking_reasons,
+        "supply_actions": supply_actions,
+        "evidence_refs": evidence_refs,
+        "source_surfaces": source_surfaces,
+    }
+
+
+def _collect_supply_actions(
+    *,
+    issues: list[dict[str, Any]],
+    required_input_ids: list[str],
+    evidence_refs: list[str],
+) -> list[dict[str, Any]]:
+    actions: list[dict[str, Any]] = []
+    seen_action_ids: set[str] = set()
+    for issue in issues:
+        lineage_basis = _ensure_mapping(issue.get("lineage_basis")) or {}
+        required_input_ids.extend(_read_nonempty_string_list(lineage_basis.get("required_input_ids")))
+        obligations = issue.get("evidence_obligations")
+        if not isinstance(obligations, list):
+            continue
+        for obligation in obligations:
+            obligation_payload = _ensure_mapping(obligation)
+            if obligation_payload is None:
+                continue
+            obligation_id = _nonempty_string(obligation_payload.get("obligation_id"))
+            if obligation_id is None or obligation_id in seen_action_ids:
+                continue
+            seen_action_ids.add(obligation_id)
+            obligation_required_inputs = _read_nonempty_string_list(obligation_payload.get("required_input_ids"))
+            obligation_evidence_refs = _read_nonempty_string_list(obligation_payload.get("evidence_refs"))
+            required_input_ids.extend(obligation_required_inputs)
+            evidence_refs.extend(obligation_evidence_refs)
+            actions.append(
+                {
+                    "obligation_id": obligation_id,
+                    "summary": _nonempty_string(obligation_payload.get("summary")) or obligation_id,
+                    "required_input_ids": obligation_required_inputs,
+                    "evidence_refs": obligation_evidence_refs,
+                    "satisfaction_criteria": _nonempty_string(obligation_payload.get("satisfaction_criteria")),
+                    "source_surface": _nonempty_string(obligation_payload.get("source_surface")) or "grant_quality",
+                }
+            )
+    return actions
+
+
+def _resolve_controller_action_hint(issues: list[dict[str, Any]]) -> dict[str, Any]:
+    prioritized_issues = sorted(
+        issues,
+        key=lambda item: 0 if _nonempty_string(item.get("severity")) == "hard" else 1,
+    )
+    for issue in prioritized_issues:
+        action_hint = _ensure_mapping(issue.get("recommended_closure_action"))
+        if action_hint is None:
+            continue
+        summary = _nonempty_string(action_hint.get("summary")) or _nonempty_string(issue.get("summary"))
+        source_surface = _nonempty_string(action_hint.get("source_surface")) or _nonempty_string(issue.get("source_surface"))
+        if summary is None or source_surface is None:
+            continue
+        return {
+            "summary": summary,
+            "target_stage": _nonempty_string(action_hint.get("target_stage")),
+            "source_surface": source_surface,
+        }
+    fallback_issue = prioritized_issues[0] if prioritized_issues else {}
+    return {
+        "summary": _nonempty_string(fallback_issue.get("summary")) or "补齐证据供给项。",
+        "target_stage": _nonempty_string(fallback_issue.get("rollback_stage")),
+        "source_surface": _nonempty_string(fallback_issue.get("source_surface")) or "grant_quality",
+    }
+
+
+def _build_evidence_supply_progress(
+    *,
+    previous_queue: list[dict[str, Any]],
+    current_queue: list[dict[str, Any]],
+) -> dict[str, Any]:
+    previous_gap_map = _build_evidence_supply_map(previous_queue)
+    current_gap_map = _build_evidence_supply_map(current_queue)
+    closed_gap_ids = [gap_id for gap_id in previous_gap_map if gap_id not in current_gap_map]
+    remaining_gap_ids = [gap_id for gap_id in previous_gap_map if gap_id in current_gap_map]
+    new_gap_ids = [gap_id for gap_id in current_gap_map if gap_id not in previous_gap_map]
+    ordered_gap_ids = list(previous_gap_map.keys())
+    ordered_gap_ids.extend(gap_id for gap_id in current_gap_map if gap_id not in previous_gap_map)
+    return {
+        "closed_gaps": closed_gap_ids,
+        "remaining_open_gaps": remaining_gap_ids,
+        "newly_opened_gaps": new_gap_ids,
+        "gap_progress": [
+            _build_evidence_supply_gap_progress_entry(
+                gap_id=gap_id,
+                previous_gap=previous_gap_map.get(gap_id),
+                current_gap=current_gap_map.get(gap_id),
+            )
+            for gap_id in ordered_gap_ids
+        ],
+    }
+
+
+def _build_evidence_supply_map(queue: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {
+        gap_id: dict(item)
+        for item in queue
+        for gap_id in [_nonempty_string(item.get("gap_id"))]
+        if gap_id is not None
+    }
+
+
+def _build_evidence_supply_gap_progress_entry(
+    *,
+    gap_id: str,
+    previous_gap: dict[str, Any] | None,
+    current_gap: dict[str, Any] | None,
+) -> dict[str, Any]:
+    if previous_gap is not None and current_gap is None:
+        transition = "closed"
+        supply_delta = "supply_closed"
+    elif previous_gap is None and current_gap is not None:
+        transition = "newly_opened"
+        supply_delta = "new_gap_opened"
+    else:
+        transition = "still_open"
+        supply_delta = _resolve_supply_delta(
+            previous_supply_status=_nonempty_string((previous_gap or {}).get("supply_status")),
+            current_supply_status=_nonempty_string((current_gap or {}).get("supply_status")),
+            previous_required_input_ids=_read_nonempty_string_list((previous_gap or {}).get("required_input_ids")),
+            current_required_input_ids=_read_nonempty_string_list((current_gap or {}).get("required_input_ids")),
+        )
+
+    return {
+        "gap_id": gap_id,
+        "transition": transition,
+        "previous_gap_kind": _nonempty_string((previous_gap or {}).get("gap_kind")),
+        "current_gap_kind": _nonempty_string((current_gap or {}).get("gap_kind")),
+        "previous_supply_status": _nonempty_string((previous_gap or {}).get("supply_status")),
+        "current_supply_status": _nonempty_string((current_gap or {}).get("supply_status")),
+        "previous_required_input_ids": _read_nonempty_string_list((previous_gap or {}).get("required_input_ids")),
+        "current_required_input_ids": _read_nonempty_string_list((current_gap or {}).get("required_input_ids")),
+        "previous_linked_issue_ids": _read_nonempty_string_list((previous_gap or {}).get("linked_issue_ids")),
+        "current_linked_issue_ids": _read_nonempty_string_list((current_gap or {}).get("linked_issue_ids")),
+        "previous_controller_action_hint": _optional_action_hint((previous_gap or {}).get("controller_action_hint")),
+        "current_controller_action_hint": _optional_action_hint((current_gap or {}).get("controller_action_hint")),
+        "supply_delta": supply_delta,
+    }
+
+
+def _optional_action_hint(value: Any) -> dict[str, Any] | None:
+    action_hint = _ensure_mapping(value)
+    if action_hint is None:
+        return None
+    summary = _nonempty_string(action_hint.get("summary"))
+    source_surface = _nonempty_string(action_hint.get("source_surface"))
+    if summary is None or source_surface is None:
+        return None
+    return {
+        "summary": summary,
+        "target_stage": _nonempty_string(action_hint.get("target_stage")),
+        "source_surface": source_surface,
+    }
+
+
+def _resolve_supply_delta(
+    *,
+    previous_supply_status: str | None,
+    current_supply_status: str | None,
+    previous_required_input_ids: list[str],
+    current_required_input_ids: list[str],
+) -> str:
+    rank = {
+        "blocked": 2,
+        "mixed": 2,
+        "evidence_required": 1,
+    }
+    previous_rank = rank.get(previous_supply_status or "")
+    current_rank = rank.get(current_supply_status or "")
+    if previous_rank is not None and current_rank is not None:
+        if current_rank < previous_rank:
+            return "progressed"
+        if current_rank > previous_rank:
+            return "regressed"
+
+    previous_inputs = set(previous_required_input_ids)
+    current_inputs = set(current_required_input_ids)
+    if current_inputs < previous_inputs:
+        return "progressed"
+    if previous_inputs < current_inputs:
+        return "regressed"
+    return "unchanged"
 
 
 def _open_issue_lineage_map(tracked_issues: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
