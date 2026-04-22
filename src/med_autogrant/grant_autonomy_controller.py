@@ -132,12 +132,7 @@ def run_grant_autonomy_controller(
         )
     require_zero_blockers = bool(stop_conditions.get("require_zero_blockers", True))
     require_zero_evidence_gaps = bool(stop_conditions.get("require_zero_evidence_gaps", True))
-    controller_plan = _normalize_controller_plan(
-        request.get("controller_plan"),
-        goal=goal,
-        require_zero_blockers=require_zero_blockers,
-        require_zero_evidence_gaps=require_zero_evidence_gaps,
-    )
+    controller_plan_input = request.get("controller_plan")
 
     initial_blockers = _string_list(request.get("blocker_queue"))
     initial_evidence_gaps = _string_list(request.get("evidence_gap_queue"))
@@ -192,6 +187,82 @@ def run_grant_autonomy_controller(
 
     selection_input: dict[str, Any] | None = None
     workspace: dict[str, Any] | None = None
+    explicit_controller_plan = isinstance(controller_plan_input, dict)
+
+    if start_mode == "controller_report":
+        additional_budget_max = budget_max
+        additional_cycles = max_rounds_or_cycles
+        resume_seed = _normalize_resume_seed_from_report(start.get("controller_report"))
+        if resume_seed is None:
+            return _fail_closed_report(
+                request_id=request_id,
+                started_from_mode=start_mode,
+                goal=deepcopy(goal),
+                max_rounds_or_cycles=max_rounds_or_cycles,
+                budget_max=budget_max,
+                spent_steps=spent_steps,
+                termination_reason="invalid_controller_report",
+                blocker_queue=initial_blockers,
+                evidence_gap_queue=initial_evidence_gaps,
+                action_trace=action_trace,
+                reselection_decisions=reselection_decisions,
+                rollback_decisions=rollback_decisions,
+            )
+
+        report_initial_blockers = resume_seed["initial_blocker_queue"]
+        report_initial_evidence_gaps = resume_seed["initial_evidence_gap_queue"]
+        if initial_blockers and initial_blockers != report_initial_blockers:
+            return _fail_closed_report(
+                request_id=request_id,
+                started_from_mode=start_mode,
+                goal=deepcopy(goal),
+                max_rounds_or_cycles=max_rounds_or_cycles,
+                budget_max=budget_max,
+                spent_steps=spent_steps,
+                termination_reason="resume_input_queue_mismatch",
+                blocker_queue=initial_blockers,
+                evidence_gap_queue=initial_evidence_gaps,
+                action_trace=action_trace,
+                reselection_decisions=reselection_decisions,
+                rollback_decisions=rollback_decisions,
+            )
+        if initial_evidence_gaps and initial_evidence_gaps != report_initial_evidence_gaps:
+            return _fail_closed_report(
+                request_id=request_id,
+                started_from_mode=start_mode,
+                goal=deepcopy(goal),
+                max_rounds_or_cycles=max_rounds_or_cycles,
+                budget_max=budget_max,
+                spent_steps=spent_steps,
+                termination_reason="resume_input_queue_mismatch",
+                blocker_queue=initial_blockers,
+                evidence_gap_queue=initial_evidence_gaps,
+                action_trace=action_trace,
+                reselection_decisions=reselection_decisions,
+                rollback_decisions=rollback_decisions,
+            )
+
+        initial_blockers = report_initial_blockers
+        initial_evidence_gaps = report_initial_evidence_gaps
+        action_trace = resume_seed["action_trace"]
+        reselection_decisions = resume_seed["reselection_decisions"]
+        rollback_decisions = resume_seed["rollback_decisions"]
+        tranche_history = resume_seed["tranche_history"]
+        spent_steps = resume_seed["spent_steps"]
+        completed_cycles = resume_seed["completed_cycles"]
+        latest_blocker_report = resume_seed["latest_quality_blocker_report"]
+        unresolved_blockers = resume_seed["unresolved_blockers"]
+        evidence_gaps = resume_seed["evidence_gaps"]
+        reselection_count = resume_seed["reselection_count"]
+        rollback_count = resume_seed["rollback_count"]
+        workspace = resume_seed["final_workspace"]
+        selection_input = resume_seed.get("selection_input")
+
+        budget_max = spent_steps + additional_budget_max
+        max_rounds_or_cycles = completed_cycles + additional_cycles
+        if not explicit_controller_plan:
+            controller_plan_input = resume_seed["controller_plan_input"]
+        explicit_controller_plan = True
 
     def spend_budget(*, step_action: str, cycle: int | None) -> bool:
         nonlocal spent_steps
@@ -208,7 +279,23 @@ def run_grant_autonomy_controller(
         )
         return True
 
-    if start_mode == "workspace":
+    if start_mode == "controller_report":
+        if not isinstance(workspace, dict):
+            return _fail_closed_report(
+                request_id=request_id,
+                started_from_mode=start_mode,
+                goal=deepcopy(goal),
+                max_rounds_or_cycles=max_rounds_or_cycles,
+                budget_max=budget_max,
+                spent_steps=spent_steps,
+                termination_reason="invalid_controller_report",
+                blocker_queue=initial_blockers,
+                evidence_gap_queue=initial_evidence_gaps,
+                action_trace=action_trace,
+                reselection_decisions=reselection_decisions,
+                rollback_decisions=rollback_decisions,
+            )
+    elif start_mode == "workspace":
         seed_workspace = start.get("workspace")
         if not isinstance(seed_workspace, dict):
             return _fail_closed_report(
@@ -444,13 +531,20 @@ def run_grant_autonomy_controller(
             rollback_decisions=rollback_decisions,
         )
 
+    controller_plan = _normalize_controller_plan(
+        controller_plan_input,
+        goal=goal,
+        require_zero_blockers=require_zero_blockers,
+        require_zero_evidence_gaps=require_zero_evidence_gaps,
+    )
     controller_plan = _apply_workspace_governance_policy(
         controller_plan,
         workspace=workspace,
-        explicit_controller_plan=isinstance(request.get("controller_plan"), dict),
+        explicit_controller_plan=explicit_controller_plan,
     )
 
-    for cycle in range(1, max_rounds_or_cycles + 1):
+    cycle_start = completed_cycles + 1
+    for cycle in range(cycle_start, max_rounds_or_cycles + 1):
         completed_cycles = cycle
 
         if not spend_budget(step_action="quality_evaluator", cycle=cycle):
@@ -1111,7 +1205,7 @@ def run_grant_autonomy_controller(
             controller_plan = _apply_workspace_governance_policy(
                 controller_plan,
                 workspace=workspace,
-                explicit_controller_plan=isinstance(request.get("controller_plan"), dict),
+                explicit_controller_plan=explicit_controller_plan,
             )
             reselection_count += 1
             continue
@@ -1175,6 +1269,29 @@ def run_grant_autonomy_controller(
     )
 
 
+def _build_controller_checkpoint(
+    *,
+    request_id: str,
+    final_workspace: dict[str, Any],
+    completed_cycles: int,
+    spent_steps: int,
+    next_controller_action: Any,
+) -> dict[str, Any]:
+    workspace_id = _normalized_string(final_workspace.get("workspace_id")) or "unknown_workspace"
+    request_part = request_id or "unknown_request"
+    checkpoint_id = f"grant_autonomy_controller_checkpoint:v1:{request_part}:{workspace_id}:cycles={completed_cycles}:steps={spent_steps}"
+    next_action = _normalized_string(next_controller_action)
+    if next_action not in _CONTROLLER_ACTIONS:
+        next_action = "continue_mainline"
+    return {
+        "checkpoint_id": checkpoint_id,
+        "resume_start_mode": "controller_report",
+        "workspace_id": workspace_id,
+        "completed_cycles": int(completed_cycles) if isinstance(completed_cycles, int) and completed_cycles >= 0 else 0,
+        "next_controller_action": next_action,
+    }
+
+
 def _build_report(
     *,
     request_id: str,
@@ -1204,6 +1321,7 @@ def _build_report(
     unresolved = list(unresolved_blockers or [])
     gaps = list(evidence_gaps or [])
     latest_report = deepcopy(blocker_report) if isinstance(blocker_report, dict) else {}
+    final_workspace_payload = deepcopy(final_workspace) if isinstance(final_workspace, dict) else {}
     tranche_plan_payload = _finalize_controller_plan(
         controller_plan,
         goal=goal_payload,
@@ -1214,9 +1332,17 @@ def _build_report(
         evidence_gaps=gaps,
         tranche_history=tranche_history or [],
     )
+    controller_checkpoint = _build_controller_checkpoint(
+        request_id=request_id,
+        final_workspace=final_workspace_payload,
+        completed_cycles=completed_cycles,
+        spent_steps=spent_steps,
+        next_controller_action=tranche_plan_payload.get("next_controller_action"),
+    )
     return {
         "surface_kind": "grant_autonomy_controller_report",
-        "controller_version": 1,
+        "controller_version": 2,
+        "controller_checkpoint": controller_checkpoint,
         "request_id": request_id,
         "controller_status": controller_status,
         "termination_reason": termination_reason,
@@ -1244,7 +1370,7 @@ def _build_report(
         "rollback_decisions": deepcopy(rollback_decisions or []),
         "controller_plan": tranche_plan_payload,
         "tranche_history": deepcopy(tranche_history or []),
-        "final_workspace": deepcopy(final_workspace) if isinstance(final_workspace, dict) else {},
+        "final_workspace": final_workspace_payload,
     }
 
 
@@ -1357,6 +1483,131 @@ def _normalize_quality_output(payload: Any) -> dict[str, Any] | None:
         "unresolved_blockers": unresolved_blockers,
         "evidence_gaps": evidence_gaps,
         "evidence_supply_queue": evidence_supply_queue,
+    }
+
+
+def _normalize_resume_seed_from_report(payload: Any) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return None
+    if payload.get("surface_kind") != "grant_autonomy_controller_report":
+        return None
+    if payload.get("controller_version") != 2:
+        return None
+
+    final_workspace = payload.get("final_workspace")
+    if not isinstance(final_workspace, dict):
+        return None
+    completed_cycles = payload.get("completed_cycles")
+    if not isinstance(completed_cycles, int) or completed_cycles < 0:
+        return None
+
+    budget = payload.get("budget")
+    if not isinstance(budget, dict):
+        return None
+    spent_steps = budget.get("spent_steps")
+    if not isinstance(spent_steps, int) or spent_steps < 0:
+        return None
+
+    action_trace = payload.get("action_trace")
+    if not isinstance(action_trace, list):
+        return None
+    copied_trace: list[dict[str, Any]] = []
+    max_step_index = 0
+    for item in action_trace:
+        if not isinstance(item, dict):
+            return None
+        step_index = item.get("step_index")
+        if not isinstance(step_index, int) or step_index < 1:
+            return None
+        if step_index > max_step_index:
+            max_step_index = step_index
+        copied_trace.append(deepcopy(item))
+    if spent_steps and max_step_index != spent_steps:
+        return None
+    if not spent_steps and copied_trace:
+        return None
+
+    blocker_report = payload.get("blocker_report")
+    if not isinstance(blocker_report, dict):
+        return None
+    initial_blocker_queue = _string_list(blocker_report.get("initial_blocker_queue"))
+    initial_evidence_gap_queue = _string_list(blocker_report.get("initial_evidence_gap_queue"))
+    if initial_blocker_queue is None or initial_evidence_gap_queue is None:
+        return None
+    latest_quality_blocker_report = blocker_report.get("latest_quality_blocker_report")
+    if not isinstance(latest_quality_blocker_report, dict):
+        latest_quality_blocker_report = {}
+
+    unresolved_blockers = _string_list(payload.get("unresolved_blockers"))
+    evidence_gaps = _string_list(payload.get("evidence_gaps"))
+    if unresolved_blockers is None or evidence_gaps is None:
+        return None
+
+    reselection_decisions = payload.get("reselection_decisions")
+    rollback_decisions = payload.get("rollback_decisions")
+    if not isinstance(reselection_decisions, list) or not isinstance(rollback_decisions, list):
+        return None
+    copied_reselection = []
+    for item in reselection_decisions:
+        if not isinstance(item, dict):
+            return None
+        copied_reselection.append(deepcopy(item))
+    copied_rollback = []
+    for item in rollback_decisions:
+        if not isinstance(item, dict):
+            return None
+        copied_rollback.append(deepcopy(item))
+
+    tranche_history = payload.get("tranche_history")
+    if not isinstance(tranche_history, list):
+        return None
+    copied_tranche_history: list[dict[str, Any]] = []
+    for item in tranche_history:
+        if not isinstance(item, dict):
+            return None
+        copied_tranche_history.append(deepcopy(item))
+
+    controller_plan = payload.get("controller_plan")
+    if not isinstance(controller_plan, dict):
+        return None
+    controller_plan_input = {
+        "current_tranche": controller_plan.get("current_tranche"),
+        "tranche_objective": controller_plan.get("tranche_objective"),
+        "tranche_success_gate": controller_plan.get("tranche_success_gate"),
+    }
+
+    selection_input: dict[str, Any] | None = None
+    workspace_selection = final_workspace.get("selection")
+    if isinstance(workspace_selection, dict):
+        selection_input = deepcopy(workspace_selection)
+
+    reselection_count = sum(
+        1
+        for item in copied_reselection
+        if item.get("action") == "reselect" and item.get("accepted") is True
+    )
+    rollback_count = sum(
+        1
+        for item in copied_rollback
+        if item.get("action") == "rollback" and item.get("accepted") is True
+    )
+    return {
+        "final_workspace": deepcopy(final_workspace),
+        "controller_plan_input": controller_plan_input,
+        "completed_cycles": completed_cycles,
+        "spent_steps": spent_steps,
+        "action_trace": copied_trace,
+        "reselection_decisions": copied_reselection,
+        "rollback_decisions": copied_rollback,
+        "reselection_count": reselection_count,
+        "rollback_count": rollback_count,
+        "tranche_history": copied_tranche_history,
+        "initial_blocker_queue": initial_blocker_queue,
+        "initial_evidence_gap_queue": initial_evidence_gap_queue,
+        "latest_quality_blocker_report": deepcopy(latest_quality_blocker_report),
+        "unresolved_blockers": unresolved_blockers,
+        "evidence_gaps": evidence_gaps,
+        "selection_input": selection_input,
     }
 
 

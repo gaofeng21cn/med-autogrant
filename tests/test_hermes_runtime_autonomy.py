@@ -58,7 +58,14 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
         }
         report = {
             "surface_kind": "grant_autonomy_controller_report",
-            "controller_version": 1,
+            "controller_version": 2,
+            "controller_checkpoint": {
+                "checkpoint_id": "checkpoint-001",
+                "resume_start_mode": "controller_report",
+                "workspace_id": workspace["workspace_id"],
+                "completed_cycles": 1,
+                "next_controller_action": "stop_success",
+            },
             "request_id": "autonomy-req-001",
             "controller_status": "submission_grade_candidate",
             "termination_reason": "goal_reached",
@@ -187,7 +194,14 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
         }
         report = {
             "surface_kind": "grant_autonomy_controller_report",
-            "controller_version": 1,
+            "controller_version": 2,
+            "controller_checkpoint": {
+                "checkpoint_id": "checkpoint-nih-001",
+                "resume_start_mode": "controller_report",
+                "workspace_id": "nsfc-demo-001",
+                "completed_cycles": 1,
+                "next_controller_action": "stop_success",
+            },
             "request_id": "autonomy-req-nih-001",
             "controller_status": "near_submission_candidate",
             "termination_reason": "goal_reached",

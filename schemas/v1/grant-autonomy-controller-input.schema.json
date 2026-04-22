@@ -206,6 +206,22 @@
           "$ref": "funding-landscape-discovery-input.schema.json"
         }
       }
+    },
+    "controllerReportStart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "controller_report"
+      ],
+      "properties": {
+        "mode": {
+          "const": "controller_report"
+        },
+        "controller_report": {
+          "$ref": "grant-autonomy-controller-report.schema.json"
+        }
+      }
     }
   },
   "required": [
@@ -234,6 +250,9 @@
         },
         {
           "$ref": "#/$defs/discoveryInputStart"
+        },
+        {
+          "$ref": "#/$defs/controllerReportStart"
         }
       ]
     },

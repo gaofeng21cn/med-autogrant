@@ -516,6 +516,100 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(result["tranche_history"][0]["next_controller_action"], "rollback_upstream")
         self.assertEqual(result["tranche_history"][0]["decision_reason"], "证据冲突")
 
+    def test_resume_from_controller_report_continues_cycles_and_preserves_history(self) -> None:
+        request = self._workspace_start_request()
+        request["goal"]["target_status"] = "near_submission_candidate"
+        request["max_rounds_or_cycles"] = 2
+        request["budget"] = {"max_total_steps": 10}
+        request["blocker_queue"] = ["seed blocker"]
+        request["evidence_gap_queue"] = ["seed gap"]
+        request["controller_plan"] = {
+            "current_tranche": "quality_closure",
+            "tranche_objective": "close blockers then resume",
+            "tranche_success_gate": {
+                "target_status": "near_submission_candidate",
+                "requires_zero_blockers": True,
+                "requires_zero_evidence_gaps": True,
+            },
+        }
+        mainline_calls = {"count": 0}
+        quality_calls = {"count": 0}
+
+        def mainline_runner(payload: dict[str, Any]) -> dict[str, Any]:
+            mainline_calls["count"] += 1
+            workspace = payload["workspace"]
+            self.assertEqual(workspace["workspace_id"], "ws-001")
+            return {"workspace": {"workspace_id": "ws-001", "lifecycle_stage": "revision"}}
+
+        def quality_evaluator(_workspace: dict[str, Any]) -> dict[str, Any]:
+            quality_calls["count"] += 1
+            return {
+                "quality_status": "not_ready",
+                "blocker_report": {"report_kind": "quality_snapshot"},
+                "unresolved_blockers": ["blocker-a"],
+                "evidence_gaps": ["gap-a"],
+            }
+
+        first = run_grant_autonomy_controller(
+            request=request,
+            selector=lambda selection_input: selection_input,
+            initializer=lambda selection_input, selection: {"workspace": {"selection": selection_input, "meta": selection}},
+            mainline_runner=mainline_runner,
+            quality_evaluator=quality_evaluator,
+        )
+
+        self.assertEqual(mainline_calls["count"], 1)
+        self.assertEqual(quality_calls["count"], 2)
+        self.assertEqual(first["completed_cycles"], 2)
+        self.assertEqual(first["budget"]["spent_steps"], 3)
+        self.assertEqual([entry["cycle"] for entry in first["tranche_history"]], [1, 2])
+        self.assertIn("controller_checkpoint", first)
+
+        resume_request = {
+            "request_id": "autonomy-resume-001",
+            "start": {"mode": "controller_report", "controller_report": first},
+            "goal": request["goal"],
+            "max_rounds_or_cycles": 2,
+            "budget": {"max_total_steps": 2},
+            "stop_conditions": request["stop_conditions"],
+            "blocker_queue": [],
+            "evidence_gap_queue": [],
+            "reselection_policy": request["reselection_policy"],
+            "rollback_policy": request["rollback_policy"],
+        }
+
+        def quality_evaluator_resume(workspace: dict[str, Any]) -> dict[str, Any]:
+            self.assertEqual(workspace["lifecycle_stage"], "revision")
+            return {
+                "quality_status": "near_submission_candidate",
+                "blocker_report": {"report_kind": "quality_snapshot"},
+                "unresolved_blockers": [],
+                "evidence_gaps": [],
+            }
+
+        result = run_grant_autonomy_controller(
+            request=resume_request,
+            selector=lambda selection_input: selection_input,
+            initializer=lambda selection_input, selection: {"workspace": {"selection": selection_input, "meta": selection}},
+            mainline_runner=lambda _payload: (_ for _ in ()).throw(AssertionError("resume success 不应再进入 mainline_runner")),
+            quality_evaluator=quality_evaluator_resume,
+        )
+
+        self.assertEqual(result["started_from_mode"], "controller_report")
+        self.assertEqual(result["controller_status"], "near_submission_candidate")
+        self.assertEqual(result["termination_reason"], "goal_reached")
+        self.assertEqual(result["completed_cycles"], 3)
+        self.assertEqual(result["max_rounds_or_cycles"], 4)
+        self.assertEqual(result["budget"]["max_total_steps"], 5)
+        self.assertEqual(result["budget"]["spent_steps"], 4)
+        self.assertEqual([entry["cycle"] for entry in result["tranche_history"]], [1, 2, 3])
+        self.assertEqual(result["action_trace"][-1]["cycle"], 3)
+        self.assertEqual(result["controller_plan"]["current_tranche"], first["controller_plan"]["current_tranche"])
+        self.assertEqual(result["controller_checkpoint"]["resume_start_mode"], "controller_report")
+        self.assertEqual(result["controller_checkpoint"]["workspace_id"], "ws-001")
+        self.assertEqual(result["controller_checkpoint"]["completed_cycles"], 3)
+        self.assertEqual(result["controller_checkpoint"]["next_controller_action"], "stop_success")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -186,6 +186,35 @@
         "fail_closed"
       ]
     },
+    "controllerCheckpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checkpoint_id",
+        "resume_start_mode",
+        "workspace_id",
+        "completed_cycles",
+        "next_controller_action"
+      ],
+      "properties": {
+        "checkpoint_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "resume_start_mode": {
+          "const": "controller_report"
+        },
+        "workspace_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "completed_cycles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "next_controller_action": {
+          "$ref": "#/$defs/controllerAction"
+        }
+      }
+    },
     "gateStatus": {
       "type": "string",
       "enum": [
@@ -348,6 +377,7 @@
   "required": [
     "surface_kind",
     "controller_version",
+    "controller_checkpoint",
     "request_id",
     "controller_status",
     "termination_reason",
@@ -372,7 +402,10 @@
     },
     "controller_version": {
       "type": "integer",
-      "const": 1
+      "const": 2
+    },
+    "controller_checkpoint": {
+      "$ref": "#/$defs/controllerCheckpoint"
     },
     "request_id": {
       "type": "string"
@@ -394,6 +427,7 @@
         "selection_input",
         "workspace",
         "discovery_input",
+        "controller_report",
         "unknown"
       ]
     },

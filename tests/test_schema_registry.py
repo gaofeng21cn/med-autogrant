@@ -174,6 +174,7 @@ class SchemaRegistryTest(unittest.TestCase):
 
         report_schema = json.loads((SCHEMA_ROOT / "grant-autonomy-controller-report.schema.json").read_text(encoding="utf-8"))
         report_required = report_schema["required"]
+        self.assertIn("controller_checkpoint", report_required)
         self.assertIn("controller_plan", report_required)
         self.assertIn("tranche_history", report_required)
         self.assertEqual(
