@@ -1928,6 +1928,39 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             manifest["task_lifecycle"]["progress_surface"]["surface_kind"],
             "grant_progress",
         )
+        self.assertEqual(manifest["session_continuity"]["surface_kind"], "session_continuity")
+        self.assertEqual(manifest["session_continuity"]["session_locator_field"], "grant_run_id")
+        self.assertEqual(manifest["session_continuity"]["session_handle_kind"], "grant_run_id")
+        self.assertEqual(manifest["session_continuity"]["session_id"], payload["grant_run_id"])
+        self.assertIn(
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
+            manifest["session_continuity"]["journal_path"],
+        )
+        self.assertTrue(
+            manifest["session_continuity"]["journal_path"].endswith(f"{payload['grant_run_id']}.json")
+        )
+        self.assertIn(
+            "--journal",
+            manifest["session_continuity"]["runtime_entries"]["runtime_run"]["command"],
+        )
+        self.assertEqual(manifest["progress_projection"]["surface_kind"], "progress_projection")
+        self.assertEqual(
+            manifest["progress_projection"]["workspace_path"],
+            str(CRITIQUE_EXAMPLE_PATH.resolve()),
+        )
+        self.assertEqual(
+            manifest["progress_projection"]["projection"]["projection_kind"],
+            "grant_progress",
+        )
+        self.assertEqual(manifest["artifact_inventory"]["surface_kind"], "artifact_inventory")
+        self.assertEqual(
+            manifest["artifact_inventory"]["workspace_path"],
+            str(CRITIQUE_EXAMPLE_PATH.resolve()),
+        )
+        self.assertEqual(
+            manifest["artifact_inventory"]["artifacts"][0]["artifact_kind"],
+            "workspace_document",
+        )
         self.assertEqual(manifest["skill_catalog"]["surface_kind"], "skill_catalog")
         self.assertIn("validate-workspace", manifest["skill_catalog"]["supported_commands"])
         self.assertTrue(manifest["skill_catalog"]["command_contracts"])

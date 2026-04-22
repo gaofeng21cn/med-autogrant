@@ -961,6 +961,69 @@ class MedAutoGrantProductEntry:
                 "requires": ["output_dir"],
             },
         })
+        session_continuity = _build_session_continuity_surface(
+            grant_run_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "grant_run_id",
+                context="grant-progress",
+            ),
+            workspace_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "workspace_id",
+                context="grant-progress",
+            ),
+            lifecycle_stage=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "lifecycle_stage",
+                context="grant-progress",
+            ),
+            input_path=str(resolved_input_path),
+        )
+        manifest_progress_projection = _build_progress_projection_surface(
+            projection=dict(progress_projection),
+            grant_run_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "grant_run_id",
+                context="grant-progress",
+            ),
+            workspace_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "workspace_id",
+                context="grant-progress",
+            ),
+            lifecycle_stage=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "lifecycle_stage",
+                context="grant-progress",
+            ),
+            input_path=str(resolved_input_path),
+            inspect_progress_command=command_catalog["grant_progress"],
+            summarize_workspace_command=public_cli_command(
+                "summarize-workspace", "--input", str(resolved_input_path), "--format", "json"
+            ),
+            stage_route_report_command=public_cli_command(
+                "stage-route-report", "--input", str(resolved_input_path), "--format", "json"
+            ),
+        )
+        artifact_inventory = _build_artifact_inventory_surface(
+            workspace_summary=workspace_summary,
+            grant_run_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "grant_run_id",
+                context="grant-progress",
+            ),
+            workspace_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "workspace_id",
+                context="grant-progress",
+            ),
+            lifecycle_stage=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "lifecycle_stage",
+                context="grant-progress",
+            ),
+            input_path=str(resolved_input_path),
+        )
         current_route_id = _require_nonempty_string_from_mapping(
             progress_projection,
             "current_stage",
@@ -1589,6 +1652,9 @@ class MedAutoGrantProductEntry:
                 managed_runtime_contract=managed_runtime_contract,
                 runtime_inventory=runtime_inventory,
                 task_lifecycle=task_lifecycle,
+                session_continuity=session_continuity,
+                progress_projection=manifest_progress_projection,
+                artifact_inventory=artifact_inventory,
                 skill_catalog=skill_catalog,
                 automation=automation,
                 schema_ref=f"contracts/schemas/v1/{PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE}",
@@ -3176,6 +3242,212 @@ def _schema_payload_without_contract_bundle(
         surface["product_entry_manifest"] = normalized_manifest
     normalized_payload[surface_key] = surface
     return normalized_payload
+
+
+def _build_session_continuity_surface(
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+    input_path: str,
+) -> dict[str, Any]:
+    runtime_state_contract = _build_runtime_state_contract()
+    session_journal_root = _require_nonempty_string_from_mapping(
+        runtime_state_contract,
+        "session_journal_root",
+        context="runtime_state_contract",
+    )
+    journal_path = f"{session_journal_root}{grant_run_id}.json"
+    runtime_run_command = public_cli_command(
+        "runtime-run",
+        "--input",
+        input_path,
+        "--journal",
+        journal_path,
+        "--format",
+        "json",
+    )
+    runtime_resume_command = public_cli_command(
+        "runtime-resume",
+        "--journal",
+        journal_path,
+        "--format",
+        "json",
+    )
+    return {
+        "surface_kind": "session_continuity",
+        "version": 1,
+        "summary": "显式锚定 session locator 与 journal durable anchor，避免依赖默认 journal 推断。",
+        "session_locator_field": "grant_run_id",
+        "session_handle_kind": "grant_run_id",
+        "session_id": grant_run_id,
+        "workspace_id": workspace_id,
+        "lifecycle_stage": lifecycle_stage,
+        "runtime_state_contract": dict(runtime_state_contract),
+        "journal_path": journal_path,
+        "runtime_entries": {
+            "runtime_run": {
+                "command": runtime_run_command,
+                "surface_kind": "runtime_run",
+                "summary": "用显式 --journal 启动或继续当前 workspace 的 runtime run。",
+            },
+            "runtime_resume": {
+                "command": runtime_resume_command,
+                "surface_kind": "runtime_resume",
+                "summary": "用显式 --journal 恢复当前 session。",
+            },
+        },
+        "repo_owned_truth": {
+            "workspace_surface_kind": "nsfc_workspace",
+            "workspace_path": input_path,
+            "truth_owner": TARGET_DOMAIN_ID,
+        },
+    }
+
+
+def _build_progress_projection_surface(
+    *,
+    projection: Mapping[str, Any],
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+    input_path: str,
+    inspect_progress_command: str,
+    summarize_workspace_command: str,
+    stage_route_report_command: str,
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "progress_projection",
+        "version": 1,
+        "summary": "repo-owned workspace truth 上的 grant progress projection。",
+        "workspace_surface_kind": "nsfc_workspace",
+        "workspace_path": input_path,
+        "grant_run_id": grant_run_id,
+        "workspace_id": workspace_id,
+        "lifecycle_stage": lifecycle_stage,
+        "projection_kind": _require_nonempty_string_from_mapping(
+            projection,
+            "projection_kind",
+            context="grant-progress.progress_projection",
+        ),
+        "projection": dict(projection),
+        "truth_anchors": {
+            "workspace_document": {
+                "ref_kind": "path",
+                "ref": input_path,
+                "label": "workspace JSON (repo-owned truth)",
+            },
+            "stage_route_report": {
+                "ref_kind": "command",
+                "ref": stage_route_report_command,
+                "label": "stage-route-report (derives from workspace truth)",
+            },
+            "summarize_workspace": {
+                "ref_kind": "command",
+                "ref": summarize_workspace_command,
+                "label": "summarize-workspace (derives from workspace truth)",
+            },
+            "inspect_progress": {
+                "ref_kind": "command",
+                "ref": inspect_progress_command,
+                "label": "grant-progress (projection surface)",
+            },
+        },
+    }
+
+
+def _build_artifact_inventory_surface(
+    *,
+    workspace_summary: Mapping[str, Any],
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+    input_path: str,
+) -> dict[str, Any]:
+    artifacts: list[dict[str, Any]] = [
+        {
+            "artifact_kind": "workspace_document",
+            "label": "workspace JSON (repo-owned truth)",
+            "ref": {
+                "ref_kind": "path",
+                "ref": input_path,
+            },
+        }
+    ]
+
+    def _append_workspace_ref(*, artifact_kind: str, label: str, ref: str) -> None:
+        artifacts.append(
+            {
+                "artifact_kind": artifact_kind,
+                "label": label,
+                "ref": {
+                    "ref_kind": "workspace_locator",
+                    "ref": ref,
+                },
+            }
+        )
+
+    active_draft = _optional_mapping(workspace_summary, "active_draft")
+    if isinstance(active_draft, Mapping):
+        draft_id = _optional_string_from_mapping(active_draft, "id")
+        if draft_id is not None:
+            _append_workspace_ref(
+                artifact_kind="active_draft",
+                label=f"active draft: {draft_id}",
+                ref=f"grant_workspace::{workspace_id}::application_drafts::{draft_id}",
+            )
+
+    active_revision_plan = _optional_mapping(workspace_summary, "active_revision_plan")
+    if isinstance(active_revision_plan, Mapping):
+        revision_plan_id = _optional_string_from_mapping(active_revision_plan, "id")
+        if revision_plan_id is not None:
+            _append_workspace_ref(
+                artifact_kind="active_revision_plan",
+                label=f"active revision plan: {revision_plan_id}",
+                ref=f"grant_workspace::{workspace_id}::revision_plans::{revision_plan_id}",
+            )
+
+    active_critique = _optional_mapping(workspace_summary, "active_critique")
+    if isinstance(active_critique, Mapping):
+        critique_id = _optional_string_from_mapping(active_critique, "id")
+        if critique_id is not None:
+            _append_workspace_ref(
+                artifact_kind="active_critique",
+                label=f"active critique: {critique_id}",
+                ref=f"grant_workspace::{workspace_id}::mentor_critiques::{critique_id}",
+            )
+
+    selected_direction = _optional_mapping(workspace_summary, "selected_direction")
+    if isinstance(selected_direction, Mapping):
+        direction_id = _optional_string_from_mapping(selected_direction, "id")
+        if direction_id is not None:
+            _append_workspace_ref(
+                artifact_kind="selected_direction",
+                label=f"selected direction: {direction_id}",
+                ref=f"grant_workspace::{workspace_id}::direction_hypotheses::{direction_id}",
+            )
+
+    selected_question = _optional_mapping(workspace_summary, "selected_question")
+    if isinstance(selected_question, Mapping):
+        question_id = _optional_string_from_mapping(selected_question, "id")
+        if question_id is not None:
+            _append_workspace_ref(
+                artifact_kind="selected_question",
+                label=f"selected question: {question_id}",
+                ref=f"grant_workspace::{workspace_id}::scientific_question_cards::{question_id}",
+            )
+
+    return {
+        "surface_kind": "artifact_inventory",
+        "version": 1,
+        "summary": "汇总 workspace 内当前被选中的主要对象与 draft 工件，作为 repo-owned continuity truth 的索引。",
+        "workspace_surface_kind": "nsfc_workspace",
+        "workspace_path": input_path,
+        "grant_run_id": grant_run_id,
+        "workspace_id": workspace_id,
+        "lifecycle_stage": lifecycle_stage,
+        "artifacts": artifacts,
+    }
 
 
 def _strip_contract_bundle_fields(surface: dict[str, Any]) -> None:

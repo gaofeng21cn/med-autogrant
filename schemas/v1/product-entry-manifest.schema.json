@@ -441,6 +441,207 @@
         }
       }
     },
+    "sessionContinuitySurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "summary",
+        "session_locator_field",
+        "session_handle_kind",
+        "session_id",
+        "journal_path",
+        "runtime_state_contract",
+        "workspace_id",
+        "lifecycle_stage",
+        "repo_owned_truth"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "session_continuity"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "session_locator_field": {
+          "const": "grant_run_id"
+        },
+        "session_handle_kind": {
+          "const": "grant_run_id"
+        },
+        "session_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "journal_path": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "runtime_state_contract": {
+          "$ref": "product-entry.schema.json#/$defs/runtimeStateContract"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+        },
+        "runtime_entries": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "repo_owned_truth": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "progressProjectionSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "summary",
+        "workspace_surface_kind",
+        "workspace_path",
+        "grant_run_id",
+        "workspace_id",
+        "lifecycle_stage",
+        "projection_kind",
+        "projection",
+        "truth_anchors"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "progress_projection"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "workspace_path": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "grant_run_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+        },
+        "projection_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "projection": {
+          "$ref": "grant-progress.schema.json#/$defs/grantProgressProjection"
+        },
+        "truth_anchors": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "workspace_document",
+            "stage_route_report",
+            "summarize_workspace",
+            "inspect_progress"
+          ],
+          "properties": {
+            "workspace_document": {
+              "$ref": "#/$defs/surfaceRef"
+            },
+            "stage_route_report": {
+              "$ref": "#/$defs/surfaceRef"
+            },
+            "summarize_workspace": {
+              "$ref": "#/$defs/surfaceRef"
+            },
+            "inspect_progress": {
+              "$ref": "#/$defs/surfaceRef"
+            }
+          }
+        }
+      }
+    },
+    "artifactInventoryItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_kind",
+        "label",
+        "ref"
+      ],
+      "properties": {
+        "artifact_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ref": {
+          "$ref": "#/$defs/surfaceRef"
+        }
+      }
+    },
+    "artifactInventorySurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "summary",
+        "workspace_surface_kind",
+        "workspace_path",
+        "grant_run_id",
+        "workspace_id",
+        "lifecycle_stage",
+        "artifacts"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "artifact_inventory"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_surface_kind": {
+          "const": "nsfc_workspace"
+        },
+        "workspace_path": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "grant_run_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/artifactInventoryItem"
+          }
+        }
+      }
+    },
     "skillDescriptor": {
       "type": "object",
       "additionalProperties": false,
@@ -1204,6 +1405,9 @@
         "managed_runtime_contract",
         "runtime_inventory",
         "task_lifecycle",
+        "session_continuity",
+        "progress_projection",
+        "artifact_inventory",
         "skill_catalog",
         "automation",
         "product_entry_shell",
@@ -1268,6 +1472,15 @@
         },
         "task_lifecycle": {
           "$ref": "#/$defs/taskLifecycle"
+        },
+        "session_continuity": {
+          "$ref": "#/$defs/sessionContinuitySurface"
+        },
+        "progress_projection": {
+          "$ref": "#/$defs/progressProjectionSurface"
+        },
+        "artifact_inventory": {
+          "$ref": "#/$defs/artifactInventorySurface"
         },
         "skill_catalog": {
           "$ref": "#/$defs/skillCatalog"
