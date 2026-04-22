@@ -499,6 +499,150 @@
         }
       }
     },
+    "runtimeControlSurfaceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "command",
+        "ref_kind",
+        "ref",
+        "summary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ref_kind": {
+          "const": "json_pointer"
+        },
+        "ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "runtimeControlSessionLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "locator_field",
+        "locator_value",
+        "workspace_id",
+        "lifecycle_stage"
+      ],
+      "properties": {
+        "locator_field": {
+          "const": "grant_run_id"
+        },
+        "locator_value": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+        }
+      }
+    },
+    "runtimeControlRestorePoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "session_id",
+        "workspace_id",
+        "lifecycle_stage",
+        "journal_path",
+        "resume_command",
+        "resume_surface_kind"
+      ],
+      "properties": {
+        "session_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "workspace_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "lifecycle_stage": {
+          "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
+        },
+        "journal_path": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "resume_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "resume_surface_kind": {
+          "const": "runtime_resume"
+        }
+      }
+    },
+    "runtimeControlDirectEntry": {
+      "$ref": "#/$defs/runtimeControlSurfaceRef"
+    },
+    "runtimeControlSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "summary",
+        "runtime_owner",
+        "domain_owner",
+        "executor_owner",
+        "session_locator",
+        "restore_point",
+        "progress_surface",
+        "artifact_pickup_surface",
+        "approval_control_surface",
+        "direct_entry"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "runtime_control"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "runtime_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "domain_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "executor_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "session_locator": {
+          "$ref": "#/$defs/runtimeControlSessionLocator"
+        },
+        "restore_point": {
+          "$ref": "#/$defs/runtimeControlRestorePoint"
+        },
+        "progress_surface": {
+          "$ref": "#/$defs/runtimeControlSurfaceRef"
+        },
+        "artifact_pickup_surface": {
+          "$ref": "#/$defs/runtimeControlSurfaceRef"
+        },
+        "approval_control_surface": {
+          "$ref": "#/$defs/runtimeControlSurfaceRef"
+        },
+        "direct_entry": {
+          "$ref": "#/$defs/runtimeControlDirectEntry"
+        }
+      }
+    },
     "progressProjectionSurface": {
       "type": "object",
       "additionalProperties": false,
@@ -1406,6 +1550,7 @@
         "runtime_inventory",
         "task_lifecycle",
         "session_continuity",
+        "runtime_control",
         "progress_projection",
         "artifact_inventory",
         "skill_catalog",
@@ -1475,6 +1620,9 @@
         },
         "session_continuity": {
           "$ref": "#/$defs/sessionContinuitySurface"
+        },
+        "runtime_control": {
+          "$ref": "#/$defs/runtimeControlSurface"
         },
         "progress_projection": {
           "$ref": "#/$defs/progressProjectionSurface"

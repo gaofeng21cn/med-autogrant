@@ -1406,6 +1406,47 @@ class MedAutoGrantProductEntry:
             recommended_loop_command=grant_authoring_readiness["recommended_loop_command"],
             blocking_gaps=list(grant_authoring_readiness["blocking_gaps"]),
         )
+        runtime_control = _build_runtime_control_surface(
+            runtime_summary=runtime_summary,
+            managed_runtime_contract=managed_runtime_contract,
+            grant_run_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "grant_run_id",
+                context="grant-progress",
+            ),
+            workspace_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "workspace_id",
+                context="grant-progress",
+            ),
+            lifecycle_stage=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "lifecycle_stage",
+                context="grant-progress",
+            ),
+            journal_path=_require_nonempty_string_from_mapping(
+                session_continuity,
+                "journal_path",
+                context="session_continuity",
+            ),
+            runtime_resume_command=_require_nonempty_string_from_mapping(
+                _require_mapping(
+                    _require_mapping(
+                        session_continuity,
+                        "runtime_entries",
+                        context="session_continuity",
+                    ),
+                    "runtime_resume",
+                    context="session_continuity.runtime_entries",
+                ),
+                "command",
+                context="session_continuity.runtime_entries.runtime_resume",
+            ),
+            grant_progress_command=command_catalog["grant_progress"],
+            summarize_workspace_command=command_catalog["summarize_workspace"],
+            grant_user_loop_command=grant_user_loop_command,
+            grant_direct_entry_command=grant_direct_entry_command,
+        )
         human_gate_ids = _collect_family_human_gate_ids(family_orchestration)
         runtime_inventory = _build_shared_runtime_inventory(
             summary=(
@@ -1687,6 +1728,7 @@ class MedAutoGrantProductEntry:
                 domain_entry_contract=domain_entry_contract,
                 gateway_interaction_contract=gateway_interaction_contract,
                 extra_payload={
+                    "runtime_control": runtime_control,
                     "grant_authoring_readiness": grant_authoring_readiness,
                 },
             ),
@@ -3301,6 +3343,87 @@ def _build_session_continuity_surface(
             "workspace_surface_kind": "nsfc_workspace",
             "workspace_path": input_path,
             "truth_owner": TARGET_DOMAIN_ID,
+        },
+    }
+
+
+def _build_runtime_control_surface(
+    *,
+    runtime_summary: Mapping[str, Any],
+    managed_runtime_contract: Mapping[str, Any],
+    grant_run_id: str,
+    workspace_id: str,
+    lifecycle_stage: str,
+    journal_path: str,
+    runtime_resume_command: str,
+    grant_progress_command: str,
+    summarize_workspace_command: str,
+    grant_user_loop_command: str,
+    grant_direct_entry_command: str,
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "runtime_control",
+        "version": 2,
+        "summary": (
+            "repo-owned runtime control reference：显式导出 owner 语义、restore point、"
+            "progress/artifact/approval surface 与 direct-entry locator。"
+        ),
+        "runtime_owner": _require_nonempty_string_from_mapping(
+            runtime_summary,
+            "runtime_owner",
+            context="runtime_summary",
+        ),
+        "domain_owner": _require_nonempty_string_from_mapping(
+            managed_runtime_contract,
+            "domain_owner",
+            context="managed_runtime_contract",
+        ),
+        "executor_owner": _require_nonempty_string_from_mapping(
+            managed_runtime_contract,
+            "executor_owner",
+            context="managed_runtime_contract",
+        ),
+        "session_locator": {
+            "locator_field": "grant_run_id",
+            "locator_value": grant_run_id,
+            "workspace_id": workspace_id,
+            "lifecycle_stage": lifecycle_stage,
+        },
+        "restore_point": {
+            "session_id": grant_run_id,
+            "workspace_id": workspace_id,
+            "lifecycle_stage": lifecycle_stage,
+            "journal_path": journal_path,
+            "resume_command": runtime_resume_command,
+            "resume_surface_kind": "runtime_resume",
+        },
+        "progress_surface": {
+            "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,
+            "command": grant_progress_command,
+            "ref_kind": "json_pointer",
+            "ref": "/product_entry_manifest/progress_projection",
+            "summary": "当前 grant progress projection surface。",
+        },
+        "artifact_pickup_surface": {
+            "surface_kind": "artifact_inventory",
+            "command": summarize_workspace_command,
+            "ref_kind": "json_pointer",
+            "ref": "/product_entry_manifest/artifact_inventory",
+            "summary": "当前 workspace artifact pickup index surface。",
+        },
+        "approval_control_surface": {
+            "surface_kind": GRANT_USER_LOOP_KIND,
+            "command": grant_user_loop_command,
+            "ref_kind": "json_pointer",
+            "ref": "/product_entry_manifest/operator_loop_surface",
+            "summary": "当前人工 gate / control action 入口。",
+        },
+        "direct_entry": {
+            "surface_kind": GRANT_DIRECT_ENTRY_KIND,
+            "command": grant_direct_entry_command,
+            "ref_kind": "json_pointer",
+            "ref": "/product_entry_manifest/product_entry_shell/grant_direct_entry",
+            "summary": "直接导出当前 grant direct-entry command 与 locator。",
         },
     }
 

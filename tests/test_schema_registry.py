@@ -221,6 +221,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("runtime_inventory", manifest_required)
         self.assertIn("task_lifecycle", manifest_required)
         self.assertIn("session_continuity", manifest_required)
+        self.assertIn("runtime_control", manifest_required)
         self.assertIn("progress_projection", manifest_required)
         self.assertIn("artifact_inventory", manifest_required)
         self.assertIn("skill_catalog", manifest_required)
@@ -266,6 +267,52 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(managed_runtime["properties"]["runtime_owner"]["const"], "upstream_hermes_agent")
         self.assertEqual(managed_runtime["properties"]["domain_owner"]["const"], "med-autogrant")
         self.assertEqual(managed_runtime["properties"]["executor_owner"]["const"], "med-autogrant")
+
+    def test_frontdoor_surface_schemas_pin_runtime_control_shape(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        runtime_control = manifest_schema["$defs"]["runtimeControlSurface"]
+        self.assertEqual(runtime_control["properties"]["surface_kind"]["const"], "runtime_control")
+        self.assertEqual(
+            runtime_control["required"],
+            [
+                "surface_kind",
+                "version",
+                "summary",
+                "runtime_owner",
+                "domain_owner",
+                "executor_owner",
+                "session_locator",
+                "restore_point",
+                "progress_surface",
+                "artifact_pickup_surface",
+                "approval_control_surface",
+                "direct_entry",
+            ],
+        )
+        self.assertEqual(
+            runtime_control["properties"]["session_locator"]["$ref"],
+            "#/$defs/runtimeControlSessionLocator",
+        )
+        self.assertEqual(
+            runtime_control["properties"]["restore_point"]["$ref"],
+            "#/$defs/runtimeControlRestorePoint",
+        )
+        self.assertEqual(
+            runtime_control["properties"]["progress_surface"]["$ref"],
+            "#/$defs/runtimeControlSurfaceRef",
+        )
+        self.assertEqual(
+            runtime_control["properties"]["artifact_pickup_surface"]["$ref"],
+            "#/$defs/runtimeControlSurfaceRef",
+        )
+        self.assertEqual(
+            runtime_control["properties"]["approval_control_surface"]["$ref"],
+            "#/$defs/runtimeControlSurfaceRef",
+        )
+        self.assertEqual(
+            runtime_control["properties"]["direct_entry"]["$ref"],
+            "#/$defs/runtimeControlDirectEntry",
+        )
 
     def test_frontdoor_surface_schemas_pin_start_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))

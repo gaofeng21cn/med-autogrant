@@ -1943,6 +1943,35 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             "--journal",
             manifest["session_continuity"]["runtime_entries"]["runtime_run"]["command"],
         )
+        runtime_control = manifest["runtime_control"]
+        self.assertEqual(runtime_control["surface_kind"], "runtime_control")
+        self.assertEqual(runtime_control["runtime_owner"], "upstream_hermes_agent")
+        self.assertEqual(runtime_control["domain_owner"], "med-autogrant")
+        self.assertEqual(runtime_control["executor_owner"], "med-autogrant")
+        self.assertEqual(runtime_control["session_locator"]["locator_field"], "grant_run_id")
+        self.assertEqual(runtime_control["session_locator"]["locator_value"], payload["grant_run_id"])
+        self.assertEqual(runtime_control["restore_point"]["session_id"], payload["grant_run_id"])
+        self.assertEqual(runtime_control["restore_point"]["lifecycle_stage"], payload["lifecycle_stage"])
+        self.assertEqual(
+            runtime_control["progress_surface"]["surface_kind"],
+            "grant_progress",
+        )
+        self.assertEqual(
+            runtime_control["artifact_pickup_surface"]["surface_kind"],
+            "artifact_inventory",
+        )
+        self.assertEqual(
+            runtime_control["approval_control_surface"]["surface_kind"],
+            "grant_user_loop",
+        )
+        self.assertEqual(
+            runtime_control["direct_entry"]["surface_kind"],
+            "grant_direct_entry",
+        )
+        self.assertIn(
+            "direct-entry",
+            runtime_control["direct_entry"]["command"],
+        )
         self.assertEqual(manifest["progress_projection"]["surface_kind"], "progress_projection")
         self.assertEqual(
             manifest["progress_projection"]["workspace_path"],
