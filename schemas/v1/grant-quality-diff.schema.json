@@ -71,13 +71,75 @@
         }
       }
     },
+    "issueClosureProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issue_id",
+        "dimension_id",
+        "summary",
+        "severity",
+        "transition",
+        "previous_closure_status",
+        "current_closure_status",
+        "blocking_reason",
+        "closure_delta"
+      ],
+      "properties": {
+        "issue_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "dimension_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "hard",
+            "gap"
+          ]
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "closed",
+            "still_open",
+            "newly_opened"
+          ]
+        },
+        "previous_closure_status": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "current_closure_status": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "blocking_reason": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "closure_delta": {
+          "type": "string",
+          "enum": [
+            "issue_closed",
+            "unchanged",
+            "progressed",
+            "regressed",
+            "new_blocker_opened",
+            "new_gap_opened"
+          ]
+        }
+      }
+    },
     "issueProgress": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "closed_issues",
         "remaining_open_issues",
-        "newly_opened_issues"
+        "newly_opened_issues",
+        "issue_closure_progress"
       ],
       "properties": {
         "closed_issues": {
@@ -96,6 +158,12 @@
           "type": "array",
           "items": {
             "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "issue_closure_progress": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issueClosureProgress"
           }
         }
       }

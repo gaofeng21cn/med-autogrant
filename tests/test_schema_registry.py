@@ -294,6 +294,22 @@ class SchemaRegistryTest(unittest.TestCase):
             "product-entry-manifest.schema.json#/$defs/productEntryOverview",
         )
 
+    def test_grant_quality_schemas_require_issue_closure_contract(self) -> None:
+        scorecard_schema = json.loads((SCHEMA_ROOT / "grant-quality-scorecard.schema.json").read_text(encoding="utf-8"))
+        tracked_issue_required = scorecard_schema["$defs"]["trackedIssue"]["required"]
+        self.assertIn("closure_status", tracked_issue_required)
+        self.assertIn("blocking_reason", tracked_issue_required)
+        self.assertIn("evidence_obligations", tracked_issue_required)
+        self.assertIn("recommended_closure_action", tracked_issue_required)
+
+        diff_schema = json.loads((SCHEMA_ROOT / "grant-quality-diff.schema.json").read_text(encoding="utf-8"))
+        issue_progress_required = diff_schema["$defs"]["issueProgress"]["required"]
+        self.assertIn("issue_closure_progress", issue_progress_required)
+        issue_closure_required = diff_schema["$defs"]["issueClosureProgress"]["required"]
+        self.assertIn("previous_closure_status", issue_closure_required)
+        self.assertIn("current_closure_status", issue_closure_required)
+        self.assertIn("closure_delta", issue_closure_required)
+
     def test_frontdoor_surface_schemas_pin_preflight_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         preflight = manifest_schema["$defs"]["productEntryPreflight"]

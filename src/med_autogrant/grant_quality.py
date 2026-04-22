@@ -150,6 +150,10 @@ def build_grant_quality_diff(
     closed_issue_ids = [issue_id for issue_id in previous_open_issues if issue_id not in current_open_issues]
     remaining_issue_ids = [issue_id for issue_id in previous_open_issues if issue_id in current_open_issues]
     new_issue_ids = [issue_id for issue_id in current_open_issues if issue_id not in previous_open_issues]
+    issue_closure_progress = _build_issue_closure_progress_entries(
+        previous_open_issues=previous_open_issues,
+        current_open_issues=current_open_issues,
+    )
 
     score_delta = current_scorecard["overall_score"] - previous_scorecard["overall_score"]
     overall_progression = _resolve_quality_progression(
@@ -201,6 +205,7 @@ def build_grant_quality_diff(
             "closed_issues": [previous_open_issues[issue_id]["summary"] for issue_id in closed_issue_ids],
             "remaining_open_issues": [current_open_issues[issue_id]["summary"] for issue_id in remaining_issue_ids],
             "newly_opened_issues": [current_open_issues[issue_id]["summary"] for issue_id in new_issue_ids],
+            "issue_closure_progress": issue_closure_progress,
         },
         "current_loop_gate": current_scorecard["loop_gate"],
         "previous_loop_gate": previous_scorecard["loop_gate"],
@@ -236,6 +241,7 @@ def _assess_scientific_question_validity(context: dict[str, Any]) -> dict[str, A
             score=0,
             blockers=["缺少已冻结 scientific question。"],
             evidence_gaps=["selected_question 未生成。"],
+            context=context,
         )
 
     required_fields = (
@@ -280,6 +286,7 @@ def _assess_scientific_question_validity(context: dict[str, Any]) -> dict[str, A
         blockers=blockers,
         evidence_gaps=evidence_gaps,
         evidence_refs=linked_evidence_ids,
+        context=context,
     )
 
 
@@ -295,6 +302,7 @@ def _assess_necessity_value_closure(context: dict[str, Any]) -> dict[str, Any]:
             score=0,
             blockers=["缺少 argument chain。"],
             evidence_gaps=["argument chain 未生成。"],
+            context=context,
         )
 
     required_fields = (
@@ -341,6 +349,7 @@ def _assess_necessity_value_closure(context: dict[str, Any]) -> dict[str, Any]:
         blockers=blockers,
         evidence_gaps=evidence_gaps,
         evidence_refs=_dedupe_preserve_order(linked_evidence_ids + active_argument_evidence),
+        context=context,
     )
 
 
@@ -355,6 +364,7 @@ def _assess_applicant_fit(context: dict[str, Any]) -> dict[str, Any]:
             score=0,
             blockers=["缺少 applicant fit mapping。"],
             evidence_gaps=["fit mapping 未生成。"],
+            context=context,
         )
 
     required_fields = (
@@ -394,6 +404,7 @@ def _assess_applicant_fit(context: dict[str, Any]) -> dict[str, Any]:
         blockers=blockers,
         evidence_gaps=evidence_gaps,
         evidence_refs=linked_evidence_ids,
+        context=context,
     )
 
 
@@ -408,6 +419,7 @@ def _assess_technical_feasibility(context: dict[str, Any]) -> dict[str, Any]:
             score=0,
             blockers=["缺少技术路线映射。"],
             evidence_gaps=["fit mapping 未生成。"],
+            context=context,
         )
 
     required_fields = (
@@ -439,6 +451,7 @@ def _assess_technical_feasibility(context: dict[str, Any]) -> dict[str, Any]:
         blockers=blockers,
         evidence_gaps=evidence_gaps,
         evidence_refs=_read_nonempty_string_list(fit_mapping.get("linked_evidence_ids")),
+        context=context,
     )
 
 
@@ -502,6 +515,7 @@ def _assess_claim_evidence_coverage(context: dict[str, Any]) -> dict[str, Any]:
         blockers=blockers,
         evidence_gaps=evidence_gaps,
         evidence_refs=evidence_refs,
+        context=context,
     )
 
 
@@ -522,6 +536,7 @@ def _assess_unresolved_hard_issues(context: dict[str, Any]) -> dict[str, Any]:
         score=score,
         blockers=hard_issues,
         evidence_gaps=[],
+        context=context,
     )
 
 
@@ -539,6 +554,7 @@ def _assess_version_issue_closure(context: dict[str, Any]) -> dict[str, Any]:
             score=score,
             blockers=[],
             evidence_gaps=[],
+            context=context,
         )
 
     execution_status = _nonempty_string(revision_plan.get("execution_status")) or "planned"
@@ -571,6 +587,7 @@ def _assess_version_issue_closure(context: dict[str, Any]) -> dict[str, Any]:
         score=score,
         blockers=blockers,
         evidence_gaps=[],
+        context=context,
     )
 
 
@@ -582,6 +599,7 @@ def _finalize_dimension(
     blockers: list[str],
     evidence_gaps: list[str],
     evidence_refs: list[str] | None = None,
+    context: dict[str, Any],
 ) -> dict[str, Any]:
     spec = next(item for item in _QUALITY_DIMENSION_SPECS if item["dimension_id"] == dimension_id)
     resolved_blockers = _dedupe_preserve_order(blockers)
@@ -599,6 +617,8 @@ def _finalize_dimension(
             severity="hard",
             source_surface=dimension_id,
             rollback_stage=spec["rollback_stage"],
+            evidence_refs=resolved_refs,
+            context=context,
         )
         for item in resolved_blockers
     ]
@@ -609,6 +629,8 @@ def _finalize_dimension(
             severity="gap",
             source_surface=dimension_id,
             rollback_stage=None,
+            evidence_refs=resolved_refs,
+            context=context,
         )
         for item in resolved_gaps
         if item not in resolved_blockers
@@ -737,9 +759,26 @@ def _build_issue(
     severity: str,
     source_surface: str,
     rollback_stage: str | None,
+    evidence_refs: list[str],
+    context: dict[str, Any],
 ) -> dict[str, Any]:
     normalized = " ".join(summary.split()).strip().lower()
     digest = hashlib.sha1(normalized.encode("utf-8")).hexdigest()[:12]
+    closure_status = "blocked" if severity == "hard" else "evidence_required"
+    recommended_closure_action = _build_recommended_closure_action(
+        dimension_id=dimension_id,
+        summary=summary,
+        severity=severity,
+        rollback_stage=rollback_stage,
+        context=context,
+    )
+    evidence_obligations = _build_issue_evidence_obligations(
+        dimension_id=dimension_id,
+        summary=summary,
+        severity=severity,
+        evidence_refs=evidence_refs,
+        context=context,
+    )
     return {
         "issue_id": f"{dimension_id}:{digest}",
         "dimension_id": dimension_id,
@@ -748,7 +787,192 @@ def _build_issue(
         "severity": severity,
         "source_surface": source_surface,
         "rollback_stage": rollback_stage,
+        "closure_status": closure_status,
+        "blocking_reason": summary if severity == "hard" else None,
+        "evidence_obligations": evidence_obligations,
+        "recommended_closure_action": recommended_closure_action,
     }
+
+
+def _build_recommended_closure_action(
+    *,
+    dimension_id: str,
+    summary: str,
+    severity: str,
+    rollback_stage: str | None,
+    context: dict[str, Any],
+) -> dict[str, Any]:
+    repair_summaries = _dimension_repair_summaries(dimension_id, context=context)
+    revision_items = _relevant_revision_items(dimension_id, context=context)
+    revision_plan = _active_revision_plan(context)
+
+    action_summary = summary
+    source_surface = dimension_id
+    if repair_summaries:
+        action_summary = repair_summaries[0]
+        source_surface = "critique_summary"
+    elif revision_items:
+        action_summary = _nonempty_string(revision_items[0].get("action")) or summary
+        source_surface = "revision_plan"
+    elif dimension_id == "version_issue_closure" and revision_plan is not None:
+        next_focus = _read_nonempty_string_list(revision_plan.get("next_review_focus"))
+        if next_focus:
+            action_summary = next_focus[0]
+            source_surface = "revision_plan"
+
+    target_stage = rollback_stage or _nonempty_string(context["document"].get("lifecycle_stage"))
+    if severity == "gap" and target_stage is None:
+        target_stage = "revision"
+    return {
+        "summary": action_summary,
+        "target_stage": target_stage,
+        "source_surface": source_surface,
+    }
+
+
+def _build_issue_evidence_obligations(
+    *,
+    dimension_id: str,
+    summary: str,
+    severity: str,
+    evidence_refs: list[str],
+    context: dict[str, Any],
+) -> list[dict[str, Any]]:
+    obligations: list[dict[str, Any]] = []
+    revision_items = _relevant_revision_items(dimension_id, context=context)
+    for item in revision_items:
+        item_id = _nonempty_string(item.get("item_id")) or f"{dimension_id}-revision-item"
+        action_summary = _nonempty_string(item.get("action")) or summary
+        obligations.append(
+            {
+                "obligation_id": f"{dimension_id}:{item_id}",
+                "summary": action_summary,
+                "required_input_ids": _read_nonempty_string_list(item.get("required_input_ids")),
+                "evidence_refs": list(evidence_refs),
+                "satisfaction_criteria": _nonempty_string(item.get("done_criteria")),
+                "source_surface": "revision_plan",
+            }
+        )
+
+    if obligations:
+        return obligations
+
+    repair_summaries = _dimension_repair_summaries(dimension_id, context=context)
+    if repair_summaries:
+        return [
+            {
+                "obligation_id": f"{dimension_id}:repair:{_stable_digest(repair_summaries[0])}",
+                "summary": repair_summaries[0],
+                "required_input_ids": _default_obligation_input_ids(dimension_id, context=context),
+                "evidence_refs": list(evidence_refs),
+                "satisfaction_criteria": None,
+                "source_surface": "critique_summary",
+            }
+        ]
+
+    return [
+        {
+            "obligation_id": f"{dimension_id}:issue:{_stable_digest(summary)}",
+            "summary": summary,
+            "required_input_ids": _default_obligation_input_ids(dimension_id, context=context),
+            "evidence_refs": list(evidence_refs),
+            "satisfaction_criteria": None,
+            "source_surface": dimension_id if severity == "hard" else "evidence_grounding",
+        }
+    ]
+
+
+def _relevant_revision_items(dimension_id: str, *, context: dict[str, Any]) -> list[dict[str, Any]]:
+    revision_plan = _active_revision_plan(context)
+    if revision_plan is None:
+        return []
+
+    items = [
+        item
+        for item in revision_plan.get("items") or []
+        if isinstance(item, dict)
+    ]
+    if dimension_id in {"scientific_question_validity", "necessity_value_closure"}:
+        return [
+            item
+            for item in items
+            if _nonempty_string(item.get("action_type")) == "rebuild_argument"
+            or _nonempty_string(item.get("target_ref")) == "section:basis"
+        ]
+    if dimension_id == "applicant_fit":
+        return [
+            item
+            for item in items
+            if _nonempty_string(item.get("action_type")) == "tighten_fit"
+            or _nonempty_string(item.get("target_ref")) == "section:foundation"
+        ]
+    if dimension_id in {"unresolved_hard_issues", "version_issue_closure"}:
+        high_priority_items = [
+            item
+            for item in items
+            if _nonempty_string(item.get("priority")) == "p0"
+        ]
+        return high_priority_items or items
+    return []
+
+
+def _dimension_repair_summaries(dimension_id: str, *, context: dict[str, Any]) -> list[str]:
+    critique_summary = context["critique_summary"]
+    if critique_summary is None:
+        return []
+    if dimension_id in {"scientific_question_validity", "necessity_value_closure"}:
+        return _read_nonempty_string_list(critique_summary.get("logic_chain_repairs"))
+    if dimension_id == "applicant_fit":
+        return _read_nonempty_string_list(critique_summary.get("applicant_fit_repairs"))
+    return []
+
+
+def _default_obligation_input_ids(dimension_id: str, *, context: dict[str, Any]) -> list[str]:
+    state = context["state"]
+    if dimension_id == "scientific_question_validity":
+        return _dedupe_preserve_order(
+            _read_object_id(state.selected_question, "question_id")
+            + _read_object_id(state.selected_direction, "direction_id")
+        )
+    if dimension_id == "necessity_value_closure":
+        return _dedupe_preserve_order(
+            _read_object_id(state.active_argument_chain, "argument_chain_id")
+            + _read_object_id(state.selected_question, "question_id")
+        )
+    if dimension_id in {"applicant_fit", "technical_feasibility"}:
+        return _dedupe_preserve_order(
+            _read_object_id(state.active_fit_mapping, "fit_mapping_id")
+            + _read_object_id(state.active_draft, "draft_id")
+        )
+    if dimension_id == "claim_evidence_coverage":
+        return _dedupe_preserve_order(
+            _read_object_id(state.active_draft, "draft_id")
+            + _read_object_id(state.selected_question, "question_id")
+            + _read_object_id(state.active_argument_chain, "argument_chain_id")
+            + _read_object_id(state.active_fit_mapping, "fit_mapping_id")
+        )
+    if dimension_id in {"unresolved_hard_issues", "version_issue_closure"}:
+        return _dedupe_preserve_order(
+            _read_object_id(state.active_revision_plan, "revision_plan_id")
+            + _read_object_id(state.active_draft, "draft_id")
+        )
+    return []
+
+
+def _read_object_id(payload: dict[str, Any] | None, key: str) -> list[str]:
+    if not isinstance(payload, dict):
+        return []
+    value = _nonempty_string(payload.get(key))
+    return [value] if value is not None else []
+
+
+def _active_revision_plan(context: dict[str, Any]) -> dict[str, Any] | None:
+    revision_plan = context["state"].active_revision_plan
+    return revision_plan if isinstance(revision_plan, dict) else None
+
+
+def _stable_digest(value: str) -> str:
+    return hashlib.sha1(value.encode("utf-8")).hexdigest()[:12]
 
 
 def _open_issue_map(tracked_issues: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
@@ -761,6 +985,79 @@ def _open_issue_map(tracked_issues: Iterable[Mapping[str, Any]]) -> dict[str, di
             continue
         result[issue_id] = dict(item)
     return result
+
+
+def _build_issue_closure_progress_entries(
+    *,
+    previous_open_issues: Mapping[str, dict[str, Any]],
+    current_open_issues: Mapping[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    ordered_issue_ids = list(previous_open_issues.keys())
+    ordered_issue_ids.extend(issue_id for issue_id in current_open_issues if issue_id not in previous_open_issues)
+    return [
+        _build_issue_closure_progress_entry(
+            issue_id=issue_id,
+            previous_issue=previous_open_issues.get(issue_id),
+            current_issue=current_open_issues.get(issue_id),
+        )
+        for issue_id in ordered_issue_ids
+    ]
+
+
+def _build_issue_closure_progress_entry(
+    *,
+    issue_id: str,
+    previous_issue: dict[str, Any] | None,
+    current_issue: dict[str, Any] | None,
+) -> dict[str, Any]:
+    issue = current_issue or previous_issue or {}
+    previous_closure_status = _nonempty_string(previous_issue.get("closure_status")) if previous_issue else None
+    current_closure_status = _nonempty_string(current_issue.get("closure_status")) if current_issue else None
+    if previous_issue is not None and current_issue is None:
+        transition = "closed"
+        closure_delta = "issue_closed"
+    elif previous_issue is None and current_issue is not None:
+        transition = "newly_opened"
+        closure_delta = "new_blocker_opened" if current_issue.get("severity") == "hard" else "new_gap_opened"
+    else:
+        transition = "still_open"
+        closure_delta = _resolve_issue_closure_delta(
+            previous_closure_status=previous_closure_status,
+            current_closure_status=current_closure_status,
+        )
+    return {
+        "issue_id": issue_id,
+        "dimension_id": issue.get("dimension_id"),
+        "summary": issue.get("summary"),
+        "severity": issue.get("severity"),
+        "transition": transition,
+        "previous_closure_status": previous_closure_status,
+        "current_closure_status": current_closure_status,
+        "blocking_reason": (
+            _nonempty_string(current_issue.get("blocking_reason")) if current_issue else None
+        ) or (
+            _nonempty_string(previous_issue.get("blocking_reason")) if previous_issue else None
+        ),
+        "closure_delta": closure_delta,
+    }
+
+
+def _resolve_issue_closure_delta(
+    *,
+    previous_closure_status: str | None,
+    current_closure_status: str | None,
+) -> str:
+    rank = {
+        "blocked": 2,
+        "evidence_required": 1,
+    }
+    previous_rank = rank.get(previous_closure_status or "")
+    current_rank = rank.get(current_closure_status or "")
+    if previous_rank is None or current_rank is None or previous_rank == current_rank:
+        return "unchanged"
+    if current_rank < previous_rank:
+        return "progressed"
+    return "regressed"
 
 
 def _read_critique_summary(document: dict[str, Any]) -> dict[str, Any] | None:

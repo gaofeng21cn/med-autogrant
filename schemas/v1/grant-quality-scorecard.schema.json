@@ -10,6 +10,64 @@
         "null"
       ]
     },
+    "closureAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "target_stage",
+        "source_surface"
+      ],
+      "properties": {
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "target_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "evidenceObligation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "obligation_id",
+        "summary",
+        "required_input_ids",
+        "evidence_refs",
+        "satisfaction_criteria",
+        "source_surface"
+      ],
+      "properties": {
+        "obligation_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "satisfaction_criteria": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "source_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
     "trackedIssue": {
       "type": "object",
       "additionalProperties": false,
@@ -20,7 +78,11 @@
         "status",
         "severity",
         "source_surface",
-        "rollback_stage"
+        "rollback_stage",
+        "closure_status",
+        "blocking_reason",
+        "evidence_obligations",
+        "recommended_closure_action"
       ],
       "properties": {
         "issue_id": {
@@ -47,6 +109,25 @@
         },
         "rollback_stage": {
           "$ref": "#/$defs/nullableString"
+        },
+        "closure_status": {
+          "type": "string",
+          "enum": [
+            "blocked",
+            "evidence_required"
+          ]
+        },
+        "blocking_reason": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "evidence_obligations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceObligation"
+          }
+        },
+        "recommended_closure_action": {
+          "$ref": "#/$defs/closureAction"
         }
       }
     },
