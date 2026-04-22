@@ -641,6 +641,33 @@
         }
       }
     },
+    "projectProfileFamilyGovernanceControllerDefaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_status",
+        "require_zero_blockers",
+        "require_zero_evidence_gaps"
+      ],
+      "properties": {
+        "target_status": {
+          "type": "string",
+          "enum": [
+            "submission_grade_candidate",
+            "near_submission_candidate"
+          ]
+        },
+        "require_zero_blockers": {
+          "type": "boolean"
+        },
+        "require_zero_evidence_gaps": {
+          "type": "boolean"
+        },
+        "acceptance_criteria": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
     "projectProfileFamilyGovernancePolicy": {
       "type": "object",
       "additionalProperties": false,
@@ -649,7 +676,8 @@
         "preferred_stop_target",
         "quality_bar",
         "rollback_bias",
-        "evidence_escalation_policy"
+        "evidence_escalation_policy",
+        "controller_defaults"
       ],
       "properties": {
         "default_tranche": {
@@ -666,6 +694,9 @@
         },
         "evidence_escalation_policy": {
           "$ref": "#/$defs/projectProfileFamilyGovernanceEvidenceEscalationPolicy"
+        },
+        "controller_defaults": {
+          "$ref": "#/$defs/projectProfileFamilyGovernanceControllerDefaults"
         }
       }
     },

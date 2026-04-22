@@ -1630,6 +1630,7 @@ def _build_autonomy_quality_evaluator_output(workspace: dict[str, Any]) -> dict[
         "near_submission_candidate",
     } else "not_ready"
     tracked_issues = scorecard.get("tracked_issues") if isinstance(scorecard.get("tracked_issues"), list) else []
+    evidence_supply_queue = scorecard.get("evidence_supply_queue") if isinstance(scorecard.get("evidence_supply_queue"), list) else []
     unresolved_blockers = list(scorecard.get("unresolved_hard_issues") or [])
     unresolved_blockers.extend(
         str(issue.get("summary") or "")
@@ -1646,12 +1647,24 @@ def _build_autonomy_quality_evaluator_output(workspace: dict[str, Any]) -> dict[
         for gap in dimension.get("evidence_gaps") or []:
             if isinstance(gap, str) and gap.strip():
                 evidence_gaps.append(gap.strip())
+    for item in evidence_supply_queue:
+        if not isinstance(item, dict):
+            continue
+        gap_summary = str(item.get("gap_summary") or "").strip()
+        supply_status = str(item.get("supply_status") or "").strip()
+        if not gap_summary:
+            continue
+        if supply_status in {"blocked", "reselection_required"}:
+            unresolved_blockers.append(gap_summary)
+        else:
+            evidence_gaps.append(gap_summary)
 
     return {
         "quality_status": quality_status,
         "blocker_report": scorecard,
         "unresolved_blockers": _dedupe_strings(unresolved_blockers),
         "evidence_gaps": _dedupe_strings(evidence_gaps),
+        "evidence_supply_queue": evidence_supply_queue,
     }
 
 

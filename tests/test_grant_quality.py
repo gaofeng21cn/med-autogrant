@@ -130,8 +130,86 @@ class GrantQualityScorecardTest(unittest.TestCase):
             necessity_gap["controller_action_hint"]["target_stage"],
             "argument_building",
         )
+        self.assertEqual(
+            necessity_gap["controller_action_hint"]["action"],
+            "rollback_upstream",
+        )
         self.assertEqual(necessity_gap["supply_status"], "blocked")
         self.assertTrue(necessity_gap["supply_actions"])
+
+    def test_scorecard_emits_reselection_supply_item_when_family_and_funding_brief_mismatch(self) -> None:
+        from med_autogrant.grant_quality import build_grant_quality_scorecard
+
+        critique_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
+        critique_workspace["project_profile"]["grant_family_grammar"] = {
+            "family_id": "nih_r21_translational_family_v1",
+            "family_label": "NIH R21 translational family",
+            "funder": "NIH",
+            "admission_status": "admitted",
+            "template_strategy": {
+                "required_section_strategy": "mirror_funding_brief_mandatory_sections",
+                "narrative_style": "significance_innovation_translational",
+            },
+            "review_grammar": {
+                "review_focus": "significance_and_innovation_weighted_review",
+                "critique_policy": {
+                    "preset_id": "nih_r21_significance_innovation_v1",
+                    "policy_id": "nih_r21_significance_innovation_v1",
+                },
+            },
+            "evidence_policy": {
+                "policy_id": "significance_and_innovation_claims_require_direct_grounding",
+            },
+            "governance_policy": {
+                "default_tranche": "aims_significance_innovation_loop",
+                "preferred_stop_target": "ready_for_submission_after_significance_innovation_lock",
+                "quality_bar": {
+                    "minimum_score": 78,
+                    "blocker_policy": "critical_blockers_must_close",
+                    "required_signal_coverage": ["significance", "innovation", "approach_feasibility"],
+                },
+                "rollback_bias": {
+                    "default_rollback_stage": "fit_alignment",
+                    "trigger_mode": "innovation_gap_sensitive",
+                },
+                "evidence_escalation_policy": {
+                    "trigger": "significance_or_innovation_claim_unbounded",
+                    "escalation_action": "tighten_aim_scope_and_add_translational_anchor",
+                    "required_evidence_types": ["publication", "preliminary_result"],
+                },
+                "controller_defaults": {
+                    "target_status": "near_submission_candidate",
+                    "require_zero_blockers": True,
+                    "require_zero_evidence_gaps": False,
+                },
+            },
+            "family_compatibility_hooks": [
+                {
+                    "rule_id": "rule.funder",
+                    "opportunity_field": "funder",
+                    "allowed_values": ["NIH"],
+                }
+            ],
+            "governance_entry_points": [
+                "grant-quality-scorecard",
+                "grant-quality-diff",
+                "execute-grant-autonomy-controller",
+            ],
+        }
+
+        scorecard = build_grant_quality_scorecard(critique_workspace)
+
+        mismatch_gap = next(
+            item
+            for item in scorecard["evidence_supply_queue"]
+            if item["gap_kind"] == "funding_profile_mismatch"
+        )
+        self.assertEqual(mismatch_gap["supply_status"], "reselection_required")
+        self.assertEqual(
+            mismatch_gap["controller_action_hint"]["action"],
+            "reselect_project_profile",
+        )
+        self.assertIn("profile-nsfc-general-medical", mismatch_gap["required_input_ids"])
 
 
 class GrantQualityDiffTest(unittest.TestCase):
@@ -261,3 +339,7 @@ class GrantQualityDiffTest(unittest.TestCase):
         self.assertIn("arg-001", progress_entry["previous_required_input_ids"])
         self.assertEqual(progress_entry["current_required_input_ids"], [])
         self.assertEqual(progress_entry["supply_delta"], "supply_closed")
+        self.assertEqual(
+            progress_entry["previous_controller_action_hint"]["action"],
+            "rollback_upstream",
+        )

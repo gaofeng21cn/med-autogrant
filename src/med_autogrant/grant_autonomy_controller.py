@@ -527,8 +527,25 @@ def run_grant_autonomy_controller(
         quality_status = normalized_quality["quality_status"]
         effective_require_zero_blockers = bool(controller_plan["tranche_success_gate"]["requires_zero_blockers"])
         effective_require_zero_evidence_gaps = bool(controller_plan["tranche_success_gate"]["requires_zero_evidence_gaps"])
+        inline_controller_action = _resolve_inline_controller_action(
+            normalized_quality=normalized_quality,
+        )
+        if inline_controller_action == "reselect_project_profile":
+            mainline_output = {
+                "reselection_decision": {
+                    "action": "reselect",
+                    "reason": _resolve_inline_controller_reason(
+                        normalized_quality=normalized_quality,
+                        unresolved_blockers=unresolved_blockers,
+                        evidence_gaps=evidence_gaps,
+                    ),
+                },
+                "workspace": deepcopy(workspace),
+            }
+        else:
+            mainline_output = None
 
-        if _goal_satisfied(goal_target=goal_target, quality_status=quality_status):
+        if _goal_satisfied(goal_target=goal_target, quality_status=quality_status) and mainline_output is None:
             if effective_require_zero_blockers and unresolved_blockers:
                 tranche_history.append(
                     _build_tranche_history_entry(
@@ -634,24 +651,6 @@ def run_grant_autonomy_controller(
                 completed_cycles=completed_cycles,
                 final_workspace=workspace,
             )
-
-        inline_controller_action = _resolve_inline_controller_action(
-            normalized_quality=normalized_quality,
-        )
-        if inline_controller_action == "reselect_project_profile":
-            mainline_output = {
-                "reselection_decision": {
-                    "action": "reselect",
-                    "reason": _resolve_inline_controller_reason(
-                        normalized_quality=normalized_quality,
-                        unresolved_blockers=unresolved_blockers,
-                        evidence_gaps=evidence_gaps,
-                    ),
-                },
-                "workspace": deepcopy(workspace),
-            }
-        else:
-            mainline_output = None
 
         if cycle == max_rounds_or_cycles:
             terminal_reason = _resolve_terminal_reason(unresolved_blockers, evidence_gaps)
@@ -1448,14 +1447,26 @@ def _apply_workspace_governance_policy(
     default_tranche = _normalized_string(family_policy.get("default_tranche"))
     if default_tranche:
         hydrated["current_tranche"] = default_tranche
-    preferred_stop_target = _normalized_string(family_policy.get("preferred_stop_target"))
-    if preferred_stop_target in {"submission_grade_candidate", "near_submission_candidate"}:
-        hydrated["tranche_success_gate"]["target_status"] = preferred_stop_target
-    if "requires_zero_blockers" in family_policy:
+    controller_defaults = family_policy.get("controller_defaults")
+    normalized_defaults = controller_defaults if isinstance(controller_defaults, dict) else {}
+    target_status = _normalized_string(normalized_defaults.get("target_status"))
+    if target_status not in {"submission_grade_candidate", "near_submission_candidate"}:
+        target_status = _normalized_string(family_policy.get("preferred_stop_target"))
+    if target_status in {"submission_grade_candidate", "near_submission_candidate"}:
+        hydrated["tranche_success_gate"]["target_status"] = target_status
+    if "require_zero_blockers" in normalized_defaults:
+        hydrated["tranche_success_gate"]["requires_zero_blockers"] = bool(normalized_defaults["require_zero_blockers"])
+    elif "requires_zero_blockers" in family_policy:
         hydrated["tranche_success_gate"]["requires_zero_blockers"] = bool(family_policy["requires_zero_blockers"])
-    if "requires_zero_evidence_gaps" in family_policy:
+    if "require_zero_evidence_gaps" in normalized_defaults:
+        hydrated["tranche_success_gate"]["requires_zero_evidence_gaps"] = bool(
+            normalized_defaults["require_zero_evidence_gaps"]
+        )
+    elif "requires_zero_evidence_gaps" in family_policy:
         hydrated["tranche_success_gate"]["requires_zero_evidence_gaps"] = bool(family_policy["requires_zero_evidence_gaps"])
-    acceptance = family_policy.get("acceptance_criteria")
+    acceptance = normalized_defaults.get("acceptance_criteria")
+    if not isinstance(acceptance, list):
+        acceptance = family_policy.get("acceptance_criteria")
     if isinstance(acceptance, list):
         normalized_acceptance = [item for item in (_normalized_string(v) for v in acceptance) if item]
         if normalized_acceptance:
@@ -1484,11 +1495,12 @@ def _normalize_evidence_supply_queue(payload: Any) -> list[dict[str, Any]] | Non
         if not isinstance(item, dict):
             return None
         gap_id = _normalized_string(item.get("gap_id"))
-        controller_action_hint = _normalized_string(item.get("controller_action_hint"))
+        controller_action_hint = _normalize_controller_action_hint(item.get("controller_action_hint"))
         gap_kind = _normalized_string(item.get("gap_kind"))
+        gap_summary = _normalized_string(item.get("gap_summary"))
         required_input_ids = _string_list(item.get("required_input_ids"))
         linked_issue_ids = _string_list(item.get("linked_issue_ids"))
-        if not gap_id or not controller_action_hint or not gap_kind:
+        if not gap_id or controller_action_hint is None or not gap_kind:
             return None
         if required_input_ids is None or linked_issue_ids is None:
             return None
@@ -1497,6 +1509,7 @@ def _normalize_evidence_supply_queue(payload: Any) -> list[dict[str, Any]] | Non
                 "gap_id": gap_id,
                 "controller_action_hint": controller_action_hint,
                 "gap_kind": gap_kind,
+                "gap_summary": gap_summary,
                 "required_input_ids": required_input_ids,
                 "linked_issue_ids": linked_issue_ids,
             }
@@ -1504,14 +1517,32 @@ def _normalize_evidence_supply_queue(payload: Any) -> list[dict[str, Any]] | Non
     return normalized
 
 
+def _normalize_controller_action_hint(payload: Any) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return None
+    action = _normalized_string(payload.get("action"))
+    summary = _normalized_string(payload.get("summary"))
+    source_surface = _normalized_string(payload.get("source_surface"))
+    if action not in _CONTROLLER_ACTIONS - {"stop_success"}:
+        return None
+    if not summary or not source_surface:
+        return None
+    return {
+        "action": action,
+        "summary": summary,
+        "target_stage": _normalized_string(payload.get("target_stage")) or None,
+        "source_surface": source_surface,
+    }
+
+
 def _resolve_inline_controller_action(
     *,
     normalized_quality: dict[str, Any],
 ) -> str:
     action_hints = [
-        item["controller_action_hint"]
+        item["controller_action_hint"]["action"]
         for item in normalized_quality.get("evidence_supply_queue", [])
-        if item["controller_action_hint"] in {"reselect_project_profile"}
+        if item["controller_action_hint"]["action"] in {"reselect_project_profile"}
     ]
     return action_hints[0] if action_hints else ""
 
@@ -1525,8 +1556,14 @@ def _resolve_inline_controller_reason(
     supply_queue = normalized_quality.get("evidence_supply_queue", [])
     if supply_queue:
         first = supply_queue[0]
-        if first["gap_kind"] == "funding_opportunity_mismatch":
+        summary = first["controller_action_hint"].get("summary")
+        if isinstance(summary, str) and summary.strip():
+            return summary.strip()
+        if first["gap_kind"] == "funding_profile_mismatch":
             return "quality_supply_requires_reselection"
+        gap_summary = first.get("gap_summary")
+        if isinstance(gap_summary, str) and gap_summary.strip():
+            return gap_summary.strip()
         return first["gap_kind"]
     return _default_progress_reason(normalized_quality["quality_status"], unresolved_blockers, evidence_gaps)
 

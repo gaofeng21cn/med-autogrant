@@ -230,6 +230,7 @@ def _build_family_grammar_trace(preset: dict[str, Any]) -> dict[str, Any]:
 def _build_governance_policy(governance_policy: dict[str, Any]) -> dict[str, Any]:
     quality_bar = governance_policy["quality_bar"]
     evidence_escalation_policy = governance_policy["evidence_escalation_policy"]
+    controller_defaults = governance_policy["controller_defaults"]
     return {
         "default_tranche": _normalize_string(governance_policy["default_tranche"]),
         "preferred_stop_target": _normalize_string(governance_policy["preferred_stop_target"]),
@@ -252,6 +253,16 @@ def _build_governance_policy(governance_policy: dict[str, Any]) -> dict[str, Any
             "required_evidence_types": [
                 _normalize_string(item)
                 for item in evidence_escalation_policy["required_evidence_types"]
+                if _normalize_string(item)
+            ],
+        },
+        "controller_defaults": {
+            "target_status": _normalize_string(controller_defaults["target_status"]),
+            "require_zero_blockers": bool(controller_defaults["require_zero_blockers"]),
+            "require_zero_evidence_gaps": bool(controller_defaults["require_zero_evidence_gaps"]),
+            "acceptance_criteria": [
+                _normalize_string(item)
+                for item in controller_defaults.get("acceptance_criteria", [])
                 if _normalize_string(item)
             ],
         },

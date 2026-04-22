@@ -13,6 +13,12 @@ from med_autogrant.workspace import (
 
 
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
+_QUALITY_CONTROLLER_ACTIONS = {
+    "continue_mainline",
+    "rollback_upstream",
+    "reselect_project_profile",
+    "fail_closed",
+}
 
 _QUALITY_DIMENSION_SPECS: tuple[dict[str, str], ...] = (
     {
@@ -81,6 +87,9 @@ def build_grant_quality_scorecard(document: dict[str, Any]) -> dict[str, Any]:
         for issue in dimension["tracked_issues"]
     ]
     evidence_supply_queue = _build_evidence_supply_queue(tracked_issues)
+    funding_profile_mismatch_gap = _build_funding_profile_mismatch_gap(document)
+    if funding_profile_mismatch_gap is not None:
+        evidence_supply_queue.append(funding_profile_mismatch_gap)
     unresolved_hard_issues = [
         issue["summary"]
         for issue in tracked_issues
@@ -840,10 +849,19 @@ def _build_recommended_closure_action(
     if severity == "gap" and target_stage is None:
         target_stage = "revision"
     return {
+        "action": _resolve_issue_controller_action(severity=severity, target_stage=target_stage),
         "summary": action_summary,
         "target_stage": target_stage,
         "source_surface": source_surface,
     }
+
+
+def _resolve_issue_controller_action(*, severity: str, target_stage: str | None) -> str:
+    if severity == "hard":
+        return "rollback_upstream"
+    if target_stage is None:
+        return "continue_mainline"
+    return "continue_mainline"
 
 
 def _build_issue_evidence_obligations(
@@ -1076,6 +1094,97 @@ def _build_evidence_supply_queue(tracked_issues: Iterable[Mapping[str, Any]]) ->
     ]
 
 
+def _build_funding_profile_mismatch_gap(document: dict[str, Any]) -> dict[str, Any] | None:
+    project_profile = _ensure_mapping(document.get("project_profile"))
+    if project_profile is None:
+        return None
+    funding_brief = _ensure_mapping(document.get("funding_opportunity_brief"))
+    if funding_brief is None:
+        return None
+    family_grammar = _ensure_mapping(project_profile.get("grant_family_grammar"))
+    if family_grammar is None:
+        family_grammar = _ensure_mapping(project_profile.get("family_grammar_trace"))
+    if family_grammar is None:
+        return None
+    compatibility_hooks = family_grammar.get("family_compatibility_hooks")
+    if not isinstance(compatibility_hooks, list) or not compatibility_hooks:
+        return None
+
+    mismatch_reasons: list[str] = []
+    linked_issue_ids: list[str] = []
+    for item in compatibility_hooks:
+        hook = _ensure_mapping(item)
+        if hook is None:
+            continue
+        mismatch_reason = _evaluate_family_compatibility_mismatch_reason(
+            funding_brief=funding_brief,
+            hook=hook,
+        )
+        if mismatch_reason is None:
+            continue
+        mismatch_reasons.append(mismatch_reason)
+        rule_id = _nonempty_string(hook.get("rule_id"))
+        if rule_id is not None:
+            linked_issue_ids.append(f"funding_profile_mismatch:{rule_id}")
+
+    if not mismatch_reasons:
+        return None
+
+    workspace_id = _nonempty_string(document.get("workspace_id")) or "workspace"
+    family_id = _nonempty_string(family_grammar.get("family_id")) or "family"
+    profile_id = _nonempty_string(project_profile.get("profile_id"))
+    brief_id = _nonempty_string(funding_brief.get("brief_id"))
+    required_input_ids = _dedupe_preserve_order(
+        item
+        for item in (profile_id, brief_id, workspace_id)
+        if item is not None
+    )
+    return {
+        "gap_id": f"funding_profile_mismatch:{workspace_id}:{family_id}",
+        "gap_kind": "funding_profile_mismatch",
+        "gap_summary": "当前 funding opportunity 与已选 family 不兼容。",
+        "supply_status": "reselection_required",
+        "controller_action_hint": {
+            "action": "reselect_project_profile",
+            "summary": "重选兼容的 funding / family 组合。",
+            "target_stage": None,
+            "source_surface": "grant_quality",
+        },
+        "required_input_ids": required_input_ids,
+        "linked_issue_ids": _dedupe_preserve_order(linked_issue_ids),
+        "linked_issue_summaries": _dedupe_preserve_order(mismatch_reasons),
+        "blocking_reasons": _dedupe_preserve_order(mismatch_reasons),
+        "supply_actions": [],
+        "evidence_refs": [],
+        "source_surfaces": ["grant_quality"],
+    }
+
+
+def _evaluate_family_compatibility_mismatch_reason(
+    *,
+    funding_brief: dict[str, Any],
+    hook: dict[str, Any],
+) -> str | None:
+    field = _nonempty_string(hook.get("opportunity_field"))
+    rule_id = _nonempty_string(hook.get("rule_id")) or "unknown_rule"
+    allowed_values = _read_nonempty_string_list(hook.get("allowed_values"))
+    if field is None or not allowed_values:
+        return None
+    observed = funding_brief.get(field)
+    if isinstance(observed, list):
+        normalized_observed = [item for item in (_nonempty_string(value) for value in observed) if item is not None]
+        matched = any(item in allowed_values for item in normalized_observed)
+        observed_payload = ", ".join(normalized_observed) if normalized_observed else "missing"
+    else:
+        observed_value = _nonempty_string(observed)
+        matched = observed_value in allowed_values
+        observed_payload = observed_value or "missing"
+    if matched:
+        return None
+    expected_payload = ", ".join(allowed_values)
+    return f"{rule_id}: funding_opportunity_brief.{field}={observed_payload}，不满足 family 允许值 {expected_payload}。"
+
+
 def _build_evidence_supply_queue_item(*, gap_id: str, issues: list[dict[str, Any]]) -> dict[str, Any]:
     severities = _dedupe_preserve_order(
         severity
@@ -1215,19 +1324,32 @@ def _resolve_controller_action_hint(issues: list[dict[str, Any]]) -> dict[str, A
             continue
         summary = _nonempty_string(action_hint.get("summary")) or _nonempty_string(issue.get("summary"))
         source_surface = _nonempty_string(action_hint.get("source_surface")) or _nonempty_string(issue.get("source_surface"))
+        action = _normalize_quality_controller_action(
+            action_hint.get("action"),
+            fallback_action="rollback_upstream" if _nonempty_string(issue.get("severity")) == "hard" else "continue_mainline",
+        )
         if summary is None or source_surface is None:
             continue
         return {
+            "action": action,
             "summary": summary,
             "target_stage": _nonempty_string(action_hint.get("target_stage")),
             "source_surface": source_surface,
         }
     fallback_issue = prioritized_issues[0] if prioritized_issues else {}
     return {
+        "action": "continue_mainline",
         "summary": _nonempty_string(fallback_issue.get("summary")) or "补齐证据供给项。",
         "target_stage": _nonempty_string(fallback_issue.get("rollback_stage")),
         "source_surface": _nonempty_string(fallback_issue.get("source_surface")) or "grant_quality",
     }
+
+
+def _normalize_quality_controller_action(value: Any, *, fallback_action: str) -> str:
+    action = _nonempty_string(value)
+    if action in _QUALITY_CONTROLLER_ACTIONS:
+        return action
+    return fallback_action
 
 
 def _build_evidence_supply_progress(
@@ -1308,11 +1430,13 @@ def _optional_action_hint(value: Any) -> dict[str, Any] | None:
     action_hint = _ensure_mapping(value)
     if action_hint is None:
         return None
+    action = _normalize_quality_controller_action(action_hint.get("action"), fallback_action="continue_mainline")
     summary = _nonempty_string(action_hint.get("summary"))
     source_surface = _nonempty_string(action_hint.get("source_surface"))
     if summary is None or source_surface is None:
         return None
     return {
+        "action": action,
         "summary": summary,
         "target_stage": _nonempty_string(action_hint.get("target_stage")),
         "source_surface": source_surface,
@@ -1327,6 +1451,7 @@ def _resolve_supply_delta(
     current_required_input_ids: list[str],
 ) -> str:
     rank = {
+        "reselection_required": 2,
         "blocked": 2,
         "mixed": 2,
         "evidence_required": 1,

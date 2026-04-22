@@ -186,6 +186,15 @@
             "publication",
             "preliminary_result"
           ]
+        },
+        "controller_defaults": {
+          "target_status": "near_submission_candidate",
+          "require_zero_blockers": true,
+          "require_zero_evidence_gaps": false,
+          "acceptance_criteria": [
+            "significance_and_innovation_risks_closed",
+            "exploratory_aims_and_translational_anchor_locked"
+          ]
         }
       },
       "family_compatibility_hooks": [
@@ -259,6 +268,15 @@
           "required_evidence_types": [
             "publication",
             "preliminary_result"
+          ]
+        },
+        "controller_defaults": {
+          "target_status": "near_submission_candidate",
+          "require_zero_blockers": true,
+          "require_zero_evidence_gaps": false,
+          "acceptance_criteria": [
+            "significance_and_innovation_risks_closed",
+            "exploratory_aims_and_translational_anchor_locked"
           ]
         }
       },

@@ -214,6 +214,7 @@ class SchemaRegistryTest(unittest.TestCase):
                 "quality_bar",
                 "rollback_bias",
                 "evidence_escalation_policy",
+                "controller_defaults",
             ],
         )
 
@@ -455,6 +456,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("gap_id", gap_progress_item_required)
         self.assertIn("transition", gap_progress_item_required)
         self.assertIn("supply_delta", gap_progress_item_required)
+        self.assertIn("action", diff_schema["$defs"]["controllerActionHint"]["required"])
 
     def test_frontdoor_surface_schemas_pin_preflight_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))

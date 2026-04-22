@@ -14,11 +14,21 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "action",
         "summary",
         "target_stage",
         "source_surface"
       ],
       "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "continue_mainline",
+            "rollback_upstream",
+            "reselect_project_profile",
+            "fail_closed"
+          ]
+        },
         "summary": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
@@ -203,7 +213,8 @@
           "enum": [
             "hard_blocker",
             "evidence_gap",
-            "mixed_gap"
+            "mixed_gap",
+            "funding_profile_mismatch"
           ]
         },
         "gap_summary": {
@@ -214,7 +225,8 @@
           "enum": [
             "blocked",
             "evidence_required",
-            "mixed"
+            "mixed",
+            "reselection_required"
           ]
         },
         "controller_action_hint": {

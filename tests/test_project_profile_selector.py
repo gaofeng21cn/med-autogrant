@@ -108,6 +108,10 @@ class ProjectProfileSelectorTest(unittest.TestCase):
             grammar["governance_policy"]["quality_bar"]["minimum_score"],
             78,
         )
+        self.assertEqual(
+            grammar["governance_policy"]["controller_defaults"]["target_status"],
+            "near_submission_candidate",
+        )
         workspace, _selection = build_initialized_intake_workspace(selection_input)
         self.assertEqual(
             workspace["project_profile"]["grant_family_grammar"]["family_id"],
@@ -277,6 +281,8 @@ class ProjectProfileSelectorTest(unittest.TestCase):
         )
         self.assertEqual(nsfc_policy["rollback_bias"]["default_rollback_stage"], "argument_building")
         self.assertEqual(nih_policy["rollback_bias"]["default_rollback_stage"], "fit_alignment")
+        self.assertEqual(nsfc_policy["controller_defaults"]["target_status"], "submission_grade_candidate")
+        self.assertEqual(nih_policy["controller_defaults"]["target_status"], "near_submission_candidate")
         self.assertGreater(
             nsfc_policy["quality_bar"]["minimum_score"],
             nih_policy["quality_bar"]["minimum_score"],

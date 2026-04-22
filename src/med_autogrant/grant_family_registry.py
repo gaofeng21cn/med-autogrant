@@ -68,6 +68,15 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
                         "preliminary_result",
                     ),
                 },
+                "controller_defaults": {
+                    "target_status": "submission_grade_candidate",
+                    "require_zero_blockers": True,
+                    "require_zero_evidence_gaps": True,
+                    "acceptance_criteria": (
+                        "scientific_question_and_argument_chain_closed",
+                        "applicant_fit_and_mechanistic_support_locked",
+                    ),
+                },
             },
             "family_compatibility_hooks": (
                 {
@@ -145,6 +154,15 @@ _PROJECT_PROFILE_PRESET_REGISTRY: dict[str, dict[str, Any]] = {
                         "preliminary_result",
                     ),
                 },
+                "controller_defaults": {
+                    "target_status": "near_submission_candidate",
+                    "require_zero_blockers": True,
+                    "require_zero_evidence_gaps": False,
+                    "acceptance_criteria": (
+                        "significance_and_innovation_risks_closed",
+                        "exploratory_aims_and_translational_anchor_locked",
+                    ),
+                },
             },
             "family_compatibility_hooks": (
                 {
@@ -210,6 +228,15 @@ _FAMILY_PROFILE_PLACEHOLDERS: tuple[dict[str, Any], ...] = (
                     "required_evidence_types": (
                         "publication",
                         "project",
+                    ),
+                },
+                "controller_defaults": {
+                    "target_status": "near_submission_candidate",
+                    "require_zero_blockers": True,
+                    "require_zero_evidence_gaps": False,
+                    "acceptance_criteria": (
+                        "transformative_value_case_closed",
+                        "milestone_and_execution_risks_bounded",
                     ),
                 },
             },

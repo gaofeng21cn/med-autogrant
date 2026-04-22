@@ -148,9 +148,26 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                         "policy_id": "nih_r21_governance_v1",
                         "default_tranche": "quality_closure",
                         "preferred_stop_target": "near_submission_candidate",
-                        "requires_zero_blockers": True,
-                        "requires_zero_evidence_gaps": False,
-                        "acceptance_criteria": ["significance / innovation 风险关闭"],
+                        "quality_bar": {
+                            "minimum_score": 78,
+                            "blocker_policy": "critical_blockers_must_close",
+                            "required_signal_coverage": ["significance", "innovation"],
+                        },
+                        "rollback_bias": {
+                            "default_rollback_stage": "fit_alignment",
+                            "trigger_mode": "innovation_gap_sensitive",
+                        },
+                        "evidence_escalation_policy": {
+                            "trigger": "significance_or_innovation_claim_unbounded",
+                            "escalation_action": "tighten_aim_scope_and_add_translational_anchor",
+                            "required_evidence_types": ["publication", "preliminary_result"],
+                        },
+                        "controller_defaults": {
+                            "target_status": "near_submission_candidate",
+                            "require_zero_blockers": True,
+                            "require_zero_evidence_gaps": False,
+                            "acceptance_criteria": ["significance / innovation 风险关闭"],
+                        },
                     },
                 }
             },
@@ -218,14 +235,26 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                     "evidence_gaps": ["需要重选可兼容的 funding family"],
                     "evidence_supply_queue": [
                         {
-                            "gap_id": "gap-opportunity-fit",
-                            "controller_action_hint": "reselect_project_profile",
-                            "gap_kind": "funding_opportunity_mismatch",
-                            "required_input_ids": ["sel-001"],
-                            "linked_issue_ids": ["unresolved_hard_issues:opportunity-fit"],
-                        }
-                    ],
-                }
+                "gap_id": "gap-opportunity-fit",
+                "gap_kind": "funding_profile_mismatch",
+                "gap_summary": "当前 funding opportunity 与已选 family 不兼容。",
+                "supply_status": "reselection_required",
+                "controller_action_hint": {
+                    "action": "reselect_project_profile",
+                    "summary": "重选兼容的 funding / family 组合。",
+                    "target_stage": None,
+                    "source_surface": "grant_quality",
+                },
+                "required_input_ids": ["sel-001"],
+                "linked_issue_ids": ["unresolved_hard_issues:opportunity-fit"],
+                "linked_issue_summaries": ["当前 funding opportunity 与问题不匹配"],
+                "blocking_reasons": ["当前 funding opportunity 与问题不匹配"],
+                "supply_actions": [],
+                "evidence_refs": [],
+                "source_surfaces": ["grant_quality"],
+            }
+        ],
+    }
             self.assertEqual(workspace["workspace_id"], "sel-001-v2")
             return {
                 "quality_status": "near_submission_candidate",

@@ -182,6 +182,10 @@ class WorkspaceSummaryTest(unittest.TestCase):
             78,
         )
         self.assertEqual(
+            summary["project_profile"]["grant_family_grammar"]["governance_policy"]["controller_defaults"]["target_status"],
+            "near_submission_candidate",
+        )
+        self.assertEqual(
             summary["project_profile"]["family_grammar_trace"]["family_id"],
             "nih_r21_translational_family_v1",
         )

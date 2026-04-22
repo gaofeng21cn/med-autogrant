@@ -77,11 +77,21 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "action",
         "summary",
         "target_stage",
         "source_surface"
       ],
       "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "continue_mainline",
+            "rollback_upstream",
+            "reselect_project_profile",
+            "fail_closed"
+          ]
+        },
         "summary": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
