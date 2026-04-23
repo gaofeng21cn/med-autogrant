@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-04-23：默认公开能力面收口为稳定 capability surface
+
+- 决策：当前对外默认合同优先冻结为 `CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；默认正文执行继续继承本机 `Codex` 配置。
+- 理由：如果继续把 hosted runtime carrier 写成默认公开主语，就会把真正稳定、可调用、可被 `Codex` / `OPL` skill activation 复用的能力面淹没掉。
+- 影响：`Hermes-Agent` 相关 lane 继续保留为显式 hosted/proof backend 或技术参考；默认公开口径回到稳定 capability surface，避免把 backend 位置误写成产品第一身份。
+
 ## 2026-04-23：完成语义收口到 authoring quality 主线（P4.G）
 
 - 决策：当前 tranche 收口为 `P4.G authoring-quality-first completion semantics alignment`，主任务完成语义以正文科学性与 authoring quality 为主。

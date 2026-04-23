@@ -9,7 +9,7 @@
     "internal_controller_surface": "controller"
   },
   "runtime_owner": {
-    "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+    "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
     "active_phase": "P4 mature direct grant product entry",
     "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
     "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
@@ -93,7 +93,7 @@
   "ideal_target": {
     "family_top_entry": "OPL family-level orchestration surface",
     "domain_direct_entry": "Med Auto Grant Product Entry",
-    "runtime_substrate_owner": "Hermes-Agent",
+    "runtime_substrate_owner": "explicit hosted runtime carrier (for example Hermes-Agent)",
     "authoring_truth_owner": "Med Auto Grant",
     "direct_user_route": "User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant domain logic",
     "opl_gateway_route": "User or agent caller -> OPL Product Entry -> OPL family-level orchestration surface -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry",

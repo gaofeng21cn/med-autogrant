@@ -523,7 +523,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["program_id"], "med-autogrant-mainline")
         self.assertEqual(
             payload["current_line"]["current_owner_line"],
-            "CLI-first with real upstream Hermes-Agent runtime substrate",
+            "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
         )
         self.assertTrue(payload["current_focus"]["summary"])
         self.assertEqual(

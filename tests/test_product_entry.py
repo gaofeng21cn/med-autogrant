@@ -1412,7 +1412,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "resume_entry": "runtime-resume",
                         "runtime_substrate_contract": {
                             "runtime_owner": "Hermes",
-                            "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                            "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                             "active_phase": "P4 mature direct grant product entry",
                             "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
@@ -1468,7 +1468,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                         "resume_entry": "runtime-resume",
                         "runtime_substrate_contract": {
                             "runtime_owner": "Hermes",
-                            "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                            "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                             "active_phase": "P4 mature direct grant product entry",
                             "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
@@ -1542,7 +1542,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "resume_entry": "runtime-resume",
                             "runtime_substrate_contract": {
                                 "runtime_owner": "Hermes",
-                                "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                                "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                                 "active_phase": "P4 mature direct grant product entry",
                                 "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
@@ -1636,7 +1636,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "resume_entry": "runtime-resume",
                             "runtime_substrate_contract": {
                                 "runtime_owner": "Hermes",
-                                "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                                "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                                 "active_phase": "P4 mature direct grant product entry",
                                 "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
@@ -2871,7 +2871,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         with patch(
             "med_autogrant.product_entry._build_mainline_snapshot",
             return_value={
-                "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
+                "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                 "active_phase": "P4 mature direct grant product entry",
                 "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                 "phase_map": [{"phase_id": "P4", "phase_name": "mature direct grant product entry", "status": "next"}],

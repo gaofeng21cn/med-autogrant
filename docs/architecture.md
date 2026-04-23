@@ -2,13 +2,15 @@
 
 ## 主链路
 
-当前主链路是 `CLI-first + real upstream Hermes-Agent runtime substrate`：
+当前主链路是“稳定 capability surface 优先，默认执行继承本机 Codex，hosted backend 显式可选”：
 
-`operator / Codex / OPL / generic agent caller -> CLI or MedAutoGrantDomainEntry -> upstream Hermes session substrate -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
+`operator / Codex / OPL / generic agent caller -> CLI or MedAutoGrantDomainEntry -> route-selected executor -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
 
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 
 当前任务语义固定为“指定基金任务正文 authoring”。架构层显式区分两类完成态：科学完成可待审包，以及形式/客观补件完成。
+
+如果显式启用 hosted runtime carrier，它也只能挂在同一套 `CLI / MedAutoGrantDomainEntry / route contract / export contract` 下面；`Hermes-Agent` 相关路径当前属于这类显式 hosted/proof lane，而不是默认公开 capability contract。
 
 ## 入口 taxonomy 与 OPL handoff
 
@@ -53,11 +55,11 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 目标中的 domain 级链路应是：
 
-`User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant domain logic`
+`User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> route-selected executor or optional hosted runtime carrier -> Med Auto Grant domain logic`
 
 与 `OPL` 的家族级衔接应是：
 
-`User or agent caller -> OPL Product Entry -> OPL family orchestration surface -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+`User or agent caller -> OPL Product Entry -> OPL family orchestration surface -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
 
 `OPL -> Med Auto Grant` 的最小 handoff envelope 至少包括：
 
@@ -74,7 +76,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 - `OPL`：family-level session/runtime/projection 与 shared modules/contracts/indexes owner
 - `Med Auto Grant Product Entry`：domain direct entry owner
-- `Hermes-Agent`：runtime substrate owner
+- `Hermes-Agent`：显式 hosted/proof lane 中可选的 runtime carrier
 - `Med Auto Grant`：author-side grant truth / route / export owner
 
 当前并不宣称 `OPL` family orchestration surface 已在本仓实现；当前只是在为 future caller 冻结稳定 contract。
@@ -91,11 +93,11 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 对 `Med Auto Grant` 来说，优先 adoption 的面是 `workspace progress / workspace cockpit / product direct-entry / product user-loop`，并与 family action graph / family human gate / family product-entry manifest v2 对齐；domain 侧继续保持 `workspace / draft / program` 的真相边界。
 
-这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL` 写成 runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是上游 `Hermes-Agent` 作为 runtime substrate owner，MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持。
+这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL` 写成 runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 的 runtime carrier。
 
 ## Hermes-Agent、Med Auto Grant 与 concrete executor 的分工
 
-在当前架构里，`Hermes-Agent` 已经承担：
+在当前架构里，若显式启用 hosted/proof backend，`Hermes-Agent` 可以承担：
 
 - session substrate
 - runtime state / attempt ledger durability
@@ -115,7 +117,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 因此，这里真实成立的是：
 
-- runtime substrate owner 已切到上游 `Hermes-Agent`
+- 默认公开 capability contract 先固定在 `CLI` / `MedAutoGrantDomainEntry` / 本地脚本 / schema-backed contract
 - domain governance / truth owner 仍是 `Med Auto Grant`
 - concrete executor owner 仍按 route 单独选择，当前默认是 `Codex CLI`
 

@@ -16,12 +16,13 @@ This guide is for readers who need the technical records, trace records, referen
 
 ## Current Technical Picture
 
-- `Med Auto Grant` is the author-side medical grant domain gateway under the `OPL` family gateway and handoff surface.
+- `Med Auto Grant` is an independent medical grant domain agent with a stable capability surface built from `CLI`, `MedAutoGrantDomainEntry`, local scripts, and schema-backed contracts.
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
-- `Hermes-Agent` names the external runtime substrate owner; repo-side grant adapters keep authoring truth, direct entry, and route contracts stable above that substrate.
+- Default authoring execution inherits local `Codex` defaults through the existing route-selected executor path.
+- `Hermes-Agent`-related lanes stay in explicit hosted/proof or technical-reference positions; they do not redefine the default public capability contract.
 - Historical program records and migration notes stay in `docs/specs/` and `docs/history/` for traceability.
 - The frontdesk, user-loop, projections, and local `submission-ready` package are landed. The active task boundary now distinguishes scientific review readiness from the stricter local export gate. Future hosted product expansion lives in `docs/plans/`.
-- `OPL` owns family navigation and domain handoff; MAG owns grant-domain truth, direct grant entry, and execution routing.
+- `OPL` family routing and `Codex` skill activation consume the same MAG capability surface; MAG keeps grant-domain truth, direct grant entry, and execution routing.
 - The active MAG task boundary is specified-funder body authoring; scientific completion and formal/objective supplement completion are explicitly separated layers.
 - The scientific completion layer delivers a review-ready package for author and reviewer decision flow.
 - Formal/objective supplements default to `TODO + explicit wakeup`; they are not body-authoring blockers unless they directly invalidate scientific claims.
@@ -61,7 +62,7 @@ These files are the default public-facing entry surfaces and should stay mirrore
 - [Specs directory](./specs/)
 - [Contracts Overview](../contracts/README.md)
 
-The current grant product-entry shell remains available as the domain/API catalog builder. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible for hosted caller / external caller consumption.
+The current grant product-entry shell remains available as the domain/API catalog builder and as part of the stable callable surface. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible for hosted caller / external caller consumption.
 The quality and autonomy schemas are tracked in [`schema-index.json`](../schemas/v1/schema-index.json) and in the current-program truth surface.
 
 ## Trace Records

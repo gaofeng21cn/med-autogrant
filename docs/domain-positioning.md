@@ -5,8 +5,8 @@
 ## What It Is
 
 `Med Auto Grant` is the author-side, proposal-facing medical `Grant Ops` mainline under the shared `Unified Harness Engineering Substrate`.
-Its role is a medical `Grant Ops` domain gateway and harness for medical grant applications, with the current product runtime mainline frozen as `CLI-first + real upstream Hermes-Agent runtime substrate`.
-The previously absorbed `Codex-default host-agent` line is retained only as a compatibility bridge / regression oracle, while repo-side adapters preserve Med Auto Grant domain semantics on top of the landed upstream substrate.
+Its role is a medical `Grant Ops` domain gateway and harness for medical grant applications, with the current public capability contract frozen as `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`.
+The previously absorbed `Codex-default host-agent` line is retained only as a compatibility bridge / regression oracle, while repo-side adapters preserve Med Auto Grant domain semantics on top of the stable capability surface.
 
 ## What It Is Not
 
@@ -61,8 +61,8 @@ Current status:
 
 - top-level public docs exist
 - internal Chinese design and current-truth artifacts exist
-- a real upstream-Hermes-backed runtime substrate is landed
+- the stable public capability surface is landed and remains Codex-default by default
 - the current active phase is `P4 mature direct grant product entry`
-- the current active tranche is `P4.F local submission-ready package landing`
+- the current active tranche is `P4.G authoring-quality-first completion semantics alignment`
 - `P3 hosted caller / OPL consumption proof` is already completed and retained as historical landing context
-- future hosted product deployment remains a later evolution on the same substrate
+- future hosted product deployment remains a later evolution through the same route/export contracts

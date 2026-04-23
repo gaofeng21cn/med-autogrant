@@ -5,7 +5,7 @@ Date: `2026-04-23`
 ## 当前角色
 
 - 仓库角色：`Med Auto Grant` 是独立 medical grant domain agent，负责 author-side grant truth、route、review gate 与 package export；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
-- 当前执行口径：`Hermes-Agent` 作为外部 runtime substrate owner 持有长期在线与 proof 语义；repo-side grant adapter 继续持有 direct entry、route contract 与导出边界。
+- 当前执行口径：repo-tracked 默认 capability contract 收口为 `CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；默认正文执行继续继承本机 `Codex` 配置；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 与技术参考层。
 - 当前 agent entry：`CLI` / `MedAutoGrantDomainEntry` 可被 `Codex`、`OPL` 和其他通用 agent 直接调用。
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
@@ -35,6 +35,7 @@ Date: `2026-04-23`
 - 当前 funding sync 会同时生成 `latest.diff.json`，并对消失条目标记 `withdrawn_or_not_listed`。
 - 当前公开用户回路：`product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`
 - 当前公开 CLI 入口面：`product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready`
+- 当前稳定可调用面：`CLI` / `MedAutoGrantDomainEntry`、本地脚本、`product build-entry` / `product manifest` / `product frontdesk` / `product direct-entry` / `product user-loop`，以及对应 schema-backed contract
 - 当前主任务完成语义：以正文科学性与 authoring quality 为主，不把单一导出命令当作主任务完成替代。
 - 当前 `package submission-ready` 语义：继续作为更严格的本地提交包导出面；它是高标准交付导出能力，不是 authoring 主任务的唯一完成条件。
 - 当前形式审查/客观补件语义：默认进入 `TODO` 与显式唤醒链路；仅在直接破坏科学论证成立性时升级为正文 authoring blocker。

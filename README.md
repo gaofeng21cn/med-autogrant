@@ -52,6 +52,7 @@ You can start with prompts like:
 
 - `Med Auto Grant` is an independent medical grant domain agent, not an internal module inside the `OPL` workspace.
 - It can be called directly by `Codex` or other general agents through `CLI` / `MedAutoGrantDomainEntry`, and can also be federated by `OPL`.
+- Its stable product capability surface is the local CLI, `MedAutoGrantDomainEntry`, local scripts, product-entry/projection commands, and schema-backed contracts that `Codex` or `OPL` skill activation can call directly.
 - MAG task scope is locked to body authoring for a specified funding call.
 - Scientific completion is delivered as a review-ready package; formal/objective supplements are tracked separately.
 - Formal/objective supplements default to `TODO + explicit wakeup` and do not block body authoring unless they directly break scientific validity.
@@ -70,10 +71,10 @@ You can start with prompts like:
 <details>
   <summary><strong>Start here if you are handing this repo to Codex or another agent</strong></summary>
 
-- Read the [Docs Guide](./docs/README.md) first. It summarizes the current technical picture, the formal-entry matrix, and where repo-tracked truth lives.
+- Read the [Docs Guide](./docs/README.md) first. It summarizes the current technical picture, the formal-entry matrix, the stable capability surface, and where repo-tracked truth lives.
 - Then read [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json). That is the fastest path to the active product-entry shell, schema-backed surfaces, and current mainline pointer.
 - Treat [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the public and technical truth set before changing routes or wording.
-- The current formal-entry matrix is `CLI`, `MCP`, and `controller`. `CLI` / `MedAutoGrantDomainEntry` are the agent-entry surfaces; `product entry/frontdesk/direct-entry/user-loop` are the lightweight direct-entry and projection shell.
+- The current formal-entry matrix is `CLI`, `MCP`, and `controller`. `CLI` / `MedAutoGrantDomainEntry` are the agent-entry surfaces; `product entry/frontdesk/direct-entry/user-loop`, local scripts, and schema-backed contracts form the stable callable surface. Hosted or proof backends remain explicit opt-in lanes rather than the default public contract.
 - Current machine-readable governance surfaces include `workspace quality-scorecard`, `workspace quality-diff`, and `pass autonomy-controller`.
 
 </details>

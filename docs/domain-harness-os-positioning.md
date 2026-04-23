@@ -37,7 +37,7 @@
 
 ## 4. 当前默认 Runtime 形态
 
-当前产品 runtime 主线是 `CLI-first + real upstream Hermes-Agent runtime substrate`；旧 `Codex-default host-agent runtime` 只保留为 compatibility bridge / regression oracle。`hermes_runtime.py` 与 `domain_entry.py` 当前承担的是 repo-side domain/entry adapter 责任，而不是 substrate owner。
+当前公开 capability contract 主线是 `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`；旧 `Codex-default host-agent runtime` 只保留为 compatibility bridge / regression oracle。`hermes_runtime.py` 与 `domain_entry.py` 当前承担的是 repo-side domain/entry adapter 责任，而不是默认公开 runtime owner。
 
 当前 formal-entry matrix 固定为：
 
@@ -99,7 +99,7 @@
 
 当前阶段应统一表述为：
 
-- 已完成 upstream Hermes substrate fast cutover
+- 已完成稳定 capability surface 与默认 Codex 执行口径收口
 - 已形成 service-safe domain entry 与 fresh proof
 - 尚未完成 actual hosted runtime 与 submission-grade autopilot
 

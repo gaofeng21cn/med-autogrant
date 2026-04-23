@@ -24,7 +24,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["formal_entry"]["internal_controller_surface"], "controller")
         self.assertEqual(
             contract["runtime_owner"]["current_owner_line"],
-            "CLI-first with real upstream Hermes-Agent runtime substrate",
+            "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
         )
         self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
@@ -137,7 +137,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "OPL family-level orchestration surface",
         )
         self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
-        self.assertEqual(contract["ideal_target"]["runtime_substrate_owner"], "Hermes-Agent")
+        self.assertEqual(
+            contract["ideal_target"]["runtime_substrate_owner"],
+            "explicit hosted runtime carrier (for example Hermes-Agent)",
+        )
         self.assertEqual(contract["ideal_target"]["authoring_truth_owner"], "Med Auto Grant")
         self.assertEqual(contract["phase_map"][0]["phase_id"], "P1")
         self.assertEqual(contract["phase_map"][0]["status"], "completed")

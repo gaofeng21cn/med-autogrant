@@ -11,7 +11,10 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     payload = module.read_mainline_status()
 
     assert payload["program_id"] == "med-autogrant-mainline"
-    assert payload["current_line"]["current_owner_line"] == "CLI-first with real upstream Hermes-Agent runtime substrate"
+    assert (
+        payload["current_line"]["current_owner_line"]
+        == "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers"
+    )
     assert payload["current_focus"]["summary"]
     assert payload["current_focus"]["focus_items"]
     assert payload["ideal_target"]["family_top_entry"] == "OPL family-level orchestration surface"

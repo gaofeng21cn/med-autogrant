@@ -8,7 +8,7 @@
 - formal-entry matrix 当前固定为：默认正式入口 `CLI`、支持协议层 `MCP`（future layer）、内部控制面 `controller`。
 - 不得把 `supported_protocol_layer=MCP` 解释成“当前 public runtime 已正式支持 MCP”。
 - 不得把 developer control-plane entry 的存在解释成“产品 controller 已正式支持”。
-- 当前可执行 runtime mainline 固定为 `CLI-first + real upstream Hermes-Agent runtime substrate`。
+- 当前默认公开 capability contract 固定为 `CLI-first + MedAutoGrantDomainEntry + local scripts/contracts`，默认正文执行继承本机 `Codex` 配置。
 - 历史 local host-agent runtime 材料只允许作为归档追溯材料，不得继续写成当前产品 runtime。
 - 当前 `hermes_runtime.py` 与 `domain_entry.py` 只允许被写成 repo-side domain adapter / entry adapter，不得再被误写成 runtime substrate owner。
 
@@ -19,7 +19,7 @@
 - 项目级 `.codex/` 与 `.omx/` 已退役，不再作为仓库本地状态入口。
 - 如需保留历史 session、prompt、log 或 hook 状态，应迁入用户级 `~/.codex/` 归档。
 - repo-tracked current truth 以 `docs/specs/*current-truth.md` 与相关 activation package 为准。
-- 当前 owner line 固定为“CLI-first with real upstream Hermes-Agent runtime substrate”。
+- 当前 owner line 固定为“CLI/domain-entry stable capability surface with Codex-default execution and optional hosted backend lanes”。
 - 历史 closeout label 与 baseline 只保留在归档 current-truth 材料中；核心五件套不再把它们写成当前 owner line。
 - 在没有新的 repo-tracked tranche truth 前，不得把旧 host-agent runtime closeout 材料重新写回“还有默认续推中的 active delta”。
 
@@ -28,7 +28,7 @@
 - `OPL` 当前固定只承担 family-level session/runtime/projection 与 shared modules/contracts/indexes，不承担本仓 domain truth owner 身份。
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态，而不是继续深磨已放弃的旧本地宿主路线。
 - 当前 `CLI-first + host-agent runtime` 是历史 repo-verified baseline，但它只允许留在归档追溯材料中，不应再被误写为长期终态。
-- 当前 Hermes substrate 已落地主线时，不得把 repo-side adapter 重新写回“runtime 仍由本地 helper 主责”。
+- 当 hosted/proof backend 相关材料存在时，不得把 repo-side adapter 重写成默认 runtime owner，也不得把这些 lane 误写成唯一公开 capability contract。
 - 当前 landed substrate、兼容桥与 future scope 必须在 `docs/status.md` 与 `docs/README*` 中显式拆开。
 
 ## 任务边界与 gate 语义
