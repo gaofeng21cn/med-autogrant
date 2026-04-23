@@ -1,5 +1,23 @@
 # 决策记录
 
+## 2026-04-23：完成语义收口到 authoring quality 主线（P4.G）
+
+- 决策：当前 tranche 收口为 `P4.G authoring-quality-first completion semantics alignment`，主任务完成语义以正文科学性与 authoring quality 为主。
+- 理由：如果把 `submission-ready` 本地导出能力写成主任务唯一完成条件，容易把“交付包可导出”误写成“正文科学论证已闭环”。
+- 影响：`package submission-ready` 继续保留为更严格的本地提交包导出面，但不作为 authoring 主任务唯一完成判据；`current-program`、`mainline-status`、`status` 与 current-truth spec 统一对齐此口径。
+
+## 2026-04-23：形式审查/客观补件采用 TODO + 显式唤醒链路
+
+- 决策：形式审查项与客观补件项默认进入 `TODO` 与显式唤醒链路，不默认阻塞正文 authoring。
+- 理由：多数形式补件属于可排程闭环事项，默认 hard-block 会打断正文主线推进并降低主任务收敛效率。
+- 影响：只有当缺口直接破坏科学论证成立性时，才升级为正文 authoring blocker；其余场景保持可追踪待办与显式恢复点。
+
+## 2026-04-23：锁定 funder 任务线禁止 opportunistic 跨 funder 切换叙事
+
+- 决策：已锁定 funder/family 的任务线保持同一 funder 语义闭环推进，不写成 opportunistic 跨 funder 切换。
+- 理由：跨 funder opportunistic 切换会破坏已锁定材料、评审语境与质量治理闭环的一致性。
+- 影响：current-truth 文案与 projection 输出默认保持 locked-funder continuity；跨 funder 变更必须作为显式重规划事件处理。
+
 ## 2026-04-21：公开主语收口为独立 medical grant domain agent
 
 - 决策：公开文案与 machine-readable 描述统一收口为 `Med Auto Grant` 是独立 medical grant domain agent，可被 `Codex` / `OPL` / 其他通用 agent 直接调用；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。

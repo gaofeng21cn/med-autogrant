@@ -1414,7 +1414,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.F local submission-ready package landing",
+                            "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1470,7 +1470,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                             "runtime_owner": "Hermes",
                             "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                             "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.F local submission-ready package landing",
+                            "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                             "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
@@ -1544,7 +1544,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.F local submission-ready package landing",
+                                "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1638,7 +1638,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
                                 "runtime_owner": "Hermes",
                                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                                 "active_phase": "P4 mature direct grant product entry",
-                                "active_tranche": "P4.F local submission-ready package landing",
+                                "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                                 "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
                                 "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                             },
@@ -1728,7 +1728,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(payload["grant_user_loop"]["entry_kind"], "grant_user_loop")
         self.assertEqual(
             payload["grant_user_loop"]["mainline_snapshot"]["active_tranche"],
-            "P4.F local submission-ready package landing",
+            "P4.G authoring-quality-first completion semantics alignment",
         )
         self.assertEqual(
             payload["grant_user_loop"]["grant_direct_entry"]["recommended_executor_route"]["route_id"],
@@ -2111,23 +2111,25 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
         self.assertEqual(manifest["repo_mainline"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             manifest["repo_mainline"]["active_tranche"],
-            "P4.F local submission-ready package landing",
+            "P4.G authoring-quality-first completion semantics alignment",
         )
         self.assertEqual(manifest["repo_mainline"]["phase_id"], "P4")
         self.assertEqual(
             manifest["repo_mainline"]["phase_summary"],
-            "把 direct grant product 面逐步收成当前用户 inbox shell，而不越界写成 mature Web UI 或 hosted runtime。",
+            "把 direct grant product 面逐步收成当前用户 inbox shell，并以 authoring quality 作为主任务完成语义。",
         )
         self.assertEqual(
             manifest["repo_mainline"]["next_focus"],
             [
                 "继续把 `product-entry-manifest` / `product-frontdesk` 当作当前 direct grant frontdoor contract，并让 `grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop` 继续对齐同一份 frontdoor truth。",
                 "继续把 `family_orchestration` companion 从 action graph / human gate preview 深压到 family product-entry manifest v2、event envelope 与 checkpoint lineage contract，并保持 route status 直接读取共享 author-side route truth。",
+                "把形式审查/客观补件统一收口到 TODO 与显式唤醒链路，并仅在直接破坏科学论证时升级为 blocker。",
+                "对已锁定 funder/family 的任务线保持 continuity，不引入 opportunistic 跨 funder 切换叙事。",
             ],
         )
         self.assertEqual(
             manifest["product_entry_status"]["summary"],
-            "把 direct grant product 面逐步收成当前用户 inbox shell，而不越界写成 mature Web UI 或 hosted runtime。",
+            "把 direct grant product 面逐步收成当前用户 inbox shell，并以 authoring quality 作为主任务完成语义。",
         )
         self.assertEqual(
             manifest["product_entry_status"]["remaining_gaps_count"],
@@ -2871,7 +2873,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             return_value={
                 "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
                 "active_phase": "P4 mature direct grant product entry",
-                "active_tranche": "P4.F local submission-ready package landing",
+                "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                 "phase_map": [{"phase_id": "P4", "phase_name": "mature direct grant product entry", "status": "next"}],
                 "next_focus": [1],
                 "remaining_gaps": ["mature direct grant Web UI / hosted runtime 仍未 landed。"],

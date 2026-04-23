@@ -124,7 +124,7 @@ def _phase_details() -> dict[str, dict[str, Any]]:
             ],
         },
         "P4": {
-            "summary": "把 direct grant product 面逐步收成当前用户 inbox shell，而不越界写成 mature Web UI 或 hosted runtime。",
+            "summary": "把 direct grant product 面逐步收成当前用户 inbox shell，并以 authoring quality 作为主任务完成语义。",
             "entry_points": [
                 {
                     "name": "mainline_status",
@@ -169,6 +169,9 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "用户不再需要自己拼 program docs 与 route commands 才能理解当前 grant 主线。",
                 "当前 direct grant user loop 已能稳定暴露 mainline snapshot、entry shell 与 next action。",
                 "对满足冻结 gate 与材料完备条件的 workspace，当前系统已能 fail-closed 地一键导出本地 submission-ready 包。",
+                "主任务完成判据保持正文科学性与 authoring quality 优先，不把 submission-ready 导出写成唯一完成条件。",
+                "形式审查与客观补件默认进入 TODO 与显式唤醒链路，只有直接破坏科学论证时才升级为 blocker。",
+                "已锁定 funder/family 的任务线维持同一 funder 语义闭环推进，不做 opportunistic 跨 funder 切换。",
                 "这层 shell 仍然诚实保持 controller-owned，不越界声称 mature frontend / hosted runtime 已完成。",
             ],
             "phase_docs": [
@@ -231,6 +234,11 @@ def _completed_records() -> list[dict[str, str]]:
             "title": "local submission-ready package landing",
             "summary": "build-submission-ready-package 已 landed，可对满足冻结与材料完备条件的 workspace 一键导出本地 submission-ready 交付目录。",
         },
+        {
+            "record_id": "P4.G",
+            "title": "authoring-quality-first completion semantics alignment",
+            "summary": "主任务完成语义已收口到正文科学性与 authoring quality；submission-ready 导出、形式补件与 funder continuity 语义已统一对齐。",
+        },
     ]
 
 
@@ -251,6 +259,8 @@ def _explicitly_not_now() -> list[str]:
         "提前扩 family、提前做 Human-in-the-loop sibling。",
         "把 repo-local helper 重新写回 runtime owner。",
         "把本地 submission-ready package 写成已完成外部官网提交。",
+        "把形式审查/客观补件默认写成正文 authoring 硬阻塞。",
+        "把已锁定 funder 任务线写成 opportunistic 跨 funder 切换。",
     ]
 
 
@@ -258,6 +268,8 @@ def _next_focus() -> list[str]:
     return [
         "继续把 `product-entry-manifest` / `product-frontdesk` 当作当前 direct grant frontdoor contract，并让 `grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop` 继续对齐同一份 frontdoor truth。",
         "继续把 `family_orchestration` companion 从 action graph / human gate preview 深压到 family product-entry manifest v2、event envelope 与 checkpoint lineage contract，并保持 route status 直接读取共享 author-side route truth。",
+        "把形式审查/客观补件统一收口到 TODO 与显式唤醒链路，并仅在直接破坏科学论证时升级为 blocker。",
+        "对已锁定 funder/family 的任务线保持 continuity，不引入 opportunistic 跨 funder 切换叙事。",
     ]
 
 

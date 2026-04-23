@@ -1,6 +1,6 @@
 {
   "program_id": "med-autogrant-mainline",
-  "date_anchor": "2026-04-21",
+  "date_anchor": "2026-04-23",
   "formal_entry": {
     "default_formal_entry": "CLI",
     "supported_protocol_layer": [
@@ -11,7 +11,7 @@
   "runtime_owner": {
     "current_owner_line": "CLI-first with real upstream Hermes-Agent runtime substrate",
     "active_phase": "P4 mature direct grant product entry",
-    "active_tranche": "P4.F local submission-ready package landing",
+    "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
     "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
     "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle"
   },
@@ -48,8 +48,16 @@
     "draft_id": "ApplicationDraft durable identity",
     "program_id": "repo-tracked runtime-program pointer"
   },
+  "task_boundary": {
+    "primary_scope": "target-locked grant narrative authoring and scientific quality closure",
+    "target_lock_rule": "Once the caller or selected workspace has explicitly locked a target funder/profile, downstream authoring and controller semantics stay within that task rather than opportunistically switching funders.",
+    "authoring_completion_rule": "near_submission_candidate and submission_grade_candidate mean the narrative is scientifically reviewable for applicant-side inspection.",
+    "objective_material_policy": "Administrative supplements, portal forms, signatures, ethics identifiers, and similar objective materials default to TODO and explicit wake-up follow-ups unless their absence invalidates scientific claims already used in the narrative.",
+    "submission_ready_relation": "package submission-ready remains a stricter local export gate than MAG authoring completion."
+  },
   "repo_tracked_truth_surfaces": [
     "contracts/runtime-program/current-program.json",
+    "docs/specs/2026-04-23-authoring-completion-semantics-current-truth.md",
     "docs/specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md",
     "docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md",
     "docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md",

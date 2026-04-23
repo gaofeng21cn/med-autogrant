@@ -528,7 +528,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertTrue(payload["current_focus"]["summary"])
         self.assertEqual(
             payload["maintainer_references"]["runtime_owner"]["active_tranche"],
-            "P4.F local submission-ready package landing",
+            "P4.G authoring-quality-first completion semantics alignment",
         )
 
     def test_mainline_status_plain_text_prefers_human_facing_labels(self) -> None:

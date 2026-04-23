@@ -36,6 +36,8 @@ The controller input and report are schema-backed by:
 - `schemas/v1/grant-autonomy-controller-report.schema.json`
 
 The report is fail-closed: success returns a `submission_grade_candidate` or `near_submission_candidate`; failure returns a structured blocker report, unresolved blocker queue, evidence gap queue, action trace, and reselection / rollback decisions.
+Within MAG's current task boundary, `near_submission_candidate` and `submission_grade_candidate` mean the narrative is scientifically reviewable for applicant-side inspection. They do not imply that every administrative supplement, portal form, signature, or local `submission-ready` export prerequisite is already complete.
+Objective supplements and formality-review items therefore stay on a TODO / explicit wake-up follow-up line unless their absence directly invalidates scientific claims already used in the current narrative.
 The controller now also supports `start.mode=controller_report`, so a later run can resume from a prior report instead of restarting from workspace / selection / discovery inputs.
 The report now emits `controller_checkpoint`, which freezes the resume start mode, workspace identity, completed cycle count, and next controller action as a stable checkpoint surface.
 The controller now consumes `grant_quality_closure_dossier` as its primary quality-planning input, prioritizes a formal closure package queue, and records the active closure package plus quality summary in `controller_plan`, `decision_basis`, and `tranche_history`.
@@ -44,4 +46,5 @@ The controller now consumes `grant_quality_closure_dossier` as its primary quali
 
 `grant_family_registry.py` separates common grant grammar from funder-specific profile choices.
 `grant_governance_adapter.py` now hydrates controller defaults and closure-package ordering from the workspace family governance policy, so family-specific stop targets, rollback preference, and governance entry points are consumed through one adapter surface rather than controller-local branching.
+Discovery and profile selection remain the place where MAG can compare compatible grant families before a task is locked. Once the caller or selected workspace has explicitly locked a target family, downstream controller and human-gate semantics stay within that grant task instead of opportunistically switching funders mid-authoring.
 The landed registry now preserves NSFC, NIH R21, and Wellcome Discovery admitted profile behavior, while still keeping a formal Wellcome discovery placeholder so future funder additions can land through family profile / review grammar / template strategy rather than a rewritten process.

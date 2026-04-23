@@ -29,7 +29,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             contract["runtime_owner"]["active_tranche"],
-            "P4.F local submission-ready package landing",
+            "P4.G authoring-quality-first completion semantics alignment",
         )
         self.assertEqual(contract["executor_defaults"]["default_executor_name"], "codex_cli")
         self.assertEqual(contract["executor_defaults"]["default_executor_mode"], "autonomous")
@@ -75,9 +75,25 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["runtime_owner"]["historical_baseline"],
             "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
         )
+        self.assertEqual(
+            contract["task_boundary"]["primary_scope"],
+            "target-locked grant narrative authoring and scientific quality closure",
+        )
+        self.assertEqual(
+            contract["task_boundary"]["submission_ready_relation"],
+            "package submission-ready remains a stricter local export gate than MAG authoring completion.",
+        )
+        self.assertIn(
+            "TODO and explicit wake-up follow-ups",
+            contract["task_boundary"]["objective_material_policy"],
+        )
         self.assertEqual(contract["machine_local_runtime_state"]["root"], RUNTIME_STATE_ROOT)
         self.assertEqual(contract["machine_local_runtime_state"]["not_repo_tracked"], True)
         self.assertIn("contracts/runtime-program/current-program.json", contract["repo_tracked_truth_surfaces"])
+        self.assertIn(
+            "docs/specs/2026-04-23-authoring-completion-semantics-current-truth.md",
+            contract["repo_tracked_truth_surfaces"],
+        )
         self.assertIn("docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md", contract["repo_tracked_truth_surfaces"])
         self.assertIn(
             "docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md",

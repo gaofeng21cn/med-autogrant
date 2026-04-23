@@ -20,9 +20,13 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     assert any(item["record_id"] == "P4.C" for item in payload["completed_records"])
     assert any(item["record_id"] == "P4.E" for item in payload["completed_records"])
     assert any(item["record_id"] == "P4.F" for item in payload["completed_records"])
+    assert any(item["record_id"] == "P4.G" for item in payload["completed_records"])
     maintainer_references = payload["maintainer_references"]
     assert maintainer_references["runtime_owner"]["active_phase"] == "P4 mature direct grant product entry"
-    assert maintainer_references["runtime_owner"]["active_tranche"] == "P4.F local submission-ready package landing"
+    assert (
+        maintainer_references["runtime_owner"]["active_tranche"]
+        == "P4.G authoring-quality-first completion semantics alignment"
+    )
     assert maintainer_references["current_record_detail"]["phase_id"] == "P4"
     assert maintainer_references["current_record_detail"]["status"] == "next"
     assert len(maintainer_references["phase_ladder"]) == 4

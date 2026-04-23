@@ -15,6 +15,7 @@ Date: `2026-04-13`
 - `Hermes-Agent` 继续只持有 runtime substrate / orchestration owner
 - `Med Auto Grant` 继续持有 grant domain truth、author-side route 与导出物 owner
 - 当前 landed 的只是“本地 submission-ready 交付包导出”，不是外部官网自动提交、不是成熟 Web UI，也不是 Word/PDF 全自动定稿系统
+- 这条命令面也不重写 MAG 的正文 authoring 完成语义；它只定义更严格的本地交付 gate
 
 ## Landed Facts
 
@@ -75,6 +76,17 @@ Date: `2026-04-13`
 
 这意味着当前口径不是“能导出一个差不多的包”，而是“只有达到 submission-ready gate 才允许导出本地交付目录”。
 
+### 3.5 这条严格 gate 不等于正文 authoring 的唯一完成条件
+
+在当前 MAG 任务边界下，申请书正文的科学问题、论证闭合、申请人适配与技术路线已经达到 `near_submission_candidate` / `submission_grade_candidate` 时，可以先停在供申请人审查的 authoring stop surface。
+
+签字、伦理编号、行政附件、预算表单、portal 字段等客观补件，默认属于 TODO / explicit wake-up follow-up，而不是正文 authoring blocker。只有这些缺口直接破坏正文中已经使用的科学主张时，它们才会回到 authoring blocker 语义。
+
+因此：
+
+- `package submission-ready` 继续保持严格 fail-closed
+- MAG 的正文 authoring 完成语义继续由科学质量和申请人侧可审查性决定
+
 ### 4. `product frontdoor` 已把这条导出动作暴露给用户
 
 `product-entry-manifest`、`product-frontdesk`、`grant-cockpit` 与 `product_entry_quickstart` 现在都已经显式带出：
@@ -106,6 +118,7 @@ Date: `2026-04-13`
 因此当前最诚实的说法是：
 
 - `Med Auto Grant` 已经可以把“通过 gate 的本地 submission-ready 交付目录”一键导出
+- 它也允许在正文科学性已收口但客观补件尚未齐备时，先把任务停在申请人审查 / TODO / 显式唤醒边界
 - 但它仍不是“从零材料到官网提交”的全自动成熟产品
 
 ## Verification

@@ -1,6 +1,6 @@
 # 当前状态
 
-Date: `2026-04-22`
+Date: `2026-04-23`
 
 ## 当前角色
 
@@ -35,6 +35,10 @@ Date: `2026-04-22`
 - 当前 funding sync 会同时生成 `latest.diff.json`，并对消失条目标记 `withdrawn_or_not_listed`。
 - 当前公开用户回路：`product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`
 - 当前公开 CLI 入口面：`product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready`
+- 当前主任务完成语义：以正文科学性与 authoring quality 为主，不把单一导出命令当作主任务完成替代。
+- 当前 `package submission-ready` 语义：继续作为更严格的本地提交包导出面；它是高标准交付导出能力，不是 authoring 主任务的唯一完成条件。
+- 当前形式审查/客观补件语义：默认进入 `TODO` 与显式唤醒链路；仅在直接破坏科学论证成立性时升级为正文 authoring blocker。
+- 当前 funder 锁定语义：已锁定 funder/family 的任务线维持同一 funder 闭环推进，不写成 opportunistic 跨 funder 切换。
 - 当前新增自治入口：`pass critique-loop`（internal command: `execute-critique-revision-loop`）
 - 当前新增全链路自治入口：`pass mainline-loop`（internal command: `execute-authoring-mainline-loop`）
 - 当前新增长期 controller 入口：`pass autonomy-controller`（internal command: `execute-grant-autonomy-controller`）
