@@ -20,7 +20,7 @@ This guide is for readers who need the technical records, trace records, referen
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
 - `Hermes-Agent` names the external runtime substrate owner; repo-side grant adapters keep authoring truth, direct entry, and route contracts stable above that substrate.
 - Historical program records and migration notes stay in `docs/specs/` and `docs/history/` for traceability.
-- The frontdesk, user-loop, projections, and local review-package surfaces are landed. Future hosted product expansion lives in `docs/plans/`.
+- The frontdesk, user-loop, projections, and local `submission-ready` package are landed. The active task boundary now distinguishes scientific review readiness from the stricter local export gate. Future hosted product expansion lives in `docs/plans/`.
 - `OPL` owns family navigation and domain handoff; MAG owns grant-domain truth, direct grant entry, and execution routing.
 - The active MAG task boundary is specified-funder body authoring; scientific completion and formal/objective supplement completion are explicitly separated layers.
 - The scientific completion layer delivers a review-ready package for author and reviewer decision flow.

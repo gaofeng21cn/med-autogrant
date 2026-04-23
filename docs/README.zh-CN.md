@@ -20,7 +20,7 @@
 - formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
 - `Hermes-Agent` 指外部 runtime substrate owner；repo-side grant adapter 继续在其上方稳定 grant truth、direct entry 与 route contract。
 - 历史 program 记录与迁移说明继续留在 `docs/specs/` 与 `docs/history/` 中供追溯。
-- frontdesk、user-loop、projection 与本地待审包交付面已落地；未来 hosted 产品扩展统一留在 `docs/plans/`。
+- frontdesk、user-loop、projection 与本地 `submission-ready` package 已落地；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate；未来 hosted 产品扩展统一留在 `docs/plans/`。
 - `OPL` 负责 family navigation 与 domain handoff；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。
 - MAG 当前任务边界锁定在“指定基金任务正文 authoring”；“科学完成”与“形式/客观补件完成”是显式分层。
 - 科学层交付的是可待审包，用于同任务内作者/评审决策。

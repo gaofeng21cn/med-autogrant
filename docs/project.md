@@ -30,7 +30,7 @@
 - 通过 `execute-grant-autonomy-controller` 把长期自治控制层收口成正式 command surface，使系统在同一基金任务内调度 mainline loop 与质量 gate；selection/discovery 仅作为可选输入上下文，不触发默认跨 funder 重选。
 - 通过 `grant_family_registry.py` 把通用 grant grammar、review grammar、template strategy 与 funder-specific family profile 分开，避免把新增基金类型散落进主流程。
 - 通过 `product manifest` 与 `product frontdesk` 把 direct grant frontdoor 收口成独立 schema-backed、generation-time fail-closed 的 contract，并把 `family_orchestration` companion 的 route status 严格对齐到共享 author-side route truth。
-- 通过 `package submission-ready` 把本地可待审包与补件状态收口成正式 command surface，并保持“科学待审包可先行、补件按唤醒推进、不对外宣称官网已提交”的边界。
+- 通过 `package submission-ready` 保持严格的本地 submission-ready 导出面，并明确它与“科学完成可待审包”的 authoring stop 不是同一完成层；同时继续保持“不对外宣称官网已提交”的边界。
 - 人工 gate 只覆盖同一基金任务内的作者决策，不扩展成跨 funder 路线重选流程。
 - 把 hosted-friendly handoff contract 收口成 caller 可直接消费的 entry / schema / route catalog，并保持与当前 bundle 同步。
 - 保持 `gateway / harness` 作为内部架构分层术语，不作为公开第一身份。
@@ -46,8 +46,8 @@
 
 ## 当前形态
 
-- Current public execution line：`direct MAG agent entry / OPL federation handoff -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> quality governance / autonomy controller -> service-safe authoring/review-package commands`
-- Current frontdoor shape：`product frontdesk + product user-loop + workspace progress/workspace cockpit + product direct-entry + scientific review-ready package + supplement TODO wakeups`
+- Current public execution line：`direct MAG agent entry / OPL federation handoff -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> quality governance / autonomy controller -> service-safe pass/package commands`
+- Current frontdoor shape：`product frontdesk + product user-loop + workspace progress/workspace cockpit + product direct-entry + package submission-ready`
 - Latest absorbed runtime slice：`R5.A / Hosted-Friendly Session Boundary`
 - Current owner line：`CLI-first with real upstream Hermes-Agent runtime substrate`
 - 默认入口：CLI（validator、summary、route、controller-owned product projection + service-safe domain entry dispatch）
