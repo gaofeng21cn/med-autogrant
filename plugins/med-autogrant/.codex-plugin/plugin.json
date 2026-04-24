@@ -1,0 +1,37 @@
+{
+  "name": "med-autogrant",
+  "version": "0.1.0",
+  "description": "Codex plugin shell for the Med Auto Grant grant-authoring domain app.",
+  "author": {
+    "name": "Gao Feng",
+    "url": "https://github.com/gaofeng21cn"
+  },
+  "homepage": "https://github.com/gaofeng21cn/med-autogrant",
+  "repository": "https://github.com/gaofeng21cn/med-autogrant",
+  "license": "UNLICENSED",
+  "keywords": [
+    "grant-authoring",
+    "codex",
+    "medical-grant",
+    "domain-agent"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Med Auto Grant",
+    "shortDescription": "Agent-first grant-authoring domain app for Codex.",
+    "longDescription": "Adds a thin Codex plugin entry for Med Auto Grant while preserving the existing CLI, domain-entry contracts, and authoring loop surfaces.",
+    "developerName": "Gao Feng",
+    "category": "Research",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/gaofeng21cn/med-autogrant",
+    "defaultPrompt": [
+      "Inspect the current Med Auto Grant skill catalog for this workspace.",
+      "Open the current Med Auto Grant frontdesk for this grant workspace.",
+      "Continue the active Med Auto Grant user loop with the current funding call."
+    ],
+    "brandColor": "#2E6E9E"
+  }
+}

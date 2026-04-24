@@ -42,6 +42,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "mainline-phase": ("mainline", "phase"),
     "grant-direct-entry": ("product", "direct-entry"),
     "grant-user-loop": ("product", "user-loop"),
+    "skill-catalog": ("product", "skill-catalog"),
     "product-entry-manifest": ("product", "manifest"),
     "product-frontdesk": ("product", "frontdesk"),
     "product-preflight": ("product", "preflight"),

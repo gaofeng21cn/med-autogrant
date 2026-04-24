@@ -195,6 +195,40 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             funding_call=None,
         )
 
+    def test_skill_catalog_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "skill-catalog",
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "critique",
+            "input_path": str(CRITIQUE_EXAMPLE_PATH),
+            "skill_catalog": {
+                "surface_kind": "skill_catalog",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.build_skill_catalog.return_value = expected_payload
+
+            exit_code, stdout, stderr = self.run_cli(
+                "skill-catalog",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_skill_catalog.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            funding_call=None,
+        )
+
     def test_product_preflight_dispatches_product_surface(self) -> None:
         expected_payload = {
             "ok": True,

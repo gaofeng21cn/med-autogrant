@@ -75,6 +75,7 @@ You can start with prompts like:
 - Then read [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json). That is the fastest path to the active product-entry shell, schema-backed surfaces, and current mainline pointer.
 - Treat [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the public and technical truth set before changing routes or wording.
 - The current formal-entry matrix is `CLI`, `MCP`, and `controller`. `CLI` / `MedAutoGrantDomainEntry` are the agent-entry surfaces; `product entry/frontdesk/direct-entry/user-loop`, local scripts, and schema-backed contracts form the stable callable surface. Hosted or proof backends remain explicit opt-in lanes rather than the default public contract.
+- When an external agent or OPL wants the repo-tracked skill surface directly, use `medautogrant product skill-catalog --input <input_path> --format json`; it returns one Med Auto Grant app skill plus the underlying command contracts.
 - Current machine-readable governance surfaces include `workspace quality-scorecard`, `workspace quality-diff`, and `pass autonomy-controller`.
 
 </details>

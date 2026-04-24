@@ -275,6 +275,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_manifest_command(
         subparsers,
+        "skill-catalog",
+        handle_skill_catalog,
+        "输出单个 Med Auto Grant app skill 及其 machine-readable command contract。",
+    )
+    _add_manifest_command(
+        subparsers,
         "product-entry-manifest",
         handle_product_entry_manifest,
         "输出当前 direct grant product-entry manifest，收口 repo 主线、当前壳与 shared handoff 模板。",
@@ -633,6 +639,13 @@ def handle_grant_user_loop(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_grant_user_loop(
         input_path=args.input,
         task_intent=args.task_intent,
+        funding_call=args.funding_call,
+    )
+
+
+def handle_skill_catalog(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_skill_catalog(
+        input_path=args.input,
         funding_call=args.funding_call,
     )
 

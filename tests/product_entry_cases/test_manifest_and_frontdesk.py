@@ -153,6 +153,29 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
             "workspace_document",
         )
         self.assertEqual(manifest["skill_catalog"]["surface_kind"], "skill_catalog")
+        self.assertEqual(len(manifest["skill_catalog"]["skills"]), 1)
+        self.assertEqual(
+            manifest["skill_catalog"]["skills"][0],
+            {
+                "surface_kind": "skill_descriptor",
+                "skill_id": "med-autogrant",
+                "title": "Med Auto Grant",
+                "owner": "med-autogrant",
+                "distribution_mode": "repo_tracked_codex_plugin",
+                "target_surface_kind": "skill_catalog",
+                "description": "Canonical Med Auto Grant domain app skill for Codex and OPL callers.",
+                "command": public_cli_command(
+                    "skill-catalog", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                ),
+                "readiness": "landed",
+                "tags": ["med-autogrant", "domain-app", "grant-authoring"],
+                "domain_projection": {
+                    "plugin_name": "med-autogrant",
+                    "skill_entry": "med-autogrant",
+                    "recommended_shell": "grant_user_loop",
+                },
+            },
+        )
         self.assertIn("validate-workspace", manifest["skill_catalog"]["supported_commands"])
         self.assertTrue(manifest["skill_catalog"]["command_contracts"])
         self.assertEqual(manifest["domain_entry_contract"], build_domain_entry_contract())

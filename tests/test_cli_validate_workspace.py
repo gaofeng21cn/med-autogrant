@@ -739,11 +739,34 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("checkpoint_summary", manifest["task_lifecycle"])
         self.assertIn("skill_catalog", manifest)
         self.assertEqual(manifest["skill_catalog"]["surface_kind"], "skill_catalog")
+        self.assertEqual(len(manifest["skill_catalog"]["skills"]), 1)
+        self.assertEqual(manifest["skill_catalog"]["skills"][0]["skill_id"], "med-autogrant")
         self.assertIn("supported_commands", manifest["skill_catalog"])
         self.assertIn("command_contracts", manifest["skill_catalog"])
         self.assertIn("automation", manifest)
         self.assertEqual(manifest["automation"]["surface_kind"], "automation")
         self.assertGreaterEqual(len(manifest["automation"]["automations"]), 1)
+
+    def test_skill_catalog_returns_machine_readable_app_skill_surface(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "skill-catalog",
+            "--input",
+            str(CRITIQUE_EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["command"], "skill-catalog")
+        skill_catalog = payload["skill_catalog"]
+        self.assertEqual(skill_catalog["surface_kind"], "skill_catalog")
+        self.assertEqual(len(skill_catalog["skills"]), 1)
+        self.assertEqual(skill_catalog["skills"][0]["skill_id"], "med-autogrant")
+        self.assertIn("supported_commands", skill_catalog)
+        self.assertIn("command_contracts", skill_catalog)
 
     def test_product_entry_manifest_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

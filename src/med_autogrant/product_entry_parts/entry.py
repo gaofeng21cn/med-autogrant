@@ -1546,29 +1546,30 @@ class MedAutoGrantProductEntry:
             },
         )
         skill_catalog = _build_shared_skill_catalog(
-            summary="skill catalog 聚合 domain entry command catalog 与当前 product-entry shells。",
+            summary="Canonical Med Auto Grant app skill plus machine-readable command contracts.",
             skills=[
                 _build_shared_skill_descriptor(
-                    skill_id=f"mag.{shell_key}",
-                    title=shell_key.replace("_", " ").title(),
+                    skill_id="med-autogrant",
+                    title="Med Auto Grant",
                     owner=TARGET_DOMAIN_ID,
-                    distribution_mode="repo_tracked_cli_surface",
-                    surface_kind=_require_nonempty_string_from_mapping(
-                        shell_surface,
-                        "surface_kind",
-                        context=f"product_entry_shell.{shell_key}",
-                    ),
-                    description=f"{shell_key} shell 的当前 product-entry command surface。",
-                    command=_require_nonempty_string_from_mapping(
-                        shell_surface,
-                        "command",
-                        context=f"product_entry_shell.{shell_key}",
+                    distribution_mode="repo_tracked_codex_plugin",
+                    surface_kind="skill_catalog",
+                    description="Canonical Med Auto Grant domain app skill for Codex and OPL callers.",
+                    command=public_cli_command(
+                        "skill-catalog",
+                        "--input",
+                        str(resolved_input_path),
+                        "--format",
+                        "json",
                     ),
                     readiness="landed",
-                    tags=[TARGET_DOMAIN_ID, "product-entry-shell", shell_key],
-                    domain_projection={"shell_key": shell_key},
+                    tags=["med-autogrant", "domain-app", "grant-authoring"],
+                    domain_projection={
+                        "plugin_name": "med-autogrant",
+                        "skill_entry": "med-autogrant",
+                        "recommended_shell": "grant_user_loop",
+                    },
                 )
-                for shell_key, shell_surface in product_entry_shell.items()
             ],
             supported_commands=list(domain_entry_contract.get("supported_commands") or []),
             command_contracts=list(domain_entry_contract.get("command_contracts") or []),
@@ -1720,6 +1721,33 @@ class MedAutoGrantProductEntry:
             lifecycle_stage=progress_payload["lifecycle_stage"],
         )
         return payload
+
+    def build_skill_catalog(
+        self,
+        *,
+        input_path: str | Path,
+        funding_call: str | None = None,
+    ) -> dict[str, Any]:
+        manifest_payload = self.build_product_entry_manifest(
+            input_path=input_path,
+            funding_call=funding_call,
+        )
+        return {
+            "ok": True,
+            "command": "skill-catalog",
+            "grant_run_id": manifest_payload["grant_run_id"],
+            "workspace_id": manifest_payload["workspace_id"],
+            "draft_id": manifest_payload["draft_id"],
+            "lifecycle_stage": manifest_payload["lifecycle_stage"],
+            "input_path": manifest_payload["input_path"],
+            "skill_catalog": dict(
+                _require_mapping(
+                    manifest_payload["product_entry_manifest"],
+                    "skill_catalog",
+                    context="product_entry_manifest",
+                )
+            ),
+        }
 
     def build_product_frontdesk(
         self,
