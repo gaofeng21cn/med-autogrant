@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="assets/branding/medautogrant-logo.svg" alt="Med Auto Grant Logo" width="132" />
+</p>
+
+<p align="center">
   <a href="./README.md">English</a> | <a href="./README.zh-CN.md"><strong>中文</strong></a>
 </p>
 
