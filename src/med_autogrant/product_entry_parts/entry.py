@@ -1551,6 +1551,33 @@ class MedAutoGrantProductEntry:
             artifact_inventory=artifact_inventory,
             runtime_control=runtime_control,
         )
+        shell_commands = {
+            "product_frontdesk": _require_nonempty_string_from_mapping(
+                product_entry_shell["product_frontdesk"],
+                "command",
+                context="product_entry_shell.product_frontdesk",
+            ),
+            "grant_progress": _require_nonempty_string_from_mapping(
+                product_entry_shell["grant_progress"],
+                "command",
+                context="product_entry_shell.grant_progress",
+            ),
+            "grant_cockpit": _require_nonempty_string_from_mapping(
+                product_entry_shell["grant_cockpit"],
+                "command",
+                context="product_entry_shell.grant_cockpit",
+            ),
+            "grant_direct_entry": _require_nonempty_string_from_mapping(
+                product_entry_shell["grant_direct_entry"],
+                "command",
+                context="product_entry_shell.grant_direct_entry",
+            ),
+            "grant_user_loop": _require_nonempty_string_from_mapping(
+                product_entry_shell["grant_user_loop"],
+                "command",
+                context="product_entry_shell.grant_user_loop",
+            ),
+        }
         skill_catalog = _build_shared_skill_catalog(
             summary="Canonical Med Auto Grant app skill plus machine-readable command contracts.",
             skills=[
@@ -1559,21 +1586,25 @@ class MedAutoGrantProductEntry:
                     title="Med Auto Grant",
                     owner=TARGET_DOMAIN_ID,
                     distribution_mode="repo_tracked_codex_plugin",
-                    surface_kind="skill_catalog",
+                    surface_kind=PRODUCT_FRONTDESK_KIND,
                     description="Canonical Med Auto Grant domain app skill for Codex and OPL callers.",
-                    command=public_cli_command(
-                        "skill-catalog",
-                        "--input",
-                        str(resolved_input_path),
-                        "--format",
-                        "json",
-                    ),
+                    command=shell_commands["product_frontdesk"],
                     readiness="landed",
                     tags=["med-autogrant", "domain-app", "grant-authoring"],
                     domain_projection={
                         "plugin_name": "med-autogrant",
                         "skill_entry": "med-autogrant",
-                        "recommended_shell": "grant_user_loop",
+                        "skill_semantics": "domain_app",
+                        "entry_shell_key": "product_frontdesk",
+                        "entry_command": shell_commands["product_frontdesk"],
+                        "recommended_shell": "product_frontdesk",
+                        "supporting_shell_keys": [
+                            "grant_progress",
+                            "grant_cockpit",
+                            "grant_direct_entry",
+                            "grant_user_loop",
+                        ],
+                        "shell_commands": shell_commands,
                         "runtime_continuity": dict(runtime_continuity),
                     },
                 )

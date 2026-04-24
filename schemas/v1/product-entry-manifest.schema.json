@@ -848,7 +848,12 @@
       "required": [
         "plugin_name",
         "skill_entry",
+        "skill_semantics",
+        "entry_shell_key",
+        "entry_command",
         "recommended_shell",
+        "supporting_shell_keys",
+        "shell_commands",
         "runtime_continuity"
       ],
       "properties": {
@@ -858,8 +863,48 @@
         "skill_entry": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
+        "skill_semantics": {
+          "const": "domain_app"
+        },
+        "entry_shell_key": {
+          "const": "product_frontdesk"
+        },
+        "entry_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
         "recommended_shell": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "supporting_shell_keys": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "shell_commands": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "product_frontdesk",
+            "grant_progress",
+            "grant_cockpit",
+            "grant_direct_entry",
+            "grant_user_loop"
+          ],
+          "properties": {
+            "product_frontdesk": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "grant_progress": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "grant_cockpit": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "grant_direct_entry": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "grant_user_loop": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            }
+          }
         },
         "runtime_continuity": {
           "$ref": "#/$defs/skillRuntimeContinuitySurface"

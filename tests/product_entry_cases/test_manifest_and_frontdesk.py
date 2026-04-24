@@ -162,17 +162,57 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
                 "title": "Med Auto Grant",
                 "owner": "med-autogrant",
                 "distribution_mode": "repo_tracked_codex_plugin",
-                "target_surface_kind": "skill_catalog",
+                "target_surface_kind": "product_frontdesk",
                 "description": "Canonical Med Auto Grant domain app skill for Codex and OPL callers.",
                 "command": public_cli_command(
-                    "skill-catalog", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                    "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
                 ),
                 "readiness": "landed",
                 "tags": ["med-autogrant", "domain-app", "grant-authoring"],
                 "domain_projection": {
                     "plugin_name": "med-autogrant",
                     "skill_entry": "med-autogrant",
-                    "recommended_shell": "grant_user_loop",
+                    "skill_semantics": "domain_app",
+                    "entry_shell_key": "product_frontdesk",
+                    "entry_command": public_cli_command(
+                        "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                    ),
+                    "recommended_shell": "product_frontdesk",
+                    "supporting_shell_keys": [
+                        "grant_progress",
+                        "grant_cockpit",
+                        "grant_direct_entry",
+                        "grant_user_loop",
+                    ],
+                    "shell_commands": {
+                        "product_frontdesk": public_cli_command(
+                            "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                        ),
+                        "grant_progress": public_cli_command(
+                            "grant-progress", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                        ),
+                        "grant_cockpit": public_cli_command(
+                            "grant-cockpit", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                        ),
+                        "grant_direct_entry": public_cli_command(
+                            "grant-direct-entry",
+                            "--input",
+                            str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                            "--task-intent",
+                            "<describe-task-intent>",
+                            "--format",
+                            "json",
+                        ),
+                        "grant_user_loop": public_cli_command(
+                            "grant-user-loop",
+                            "--input",
+                            str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                            "--task-intent",
+                            "<describe-task-intent>",
+                            "--format",
+                            "json",
+                        ),
+                    },
                     "runtime_continuity": {
                         "surface_kind": "skill_runtime_continuity",
                         "runtime_owner": manifest["runtime_control"]["runtime_owner"],

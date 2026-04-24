@@ -409,8 +409,20 @@ class SchemaRegistryTest(unittest.TestCase):
         skill_projection = manifest_schema["$defs"]["skillDomainProjection"]
         self.assertEqual(
             skill_projection["required"],
-            ["plugin_name", "skill_entry", "recommended_shell", "runtime_continuity"],
+            [
+                "plugin_name",
+                "skill_entry",
+                "skill_semantics",
+                "entry_shell_key",
+                "entry_command",
+                "recommended_shell",
+                "supporting_shell_keys",
+                "shell_commands",
+                "runtime_continuity",
+            ],
         )
+        self.assertEqual(skill_projection["properties"]["skill_semantics"]["const"], "domain_app")
+        self.assertEqual(skill_projection["properties"]["entry_shell_key"]["const"], "product_frontdesk")
         self.assertEqual(
             skill_projection["properties"]["runtime_continuity"]["$ref"],
             "#/$defs/skillRuntimeContinuitySurface",

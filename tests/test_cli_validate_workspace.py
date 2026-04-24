@@ -764,8 +764,29 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         skill_catalog = payload["skill_catalog"]
         self.assertEqual(skill_catalog["surface_kind"], "skill_catalog")
         self.assertEqual(len(skill_catalog["skills"]), 1)
-        self.assertEqual(skill_catalog["skills"][0]["skill_id"], "med-autogrant")
-        runtime_continuity = skill_catalog["skills"][0]["domain_projection"]["runtime_continuity"]
+        skill = skill_catalog["skills"][0]
+        self.assertEqual(skill["skill_id"], "med-autogrant")
+        self.assertEqual(skill["target_surface_kind"], "product_frontdesk")
+        self.assertIn("product frontdesk", skill["command"])
+        domain_projection = skill["domain_projection"]
+        self.assertEqual(domain_projection["plugin_name"], "med-autogrant")
+        self.assertEqual(domain_projection["skill_entry"], "med-autogrant")
+        self.assertEqual(domain_projection["skill_semantics"], "domain_app")
+        self.assertEqual(domain_projection["entry_shell_key"], "product_frontdesk")
+        self.assertEqual(domain_projection["recommended_shell"], "product_frontdesk")
+        self.assertIn("product frontdesk", domain_projection["entry_command"])
+        self.assertEqual(
+            domain_projection["supporting_shell_keys"],
+            [
+                "grant_progress",
+                "grant_cockpit",
+                "grant_direct_entry",
+                "grant_user_loop",
+            ],
+        )
+        self.assertIn("product frontdesk", domain_projection["shell_commands"]["product_frontdesk"])
+        self.assertIn("product user-loop", domain_projection["shell_commands"]["grant_user_loop"])
+        runtime_continuity = domain_projection["runtime_continuity"]
         self.assertEqual(runtime_continuity["surface_kind"], "skill_runtime_continuity")
         self.assertEqual(runtime_continuity["runtime_owner"], "upstream_hermes_agent")
         self.assertEqual(runtime_continuity["domain_owner"], "med-autogrant")
