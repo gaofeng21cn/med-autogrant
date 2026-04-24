@@ -35,7 +35,7 @@ def test_codex_plugin_installer_script_supports_lightweight_skip_tools_path(tmp_
 
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
-    assert payload["plugin_root"] == str(home_dir / "plugins" / "med-autogrant")
-    assert (home_dir / "plugins" / "med-autogrant").is_symlink()
-    assert (home_dir / ".agents" / "skills" / "med-autogrant").is_symlink()
+    assert payload["plugin_root"] == str(home_dir / "plugins" / "mag")
+    assert (home_dir / "plugins" / "mag").is_symlink()
+    assert (home_dir / ".agents" / "skills" / "mag").is_symlink()
     assert (home_dir / ".agents" / "plugins" / "marketplace.json").exists()

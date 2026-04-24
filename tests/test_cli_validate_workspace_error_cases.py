@@ -1,0 +1,377 @@
+from __future__ import annotations
+
+from cli_validate_cases import *  # noqa: F401,F403
+
+
+class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
+    def test_validate_workspace_json_output(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["error_count"], 0)
+        self.assertEqual(payload["errors"], [])
+
+    def test_critique_summary_json_output(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "critique-summary",
+            "--input",
+            str(EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+
+        payload = json.loads(stdout)
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["critique_id"], "critique-v1")
+        self.assertEqual(payload["draft_id"], "draft-v1")
+        self.assertEqual(payload["verdict"], "major_revision")
+        self.assertEqual(payload["necessity_scientific_value"]["weight"], 60)
+        self.assertEqual(payload["applicant_fit"]["weight"], 30)
+        self.assertEqual(payload["feasibility"]["weight"], 10)
+        self.assertIn("必要性表述仍略偏现象描述。", payload["blocking_issues"])
+
+    def test_module_invocation_outputs_summary(self) -> None:
+        env = dict(os.environ)
+        env["PYTHONPATH"] = str(SRC_ROOT)
+
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "med_autogrant.cli",
+                "workspace",
+                "summarize",
+                "--input",
+                str(EXAMPLE_PATH),
+                "--format",
+                "json",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            env=env,
+            cwd=REPO_ROOT,
+        )
+
+        self.assertEqual(completed.returncode, 0)
+        payload = json.loads(completed.stdout)
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["selected_question"]["id"], "question-immune-fibrosis")
+
+    def test_stage_route_report_json_output(self) -> None:
+        exit_code, stdout, stderr = self.run_cli(
+            "stage-route-report",
+            "--input",
+            str(EXAMPLE_PATH),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+
+        payload = json.loads(stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(
+            payload["route"]["validate_workspace"]["grant_run_id"],
+            "grant-run-nsfc-demo-001-baseline-001",
+        )
+        self.assertEqual(payload["route"]["validate_workspace"]["ok"], True)
+        self.assertEqual(payload["route"]["next_step"]["recommended_stage"], "revision")
+        self.assertEqual(payload["route"]["critique_summary"]["verdict"], "major_revision")
+
+    def test_summarize_workspace_returns_structured_json_error_for_invalid_workspace(self) -> None:
+        invalid_path = self.write_invalid_workspace()
+
+        exit_code, stdout, stderr = self.run_cli(
+            "summarize-workspace",
+            "--input",
+            str(invalid_path),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["command"], "summarize-workspace")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["errors"][0]["path"], "revision_plans")
+        self.assertEqual(payload["errors"][0]["message"], "critique 阶段必须存在非空 RevisionPlan。")
+        self.assertIn("critique 阶段必须存在非空 RevisionPlan", payload["error"])
+
+    def test_next_step_returns_structured_json_error_for_invalid_workspace(self) -> None:
+        invalid_path = self.write_invalid_workspace()
+
+        exit_code, stdout, stderr = self.run_cli(
+            "next-step",
+            "--input",
+            str(invalid_path),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["command"], "next-step")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["errors"][0]["path"], "revision_plans")
+        self.assertEqual(payload["errors"][0]["message"], "critique 阶段必须存在非空 RevisionPlan。")
+        self.assertIn("critique 阶段必须存在非空 RevisionPlan", payload["error"])
+
+    def test_critique_summary_returns_structured_json_error_for_invalid_workspace(self) -> None:
+        invalid_path = self.write_invalid_workspace()
+
+        exit_code, stdout, stderr = self.run_cli(
+            "critique-summary",
+            "--input",
+            str(invalid_path),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["command"], "critique-summary")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["errors"][0]["path"], "revision_plans")
+        self.assertEqual(payload["errors"][0]["message"], "critique 阶段必须存在非空 RevisionPlan。")
+        self.assertIn("critique 阶段必须存在非空 RevisionPlan", payload["error"])
+
+    def test_stage_route_report_returns_structured_json_error_for_outline_only_critique_draft(self) -> None:
+        invalid_path = self.write_outline_only_critique_workspace()
+
+        exit_code, stdout, stderr = self.run_cli(
+            "stage-route-report",
+            "--input",
+            str(invalid_path),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["command"], "stage-route-report")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["errors"][0]["path"], "application_drafts.status")
+        self.assertEqual(payload["errors"][0]["message"], "critique 阶段的激活草稿 status 必须为 draft 或 revised。")
+        self.assertIn("critique 阶段的激活草稿 status 必须为 draft 或 revised", payload["error"])
+
+    def test_next_step_returns_structured_json_error_for_revision_stage_with_outline_draft(self) -> None:
+        invalid_path = self.write_revision_outline_workspace()
+
+        exit_code, stdout, stderr = self.run_cli(
+            "next-step",
+            "--input",
+            str(invalid_path),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["command"], "next-step")
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], "revision")
+        self.assertEqual(payload["errors"][0]["path"], "application_drafts.status")
+        self.assertEqual(payload["errors"][0]["message"], "revision 阶段的激活草稿 status 必须为 draft 或 revised。")
+        self.assertIn("revision 阶段的激活草稿 status 必须为 draft 或 revised", payload["error"])
+
+    def test_validate_workspace_reports_revision_transition_error_when_completed_plan_does_not_switch_status(self) -> None:
+        invalid_path = self.write_revision_completed_without_revised_workspace()
+
+        exit_code, stdout, stderr = self.run_cli(
+            "validate-workspace",
+            "--input",
+            str(invalid_path),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["workspace_id"], "nsfc-demo-001")
+        self.assertEqual(payload["lifecycle_stage"], "revision")
+        self.assertGreaterEqual(payload["error_count"], 1)
+        messages = {(item["path"], item["message"]) for item in payload["errors"]}
+        self.assertIn(
+            (
+                "application_drafts.status",
+                "revision plan 已标记 completed 时，激活草稿 status 必须显式切换为 revised。",
+            ),
+            messages,
+        )
+
+    def test_next_step_routes_completed_revision_back_to_critique(self) -> None:
+        valid_path = self.write_completed_revision_workspace()
+
+        exit_code, stdout, stderr = self.run_cli(
+            "next-step",
+            "--input",
+            str(valid_path),
+            "--format",
+            "json",
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        payload = json.loads(stdout)
+        self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
+        self.assertEqual(payload["current_stage"], "revision")
+        self.assertEqual(payload["recommended_stage"], "critique")
+        self.assertIn("revised", payload["reason"])
+
+    def write_invalid_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["revision_plans"][0]["items"] = []
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        invalid_path = tmp_dir / "invalid-workspace.json"
+        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return invalid_path
+
+    def write_outline_only_critique_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["application_drafts"][0]["status"] = "outline"
+        payload["application_drafts"][0]["sections"] = []
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        invalid_path = tmp_dir / "outline-only-critique-workspace.json"
+        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return invalid_path
+
+    def write_revision_outline_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["lifecycle_stage"] = "revision"
+        payload["application_drafts"][0]["status"] = "outline"
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        invalid_path = tmp_dir / "revision-outline-workspace.json"
+        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return invalid_path
+
+    def write_revision_completed_without_revised_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["lifecycle_stage"] = "revision"
+        payload["revision_plans"][0]["execution_status"] = "completed"
+        payload["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+        payload["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+        payload["revision_plans"][0]["comparison_summary"] = "已按批注完成修订，但尚未切换草稿状态。"
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        invalid_path = tmp_dir / "revision-completed-without-revised.json"
+        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return invalid_path
+
+    def write_completed_revision_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["lifecycle_stage"] = "revision"
+        payload["application_drafts"][0]["status"] = "revised"
+        payload["application_drafts"][0]["version_label"] = "v0.4"
+        payload["revision_plans"][0]["execution_status"] = "completed"
+        payload["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+        payload["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+        payload["revision_plans"][0]["comparison_summary"] = "已根据 major_revision 完成立项依据与机制链条修订。"
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        valid_path = tmp_dir / "revision-completed.json"
+        valid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return valid_path
+
+    def write_invalid_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["revision_plans"][0]["items"] = []
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        invalid_path = tmp_dir / "invalid-workspace.json"
+        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return invalid_path
+
+    def write_outline_only_critique_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["application_drafts"][0]["status"] = "outline"
+        payload["application_drafts"][0]["sections"] = []
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        invalid_path = tmp_dir / "outline-only-critique-workspace.json"
+        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return invalid_path
+
+    def write_revision_outline_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["lifecycle_stage"] = "revision"
+        payload["application_drafts"][0]["status"] = "outline"
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        invalid_path = tmp_dir / "revision-outline-workspace.json"
+        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return invalid_path
+
+    def write_revision_completed_without_revised_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["lifecycle_stage"] = "revision"
+        payload["revision_plans"][0]["execution_status"] = "completed"
+        payload["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+        payload["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+        payload["revision_plans"][0]["comparison_summary"] = "已按批注完成修订，但尚未切换草稿状态。"
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        invalid_path = tmp_dir / "revision-completed-without-revised.json"
+        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return invalid_path
+
+    def write_completed_revision_workspace(self) -> Path:
+        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
+        payload["lifecycle_stage"] = "revision"
+        payload["application_drafts"][0]["status"] = "revised"
+        payload["application_drafts"][0]["version_label"] = "v0.4"
+        payload["revision_plans"][0]["execution_status"] = "completed"
+        payload["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
+        payload["revision_plans"][0]["post_revision_version_label"] = "v0.4"
+        payload["revision_plans"][0]["comparison_summary"] = "已根据 major_revision 完成立项依据与机制链条修订。"
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
+        valid_path = tmp_dir / "revision-completed.json"
+        valid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return valid_path

@@ -16,6 +16,12 @@ def test_makefile_exposes_layered_test_entrypoints() -> None:
 
     assert "test-fast:" in makefile
     assert 'uv run pytest -q -m "not meta"' in makefile
+    assert "test-line-budget:" in makefile
+    assert "uv run python scripts/check-line-budget.py" in makefile
+    line_budget_script = _read("scripts/check-line-budget.py")
+    assert "LEGACY_OVER_TARGET_BUDGETS" in line_budget_script
+    assert '"src/med_autogrant/cli.py": 1075' in line_budget_script
+    assert '"src/med_autogrant/grant_autonomy_controller.py": 1326' in line_budget_script
     assert "test-family:" in makefile
     assert (
         "uv run pytest tests/test_repository_hygiene.py tests/test_test_command_surfaces.py "
@@ -42,6 +48,7 @@ def test_pyproject_registers_meta_marker() -> None:
 def test_verify_script_wraps_canonical_make_lanes() -> None:
     verify_script = _read("scripts/verify.sh")
 
+    assert "make test-line-budget" in verify_script
     assert "make test-fast" in verify_script
     assert "make test-family" in verify_script
     assert "make test-meta" in verify_script

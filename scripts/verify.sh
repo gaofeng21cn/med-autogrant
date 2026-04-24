@@ -7,9 +7,11 @@ python scripts/line_budget.py
 
 case "$lane" in
   fast|smoke)
+    make test-line-budget
     make test-fast
     ;;
   family)
+    make test-line-budget
     make test-family
     ;;
   meta)

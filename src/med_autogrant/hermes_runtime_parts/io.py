@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from med_autogrant.control_plane import resolve_runtime_state_root
 from med_autogrant.final_package import _validate_required_artifact_bundle_fields
 from med_autogrant.hosted_contract_bundle import _validate_required_final_package_fields
+from med_autogrant.hosted_contract_bundle import SUPPORTED_FINAL_PACKAGE_VERSION
 from med_autogrant.workspace import (
     WorkspaceFileError,
     WorkspaceStateError,
@@ -17,6 +19,7 @@ from .contracts import validate_schema_payload as _validate_schema_payload
 from .shared import (
     FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
     JOURNAL_VERSION,
+    LocalRuntimeStateError,
 )
 def _read_journal(journal_path: Path) -> dict[str, Any]:
     try:
@@ -419,6 +422,7 @@ def _read_final_package(final_package_path: str | Path) -> dict[str, Any]:
     package_version = final_package.get("package_version")
     if not isinstance(package_version, int) or package_version != SUPPORTED_FINAL_PACKAGE_VERSION:
         raise WorkspaceStateError("final package 缺少字段: package_version")
+    return final_package
 
 def _guard_final_package_output_identity(
     output_path: Path,
