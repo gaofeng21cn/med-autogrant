@@ -1,5 +1,5 @@
 {
-  "name": "med-autogrant",
+  "name": "mag",
   "version": "0.1.0",
   "description": "Codex plugin shell for the Med Auto Grant grant-authoring domain app.",
   "author": {
@@ -17,7 +17,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Med Auto Grant",
+    "displayName": "MAG",
     "shortDescription": "Agent-first grant-authoring domain app for Codex.",
     "longDescription": "Adds a thin Codex plugin entry for Med Auto Grant while preserving the existing CLI, domain-entry contracts, and authoring loop surfaces.",
     "developerName": "Gao Feng",

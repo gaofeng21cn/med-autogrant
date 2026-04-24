@@ -11,24 +11,41 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 def test_install_home_local_codex_plugin_creates_plugin_links_and_marketplace(tmp_path: Path) -> None:
     module = importlib.import_module("med_autogrant.codex_plugin_installer")
     home = tmp_path / "home"
+    legacy_plugin_link = home / "plugins" / "med-autogrant"
+    legacy_skill_link = home / ".agents" / "skills" / "med-autogrant"
+    legacy_target = tmp_path / "legacy-target"
+    legacy_target.mkdir()
+    legacy_plugin_link.parent.mkdir(parents=True)
+    legacy_skill_link.parent.mkdir(parents=True)
+    legacy_plugin_link.symlink_to(legacy_target)
+    legacy_skill_link.symlink_to(legacy_target)
+    legacy_marketplace_path = home / ".agents" / "plugins" / "marketplace.json"
+    legacy_marketplace_path.parent.mkdir(parents=True)
+    legacy_marketplace_path.write_text(
+        json.dumps({"plugins": [{"name": "med-autogrant", "source": {"path": "./plugins/med-autogrant"}}]}),
+        encoding="utf-8",
+    )
 
     result = module.install_home_local_codex_plugin(repo_root=REPO_ROOT, home=home)
 
-    plugin_link = home / "plugins" / "med-autogrant"
-    skill_link = home / ".agents" / "skills" / "med-autogrant"
+    plugin_link = home / "plugins" / "mag"
+    skill_link = home / ".agents" / "skills" / "mag"
     marketplace_path = home / ".agents" / "plugins" / "marketplace.json"
     marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
-    plugin_entry = next(item for item in marketplace["plugins"] if item["name"] == "med-autogrant")
+    plugin_entry = next(item for item in marketplace["plugins"] if item["name"] == "mag")
 
+    assert not legacy_plugin_link.exists()
+    assert not legacy_skill_link.exists()
+    assert all(item["name"] != "med-autogrant" for item in marketplace["plugins"])
     assert result["plugin_root"] == str(plugin_link)
     assert result["skill_root"] == str(skill_link)
     assert plugin_link.is_symlink()
     assert skill_link.is_symlink()
-    assert plugin_link.resolve() == REPO_ROOT / "plugins" / "med-autogrant"
-    assert skill_link.resolve() == REPO_ROOT / "plugins" / "med-autogrant" / "skills" / "med-autogrant"
+    assert plugin_link.resolve() == REPO_ROOT / "plugins" / "mag"
+    assert skill_link.resolve() == REPO_ROOT / "plugins" / "mag" / "skills" / "mag"
     assert plugin_entry["source"] == {
         "source": "local",
-        "path": "./plugins/med-autogrant",
+        "path": "./plugins/mag",
     }
     assert plugin_entry["category"] == "Research"
 

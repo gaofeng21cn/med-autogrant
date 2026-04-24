@@ -1,9 +1,9 @@
 ---
-name: med-autogrant
+name: mag
 description: Use when Codex should operate Med Auto Grant through its grant-authoring product entry, user-loop, and schema-backed contracts instead of ad-hoc repo scripting.
 ---
 
-# Med Auto Grant App Skill
+# MAG App Skill
 
 当 Codex 需要把 `Med Auto Grant` 作为正式 domain app 来操作，而不是把仓库当成临时脚本集合时，使用这个 app skill。对外第一入口是这个单一 app skill；`CLI` / `MedAutoGrantDomainEntry`、`frontdesk`、`user-loop`、`direct-entry` 等都属于它下面的内部 command contract。
 

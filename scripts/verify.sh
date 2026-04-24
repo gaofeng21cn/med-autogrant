@@ -3,6 +3,8 @@ set -euo pipefail
 
 lane="${1:-fast}"
 
+python scripts/line_budget.py
+
 case "$lane" in
   fast|smoke)
     make test-fast

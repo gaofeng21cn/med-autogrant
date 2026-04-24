@@ -168,8 +168,8 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
             manifest["skill_catalog"]["skills"][0],
             {
                 "surface_kind": "skill_descriptor",
-                "skill_id": "med-autogrant",
-                "title": "Med Auto Grant",
+                "skill_id": "mag",
+                "title": "MAG",
                 "owner": "med-autogrant",
                 "distribution_mode": "repo_tracked_codex_plugin",
                 "target_surface_kind": "product_frontdesk",
@@ -178,10 +178,10 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
                     "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
                 ),
                 "readiness": "landed",
-                "tags": ["med-autogrant", "domain-app", "grant-authoring"],
+                "tags": ["mag", "domain-app", "grant-authoring"],
                 "domain_projection": {
-                    "plugin_name": "med-autogrant",
-                    "skill_entry": "med-autogrant",
+                    "plugin_name": "mag",
+                    "skill_entry": "mag",
                     "skill_semantics": "domain_app",
                     "entry_shell_key": "product_frontdesk",
                     "entry_command": public_cli_command(

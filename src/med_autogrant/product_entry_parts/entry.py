@@ -1585,18 +1585,18 @@ class MedAutoGrantProductEntry:
             summary="Canonical Med Auto Grant app skill plus machine-readable command contracts.",
             skills=[
                 _build_shared_skill_descriptor(
-                    skill_id="med-autogrant",
-                    title="Med Auto Grant",
+                    skill_id="mag",
+                    title="MAG",
                     owner=TARGET_DOMAIN_ID,
                     distribution_mode="repo_tracked_codex_plugin",
                     surface_kind=PRODUCT_FRONTDESK_KIND,
                     description="Canonical Med Auto Grant domain app skill for Codex and OPL callers.",
                     command=shell_commands["product_frontdesk"],
                     readiness="landed",
-                    tags=["med-autogrant", "domain-app", "grant-authoring"],
+                    tags=["mag", "domain-app", "grant-authoring"],
                     domain_projection={
-                        "plugin_name": "med-autogrant",
-                        "skill_entry": "med-autogrant",
+                        "plugin_name": "mag",
+                        "skill_entry": "mag",
                         "skill_semantics": "domain_app",
                         "entry_shell_key": "product_frontdesk",
                         "entry_command": shell_commands["product_frontdesk"],
