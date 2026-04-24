@@ -404,6 +404,38 @@ class SchemaRegistryTest(unittest.TestCase):
             "#/$defs/runtimeControlDirectEntry",
         )
 
+    def test_frontdoor_surface_schemas_pin_skill_runtime_continuity_shape(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        skill_projection = manifest_schema["$defs"]["skillDomainProjection"]
+        self.assertEqual(
+            skill_projection["required"],
+            ["plugin_name", "skill_entry", "recommended_shell", "runtime_continuity"],
+        )
+        self.assertEqual(
+            skill_projection["properties"]["runtime_continuity"]["$ref"],
+            "#/$defs/skillRuntimeContinuitySurface",
+        )
+
+        runtime_continuity = manifest_schema["$defs"]["skillRuntimeContinuitySurface"]
+        self.assertEqual(runtime_continuity["properties"]["surface_kind"]["const"], "skill_runtime_continuity")
+        self.assertEqual(
+            runtime_continuity["required"],
+            [
+                "surface_kind",
+                "runtime_owner",
+                "domain_owner",
+                "executor_owner",
+                "session_locator_field",
+                "session_surface_ref",
+                "progress_surface_ref",
+                "artifact_surface_ref",
+                "restore_point_surface_ref",
+                "recommended_resume_command",
+                "recommended_progress_command",
+                "recommended_artifact_command",
+            ],
+        )
+
     def test_frontdoor_surface_schemas_pin_start_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         start = manifest_schema["$defs"]["productEntryStart"]

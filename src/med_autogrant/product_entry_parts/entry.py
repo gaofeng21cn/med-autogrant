@@ -1545,6 +1545,12 @@ class MedAutoGrantProductEntry:
                 "continuation_action_kind": continuation_action_kind,
             },
         )
+        runtime_continuity = _build_skill_runtime_continuity_envelope(
+            session_continuity=session_continuity,
+            progress_surface=manifest_progress_projection,
+            artifact_inventory=artifact_inventory,
+            runtime_control=runtime_control,
+        )
         skill_catalog = _build_shared_skill_catalog(
             summary="Canonical Med Auto Grant app skill plus machine-readable command contracts.",
             skills=[
@@ -1568,6 +1574,7 @@ class MedAutoGrantProductEntry:
                         "plugin_name": "med-autogrant",
                         "skill_entry": "med-autogrant",
                         "recommended_shell": "grant_user_loop",
+                        "runtime_continuity": dict(runtime_continuity),
                     },
                 )
             ],

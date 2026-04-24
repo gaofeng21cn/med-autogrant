@@ -1743,6 +1743,100 @@ def _build_runtime_continuity_surfaces(
     }
 
 
+def _build_skill_runtime_continuity_envelope(
+    *,
+    session_continuity: Mapping[str, Any],
+    progress_surface: Mapping[str, Any],
+    artifact_inventory: Mapping[str, Any],
+    runtime_control: Mapping[str, Any],
+) -> dict[str, Any]:
+    if (
+        _require_nonempty_string_from_mapping(
+            progress_surface,
+            "surface_kind",
+            context="progress_surface",
+        )
+        != "progress_projection"
+    ):
+        raise WorkspaceStateError("progress_surface 必须是 progress_projection。")
+    if (
+        _require_nonempty_string_from_mapping(
+            artifact_inventory,
+            "surface_kind",
+            context="artifact_inventory",
+        )
+        != "artifact_inventory"
+    ):
+        raise WorkspaceStateError("artifact_inventory 必须是 artifact_inventory。")
+    runtime_control_restore_point = _require_mapping(
+        runtime_control,
+        "restore_point",
+        context="runtime_control",
+    )
+    runtime_control_progress_surface = _require_mapping(
+        runtime_control,
+        "progress_surface",
+        context="runtime_control",
+    )
+    runtime_control_artifact_surface = _require_mapping(
+        runtime_control,
+        "artifact_pickup_surface",
+        context="runtime_control",
+    )
+    progress_surface_ref = _require_nonempty_string_from_mapping(
+        runtime_control_progress_surface,
+        "ref",
+        context="runtime_control.progress_surface",
+    )
+    artifact_surface_ref = _require_nonempty_string_from_mapping(
+        runtime_control_artifact_surface,
+        "ref",
+        context="runtime_control.artifact_pickup_surface",
+    )
+    return {
+        "surface_kind": "skill_runtime_continuity",
+        "runtime_owner": _require_nonempty_string_from_mapping(
+            runtime_control,
+            "runtime_owner",
+            context="runtime_control",
+        ),
+        "domain_owner": _require_nonempty_string_from_mapping(
+            runtime_control,
+            "domain_owner",
+            context="runtime_control",
+        ),
+        "executor_owner": _require_nonempty_string_from_mapping(
+            runtime_control,
+            "executor_owner",
+            context="runtime_control",
+        ),
+        "session_locator_field": _require_nonempty_string_from_mapping(
+            session_continuity,
+            "session_locator_field",
+            context="session_continuity",
+        ),
+        "session_surface_ref": "/product_entry_manifest/session_continuity",
+        "progress_surface_ref": progress_surface_ref,
+        "artifact_surface_ref": artifact_surface_ref,
+        "restore_point_surface_ref": "/product_entry_manifest/runtime_control/restore_point",
+        "recommended_resume_command": _require_nonempty_string_from_mapping(
+            runtime_control_restore_point,
+            "resume_command",
+            context="runtime_control.restore_point",
+        ),
+        "recommended_progress_command": _require_nonempty_string_from_mapping(
+            runtime_control_progress_surface,
+            "command",
+            context="runtime_control.progress_surface",
+        ),
+        "recommended_artifact_command": _require_nonempty_string_from_mapping(
+            runtime_control_artifact_surface,
+            "command",
+            context="runtime_control.artifact_pickup_surface",
+        ),
+    }
+
+
 def _build_session_continuity_surface(
     *,
     grant_run_id: str,

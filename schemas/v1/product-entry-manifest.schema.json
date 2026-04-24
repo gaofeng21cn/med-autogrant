@@ -786,6 +786,86 @@
         }
       }
     },
+    "skillRuntimeContinuitySurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "runtime_owner",
+        "domain_owner",
+        "executor_owner",
+        "session_locator_field",
+        "session_surface_ref",
+        "progress_surface_ref",
+        "artifact_surface_ref",
+        "restore_point_surface_ref",
+        "recommended_resume_command",
+        "recommended_progress_command",
+        "recommended_artifact_command"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "skill_runtime_continuity"
+        },
+        "runtime_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "domain_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "executor_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "session_locator_field": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "session_surface_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "progress_surface_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "artifact_surface_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "restore_point_surface_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_resume_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_progress_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_artifact_command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "skillDomainProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plugin_name",
+        "skill_entry",
+        "recommended_shell",
+        "runtime_continuity"
+      ],
+      "properties": {
+        "plugin_name": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "skill_entry": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_shell": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "runtime_continuity": {
+          "$ref": "#/$defs/skillRuntimeContinuitySurface"
+        }
+      }
+    },
     "skillDescriptor": {
       "type": "object",
       "additionalProperties": false,
@@ -832,8 +912,7 @@
           "$ref": "common.schema.json#/$defs/stringList"
         },
         "domain_projection": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/skillDomainProjection"
         }
       }
     },

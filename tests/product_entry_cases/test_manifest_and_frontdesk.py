@@ -173,6 +173,22 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
                     "plugin_name": "med-autogrant",
                     "skill_entry": "med-autogrant",
                     "recommended_shell": "grant_user_loop",
+                    "runtime_continuity": {
+                        "surface_kind": "skill_runtime_continuity",
+                        "runtime_owner": manifest["runtime_control"]["runtime_owner"],
+                        "domain_owner": manifest["runtime_control"]["domain_owner"],
+                        "executor_owner": manifest["runtime_control"]["executor_owner"],
+                        "session_locator_field": manifest["session_continuity"]["session_locator_field"],
+                        "session_surface_ref": "/product_entry_manifest/session_continuity",
+                        "progress_surface_ref": manifest["runtime_control"]["progress_surface"]["ref"],
+                        "artifact_surface_ref": manifest["runtime_control"]["artifact_pickup_surface"]["ref"],
+                        "restore_point_surface_ref": "/product_entry_manifest/runtime_control/restore_point",
+                        "recommended_resume_command": manifest["runtime_control"]["restore_point"]["resume_command"],
+                        "recommended_progress_command": manifest["runtime_control"]["progress_surface"]["command"],
+                        "recommended_artifact_command": (
+                            manifest["runtime_control"]["artifact_pickup_surface"]["command"]
+                        ),
+                    },
                 },
             },
         )

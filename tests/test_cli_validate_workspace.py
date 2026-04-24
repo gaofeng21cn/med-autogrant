@@ -765,6 +765,22 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(skill_catalog["surface_kind"], "skill_catalog")
         self.assertEqual(len(skill_catalog["skills"]), 1)
         self.assertEqual(skill_catalog["skills"][0]["skill_id"], "med-autogrant")
+        runtime_continuity = skill_catalog["skills"][0]["domain_projection"]["runtime_continuity"]
+        self.assertEqual(runtime_continuity["surface_kind"], "skill_runtime_continuity")
+        self.assertEqual(runtime_continuity["runtime_owner"], "upstream_hermes_agent")
+        self.assertEqual(runtime_continuity["domain_owner"], "med-autogrant")
+        self.assertEqual(runtime_continuity["executor_owner"], "med-autogrant")
+        self.assertEqual(runtime_continuity["session_locator_field"], "grant_run_id")
+        self.assertEqual(runtime_continuity["session_surface_ref"], "/product_entry_manifest/session_continuity")
+        self.assertEqual(runtime_continuity["progress_surface_ref"], "/product_entry_manifest/progress_projection")
+        self.assertEqual(runtime_continuity["artifact_surface_ref"], "/product_entry_manifest/artifact_inventory")
+        self.assertEqual(
+            runtime_continuity["restore_point_surface_ref"],
+            "/product_entry_manifest/runtime_control/restore_point",
+        )
+        self.assertIn("runtime resume", runtime_continuity["recommended_resume_command"])
+        self.assertIn("workspace progress", runtime_continuity["recommended_progress_command"])
+        self.assertIn("workspace summarize", runtime_continuity["recommended_artifact_command"])
         self.assertIn("supported_commands", skill_catalog)
         self.assertIn("command_contracts", skill_catalog)
 
