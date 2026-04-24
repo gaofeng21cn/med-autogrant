@@ -114,6 +114,16 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         self.assertEqual(runtime_control["session_locator"]["locator_value"], payload["grant_run_id"])
         self.assertEqual(runtime_control["restore_point"]["session_id"], payload["grant_run_id"])
         self.assertEqual(runtime_control["restore_point"]["lifecycle_stage"], payload["lifecycle_stage"])
+        semantic_closure = runtime_control["semantic_closure"]
+        self.assertEqual(semantic_closure["surface_kind"], "runtime_control_semantic_closure")
+        self.assertEqual(semantic_closure["authoring_continuity"], "same_funding_call_task")
+        self.assertEqual(semantic_closure["funding_call_lock"], "nsfc-2026-general")
+        self.assertEqual(semantic_closure["quality_closure_surface"], "grant-quality-closure-dossier")
+        self.assertEqual(semantic_closure["submission_ready_gate"], "package_submission_ready_strict_export_gate")
+        self.assertEqual(
+            semantic_closure["closure_ref"],
+            "/product_entry_manifest/grant_authoring_readiness",
+        )
         self.assertEqual(
             runtime_control["progress_surface"]["surface_kind"],
             "grant_progress",
@@ -213,13 +223,17 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
                             "json",
                         ),
                     },
-                    "runtime_continuity": {
-                        "surface_kind": "skill_runtime_continuity",
-                        "runtime_owner": manifest["runtime_control"]["runtime_owner"],
-                        "domain_owner": manifest["runtime_control"]["domain_owner"],
-                        "executor_owner": manifest["runtime_control"]["executor_owner"],
-                        "session_locator_field": manifest["session_continuity"]["session_locator_field"],
-                        "session_surface_ref": "/product_entry_manifest/session_continuity",
+                        "runtime_continuity": {
+                            "surface_kind": "skill_runtime_continuity",
+                            "runtime_owner": manifest["runtime_control"]["runtime_owner"],
+                            "domain_owner": manifest["runtime_control"]["domain_owner"],
+                            "executor_owner": manifest["runtime_control"]["executor_owner"],
+                            "authoring_continuity": "same_funding_call_task",
+                            "funding_call_lock": "nsfc-2026-general",
+                            "quality_closure_surface": "grant-quality-closure-dossier",
+                            "submission_ready_gate": "package_submission_ready_strict_export_gate",
+                            "session_locator_field": manifest["session_continuity"]["session_locator_field"],
+                            "session_surface_ref": "/product_entry_manifest/session_continuity",
                         "progress_surface_ref": manifest["runtime_control"]["progress_surface"]["ref"],
                         "artifact_surface_ref": manifest["runtime_control"]["artifact_pickup_surface"]["ref"],
                         "restore_point_surface_ref": "/product_entry_manifest/runtime_control/restore_point",

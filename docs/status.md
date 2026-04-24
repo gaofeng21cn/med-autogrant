@@ -19,7 +19,7 @@ Date: `2026-04-23`
 - 长时间自治入口现在包括 `pass autonomy-controller`（internal command: `execute-grant-autonomy-controller`），用于在预算、轮次、blocker 队列和 evidence gap 队列约束下调度既有主线。
 - `product build-entry` 与 lightweight `product entry` shell 继续作为 machine-readable domain/API catalog 的构建层。
 - `product frontdesk` 是 controller-owned direct frontdoor contract，读取当前 user loop、projection 与 route truth，并通过 `product-frontdesk.schema.json` generation-time fail-closed 校验；它属于 app skill 的内部 command contract。
-- `product-entry-manifest` 现已导出 `runtime_control` surface，固定 session/runtime/domain/executor owner、restore point、progress/artifact/approval control surface 与 direct-entry locator，作为 integration/reference truth 供 OPL 或 hosted caller 归一化消费。
+- `product-entry-manifest` 现已导出 `runtime_control` surface，固定 session/runtime/domain/executor owner、restore point、progress/artifact/approval control surface、direct-entry locator 与 `semantic_closure`，作为 integration/reference truth 供 OPL 或 hosted caller 归一化消费。
 - `product direct-entry` 组合 `workspace progress`、`workspace cockpit` 与 direct / `opl-handoff` entry mode，是 controller-owned product contract。
 - `mainline status` 负责 current line / current focus / completed records / remaining gaps；`mainline phase` 继续保留为维护者参考记录查询。
 
@@ -37,7 +37,7 @@ Date: `2026-04-23`
 - 当前 CLI 入口面：`product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready`；这些都属于 app skill 下的内部命令面
 - 当前稳定可调用面：`CLI` / `MedAutoGrantDomainEntry`、本地脚本、`product build-entry` / `product manifest` / `product frontdesk` / `product direct-entry` / `product user-loop`，以及对应 schema-backed contract；它们都挂在单一 `Med Auto Grant` app skill 之下。
 - 当前 `product skill-catalog` 已收口为单一 `Med Auto Grant` app skill；`frontdesk`、`direct-entry`、`user-loop` 等继续作为这个 app skill 的内部 command contract 暴露给 `Codex` / `OPL`。
-- 同一 skill descriptor 的 `domain_projection` 现已带 `runtime_continuity` envelope，复用 `session_continuity`、`progress_projection`、`artifact_inventory`、`runtime_control` 真相面，供 family caller 直接消费。
+- 同一 skill descriptor 的 `domain_projection` 现已带 `runtime_continuity` envelope，复用 `session_continuity`、`progress_projection`、`artifact_inventory`、`runtime_control.semantic_closure` 真相面，把 authoring continuity、funding call lock、quality closure surface 与 submission-ready gate 语义一起供 `Codex` / `OPL` 直接消费。
 - 当前主任务完成语义：以正文科学性与 authoring quality 为主，不把单一导出命令当作主任务完成替代。
 - 当前 `package submission-ready` 语义：继续作为更严格的本地提交包导出面；它是高标准交付导出能力，不是 authoring 主任务的唯一完成条件。
 - 当前形式审查/客观补件语义：默认进入 `TODO` 与显式唤醒链路；仅在直接破坏科学论证成立性时升级为正文 authoring blocker。

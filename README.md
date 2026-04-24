@@ -78,7 +78,7 @@ You can start with prompts like:
 - Treat [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the public and technical truth set before changing routes or wording.
 - The current formal-entry matrix is `CLI`, `MCP`, and `controller`. `CLI` / `MedAutoGrantDomainEntry` are the agent-entry surfaces; `product entry/frontdesk/direct-entry/user-loop`, local scripts, and schema-backed contracts are internal command contracts and direct-product projections under the app skill. Hosted or proof backends remain explicit opt-in integration lanes rather than the default public contract.
 - When an external agent or OPL wants the repo-tracked skill surface directly, use `medautogrant product skill-catalog --input <input_path> --format json`; it returns one Med Auto Grant app skill plus the underlying command contracts.
-- The single skill descriptor now carries a `runtime_continuity` envelope for direct family-caller consumption, reusing existing `session_continuity` / `progress_projection` / `artifact_inventory` / `runtime_control` truth.
+- The single skill descriptor now carries a `runtime_continuity` envelope for direct family-caller consumption, reusing existing `session_continuity` / `progress_projection` / `artifact_inventory` / `runtime_control.semantic_closure` truth for authoring continuity, funding-call lock, quality closure, and the stricter submission-ready gate.
 - Current machine-readable governance surfaces include `workspace quality-scorecard`, `workspace quality-diff`, and `pass autonomy-controller`.
 
 </details>

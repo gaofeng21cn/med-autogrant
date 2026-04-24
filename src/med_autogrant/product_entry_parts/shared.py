@@ -1677,6 +1677,7 @@ def _build_runtime_continuity_surfaces(
     workspace_id: str,
     lifecycle_stage: str,
     input_path: str,
+    funding_call: str,
     grant_progress_command: str,
     summarize_workspace_command: str,
     stage_route_report_command: str,
@@ -1730,6 +1731,7 @@ def _build_runtime_continuity_surfaces(
             "command",
             context="session_continuity.runtime_entries.runtime_resume",
         ),
+        funding_call=funding_call,
         grant_progress_command=grant_progress_command,
         summarize_workspace_command=summarize_workspace_command,
         grant_user_loop_command=grant_user_loop_command,
@@ -1793,6 +1795,11 @@ def _build_skill_runtime_continuity_envelope(
         "ref",
         context="runtime_control.artifact_pickup_surface",
     )
+    semantic_closure = _require_mapping(
+        runtime_control,
+        "semantic_closure",
+        context="runtime_control",
+    )
     return {
         "surface_kind": "skill_runtime_continuity",
         "runtime_owner": _require_nonempty_string_from_mapping(
@@ -1809,6 +1816,26 @@ def _build_skill_runtime_continuity_envelope(
             runtime_control,
             "executor_owner",
             context="runtime_control",
+        ),
+        "authoring_continuity": _require_nonempty_string_from_mapping(
+            semantic_closure,
+            "authoring_continuity",
+            context="runtime_control.semantic_closure",
+        ),
+        "funding_call_lock": _require_nonempty_string_from_mapping(
+            semantic_closure,
+            "funding_call_lock",
+            context="runtime_control.semantic_closure",
+        ),
+        "quality_closure_surface": _require_nonempty_string_from_mapping(
+            semantic_closure,
+            "quality_closure_surface",
+            context="runtime_control.semantic_closure",
+        ),
+        "submission_ready_gate": _require_nonempty_string_from_mapping(
+            semantic_closure,
+            "submission_ready_gate",
+            context="runtime_control.semantic_closure",
         ),
         "session_locator_field": _require_nonempty_string_from_mapping(
             session_continuity,
@@ -1907,6 +1934,7 @@ def _build_runtime_control_surface(
     lifecycle_stage: str,
     journal_path: str,
     runtime_resume_command: str,
+    funding_call: str,
     grant_progress_command: str,
     summarize_workspace_command: str,
     grant_user_loop_command: str,
@@ -1947,6 +1975,14 @@ def _build_runtime_control_surface(
             "journal_path": journal_path,
             "resume_command": runtime_resume_command,
             "resume_surface_kind": "runtime_resume",
+        },
+        "semantic_closure": {
+            "surface_kind": "runtime_control_semantic_closure",
+            "authoring_continuity": "same_funding_call_task",
+            "funding_call_lock": _require_nonempty_string(funding_call, field_name="funding_call"),
+            "quality_closure_surface": "grant-quality-closure-dossier",
+            "submission_ready_gate": "package_submission_ready_strict_export_gate",
+            "closure_ref": "/product_entry_manifest/grant_authoring_readiness",
         },
         "progress_surface": {
             "surface_kind": GRANT_PROGRESS_PROJECTION_KIND,

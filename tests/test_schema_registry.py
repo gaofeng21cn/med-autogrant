@@ -373,6 +373,7 @@ class SchemaRegistryTest(unittest.TestCase):
                 "executor_owner",
                 "session_locator",
                 "restore_point",
+                "semantic_closure",
                 "progress_surface",
                 "artifact_pickup_surface",
                 "approval_control_surface",
@@ -386,6 +387,10 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(
             runtime_control["properties"]["restore_point"]["$ref"],
             "#/$defs/runtimeControlRestorePoint",
+        )
+        self.assertEqual(
+            runtime_control["properties"]["semantic_closure"]["$ref"],
+            "#/$defs/runtimeControlSemanticClosure",
         )
         self.assertEqual(
             runtime_control["properties"]["progress_surface"]["$ref"],
@@ -437,6 +442,10 @@ class SchemaRegistryTest(unittest.TestCase):
                 "runtime_owner",
                 "domain_owner",
                 "executor_owner",
+                "authoring_continuity",
+                "funding_call_lock",
+                "quality_closure_surface",
+                "submission_ready_gate",
                 "session_locator_field",
                 "session_surface_ref",
                 "progress_surface_ref",

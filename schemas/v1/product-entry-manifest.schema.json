@@ -586,6 +586,38 @@
     "runtimeControlDirectEntry": {
       "$ref": "#/$defs/runtimeControlSurfaceRef"
     },
+    "runtimeControlSemanticClosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "authoring_continuity",
+        "funding_call_lock",
+        "quality_closure_surface",
+        "submission_ready_gate",
+        "closure_ref"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "runtime_control_semantic_closure"
+        },
+        "authoring_continuity": {
+          "const": "same_funding_call_task"
+        },
+        "funding_call_lock": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "quality_closure_surface": {
+          "const": "grant-quality-closure-dossier"
+        },
+        "submission_ready_gate": {
+          "const": "package_submission_ready_strict_export_gate"
+        },
+        "closure_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
     "runtimeControlSurface": {
       "type": "object",
       "additionalProperties": false,
@@ -598,6 +630,7 @@
         "executor_owner",
         "session_locator",
         "restore_point",
+        "semantic_closure",
         "progress_surface",
         "artifact_pickup_surface",
         "approval_control_surface",
@@ -628,6 +661,9 @@
         },
         "restore_point": {
           "$ref": "#/$defs/runtimeControlRestorePoint"
+        },
+        "semantic_closure": {
+          "$ref": "#/$defs/runtimeControlSemanticClosure"
         },
         "progress_surface": {
           "$ref": "#/$defs/runtimeControlSurfaceRef"
@@ -794,6 +830,10 @@
         "runtime_owner",
         "domain_owner",
         "executor_owner",
+        "authoring_continuity",
+        "funding_call_lock",
+        "quality_closure_surface",
+        "submission_ready_gate",
         "session_locator_field",
         "session_surface_ref",
         "progress_surface_ref",
@@ -815,6 +855,18 @@
         },
         "executor_owner": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "authoring_continuity": {
+          "const": "same_funding_call_task"
+        },
+        "funding_call_lock": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "quality_closure_surface": {
+          "const": "grant-quality-closure-dossier"
+        },
+        "submission_ready_gate": {
+          "const": "package_submission_ready_strict_export_gate"
         },
         "session_locator_field": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"

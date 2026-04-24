@@ -83,6 +83,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["task_boundary"]["submission_ready_relation"],
             "package submission-ready remains a stricter local export gate than MAG authoring completion.",
         )
+        self.assertEqual(
+            contract["task_boundary"]["closure_proof_surface"],
+            "runtime_control.semantic_closure plus skill_catalog.domain_projection.runtime_continuity",
+        )
         self.assertIn(
             "TODO and explicit wake-up follow-ups",
             contract["task_boundary"]["objective_material_policy"],
