@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-04-24：公开主语收口为单一 app skill 与内部 command contract
+
+- 决策：公开文案与技术索引的第一主语收口为单一 `Med Auto Grant` app skill；`CLI` / `MedAutoGrantDomainEntry` 保持底层 agent entry，而 `product entry/frontdesk/direct-entry/user-loop` 统一降级为这个 app skill 下的内部 command contract / direct-product projection。
+- 理由：此前的公开叙事把 frontdesk、user-loop、runtime_control 和 hosted bundle 写得过于靠前，容易让读者把内部投影面误判成产品第一入口，也会削弱单一 app skill 的对外定位。
+- 影响：README、docs 索引、项目/状态/架构/合同说明与 app skill 文档需要同步保持这一层级；`hosted-contract-bundle` 与 `runtime_control` 仅保留 integration/reference 角色，不再暗示 OPL 或 hosted caller 是默认主入口。
+
 ## 2026-04-23：默认公开能力面收口为稳定 capability surface
 
 - 决策：当前对外默认合同优先冻结为 `CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；默认正文执行继续继承本机 `Codex` 配置。

@@ -4,7 +4,7 @@
 
 # Med Auto Grant
 
-**An independent medical grant domain agent for investigator-side authoring on a specified funding call**
+**An independent medical grant domain agent surfaced through a single Med Auto Grant app skill**
 
 > `Med Auto Grant` is an independent medical grant domain agent. It keeps specified-funder body authoring, critique, revision, and scientific review-package delivery on one line for investigator-side medical grant applications.
 
@@ -51,12 +51,14 @@ You can start with prompts like:
 ## Current Boundary
 
 - `Med Auto Grant` is an independent medical grant domain agent, not an internal module inside the `OPL` workspace.
-- It can be called directly by `Codex` or other general agents through `CLI` / `MedAutoGrantDomainEntry`, and can also be federated by `OPL`.
-- Its stable product capability surface is the local CLI, `MedAutoGrantDomainEntry`, local scripts, product-entry/projection commands, and schema-backed contracts that `Codex` or `OPL` skill activation can call directly.
+- Its first public surface is the single Med Auto Grant app skill; `Codex`, `OPL`, and other general agents can reach the stable callable surfaces through that skill or directly through `CLI` / `MedAutoGrantDomainEntry`.
+- The stable callable surfaces behind that skill are the local CLI, `MedAutoGrantDomainEntry`, local scripts, product-entry/projection commands, and schema-backed contracts.
+- `product entry/frontdesk/direct-entry/user-loop` stay as internal command contracts and direct-product projections under the app skill, not as the public first subject.
 - MAG task scope is locked to body authoring for a specified funding call.
 - Scientific completion is delivered as a review-ready package; formal/objective supplements are tracked separately.
 - Formal/objective supplements default to `TODO + explicit wakeup` and do not block body authoring unless they directly break scientific validity.
 - `OPL` keeps family-level session/runtime/projection and shared modules/contracts/indexes.
+- `hosted-contract-bundle` and `runtime_control` stay as integration/reference surfaces for machine-readable handoff, not as the primary public entry.
 - Human gate decisions stay inside the same funding-call task and are author decisions, not cross-funder reselection.
 - External funding portal submission stays under human supervision.
 
@@ -74,7 +76,7 @@ You can start with prompts like:
 - Read the [Docs Guide](./docs/README.md) first. It summarizes the current technical picture, the formal-entry matrix, the stable capability surface, and where repo-tracked truth lives.
 - Then read [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json). That is the fastest path to the active product-entry shell, schema-backed surfaces, and current mainline pointer.
 - Treat [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the public and technical truth set before changing routes or wording.
-- The current formal-entry matrix is `CLI`, `MCP`, and `controller`. `CLI` / `MedAutoGrantDomainEntry` are the agent-entry surfaces; `product entry/frontdesk/direct-entry/user-loop`, local scripts, and schema-backed contracts form the stable callable surface. Hosted or proof backends remain explicit opt-in lanes rather than the default public contract.
+- The current formal-entry matrix is `CLI`, `MCP`, and `controller`. `CLI` / `MedAutoGrantDomainEntry` are the agent-entry surfaces; `product entry/frontdesk/direct-entry/user-loop`, local scripts, and schema-backed contracts are internal command contracts and direct-product projections under the app skill. Hosted or proof backends remain explicit opt-in integration lanes rather than the default public contract.
 - When an external agent or OPL wants the repo-tracked skill surface directly, use `medautogrant product skill-catalog --input <input_path> --format json`; it returns one Med Auto Grant app skill plus the underlying command contracts.
 - Current machine-readable governance surfaces include `workspace quality-scorecard`, `workspace quality-diff`, and `pass autonomy-controller`.
 

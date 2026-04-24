@@ -16,19 +16,19 @@
 
 ## 当前技术图景
 
-- `Med Auto Grant` 是独立的医学基金 domain agent，对外稳定 capability surface 由 `CLI`、`MedAutoGrantDomainEntry`、本地脚本与 schema-backed contract 组成。
+- `Med Auto Grant` 是独立的医学基金 domain agent，对外第一主语是单一 `Med Auto Grant` app skill；其下稳定 capability surface 由 `CLI`、`MedAutoGrantDomainEntry`、本地脚本与 schema-backed contract 组成。
 - formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
 - 默认正文执行继续继承本机 `Codex` 默认；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 或技术参考层，不改写默认公开 capability contract。
 - 历史 program 记录与迁移说明继续留在 `docs/specs/` 与 `docs/history/` 中供追溯。
-- frontdesk、user-loop、projection 与本地 `submission-ready` package 已落地；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate；未来 hosted 产品扩展统一留在 `docs/plans/`。
+- frontdesk、user-loop、projection 与本地 `submission-ready` package 已落地，但它们都是 app skill 下的内部 command contract 与 direct-product projection；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate；未来 hosted 产品扩展统一留在 `docs/plans/`。
 - `OPL` family routing 与 `Codex` skill activation 继续消费同一套 MAG capability surface；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。
 - MAG 当前任务边界锁定在“指定基金任务正文 authoring”；“科学完成”与“形式/客观补件完成”是显式分层。
 - 科学层交付的是可待审包，用于同任务内作者/评审决策。
 - 形式/客观补件默认按 `TODO + 显式唤醒` 管理；除非直接破坏正文科学成立，否则不作为正文 authoring blocker。
 - 人工 gate 只作用于同一基金任务内的作者决策，不扩展成跨 funder 重选。
 - 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`，并在作者侧主线之上保持 schema-backed 边界。
-- 当前 grouped public shell 也已经把 `product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready` 暴露成公开 CLI 入口面。
-- 当前轻量 grant `product entry` shell 就是现在的产品入口 shell 与内部 domain/API catalog builder；未来 hosted 产品形态统一留在 `docs/plans/`。
+- 当前 grouped shell 也已经把 `product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready` 暴露成 skill-backed CLI 命令面。
+- 当前轻量 grant `product entry` shell 是 app skill 背后的内部产品入口 shell 与 domain/API catalog builder；未来 hosted 产品形态统一留在 `docs/plans/`。
 - 质量治理已经通过 `workspace quality-scorecard` 与 `workspace quality-diff` 收成 schema-backed surface。
 - 长时间自治已经通过 `pass autonomy-controller` 暴露为正式入口，并输出结构化 blocker 与 evidence-gap report。
 - 通用 grant grammar 与 funder-specific family profile 规则继续在 `grant_family_registry.py` 分层；跨 funder 重选不进入默认正文 authoring gate 语义。
@@ -61,7 +61,7 @@
 - [Specs 目录](./specs/)
 - [合同说明](../contracts/README.md)
 
-当前 grant product-entry shell 继续作为 domain/API catalog builder，也是稳定可调用面的一部分；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 继续暴露给 hosted caller / 外部 caller 使用。
+当前 grant product-entry shell 继续作为 app skill 背后的 domain/API catalog builder，也是稳定可调用面的一部分；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 作为集成/参考面暴露给 hosted caller / 外部 caller 使用。
 质量治理与自治 controller schema 已进入 [`schema-index.json`](../schemas/v1/schema-index.json) 和 current-program truth surface。
 
 ## 追溯记录

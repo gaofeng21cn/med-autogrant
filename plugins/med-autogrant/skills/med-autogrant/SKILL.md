@@ -5,7 +5,7 @@ description: Use when Codex should operate Med Auto Grant through its grant-auth
 
 # Med Auto Grant App Skill
 
-当 Codex 需要把 `Med Auto Grant` 作为正式 domain app 来操作，而不是把仓库当成临时脚本集合时，使用这个 app skill。
+当 Codex 需要把 `Med Auto Grant` 作为正式 domain app 来操作，而不是把仓库当成临时脚本集合时，使用这个 app skill。对外第一入口是这个单一 app skill；`CLI` / `MedAutoGrantDomainEntry`、`frontdesk`、`user-loop`、`direct-entry` 等都属于它下面的内部 command contract。
 
 ## 这个 app skill 是什么
 
@@ -28,7 +28,7 @@ description: Use when Codex should operate Med Auto Grant through its grant-auth
 - 把 `skill_catalog`、`product_entry_manifest`、`domain_entry_contract`、`task_lifecycle` 当作正式 contract surface
 - 保持同一指定 funding call 下的 authoring continuity，不写成 opportunistic funder switching
 - 不绕开 schema-backed contract 直接手改 runtime state
-- 不把内部 shell 命令写成多个独立用户 skill；它们继续是这个 app skill 的内部 command contract
+- 不把内部 shell 命令写成多个独立用户 skill；它们继续是这个 app skill 的内部 command contract 和 direct-product projection
 
 ## 首先应读的文件
 

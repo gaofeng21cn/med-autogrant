@@ -2,15 +2,15 @@
 
 ## 主链路
 
-当前主链路是“稳定 capability surface 优先，默认执行继承本机 Codex，hosted backend 显式可选”：
+当前主链路是“单一 app skill 优先，稳定 capability surface 仍由 CLI / domain entry 承载，hosted backend 显式可选”：
 
-`operator / Codex / OPL / generic agent caller -> CLI or MedAutoGrantDomainEntry -> route-selected executor -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
+`operator / Codex / OPL / generic agent caller -> single Med Auto Grant app skill -> CLI or MedAutoGrantDomainEntry -> route-selected executor -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
 
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 
 当前任务语义固定为“指定基金任务正文 authoring”。架构层显式区分两类完成态：科学完成可待审包，以及形式/客观补件完成。
 
-如果显式启用 hosted runtime carrier，它也只能挂在同一套 `CLI / MedAutoGrantDomainEntry / route contract / export contract` 下面；`Hermes-Agent` 相关路径当前属于这类显式 hosted/proof lane，而不是默认公开 capability contract。
+如果显式启用 hosted runtime carrier，它也只能挂在同一套 `CLI / MedAutoGrantDomainEntry / route contract / export contract` 下面；`Hermes-Agent` 相关路径当前属于这类显式 hosted/proof lane，而不是默认公开 capability contract 或公开第一入口。
 
 ## 入口 taxonomy 与 OPL handoff
 
@@ -21,9 +21,9 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `agent entry`
   - 给 `Codex`、Claude Code、OpenClaw 等 host-agent 使用的 `CLI` / `MedAutoGrantDomainEntry`
 - `product entry`
-  - 给最终用户直接进入的产品入口
+  - 给单一 app skill 使用的内部产品入口 shell
 
-当前真实状态是：前两层已经存在，第三层的轻量结构化 shell 与第一棒 read-only product projection 也已经 landed，但成熟用户级前台仍未落地。
+当前真实状态是：前两层已经存在，第三层的轻量结构化 shell 与第一棒 read-only product projection 也已经 landed，但它们仍是 app skill 下的内部 command contract；成熟用户级前台仍未落地。
 `gateway / harness` 在这里继续作为内部架构分层术语，不作为对外第一身份。
 
 在进入 repo-tracked workspace 之前，仍保留 pre-workspace intake 入口作为可选辅助：
@@ -75,7 +75,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 按当前定位，这条链路的 owner 固定为：
 
 - `OPL`：family-level session/runtime/projection 与 shared modules/contracts/indexes owner
-- `Med Auto Grant Product Entry`：domain direct entry owner
+- `Med Auto Grant App Skill`：domain direct entry owner
 - `Hermes-Agent`：显式 hosted/proof lane 中可选的 runtime carrier
 - `Med Auto Grant`：author-side grant truth / route / export owner
 
@@ -91,9 +91,9 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - family human gate
 - family product-entry manifest v2
 
-对 `Med Auto Grant` 来说，优先 adoption 的面是 `workspace progress / workspace cockpit / product direct-entry / product user-loop`，并与 family action graph / family human gate / family product-entry manifest v2 对齐；domain 侧继续保持 `workspace / draft / program` 的真相边界。
+对 `Med Auto Grant` 来说，优先 adoption 的面是 `workspace progress / workspace cockpit / product direct-entry / product user-loop`，并与 family action graph / family human gate / family product-entry manifest v2 对齐；这些面仍属于 app skill 下的内部 command contract，domain 侧继续保持 `workspace / draft / program` 的真相边界。
 
-这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL` 写成 runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 的 runtime carrier。
+这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL` 写成 runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 的 runtime carrier，而不是默认公开入口。
 
 ## Hermes-Agent、Med Auto Grant 与 concrete executor 的分工
 
@@ -151,11 +151,11 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `grant-quality-scorecard` 与 `grant-quality-diff` 在 intake/evidence/critique truth 之上形成质量治理层，并把质量 gate 注入 `execute-authoring-mainline-loop` 的 route resolver，作为 stop / continue / rollback 的依据之一。
 - `execute-grant-autonomy-controller` 位于已有 discovery / selector / initializer / mainline loop / quality surface 之上，负责预算、轮次、blocker 队列、evidence gap 队列、同一基金任务内的 rollback/continue 决策记录与 fail-closed 报告，不替代下游单步 pass。
 - 同一条 `pass critique` 现在也支持显式 `executor_kind=hermes_native_proof`：这条 experimental lane 会通过 `hermes_native_executor.py -> read_hermes_agent_contract(...) -> run_agent.AIAgent.run_conversation(...)` 真实调用上游 Hermes full agent loop；它会显式读取本机 `~/.hermes/config.yaml` 的 model/provider/base_url/api_mode/reasoning_effort，并且只有在完成整轮 loop、拿到真实工具事件和合法 JSON 结果时才通过，否则 fail-closed。
-- `package hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 hosted contract catalog。
+- `package hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 integration/reference contract catalog。
 - `package submission-ready` 继续复用 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链，并维持完整材料下的严格 fail-closed 本地导出 gate；它与“科学完成可待审包”的 authoring stop 语义分层存在，不替代外部官网提交，也不定义补件 TODO 队列本身。
 - 当前 external caller 只需要读取 `domain_entry_contract.supported_commands` 与 `domain_entry_contract.command_contracts`，就能按统一 contract 构造 request，而不需要 repo-local helper。
 - 当前 direct-product projection caller 则可以读取 `workspace progress / workspace cockpit` 的只读投影结果，先看当前 grant 主线、blocker 与 direct / `OPL` entry command catalog，再决定是否进入真正的 domain entry / product entry 调用。
-- `package hosted-contract-bundle.hosted_contract_bundle` 现在也受 `schemas/v1/hosted-contract-bundle.schema.json` 约束，并在写出前执行 schema + 冻结 truth 的 fail-closed 校验。
+- `package hosted-contract-bundle.hosted_contract_bundle` 现在也受 `schemas/v1/hosted-contract-bundle.schema.json` 约束，并在写出前执行 schema + 冻结 truth 的 fail-closed 校验；它保持 integration/reference 角色，不改写公开第一入口。
 - 当前 author-side executor routing 继续按 route 单独冻结：`direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / revision / frozen / artifact_bundle / final_package / hosted_contract_bundle` 现在都已经有 landed service-safe command surface，并共享同一份 route catalog truth。
 - `pending-handoff-requirements.schema.json` 继续只承担历史兼容与旧真相追溯角色；当前 schema contract 与 route output 都已经收口为 landed route catalog。
 - `workspace critique-summary` 继续只在 source workspace 已经位于 `critique / revision / frozen` review context 时作为 review-context audit surface 有意义；当前 full landed authoring catalog 不再依赖 pending handoff contract 才能进入 `critique`。
