@@ -19,7 +19,7 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     assert manifest["version"] == pyproject_data["project"]["version"]
     assert manifest["repository"] == "https://github.com/gaofeng21cn/med-autogrant"
     assert manifest["skills"] == "./skills/"
-    assert manifest["interface"]["displayName"] == "MAG"
+    assert manifest["interface"]["displayName"] == "Med Auto Grant"
     assert manifest["interface"]["category"] == "Research"
     assert "domain app" in manifest["description"].lower()
     assert PLUGIN_SKILL_PATH.is_file()
