@@ -20,7 +20,6 @@ def test_makefile_exposes_layered_test_entrypoints() -> None:
     assert "uv run python scripts/check-line-budget.py" in makefile
     line_budget_script = _read("scripts/check-line-budget.py")
     assert "LEGACY_OVER_TARGET_BUDGETS" in line_budget_script
-    assert '"src/med_autogrant/cli.py": 1075' in line_budget_script
     assert '"src/med_autogrant/grant_autonomy_controller.py": 1326' in line_budget_script
     assert "test-family:" in makefile
     assert (

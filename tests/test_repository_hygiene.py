@@ -12,7 +12,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 LINE_BUDGET_TARGET = 1000
 LINE_BUDGET_LIMIT = 1500
 LEGACY_OVER_TARGET_BUDGETS = {
-    "src/med_autogrant/cli.py": 1075,
     "src/med_autogrant/grant_autonomy_controller.py": 1326,
 }
 CODE_SUFFIXES = {".py", ".sh", ".js", ".ts", ".tsx", ".jsx"}

@@ -3,13 +3,11 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from typing import Any
 
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
-from med_autogrant import mainline_status
 from med_autogrant.domain_entry import MedAutoGrantDomainEntry
 from med_autogrant.product_entry import MedAutoGrantProductEntry
 from med_autogrant.public_cli import (
@@ -20,23 +18,81 @@ from med_autogrant.public_cli import (
     PUBLIC_TO_INTERNAL_COMMAND,
     public_command_label,
 )
-from med_autogrant.workspace import (
-    WorkspaceError,
-    WorkspaceStateError,
-    load_workspace_document,
-)
+from med_autogrant.workspace import WorkspaceError, WorkspaceStateError
 
 from med_autogrant.cli_rendering import (
     _extract_error_details,
     _extract_workspace_context_for_error,
-    _field_label,
-    _field_value,
-    _render_field,
-    _render_shell_name,
     _render_text,
 )
-
-
+from med_autogrant.cli_parts.handlers import (
+    handle_build_artifact_bundle,
+    handle_build_final_package,
+    handle_build_hosted_contract_bundle,
+    handle_build_product_entry,
+    handle_build_submission_ready_package,
+    handle_critique_summary,
+    handle_discover_funding_opportunities,
+    handle_execute_argument_building_pass,
+    handle_execute_authoring_mainline_loop,
+    handle_execute_critique_pass,
+    handle_execute_critique_revision_loop,
+    handle_execute_direction_screening_pass,
+    handle_execute_drafting_pass,
+    handle_execute_fit_alignment_pass,
+    handle_execute_freeze_pass,
+    handle_execute_grant_autonomy_controller,
+    handle_execute_outline_pass,
+    handle_execute_question_refinement_pass,
+    handle_execute_revision_pass,
+    handle_grant_cockpit,
+    handle_grant_direct_entry,
+    handle_grant_evidence_grounding,
+    handle_grant_intake_audit,
+    handle_grant_progress,
+    handle_grant_quality_closure_dossier,
+    handle_grant_quality_diff,
+    handle_grant_quality_scorecard,
+    handle_grant_user_loop,
+    handle_initialize_intake_workspace,
+    handle_mainline_phase,
+    handle_mainline_status,
+    handle_next_step,
+    handle_probe_upstream_hermes,
+    handle_product_entry_manifest,
+    handle_product_frontdesk,
+    handle_product_preflight,
+    handle_product_start,
+    handle_refresh_funding_opportunities_cache,
+    handle_runtime_resume,
+    handle_runtime_run,
+    handle_select_project_profile,
+    handle_skill_catalog,
+    handle_stage_route_report,
+    handle_summarize_workspace,
+    handle_validate_workspace,
+)
+from med_autogrant.cli_parts.parser_adders import (
+    _add_artifact_bundle_command,
+    _add_critique_loop_command,
+    _add_direct_entry_command,
+    _add_final_package_command,
+    _add_grant_autonomy_controller_command,
+    _add_hosted_contract_bundle_command,
+    _add_mainline_loop_command,
+    _add_manifest_command,
+    _add_output_workspace_command,
+    _add_phase_command,
+    _add_product_entry_command,
+    _add_quality_diff_command,
+    _add_refresh_cache_command,
+    _add_resume_runtime_command,
+    _add_revision_executor_command,
+    _add_runtime_entry_command,
+    _add_simple_command,
+    _add_submission_ready_package_command,
+    _add_workspace_command,
+)
 
 
 LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND)
@@ -318,241 +374,6 @@ def build_parser() -> argparse.ArgumentParser:
     )
     return parser
 
-def _add_workspace_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_output_workspace_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--output", required=True)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_refresh_cache_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--output")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_quality_diff_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--previous-input", required=True)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_simple_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_phase_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--phase", required=True)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_runtime_entry_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--journal")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_direct_entry_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--task-intent", required=True)
-    command.add_argument("--funding-call")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_manifest_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--funding-call")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_resume_runtime_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--journal", required=True)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_artifact_bundle_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--output", required=True)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_revision_executor_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--output", required=True)
-    command.add_argument("--executor")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_critique_loop_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--output-dir", required=True)
-    command.add_argument("--max-rounds", type=int, default=3)
-    command.add_argument("--executor")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_mainline_loop_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--output-dir", required=True)
-    command.add_argument("--max-cycles", type=int, default=8)
-    command.add_argument("--executor")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_grant_autonomy_controller_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--output-dir", required=True)
-    command.add_argument("--executor")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_final_package_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--artifact-bundle", required=True)
-    command.add_argument("--output", required=True)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_hosted_contract_bundle_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--final-package", required=True)
-    command.add_argument("--output", required=True)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_submission_ready_package_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--output-dir", required=True)
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_product_entry_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--entry-mode", required=True, choices=("direct", "opl-handoff"))
-    command.add_argument("--task-intent", required=True)
-    command.add_argument("--funding-call")
-    command.add_argument("--output")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-
 def _print_public_help() -> None:
     lines = [
         "Usage: medautogrant <group> <command> [options]",
@@ -660,415 +481,6 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     return 0
 
-
-def handle_validate_workspace(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "validate-workspace", "input_path": args.input})
-
-
-def handle_summarize_workspace(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "summarize-workspace", "input_path": args.input})
-
-
-def handle_grant_intake_audit(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "grant-intake-audit", "input_path": args.input})
-
-
-def handle_grant_evidence_grounding(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "grant-evidence-grounding", "input_path": args.input})
-
-
-def handle_grant_quality_scorecard(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "grant-quality-scorecard", "input_path": args.input})
-
-
-def handle_grant_quality_closure_dossier(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "grant-quality-closure-dossier", "input_path": args.input})
-
-
-def handle_grant_quality_diff(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "grant-quality-diff",
-            "input_path": args.input,
-            "previous_input_path": args.previous_input,
-        }
-    )
-
-
-def handle_discover_funding_opportunities(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "discover-funding-opportunities", "input_path": args.input})
-
-
-def handle_refresh_funding_opportunities_cache(args: argparse.Namespace) -> dict[str, Any]:
-    request: dict[str, Any] = {
-        "command": "refresh-funding-opportunities-cache",
-        "input_path": args.input,
-    }
-    if args.output is not None:
-        request["output_path"] = args.output
-    return _domain_entry().dispatch(request)
-
-
-def handle_select_project_profile(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "select-project-profile", "input_path": args.input})
-
-
-def handle_initialize_intake_workspace(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "initialize-intake-workspace",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_next_step(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "next-step", "input_path": args.input})
-
-
-def handle_critique_summary(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "critique-summary", "input_path": args.input})
-
-
-def handle_stage_route_report(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "stage-route-report", "input_path": args.input})
-
-
-def handle_grant_progress(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().read_grant_progress(input_path=args.input)
-
-
-def handle_grant_cockpit(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().read_grant_cockpit(input_path=args.input)
-
-
-def handle_mainline_status(args: argparse.Namespace) -> dict[str, Any]:
-    return mainline_status.read_mainline_status()
-
-
-def handle_mainline_phase(args: argparse.Namespace) -> dict[str, Any]:
-    return mainline_status.read_mainline_phase_status(args.phase)
-
-
-def handle_grant_direct_entry(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_grant_direct_entry(
-        input_path=args.input,
-        task_intent=args.task_intent,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_grant_user_loop(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_grant_user_loop(
-        input_path=args.input,
-        task_intent=args.task_intent,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_skill_catalog(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_skill_catalog(
-        input_path=args.input,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_product_entry_manifest(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_product_entry_manifest(
-        input_path=args.input,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_product_frontdesk(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_product_frontdesk(
-        input_path=args.input,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_product_preflight(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_product_entry_preflight(
-        input_path=args.input,
-    )
-
-
-def handle_product_start(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_product_entry_start(
-        input_path=args.input,
-        funding_call=args.funding_call,
-    )
-
-
-def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
-
-
-def handle_runtime_run(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "runtime-run",
-            "input_path": args.input,
-            "journal_path": args.journal,
-        }
-    )
-
-
-def handle_runtime_resume(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "runtime-resume", "journal_path": args.journal})
-
-
-def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "build-artifact-bundle",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_execute_direction_screening_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "execute-direction-screening-pass",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_execute_question_refinement_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "execute-question-refinement-pass",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_execute_argument_building_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "execute-argument-building-pass",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_execute_fit_alignment_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "execute-fit-alignment-pass",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_execute_outline_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "execute-outline-pass",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_execute_drafting_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "execute-drafting-pass",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_execute_critique_pass(args: argparse.Namespace) -> dict[str, Any]:
-    request = {
-        "command": "execute-critique-pass",
-        "input_path": args.input,
-        "output_path": args.output,
-    }
-    if args.executor is not None:
-        request["executor_kind"] = args.executor
-    return _domain_entry().dispatch(request)
-
-
-def handle_execute_critique_revision_loop(args: argparse.Namespace) -> dict[str, Any]:
-    request: dict[str, Any] = {
-        "command": "execute-critique-revision-loop",
-        "input_path": args.input,
-        "output_dir": args.output_dir,
-        "max_rounds": args.max_rounds,
-    }
-    if args.executor is not None:
-        request["executor_kind"] = args.executor
-    return _domain_entry().dispatch(request)
-
-
-def handle_execute_authoring_mainline_loop(args: argparse.Namespace) -> dict[str, Any]:
-    request: dict[str, Any] = {
-        "command": "execute-authoring-mainline-loop",
-        "input_path": args.input,
-        "output_dir": args.output_dir,
-        "max_cycles": args.max_cycles,
-    }
-    if args.executor is not None:
-        request["executor_kind"] = args.executor
-    return _domain_entry().dispatch(request)
-
-
-def handle_execute_grant_autonomy_controller(args: argparse.Namespace) -> dict[str, Any]:
-    request: dict[str, Any] = {
-        "command": "execute-grant-autonomy-controller",
-        "input_path": args.input,
-        "output_dir": args.output_dir,
-    }
-    if args.executor is not None:
-        request["executor_kind"] = args.executor
-    return _domain_entry().dispatch(request)
-
-
-def handle_execute_revision_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "execute-revision-pass",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_execute_freeze_pass(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "execute-freeze-pass",
-            "input_path": args.input,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_build_final_package(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "build-final-package",
-            "input_path": args.input,
-            "artifact_bundle_path": args.artifact_bundle,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_build_hosted_contract_bundle(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "build-hosted-contract-bundle",
-            "final_package_path": args.final_package,
-            "output_path": args.output,
-        }
-    )
-
-
-def handle_build_submission_ready_package(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "build-submission-ready-package",
-            "input_path": args.input,
-            "output_dir": args.output_dir,
-        }
-    )
-
-
-def handle_build_product_entry(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build(
-        input_path=args.input,
-        entry_mode=args.entry_mode,
-        task_intent=args.task_intent,
-        output_path=args.output,
-        funding_call=args.funding_call,
-    )
-
-
-def _domain_entry() -> MedAutoGrantDomainEntry:
-    return MedAutoGrantDomainEntry()
-
-
-def _product_entry() -> MedAutoGrantProductEntry:
-    return MedAutoGrantProductEntry()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def _extract_workspace_context_for_error(args: argparse.Namespace) -> dict[str, Any]:
-    input_path = getattr(args, "input", None)
-    if not input_path:
-        return {}
-    try:
-        document = load_workspace_document(input_path)
-    except WorkspaceError:
-        return {}
-    return {
-        "grant_run_id": document.get("grant_run_id"),
-        "workspace_id": document.get("workspace_id"),
-        "lifecycle_stage": document.get("lifecycle_stage"),
-    }
-
-
-def _extract_error_details(exc: WorkspaceError) -> list[dict[str, str]]:
-    if not isinstance(exc, WorkspaceStateError):
-        return []
-    return [
-        {
-            "path": issue.path,
-            "message": issue.message,
-        }
-        for issue in exc.errors
-    ]
 
 
 if __name__ == "__main__":
