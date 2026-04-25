@@ -54,7 +54,19 @@
     "authoring_completion_rule": "near_submission_candidate and submission_grade_candidate mean the narrative is scientifically reviewable for applicant-side inspection.",
     "objective_material_policy": "Administrative supplements, portal forms, signatures, ethics identifiers, and similar objective materials default to TODO and explicit wake-up follow-ups unless their absence invalidates scientific claims already used in the narrative.",
     "submission_ready_relation": "package submission-ready remains a stricter local export gate than MAG authoring completion.",
-    "closure_proof_surface": "runtime_control.semantic_closure plus skill_catalog.domain_projection.runtime_continuity"
+    "closure_proof_surface": "runtime_control.semantic_closure plus skill_catalog.domain_projection.runtime_continuity",
+    "ad_hoc_bypass_policy": {
+      "forbid_ad_hoc_runtime_bypass": true,
+      "allowed_surfaces": [
+        "product_entry",
+        "frontdesk",
+        "user_loop",
+        "direct_entry",
+        "schema_backed_authoring_contract"
+      ],
+      "local_scripts_contracts_rule": "Local scripts/contracts are allowed only when schema-backed and surfaced through product-entry/user-loop/direct-entry runtime semantics; they must not bypass the MAG authoring runtime.",
+      "generic_document_tools_rule": "Generic documents/Office tools, direct .docx edits, prompt-only drafting, hand-written export packages, and one-off ad-hoc scripts must not replace MAG grant-authoring runtime surfaces for MAG-scoped work."
+    }
   },
   "repo_tracked_truth_surfaces": [
     "contracts/runtime-program/current-program.json",

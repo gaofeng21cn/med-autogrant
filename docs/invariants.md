@@ -8,7 +8,7 @@
 - formal-entry matrix 当前固定为：默认正式入口 `CLI`、支持协议层 `MCP`（future layer）、内部控制面 `controller`。
 - 不得把 `supported_protocol_layer=MCP` 解释成“当前 public runtime 已正式支持 MCP”。
 - 不得把 developer control-plane entry 的存在解释成“产品 controller 已正式支持”。
-- 当前默认公开 capability contract 固定为 `CLI-first + MedAutoGrantDomainEntry + local scripts/contracts`，默认正文执行继承本机 `Codex` 配置。
+- 当前默认公开 capability contract 固定为 `CLI-first + MedAutoGrantDomainEntry + product-entry/user-loop surfaced local scripts/contracts`；local scripts/contracts 必须是 schema-backed、由 product-entry / user-loop / direct-entry surface 暴露的受控 contract，不得作为绕开 authoring runtime 的 ad-hoc 执行路径。
 - 历史 local host-agent runtime 材料只允许作为归档追溯材料，不得继续写成当前产品 runtime。
 - 当前 `hermes_runtime.py` 与 `domain_entry.py` 只允许被写成 repo-side domain adapter / entry adapter，不得再被误写成 runtime substrate owner。
 

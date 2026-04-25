@@ -87,6 +87,21 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["task_boundary"]["closure_proof_surface"],
             "runtime_control.semantic_closure plus skill_catalog.domain_projection.runtime_continuity",
         )
+        self.assertEqual(
+            contract["task_boundary"]["ad_hoc_bypass_policy"],
+            {
+                "forbid_ad_hoc_runtime_bypass": True,
+                "allowed_surfaces": [
+                    "product_entry",
+                    "frontdesk",
+                    "user_loop",
+                    "direct_entry",
+                    "schema_backed_authoring_contract",
+                ],
+                "local_scripts_contracts_rule": "Local scripts/contracts are allowed only when schema-backed and surfaced through product-entry/user-loop/direct-entry runtime semantics; they must not bypass the MAG authoring runtime.",
+                "generic_document_tools_rule": "Generic documents/Office tools, direct .docx edits, prompt-only drafting, hand-written export packages, and one-off ad-hoc scripts must not replace MAG grant-authoring runtime surfaces for MAG-scoped work.",
+            },
+        )
         self.assertIn(
             "TODO and explicit wake-up follow-ups",
             contract["task_boundary"]["objective_material_policy"],
