@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__test__ = False
+
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
