@@ -8,7 +8,7 @@ from pathlib import Path
 DEFAULT_LIMIT = 1000
 BASELINE = {
     'src/med_autogrant/authoring_executor.py': 1151,
-    'src/med_autogrant/grant_autonomy_controller.py': 2220,
+    'src/med_autogrant/grant_autonomy_controller.py': 1055,
     'src/med_autogrant/grant_quality.py': 2047,
     'src/med_autogrant/hermes_runtime.py': 1450,
     'src/med_autogrant/product_entry_parts/entry.py': 2048,
