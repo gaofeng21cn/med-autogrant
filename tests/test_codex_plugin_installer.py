@@ -59,6 +59,37 @@ def test_install_repo_local_codex_plugin_keeps_skill_repo_local(tmp_path: Path) 
     assert result["skill_root"] == str(REPO_ROOT / "plugins" / "mag" / "skills" / "mag")
 
 
+def test_install_repo_local_codex_plugin_removes_legacy_test_skill_stub(tmp_path: Path) -> None:
+    module = importlib.import_module("med_autogrant.codex_plugin_installer")
+    home = tmp_path / "home"
+    stub = home / ".codex" / "skills" / "mag"
+    stub.mkdir(parents=True)
+    (stub / "SKILL.md").write_text(
+        "---\nname: mag\ndescription: mag test skill\n---\n\n# mag\n",
+        encoding="utf-8",
+    )
+
+    module.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+
+    assert not stub.exists()
+
+
+def test_install_repo_local_codex_plugin_preserves_non_stub_user_skill(tmp_path: Path) -> None:
+    module = importlib.import_module("med_autogrant.codex_plugin_installer")
+    home = tmp_path / "home"
+    skill = home / ".codex" / "skills" / "mag"
+    skill.mkdir(parents=True)
+    (skill / "SKILL.md").write_text(
+        "---\nname: mag\ndescription: custom local MAG skill\n---\n\n# mag\n",
+        encoding="utf-8",
+    )
+
+    module.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+
+    assert skill.exists()
+    assert "custom local MAG skill" in (skill / "SKILL.md").read_text(encoding="utf-8")
+
+
 def test_install_home_local_codex_plugin_is_idempotent(tmp_path: Path) -> None:
     module = importlib.import_module("med_autogrant.codex_plugin_installer")
     home = tmp_path / "home"

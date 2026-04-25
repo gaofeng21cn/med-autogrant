@@ -12,6 +12,10 @@ MARKETPLACE_NAME = "mag-local"
 MARKETPLACE_DISPLAY_NAME = "MAG Local"
 PLUGIN_CATEGORY = "Research"
 LEGACY_PLUGIN_NAMES = ("med-autogrant",)
+LEGACY_TEST_SKILL_MARKERS = (
+    "description: mag test skill",
+    "# mag",
+)
 
 
 def _repo_plugin_root(repo_root: Path) -> Path:
@@ -61,6 +65,20 @@ def _ensure_expected_symlink(*, link_path: Path, target_path: Path) -> None:
 def _remove_legacy_symlink(path: Path) -> None:
     if path.is_symlink():
         path.unlink()
+
+
+def _remove_legacy_test_skill_stub(path: Path) -> None:
+    if path.is_symlink() or not path.is_dir():
+        return
+    skill_file = path / "SKILL.md"
+    if not skill_file.is_file():
+        return
+    if any(item.name != "SKILL.md" for item in path.iterdir()):
+        return
+    content = skill_file.read_text(encoding="utf-8")
+    if all(marker in content for marker in LEGACY_TEST_SKILL_MARKERS):
+        skill_file.unlink()
+        path.rmdir()
 
 
 def _upsert_marketplace(*, marketplace_path: Path) -> None:
@@ -125,6 +143,7 @@ def install_repo_local_codex_plugin(*, repo_root: Path, home: Path | None = None
         _remove_legacy_symlink(resolved_home / ".agents" / "skills" / legacy_name)
     _remove_legacy_symlink(_user_plugin_root(resolved_home))
     _remove_legacy_symlink(_user_skill_root(resolved_home))
+    _remove_legacy_test_skill_stub(resolved_home / ".codex" / "skills" / PLUGIN_NAME)
 
     _upsert_marketplace(marketplace_path=marketplace_path)
 
