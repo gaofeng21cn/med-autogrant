@@ -10,7 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 INSTALLER_PATH = REPO_ROOT / "scripts" / "install-codex-plugin.sh"
 
 
-def test_codex_plugin_installer_script_supports_lightweight_skip_tools_path(tmp_path: Path) -> None:
+def test_codex_plugin_installer_script_keeps_codex_paths_repo_local(tmp_path: Path) -> None:
     home_dir = tmp_path / "home"
     home_dir.mkdir()
 
@@ -35,7 +35,8 @@ def test_codex_plugin_installer_script_supports_lightweight_skip_tools_path(tmp_
 
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
-    assert payload["plugin_root"] == str(home_dir / "plugins" / "mag")
-    assert (home_dir / "plugins" / "mag").is_symlink()
-    assert (home_dir / ".agents" / "skills" / "mag").is_symlink()
-    assert (home_dir / ".agents" / "plugins" / "marketplace.json").exists()
+    assert payload["plugin_root"] == str(REPO_ROOT / "plugins" / "mag")
+    assert not (home_dir / "plugins" / "mag").exists()
+    assert not (home_dir / ".agents" / "skills" / "mag").exists()
+    assert not (home_dir / ".agents" / "plugins" / "marketplace.json").exists()
+    assert (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").exists()

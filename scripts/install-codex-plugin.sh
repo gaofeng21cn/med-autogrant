@@ -96,10 +96,10 @@ main() {
   install_codex_paths
 
   if [[ "${SKIP_TOOLS}" -eq 1 ]]; then
-    printf "installed MedAutoGrant Codex plugin paths into %s (skip-tools)\n" "${INSTALL_HOME}" >&2
+    printf "refreshed MedAutoGrant repo-local Codex plugin metadata (skip-tools)\n" >&2
   else
-    printf "installed MedAutoGrant Codex integration into %s\n" "${INSTALL_HOME}" >&2
-    printf "restart Codex so native skill discovery and plugin metadata are reloaded\n" >&2
+    printf "installed MedAutoGrant CLI tools into %s and refreshed repo-local Codex plugin metadata\n" "${INSTALL_HOME}" >&2
+    printf "restart Codex in this repository so repo-local skill discovery and plugin metadata are reloaded\n" >&2
   fi
 }
 
