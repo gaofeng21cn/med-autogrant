@@ -183,6 +183,16 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "opl_runtime_manager_registration",
             contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
         )
+        self.assertIn(
+            "native_helper_consumption",
+            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+        )
+        self.assertTrue(
+            any(
+                "OPL Rust native helper" in item
+                for item in contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"]
+            )
+        )
         self.assertIn("grant authoring truth", contract["ideal_target"]["opl_runtime_manager"]["does_not_own"])
         self.assertEqual(contract["phase_map"][0]["phase_id"], "P1")
         self.assertEqual(contract["phase_map"][0]["status"], "completed")

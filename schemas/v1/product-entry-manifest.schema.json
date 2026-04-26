@@ -910,6 +910,7 @@
         "registration_surface",
         "consumable_projection_refs",
         "state_index_inputs",
+        "native_helper_consumption",
         "resume_contract",
         "wakeup_boundary",
         "non_goals"
@@ -965,6 +966,9 @@
             "runtime_health_snapshot_index"
           ]
         },
+        "native_helper_consumption": {
+          "$ref": "#/$defs/oplNativeHelperConsumption"
+        },
         "resume_contract": {
           "type": "object",
           "additionalProperties": false,
@@ -992,6 +996,61 @@
         },
         "non_goals": {
           "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "oplNativeHelperConsumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_ref",
+        "language",
+        "managed_by",
+        "source_of_truth_rule",
+        "indexes"
+      ],
+      "properties": {
+        "protocol_ref": {
+          "const": "contracts/opl-gateway/native-helper-contract.json"
+        },
+        "language": {
+          "const": "rust"
+        },
+        "managed_by": {
+          "const": "one-person-lab"
+        },
+        "source_of_truth_rule": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "indexes": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/oplNativeHelperBackedIndex"
+          },
+          "required": [
+            "workspace_registry_index",
+            "managed_session_ledger_index",
+            "artifact_projection_index",
+            "attention_queue_index",
+            "runtime_health_snapshot_index"
+          ]
+        }
+      }
+    },
+    "oplNativeHelperBackedIndex": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_ref", "backing_helper_id"],
+      "properties": {
+        "input_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "backing_helper_id": {
+          "enum": [
+            "opl-artifact-indexer",
+            "opl-runtime-watch",
+            "opl-state-indexer"
+          ]
         }
       }
     },

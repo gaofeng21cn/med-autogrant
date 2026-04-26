@@ -116,6 +116,18 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
             runtime_manager_registration["wakeup_boundary"]["policy"],
             "explicit_authoring_loop_continuation",
         )
+        native_helper_consumption = runtime_manager_registration["native_helper_consumption"]
+        self.assertEqual(native_helper_consumption["protocol_ref"], "contracts/opl-gateway/native-helper-contract.json")
+        self.assertEqual(native_helper_consumption["language"], "rust")
+        self.assertEqual(
+            native_helper_consumption["indexes"]["artifact_projection_index"]["backing_helper_id"],
+            "opl-artifact-indexer",
+        )
+        self.assertEqual(
+            native_helper_consumption["indexes"]["attention_queue_index"]["backing_helper_id"],
+            "opl-state-indexer",
+        )
+        self.assertTrue(native_helper_consumption["source_of_truth_rule"].startswith("Rust helpers may index MAG"))
         self.assertIn("supported_commands", skill_catalog)
         self.assertIn("command_contracts", skill_catalog)
 

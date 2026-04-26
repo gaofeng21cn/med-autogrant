@@ -441,6 +441,14 @@ class SchemaRegistryTest(unittest.TestCase):
             manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["properties"]["surface_kind"]["const"],
             "opl_runtime_manager_domain_registration",
         )
+        self.assertIn(
+            "native_helper_consumption",
+            manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["required"],
+        )
+        native_helper_consumption = manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["properties"][
+            "native_helper_consumption"
+        ]
+        self.assertEqual(native_helper_consumption["$ref"], "#/$defs/oplNativeHelperConsumption")
 
         runtime_continuity = manifest_schema["$defs"]["skillRuntimeContinuitySurface"]
         self.assertEqual(runtime_continuity["properties"]["surface_kind"]["const"], "skill_runtime_continuity")
