@@ -62,6 +62,7 @@ You can start with prompts like:
 - Scientific completion is delivered as a review-ready package; formal/objective supplements are tracked separately.
 - Formal/objective supplements default to `TODO + explicit wakeup` and do not block body authoring unless they directly break scientific validity.
 - `OPL` keeps family-level session/runtime/projection and shared modules/contracts/indexes.
+- The target `OPL Runtime Manager` can index MAG runtime-control, continuity, artifact, and wakeup projections over an external `Hermes-Agent` substrate, but MAG remains the grant-truth and authoring-contract owner.
 - `hosted-contract-bundle` and `runtime_control` stay as integration/reference surfaces for machine-readable handoff, not as the primary public entry.
 - Human gate decisions stay inside the same funding-call task and are author decisions, not cross-funder reselection.
 - External funding portal submission stays under human supervision.

@@ -31,6 +31,18 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["runtime_owner"]["active_tranche"],
             "P4.G authoring-quality-first completion semantics alignment",
         )
+        self.assertEqual(
+            contract["runtime_owner"]["runtime_manager_boundary"]["manager"],
+            "OPL Runtime Manager",
+        )
+        self.assertIn(
+            "runtime_control.semantic_closure",
+            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+        )
+        self.assertIn(
+            "grant-domain truth owner",
+            contract["runtime_owner"]["runtime_manager_boundary"]["manager_non_goals"],
+        )
         self.assertEqual(contract["executor_defaults"]["default_executor_name"], "codex_cli")
         self.assertEqual(contract["executor_defaults"]["default_executor_mode"], "autonomous")
         self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")
@@ -155,12 +167,15 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["ideal_target"]["family_top_entry"],
             "OPL family-level orchestration surface",
         )
+        self.assertEqual(contract["ideal_target"]["family_runtime_manager"], "OPL Runtime Manager")
         self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
         self.assertEqual(
             contract["ideal_target"]["runtime_substrate_owner"],
             "explicit hosted runtime carrier (for example Hermes-Agent)",
         )
         self.assertEqual(contract["ideal_target"]["authoring_truth_owner"], "Med Auto Grant")
+        self.assertIn("runtime_control", contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"])
+        self.assertIn("grant authoring truth", contract["ideal_target"]["opl_runtime_manager"]["does_not_own"])
         self.assertEqual(contract["phase_map"][0]["phase_id"], "P1")
         self.assertEqual(contract["phase_map"][0]["status"], "completed")
         self.assertEqual(contract["phase_map"][1]["phase_id"], "P2")

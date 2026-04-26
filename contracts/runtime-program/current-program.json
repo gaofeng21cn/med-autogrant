@@ -1,6 +1,6 @@
 {
   "program_id": "med-autogrant-mainline",
-  "date_anchor": "2026-04-23",
+  "date_anchor": "2026-04-26",
   "formal_entry": {
     "default_formal_entry": "CLI",
     "supported_protocol_layer": [
@@ -13,7 +13,34 @@
     "active_phase": "P4 mature direct grant product entry",
     "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
     "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
-    "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle"
+    "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
+    "runtime_manager_boundary": {
+      "manager": "OPL Runtime Manager",
+      "layer_role": "product-managed adapter/projection layer over external Hermes-Agent runtime substrate",
+      "mag_owned_truth": [
+        "grant_run_id/workspace_id/draft_id/program_id identity boundary",
+        "author-side route truth",
+        "authoring_contract",
+        "quality governance and review package truth",
+        "submission-ready export gate"
+      ],
+      "manager_consumed_projection": [
+        "domain_entry_contract",
+        "runtime_control.semantic_closure",
+        "skill_catalog.domain_projection.runtime_continuity",
+        "workspace progress / cockpit",
+        "artifact inventory and explicit wakeup/TODO queue"
+      ],
+      "manager_non_goals": [
+        "grant-domain truth owner",
+        "scheduler kernel",
+        "session store",
+        "memory store",
+        "concrete authoring executor",
+        "private Hermes-Agent fork"
+      ],
+      "future_sidecar_promotion_gate": "only if external Hermes-Agent cannot express the task/wakeup/approval/audit/product isolation contracts required by OPL"
+    }
   },
   "executor_defaults": {
     "default_executor_name": "codex_cli",
@@ -105,11 +132,30 @@
   },
   "ideal_target": {
     "family_top_entry": "OPL family-level orchestration surface",
+    "family_runtime_manager": "OPL Runtime Manager",
     "domain_direct_entry": "Med Auto Grant Product Entry",
     "runtime_substrate_owner": "explicit hosted runtime carrier (for example Hermes-Agent)",
     "authoring_truth_owner": "Med Auto Grant",
-    "direct_user_route": "User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant domain logic",
-    "opl_gateway_route": "User or agent caller -> OPL Product Entry -> OPL family-level orchestration surface -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry",
+    "direct_user_route": "User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> route-selected executor or optional hosted runtime carrier -> Med Auto Grant domain logic",
+    "opl_gateway_route": "User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> external Hermes-Agent runtime substrate -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry",
+    "opl_runtime_manager": {
+      "role": "thin OPL-side runtime manager for profile wiring, task registration hydration, runtime status projection, doctor/repair/resume, native helper catalog, and high-frequency state indexes",
+      "consumes_mag_surfaces": [
+        "domain_entry_contract",
+        "runtime_control",
+        "runtime_continuity",
+        "workspace progress",
+        "workspace cockpit",
+        "hosted contract bundle"
+      ],
+      "does_not_own": [
+        "grant authoring truth",
+        "route truth",
+        "quality gate",
+        "submission-ready export gate",
+        "concrete executor selection"
+      ]
+    },
     "opl_family_scope": "family-level session/runtime/projection plus shared modules/contracts/indexes"
   },
   "phase_map": [

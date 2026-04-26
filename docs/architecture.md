@@ -59,7 +59,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 与 `OPL` 的家族级衔接应是：
 
-`User or agent caller -> OPL Product Entry -> OPL family orchestration surface -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+`User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> external Hermes-Agent runtime substrate -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
 
 `OPL -> Med Auto Grant` 的最小 handoff envelope 至少包括：
 
@@ -75,11 +75,13 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 按当前定位，这条链路的 owner 固定为：
 
 - `OPL`：family-level session/runtime/projection 与 shared modules/contracts/indexes owner
+- `OPL Runtime Manager`：OPL 侧 product-managed adapter/projection layer，负责 Hermes profile/provisioning、MAG task registration hydration、runtime status projection、doctor/repair/resume、native helper catalog 与高频状态索引
 - `Med Auto Grant App Skill`：domain direct entry owner
 - `Hermes-Agent`：显式 hosted/proof lane 中可选的 runtime carrier
 - `Med Auto Grant`：author-side grant truth / route / export owner
 
 当前并不宣称 `OPL` family orchestration surface 已在本仓实现；当前只是在为 future caller 冻结稳定 contract。
+当前也不宣称 MAG 需要自有长期常驻 runtime sidecar；自有 sidecar 只在外部 `Hermes-Agent` 无法表达 task/wakeup/approval/audit/product isolation contract 时，才由 `OPL Runtime Manager` 的 adapter/projection 边界进入 promotion 评估。
 
 ## OPL family orchestration contracts（adoption 方向）
 
@@ -90,10 +92,11 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - family action graph
 - family human gate
 - family product-entry manifest v2
+- OPL Runtime Manager registration/projection envelope
 
 对 `Med Auto Grant` 来说，优先 adoption 的面是 `workspace progress / workspace cockpit / product direct-entry / product user-loop`，并与 family action graph / family human gate / family product-entry manifest v2 对齐；这些面仍属于 app skill 下的内部 command contract，domain 侧继续保持 `workspace / draft / program` 的真相边界。
 
-这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL` 写成 runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 的 runtime carrier，而不是默认公开入口。
+这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL Runtime Manager` 写成 MAG runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 的外部 runtime carrier，而不是默认公开入口。
 
 ## Hermes-Agent、Med Auto Grant 与 concrete executor 的分工
 
@@ -139,6 +142,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `runtime run` 与 `runtime resume` 继续以 journal 串联多次 pass，但 attempt index 现在来自真实上游 Hermes session substrate。
 - 对 valid workspace，Hermes session handle 继续沿用 `grant_run_id`；对 `validation_failed` path，只允许使用 journal-scoped substrate session handle 持续 durability，不得伪造新的 domain `grant_run_id`。
 - `src/med_autogrant/hermes_runtime.py` 现在应被理解为 repo-side domain adapter / orchestrator，而不是 runtime substrate owner。
+- 目标中的 `OPL Runtime Manager` 只消费 `runtime_control.semantic_closure`、`skill_catalog.domain_projection.runtime_continuity`、`workspace progress / cockpit`、hosted contract bundle 与 artifact/wakeup locator；它不写 MAG authoring truth，也不替代 route-selected executor。
 - `runtime run` / `runtime resume` 直接通过 `MedAutoGrantDomainEntry -> HermesRuntimeSubstrate` 落到当前 runtime loop。
 - `pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting`、`pass critique`、`pass revision`、`pass freeze`、`package artifact-bundle`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
 - `select-project-profile` 与 `initialize-intake-workspace` 由 repo-side selector/initializer contract 持有材料池解析、profile/funding 匹配与 input-intake workspace 生成；在任务已锁定指定基金后，它们只作为显式唤醒的准备工具。

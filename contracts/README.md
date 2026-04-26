@@ -9,4 +9,4 @@
 - `package submission-ready` 会把当前本地导出链进一步收口成 submission-ready delivery surface；它只在 frozen gate、必备章节、预实验、代表作和在研项目都满足时写出 `submission_ready_package`，不会宣称已执行外部官网提交。
 - 共享 `domain_entry_contract` 当前还会固定 `supported_commands` 与 `command_contracts`，供 external caller 直接消费。
 - `schemas/v1/hosted-contract-bundle.schema.json` 现在定义整份 hosted contract bundle 的 fail-closed 结构。
-- `contracts/runtime-program/current-program.json` 现在还额外固定了 `ideal_target` 与 `phase_map`，用于说明 `Med Auto Grant` 独立 domain agent、显式 hosted runtime carrier（如 `Hermes-Agent`）的技术位置，以及 `OPL` family-level 协作边界与当前阶段。
+- `contracts/runtime-program/current-program.json` 现在还额外固定了 `runtime_manager_boundary`、`ideal_target` 与 `phase_map`，用于说明 `Med Auto Grant` 独立 domain agent、`OPL Runtime Manager` 薄管理层、显式 hosted runtime carrier（如外部 `Hermes-Agent`）的技术位置，以及 `OPL` family-level 协作边界与当前阶段。

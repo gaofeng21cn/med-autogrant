@@ -19,6 +19,7 @@ This guide is for readers who need the technical records, trace records, referen
 - `Med Auto Grant` is an independent medical grant domain agent whose first public surface is the single Med Auto Grant app skill. The stable callable surface underneath it is `CLI`, `MedAutoGrantDomainEntry`, local scripts, and schema-backed contracts.
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
 - Default authoring execution inherits local `Codex` defaults through the existing route-selected executor path.
+- `OPL Runtime Manager` is the target OPL-side thin manager over the external `Hermes-Agent` substrate; it may consume MAG runtime_control, runtime_continuity, workspace projection, artifact locator, and explicit wakeup/TODO queues, but it does not own MAG grant truth or authoring execution.
 - `Hermes-Agent`-related lanes stay in explicit hosted/proof or technical-reference positions; they do not redefine the default public capability contract.
 - Historical program records and migration notes stay in `docs/specs/` and `docs/history/` for traceability.
 - The frontdesk, user-loop, projections, and local `submission-ready` package are landed as internal command contracts and direct-product projections under the app skill. The active task boundary now distinguishes scientific review readiness from the stricter local export gate. Future hosted product expansion lives in `docs/plans/`.

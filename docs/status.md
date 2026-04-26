@@ -1,11 +1,12 @@
 # 当前状态
 
-Date: `2026-04-23`
+Date: `2026-04-26`
 
 ## 当前角色
 
 - 仓库角色：`Med Auto Grant` 是独立 medical grant domain agent，负责 author-side grant truth、route、review gate 与 package export；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
 - 当前执行口径：repo-tracked 默认 capability contract 收口为单一 `Med Auto Grant` app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；其中 `product entry/frontdesk/direct-entry/user-loop` 是 app skill 下的内部 command contract 和 direct-product projection。默认正文执行继续继承本机 `Codex` 配置；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 与技术参考层。
+- OPL Runtime Manager 口径：`OPL Runtime Manager` 是 OPL 侧薄运行管理/投影层，用于把 MAG 的 task registration、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue 接到外部 `Hermes-Agent` substrate、高频状态索引和 doctor/repair/resume 面；它不持有 author-side truth、quality gate、submission-ready export gate 或 concrete executor。
 - 当前 agent entry：`CLI` / `MedAutoGrantDomainEntry` 可被 `Codex`、`OPL` 和其他通用 agent 直接调用，或者先通过单一 app skill 读取 machine-readable surface。
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
@@ -20,6 +21,7 @@ Date: `2026-04-23`
 - `product build-entry` 与 lightweight `product entry` shell 继续作为 machine-readable domain/API catalog 的构建层。
 - `product frontdesk` 是 controller-owned direct frontdoor contract，读取当前 user loop、projection 与 route truth，并通过 `product-frontdesk.schema.json` generation-time fail-closed 校验；它属于 app skill 的内部 command contract。
 - `product-entry-manifest` 现已导出 `runtime_control` surface，固定 session/runtime/domain/executor owner、restore point、progress/artifact/approval control surface、direct-entry locator 与 `semantic_closure`，作为 integration/reference truth 供 OPL 或 hosted caller 归一化消费。
+- `runtime_control` 与 skill catalog 的 `runtime_continuity` 也是 OPL Runtime Manager 的 MAG 侧注册/投影输入；任何上层索引都必须回指这些 repo-tracked surface，不能在 OPL 侧复制 authoring truth。
 - `product direct-entry` 组合 `workspace progress`、`workspace cockpit` 与 direct / `opl-handoff` entry mode，是 controller-owned product contract。
 - `mainline status` 负责 current line / current focus / completed records / remaining gaps；`mainline phase` 继续保留为维护者参考记录查询。
 
@@ -56,6 +58,7 @@ Date: `2026-04-23`
 - 当前 controller-owned projection：`workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`
 - 当前 repo 级投影：`mainline status` 输出 current line / current focus；`mainline phase` 只承担维护者参考记录。
 - `pass critique --executor hermes_native_proof` 继续作为显式 proof lane；默认执行器继续保持 `Codex CLI`，默认模式是 `autonomous`
+- 自有 OPL sidecar 当前不是 MAG 侧目标；只有当外部 `Hermes-Agent` 无法表达 task/wakeup/approval/audit/product isolation contract 时，才从 OPL Runtime Manager 的薄 adapter/projection 边界进入 promotion 评估。
 
 ## 参考入口
 

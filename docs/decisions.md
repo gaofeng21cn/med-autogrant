@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-04-26：MAG 对齐 OPL Runtime Manager 薄管理层
+
+- 决策：MAG 与 OPL 的长期托管对齐采用 `OPL Product Entry -> OPL Runtime Manager -> external Hermes-Agent runtime substrate -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`。MAG 只提供 domain entry contract、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue；`OPL Runtime Manager` 只负责 OPL 侧 profile/provisioning、registration hydration、status index、doctor/repair/resume 与 native helper catalog。
+- 理由：MAG 的核心价值在 author-side grant truth、route/export contract、quality gate 和 submission-ready export gate。把长期在线管理先放在 OPL Runtime Manager 这一薄层，可以利用 Hermes 常驻服务并为未来自有 sidecar 预留 promotion 边界，同时不制造第二套 grant truth。
+- 影响：`current-program.json` 增加 runtime manager boundary；后续 docs/contracts 若提到 OPL 长期托管，必须明确 Runtime Manager 不是 MAG 的 scheduler kernel、session store、memory store、grant truth owner、authoring executor 或 private Hermes fork。
+
 ## 2026-04-24：公开主语收口为单一 app skill 与内部 command contract
 
 - 决策：公开文案与技术索引的第一主语收口为单一 `Med Auto Grant` app skill；`CLI` / `MedAutoGrantDomainEntry` 保持底层 agent entry，而 `product entry/frontdesk/direct-entry/user-loop` 统一降级为这个 app skill 下的内部 command contract / direct-product projection。

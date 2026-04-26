@@ -6,7 +6,7 @@
 对外第一主语是单一 `Med Auto Grant` app skill；当前仓库主线按 `Auto-only` 理解，formal entry 仍是 `CLI`。默认公开 capability surface 收口为 `CLI + MedAutoGrantDomainEntry + 本地脚本 + schema-backed contract`，默认正文执行继续继承本机 `Codex` 配置。`product entry/frontdesk/direct-entry/user-loop`、`product build-entry`、`product manifest`、`runtime_control` 与 `package hosted-contract-bundle` 仍然保留，但它们只作为 app skill 下的内部 command contract、direct-product projection 或 integration/reference surface，不再作为对外第一主语。历史本地 runtime 线只保留在归档材料里，而 `Hermes-Agent` 相关路径与 `hermes_runtime.py` 只应被理解为显式 hosted/proof backend 或 repo-side domain adapter，不是默认公开 runtime owner。
 当前入口已经形成稳定的 `CLI + MedAutoGrantDomainEntry`；`product build-entry` 负责轻量结构化 `product entry` shell，`product manifest` 把这层 shell、shared handoff 模板与当前主线快照冻结成 machine-readable discovery surface。`product frontdesk` 进一步把其上方的 controller-owned direct frontdoor 冻结下来。这层 shell、`product manifest`、`product frontdesk` 及其 `executor_routing_contract` 都已经进一步收口成 schema-backed contract，并在生成时 fail-closed。`package hosted-contract-bundle` 会把 `domain_entry_contract`、`schema_contract`、`authoring_contract` 一起冻结进 hosted-friendly 合同目录，但只作为 integration/reference surface。`workspace progress / workspace cockpit`、`product direct-entry`、`mainline status`、维护者参考记录与 `product user-loop` 已经共同构成当前 direct grant product projection 与用户回路，但都属于 app skill 下的内部 command contract。`direction_screening -> frozen` 已进入 landed command catalog；`package submission-ready` 已收口为 fail-closed 的本地 submission-ready 交付面。当前 direct grant loop、frontdoor discovery、route contract、local delivery 与 hosted bundle 已经共享同一份可机读的 authoring record。
 当前任务边界锁定在“指定基金任务正文 authoring”：科学完成的可待审包与形式/客观补件完成必须显式分层管理，默认先确保正文科学成立与可审阅，再通过补件队列收口门户前置材料。
-按当前定位，这个仓的对外第一身份是“通过单一 app skill 暴露的独立医学基金 domain agent”：`OPL` 只保留 family-level 的 session/runtime/projection 与 shared modules/contracts/indexes；`Med Auto Grant` 继续负责 grant authoring record、domain entry 与 direct grant product entry；显式 hosted/proof backend 只能挂在同一套 route/export contract 之下。
+按当前定位，这个仓的对外第一身份是“通过单一 app skill 暴露的独立医学基金 domain agent”：`OPL` 只保留 family-level 的 session/runtime/projection 与 shared modules/contracts/indexes；目标形态中的 `OPL Runtime Manager` 是 OPL 侧的薄运行管理/投影层，负责把 MAG 的 task registration、runtime_control、runtime_continuity、workspace projection 与 artifact/wakeup locator 接到外部 `Hermes-Agent` substrate、native helper catalog、高频状态索引和 doctor/repair/resume 面；`Med Auto Grant` 继续负责 grant authoring record、domain entry 与 direct grant product entry；显式 hosted/proof backend 只能挂在同一套 route/export contract 之下。
 当前统一协作模型是：稳定可调用面先固定在单一 app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；默认 concrete executor 继续继承本机 `Codex`；如果显式启用 hosted/proof backend，它也必须服从同一套 route truth、author-side contract 与 export record。`direction_screening -> frozen`、`revision` 与 packaging/export 继续通过 repo-side domain logic 与 executor adapter 落地。
 当前 hosted caller / `OPL` caller 若需要 machine-readable handoff，可以消费 `domain_entry_contract`、`schema_contract`、`authoring_contract`，并按 `supported_commands` / `command_contracts` 构造请求。`workspace progress / workspace cockpit` 保持 product-facing read-only projection，`product direct-entry` 负责组合 direct-entry contract，`mainline status`、维护者参考记录与 `product user-loop` 负责投影 repo 主线快照与 route-derived next action。`pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting` 与 `pass freeze` 已经收口成 landed command catalog，并被 route contract、`product user-loop` 与 hosted bundle 复用。
 
@@ -15,6 +15,7 @@
 - 明确 `CLI / MCP / controller` 的 formal-entry matrix。
 - 稳定 `grant_run_id`、`workspace_id`、`draft_id`、`program_id` 与相关 artifact/export surface。
 - 在不改写 domain truth 的前提下保持默认 `Codex` 执行路径与显式 hosted/proof backend 并存，并把历史本地 runtime closeout 只保留给归档追溯材料。
+- 在 OPL 目标形态中只把 MAG projection 注册给 `OPL Runtime Manager`；Runtime Manager 可以管理外部 runtime substrate 与状态索引，但不得替代 MAG author-side truth、quality gate、submission-ready export gate 或 route-selected executor。
 - 保持 `CLI` / `MedAutoGrantDomainEntry` 作为稳定 agent entry，使 `Codex`、`OPL` 和其他通用 agent 都能直接按 contract 调用。
 - 在已落地 runtime substrate 之上，保持 `product build-entry` 这层共享-envelope lightweight grant `product entry` shell 稳定，并让它同时服务 direct entry 与 `OPL` handoff。
 - 在已落地 runtime substrate 与 lightweight shell 之上，通过 `workspace progress / workspace cockpit` 维持 controller-owned、read-only 的 direct grant product projection。
@@ -43,6 +44,7 @@
 - 不把用户级 runtime-state 或其他 machine-local control-plane 写成 repo-tracked 产品本体。
 - 不把 `P5.*` hosted/federation 扩展写成当前已开工的范围。
 - 不把同任务内的人工 gate 写成跨 funder 的重选流程。
+- 不把 `OPL Runtime Manager` 或未来 OPL sidecar 写成 MAG 的默认公开入口、grant truth owner、authoring executor 或 repository-local Hermes fork。
 
 ## 当前形态
 
