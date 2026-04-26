@@ -1,0 +1,4 @@
+interface:
+  display_name: "Med Auto Grant"
+  short_description: "Grant authoring runtime for Codex"
+  default_prompt: "Use $mag to open the current Med Auto Grant frontdesk and continue the active grant authoring loop."

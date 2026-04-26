@@ -9,6 +9,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "mag"
 PLUGIN_MANIFEST_PATH = PLUGIN_ROOT / ".codex-plugin" / "plugin.json"
 PLUGIN_SKILL_PATH = PLUGIN_ROOT / "skills" / "mag" / "SKILL.md"
+PLUGIN_SKILL_UI_METADATA_PATH = PLUGIN_ROOT / "skills" / "mag" / "agents" / "openai.yaml"
+MARKETPLACE_PATH = REPO_ROOT / ".agents" / "plugins" / "marketplace.json"
 README_PATH = REPO_ROOT / "README.md"
 INVARIANTS_PATH = REPO_ROOT / "docs" / "invariants.md"
 
@@ -25,10 +27,24 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     assert manifest["interface"]["category"] == "Research"
     assert "domain app" in manifest["description"].lower()
     assert PLUGIN_SKILL_PATH.is_file()
+    assert PLUGIN_SKILL_UI_METADATA_PATH.is_file()
+
+
+def test_codex_plugin_marketplace_uses_full_display_name() -> None:
+    marketplace = json.loads(MARKETPLACE_PATH.read_text(encoding="utf-8"))
+    plugin_entry = next(item for item in marketplace["plugins"] if item["name"] == "mag")
+
+    assert marketplace["interface"]["displayName"] == "Med Auto Grant Local"
+    assert plugin_entry["source"] == {
+        "source": "local",
+        "path": "./plugins/mag",
+    }
+    assert plugin_entry["category"] == "Research"
 
 
 def test_mag_skill_pins_domain_runtime_guardrails() -> None:
     skill_text = PLUGIN_SKILL_PATH.read_text(encoding="utf-8")
+    metadata_text = PLUGIN_SKILL_UI_METADATA_PATH.read_text(encoding="utf-8")
 
     assert "Domain runtime 护栏" in skill_text
     assert "必须通过 MAG product-entry、user-loop、direct-entry 或 schema-backed authoring contract 推进" in skill_text
@@ -36,6 +52,8 @@ def test_mag_skill_pins_domain_runtime_guardrails() -> None:
     assert "ad-hoc 脚本、手写导出包或 prompt-only 文档路径" in skill_text
     assert "回到 repo 层补最小 callable/product-entry surface" in skill_text
     assert "不能成为绕开 runtime 的替代执行路径" in skill_text
+    assert 'display_name: "Med Auto Grant"' in metadata_text
+    assert 'default_prompt: "Use $mag' in metadata_text
 
 
 def test_public_docs_pin_schema_backed_authoring_runtime_boundary() -> None:

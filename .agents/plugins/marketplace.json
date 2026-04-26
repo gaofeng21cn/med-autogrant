@@ -1,7 +1,7 @@
 {
   "name": "mag-local",
   "interface": {
-    "displayName": "MAG Local"
+    "displayName": "Med Auto Grant Local"
   },
   "plugins": [
     {
