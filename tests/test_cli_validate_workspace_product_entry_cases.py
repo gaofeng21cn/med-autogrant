@@ -39,6 +39,12 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertIn("automation", manifest)
         self.assertEqual(manifest["automation"]["surface_kind"], "automation")
         self.assertGreaterEqual(len(manifest["automation"]["automations"]), 1)
+        self.assertIn("autonomy_observability", manifest)
+        self.assertEqual(
+            manifest["autonomy_observability"]["surface_kind"],
+            "grant_autonomy_observability",
+        )
+        self.assertIn("sli_summary", manifest["autonomy_observability"])
 
     def test_skill_catalog_returns_machine_readable_app_skill_surface(self) -> None:
         exit_code, stdout, stderr = self.run_cli(

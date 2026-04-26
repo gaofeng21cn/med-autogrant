@@ -1987,6 +1987,121 @@
         }
       }
     },
+    "grantAutonomyObservabilityAttentionCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attention_type",
+        "severity",
+        "recommended_surface"
+      ],
+      "properties": {
+        "attention_type": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "severity": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "recommended_surface": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "grantAutonomyObservability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "schema_version",
+        "owner",
+        "sli_summary",
+        "checkpoint_ref",
+        "attention_candidates"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "grant_autonomy_observability"
+        },
+        "schema_version": {
+          "const": 1
+        },
+        "owner": {
+          "const": "med-autogrant"
+        },
+        "sli_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "task_status",
+            "runtime_health_status",
+            "task_resumable",
+            "workspace_bound",
+            "same_funding_call_locked",
+            "quality_closure_surface_ready",
+            "submission_ready_gate_open",
+            "operator_assisted_ready",
+            "remaining_gaps_count",
+            "blocking_gaps_count"
+          ],
+          "properties": {
+            "task_status": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "runtime_health_status": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "task_resumable": {
+              "type": "boolean"
+            },
+            "workspace_bound": {
+              "type": "boolean"
+            },
+            "same_funding_call_locked": {
+              "type": "boolean"
+            },
+            "quality_closure_surface_ready": {
+              "type": "boolean"
+            },
+            "submission_ready_gate_open": {
+              "type": "boolean"
+            },
+            "operator_assisted_ready": {
+              "type": "boolean"
+            },
+            "remaining_gaps_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "blocking_gaps_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "checkpoint_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "checkpoint_id"
+          ],
+          "properties": {
+            "status": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "checkpoint_id": {
+              "$ref": "#/$defs/nullableString"
+            }
+          }
+        },
+        "attention_candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/grantAutonomyObservabilityAttentionCandidate"
+          }
+        }
+      }
+    },
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
@@ -2020,6 +2135,7 @@
         "product_entry_preflight",
         "product_entry_readiness",
         "grant_authoring_readiness",
+        "autonomy_observability",
         "product_entry_quickstart",
         "family_orchestration",
         "product_entry_status",
@@ -2114,6 +2230,9 @@
         },
         "grant_authoring_readiness": {
           "$ref": "#/$defs/grantAuthoringReadiness"
+        },
+        "autonomy_observability": {
+          "$ref": "#/$defs/grantAutonomyObservability"
         },
         "product_entry_quickstart": {
           "$ref": "#/$defs/productEntryQuickstart"

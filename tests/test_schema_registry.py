@@ -322,6 +322,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("product_entry_preflight", manifest_required)
         self.assertIn("product_entry_readiness", manifest_required)
         self.assertIn("grant_authoring_readiness", manifest_required)
+        self.assertIn("autonomy_observability", manifest_required)
         self.assertIn("product_entry_quickstart", manifest_required)
 
         frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))

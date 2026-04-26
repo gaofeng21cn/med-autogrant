@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from med_autogrant.product_entry_parts.autonomy_observability import build_grant_autonomy_observability
 from med_autogrant.product_entry_parts.shared import *  # noqa: F401,F403
 
 
@@ -865,6 +866,13 @@ class ProductEntryManifestBuilderMixin:
                 ),
             ],
         )
+        autonomy_observability = build_grant_autonomy_observability(
+            task_lifecycle=task_lifecycle,
+            runtime_inventory=runtime_inventory,
+            grant_authoring_readiness=grant_authoring_readiness,
+            runtime_control=runtime_control,
+            remaining_gaps=list(mainline_payload.get("remaining_gaps") or []),
+        )
 
         payload = {
             "ok": True,
@@ -934,6 +942,7 @@ class ProductEntryManifestBuilderMixin:
                 extra_payload={
                     "runtime_control": runtime_control,
                     "grant_authoring_readiness": grant_authoring_readiness,
+                    "autonomy_observability": autonomy_observability,
                 },
             ),
         }

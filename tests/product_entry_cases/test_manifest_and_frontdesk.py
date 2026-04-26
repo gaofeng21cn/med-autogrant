@@ -147,6 +147,19 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
             "direct-entry",
             runtime_control["direct_entry"]["command"],
         )
+        observability = manifest["autonomy_observability"]
+        self.assertEqual(observability["surface_kind"], "grant_autonomy_observability")
+        self.assertEqual(observability["owner"], "med-autogrant")
+        self.assertEqual(observability["sli_summary"]["task_status"], manifest["task_lifecycle"]["status"])
+        self.assertEqual(
+            observability["sli_summary"]["runtime_health_status"],
+            manifest["runtime_inventory"]["health_status"],
+        )
+        self.assertTrue(observability["sli_summary"]["same_funding_call_locked"])
+        self.assertEqual(
+            observability["sli_summary"]["remaining_gaps_count"],
+            len(manifest["remaining_gaps"]),
+        )
         self.assertEqual(manifest["progress_projection"]["surface_kind"], "progress_projection")
         self.assertEqual(
             manifest["progress_projection"]["workspace_path"],
