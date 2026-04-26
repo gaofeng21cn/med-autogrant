@@ -27,6 +27,21 @@ def _add_output_workspace_command(
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
+def _add_initialize_intake_workspace_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    output_target = command.add_mutually_exclusive_group(required=True)
+    output_target.add_argument("--output")
+    output_target.add_argument("--workspace-root")
+    command.add_argument("--no-git", action="store_true")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
 def _add_refresh_cache_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,

@@ -62,6 +62,8 @@ def handle_initialize_intake_workspace(args: argparse.Namespace) -> dict[str, An
             "command": "initialize-intake-workspace",
             "input_path": args.input,
             "output_path": args.output,
+            "workspace_root": getattr(args, "workspace_root", None),
+            "initialize_git": not getattr(args, "no_git", False),
         }
     )
 

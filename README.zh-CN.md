@@ -51,6 +51,7 @@
 - 申请人提供目标基金任务、已有材料、限制条件和最终判断。
 - AI 助手负责该任务内的科学结构整理、正文草拟、批注整合和修订推进。
 - 工作区持续保存版本、评审意见和交付文件，方便回看与比较。
+- 新建 intake 工作区采用目录型 scaffold：`workspace.json` 是 canonical document，轻量合同/产物可被 Git 跟踪，本地 runtime 输出保持忽略。
 
 ## 当前边界
 
@@ -83,6 +84,7 @@
 - 在改 route、入口 wording 或公开表述前，把 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 当成公开与技术真相集。
 - 当前 formal-entry matrix 是 `CLI`、`MCP` 和 `controller`。`CLI` / `MedAutoGrantDomainEntry` 是 agent entry；`product entry/frontdesk/direct-entry/user-loop`、本地脚本与 schema-backed contract 共同构成 app skill 下的内部 command contract 和 direct-product projection。hosted / proof backend 只在显式 opt-in 集成 lane 中出现，不构成默认公开合同。
 - 如果外部 agent 或 OPL 需要直接读取 repo-tracked skill surface，用 `medautogrant product skill-catalog --input <input_path> --format json`；返回的是一个 Med Auto Grant app skill 加底层 command contracts。
+- pre-authoring intake 用 `medautogrant workspace initialize-intake --input <selection_input> --workspace-root <workspace_dir> --format json`；目录会带 workspace-local Git boundary，`workspace.json` 是 MAG canonical document。
 - 当前单一 skill descriptor 已携带可直接消费的 `runtime_continuity` envelope，并复用既有 `session_continuity` / `progress_projection` / `artifact_inventory` / `runtime_control` truth。
 - 当前可机读治理面包括 `workspace quality-scorecard`、`workspace quality-diff` 和 `pass autonomy-controller`。
 

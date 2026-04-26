@@ -15,7 +15,7 @@ Date: `2026-04-26`
 ## 当前入口
 
 - 用户路径收口为单一 app skill 下的 `product frontdesk` -> `product user-loop` -> `workspace progress / workspace cockpit` -> `product direct-entry` -> landed `pass` / `package` commands。
-- pre-workspace 入口现在增加 `discover-funding-opportunities` -> `select-project-profile` -> `initialize-intake-workspace`，用于先发现候选池，再选 funding/profile，最后落到 `input_intake` workspace。
+- pre-workspace 入口现在增加 `discover-funding-opportunities` -> `select-project-profile` -> `initialize-intake-workspace`，用于先发现候选池，再选 funding/profile，最后落到带 `workspace.json` canonical document 与 workspace-local Git boundary 的目录型 `input_intake` workspace。
 - 质量治理入口现在包括 `workspace quality-scorecard`、`workspace quality-closure-dossier` 与 `workspace quality-diff`，用于当前版本质量评估、closure package 收口与版本间问题关闭比较。
 - 长时间自治入口现在包括 `pass autonomy-controller`（internal command: `execute-grant-autonomy-controller`），用于在预算、轮次、blocker 队列和 evidence gap 队列约束下调度既有主线。
 - `product build-entry` 与 lightweight `product entry` shell 继续作为 machine-readable domain/API catalog 的构建层。
@@ -28,7 +28,7 @@ Date: `2026-04-26`
 ## 当前执行线
 
 - 当前公开执行线：`single Med Auto Grant app skill / direct MAG agent entry -> internal product frontdesk -> internal product user-loop -> workspace progress / workspace cockpit -> internal product direct-entry -> pass / package commands`
-- 当前 pre-workspace intake 线：`selection_input materials -> select-project-profile -> initialize-intake-workspace -> input_intake workspace`
+- 当前 pre-workspace intake 线：`selection_input materials -> select-project-profile -> initialize-intake-workspace -> input_intake workspace directory / workspace.json`
 - 当前 funding discovery 线：`discovery_input materials -> discover-funding-opportunities -> funding_opportunity_pool`
 - 当前 funding discovery 已支持 `official_live`，会记录 source receipts，便于后续 profile 选择和材料 provenance 回溯。
 - 当前 `official_live` 官方入口：

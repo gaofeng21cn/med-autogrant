@@ -19,7 +19,7 @@
 - 保持 `CLI` / `MedAutoGrantDomainEntry` 作为稳定 agent entry，使 `Codex`、`OPL` 和其他通用 agent 都能直接按 contract 调用。
 - 在已落地 runtime substrate 之上，保持 `product build-entry` 这层共享-envelope lightweight grant `product entry` shell 稳定，并让它同时服务 direct entry 与 `OPL` handoff。
 - 在已落地 runtime substrate 与 lightweight shell 之上，通过 `workspace progress / workspace cockpit` 维持 controller-owned、read-only 的 direct grant product projection。
-- 保持 `select-project-profile`、`initialize-intake-workspace`、`discover-funding-opportunities` 作为可选 pre-authoring 辅助入口，不把它们写成已指定基金任务内的默认执行阻塞链路。
+- 保持 `select-project-profile`、`initialize-intake-workspace`、`discover-funding-opportunities` 作为可选 pre-authoring 辅助入口；`initialize-intake-workspace` 默认生成目录型 workspace scaffold，并以 `workspace.json` 作为 canonical document，不把它们写成已指定基金任务内的默认执行阻塞链路。
 - 把“科学完成可交付待审包”与“形式/客观补件完成”显式分层，避免把门户前置材料与正文科学语义混写成单一完成态。
 - 形式/客观补件默认进入 `TODO + 显式唤醒` 队列；只有直接破坏正文科学成立时，才升级为正文 authoring blocker。
 - 通过 `product direct-entry` 把 direct grant entry 继续推进到组合式 product contract，并保持当前 controller-owned direct-entry 语义稳定。

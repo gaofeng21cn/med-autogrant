@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import tempfile
 import types
@@ -173,3 +174,77 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
                 "nsfc_general_medical_v1",
             )
             self.assertTrue(output_path.exists())
+
+    def test_initialize_intake_workspace_materializes_directory_workspace_with_git_boundary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            workspace_root = Path(tmp_dir) / "mag-workspace"
+
+            exit_code, stdout, stderr = self.run_cli(
+                "initialize-intake-workspace",
+                "--input",
+                str(NSFC_SELECTION_INPUT),
+                "--workspace-root",
+                str(workspace_root),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            workspace_path = workspace_root / "workspace.json"
+            self.assertTrue(payload["ok"])
+            self.assertEqual(payload["workspace_root"], str(workspace_root.resolve()))
+            self.assertEqual(payload["workspace_path"], str(workspace_path.resolve()))
+            self.assertTrue(payload["workspace_git"]["initialized"])
+            self.assertTrue((workspace_root / ".git").exists())
+            self.assertTrue(workspace_path.exists())
+            self.assertEqual(
+                json.loads(workspace_path.read_text(encoding="utf-8"))["lifecycle_stage"],
+                "input_intake",
+            )
+
+            runtime_probe = workspace_root / "runtime" / "probe.json"
+            runtime_probe.parent.mkdir(parents=True, exist_ok=True)
+            runtime_probe.write_text("{}", encoding="utf-8")
+            check_ignore = subprocess.run(
+                ["git", "check-ignore", str(runtime_probe.relative_to(workspace_root))],
+                cwd=workspace_root,
+                check=False,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(check_ignore.returncode, 0)
+
+            validate_exit, validate_stdout, validate_stderr = self.run_cli(
+                "validate-workspace",
+                "--input",
+                str(workspace_root),
+                "--format",
+                "json",
+            )
+            self.assertEqual(validate_exit, 0)
+            self.assertEqual(validate_stderr, "")
+            self.assertTrue(json.loads(validate_stdout)["ok"])
+
+    def test_initialize_intake_workspace_can_skip_git_boundary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            workspace_root = Path(tmp_dir) / "mag-workspace"
+
+            exit_code, stdout, stderr = self.run_cli(
+                "initialize-intake-workspace",
+                "--input",
+                str(NSFC_SELECTION_INPUT),
+                "--workspace-root",
+                str(workspace_root),
+                "--no-git",
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["workspace_git"]["enabled"])
+            self.assertFalse((workspace_root / ".git").exists())
+            self.assertTrue((workspace_root / "workspace.json").exists())

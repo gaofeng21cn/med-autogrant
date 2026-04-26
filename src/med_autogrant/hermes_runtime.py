@@ -73,6 +73,10 @@ from med_autogrant.workspace import (
     summarize_workspace_document,
     validate_workspace_document,
 )
+from med_autogrant.workspace_scaffold import (
+    materialize_mag_directory_workspace,
+    resolve_mag_directory_workspace_document_path,
+)
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 
 from med_autogrant.hermes_runtime_parts.shared import *  # noqa: F401,F403
@@ -338,8 +342,15 @@ class HermesRuntimeSubstrate(HermesRuntimeAuthoringSurfaceMixin):
         self,
         *,
         input_path: str | Path,
-        output_path: str | Path,
+        output_path: str | Path | None = None,
+        workspace_root: str | Path | None = None,
+        initialize_git: bool = True,
     ) -> dict[str, Any]:
+        if output_path is None and workspace_root is None:
+            raise WorkspaceStateError("initialize-intake-workspace 需要 --output 或 --workspace-root。")
+        if output_path is not None and workspace_root is not None:
+            raise WorkspaceStateError("initialize-intake-workspace 只能指定 --output 或 --workspace-root 其中一个。")
+
         raw_input = _load_json_object(input_path, context="intake initialization input")
         if "funding_opportunity_pool" in raw_input:
             selection_input = raw_input
@@ -374,6 +385,37 @@ class HermesRuntimeSubstrate(HermesRuntimeAuthoringSurfaceMixin):
                 workspace_id=workspace.get("workspace_id"),
                 lifecycle_stage=workspace.get("lifecycle_stage"),
             )
+
+        if workspace_root is not None:
+            resolved_workspace_root = Path(workspace_root).expanduser().resolve()
+            resolved_output_path = resolve_mag_directory_workspace_document_path(resolved_workspace_root)
+            _guard_workspace_output_identity(
+                resolved_output_path,
+                workspace_document=workspace,
+                draft_id=None,
+            )
+            scaffold = materialize_mag_directory_workspace(
+                workspace_root=resolved_workspace_root,
+                workspace_document=workspace,
+                initialize_git=initialize_git,
+            )
+            _write_revised_workspace_output(resolved_output_path, workspace)
+            return {
+                "ok": True,
+                "command": "initialize-intake-workspace",
+                "selection_input_id": selection_input["selection_input_id"],
+                "grant_run_id": workspace["grant_run_id"],
+                "workspace_id": workspace["workspace_id"],
+                "draft_id": None,
+                "lifecycle_stage": workspace["lifecycle_stage"],
+                "output_path": str(resolved_output_path),
+                "workspace_root": str(resolved_workspace_root),
+                "workspace_path": str(resolved_output_path),
+                "workspace_git": scaffold["workspace_git"],
+                "workspace_scaffold": scaffold,
+                "project_profile_selection": selection,
+                "initialized_workspace": workspace,
+            }
 
         resolved_output_path = Path(output_path).expanduser().resolve()
         _guard_workspace_output_identity(

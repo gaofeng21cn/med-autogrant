@@ -36,9 +36,11 @@ from med_autogrant.workspace_types import (
     WorkspaceState,
     WorkspaceStateError,
 )
+from med_autogrant.workspace_scaffold import resolve_mag_workspace_document_path
+
 
 def load_workspace_document(path: str | Path) -> dict[str, Any]:
-    workspace_path = Path(path)
+    workspace_path = resolve_mag_workspace_document_path(path)
     try:
         payload = json.loads(workspace_path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
@@ -427,8 +429,6 @@ def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
 def _validate_schema(document: dict[str, Any]) -> list[ValidationIssue]:
     validator = _SchemaSubsetValidator(SchemaStore())
     return validator.validate(document, "nsfc-workspace.schema.json")
-
-
 
 
 

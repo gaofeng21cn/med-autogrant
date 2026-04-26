@@ -269,8 +269,8 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "select-project-profile", "required_fields": ["input_path"], "optional_fields": []},
     {
         "command": "initialize-intake-workspace",
-        "required_fields": ["input_path", "output_path"],
-        "optional_fields": [],
+        "required_fields": ["input_path"],
+        "optional_fields": ["output_path", "workspace_root", "initialize_git"],
     },
     {"command": "next-step", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "critique-summary", "required_fields": ["input_path"], "optional_fields": []},

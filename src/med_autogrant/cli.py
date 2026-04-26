@@ -79,6 +79,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_final_package_command,
     _add_grant_autonomy_controller_command,
     _add_hosted_contract_bundle_command,
+    _add_initialize_intake_workspace_command,
     _add_mainline_loop_command,
     _add_manifest_command,
     _add_output_workspace_command,
@@ -162,7 +163,7 @@ def build_parser() -> argparse.ArgumentParser:
         handle_select_project_profile,
         "从材料池与 funding pool 中选择推荐 project profile。",
     )
-    _add_output_workspace_command(
+    _add_initialize_intake_workspace_command(
         subparsers,
         "initialize-intake-workspace",
         handle_initialize_intake_workspace,

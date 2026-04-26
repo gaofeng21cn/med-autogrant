@@ -28,7 +28,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 在进入 repo-tracked workspace 之前，仍保留 pre-workspace intake 入口作为可选辅助：
 
-`selection_input materials -> select-project-profile -> initialize-intake-workspace -> input_intake workspace`
+`selection_input materials -> select-project-profile -> initialize-intake-workspace -> input_intake workspace directory / workspace.json`
 
 在这层之前，也保留 funding discovery 作为可选辅助：
 
@@ -145,7 +145,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - 目标中的 `OPL Runtime Manager` 只消费 `runtime_control.semantic_closure`、`skill_catalog.domain_projection.runtime_continuity`、`workspace progress / cockpit`、hosted contract bundle 与 artifact/wakeup locator；它不写 MAG authoring truth，也不替代 route-selected executor。
 - `runtime run` / `runtime resume` 直接通过 `MedAutoGrantDomainEntry -> HermesRuntimeSubstrate` 落到当前 runtime loop。
 - `pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting`、`pass critique`、`pass revision`、`pass freeze`、`package artifact-bundle`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
-- `select-project-profile` 与 `initialize-intake-workspace` 由 repo-side selector/initializer contract 持有材料池解析、profile/funding 匹配与 input-intake workspace 生成；在任务已锁定指定基金后，它们只作为显式唤醒的准备工具。
+- `select-project-profile` 与 `initialize-intake-workspace` 由 repo-side selector/initializer contract 持有材料池解析、profile/funding 匹配与 input-intake workspace 生成；新建 workspace 默认是目录型 scaffold，`workspace.json` 是 canonical document，workspace-local Git boundary 来自 `OPL` shared helper；在任务已锁定指定基金后，它们只作为显式唤醒的准备工具。
 - `discover-funding-opportunities` 由 repo-side funding landscape discovery contract 持有显式 catalog、机器可读过滤规则与候选池输出；默认不进入已锁定任务的正文 authoring gate。
 - `refresh-funding-opportunities-cache` 由 repo-side funding sync contract 持有官方来源抓取、按 source 增量刷新、cache snapshot 写入与 provenance 证据保留；它服务候选池维护，不直接定义正文完成态。
 - `funding_landscape_diff_report` 则承担 refresh 前后差异、`withdrawn_or_not_listed` 检测与变化摘要。

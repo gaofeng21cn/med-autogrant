@@ -274,9 +274,11 @@ def _render_text(command: str, payload: dict[str, Any]) -> str:
             f"grant_run_id: {payload['grant_run_id']}",
             f"workspace_id: {payload['workspace_id']}",
             f"lifecycle_stage: {payload['lifecycle_stage']}",
-            f"output_path: {payload['output_path']}",
+            f"workspace_path: {payload.get('workspace_path') or payload['output_path']}",
             f"推荐 profile: {payload['project_profile_selection']['recommended_project_profile']['profile_label']}",
         ]
+        if payload.get("workspace_root"):
+            lines.insert(4, f"workspace_root: {payload['workspace_root']}")
         return "\n".join(lines)
 
     if command == "next-step":

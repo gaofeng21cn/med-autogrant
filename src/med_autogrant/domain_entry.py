@@ -38,7 +38,8 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "select-project-profile": DomainEntryCommandSpec("select_project_profile", ("input_path",)),
     "initialize-intake-workspace": DomainEntryCommandSpec(
         "initialize_intake_workspace",
-        ("input_path", "output_path"),
+        ("input_path",),
+        ("output_path", "workspace_root", "initialize_git"),
     ),
     "next-step": DomainEntryCommandSpec("next_step", ("input_path",)),
     "critique-summary": DomainEntryCommandSpec("critique_summary", ("input_path",)),
