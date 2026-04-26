@@ -749,6 +749,19 @@ class ProductEntryManifestBuilderMixin:
                 context="product_entry_shell.grant_user_loop",
             ),
         }
+        skill_catalog_command = public_cli_command(
+            "skill-catalog",
+            "--input",
+            str(resolved_input_path),
+            "--format",
+            "json",
+        )
+        opl_runtime_manager_registration = _build_opl_runtime_manager_registration(
+            runtime_summary=runtime_summary,
+            runtime_continuity=runtime_continuity,
+            shell_commands=shell_commands,
+            skill_catalog_command=skill_catalog_command,
+        )
         skill_catalog = _build_shared_skill_catalog(
             summary="Canonical Med Auto Grant app skill plus machine-readable command contracts.",
             skills=[
@@ -777,6 +790,7 @@ class ProductEntryManifestBuilderMixin:
                         ],
                         "shell_commands": shell_commands,
                         "runtime_continuity": dict(runtime_continuity),
+                        "opl_runtime_manager_registration": dict(opl_runtime_manager_registration),
                     },
                 )
             ],

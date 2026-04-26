@@ -95,6 +95,27 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertIn("runtime resume", runtime_continuity["recommended_resume_command"])
         self.assertIn("workspace progress", runtime_continuity["recommended_progress_command"])
         self.assertIn("workspace summarize", runtime_continuity["recommended_artifact_command"])
+        runtime_manager_registration = domain_projection["opl_runtime_manager_registration"]
+        self.assertEqual(
+            runtime_manager_registration["surface_kind"],
+            "opl_runtime_manager_domain_registration",
+        )
+        self.assertEqual(runtime_manager_registration["registration_id"], "mag.opl_runtime_manager.registration.v1")
+        self.assertEqual(runtime_manager_registration["domain_id"], "medautogrant")
+        self.assertEqual(runtime_manager_registration["domain_owner"], "med-autogrant")
+        self.assertIn("skill-catalog", runtime_manager_registration["registration_surface"]["command"])
+        self.assertIn(
+            "/runtime_control/semantic_closure",
+            runtime_manager_registration["consumable_projection_refs"],
+        )
+        self.assertEqual(
+            runtime_manager_registration["state_index_inputs"]["attention_queue_index"],
+            "/automation/automations/1",
+        )
+        self.assertEqual(
+            runtime_manager_registration["wakeup_boundary"]["policy"],
+            "explicit_authoring_loop_continuation",
+        )
         self.assertIn("supported_commands", skill_catalog)
         self.assertIn("command_contracts", skill_catalog)
 

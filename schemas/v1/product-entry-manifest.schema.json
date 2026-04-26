@@ -894,6 +894,107 @@
         }
       }
     },
+    "oplRuntimeManagerRegistration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "registration_id",
+        "manager_surface_id",
+        "domain_id",
+        "domain_owner",
+        "runtime_owner",
+        "executor_owner",
+        "domain_entry_surface",
+        "registration_surface",
+        "consumable_projection_refs",
+        "state_index_inputs",
+        "resume_contract",
+        "wakeup_boundary",
+        "non_goals"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "opl_runtime_manager_domain_registration"
+        },
+        "version": {
+          "const": "v1"
+        },
+        "registration_id": {
+          "const": "mag.opl_runtime_manager.registration.v1"
+        },
+        "manager_surface_id": {
+          "const": "opl_runtime_manager"
+        },
+        "domain_id": {
+          "const": "medautogrant"
+        },
+        "domain_owner": {
+          "const": "med-autogrant"
+        },
+        "runtime_owner": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "executor_owner": {
+          "const": "med-autogrant"
+        },
+        "domain_entry_surface": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["surface_kind", "command", "manifest_command"]
+        },
+        "registration_surface": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["surface_kind", "ref", "command"]
+        },
+        "consumable_projection_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "state_index_inputs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "required": [
+            "workspace_registry_index",
+            "managed_session_ledger_index",
+            "artifact_projection_index",
+            "attention_queue_index",
+            "runtime_health_snapshot_index"
+          ]
+        },
+        "resume_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "session_locator_field",
+            "recommended_resume_command",
+            "recommended_progress_command"
+          ],
+          "properties": {
+            "session_locator_field": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "recommended_resume_command": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "recommended_progress_command": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "wakeup_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["owner", "surface_ref", "policy"]
+        },
+        "non_goals": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
     "skillDomainProjection": {
       "type": "object",
       "additionalProperties": false,
@@ -906,7 +1007,8 @@
         "recommended_shell",
         "supporting_shell_keys",
         "shell_commands",
-        "runtime_continuity"
+        "runtime_continuity",
+        "opl_runtime_manager_registration"
       ],
       "properties": {
         "plugin_name": {
@@ -960,6 +1062,9 @@
         },
         "runtime_continuity": {
           "$ref": "#/$defs/skillRuntimeContinuitySurface"
+        },
+        "opl_runtime_manager_registration": {
+          "$ref": "#/$defs/oplRuntimeManagerRegistration"
         }
       }
     },

@@ -328,6 +328,81 @@ def _build_skill_runtime_continuity_envelope(
         ),
     }
 
+
+def _build_opl_runtime_manager_registration(
+    *,
+    runtime_summary: Mapping[str, Any],
+    runtime_continuity: Mapping[str, Any],
+    shell_commands: Mapping[str, str],
+    skill_catalog_command: str,
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "opl_runtime_manager_domain_registration",
+        "version": "v1",
+        "registration_id": "mag.opl_runtime_manager.registration.v1",
+        "manager_surface_id": "opl_runtime_manager",
+        "domain_id": "medautogrant",
+        "domain_owner": TARGET_DOMAIN_ID,
+        "runtime_owner": _require_nonempty_string_from_mapping(
+            runtime_summary,
+            "runtime_owner",
+            context="runtime_summary",
+        ),
+        "executor_owner": "med-autogrant",
+        "domain_entry_surface": {
+            "surface_kind": PRODUCT_FRONTDESK_KIND,
+            "command": shell_commands["product_frontdesk"],
+            "manifest_command": skill_catalog_command,
+        },
+        "registration_surface": {
+            "surface_kind": "skill_catalog",
+            "ref": "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",
+            "command": skill_catalog_command,
+        },
+        "consumable_projection_refs": [
+            "/skill_catalog/skills/0/domain_projection/runtime_continuity",
+            "/runtime_control/semantic_closure",
+            "/artifact_inventory",
+            "/automation/automations/1",
+        ],
+        "state_index_inputs": {
+            "workspace_registry_index": "/workspace_locator",
+            "managed_session_ledger_index": "/session_continuity",
+            "artifact_projection_index": "/artifact_inventory",
+            "attention_queue_index": "/automation/automations/1",
+            "runtime_health_snapshot_index": "/runtime_inventory",
+        },
+        "resume_contract": {
+            "session_locator_field": _require_nonempty_string_from_mapping(
+                runtime_continuity,
+                "session_locator_field",
+                context="runtime_continuity",
+            ),
+            "recommended_resume_command": _require_nonempty_string_from_mapping(
+                runtime_continuity,
+                "recommended_resume_command",
+                context="runtime_continuity",
+            ),
+            "recommended_progress_command": _require_nonempty_string_from_mapping(
+                runtime_continuity,
+                "recommended_progress_command",
+                context="runtime_continuity",
+            ),
+        },
+        "wakeup_boundary": {
+            "owner": TARGET_DOMAIN_ID,
+            "surface_ref": "/automation/automations/1",
+            "policy": "explicit_authoring_loop_continuation",
+        },
+        "non_goals": [
+            "not_a_grant_truth_owner",
+            "not_a_quality_gate",
+            "not_a_submission_ready_export_gate",
+            "not_a_concrete_authoring_executor",
+        ],
+    }
+
+
 def _build_session_continuity_surface(
     *,
     grant_run_id: str,

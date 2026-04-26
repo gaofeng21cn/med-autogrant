@@ -28,6 +28,7 @@
         "domain_entry_contract",
         "runtime_control.semantic_closure",
         "skill_catalog.domain_projection.runtime_continuity",
+        "skill_catalog.domain_projection.opl_runtime_manager_registration",
         "workspace progress / cockpit",
         "artifact inventory and explicit wakeup/TODO queue"
       ],
@@ -144,6 +145,7 @@
         "domain_entry_contract",
         "runtime_control",
         "runtime_continuity",
+        "opl_runtime_manager_registration",
         "workspace progress",
         "workspace cockpit",
         "hosted contract bundle"

@@ -424,6 +424,7 @@ class SchemaRegistryTest(unittest.TestCase):
                 "supporting_shell_keys",
                 "shell_commands",
                 "runtime_continuity",
+                "opl_runtime_manager_registration",
             ],
         )
         self.assertEqual(skill_projection["properties"]["skill_semantics"]["const"], "domain_app")
@@ -431,6 +432,14 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(
             skill_projection["properties"]["runtime_continuity"]["$ref"],
             "#/$defs/skillRuntimeContinuitySurface",
+        )
+        self.assertEqual(
+            skill_projection["properties"]["opl_runtime_manager_registration"]["$ref"],
+            "#/$defs/oplRuntimeManagerRegistration",
+        )
+        self.assertEqual(
+            manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["properties"]["surface_kind"]["const"],
+            "opl_runtime_manager_domain_registration",
         )
 
         runtime_continuity = manifest_schema["$defs"]["skillRuntimeContinuitySurface"]
