@@ -49,6 +49,7 @@ Date: `2026-04-26`
 - 当前新增全链路自治入口：`pass mainline-loop`（internal command: `execute-authoring-mainline-loop`）
 - 当前新增长期 controller 入口：`pass autonomy-controller`（internal command: `execute-grant-autonomy-controller`）
 - 当前新增质量治理入口：`workspace quality-scorecard`、`workspace quality-closure-dossier` 与 `workspace quality-diff`
+- 当前 AI-first 质量边界：`grant_quality_scorecard` / `grant_quality_closure_dossier` 只是 AI critique-backed aggregator。结构字段完整性、证据链接和分数只能作为 completeness signal；没有当前 active AI critique 或 AI-authored quality assessment 时，scorecard 必须标记 `assessment_owner=projection_only`、`ai_reviewer_required=true`，不得产生 `near_submission_candidate` / `submission_grade_candidate`。
 - 当前质量治理已补齐 `issue lineage` 合同：同一问题在 revision 后即使摘要改写，`quality diff` 也会优先按 lineage 跟踪关闭进度，而不是把它误记成“旧问题关闭 + 新问题打开”。
 - 当前质量治理已补齐 `closure dossier` 合同：同一轮 quality evaluation 会把 open issue lineage、evidence supply queue 与 queue-only reselection gap 收口成 formal closure package，供 controller / human operator 直接消费。
 - 当前 `pass critique-loop` 与 `pass mainline-loop` 的 loop report 已正式携带 `grant_quality_scorecard` 与 `grant_quality_closure_dossier`，每轮质量状态、closure package 与 stop/continue 依据不再只停留在 route reason。

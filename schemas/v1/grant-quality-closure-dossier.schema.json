@@ -17,7 +17,10 @@
         "overall_status",
         "overall_score",
         "summary",
-        "loop_gate"
+        "loop_gate",
+        "assessment_owner",
+        "ai_reviewer_required",
+        "review_artifact_ref"
       ],
       "properties": {
         "overall_status": {
@@ -38,6 +41,19 @@
         },
         "loop_gate": {
           "$ref": "grant-quality-scorecard.schema.json#/$defs/loopGate"
+        },
+        "assessment_owner": {
+          "type": "string",
+          "enum": [
+            "ai_reviewer_backed",
+            "projection_only"
+          ]
+        },
+        "ai_reviewer_required": {
+          "type": "boolean"
+        },
+        "review_artifact_ref": {
+          "$ref": "#/$defs/nullableString"
         }
       }
     },

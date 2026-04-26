@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -78,6 +79,20 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                 "max_rollbacks": 0,
             },
         }
+
+    def test_runtime_quality_evaluator_keeps_projection_only_scorecard_not_ready(self) -> None:
+        from med_autogrant.hermes_runtime_parts.runtime_ops import build_autonomy_quality_evaluator_output
+
+        workspace = json.loads((REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json").read_text(encoding="utf-8"))
+        for critique in workspace["mentor_critiques"]:
+            critique.get("metadata", {}).pop("owner", None)
+
+        quality_output = build_autonomy_quality_evaluator_output(workspace)
+
+        self.assertEqual(quality_output["quality_status"], "not_ready")
+        self.assertIn("AI reviewer-backed critique", quality_output["unresolved_blockers"][0])
+        self.assertTrue(quality_output["blocker_report"]["ai_reviewer_required"])
+        self.assertEqual(quality_output["blocker_report"]["assessment_owner"], "projection_only")
 
     def _closure_package(
         self,

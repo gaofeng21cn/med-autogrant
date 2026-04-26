@@ -39,6 +39,32 @@ class RevisionExecutorCliTest(unittest.TestCase):
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
 
+    def test_execute_revision_pass_requires_ai_backed_active_critique(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            workspace_path = tmp_path / "projection-only-workspace.json"
+            output_path = tmp_path / "revised-workspace.json"
+            workspace = json.loads(P2C_CRITIQUE_EXAMPLE_PATH.read_text(encoding="utf-8"))
+            for critique in workspace["mentor_critiques"]:
+                critique.get("metadata", {}).pop("owner", None)
+            workspace_path.write_text(json.dumps(workspace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+            exit_code, stdout, stderr = self.run_cli(
+                "execute-revision-pass",
+                "--input",
+                str(workspace_path),
+                "--output",
+                str(output_path),
+                "--format",
+                "json",
+            )
+
+            self.assertNotEqual(exit_code, 0)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["ok"])
+            self.assertIn("AI reviewer-backed critique", payload["error"])
+
     def test_execute_revision_pass_writes_revised_workspace_from_initial_critique(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             output_path = Path(tmp_dir) / "revised-workspace.json"

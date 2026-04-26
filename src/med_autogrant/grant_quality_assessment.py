@@ -457,7 +457,10 @@ def _resolve_overall_status(
     lifecycle_stage: str,
     blocked_dimensions: list[dict[str, Any]],
     unresolved_hard_issues: list[str],
+    ai_reviewer_required: bool = False,
 ) -> str:
+    if ai_reviewer_required:
+        return "blocked"
     if blocked_dimensions:
         return "blocked"
     if (
@@ -477,7 +480,14 @@ def _build_loop_gate(
     overall_score: int,
     blocked_dimensions: list[dict[str, Any]],
     unresolved_hard_issues: list[str],
+    ai_reviewer_required: bool = False,
 ) -> dict[str, Any]:
+    if ai_reviewer_required:
+        return {
+            "action": "continue",
+            "recommended_stage": "critique",
+            "reason": "AI reviewer-backed critique is required before grant quality can be marked near-submission or submission-grade.",
+        }
     if blocked_dimensions:
         blocker = blocked_dimensions[0]
         recommended_stage = blocker.get("rollback_stage") or "revision"
@@ -511,7 +521,10 @@ def _build_scorecard_summary(
     overall_score: int,
     blocked_dimensions: list[dict[str, Any]],
     unresolved_hard_issues: list[str],
+    ai_reviewer_required: bool = False,
 ) -> str:
+    if ai_reviewer_required:
+        return f"当前版本结构质量得分 {overall_score}，但缺少 AI reviewer-backed critique，不能给出 submission-grade 或 near-submission 质量判断。"
     if overall_status == "submission_grade_candidate":
         return f"当前版本质量得分 {overall_score}，已达到 submission-grade candidate。"
     if blocked_dimensions:

@@ -67,6 +67,7 @@ def build_critique_execution_document(
     critique = _normalize_mentor_critique(
         critique_context=critique_context,
         critique_policy=critique_policy,
+        executor_payload=executor_payload,
         payload=_require_object(payload, "mentor_critique"),
     )
     revision_plan = _normalize_revision_plan(
@@ -357,9 +358,17 @@ def _normalize_mentor_critique(
     *,
     critique_context: dict[str, Any],
     critique_policy: dict[str, Any],
+    executor_payload: dict[str, Any],
     payload: dict[str, Any],
 ) -> dict[str, Any]:
     critique = deepcopy(payload)
+    metadata = dict(critique.get("metadata") or {})
+    executor_kind = str(executor_payload.get("kind") or "").strip()
+    if executor_kind == "hermes_native_full_agent_loop":
+        metadata["owner"] = "Hermes-native critique proof executor"
+    else:
+        metadata["owner"] = "Codex CLI critique executor"
+    critique["metadata"] = metadata
     critique["draft_id"] = critique_context["draft_id"]
     critique["critique_id"] = critique_context["next_critique_id"]
     critique["current_scientific_question"] = critique_context["selected_question"]["core_question"]

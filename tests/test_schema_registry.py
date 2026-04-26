@@ -559,6 +559,9 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("evidence_obligations", tracked_issue_required)
         self.assertIn("recommended_closure_action", tracked_issue_required)
         scorecard_required = scorecard_schema["$defs"]["grantQualityScorecard"]["required"]
+        self.assertIn("assessment_owner", scorecard_required)
+        self.assertIn("ai_reviewer_required", scorecard_required)
+        self.assertIn("review_artifact_ref", scorecard_required)
         self.assertIn("evidence_supply_queue", scorecard_required)
         supply_item_required = scorecard_schema["$defs"]["evidenceSupplyQueueItem"]["required"]
         self.assertIn("gap_id", supply_item_required)
@@ -601,6 +604,10 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("unclosed_hard_issues", dossier_required)
         self.assertIn("evidence_supply_queue_summary", dossier_required)
         self.assertIn("closure_packages", dossier_required)
+        quality_summary_required = dossier_schema["$defs"]["qualitySummary"]["required"]
+        self.assertIn("assessment_owner", quality_summary_required)
+        self.assertIn("ai_reviewer_required", quality_summary_required)
+        self.assertIn("review_artifact_ref", quality_summary_required)
         closure_package_required = dossier_schema["$defs"]["closurePackage"]["required"]
         self.assertIn("closure_id", closure_package_required)
         self.assertIn("severity", closure_package_required)
