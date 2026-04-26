@@ -40,7 +40,7 @@ Date: `2026-04-26`
 - 当前稳定可调用面：`CLI` / `MedAutoGrantDomainEntry`、本地脚本、`product build-entry` / `product manifest` / `product frontdesk` / `product direct-entry` / `product user-loop`，以及对应 schema-backed contract；它们都挂在单一 `Med Auto Grant` app skill 之下。
 - 当前 `product skill-catalog` 已收口为单一 `Med Auto Grant` app skill；`frontdesk`、`direct-entry`、`user-loop` 等继续作为这个 app skill 的内部 command contract 暴露给 `Codex` / `OPL`。
 - 同一 skill descriptor 的 `domain_projection` 现已带 `runtime_continuity` envelope，复用 `session_continuity`、`progress_projection`、`artifact_inventory`、`runtime_control.semantic_closure` 真相面，把 authoring continuity、funding call lock、quality closure surface 与 submission-ready gate 语义一起供 `Codex` / `OPL` 直接消费。
-- 同一 `domain_projection` 现已暴露 `opl_runtime_manager_registration` v1：OPL Runtime Manager 可以索引 MAG 的 runtime_control、runtime_continuity、artifact inventory、authoring-loop wakeup 与 runtime health 输入；其中高频 workspace/session/artifact/TODO/runtime-health 索引可由 OPL Rust native helper 消费，但不得复制 grant truth 或绕过 submission-ready export gate。
+- 同一 `domain_projection` 现已暴露 `opl_runtime_manager_registration` v1：OPL Runtime Manager 可以索引 MAG 的 runtime_control、runtime_continuity、artifact inventory、authoring-loop wakeup 与 runtime health 输入；其中高频 workspace/session/artifact/TODO/runtime-health 索引可由 OPL Rust native helper 消费，并由 `native_helper_consumption.proof_surface` 固定 coverage、只读写入边界与 MAG-owned gate 边界，但不得复制 grant truth 或绕过 submission-ready export gate。
 - 当前主任务完成语义：以正文科学性与 authoring quality 为主，不把单一导出命令当作主任务完成替代。
 - 当前 `package submission-ready` 语义：继续作为更严格的本地提交包导出面；它是高标准交付导出能力，不是 authoring 主任务的唯一完成条件。
 - 当前形式审查/客观补件语义：默认进入 `TODO` 与显式唤醒链路；仅在直接破坏科学论证成立性时升级为正文 authoring blocker。

@@ -380,6 +380,7 @@ def _build_opl_runtime_manager_registration(
                 "Rust helpers may index MAG workspace, session, artifact, TODO/attention, and runtime-health "
                 "surfaces, but MAG author-side grant truth remains authoritative."
             ),
+            "proof_surface": _build_opl_native_helper_indexing_proof(),
             "indexes": {
                 "workspace_registry_index": {
                     "input_ref": "/workspace_locator",
@@ -430,6 +431,66 @@ def _build_opl_runtime_manager_registration(
             "not_a_quality_gate",
             "not_a_submission_ready_export_gate",
             "not_a_concrete_authoring_executor",
+        ],
+    }
+
+
+def _build_opl_native_helper_indexing_proof() -> dict[str, Any]:
+    return {
+        "surface_kind": "opl_native_helper_indexing_proof",
+        "version": 1,
+        "proof_id": "mag.opl_rust_native_helper.indexing_proof.v1",
+        "status": "proof_surface_landed",
+        "covered_index_keys": [
+            "workspace_registry_index",
+            "managed_session_ledger_index",
+            "artifact_projection_index",
+            "attention_queue_index",
+            "runtime_health_snapshot_index",
+        ],
+        "coverage": {
+            "workspace_registry_index": {
+                "input_ref": "/workspace_locator",
+                "source_surface_kind": "workspace_locator",
+                "proof_role": "workspace_registry_indexing",
+                "write_policy": "opl_index_only",
+            },
+            "managed_session_ledger_index": {
+                "input_ref": "/session_continuity",
+                "source_surface_kind": "session_continuity",
+                "proof_role": "session_ledger_indexing",
+                "write_policy": "opl_index_only",
+            },
+            "artifact_projection_index": {
+                "input_ref": "/artifact_inventory",
+                "source_surface_kind": "artifact_inventory",
+                "proof_role": "artifact_projection_indexing",
+                "write_policy": "opl_index_only",
+            },
+            "attention_queue_index": {
+                "input_ref": "/automation/automations/1",
+                "source_surface_kind": "automation_descriptor",
+                "proof_role": "todo_wakeup_indexing",
+                "write_policy": "opl_index_only",
+            },
+            "runtime_health_snapshot_index": {
+                "input_ref": "/runtime_inventory",
+                "source_surface_kind": "runtime_inventory",
+                "proof_role": "runtime_health_indexing",
+                "write_policy": "opl_index_only",
+            },
+        },
+        "readonly_boundaries": [
+            "rust_helper_outputs_are_opl_indexes_only",
+            "mag_repo_tracked_truth_remains_authoritative",
+            "quality_gate_remains_mag_owned",
+            "submission_ready_gate_remains_mag_owned",
+        ],
+        "authoritative_surfaces": [
+            "contracts/runtime-program/current-program.json",
+            "runtime_control.semantic_closure",
+            "skill_catalog.domain_projection.runtime_continuity",
+            "package submission-ready",
         ],
     }
 

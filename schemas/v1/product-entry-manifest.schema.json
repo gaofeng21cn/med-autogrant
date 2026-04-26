@@ -1007,6 +1007,7 @@
         "language",
         "managed_by",
         "source_of_truth_rule",
+        "proof_surface",
         "indexes"
       ],
       "properties": {
@@ -1022,6 +1023,9 @@
         "source_of_truth_rule": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
+        "proof_surface": {
+          "$ref": "#/$defs/oplNativeHelperIndexingProof"
+        },
         "indexes": {
           "type": "object",
           "additionalProperties": {
@@ -1034,6 +1038,120 @@
             "attention_queue_index",
             "runtime_health_snapshot_index"
           ]
+        }
+      }
+    },
+    "oplNativeHelperIndexingProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "proof_id",
+        "status",
+        "covered_index_keys",
+        "coverage",
+        "readonly_boundaries",
+        "authoritative_surfaces"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "opl_native_helper_indexing_proof"
+        },
+        "version": {
+          "type": "integer",
+          "const": 1
+        },
+        "proof_id": {
+          "const": "mag.opl_rust_native_helper.indexing_proof.v1"
+        },
+        "status": {
+          "const": "proof_surface_landed"
+        },
+        "covered_index_keys": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "workspace_registry_index",
+              "managed_session_ledger_index",
+              "artifact_projection_index",
+              "attention_queue_index",
+              "runtime_health_snapshot_index"
+            ]
+          },
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "workspace_registry_index",
+            "managed_session_ledger_index",
+            "artifact_projection_index",
+            "attention_queue_index",
+            "runtime_health_snapshot_index"
+          ],
+          "properties": {
+            "workspace_registry_index": {
+              "$ref": "#/$defs/oplNativeHelperIndexProof"
+            },
+            "managed_session_ledger_index": {
+              "$ref": "#/$defs/oplNativeHelperIndexProof"
+            },
+            "artifact_projection_index": {
+              "$ref": "#/$defs/oplNativeHelperIndexProof"
+            },
+            "attention_queue_index": {
+              "$ref": "#/$defs/oplNativeHelperIndexProof"
+            },
+            "runtime_health_snapshot_index": {
+              "$ref": "#/$defs/oplNativeHelperIndexProof"
+            }
+          }
+        },
+        "readonly_boundaries": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "authoritative_surfaces": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "oplNativeHelperIndexProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_ref",
+        "source_surface_kind",
+        "proof_role",
+        "write_policy"
+      ],
+      "properties": {
+        "input_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "source_surface_kind": {
+          "enum": [
+            "workspace_locator",
+            "session_continuity",
+            "artifact_inventory",
+            "automation_descriptor",
+            "runtime_inventory"
+          ]
+        },
+        "proof_role": {
+          "enum": [
+            "workspace_registry_indexing",
+            "session_ledger_indexing",
+            "artifact_projection_indexing",
+            "todo_wakeup_indexing",
+            "runtime_health_indexing"
+          ]
+        },
+        "write_policy": {
+          "const": "opl_index_only"
         }
       }
     },

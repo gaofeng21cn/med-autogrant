@@ -449,6 +449,12 @@ class SchemaRegistryTest(unittest.TestCase):
             "native_helper_consumption"
         ]
         self.assertEqual(native_helper_consumption["$ref"], "#/$defs/oplNativeHelperConsumption")
+        self.assertIn("proof_surface", manifest_schema["$defs"]["oplNativeHelperConsumption"]["required"])
+        self.assertEqual(
+            manifest_schema["$defs"]["oplNativeHelperConsumption"]["properties"]["proof_surface"]["$ref"],
+            "#/$defs/oplNativeHelperIndexingProof",
+        )
+        self.assertIn("todo_wakeup_indexing", manifest_schema["$defs"]["oplNativeHelperIndexProof"]["properties"]["proof_role"]["enum"])
 
         runtime_continuity = manifest_schema["$defs"]["skillRuntimeContinuitySurface"]
         self.assertEqual(runtime_continuity["properties"]["surface_kind"]["const"], "skill_runtime_continuity")

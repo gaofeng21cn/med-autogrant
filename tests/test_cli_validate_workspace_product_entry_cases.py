@@ -128,6 +128,48 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
             "opl-state-indexer",
         )
         self.assertTrue(native_helper_consumption["source_of_truth_rule"].startswith("Rust helpers may index MAG"))
+        proof_surface = native_helper_consumption["proof_surface"]
+        self.assertEqual(proof_surface["surface_kind"], "opl_native_helper_indexing_proof")
+        self.assertEqual(proof_surface["proof_id"], "mag.opl_rust_native_helper.indexing_proof.v1")
+        self.assertEqual(
+            proof_surface["covered_index_keys"],
+            [
+                "workspace_registry_index",
+                "managed_session_ledger_index",
+                "artifact_projection_index",
+                "attention_queue_index",
+                "runtime_health_snapshot_index",
+            ],
+        )
+        self.assertEqual(
+            proof_surface["coverage"]["artifact_projection_index"]["proof_role"],
+            "artifact_projection_indexing",
+        )
+        self.assertEqual(
+            proof_surface["coverage"]["artifact_projection_index"]["input_ref"],
+            "/artifact_inventory",
+        )
+        self.assertEqual(
+            proof_surface["coverage"]["attention_queue_index"]["proof_role"],
+            "todo_wakeup_indexing",
+        )
+        self.assertEqual(
+            proof_surface["coverage"]["attention_queue_index"]["input_ref"],
+            "/automation/automations/1",
+        )
+        self.assertEqual(
+            proof_surface["coverage"]["runtime_health_snapshot_index"]["proof_role"],
+            "runtime_health_indexing",
+        )
+        self.assertEqual(
+            proof_surface["coverage"]["runtime_health_snapshot_index"]["input_ref"],
+            "/runtime_inventory",
+        )
+        for proof in proof_surface["coverage"].values():
+            self.assertEqual(proof["write_policy"], "opl_index_only")
+        self.assertIn("mag_repo_tracked_truth_remains_authoritative", proof_surface["readonly_boundaries"])
+        self.assertIn("quality_gate_remains_mag_owned", proof_surface["readonly_boundaries"])
+        self.assertIn("submission_ready_gate_remains_mag_owned", proof_surface["readonly_boundaries"])
         self.assertIn("supported_commands", skill_catalog)
         self.assertIn("command_contracts", skill_catalog)
 
