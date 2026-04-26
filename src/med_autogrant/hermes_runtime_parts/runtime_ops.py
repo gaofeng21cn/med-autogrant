@@ -221,13 +221,18 @@ def _build_autonomy_quality_evaluator_output(workspace: dict[str, Any]) -> dict[
     scorecard = facade.build_grant_quality_scorecard(workspace)
     closure_dossier = facade.build_grant_quality_closure_dossier(workspace)
     overall_status = str(scorecard.get("overall_status") or "")
-    quality_status = overall_status if overall_status in {
+    ai_reviewer_required = bool(scorecard.get("ai_reviewer_required"))
+    quality_status = overall_status if not ai_reviewer_required and overall_status in {
         "submission_grade_candidate",
         "near_submission_candidate",
     } else "not_ready"
     tracked_issues = scorecard.get("tracked_issues") if isinstance(scorecard.get("tracked_issues"), list) else []
     evidence_supply_queue = scorecard.get("evidence_supply_queue") if isinstance(scorecard.get("evidence_supply_queue"), list) else []
     unresolved_blockers = list(scorecard.get("unresolved_hard_issues") or [])
+    if ai_reviewer_required:
+        unresolved_blockers.append(
+            "AI reviewer-backed critique is required before grant quality can be marked near-submission or submission-grade."
+        )
     unresolved_blockers.extend(
         str(issue.get("summary") or "")
         for issue in tracked_issues

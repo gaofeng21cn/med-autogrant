@@ -21,6 +21,51 @@ def _load_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _mark_active_critique_ai_backed(document: dict[str, object]) -> None:
+    active_revision_plan_id = document["current_selection"]["active_revision_plan_id"]  # type: ignore[index]
+    active_revision_plan = next(
+        item
+        for item in document["revision_plans"]  # type: ignore[index]
+        if item["revision_plan_id"] == active_revision_plan_id
+    )
+    critique = next(
+        item
+        for item in document["mentor_critiques"]  # type: ignore[index]
+        if item["critique_id"] == active_revision_plan["critique_id"]
+    )
+    critique.setdefault("metadata", {})["owner"] = "Codex CLI critique executor"
+
+
+def _remove_active_critique_ai_owner(document: dict[str, object]) -> None:
+    active_revision_plan_id = document["current_selection"]["active_revision_plan_id"]  # type: ignore[index]
+    active_revision_plan = next(
+        item
+        for item in document["revision_plans"]  # type: ignore[index]
+        if item["revision_plan_id"] == active_revision_plan_id
+    )
+    critique = next(
+        item
+        for item in document["mentor_critiques"]  # type: ignore[index]
+        if item["critique_id"] == active_revision_plan["critique_id"]
+    )
+    critique.get("metadata", {}).pop("owner", None)
+
+
+def _set_active_critique_owner(document: dict[str, object], owner: str) -> None:
+    active_revision_plan_id = document["current_selection"]["active_revision_plan_id"]  # type: ignore[index]
+    active_revision_plan = next(
+        item
+        for item in document["revision_plans"]  # type: ignore[index]
+        if item["revision_plan_id"] == active_revision_plan_id
+    )
+    critique = next(
+        item
+        for item in document["mentor_critiques"]  # type: ignore[index]
+        if item["critique_id"] == active_revision_plan["critique_id"]
+    )
+    critique.setdefault("metadata", {})["owner"] = owner
+
+
 class GrantQualityScorecardTest(unittest.TestCase):
     def test_scorecard_surfaces_blockers_and_route_recommendation_for_critique_workspace(self) -> None:
         from med_autogrant.grant_quality import build_grant_quality_scorecard
@@ -53,17 +98,45 @@ class GrantQualityScorecardTest(unittest.TestCase):
             any(item["dimension_id"] == "necessity_value_closure" for item in scorecard["tracked_issues"])
         )
 
-    def test_scorecard_marks_frozen_workspace_as_submission_grade_candidate(self) -> None:
+    def test_scorecard_requires_ai_backed_critique_before_candidate_status(self) -> None:
         from med_autogrant.grant_quality import build_grant_quality_scorecard
 
         frozen_workspace = _load_json(FROZEN_EXAMPLE_PATH)
+        _remove_active_critique_ai_owner(frozen_workspace)
         scorecard = build_grant_quality_scorecard(frozen_workspace)
 
+        self.assertEqual(scorecard["assessment_owner"], "projection_only")
+        self.assertTrue(scorecard["ai_reviewer_required"])
+        self.assertEqual(scorecard["overall_status"], "blocked")
+        self.assertEqual(scorecard["loop_gate"]["action"], "continue")
+        self.assertEqual(scorecard["loop_gate"]["recommended_stage"], "critique")
+
+    def test_scorecard_marks_ai_backed_frozen_workspace_as_submission_grade_candidate(self) -> None:
+        from med_autogrant.grant_quality import build_grant_quality_scorecard
+
+        frozen_workspace = _load_json(FROZEN_EXAMPLE_PATH)
+        _mark_active_critique_ai_backed(frozen_workspace)
+        scorecard = build_grant_quality_scorecard(frozen_workspace)
+
+        self.assertEqual(scorecard["assessment_owner"], "ai_reviewer_backed")
+        self.assertFalse(scorecard["ai_reviewer_required"])
+        self.assertEqual(scorecard["review_artifact_ref"], "mentor_critiques::critique-v1")
         self.assertEqual(scorecard["overall_status"], "submission_grade_candidate")
         self.assertEqual(scorecard["loop_gate"]["action"], "ready_for_submission")
         self.assertIsNone(scorecard["loop_gate"]["recommended_stage"])
         self.assertEqual(scorecard["unresolved_hard_issues"], [])
         self.assertGreaterEqual(scorecard["overall_score"], 85)
+
+    def test_scorecard_rejects_imprecise_critique_owner_as_projection_only(self) -> None:
+        from med_autogrant.grant_quality import build_grant_quality_scorecard
+
+        frozen_workspace = _load_json(FROZEN_EXAMPLE_PATH)
+        _set_active_critique_owner(frozen_workspace, "not a Codex reviewer")
+        scorecard = build_grant_quality_scorecard(frozen_workspace)
+
+        self.assertEqual(scorecard["assessment_owner"], "projection_only")
+        self.assertTrue(scorecard["ai_reviewer_required"])
+        self.assertEqual(scorecard["overall_status"], "blocked")
 
     def test_scorecard_attaches_closure_governance_to_open_hard_issues(self) -> None:
         from med_autogrant.grant_quality import build_grant_quality_scorecard

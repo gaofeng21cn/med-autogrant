@@ -11,6 +11,7 @@ from med_autogrant.workspace import (
     _require_workspace_context,
     _serialize_reviewed_revision_evidence,
 )
+from med_autogrant.ai_first_boundaries import require_active_ai_backed_critique
 
 
 ALLOWED_ACTION_TYPES = {
@@ -29,6 +30,7 @@ def build_revision_execution_document(*, document: dict[str, Any]) -> dict[str, 
     active_draft = context.active_draft
 
     _validate_execution_preconditions(document=document, critique=critique, revision_plan=revision_plan)
+    ai_review_provenance = require_active_ai_backed_critique(document)
 
     section_index = _index_by_section_key(active_draft.get("sections"), scope_name="ApplicationDraft.sections")
     outline_index = _index_by_section_key(active_draft.get("outline"), scope_name="ApplicationDraft.outline")
@@ -89,6 +91,7 @@ def build_revision_execution_document(*, document: dict[str, Any]) -> dict[str, 
         "active_revision_plan_id": revision_plan["revision_plan_id"],
         "lifecycle_stage": revised_workspace["lifecycle_stage"],
         "revision_execution": revision_execution,
+        "ai_review_provenance": ai_review_provenance,
         "revised_workspace": revised_workspace,
     }
 

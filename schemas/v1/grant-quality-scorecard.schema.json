@@ -373,6 +373,9 @@
         "workspace_id",
         "lifecycle_stage",
         "draft_id",
+        "assessment_owner",
+        "ai_reviewer_required",
+        "review_artifact_ref",
         "overall_status",
         "overall_score",
         "summary",
@@ -403,6 +406,19 @@
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "draft_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "assessment_owner": {
+          "type": "string",
+          "enum": [
+            "ai_reviewer_backed",
+            "projection_only"
+          ]
+        },
+        "ai_reviewer_required": {
+          "type": "boolean"
+        },
+        "review_artifact_ref": {
           "$ref": "#/$defs/nullableString"
         },
         "overall_status": {

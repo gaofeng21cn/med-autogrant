@@ -37,6 +37,8 @@
 
 - MAG 当前任务边界固定为“指定基金任务正文 authoring”，不把跨 funder 重选写成默认主线动作。
 - “科学完成可待审包”与“形式/客观补件完成”必须分层表达，禁止合并成单一完成态。
+- AI-first 质量判断必须由 authoring executor / critique executor 产生的 AI-authored artifact 持有；schema、scorecard、closure dossier 与 autonomy controller 只能聚合结构、证据引用、机械状态和队列。缺少 active AI-backed critique 时，不得把质量状态提升为 `near_submission_candidate` 或 `submission_grade_candidate`。
+- `pass revision` 只能应用 AI-authored `mutation_payload.replacement_text` / `replacement_core_claim`，不得程序化生成正文 replacement prose 或使用 fallback prose 补齐正文。
 - 形式/客观补件默认进入 `TODO + 显式唤醒` 队列；除非直接破坏正文科学成立，否则不得升级为正文 authoring blocker。
 - 人工 gate 只覆盖同一基金任务内的作者决策，不跨任务改写 funding 目标。
 

@@ -8,6 +8,7 @@ from med_autogrant import grant_quality_assessment as _grant_quality_assessment
 from med_autogrant import grant_quality_closure as _grant_quality_closure
 from med_autogrant.grant_quality_assessment import *  # noqa: F401,F403
 from med_autogrant.grant_quality_parts import *  # noqa: F401,F403
+from med_autogrant.ai_first_boundaries import active_critique_ai_review_provenance
 
 from med_autogrant.workspace import (
     WorkspaceStateError,
@@ -108,11 +109,13 @@ def build_grant_quality_scorecard(document: dict[str, Any]) -> dict[str, Any]:
     overall_score = round(sum(int(item["score"]) for item in dimensions) / len(dimensions))
     blocked_dimensions = [item for item in dimensions if item["status"] == "blocked"]
     lifecycle_stage = _nonempty_string(document.get("lifecycle_stage")) or "unknown"
+    assessment_provenance = active_critique_ai_review_provenance(document)
     overall_status = _resolve_overall_status(
         overall_score=overall_score,
         lifecycle_stage=lifecycle_stage,
         blocked_dimensions=blocked_dimensions,
         unresolved_hard_issues=unresolved_hard_issues,
+        ai_reviewer_required=bool(assessment_provenance["ai_reviewer_required"]),
     )
     loop_gate = _build_loop_gate(
         lifecycle_stage=lifecycle_stage,
@@ -120,6 +123,7 @@ def build_grant_quality_scorecard(document: dict[str, Any]) -> dict[str, Any]:
         overall_score=overall_score,
         blocked_dimensions=blocked_dimensions,
         unresolved_hard_issues=unresolved_hard_issues,
+        ai_reviewer_required=bool(assessment_provenance["ai_reviewer_required"]),
     )
 
     summary = _build_scorecard_summary(
@@ -127,6 +131,7 @@ def build_grant_quality_scorecard(document: dict[str, Any]) -> dict[str, Any]:
         overall_score=overall_score,
         blocked_dimensions=blocked_dimensions,
         unresolved_hard_issues=unresolved_hard_issues,
+        ai_reviewer_required=bool(assessment_provenance["ai_reviewer_required"]),
     )
 
     return {
@@ -137,6 +142,9 @@ def build_grant_quality_scorecard(document: dict[str, Any]) -> dict[str, Any]:
         "workspace_id": document["workspace_id"],
         "lifecycle_stage": lifecycle_stage,
         "draft_id": _read_active_draft_id(document),
+        "assessment_owner": assessment_provenance["assessment_owner"],
+        "ai_reviewer_required": assessment_provenance["ai_reviewer_required"],
+        "review_artifact_ref": assessment_provenance["review_artifact_ref"],
         "overall_status": overall_status,
         "overall_score": overall_score,
         "summary": summary,
@@ -183,6 +191,9 @@ def build_grant_quality_closure_dossier(document: dict[str, Any]) -> dict[str, A
             "overall_score": scorecard["overall_score"],
             "summary": scorecard["summary"],
             "loop_gate": scorecard["loop_gate"],
+            "assessment_owner": scorecard["assessment_owner"],
+            "ai_reviewer_required": scorecard["ai_reviewer_required"],
+            "review_artifact_ref": scorecard["review_artifact_ref"],
         },
         "unclosed_hard_issues": list(scorecard["unresolved_hard_issues"]),
         "evidence_supply_queue_summary": _build_evidence_supply_queue_summary(evidence_supply_queue),

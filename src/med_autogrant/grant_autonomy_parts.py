@@ -336,6 +336,13 @@ def _normalize_quality_summary(payload: Any) -> dict[str, Any] | None:
             "recommended_stage": gate_stage,
             "reason": gate_reason,
         },
+        "assessment_owner": _normalized_string(payload.get("assessment_owner")) or None,
+        "ai_reviewer_required": (
+            payload.get("ai_reviewer_required")
+            if isinstance(payload.get("ai_reviewer_required"), bool)
+            else None
+        ),
+        "review_artifact_ref": _normalized_string(payload.get("review_artifact_ref")) or None,
     }
 
 def _normalize_closure_package_queue(payload: Any) -> list[dict[str, Any]] | None:
