@@ -4,8 +4,8 @@
 
 ## What It Is
 
-`Med Auto Grant` is the author-side, proposal-facing medical `Grant Ops` mainline under the shared `Unified Harness Engineering Substrate`.
-Its role is a medical `Grant Ops` domain gateway and harness for medical grant applications, with the current public capability contract frozen as `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`.
+`Med Auto Grant` is an independent author-side, proposal-facing medical `Grant Ops` domain agent under the shared `Unified Harness Engineering Substrate`.
+Its public role is a stable agent entry and lightweight direct-entry/projection surface for medical grant applications, with the current public capability contract frozen as `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`.
 The previously absorbed `Codex-default host-agent` line is retained only as a compatibility bridge / regression oracle, while repo-side adapters preserve Med Auto Grant domain semantics on top of the stable capability surface.
 
 ## What It Is Not

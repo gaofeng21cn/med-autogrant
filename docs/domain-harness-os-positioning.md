@@ -1,5 +1,7 @@
 # Med Auto Grant 在 Unified Harness Engineering Substrate 中的 Domain Harness OS 定位（内部）
 
+> 当前状态说明（2026-04-25）：本文保留为内部 harness/substrate 边界参考。当前公开第一身份是独立 medical grant domain agent 与单一 Med Auto Grant app skill；`Domain Harness OS` 词汇只用于内部执行、治理与兼容边界。
+
 ## 1. 项目位置：Shared Substrate 上的医学 Domain Harness OS
 
 `Med Auto Grant` 的定位不是“独立平台”，而是共享 `Unified Harness Engineering Substrate` 之上的医学 `Grant Ops` `Domain Harness OS` 方向/系统。
