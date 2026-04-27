@@ -60,6 +60,7 @@
 
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
 - [Specs 目录](./specs/)
+- [AI-first 质量边界 current truth](./specs/2026-04-27-ai-first-quality-boundary-current-truth.md)
 - [合同说明](../contracts/README.md)
 
 当前 grant product-entry shell 继续作为 app skill 背后的 domain/API catalog builder，也是稳定可调用面的一部分；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 作为集成/参考面暴露给 hosted caller / 外部 caller 使用。

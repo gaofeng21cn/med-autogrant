@@ -65,6 +65,7 @@ Date: `2026-04-26`
 ## 参考入口
 
 - 当前技术记录：`docs/specs/` 与 `contracts/runtime-program/current-program.json`
+- AI-first 质量边界记录：`docs/specs/2026-04-27-ai-first-quality-boundary-current-truth.md`
 - 追溯记录：`docs/references/` 与 `docs/history/`
 - 当前规范与边界：`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`
 - 维护者验证与文档治理：`docs/references/series-doc-governance-checklist.md`

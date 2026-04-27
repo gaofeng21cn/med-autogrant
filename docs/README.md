@@ -61,6 +61,7 @@ These files are the default public-facing entry surfaces and should stay mirrore
 
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
 - [Specs directory](./specs/)
+- [AI-first quality boundary current truth](./specs/2026-04-27-ai-first-quality-boundary-current-truth.md)
 - [Contracts Overview](../contracts/README.md)
 
 The current grant product-entry shell remains available as the internal domain/API catalog builder behind the app skill and as part of the stable callable surface. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible as integration/reference surfaces for hosted caller / external caller consumption.
