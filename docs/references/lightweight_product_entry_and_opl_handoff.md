@@ -1,6 +1,8 @@
 # Med Auto Grant 轻量产品入口与 OPL Handoff
 
 > Historical reference. The current landed route catalog and direct-entry truth now live in `docs/project.md`, `docs/decisions.md`, and `contracts/runtime-program/current-program.json`.
+>
+> Current reading note: older phrases such as `Hermes Kernel` and `OPL family orchestration surface` should now be read through the current route `OPL Runtime Manager -> external Hermes-Agent runtime substrate -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`. `OPL Runtime Manager` is a thin family runtime/projection manager; it does not own MAG grant truth, authoring semantics, quality gates, or submission-ready export truth.
 
 ## 1. 当前真相
 
@@ -26,6 +28,8 @@
 在 `OPL` 家族级入口下，则应兼容：
 
 `User or agent caller -> OPL Product Entry -> OPL family orchestration surface -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+
+按当前口径，上面两条历史链路里的 `Hermes Kernel` 应理解为 external `Hermes-Agent` runtime substrate；`OPL family orchestration surface` 应理解为 `OPL Runtime Manager`，并且只负责 OPL 侧托管、投影和 handoff，不接管 MAG grant truth。
 
 这意味着：
 
