@@ -6,7 +6,7 @@ test-fast:
 	uv run pytest -q -m "not meta"
 
 test-line-budget:
-	uv run python scripts/check-line-budget.py
+	uv run python scripts/line_budget.py
 
 test-family:
 	uv run pytest tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q

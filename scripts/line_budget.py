@@ -7,16 +7,7 @@ from pathlib import Path
 
 DEFAULT_LIMIT = 1000
 BASELINE = {
-    'src/med_autogrant/authoring_executor.py': 1151,
-    'src/med_autogrant/grant_autonomy_controller.py': 1055,
-    'src/med_autogrant/grant_quality.py': 2047,
-    'src/med_autogrant/hermes_runtime.py': 1450,
-    'src/med_autogrant/product_entry_parts/entry.py': 2048,
-    'src/med_autogrant/product_entry_parts/shared.py': 2223,
-    'src/med_autogrant/workspace.py': 2033,
-    'tests/product_entry_cases/test_manifest_and_frontdesk.py': 1131,
-    'tests/test_cli_validate_workspace.py': 2148,
-    'tests/test_hosted_contract_bundle.py': 1142,
+    "src/med_autogrant/grant_autonomy_controller.py": 1055,
 }
 CODE_EXTENSIONS = {
     ".py",

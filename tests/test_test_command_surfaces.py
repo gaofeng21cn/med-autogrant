@@ -17,10 +17,10 @@ def test_makefile_exposes_layered_test_entrypoints() -> None:
     assert "test-fast:" in makefile
     assert 'uv run pytest -q -m "not meta"' in makefile
     assert "test-line-budget:" in makefile
-    assert "uv run python scripts/check-line-budget.py" in makefile
+    assert "uv run python scripts/line_budget.py" in makefile
     line_budget_script = _read("scripts/check-line-budget.py")
-    assert "LEGACY_OVER_TARGET_BUDGETS" in line_budget_script
-    assert '"src/med_autogrant/grant_autonomy_controller.py": 1055' in line_budget_script
+    assert 'with_name("line_budget.py")' in line_budget_script
+    assert "LEGACY_OVER_TARGET_BUDGETS" not in line_budget_script
     assert "test-family:" in makefile
     assert (
         "uv run pytest tests/test_repository_hygiene.py tests/test_test_command_surfaces.py "

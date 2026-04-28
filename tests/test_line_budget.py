@@ -4,6 +4,25 @@ import subprocess
 from pathlib import Path
 
 
+def test_line_budget_baseline_only_keeps_semantic_holdout() -> None:
+    import runpy
+
+    repo_root = Path(__file__).resolve().parents[1]
+    module_globals = runpy.run_path(str(repo_root / "scripts" / "line_budget.py"))
+
+    assert module_globals["BASELINE"] == {
+        "src/med_autogrant/grant_autonomy_controller.py": 1055,
+    }
+
+
+def test_legacy_check_line_budget_delegates_to_canonical_checker() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    legacy_script = (repo_root / "scripts" / "check-line-budget.py").read_text(encoding="utf-8")
+
+    assert 'with_name("line_budget.py")' in legacy_script
+    assert "LEGACY_OVER_TARGET_BUDGETS" not in legacy_script
+
+
 def test_line_budget_script_accepts_current_locked_baseline() -> None:
     repo_root = Path(__file__).resolve().parents[1]
 
