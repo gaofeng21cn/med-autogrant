@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any
 
 from med_autogrant.schema_loader import SchemaStore
-from med_autogrant.workspace_parts import _validate_runtime_constraints
+from med_autogrant.workspace_runtime_constraints import _validate_runtime_constraints
 from med_autogrant.workspace_types import ValidationIssue, ValidationResult, WorkspaceStateError
 
 
