@@ -28,8 +28,6 @@ from med_autogrant.product_entry_parts.shared import (
     _build_shared_product_entry_shell_catalog,
     _build_shared_product_entry_shell_linked_surface,
     _build_shared_runtime_inventory,
-    _build_shared_skill_catalog,
-    _build_shared_skill_descriptor,
     _build_shared_task_lifecycle,
     _build_shared_workflow_coverage_item,
     _collect_family_human_gate_ids,
@@ -50,9 +48,9 @@ from med_autogrant.product_entry_parts.loop_contracts import (
     _build_next_action_payload,
     _validate_product_entry_manifest_contract,
 )
+from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_artifact_inventory_surface,
-    _build_opl_runtime_manager_registration,
     _build_product_command_catalog,
     _build_progress_projection_surface,
     _build_runtime_control_surface,
@@ -807,53 +805,12 @@ class ProductEntryManifestBuilderMixin:
                 context="product_entry_shell.grant_user_loop",
             ),
         }
-        skill_catalog_command = public_cli_command(
-            "skill-catalog",
-            "--input",
-            str(resolved_input_path),
-            "--format",
-            "json",
-        )
-        opl_runtime_manager_registration = _build_opl_runtime_manager_registration(
+        skill_catalog = build_product_entry_skill_catalog(
+            resolved_input_path=resolved_input_path,
             runtime_summary=runtime_summary,
             runtime_continuity=runtime_continuity,
             shell_commands=shell_commands,
-            skill_catalog_command=skill_catalog_command,
-        )
-        skill_catalog = _build_shared_skill_catalog(
-            summary="Canonical Med Auto Grant app skill plus machine-readable command contracts.",
-            skills=[
-                _build_shared_skill_descriptor(
-                    skill_id="med-autogrant",
-                    title="Med Auto Grant",
-                    owner=TARGET_DOMAIN_ID,
-                    distribution_mode="repo_tracked_codex_plugin",
-                    surface_kind=PRODUCT_FRONTDESK_KIND,
-                    description="Canonical Med Auto Grant domain app skill for Codex and OPL callers.",
-                    command=shell_commands["product_frontdesk"],
-                    readiness="landed",
-                    tags=["med-autogrant", "domain-app", "grant-authoring"],
-                    domain_projection={
-                        "plugin_name": "med-autogrant",
-                        "skill_entry": "med-autogrant",
-                        "skill_semantics": "domain_app",
-                        "entry_shell_key": "product_frontdesk",
-                        "entry_command": shell_commands["product_frontdesk"],
-                        "recommended_shell": "product_frontdesk",
-                        "supporting_shell_keys": [
-                            "grant_progress",
-                            "grant_cockpit",
-                            "grant_direct_entry",
-                            "grant_user_loop",
-                        ],
-                        "shell_commands": shell_commands,
-                        "runtime_continuity": dict(runtime_continuity),
-                        "opl_runtime_manager_registration": dict(opl_runtime_manager_registration),
-                    },
-                )
-            ],
-            supported_commands=list(domain_entry_contract.get("supported_commands") or []),
-            command_contracts=list(domain_entry_contract.get("command_contracts") or []),
+            domain_entry_contract=domain_entry_contract,
         )
         automation = _build_shared_automation_catalog(
             summary="automation companion 聚合 submission-ready 导出 gate 与 authoring loop continuation 提示。",

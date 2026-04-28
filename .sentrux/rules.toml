@@ -1,7 +1,7 @@
 [constraints]
-min_quality = 0.44
-max_cycles = 2
-max_depth = 19
+min_quality = 0.56
+max_cycles = 0
+max_depth = 17
 max_file_lines = 2500
 no_god_files = false
 

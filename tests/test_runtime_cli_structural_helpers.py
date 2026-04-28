@@ -1,0 +1,97 @@
+from __future__ import annotations
+
+from unittest.mock import Mock, patch
+
+from med_autogrant.cli_rendering import _render_text as public_render_text
+from med_autogrant.cli_rendering_parts import _render_text as parts_render_text
+from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
+from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
+
+
+def _valid_autonomy_request() -> dict[str, object]:
+    return {
+        "request_id": "autonomy-req-structure",
+        "start": {
+            "mode": "workspace",
+            "workspace": {
+                "workspace_id": "ws-structure",
+                "lifecycle_stage": "critique",
+            },
+        },
+        "goal": {
+            "target_status": "near_submission_candidate",
+            "summary": "maintain near-submission trajectory",
+        },
+        "max_rounds_or_cycles": 2,
+        "budget": {"max_total_steps": 5},
+        "stop_conditions": {
+            "require_zero_blockers": True,
+            "require_zero_evidence_gaps": True,
+        },
+        "blocker_queue": [],
+        "evidence_gap_queue": [],
+        "reselection_policy": {
+            "enabled": True,
+            "max_reselections": -2,
+        },
+        "rollback_policy": {
+            "enabled": True,
+            "max_rollbacks": "invalid",
+        },
+    }
+
+
+def test_grant_autonomy_request_validator_sanitizes_policy_counts() -> None:
+    state = validate_grant_autonomy_request(_valid_autonomy_request())
+
+    assert state["ok"] is True
+    assert state["max_reselections"] == 0
+    assert state["max_rollbacks"] == 0
+    assert state["start_mode"] == "workspace"
+    assert state["goal_target"] == "near_submission_candidate"
+
+
+def test_grant_autonomy_request_validator_fail_closes_invalid_budget() -> None:
+    request = _valid_autonomy_request()
+    request["budget"] = {"max_total_steps": 0}
+
+    state = validate_grant_autonomy_request(request)
+
+    assert state["ok"] is False
+    assert state["report"]["controller_status"] == "failed_closed"
+    assert state["report"]["termination_reason"] == "invalid_budget"
+
+
+def test_cli_rendering_preserves_public_render_text_export() -> None:
+    assert public_render_text is parts_render_text
+
+    rendered = public_render_text(
+        "validate-workspace",
+        {
+            "grant_run_id": "grant-structure",
+            "workspace_id": "ws-structure",
+            "lifecycle_stage": "critique",
+            "ok": False,
+            "error_count": 1,
+            "errors": [{"path": "drafts.0", "message": "missing section"}],
+        },
+    )
+
+    assert "当前 grant run: grant-structure" in rendered
+    assert "当前 workspace: ws-structure" in rendered
+    assert "- drafts.0: missing section" in rendered
+
+
+def test_product_entry_default_domain_entry_loader_is_lazy() -> None:
+    domain_entry = object()
+    domain_entry_module = Mock()
+    domain_entry_module.MedAutoGrantDomainEntry.return_value = domain_entry
+
+    with patch(
+        "med_autogrant.product_entry_parts.domain_entry_loader.import_module",
+        return_value=domain_entry_module,
+    ) as import_module:
+        loaded = build_default_domain_entry()
+
+    assert loaded is domain_entry
+    import_module.assert_called_once_with("med_autogrant.domain_entry")
