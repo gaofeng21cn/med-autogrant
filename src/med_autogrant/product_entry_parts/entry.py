@@ -1,10 +1,38 @@
 from __future__ import annotations
 
-from med_autogrant.product_entry_parts.shared import *  # noqa: F401,F403
+from med_autogrant.product_entry_parts.shared import (
+    Any,
+    PRODUCT_ENTRY_KIND,
+    PRODUCT_ENTRY_SCHEMA_FILE,
+    PRODUCT_ENTRY_VERSION,
+    Path,
+    SUPPORTED_ENTRY_MODES,
+    TARGET_DOMAIN_ID,
+    WorkspaceStateError,
+    _build_executor_routing_contract,
+    _build_managed_runtime_contract,
+    _build_operator_contract,
+    _build_runtime_state_contract,
+    _build_runtime_substrate_contract,
+    _read_current_program_contract,
+    _read_funding_call_from_summary,
+    _require_entry_mode,
+    _require_mapping,
+    _require_nonempty_string,
+    _require_nonempty_string_from_mapping,
+    _require_optional_string,
+    _validate_contract_schema,
+    _validate_executor_routing_contract,
+    _write_product_entry_output,
+    build_domain_entry_contract,
+    public_cli_command,
+    read_mainline_status,
+)
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_product_command_catalog,
     _build_runtime_continuity_surfaces,
 )
+from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -13,8 +41,8 @@ from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMix
 class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMixin, ProductEntryPreflightMixin):
     """轻量 grant product entry 壳，复用已 landed 的 domain entry 与 Hermes substrate contract。"""
 
-    def __init__(self, *, domain_entry: MedAutoGrantDomainEntry | None = None) -> None:
-        self._domain_entry = domain_entry or MedAutoGrantDomainEntry()
+    def __init__(self, *, domain_entry: Any | None = None) -> None:
+        self._domain_entry = domain_entry or build_default_domain_entry()
 
     def build(
         self,

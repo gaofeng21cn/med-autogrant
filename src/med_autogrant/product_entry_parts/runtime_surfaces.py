@@ -14,9 +14,7 @@ from med_autogrant.domain_entry_contract import (
     build_gateway_interaction_contract,
     build_shared_handoff,
 )
-from med_autogrant.domain_entry import MedAutoGrantDomainEntry
-from med_autogrant.hermes_runtime import (
-    _build_author_side_route_contract,
+from med_autogrant.product_entry_parts.runtime_contracts import (
     GRANT_COCKPIT_SCHEMA_FILE,
     GRANT_DIRECT_ENTRY_SCHEMA_FILE,
     GRANT_PROGRESS_SCHEMA_FILE,
@@ -24,6 +22,7 @@ from med_autogrant.hermes_runtime import (
     PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
     PRODUCT_ENTRY_SCHEMA_FILE,
     PRODUCT_FRONTDESK_SCHEMA_FILE,
+    _build_author_side_route_contract,
     _build_executor_routing_contract,
     _build_operator_contract,
     _build_runtime_state_contract,
