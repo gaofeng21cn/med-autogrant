@@ -71,6 +71,13 @@
 - [References 目录](./references/)
 - [历史归档](./history/README.zh-CN.md)
 
+## 结构质量验证
+
+Sentrux 作为 advisory 架构信号进入仓库。维护者在吸收结构性变更前应运行
+`sentrux gate .`；涉及依赖方向、package/export builder、runtime adapter
+或 product-entry 内部结构时，应同时运行 `sentrux check .`。CI 工作流当前保持
+advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。
+
 ## Plans 与历史规划工件
 
 - [Plans 目录](./plans/)

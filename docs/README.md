@@ -72,6 +72,14 @@ The quality and autonomy schemas are tracked in [`schema-index.json`](../schemas
 - [References directory](./references/)
 - [History archive](./history/README.md)
 
+## Structural Quality Verification
+
+Sentrux is tracked as an advisory architecture signal. Maintainers should run
+`sentrux gate .` before absorbing structural changes, and `sentrux check .`
+when changing dependency direction, package/export builders, runtime adapters,
+or product-entry internals. The CI workflow is intentionally advisory while the
+current baseline is tightened through focused cleanup lanes.
+
 ## Plans And Historical Planning Artifacts
 
 - [Plans directory](./plans/)
