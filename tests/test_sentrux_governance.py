@@ -23,7 +23,6 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
     rules_text = rules_path.read_text(encoding="utf-8")
     assert "max_cycles" in rules_text
     assert "runtime_facade" in rules_text
-    assert "runtime_parts" in rules_text
     assert "export_package" in rules_text
 
     workflow_text = workflow_path.read_text(encoding="utf-8")

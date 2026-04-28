@@ -21,25 +21,14 @@ paths = ["src/med_autogrant/hermes_runtime.py"]
 order = 3
 
 [[layers]]
-name = "runtime_parts"
-paths = [
-  "src/med_autogrant/hermes_runtime_parts/authoring_surface.py",
-  "src/med_autogrant/hermes_runtime_parts/contracts.py",
-  "src/med_autogrant/hermes_runtime_parts/io.py",
-  "src/med_autogrant/hermes_runtime_parts/runtime_ops.py",
-  "src/med_autogrant/hermes_runtime_parts/shared.py",
-]
-order = 4
-
-[[layers]]
 name = "domain_logic"
 paths = ["src/med_autogrant/workspace*.py", "src/med_autogrant/*executor.py", "src/med_autogrant/*controller.py"]
-order = 5
+order = 4
 
 [[layers]]
 name = "export_package"
 paths = ["src/med_autogrant/artifact_bundle.py", "src/med_autogrant/final_package.py", "src/med_autogrant/hosted_contract_bundle.py", "src/med_autogrant/submission_ready.py"]
-order = 6
+order = 5
 
 [[boundaries]]
 from = "export_package"

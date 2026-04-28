@@ -5,6 +5,10 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
+from med_autogrant.hermes_runtime_parts.io import (
+    _guard_artifact_bundle_output_identity,
+    _write_artifact_bundle_output,
+)
 from med_autogrant.workspace import WorkspaceStateError, _build_workspace_state
 
 
@@ -109,11 +113,7 @@ def _guard_output_identity(
     draft_id: str,
     lifecycle_stage: str,
 ) -> None:
-    from med_autogrant.hermes_runtime import (
-        _guard_artifact_bundle_output_identity as _hermes_guard_artifact_bundle_output_identity,
-    )
-
-    _hermes_guard_artifact_bundle_output_identity(
+    _guard_artifact_bundle_output_identity(
         output_path,
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
@@ -123,6 +123,4 @@ def _guard_output_identity(
 
 
 def _write_bundle(output_path: Path, bundle: dict[str, Any]) -> None:
-    from med_autogrant.hermes_runtime import _write_artifact_bundle_output as _hermes_write_artifact_bundle_output
-
-    _hermes_write_artifact_bundle_output(output_path, bundle)
+    _write_artifact_bundle_output(output_path, bundle)

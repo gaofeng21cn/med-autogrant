@@ -5,16 +5,20 @@ import copy
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.schema_loader import SchemaStore
+from med_autogrant.workspace_validation import _SchemaSubsetValidator, _validate_schema
 from med_autogrant.workspace_parts import *  # noqa: F401,F403
 from med_autogrant.workspace_projection_parts import *  # noqa: F401,F403
 from med_autogrant.workspace_parts import (
+    _collect_known_ids,
+    _validate_reference_sets,
+    _validate_runtime_constraints,
+    _validate_stage_requirements,
+)
+from med_autogrant.workspace_projection_parts import (
     _EVIDENCE_TRUST_LEVELS,
     _build_workspace_state,
-    _collect_known_ids,
     _collect_trust_ranked_evidence,
     _require_workspace_context,
-    _SchemaSubsetValidator,
     _serialize_argument_chain,
     _serialize_critique,
     _serialize_direction,
@@ -23,9 +27,6 @@ from med_autogrant.workspace_parts import (
     _serialize_question,
     _serialize_reviewed_revision_evidence,
     _serialize_revision_plan,
-    _validate_reference_sets,
-    _validate_runtime_constraints,
-    _validate_stage_requirements,
 )
 from med_autogrant.workspace_types import (
     ValidationIssue,
@@ -37,6 +38,7 @@ from med_autogrant.workspace_types import (
     WorkspaceStateError,
 )
 from med_autogrant.workspace_scaffold import resolve_mag_workspace_document_path
+from med_autogrant.workspace_validation import validate_workspace_document
 
 
 def load_workspace_document(path: str | Path) -> dict[str, Any]:
@@ -50,14 +52,6 @@ def load_workspace_document(path: str | Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise WorkspaceFileError("workspace 顶层必须是 JSON object。")
     return payload
-
-
-def validate_workspace_document(document: dict[str, Any]) -> ValidationResult:
-    issues: list[ValidationIssue] = []
-    issues.extend(_validate_schema(document))
-    if not issues:
-        issues.extend(_validate_runtime_constraints(document))
-    return ValidationResult(errors=issues)
 
 
 def _build_project_profile_summary(document: dict[str, Any]) -> dict[str, Any]:
@@ -424,13 +418,6 @@ def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
         "applicant_fit_repairs": list(critique.get("applicant_fit_repairs", [])),
         "next_review_focus": list(revision_plan.get("next_review_focus", [])),
     }
-
-
-def _validate_schema(document: dict[str, Any]) -> list[ValidationIssue]:
-    validator = _SchemaSubsetValidator(SchemaStore())
-    return validator.validate(document, "nsfc-workspace.schema.json")
-
-
 
 
 

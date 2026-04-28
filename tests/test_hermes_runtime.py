@@ -517,23 +517,80 @@ class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
 
 
 class HostedContractBundleBridgeTest(unittest.TestCase):
-    def test_hosted_contract_bundle_payload_uses_hermes_runtime_as_handoff_owner(self) -> None:
+    def test_hosted_contract_bundle_payload_uses_split_runtime_helpers(self) -> None:
         from med_autogrant.hosted_contract_bundle import build_hosted_contract_bundle_payload
 
-        expected_payload = {"ok": True, "command": "build-hosted-contract-bundle"}
-        with patch("med_autogrant.hermes_runtime.HermesRuntimeSubstrate") as substrate_class:
-            substrate = substrate_class.return_value
-            substrate.build_hosted_contract_bundle.return_value = expected_payload
-
+        final_package = {
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "lifecycle_stage": "frozen",
+        }
+        hosted_contract_bundle = {
+            "grant_run_id": "grant-run-test",
+            "workspace_id": "workspace-test",
+            "draft_id": "draft-test",
+            "program_id": "program-test",
+            "lifecycle_stage": "frozen",
+        }
+        with patch(
+            "med_autogrant.hosted_contract_bundle._read_final_package",
+            return_value=final_package,
+        ) as read_final_package, patch(
+            "med_autogrant.hosted_contract_bundle._validate_required_final_package_fields",
+        ) as validate_final_package, patch(
+            "med_autogrant.hosted_contract_bundle._read_current_program_contract",
+            return_value={"program_id": "program-test"},
+        ), patch(
+            "med_autogrant.hosted_contract_bundle._read_program_id",
+            return_value="program-test",
+        ), patch(
+            "med_autogrant.hosted_contract_bundle._build_runtime_substrate_contract",
+            return_value={},
+        ), patch(
+            "med_autogrant.hosted_contract_bundle._build_runtime_state_contract",
+            return_value={},
+        ), patch(
+            "med_autogrant.hosted_contract_bundle._build_operator_contract",
+            return_value={},
+        ), patch(
+            "med_autogrant.hosted_contract_bundle.build_domain_entry_contract",
+            return_value={},
+        ), patch(
+            "med_autogrant.hosted_contract_bundle._build_schema_contract",
+            return_value={},
+        ), patch(
+            "med_autogrant.hosted_contract_bundle._build_hosted_authoring_contract",
+            return_value={},
+        ), patch(
+            "med_autogrant.hosted_contract_bundle.build_hosted_contract_bundle_document",
+            return_value=hosted_contract_bundle,
+        ) as build_document, patch(
+            "med_autogrant.hosted_contract_bundle._validate_hosted_contract_bundle",
+        ) as validate_bundle, patch(
+            "med_autogrant.hosted_contract_bundle._guard_output_identity",
+        ) as guard_output, patch(
+            "med_autogrant.hosted_contract_bundle._write_hosted_contract_bundle",
+        ) as write_bundle:
             payload = build_hosted_contract_bundle_payload(
                 final_package_path="/tmp/final-package.json",
                 output_path="/tmp/hosted-contract.json",
             )
 
-        self.assertEqual(payload, expected_payload)
-        substrate.build_hosted_contract_bundle.assert_called_once_with(
-            final_package_path="/tmp/final-package.json",
-            output_path="/tmp/hosted-contract.json",
+        self.assertEqual(payload["hosted_contract_bundle"], hosted_contract_bundle)
+        read_final_package.assert_called_once_with("/tmp/final-package.json")
+        validate_final_package.assert_called_once_with(final_package)
+        build_document.assert_called_once()
+        validate_bundle.assert_called_once_with(
+            hosted_contract_bundle,
+            grant_run_id="grant-run-test",
+            workspace_id="workspace-test",
+            lifecycle_stage="frozen",
+        )
+        guard_output.assert_called_once()
+        write_bundle.assert_called_once_with(
+            Path("/tmp/hosted-contract.json").resolve(),
+            hosted_contract_bundle,
         )
 
 

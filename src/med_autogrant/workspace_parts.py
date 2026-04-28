@@ -3,8 +3,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+from med_autogrant.workspace_index import _index_objects
 from med_autogrant.workspace_types import ValidationIssue, WorkspaceContext, WorkspaceState
-from med_autogrant.workspace_projection_parts import *  # noqa: F401,F403
 
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 

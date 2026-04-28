@@ -12,6 +12,10 @@ from med_autogrant.workspace import (
     _serialize_reviewed_revision_evidence,
 )
 from med_autogrant.ai_first_boundaries import require_active_ai_backed_critique
+from med_autogrant.hermes_runtime_parts.io import (
+    _guard_revision_output_identity,
+    _write_revised_workspace_output,
+)
 
 
 ALLOWED_ACTION_TYPES = {
@@ -380,9 +384,7 @@ def _guard_output_identity(
     active_revision_plan_id: str,
     lifecycle_stage: str | None,
 ) -> None:
-    from med_autogrant.hermes_runtime import _guard_revision_output_identity as _hermes_guard_revision_output_identity
-
-    _hermes_guard_revision_output_identity(
+    _guard_revision_output_identity(
         output_path,
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
@@ -393,6 +395,4 @@ def _guard_output_identity(
 
 
 def _write_workspace(output_path: Path, revised_workspace: dict[str, Any]) -> None:
-    from med_autogrant.hermes_runtime import _write_revised_workspace_output as _hermes_write_revised_workspace_output
-
-    _hermes_write_revised_workspace_output(output_path, revised_workspace)
+    _write_revised_workspace_output(output_path, revised_workspace)

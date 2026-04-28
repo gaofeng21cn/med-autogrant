@@ -5,10 +5,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from med_autogrant.artifact_bundle_validation import _validate_required_artifact_bundle_fields
 from med_autogrant.control_plane import resolve_runtime_state_root
-from med_autogrant.final_package import _validate_required_artifact_bundle_fields
-from med_autogrant.hosted_contract_bundle import _validate_required_final_package_fields
-from med_autogrant.hosted_contract_bundle import SUPPORTED_FINAL_PACKAGE_VERSION
+from med_autogrant.final_package_validation import SUPPORTED_FINAL_PACKAGE_VERSION
 from med_autogrant.workspace import (
     WorkspaceFileError,
     WorkspaceStateError,
