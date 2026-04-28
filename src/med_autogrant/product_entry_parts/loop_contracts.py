@@ -109,7 +109,15 @@ GRANT_USER_LOOP_KIND = "grant_user_loop"
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 
 
-from med_autogrant.product_entry_parts.runtime_surfaces import *  # noqa: F401,F403
+from med_autogrant.product_entry_parts.runtime_surfaces import (
+    _schema_payload_without_contract_bundle,
+    _validate_runtime_continuity_alignment,
+)
+from med_autogrant.product_entry_parts.shared import (
+    _require_mapping,
+    _require_nonempty_string,
+    _require_nonempty_string_from_mapping,
+)
 
 def _validate_grant_direct_entry_contract(
     payload: dict[str, Any],

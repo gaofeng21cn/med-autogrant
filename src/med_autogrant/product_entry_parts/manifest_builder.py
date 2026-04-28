@@ -2,6 +2,20 @@ from __future__ import annotations
 
 from med_autogrant.product_entry_parts.autonomy_observability import build_grant_autonomy_observability
 from med_autogrant.product_entry_parts.shared import *  # noqa: F401,F403
+from med_autogrant.product_entry_parts.loop_contracts import (
+    _build_mainline_snapshot,
+    _build_next_action_payload,
+    _validate_product_entry_manifest_contract,
+)
+from med_autogrant.product_entry_parts.runtime_surfaces import (
+    _build_artifact_inventory_surface,
+    _build_opl_runtime_manager_registration,
+    _build_product_command_catalog,
+    _build_progress_projection_surface,
+    _build_runtime_control_surface,
+    _build_session_continuity_surface,
+    _build_skill_runtime_continuity_envelope,
+)
 
 
 class ProductEntryManifestBuilderMixin:

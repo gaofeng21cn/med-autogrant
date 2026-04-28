@@ -100,9 +100,6 @@ GRANT_USER_LOOP_KIND = "grant_user_loop"
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 
 
-from med_autogrant.product_entry_parts.runtime_surfaces import *  # noqa: F401,F403
-from med_autogrant.product_entry_parts.loop_contracts import *  # noqa: F401,F403
-
 def _build_managed_runtime_contract() -> dict[str, Any]:
     return _build_shared_managed_runtime_contract(
         domain_owner=TARGET_DOMAIN_ID,

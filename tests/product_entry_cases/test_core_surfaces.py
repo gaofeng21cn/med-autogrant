@@ -5,6 +5,24 @@ __test__ = False
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
+class ProductEntryPartsStructureTest(unittest.TestCase):
+    def test_core_product_entry_parts_do_not_star_import_each_other(self) -> None:
+        repo_root = Path(__file__).resolve().parents[2]
+        core_parts = [
+            repo_root / "src" / "med_autogrant" / "product_entry_parts" / "shared.py",
+            repo_root / "src" / "med_autogrant" / "product_entry_parts" / "runtime_surfaces.py",
+            repo_root / "src" / "med_autogrant" / "product_entry_parts" / "loop_contracts.py",
+        ]
+
+        offenders = [
+            path.relative_to(repo_root).as_posix()
+            for path in core_parts
+            if "import *" in path.read_text(encoding="utf-8")
+        ]
+
+        self.assertEqual([], offenders)
+
+
 class ProductEntryCoreSurfaceTest(unittest.TestCase):
     def test_product_entry_builds_shared_envelope_for_direct_and_opl_handoff(self) -> None:
         from med_autogrant.domain_entry_contract import build_domain_entry_contract

@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from med_autogrant.product_entry_parts.shared import *  # noqa: F401,F403
+from med_autogrant.product_entry_parts.runtime_surfaces import (
+    _build_product_command_catalog,
+    _build_runtime_continuity_surfaces,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin

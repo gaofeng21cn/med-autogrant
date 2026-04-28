@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from med_autogrant.product_entry_parts.shared import *  # noqa: F401,F403
+from med_autogrant.product_entry_parts.loop_contracts import _validate_product_frontdesk_contract
 from med_autogrant.product_entry_parts.manifest_builder import ProductEntryManifestBuilderMixin
 
 
