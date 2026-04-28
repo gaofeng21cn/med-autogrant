@@ -3,12 +3,11 @@ from __future__ import annotations
 import hashlib
 from typing import Any, Iterable, Mapping
 
-from med_autogrant.grant_quality_closure import *  # noqa: F401,F403
 from med_autogrant import grant_quality_assessment as _grant_quality_assessment
 from med_autogrant import grant_quality_closure as _grant_quality_closure
-from med_autogrant.grant_quality_assessment import *  # noqa: F401,F403
-from med_autogrant.grant_quality_parts import *  # noqa: F401,F403
+from med_autogrant import grant_quality_parts as _grant_quality_parts
 from med_autogrant.ai_first_boundaries import active_critique_ai_review_provenance
+from med_autogrant.facade_exports import re_export_public_names
 
 from med_autogrant.workspace import (
     WorkspaceStateError,
@@ -17,6 +16,10 @@ from med_autogrant.workspace import (
     build_grant_evidence_grounding,
     build_grant_intake_audit,
 )
+
+re_export_public_names(_grant_quality_closure, globals())
+re_export_public_names(_grant_quality_assessment, globals())
+re_export_public_names(_grant_quality_parts, globals())
 
 
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}

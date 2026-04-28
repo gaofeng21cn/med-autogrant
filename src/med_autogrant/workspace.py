@@ -5,9 +5,10 @@ import copy
 from pathlib import Path
 from typing import Any
 
+from med_autogrant import workspace_parts as _workspace_parts
+from med_autogrant import workspace_projection_parts as _workspace_projection_parts
+from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.workspace_validation import _SchemaSubsetValidator, _validate_schema
-from med_autogrant.workspace_parts import *  # noqa: F401,F403
-from med_autogrant.workspace_projection_parts import *  # noqa: F401,F403
 from med_autogrant.workspace_parts import (
     _collect_known_ids,
     _validate_reference_sets,
@@ -39,6 +40,9 @@ from med_autogrant.workspace_types import (
 )
 from med_autogrant.workspace_scaffold import resolve_mag_workspace_document_path
 from med_autogrant.workspace_validation import validate_workspace_document
+
+re_export_public_names(_workspace_parts, globals())
+re_export_public_names(_workspace_projection_parts, globals())
 
 
 def load_workspace_document(path: str | Path) -> dict[str, Any]:
@@ -418,7 +422,6 @@ def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
         "applicant_fit_repairs": list(critique.get("applicant_fit_repairs", [])),
         "next_review_focus": list(revision_plan.get("next_review_focus", [])),
     }
-
 
 
 

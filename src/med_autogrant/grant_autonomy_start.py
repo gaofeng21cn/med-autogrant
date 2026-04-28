@@ -3,7 +3,10 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Callable
 
-from med_autogrant.grant_autonomy_parts import *  # noqa: F401,F403
+from med_autogrant import grant_autonomy_parts as _grant_autonomy_parts
+from med_autogrant.facade_exports import re_export_public_names
+
+re_export_public_names(_grant_autonomy_parts, globals())
 
 Discoverer = Callable[[dict[str, Any]], dict[str, Any]]
 Selector = Callable[[dict[str, Any]], dict[str, Any]]

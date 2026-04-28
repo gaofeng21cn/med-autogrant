@@ -4,7 +4,6 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-import sys
 
 from med_autogrant.authoring_executor import (
     build_argument_building_execution_document,
@@ -60,6 +59,9 @@ from med_autogrant.domain_entry_contract import (
     SERVICE_SAFE_ENTRY_SURFACE_KIND,
     build_domain_entry_contract,
 )
+from med_autogrant.facade_exports import re_export_public_names
+from med_autogrant.hermes_runtime_parts import shared as _runtime_shared
+from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.workspace import (
     WorkspaceError,
     WorkspaceFileError,
@@ -76,7 +78,6 @@ from med_autogrant.workspace import (
 )
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 
-from med_autogrant.hermes_runtime_parts.shared import *  # noqa: F401,F403
 from med_autogrant.hermes_runtime_parts.contracts import (
     build_hosted_authoring_contract as _build_hosted_authoring_contract,
     build_operator_contract as _build_operator_contract,
@@ -118,12 +119,11 @@ from med_autogrant.hermes_runtime_parts.runtime_ops import (
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
+re_export_public_names(_runtime_shared, globals())
+
 
 def _hosted_contract_bundle_document_builder() -> Any:
-    runtime_module = sys.modules.get("med_autogrant.hermes_runtime")
-    if runtime_module is not None:
-        return getattr(runtime_module, "build_hosted_contract_bundle_document", build_hosted_contract_bundle_document)
-    return build_hosted_contract_bundle_document
+    return resolve_runtime_patch_target("build_hosted_contract_bundle_document", build_hosted_contract_bundle_document)
 
 
 
@@ -183,10 +183,7 @@ class HermesRuntimeAuthoringSurfaceMixin:
                 "revised_workspace": revision_document["revised_workspace"],
             }
 
-        from med_autogrant import hermes_runtime as _runtime_module
-
-        run_critique_loop = getattr(
-            _runtime_module,
+        run_critique_loop = resolve_runtime_patch_target(
             "run_critique_revision_closed_loop",
             run_critique_revision_closed_loop,
         )
@@ -209,8 +206,14 @@ class HermesRuntimeAuthoringSurfaceMixin:
             else None,
         )
         _write_revised_workspace_output(final_workspace_path, final_workspace)
-        build_scorecard = getattr(_runtime_module, "build_grant_quality_scorecard", build_grant_quality_scorecard)
-        build_dossier = getattr(_runtime_module, "build_grant_quality_closure_dossier", build_grant_quality_closure_dossier)
+        build_scorecard = resolve_runtime_patch_target(
+            "build_grant_quality_scorecard",
+            build_grant_quality_scorecard,
+        )
+        build_dossier = resolve_runtime_patch_target(
+            "build_grant_quality_closure_dossier",
+            build_grant_quality_closure_dossier,
+        )
         quality_scorecard = build_scorecard(final_workspace)
         quality_closure_dossier = build_dossier(final_workspace)
         loop_report = {
@@ -367,16 +370,14 @@ class HermesRuntimeAuthoringSurfaceMixin:
 
         def _quality_aware_route_resolver(workspace: dict[str, Any]) -> dict[str, Any]:
             route = determine_next_step(workspace)
-            from med_autogrant import hermes_runtime as _runtime_module
-
-            build_scorecard = getattr(_runtime_module, "build_grant_quality_scorecard", build_grant_quality_scorecard)
+            build_scorecard = resolve_runtime_patch_target(
+                "build_grant_quality_scorecard",
+                build_grant_quality_scorecard,
+            )
             quality_scorecard = build_scorecard(workspace)
             return _apply_quality_gate_to_route(route=route, quality_scorecard=quality_scorecard)
 
-        from med_autogrant import hermes_runtime as _runtime_module
-
-        run_mainline_controller = getattr(
-            _runtime_module,
+        run_mainline_controller = resolve_runtime_patch_target(
             "run_authoring_mainline_controller",
             run_authoring_mainline_controller,
         )
@@ -400,8 +401,14 @@ class HermesRuntimeAuthoringSurfaceMixin:
         final_route = loop["final_route"]
         final_workspace_path = resolved_output_dir / "authoring-mainline-final-workspace.json"
         _write_cycle_workspace(final_workspace_path, final_workspace)
-        build_scorecard = getattr(_runtime_module, "build_grant_quality_scorecard", build_grant_quality_scorecard)
-        build_dossier = getattr(_runtime_module, "build_grant_quality_closure_dossier", build_grant_quality_closure_dossier)
+        build_scorecard = resolve_runtime_patch_target(
+            "build_grant_quality_scorecard",
+            build_grant_quality_scorecard,
+        )
+        build_dossier = resolve_runtime_patch_target(
+            "build_grant_quality_closure_dossier",
+            build_grant_quality_closure_dossier,
+        )
         quality_scorecard = build_scorecard(final_workspace)
         quality_closure_dossier = build_dossier(final_workspace)
         mainline_loop_report = {
@@ -524,9 +531,10 @@ class HermesRuntimeAuthoringSurfaceMixin:
                 "mainline_loop_report": mainline_payload["mainline_loop_report"],
             }
 
-        from med_autogrant import hermes_runtime as _runtime_module
-
-        run_controller = getattr(_runtime_module, "run_grant_autonomy_controller", run_grant_autonomy_controller)
+        run_controller = resolve_runtime_patch_target(
+            "run_grant_autonomy_controller",
+            run_grant_autonomy_controller,
+        )
         report = run_controller(
             request=request,
             selector=_selector,
@@ -598,16 +606,19 @@ class HermesRuntimeAuthoringSurfaceMixin:
         document = self._load_workspace(input_path)
         context = _require_workspace_context(document)
         active_draft = context.active_draft
-        from med_autogrant import hermes_runtime as _runtime_module
-
-        read_artifact_bundle = getattr(_runtime_module, "_read_artifact_bundle", _read_artifact_bundle)
-        build_final_package = getattr(_runtime_module, "build_final_package_document", build_final_package_document)
-        guard_final_package_output = getattr(
-            _runtime_module,
+        read_artifact_bundle = resolve_runtime_patch_target("_read_artifact_bundle", _read_artifact_bundle)
+        build_final_package = resolve_runtime_patch_target(
+            "build_final_package_document",
+            build_final_package_document,
+        )
+        guard_final_package_output = resolve_runtime_patch_target(
             "_guard_final_package_output_identity",
             _guard_final_package_output_identity,
         )
-        write_final_package_output = getattr(_runtime_module, "_write_final_package_output", _write_final_package_output)
+        write_final_package_output = resolve_runtime_patch_target(
+            "_write_final_package_output",
+            _write_final_package_output,
+        )
         artifact_bundle = read_artifact_bundle(
             artifact_bundle_path,
             grant_run_id=document["grant_run_id"],

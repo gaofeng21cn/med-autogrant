@@ -3,13 +3,16 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Callable
 
-from med_autogrant.grant_autonomy_parts import *  # noqa: F401,F403
+from med_autogrant import grant_autonomy_parts as _grant_autonomy_parts
+from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
 from med_autogrant.grant_autonomy_start import _resolve_grant_autonomy_start
 from med_autogrant.grant_governance_adapter import (
     apply_family_governance_to_controller_plan,
     prioritize_closure_package_queue,
 )
+
+re_export_public_names(_grant_autonomy_parts, globals())
 
 Discoverer = Callable[[dict[str, Any]], dict[str, Any]]
 Selector = Callable[[dict[str, Any]], dict[str, Any]]

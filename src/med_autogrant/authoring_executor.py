@@ -8,7 +8,8 @@ from pathlib import Path
 from typing import Any, Callable
 
 from med_autogrant.codex_cli import read_codex_cli_contract, run_codex_exec
-from med_autogrant.authoring_executor_parts import *  # noqa: F401,F403
+from med_autogrant import authoring_executor_parts as _authoring_executor_parts
+from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.workspace import (
     WorkspaceStateError,
@@ -18,6 +19,8 @@ from med_autogrant.workspace import (
     materialize_workspace_surfaces,
     validate_workspace_document,
 )
+
+re_export_public_names(_authoring_executor_parts, globals())
 
 
 CodexRunner = Callable[..., dict[str, Any]]
@@ -747,7 +750,6 @@ def build_freeze_execution_document(
         },
         "frozen_workspace": next_workspace,
     }
-
 
 
 

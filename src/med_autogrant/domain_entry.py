@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
-from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+from med_autogrant.hermes_runtime_parts.substrate import HermesRuntimeSubstrate
 from med_autogrant.upstream_hermes import probe_upstream_hermes
 from med_autogrant.workspace import WorkspaceStateError
 
