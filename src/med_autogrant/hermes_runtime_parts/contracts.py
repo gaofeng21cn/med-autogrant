@@ -16,7 +16,8 @@ from med_autogrant.domain_entry_contract import (
     build_domain_entry_contract,
 )
 from med_autogrant.schema_loader import SchemaStore
-from med_autogrant.workspace import WorkspaceStateError, _SchemaSubsetValidator
+from med_autogrant.schema_subset_validator import SchemaSubsetValidator
+from med_autogrant.workspace_types import WorkspaceStateError
 
 from .shared import (
     AUTHOR_SIDE_ROUTE_IDS,
@@ -47,7 +48,7 @@ def validate_contract_schema(
     workspace_id: str | None = None,
     lifecycle_stage: str | None = None,
 ) -> None:
-    issues = _SchemaSubsetValidator(SchemaStore()).validate(payload, schema_file)
+    issues = SchemaSubsetValidator(SchemaStore()).validate(payload, schema_file)
     if not issues:
         return
     detail = "; ".join(f"{issue.path}: {issue.message}" for issue in issues[:5])

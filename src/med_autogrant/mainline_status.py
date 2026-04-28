@@ -5,7 +5,7 @@ from typing import Any
 
 from med_autogrant.control_plane import read_current_program_contract
 from med_autogrant.public_cli import public_cli_command
-from med_autogrant.workspace import WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 SCHEMA_VERSION = 1

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from med_autogrant.workspace import WorkspaceError
+from med_autogrant.workspace_types import WorkspaceError
 
 
 JOURNAL_VERSION = 1

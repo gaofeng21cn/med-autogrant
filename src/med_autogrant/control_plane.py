@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
 
 
 PROJECT_SLUG = "med-autogrant"
