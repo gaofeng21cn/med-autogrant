@@ -3,9 +3,11 @@ from __future__ import annotations
 from unittest.mock import Mock, patch
 
 from med_autogrant.cli_rendering import _render_text as public_render_text
-from med_autogrant.cli_rendering_parts import _render_text as parts_render_text
+from med_autogrant.cli_rendering_parts import _TEXT_RENDERERS, _render_text as parts_render_text
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
+from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
+from med_autogrant.workspace_stage_validation import _find_active_draft, _validate_active_draft_sections
 
 
 def _valid_autonomy_request() -> dict[str, object]:
@@ -64,6 +66,7 @@ def test_grant_autonomy_request_validator_fail_closes_invalid_budget() -> None:
 
 def test_cli_rendering_preserves_public_render_text_export() -> None:
     assert public_render_text is parts_render_text
+    assert _TEXT_RENDERERS["validate-workspace"] is not parts_render_text
 
     rendered = public_render_text(
         "validate-workspace",
@@ -82,6 +85,12 @@ def test_cli_rendering_preserves_public_render_text_export() -> None:
     assert "- drafts.0: missing section" in rendered
 
 
+def test_runtime_patch_target_resolver_uses_facade_when_loaded() -> None:
+    sentinel = object()
+    with patch("med_autogrant.hermes_runtime.HermesGrantRunLedger", sentinel, create=True):
+        assert resolve_runtime_patch_target("HermesGrantRunLedger", object()) is sentinel
+
+
 def test_product_entry_default_domain_entry_loader_is_lazy() -> None:
     domain_entry = object()
     domain_entry_module = Mock()
@@ -95,3 +104,29 @@ def test_product_entry_default_domain_entry_loader_is_lazy() -> None:
 
     assert loaded is domain_entry
     import_module.assert_called_once_with("med_autogrant.domain_entry")
+
+
+def test_workspace_stage_validation_helpers_keep_active_draft_lookup_and_section_errors() -> None:
+    active_draft = {
+        "draft_id": "draft-1",
+        "sections": [{"linked_object_ids": ["question-1", "argument-1"]}],
+    }
+    document = {
+        "current_selection": {"active_draft_id": "draft-1"},
+        "application_drafts": [active_draft],
+    }
+    issues = []
+
+    assert _find_active_draft(document, document["current_selection"]) is active_draft
+    _validate_active_draft_sections(
+        stage="drafting",
+        active_draft=active_draft,
+        selected_question_id="question-1",
+        active_argument_chain_id="argument-1",
+        active_fit_mapping_id="fit-1",
+        issues=issues,
+    )
+
+    assert len(issues) == 1
+    assert issues[0].path == "application_drafts.sections"
+    assert "ApplicantFitMapping" in issues[0].message

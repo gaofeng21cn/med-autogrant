@@ -12,6 +12,23 @@ if str(SRC_ROOT) not in sys.path:
 
 
 class HermesRuntimeSplitStructureTest(unittest.TestCase):
+    def test_source_modules_do_not_use_star_imports(self) -> None:
+        offenders = [
+            path.relative_to(REPO_ROOT).as_posix()
+            for path in sorted((SRC_ROOT / "med_autogrant").rglob("*.py"))
+            if "import *" in path.read_text(encoding="utf-8")
+        ]
+
+        self.assertEqual([], offenders)
+
+    def test_runtime_substrate_lives_below_runtime_parts(self) -> None:
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+
+        self.assertEqual(
+            "med_autogrant.hermes_runtime_parts.substrate",
+            HermesRuntimeSubstrate.__module__,
+        )
+
     def test_facade_re_exports_split_runtime_helpers(self) -> None:
         from med_autogrant import hermes_runtime
         from med_autogrant.hermes_runtime_parts import runtime_ops
@@ -20,6 +37,31 @@ class HermesRuntimeSplitStructureTest(unittest.TestCase):
             hermes_runtime._build_autonomy_quality_evaluator_output,
             runtime_ops.build_autonomy_quality_evaluator_output,
         )
+
+    def test_domain_entry_does_not_import_runtime_facade(self) -> None:
+        domain_entry_text = (SRC_ROOT / "med_autogrant" / "domain_entry.py").read_text(encoding="utf-8")
+
+        self.assertNotIn("from med_autogrant.hermes_runtime import", domain_entry_text)
+        self.assertNotIn("from med_autogrant import hermes_runtime", domain_entry_text)
+
+    def test_control_plane_does_not_import_workspace_facade(self) -> None:
+        control_plane_text = (SRC_ROOT / "med_autogrant" / "control_plane.py").read_text(encoding="utf-8")
+
+        self.assertNotIn("from med_autogrant.workspace import", control_plane_text)
+
+    def test_runtime_parts_do_not_import_runtime_facade(self) -> None:
+        runtime_parts = sorted((SRC_ROOT / "med_autogrant" / "hermes_runtime_parts").glob("*.py"))
+        forbidden_fragments = (
+            "from med_autogrant.hermes_runtime import",
+            "from med_autogrant import hermes_runtime",
+        )
+        offenders = [
+            path.relative_to(REPO_ROOT).as_posix()
+            for path in runtime_parts
+            if any(fragment in path.read_text(encoding="utf-8") for fragment in forbidden_fragments)
+        ]
+
+        self.assertEqual([], offenders)
 
     def test_package_builders_do_not_import_runtime_facade(self) -> None:
         package_builders = [
