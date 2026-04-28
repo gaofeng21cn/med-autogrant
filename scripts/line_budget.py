@@ -6,9 +6,7 @@ import subprocess
 from pathlib import Path
 
 DEFAULT_LIMIT = 1000
-BASELINE = {
-    "src/med_autogrant/grant_autonomy_controller.py": 1055,
-}
+BASELINE: dict[str, int] = {}
 CODE_EXTENSIONS = {
     ".py",
     ".js",

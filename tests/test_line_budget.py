@@ -4,15 +4,13 @@ import subprocess
 from pathlib import Path
 
 
-def test_line_budget_baseline_only_keeps_semantic_holdout() -> None:
+def test_line_budget_baseline_has_no_semantic_holdouts() -> None:
     import runpy
 
     repo_root = Path(__file__).resolve().parents[1]
     module_globals = runpy.run_path(str(repo_root / "scripts" / "line_budget.py"))
 
-    assert module_globals["BASELINE"] == {
-        "src/med_autogrant/grant_autonomy_controller.py": 1055,
-    }
+    assert module_globals["BASELINE"] == {}
 
 
 def test_legacy_check_line_budget_delegates_to_canonical_checker() -> None:
