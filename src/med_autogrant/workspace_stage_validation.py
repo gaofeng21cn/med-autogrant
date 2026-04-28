@@ -19,13 +19,63 @@ def _validate_stage_requirements(
     stage = document.get("lifecycle_stage")
     gates = document.get("gates", {})
     selection = document.get("current_selection", {})
-    active_draft = None
+    active_draft = _find_active_draft(document, selection)
+
+    _validate_stage_gate_prerequisites(stage=stage, gates=gates, issues=issues)
+    _validate_stage_material_requirements(
+        document=document,
+        stage=stage,
+        gates=gates,
+        active_draft=active_draft,
+        active_revision_plan=active_revision_plan,
+        active_critique=active_critique,
+        issues=issues,
+    )
+    _validate_active_draft_sections(
+        stage=stage,
+        active_draft=active_draft,
+        selected_question_id=selected_question_id,
+        active_argument_chain_id=active_argument_chain_id,
+        active_fit_mapping_id=active_fit_mapping_id,
+        issues=issues,
+    )
+    _validate_revision_transition_contract(
+        stage=stage,
+        active_draft=active_draft,
+        active_revision_plan=active_revision_plan,
+        active_critique=active_critique,
+        reviewed_revision_plan=reviewed_revision_plan,
+        issues=issues,
+    )
+    _validate_forced_rollback_contract(active_critique=active_critique, issues=issues)
+    _validate_presubmission_gate_contract(
+        stage=stage,
+        gates=gates,
+        active_draft=active_draft,
+        active_revision_plan=active_revision_plan,
+        active_critique=active_critique,
+        issues=issues,
+    )
+    if active_critique is not None:
+        _validate_critique_weight_contract(active_critique=active_critique, issues=issues)
+
+
+def _find_active_draft(document: dict[str, Any], selection: dict[str, Any]) -> dict[str, Any] | None:
     active_draft_id = selection.get("active_draft_id")
-    if isinstance(active_draft_id, str):
-        for item in document.get("application_drafts", []):
-            if isinstance(item, dict) and item.get("draft_id") == active_draft_id:
-                active_draft = item
-                break
+    if not isinstance(active_draft_id, str):
+        return None
+    for item in document.get("application_drafts", []):
+        if isinstance(item, dict) and item.get("draft_id") == active_draft_id:
+            return item
+    return None
+
+
+def _validate_stage_gate_prerequisites(
+    *,
+    stage: Any,
+    gates: dict[str, Any],
+    issues: list[ValidationIssue],
+) -> None:
     if stage in {"fit_alignment", "outline", "drafting", "critique", "revision", "frozen"}:
         for gate_name in ("direction_frozen", "scientific_question_frozen", "argument_chain_frozen"):
             if not gates.get(gate_name):
@@ -49,6 +99,18 @@ def _validate_stage_requirements(
                 message=f"{stage} 阶段前必须先冻结提纲。",
             )
         )
+
+
+def _validate_stage_material_requirements(
+    *,
+    document: dict[str, Any],
+    stage: Any,
+    gates: dict[str, Any],
+    active_draft: dict[str, Any] | None,
+    active_revision_plan: dict[str, Any] | None,
+    active_critique: dict[str, Any] | None,
+    issues: list[ValidationIssue],
+) -> None:
     if stage == "outline" and active_draft is not None and active_draft.get("status") != "outline":
         issues.append(
             ValidationIssue(
@@ -121,68 +183,69 @@ def _validate_stage_requirements(
                 message="frozen 阶段的激活草稿 status 必须为 frozen。",
             )
         )
-    if stage in {"drafting", "critique", "revision", "frozen"} and active_draft is not None:
-        sections = active_draft.get("sections")
-        if not isinstance(sections, list) or not sections:
+
+
+def _validate_active_draft_sections(
+    *,
+    stage: Any,
+    active_draft: dict[str, Any] | None,
+    selected_question_id: str | None,
+    active_argument_chain_id: str | None,
+    active_fit_mapping_id: str | None,
+    issues: list[ValidationIssue],
+) -> None:
+    if stage not in {"drafting", "critique", "revision", "frozen"} or active_draft is None:
+        return
+    sections = active_draft.get("sections")
+    if not isinstance(sections, list) or not sections:
+        issues.append(
+            ValidationIssue(
+                path="application_drafts.sections",
+                message=f"{stage} 阶段的激活草稿必须包含非空 sections。",
+            )
+        )
+        return
+    if selected_question_id is not None and not _draft_sections_link_object(active_draft, selected_question_id):
+        issues.append(
+            ValidationIssue(
+                path="application_drafts.sections",
+                message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ScientificQuestionCard。",
+            )
+        )
+    if active_argument_chain_id is not None and not _draft_sections_link_object(active_draft, active_argument_chain_id):
+        issues.append(
+            ValidationIssue(
+                path="application_drafts.sections",
+                message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ArgumentChain。",
+            )
+        )
+    if active_fit_mapping_id is not None and not _draft_sections_link_object(active_draft, active_fit_mapping_id):
+        issues.append(
+            ValidationIssue(
+                path="application_drafts.sections",
+                message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ApplicantFitMapping。",
+            )
+        )
+
+
+def _validate_critique_weight_contract(
+    *,
+    active_critique: dict[str, Any],
+    issues: list[ValidationIssue],
+) -> None:
+    for field, expected in (
+        ("necessity_scientific_value", 60),
+        ("applicant_fit", 30),
+        ("feasibility", 10),
+    ):
+        criterion = active_critique.get(field, {})
+        if criterion.get("weight") != expected:
             issues.append(
                 ValidationIssue(
-                    path="application_drafts.sections",
-                    message=f"{stage} 阶段的激活草稿必须包含非空 sections。",
+                    path=f"mentor_critiques.{field}",
+                    message=f"{field} 的权重必须固定为 {expected}。",
                 )
             )
-        else:
-            if selected_question_id is not None and not _draft_sections_link_object(active_draft, selected_question_id):
-                issues.append(
-                    ValidationIssue(
-                        path="application_drafts.sections",
-                        message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ScientificQuestionCard。",
-                    )
-                )
-            if active_argument_chain_id is not None and not _draft_sections_link_object(active_draft, active_argument_chain_id):
-                issues.append(
-                    ValidationIssue(
-                        path="application_drafts.sections",
-                        message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ArgumentChain。",
-                    )
-                )
-            if active_fit_mapping_id is not None and not _draft_sections_link_object(active_draft, active_fit_mapping_id):
-                issues.append(
-                    ValidationIssue(
-                        path="application_drafts.sections",
-                        message=f"{stage} 阶段的激活草稿 sections 必须显式链接当前 ApplicantFitMapping。",
-                    )
-                )
-    _validate_revision_transition_contract(
-        stage=stage,
-        active_draft=active_draft,
-        active_revision_plan=active_revision_plan,
-        active_critique=active_critique,
-        reviewed_revision_plan=reviewed_revision_plan,
-        issues=issues,
-    )
-    _validate_forced_rollback_contract(active_critique=active_critique, issues=issues)
-    _validate_presubmission_gate_contract(
-        stage=stage,
-        gates=gates,
-        active_draft=active_draft,
-        active_revision_plan=active_revision_plan,
-        active_critique=active_critique,
-        issues=issues,
-    )
-    if active_critique is not None:
-        for field, expected in (
-            ("necessity_scientific_value", 60),
-            ("applicant_fit", 30),
-            ("feasibility", 10),
-        ):
-            criterion = active_critique.get(field, {})
-            if criterion.get("weight") != expected:
-                issues.append(
-                    ValidationIssue(
-                        path=f"mentor_critiques.{field}",
-                        message=f"{field} 的权重必须固定为 {expected}。",
-                    )
-                )
 
 def _validate_revision_transition_contract(
     *,
