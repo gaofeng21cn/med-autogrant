@@ -24,6 +24,7 @@ from med_autogrant.hermes_runtime_parts.io import (
     _read_final_package as _read_final_package_from_runtime_parts,
     _write_hosted_contract_bundle_output,
 )
+from med_autogrant.workspace import WorkspaceFileError, WorkspaceStateError
 
 
 HOSTED_CONTRACT_VERSION = 1
