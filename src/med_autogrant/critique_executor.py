@@ -18,13 +18,11 @@ from med_autogrant.critique_policy import (
 )
 from med_autogrant.hermes_native_executor import run_hermes_agent_exec
 from med_autogrant.schema_loader import SchemaStore
-from med_autogrant.workspace import (
-    WorkspaceStateError,
-    _SchemaSubsetValidator,
-    _build_workspace_state,
-    _collect_known_ids,
-    validate_workspace_document,
-)
+from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
+from med_autogrant.workspace_projection_parts import _build_workspace_state
+from med_autogrant.workspace_reference_validation import _collect_known_ids
+from med_autogrant.workspace_types import WorkspaceStateError
+from med_autogrant.workspace_validation import validate_workspace_document
 
 
 CodexRunner = Callable[[str], dict[str, Any]]

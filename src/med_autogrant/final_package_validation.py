@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.workspace import WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 SUPPORTED_FINAL_PACKAGE_VERSION = 1
@@ -105,4 +105,3 @@ def _validate_required_final_package_fields(final_package: dict[str, Any]) -> No
         or freeze_manifest_checkpoint_status != verification_checkpoint_status
     ):
         raise WorkspaceStateError("final package checkpoint_status 不一致。")
-

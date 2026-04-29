@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.workspace import WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 DEFAULT_CODEX_COMMAND = ("codex",)

@@ -7,13 +7,13 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 
 from med_autogrant.codex_cli import read_codex_cli_contract
+from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
-    WorkspaceStateError,
-    _SchemaSubsetValidator,
-    _collect_known_ids,
     materialize_workspace_surfaces,
-    validate_workspace_document,
 )
+from med_autogrant.workspace_reference_validation import _collect_known_ids
+from med_autogrant.workspace_types import WorkspaceStateError
+from med_autogrant.workspace_validation import validate_workspace_document
 from med_autogrant.schema_loader import SchemaStore
 
 def _build_direction_screening_prompt(*, input_path: str | Path, known_ids: list[str]) -> str:

@@ -4,11 +4,11 @@ from typing import Any
 
 from med_autogrant.stage_router import determine_next_step
 from med_autogrant.workspace import (
-    WorkspaceStateError,
     build_critique_summary,
     summarize_workspace_document,
-    validate_workspace_document,
 )
+from med_autogrant.workspace_types import WorkspaceStateError
+from med_autogrant.workspace_validation import validate_workspace_document
 
 
 def build_stage_route_report(document: dict[str, Any]) -> dict[str, Any]:

@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from med_autogrant.control_plane import resolve_runtime_state_root
-from med_autogrant.workspace import WorkspaceError
+from med_autogrant.workspace_types import WorkspaceError
 
 
 class HermesDependencyError(WorkspaceError):

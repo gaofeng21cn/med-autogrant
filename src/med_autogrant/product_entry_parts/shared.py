@@ -34,11 +34,10 @@ from med_autogrant.product_entry_parts.runtime_contracts import (
 from med_autogrant.mainline_status import read_mainline_status
 from med_autogrant.public_cli import public_cli_command, public_command_label
 from med_autogrant.workspace import (
-    WorkspaceFileError,
-    WorkspaceStateError,
     load_workspace_document,
-    validate_workspace_document,
 )
+from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
+from med_autogrant.workspace_validation import validate_workspace_document
 
 from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
 from opl_harness_shared.family_orchestration import (

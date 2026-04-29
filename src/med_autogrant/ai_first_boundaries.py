@@ -51,7 +51,7 @@ def active_critique_ai_review_provenance(document: dict[str, Any]) -> dict[str, 
 def require_active_ai_backed_critique(document: dict[str, Any]) -> dict[str, Any]:
     provenance = active_critique_ai_review_provenance(document)
     if provenance["ai_reviewer_required"]:
-        from med_autogrant.workspace import WorkspaceStateError
+        from med_autogrant.workspace_types import WorkspaceStateError
 
         raise WorkspaceStateError(
             "AI reviewer-backed critique is required before this mechanical quality/revision surface can proceed."

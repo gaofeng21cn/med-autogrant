@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import Any, Callable
 
-from med_autogrant.workspace import WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 ConfigLoader = Callable[[], dict[str, Any]]

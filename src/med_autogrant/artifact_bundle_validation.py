@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.workspace import WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 REQUIRED_ARTIFACT_BUNDLE_OBJECT_FIELDS = (
@@ -415,4 +415,3 @@ def _validate_required_artifact_bundle_fields(
                         workspace_id=workspace_id,
                         lifecycle_stage=lifecycle_stage,
                     )
-

@@ -5,17 +5,14 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.workspace import (
-    WorkspaceStateError,
-    _collect_known_ids,
-    _require_workspace_context,
-    _serialize_reviewed_revision_evidence,
-)
 from med_autogrant.ai_first_boundaries import require_active_ai_backed_critique
 from med_autogrant.hermes_runtime_parts.io import (
     _guard_revision_output_identity,
     _write_revised_workspace_output,
 )
+from med_autogrant.workspace_projection_parts import _require_workspace_context, _serialize_reviewed_revision_evidence
+from med_autogrant.workspace_reference_validation import _collect_known_ids
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 ALLOWED_ACTION_TYPES = {

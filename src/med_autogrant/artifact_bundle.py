@@ -9,7 +9,8 @@ from med_autogrant.hermes_runtime_parts.io import (
     _guard_artifact_bundle_output_identity,
     _write_artifact_bundle_output,
 )
-from med_autogrant.workspace import WorkspaceStateError, _build_workspace_state
+from med_autogrant.workspace_projection_parts import _build_workspace_state
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 BUNDLE_VERSION = 1

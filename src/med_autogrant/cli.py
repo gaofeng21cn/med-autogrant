@@ -18,7 +18,7 @@ from med_autogrant.public_cli import (
     PUBLIC_TO_INTERNAL_COMMAND,
     public_command_label,
 )
-from med_autogrant.workspace import WorkspaceError, WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceError, WorkspaceStateError
 
 from med_autogrant.cli_rendering import (
     _extract_error_details,

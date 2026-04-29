@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.workspace import WorkspaceStateError, _require_workspace_context, validate_workspace_document
+from med_autogrant.workspace_projection_parts import _require_workspace_context
+from med_autogrant.workspace_types import WorkspaceStateError
+from med_autogrant.workspace_validation import validate_workspace_document
 
 
 def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:

@@ -3,7 +3,8 @@ from __future__ import annotations
 import hashlib
 from typing import Any, Iterable, Mapping
 
-from med_autogrant.workspace import WorkspaceStateError, build_critique_summary
+from med_autogrant.workspace import build_critique_summary
+from med_autogrant.workspace_types import WorkspaceStateError
 
 _QUALITY_CONTROLLER_ACTIONS = {
     "continue_mainline",

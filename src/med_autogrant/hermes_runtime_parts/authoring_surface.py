@@ -62,20 +62,18 @@ from med_autogrant.domain_entry_contract import (
 from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.hermes_runtime_parts import shared as _runtime_shared
 from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
+from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
-    WorkspaceError,
-    WorkspaceFileError,
-    WorkspaceStateError,
-    _SchemaSubsetValidator,
-    _require_workspace_context,
     build_grant_evidence_grounding,
     build_grant_intake_audit,
     build_critique_summary,
     load_workspace_document,
     materialize_workspace_surfaces,
     summarize_workspace_document,
-    validate_workspace_document,
 )
+from med_autogrant.workspace_projection_parts import _require_workspace_context
+from med_autogrant.workspace_types import WorkspaceError, WorkspaceFileError, WorkspaceStateError
+from med_autogrant.workspace_validation import validate_workspace_document
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 
 from med_autogrant.hermes_runtime_parts.contracts import (

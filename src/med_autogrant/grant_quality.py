@@ -10,12 +10,12 @@ from med_autogrant.ai_first_boundaries import active_critique_ai_review_provenan
 from med_autogrant.facade_exports import re_export_public_names
 
 from med_autogrant.workspace import (
-    WorkspaceStateError,
-    _build_workspace_state,
     build_critique_summary,
     build_grant_evidence_grounding,
     build_grant_intake_audit,
 )
+from med_autogrant.workspace_projection_parts import _build_workspace_state
+from med_autogrant.workspace_types import WorkspaceStateError
 
 re_export_public_names(_grant_quality_closure, globals())
 re_export_public_names(_grant_quality_assessment, globals())

@@ -3,7 +3,8 @@ from __future__ import annotations
 from typing import Any
 
 from med_autogrant.cli_rendering_parts import _render_text
-from med_autogrant.workspace import WorkspaceError, WorkspaceStateError, load_workspace_document
+from med_autogrant.workspace import load_workspace_document
+from med_autogrant.workspace_types import WorkspaceError, WorkspaceStateError
 
 
 def _extract_workspace_context_for_error(args: Any) -> dict[str, Any]:

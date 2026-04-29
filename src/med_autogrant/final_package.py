@@ -11,7 +11,8 @@ from med_autogrant.hermes_runtime_parts.io import (
     _write_final_package_output,
 )
 from med_autogrant.route_report import build_stage_route_report
-from med_autogrant.workspace import WorkspaceStateError, _require_workspace_context
+from med_autogrant.workspace_projection_parts import _require_workspace_context
+from med_autogrant.workspace_types import WorkspaceStateError
 
 
 FINAL_PACKAGE_VERSION = 1
