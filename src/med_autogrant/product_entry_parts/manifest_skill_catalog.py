@@ -3,13 +3,13 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
+from med_autogrant.product_entry_parts.primitives import PRODUCT_FRONTDESK_KIND, TARGET_DOMAIN_ID
 from med_autogrant.product_entry_parts.runtime_surfaces import _build_opl_runtime_manager_registration
-from med_autogrant.product_entry_parts.shared import (
-    PRODUCT_FRONTDESK_KIND,
-    TARGET_DOMAIN_ID,
-    _build_shared_skill_catalog,
-    _build_shared_skill_descriptor,
-    public_cli_command,
+from med_autogrant.public_cli import public_cli_command
+
+from opl_harness_shared.skill_catalog import (
+    build_skill_catalog as _build_shared_skill_catalog,
+    build_skill_descriptor as _build_shared_skill_descriptor,
 )
 
 

@@ -111,7 +111,7 @@ from med_autogrant.product_entry_parts.runtime_surfaces import (
     _schema_payload_without_contract_bundle,
     _validate_runtime_continuity_alignment,
 )
-from med_autogrant.product_entry_parts.shared import (
+from med_autogrant.product_entry_parts.primitives import (
     _require_mapping,
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,

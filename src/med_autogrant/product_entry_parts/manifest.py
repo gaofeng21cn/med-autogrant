@@ -1,14 +1,18 @@
 from __future__ import annotations
 
-from med_autogrant.product_entry_parts.shared import (
-    Any,
-    PRODUCT_FRONTDESK_SCHEMA_FILE,
-    Path,
-    _build_shared_family_product_frontdesk_from_manifest,
+from pathlib import Path
+from typing import Any
+
+from med_autogrant.product_entry_parts.primitives import (
     _require_mapping,
 )
+from med_autogrant.product_entry_parts.runtime_contracts import PRODUCT_FRONTDESK_SCHEMA_FILE
 from med_autogrant.product_entry_parts.loop_contracts import _validate_product_frontdesk_contract
 from med_autogrant.product_entry_parts.manifest_builder import ProductEntryManifestBuilderMixin
+
+from opl_harness_shared.product_entry_companions import (
+    build_family_product_frontdesk_from_manifest as _build_shared_family_product_frontdesk_from_manifest,
+)
 
 
 

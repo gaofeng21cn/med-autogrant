@@ -1,47 +1,38 @@
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Any
+
+from med_autogrant.domain_entry_contract import (
+    build_domain_entry_contract,
+    build_gateway_interaction_contract,
+    build_shared_handoff,
+)
+from med_autogrant.mainline_status import read_mainline_status
 from med_autogrant.product_entry_parts.autonomy_observability import build_grant_autonomy_observability
-from med_autogrant.product_entry_parts.shared import (
-    Any,
+from med_autogrant.product_entry_parts.orchestration_companions import (
+    _build_family_orchestration_companion,
+    _build_managed_runtime_contract,
+    _build_product_entry_start,
+    _route_status_from_route_id,
+)
+from med_autogrant.product_entry_parts.primitives import (
     GRANT_COCKPIT_KIND,
     GRANT_DIRECT_ENTRY_KIND,
     GRANT_PROGRESS_PROJECTION_KIND,
     GRANT_USER_LOOP_KIND,
     PRODUCT_ENTRY_MANIFEST_KIND,
-    PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
     PRODUCT_FRONTDESK_KIND,
-    Path,
     TARGET_DOMAIN_ID,
-    _build_author_side_route_contract,
-    _build_family_orchestration_companion,
-    _build_managed_runtime_contract,
-    _build_product_entry_start,
-    _build_shared_automation_catalog,
-    _build_shared_automation_descriptor,
-    _build_shared_detailed_readiness,
-    _build_shared_family_product_entry_manifest,
-    _build_shared_operator_loop_action_catalog,
-    _build_shared_product_entry_overview,
-    _build_shared_product_entry_quickstart,
-    _build_shared_product_entry_readiness,
-    _build_shared_product_entry_resume_surface,
-    _build_shared_product_entry_shell_catalog,
-    _build_shared_product_entry_shell_linked_surface,
-    _build_shared_runtime_inventory,
-    _build_shared_task_lifecycle,
-    _build_shared_workflow_coverage_item,
-    _collect_family_human_gate_ids,
     _optional_mapping,
     _optional_string_from_mapping,
     _read_funding_call_from_summary,
     _require_mapping,
     _require_nonempty_string_from_mapping,
-    _route_status_from_route_id,
-    build_domain_entry_contract,
-    build_gateway_interaction_contract,
-    build_shared_handoff,
-    public_cli_command,
-    read_mainline_status,
+)
+from med_autogrant.product_entry_parts.runtime_contracts import (
+    PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
+    _build_author_side_route_contract,
 )
 from med_autogrant.product_entry_parts.loop_contracts import (
     _build_mainline_snapshot,
@@ -56,6 +47,31 @@ from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_runtime_control_surface,
     _build_session_continuity_surface,
     _build_skill_runtime_continuity_envelope,
+)
+from med_autogrant.public_cli import public_cli_command
+
+from opl_harness_shared.automation_companions import (
+    build_automation_catalog as _build_shared_automation_catalog,
+    build_automation_descriptor as _build_shared_automation_descriptor,
+)
+from opl_harness_shared.product_entry_companions import (
+    build_family_product_entry_manifest as _build_shared_family_product_entry_manifest,
+    build_operator_loop_action_catalog as _build_shared_operator_loop_action_catalog,
+    build_product_entry_overview as _build_shared_product_entry_overview,
+    build_product_entry_quickstart as _build_shared_product_entry_quickstart,
+    build_product_entry_readiness as _build_shared_product_entry_readiness,
+    build_product_entry_resume_surface as _build_shared_product_entry_resume_surface,
+    build_product_entry_shell_catalog as _build_shared_product_entry_shell_catalog,
+    build_product_entry_shell_linked_surface as _build_shared_product_entry_shell_linked_surface,
+    collect_family_human_gate_ids as _collect_family_human_gate_ids,
+)
+from opl_harness_shared.product_entry_program_companions import (
+    build_detailed_readiness as _build_shared_detailed_readiness,
+    build_workflow_coverage_item as _build_shared_workflow_coverage_item,
+)
+from opl_harness_shared.runtime_task_companions import (
+    build_runtime_inventory as _build_shared_runtime_inventory,
+    build_task_lifecycle as _build_shared_task_lifecycle,
 )
 
 

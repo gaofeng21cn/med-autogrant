@@ -587,7 +587,7 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         )
 
     def test_family_orchestration_action_graph_uses_shared_product_entry_orchestration(self) -> None:
-        from med_autogrant.product_entry_parts import shared as module
+        from med_autogrant.product_entry_parts import orchestration_companions as module
 
         captured: dict[str, object] = {}
 

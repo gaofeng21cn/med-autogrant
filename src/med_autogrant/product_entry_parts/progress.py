@@ -1,45 +1,48 @@
 from __future__ import annotations
 
-from med_autogrant.product_entry_parts.shared import (
-    Any,
+from pathlib import Path
+from typing import Any
+
+from med_autogrant.mainline_status import read_mainline_status
+from med_autogrant.product_entry_parts.orchestration_companions import (
+    _build_family_orchestration_companion,
+    _build_managed_runtime_contract,
+    _route_status_from_route_id,
+)
+from med_autogrant.product_entry_parts.primitives import (
     GRANT_COCKPIT_KIND,
-    GRANT_COCKPIT_SCHEMA_FILE,
     GRANT_DIRECT_ENTRY_KIND,
     GRANT_DIRECT_ENTRY_VERSION,
     GRANT_PROGRESS_PROJECTION_KIND,
     GRANT_PROGRESS_PROJECTION_VERSION,
-    GRANT_PROGRESS_SCHEMA_FILE,
     GRANT_USER_LOOP_KIND,
     GRANT_USER_LOOP_VERSION,
-    PROGRESS_ANSWER_CHECKLIST,
-    Path,
     SUPPORTED_ENTRY_MODES,
     TARGET_DOMAIN_ID,
     _assert_entry_mode,
-    _build_author_decision_summary,
-    _build_current_stage_summary,
-    _build_family_orchestration_companion,
-    _build_focus_payload,
-    _build_managed_runtime_contract,
-    _build_workspace_overview,
-    _build_workspace_status,
     _optional_mapping,
     _optional_string_from_mapping,
     _read_funding_call_from_summary,
-    _read_next_system_action,
     _read_nonempty_string_list,
-    _read_projection_blockers,
     _require_mapping,
     _require_matching_top_level_identity,
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
     _require_optional_string,
-    _route_status_from_route_id,
+)
+from med_autogrant.product_entry_parts.progress_projection_helpers import (
+    _build_author_decision_summary,
+    _build_current_stage_summary,
+    _build_focus_payload,
+    _build_workspace_overview,
+    _build_workspace_status,
+    _read_next_system_action,
+    _read_projection_blockers,
+)
+from med_autogrant.product_entry_parts.runtime_contracts import (
+    GRANT_COCKPIT_SCHEMA_FILE,
+    GRANT_PROGRESS_SCHEMA_FILE,
     _validate_contract_schema,
-    build_status_narration_contract,
-    public_cli_command,
-    public_command_label,
-    read_mainline_status,
 )
 from med_autogrant.product_entry_parts.loop_contracts import (
     _build_grant_user_loop_commands,
@@ -51,6 +54,12 @@ from med_autogrant.product_entry_parts.loop_contracts import (
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_product_command_catalog,
     _build_runtime_continuity_surfaces,
+)
+from med_autogrant.public_cli import public_cli_command, public_command_label
+
+from opl_harness_shared.status_narration import (
+    PROGRESS_ANSWER_CHECKLIST,
+    build_status_narration_contract,
 )
 
 

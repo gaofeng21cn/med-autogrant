@@ -1,19 +1,22 @@
 from __future__ import annotations
 
-from med_autogrant.product_entry_parts.shared import (
-    Any,
-    Mapping,
-    Path,
+from pathlib import Path
+from typing import Any, Mapping
+
+from med_autogrant.mainline_status import read_mainline_status
+from med_autogrant.product_entry_parts.primitives import (
     REVIEW_CONTEXT_STAGES,
-    _build_shared_product_entry_preflight,
     _require_mapping,
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
     _require_optional_string,
-    load_workspace_document,
-    public_cli_command,
-    read_mainline_status,
-    validate_workspace_document,
+)
+from med_autogrant.public_cli import public_cli_command
+from med_autogrant.workspace import load_workspace_document
+from med_autogrant.workspace_validation import validate_workspace_document
+
+from opl_harness_shared.product_entry_program_companions import (
+    build_product_entry_preflight as _build_shared_product_entry_preflight,
 )
 
 
