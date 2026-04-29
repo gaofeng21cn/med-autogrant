@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import sys
 import unittest
 from pathlib import Path
@@ -36,6 +37,38 @@ class HermesRuntimeSplitStructureTest(unittest.TestCase):
         self.assertIs(
             hermes_runtime._build_autonomy_quality_evaluator_output,
             runtime_ops.build_autonomy_quality_evaluator_output,
+        )
+
+    def test_runtime_facade_keeps_handoff_monkeypatch_targets(self) -> None:
+        from med_autogrant import hermes_runtime
+        from med_autogrant.hermes_runtime_parts import handoff_surfaces
+
+        self.assertIs(
+            hermes_runtime.build_artifact_bundle_document,
+            handoff_surfaces.build_artifact_bundle_document,
+        )
+        self.assertIs(
+            hermes_runtime._guard_critique_output_identity,
+            handoff_surfaces._guard_critique_output_identity,
+        )
+
+    def test_runtime_substrate_does_not_directly_import_handoff_owners(self) -> None:
+        substrate_path = SRC_ROOT / "med_autogrant" / "hermes_runtime_parts" / "substrate.py"
+        tree = ast.parse(substrate_path.read_text(encoding="utf-8"))
+        imported_modules = {
+            node.module
+            for node in ast.walk(tree)
+            if isinstance(node, ast.ImportFrom) and isinstance(node.module, str)
+        }
+
+        self.assertFalse(
+            {
+                "med_autogrant.authoring_executor",
+                "med_autogrant.artifact_bundle",
+                "med_autogrant.critique_executor",
+                "med_autogrant.revision_executor",
+            }
+            & imported_modules
         )
 
     def test_domain_entry_does_not_import_runtime_facade(self) -> None:

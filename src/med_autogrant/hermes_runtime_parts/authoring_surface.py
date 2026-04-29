@@ -113,6 +113,7 @@ from med_autogrant.hermes_runtime_parts.runtime_ops import (
     _build_autonomy_quality_evaluator_output,
     _looks_like_workspace,
 )
+from med_autogrant.hermes_runtime_parts.authoring_mainline import build_authoring_mainline_payload
 
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
@@ -280,183 +281,19 @@ class HermesRuntimeAuthoringSurfaceMixin:
         resolved_output_dir = Path(output_dir).expanduser().resolve()
         resolved_output_dir.mkdir(parents=True, exist_ok=True)
 
-        loop_state = {"cycle": 0}
-
-        def _materialize_loop_input(workspace: dict[str, Any]) -> Path:
-            input_path_for_cycle = resolved_output_dir / f"cycle-{loop_state['cycle'] + 1:02d}-input-workspace.json"
-            _write_revised_workspace_output(input_path_for_cycle, workspace)
-            return input_path_for_cycle
-
-        def _extract_draft_id(workspace: dict[str, Any]) -> str | None:
-            selection = workspace.get("current_selection") or {}
-            draft_id = selection.get("active_draft_id")
-            if isinstance(draft_id, str) and draft_id.strip():
-                return draft_id
-            return None
-
-        def _write_cycle_workspace(path: Path, workspace: dict[str, Any]) -> None:
-            _guard_workspace_output_identity(
-                path,
-                workspace_document=workspace,
-                draft_id=_extract_draft_id(workspace),
-            )
-            _write_revised_workspace_output(path, workspace)
-
-        def _stage_runner(stage_name: str):
-            def _runner(workspace: dict[str, Any]) -> dict[str, Any]:
-                loop_state["cycle"] += 1
-                current_input_path = _materialize_loop_input(workspace)
-                if stage_name == "direction_screening":
-                    execution_document = build_direction_screening_execution_document(
-                        document=workspace,
-                        input_path=current_input_path,
-                    )
-                    next_workspace = execution_document["direction_screening_workspace"]
-                elif stage_name == "question_refinement":
-                    execution_document = build_question_refinement_execution_document(
-                        document=workspace,
-                        input_path=current_input_path,
-                    )
-                    next_workspace = execution_document["question_refinement_workspace"]
-                elif stage_name == "argument_building":
-                    execution_document = build_argument_building_execution_document(
-                        document=workspace,
-                        input_path=current_input_path,
-                    )
-                    next_workspace = execution_document["argument_building_workspace"]
-                elif stage_name == "fit_alignment":
-                    execution_document = build_fit_alignment_execution_document(
-                        document=workspace,
-                        input_path=current_input_path,
-                    )
-                    next_workspace = execution_document["fit_alignment_workspace"]
-                elif stage_name == "outline":
-                    execution_document = build_outline_execution_document(
-                        document=workspace,
-                        input_path=current_input_path,
-                    )
-                    next_workspace = execution_document["outline_workspace"]
-                elif stage_name == "drafting":
-                    execution_document = build_drafting_execution_document(
-                        document=workspace,
-                        input_path=current_input_path,
-                    )
-                    next_workspace = execution_document["drafting_workspace"]
-                elif stage_name == "critique":
-                    execution_document = build_critique_execution_document(
-                        document=workspace,
-                        input_path=current_input_path,
-                        executor_kind=executor_kind,
-                    )
-                    next_workspace = execution_document["critique_workspace"]
-                elif stage_name == "revision":
-                    execution_document = build_revision_execution_document(document=workspace)
-                    next_workspace = execution_document["revised_workspace"]
-                elif stage_name == "frozen":
-                    execution_document = build_freeze_execution_document(document=workspace)
-                    next_workspace = execution_document["frozen_workspace"]
-                else:
-                    raise WorkspaceStateError(f"execute-authoring-mainline-loop 不支持 stage runner: {stage_name}")
-
-                output_path_for_cycle = resolved_output_dir / f"cycle-{loop_state['cycle']:02d}-{stage_name}-workspace.json"
-                _write_cycle_workspace(output_path_for_cycle, next_workspace)
-                return {
-                    "workspace": next_workspace,
-                }
-
-            return _runner
-
-        def _quality_aware_route_resolver(workspace: dict[str, Any]) -> dict[str, Any]:
-            route = determine_next_step(workspace)
-            build_scorecard = resolve_runtime_patch_target(
-                "build_grant_quality_scorecard",
-                build_grant_quality_scorecard,
-            )
-            quality_scorecard = build_scorecard(workspace)
-            return _apply_quality_gate_to_route(route=route, quality_scorecard=quality_scorecard)
-
         run_mainline_controller = resolve_runtime_patch_target(
             "run_authoring_mainline_controller",
             run_authoring_mainline_controller,
         )
-        loop = run_mainline_controller(
-            current_workspace=starting_workspace,
+        return build_authoring_mainline_payload(
+            runtime=self,
+            input_path=resolved_input_path,
+            output_dir=resolved_output_dir,
+            starting_workspace=starting_workspace,
             max_cycles=max_cycles,
-            route_resolver=_quality_aware_route_resolver,
-            stage_runners={
-                "direction_screening": _stage_runner("direction_screening"),
-                "question_refinement": _stage_runner("question_refinement"),
-                "argument_building": _stage_runner("argument_building"),
-                "fit_alignment": _stage_runner("fit_alignment"),
-                "outline": _stage_runner("outline"),
-                "drafting": _stage_runner("drafting"),
-                "critique": _stage_runner("critique"),
-                "revision": _stage_runner("revision"),
-                "frozen": _stage_runner("frozen"),
-            },
+            executor_kind=executor_kind,
+            run_authoring_mainline_controller=run_mainline_controller,
         )
-        final_workspace = loop["final_workspace"]
-        final_route = loop["final_route"]
-        final_workspace_path = resolved_output_dir / "authoring-mainline-final-workspace.json"
-        _write_cycle_workspace(final_workspace_path, final_workspace)
-        build_scorecard = resolve_runtime_patch_target(
-            "build_grant_quality_scorecard",
-            build_grant_quality_scorecard,
-        )
-        build_dossier = resolve_runtime_patch_target(
-            "build_grant_quality_closure_dossier",
-            build_grant_quality_closure_dossier,
-        )
-        quality_scorecard = build_scorecard(final_workspace)
-        quality_closure_dossier = build_dossier(final_workspace)
-        mainline_loop_report = {
-            "surface_kind": "authoring_mainline_loop_report",
-            "loop_version": 1,
-            "loop_status": loop["loop_status"],
-            "started_from_stage": starting_workspace["lifecycle_stage"],
-            "completed_cycles": len(loop["cycles"]),
-            "max_cycles": max_cycles,
-            "termination_reason": loop["termination_reason"],
-            "final_stage": final_workspace["lifecycle_stage"],
-            "final_recommended_stage": final_route.get("recommended_stage"),
-            "cycles": [
-                {
-                    "cycle": item["cycle"],
-                    "decision": item["decision"],
-                    "input_stage": item["input_workspace"]["lifecycle_stage"],
-                    "recommended_stage": item["route"].get("recommended_stage"),
-                    "route_reason": item["route"].get("reason") or "unknown",
-                    "output_stage": (
-                        item["output_workspace"]["lifecycle_stage"]
-                        if isinstance(item.get("output_workspace"), dict)
-                        else None
-                    ),
-                }
-                for item in loop["cycles"]
-            ],
-            "grant_quality_scorecard": quality_scorecard,
-            "grant_quality_closure_dossier": quality_closure_dossier,
-        }
-        _validate_schema_payload(
-            mainline_loop_report,
-            schema_file=AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE,
-            context="authoring_mainline_loop_report",
-        )
-        report_path = resolved_output_dir / "authoring-mainline-loop-report.json"
-        _write_json_output(report_path, mainline_loop_report, label="authoring mainline loop report")
-        return {
-            "ok": True,
-            "command": "execute-authoring-mainline-loop",
-            "grant_run_id": final_workspace["grant_run_id"],
-            "workspace_id": final_workspace["workspace_id"],
-            "draft_id": _extract_draft_id(final_workspace),
-            "lifecycle_stage": final_workspace["lifecycle_stage"],
-            "output_dir": str(resolved_output_dir),
-            "mainline_loop_report_path": str(report_path),
-            "final_workspace_path": str(final_workspace_path),
-            "mainline_loop_report": mainline_loop_report,
-            "final_workspace": final_workspace,
-        }
 
     def execute_grant_autonomy_controller(
         self,

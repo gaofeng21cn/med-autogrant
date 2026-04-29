@@ -5,16 +5,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.authoring_executor import (
-    build_argument_building_execution_document,
-    build_direction_screening_execution_document,
-    build_drafting_execution_document,
-    build_fit_alignment_execution_document,
-    build_freeze_execution_document,
-    build_outline_execution_document,
-    build_question_refinement_execution_document,
-)
-from med_autogrant.artifact_bundle import build_artifact_bundle_document
 from med_autogrant.control_plane import (
     CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
     read_current_program_contract as _read_current_program_contract_from_contract,
@@ -23,7 +13,6 @@ from med_autogrant.control_plane import (
     resolve_runtime_state_root,
     runtime_state_display_path,
 )
-from med_autogrant.critique_executor import build_critique_execution_document
 from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop
 from med_autogrant.authoring_mainline_controller import run_authoring_mainline_controller
 from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller
@@ -44,7 +33,6 @@ from med_autogrant.hosted_contract_bundle import (
 from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.upstream_hermes import HermesGrantRunLedger
-from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.funding_landscape_discovery import discover_funding_landscape
 from med_autogrant.funding_landscape_discovery import build_funding_landscape_cache
@@ -78,16 +66,19 @@ from med_autogrant.workspace_validation import validate_workspace_document
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.hermes_runtime_parts import shared as _runtime_shared
+from med_autogrant.hermes_runtime_parts import handoff_surfaces as _handoff_surfaces
 from med_autogrant.hermes_runtime_parts.authoring_surface import HermesRuntimeAuthoringSurfaceMixin
+from med_autogrant.hermes_runtime_parts.handoff_surfaces import HermesRuntimeHandoffSurfaceMixin
 from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
 
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 re_export_public_names(_runtime_shared, globals())
+re_export_public_names(_handoff_surfaces, globals())
 
 
-class HermesRuntimeSubstrate(HermesRuntimeAuthoringSurfaceMixin):
+class HermesRuntimeSubstrate(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimeHandoffSurfaceMixin):
     """Hermes owns runtime orchestration while MedAutoGrant keeps domain semantics."""
 
     runtime_owner = "Hermes"
@@ -552,255 +543,6 @@ class HermesRuntimeSubstrate(HermesRuntimeAuthoringSurfaceMixin):
             journal_path=resolved_journal_path,
             trigger="runtime-resume",
         )
-
-    def execute_direction_screening_pass(
-        self,
-        *,
-        input_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        execution_document = build_direction_screening_execution_document(
-            document=self._load_workspace(input_path),
-            input_path=input_path,
-        )
-        return self._write_authoring_execution_output(
-            command="execute-direction-screening-pass",
-            output_path=output_path,
-            execution_document=execution_document,
-            execution_key="direction_screening_execution",
-            workspace_key="direction_screening_workspace",
-        )
-
-    def execute_question_refinement_pass(
-        self,
-        *,
-        input_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        execution_document = build_question_refinement_execution_document(
-            document=self._load_workspace(input_path),
-            input_path=input_path,
-        )
-        return self._write_authoring_execution_output(
-            command="execute-question-refinement-pass",
-            output_path=output_path,
-            execution_document=execution_document,
-            execution_key="question_refinement_execution",
-            workspace_key="question_refinement_workspace",
-        )
-
-    def execute_argument_building_pass(
-        self,
-        *,
-        input_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        execution_document = build_argument_building_execution_document(
-            document=self._load_workspace(input_path),
-            input_path=input_path,
-        )
-        return self._write_authoring_execution_output(
-            command="execute-argument-building-pass",
-            output_path=output_path,
-            execution_document=execution_document,
-            execution_key="argument_building_execution",
-            workspace_key="argument_building_workspace",
-        )
-
-    def execute_fit_alignment_pass(
-        self,
-        *,
-        input_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        execution_document = build_fit_alignment_execution_document(
-            document=self._load_workspace(input_path),
-            input_path=input_path,
-        )
-        return self._write_authoring_execution_output(
-            command="execute-fit-alignment-pass",
-            output_path=output_path,
-            execution_document=execution_document,
-            execution_key="fit_alignment_execution",
-            workspace_key="fit_alignment_workspace",
-        )
-
-    def execute_outline_pass(
-        self,
-        *,
-        input_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        execution_document = build_outline_execution_document(
-            document=self._load_workspace(input_path),
-            input_path=input_path,
-        )
-        return self._write_authoring_execution_output(
-            command="execute-outline-pass",
-            output_path=output_path,
-            execution_document=execution_document,
-            execution_key="outline_execution",
-            workspace_key="outline_workspace",
-        )
-
-    def execute_drafting_pass(
-        self,
-        *,
-        input_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        execution_document = build_drafting_execution_document(
-            document=self._load_workspace(input_path),
-            input_path=input_path,
-        )
-        return self._write_authoring_execution_output(
-            command="execute-drafting-pass",
-            output_path=output_path,
-            execution_document=execution_document,
-            execution_key="drafting_execution",
-            workspace_key="drafting_workspace",
-        )
-
-    def build_artifact_bundle(
-        self,
-        *,
-        input_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        document = self._load_workspace(input_path)
-        build_bundle_document = resolve_runtime_patch_target(
-            "build_artifact_bundle_document",
-            build_artifact_bundle_document,
-        )
-        guard_bundle_output = resolve_runtime_patch_target(
-            "_guard_artifact_bundle_output_identity",
-            _guard_artifact_bundle_output_identity,
-        )
-        write_bundle_output = resolve_runtime_patch_target(
-            "_write_artifact_bundle_output",
-            _write_artifact_bundle_output,
-        )
-        bundle = build_bundle_document(document=document)
-        resolved_output_path = Path(output_path).expanduser().resolve()
-        guard_bundle_output(
-            resolved_output_path,
-            grant_run_id=bundle["grant_run_id"],
-            workspace_id=bundle["workspace_id"],
-            draft_id=bundle["draft_id"],
-            lifecycle_stage=bundle["lifecycle_stage"],
-        )
-        write_bundle_output(resolved_output_path, bundle)
-        return {
-            "ok": True,
-            "command": "build-artifact-bundle",
-            "grant_run_id": bundle["grant_run_id"],
-            "workspace_id": bundle["workspace_id"],
-            "draft_id": bundle["draft_id"],
-            "lifecycle_stage": bundle["lifecycle_stage"],
-            "output_path": str(resolved_output_path),
-            "bundle": bundle,
-        }
-
-    def execute_revision_pass(
-        self,
-        *,
-        input_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        document = self._load_workspace(input_path)
-        build_revision_document = resolve_runtime_patch_target(
-            "build_revision_execution_document",
-            build_revision_execution_document,
-        )
-        guard_revision_output = resolve_runtime_patch_target(
-            "_guard_revision_output_identity",
-            _guard_revision_output_identity,
-        )
-        write_revised_workspace_output = resolve_runtime_patch_target(
-            "_write_revised_workspace_output",
-            _write_revised_workspace_output,
-        )
-        revision_document = build_revision_document(document=document)
-        resolved_output_path = Path(output_path).expanduser().resolve()
-        guard_revision_output(
-            resolved_output_path,
-            grant_run_id=revision_document["grant_run_id"],
-            workspace_id=revision_document["workspace_id"],
-            draft_id=revision_document["draft_id"],
-            active_revision_plan_id=revision_document["active_revision_plan_id"],
-            lifecycle_stage=revision_document["lifecycle_stage"],
-        )
-        write_revised_workspace_output(
-            resolved_output_path,
-            revision_document["revised_workspace"],
-        )
-        return {
-            "ok": True,
-            "command": "execute-revision-pass",
-            "grant_run_id": revision_document["grant_run_id"],
-            "workspace_id": revision_document["workspace_id"],
-            "draft_id": revision_document["draft_id"],
-            "lifecycle_stage": revision_document["lifecycle_stage"],
-            "output_path": str(resolved_output_path),
-            "revision_execution": revision_document["revision_execution"],
-            "revised_workspace": revision_document["revised_workspace"],
-        }
-
-    def execute_critique_pass(
-        self,
-        *,
-        input_path: str | Path,
-        output_path: str | Path,
-        executor_kind: str | None = None,
-    ) -> dict[str, Any]:
-        build_critique_document = resolve_runtime_patch_target(
-            "build_critique_execution_document",
-            build_critique_execution_document,
-        )
-        guard_critique_output = resolve_runtime_patch_target(
-            "_guard_critique_output_identity",
-            _guard_critique_output_identity,
-        )
-        write_revised_workspace_output = resolve_runtime_patch_target(
-            "_write_revised_workspace_output",
-            _write_revised_workspace_output,
-        )
-        critique_document = build_critique_document(
-            document=self._load_workspace(input_path),
-            input_path=input_path,
-            executor_kind=executor_kind,
-        )
-        resolved_output_path = Path(output_path).expanduser().resolve()
-        guard_critique_output(
-            resolved_output_path,
-            grant_run_id=critique_document["grant_run_id"],
-            workspace_id=critique_document["workspace_id"],
-            draft_id=critique_document["draft_id"],
-            active_revision_plan_id=critique_document["active_revision_plan_id"],
-            lifecycle_stage=critique_document["lifecycle_stage"],
-        )
-        write_revised_workspace_output(
-            resolved_output_path,
-            critique_document["critique_workspace"],
-        )
-        return {
-            "ok": True,
-            "command": "execute-critique-pass",
-            "grant_run_id": critique_document["grant_run_id"],
-            "workspace_id": critique_document["workspace_id"],
-            "draft_id": critique_document["draft_id"],
-            "lifecycle_stage": critique_document["lifecycle_stage"],
-            "output_path": str(resolved_output_path),
-            "critique_execution": critique_document["critique_execution"],
-            "critique_workspace": critique_document["critique_workspace"],
-        }
-
-
-
-
-
-
-
 
     def _load_workspace(self, input_path: str | Path) -> dict[str, Any]:
         return load_workspace_document(Path(input_path).expanduser().resolve())
