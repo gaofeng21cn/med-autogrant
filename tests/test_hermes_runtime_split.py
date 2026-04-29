@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import sys
 import unittest
+import ast
 from pathlib import Path
 
 
@@ -123,6 +124,33 @@ class HermesRuntimeSplitStructureTest(unittest.TestCase):
             for path in workspace_parts
             if "med_autogrant.workspace import" in path.read_text(encoding="utf-8")
         ]
+
+        self.assertEqual([], offenders)
+
+    def test_workspace_facade_imports_only_public_workspace_surfaces(self) -> None:
+        offenders: list[str] = []
+        forbidden_names = {
+            "WorkspaceError",
+            "WorkspaceFileError",
+            "WorkspaceStateError",
+            "_SchemaSubsetValidator",
+            "_build_workspace_state",
+            "_collect_known_ids",
+            "_require_workspace_context",
+            "validate_workspace_document",
+        }
+        for path in sorted((SRC_ROOT / "med_autogrant").rglob("*.py")):
+            if path.name == "workspace.py":
+                continue
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.ImportFrom) or node.module != "med_autogrant.workspace":
+                    continue
+                imported_names = {alias.name for alias in node.names}
+                forbidden_imports = sorted(imported_names & forbidden_names)
+                if forbidden_imports:
+                    relative_path = path.relative_to(REPO_ROOT).as_posix()
+                    offenders.append(f"{relative_path}: {', '.join(forbidden_imports)}")
 
         self.assertEqual([], offenders)
 

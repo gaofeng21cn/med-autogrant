@@ -78,7 +78,11 @@ Sentrux is tracked as an advisory architecture signal. Maintainers should run
 `sentrux gate .` before absorbing structural changes, and `sentrux check .`
 when changing dependency direction, package/export builders, runtime adapters,
 or product-entry internals. The CI workflow is intentionally advisory while the
-current baseline is tightened through focused cleanup lanes.
+current baseline is tightened through focused cleanup lanes. Merge decisions
+must prioritize product semantics and repo-native verification: large
+unexplained structural drops, cycle regressions, rule violations, or failing
+tests should block absorption, while a small score movement is acceptable when
+the dependency ownership becomes clearer.
 
 ## Plans And Historical Planning Artifacts
 

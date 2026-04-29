@@ -39,6 +39,8 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
     assert "sentrux check ." in docs_text
     assert "sentrux gate ." in docs_zh_text
     assert "sentrux check ." in docs_zh_text
+    assert "small score movement is acceptable" in docs_text
+    assert "Sentrux 分数小幅波动可以接受" in docs_zh_text
 
 
 @pytest.mark.meta
