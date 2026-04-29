@@ -18,11 +18,11 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
     workflow_path = REPO_ROOT / ".github" / "workflows" / "sentrux-advisory.yml"
 
     baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
-    assert baseline["quality_signal"] >= 0.58
+    assert baseline["quality_signal"] >= 0.59
     assert baseline["cycle_count"] == 0
 
     rules_text = rules_path.read_text(encoding="utf-8")
-    assert "min_quality = 0.58" in rules_text
+    assert "min_quality = 0.59" in rules_text
     assert "max_cycles = 0" in rules_text
     assert "max_depth = 14" in rules_text
     assert "runtime_facade" in rules_text
