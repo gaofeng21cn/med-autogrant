@@ -13,9 +13,47 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller  # noqa: E402
+from med_autogrant.grant_autonomy_trace import spend_budget_step  # noqa: E402
 
 
 class GrantAutonomyControllerTest(unittest.TestCase):
+    def test_spend_budget_step_records_action_trace_without_overrun(self) -> None:
+        action_trace: list[dict[str, Any]] = []
+
+        ok, spent_steps = spend_budget_step(
+            spent_steps=0,
+            budget_max=1,
+            action_trace=action_trace,
+            step_action="quality_evaluator",
+            cycle=3,
+        )
+
+        self.assertTrue(ok)
+        self.assertEqual(spent_steps, 1)
+        self.assertEqual(
+            action_trace,
+            [
+                {
+                    "step_action": "quality_evaluator",
+                    "cycle": 3,
+                    "step_index": 1,
+                    "result": "executed",
+                }
+            ],
+        )
+
+        ok, spent_steps = spend_budget_step(
+            spent_steps=spent_steps,
+            budget_max=1,
+            action_trace=action_trace,
+            step_action="mainline_runner",
+            cycle=3,
+        )
+
+        self.assertFalse(ok)
+        self.assertEqual(spent_steps, 1)
+        self.assertEqual(len(action_trace), 1)
+
     def _selection_start_request(self) -> dict[str, Any]:
         return {
             "request_id": "autonomy-req-001",

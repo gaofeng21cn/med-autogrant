@@ -7,6 +7,7 @@ from med_autogrant import grant_autonomy_parts as _grant_autonomy_parts
 from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
 from med_autogrant.grant_autonomy_start import _resolve_grant_autonomy_start
+from med_autogrant.grant_autonomy_trace import spend_budget_step
 from med_autogrant.grant_governance_adapter import (
     apply_family_governance_to_controller_plan,
     prioritize_closure_package_queue,
@@ -129,18 +130,14 @@ def run_grant_autonomy_controller(
 
     def spend_budget(*, step_action: str, cycle: int | None) -> bool:
         nonlocal spent_steps
-        if spent_steps + 1 > budget_max:
-            return False
-        spent_steps += 1
-        action_trace.append(
-            {
-                "step_action": step_action,
-                "cycle": cycle,
-                "step_index": spent_steps,
-                "result": "executed",
-            }
+        ok, spent_steps = spend_budget_step(
+            spent_steps=spent_steps,
+            budget_max=budget_max,
+            action_trace=action_trace,
+            step_action=step_action,
+            cycle=cycle,
         )
-        return True
+        return ok
 
     controller_plan = _normalize_controller_plan(
         controller_plan_input,

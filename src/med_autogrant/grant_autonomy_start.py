@@ -5,6 +5,7 @@ from typing import Any, Callable
 
 from med_autogrant import grant_autonomy_parts as _grant_autonomy_parts
 from med_autogrant.facade_exports import re_export_public_names
+from med_autogrant.grant_autonomy_trace import spend_budget_step
 
 re_export_public_names(_grant_autonomy_parts, globals())
 
@@ -129,18 +130,14 @@ def _resolve_grant_autonomy_start(
 
     def spend_budget(*, step_action: str, cycle: int | None) -> bool:
         nonlocal spent_steps
-        if spent_steps + 1 > budget_max:
-            return False
-        spent_steps += 1
-        action_trace.append(
-            {
-                "step_action": step_action,
-                "cycle": cycle,
-                "step_index": spent_steps,
-                "result": "executed",
-            }
+        ok, spent_steps = spend_budget_step(
+            spent_steps=spent_steps,
+            budget_max=budget_max,
+            action_trace=action_trace,
+            step_action=step_action,
+            cycle=cycle,
         )
-        return True
+        return ok
 
     if start_mode == "controller_report":
         if not isinstance(workspace, dict):
