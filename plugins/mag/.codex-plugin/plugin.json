@@ -27,6 +27,8 @@
       "Write"
     ],
     "websiteURL": "https://github.com/gaofeng21cn/med-autogrant",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png",
     "defaultPrompt": [
       "Inspect the current Med Auto Grant skill catalog for this workspace.",
       "Open the current Med Auto Grant frontdesk for this grant workspace.",
