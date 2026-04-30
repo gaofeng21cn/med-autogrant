@@ -21,6 +21,7 @@ Date: `2026-04-26`
 - `product build-entry` 与 lightweight `product entry` shell 继续作为 machine-readable domain/API catalog 的构建层。
 - `product frontdesk` 是 controller-owned direct frontdoor contract，读取当前 user loop、projection 与 route truth，并通过 `product-frontdesk.schema.json` generation-time fail-closed 校验；它属于 app skill 的内部 command contract。
 - `product-entry-manifest` 现已导出 `runtime_control` surface，固定 session/runtime/domain/executor owner、restore point、progress/artifact/approval control surface、direct-entry locator 与 `semantic_closure`，作为 integration/reference truth 供 OPL 或 hosted caller 归一化消费。
+- `MAG` 已声明 `OPL` family contract adoption：`contracts/runtime-program/opl-family-contract-adoption.json` 与 `docs/references/opl_family_contract_adoption.md` 把 runtime attempt、grant quality projection、incident learning 与 product operator projection 映射回 MAG-owned surfaces；`OPL` 只消费投影，不持有 grant truth、fundability judgment 或 submission-ready export gate。
 - `runtime_control` 与 skill catalog 的 `runtime_continuity` 也是 OPL Runtime Manager 的 MAG 侧注册/投影输入；任何上层索引都必须回指这些 repo-tracked surface，不能在 OPL 侧复制 authoring truth。
 - `product direct-entry` 组合 `workspace progress`、`workspace cockpit` 与 direct / `opl-handoff` entry mode，是 controller-owned product contract。
 - `mainline status` 负责 current line / current focus / completed records / remaining gaps；`mainline phase` 继续保留为维护者参考记录查询。

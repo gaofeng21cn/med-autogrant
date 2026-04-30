@@ -1,0 +1,65 @@
+{
+  "contract_kind": "mag_opl_family_contract_adoption.v1",
+  "domain_id": "med-autogrant",
+  "domain_owner": "Med Auto Grant",
+  "opl_role": "family-level projection consumer only",
+  "attempt_projection": {
+    "source_surfaces": [
+      "runtime_control",
+      "runtime_continuity",
+      "grant-autonomy-controller-report",
+      "workspace progress"
+    ],
+    "maps_to_opl_contract": "opl_family_runtime_attempt_contract.v1",
+    "owner_boundary": "MAG owns grant authoring runtime and route truth"
+  },
+  "quality_projection": {
+    "source_surfaces": [
+      "grant_quality_scorecard",
+      "grant_quality_closure_dossier",
+      "grant review",
+      "fundability gate",
+      "submission-ready export gate"
+    ],
+    "maps_to_opl_contract": "opl_family_domain_quality_projection_contract.v1",
+    "quality_gate_owner": "MAG grant authoring quality",
+    "claim_only_ready_forbidden": true
+  },
+  "incident_projection": {
+    "source_surfaces": [
+      "controller_report",
+      "runtime_control.semantic_closure",
+      "workspace cockpit",
+      "explicit wakeup/TODO queue"
+    ],
+    "maps_to_opl_contract": "opl_family_incident_learning_loop.v1",
+    "closure_rule": "domain-specific failure requires MAG-owned closure ref"
+  },
+  "operator_projection": {
+    "source_surfaces": [
+      "product frontdesk",
+      "product user-loop",
+      "workspace progress",
+      "workspace cockpit",
+      "product direct-entry"
+    ],
+    "maps_to_opl_contract": "opl_family_product_operator_projection.v1",
+    "required_fields": [
+      "source_refs",
+      "freshness",
+      "owner_split",
+      "next_surface_ref",
+      "human_gate_reason"
+    ]
+  },
+  "non_goals": [
+    "OPL owns grant truth",
+    "OPL owns fundability judgment",
+    "OPL bypasses submission-ready export gate",
+    "medical publication gate",
+    "visual render/export proof gate",
+    "generic persona QA",
+    "claim-only ready"
+  ]
+}
+
