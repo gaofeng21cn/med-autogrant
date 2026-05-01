@@ -58,7 +58,10 @@ def test_verify_script_wraps_canonical_make_lanes() -> None:
 def test_opl_module_healthcheck_uses_product_smoke_lane() -> None:
     healthcheck = _read("scripts/opl-module-healthcheck.sh")
 
-    assert "python scripts/line_budget.py" in healthcheck
+    assert 'export PATH="${HOME}/.local/bin:/opt/homebrew/bin:/usr/local/bin:${PATH}"' in healthcheck
+    assert "command -v python3" in healthcheck
+    assert "command -v uv" in healthcheck
+    assert "python3 scripts/line_budget.py" in healthcheck
     assert "make test-cli-smoke" in healthcheck
     assert "make test-fast" not in healthcheck
     assert "make test-family" not in healthcheck
