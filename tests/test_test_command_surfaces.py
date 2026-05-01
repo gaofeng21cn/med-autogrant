@@ -53,3 +53,12 @@ def test_verify_script_wraps_canonical_make_lanes() -> None:
     assert "make test-meta" in verify_script
     assert "make test-cli-smoke" in verify_script
     assert "make test-full" in verify_script
+
+
+def test_opl_module_healthcheck_uses_product_smoke_lane() -> None:
+    healthcheck = _read("scripts/opl-module-healthcheck.sh")
+
+    assert "python scripts/line_budget.py" in healthcheck
+    assert "make test-cli-smoke" in healthcheck
+    assert "make test-fast" not in healthcheck
+    assert "make test-family" not in healthcheck
