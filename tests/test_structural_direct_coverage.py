@@ -27,6 +27,7 @@ import med_autogrant.product_entry_parts.manifest_readiness as manifest_readines
 import med_autogrant.product_entry_parts.manifest_skill_catalog as manifest_skill_catalog
 import med_autogrant.product_entry_parts.preflight as preflight
 import med_autogrant.product_entry_parts.progress as progress
+import med_autogrant.product_entry_parts.runtime_registration as runtime_registration
 import med_autogrant.product_entry_parts.runtime_contracts as runtime_contracts
 import med_autogrant.product_entry_parts.runtime_surfaces as runtime_surfaces
 import med_autogrant.revision_executor as revision_executor
@@ -83,6 +84,7 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert preflight.ProductEntryPreflightMixin
     assert progress.ProductEntryProgressMixin
     assert runtime_contracts.PRODUCT_ENTRY_SCHEMA_FILE == "product-entry.schema.json"
+    assert runtime_registration._build_opl_runtime_manager_registration
     assert runtime_surfaces._build_runtime_continuity_surfaces
 
 
