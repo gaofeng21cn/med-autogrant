@@ -17,4 +17,5 @@ Current product truth, author-side boundary, and maintainer guidance belong in:
 
 Archived lanes:
 
+- [Plan completion audit 2026-05-01](./plan-completion-audit-2026-05-01.md)
 - [OMX historical archive](./omx/README.md)

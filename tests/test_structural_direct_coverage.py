@@ -23,6 +23,7 @@ import med_autogrant.product_entry_parts.entry as entry
 import med_autogrant.product_entry_parts.loop_contracts as loop_contracts
 import med_autogrant.product_entry_parts.manifest as manifest
 import med_autogrant.product_entry_parts.manifest_builder as manifest_builder
+import med_autogrant.product_entry_parts.manifest_readiness as manifest_readiness
 import med_autogrant.product_entry_parts.manifest_skill_catalog as manifest_skill_catalog
 import med_autogrant.product_entry_parts.preflight as preflight
 import med_autogrant.product_entry_parts.progress as progress
@@ -77,6 +78,7 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert loop_contracts._build_mainline_snapshot
     assert manifest.ProductEntryManifestMixin
     assert manifest_builder.ProductEntryManifestBuilderMixin
+    assert manifest_readiness.build_manifest_readiness_surfaces
     assert manifest_skill_catalog.build_product_entry_skill_catalog
     assert preflight.ProductEntryPreflightMixin
     assert progress.ProductEntryProgressMixin

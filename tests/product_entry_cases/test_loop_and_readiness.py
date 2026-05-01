@@ -188,10 +188,10 @@ class ProductEntryLoopReadinessTest(unittest.TestCase):
             return payload
 
         with patch(
-            "med_autogrant.product_entry_parts.manifest_builder._build_shared_workflow_coverage_item",
+            "med_autogrant.product_entry_parts.manifest_readiness._build_shared_workflow_coverage_item",
             side_effect=_fake_build_workflow_coverage_item,
         ) as workflow_builder, patch(
-            "med_autogrant.product_entry_parts.manifest_builder._build_shared_detailed_readiness",
+            "med_autogrant.product_entry_parts.manifest_readiness._build_shared_detailed_readiness",
             side_effect=_fake_build_detailed_readiness,
         ) as readiness_builder:
             manifest = MedAutoGrantProductEntry().build_product_entry_manifest(
