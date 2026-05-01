@@ -14,7 +14,6 @@ from med_autogrant.authoring_executor import (
     build_outline_execution_document,
     build_question_refinement_execution_document,
 )
-from med_autogrant.artifact_bundle import build_artifact_bundle_document
 from med_autogrant.control_plane import (
     CURRENT_PROGRAM_CONTRACT_RELATIVE_PATH,
     read_current_program_contract as _read_current_program_contract_from_contract,
@@ -32,16 +31,6 @@ from med_autogrant.grant_quality import (
     build_grant_quality_diff,
     build_grant_quality_scorecard,
 )
-from med_autogrant.final_package import (
-    _validate_required_artifact_bundle_fields,
-    build_final_package_document,
-)
-from med_autogrant.hosted_contract_bundle import (
-    SUPPORTED_FINAL_PACKAGE_VERSION,
-    _validate_required_final_package_fields,
-    build_hosted_contract_bundle_document,
-)
-from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.upstream_hermes import HermesGrantRunLedger
 from med_autogrant.revision_executor import build_revision_execution_document
@@ -54,13 +43,9 @@ from med_autogrant.project_profile_selector import (
     select_project_profile,
 )
 from med_autogrant.stage_router import _build_forced_rollback_actions, determine_next_step
-from med_autogrant.domain_entry_contract import (
-    SERVICE_SAFE_ENTRY_ADAPTER,
-    SERVICE_SAFE_ENTRY_SURFACE_KIND,
-    build_domain_entry_contract,
-)
 from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.hermes_runtime_parts import shared as _runtime_shared
+from med_autogrant.hermes_runtime_parts.package_surface import HermesRuntimePackageSurfaceMixin
 from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
@@ -89,22 +74,12 @@ from med_autogrant.hermes_runtime_parts.contracts import (
 )
 from med_autogrant.hermes_runtime_parts.io import (
     _read_active_draft_id,
-    _guard_artifact_bundle_output_identity,
     _guard_critique_output_identity,
-    _guard_final_package_output_identity,
-    _guard_hosted_contract_output_identity,
     _guard_revision_output_identity,
-    _guard_submission_ready_package_output_identity,
     _guard_workspace_output_identity,
     _load_json_object,
-    _read_artifact_bundle,
-    _read_final_package,
-    _write_artifact_bundle_output,
-    _write_final_package_output,
-    _write_hosted_contract_bundle_output,
     _write_json_output,
     _write_revised_workspace_output,
-    _write_submission_ready_package_output,
 )
 from med_autogrant.hermes_runtime_parts.contracts import validate_schema_payload as _validate_schema_payload
 from med_autogrant.hermes_runtime_parts.io import _load_funding_landscape_cache_if_needed
@@ -121,12 +96,7 @@ _editable_shared_bootstrap.ensure_editable_dependency_paths()
 re_export_public_names(_runtime_shared, globals())
 
 
-def _hosted_contract_bundle_document_builder() -> Any:
-    return resolve_runtime_patch_target("build_hosted_contract_bundle_document", build_hosted_contract_bundle_document)
-
-
-
-class HermesRuntimeAuthoringSurfaceMixin:
+class HermesRuntimeAuthoringSurfaceMixin(HermesRuntimePackageSurfaceMixin):
     def execute_critique_revision_loop(
         self,
         *,
@@ -430,224 +400,6 @@ class HermesRuntimeAuthoringSurfaceMixin:
             execution_key="freeze_execution",
             workspace_key="frozen_workspace",
         )
-
-    def build_final_package(
-        self,
-        *,
-        input_path: str | Path,
-        artifact_bundle_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        document = self._load_workspace(input_path)
-        context = _require_workspace_context(document)
-        active_draft = context.active_draft
-        read_artifact_bundle = resolve_runtime_patch_target("_read_artifact_bundle", _read_artifact_bundle)
-        build_final_package = resolve_runtime_patch_target(
-            "build_final_package_document",
-            build_final_package_document,
-        )
-        guard_final_package_output = resolve_runtime_patch_target(
-            "_guard_final_package_output_identity",
-            _guard_final_package_output_identity,
-        )
-        write_final_package_output = resolve_runtime_patch_target(
-            "_write_final_package_output",
-            _write_final_package_output,
-        )
-        artifact_bundle = read_artifact_bundle(
-            artifact_bundle_path,
-            grant_run_id=document["grant_run_id"],
-            workspace_id=document["workspace_id"],
-            draft_id=active_draft["draft_id"],
-            lifecycle_stage=document.get("lifecycle_stage"),
-        )
-        final_package = build_final_package(
-            document=document,
-            artifact_bundle=artifact_bundle,
-        )
-        resolved_output_path = Path(output_path).expanduser().resolve()
-        guard_final_package_output(
-            resolved_output_path,
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            draft_id=final_package["draft_id"],
-            lifecycle_stage=final_package["lifecycle_stage"],
-        )
-        write_final_package_output(resolved_output_path, final_package)
-        return {
-            "ok": True,
-            "command": "build-final-package",
-            "grant_run_id": final_package["grant_run_id"],
-            "workspace_id": final_package["workspace_id"],
-            "draft_id": final_package["draft_id"],
-            "lifecycle_stage": final_package["lifecycle_stage"],
-            "output_path": str(resolved_output_path),
-            "final_package": final_package,
-        }
-
-    def build_hosted_contract_bundle(
-        self,
-        *,
-        final_package_path: str | Path,
-        output_path: str | Path,
-    ) -> dict[str, Any]:
-        final_package = _read_final_package(final_package_path)
-        _validate_required_final_package_fields(final_package)
-        current_program_contract = _read_current_program_contract()
-        program_id = _read_program_id()
-        hosted_contract_bundle = _hosted_contract_bundle_document_builder()(
-            final_package=final_package,
-            program_id=program_id,
-            runtime_substrate_contract=_build_runtime_substrate_contract(
-                current_program_contract=current_program_contract,
-            ),
-            runtime_state_contract=_build_runtime_state_contract(),
-            operator_contract=_build_operator_contract(),
-            domain_entry_contract=build_domain_entry_contract(),
-            schema_contract=_build_schema_contract(),
-            authoring_contract=_build_hosted_authoring_contract(),
-        )
-        _validate_hosted_contract_bundle(
-            hosted_contract_bundle,
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            lifecycle_stage=final_package["lifecycle_stage"],
-        )
-        resolved_output_path = Path(output_path).expanduser().resolve()
-        _guard_hosted_contract_output_identity(
-            resolved_output_path,
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            draft_id=final_package["draft_id"],
-            program_id=program_id,
-        )
-        _write_hosted_contract_bundle_output(resolved_output_path, hosted_contract_bundle)
-        return {
-            "ok": True,
-            "command": "build-hosted-contract-bundle",
-            "grant_run_id": final_package["grant_run_id"],
-            "workspace_id": final_package["workspace_id"],
-            "draft_id": final_package["draft_id"],
-            "output_path": str(resolved_output_path),
-            "hosted_contract_bundle": hosted_contract_bundle,
-        }
-
-    def build_submission_ready_package(
-        self,
-        *,
-        input_path: str | Path,
-        output_dir: str | Path,
-    ) -> dict[str, Any]:
-        document = self._load_workspace(input_path)
-        artifact_bundle = build_artifact_bundle_document(document=document)
-        final_package = build_final_package_document(
-            document=document,
-            artifact_bundle=artifact_bundle,
-        )
-        current_program_contract = _read_current_program_contract()
-        program_id = _read_program_id()
-        hosted_contract_bundle = build_hosted_contract_bundle_document(
-            final_package=final_package,
-            program_id=program_id,
-            runtime_substrate_contract=_build_runtime_substrate_contract(
-                current_program_contract=current_program_contract,
-            ),
-            runtime_state_contract=_build_runtime_state_contract(),
-            operator_contract=_build_operator_contract(),
-            domain_entry_contract=build_domain_entry_contract(),
-            schema_contract=_build_schema_contract(),
-            authoring_contract=_build_hosted_authoring_contract(),
-        )
-        _validate_hosted_contract_bundle(
-            hosted_contract_bundle,
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            lifecycle_stage=final_package["lifecycle_stage"],
-        )
-        submission_ready_package = build_submission_ready_package_document(
-            document=document,
-            artifact_bundle=artifact_bundle,
-            final_package=final_package,
-            hosted_contract_bundle=hosted_contract_bundle,
-            program_id=program_id,
-        )
-        if not submission_ready_package["submission_ready"]:
-            issue_ids = [
-                item["issue_id"]
-                for item in submission_ready_package["blocking_issues"]
-                if isinstance(item, dict) and isinstance(item.get("issue_id"), str)
-            ]
-            raise WorkspaceStateError(
-                f"submission ready package blocked: {', '.join(issue_ids)}",
-                errors=[],
-                grant_run_id=final_package["grant_run_id"],
-                workspace_id=final_package["workspace_id"],
-                lifecycle_stage=final_package["lifecycle_stage"],
-            )
-        _validate_contract_schema(
-            submission_ready_package,
-            schema_file=SUBMISSION_READY_PACKAGE_SCHEMA_FILE,
-            context="submission_ready_package",
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            lifecycle_stage=final_package["lifecycle_stage"],
-        )
-
-        resolved_output_dir = Path(output_dir).expanduser().resolve()
-        artifact_bundle_path = resolved_output_dir / "artifact-bundle.json"
-        final_package_path = resolved_output_dir / "final-package.json"
-        hosted_contract_bundle_path = resolved_output_dir / "hosted-contract-bundle.json"
-        submission_ready_package_path = resolved_output_dir / "submission-ready-package.json"
-
-        _guard_artifact_bundle_output_identity(
-            artifact_bundle_path,
-            grant_run_id=artifact_bundle["grant_run_id"],
-            workspace_id=artifact_bundle["workspace_id"],
-            draft_id=artifact_bundle["draft_id"],
-            lifecycle_stage=artifact_bundle["lifecycle_stage"],
-        )
-        _guard_final_package_output_identity(
-            final_package_path,
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            draft_id=final_package["draft_id"],
-            lifecycle_stage=final_package["lifecycle_stage"],
-        )
-        _guard_hosted_contract_output_identity(
-            hosted_contract_bundle_path,
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            draft_id=final_package["draft_id"],
-            program_id=program_id,
-        )
-        _guard_submission_ready_package_output_identity(
-            submission_ready_package_path,
-            grant_run_id=final_package["grant_run_id"],
-            workspace_id=final_package["workspace_id"],
-            draft_id=final_package["draft_id"],
-            program_id=program_id,
-        )
-
-        _write_artifact_bundle_output(artifact_bundle_path, artifact_bundle)
-        _write_final_package_output(final_package_path, final_package)
-        _write_hosted_contract_bundle_output(hosted_contract_bundle_path, hosted_contract_bundle)
-        _write_submission_ready_package_output(submission_ready_package_path, submission_ready_package)
-        return {
-            "ok": True,
-            "command": "build-submission-ready-package",
-            "grant_run_id": final_package["grant_run_id"],
-            "workspace_id": final_package["workspace_id"],
-            "draft_id": final_package["draft_id"],
-            "lifecycle_stage": final_package["lifecycle_stage"],
-            "output_dir": str(resolved_output_dir),
-            "output_paths": {
-                "artifact_bundle": str(artifact_bundle_path),
-                "final_package": str(final_package_path),
-                "hosted_contract_bundle": str(hosted_contract_bundle_path),
-                "submission_ready_package": str(submission_ready_package_path),
-            },
-            "submission_ready_package": submission_ready_package,
-        }
 
     def _write_authoring_execution_output(
         self,

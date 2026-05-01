@@ -31,6 +31,25 @@ class HermesRuntimeSplitStructureTest(unittest.TestCase):
             HermesRuntimeSubstrate.__module__,
         )
 
+    def test_package_surface_owns_export_methods_under_authoring_mixin(self) -> None:
+        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime_parts.authoring_surface import HermesRuntimeAuthoringSurfaceMixin
+        from med_autogrant.hermes_runtime_parts.package_surface import HermesRuntimePackageSurfaceMixin
+
+        self.assertTrue(issubclass(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimePackageSurfaceMixin))
+        self.assertEqual(
+            "med_autogrant.hermes_runtime_parts.package_surface",
+            HermesRuntimeSubstrate.build_final_package.__module__,
+        )
+        self.assertEqual(
+            "med_autogrant.hermes_runtime_parts.package_surface",
+            HermesRuntimeSubstrate.build_hosted_contract_bundle.__module__,
+        )
+        self.assertEqual(
+            "med_autogrant.hermes_runtime_parts.package_surface",
+            HermesRuntimeSubstrate.build_submission_ready_package.__module__,
+        )
+
     def test_facade_re_exports_split_runtime_helpers(self) -> None:
         from med_autogrant import hermes_runtime
         from med_autogrant.hermes_runtime_parts import runtime_ops
@@ -96,6 +115,15 @@ class HermesRuntimeSplitStructureTest(unittest.TestCase):
         ]
 
         self.assertEqual([], offenders)
+
+    def test_package_surface_does_not_import_runtime_facade(self) -> None:
+        package_surface_text = (
+            SRC_ROOT / "med_autogrant" / "hermes_runtime_parts" / "package_surface.py"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("class HermesRuntimePackageSurfaceMixin", package_surface_text)
+        self.assertNotIn("from med_autogrant.hermes_runtime import", package_surface_text)
+        self.assertNotIn("from med_autogrant import hermes_runtime", package_surface_text)
 
     def test_package_builders_do_not_import_runtime_facade(self) -> None:
         package_builders = [
