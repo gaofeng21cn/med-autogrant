@@ -5,7 +5,7 @@
 ## 它是什么
 
 `Med Auto Grant` 是独立的、面向申请人侧且 proposal-facing 的医学 `Grant Ops` domain agent。
-它对外提供稳定 agent entry 与 lightweight direct-entry/projection，当前公开 capability contract 冻结为 `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`。
+对外第一主语是单一 `Med Auto Grant` app skill。在这个 skill 下面，`CLI` / `MedAutoGrantDomainEntry` 提供稳定 agent entry，product-entry / direct-entry / projection surfaces 继续作为医学基金申请的内部 command contract。当前公开 capability contract 冻结为 `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`。
 此前已 absorbed 的 `Codex-default host-agent` 线现在只保留为 compatibility bridge / regression oracle；repo-side adapter 继续在这组稳定 capability surface 之上保留 Med Auto Grant 的领域语义。
 
 ## 它不是什么
@@ -55,7 +55,7 @@
 - `supported_protocol_layer`：`MCP`（当前保留为 future layer，尚未 repo-verified）
 - `internal_controller_surface`：`controller`
 - `CLI` / `MedAutoGrantDomainEntry`：agent entry
-- `product entry/frontdesk/direct-entry/user-loop`：lightweight direct entry / projection
+- `product entry/frontdesk/direct-entry/user-loop`：单一 app skill 下的内部 command contract / direct-product projection
 
 ## 当前公开面状态
 
@@ -65,6 +65,7 @@
 - 中文内部设计与 current-truth 文档已建立
 - 默认 Codex 执行 + 稳定 capability surface 已落地
 - 对外第一身份已收口为独立 medical grant domain agent（可 direct，也可被 `OPL` federate）
+- product-entry、frontdesk、direct-entry、user-loop 继续位于 app skill 之下，不作为对外第一主语
 - 当前活跃 phase 是 `P4 mature direct grant product entry`
 - 当前活跃 tranche 是 `P4.G authoring-quality-first completion semantics alignment`
 - `P3 hosted caller / OPL consumption proof` 已经完成，现只作为历史落地上下文保留

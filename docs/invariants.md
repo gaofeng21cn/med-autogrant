@@ -3,7 +3,7 @@
 ## Runtime 与 formal-entry
 
 - `Med Auto Grant` 对外第一身份固定为独立 medical grant domain agent，不写成 `OPL` 内部 workspace 模块。
-- `CLI` / `MedAutoGrantDomainEntry` 固定为 agent entry；`product entry/frontdesk/direct-entry/user-loop` 固定为 lightweight direct entry / projection。
+- `CLI` / `MedAutoGrantDomainEntry` 固定为 agent entry；`product entry/frontdesk/direct-entry/user-loop` 固定为单一 app skill 下的内部 command contract / direct-product projection，不得被提升成公开第一主语。
 - `gateway / harness` 继续保留为内部架构分层术语，不作为对外第一身份。
 - formal-entry matrix 当前固定为：默认正式入口 `CLI`、支持协议层 `MCP`（future layer）、内部控制面 `controller`。
 - 不得把 `supported_protocol_layer=MCP` 解释成“当前 public runtime 已正式支持 MCP”。
@@ -37,6 +37,7 @@
 
 - MAG 当前任务边界固定为“指定基金任务正文 authoring”，不把跨 funder 重选写成默认主线动作。
 - “科学完成可待审包”与“形式/客观补件完成”必须分层表达，禁止合并成单一完成态。
+- `package submission-ready` 是本地严格导出 gate，不等于外部基金官网 portal submission 已完成，也不能替代正文科学完成判断。
 - AI-first 质量判断必须由 authoring executor / critique executor 产生的 AI-authored artifact 持有；schema、scorecard、closure dossier 与 autonomy controller 只能聚合结构、证据引用、机械状态和队列。缺少 active AI-backed critique 时，不得把质量状态提升为 `near_submission_candidate` 或 `submission_grade_candidate`。
 - `pass revision` 只能应用 AI-authored `mutation_payload.replacement_text` / `replacement_core_claim`，不得程序化生成正文 replacement prose 或使用 fallback prose 补齐正文。
 - 形式/客观补件默认进入 `TODO + 显式唤醒` 队列；除非直接破坏正文科学成立，否则不得升级为正文 authoring blocker。

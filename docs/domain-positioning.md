@@ -5,7 +5,7 @@
 ## What It Is
 
 `Med Auto Grant` is an independent author-side, proposal-facing medical `Grant Ops` domain agent under the shared `Unified Harness Engineering Substrate`.
-Its public role is a stable agent entry and lightweight direct-entry/projection surface for medical grant applications, with the current public capability contract frozen as `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`.
+Its public first subject is the single `Med Auto Grant` app skill. Under that skill, `CLI` / `MedAutoGrantDomainEntry` provide the stable agent entry, while product-entry / direct-entry / projection surfaces remain internal command contracts for medical grant applications. The current public capability contract is frozen as `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`.
 The previously absorbed `Codex-default host-agent` line is retained only as a compatibility bridge / regression oracle, while repo-side adapters preserve Med Auto Grant domain semantics on top of the stable capability surface.
 
 ## What It Is Not
@@ -62,6 +62,7 @@ Current status:
 - top-level public docs exist
 - internal Chinese design and current-truth artifacts exist
 - the stable public capability surface is landed and remains Codex-default by default
+- product-entry, frontdesk, direct-entry, and user-loop surfaces remain below the app skill as internal command contracts / direct-product projections
 - the current active phase is `P4 mature direct grant product entry`
 - the current active tranche is `P4.G authoring-quality-first completion semantics alignment`
 - `P3 hosted caller / OPL consumption proof` is already completed and retained as historical landing context
