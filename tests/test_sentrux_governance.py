@@ -30,8 +30,22 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
 
     workflow_text = workflow_path.read_text(encoding="utf-8")
     assert "continue-on-error: true" in workflow_text
-    assert "sentrux gate ." in workflow_text
-    assert "sentrux check ." in workflow_text
+    assert "./scripts/run-structural-quality-gate.sh --advisory" in workflow_text
+
+    structural_gate_script = (REPO_ROOT / "scripts" / "run-structural-quality-gate.sh").read_text(
+        encoding="utf-8"
+    )
+    quality_details_script = (REPO_ROOT / "scripts" / "run-opl-quality-details.sh").read_text(encoding="utf-8")
+    verify_script = (REPO_ROOT / "scripts" / "verify.sh").read_text(encoding="utf-8")
+    makefile_text = (REPO_ROOT / "Makefile").read_text(encoding="utf-8")
+    assert "sentrux gate ." in structural_gate_script
+    assert "sentrux check ." in structural_gate_script
+    assert "complete .sentrux/rules.toml sidecar" in structural_gate_script
+    assert "quality details --root . --format markdown --limit 20" in quality_details_script
+    assert "quality details --root . --format json" in quality_details_script
+    assert "sentrux-rules.toml" in quality_details_script
+    assert "structure)" in verify_script
+    assert "test-structure:" in makefile_text
 
     docs_text = (REPO_ROOT / "docs" / "README.md").read_text(encoding="utf-8")
     docs_zh_text = (REPO_ROOT / "docs" / "README.zh-CN.md").read_text(encoding="utf-8")
@@ -39,6 +53,12 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
     assert "sentrux check ." in docs_text
     assert "sentrux gate ." in docs_zh_text
     assert "sentrux check ." in docs_zh_text
+    assert "OPL quality details" in docs_text
+    assert "complete" in docs_text
+    assert "`.sentrux/rules.toml` sidecar" in docs_text
+    assert "OPL quality details" in docs_zh_text
+    assert "完整" in docs_zh_text
+    assert "`.sentrux/rules.toml` sidecar" in docs_zh_text
     assert "small score movement is acceptable" in docs_text
     assert "Sentrux 分数小幅波动可以接受" in docs_zh_text
 

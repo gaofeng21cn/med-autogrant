@@ -84,6 +84,13 @@ unexplained structural drops, cycle regressions, rule violations, or failing
 tests should block absorption, while a small score movement is acceptable when
 the dependency ownership becomes clearer.
 
+The local `structure` lane and advisory workflow also write OPL quality details
+sidecars under `artifacts/opl-quality-details/`: markdown output from
+`/Users/gaofeng/workspace/one-person-lab/bin/opl quality details --root . --format markdown --limit 20`,
+JSON output from the same command with `--format json`, and a complete
+`.sentrux/rules.toml` sidecar. If Sentrux gate/check fails, these diagnostics
+are generated and printed before the lane reports the Sentrux failure.
+
 ## Plans And Historical Planning Artifacts
 
 - [Plans directory](./plans/)

@@ -80,6 +80,13 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 和 repo-native 验证：大幅且无法解释的结构退化、cycle 回归、rules 违规或测试失败
 应阻止吸收；若依赖 ownership 更清楚，Sentrux 分数小幅波动可以接受。
 
+本地 `structure` lane 与 advisory workflow 还会在 `artifacts/opl-quality-details/`
+写入 OPL quality details sidecar：通过
+`/Users/gaofeng/workspace/one-person-lab/bin/opl quality details --root . --format markdown --limit 20`
+生成 markdown，通过同一命令的 `--format json` 生成 JSON，并额外保留完整
+`.sentrux/rules.toml` sidecar。若 Sentrux gate/check 失败，脚本会先生成并打印这些
+诊断，再报告 Sentrux 失败。
+
 ## Plans 与历史规划工件
 
 - [Plans 目录](./plans/)

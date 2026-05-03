@@ -1,4 +1,4 @@
-.PHONY: test test-fast test-line-budget test-family test-meta test-cli-smoke test-full
+.PHONY: test test-fast test-line-budget test-family test-meta test-cli-smoke test-structure test-full
 
 test: test-fast
 
@@ -16,6 +16,10 @@ test-meta:
 
 test-cli-smoke:
 	uv run pytest tests/test_cli_validate_workspace.py tests/test_local_runtime.py tests/test_hermes_runtime.py tests/test_product_entry.py -q
+
+test-structure:
+	make test-line-budget
+	./scripts/run-structural-quality-gate.sh
 
 test-full:
 	uv run pytest -q

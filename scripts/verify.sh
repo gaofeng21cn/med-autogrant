@@ -20,12 +20,15 @@ case "$lane" in
   cli-smoke)
     make test-cli-smoke
     ;;
+  structure)
+    make test-structure
+    ;;
   full)
     make test-full
     ;;
   *)
     echo "Unknown lane: $lane" >&2
-    echo "Usage: $0 [fast|family|meta|cli-smoke|full]" >&2
+    echo "Usage: $0 [fast|family|meta|cli-smoke|structure|full]" >&2
     exit 2
     ;;
 esac
