@@ -6,6 +6,7 @@ cd "${repo_root}"
 
 output_dir="${OPL_QUALITY_DETAILS_DIR:-artifacts/opl-quality-details}"
 opl_bin="${OPL_QUALITY_DETAILS_BIN:-/Users/gaofeng/workspace/one-person-lab/bin/opl}"
+compare_ref="${OPL_QUALITY_DETAILS_COMPARE_REF:-origin/main}"
 
 mkdir -p "${output_dir}"
 
@@ -24,13 +25,13 @@ markdown_path="${output_dir}/quality-details.md"
 json_path="${output_dir}/quality-details.json"
 
 echo "Writing OPL quality details markdown sidecar: ${markdown_path}" >&2
-if ! "${opl_bin}" quality details --root . --format markdown --limit 20 | tee "${markdown_path}"; then
+if ! "${opl_bin}" quality details --root . --format markdown --limit 20 --compare-ref "${compare_ref}" | tee "${markdown_path}"; then
   echo "OPL quality details markdown generation failed; continuing with Sentrux result as authority." >&2
   exit 0
 fi
 
 echo "Writing OPL quality details json sidecar: ${json_path}" >&2
-if ! "${opl_bin}" quality details --root . --format json >"${json_path}"; then
+if ! "${opl_bin}" quality details --root . --format json --compare-ref "${compare_ref}" >"${json_path}"; then
   echo "OPL quality details json generation failed; continuing with Sentrux result as authority." >&2
   rm -f "${json_path}"
 fi

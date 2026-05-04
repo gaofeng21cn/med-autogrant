@@ -30,7 +30,10 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
 
     workflow_text = workflow_path.read_text(encoding="utf-8")
     assert "continue-on-error: true" in workflow_text
+    assert "fetch-depth: 0" in workflow_text
+    assert "git fetch --no-tags --prune origin main:refs/remotes/origin/main" in workflow_text
     assert "./scripts/run-structural-quality-gate.sh --advisory" in workflow_text
+    assert "compare-ref: origin/main" in workflow_text
 
     structural_gate_script = (REPO_ROOT / "scripts" / "run-structural-quality-gate.sh").read_text(
         encoding="utf-8"
@@ -41,8 +44,9 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
     assert "sentrux gate ." in structural_gate_script
     assert "sentrux check ." in structural_gate_script
     assert "complete .sentrux/rules.toml sidecar" in structural_gate_script
-    assert "quality details --root . --format markdown --limit 20" in quality_details_script
-    assert "quality details --root . --format json" in quality_details_script
+    assert 'compare_ref="${OPL_QUALITY_DETAILS_COMPARE_REF:-origin/main}"' in quality_details_script
+    assert 'quality details --root . --format markdown --limit 20 --compare-ref "${compare_ref}"' in quality_details_script
+    assert 'quality details --root . --format json --compare-ref "${compare_ref}"' in quality_details_script
     assert "sentrux-rules.toml" in quality_details_script
     assert "structure)" in verify_script
     assert "test-structure:" in makefile_text
