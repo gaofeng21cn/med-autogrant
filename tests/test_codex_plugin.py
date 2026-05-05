@@ -13,8 +13,6 @@ PLUGIN_ICON_SOURCE_PATH = PLUGIN_ROOT / "assets" / "icon.svg"
 PLUGIN_SKILL_PATH = PLUGIN_ROOT / "skills" / "mag" / "SKILL.md"
 PLUGIN_SKILL_UI_METADATA_PATH = PLUGIN_ROOT / "skills" / "mag" / "agents" / "openai.yaml"
 MARKETPLACE_PATH = REPO_ROOT / ".agents" / "plugins" / "marketplace.json"
-README_PATH = REPO_ROOT / "README.md"
-INVARIANTS_PATH = REPO_ROOT / "docs" / "invariants.md"
 
 
 def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
@@ -60,14 +58,3 @@ def test_mag_skill_pins_domain_runtime_guardrails() -> None:
     assert "不能成为绕开 runtime 的替代执行路径" in skill_text
     assert 'display_name: "Med Auto Grant"' in metadata_text
     assert 'default_prompt: "Use $mag' in metadata_text
-
-
-def test_public_docs_pin_schema_backed_authoring_runtime_boundary() -> None:
-    readme_text = README_PATH.read_text(encoding="utf-8")
-    invariants_text = INVARIANTS_PATH.read_text(encoding="utf-8")
-
-    assert "only those local scripts/contracts that are schema-backed" in readme_text
-    assert "not alternate paths around the authoring runtime" in readme_text
-    assert "local scripts/contracts only when schema-backed and surfaced through those runtime contracts" in readme_text
-    assert "product-entry/user-loop surfaced local scripts/contracts" in invariants_text
-    assert "不得作为绕开 authoring runtime 的 ad-hoc 执行路径" in invariants_text

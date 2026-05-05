@@ -10,7 +10,6 @@ pytestmark = pytest.mark.meta
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = "contracts/runtime-program/opl-family-contract-adoption.json"
-DOC_PATH = "docs/references/opl_family_contract_adoption.md"
 
 
 def _read(relative_path: str) -> str:
@@ -23,17 +22,14 @@ def _contract() -> dict[str, object]:
 
 def test_mag_declares_thin_opl_family_contract_adoption() -> None:
     contract = _contract()
-    doc = _read(DOC_PATH)
 
     assert contract["contract_kind"] == "mag_opl_family_contract_adoption.v1"
     assert contract["domain_id"] == "med-autogrant"
     assert contract["opl_role"] == "family-level projection consumer only"
-    assert "不把 `OPL` 变成 grant authoring owner" in doc
 
 
 def test_mag_runtime_projection_maps_to_grant_runtime_truth_surfaces() -> None:
     contract = _contract()
-    doc = _read(DOC_PATH)
     attempt = contract["attempt_projection"]
 
     for surface in (
@@ -43,14 +39,12 @@ def test_mag_runtime_projection_maps_to_grant_runtime_truth_surfaces() -> None:
         "workspace progress",
     ):
         assert surface in attempt["source_surfaces"]
-        assert surface in doc
     assert attempt["maps_to_opl_contract"] == "opl_family_runtime_attempt_contract.v1"
     assert "MAG owns grant authoring runtime" in attempt["owner_boundary"]
 
 
 def test_mag_quality_projection_keeps_grant_quality_owner_and_excludes_other_domain_gates() -> None:
     contract = _contract()
-    doc = _read(DOC_PATH)
     quality = contract["quality_projection"]
 
     for surface in (
@@ -61,22 +55,12 @@ def test_mag_quality_projection_keeps_grant_quality_owner_and_excludes_other_dom
         "submission-ready export gate",
     ):
         assert surface in quality["source_surfaces"]
-        assert surface in doc
     assert quality["maps_to_opl_contract"] == "opl_family_domain_quality_projection_contract.v1"
     assert quality["claim_only_ready_forbidden"] is True
-    for forbidden in (
-        "claim-only ready",
-        "generic persona QA",
-        "medical publication gate",
-        "visual render/export proof gate",
-        "OPL projection-only",
-    ):
-        assert forbidden in doc
 
 
 def test_mag_operator_and_incident_projection_require_source_refs_and_mag_closure() -> None:
     contract = _contract()
-    doc = _read(DOC_PATH)
     incident = contract["incident_projection"]
     operator = contract["operator_projection"]
 
@@ -84,7 +68,6 @@ def test_mag_operator_and_incident_projection_require_source_refs_and_mag_closur
     assert "MAG-owned closure ref" in incident["closure_rule"]
     for field in ("source_refs", "freshness", "owner_split", "next_surface_ref", "human_gate_reason"):
         assert field in operator["required_fields"]
-        assert field.replace("_", " ") in doc or field in doc
     for non_goal in (
         "OPL owns grant truth",
         "OPL bypasses submission-ready export gate",
@@ -92,4 +75,3 @@ def test_mag_operator_and_incident_projection_require_source_refs_and_mag_closur
         "visual render/export proof gate",
     ):
         assert non_goal in contract["non_goals"]
-
