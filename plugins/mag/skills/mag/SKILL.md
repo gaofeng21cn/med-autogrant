@@ -15,10 +15,12 @@ description: Use when Codex should operate Med Auto Grant through its grant-auth
 
 ## 核心入口
 
-- `medautogrant product skill-catalog --input <input_path> --format json`
-- `medautogrant product frontdesk --input <input_path>`
-- `medautogrant product user-loop --input <input_path> --task-intent "<task_intent>"`
-- `medautogrant product direct-entry --input <input_path> --task-intent "<task_intent>"`
+自动调用时使用 repo-local launcher：`uv run --directory <med-autogrant-repo> medautogrant ...`。不要用 shell PATH lookup 或用户 PATH 上的裸 `medautogrant` 判断当前模块可用性。
+
+- `uv run --directory <med-autogrant-repo> medautogrant product skill-catalog --input <input_path> --format json`
+- `uv run --directory <med-autogrant-repo> medautogrant product frontdesk --input <input_path>`
+- `uv run --directory <med-autogrant-repo> medautogrant product user-loop --input <input_path> --task-intent "<task_intent>"`
+- `uv run --directory <med-autogrant-repo> medautogrant product direct-entry --input <input_path> --task-intent "<task_intent>"`
 
 默认先读取 skill catalog 或打开 frontdesk，再根据当前 funding call、task intent 和 draft 状态进入 user loop 或 direct entry。
 
