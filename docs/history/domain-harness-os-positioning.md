@@ -1,6 +1,6 @@
-# Med Auto Grant 在 Unified Harness Engineering Substrate 中的 Domain Harness OS 定位（内部）
+# Med Auto Grant 在 Unified Harness Engineering Substrate 中的 Domain Harness OS 定位（历史）
 
-> 当前状态说明（2026-04-25）：本文保留为内部 harness/substrate 边界参考。当前公开第一身份是独立 medical grant domain agent 与单一 Med Auto Grant app skill；`Domain Harness OS` 词汇只用于内部执行、治理与兼容边界。
+> 历史状态说明（2026-05-06）：本文保留为内部 harness/substrate 边界参考和旧定位追溯材料。当前公开第一身份是独立 medical grant domain agent 与单一 Med Auto Grant app skill；`Domain Harness OS` 与 `Unified Harness Engineering Substrate` 词汇只用于历史上下文、内部执行、治理与兼容边界，不覆盖核心文档与 `current-program.json`。
 
 ## 1. 项目位置：Shared Substrate 上的医学 Domain Harness OS
 
@@ -41,10 +41,10 @@
 
 当前公开 capability contract 主线是 `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`；旧 `Codex-default host-agent runtime` 只保留为 compatibility bridge / regression oracle。`hermes_runtime.py` 与 `domain_entry.py` 当前承担的是 repo-side domain/entry adapter 责任，而不是默认公开 runtime owner。
 
-当前 formal-entry matrix 固定为：
+当时 formal-entry matrix 记录为：
 
 - `default_formal_entry`：`CLI`
-- `supported_protocol_layer`：`MCP`（当前保留为 future layer，尚未 repo-verified）
+- `supported_protocol_layer`：`MCP`（旧记录；当前口径以核心文档与 `current-program.json` 为准）
 - `internal_controller_surface`：`controller`
 
 该形态下，项目已有一条真实 substrate-backed runtime 主线，可覆盖以下基线能力：

@@ -6,7 +6,7 @@
 
 `Med Auto Grant` 是独立的、面向申请人侧且 proposal-facing 的医学 `Grant Ops` domain agent。
 对外第一主语是单一 `Med Auto Grant` app skill。在这个 skill 下面，`CLI` / `MedAutoGrantDomainEntry` 提供稳定 agent entry，product-entry / direct-entry / projection surfaces 继续作为医学基金申请的内部 command contract。当前公开 capability contract 冻结为 `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`。
-此前已 absorbed 的 `Codex-default host-agent` 线现在只保留为 compatibility bridge / regression oracle；repo-side adapter 继续在这组稳定 capability surface 之上保留 Med Auto Grant 的领域语义。
+MAG 可以复用 family-level harness contract 与 OPL 侧 runtime-management 约定，但 OPL 不持有 MAG grant truth、authoring execution 或 submission-ready export gate。
 
 ## 它不是什么
 
@@ -52,7 +52,7 @@
 其 formal-entry matrix 为：
 
 - `default_formal_entry`：`CLI`
-- `supported_protocol_layer`：`MCP`（当前保留为 future layer，尚未 repo-verified）
+- `supported_protocol_layer`：`MCP`
 - `internal_controller_surface`：`controller`
 - `CLI` / `MedAutoGrantDomainEntry`：agent entry
 - `product entry/frontdesk/direct-entry/user-loop`：单一 app skill 下的内部 command contract / direct-product projection

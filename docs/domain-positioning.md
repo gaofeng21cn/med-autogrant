@@ -4,9 +4,9 @@
 
 ## What It Is
 
-`Med Auto Grant` is an independent author-side, proposal-facing medical `Grant Ops` domain agent under the shared `Unified Harness Engineering Substrate`.
+`Med Auto Grant` is an independent author-side, proposal-facing medical `Grant Ops` domain agent.
 Its public first subject is the single `Med Auto Grant` app skill. Under that skill, `CLI` / `MedAutoGrantDomainEntry` provide the stable agent entry, while product-entry / direct-entry / projection surfaces remain internal command contracts for medical grant applications. The current public capability contract is frozen as `CLI/domain-entry stable capability surface + Codex-default execution + explicit hosted runtime carriers`.
-The previously absorbed `Codex-default host-agent` line is retained only as a compatibility bridge / regression oracle, while repo-side adapters preserve Med Auto Grant domain semantics on top of the stable capability surface.
+MAG may reuse family-level harness contracts and OPL-side runtime-management conventions, but OPL does not own MAG grant truth, authoring execution, or submission-ready export gates.
 
 ## What It Is Not
 
@@ -52,7 +52,7 @@ The repository follows two shared architectural rules:
 Its formal-entry matrix is:
 
 - `default_formal_entry`: `CLI`
-- `supported_protocol_layer`: `MCP` (reserved future layer, not yet repo-verified)
+- `supported_protocol_layer`: `MCP`
 - `internal_controller_surface`: `controller`
 
 ## Public Surface Status

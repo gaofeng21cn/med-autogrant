@@ -18,6 +18,7 @@
 当前归档路线：
 
 - [Plan 完成度审计 2026-05-01](./plan-completion-audit-2026-05-01.md)
+- [Domain Harness OS 定位历史说明](./domain-harness-os-positioning.md)
 - [历史 plans](./plans/README.zh-CN.md)
 - [历史 specs 索引](./specs/README.zh-CN.md)
 - [OMX 历史资料](./omx/README.zh-CN.md)

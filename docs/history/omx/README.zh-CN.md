@@ -7,7 +7,7 @@
 
 - `../../../AGENTS.md`
 - `../../README.zh-CN.md`
-- `../../domain-harness-os-positioning.md`
+- `../domain-harness-os-positioning.md`
 - `../../specs/2026-04-07-formal-entry-matrix-current-truth.md`
 - `../../specs/2026-04-07-durability-model-clarification.md`
 

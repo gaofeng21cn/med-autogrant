@@ -1,6 +1,6 @@
 # 当前状态
 
-Date: `2026-04-26`
+Date: `2026-05-06`
 
 ## 当前角色
 
@@ -11,6 +11,7 @@ Date: `2026-04-26`
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
 - OMX 状态：已退场，仅保留历史入口。
+- 文档组合状态：2026-05-06 第二轮内容治理后，公开/核心入口继续以 single app skill、`CLI` / `MCP` / `controller` stable surface、OPL Runtime Manager 薄管理边界和本地 `submission-ready` 非外部 portal submission 为准；旧 specs 保留原路径作为 provenance，通过 `docs/history/specs/` 进入。
 
 ## 当前入口
 

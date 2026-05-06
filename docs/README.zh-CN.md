@@ -20,7 +20,7 @@
 - formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
 - 默认正文执行继续继承本机 `Codex` 默认；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 或技术参考层，不改写默认公开 capability contract。
 - `OPL Runtime Manager` 是目标形态中的 OPL 侧薄管理层，位于外部 `Hermes-Agent` substrate 之上；它可以消费 MAG runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue，但不持有 MAG grant truth 或 authoring execution。
-- 历史 program 记录与迁移说明统一从 `docs/history/` 进入；较早 dated specs 继续留在 `docs/specs/` 作为 provenance，并由 `docs/history/specs/` 建立历史索引。
+- 历史 program 记录与迁移说明统一从 `docs/history/` 进入；较早 dated specs 为保持旧路径稳定继续留在 `docs/specs/`，但阅读入口统一由 `docs/history/specs/` 承担。
 - frontdesk、user-loop、projection 与本地 `submission-ready` package 已落地，但它们都是 app skill 下的内部 command contract 与 direct-product projection；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，且本地导出 gate 不代表外部基金官网 portal submission 已完成；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/plans/`。
 - `OPL` family routing 与 `Codex` skill activation 继续消费同一套 MAG capability surface；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。
 - MAG 当前任务边界锁定在“指定基金任务正文 authoring”；“科学完成”与“形式/客观补件完成”是显式分层。
@@ -67,6 +67,7 @@
 
 当前 grant product-entry shell 继续作为 app skill 背后的 domain/API catalog builder，也是稳定可调用面的一部分；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 作为集成/参考面暴露给 hosted caller / 外部 caller 使用。
 质量治理与自治 controller schema 已进入 [`schema-index.json`](../schemas/v1/schema-index.json) 和 current-program truth surface。
+完整 repo-tracked truth surface 清单以 [`current-program.json`](../contracts/runtime-program/current-program.json) 的 `repo_tracked_truth_surfaces` 为准；Specs 索引负责区分当前活跃边界记录和历史 provenance 记录。
 
 ## 追溯记录
 
@@ -111,6 +112,6 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 
 - 文档治理统一冻结在 [系列项目文档治理清单](./references/series-doc-governance-checklist.md)、技术工作集和仓库跟踪的 contract/doc surface 中，而不再只写在 `AGENTS.md`。
 - `README*` 与 `docs/README*` 是默认公开入口。
-- `docs/specs/**` 承载 active 技术记录和较早 provenance specs；`docs/history/specs/` 是较早 dated records 的历史阅读索引。
+- `docs/specs/**` 承载 active 技术记录和保留原路径的较早 provenance specs；`docs/history/specs/` 是较早 dated records 的历史阅读索引。
 - `docs/references/**` 承载内部参考说明。
 - `docs/plans/**` 只保留活跃未来工作；`docs/history/**` 承载已完成计划和历史追溯材料。
