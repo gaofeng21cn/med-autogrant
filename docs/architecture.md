@@ -199,8 +199,8 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 - Public surface：`README*`、`docs/README*`、`docs/domain-positioning*`、`docs/mvp-scope*`。
 - 核心骨架：`docs/project.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`、`docs/status.md`。
-- Repo-tracked current truth 与 activation package：`docs/specs/**`。
-- 历史规划：`docs/plans/**`；历史归档：`docs/history/**`。
+- Repo-tracked current truth：核心五件套、`contracts/runtime-program/current-program.json`，以及 `docs/specs/README*` 中列出的 active specs。
+- 活跃规划：`docs/plans/**`；历史计划与 dated specs 入口：`docs/history/**`。
 
 ## 历史边界
 

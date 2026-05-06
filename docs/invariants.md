@@ -18,7 +18,7 @@
 - 项目级 `.runtime-program/` 已退役；机器本地 runtime state 统一迁到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 - 项目级 `.codex/` 与 `.omx/` 已退役，不再作为仓库本地状态入口。
 - 如需保留历史 session、prompt、log 或 hook 状态，应迁入用户级 `~/.codex/` 归档。
-- repo-tracked current truth 以 `docs/specs/*current-truth.md` 与相关 activation package 为准。
+- repo-tracked current truth 以核心五件套、`contracts/runtime-program/current-program.json`、以及 `docs/specs/README*` 中列出的 active current-truth specs 为准；较早 dated specs 与 activation package 只作为历史 provenance。
 - 当前 owner line 固定为“CLI/domain-entry stable capability surface with Codex-default execution and optional hosted backend lanes”。
 - 历史 closeout label 与 baseline 只保留在归档 current-truth 材料中；核心五件套不再把它们写成当前 owner line。
 - 在没有新的 repo-tracked tranche truth 前，不得把旧 host-agent runtime closeout 材料重新写回“还有默认续推中的 active delta”。

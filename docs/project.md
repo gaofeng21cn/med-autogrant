@@ -35,7 +35,7 @@
 - 人工 gate 只覆盖同一基金任务内的作者决策，不扩展成跨 funder 路线重选流程。
 - 把 hosted-friendly handoff contract 收口成 caller 可直接消费的 integration/reference catalog，并保持与当前 bundle 同步。
 - 保持 `gateway / harness` 作为内部架构分层术语，不作为公开第一身份。
-- 更远期的 hosted 产品入口演进统一留在 `docs/plans/`，不写进当前主线口径。
+- 更远期的 hosted 产品入口演进在活跃阶段统一留在 `docs/plans/`，完成后归入 `docs/history/`，不写进当前主线口径。
 
 ## 范围与非目标
 

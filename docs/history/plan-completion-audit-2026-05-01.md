@@ -1,6 +1,6 @@
 # Plan Completion Audit 2026-05-01
 
-本文记录 2026-05-01 对 Med Auto Grant 相关 Plan Mode 计划的完成度核查。它是历史审计记录，不替代当前项目真相；当前 truth 仍以 `docs/status.md`、`docs/specs/**` 与 `contracts/runtime-program/current-program.json` 为准。
+本文记录 2026-05-01 对 Med Auto Grant 相关 Plan Mode 计划的完成度核查。它是历史审计记录，不替代当前项目真相；当前 truth 仍以 `docs/status.md`、`docs/specs/README*` 中列出的 active specs 与 `contracts/runtime-program/current-program.json` 为准。
 
 ## 审计范围
 

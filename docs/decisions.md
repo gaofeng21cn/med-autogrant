@@ -105,7 +105,7 @@
 ## 2026-04-11：统一文档骨架
 
 - 采用核心五件套：`project/architecture/invariants/decisions/status`。
-- `docs/README*` 以核心骨架为首读入口，其次是 `specs/`、`plans/`、`history/`。
+- `docs/README*` 以核心骨架为首读入口，其次是 active specs、active plans、references 与 history 索引。
 
 ## 2026-04-11：AGENTS 仅保留工作方式
 
