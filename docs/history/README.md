@@ -15,6 +15,13 @@ Current product truth, author-side boundary, and maintainer guidance belong in:
 - [Invariants](../invariants.md)
 - [Decisions](../decisions.md)
 
+Lifecycle:
+
+- `owner`: MAG maintainers.
+- `purpose`: preserve retired docs lanes, completed plans, superseded positioning, and audit provenance.
+- `state`: `history`.
+- `machine boundary`: history docs are human-readable provenance only. Machine surfaces must use current contracts/schema/source paths or semantic `human_doc:*` ids.
+
 Archived lanes:
 
 - [Plan completion audit 2026-05-01](./plan-completion-audit-2026-05-01.md)

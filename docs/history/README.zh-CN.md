@@ -15,6 +15,13 @@
 - [不变量](../invariants.md)
 - [决策记录](../decisions.md)
 
+生命周期信号：
+
+- `owner`：MAG maintainers。
+- `purpose`：保留已退役文档路线、已完成计划、被 supersede 的定位说明和审计 provenance。
+- `state`：`history`。
+- `machine boundary`：历史文档只是人读 provenance；机器面必须使用当前 contracts/schema/source path 或语义化 `human_doc:*` 标识。
+
 当前归档路线：
 
 - [Plan 完成度审计 2026-05-01](./plan-completion-audit-2026-05-01.md)

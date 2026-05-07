@@ -56,6 +56,11 @@ Machine-local runtime state stays under `$CODEX_HOME/projects/med-autogrant/runt
 - [MVP Scope](./mvp-scope.md)
 
 These files are the default public-facing entry surfaces and should stay mirrored in English and Chinese where applicable.
+The root public-doc allowlist is intentionally sparse:
+
+- `README*` is the public first page.
+- `docs/domain-positioning*` remains current for MAG owner, public subject, and OPL/Hermes boundary.
+- `docs/mvp-scope*` remains current for the NSFC MVP scope and non-goals.
 
 ## Technical Records
 
@@ -112,6 +117,8 @@ Current mainline truth continues to live in the core docs, active specs listed i
 - Keep active specs listed in `docs/specs/README.md` authoritative for their specific technical boundaries without letting them replace the user-facing home page.
 - Keep references, plans, and history available, while keeping the public home page as the default entry.
 - Treat `README*` and `docs/**` as human-readable surfaces. Do not make scripts, tests, runtime status, or contracts depend on their concrete paths; use schema/source paths or semantic `human_doc:*` ids where machine surfaces need a doc relationship.
+- Each doc lane carries lifecycle signals: `owner`, `purpose`, `state`, and `machine boundary`.
+- Use `state=current` only for the public entry, core docs, active specs, and current contract pointers. Use `state=reference` for stable explanatory material and `state=history` for provenance.
 
 ## Governance
 

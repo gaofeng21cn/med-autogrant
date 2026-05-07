@@ -2,6 +2,13 @@
 
 This directory keeps the current technical record layer for `Med Auto Grant`.
 
+Lifecycle:
+
+- `owner`: MAG maintainers and the owning runtime/product-governance lane for each active spec.
+- `purpose`: index active current-truth records and route older dated records to historical reading.
+- `state`: `current` for active specs listed below; `history` for older dated specs retained here for path provenance.
+- `machine boundary`: specs are human-readable current-truth records. Machine consumers should use `contracts/runtime-program/current-program.json`, schema files, source files, or semantic `human_doc:*` ids rather than depending on prose paths.
+
 The highest-priority active current-truth specs are the small set still referenced directly from the docs guide or current status:
 
 - [AI-first quality boundary current truth](./2026-04-27-ai-first-quality-boundary-current-truth.md)

@@ -55,6 +55,11 @@
 - [MVP 范围](./mvp-scope.zh-CN.md)
 
 这些文件构成默认公开入口；凡是属于公开表面的内容，应在适用时保持中英双语镜像。
+root public-doc allowlist 保持稀疏：
+
+- `README*` 是公开第一入口。
+- `docs/domain-positioning*` 继续 current，用于说明 MAG owner、公开主语和 OPL/Hermes 边界。
+- `docs/mvp-scope*` 继续 current，用于说明 NSFC MVP 范围与非目标。
 
 ## 技术记录
 
@@ -108,6 +113,8 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 - `docs/specs/README.zh-CN.md` 中列出的 active specs 继续承担具体技术边界的权威记录，但不能取代用户入口首页。
 - references、plans 和 history 可以保留，但不能占据默认公开阅读路径。
 - `README*` 与 `docs/**` 默认是人读材料。脚本、测试、runtime status 和 contracts 不应依赖它们的具体路径；机器面需要表达文档关系时，使用 schema/source path 或语义化 `human_doc:*` 标识。
+- 每条 docs lane 都应能说明 `owner`、`purpose`、`state` 和 `machine boundary`。
+- `state=current` 只用于公开入口、核心文档、active specs 和当前合同指针；稳定说明材料用 `state=reference`，追溯材料用 `state=history`。
 
 ## 治理说明
 

@@ -2,6 +2,13 @@
 
 本目录保留 `Med Auto Grant` 的当前技术记录层。
 
+生命周期信号：
+
+- `owner`：MAG maintainers，以及每份 active spec 对应的 runtime/product-governance lane。
+- `purpose`：索引 active current-truth records，并把较早 dated records 导向历史阅读入口。
+- `state`：下方列出的 active specs 为 `current`；留在本目录用于路径 provenance 的较早 dated specs 为 `history`。
+- `machine boundary`：specs 是人读 current-truth records。机器消费者应使用 `contracts/runtime-program/current-program.json`、schema、source file 或语义化 `human_doc:*` 标识，而不是依赖 prose path。
+
 当前优先级最高、仍由 docs guide 或 status 直接引用的 active current-truth specs 是：
 
 - [AI-first 质量边界 current truth](./2026-04-27-ai-first-quality-boundary-current-truth.md)
