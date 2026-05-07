@@ -21,22 +21,24 @@
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态；旧本地 runtime 只允许作为迁移桥、兼容层或回归 oracle 存在。
 - 不做降级处理、兜底补丁、启发式修补或“先糊住再说”式实现。
 
-## 核心文档骨架
+## 文档分层与生命周期治理
 
 - `docs/project.md`：项目定位与边界。
 - `docs/architecture.md`：系统结构与核心数据流。
 - `docs/invariants.md`：必须长期保持的约束与不变量。
 - `docs/decisions.md`：关键决策记录与变更原因。
 - `docs/status.md`：当前阶段、活跃 tranche 与近期进度。
-
-## 文档分类与治理
-
 - `README*` 与 `docs/README*`：默认公开入口与索引。
+- `docs/docs_portfolio_consolidation.md` 是当前文档组合治理入口；维护者应先读核心五件套，再按该文件判断新增、更新、归档或 tombstone。
+- 每份长期文档都必须能说明 `owner`、`purpose`、`state`、`machine boundary`；缺少任一信号时，先补入口或归位，再继续扩写。
 - 公开文档保持中英双语；内部技术、规划、实现和历史记录默认中文。
+- `docs/domain-positioning*` 与 `docs/mvp-scope*` 是当前 root allowlist 的一部分，因为它们仍承载 public subject、domain owner、MVP boundary 与 non-goals；新增 root-level docs 必须先更新 portfolio note。
 - 核心骨架文档与 activation package / current truth 严格分层。
 - `docs/specs/**`：repo-tracked current truth、activation package、设计冻结文档与硬门槛描述。
-- `docs/plans/**`：历史规划工件，仅用于追溯。
+- `docs/references/**`：定位、背景、审计、handoff 与非活跃支持材料。
+- `docs/plans/**`：历史规划工件，仅用于追溯；新计划默认进入合适的 current/spec/reference owner surface，完成后进入 history。
 - `docs/history/**`：历史归档入口（含 OMX）。
+- `README*`、`docs/**` 与参考文档是人读面。代码、测试、contracts、dashboard 或 runtime 不得把 prose path、Markdown 章节或文案当成稳定机器接口；MAG 的机器真相以 `contracts/runtime-program/current-program.json`、schema/source 与 CLI/API 行为为准，确需关联人读材料时使用 `human_doc:*` 语义 ID。
 
 ## Worktree 规则
 
