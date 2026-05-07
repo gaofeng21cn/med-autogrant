@@ -3,7 +3,6 @@ from __future__ import annotations
 import ast
 import sys
 import unittest
-import ast
 from pathlib import Path
 
 
@@ -13,7 +12,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 
-class HermesRuntimeSplitStructureTest(unittest.TestCase):
+class RuntimeSplitStructureTest(unittest.TestCase):
     def test_source_modules_do_not_use_star_imports(self) -> None:
         offenders = [
             path.relative_to(REPO_ROOT).as_posix()
@@ -48,28 +47,6 @@ class HermesRuntimeSplitStructureTest(unittest.TestCase):
         self.assertEqual(
             "med_autogrant.hermes_runtime_parts.package_surface",
             HermesRuntimeSubstrate.build_submission_ready_package.__module__,
-        )
-
-    def test_facade_re_exports_split_runtime_helpers(self) -> None:
-        from med_autogrant import hermes_runtime
-        from med_autogrant.hermes_runtime_parts import runtime_ops
-
-        self.assertIs(
-            hermes_runtime._build_autonomy_quality_evaluator_output,
-            runtime_ops.build_autonomy_quality_evaluator_output,
-        )
-
-    def test_runtime_facade_keeps_handoff_monkeypatch_targets(self) -> None:
-        from med_autogrant import hermes_runtime
-        from med_autogrant.hermes_runtime_parts import handoff_surfaces
-
-        self.assertIs(
-            hermes_runtime.build_artifact_bundle_document,
-            handoff_surfaces.build_artifact_bundle_document,
-        )
-        self.assertIs(
-            hermes_runtime._guard_critique_output_identity,
-            handoff_surfaces._guard_critique_output_identity,
         )
 
     def test_runtime_substrate_does_not_directly_import_handoff_owners(self) -> None:

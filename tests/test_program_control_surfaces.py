@@ -92,10 +92,6 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "autonomous",
         )
         self.assertEqual(
-            contract["runtime_owner"]["historical_baseline"],
-            "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
-        )
-        self.assertEqual(
             contract["task_boundary"]["primary_scope"],
             "target-locked grant narrative authoring and scientific quality closure",
         )

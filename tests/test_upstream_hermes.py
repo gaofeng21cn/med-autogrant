@@ -23,7 +23,7 @@ from med_autogrant.public_cli import public_cli_argv  # noqa: E402
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 
 
-class UpstreamHermesCliProbeTest(unittest.TestCase):
+class HostedExecutorCliProbeTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
         stdout = StringIO()
         stderr = StringIO()
@@ -62,8 +62,8 @@ class UpstreamHermesCliProbeTest(unittest.TestCase):
         entry.dispatch.assert_called_once_with({"command": "probe-upstream-hermes"})
 
 
-class RunLocalUpstreamLedgerTest(unittest.TestCase):
-    def test_run_local_uses_upstream_hermes_ledger_for_attempt_index(self) -> None:
+class RuntimeLedgerTest(unittest.TestCase):
+    def test_runtime_run_uses_grant_run_ledger_for_attempt_index(self) -> None:
         from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
 
         runtime = HermesRuntimeSubstrate()

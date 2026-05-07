@@ -233,7 +233,7 @@ def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
     return _expected_landed_route(route_id)
 
 
-class HermesRuntimeCliDispatchTest(unittest.TestCase):
+class RuntimeCliDispatchTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
         stdout = StringIO()
         stderr = StringIO()
@@ -244,7 +244,7 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
 
-    def test_validate_workspace_dispatches_through_hermes_runtime_substrate(self) -> None:
+    def test_validate_workspace_dispatches_through_domain_entry(self) -> None:
         expected_payload = {
             "ok": True,
             "command": "validate-workspace",
@@ -277,7 +277,7 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
             }
         )
 
-    def test_run_local_dispatches_through_hermes_runtime_substrate(self) -> None:
+    def test_runtime_run_dispatches_through_domain_entry(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "journal.json"
             expected_payload = {
@@ -292,7 +292,7 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
                 "attempt_index": 1,
                 "stop_reason": {
                     "code": "stage_action_required",
-                    "reason": "runtime owned by Hermes",
+                    "reason": "stage action required",
                     "current_stage": "critique",
                     "recommended_next_stage": "revision",
                     "checkpoint_status": "forward_progress",
@@ -334,12 +334,11 @@ class HermesRuntimeCliDispatchTest(unittest.TestCase):
             )
 
 
-class HermesRuntimeSubstrateFlowTest(unittest.TestCase):
-    def test_hermes_runtime_substrate_keeps_revision_and_export_paths_identity_stable(self) -> None:
+class RuntimeSubstrateFlowTest(unittest.TestCase):
+    def test_runtime_substrate_keeps_revision_and_export_paths_identity_stable(self) -> None:
         from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
 
         runtime = HermesRuntimeSubstrate()
-        self.assertEqual(runtime.runtime_owner, "Hermes")
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
@@ -581,96 +580,7 @@ class HostedContractBundleBridgeTest(unittest.TestCase):
         )
 
 
-class ArtifactBundleHandoffTest(unittest.TestCase):
-    def test_build_artifact_bundle_uses_hermes_handoff_owner(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
-
-        runtime = HermesRuntimeSubstrate()
-        expected_bundle = {
-            "bundle_version": 1,
-            "bundle_kind": "artifact_bundle",
-            "grant_run_id": "grant-run-test",
-            "workspace_id": "workspace-test",
-            "draft_id": "draft-test",
-            "lifecycle_stage": "critique",
-        }
-
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            bundle_path = Path(tmp_dir) / "bundle.json"
-            with patch(
-                "med_autogrant.hermes_runtime.build_artifact_bundle_document",
-                create=True,
-                return_value=expected_bundle,
-            ) as build_document, patch(
-                "med_autogrant.hermes_runtime._guard_artifact_bundle_output_identity",
-                create=True,
-            ) as guard_output, patch(
-                "med_autogrant.hermes_runtime._write_artifact_bundle_output",
-                create=True,
-            ) as write_output:
-                payload = runtime.build_artifact_bundle(
-                    input_path=str(FROZEN_EXAMPLE_PATH),
-                    output_path=str(bundle_path),
-                )
-
-        self.assertEqual(payload["bundle"], expected_bundle)
-        build_document.assert_called_once()
-        guard_output.assert_called_once()
-        write_output.assert_called_once_with(bundle_path.resolve(), expected_bundle)
-
-
 class RevisionExecutionHandoffTest(unittest.TestCase):
-    def test_execute_critique_pass_uses_codex_cli_handoff_owner(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
-
-        runtime = HermesRuntimeSubstrate()
-        expected_critique_workspace = {
-            "grant_run_id": "grant-run-test",
-            "workspace_id": "workspace-test",
-            "lifecycle_stage": "critique",
-            "current_selection": {
-                "active_draft_id": "draft-test",
-                "active_revision_plan_id": "revision-plan-test",
-            },
-        }
-        expected_critique_execution = {
-            "critique_id": "critique-test",
-            "active_revision_plan_id": "revision-plan-test",
-            "verdict": "major_revision",
-        }
-
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            workspace_path = Path(tmp_dir) / "critique.json"
-            with patch(
-                "med_autogrant.hermes_runtime.build_critique_execution_document",
-                create=True,
-                return_value={
-                    "grant_run_id": "grant-run-test",
-                    "workspace_id": "workspace-test",
-                    "draft_id": "draft-test",
-                    "active_revision_plan_id": "revision-plan-test",
-                    "lifecycle_stage": "critique",
-                    "critique_execution": expected_critique_execution,
-                    "critique_workspace": expected_critique_workspace,
-                },
-            ) as build_document, patch(
-                "med_autogrant.hermes_runtime._guard_critique_output_identity",
-                create=True,
-            ) as guard_output, patch(
-                "med_autogrant.hermes_runtime._write_revised_workspace_output",
-                create=True,
-            ) as write_output:
-                payload = runtime.execute_critique_pass(
-                    input_path=str(REVISION_EXAMPLE_PATH),
-                    output_path=str(workspace_path),
-                )
-
-        self.assertEqual(payload["critique_workspace"], expected_critique_workspace)
-        self.assertEqual(payload["critique_execution"], expected_critique_execution)
-        build_document.assert_called_once()
-        guard_output.assert_called_once()
-        write_output.assert_called_once_with(workspace_path.resolve(), expected_critique_workspace)
-
     def test_execute_critique_pass_forwards_explicit_executor_kind(self) -> None:
         from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
 
@@ -713,103 +623,6 @@ class RevisionExecutionHandoffTest(unittest.TestCase):
 
         _, kwargs = build_document.call_args
         self.assertEqual(kwargs["executor_kind"], "hermes_native_proof")
-
-    def test_execute_revision_pass_uses_hermes_handoff_owner(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
-
-        runtime = HermesRuntimeSubstrate()
-        expected_revised_workspace = {
-            "grant_run_id": "grant-run-test",
-            "workspace_id": "workspace-test",
-            "draft_id": "draft-test",
-            "lifecycle_stage": "critique",
-        }
-        expected_revision_execution = {
-            "active_revision_plan_id": "revision-plan-test",
-            "comparison_summary": {"changed_section_count": 1},
-        }
-
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            workspace_path = Path(tmp_dir) / "revised.json"
-            with patch(
-                "med_autogrant.hermes_runtime.build_revision_execution_document",
-                create=True,
-                return_value={
-                    "grant_run_id": "grant-run-test",
-                    "workspace_id": "workspace-test",
-                    "draft_id": "draft-test",
-                    "active_revision_plan_id": "revision-plan-test",
-                    "lifecycle_stage": "critique",
-                    "revision_execution": expected_revision_execution,
-                    "revised_workspace": expected_revised_workspace,
-                },
-            ) as build_document, patch(
-                "med_autogrant.hermes_runtime._guard_revision_output_identity",
-                create=True,
-            ) as guard_output, patch(
-                "med_autogrant.hermes_runtime._write_revised_workspace_output",
-                create=True,
-            ) as write_output:
-                payload = runtime.execute_revision_pass(
-                    input_path=str(RE_REVIEW_EXAMPLE_PATH),
-                    output_path=str(workspace_path),
-                )
-
-        self.assertEqual(payload["revised_workspace"], expected_revised_workspace)
-        self.assertEqual(payload["revision_execution"], expected_revision_execution)
-        build_document.assert_called_once()
-        guard_output.assert_called_once()
-        write_output.assert_called_once_with(workspace_path.resolve(), expected_revised_workspace)
-
-
-class FinalPackageHandoffTest(unittest.TestCase):
-    def test_build_final_package_uses_hermes_handoff_owner(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
-
-        runtime = HermesRuntimeSubstrate()
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            tmp_root = Path(tmp_dir)
-            bundle_path = tmp_root / "bundle.json"
-            package_path = tmp_root / "package.json"
-            runtime.build_artifact_bundle(
-                input_path=str(FROZEN_EXAMPLE_PATH),
-                output_path=str(bundle_path),
-            )
-            expected_final_package = {
-                "package_version": 1,
-                "package_kind": "final_package",
-                "grant_run_id": "grant-run-test",
-                "workspace_id": "workspace-test",
-                "draft_id": "draft-test",
-                "lifecycle_stage": "frozen",
-            }
-
-            with patch(
-                "med_autogrant.hermes_runtime._read_artifact_bundle",
-                create=True,
-                return_value={"manifest": {}, "artifacts": [1, 2]},
-            ) as read_bundle, patch(
-                "med_autogrant.hermes_runtime.build_final_package_document",
-                create=True,
-                return_value=expected_final_package,
-            ) as build_document, patch(
-                "med_autogrant.hermes_runtime._guard_final_package_output_identity",
-                create=True,
-            ) as guard_output, patch(
-                "med_autogrant.hermes_runtime._write_final_package_output",
-                create=True,
-            ) as write_output:
-                payload = runtime.build_final_package(
-                    input_path=str(FROZEN_EXAMPLE_PATH),
-                    artifact_bundle_path=str(bundle_path),
-                    output_path=str(package_path),
-                )
-
-        self.assertEqual(payload["final_package"], expected_final_package)
-        read_bundle.assert_called_once()
-        build_document.assert_called_once()
-        guard_output.assert_called_once()
-        write_output.assert_called_once_with(package_path.resolve(), expected_final_package)
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c
 RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 
 
-class LocalRuntimeCliTest(unittest.TestCase):
+class RuntimeCliTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
         stdout = StringIO()
         stderr = StringIO()
@@ -38,7 +38,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
 
-    def test_run_local_legacy_alias_exits_with_parser_error(self) -> None:
+    def test_removed_run_local_alias_exits_with_parser_error(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "run-local",
             "--input",
@@ -51,7 +51,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
         self.assertEqual(stdout, "")
         self.assertIn("invalid choice", stderr)
 
-    def test_run_local_defaults_journal_to_runtime_state_sessions_root(self) -> None:
+    def test_runtime_run_defaults_journal_to_runtime_state_sessions_root(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             codex_home = Path(tmp_dir) / "codex-home"
             expected_journal_path = (
@@ -85,7 +85,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(payload["journal_path"], str(expected_journal_path.resolve()))
             self.assertTrue(expected_journal_path.exists())
 
-    def test_run_local_writes_journal_and_stage_action_stop_reason_for_revision_workspace(self) -> None:
+    def test_runtime_run_writes_journal_and_stage_action_stop_reason_for_revision_workspace(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "revision-journal.json"
 
@@ -127,7 +127,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(journal["attempts"][0]["trigger"], "runtime-run")
             self.assertEqual(journal["attempts"][0]["attempt_index"], 1)
 
-    def test_run_local_adds_stage_action_envelope_for_revision_workspace(self) -> None:
+    def test_runtime_run_adds_stage_action_envelope_for_revision_workspace(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "revision-envelope-journal.json"
 
@@ -193,7 +193,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(journal["latest_stage_action_envelope"], envelope)
             self.assertEqual(journal["attempts"][0]["stage_action_envelope"], envelope)
 
-    def test_run_local_adds_stage_action_envelope_for_critique_major_revision_workspace(self) -> None:
+    def test_runtime_run_adds_stage_action_envelope_for_critique_major_revision_workspace(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "major-revision-envelope-journal.json"
 
@@ -229,7 +229,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
                 ],
             )
 
-    def test_run_local_accepts_re_review_revised_output_after_execute_revision_pass(self) -> None:
+    def test_runtime_run_accepts_re_review_revised_output_after_execute_revision_pass(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             revised_output = Path(tmp_dir) / "p3b-revised.json"
             journal_path = Path(tmp_dir) / "p3b-revised-journal.json"
@@ -309,7 +309,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
                     self.assertIsNone(journal["latest_stage_action_envelope"])
                     self.assertIsNone(journal["attempts"][0]["stage_action_envelope"])
 
-    def test_run_local_surfaces_rollback_required_stop_reason(self) -> None:
+    def test_runtime_run_surfaces_rollback_required_stop_reason(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "rollback-journal.json"
 
@@ -332,7 +332,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(payload["stop_reason"]["forced_rollback_stage"], "argument_building")
             self.assertIn("失真", payload["stop_reason"]["forced_rollback_reason"])
 
-    def test_run_local_surfaces_freeze_ready_stop_reason(self) -> None:
+    def test_runtime_run_surfaces_freeze_ready_stop_reason(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "freeze-ready-journal.json"
 
@@ -355,7 +355,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertTrue(payload["stop_reason"]["requires_human_confirmation"])
             self.assertEqual(payload["stop_reason"]["recommended_next_stage"], "frozen")
 
-    def test_run_local_surfaces_presubmission_frozen_stop_reason(self) -> None:
+    def test_runtime_run_surfaces_presubmission_frozen_stop_reason(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "frozen-journal.json"
 
@@ -377,7 +377,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
             self.assertEqual(payload["stop_reason"]["checkpoint_status"], "submission_frozen")
             self.assertEqual(payload["stop_reason"]["recommended_next_stage"], "frozen")
 
-    def test_run_local_validation_failed_path_keeps_route_checkpoint_shape(self) -> None:
+    def test_runtime_run_validation_failed_path_keeps_route_checkpoint_shape(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             invalid_workspace = Path(tmp_dir) / "invalid-workspace.json"
             journal_path = Path(tmp_dir) / "invalid-journal.json"
@@ -538,7 +538,7 @@ class LocalRuntimeCliTest(unittest.TestCase):
                 "critique",
             )
 
-    def test_run_local_rejects_journal_reuse_with_different_input_path(self) -> None:
+    def test_runtime_run_rejects_journal_reuse_with_different_input_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "shared-journal.json"
 
