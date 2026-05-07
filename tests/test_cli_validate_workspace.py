@@ -1,13 +1,8 @@
 from __future__ import annotations
 
 import json
-import os
-import subprocess
 import sys
-import tempfile
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
-from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
@@ -17,8 +12,14 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from med_autogrant.cli import main  # noqa: E402
-from med_autogrant.public_cli import public_cli_argv  # noqa: E402
+from support.cli import run_cli  # noqa: E402
+from support.workspaces import (  # noqa: E402
+    write_completed_revision_workspace,
+    write_empty_revision_items_workspace,
+    write_outline_only_critique_workspace,
+    write_revision_completed_without_revised_workspace,
+    write_revision_outline_workspace,
+)
 
 
 EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
@@ -42,11 +43,7 @@ NON_NSFC_INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nih_r21_workspace_p2a_in
 
 class CliValidateWorkspaceTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            exit_code = main(public_cli_argv(args))
-        return exit_code, stdout.getvalue(), stderr.getvalue()
+        return run_cli(*args, allow_system_exit=False)
 
     def run_json_cli(self, *args: str) -> dict[str, object]:
         exit_code, stdout, stderr = self.run_cli(*args)
@@ -881,61 +878,19 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertTrue(payload["presubmission_frozen"])
 
     def write_invalid_workspace(self) -> Path:
-        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
-        payload["revision_plans"][0]["items"] = []
-
-        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
-        invalid_path = tmp_dir / "invalid-workspace.json"
-        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-        return invalid_path
+        return write_empty_revision_items_workspace(EXAMPLE_PATH)
 
     def write_outline_only_critique_workspace(self) -> Path:
-        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
-        payload["application_drafts"][0]["status"] = "outline"
-        payload["application_drafts"][0]["sections"] = []
-
-        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
-        invalid_path = tmp_dir / "outline-only-critique-workspace.json"
-        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-        return invalid_path
+        return write_outline_only_critique_workspace(EXAMPLE_PATH)
 
     def write_revision_outline_workspace(self) -> Path:
-        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
-        payload["lifecycle_stage"] = "revision"
-        payload["application_drafts"][0]["status"] = "outline"
-
-        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
-        invalid_path = tmp_dir / "revision-outline-workspace.json"
-        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-        return invalid_path
+        return write_revision_outline_workspace(EXAMPLE_PATH)
 
     def write_revision_completed_without_revised_workspace(self) -> Path:
-        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
-        payload["lifecycle_stage"] = "revision"
-        payload["revision_plans"][0]["execution_status"] = "completed"
-        payload["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
-        payload["revision_plans"][0]["post_revision_version_label"] = "v0.4"
-        payload["revision_plans"][0]["comparison_summary"] = "已按批注完成修订，但尚未切换草稿状态。"
-
-        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
-        invalid_path = tmp_dir / "revision-completed-without-revised.json"
-        invalid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-        return invalid_path
+        return write_revision_completed_without_revised_workspace(EXAMPLE_PATH)
 
     def write_completed_revision_workspace(self) -> Path:
-        payload = json.loads(EXAMPLE_PATH.read_text(encoding="utf-8"))
-        payload["lifecycle_stage"] = "revision"
-        payload["application_drafts"][0]["status"] = "revised"
-        payload["application_drafts"][0]["version_label"] = "v0.4"
-        payload["revision_plans"][0]["execution_status"] = "completed"
-        payload["revision_plans"][0]["pre_revision_version_label"] = "v0.3"
-        payload["revision_plans"][0]["post_revision_version_label"] = "v0.4"
-        payload["revision_plans"][0]["comparison_summary"] = "已根据 major_revision 完成立项依据与机制链条修订。"
-
-        tmp_dir = Path(tempfile.mkdtemp(prefix="med-autogrant-cli-test-"))
-        valid_path = tmp_dir / "revision-completed.json"
-        valid_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-        return valid_path
+        return write_completed_revision_workspace(EXAMPLE_PATH)
 
 
 if __name__ == "__main__":

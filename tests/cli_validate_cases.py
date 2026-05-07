@@ -6,8 +6,6 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
-from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
@@ -17,8 +15,15 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from med_autogrant.cli import main  # noqa: E402
-from med_autogrant.public_cli import public_cli_argv  # noqa: E402
+from support.cli import run_cli as run_cli_helper  # noqa: E402
+from support.cli import run_json_cli as run_json_cli_helper  # noqa: E402
+from support.workspaces import (  # noqa: E402
+    write_completed_revision_workspace,
+    write_empty_revision_items_workspace,
+    write_outline_only_critique_workspace,
+    write_revision_completed_without_revised_workspace,
+    write_revision_outline_workspace,
+)
 
 
 EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
@@ -42,14 +47,24 @@ NON_NSFC_INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nih_r21_workspace_p2a_in
 
 class CliValidateWorkspaceTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
-        stdout = StringIO()
-        stderr = StringIO()
-        with redirect_stdout(stdout), redirect_stderr(stderr):
-            exit_code = main(public_cli_argv(args))
-        return exit_code, stdout.getvalue(), stderr.getvalue()
+        return run_cli_helper(*args, allow_system_exit=False)
 
     def run_json_cli(self, *args: str) -> dict[str, object]:
-        exit_code, stdout, stderr = self.run_cli(*args)
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        return json.loads(stdout)
+        payload = run_json_cli_helper(*args, allow_system_exit=False)
+        self.assertIsInstance(payload, dict)
+        return payload
+
+    def write_invalid_workspace(self) -> Path:
+        return write_empty_revision_items_workspace(EXAMPLE_PATH)
+
+    def write_outline_only_critique_workspace(self) -> Path:
+        return write_outline_only_critique_workspace(EXAMPLE_PATH)
+
+    def write_revision_outline_workspace(self) -> Path:
+        return write_revision_outline_workspace(EXAMPLE_PATH)
+
+    def write_revision_completed_without_revised_workspace(self) -> Path:
+        return write_revision_completed_without_revised_workspace(EXAMPLE_PATH)
+
+    def write_completed_revision_workspace(self) -> Path:
+        return write_completed_revision_workspace(EXAMPLE_PATH)
