@@ -64,6 +64,12 @@ Date: `2026-05-06`
 - `pass critique --executor hermes_native_proof` 继续作为显式 proof lane；默认执行器继续保持 `Codex CLI`，默认模式是 `autonomous`
 - 自有 OPL sidecar 当前不是 MAG 侧目标；只有当外部 `Hermes-Agent` 无法表达 task/wakeup/approval/audit/product isolation contract 时，才从 OPL Runtime Manager 的薄 adapter/projection 边界进入 promotion 评估。
 
+## 当前目录治理
+
+- repo-tracked 主线不再保留项目级 `.codex/`、`.omx/`、`.runtime-program/`、`.agent-contract-baseline.json` 或 `runtime-state/`；本机 session、prompt、log、report 与 hook 状态统一属于 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
+- `tests/test_repository_hygiene.py` 作为 meta 验证的一部分，阻断 tracked `dist/`、`build/`、`out/`、`__pycache__`、`*.egg-info`、`.DS_Store`、项目级本地状态目录，以及除 `.agents/plugins/marketplace.json` 外的 `.agents/` 内容。
+- 同一 hygiene 测试同时固定 tracked source/test line budget，新增或增长的超长源码应先拆分到清晰子模块，而不是扩大单文件基线。
+
 ## 参考入口
 
 - 当前技术记录：`docs/specs/` 与 `contracts/runtime-program/current-program.json`

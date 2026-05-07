@@ -98,6 +98,13 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 `.sentrux/rules.toml` sidecar。若 Sentrux gate/check 失败，脚本会先生成并打印这些
 诊断，再报告 Sentrux 失败。
 
+仓库目录治理通过 `tests/test_repository_hygiene.py` 纳入 meta 验证面。repo-tracked
+主线不得包含 `dist/`、`build/`、`out/`、`__pycache__`、`*.egg-info`、`.DS_Store`、
+`.codex/`、`.omx/`、`.runtime-program/`、`runtime-state/` 或
+`.agent-contract-baseline.json` 这类生成物 / 本地状态；`.agents/` 下唯一允许跟踪的
+入口是 `.agents/plugins/marketplace.json`。同一测试也继续约束 tracked source/test
+line budget，新增或增长的超长文件应拆分，而不是扩大单文件基线。
+
 ## Plans 与历史规划工件
 
 - [活跃 plans](./plans/README.zh-CN.md)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 import tomllib
 import unittest
@@ -13,6 +14,21 @@ LINE_BUDGET_TARGET = 1000
 LINE_BUDGET_LIMIT = 1500
 LEGACY_OVER_TARGET_BUDGETS: dict[str, int] = {}
 CODE_SUFFIXES = {".py", ".sh", ".js", ".ts", ".tsx", ".jsx"}
+TRACKED_PATH_FORBIDDEN_EXACT_NAMES = {
+    ".DS_Store",
+    ".agent-contract-baseline.json",
+}
+TRACKED_PATH_FORBIDDEN_PARTS = {
+    ".codex",
+    ".omx",
+    ".runtime-program",
+    "__pycache__",
+    "build",
+    "dist",
+    "out",
+    "runtime-state",
+}
+TRACKED_PLUGIN_ENTRYPOINT = ".agents/plugins/marketplace.json"
 
 
 def _tracked_code_files() -> list[Path]:
@@ -30,6 +46,26 @@ def _tracked_code_files() -> list[Path]:
     ]
 
 
+def _tracked_files() -> list[str]:
+    completed = subprocess.run(
+        ["git", "ls-files"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return completed.stdout.splitlines()
+
+
+def _is_forbidden_tracked_path(path: str) -> bool:
+    parts = Path(path).parts
+    return (
+        any(part in TRACKED_PATH_FORBIDDEN_EXACT_NAMES for part in parts)
+        or any(part in TRACKED_PATH_FORBIDDEN_PARTS for part in parts)
+        or any(part.endswith(".egg-info") for part in parts)
+    )
+
+
 class RepositoryHygieneTest(unittest.TestCase):
     def test_gitignore_fully_ignores_local_tooling_state(self) -> None:
         text = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
@@ -38,17 +74,18 @@ class RepositoryHygieneTest(unittest.TestCase):
         self.assertNotIn(".runtime-program/", text)
         self.assertNotIn(".omx/", text)
 
-    def test_local_tooling_state_is_not_tracked(self) -> None:
-        completed = subprocess.run(
-            ["git", "ls-files", ".runtime-program", ".codex", ".omx"],
-            cwd=REPO_ROOT,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+    def test_forbidden_generated_and_local_state_paths_are_not_tracked(self) -> None:
+        forbidden_paths = [path for path in _tracked_files() if _is_forbidden_tracked_path(path)]
 
-        self.assertEqual(completed.returncode, 0)
-        self.assertEqual(completed.stdout.strip(), "")
+        self.assertEqual(forbidden_paths, [])
+
+    def test_repo_tracked_plugin_entrypoint_is_limited_to_marketplace_source(self) -> None:
+        agent_paths = [path for path in _tracked_files() if path.startswith(".agents/")]
+
+        self.assertEqual(agent_paths, [TRACKED_PLUGIN_ENTRYPOINT])
+        marketplace = json.loads((REPO_ROOT / TRACKED_PLUGIN_ENTRYPOINT).read_text(encoding="utf-8"))
+        self.assertEqual(marketplace["plugins"][0]["source"]["source"], "local")
+        self.assertEqual(marketplace["plugins"][0]["source"]["path"], "./plugins/mag")
 
     def test_pyproject_pins_opl_harness_shared_to_a_full_commit(self) -> None:
         pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))

@@ -102,6 +102,15 @@ JSON output from the same command with `--format json`, and a complete
 `.sentrux/rules.toml` sidecar. If Sentrux gate/check fails, these diagnostics
 are generated and printed before the lane reports the Sentrux failure.
 
+Repository hygiene is enforced in the meta verification surface through
+`tests/test_repository_hygiene.py`. The repo-tracked mainline must not contain
+generated or local-state payloads such as `dist/`, `build/`, `out/`,
+`__pycache__`, `*.egg-info`, `.DS_Store`, `.codex/`, `.omx/`,
+`.runtime-program/`, `runtime-state/`, or `.agent-contract-baseline.json`.
+The only tracked `.agents/` entrypoint is `.agents/plugins/marketplace.json`.
+The same test also keeps tracked source and test files within the current line
+budget unless a legacy baseline is explicitly recorded.
+
 ## Plans And Historical Planning Artifacts
 
 - [Active plans](./plans/README.md)
