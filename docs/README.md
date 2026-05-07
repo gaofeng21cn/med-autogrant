@@ -102,6 +102,12 @@ JSON output from the same command with `--format json`, and a complete
 `.sentrux/rules.toml` sidecar. If Sentrux gate/check fails, these diagnostics
 are generated and printed before the lane reports the Sentrux failure.
 
+The default local verification entry is `./scripts/verify.sh`. It runs the
+line-budget check once, then the small `smoke` lane and the fast non-regression
+core lane. Heavier matrix, runtime/session, hosted/export, product-entry, and
+compatibility coverage belongs to `./scripts/verify.sh regression`; full-suite
+baselines remain available through `./scripts/verify.sh full`.
+
 Repository hygiene is enforced in the meta verification surface through
 `tests/test_repository_hygiene.py`. The repo-tracked mainline must not contain
 generated or local-state payloads such as `dist/`, `build/`, `out/`,

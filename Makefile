@@ -1,9 +1,11 @@
-.PHONY: test test-fast test-line-budget test-family test-meta test-cli-smoke test-structure test-full
+.PHONY: test test-fast test-line-budget test-family test-meta test-cli-smoke test-regression test-structure test-full
 
 test: test-fast
 
 test-fast:
-	uv run pytest -q -m "not meta"
+	$(MAKE) test-line-budget
+	$(MAKE) test-cli-smoke
+	uv run pytest -q -m "not meta and not regression"
 
 test-line-budget:
 	uv run python scripts/line_budget.py
@@ -15,7 +17,10 @@ test-meta:
 	uv run pytest -q -m meta
 
 test-cli-smoke:
-	uv run pytest tests/test_cli_validate_workspace.py tests/test_local_runtime.py tests/test_hermes_runtime.py tests/test_product_entry.py -q
+	uv run pytest -q -m smoke
+
+test-regression:
+	uv run pytest -q -m regression
 
 test-structure:
 	make test-line-budget

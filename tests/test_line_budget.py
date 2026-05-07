@@ -35,9 +35,12 @@ def test_line_budget_script_accepts_current_locked_baseline() -> None:
     assert result.returncode == 0, result.stdout
 
 
-def test_verify_runs_line_budget_before_lane_dispatch() -> None:
+def test_default_verify_delegates_line_budget_to_fast_lane_once() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     verify_script = (repo_root / "scripts" / "verify.sh").read_text(encoding="utf-8")
+    makefile = (repo_root / "Makefile").read_text(encoding="utf-8")
 
-    assert "python scripts/line_budget.py" in verify_script
-    assert verify_script.index("python scripts/line_budget.py") < verify_script.index("case \"$lane\" in")
+    assert "python scripts/line_budget.py" not in verify_script
+    assert "make test-fast" in verify_script
+    assert makefile.count("$(MAKE) test-line-budget") == 1
+    assert makefile.index("$(MAKE) test-line-budget") < makefile.index("uv run pytest -q -m \"not meta and not regression\"")

@@ -90,6 +90,13 @@ You can start with prompts like:
 
 </details>
 
+## Maintainer Verification
+
+- Use `./scripts/verify.sh` for the default local gate. It runs the line-budget check, the minimal smoke lane, and the fast non-regression core lane.
+- Use `./scripts/verify.sh smoke` or `make test-cli-smoke` for quick CLI/product/runtime entry health checks.
+- Use `./scripts/verify.sh regression` for heavier matrix, product-entry, runtime/session, hosted/export, and compatibility regression coverage.
+- Use `./scripts/verify.sh meta`, `./scripts/verify.sh structure`, and `./scripts/verify.sh full` for repo governance, architecture checks, and clean-clone/full-suite baselines.
+
 ## Further Reading
 
 - [Docs Guide](./docs/README.md)

@@ -98,6 +98,11 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 `.sentrux/rules.toml` sidecar。若 Sentrux gate/check 失败，脚本会先生成并打印这些
 诊断，再报告 Sentrux 失败。
 
+默认本地验证入口是 `./scripts/verify.sh`。它只运行一次 line-budget，然后运行小
+`smoke` lane 与非重型 fast core lane。矩阵型、runtime/session、hosted/export、
+product-entry 与兼容性覆盖归入 `./scripts/verify.sh regression`；完整基线继续由
+`./scripts/verify.sh full` 承担。
+
 仓库目录治理通过 `tests/test_repository_hygiene.py` 纳入 meta 验证面。repo-tracked
 主线不得包含 `dist/`、`build/`、`out/`、`__pycache__`、`*.egg-info`、`.DS_Store`、
 `.codex/`、`.omx/`、`.runtime-program/`、`runtime-state/` 或

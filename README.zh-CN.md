@@ -90,6 +90,13 @@
 
 </details>
 
+## 维护者验证
+
+- 默认本地门禁使用 `./scripts/verify.sh`，它会运行 line-budget、最小 smoke lane 和非重型 fast core lane。
+- 快速入口健康检查使用 `./scripts/verify.sh smoke` 或 `make test-cli-smoke`。
+- 矩阵型、product-entry、runtime/session、hosted/export 与兼容性回归使用 `./scripts/verify.sh regression`。
+- repo 治理、结构检查和 clean-clone/full-suite 基线分别使用 `./scripts/verify.sh meta`、`./scripts/verify.sh structure` 与 `./scripts/verify.sh full`。
+
 ## 延伸阅读
 
 - [文档索引](./docs/README.zh-CN.md)

@@ -23,6 +23,10 @@ medautogrant = "med_autogrant.cli:entrypoint"
 testpaths = ["tests"]
 markers = [
   "meta: repo-tracked program control and repository hygiene checks",
+  "smoke: minimal CLI/product/runtime entry health checks",
+  "integration: cross-surface integration checks that are broader than unit contracts",
+  "regression: heavier matrix, historical compatibility, runtime/export, and product regression checks",
+  "structure: repository structure and architecture governance checks",
 ]
 
 [tool.uv.sources]

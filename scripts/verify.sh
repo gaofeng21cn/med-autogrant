@@ -3,12 +3,13 @@ set -euo pipefail
 
 lane="${1:-fast}"
 
-python scripts/line_budget.py
-
 case "$lane" in
-  fast|smoke)
-    make test-line-budget
+  fast)
     make test-fast
+    ;;
+  smoke|cli-smoke)
+    make test-line-budget
+    make test-cli-smoke
     ;;
   family)
     make test-line-budget
@@ -17,8 +18,8 @@ case "$lane" in
   meta)
     make test-meta
     ;;
-  cli-smoke)
-    make test-cli-smoke
+  regression)
+    make test-regression
     ;;
   structure)
     make test-structure
@@ -28,7 +29,7 @@ case "$lane" in
     ;;
   *)
     echo "Unknown lane: $lane" >&2
-    echo "Usage: $0 [fast|family|meta|cli-smoke|structure|full]" >&2
+    echo "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|structure|full]" >&2
     exit 2
     ;;
 esac
