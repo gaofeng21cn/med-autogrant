@@ -21,7 +21,7 @@ This guide is for readers who need the technical records, trace records, referen
 - Default authoring execution inherits local `Codex` defaults through the existing route-selected executor path.
 - `OPL Runtime Manager` is the target OPL-side thin manager over the external `Hermes-Agent` substrate; it may consume MAG runtime_control, runtime_continuity, workspace projection, artifact locator, and explicit wakeup/TODO queues, but it does not own MAG grant truth or authoring execution.
 - `Hermes-Agent`-related lanes stay in explicit hosted/proof or technical-reference positions; they do not redefine the default public capability contract.
-- Historical program records and migration notes stay reachable through `docs/history/`; older dated specs physically remain in `docs/specs/` for path stability, but their reading entry is `docs/history/specs/`.
+- Historical program records and migration notes stay reachable through `docs/history/`; older dated specs can remain in `docs/specs/` for provenance, while machine-readable surfaces refer to them through semantic `human_doc:*` ids rather than path-stability constraints.
 - The frontdesk, user-loop, projections, and local `submission-ready` package are landed as internal command contracts and direct-product projections under the app skill. The active task boundary now distinguishes scientific review readiness from the stricter local export gate, and that export gate does not imply external funding-portal submission. Future hosted product expansion belongs in `docs/plans/` only when there is an active plan.
 - `OPL` family routing and `Codex` skill activation consume the same MAG capability surface; MAG keeps grant-domain truth, direct grant entry, and execution routing.
 - The active MAG task boundary is specified-funder body authoring; scientific completion and formal/objective supplement completion are explicitly separated layers.
@@ -68,7 +68,7 @@ These files are the default public-facing entry surfaces and should stay mirrore
 
 The current grant product-entry shell remains available as the internal domain/API catalog builder behind the app skill and as part of the stable callable surface. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible as integration/reference surfaces for hosted caller / external caller consumption.
 The quality and autonomy schemas are tracked in [`schema-index.json`](../schemas/v1/schema-index.json) and in the current-program truth surface.
-For the complete repo-tracked truth-surface list, read `repo_tracked_truth_surfaces` in [`current-program.json`](../contracts/runtime-program/current-program.json); the specs guide separates currently active boundary records from historical provenance records.
+For the complete repo-tracked truth-surface list, read `repo_tracked_truth_surfaces` in [`current-program.json`](../contracts/runtime-program/current-program.json); contract/schema/source surfaces stay as repo paths, and prose docs are referenced by semantic `human_doc:*` ids. The specs guide separates currently active boundary records from historical provenance records.
 
 ## Trace Records
 
@@ -111,11 +111,12 @@ Current mainline truth continues to live in the core docs, active specs listed i
 - Keep the default public docs mirrored in English and Chinese where they are part of the public surface.
 - Keep active specs listed in `docs/specs/README.md` authoritative for their specific technical boundaries without letting them replace the user-facing home page.
 - Keep references, plans, and history available, while keeping the public home page as the default entry.
+- Treat `README*` and `docs/**` as human-readable surfaces. Do not make scripts, tests, runtime status, or contracts depend on their concrete paths; use schema/source paths or semantic `human_doc:*` ids where machine surfaces need a doc relationship.
 
 ## Governance
 
 - Documentation governance freezes in [series doc governance checklist](./references/series-doc-governance-checklist.md), the technical working set, and repo-tracked contract/doc surfaces rather than in `AGENTS.md` alone.
 - `README*` and `docs/README*` are the default public entry.
-- `docs/specs/**` holds active technical records plus older provenance specs whose original paths are retained; `docs/history/specs/` is the archival reading index for older dated records.
+- `docs/specs/**` holds active technical records plus older provenance specs; `docs/history/specs/` is the archival reading index for older dated records.
 - `docs/references/**` holds internal reference notes.
 - `docs/plans/**` is reserved for active future work; `docs/history/**` holds completed plans and archival traceability.

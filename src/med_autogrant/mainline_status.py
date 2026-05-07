@@ -42,8 +42,8 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "runtime-run / runtime-resume 不再由 repo-local helper 主责 substrate durability。",
             ],
             "phase_docs": [
-                "docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md",
-                "docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md",
+                "human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth",
+                "human_doc:2026_04_12_upstream_hermes_agent_fast_cutover_current_truth",
             ],
         },
         "P2": {
@@ -77,9 +77,9 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "hosted contract bundle 已显式导出 domain_entry_contract / schema_contract / authoring_contract。",
             ],
             "phase_docs": [
-                "docs/specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md",
-                "docs/specs/2026-04-12-author-side-executor-routing-contract-current-truth.md",
-                "docs/specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md",
+                "human_doc:2026_04_12_schema_backed_product_entry_and_routing_contract_current_truth",
+                "human_doc:2026_04_12_author_side_executor_routing_contract_current_truth",
+                "human_doc:2026_04_12_hosted_contract_bundle_entry_and_route_catalog_current_truth",
             ],
         },
         "P3": {
@@ -119,8 +119,8 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "hosted caller / OPL caller 不再需要 repo-local helper 才能构造 request。",
             ],
             "phase_docs": [
-                "docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md",
-                "docs/specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md",
+                "human_doc:2026_04_12_hosted_caller_consumption_proof_current_truth",
+                "human_doc:2026_04_12_hosted_contract_bundle_entry_and_route_catalog_current_truth",
             ],
         },
         "P4": {
@@ -175,13 +175,13 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "这层 shell 仍然诚实保持 controller-owned，不越界声称 mature frontend / hosted runtime 已完成。",
             ],
             "phase_docs": [
-                "docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md",
-                "docs/specs/2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md",
-                "docs/specs/2026-04-12-p4b-direct-grant-entry-composition-current-truth.md",
-                "docs/specs/2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md",
-                "docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md",
-                "docs/specs/2026-04-13-p4e-schema-backed-frontdesk-and-manifest-current-truth.md",
-                "docs/specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md",
+                "human_doc:2026_04_12_opl_aligned_ideal_target_and_phase_map_current_truth",
+                "human_doc:2026_04_12_p4a_direct_grant_cockpit_and_progress_projection_current_truth",
+                "human_doc:2026_04_12_p4b_direct_grant_entry_composition_current_truth",
+                "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth",
+                "human_doc:2026_04_13_full_grant_authoring_executor_current_truth",
+                "human_doc:2026_04_13_p4e_schema_backed_frontdesk_and_manifest_current_truth",
+                "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth",
             ],
         },
     }

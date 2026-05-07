@@ -37,15 +37,15 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     assert maintainer_references["phase_ladder"][3]["phase_id"] == "P4"
     assert any(item["name"] == "grant_user_loop" for item in maintainer_references["phase_ladder"][3]["entry_points"])
     assert any(
-        item.endswith("2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md")
+        item == "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth"
         for item in maintainer_references["phase_ladder"][3]["phase_docs"]
     )
     assert any(
-        item.endswith("2026-04-13-p4e-schema-backed-frontdesk-and-manifest-current-truth.md")
+        item == "human_doc:2026_04_13_p4e_schema_backed_frontdesk_and_manifest_current_truth"
         for item in maintainer_references["phase_ladder"][3]["phase_docs"]
     )
     assert any(
-        item.endswith("2026-04-13-p4f-local-submission-ready-package-current-truth.md")
+        item == "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth"
         for item in maintainer_references["phase_ladder"][3]["phase_docs"]
     )
     assert any("Web UI" in item for item in payload["remaining_gaps"])

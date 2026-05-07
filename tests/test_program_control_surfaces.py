@@ -130,47 +130,47 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["machine_local_runtime_state"]["not_repo_tracked"], True)
         self.assertIn("contracts/runtime-program/current-program.json", contract["repo_tracked_truth_surfaces"])
         self.assertIn(
-            "docs/specs/2026-04-23-authoring-completion-semantics-current-truth.md",
+            "human_doc:2026_04_23_authoring_completion_semantics_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
-        self.assertIn("docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md", contract["repo_tracked_truth_surfaces"])
+        self.assertIn("human_doc:2026_04_12_upstream_hermes_agent_fast_cutover_current_truth", contract["repo_tracked_truth_surfaces"])
         self.assertIn(
-            "docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md",
+            "human_doc:2026_04_12_opl_aligned_ideal_target_and_phase_map_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "docs/specs/2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md",
+            "human_doc:2026_04_12_hosted_caller_consumption_proof_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "docs/specs/2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md",
+            "human_doc:2026_04_12_lightweight_product_entry_and_opl_handoff_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "docs/specs/2026-04-12-p4b-direct-grant-entry-composition-current-truth.md",
+            "human_doc:2026_04_12_p4a_direct_grant_cockpit_and_progress_projection_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "docs/specs/2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md",
+            "human_doc:2026_04_12_p4b_direct_grant_entry_composition_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "docs/specs/2026-04-13-p4e-schema-backed-frontdesk-and-manifest-current-truth.md",
+            "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "docs/specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md",
+            "human_doc:2026_04_13_p4e_schema_backed_frontdesk_and_manifest_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "docs/specs/2026-04-13-hermes-native-critique-proof-current-truth.md",
+            "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
-        self.assertIn("docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md", contract["repo_tracked_truth_surfaces"])
+        self.assertIn(
+            "human_doc:2026_04_13_hermes_native_critique_proof_current_truth",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertIn("human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth", contract["repo_tracked_truth_surfaces"])
         self.assertEqual(
             contract["ideal_target"]["family_top_entry"],
             "OPL family-level orchestration surface",
@@ -211,11 +211,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["phase_map"][3]["phase_id"], "P4")
         self.assertEqual(contract["phase_map"][3]["status"], "next")
 
-    def test_repo_tracked_truth_surfaces_exist(self) -> None:
+    def test_repo_tracked_truth_surfaces_use_machine_paths_or_semantic_docs(self) -> None:
         contract = json.loads(_read(CURRENT_PROGRAM_CONTRACT))
-        for relative_path in contract["repo_tracked_truth_surfaces"]:
-            with self.subTest(relative_path=relative_path):
-                self.assertTrue((REPO_ROOT / relative_path).exists(), relative_path)
+        for surface_ref in contract["repo_tracked_truth_surfaces"]:
+            with self.subTest(surface_ref=surface_ref):
+                if surface_ref.startswith("human_doc:"):
+                    self.assertRegex(surface_ref, r"^human_doc:[a-z0-9_]+$")
+                else:
+                    self.assertTrue((REPO_ROOT / surface_ref).exists(), surface_ref)
 
 
 if __name__ == "__main__":
