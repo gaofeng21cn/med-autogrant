@@ -17,6 +17,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from med_autogrant.cli import main  # noqa: E402
 from med_autogrant.public_cli import public_cli_argv  # noqa: E402
+from support.domain_contracts import AUTHOR_SIDE_ROUTE_IDS  # noqa: E402
 
 
 CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
@@ -24,20 +25,6 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.js
 RE_REVIEW_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 
-AUTHOR_SIDE_ROUTE_IDS = (
-    "direction_screening",
-    "question_refinement",
-    "argument_building",
-    "fit_alignment",
-    "outline",
-    "drafting",
-    "critique",
-    "revision",
-    "frozen",
-    "artifact_bundle",
-    "final_package",
-    "hosted_contract_bundle",
-)
 REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
 DRAFT_ID_CONTEXT_STAGES = {"outline", "drafting", "critique", "revision", "frozen"}
 PENDING_ROUTE_REQUIREMENTS = {
