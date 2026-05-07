@@ -64,6 +64,14 @@ def test_verify_script_wraps_canonical_make_lanes() -> None:
     assert "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|structure|full]" in verify_script
 
 
+def test_product_entry_cases_are_direct_regression_cases() -> None:
+    conftest = _read("tests/conftest.py")
+
+    assert 'relative_path.startswith("tests/product_entry_cases/")' in conftest
+    assert 'PRODUCT_ENTRY_AGGREGATOR = "tests/test_product_entry.py"' in conftest
+    assert "pytest_ignore_collect" in conftest
+
+
 def test_opl_module_healthcheck_uses_product_smoke_lane() -> None:
     healthcheck = _read("scripts/opl-module-healthcheck.sh")
 

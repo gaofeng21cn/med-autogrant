@@ -105,8 +105,11 @@ are generated and printed before the lane reports the Sentrux failure.
 The default local verification entry is `./scripts/verify.sh`. It runs the
 line-budget check once, then the small `smoke` lane and the fast non-regression
 core lane. Heavier matrix, runtime/session, hosted/export, product-entry, and
-compatibility coverage belongs to `./scripts/verify.sh regression`; full-suite
-baselines remain available through `./scripts/verify.sh full`.
+compatibility coverage belongs to `./scripts/verify.sh regression`; the
+product-entry case modules under `tests/product_entry_cases/` are directly
+collected there, with `tests/test_product_entry.py` kept only as the compatibility
+import surface. Full-suite baselines remain available through
+`./scripts/verify.sh full`.
 
 Repository hygiene is enforced in the meta verification surface through
 `tests/test_repository_hygiene.py`. The repo-tracked mainline must not contain
