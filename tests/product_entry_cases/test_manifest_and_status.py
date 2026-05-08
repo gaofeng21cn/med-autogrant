@@ -92,6 +92,14 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             manifest["task_lifecycle"]["progress_surface"]["surface_kind"],
             "grant_progress",
         )
+        self.assertEqual(manifest["persistence_policy"]["surface_kind"], "family_persistence_policy")
+        self.assertEqual(manifest["persistence_policy"]["authority_surfaces"][0]["owner"], "med-autogrant")
+        self.assertEqual(manifest["lifecycle_ledger"]["surface_kind"], "family_lifecycle_ledger")
+        self.assertEqual(manifest["lifecycle_ledger"]["actions"][0]["safety_gate"], "schema_and_shared_family_validator")
+        self.assertRegex(manifest["lifecycle_ledger"]["actions"][0]["sha256"], r"^[0-9a-f]{64}$")
+        self.assertEqual(manifest["owner_route"]["surface_kind"], "family_owner_route")
+        self.assertEqual(manifest["owner_route"]["next_owner"], "med-autogrant")
+        self.assertIn("open_product_entry", manifest["owner_route"]["allowed_actions"])
         self.assertEqual(manifest["session_continuity"]["surface_kind"], "session_continuity")
         self.assertEqual(manifest["session_continuity"]["session_locator_field"], "grant_run_id")
         self.assertEqual(manifest["session_continuity"]["session_handle_kind"], "grant_run_id")

@@ -196,7 +196,7 @@ class DomainEntryDispatchTest(unittest.TestCase):
                 "command": "execute-critique-pass",
                 "input_path": str(CRITIQUE_EXAMPLE_PATH),
                 "output_path": "/tmp/critique-output.json",
-                "executor_kind": "hermes_native_proof",
+                "executor_kind": "hermes_agent",
             }
         )
 
@@ -204,7 +204,7 @@ class DomainEntryDispatchTest(unittest.TestCase):
         runtime.execute_critique_pass.assert_called_once_with(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             output_path="/tmp/critique-output.json",
-            executor_kind="hermes_native_proof",
+            executor_kind="hermes_agent",
         )
 
     def test_domain_entry_dispatches_execute_direction_screening_pass(self) -> None:

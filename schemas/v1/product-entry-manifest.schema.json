@@ -441,6 +441,9 @@
         }
       }
     },
+    "persistencePolicy": {"type": "object", "additionalProperties": true, "required": ["surface_kind"], "properties": {"surface_kind": {"const": "family_persistence_policy"}}},
+    "lifecycleLedger": {"type": "object", "additionalProperties": true, "required": ["surface_kind"], "properties": {"surface_kind": {"const": "family_lifecycle_ledger"}}},
+    "ownerRoute": {"type": "object", "additionalProperties": true, "required": ["surface_kind"], "properties": {"surface_kind": {"const": "family_owner_route"}}},
     "sessionContinuitySurface": {
       "type": "object",
       "additionalProperties": false,
@@ -1169,7 +1172,7 @@
             "$ref": "#/$defs/oplFamilyRouteSurfaceRef"
           },
           "required": [
-            "frontdoor",
+            "product_entry",
             "operator_loop",
             "progress",
             "resume"
@@ -2347,43 +2350,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "surface_kind",
-        "manifest_version",
-        "manifest_kind",
-        "target_domain_id",
-        "formal_entry",
-        "workspace_locator",
-        "recommended_shell",
-        "recommended_command",
-        "product_entry_surface",
-        "operator_loop_surface",
-        "operator_loop_actions",
-        "repo_mainline",
-        "runtime",
-        "managed_runtime_contract",
-        "runtime_inventory",
-        "task_lifecycle",
-        "session_continuity",
-        "runtime_control",
-        "progress_projection",
-        "artifact_inventory",
-        "skill_catalog",
-        "automation",
-        "product_entry_shell",
-        "shared_handoff",
-        "product_entry_start",
-        "product_entry_overview",
-        "product_entry_preflight",
-        "product_entry_readiness",
-        "grant_authoring_readiness",
-        "autonomy_observability",
-        "product_entry_quickstart",
-        "family_orchestration",
-        "product_entry_status",
-        "remaining_gaps",
-        "notes"
-      ],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -2434,6 +2401,15 @@
         "task_lifecycle": {
           "$ref": "#/$defs/taskLifecycle"
         },
+        "persistence_policy": {
+          "$ref": "#/$defs/persistencePolicy"
+        },
+        "lifecycle_ledger": {
+          "$ref": "#/$defs/lifecycleLedger"
+        },
+        "owner_route": {
+          "$ref": "#/$defs/ownerRoute"
+        },
         "session_continuity": {
           "$ref": "#/$defs/sessionContinuitySurface"
         },
@@ -2482,9 +2458,7 @@
         "family_orchestration": {
           "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
         },
-        "product_entry_status": {
-          "$ref": "#/$defs/productEntryStatus"
-        },
+        "product_entry_status": {"$ref": "#/$defs/productEntryStatus"},
         "remaining_gaps": {
           "$ref": "common.schema.json#/$defs/stringList"
         },
@@ -2495,16 +2469,7 @@
     }
   },
   "additionalProperties": false,
-  "required": [
-    "ok",
-    "command",
-    "grant_run_id",
-    "workspace_id",
-    "draft_id",
-    "lifecycle_stage",
-    "input_path",
-    "product_entry_manifest"
-  ],
+  "required": ["ok", "command", "grant_run_id", "workspace_id", "draft_id", "lifecycle_stage", "input_path", "product_entry_manifest"],
   "properties": {
     "ok": {
       "const": true

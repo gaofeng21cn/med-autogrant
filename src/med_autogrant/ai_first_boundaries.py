@@ -6,7 +6,7 @@ from typing import Any
 AI_REVIEWER_BACKED_OWNERS = frozenset(
     {
         "Codex CLI critique executor",
-        "Hermes-native critique proof executor",
+        "Hermes-Agent critique executor",
     }
 )
 

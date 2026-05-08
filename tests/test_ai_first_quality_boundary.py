@@ -40,7 +40,7 @@ def test_quality_candidate_statuses_are_gated_by_ai_reviewer_backed_critique() -
     runtime_ops = _read("src/med_autogrant/hermes_runtime_parts/runtime_ops.py")
 
     assert '"Codex CLI critique executor"' in boundaries
-    assert '"Hermes-native critique proof executor"' in boundaries
+    assert '"Hermes-Agent critique executor"' in boundaries
     assert "owner in AI_REVIEWER_BACKED_OWNERS" in boundaries
     assert 'return "blocked"' in quality_assessment
     assert "if ai_reviewer_required:" in quality_assessment
@@ -63,4 +63,4 @@ def test_critique_executor_stamps_known_ai_reviewer_owners() -> None:
     critique_executor = _read("src/med_autogrant/critique_executor.py")
 
     assert 'metadata["owner"] = "Codex CLI critique executor"' in critique_executor
-    assert 'metadata["owner"] = "Hermes-native critique proof executor"' in critique_executor
+    assert 'metadata["owner"] = "Hermes-Agent critique executor"' in critique_executor

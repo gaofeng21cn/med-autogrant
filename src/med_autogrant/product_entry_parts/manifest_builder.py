@@ -40,6 +40,7 @@ from med_autogrant.product_entry_parts.loop_contracts import (
     _validate_product_entry_manifest_contract,
 )
 from med_autogrant.product_entry_parts.manifest_readiness import build_manifest_readiness_surfaces
+from med_autogrant.product_entry_parts.manifest_runtime_companions import build_manifest_runtime_companions
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_artifact_inventory_surface,
@@ -692,6 +693,13 @@ class ProductEntryManifestBuilderMixin:
                 "continuation_action_kind": continuation_action_kind,
             },
         )
+        runtime_companions = build_manifest_runtime_companions(
+            progress_payload=progress_payload,
+            checkpoint_status=checkpoint_status,
+            continuation_route_id=continuation_route_id,
+            continuation_route_status=continuation_route_status,
+            grant_user_loop_command=grant_user_loop_command,
+        )
         runtime_continuity = _build_skill_runtime_continuity_envelope(
             session_continuity=session_continuity,
             progress_surface=manifest_progress_projection,
@@ -831,6 +839,9 @@ class ProductEntryManifestBuilderMixin:
             managed_runtime_contract=managed_runtime_contract,
             runtime_inventory=runtime_inventory,
             task_lifecycle=task_lifecycle,
+            persistence_policy=runtime_companions["persistence_policy"],
+            lifecycle_ledger=runtime_companions["lifecycle_ledger"],
+            owner_route=runtime_companions["owner_route"],
             session_continuity=session_continuity,
             progress_projection=manifest_progress_projection,
             artifact_inventory=artifact_inventory,

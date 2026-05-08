@@ -293,7 +293,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(critique_workspace["revision_plans"][-1]["pre_revision_version_label"], "v0.4")
         self.assertEqual(validate_workspace_document(critique_workspace).ok, True)
 
-    def test_build_critique_execution_document_supports_experimental_hermes_native_proof_executor(self) -> None:
+    def test_build_critique_execution_document_supports_experimental_hermes_agent_executor(self) -> None:
         from med_autogrant.critique_executor import build_critique_execution_document
 
         document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
@@ -308,7 +308,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                             "created_at": "2026-04-13T12:00:00Z",
                             "updated_at": "2026-04-13T12:00:00Z",
                             "source_mode": "auto",
-                            "owner": "Hermes-native critique proof executor",
+                            "owner": "Hermes-Agent critique executor",
                         },
                         "critique_id": "critique-v1",
                         "draft_id": "should-be-overridden",
@@ -354,7 +354,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                             "created_at": "2026-04-13T12:05:00Z",
                             "updated_at": "2026-04-13T12:05:00Z",
                             "source_mode": "auto",
-                            "owner": "Hermes-native critique proof executor",
+                            "owner": "Hermes-Agent critique executor",
                         },
                         "revision_plan_id": "revision-v1",
                         "draft_id": "should-be-overridden",
@@ -415,7 +415,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         payload = build_critique_execution_document(
             document=document,
             input_path=DRAFTING_EXAMPLE_PATH,
-            executor_kind="hermes_native_proof",
+            executor_kind="hermes_agent",
             hermes_runner=fake_hermes_runner,
         )
 
@@ -426,7 +426,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(payload["draft_id"], "draft-v1")
         self.assertEqual(payload["active_revision_plan_id"], "revision-v1")
         self.assertEqual(payload["lifecycle_stage"], "critique")
-        self.assertEqual(executor["kind"], "hermes_native_full_agent_loop")
+        self.assertEqual(executor["kind"], "hermes_agent")
         self.assertEqual(executor["mode"], "experimental_proof")
         self.assertEqual(executor["entrypoint"], "run_agent.AIAgent.run_conversation")
         self.assertEqual(executor["provider"], "custom")

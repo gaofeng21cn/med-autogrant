@@ -29,10 +29,10 @@ CodexRunner = Callable[[str], dict[str, Any]]
 HermesRunner = Callable[[str], dict[str, Any]]
 
 DEFAULT_CRITIQUE_EXECUTOR_KIND = "codex_cli_autonomous"
-HERMES_NATIVE_PROOF_EXECUTOR_KIND = "hermes_native_proof"
+HERMES_AGENT_EXECUTOR_KIND = "hermes_agent"
 SUPPORTED_CRITIQUE_EXECUTOR_KINDS = (
     DEFAULT_CRITIQUE_EXECUTOR_KIND,
-    HERMES_NATIVE_PROOF_EXECUTOR_KIND,
+    HERMES_AGENT_EXECUTOR_KIND,
 )
 
 EXECUTABLE_REVISION_ACTION_TYPES = (
@@ -167,7 +167,7 @@ def _build_hermes_executor_payload(
     hermes_proof: dict[str, Any],
 ) -> dict[str, Any]:
     return {
-        "kind": "hermes_native_full_agent_loop",
+        "kind": "hermes_agent",
         "mode": "experimental_proof",
         "entrypoint": _require_string(hermes_contract, "entrypoint", context="Hermes contract"),
         "model": _require_string(hermes_contract, "model", context="Hermes contract"),
@@ -362,8 +362,8 @@ def _normalize_mentor_critique(
     critique = deepcopy(payload)
     metadata = dict(critique.get("metadata") or {})
     executor_kind = str(executor_payload.get("kind") or "").strip()
-    if executor_kind == "hermes_native_full_agent_loop":
-        metadata["owner"] = "Hermes-native critique proof executor"
+    if executor_kind == "hermes_agent":
+        metadata["owner"] = "Hermes-Agent critique executor"
     else:
         metadata["owner"] = "Codex CLI critique executor"
     critique["metadata"] = metadata

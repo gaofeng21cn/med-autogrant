@@ -618,11 +618,11 @@ class RevisionExecutionHandoffTest(unittest.TestCase):
                 runtime.execute_critique_pass(
                     input_path=str(REVISION_EXAMPLE_PATH),
                     output_path=str(workspace_path),
-                    executor_kind="hermes_native_proof",
+                    executor_kind="hermes_agent",
                 )
 
         _, kwargs = build_document.call_args
-        self.assertEqual(kwargs["executor_kind"], "hermes_native_proof")
+        self.assertEqual(kwargs["executor_kind"], "hermes_agent")
 
 
 if __name__ == "__main__":

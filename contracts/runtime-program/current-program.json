@@ -65,7 +65,7 @@
   "experimental_executor_proofs": [
     {
       "route_id": "critique",
-      "executor_kind": "hermes_native_proof",
+      "executor_kind": "hermes_agent",
       "entrypoint": "run_agent.AIAgent.run_conversation",
       "status": "experimental",
       "default_executor_name_unchanged": "codex_cli",

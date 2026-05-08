@@ -302,7 +302,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
                 "active_revision_plan_id": "revision-plan-test",
                 "verdict": "major_revision",
                 "executor": {
-                    "kind": "hermes_native_full_agent_loop",
+                    "kind": "hermes_agent",
                 },
             },
             "critique_workspace": {
@@ -322,7 +322,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
                 "--output",
                 "/tmp/critique-output.json",
                 "--executor",
-                "hermes_native_proof",
+                "hermes_agent",
                 "--format",
                 "json",
             )
@@ -335,7 +335,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
                 "command": "execute-critique-pass",
                 "input_path": str(DRAFTING_EXAMPLE_PATH),
                 "output_path": "/tmp/critique-output.json",
-                "executor_kind": "hermes_native_proof",
+                "executor_kind": "hermes_agent",
             }
         )
 

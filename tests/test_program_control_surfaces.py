@@ -81,7 +81,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertNotIn("default_executor", contract["executor_defaults"])
         self.assertNotIn("hermes_native_requires_full_agent_loop", contract["executor_defaults"])
         self.assertEqual(contract["experimental_executor_proofs"][0]["route_id"], "critique")
-        self.assertEqual(contract["experimental_executor_proofs"][0]["executor_kind"], "hermes_native_proof")
+        self.assertEqual(contract["experimental_executor_proofs"][0]["executor_kind"], "hermes_agent")
         self.assertEqual(
             contract["experimental_executor_proofs"][0]["entrypoint"],
             "run_agent.AIAgent.run_conversation",

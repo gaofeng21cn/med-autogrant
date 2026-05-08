@@ -189,7 +189,7 @@ def _build_opl_family_lifecycle_adapter(
                 "executor_owner": TARGET_DOMAIN_ID,
             },
             "route_surface_refs": {
-                "frontdoor": {
+                "product_entry": {
                     "surface_kind": PRODUCT_STATUS_KIND,
                     "command": shell_commands["product_status"],
                     "ref": "/product_entry_manifest/product_entry_surface",
