@@ -911,6 +911,7 @@
         "consumable_projection_refs",
         "state_index_inputs",
         "native_helper_consumption",
+        "family_lifecycle_adapter",
         "resume_contract",
         "wakeup_boundary",
         "non_goals"
@@ -969,6 +970,9 @@
         "native_helper_consumption": {
           "$ref": "#/$defs/oplNativeHelperConsumption"
         },
+        "family_lifecycle_adapter": {
+          "$ref": "#/$defs/oplFamilyLifecycleAdapter"
+        },
         "resume_contract": {
           "type": "object",
           "additionalProperties": false,
@@ -996,6 +1000,244 @@
         },
         "non_goals": {
           "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "oplFamilyLifecycleAdapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "adapter_id",
+        "contract_refs",
+        "persistence_projection",
+        "lifecycle_projection",
+        "owner_route_discovery",
+        "adoption_projection",
+        "adoption_surface",
+        "non_goals"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "opl_family_lifecycle_adapter"
+        },
+        "version": {
+          "const": "v1"
+        },
+        "adapter_id": {
+          "const": "mag.opl_family.lifecycle_adapter.v1"
+        },
+        "contract_refs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "runtime_attempt",
+            "product_operator",
+            "incident_learning",
+            "adoption"
+          ],
+          "properties": {
+            "runtime_attempt": {
+              "const": "contracts/opl-gateway/family-runtime-attempt-contract.json"
+            },
+            "product_operator": {
+              "const": "contracts/opl-gateway/family-product-operator-projection.json"
+            },
+            "incident_learning": {
+              "const": "contracts/opl-gateway/family-incident-learning-loop.json"
+            },
+            "adoption": {
+              "const": "contracts/runtime-program/opl-family-contract-adoption.json"
+            }
+          }
+        },
+        "persistence_projection": {
+          "$ref": "#/$defs/oplFamilyPersistenceProjection"
+        },
+        "lifecycle_projection": {
+          "$ref": "#/$defs/oplFamilyLifecycleProjection"
+        },
+        "owner_route_discovery": {
+          "$ref": "#/$defs/oplFamilyOwnerRouteDiscovery"
+        },
+        "adoption_projection": {
+          "$ref": "#/$defs/oplFamilyAdoptionProjection"
+        },
+        "adoption_surface": {
+          "$ref": "#/$defs/oplFamilyAdoptionSurface"
+        },
+        "non_goals": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "oplFamilyPersistenceProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maps_to",
+        "source_surface_refs",
+        "identity_fields",
+        "write_policy",
+        "sqlite_migration_required"
+      ],
+      "properties": {
+        "maps_to": {
+          "const": "opl_runtime_manager_native_state_projection"
+        },
+        "source_surface_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "identity_fields": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "write_policy": {
+          "const": "opl_index_only_no_domain_truth_writes"
+        },
+        "sqlite_migration_required": {
+          "const": false
+        }
+      }
+    },
+    "oplFamilyLifecycleProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maps_to_opl_contract",
+        "source_surface_refs",
+        "required_projection_fields",
+        "state_mapping"
+      ],
+      "properties": {
+        "maps_to_opl_contract": {
+          "const": "opl_family_runtime_attempt_contract.v1"
+        },
+        "source_surface_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "required_projection_fields": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "state_mapping": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "oplFamilyOwnerRouteDiscovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "discovery_surface_ref",
+        "owner_split",
+        "route_surface_refs"
+      ],
+      "properties": {
+        "discovery_surface_ref": {
+          "const": "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration"
+        },
+        "owner_split": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "runtime_manager_owner",
+            "runtime_kernel_owner",
+            "domain_truth_owner",
+            "executor_owner"
+          ],
+          "properties": {
+            "runtime_manager_owner": {
+              "const": "one-person-lab"
+            },
+            "runtime_kernel_owner": {
+              "const": "upstream_hermes_agent"
+            },
+            "domain_truth_owner": {
+              "const": "med-autogrant"
+            },
+            "executor_owner": {
+              "const": "med-autogrant"
+            }
+          }
+        },
+        "route_surface_refs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/oplFamilyRouteSurfaceRef"
+          },
+          "required": [
+            "frontdoor",
+            "operator_loop",
+            "progress",
+            "resume"
+          ]
+        }
+      }
+    },
+    "oplFamilyRouteSurfaceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "command",
+        "ref"
+      ],
+      "properties": {
+        "surface_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "command": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "oplFamilyAdoptionProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maps_to_opl_contract",
+        "source_refs",
+        "required_operator_fields",
+        "next_surface_ref"
+      ],
+      "properties": {
+        "maps_to_opl_contract": {
+          "const": "opl_family_product_operator_projection.v1"
+        },
+        "source_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "required_operator_fields": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "next_surface_ref": {
+          "const": "/product_entry_manifest/operator_loop_surface"
+        }
+      }
+    },
+    "oplFamilyAdoptionSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_kind",
+        "contract_ref",
+        "opl_role"
+      ],
+      "properties": {
+        "contract_kind": {
+          "const": "mag_opl_family_contract_adoption.v1"
+        },
+        "contract_ref": {
+          "const": "contracts/runtime-program/opl-family-contract-adoption.json"
+        },
+        "opl_role": {
+          "const": "family-level projection consumer only"
         }
       }
     },

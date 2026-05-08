@@ -84,6 +84,10 @@ def _build_opl_runtime_manager_registration(
                 },
             },
         },
+        "family_lifecycle_adapter": _build_opl_family_lifecycle_adapter(
+            runtime_continuity=runtime_continuity,
+            shell_commands=shell_commands,
+        ),
         "resume_contract": {
             "session_locator_field": _require_nonempty_string_from_mapping(
                 runtime_continuity,
@@ -111,6 +115,130 @@ def _build_opl_runtime_manager_registration(
             "not_a_quality_gate",
             "not_a_submission_ready_export_gate",
             "not_a_concrete_authoring_executor",
+        ],
+    }
+
+
+def _build_opl_family_lifecycle_adapter(
+    *,
+    runtime_continuity: Mapping[str, Any],
+    shell_commands: Mapping[str, str],
+) -> dict[str, Any]:
+    recommended_resume_command = _require_nonempty_string_from_mapping(
+        runtime_continuity,
+        "recommended_resume_command",
+        context="runtime_continuity",
+    )
+    recommended_progress_command = _require_nonempty_string_from_mapping(
+        runtime_continuity,
+        "recommended_progress_command",
+        context="runtime_continuity",
+    )
+    return {
+        "surface_kind": "opl_family_lifecycle_adapter",
+        "version": "v1",
+        "adapter_id": "mag.opl_family.lifecycle_adapter.v1",
+        "contract_refs": {
+            "runtime_attempt": "contracts/opl-gateway/family-runtime-attempt-contract.json",
+            "product_operator": "contracts/opl-gateway/family-product-operator-projection.json",
+            "incident_learning": "contracts/opl-gateway/family-incident-learning-loop.json",
+            "adoption": "contracts/runtime-program/opl-family-contract-adoption.json",
+        },
+        "persistence_projection": {
+            "maps_to": "opl_runtime_manager_native_state_projection",
+            "source_surface_refs": [
+                "/skill_catalog/skills/0/domain_projection/runtime_continuity",
+                "/session_continuity",
+                "/artifact_inventory",
+                "/runtime_control/restore_point",
+            ],
+            "identity_fields": ["grant_run_id", "workspace_id", "lifecycle_stage"],
+            "write_policy": "opl_index_only_no_domain_truth_writes",
+            "sqlite_migration_required": False,
+        },
+        "lifecycle_projection": {
+            "maps_to_opl_contract": "opl_family_runtime_attempt_contract.v1",
+            "source_surface_refs": [
+                "/runtime_control",
+                "/task_lifecycle",
+                "/progress_projection",
+                "/skill_catalog/skills/0/domain_projection/runtime_continuity",
+            ],
+            "required_projection_fields": [
+                "attempt_state",
+                "attempt_count",
+                "retry_policy",
+                "workspace_boundary",
+                "owner_repo",
+                "failure_reason",
+                "reconciliation_status",
+                "last_observed_projection",
+            ],
+            "state_mapping": {
+                "running": "task_lifecycle.status",
+                "blocked": "task_lifecycle.checkpoint_summary.status",
+                "last_observed_projection": "progress_projection",
+            },
+        },
+        "owner_route_discovery": {
+            "discovery_surface_ref": "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",
+            "owner_split": {
+                "runtime_manager_owner": "one-person-lab",
+                "runtime_kernel_owner": "upstream_hermes_agent",
+                "domain_truth_owner": TARGET_DOMAIN_ID,
+                "executor_owner": TARGET_DOMAIN_ID,
+            },
+            "route_surface_refs": {
+                "frontdoor": {
+                    "surface_kind": PRODUCT_FRONTDESK_KIND,
+                    "command": shell_commands["product_frontdesk"],
+                    "ref": "/product_entry_manifest/frontdesk_surface",
+                },
+                "operator_loop": {
+                    "surface_kind": "grant_user_loop",
+                    "command": shell_commands["grant_user_loop"],
+                    "ref": "/product_entry_manifest/operator_loop_surface",
+                },
+                "progress": {
+                    "surface_kind": "grant_progress",
+                    "command": recommended_progress_command,
+                    "ref": "/product_entry_manifest/progress_projection",
+                },
+                "resume": {
+                    "surface_kind": "runtime_resume",
+                    "command": recommended_resume_command,
+                    "ref": "/product_entry_manifest/runtime_control/restore_point",
+                },
+            },
+        },
+        "adoption_projection": {
+            "maps_to_opl_contract": "opl_family_product_operator_projection.v1",
+            "source_refs": [
+                "/product_entry_manifest/runtime_control",
+                "/product_entry_manifest/task_lifecycle",
+                "/product_entry_manifest/progress_projection",
+                "/product_entry_manifest/artifact_inventory",
+                "/product_entry_manifest/operator_loop_surface",
+            ],
+            "required_operator_fields": [
+                "source_refs",
+                "freshness",
+                "owner_split",
+                "next_surface_ref",
+                "human_gate_reason",
+            ],
+            "next_surface_ref": "/product_entry_manifest/operator_loop_surface",
+        },
+        "adoption_surface": {
+            "contract_kind": "mag_opl_family_contract_adoption.v1",
+            "contract_ref": "contracts/runtime-program/opl-family-contract-adoption.json",
+            "opl_role": "family-level projection consumer only",
+        },
+        "non_goals": [
+            "no_runtime_reshape",
+            "no_sqlite_migration",
+            "no_opl_grant_truth_ownership",
+            "no_submission_ready_gate_bypass",
         ],
     }
 

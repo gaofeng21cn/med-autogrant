@@ -446,6 +446,14 @@ class SchemaRegistryTest(unittest.TestCase):
             "native_helper_consumption",
             manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["required"],
         )
+        self.assertIn(
+            "family_lifecycle_adapter",
+            manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["required"],
+        )
+        self.assertEqual(
+            manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["properties"]["family_lifecycle_adapter"]["$ref"],
+            "#/$defs/oplFamilyLifecycleAdapter",
+        )
         native_helper_consumption = manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["properties"][
             "native_helper_consumption"
         ]
@@ -456,6 +464,26 @@ class SchemaRegistryTest(unittest.TestCase):
             "#/$defs/oplNativeHelperIndexingProof",
         )
         self.assertIn("todo_wakeup_indexing", manifest_schema["$defs"]["oplNativeHelperIndexProof"]["properties"]["proof_role"]["enum"])
+        lifecycle_adapter = manifest_schema["$defs"]["oplFamilyLifecycleAdapter"]
+        self.assertEqual(
+            lifecycle_adapter["required"],
+            [
+                "surface_kind",
+                "version",
+                "adapter_id",
+                "contract_refs",
+                "persistence_projection",
+                "lifecycle_projection",
+                "owner_route_discovery",
+                "adoption_projection",
+                "adoption_surface",
+                "non_goals",
+            ],
+        )
+        self.assertEqual(
+            lifecycle_adapter["properties"]["surface_kind"]["const"],
+            "opl_family_lifecycle_adapter",
+        )
 
         runtime_continuity = manifest_schema["$defs"]["skillRuntimeContinuitySurface"]
         self.assertEqual(runtime_continuity["properties"]["surface_kind"]["const"], "skill_runtime_continuity")
