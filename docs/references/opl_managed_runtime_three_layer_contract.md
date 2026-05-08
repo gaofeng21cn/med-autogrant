@@ -42,8 +42,8 @@
 
 - 这轮已完成的是跨仓 contract / 入口 / 文档同构
 - 这轮没有宣称跨仓共享代码模块已经抽离完成
-- 默认 concrete executor 仍是 `Codex CLI autonomous executor`
-- `hermes_native_proof` 继续只是 opt-in proof lane，不改写默认 executor owner
+- 默认 concrete executor 仍是 `codex_cli` / `Codex CLI` executor，默认模式是 `autonomous`
+- `hermes_agent` 继续只是 opt-in proof lane，不改写默认 executor owner
 
 ## 共享框架下一步
 
@@ -53,7 +53,7 @@
 
 - 三层角色命名与 owner truth
 - runtime owner / domain owner / executor owner 的 machine-readable envelope
-- frontdesk / cockpit / progress 上的用户可见术语
+- product status / user-loop / cockpit / progress 上的用户可见术语
 - domain supervision 不得越过 runtime 的 fail-closed 规则
 
 第二批再考虑代码共享：

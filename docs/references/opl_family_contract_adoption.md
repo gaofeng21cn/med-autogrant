@@ -28,7 +28,7 @@ MAG 通过 `controller_report`、`runtime_control.semantic_closure`、`workspace
 
 ## Product Operator Projection
 
-MAG 通过 `product frontdesk`、`product user-loop`、`workspace progress`、`workspace cockpit` 与 `product direct-entry` 映射 `opl_family_product_operator_projection.v1`。这些投影必须保留 source refs、freshness、owner split、next surface ref 和 human gate reason。
+MAG 通过 `product status`、`product user-loop`、`workspace progress`、`workspace cockpit` 与 `product direct-entry` 映射 `opl_family_product_operator_projection.v1`。这些投影必须保留 source refs、freshness、owner split、next surface ref 和 human gate reason。
 
 ## Lifecycle Adapter
 
@@ -36,7 +36,7 @@ MAG 的 `opl_runtime_manager_registration` 现在携带 `family_lifecycle_adapte
 
 - persistence：只给 OPL native/index lifecycle 建索引输入，write policy 固定为 `opl_index_only_no_domain_truth_writes`。
 - lifecycle：映射 `opl_family_runtime_attempt_contract.v1` 的 attempt state、workspace boundary、owner repo、failure/reconciliation 和 last observed projection 字段。
-- owner-route discovery：从 skill catalog / runtime manager registration 发现 frontdesk、operator loop、progress 和 resume route；route truth owner 仍是 MAG。
+- owner-route discovery：从 skill catalog / runtime manager registration 发现 product status、operator loop、progress 和 resume route；route truth owner 仍是 MAG。
 - adoption：映射 `opl_family_product_operator_projection.v1` 的 source refs、freshness、owner split、next surface ref 与 human gate reason。
 
 这层不重塑 runtime，不引入 SQLite 深迁移，也不把 OPL 写成 grant truth、fundability 或 submission-ready gate owner。

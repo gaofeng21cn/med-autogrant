@@ -28,7 +28,7 @@ from med_autogrant.workspace_validation import validate_workspace_document
 CodexRunner = Callable[[str], dict[str, Any]]
 HermesRunner = Callable[[str], dict[str, Any]]
 
-DEFAULT_CRITIQUE_EXECUTOR_KIND = "codex_cli_autonomous"
+DEFAULT_CRITIQUE_EXECUTOR_KIND = "codex_cli"
 HERMES_AGENT_EXECUTOR_KIND = "hermes_agent"
 SUPPORTED_CRITIQUE_EXECUTOR_KINDS = (
     DEFAULT_CRITIQUE_EXECUTOR_KIND,

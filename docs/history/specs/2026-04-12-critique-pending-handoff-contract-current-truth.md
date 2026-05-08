@@ -14,7 +14,7 @@ Date: `2026-04-12`
 
 它已经被下面这份 current truth supersede：
 
-- `docs/specs/2026-04-13-critique-codex-cli-autonomous-executor-current-truth.md`
+- `docs/specs/2026-04-13-critique-codex-cli-executor-current-truth.md`
 
 当前 repo-tracked truth 不再是 `critique-pending-handoff`，而是：
 

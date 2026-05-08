@@ -13,7 +13,7 @@
 - 2026-04-10 post-R5A fail-closed hardening activation packages：`../../specs/2026-04-10-*.md`
 - 2026-04-11 Hermes/reset 与 local-runtime closeout 记录：`../../specs/2026-04-11-*.md`
 - 2026-04-12 hosted-caller、OPL alignment、product-entry 与 handoff 记录：`../../specs/2026-04-12-*.md`
-- 2026-04-13 authoring route landing、frontdesk、submission-ready 与 Hermes-native proof 记录：`../../specs/2026-04-13-*.md`
+- 2026-04-13 authoring route landing、默认 executor vocabulary 与 submission-ready 记录：`../../specs/2026-04-13-*.md`；已退役 Hermes-native proof tombstone：`./2026-04-13-hermes-native-critique-proof-tombstone.md`
 
 Active specs 继续列在 [Specs 索引](../../specs/README.zh-CN.md)。
 若 dated spec 与核心文档或 `current-program.json` 冲突，除非它被明确列为 active boundary record，否则按 provenance 处理。

@@ -116,7 +116,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 - 具体 authoring pass 的执行
 - 由 route / executor adapter 选中的单步运行时
-- 当前默认 `Codex CLI` 执行器，默认模式是 `autonomous`；另有 opt-in `hermes_native_proof`
+- 当前默认 `Codex CLI` 执行器，默认模式是 `autonomous`；另有 opt-in `hermes_agent` explicit proof lane
 
 因此，这里真实成立的是：
 
@@ -152,10 +152,10 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - `pass critique` 当前默认走 `Codex CLI` 的 `autonomous` 模式：具体由 `critique_executor.py -> run_codex_exec(...)` 调起 `codex exec`，默认 `model / reasoning` 都继承本机 Codex 默认（`inherit_local_codex_default`），只有显式环境变量覆盖才会传 override。
 - `execute-critique-revision-loop` 在现有 `execute-critique-pass` 与 `execute-revision-pass` 之上复用同一份 route truth；它不会改写单步 pass 语义，只负责多轮闭环调度、每轮产物落盘与 stop condition 汇总。
 - `execute-authoring-mainline-loop` 在 `determine_next_step(...)` 与单步 pass builder 之上进一步向上扩，把 rollback 到 `direction_screening / question_refinement / argument_building / fit_alignment` 的重建也纳入同一条自治调度线。
-- `grant-quality-scorecard` 与 `grant-quality-diff` 在 intake/evidence/critique truth 之上形成质量治理层，并把质量 gate 注入 `execute-authoring-mainline-loop` 的 route resolver，作为 stop / continue / rollback 的依据之一。scorecard / closure dossier 本身不持有 grant reviewer 判断；它们只能在 active critique 明确来自 `Codex CLI critique executor` 或 `Hermes-native critique proof executor` 时把结构化分数聚合为 candidate 质量状态，否则只能输出 projection-only / AI reviewer required。
+- `grant-quality-scorecard` 与 `grant-quality-diff` 在 intake/evidence/critique truth 之上形成质量治理层，并把质量 gate 注入 `execute-authoring-mainline-loop` 的 route resolver，作为 stop / continue / rollback 的依据之一。scorecard / closure dossier 本身不持有 grant reviewer 判断；它们只能在 active critique 明确来自 `Codex CLI critique executor` 或 `Hermes-Agent critique proof executor` 时把结构化分数聚合为 candidate 质量状态，否则只能输出 projection-only / AI reviewer required。
 - `pass revision` 继续是机械 apply 层，只能应用 AI-authored `revision_plan.items[].mutation_payload`；它不得自行生成 replacement prose，也不得用 fallback prose 补正文。
 - `execute-grant-autonomy-controller` 位于已有 discovery / selector / initializer / mainline loop / quality surface 之上，负责预算、轮次、blocker 队列、evidence gap 队列、同一基金任务内的 rollback/continue 决策记录与 fail-closed 报告，不替代下游单步 pass。
-- 同一条 `pass critique` 现在也支持显式 `executor_kind=hermes_native_proof`：这条 experimental lane 会通过 `hermes_native_executor.py -> read_hermes_agent_contract(...) -> run_agent.AIAgent.run_conversation(...)` 真实调用上游 Hermes full agent loop；它会显式读取本机 `~/.hermes/config.yaml` 的 model/provider/base_url/api_mode/reasoning_effort，并且只有在完成整轮 loop、拿到真实工具事件和合法 JSON 结果时才通过，否则 fail-closed。
+- 同一条 `pass critique` 现在也支持显式 `executor_kind=hermes_agent`：这条 experimental lane 会通过 `hermes_native_executor.py -> read_hermes_agent_contract(...) -> run_agent.AIAgent.run_conversation(...)` 真实调用上游 Hermes full agent loop；它会显式读取本机 `~/.hermes/config.yaml` 的 model/provider/base_url/api_mode/reasoning_effort，并且只有在完成整轮 loop、拿到真实工具事件和合法 JSON 结果时才通过，否则 fail-closed。
 - `package hosted-contract-bundle` 继续把 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract` 一并导出，并额外显式导出 `domain_entry_contract`、`schema_contract`、`authoring_contract`，形成 future host / `OPL` caller 可直接消费的 integration/reference contract catalog。
 - `package submission-ready` 继续复用 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链，并维持完整材料下的严格 fail-closed 本地导出 gate；它与“科学完成可待审包”的 authoring stop 语义分层存在，不替代外部官网提交，也不定义补件 TODO 队列本身。
 - 当前 external caller 只需要读取 `domain_entry_contract.supported_commands` 与 `domain_entry_contract.command_contracts`，就能按统一 contract 构造 request，而不需要 repo-local helper。
@@ -164,7 +164,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - 当前 author-side executor routing 继续按 route 单独冻结：`direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / revision / frozen / artifact_bundle / final_package / hosted_contract_bundle` 现在都已经有 landed service-safe command surface，并共享同一份 route catalog truth。
 - `product-status.schema.json` 继续只承担历史兼容与旧真相追溯角色；当前 schema contract 与 route output 都已经收口为 landed route catalog。
 - `workspace critique-summary` 继续只在 source workspace 已经位于 `critique / revision / frozen` review context 时作为 review-context audit surface 有意义；当前 full landed authoring catalog 不再依赖 pending handoff contract 才能进入 `critique`。
-- 这里的 `critique` landed 只表示当前默认 concrete executor 已统一到 `Codex CLI`，默认模式是 `autonomous`；现在虽然已经有一条 `hermes_native_proof` 的 experimental critique lane，但只有带 session substrate、route orchestration、domain mutation 与 durable state transition 的 full agent loop 才算 `Hermes-native`，chat relay 不算。若本机 Hermes 当前仍走 `custom + chat_completions`，这条 lane 也只证明 full-loop 存在，不证明 provider 侧 reasoning 语义已经等价于 Codex CLI。
+- 这里的 `critique` landed 只表示当前默认 concrete executor 已统一到 `codex_cli` / `Codex CLI`，默认模式是 `autonomous`；现在虽然已经有一条 `hermes_agent` experimental critique lane，但只有带 session substrate、route orchestration、domain mutation 与 durable state transition 的 full agent loop 才算显式 proof lane，chat relay 不算。若本机 Hermes 当前仍走 `custom + chat_completions`，这条 lane 也只证明 full-loop 存在，不证明 provider 侧 reasoning 语义已经等价于 Codex CLI。
 - 产物面：`package artifact-bundle`、`pass revision`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready`。
 
 ## 数据与对象模型

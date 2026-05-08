@@ -1,6 +1,6 @@
-# 2026-04-13：Hermes-native critique experimental proof 当前真相
+# 2026-04-13：Hermes-native critique experimental proof Tombstone
 
-状态：`landed / current truth`
+状态：`historical tombstone / superseded`
 
 ## 这次真正落了什么
 
@@ -85,9 +85,9 @@
 
 其中 `event_stream` 当前来自真实 `AIAgent` 回调，而不是 repo-local 伪造的 chat log。
 
-## 当前边界
+## 归档边界
 
-这条 lane 当前只证明了一件事：
+这条 lane 当时只证明了一件事：
 
 - `Med Auto Grant critique` 已经具备一条真实可跑的 `Hermes-native full agent loop` 备选 proof route
 
@@ -96,7 +96,7 @@
 - 它已经等价于默认 `Codex CLI autonomous`
 - `custom + chat_completions` 路径下 provider 侧 reasoning 语义已经被 repo 级证明
 
-因此当前 closeout 只能写成：
+因此这份 tombstone 只能写成：
 
 - `FULL_AGENT_LOOP_PRESENT_BUT_NOT_YET_EQUIVALENT_TO_CODEX`
 - 若本机 Hermes 仍是 `provider=custom + api_mode=chat_completions`，则 `PROVIDER_REASONING_NOT_PROVED_KEEP_DEFAULT`
@@ -105,3 +105,7 @@
 
 - `Hermes-native 已替代默认 critique executor`
 - `Hermes-native 已经 repo-verified 等价于 Codex CLI`
+
+当前活跃真相入口改为：
+
+- `docs/specs/2026-04-13-critique-codex-cli-executor-current-truth.md`

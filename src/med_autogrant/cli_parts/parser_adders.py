@@ -4,6 +4,9 @@ import argparse
 from typing import Any
 
 
+EXECUTOR_KIND_CHOICES = ("codex_cli", "hermes_agent")
+
+
 def _add_workspace_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -156,7 +159,7 @@ def _add_revision_executor_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
     command.add_argument("--output", required=True)
-    command.add_argument("--executor")
+    command.add_argument("--executor", choices=EXECUTOR_KIND_CHOICES)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -170,7 +173,7 @@ def _add_critique_loop_command(
     command.add_argument("--input", required=True)
     command.add_argument("--output-dir", required=True)
     command.add_argument("--max-rounds", type=int, default=3)
-    command.add_argument("--executor")
+    command.add_argument("--executor", choices=EXECUTOR_KIND_CHOICES)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -184,7 +187,7 @@ def _add_mainline_loop_command(
     command.add_argument("--input", required=True)
     command.add_argument("--output-dir", required=True)
     command.add_argument("--max-cycles", type=int, default=8)
-    command.add_argument("--executor")
+    command.add_argument("--executor", choices=EXECUTOR_KIND_CHOICES)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -197,7 +200,7 @@ def _add_grant_autonomy_controller_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
     command.add_argument("--output-dir", required=True)
-    command.add_argument("--executor")
+    command.add_argument("--executor", choices=EXECUTOR_KIND_CHOICES)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 

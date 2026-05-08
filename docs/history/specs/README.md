@@ -13,7 +13,7 @@ Historical groups kept behind this archive entry:
 - 2026-04-10 post-R5A fail-closed hardening activation packages: `../../specs/2026-04-10-*.md`
 - 2026-04-11 Hermes/reset and local-runtime closeout records: `../../specs/2026-04-11-*.md`
 - 2026-04-12 hosted-caller, OPL alignment, product-entry, and handoff records: `../../specs/2026-04-12-*.md`
-- 2026-04-13 authoring route landing, frontdesk, submission-ready, and Hermes-native proof records: `../../specs/2026-04-13-*.md`
+- 2026-04-13 authoring route landing, default executor vocabulary, and submission-ready records: `../../specs/2026-04-13-*.md`; retired Hermes-native proof tombstone: `./2026-04-13-hermes-native-critique-proof-tombstone.md`
 
 Active specs remain listed in [Specs Guide](../../specs/README.md).
 If a dated spec conflicts with the core docs or `current-program.json`, treat the dated spec as provenance unless it is explicitly listed as an active boundary record.

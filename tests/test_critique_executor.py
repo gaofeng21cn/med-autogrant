@@ -19,6 +19,23 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.js
 
 
 class CritiqueExecutionDocumentTest(unittest.TestCase):
+    def test_critique_executor_kind_vocabulary_rejects_retired_aliases(self) -> None:
+        from med_autogrant.critique_executor import _resolve_critique_executor_kind
+        from med_autogrant.workspace import WorkspaceStateError
+
+        self.assertEqual(_resolve_critique_executor_kind(None), "codex_cli")
+        self.assertEqual(_resolve_critique_executor_kind("codex_cli"), "codex_cli")
+        self.assertEqual(_resolve_critique_executor_kind("hermes_agent"), "hermes_agent")
+
+        retired_aliases = [
+            "codex_cli" + "_autonomous",
+            "hermes" + "_native" + "_proof",
+        ]
+        for retired_alias in retired_aliases:
+            with self.subTest(retired_alias=retired_alias):
+                with self.assertRaisesRegex(WorkspaceStateError, "不支持该 executor_kind"):
+                    _resolve_critique_executor_kind(retired_alias)
+
     def test_build_critique_prompt_spells_out_weighted_score_block_field_names(self) -> None:
         from med_autogrant.critique_executor import _build_critique_context, _build_critique_prompt
         from med_autogrant.workspace import _build_workspace_state
@@ -174,6 +191,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(payload["draft_id"], "draft-v1")
         self.assertEqual(payload["active_revision_plan_id"], "revision-v1")
         self.assertEqual(payload["lifecycle_stage"], "critique")
+        self.assertEqual(payload["critique_execution"]["executor"]["kind"], "codex_cli")
         self.assertEqual(payload["critique_execution"]["critique_id"], "critique-v1")
         self.assertEqual(payload["critique_execution"]["active_revision_plan_id"], "revision-v1")
         self.assertEqual(payload["critique_execution"]["verdict"], "major_revision")

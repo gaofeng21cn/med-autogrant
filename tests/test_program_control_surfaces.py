@@ -167,7 +167,15 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "human_doc:2026_04_13_hermes_native_critique_proof_current_truth",
+            "human_doc:2026_04_13_critique_codex_cli_executor_current_truth",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertNotIn(
+            "human_doc:2026_04_13_" + "critique_codex_cli" + "_autonomous_executor_current_truth",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertNotIn(
+            "human_doc:2026_04_13_" + "hermes_native" + "_critique_proof_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn("human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth", contract["repo_tracked_truth_surfaces"])

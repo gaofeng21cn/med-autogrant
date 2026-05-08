@@ -90,15 +90,15 @@
 - 理由：如果把 chat relay / 单次 chat completion 也写成 `Hermes-native`，就会把 substrate owner 与单步 executor 混写，误导后续跨仓收敛。
 - 影响：当前 `critique` landed 只能写成 `Codex CLI` landed route，默认模式是 `autonomous`，不能写成 `Hermes-native landed`；后续若切到 Hermes executor，必须额外拿 full-loop truth 与 proof。
 
-## 2026-04-13：先在 critique route 落一条 Hermes-native experimental proof lane
+## 2026-04-13：先在 critique route 落一条 Hermes-Agent experimental proof lane
 
-- 决策：不新增第二条 critique command，也不改默认执行器；而是在现有 `execute-critique-pass` 上增加显式 `executor_kind=hermes_native_proof` 的 experimental proof lane。
+- 决策：不新增第二条 critique command，也不改默认执行器；而是在现有 `execute-critique-pass` 上增加显式 `executor_kind=hermes_agent` 的 experimental proof lane。
 - 理由：这样既能保持 service-safe command surface、route catalog 与 hosted contract 不漂移，也能在同一条 route 上真实验证 `Hermes-native` 是否具备 full agent loop 能力，而不是继续停留在纯文档讨论。
 - 影响：当前 `execute-critique-pass` 默认仍是 `Codex CLI`，默认模式是 `autonomous`；只有显式 opt-in 时才会走 `run_agent.AIAgent.run_conversation(...)`，并且必须以“读取本机 Hermes config + 真实工具事件 + 完整 loop + 合法 JSON”四重 fail-closed 门槛来证明自己。
 
-## 2026-04-13：Hermes-native proof 必须显式读取本机 Hermes 默认配置
+## 2026-04-13：Hermes-Agent proof 必须显式读取本机 Hermes 默认配置
 
-- 决策：`Hermes-native` proof lane 不在 repo 内硬编码 `gpt-5.4 / xhigh`，而是显式读取 `~/.hermes/config.yaml` 里的 `model.default / provider / base_url / api_mode / agent.reasoning_effort`；只有设置 `MED_AUTOGRANT_HERMES_*` 环境变量时才覆盖。
+- 决策：`hermes_agent` proof lane 不在 repo 内硬编码 `gpt-5.4 / xhigh`，而是显式读取 `~/.hermes/config.yaml` 里的 `model.default / provider / base_url / api_mode / agent.reasoning_effort`；只有设置 `MED_AUTOGRANT_HERMES_*` 环境变量时才覆盖。
 - 理由：当前真实环境里，直接裸实例化 `AIAgent()` 并不会稳定自动补齐 `model.default`，provider 会直接报 `model is required`。如果不显式读取本机 Hermes config，这条 proof lane 根本不成立。
 - 影响：repo-tracked truth 必须诚实写明“这条 lane 继承本机 Hermes 默认，而不是 repo-local pin”；同时若运行环境仍是 `custom + chat_completions`，当前只能证明 full-loop 存在，不能把 provider 侧 reasoning 语义直接写成已证明。
 

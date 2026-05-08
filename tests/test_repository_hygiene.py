@@ -157,6 +157,10 @@ class RepositoryHygieneTest(unittest.TestCase):
             "pending-" + "handoff",
             "pending-" + "handoff-requirements.schema.json",
             "opl-product " + "entry",
+            "codex_cli" + "_autonomous",
+            "hermes" + "_native" + "_proof",
+            "host" + "_agent",
+            "@redcube/" + "hermes-substrate",
         ]
         scanned_roots = ("src/", "tests/", "schemas/", "contracts/", "plugins/", "docs/")
         allowed_roots = ("docs/history/", "docs/references/")
