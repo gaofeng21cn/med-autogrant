@@ -22,6 +22,8 @@ description: Use when Codex should operate Med Auto Grant through its grant-auth
 - `uv run --directory <med-autogrant-repo> medautogrant product user-loop --input <input_path> --task-intent "<task_intent>"`
 - `uv run --directory <med-autogrant-repo> medautogrant product direct-entry --input <input_path> --task-intent "<task_intent>"`
 
+`product manifest` 暴露 MAG-owned `family_action_catalog`；CLI、product-entry、skill metadata 与 MCP-compatible descriptor 从同一份 action definition 派生。当前 MCP projection 是 descriptor-only：`descriptor_only=true`、`public_runtime=false`，不能写成 public MCP runtime 已落地。
+
 默认先读取 skill catalog 或打开 status，再根据当前 funding call、task intent 和 draft 状态进入 user loop 或 direct entry。
 
 ## Domain runtime 护栏
