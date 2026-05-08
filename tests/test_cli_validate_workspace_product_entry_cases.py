@@ -85,6 +85,16 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         )
         self.assertIn("product status", domain_projection["shell_commands"]["product_status"])
         self.assertIn("product user-loop", domain_projection["shell_commands"]["grant_user_loop"])
+        self.assertEqual(
+            domain_projection["action_catalog_ref"],
+            "/product_entry_manifest/family_action_catalog",
+        )
+        mcp_descriptor = domain_projection["mcp_descriptor"]
+        self.assertEqual(mcp_descriptor["name"], "open_grant_user_loop")
+        self.assertIn("product user-loop", mcp_descriptor["command"])
+        self.assertEqual(mcp_descriptor["surface_kind"], "grant_user_loop")
+        self.assertTrue(mcp_descriptor["descriptor_only"])
+        self.assertFalse(mcp_descriptor["public_runtime"])
         runtime_continuity = domain_projection["runtime_continuity"]
         self.assertEqual(runtime_continuity["surface_kind"], "skill_runtime_continuity")
         self.assertEqual(runtime_continuity["runtime_owner"], "upstream_hermes_agent")

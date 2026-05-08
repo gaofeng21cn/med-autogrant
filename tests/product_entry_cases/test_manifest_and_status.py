@@ -194,6 +194,43 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(skill["domain_projection"]["skill_entry"], "med-autogrant")
         self.assertEqual(skill["domain_projection"]["recommended_shell"], "product_status")
         self.assertEqual(skill["domain_projection"]["runtime_continuity"]["surface_kind"], "skill_runtime_continuity")
+        action_catalog = manifest["family_action_catalog"]
+        self.assertEqual(action_catalog["surface_kind"], "family_action_catalog")
+        self.assertEqual(action_catalog["catalog_id"], "med_autogrant_action_catalog")
+        self.assertEqual(action_catalog["target_domain_id"], "med-autogrant")
+        self.assertEqual(action_catalog["authority_boundary"]["domain_truth_owner"], "med-autogrant")
+        self.assertIn(
+            "MCP projection is descriptor-only",
+            action_catalog["notes"],
+        )
+        user_loop_action = next(
+            action for action in action_catalog["actions"] if action["action_id"] == "open_grant_user_loop"
+        )
+        self.assertEqual(user_loop_action["source_command"]["command"], manifest["recommended_command"])
+        self.assertFalse(user_loop_action["supported_surfaces"]["mcp"]["public_runtime"])
+        self.assertTrue(user_loop_action["supported_surfaces"]["mcp"]["descriptor_only"])
+        self.assertEqual(
+            manifest["action_catalog_projections"]["mcp"][0]["name"],
+            "open_grant_user_loop",
+        )
+        self.assertFalse(manifest["action_catalog_projections"]["mcp"][0]["public_runtime"])
+        self.assertTrue(manifest["action_catalog_projections"]["mcp"][0]["descriptor_only"])
+        self.assertEqual(
+            manifest["operator_loop_actions"]["open_loop"]["action_catalog_ref"],
+            "open_grant_user_loop",
+        )
+        self.assertEqual(
+            manifest["operator_loop_actions"]["open_loop"]["command"],
+            user_loop_action["source_command"]["command"],
+        )
+        self.assertEqual(
+            skill["domain_projection"]["action_catalog_ref"],
+            "/product_entry_manifest/family_action_catalog",
+        )
+        self.assertEqual(
+            skill["domain_projection"]["mcp_descriptor"],
+            manifest["action_catalog_projections"]["mcp"][0],
+        )
         self.assertIn("validate-workspace", manifest["skill_catalog"]["supported_commands"])
         self.assertTrue(manifest["skill_catalog"]["command_contracts"])
         self.assertEqual(manifest["domain_entry_contract"], build_domain_entry_contract())

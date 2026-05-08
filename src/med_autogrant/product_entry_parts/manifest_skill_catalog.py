@@ -6,6 +6,7 @@ from typing import Any, Mapping
 from med_autogrant.product_entry_parts.primitives import PRODUCT_STATUS_KIND, TARGET_DOMAIN_ID
 from med_autogrant.product_entry_parts.runtime_registration import _build_opl_runtime_manager_registration
 from med_autogrant.public_cli import public_cli_command
+from med_autogrant.action_catalog import ACTION_CATALOG_REF
 
 from opl_harness_shared.skill_catalog import (
     build_skill_catalog as _build_shared_skill_catalog,
@@ -20,6 +21,7 @@ def build_product_entry_skill_catalog(
     runtime_continuity: Mapping[str, Any],
     shell_commands: Mapping[str, str],
     domain_entry_contract: Mapping[str, Any],
+    action_catalog_projections: Mapping[str, list[dict[str, Any]]],
 ) -> dict[str, Any]:
     skill_catalog_command = public_cli_command(
         "skill-catalog",
@@ -41,6 +43,7 @@ def build_product_entry_skill_catalog(
                 shell_commands=shell_commands,
                 runtime_continuity=runtime_continuity,
                 opl_runtime_manager_registration=opl_runtime_manager_registration,
+                action_catalog_projections=action_catalog_projections,
             )
         ],
         supported_commands=list(domain_entry_contract.get("supported_commands") or []),
@@ -53,7 +56,9 @@ def _build_med_autogrant_skill_descriptor(
     shell_commands: Mapping[str, str],
     runtime_continuity: Mapping[str, Any],
     opl_runtime_manager_registration: Mapping[str, Any],
+    action_catalog_projections: Mapping[str, list[dict[str, Any]]],
 ) -> dict[str, Any]:
+    mcp_descriptors = list(action_catalog_projections["mcp"])
     return _build_shared_skill_descriptor(
         skill_id="med-autogrant",
         title="Med Auto Grant",
@@ -80,5 +85,11 @@ def _build_med_autogrant_skill_descriptor(
             "shell_commands": shell_commands,
             "runtime_continuity": dict(runtime_continuity),
             "opl_runtime_manager_registration": dict(opl_runtime_manager_registration),
+            "action_catalog_ref": ACTION_CATALOG_REF,
+            "mcp_descriptor": dict(mcp_descriptors[0]),
+            "action_catalog_projections": {
+                "skill": list(action_catalog_projections["skill"]),
+                "mcp": mcp_descriptors,
+            },
         },
     )

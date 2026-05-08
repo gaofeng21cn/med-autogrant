@@ -9,6 +9,11 @@ from med_autogrant.domain_entry_contract import (
     build_shared_handoff,
 )
 from med_autogrant.mainline_status import read_mainline_status
+from med_autogrant.action_catalog import (
+    annotate_operator_loop_actions_with_catalog_refs,
+    build_mag_family_action_catalog,
+    project_mag_family_action_catalog,
+)
 from med_autogrant.product_entry_parts.autonomy_observability import build_grant_autonomy_observability
 from med_autogrant.product_entry_parts.orchestration_companions import (
     _build_family_orchestration_companion,
@@ -149,7 +154,7 @@ class ProductEntryManifestBuilderMixin:
             "--format",
             "json",
         )
-        operator_loop_actions = _build_shared_operator_loop_action_catalog({
+        base_operator_loop_actions = _build_shared_operator_loop_action_catalog({
             "open_loop": {
                 "command": grant_user_loop_command,
                 "surface_kind": GRANT_USER_LOOP_KIND,
@@ -181,6 +186,14 @@ class ProductEntryManifestBuilderMixin:
                 "requires": ["output_dir"],
             },
         })
+        family_action_catalog = build_mag_family_action_catalog(
+            action_commands=base_operator_loop_actions,
+        )
+        action_catalog_projections = project_mag_family_action_catalog(family_action_catalog)
+        operator_loop_actions = annotate_operator_loop_actions_with_catalog_refs(
+            operator_loop_actions=base_operator_loop_actions,
+            action_catalog=family_action_catalog,
+        )
         session_continuity = _build_session_continuity_surface(
             grant_run_id=_require_nonempty_string_from_mapping(
                 progress_payload,
@@ -739,6 +752,7 @@ class ProductEntryManifestBuilderMixin:
             runtime_continuity=runtime_continuity,
             shell_commands=shell_commands,
             domain_entry_contract=domain_entry_contract,
+            action_catalog_projections=action_catalog_projections,
         )
         automation = _build_shared_automation_catalog(
             summary="automation companion 聚合 submission-ready 导出 gate 与 authoring loop continuation 提示。",
@@ -877,6 +891,8 @@ class ProductEntryManifestBuilderMixin:
             domain_entry_contract=domain_entry_contract,
             user_interaction_contract=user_interaction_contract,
             extra_payload={
+                "family_action_catalog": family_action_catalog,
+                "action_catalog_projections": action_catalog_projections,
                 "runtime_control": runtime_control,
                 "grant_authoring_readiness": grant_authoring_readiness,
                 "autonomy_observability": autonomy_observability,

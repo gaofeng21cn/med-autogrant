@@ -98,6 +98,9 @@
         },
         "requires": {
           "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "action_catalog_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
         }
       }
     },
@@ -1487,6 +1490,135 @@
         },
         "opl_runtime_manager_registration": {
           "$ref": "#/$defs/oplRuntimeManagerRegistration"
+        },
+        "action_catalog_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "mcp_descriptor": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "name",
+            "description",
+            "command",
+            "surface_kind",
+            "public_runtime",
+            "descriptor_only"
+          ]
+        },
+        "action_catalog_projections": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "skill",
+            "mcp"
+          ]
+        }
+      }
+    },
+    "familyActionCatalog": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "version",
+        "catalog_id",
+        "target_domain_id",
+        "owner",
+        "authority_boundary",
+        "actions",
+        "notes"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "family_action_catalog"
+        },
+        "version": {
+          "const": "family-action-catalog.v1"
+        },
+        "catalog_id": {
+          "const": "med_autogrant_action_catalog"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "owner": {
+          "const": "med-autogrant"
+        },
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object"
+          }
+        },
+        "notes": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "actionCatalogProjections": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cli",
+        "mcp",
+        "skill",
+        "openai",
+        "ai-sdk"
+      ],
+      "properties": {
+        "cli": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "mcp": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "name",
+              "description",
+              "command",
+              "surface_kind",
+              "public_runtime",
+              "descriptor_only"
+            ],
+            "properties": {
+              "public_runtime": {
+                "const": false
+              },
+              "descriptor_only": {
+                "const": true
+              }
+            }
+          }
+        },
+        "skill": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "openai": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "ai-sdk": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
         }
       }
     },
@@ -2350,7 +2482,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -2457,6 +2589,12 @@
         },
         "family_orchestration": {
           "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
+        },
+        "family_action_catalog": {
+          "$ref": "#/$defs/familyActionCatalog"
+        },
+        "action_catalog_projections": {
+          "$ref": "#/$defs/actionCatalogProjections"
         },
         "product_entry_status": {"$ref": "#/$defs/productEntryStatus"},
         "remaining_gaps": {
