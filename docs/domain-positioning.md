@@ -62,7 +62,7 @@ Current status:
 - top-level public docs exist
 - internal Chinese design and current-truth artifacts exist
 - the stable public capability surface is landed and remains Codex-default by default
-- product-entry, frontdesk, direct-entry, and user-loop surfaces remain below the app skill as internal command contracts / direct-product projections
+- product-entry, product status, direct-entry, and user-loop surfaces remain below the app skill as internal command contracts / direct-product projections
 - the current active phase is `P4 mature direct grant product entry`
 - the current active tranche is `P4.G authoring-quality-first completion semantics alignment`
 - `P3 hosted caller / OPL consumption proof` is already completed and retained as historical landing context

@@ -436,7 +436,7 @@ class DomainEntryContractSurfaceTest(unittest.TestCase):
         self.assertEqual(domain_agent_entry_spec["codex_entry_strategy"], "domain_agent_entry")
         self.assertEqual(domain_agent_entry_spec["artifact_conventions"], "grant_proposal_package")
         self.assertEqual(domain_agent_entry_spec["progress_conventions"], "grant_workloop_narration")
-        self.assertEqual(domain_agent_entry_spec["entry_command"], "product-frontdesk")
+        self.assertEqual(domain_agent_entry_spec["entry_command"], "product-status")
         self.assertEqual(domain_agent_entry_spec["manifest_command"], "product-entry-manifest")
 
 

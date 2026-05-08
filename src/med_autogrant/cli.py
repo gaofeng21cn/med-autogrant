@@ -60,7 +60,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_next_step,
     handle_probe_upstream_hermes,
     handle_product_entry_manifest,
-    handle_product_frontdesk,
+    handle_product_status,
     handle_product_preflight,
     handle_product_start,
     handle_refresh_funding_opportunities_cache,
@@ -96,7 +96,7 @@ from med_autogrant.cli_parts.parser_adders import (
 )
 
 
-LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND)
+LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND) - {"product-status"}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -237,15 +237,15 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_manifest_command(
         subparsers,
-        "product-frontdesk",
-        handle_product_frontdesk,
-        "输出 controller-owned 的 direct grant product frontdesk。",
+        "product-status",
+        handle_product_status,
+        "输出 controller-owned 的 direct grant product status。",
     )
     _add_workspace_command(
         subparsers,
         "product-preflight",
         handle_product_preflight,
-        "输出 direct grant frontdoor 的前置检查。",
+        "输出 direct grant product entry surface 的前置检查。",
     )
     _add_manifest_command(
         subparsers,

@@ -65,15 +65,15 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(len(skill_catalog["skills"]), 1)
         skill = skill_catalog["skills"][0]
         self.assertEqual(skill["skill_id"], "med-autogrant")
-        self.assertEqual(skill["target_surface_kind"], "product_frontdesk")
-        self.assertIn("product frontdesk", skill["command"])
+        self.assertEqual(skill["target_surface_kind"], "product_status")
+        self.assertIn("product status", skill["command"])
         domain_projection = skill["domain_projection"]
         self.assertEqual(domain_projection["plugin_name"], "med-autogrant")
         self.assertEqual(domain_projection["skill_entry"], "med-autogrant")
         self.assertEqual(domain_projection["skill_semantics"], "domain_app")
-        self.assertEqual(domain_projection["entry_shell_key"], "product_frontdesk")
-        self.assertEqual(domain_projection["recommended_shell"], "product_frontdesk")
-        self.assertIn("product frontdesk", domain_projection["entry_command"])
+        self.assertEqual(domain_projection["entry_shell_key"], "product_status")
+        self.assertEqual(domain_projection["recommended_shell"], "product_status")
+        self.assertIn("product status", domain_projection["entry_command"])
         self.assertEqual(
             domain_projection["supporting_shell_keys"],
             [
@@ -83,7 +83,7 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
                 "grant_user_loop",
             ],
         )
-        self.assertIn("product frontdesk", domain_projection["shell_commands"]["product_frontdesk"])
+        self.assertIn("product status", domain_projection["shell_commands"]["product_status"])
         self.assertIn("product user-loop", domain_projection["shell_commands"]["grant_user_loop"])
         runtime_continuity = domain_projection["runtime_continuity"]
         self.assertEqual(runtime_continuity["surface_kind"], "skill_runtime_continuity")
@@ -223,9 +223,9 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertNotIn("recommended_check_command:", stdout)
         self.assertNotIn("recommended_start_command:", stdout)
 
-    def test_product_frontdesk_projects_frontdoor_and_current_loop(self) -> None:
+    def test_product_status_projects_product_entry_surface_and_current_loop(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "product-frontdesk",
+            "product-status",
             "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
@@ -236,14 +236,14 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(stderr, "")
         payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
-        self.assertEqual(payload["command"], "product-frontdesk")
-        self.assertEqual(payload["product_frontdesk"]["surface_kind"], "product_frontdesk")
-        self.assertEqual(payload["product_frontdesk"]["frontdesk_surface"]["shell_key"], "product_frontdesk")
-        self.assertEqual(payload["product_frontdesk"]["operator_loop_surface"]["shell_key"], "grant_user_loop")
+        self.assertEqual(payload["command"], "product-status")
+        self.assertEqual(payload["product_status"]["surface_kind"], "product_status")
+        self.assertEqual(payload["product_status"]["product_entry_surface"]["shell_key"], "product_status")
+        self.assertEqual(payload["product_status"]["operator_loop_surface"]["shell_key"], "grant_user_loop")
 
-    def test_product_frontdesk_plain_text_prefers_human_facing_labels(self) -> None:
+    def test_product_status_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "product-frontdesk",
+            "product-status",
             "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
@@ -256,8 +256,8 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertIn("前台入口命令:", stdout)
         self.assertIn("推荐继续命令:", stdout)
         self.assertIn("当前 loop 命令:", stdout)
-        self.assertIn("- 可用入口 frontdesk:", stdout)
-        self.assertNotIn("frontdesk_command:", stdout)
+        self.assertIn("- 可用入口 status:", stdout)
+        self.assertNotIn("product_entry_command:", stdout)
         self.assertNotIn("recommended_command:", stdout)
         self.assertNotIn("operator_loop_command:", stdout)
 
@@ -276,10 +276,10 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "product-start")
         self.assertEqual(payload["product_entry_start"]["surface_kind"], "product_entry_start")
-        self.assertEqual(payload["product_entry_start"]["recommended_mode_id"], "open_frontdesk")
+        self.assertEqual(payload["product_entry_start"]["recommended_mode_id"], "open_product_entry")
         self.assertEqual(
             [mode["mode_id"] for mode in payload["product_entry_start"]["modes"]],
-            ["open_frontdesk", "continue_grant_loop", "build_direct_entry"],
+            ["open_product_entry", "continue_grant_loop", "build_direct_entry"],
         )
 
     def test_build_product_entry_plain_text_prefers_human_facing_labels(self) -> None:
@@ -332,4 +332,4 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertIn("- 可用入口", stdout)
         self.assertNotIn("lifecycle_stage:", stdout)
         self.assertNotIn("recommended_mode_id:", stdout)
-        self.assertNotIn("- open_frontdesk:", stdout)
+        self.assertNotIn("- open_product_entry:", stdout)

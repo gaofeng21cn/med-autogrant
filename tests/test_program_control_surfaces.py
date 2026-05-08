@@ -113,7 +113,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
                 "forbid_ad_hoc_runtime_bypass": True,
                 "allowed_surfaces": [
                     "product_entry",
-                    "frontdesk",
+                    "product_status",
                     "user_loop",
                     "direct_entry",
                     "schema_backed_authoring_contract",
@@ -159,7 +159,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "human_doc:2026_04_13_p4e_schema_backed_frontdesk_and_manifest_current_truth",
+            "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(

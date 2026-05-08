@@ -5,7 +5,7 @@ from typing import Any, Mapping
 from med_autogrant.product_entry_parts.primitives import (
     GRANT_DIRECT_ENTRY_KIND,
     GRANT_USER_LOOP_KIND,
-    PRODUCT_FRONTDESK_KIND,
+    PRODUCT_STATUS_KIND,
     TARGET_DOMAIN_ID,
     _optional_mapping,
     _optional_string_from_mapping,
@@ -39,7 +39,7 @@ def _build_managed_runtime_contract() -> dict[str, Any]:
 
 def _build_product_entry_start(
     *,
-    product_frontdesk_command: str,
+    product_status_command: str,
     grant_user_loop_command: str,
     grant_direct_entry_command: str,
     operator_loop_actions: Mapping[str, Mapping[str, Any]],
@@ -47,17 +47,17 @@ def _build_product_entry_start(
 ) -> dict[str, Any]:
     return _build_shared_product_entry_start(
         summary=(
-            "先进入 direct grant frontdesk；需要继续当前写作主线时恢复 grant user loop，"
+            "先进入 direct grant status；需要继续当前写作主线时恢复 grant user loop，"
             "需要把用户意图显式装配成入口合同时再构建 direct entry。"
         ),
-        recommended_mode_id="open_frontdesk",
+        recommended_mode_id="open_product_entry",
         modes=[
             {
-                "mode_id": "open_frontdesk",
-                "title": "Open grant frontdesk",
-                "command": product_frontdesk_command,
-                "surface_kind": PRODUCT_FRONTDESK_KIND,
-                "summary": "打开当前 direct grant frontdoor。",
+                "mode_id": "open_product_entry",
+                "title": "Open grant status",
+                "command": product_status_command,
+                "surface_kind": PRODUCT_STATUS_KIND,
+                "summary": "打开当前 direct grant product entry surface。",
                 "requires": [],
             },
             {

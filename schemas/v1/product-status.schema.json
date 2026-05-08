@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.med-autogrant.local/v1/product-frontdesk.schema.json",
-  "title": "Med Auto Grant Product Frontdesk",
+  "$id": "https://schemas.med-autogrant.local/v1/product-status.schema.json",
+  "title": "Med Auto Grant Product Status",
   "type": "object",
   "$defs": {
     "nullableString": {
@@ -14,7 +14,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "frontdesk",
+        "status",
         "grant_progress",
         "grant_cockpit",
         "grant_direct_entry",
@@ -23,7 +23,7 @@
         "opl_handoff_builder"
       ],
       "properties": {
-        "frontdesk": {
+        "status": {
           "$ref": "product-entry-manifest.schema.json#/$defs/productShellSurface"
         },
         "grant_progress": {
@@ -50,12 +50,12 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "frontdesk_command",
+        "product_entry_command",
         "recommended_command",
         "operator_loop_command"
       ],
       "properties": {
-        "frontdesk_command": {
+        "product_entry_command": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "recommended_command": {
@@ -66,7 +66,7 @@
         }
       }
     },
-    "productFrontdesk": {
+    "productStatus": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -76,7 +76,7 @@
         "workspace_locator",
         "runtime",
         "product_entry_status",
-        "frontdesk_surface",
+        "product_entry_surface",
         "operator_loop_surface",
         "operator_loop_actions",
         "product_entry_start",
@@ -91,13 +91,13 @@
         "runtime_control",
         "family_orchestration",
         "product_entry_manifest",
-        "entry_surfaces",
+        "product_entry_surfaces",
         "summary",
         "notes"
       ],
       "properties": {
         "surface_kind": {
-          "const": "product_frontdesk"
+          "const": "product_status"
         },
         "recommended_action": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
@@ -114,7 +114,7 @@
         "product_entry_status": {
           "$ref": "product-entry-manifest.schema.json#/$defs/productEntryStatus"
         },
-        "frontdesk_surface": {
+        "product_entry_surface": {
           "$ref": "product-entry-manifest.schema.json#/$defs/shellSurface"
         },
         "operator_loop_surface": {
@@ -159,7 +159,7 @@
         "product_entry_manifest": {
           "$ref": "product-entry-manifest.schema.json#/$defs/productEntryManifest"
         },
-        "entry_surfaces": {
+        "product_entry_surfaces": {
           "$ref": "#/$defs/entrySurfaces"
         },
         "summary": {
@@ -180,14 +180,14 @@
     "draft_id",
     "lifecycle_stage",
     "input_path",
-    "product_frontdesk"
+    "product_status"
   ],
   "properties": {
     "ok": {
       "const": true
     },
     "command": {
-      "const": "product-frontdesk"
+      "const": "product-status"
     },
     "grant_run_id": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
@@ -204,8 +204,8 @@
     "input_path": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"
     },
-    "product_frontdesk": {
-      "$ref": "#/$defs/productFrontdesk"
+    "product_status": {
+      "$ref": "#/$defs/productStatus"
     }
   }
 }

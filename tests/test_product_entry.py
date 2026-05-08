@@ -15,7 +15,7 @@ from product_entry_cases.test_failure_modes import *  # noqa: F401,F403
 from product_entry_cases.test_progress_cockpit import *  # noqa: F401,F403
 from product_entry_cases.test_dependency_structure import *  # noqa: F401,F403
 from product_entry_cases.test_loop_and_readiness import *  # noqa: F401,F403
-from product_entry_cases.test_manifest_and_frontdesk import *  # noqa: F401,F403
+from product_entry_cases.test_manifest_and_status import *  # noqa: F401,F403
 from product_entry_cases.test_manifest_readiness import *  # noqa: F401,F403
 from product_entry_cases.test_runtime_registration import *  # noqa: F401,F403
 

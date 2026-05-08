@@ -91,7 +91,7 @@ Date: `2026-04-13`
 
 当前 route 真相已经不是：
 
-- `critique-pending-handoff`
+- `critique-product-status-required`
 
 而是：
 

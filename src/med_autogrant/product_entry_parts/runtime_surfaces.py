@@ -517,7 +517,7 @@ def _build_artifact_inventory_surface(
 def _strip_contract_bundle_fields(surface: dict[str, Any]) -> None:
     surface.pop("schema_ref", None)
     surface.pop("domain_entry_contract", None)
-    surface.pop("gateway_interaction_contract", None)
+    surface.pop("user_interaction_contract", None)
 
 def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
     resolved_input_path = input_path.expanduser().resolve()

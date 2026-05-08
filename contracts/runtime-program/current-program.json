@@ -90,7 +90,7 @@
       "forbid_ad_hoc_runtime_bypass": true,
       "allowed_surfaces": [
         "product_entry",
-        "frontdesk",
+        "product_status",
         "user_loop",
         "direct_entry",
         "schema_backed_authoring_contract"
@@ -114,7 +114,7 @@
     "human_doc:2026_04_12_lightweight_product_entry_and_opl_handoff_current_truth",
     "human_doc:2026_04_12_author_side_executor_routing_contract_current_truth",
     "human_doc:2026_04_13_full_grant_authoring_executor_current_truth",
-    "human_doc:2026_04_13_p4e_schema_backed_frontdesk_and_manifest_current_truth",
+    "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth",
     "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth",
     "human_doc:2026_04_13_critique_codex_cli_autonomous_executor_current_truth",
     "human_doc:2026_04_13_hermes_native_critique_proof_current_truth",

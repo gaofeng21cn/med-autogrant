@@ -11,7 +11,7 @@ _editable_shared_bootstrap.ensure_editable_dependency_paths()
 from med_autogrant.control_plane import read_program_id, resolve_runtime_state_root
 from med_autogrant.domain_entry_contract import (
     build_domain_entry_contract,
-    build_gateway_interaction_contract,
+    build_user_interaction_contract,
     build_shared_handoff,
 )
 from med_autogrant.product_entry_parts.runtime_contracts import (
@@ -21,7 +21,7 @@ from med_autogrant.product_entry_parts.runtime_contracts import (
     GRANT_USER_LOOP_SCHEMA_FILE,
     PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
     PRODUCT_ENTRY_SCHEMA_FILE,
-    PRODUCT_FRONTDESK_SCHEMA_FILE,
+    PRODUCT_STATUS_SCHEMA_FILE,
     _build_author_side_route_contract,
     _build_executor_routing_contract,
     _build_operator_contract,
@@ -58,7 +58,6 @@ from opl_harness_shared.automation_companions import (
     build_automation_descriptor as _build_shared_automation_descriptor,
 )
 from opl_harness_shared.product_entry_companions import (
-    build_family_product_frontdesk_from_manifest as _build_shared_family_product_frontdesk_from_manifest,
     build_family_product_entry_manifest as _build_shared_family_product_entry_manifest,
     build_operator_loop_action_catalog as _build_shared_operator_loop_action_catalog,
     build_product_entry_start as _build_shared_product_entry_start,
@@ -69,8 +68,8 @@ from opl_harness_shared.product_entry_companions import (
     build_product_entry_shell_catalog as _build_shared_product_entry_shell_catalog,
     build_product_entry_shell_linked_surface as _build_shared_product_entry_shell_linked_surface,
     collect_family_human_gate_ids as _collect_family_human_gate_ids,
-    validate_family_product_frontdesk as _validate_shared_family_product_frontdesk,
     validate_family_product_entry_manifest as _validate_shared_family_product_entry_manifest,
+    validate_family_product_entry_surface as _validate_shared_family_product_entry_surface,
 )
 from opl_harness_shared.product_entry_program_companions import (
     build_detailed_readiness as _build_shared_detailed_readiness,
@@ -94,7 +93,7 @@ from opl_harness_shared.skill_catalog import (
 PRODUCT_ENTRY_VERSION = 1
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
 PRODUCT_ENTRY_MANIFEST_KIND = "med_auto_grant_product_entry_manifest"
-PRODUCT_FRONTDESK_KIND = "product_frontdesk"
+PRODUCT_STATUS_KIND = "product_status"
 TARGET_DOMAIN_ID = "med-autogrant"
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
 GRANT_PROGRESS_PROJECTION_VERSION = 1
@@ -781,40 +780,42 @@ def _validate_product_entry_manifest_contract(
         lifecycle_stage=lifecycle_stage,
     )
 
-def _validate_product_frontdesk_contract(
+def _validate_product_status_contract(
     payload: dict[str, Any],
     *,
     grant_run_id: str,
     workspace_id: str,
     lifecycle_stage: str,
 ) -> None:
-    _validate_shared_family_product_frontdesk(
-        payload["product_frontdesk"],
+    shared_status_payload = dict(payload["product_status"])
+    shared_status_payload["entry_surfaces"] = shared_status_payload.get("product_entry_surfaces")
+    _validate_shared_family_product_entry_surface(
+        shared_status_payload,
         require_contract_bundle=True,
         require_runtime_companions=True,
     )
     _validate_contract_schema(
-        _schema_payload_without_contract_bundle(payload, surface_key="product_frontdesk"),
-        schema_file=PRODUCT_FRONTDESK_SCHEMA_FILE,
-        context="product_frontdesk",
+        _schema_payload_without_contract_bundle(payload, surface_key="product_status"),
+        schema_file=PRODUCT_STATUS_SCHEMA_FILE,
+        context="product_status",
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
         lifecycle_stage=lifecycle_stage,
     )
-    product_frontdesk = _require_mapping(
+    product_status = _require_mapping(
         payload,
-        "product_frontdesk",
-        context="product_frontdesk",
+        "product_status",
+        context="product_status",
     )
     manifest = _require_mapping(
-        product_frontdesk,
+        product_status,
         "product_entry_manifest",
-        context="product_frontdesk.product_entry_manifest",
+        context="product_status.product_entry_manifest",
     )
     for surface_key in ("session_continuity", "progress_projection", "artifact_inventory", "runtime_control"):
-        if product_frontdesk.get(surface_key) != manifest.get(surface_key):
+        if product_status.get(surface_key) != manifest.get(surface_key):
             raise WorkspaceStateError(
-                f"product_frontdesk.{surface_key} 与 product_entry_manifest.{surface_key} 不一致。",
+                f"product_status.{surface_key} 与 product_entry_manifest.{surface_key} 不一致。",
                 grant_run_id=grant_run_id,
                 workspace_id=workspace_id,
                 lifecycle_stage=lifecycle_stage,

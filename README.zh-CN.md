@@ -58,7 +58,7 @@
 - `Med Auto Grant` 是独立的医学基金 domain agent，不是 `OPL` 内部工作区模块。
 - 对外第一主语是单一 `Med Auto Grant` app skill；`Codex`、`OPL` 和其他通用 agent 可以通过这个 skill 入口，或直接通过 `CLI` / `MedAutoGrantDomainEntry` 访问稳定能力面。
 - 这个 app skill 背后的稳定可调用面是本地 CLI、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract。
-- `product entry/frontdesk/direct-entry/user-loop` 保持为 app skill 下的内部 command contract 与 direct-product projection，不再写成对外第一主语。
+- `product entry/product status/direct-entry/user-loop` 保持为 app skill 下的内部 command contract 与 direct-product projection，不再写成对外第一主语。
 - MAG 当前任务边界锁定在“指定基金任务正文 authoring”。
 - “科学完成”交付面是可待审包；“形式/客观补件完成”是并行分层，不与正文语义混写。
 - 形式/客观补件默认按 `TODO + 显式唤醒` 处理，除非直接破坏正文科学成立，否则不升级为正文 blocker。
@@ -82,7 +82,7 @@
 - 先读 [文档索引](./docs/README.zh-CN.md)。这里已经把当前技术全景、formal-entry matrix、稳定 capability surface 和 repo-tracked 真相所在位置收口好了。
 - 然后读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。这是恢复 active product-entry shell、schema-backed surface 和当前 mainline 指针的最快路径。
 - 在改 route、入口 wording 或公开表述前，把 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 当成公开与技术真相集。
-- 当前 formal-entry matrix 是 `CLI`、`MCP` 和 `controller`。`CLI` / `MedAutoGrantDomainEntry` 是 agent entry；`product entry/frontdesk/direct-entry/user-loop`、本地脚本与 schema-backed contract 共同构成 app skill 下的内部 command contract 和 direct-product projection。hosted / proof backend 只在显式 opt-in 集成 lane 中出现，不构成默认公开合同。
+- 当前 formal-entry matrix 是 `CLI`、`MCP` 和 `controller`。`CLI` / `MedAutoGrantDomainEntry` 是 agent entry；`product entry/product status/direct-entry/user-loop`、本地脚本与 schema-backed contract 共同构成 app skill 下的内部 command contract 和 direct-product projection。hosted / proof backend 只在显式 opt-in 集成 lane 中出现，不构成默认公开合同。
 - 如果外部 agent 或 OPL 需要直接读取 repo-tracked skill surface，用 repo-local launcher：`uv run --directory <med-autogrant-repo> medautogrant product skill-catalog --input <input_path> --format json`；返回的是一个 Med Auto Grant app skill 加底层 command contracts。
 - pre-authoring intake 用 `uv run --directory <med-autogrant-repo> medautogrant workspace initialize-intake --input <selection_input> --workspace-root <workspace_dir> --format json`；目录会带 workspace-local Git boundary，`workspace.json` 是 MAG canonical document。
 - 当前单一 skill descriptor 已携带可直接消费的 `runtime_continuity` envelope，并复用既有 `session_continuity` / `progress_projection` / `artifact_inventory` / `runtime_control` truth。

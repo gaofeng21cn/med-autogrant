@@ -57,6 +57,17 @@ def _tracked_files() -> list[str]:
     return completed.stdout.splitlines()
 
 
+def _tracked_or_pending_files() -> list[str]:
+    completed = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return completed.stdout.splitlines()
+
+
 def _is_forbidden_tracked_path(path: str) -> bool:
     parts = Path(path).parts
     return (
@@ -117,6 +128,8 @@ class RepositoryHygieneTest(unittest.TestCase):
         over_limit: list[str] = []
         new_or_grown_over_target: list[str] = []
         for path in _tracked_code_files():
+            if not path.exists():
+                continue
             line_count = sum(1 for _ in path.open(encoding="utf-8"))
             relative_path = path.relative_to(REPO_ROOT).as_posix()
             if line_count > LINE_BUDGET_LIMIT:
@@ -129,6 +142,41 @@ class RepositoryHygieneTest(unittest.TestCase):
 
         self.assertEqual(over_limit, [])
         self.assertEqual(new_or_grown_over_target, [])
+
+    def test_active_surfaces_do_not_reintroduce_retired_product_entry_vocabulary(self) -> None:
+        retired_terms = [
+            "front" + "door",
+            "front" + "desk",
+            "front" + "-desk",
+            "product_" + "front" + "desk",
+            "product-" + "front" + "desk",
+            "product " + "front" + "desk",
+            "gateway_" + "interaction_contract",
+            "front" + "door_owner",
+            "natural_language_" + "front" + "door",
+            "pending-" + "handoff",
+            "pending-" + "handoff-requirements.schema.json",
+            "opl-product " + "entry",
+        ]
+        scanned_roots = ("src/", "tests/", "schemas/", "contracts/", "plugins/", "docs/")
+        allowed_roots = ("docs/history/", "docs/references/")
+        scanned_suffixes = {".py", ".json", ".md", ".yaml", ".yml", ".toml", ".sh"}
+        violations: list[str] = []
+
+        for relative_path in _tracked_or_pending_files():
+            if not relative_path.startswith(scanned_roots):
+                continue
+            if relative_path.startswith(allowed_roots):
+                continue
+            path = REPO_ROOT / relative_path
+            if path.suffix not in scanned_suffixes or not path.is_file():
+                continue
+            text = path.read_text(encoding="utf-8")
+            for term in retired_terms:
+                if term in text:
+                    violations.append(f"{relative_path}: {term}")
+
+        self.assertEqual(violations, [])
 
 
 if __name__ == "__main__":

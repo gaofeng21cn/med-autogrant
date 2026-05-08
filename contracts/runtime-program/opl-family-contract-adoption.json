@@ -37,7 +37,7 @@
   },
   "operator_projection": {
     "source_surfaces": [
-      "product frontdesk",
+      "product status",
       "product user-loop",
       "workspace progress",
       "workspace cockpit",
@@ -90,7 +90,7 @@
       "route_truth_owner": "med-autogrant",
       "discovery_surface_ref": "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",
       "route_surface_refs": [
-        "/product_entry_manifest/frontdesk_surface",
+        "/product_entry_manifest/product_entry_surface",
         "/product_entry_manifest/operator_loop_surface",
         "/product_entry_manifest/progress_projection",
         "/product_entry_manifest/runtime_control/restore_point"

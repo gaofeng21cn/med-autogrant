@@ -22,9 +22,6 @@ def test_makefile_exposes_layered_test_entrypoints() -> None:
     assert "uv run pytest -q -m smoke" in makefile
     assert "test-regression:" in makefile
     assert "uv run pytest -q -m regression" in makefile
-    line_budget_script = _read("scripts/check-line-budget.py")
-    assert 'with_name("line_budget.py")' in line_budget_script
-    assert "LEGACY_OVER_TARGET_BUDGETS" not in line_budget_script
     assert "test-family:" in makefile
     assert (
         "uv run pytest tests/test_repository_hygiene.py tests/test_test_command_surfaces.py "

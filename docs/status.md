@@ -5,7 +5,7 @@ Date: `2026-05-06`
 ## 当前角色
 
 - 仓库角色：`Med Auto Grant` 是独立 medical grant domain agent，负责 author-side grant truth、route、review gate 与 package export；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
-- 当前执行口径：repo-tracked 默认 capability contract 收口为单一 `Med Auto Grant` app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；其中 `product entry/frontdesk/direct-entry/user-loop` 是 app skill 下的内部 command contract 和 direct-product projection。默认正文执行继续继承本机 `Codex` 配置；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 与技术参考层。
+- 当前执行口径：repo-tracked 默认 capability contract 收口为单一 `Med Auto Grant` app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；其中 `product entry/product status/direct-entry/user-loop` 是 app skill 下的内部 command contract 和 direct-product projection。默认正文执行继续继承本机 `Codex` 配置；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 与技术参考层。
 - OPL Runtime Manager 口径：`OPL Runtime Manager` 是 OPL 侧薄运行管理/投影层，用于把 MAG 的 task registration、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue 接到外部 `Hermes-Agent` substrate、高频状态索引和 doctor/repair/resume 面；它不持有 author-side truth、quality gate、submission-ready export gate 或 concrete executor。
 - 当前 agent entry：`CLI` / `MedAutoGrantDomainEntry` 可被 `Codex`、`OPL` 和其他通用 agent 直接调用，或者先通过单一 app skill 读取 machine-readable surface。
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
@@ -15,12 +15,12 @@ Date: `2026-05-06`
 
 ## 当前入口
 
-- 用户路径收口为单一 app skill 下的 `product frontdesk` -> `product user-loop` -> `workspace progress / workspace cockpit` -> `product direct-entry` -> landed `pass` / `package` commands。
+- 用户路径收口为单一 app skill 下的 `product status` -> `product user-loop` -> `workspace progress / workspace cockpit` -> `product direct-entry` -> landed `pass` / `package` commands。
 - pre-workspace 入口现在增加 `discover-funding-opportunities` -> `select-project-profile` -> `initialize-intake-workspace`，用于先发现候选池，再选 funding/profile，最后落到带 `workspace.json` canonical document 与 workspace-local Git boundary 的目录型 `input_intake` workspace。
 - 质量治理入口现在包括 `workspace quality-scorecard`、`workspace quality-closure-dossier` 与 `workspace quality-diff`，用于当前版本质量评估、closure package 收口与版本间问题关闭比较。
 - 长时间自治入口现在包括 `pass autonomy-controller`（internal command: `execute-grant-autonomy-controller`），用于在预算、轮次、blocker 队列和 evidence gap 队列约束下调度既有主线。
 - `product build-entry` 与 lightweight `product entry` shell 继续作为 machine-readable domain/API catalog 的构建层。
-- `product frontdesk` 是 controller-owned direct frontdoor contract，读取当前 user loop、projection 与 route truth，并通过 `product-frontdesk.schema.json` generation-time fail-closed 校验；它属于 app skill 的内部 command contract。
+- `product status` 是 controller-owned direct product entry contract，读取当前 user loop、projection 与 route truth，并通过 `product-status.schema.json` generation-time fail-closed 校验；它属于 app skill 的内部 command contract。
 - `product-entry-manifest` 现已导出 `runtime_control` surface，固定 session/runtime/domain/executor owner、restore point、progress/artifact/approval control surface、direct-entry locator 与 `semantic_closure`，作为 integration/reference truth 供 OPL 或 hosted caller 归一化消费。
 - `MAG` 已声明 `OPL` family contract adoption：`contracts/runtime-program/opl-family-contract-adoption.json` 与 `docs/references/opl_family_contract_adoption.md` 把 runtime attempt、grant quality projection、incident learning 与 product operator projection 映射回 MAG-owned surfaces；`OPL` 只消费投影，不持有 grant truth、fundability judgment 或 submission-ready export gate。
 - `runtime_control` 与 skill catalog 的 `runtime_continuity` 也是 OPL Runtime Manager 的 MAG 侧注册/投影输入；任何上层索引都必须回指这些 repo-tracked surface，不能在 OPL 侧复制 authoring truth。
@@ -29,7 +29,7 @@ Date: `2026-05-06`
 
 ## 当前执行线
 
-- 当前公开执行线：`single Med Auto Grant app skill / direct MAG agent entry -> internal product frontdesk -> internal product user-loop -> workspace progress / workspace cockpit -> internal product direct-entry -> pass / package commands`
+- 当前公开执行线：`single Med Auto Grant app skill / direct MAG agent entry -> internal product status -> internal product user-loop -> workspace progress / workspace cockpit -> internal product direct-entry -> pass / package commands`
 - 当前 pre-workspace intake 线：`selection_input materials -> select-project-profile -> initialize-intake-workspace -> input_intake workspace directory / workspace.json`
 - 当前 funding discovery 线：`discovery_input materials -> discover-funding-opportunities -> funding_opportunity_pool`
 - 当前 funding discovery 已支持 `official_live`，会记录 source receipts，便于后续 profile 选择和材料 provenance 回溯。
@@ -37,10 +37,10 @@ Date: `2026-05-06`
   NIH Parent Announcements + NSFC 项目指南列表 + NSFC 医学科学部指南页。
 - 当前 funding sync 已支持 `refresh-funding-opportunities-cache` 与 `official_cached`；默认 cache 落点是 `$CODEX_HOME/projects/med-autogrant/runtime-state/funding-landscape/cache/latest.json`。
 - 当前 funding sync 会同时生成 `latest.diff.json`，并对消失条目标记 `withdrawn_or_not_listed`。
-- 当前用户回路：`single Med Auto Grant app skill -> product frontdesk -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`
-- 当前 CLI 入口面：`product build-entry`、`product manifest`、`product frontdesk` 与 `package submission-ready`；这些都属于 app skill 下的内部命令面
-- 当前稳定可调用面：`CLI` / `MedAutoGrantDomainEntry`、本地脚本、`product build-entry` / `product manifest` / `product frontdesk` / `product direct-entry` / `product user-loop`，以及对应 schema-backed contract；它们都挂在单一 `Med Auto Grant` app skill 之下。
-- 当前 `product skill-catalog` 已收口为单一 `Med Auto Grant` app skill；`frontdesk`、`direct-entry`、`user-loop` 等继续作为这个 app skill 的内部 command contract 暴露给 `Codex` / `OPL`。
+- 当前用户回路：`single Med Auto Grant app skill -> product status -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`
+- 当前 CLI 入口面：`product build-entry`、`product manifest`、`product status` 与 `package submission-ready`；这些都属于 app skill 下的内部命令面
+- 当前稳定可调用面：`CLI` / `MedAutoGrantDomainEntry`、本地脚本、`product build-entry` / `product manifest` / `product status` / `product direct-entry` / `product user-loop`，以及对应 schema-backed contract；它们都挂在单一 `Med Auto Grant` app skill 之下。
+- 当前 `product skill-catalog` 已收口为单一 `Med Auto Grant` app skill；`product status`、`direct-entry`、`user-loop` 等继续作为这个 app skill 的内部 command contract 暴露给 `Codex` / `OPL`。
 - 同一 skill descriptor 的 `domain_projection` 现已带 `runtime_continuity` envelope，复用 `session_continuity`、`progress_projection`、`artifact_inventory`、`runtime_control.semantic_closure` 真相面，把 authoring continuity、funding call lock、quality closure surface 与 submission-ready gate 语义一起供 `Codex` / `OPL` 直接消费。
 - 同一 `domain_projection` 现已暴露 `opl_runtime_manager_registration` v1：OPL Runtime Manager 可以索引 MAG 的 runtime_control、runtime_continuity、artifact inventory、authoring-loop wakeup 与 runtime health 输入；其中高频 workspace/session/artifact/TODO/runtime-health 索引可由 OPL Rust native helper 消费，并由 `native_helper_consumption.proof_surface` 固定 coverage、只读写入边界与 MAG-owned gate 边界，但不得复制 grant truth 或绕过 submission-ready export gate。
 - 同一 `opl_runtime_manager_registration` 现已携带 `family_lifecycle_adapter`：它把现有 `runtime_control`、`session_continuity`、`grant-progress/user-loop` 与 `artifact_inventory` 映射成 OPL family persistence、lifecycle、owner-route discovery 与 adoption projection；这只是薄 adapter，不重塑 runtime，不引入 SQLite 深迁移。

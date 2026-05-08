@@ -31,7 +31,7 @@
     "logo": "./assets/icon.png",
     "defaultPrompt": [
       "Inspect the current Med Auto Grant skill catalog for this workspace.",
-      "Open the current Med Auto Grant frontdesk for this grant workspace.",
+      "Open the current Med Auto Grant status for this grant workspace.",
       "Continue the active Med Auto Grant user loop with the current funding call."
     ],
     "brandColor": "#2E6E9E"

@@ -6,7 +6,7 @@ from typing import Final
 PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
     "workspace": "工作区诊断、摘要、阶段路由与 progress cockpit。",
     "mainline": "当前 line/current focus 概览与维护者参考记录。",
-    "product": "grant direct entry、frontdesk 与 product-entry contract。",
+    "product": "grant direct entry、status 与 product-entry contract。",
     "runtime": "Hermes substrate 探测与本地 runtime 运行/恢复。",
     "pass": "authoring pass 执行入口。",
     "package": "artifact/final/hosted/submission package 导出入口。",
@@ -44,7 +44,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "grant-user-loop": ("product", "user-loop"),
     "skill-catalog": ("product", "skill-catalog"),
     "product-entry-manifest": ("product", "manifest"),
-    "product-frontdesk": ("product", "frontdesk"),
+    "product-status": ("product", "status"),
     "product-preflight": ("product", "preflight"),
     "product-start": ("product", "start"),
     "build-product-entry": ("product", "build-entry"),

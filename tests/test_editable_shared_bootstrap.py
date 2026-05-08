@@ -6,7 +6,29 @@ import sys
 import types
 from pathlib import Path
 
+import pytest
+
 from med_autogrant import editable_shared_bootstrap as module
+
+
+@pytest.fixture(autouse=True)
+def _ignore_session_explicit_shared_path(monkeypatch):
+    monkeypatch.setattr(module, "_explicit_shared_src_roots_from_sys_path", lambda: ())
+
+
+def test_bootstrap_prefers_explicit_shared_path_from_sys_path(monkeypatch, tmp_path: Path) -> None:
+    explicit_root = tmp_path / "opl-shared" / "src"
+    (explicit_root / "opl_harness_shared").mkdir(parents=True)
+    (explicit_root / "opl_harness_shared" / "editable_consumer_launcher.py").write_text("", encoding="utf-8")
+
+    monkeypatch.setattr(module, "_explicit_shared_src_roots_from_sys_path", lambda: (explicit_root,))
+    monkeypatch.setattr(
+        module,
+        "_load_sibling_shared_helper",
+        lambda added_paths: (_ for _ in ()).throw(AssertionError("sibling lookup should not run")),
+    )
+
+    assert module.ensure_editable_dependency_paths() == (explicit_root,)
 
 
 def test_bootstrap_adds_repo_venv_site_packages_when_shared_helper_imports_from_site_packages(

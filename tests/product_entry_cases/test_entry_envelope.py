@@ -118,7 +118,7 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             },
         )
 
-    def test_product_entry_surfaces_revision_completed_reroute_to_critique_handoff(self) -> None:
+    def test_product_product_entry_surfaces_revision_completed_reroute_to_critique_handoff(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         payload = MedAutoGrantProductEntry().build(

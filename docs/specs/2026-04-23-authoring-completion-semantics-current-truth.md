@@ -16,7 +16,7 @@ Date: `2026-04-23`
 
 ## Projection Alignment
 
-- `current-program`、`mainline-status`、`grant-user-loop`、`product-frontdesk` 等 repo-tracked projection 必须共同反映上述语义，不得出现“submission-ready 即主任务唯一完成判据”或“默认跨 funder 重选”的第二真相。
+- `current-program`、`mainline-status`、`grant-user-loop`、`product-status` 等 repo-tracked projection 必须共同反映上述语义，不得出现“submission-ready 即主任务唯一完成判据”或“默认跨 funder 重选”的第二真相。
 - quality governance、closure dossier 与 autonomy controller 继续用于质量收口与行动排序，但它们服务的是 authoring 质量主线，而不是替代正文科学判断。
 
 ## Out of Scope
