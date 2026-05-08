@@ -19,7 +19,7 @@ _PHASE_STATUS_LABELS = {
 }
 
 _START_MODE_LABELS = {
-    "open_frontdesk": "打开 frontdesk",
+    "open_product_entry": "打开 status",
     "continue_grant_loop": "继续 grant loop",
     "build_direct_entry": "构建 direct entry",
 }
@@ -469,19 +469,19 @@ def _render_product_entry_manifest(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _render_product_frontdesk(payload: dict[str, Any]) -> str:
-    frontdesk = payload["product_frontdesk"]
+def _render_product_status(payload: dict[str, Any]) -> str:
+    status = payload["product_status"]
     lines = [
         f"grant_run_id: {payload['grant_run_id']}",
         f"workspace_id: {payload['workspace_id']}",
         f"draft_id: {payload['draft_id']}",
         f"当前阶段: {_human_token_label(payload['lifecycle_stage']) or payload['lifecycle_stage']}",
-        f"当前判断: {frontdesk['product_entry_status']['summary']}",
-        f"前台入口命令: {frontdesk['summary']['frontdesk_command']}",
-        f"推荐继续命令: {frontdesk['summary']['recommended_command']}",
-        f"当前 loop 命令: {frontdesk['summary']['operator_loop_command']}",
+        f"当前判断: {status['product_entry_status']['summary']}",
+        f"前台入口命令: {status['summary']['product_entry_command']}",
+        f"推荐继续命令: {status['summary']['recommended_command']}",
+        f"当前 loop 命令: {status['summary']['operator_loop_command']}",
     ]
-    for name, item in frontdesk["entry_surfaces"].items():
+    for name, item in status["product_entry_surfaces"].items():
         lines.append(f"- 可用入口 {name}: {item['command']}")
     return "\n".join(lines)
 
@@ -726,7 +726,7 @@ _TEXT_RENDERERS: dict[str, Callable[[dict[str, Any]], str]] = {
     'grant-direct-entry': _render_grant_direct_entry,
     'grant-user-loop': _render_grant_user_loop,
     'product-entry-manifest': _render_product_entry_manifest,
-    'product-frontdesk': _render_product_frontdesk,
+    'product-status': _render_product_status,
     'product-preflight': _render_product_preflight,
     'product-start': _render_product_start,
     'probe-upstream-hermes': _render_probe_upstream_hermes,

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import (
-    PRODUCT_FRONTDESK_KIND,
+    PRODUCT_STATUS_KIND,
     TARGET_DOMAIN_ID,
     _require_nonempty_string_from_mapping,
 )
@@ -30,8 +30,8 @@ def _build_opl_runtime_manager_registration(
         ),
         "executor_owner": "med-autogrant",
         "domain_entry_surface": {
-            "surface_kind": PRODUCT_FRONTDESK_KIND,
-            "command": shell_commands["product_frontdesk"],
+            "surface_kind": PRODUCT_STATUS_KIND,
+            "command": shell_commands["product_status"],
             "manifest_command": skill_catalog_command,
         },
         "registration_surface": {

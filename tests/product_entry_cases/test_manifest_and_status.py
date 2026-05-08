@@ -5,11 +5,11 @@ from product_entry_cases.support import *  # noqa: F401,F403
 
 
 
-class ProductEntryManifestFrontdeskTest(unittest.TestCase):
+class ProductEntryManifestStatusTest(unittest.TestCase):
     def test_product_entry_manifest_projects_current_grant_shell_and_shared_handoff(self) -> None:
         from med_autogrant.domain_entry_contract import (
             build_domain_entry_contract,
-            build_gateway_interaction_contract,
+            build_user_interaction_contract,
         )
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
@@ -42,15 +42,15 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
                 "json",
             ),
         )
-        self.assertEqual(manifest["frontdesk_surface"]["shell_key"], "product_frontdesk")
+        self.assertEqual(manifest["product_entry_surface"]["shell_key"], "product_status")
         self.assertEqual(
-            manifest["frontdesk_surface"]["command"],
+            manifest["product_entry_surface"]["command"],
             public_cli_command(
-                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
             ),
         )
-        self.assertEqual(manifest["frontdesk_surface"]["surface_kind"], "product_frontdesk")
-        self.assertIn("direct grant product frontdesk", manifest["frontdesk_surface"]["summary"])
+        self.assertEqual(manifest["product_entry_surface"]["surface_kind"], "product_status")
+        self.assertIn("direct grant product status", manifest["product_entry_surface"]["summary"])
         self.assertEqual(
             manifest["managed_runtime_contract"],
             {
@@ -184,7 +184,7 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         self.assertEqual(skill["title"], "Med Auto Grant")
         self.assertEqual(skill["domain_projection"]["plugin_name"], "med-autogrant")
         self.assertEqual(skill["domain_projection"]["skill_entry"], "med-autogrant")
-        self.assertEqual(skill["domain_projection"]["recommended_shell"], "product_frontdesk")
+        self.assertEqual(skill["domain_projection"]["recommended_shell"], "product_status")
         self.assertEqual(skill["domain_projection"]["runtime_continuity"]["surface_kind"], "skill_runtime_continuity")
         self.assertIn("validate-workspace", manifest["skill_catalog"]["supported_commands"])
         self.assertTrue(manifest["skill_catalog"]["command_contracts"])
@@ -210,13 +210,13 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
                 "codex_entry_strategy": "domain_agent_entry",
                 "artifact_conventions": "grant_proposal_package",
                 "progress_conventions": "grant_workloop_narration",
-                "entry_command": "product-frontdesk",
+                "entry_command": "product-status",
                 "manifest_command": "product-entry-manifest",
             },
         )
         self.assertEqual(
-            manifest["gateway_interaction_contract"],
-            build_gateway_interaction_contract(),
+            manifest["user_interaction_contract"],
+            build_user_interaction_contract(),
         )
         self.assertEqual(manifest["automation"]["surface_kind"], "automation")
         self.assertEqual(
@@ -244,7 +244,7 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         self.assertEqual(
             manifest["repo_mainline"]["next_focus"],
             [
-                "继续把 `product-entry-manifest` / `product-frontdesk` 当作当前 direct grant frontdoor contract，并让 `grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop` 继续对齐同一份 frontdoor truth。",
+                "继续把 `product-entry-manifest` / `product-status` 当作当前 direct grant product entry surface contract，并让 `grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop` 继续对齐同一份 product entry surface truth。",
                 "继续把 `family_orchestration` companion 从 action graph / human gate preview 深压到 family product-entry manifest v2、event envelope 与 checkpoint lineage contract，并保持 route status 直接读取共享 author-side route truth。",
                 "把形式审查/客观补件统一收口到 TODO 与显式唤醒链路，并仅在直接破坏科学论证时升级为 blocker。",
                 "对已锁定 funder/family 的任务线保持 continuity，不引入 opportunistic 跨 funder 切换叙事。",
@@ -281,9 +281,9 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
             ),
         )
         self.assertEqual(
-            manifest["product_entry_shell"]["product_frontdesk"]["command"],
+            manifest["product_entry_shell"]["product_status"]["command"],
             public_cli_command(
-                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
             ),
         )
         self.assertEqual(
@@ -332,11 +332,11 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
             "/product_entry_manifest/repo_mainline/active_phase",
         )
         self.assertEqual(manifest["product_entry_quickstart"]["surface_kind"], "product_entry_quickstart")
-        self.assertEqual(manifest["product_entry_quickstart"]["recommended_step_id"], "open_frontdesk")
+        self.assertEqual(manifest["product_entry_quickstart"]["recommended_step_id"], "open_product_entry")
         self.assertEqual(
             [step["step_id"] for step in manifest["product_entry_quickstart"]["steps"]],
             [
-                "open_frontdesk",
+                "open_product_entry",
                 "continue_grant_loop",
                 "inspect_progress",
                 "inspect_cockpit",
@@ -346,7 +346,7 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         self.assertEqual(
             manifest["product_entry_quickstart"]["steps"][0]["command"],
             public_cli_command(
-                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
             ),
         )
         self.assertEqual(
@@ -367,15 +367,15 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         )
         product_start = manifest["product_entry_start"]
         self.assertEqual(product_start["surface_kind"], "product_entry_start")
-        self.assertEqual(product_start["recommended_mode_id"], "open_frontdesk")
+        self.assertEqual(product_start["recommended_mode_id"], "open_product_entry")
         self.assertEqual(
             [mode["mode_id"] for mode in product_start["modes"]],
-            ["open_frontdesk", "continue_grant_loop", "build_direct_entry"],
+            ["open_product_entry", "continue_grant_loop", "build_direct_entry"],
         )
         self.assertEqual(
             product_start["modes"][0]["command"],
             public_cli_command(
-                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
             ),
         )
         self.assertEqual(product_start["modes"][1]["requires"], ["task_intent"])
@@ -391,9 +391,9 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
             manifest["product_entry_status"]["summary"],
         )
         self.assertEqual(
-            manifest["product_entry_overview"]["frontdesk_command"],
+            manifest["product_entry_overview"]["product_entry_command"],
             public_cli_command(
-                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
             ),
         )
         self.assertEqual(
@@ -435,7 +435,7 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
                 "checkpoint_locator_field": "lifecycle_stage",
             },
         )
-        self.assertEqual(manifest["product_entry_overview"]["recommended_step_id"], "open_frontdesk")
+        self.assertEqual(manifest["product_entry_overview"]["recommended_step_id"], "open_product_entry")
         self.assertEqual(
             manifest["product_entry_overview"]["next_focus"],
             manifest["product_entry_status"]["next_focus"],
@@ -452,7 +452,7 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         self.assertEqual(preflight["surface_kind"], "product_entry_preflight")
         self.assertEqual(
             preflight["summary"],
-            "当前 direct grant frontdoor 仍有 blocking preflight check；请先修复 workspace 或 runtime owner line 再进入 product frontdesk。",
+            "当前 direct grant product entry surface 仍有 blocking preflight check；请先修复 workspace 或 runtime owner line 再进入 product status。",
         )
         self.assertFalse(preflight["ready_to_try_now"])
         self.assertEqual(
@@ -464,7 +464,7 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         self.assertEqual(
             preflight["recommended_start_command"],
             public_cli_command(
-                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
             ),
         )
         self.assertEqual(preflight["blocking_check_ids"], ["upstream_hermes_owner_line"])
@@ -473,7 +473,7 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
             [
                 "workspace_document_valid",
                 "upstream_hermes_owner_line",
-                "direct_frontdoor_contract_landed",
+                "direct_product entry surface_contract_landed",
                 "submission_ready_export_gate",
             ],
         )
@@ -488,11 +488,11 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         self.assertTrue(product_readiness["usable_now"])
         self.assertFalse(product_readiness["good_to_use_now"])
         self.assertFalse(product_readiness["fully_automatic"])
-        self.assertEqual(product_readiness["recommended_start_surface"], "product_frontdesk")
+        self.assertEqual(product_readiness["recommended_start_surface"], "product_status")
         self.assertEqual(
             product_readiness["recommended_start_command"],
             public_cli_command(
-                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
             ),
         )
         self.assertEqual(product_readiness["recommended_loop_surface"], "grant_user_loop")
@@ -515,11 +515,11 @@ class ProductEntryManifestFrontdeskTest(unittest.TestCase):
         self.assertFalse(readiness["fully_automatic"])
         self.assertTrue(readiness["usable_now"])
         self.assertFalse(readiness["good_to_use_now"])
-        self.assertEqual(readiness["recommended_start_surface"], "product_frontdesk")
+        self.assertEqual(readiness["recommended_start_surface"], "product_status")
         self.assertEqual(
             readiness["recommended_start_command"],
             public_cli_command(
-                "product-frontdesk", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
+                "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
             ),
         )
         self.assertEqual(readiness["recommended_loop_surface"], "grant_user_loop")

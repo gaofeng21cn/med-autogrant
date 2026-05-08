@@ -41,7 +41,7 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
         for item in maintainer_references["phase_ladder"][3]["phase_docs"]
     )
     assert any(
-        item == "human_doc:2026_04_13_p4e_schema_backed_frontdesk_and_manifest_current_truth"
+        item == "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth"
         for item in maintainer_references["phase_ladder"][3]["phase_docs"]
     )
     assert any(
@@ -50,7 +50,7 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     )
     assert any("Web UI" in item for item in payload["remaining_gaps"])
     assert any("官网提交" in item for item in payload["remaining_gaps"])
-    assert any("OPL Gateway" in item for item in maintainer_references["explicitly_not_now"])
+    assert any("OPL Runtime Manager" in item for item in maintainer_references["explicitly_not_now"])
     assert any("官网提交" in item for item in maintainer_references["explicitly_not_now"])
     assert any("product-entry-manifest" in item for item in payload["current_focus"]["focus_items"])
     assert any("family product-entry manifest v2" in item for item in payload["current_focus"]["focus_items"])

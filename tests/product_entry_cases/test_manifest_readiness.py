@@ -9,7 +9,7 @@ class ProductEntryManifestReadinessTest(unittest.TestCase):
         from med_autogrant.product_entry_parts.manifest_readiness import build_manifest_readiness_surfaces
 
         surfaces = build_manifest_readiness_surfaces(
-            product_frontdesk_command="medautogrant product-frontdesk --input workspace.json --format json",
+            product_status_command="medautogrant product-status --input workspace.json --format json",
             grant_user_loop_command=(
                 "medautogrant grant-user-loop --input workspace.json "
                 "--task-intent '<describe-task-intent>' --format json"
@@ -23,7 +23,7 @@ class ProductEntryManifestReadinessTest(unittest.TestCase):
         self.assertFalse(grant_readiness["fully_automatic"])
         self.assertTrue(grant_readiness["usable_now"])
         self.assertFalse(grant_readiness["good_to_use_now"])
-        self.assertEqual(grant_readiness["recommended_start_surface"], "product_frontdesk")
+        self.assertEqual(grant_readiness["recommended_start_surface"], "product_status")
         self.assertEqual(grant_readiness["recommended_loop_surface"], "grant_user_loop")
         self.assertEqual(len(grant_readiness["workflow_coverage"]), 9)
         coverage_by_id = {item["step_id"]: item for item in grant_readiness["workflow_coverage"]}

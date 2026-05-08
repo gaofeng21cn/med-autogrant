@@ -95,7 +95,7 @@ Date: `2026-04-13`
 
 ### 5. `pending_handoff_requirements` 已退出当前主线 route output
 
-`pending-handoff-requirements.schema.json` 继续只保留为历史兼容与旧真相追溯材料。
+`product-status.schema.json` 继续只保留为历史兼容与旧真相追溯材料。
 
 当前主线 route output 的真实口径已经是：
 

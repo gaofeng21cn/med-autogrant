@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-from med_autogrant.product_entry_parts.primitives import PRODUCT_FRONTDESK_KIND, TARGET_DOMAIN_ID
+from med_autogrant.product_entry_parts.primitives import PRODUCT_STATUS_KIND, TARGET_DOMAIN_ID
 from med_autogrant.product_entry_parts.runtime_registration import _build_opl_runtime_manager_registration
 from med_autogrant.public_cli import public_cli_command
 
@@ -59,18 +59,18 @@ def _build_med_autogrant_skill_descriptor(
         title="Med Auto Grant",
         owner=TARGET_DOMAIN_ID,
         distribution_mode="repo_tracked_codex_plugin",
-        surface_kind=PRODUCT_FRONTDESK_KIND,
+        surface_kind=PRODUCT_STATUS_KIND,
         description="Canonical Med Auto Grant domain app skill for Codex and OPL callers.",
-        command=shell_commands["product_frontdesk"],
+        command=shell_commands["product_status"],
         readiness="landed",
         tags=["med-autogrant", "domain-app", "grant-authoring"],
         domain_projection={
             "plugin_name": "med-autogrant",
             "skill_entry": "med-autogrant",
             "skill_semantics": "domain_app",
-            "entry_shell_key": "product_frontdesk",
-            "entry_command": shell_commands["product_frontdesk"],
-            "recommended_shell": "product_frontdesk",
+            "entry_shell_key": "product_status",
+            "entry_command": shell_commands["product_status"],
+            "recommended_shell": "product_status",
             "supporting_shell_keys": [
                 "grant_progress",
                 "grant_cockpit",

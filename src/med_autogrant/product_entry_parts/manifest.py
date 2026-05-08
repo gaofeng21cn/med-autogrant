@@ -6,12 +6,12 @@ from typing import Any
 from med_autogrant.product_entry_parts.primitives import (
     _require_mapping,
 )
-from med_autogrant.product_entry_parts.runtime_contracts import PRODUCT_FRONTDESK_SCHEMA_FILE
-from med_autogrant.product_entry_parts.loop_contracts import _validate_product_frontdesk_contract
+from med_autogrant.product_entry_parts.runtime_contracts import PRODUCT_STATUS_SCHEMA_FILE
+from med_autogrant.product_entry_parts.loop_contracts import _validate_product_status_contract
 from med_autogrant.product_entry_parts.manifest_builder import ProductEntryManifestBuilderMixin
 
 from opl_harness_shared.product_entry_companions import (
-    build_family_product_frontdesk_from_manifest as _build_shared_family_product_frontdesk_from_manifest,
+    build_family_product_entry_surface_from_manifest as _build_shared_family_product_entry_surface_from_manifest,
 )
 
 
@@ -45,7 +45,7 @@ class ProductEntryManifestMixin(ProductEntryManifestBuilderMixin):
             ),
         }
 
-    def build_product_frontdesk(
+    def build_product_status(
         self,
         *,
         input_path: str | Path,
@@ -58,63 +58,65 @@ class ProductEntryManifestMixin(ProductEntryManifestBuilderMixin):
         manifest = _require_mapping(
             manifest_payload,
             "product_entry_manifest",
-            context="product_frontdesk",
+            context="product_status",
         )
-        product_frontdesk = _build_shared_family_product_frontdesk_from_manifest(
+        product_status = _build_shared_family_product_entry_surface_from_manifest(
             recommended_action="inspect_or_prepare_grant_loop",
             product_entry_manifest=dict(manifest),
             shell_aliases={
-                "frontdesk": "product_frontdesk",
+                "status": "product_status",
                 "grant_progress": "grant_progress",
                 "grant_cockpit": "grant_cockpit",
                 "grant_direct_entry": "grant_direct_entry",
                 "grant_user_loop": "grant_user_loop",
             },
-            schema_ref=f"contracts/schemas/v1/{PRODUCT_FRONTDESK_SCHEMA_FILE}",
+            schema_ref=f"contracts/schemas/v1/{PRODUCT_STATUS_SCHEMA_FILE}",
             notes=[
-                "This frontdesk surface is a controller-owned direct grant front door over the landed product-entry shell.",
+                "This status surface is a controller-owned direct grant product status over the landed product-entry shell.",
                 "It does not claim that mature Web UI or hosted runtime is already landed.",
             ],
             extra_payload={
                 "grant_authoring_readiness": dict(_require_mapping(
                     manifest,
                     "grant_authoring_readiness",
-                    context="product_frontdesk.product_entry_manifest",
+                    context="product_status.product_entry_manifest",
                 )),
                 "session_continuity": dict(_require_mapping(
                     manifest,
                     "session_continuity",
-                    context="product_frontdesk.product_entry_manifest",
+                    context="product_status.product_entry_manifest",
                 )),
                 "progress_projection": dict(_require_mapping(
                     manifest,
                     "progress_projection",
-                    context="product_frontdesk.product_entry_manifest",
+                    context="product_status.product_entry_manifest",
                 )),
                 "artifact_inventory": dict(_require_mapping(
                     manifest,
                     "artifact_inventory",
-                    context="product_frontdesk.product_entry_manifest",
+                    context="product_status.product_entry_manifest",
                 )),
                 "runtime_control": dict(_require_mapping(
                     manifest,
                     "runtime_control",
-                    context="product_frontdesk.product_entry_manifest",
+                    context="product_status.product_entry_manifest",
                 )),
             },
         )
+        product_status["surface_kind"] = "product_status"
+        product_status["product_entry_surfaces"] = product_status.pop("entry_surfaces")
 
         payload = {
             "ok": True,
-            "command": "product-frontdesk",
+            "command": "product-status",
             "grant_run_id": manifest_payload["grant_run_id"],
             "workspace_id": manifest_payload["workspace_id"],
             "draft_id": manifest_payload["draft_id"],
             "lifecycle_stage": manifest_payload["lifecycle_stage"],
             "input_path": manifest_payload["input_path"],
-            "product_frontdesk": product_frontdesk,
+            "product_status": product_status,
         }
-        _validate_product_frontdesk_contract(
+        _validate_product_status_contract(
             payload,
             grant_run_id=manifest_payload["grant_run_id"],
             workspace_id=manifest_payload["workspace_id"],

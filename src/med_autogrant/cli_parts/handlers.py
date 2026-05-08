@@ -126,8 +126,8 @@ def handle_product_entry_manifest(args: argparse.Namespace) -> dict[str, Any]:
     )
 
 
-def handle_product_frontdesk(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_product_frontdesk(
+def handle_product_status(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_product_status(
         input_path=args.input,
         funding_call=args.funding_call,
     )

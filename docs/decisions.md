@@ -8,8 +8,8 @@
 
 ## 2026-04-24：公开主语收口为单一 app skill 与内部 command contract
 
-- 决策：公开文案与技术索引的第一主语收口为单一 `Med Auto Grant` app skill；`CLI` / `MedAutoGrantDomainEntry` 保持底层 agent entry，而 `product entry/frontdesk/direct-entry/user-loop` 统一降级为这个 app skill 下的内部 command contract / direct-product projection。
-- 理由：此前的公开叙事把 frontdesk、user-loop、runtime_control 和 hosted bundle 写得过于靠前，容易让读者把内部投影面误判成产品第一入口，也会削弱单一 app skill 的对外定位。
+- 决策：公开文案与技术索引的第一主语收口为单一 `Med Auto Grant` app skill；`CLI` / `MedAutoGrantDomainEntry` 保持底层 agent entry，而 `product entry/product status/direct-entry/user-loop` 统一降级为这个 app skill 下的内部 command contract / direct-product projection。
+- 理由：此前的公开叙事把 product status、user-loop、runtime_control 和 hosted bundle 写得过于靠前，容易让读者把内部投影面误判成产品第一入口，也会削弱单一 app skill 的对外定位。
 - 影响：README、docs 索引、项目/状态/架构/合同说明与 app skill 文档需要同步保持这一层级；`hosted-contract-bundle` 与 `runtime_control` 仅保留 integration/reference 角色，不再暗示 OPL 或 hosted caller 是默认主入口。
 
 ## 2026-04-23：默认公开能力面收口为稳定 capability surface
@@ -40,7 +40,7 @@
 
 - 决策：公开文案与 machine-readable 描述统一收口为 `Med Auto Grant` 是独立 medical grant domain agent，可被 `Codex` / `OPL` / 其他通用 agent 直接调用；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
 - 理由：此前公开叙述里仍混入了“位于 OPL 内部 workspace”或把 `gateway / harness` 作为第一身份的表达，容易让 caller 误判 MAG 的独立边界与 direct-entry 能力。
-- 影响：`CLI` / `MedAutoGrantDomainEntry` 继续固定为 agent entry；`product entry/frontdesk/direct-entry/user-loop` 继续固定为 lightweight direct entry / projection；`gateway / harness` 继续保留为内部架构层级术语，避免对外身份漂移。
+- 影响：`CLI` / `MedAutoGrantDomainEntry` 继续固定为 agent entry；`product entry/product status/direct-entry/user-loop` 继续固定为 lightweight direct entry / projection；`gateway / harness` 继续保留为内部架构层级术语，避免对外身份漂移。
 
 ## 2026-04-17：冻结托管运行时三层 owner contract
 
@@ -52,25 +52,25 @@
 
 - 决策：新增 `build-submission-ready-package`，把 `artifact_bundle -> final_package -> hosted_contract_bundle` 这条导出链再向前收口成一个正式的本地交付命令，并新增 `submission-ready-package.schema.json` 作为独立的 repo-tracked contract。
 - 理由：从用户视角看，“能不能把当前冻结且材料齐备的国自然标书一次性导出成可交付目录”已经不该再靠人工拼三四个命令；同时这一步又必须 fail-closed，不能对缺章节、缺证据或有 gaps 的 frozen workspace 勉强导出。
-- 影响：`build-submission-ready-package` 现在已经进入 CLI / domain entry / hosted bundle / product frontdoor command catalog；`current-program`、`mainline-status`、核心骨架、README、`contracts/README` 与测试都要同步进入 `P4.F` 口径，并明确“本地 package 导出”不等于“外部官网提交已完成”。
+- 影响：`build-submission-ready-package` 现在已经进入 CLI / domain entry / hosted bundle / product product entry command catalog；`current-program`、`mainline-status`、核心骨架、README、`contracts/README` 与测试都要同步进入 `P4.F` 口径，并明确“本地 package 导出”不等于“外部官网提交已完成”。
 
-## 2026-04-13：把 `product-entry-manifest` 与 `product-frontdesk` 升级为独立 schema-backed contract
+## 2026-04-13：把 `product-entry-manifest` 与 `product-status` 升级为独立 schema-backed contract
 
-- 决策：把 `product-entry-manifest` 与 `product-frontdesk` 从“复用 product-entry shell 的 controller surface”进一步收口成独立 schema-backed、generation-time fail-closed 的 direct frontdoor contract，并把它们显式登记进 `schema-index.json`。
-- 理由：当前 direct grant frontdoor 已经不只是几段人话描述，而是 future caller / `OPL` 需要直接消费的 machine-readable frontdoor contract；如果没有独立 schema，manifest/frontdesk 的 shape、companion 字段与 quickstart 结构仍可能在不知不觉中漂移。
-- 影响：`product_entry.py` 现在会在生成 `product-entry-manifest` / `product-frontdesk` 后直接做 fail-closed schema 校验；`schemas/v1/product-entry-manifest.schema.json` 与 `schemas/v1/product-frontdesk.schema.json` 成为新的 repo-tracked truth surface；`current-program`、`mainline-status`、核心骨架、README 与测试都要同步进入 `P4.E` 口径。
+- 决策：把 `product-entry-manifest` 与 `product-status` 从“复用 product-entry shell 的 controller surface”进一步收口成独立 schema-backed、generation-time fail-closed 的 direct product entry contract，并把它们显式登记进 `schema-index.json`。
+- 理由：当前 direct grant product entry 已经不只是几段人话描述，而是 future caller / `OPL` 需要直接消费的 machine-readable product entry contract；如果没有独立 schema，manifest/product status 的 shape、companion 字段与 quickstart 结构仍可能在不知不觉中漂移。
+- 影响：`product_entry.py` 现在会在生成 `product-entry-manifest` / `product-status` 后直接做 fail-closed schema 校验；`schemas/v1/product-entry-manifest.schema.json` 与 `schemas/v1/product-status.schema.json` 成为新的 repo-tracked truth surface；`current-program`、`mainline-status`、核心骨架、README 与测试都要同步进入 `P4.E` 口径。
 
 ## 2026-04-13：`family_orchestration` 的 route status 统一回到共享 author-side route truth
 
-- 决策：`grant-progress`、`product-entry-manifest` 与 `product-frontdesk` 上的 `family_orchestration` companion，不再使用本地过期的 landed-route 集合判断 human gate 状态，而是统一读取共享 author-side route contract。
-- 理由：`direction_screening -> frozen` 已经在 `P4.D` 收口为 landed route catalog；如果 frontdoor companion 还继续看旧集合，就会把诸如 `question_refinement` 这类已 landed route 错标成 `pending/requested`，制造第二真相。
-- 影响：当前 frontdoor / projection / user loop 看到的是同一份 route status；后续继续向 family action graph / human gate / manifest v2 深压时，必须保持这种“共享 route truth 单源读取”的做法。
+- 决策：`grant-progress`、`product-entry-manifest` 与 `product-status` 上的 `family_orchestration` companion，不再使用本地过期的 landed-route 集合判断 human gate 状态，而是统一读取共享 author-side route contract。
+- 理由：`direction_screening -> frozen` 已经在 `P4.D` 收口为 landed route catalog；如果 product entry companion 还继续看旧集合，就会把诸如 `question_refinement` 这类已 landed route 错标成 `pending/requested`，制造第二真相。
+- 影响：当前 product entry / projection / user loop 看到的是同一份 route status；后续继续向 family action graph / human gate / manifest v2 深压时，必须保持这种“共享 route truth 单源读取”的做法。
 
 ## 2026-04-13：full authoring executor 升级为全链 landed route catalog
 
 - 决策：把 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / frozen` 从历史上的 `pending / handoff-required` 一次性提升为 landed 的 service-safe command surface，并与 `critique / revision / artifact_bundle / final_package / hosted_contract_bundle` 收敛成完整 author-side route catalog。
 - 理由：人工整理的国自然写作流程已经能稳定映射到现有 stage 梯子，而实现层、CLI、domain entry、product loop 与 hosted bundle 也都已经具备同一套 route truth；继续把前半程写成 pending，只会制造第二真相。
-- 影响：`current-program`、`mainline-status`、`status/project/architecture/current-truth specs`、`grant-user-loop`、`domain_entry_contract`、hosted bundle route catalog 与 tests 全部改写为 full landed truth；`pending-handoff-requirements.schema.json` 退为历史兼容与追溯材料，并退出 schema index 与当前 contract surface。
+- 影响：`current-program`、`mainline-status`、`status/project/architecture/current-truth specs`、`grant-user-loop`、`domain_entry_contract`、hosted bundle route catalog 与 tests 全部改写为 full landed truth；`product-status.schema.json` 退为历史兼容与追溯材料，并退出 schema index 与当前 contract surface。
 
 ## 2026-04-13：critique route 升级为 Codex CLI landed route
 

@@ -18,7 +18,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
                 "recommended_resume_command": "medautogrant runtime-resume --journal journal.json --format json",
                 "recommended_progress_command": "medautogrant grant-progress --input workspace.json --format json",
             },
-            shell_commands={"product_frontdesk": "medautogrant product-frontdesk --input workspace.json --format json"},
+            shell_commands={"product_status": "medautogrant product-status --input workspace.json --format json"},
             skill_catalog_command="medautogrant skill-catalog --input workspace.json --format json",
         )
 
@@ -26,7 +26,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
         self.assertEqual(registration["domain_owner"], "med-autogrant")
         self.assertEqual(registration["runtime_owner"], "upstream-hermes-agent")
         self.assertEqual(registration["executor_owner"], "med-autogrant")
-        self.assertEqual(registration["domain_entry_surface"]["surface_kind"], "product_frontdesk")
+        self.assertEqual(registration["domain_entry_surface"]["surface_kind"], "product_status")
         self.assertEqual(
             registration["registration_surface"]["ref"],
             "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",

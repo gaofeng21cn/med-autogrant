@@ -53,6 +53,20 @@ def _candidate_shared_src_roots() -> tuple[Path, ...]:
     )
 
 
+def _explicit_shared_src_roots_from_sys_path() -> tuple[Path, ...]:
+    roots: list[Path] = []
+    for entry in sys.path:
+        if not entry:
+            continue
+        candidate = Path(entry).expanduser()
+        if not (candidate / _SHARED_PACKAGE_NAME / _SHARED_HELPER_MODULE_FILE).exists():
+            continue
+        resolved = candidate.resolve()
+        if resolved not in roots:
+            roots.append(resolved)
+    return tuple(roots)
+
+
 def _candidate_shared_helper_module_paths() -> tuple[Path, ...]:
     return tuple(
         candidate_root / _SHARED_PACKAGE_NAME / _SHARED_HELPER_MODULE_FILE
@@ -137,6 +151,11 @@ def _import_installed_shared_helper():
 def ensure_editable_dependency_paths() -> tuple[Path, ...]:
     repo_root = _repo_root()
     added_paths: list[Path] = []
+    for explicit_root in _explicit_shared_src_roots_from_sys_path():
+        _prepend_path(explicit_root)
+        _prefer_existing_package_path(explicit_root)
+        _evict_stale_package_modules(explicit_root)
+        return (explicit_root,)
     helper_module = _load_sibling_shared_helper(added_paths)
     if helper_module is None:
         for candidate_root in _candidate_repo_site_packages_roots():

@@ -1198,7 +1198,7 @@
           "const": "domain_app"
         },
         "entry_shell_key": {
-          "const": "product_frontdesk"
+          "const": "product_status"
         },
         "entry_command": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
@@ -1213,14 +1213,14 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "product_frontdesk",
+            "product_status",
             "grant_progress",
             "grant_cockpit",
             "grant_direct_entry",
             "grant_user_loop"
           ],
           "properties": {
-            "product_frontdesk": {
+            "product_status": {
               "$ref": "common.schema.json#/$defs/nonEmptyString"
             },
             "grant_progress": {
@@ -1432,14 +1432,14 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "product_frontdesk",
+        "product_status",
         "grant_progress",
         "grant_cockpit",
         "grant_direct_entry",
         "grant_user_loop"
       ],
       "properties": {
-        "product_frontdesk": {
+        "product_status": {
           "$ref": "#/$defs/productShellSurface"
         },
         "grant_progress": {
@@ -1681,7 +1681,7 @@
       "required": [
         "surface_kind",
         "summary",
-        "frontdesk_command",
+        "product_entry_command",
         "recommended_command",
         "operator_loop_command",
         "project_profile_label",
@@ -1701,7 +1701,7 @@
         "summary": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
-        "frontdesk_command": {
+        "product_entry_command": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "recommended_command": {
@@ -2114,7 +2114,7 @@
         "workspace_locator",
         "recommended_shell",
         "recommended_command",
-        "frontdesk_surface",
+        "product_entry_surface",
         "operator_loop_surface",
         "operator_loop_actions",
         "repo_mainline",
@@ -2168,7 +2168,7 @@
         "recommended_command": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
-        "frontdesk_surface": {
+        "product_entry_surface": {
           "$ref": "#/$defs/shellSurface"
         },
         "operator_loop_surface": {

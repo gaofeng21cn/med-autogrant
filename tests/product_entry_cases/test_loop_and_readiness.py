@@ -155,7 +155,7 @@ class ProductEntryLoopReadinessTest(unittest.TestCase):
             [
                 "workspace_document_valid",
                 "upstream_hermes_owner_line",
-                "direct_frontdoor_contract_landed",
+                "direct_product entry surface_contract_landed",
                 "submission_ready_export_gate",
             ],
         )

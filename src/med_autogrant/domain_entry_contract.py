@@ -12,7 +12,7 @@ from opl_harness_shared.family_entry_contracts import (
     build_domain_entry_command_catalog as _build_shared_domain_entry_command_catalog,
     build_family_direct_opl_shared_handoff as _build_shared_family_direct_opl_shared_handoff,
     build_family_domain_entry_contract as _build_shared_family_domain_entry_contract,
-    build_family_gateway_interaction_contract as _build_shared_family_gateway_interaction_contract,
+    build_family_user_interaction_contract as _build_shared_family_user_interaction_contract,
 )
 
 
@@ -38,7 +38,7 @@ DOMAIN_AGENT_LOCATOR_SCHEMA: dict[str, Any] = {
 DOMAIN_AGENT_CODEX_ENTRY_STRATEGY = "domain_agent_entry"
 DOMAIN_AGENT_ARTIFACT_CONVENTIONS = "grant_proposal_package"
 DOMAIN_AGENT_PROGRESS_CONVENTIONS = "grant_workloop_narration"
-DOMAIN_AGENT_ENTRY_COMMAND = "product-frontdesk"
+DOMAIN_AGENT_ENTRY_COMMAND = "product-status"
 DOMAIN_AGENT_MANIFEST_COMMAND = "product-entry-manifest"
 DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES: list[dict[str, Any]] = [
     {"command": "probe-upstream-hermes", "required_fields": [], "optional_fields": []},
@@ -179,11 +179,11 @@ def build_domain_entry_contract() -> dict[str, Any]:
     )
 
 
-def build_gateway_interaction_contract(
+def build_user_interaction_contract(
     *,
     extra_payload: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    return _build_shared_family_gateway_interaction_contract(
+    return _build_shared_family_user_interaction_contract(
         shared_downstream_entry=SERVICE_SAFE_ENTRY_ADAPTER,
         extra_payload=extra_payload,
     )

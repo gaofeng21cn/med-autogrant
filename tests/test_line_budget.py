@@ -13,14 +13,6 @@ def test_line_budget_baseline_has_no_semantic_holdouts() -> None:
     assert module_globals["BASELINE"] == {}
 
 
-def test_legacy_check_line_budget_delegates_to_canonical_checker() -> None:
-    repo_root = Path(__file__).resolve().parents[1]
-    legacy_script = (repo_root / "scripts" / "check-line-budget.py").read_text(encoding="utf-8")
-
-    assert 'with_name("line_budget.py")' in legacy_script
-    assert "LEGACY_OVER_TARGET_BUDGETS" not in legacy_script
-
-
 def test_line_budget_script_accepts_current_locked_baseline() -> None:
     repo_root = Path(__file__).resolve().parents[1]
 

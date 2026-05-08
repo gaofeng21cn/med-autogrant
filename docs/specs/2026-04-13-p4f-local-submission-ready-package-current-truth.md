@@ -87,13 +87,13 @@ Date: `2026-04-13`
 - `package submission-ready` 继续保持严格 fail-closed
 - MAG 的正文 authoring 完成语义继续由科学质量和申请人侧可审查性决定
 
-### 4. `product frontdoor` 已把这条导出动作暴露给用户
+### 4. `product product entry` 已把这条导出动作暴露给用户
 
-`product-entry-manifest`、`product-frontdesk`、`grant-cockpit` 与 `product_entry_quickstart` 现在都已经显式带出：
+`product-entry-manifest`、`product-status`、`grant-cockpit` 与 `product_entry_quickstart` 现在都已经显式带出：
 
 - `build_submission_ready_package`
 
-因此从用户侧看，当前 direct grant frontdoor 已能回答：
+因此从用户侧看，当前 direct grant product entry 已能回答：
 
 - 下一步如何继续主线
 - 如何查看 progress / cockpit
@@ -137,7 +137,7 @@ Date: `2026-04-13`
 - `submission-ready-package.schema.json` 已进入 schema index 与相关 bundle/export truth
 - incomplete frozen workspace 会 fail-closed 拒绝导出
 - complete frozen workspace 会稳定导出四份本地交付物
-- docs / current-program / mainline-status / product frontdoor 对 `P4.F` 口径保持同步
+- docs / current-program / mainline-status / product product entry 对 `P4.F` 口径保持同步
 
 ## Honest Boundary
 

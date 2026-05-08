@@ -193,8 +193,8 @@
       "status": "frozen"
     },
     {
-      "name": "product_frontdesk_surface",
-      "file": "product-frontdesk.schema.json",
+      "name": "product_status_surface",
+      "file": "product-status.schema.json",
       "status": "frozen"
     },
     {

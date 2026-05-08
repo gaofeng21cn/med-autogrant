@@ -180,7 +180,7 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "human_doc:2026_04_12_p4b_direct_grant_entry_composition_current_truth",
                 "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth",
                 "human_doc:2026_04_13_full_grant_authoring_executor_current_truth",
-                "human_doc:2026_04_13_p4e_schema_backed_frontdesk_and_manifest_current_truth",
+                "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth",
                 "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth",
             ],
         },
@@ -226,8 +226,8 @@ def _completed_records() -> list[dict[str, str]]:
         },
         {
             "record_id": "P4.E",
-            "title": "schema-backed frontdesk and manifest contract landing",
-            "summary": "product-entry-manifest / product-frontdesk 已 landed 为独立 schema-backed、generation-time fail-closed 的 direct frontdoor contract。",
+            "title": "schema-backed product status and manifest contract landing",
+            "summary": "product-entry-manifest / product-status 已 landed 为独立 schema-backed、generation-time fail-closed 的 direct product status contract。",
         },
         {
             "record_id": "P4.F",
@@ -245,7 +245,7 @@ def _completed_records() -> list[dict[str, str]]:
 def _remaining_gaps() -> list[str]:
     return [
         "mature direct grant Web UI / hosted runtime 仍未 landed。",
-        "repo 内仍未落地 OPL Gateway 与 family-level cross-domain frontdoor。",
+        "repo 内仍未落地 OPL Runtime Manager 与 family-level cross-domain product status。",
         "当前 product 面仍然是 CLI/controller shell，而不是完整 standalone frontend。",
         "图件生成、Word/PDF 定稿与最终版式审查仍未产品化。",
         "不会凭空补齐真实预实验、代表作、在研项目与图片素材。",
@@ -255,7 +255,7 @@ def _remaining_gaps() -> list[str]:
 
 def _explicitly_not_now() -> list[str]:
     return [
-        "把 OPL Gateway 写成本仓已 landed。",
+        "把 OPL Runtime Manager 写成本仓已 landed。",
         "提前扩 family、提前做 Human-in-the-loop sibling。",
         "把 repo-local helper 重新写回 runtime owner。",
         "把本地 submission-ready package 写成已完成外部官网提交。",
@@ -266,7 +266,7 @@ def _explicitly_not_now() -> list[str]:
 
 def _next_focus() -> list[str]:
     return [
-        "继续把 `product-entry-manifest` / `product-frontdesk` 当作当前 direct grant frontdoor contract，并让 `grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop` 继续对齐同一份 frontdoor truth。",
+        "继续把 `product-entry-manifest` / `product-status` 当作当前 direct grant product entry surface contract，并让 `grant-progress`、`grant-cockpit`、`grant-direct-entry` 与 `grant-user-loop` 继续对齐同一份 product entry surface truth。",
         "继续把 `family_orchestration` companion 从 action graph / human gate preview 深压到 family product-entry manifest v2、event envelope 与 checkpoint lineage contract，并保持 route status 直接读取共享 author-side route truth。",
         "把形式审查/客观补件统一收口到 TODO 与显式唤醒链路，并仅在直接破坏科学论证时升级为 blocker。",
         "对已锁定 funder/family 的任务线保持 continuity，不引入 opportunistic 跨 funder 切换叙事。",

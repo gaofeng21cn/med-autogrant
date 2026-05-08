@@ -41,7 +41,6 @@ EXPECTED_SCHEMAS = {
     "grant-autonomy-controller-input.schema.json",
     "grant-autonomy-controller-report.schema.json",
     "service-safe-domain-surface.schema.json",
-    "pending-handoff-requirements.schema.json",
     "executor-routing-contract.schema.json",
     "product-entry.schema.json",
     "grant-progress.schema.json",
@@ -49,7 +48,7 @@ EXPECTED_SCHEMAS = {
     "grant-direct-entry.schema.json",
     "grant-user-loop.schema.json",
     "product-entry-manifest.schema.json",
-    "product-frontdesk.schema.json",
+    "product-status.schema.json",
     "hosted-contract-bundle.schema.json",
     "submission-ready-package.schema.json",
     "schema-index.json",
@@ -160,7 +159,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["grant_direct_entry_surface"], "grant-direct-entry.schema.json")
         self.assertEqual(names["grant_user_loop_surface"], "grant-user-loop.schema.json")
         self.assertEqual(names["product_entry_manifest_surface"], "product-entry-manifest.schema.json")
-        self.assertEqual(names["product_frontdesk_surface"], "product-frontdesk.schema.json")
+        self.assertEqual(names["product_status_surface"], "product-status.schema.json")
         self.assertEqual(names["hosted_contract_bundle"], "hosted-contract-bundle.schema.json")
         self.assertEqual(names["submission_ready_package"], "submission-ready-package.schema.json")
 
@@ -304,7 +303,7 @@ class SchemaRegistryTest(unittest.TestCase):
                 self.assertIsInstance(required, list)
                 self.assertIn("family_orchestration", required)
 
-    def test_frontdoor_surface_schemas_require_quickstart_companion(self) -> None:
+    def test_product_entry_surface_schemas_require_quickstart_companion(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         manifest_required = manifest_schema["$defs"]["productEntryManifest"]["required"]
         self.assertIn("managed_runtime_contract", manifest_required)
@@ -325,17 +324,17 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("autonomy_observability", manifest_required)
         self.assertIn("product_entry_quickstart", manifest_required)
 
-        frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))
-        frontdesk_required = frontdesk_schema["$defs"]["productFrontdesk"]["required"]
-        self.assertIn("family_orchestration", frontdesk_required)
-        self.assertIn("product_entry_start", frontdesk_required)
-        self.assertIn("product_entry_overview", frontdesk_required)
-        self.assertIn("product_entry_preflight", frontdesk_required)
-        self.assertIn("product_entry_readiness", frontdesk_required)
-        self.assertIn("grant_authoring_readiness", frontdesk_required)
-        self.assertIn("product_entry_quickstart", frontdesk_required)
+        status_schema = json.loads((SCHEMA_ROOT / "product-status.schema.json").read_text(encoding="utf-8"))
+        status_required = status_schema["$defs"]["productStatus"]["required"]
+        self.assertIn("family_orchestration", status_required)
+        self.assertIn("product_entry_start", status_required)
+        self.assertIn("product_entry_overview", status_required)
+        self.assertIn("product_entry_preflight", status_required)
+        self.assertIn("product_entry_readiness", status_required)
+        self.assertIn("grant_authoring_readiness", status_required)
+        self.assertIn("product_entry_quickstart", status_required)
 
-    def test_frontdoor_surface_schemas_pin_managed_runtime_contract_shape(self) -> None:
+    def test_product_entry_surface_schemas_pin_managed_runtime_contract_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         managed_runtime = manifest_schema["$defs"]["managedRuntimeContractSurface"]
         self.assertEqual(
@@ -359,7 +358,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(managed_runtime["properties"]["domain_owner"]["const"], "med-autogrant")
         self.assertEqual(managed_runtime["properties"]["executor_owner"]["const"], "med-autogrant")
 
-    def test_frontdoor_surface_schemas_pin_runtime_control_shape(self) -> None:
+    def test_product_entry_surface_schemas_pin_runtime_control_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         runtime_control = manifest_schema["$defs"]["runtimeControlSurface"]
         self.assertEqual(runtime_control["properties"]["surface_kind"]["const"], "runtime_control")
@@ -410,7 +409,7 @@ class SchemaRegistryTest(unittest.TestCase):
             "#/$defs/runtimeControlDirectEntry",
         )
 
-    def test_frontdoor_surface_schemas_pin_skill_runtime_continuity_shape(self) -> None:
+    def test_product_entry_surface_schemas_pin_skill_runtime_continuity_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         skill_projection = manifest_schema["$defs"]["skillDomainProjection"]
         self.assertEqual(
@@ -429,7 +428,7 @@ class SchemaRegistryTest(unittest.TestCase):
             ],
         )
         self.assertEqual(skill_projection["properties"]["skill_semantics"]["const"], "domain_app")
-        self.assertEqual(skill_projection["properties"]["entry_shell_key"]["const"], "product_frontdesk")
+        self.assertEqual(skill_projection["properties"]["entry_shell_key"]["const"], "product_status")
         self.assertEqual(
             skill_projection["properties"]["runtime_continuity"]["$ref"],
             "#/$defs/skillRuntimeContinuitySurface",
@@ -481,7 +480,7 @@ class SchemaRegistryTest(unittest.TestCase):
             ],
         )
 
-    def test_frontdoor_surface_schemas_pin_start_companion_shape(self) -> None:
+    def test_product_entry_surface_schemas_pin_start_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         start = manifest_schema["$defs"]["productEntryStart"]
         self.assertEqual(start["properties"]["surface_kind"]["const"], "product_entry_start")
@@ -505,13 +504,13 @@ class SchemaRegistryTest(unittest.TestCase):
             "#/$defs/familyOrchestrationResumeContract",
         )
 
-        frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))
+        status_schema = json.loads((SCHEMA_ROOT / "product-status.schema.json").read_text(encoding="utf-8"))
         self.assertEqual(
-            frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["product_entry_start"]["$ref"],
+            status_schema["$defs"]["productStatus"]["properties"]["product_entry_start"]["$ref"],
             "product-entry-manifest.schema.json#/$defs/productEntryStart",
         )
 
-    def test_frontdoor_surface_schemas_pin_overview_companion_shape(self) -> None:
+    def test_product_entry_surface_schemas_pin_overview_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         overview = manifest_schema["$defs"]["productEntryOverview"]
         self.assertEqual(overview["properties"]["surface_kind"]["const"], "product_entry_overview")
@@ -520,7 +519,7 @@ class SchemaRegistryTest(unittest.TestCase):
             [
                 "surface_kind",
                 "summary",
-                "frontdesk_command",
+                "product_entry_command",
                 "recommended_command",
                 "operator_loop_command",
                 "project_profile_label",
@@ -543,9 +542,9 @@ class SchemaRegistryTest(unittest.TestCase):
             "#/$defs/productEntryOverviewResumeSurface",
         )
 
-        frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))
+        status_schema = json.loads((SCHEMA_ROOT / "product-status.schema.json").read_text(encoding="utf-8"))
         self.assertEqual(
-            frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["product_entry_overview"]["$ref"],
+            status_schema["$defs"]["productStatus"]["properties"]["product_entry_overview"]["$ref"],
             "product-entry-manifest.schema.json#/$defs/productEntryOverview",
         )
 
@@ -619,7 +618,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("evidence_obligations", closure_package_required)
         self.assertIn("acceptance_signals", closure_package_required)
 
-    def test_frontdoor_surface_schemas_pin_preflight_companion_shape(self) -> None:
+    def test_product_entry_surface_schemas_pin_preflight_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         preflight = manifest_schema["$defs"]["productEntryPreflight"]
         self.assertEqual(preflight["properties"]["surface_kind"]["const"], "product_entry_preflight")
@@ -640,13 +639,13 @@ class SchemaRegistryTest(unittest.TestCase):
             "#/$defs/productEntryPreflightCheck",
         )
 
-        frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))
+        status_schema = json.loads((SCHEMA_ROOT / "product-status.schema.json").read_text(encoding="utf-8"))
         self.assertEqual(
-            frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["product_entry_preflight"]["$ref"],
+            status_schema["$defs"]["productStatus"]["properties"]["product_entry_preflight"]["$ref"],
             "product-entry-manifest.schema.json#/$defs/productEntryPreflight",
         )
 
-    def test_frontdoor_surface_schemas_pin_authoring_readiness_companion_shape(self) -> None:
+    def test_product_entry_surface_schemas_pin_authoring_readiness_companion_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         product_readiness = manifest_schema["$defs"]["productEntryReadiness"]
         self.assertEqual(product_readiness["properties"]["surface_kind"]["const"], "product_entry_readiness")
@@ -704,13 +703,13 @@ class SchemaRegistryTest(unittest.TestCase):
             ["landed_route", "partially_supported", "not_landed"],
         )
 
-        frontdesk_schema = json.loads((SCHEMA_ROOT / "product-frontdesk.schema.json").read_text(encoding="utf-8"))
+        status_schema = json.loads((SCHEMA_ROOT / "product-status.schema.json").read_text(encoding="utf-8"))
         self.assertEqual(
-            frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["product_entry_readiness"]["$ref"],
+            status_schema["$defs"]["productStatus"]["properties"]["product_entry_readiness"]["$ref"],
             "product-entry-manifest.schema.json#/$defs/productEntryReadiness",
         )
         self.assertEqual(
-            frontdesk_schema["$defs"]["productFrontdesk"]["properties"]["grant_authoring_readiness"]["$ref"],
+            status_schema["$defs"]["productStatus"]["properties"]["grant_authoring_readiness"]["$ref"],
             "product-entry-manifest.schema.json#/$defs/grantAuthoringReadiness",
         )
 

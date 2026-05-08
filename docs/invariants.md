@@ -3,7 +3,7 @@
 ## Runtime 与 formal-entry
 
 - `Med Auto Grant` 对外第一身份固定为独立 medical grant domain agent，不写成 `OPL` 内部 workspace 模块。
-- `CLI` / `MedAutoGrantDomainEntry` 固定为 agent entry；`product entry/frontdesk/direct-entry/user-loop` 固定为单一 app skill 下的内部 command contract / direct-product projection，不得被提升成公开第一主语。
+- `CLI` / `MedAutoGrantDomainEntry` 固定为 agent entry；`product entry/product status/direct-entry/user-loop` 固定为单一 app skill 下的内部 command contract / direct-product projection，不得被提升成公开第一主语。
 - `gateway / harness` 继续保留为内部架构分层术语，不作为对外第一身份。
 - formal-entry matrix 当前固定为：默认正式入口 `CLI`、支持协议层 `MCP`（future layer）、内部控制面 `controller`。
 - 不得把 `supported_protocol_layer=MCP` 解释成“当前 public runtime 已正式支持 MCP”。

@@ -257,7 +257,7 @@ def _expected_pending_route(route_id: str, *, source_stage: str) -> dict[str, ob
         "execution_surface": None,
         "handoff_contract_kind": "handoff-required",
         "handoff_requirements": {
-            "contract_kind": f"{route_id}-pending-handoff",
+            "contract_kind": f"{route_id}-product-status-required",
             "workspace_surface_kind": "nsfc_workspace",
             "required_domain_surfaces": required_domain_surfaces,
             "required_identity_fields": required_identity_fields,

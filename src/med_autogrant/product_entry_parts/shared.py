@@ -9,7 +9,7 @@ _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 from med_autogrant.domain_entry_contract import (
     build_domain_entry_contract,
-    build_gateway_interaction_contract,
+    build_user_interaction_contract,
     build_shared_handoff,
 )
 from med_autogrant.mainline_status import read_mainline_status
@@ -30,7 +30,7 @@ from med_autogrant.product_entry_parts.primitives import (
     PRODUCT_ENTRY_KIND,
     PRODUCT_ENTRY_MANIFEST_KIND,
     PRODUCT_ENTRY_VERSION,
-    PRODUCT_FRONTDESK_KIND,
+    PRODUCT_STATUS_KIND,
     REVIEW_CONTEXT_STAGES,
     SUPPORTED_ENTRY_MODES,
     TARGET_DOMAIN_ID,
@@ -63,7 +63,7 @@ from med_autogrant.product_entry_parts.runtime_contracts import (
     GRANT_USER_LOOP_SCHEMA_FILE,
     PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE,
     PRODUCT_ENTRY_SCHEMA_FILE,
-    PRODUCT_FRONTDESK_SCHEMA_FILE,
+    PRODUCT_STATUS_SCHEMA_FILE,
     _build_author_side_route_contract,
     _build_executor_routing_contract,
     _build_operator_contract,
@@ -88,8 +88,8 @@ from opl_harness_shared.family_orchestration import (
 )
 from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
 from opl_harness_shared.product_entry_companions import (
-    build_family_product_frontdesk_from_manifest as _build_shared_family_product_frontdesk_from_manifest,
     build_family_product_entry_manifest as _build_shared_family_product_entry_manifest,
+    build_family_product_entry_surface_from_manifest as _build_shared_family_product_entry_surface_from_manifest,
     build_product_entry_start as _build_shared_product_entry_start,
     build_operator_loop_action_catalog as _build_shared_operator_loop_action_catalog,
     build_product_entry_overview as _build_shared_product_entry_overview,
@@ -99,8 +99,8 @@ from opl_harness_shared.product_entry_companions import (
     build_product_entry_shell_catalog as _build_shared_product_entry_shell_catalog,
     build_product_entry_shell_linked_surface as _build_shared_product_entry_shell_linked_surface,
     collect_family_human_gate_ids as _collect_family_human_gate_ids,
-    validate_family_product_frontdesk as _validate_shared_family_product_frontdesk,
     validate_family_product_entry_manifest as _validate_shared_family_product_entry_manifest,
+    validate_family_product_entry_surface as _validate_shared_family_product_entry_surface,
 )
 from opl_harness_shared.product_entry_program_companions import (
     build_detailed_readiness as _build_shared_detailed_readiness,

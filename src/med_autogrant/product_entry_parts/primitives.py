@@ -10,7 +10,7 @@ from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateErro
 PRODUCT_ENTRY_VERSION = 1
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
 PRODUCT_ENTRY_MANIFEST_KIND = "med_auto_grant_product_entry_manifest"
-PRODUCT_FRONTDESK_KIND = "product_frontdesk"
+PRODUCT_STATUS_KIND = "product_status"
 TARGET_DOMAIN_ID = "med-autogrant"
 SUPPORTED_ENTRY_MODES = ("direct", "opl-handoff")
 GRANT_PROGRESS_PROJECTION_VERSION = 1

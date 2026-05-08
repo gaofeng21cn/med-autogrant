@@ -66,20 +66,20 @@ def test_workspace_validate_accepts_canonical_critique_workspace() -> None:
     assert payload["lifecycle_stage"] == "critique"
 
 
-def test_product_frontdesk_dispatches_current_frontdoor_contract() -> None:
+def test_product_status_dispatches_current_product_entry_surface_contract() -> None:
     payload = _run_json_cli(
         "product",
-        "frontdesk",
+        "status",
         "--input",
         str(CRITIQUE_EXAMPLE_PATH),
         "--format",
         "json",
     )
 
-    assert payload["command"] == "product-frontdesk"
-    frontdesk = payload["product_frontdesk"]
-    assert frontdesk["surface_kind"] == "product_frontdesk"
-    assert frontdesk["operator_loop_surface"]["shell_key"] == "grant_user_loop"
+    assert payload["command"] == "product-status"
+    status = payload["product_status"]
+    assert status["surface_kind"] == "product_status"
+    assert status["operator_loop_surface"]["shell_key"] == "grant_user_loop"
 
 
 def test_product_direct_entry_projects_workspace_cockpit_and_entry_envelopes() -> None:
@@ -115,7 +115,7 @@ def test_product_skill_catalog_exposes_single_mag_skill() -> None:
     assert payload["command"] == "skill-catalog"
     skill = payload["skill_catalog"]["skills"][0]
     assert skill["skill_id"] == "med-autogrant"
-    assert skill["domain_projection"]["recommended_shell"] == "product_frontdesk"
+    assert skill["domain_projection"]["recommended_shell"] == "product_status"
 
 
 def test_mainline_status_projects_current_program_pointer() -> None:

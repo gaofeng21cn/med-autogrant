@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.product_entry_parts.primitives import PRODUCT_FRONTDESK_KIND, GRANT_USER_LOOP_KIND
+from med_autogrant.product_entry_parts.primitives import PRODUCT_STATUS_KIND, GRANT_USER_LOOP_KIND
 
 from opl_harness_shared.product_entry_program_companions import (
     build_detailed_readiness as _build_shared_detailed_readiness,
@@ -15,7 +15,7 @@ from opl_harness_shared.product_entry_companions import (
 
 def build_manifest_readiness_surfaces(
     *,
-    product_frontdesk_command: str,
+    product_status_command: str,
     grant_user_loop_command: str,
 ) -> dict[str, dict[str, Any]]:
     grant_authoring_readiness = _build_shared_detailed_readiness(
@@ -30,8 +30,8 @@ def build_manifest_readiness_surfaces(
             "对满足冻结与材料齐备条件的 workspace，已经能一键导出本地 submission-ready 交付包，"
             "但还不是无需人工材料、无需判断、可直接官网提交的全自动国自然标书产品。"
         ),
-        recommended_start_surface=PRODUCT_FRONTDESK_KIND,
-        recommended_start_command=product_frontdesk_command,
+        recommended_start_surface=PRODUCT_STATUS_KIND,
+        recommended_start_command=product_status_command,
         recommended_loop_surface=GRANT_USER_LOOP_KIND,
         recommended_loop_command=grant_user_loop_command,
         workflow_coverage=[

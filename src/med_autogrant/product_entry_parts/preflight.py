@@ -47,7 +47,7 @@ class ProductEntryPreflightMixin:
             "validate-workspace", "--input", str(resolved_input_path), "--format", "json"
         )
         start_command = public_cli_command(
-            "product-frontdesk", "--input", str(resolved_input_path), "--format", "json"
+            "product-status", "--input", str(resolved_input_path), "--format", "json"
         )
         mainline_command = public_cli_command("mainline-status", "--format", "json")
         checks = [
@@ -76,11 +76,11 @@ class ProductEntryPreflightMixin:
                 "command": mainline_command,
             },
             {
-                "check_id": "direct_frontdoor_contract_landed",
-                "title": "Direct Frontdoor Contract Landed",
+                "check_id": "direct_product entry surface_contract_landed",
+                "title": "Direct Product Entry Surface Contract Landed",
                 "status": "pass",
                 "blocking": True,
-                "summary": "direct frontdoor contract 已 landed，可由 product-frontdesk / manifest 直接消费。",
+                "summary": "direct product entry surface contract 已 landed，可由 product-status / manifest 直接消费。",
                 "command": start_command,
             },
             {
@@ -91,7 +91,7 @@ class ProductEntryPreflightMixin:
                 "summary": (
                     "当前 stage 已接近或进入 submission-ready export gate。"
                     if document.get("lifecycle_stage") == "frozen"
-                    else "当前 stage 还未到 submission-ready export gate；这不阻止进入 frontdoor，但后续仍需继续主线推进。"
+                    else "当前 stage 还未到 submission-ready export gate；这不阻止进入 product entry surface，但后续仍需继续主线推进。"
                 ),
                 "command": public_cli_command(
                     "build-submission-ready-package",
@@ -111,9 +111,9 @@ class ProductEntryPreflightMixin:
         ]
         ready_to_try_now = not blocking_check_ids
         summary = (
-            "当前 direct grant frontdoor 的前置检查已通过，可以先复核 workspace 与主线，再进入 product frontdesk。"
+            "当前 direct grant product entry surface 的前置检查已通过，可以先复核 workspace 与主线，再进入 product status。"
             if ready_to_try_now
-            else "当前 direct grant frontdoor 仍有 blocking preflight check；请先修复 workspace 或 runtime owner line 再进入 product frontdesk。"
+            else "当前 direct grant product entry surface 仍有 blocking preflight check；请先修复 workspace 或 runtime owner line 再进入 product status。"
         )
         product_entry_preflight = _build_shared_product_entry_preflight(
             summary=summary,
