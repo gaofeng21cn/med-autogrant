@@ -7,6 +7,7 @@ dist/
 build/
 tmp/
 coverage/
+artifacts/opl-quality-details/
 *.log
 .env
 *.egg-info/
