@@ -44,6 +44,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
         )
         self.assertIn(
+            "skill_catalog.domain_projection.opl_runtime_manager_registration.family_lifecycle_adapter",
+            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+        )
+        self.assertIn(
             "skill_catalog.domain_projection.opl_runtime_manager_registration.native_helper_consumption.proof_surface",
             contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
         )
@@ -181,6 +185,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("runtime_control", contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"])
         self.assertIn(
             "opl_runtime_manager_registration",
+            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+        )
+        self.assertIn(
+            "family_lifecycle_adapter",
             contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
         )
         self.assertIn(

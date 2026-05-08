@@ -75,3 +75,30 @@ def test_mag_operator_and_incident_projection_require_source_refs_and_mag_closur
         "visual render/export proof gate",
     ):
         assert non_goal in contract["non_goals"]
+
+
+def test_mag_adoption_contract_declares_lifecycle_adapter_mapping() -> None:
+    contract = _contract()
+    adapter = contract["lifecycle_adapter"]
+    operator = contract["operator_projection"]
+
+    assert adapter["surface_kind"] == "opl_family_lifecycle_adapter_contract"
+    assert adapter["adapter_id"] == "mag.opl_family.lifecycle_adapter.v1"
+    assert adapter["maps_existing_surfaces_only"] is True
+    assert adapter["sqlite_migration_required"] is False
+    assert adapter["persistence_projection"]["maps_existing_surfaces"] == [
+        "session_continuity",
+        "runtime_control.restore_point",
+        "artifact_inventory",
+        "runtime_continuity",
+    ]
+    assert adapter["persistence_projection"]["write_policy"] == "opl_index_only_no_domain_truth_writes"
+    assert adapter["lifecycle_projection"]["maps_to_opl_contract"] == "opl_family_runtime_attempt_contract.v1"
+    for field in ("attempt_state", "workspace_boundary", "owner_repo", "last_observed_projection"):
+        assert field in adapter["lifecycle_projection"]["required_projection_fields"]
+    assert adapter["owner_route_discovery"]["route_truth_owner"] == "med-autogrant"
+    assert adapter["owner_route_discovery"]["discovery_surface_ref"] == (
+        "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration"
+    )
+    assert adapter["adoption_projection"]["maps_to_opl_contract"] == "opl_family_product_operator_projection.v1"
+    assert adapter["adoption_projection"]["required_operator_fields"] == operator["required_fields"]

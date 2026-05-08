@@ -30,6 +30,17 @@ MAG 通过 `controller_report`、`runtime_control.semantic_closure`、`workspace
 
 MAG 通过 `product frontdesk`、`product user-loop`、`workspace progress`、`workspace cockpit` 与 `product direct-entry` 映射 `opl_family_product_operator_projection.v1`。这些投影必须保留 source refs、freshness、owner split、next surface ref 和 human gate reason。
 
+## Lifecycle Adapter
+
+MAG 的 `opl_runtime_manager_registration` 现在携带 `family_lifecycle_adapter`。这层只把已有 `runtime_control`、`session_continuity`、`grant-progress/user-loop` 与 `artifact_inventory` 映射为 OPL family persistence、lifecycle、owner-route discovery 和 adoption projection：
+
+- persistence：只给 OPL native/index lifecycle 建索引输入，write policy 固定为 `opl_index_only_no_domain_truth_writes`。
+- lifecycle：映射 `opl_family_runtime_attempt_contract.v1` 的 attempt state、workspace boundary、owner repo、failure/reconciliation 和 last observed projection 字段。
+- owner-route discovery：从 skill catalog / runtime manager registration 发现 frontdesk、operator loop、progress 和 resume route；route truth owner 仍是 MAG。
+- adoption：映射 `opl_family_product_operator_projection.v1` 的 source refs、freshness、owner split、next surface ref 与 human gate reason。
+
+这层不重塑 runtime，不引入 SQLite 深迁移，也不把 OPL 写成 grant truth、fundability 或 submission-ready gate owner。
+
 ## Boundaries
 
 - `OPL` 只消费 MAG projection，不持有 grant truth。
@@ -37,4 +48,3 @@ MAG 通过 `product frontdesk`、`product user-loop`、`workspace progress`、`w
 - MAG 不引入 MAS 的 medical publication gate。
 - MAG 不引入 RCA 的 visual render/export proof gate。
 - `Hermes-Agent` 只保留显式 hosted/proof lane，不成为 OPL 或 MAG 的默认 owner。
-
