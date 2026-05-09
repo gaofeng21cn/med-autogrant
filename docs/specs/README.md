@@ -16,6 +16,8 @@ The highest-priority active current-truth specs are the small set still referenc
 - [Authoring completion semantics current truth](./2026-04-23-authoring-completion-semantics-current-truth.md)
 - [Quality governance, autonomy controller, and family grammar current truth](./2026-04-22-quality-autonomy-family-grammar-current-truth.md)
 
+The dense specs portfolio is classified in [Specs Lifecycle Map](./specs_lifecycle_map.md). Use that map to distinguish active records, support current-truth records, and historical provenance before editing or moving any dated spec.
+
 `contracts/runtime-program/current-program.json` remains the canonical pointer for the full repo-tracked truth-surface list. Some listed route, executor-vocabulary, hosted-caller, product-entry, and Hermes reset specs still live here because current-program or historical audit paths point to them directly.
 
 Older dated `P*`, `R*`, `post-R5A`, activation-package, migration-board, and superseded tranche current-truth files are historical technical records. They remain here as repo-tracked provenance to avoid rewriting old audit paths, but their reading entry is now:

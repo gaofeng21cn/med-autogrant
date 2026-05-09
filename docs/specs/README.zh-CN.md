@@ -16,6 +16,8 @@
 - [Authoring completion semantics current truth](./2026-04-23-authoring-completion-semantics-current-truth.md)
 - [Quality governance, autonomy controller, and family grammar current truth](./2026-04-22-quality-autonomy-family-grammar-current-truth.md)
 
+密集 specs 组合的生命周期分类见 [Specs Lifecycle Map](./specs_lifecycle_map.md)。编辑或移动任何 dated spec 前，先用这份 map 区分 active record、support current-truth record 与 historical provenance。
+
 `contracts/runtime-program/current-program.json` 仍是完整 repo-tracked truth-surface 清单的 canonical pointer。部分 route、executor-vocabulary、hosted-caller、product-entry 与 Hermes reset specs 仍留在本目录，是因为 current-program 或历史审计路径仍直接引用这些原路径。
 
 更早的 dated `P*`、`R*`、`post-R5A`、activation-package、migration-board 与已被 supersede 的 tranche current-truth 文件属于历史技术记录。它们继续留在本目录作为 repo-tracked provenance，避免大范围重写旧审计路径；统一阅读入口改为：

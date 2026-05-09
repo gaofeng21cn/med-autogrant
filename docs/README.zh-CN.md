@@ -12,7 +12,7 @@
 | --- | --- | --- |
 | 潜在用户与领域专家 | [仓库首页](../README.zh-CN.md)、[领域定位](./domain-positioning.zh-CN.md)、[MVP 范围](./mvp-scope.zh-CN.md) | 先理解这条基金主线是干什么的，再决定是否进入技术细节 |
 | 技术规划者、架构读者、方向同步读者 | [项目概览](./project.md)、[当前状态](./status.md)、[架构](./architecture.md)、[不变量](./invariants.md)、[决策记录](./decisions.md)、[合同说明](../contracts/README.md) | 快速抓住当前技术形态、边界和主线方向 |
-| 开发者与维护者 | [Specs 索引](./specs/README.zh-CN.md)、[References 目录](./references/)、[活跃 plans](./plans/README.zh-CN.md)、[历史归档](./history/README.zh-CN.md) | 查看技术记录、内部参考、未来工作和归档材料 |
+| 开发者与维护者 | [Specs 索引](./specs/README.zh-CN.md)、[Specs lifecycle map](./specs/specs_lifecycle_map.md)、[References 目录](./references/)、[活跃 plans](./plans/README.zh-CN.md)、[历史归档](./history/README.zh-CN.md) | 查看技术记录、内部参考、未来工作和归档材料 |
 
 ## 当前技术图景
 
@@ -45,6 +45,7 @@
 - [决策记录](./decisions.md)
 - [合同说明](../contracts/README.md)
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
+- [Specs lifecycle map](./specs/specs_lifecycle_map.md)
 
 机器本地 runtime state 继续统一放在 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 
@@ -65,6 +66,7 @@ root public-doc allowlist 保持稀疏：
 
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
 - [Specs 索引](./specs/README.zh-CN.md)
+- [Specs lifecycle map](./specs/specs_lifecycle_map.md)
 - [AI-first 质量边界 current truth](./specs/2026-04-27-ai-first-quality-boundary-current-truth.md)
 - [Authoring completion semantics current truth](./specs/2026-04-23-authoring-completion-semantics-current-truth.md)
 - [Quality governance, autonomy controller, and family grammar current truth](./specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md)
@@ -72,7 +74,7 @@ root public-doc allowlist 保持稀疏：
 
 当前 grant product-entry shell 继续作为 app skill 背后的 domain/API catalog builder，也是稳定可调用面的一部分；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 作为集成/参考面暴露给 hosted caller / 外部 caller 使用。
 质量治理与自治 controller schema 已进入 [`schema-index.json`](../schemas/v1/schema-index.json) 和 current-program truth surface。
-完整 repo-tracked truth surface 清单以 [`current-program.json`](../contracts/runtime-program/current-program.json) 的 `repo_tracked_truth_surfaces` 为准；contract/schema/source surface 保持 repo path，叙述文档使用语义化 `human_doc:*` 标识。Specs 索引负责区分当前活跃边界记录和历史 provenance 记录。
+完整 repo-tracked truth surface 清单以 [`current-program.json`](../contracts/runtime-program/current-program.json) 的 `repo_tracked_truth_surfaces` 为准；contract/schema/source surface 保持 repo path，叙述文档使用语义化 `human_doc:*` 标识。Specs 索引与 specs lifecycle map 共同区分 active boundary records、support records 和 historical provenance records。
 
 ## 追溯记录
 

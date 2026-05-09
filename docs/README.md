@@ -12,7 +12,7 @@ This guide is for readers who need the technical records, trace records, referen
 | --- | --- | --- |
 | Potential users and domain experts | [Repository home](../README.md), [Domain Positioning](./domain-positioning.md), [MVP Scope](./mvp-scope.md) | Understand what the grant line is for before reading technical internals |
 | Technical readers and planners | [Project](./project.md), [Status](./status.md), [Architecture](./architecture.md), [Invariants](./invariants.md), [Decisions](./decisions.md), [Contracts Overview](../contracts/README.md) | Get the current technical shape, boundaries, and mainline direction quickly |
-| Developers and maintainers | [Specs guide](./specs/README.md), [References directory](./references/), [Active plans](./plans/README.md), [History archive](./history/README.md) | Inspect technical records, reference notes, future work, and archival material |
+| Developers and maintainers | [Specs guide](./specs/README.md), [Specs lifecycle map](./specs/specs_lifecycle_map.md), [References directory](./references/), [Active plans](./plans/README.md), [History archive](./history/README.md) | Inspect technical records, reference notes, future work, and archival material |
 
 ## Current Technical Picture
 
@@ -46,6 +46,7 @@ Read these first before changing repo state:
 - [Decisions](./decisions.md)
 - [Contracts Overview](../contracts/README.md)
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
+- [Specs lifecycle map](./specs/specs_lifecycle_map.md)
 
 Machine-local runtime state stays under `$CODEX_HOME/projects/med-autogrant/runtime-state/`.
 
@@ -66,6 +67,7 @@ The root public-doc allowlist is intentionally sparse:
 
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
 - [Specs guide](./specs/README.md)
+- [Specs lifecycle map](./specs/specs_lifecycle_map.md)
 - [AI-first quality boundary current truth](./specs/2026-04-27-ai-first-quality-boundary-current-truth.md)
 - [Authoring completion semantics current truth](./specs/2026-04-23-authoring-completion-semantics-current-truth.md)
 - [Quality governance, autonomy controller, and family grammar current truth](./specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md)
@@ -73,7 +75,7 @@ The root public-doc allowlist is intentionally sparse:
 
 The current grant product-entry shell remains available as the internal domain/API catalog builder behind the app skill and as part of the stable callable surface. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible as integration/reference surfaces for hosted caller / external caller consumption.
 The quality and autonomy schemas are tracked in [`schema-index.json`](../schemas/v1/schema-index.json) and in the current-program truth surface.
-For the complete repo-tracked truth-surface list, read `repo_tracked_truth_surfaces` in [`current-program.json`](../contracts/runtime-program/current-program.json); contract/schema/source surfaces stay as repo paths, and prose docs are referenced by semantic `human_doc:*` ids. The specs guide separates currently active boundary records from historical provenance records.
+For the complete repo-tracked truth-surface list, read `repo_tracked_truth_surfaces` in [`current-program.json`](../contracts/runtime-program/current-program.json); contract/schema/source surfaces stay as repo paths, and prose docs are referenced by semantic `human_doc:*` ids. The specs guide and specs lifecycle map separate active boundary records, support records, and historical provenance records.
 
 ## Trace Records
 

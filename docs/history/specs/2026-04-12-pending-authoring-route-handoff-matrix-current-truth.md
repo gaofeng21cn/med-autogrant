@@ -19,7 +19,7 @@ Date: `2026-04-13`
 
 当前 authoring 主线真相请以：
 
-- [docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md](/Users/gaofeng/workspace/med-autogrant/.worktrees/codex/full-grant-authoring-mainline-20260413/docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
+- [docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md](../../specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
 
 为准。
 

@@ -1,6 +1,6 @@
 # Docs Portfolio Consolidation
 
-Date: `2026-05-06`
+Date: `2026-05-09`
 
 This note freezes the documentation portfolio boundary after the May 2026 consolidation and the second-round content alignment pass.
 
@@ -48,6 +48,7 @@ Root-doc allowlist:
 
 - `docs/references/**`
 - `docs/specs/README*`
+- `docs/specs/specs_lifecycle_map.md`
 - active specs listed in `docs/specs/README*`
 - repo-tracked truth surfaces listed by `contracts/runtime-program/current-program.json`
 
@@ -78,3 +79,5 @@ Lifecycle:
 - `machine boundary`: not machine-consumed as current truth; any remaining machine surface must point to current contracts/schema/source or semantic `human_doc:*` ids.
 
 The second-round review intentionally did not bulk-move older specs out of `docs/specs/`: many historical notes, rollout records, and current-program pointers still reference those original paths. The archive boundary is therefore enforced by the README/index layer rather than by rewriting every dated spec path.
+
+The 2026-05-09 family docs governance pass made that rule explicit in [Specs Lifecycle Map](./specs/specs_lifecycle_map.md): active specs, support current-truth records, and historical provenance records can share the path-stable directory only while the README/index layer makes their lifecycle state unambiguous.

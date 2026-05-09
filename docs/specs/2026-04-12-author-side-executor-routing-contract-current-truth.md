@@ -14,7 +14,7 @@ Date: `2026-04-13`
 
 自 `2026-04-13` 起，当前主线真相已经切到：
 
-- [docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md](/Users/gaofeng/workspace/med-autogrant/.worktrees/codex/full-grant-authoring-mainline-20260413/docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
+- [docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md](./2026-04-13-full-grant-authoring-executor-current-truth.md)
 
 也就是说，下面保留的是历史迁移语义，不再代表当前 landed route catalog。
 
