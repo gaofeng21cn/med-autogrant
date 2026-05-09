@@ -5,7 +5,7 @@ Date: `2026-05-06`
 ## 当前角色
 
 - 仓库角色：`Med Auto Grant` 是独立 medical grant domain agent，负责 author-side grant truth、route、review gate 与 package export；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
-- 当前执行口径：repo-tracked 默认 capability contract 收口为单一 `Med Auto Grant` app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；其中 `product entry/product status/direct-entry/user-loop` 是 app skill 下的内部 command contract 和 direct-product projection。默认正文执行继续继承本机 `Codex` 配置；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 与技术参考层。
+- 当前执行口径：repo-tracked 默认 capability contract 收口为单一 `Med Auto Grant` app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；其中 `product entry/product status/direct-entry/user-loop` 是 app skill 下的内部 command contract 和 direct-product projection。默认正文执行与默认 runtime owner 固定继承本机 `Codex CLI` / `codex_cli` 配置；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 与技术参考层，默认安装不拉取 `hermes-agent`。
 - OPL Runtime Manager 口径：`OPL Runtime Manager` 是 OPL 侧薄运行管理/投影层，用于把 MAG 的 task registration、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue 接到外部 `Hermes-Agent` substrate、高频状态索引和 doctor/repair/resume 面；它不持有 author-side truth、quality gate、submission-ready export gate 或 concrete executor。
 - 当前 agent entry：`CLI` / `MedAutoGrantDomainEntry` 可被 `Codex`、`OPL` 和其他通用 agent 直接调用，或者先通过单一 app skill 读取 machine-readable surface。
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
@@ -70,7 +70,7 @@ Date: `2026-05-06`
 ## 当前目录治理
 
 - repo-tracked 主线不再保留项目级 `.codex/`、`.omx/`、`.runtime-program/`、`.agent-contract-baseline.json` 或 `runtime-state/`；本机 session、prompt、log、report 与 hook 状态统一属于 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-- 当前测试 lane 已收口为平衡默认：`scripts/verify.sh` 默认运行一次 line-budget、最小 `smoke` 入口健康检查和非重型 fast core；矩阵型、runtime/session、hosted/export、product-entry 与兼容性覆盖进入显式 `regression` lane。`tests/product_entry_cases/` 现在是直接收集的 product-entry regression case 边界，旧 `tests/test_product_entry.py` 仅作为兼容导入面保留。
+- 当前测试 lane 已收口为平衡默认：`scripts/verify.sh` 默认运行一次 line-budget、最小 `smoke` 入口健康检查和不需要 optional proof dependency 的非重型 fast core；矩阵型、runtime/session、hosted/export、product-entry 与兼容性覆盖进入显式 `regression` lane；Hermes hosted/proof 进入显式 `proof` lane 并使用 `proof` extra。`tests/product_entry_cases/` 现在是直接收集的 product-entry regression case 边界，旧 `tests/test_product_entry.py` 仅作为兼容导入面保留。
 - `tests/test_repository_hygiene.py` 作为 meta 验证的一部分，阻断 tracked `dist/`、`build/`、`out/`、`__pycache__`、`*.egg-info`、`.DS_Store`、项目级本地状态目录，以及除 `.agents/plugins/marketplace.json` 外的 `.agents/` 内容。
 - 同一 hygiene 测试同时固定 tracked source/test line budget，新增或增长的超长源码应先拆分到清晰子模块，而不是扩大单文件基线。
 

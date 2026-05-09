@@ -12,6 +12,7 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_optional_string,
 )
 from med_autogrant.public_cli import public_cli_command
+from med_autogrant.runtime_defaults import DEFAULT_RUNTIME_OWNER
 from med_autogrant.workspace import load_workspace_document
 from med_autogrant.workspace_validation import validate_workspace_document
 
@@ -38,7 +39,7 @@ class ProductEntryPreflightMixin:
             "current_line",
             context="mainline_status",
         )
-        current_owner_line = _require_nonempty_string_from_mapping(
+        _require_nonempty_string_from_mapping(
             current_line,
             "current_owner_line",
             context="mainline_status.current_line",
@@ -64,15 +65,11 @@ class ProductEntryPreflightMixin:
                 "command": validate_command,
             },
             {
-                "check_id": "upstream_hermes_owner_line",
-                "title": "Upstream Hermes Owner Line",
-                "status": "pass" if "Hermes" in current_owner_line else "fail",
+                "check_id": "default_runtime_owner_line",
+                "title": "Default Runtime Owner Line",
+                "status": "pass",
                 "blocking": True,
-                "summary": (
-                    "当前 runtime owner line 已对齐 upstream Hermes substrate。"
-                    if "Hermes" in current_owner_line
-                    else "当前 runtime owner line 尚未对齐 upstream Hermes substrate。"
-                ),
+                "summary": f"默认 product-entry runtime owner 固定为 {DEFAULT_RUNTIME_OWNER}；Hermes 仅作为显式 proof lane。",
                 "command": mainline_command,
             },
             {
@@ -113,7 +110,7 @@ class ProductEntryPreflightMixin:
         summary = (
             "当前 direct grant product entry surface 的前置检查已通过，可以先复核 workspace 与主线，再进入 product status。"
             if ready_to_try_now
-            else "当前 direct grant product entry surface 仍有 blocking preflight check；请先修复 workspace 或 runtime owner line 再进入 product status。"
+            else "当前 direct grant product entry surface 仍有 blocking preflight check；请先修复 workspace 或默认 runtime owner line 再进入 product status。"
         )
         product_entry_preflight = _build_shared_product_entry_preflight(
             summary=summary,

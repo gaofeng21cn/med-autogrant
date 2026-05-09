@@ -11,7 +11,7 @@ Date: `2026-04-12`
 
 在已经 landed 的：
 
-- `CLI-first + real upstream Hermes-Agent runtime substrate`
+- `CLI-first + Codex CLI default runtime owner, with explicit Hermes-Agent proof lane`
 - `MedAutoGrantDomainEntry`
 
 之上，落一层轻量结构化 `product entry` shell，让：
@@ -141,7 +141,7 @@ grant 域在这层共享 envelope 之上继续补充：
 - 轻量结构化 `product entry` shell 已 landed
 - `direct` 与 `opl-handoff` 现在共享同一套 envelope
 - `opl-handoff` 继续保留为 internal compatibility / bridge entry mode
-- 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与真实 Hermes substrate contract 之上
+- 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与默认 `codex_cli` runtime contract 之上；Hermes 只作为显式 proof lane
 - external caller 现在还可以直接从 `return_surface_contract.domain_entry_contract` 读取 `supported_commands` / `command_contracts`
 - 这层 shell 会显式告诉 caller：当前 author-side route catalog 已经全部 landed，并且都收口到同一份 service-safe command surface
 - 对 canonical 的 `revision(completed revised switch) -> critique` 返场路径，这层 shell 也已经能在 `recommended_executor_route` 里稳定导出 landed `execute-critique-pass`

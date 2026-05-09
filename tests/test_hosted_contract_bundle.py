@@ -92,7 +92,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self.assertEqual(
                 contract_bundle["runtime_substrate_contract"],
                 {
-                    "runtime_owner": "Hermes",
+                    "runtime_owner": "codex_cli",
                     "current_owner_line": self._current_runtime_owner()["current_owner_line"],
                     "active_phase": self._current_runtime_owner()["active_phase"],
                     "active_tranche": self._current_runtime_owner()["active_tranche"],

@@ -97,7 +97,7 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertFalse(mcp_descriptor["public_runtime"])
         runtime_continuity = domain_projection["runtime_continuity"]
         self.assertEqual(runtime_continuity["surface_kind"], "skill_runtime_continuity")
-        self.assertEqual(runtime_continuity["runtime_owner"], "upstream_hermes_agent")
+        self.assertEqual(runtime_continuity["runtime_owner"], "codex_cli")
         self.assertEqual(runtime_continuity["domain_owner"], "med-autogrant")
         self.assertEqual(runtime_continuity["executor_owner"], "med-autogrant")
         self.assertEqual(runtime_continuity["session_locator_field"], "grant_run_id")

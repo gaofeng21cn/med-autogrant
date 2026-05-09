@@ -104,7 +104,7 @@ class ProductEntryFailureModeTest(unittest.TestCase):
                             "start_entry": "runtime-run",
                             "resume_entry": "runtime-resume",
                             "runtime_substrate_contract": {
-                                "runtime_owner": "Hermes",
+                                "runtime_owner": "codex_cli",
                                 "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                                 "active_phase": "P4 mature direct grant product entry",
                                 "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
@@ -198,7 +198,7 @@ class ProductEntryFailureModeTest(unittest.TestCase):
                             "start_entry": "runtime-run",
                             "resume_entry": "runtime-resume",
                             "runtime_substrate_contract": {
-                                "runtime_owner": "Hermes",
+                                "runtime_owner": "codex_cli",
                                 "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                                 "active_phase": "P4 mature direct grant product entry",
                                 "active_tranche": "P4.G authoring-quality-first completion semantics alignment",

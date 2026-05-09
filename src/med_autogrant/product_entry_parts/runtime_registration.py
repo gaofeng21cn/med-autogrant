@@ -7,6 +7,7 @@ from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _require_nonempty_string_from_mapping,
 )
+from med_autogrant.runtime_defaults import DEFAULT_RUNTIME_OWNER
 
 
 def _build_opl_runtime_manager_registration(
@@ -184,7 +185,7 @@ def _build_opl_family_lifecycle_adapter(
             "discovery_surface_ref": "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",
             "owner_split": {
                 "runtime_manager_owner": "one-person-lab",
-                "runtime_kernel_owner": "upstream_hermes_agent",
+                "runtime_kernel_owner": DEFAULT_RUNTIME_OWNER,
                 "domain_truth_owner": TARGET_DOMAIN_ID,
                 "executor_owner": TARGET_DOMAIN_ID,
             },

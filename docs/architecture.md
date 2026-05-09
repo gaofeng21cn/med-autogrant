@@ -59,7 +59,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 与 `OPL` 的家族级衔接应是：
 
-`User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> external Hermes-Agent runtime substrate -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+`User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> MAG product-entry/runtime-control projection -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
 
 `OPL -> Med Auto Grant` 的最小 handoff envelope 至少包括：
 
@@ -75,7 +75,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 按当前定位，这条链路的 owner 固定为：
 
 - `OPL`：family-level session/runtime/projection 与 shared modules/contracts/indexes owner
-- `OPL Runtime Manager`：OPL 侧 product-managed adapter/projection layer，负责 Hermes profile/provisioning、MAG task registration hydration、runtime status projection、doctor/repair/resume、native helper catalog 与高频状态索引
+- `OPL Runtime Manager`：OPL 侧 product-managed adapter/projection layer，负责 MAG task registration hydration、runtime status projection、doctor/repair/resume、native helper catalog 与高频状态索引；Hermes profile/provisioning 只属于显式 hosted/proof lane
 - `Med Auto Grant App Skill`：domain direct entry owner
 - `Hermes-Agent`：显式 hosted/proof lane 中可选的 runtime carrier
 - `Med Auto Grant`：author-side grant truth / route / export owner
@@ -193,7 +193,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - 人工 gate 当前只覆盖同一基金任务内的作者决策，不把 gate 语义扩展成跨 funder 的重新选题/重选项目流程。
 - 形式/客观补件默认是 `TODO + 显式唤醒` 队列项；默认不阻塞正文 authoring 主线。
 - `runtime run / runtime resume` 的默认 local run journal 落点固定为 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`；显式 `--journal` 仍可覆盖该默认值。
-- Hermes substrate state db 默认落在 `$CODEX_HOME/projects/med-autogrant/runtime-state/hermes/state.db`；如需显式隔离，可通过 `MED_AUTOGRANT_HERMES_HOME` 覆盖。
+- Hermes substrate state db 只在显式 proof lane 使用，默认不要求安装上游 `hermes-agent`；如需显式隔离，可通过 `MED_AUTOGRANT_HERMES_HOME` 覆盖。
 - 历史 local host-agent runtime 只保留在归档与 provenance 材料里，不再作为长期产品 runtime owner。
 
 ## 文档层次

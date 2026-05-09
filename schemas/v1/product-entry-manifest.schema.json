@@ -177,14 +177,22 @@
       "additionalProperties": false,
       "required": [
         "current_owner_line",
-        "runtime_owner"
+        "runtime_owner",
+        "optional_carriers"
       ],
       "properties": {
         "current_owner_line": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "runtime_owner": {
-          "const": "upstream_hermes_agent"
+          "const": "codex_cli"
+        },
+        "optional_carriers": {
+          "type": "array",
+          "items": {
+            "const": "hermes_agent"
+          },
+          "minItems": 1
         }
       }
     },
@@ -222,7 +230,7 @@
           "const": "contracts/opl-gateway/managed-runtime-three-layer-contract.json"
         },
         "runtime_owner": {
-          "const": "upstream_hermes_agent"
+          "const": "codex_cli"
         },
         "domain_owner": {
           "const": "med-autogrant"
@@ -1159,7 +1167,7 @@
               "const": "one-person-lab"
             },
             "runtime_kernel_owner": {
-              "const": "upstream_hermes_agent"
+              "const": "codex_cli"
             },
             "domain_truth_owner": {
               "const": "med-autogrant"

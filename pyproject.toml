@@ -12,8 +12,12 @@ authors = [
   { name = "Gao Feng" }
 ]
 dependencies = [
-    "hermes-agent[acp]",
     "opl-harness-shared @ git+https://github.com/gaofeng21cn/one-person-lab.git@2b08c7efd8acd80355e870087d4ce5be7b45d4d1#subdirectory=python/opl-harness-shared",
+]
+
+[project.optional-dependencies]
+proof = [
+    "hermes-agent[acp]",
 ]
 
 [project.scripts]
@@ -23,9 +27,10 @@ medautogrant = "med_autogrant.cli:entrypoint"
 testpaths = ["tests"]
 markers = [
   "meta: repo-tracked program control and repository hygiene checks",
-  "smoke: minimal CLI/product/runtime entry health checks",
+  "smoke: minimal default CLI/product entry health checks that do not require optional proof dependencies",
   "integration: cross-surface integration checks that are broader than unit contracts",
   "regression: heavier matrix, historical compatibility, runtime/export, and product regression checks",
+  "proof: explicit optional hosted/Hermes proof lane that may require optional dependencies",
   "structure: repository structure and architecture governance checks",
 ]
 

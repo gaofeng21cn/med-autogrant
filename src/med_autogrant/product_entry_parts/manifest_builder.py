@@ -56,6 +56,7 @@ from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_skill_runtime_continuity_envelope,
 )
 from med_autogrant.public_cli import public_cli_command
+from med_autogrant.runtime_defaults import DEFAULT_RUNTIME_SUBSTRATE, build_default_runtime_summary
 
 from opl_harness_shared.automation_companions import (
     build_automation_catalog as _build_shared_automation_catalog,
@@ -492,14 +493,13 @@ class ProductEntryManifestBuilderMixin:
             ),
             "next_focus": list(mainline_snapshot["next_focus"]),
         }
-        runtime_summary = {
-            "current_owner_line": _require_nonempty_string_from_mapping(
+        runtime_summary = build_default_runtime_summary(
+            current_owner_line=_require_nonempty_string_from_mapping(
                 current_line,
                 "current_owner_line",
                 context="mainline_status.current_line",
-            ),
-            "runtime_owner": "upstream_hermes_agent",
-        }
+            )
+        )
         managed_runtime_contract = _build_managed_runtime_contract()
         product_entry_shell = _build_shared_product_entry_shell_catalog({
             "product_status": {
@@ -609,7 +609,7 @@ class ProductEntryManifestBuilderMixin:
                 "executor_owner",
                 context="product_entry_manifest.managed_runtime_contract",
             ),
-            substrate="hermes_agent_managed_runtime",
+            substrate=DEFAULT_RUNTIME_SUBSTRATE,
             availability="ready_to_try_now" if bool(product_entry_preflight.get("ready_to_try_now")) else "preflight_blocked",
             health_status="attention_required" if checkpoint_status == "blocked" else "healthy",
             status_surface={

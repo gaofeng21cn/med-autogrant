@@ -266,7 +266,7 @@ def build_runtime_substrate_contract(*, current_program_contract: dict[str, Any]
         raise WorkspaceStateError("CURRENT_PROGRAM contract 缺少字段: runtime_owner")
 
     return {
-        "runtime_owner": "Hermes",
+        "runtime_owner": "codex_cli",
         "current_owner_line": require_nonempty_string(
             runtime_owner,
             "current_owner_line",

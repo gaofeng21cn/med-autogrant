@@ -7,6 +7,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import Mock
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
@@ -451,6 +453,7 @@ class DomainEntryFreshProofTest(unittest.TestCase):
             ["pyproject.toml", "uv.lock"],
         )
 
+    @pytest.mark.proof
     def test_service_safe_domain_entry_runs_fresh_cutover_walkthrough(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)

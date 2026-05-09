@@ -18,9 +18,9 @@ This guide is for readers who need the technical records, trace records, referen
 
 - `Med Auto Grant` is an independent medical grant domain agent whose first public surface is the single Med Auto Grant app skill. The stable callable surface underneath it is `CLI`, `MedAutoGrantDomainEntry`, local scripts, and schema-backed contracts.
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
-- Default authoring execution inherits local `Codex` defaults through the existing route-selected executor path.
+- Default authoring execution and default runtime owner inherit local `Codex CLI` / `codex_cli` defaults through the existing route-selected executor path.
 - `OPL Runtime Manager` is the target OPL-side thin manager over the external `Hermes-Agent` substrate; it may consume MAG runtime_control, runtime_continuity, workspace projection, artifact locator, and explicit wakeup/TODO queues, but it does not own MAG grant truth or authoring execution.
-- `Hermes-Agent`-related lanes stay in explicit hosted/proof or technical-reference positions; they do not redefine the default public capability contract.
+- `Hermes-Agent`-related lanes stay in explicit hosted/proof or technical-reference positions; they are not installed by default and do not redefine the default public capability contract.
 - Historical program records and migration notes stay reachable through `docs/history/`; older dated specs can remain in `docs/specs/` for provenance, while machine-readable surfaces refer to them through semantic `human_doc:*` ids rather than path-stability constraints.
 - The product status, user-loop, projections, and local `submission-ready` package are landed as internal command contracts and direct-product projections under the app skill. The active task boundary now distinguishes scientific review readiness from the stricter local export gate, and that export gate does not imply external funding-portal submission. Future hosted product expansion belongs in `docs/plans/` only when there is an active plan.
 - `OPL` family routing and `Codex` skill activation consume the same MAG capability surface; MAG keeps grant-domain truth, direct grant entry, and execution routing.
@@ -106,8 +106,10 @@ are generated and printed before the lane reports the Sentrux failure.
 
 The default local verification entry is `./scripts/verify.sh`. It runs the
 line-budget check once, then the small `smoke` lane and the fast non-regression
-core lane. Heavier matrix, runtime/session, hosted/export, product-entry, and
-compatibility coverage belongs to `./scripts/verify.sh regression`; the
+core lane without optional proof dependencies. Heavier matrix, runtime/session,
+hosted/export, product-entry, and compatibility coverage belongs to
+`./scripts/verify.sh regression`; explicit Hermes hosted/proof checks belong to
+`./scripts/verify.sh proof` and use the `proof` extra. The
 product-entry case modules under `tests/product_entry_cases/` are directly
 collected there, with `tests/test_product_entry.py` kept only as the compatibility
 import surface. Full-suite baselines remain available through

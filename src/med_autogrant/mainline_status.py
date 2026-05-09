@@ -191,8 +191,8 @@ def _completed_records() -> list[dict[str, str]]:
     return [
         {
             "record_id": "P1",
-            "title": "Hermes substrate cutover",
-            "summary": "真实上游 Hermes-Agent substrate 已接住 runtime owner。",
+            "title": "explicit Hermes proof lane",
+            "summary": "真实上游 Hermes-Agent 只保留为显式 proof lane；默认 runtime owner 是 Codex CLI。",
         },
         {
             "record_id": "P2",

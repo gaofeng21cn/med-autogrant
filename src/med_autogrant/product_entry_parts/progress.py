@@ -56,6 +56,7 @@ from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_runtime_continuity_surfaces,
 )
 from med_autogrant.public_cli import public_cli_command, public_command_label
+from med_autogrant.runtime_defaults import build_default_runtime_summary
 
 from opl_harness_shared.status_narration import (
     PROGRESS_ANSWER_CHECKLIST,
@@ -372,14 +373,13 @@ class ProductEntryProgressMixin:
             "current_line",
             context="mainline_status",
         )
-        runtime_summary = {
-            "current_owner_line": _require_nonempty_string_from_mapping(
+        runtime_summary = build_default_runtime_summary(
+            current_owner_line=_require_nonempty_string_from_mapping(
                 current_line,
                 "current_owner_line",
                 context="mainline_status.current_line",
-            ),
-            "runtime_owner": "upstream_hermes_agent",
-        }
+            )
+        )
         managed_runtime_contract = _build_managed_runtime_contract()
         grant_run_id = _require_nonempty_string_from_mapping(
             direct_payload,

@@ -14,6 +14,7 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_nonempty_string_from_mapping,
 )
 from med_autogrant.product_entry_parts.runtime_contracts import _build_author_side_route_contract
+from med_autogrant.runtime_defaults import DEFAULT_RUNTIME_OWNER
 from med_autogrant.workspace_types import WorkspaceStateError
 
 from opl_harness_shared.family_orchestration import (
@@ -29,6 +30,7 @@ from opl_harness_shared.product_entry_companions import (
 
 def _build_managed_runtime_contract() -> dict[str, Any]:
     return _build_shared_managed_runtime_contract(
+        runtime_owner=DEFAULT_RUNTIME_OWNER,
         domain_owner=TARGET_DOMAIN_ID,
         executor_owner="med-autogrant",
         supervision_status_surface="grant_progress",

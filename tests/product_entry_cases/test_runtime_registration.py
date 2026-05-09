@@ -1,10 +1,40 @@
 from __future__ import annotations
 
+import tomllib
+
 
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
 class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
+    def test_default_install_and_runtime_registration_do_not_require_hermes(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+        lock = tomllib.loads((REPO_ROOT / "uv.lock").read_text(encoding="utf-8"))
+        lock_package = next(package for package in lock["package"] if package["name"] == "med-autogrant")
+
+        self.assertNotIn("hermes-agent[acp]", pyproject["project"]["dependencies"])
+        self.assertIn("hermes-agent[acp]", pyproject["project"]["optional-dependencies"]["proof"])
+        self.assertNotIn("hermes-agent", {dependency["name"] for dependency in lock_package["dependencies"]})
+        self.assertEqual(lock_package["optional-dependencies"]["proof"][0]["name"], "hermes-agent")
+
+        manifest = MedAutoGrantProductEntry().build_product_entry_manifest(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )["product_entry_manifest"]
+
+        self.assertEqual(manifest["managed_runtime_contract"]["runtime_owner"], "codex_cli")
+        self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "codex_cli")
+        self.assertEqual(manifest["runtime_inventory"]["substrate"], "codex_cli_default_runtime")
+        self.assertEqual(manifest["runtime_control"]["runtime_owner"], "codex_cli")
+        self.assertEqual(
+            manifest["skill_catalog"]["skills"][0]["domain_projection"]["opl_runtime_manager_registration"][
+                "family_lifecycle_adapter"
+            ]["owner_route_discovery"]["owner_split"]["runtime_kernel_owner"],
+            "codex_cli",
+        )
+        self.assertIn("hermes_agent", manifest["runtime_inventory"]["domain_projection"]["runtime"]["optional_carriers"])
+
     def test_opl_runtime_manager_registration_keeps_mag_as_truth_owner(self) -> None:
         from med_autogrant.product_entry_parts.runtime_registration import (
             _build_opl_native_helper_indexing_proof,
@@ -12,7 +42,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
         )
 
         registration = _build_opl_runtime_manager_registration(
-            runtime_summary={"runtime_owner": "upstream-hermes-agent"},
+            runtime_summary={"runtime_owner": "codex-cli"},
             runtime_continuity={
                 "session_locator_field": "grant_run_id",
                 "recommended_resume_command": "medautogrant runtime-resume --journal journal.json --format json",
@@ -30,7 +60,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
 
         self.assertEqual(registration["surface_kind"], "opl_runtime_manager_domain_registration")
         self.assertEqual(registration["domain_owner"], "med-autogrant")
-        self.assertEqual(registration["runtime_owner"], "upstream-hermes-agent")
+        self.assertEqual(registration["runtime_owner"], "codex-cli")
         self.assertEqual(registration["executor_owner"], "med-autogrant")
         self.assertEqual(registration["domain_entry_surface"]["surface_kind"], "product_status")
         self.assertEqual(
