@@ -34,6 +34,7 @@ from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_runtime_continuity_surfaces,
 )
 from med_autogrant.public_cli import public_cli_command
+from med_autogrant.runtime_defaults import build_default_runtime_summary
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
@@ -42,7 +43,7 @@ from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMix
 
 
 class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMixin, ProductEntryPreflightMixin):
-    """轻量 grant product entry 壳，复用已 landed 的 domain entry 与 Hermes substrate contract。"""
+    """轻量 grant product entry 壳，复用已 landed 的 domain entry 与默认 runtime contract。"""
 
     def __init__(self, *, domain_entry: Any | None = None) -> None:
         self._domain_entry = domain_entry or build_default_domain_entry()
@@ -150,14 +151,13 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             "current_line",
             context="mainline_status",
         )
-        runtime_summary = {
-            "current_owner_line": _require_nonempty_string_from_mapping(
+        runtime_summary = build_default_runtime_summary(
+            current_owner_line=_require_nonempty_string_from_mapping(
                 current_line,
                 "current_owner_line",
                 context="mainline_status.current_line",
-            ),
-            "runtime_owner": "upstream_hermes_agent",
-        }
+            )
+        )
         continuity_surfaces = _build_runtime_continuity_surfaces(
             progress_projection=progress_projection,
             workspace_summary=workspace_summary,

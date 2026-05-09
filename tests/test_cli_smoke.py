@@ -17,8 +17,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 
-pytestmark = pytest.mark.smoke
-
 
 def _run_cli(*args: str) -> tuple[int, str, str]:
     stdout = StringIO()
@@ -38,6 +36,7 @@ def _run_json_cli(*args: str) -> dict[str, object]:
     return json.loads(stdout)
 
 
+@pytest.mark.smoke
 def test_public_cli_help_renders_group_index() -> None:
     exit_code, stdout, stderr = _run_cli("--help")
 
@@ -49,6 +48,7 @@ def test_public_cli_help_renders_group_index() -> None:
     assert "runtime" in stdout
 
 
+@pytest.mark.smoke
 def test_workspace_validate_accepts_canonical_critique_workspace() -> None:
     payload = _run_json_cli(
         "workspace",
@@ -66,6 +66,7 @@ def test_workspace_validate_accepts_canonical_critique_workspace() -> None:
     assert payload["lifecycle_stage"] == "critique"
 
 
+@pytest.mark.smoke
 def test_product_status_dispatches_current_product_entry_surface_contract() -> None:
     payload = _run_json_cli(
         "product",
@@ -82,6 +83,7 @@ def test_product_status_dispatches_current_product_entry_surface_contract() -> N
     assert status["operator_loop_surface"]["shell_key"] == "grant_user_loop"
 
 
+@pytest.mark.smoke
 def test_product_direct_entry_projects_workspace_cockpit_and_entry_envelopes() -> None:
     payload = _run_json_cli(
         "product",
@@ -102,6 +104,7 @@ def test_product_direct_entry_projects_workspace_cockpit_and_entry_envelopes() -
     assert direct_entry["direct_entry"]["entry_mode"] == "direct"
 
 
+@pytest.mark.smoke
 def test_product_skill_catalog_exposes_single_mag_skill() -> None:
     payload = _run_json_cli(
         "product",
@@ -118,6 +121,7 @@ def test_product_skill_catalog_exposes_single_mag_skill() -> None:
     assert skill["domain_projection"]["recommended_shell"] == "product_status"
 
 
+@pytest.mark.smoke
 def test_mainline_status_projects_current_program_pointer() -> None:
     payload = _run_json_cli("mainline", "status", "--format", "json")
 
@@ -126,6 +130,7 @@ def test_mainline_status_projects_current_program_pointer() -> None:
     assert payload["current_focus"]["summary"]
 
 
+@pytest.mark.proof
 def test_runtime_run_writes_session_journal_under_runtime_state_root() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         codex_home = Path(tmp_dir) / "codex-home"
@@ -161,6 +166,7 @@ def test_runtime_run_writes_session_journal_under_runtime_state_root() -> None:
     assert journal_exists
 
 
+@pytest.mark.proof
 def test_domain_entry_probe_smoke_dispatches_without_workspace() -> None:
     payload = _run_json_cli("runtime", "probe-hermes", "--format", "json")
 

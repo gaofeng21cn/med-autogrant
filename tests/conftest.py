@@ -32,6 +32,10 @@ REGRESSION_FILES = {
     "tests/test_workspace_summary.py",
 }
 
+PROOF_FILES = {
+    "tests/test_upstream_hermes.py",
+}
+
 STRUCTURE_FILES = {
     "tests/test_line_budget.py",
     "tests/test_runtime_cli_structural_helpers.py",
@@ -76,5 +80,7 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
             item.add_marker(pytest.mark.meta)
         if relative_path in REGRESSION_FILES or relative_path.startswith("tests/product_entry_cases/"):
             item.add_marker(pytest.mark.regression)
+        if relative_path in PROOF_FILES:
+            item.add_marker(pytest.mark.proof)
         if relative_path in STRUCTURE_FILES:
             item.add_marker(pytest.mark.structure)

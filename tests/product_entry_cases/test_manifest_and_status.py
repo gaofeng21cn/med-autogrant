@@ -55,7 +55,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             manifest["managed_runtime_contract"],
             {
                 "shared_contract_ref": "contracts/opl-gateway/managed-runtime-three-layer-contract.json",
-                "runtime_owner": "upstream_hermes_agent",
+                "runtime_owner": "codex_cli",
                 "domain_owner": "med-autogrant",
                 "executor_owner": "med-autogrant",
                 "supervision_status_surface": {
@@ -78,7 +78,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             },
         )
         self.assertEqual(manifest["runtime_inventory"]["surface_kind"], "runtime_inventory")
-        self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "upstream_hermes_agent")
+        self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "codex_cli")
         self.assertEqual(
             manifest["runtime_inventory"]["domain_owner"],
             manifest["managed_runtime_contract"]["domain_owner"],
@@ -117,7 +117,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         )
         runtime_control = manifest["runtime_control"]
         self.assertEqual(runtime_control["surface_kind"], "runtime_control")
-        self.assertEqual(runtime_control["runtime_owner"], "upstream_hermes_agent")
+        self.assertEqual(runtime_control["runtime_owner"], "codex_cli")
         self.assertEqual(runtime_control["domain_owner"], "med-autogrant")
         self.assertEqual(runtime_control["executor_owner"], "med-autogrant")
         self.assertEqual(runtime_control["session_locator"]["locator_field"], "grant_run_id")
@@ -497,9 +497,9 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(preflight["surface_kind"], "product_entry_preflight")
         self.assertEqual(
             preflight["summary"],
-            "当前 direct grant product entry surface 仍有 blocking preflight check；请先修复 workspace 或 runtime owner line 再进入 product status。",
+            "当前 direct grant product entry surface 的前置检查已通过，可以先复核 workspace 与主线，再进入 product status。",
         )
-        self.assertFalse(preflight["ready_to_try_now"])
+        self.assertTrue(preflight["ready_to_try_now"])
         self.assertEqual(
             preflight["recommended_check_command"],
             public_cli_command(
@@ -512,19 +512,19 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
                 "product-status", "--input", str(CRITIQUE_EXAMPLE_PATH.resolve()), "--format", "json"
             ),
         )
-        self.assertEqual(preflight["blocking_check_ids"], ["upstream_hermes_owner_line"])
+        self.assertEqual(preflight["blocking_check_ids"], [])
         self.assertEqual(
             [check["check_id"] for check in preflight["checks"]],
             [
                 "workspace_document_valid",
-                "upstream_hermes_owner_line",
+                "default_runtime_owner_line",
                 "direct_product entry surface_contract_landed",
                 "submission_ready_export_gate",
             ],
         )
         self.assertEqual(preflight["checks"][0]["status"], "pass")
         self.assertEqual(preflight["checks"][0]["blocking"], True)
-        self.assertEqual(preflight["checks"][1]["status"], "fail")
+        self.assertEqual(preflight["checks"][1]["status"], "pass")
         self.assertEqual(preflight["checks"][2]["status"], "pass")
         self.assertEqual(preflight["checks"][3]["status"], "warn")
         product_readiness = manifest["product_entry_readiness"]

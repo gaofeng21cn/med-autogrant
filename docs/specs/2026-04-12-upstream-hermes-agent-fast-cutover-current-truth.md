@@ -5,8 +5,8 @@ Date: `2026-04-12`
 ## Activation Status
 
 - Phase: `Upstream Hermes-Agent Fast Cutover`
-- Active tranche: `Real Hermes substrate / service-safe domain entry / fresh proof`
-- Status: `landed / current truth`
+- Active tranche: `Explicit Hermes proof lane / service-safe domain entry / fresh proof`
+- Status: `explicit proof lane / historical runtime proof`
 
 ## Goal
 
@@ -16,7 +16,7 @@ Date: `2026-04-12`
 
 切到：
 
-- `CLI-first + real upstream Hermes-Agent runtime substrate`
+- `CLI-first + explicit Hermes-Agent proof lane`
 
 同时保持 author-side grant mainline 不漂移：
 
@@ -30,7 +30,7 @@ Date: `2026-04-12`
 
 ### 1. 真实 upstream 依赖与连接证据已经 repo-tracked
 
-- `pyproject.toml` 现在直接声明 `hermes-agent[acp]`。
+- `pyproject.toml` 现在只在 `proof` optional extra 中声明 `hermes-agent[acp]`；默认安装不拉取上游 Hermes-Agent。
 - `[tool.uv.sources]` 把 `hermes-agent` 固定到上游仓库 `NousResearch/hermes-agent` 的 commit `96051955755a83f22afed5e3501d447462fbe9c8`。
 - `probe-upstream-hermes` 现在会显式探测并回显：
   - `hermes` CLI
@@ -40,11 +40,11 @@ Date: `2026-04-12`
   - `acp_adapter.session.SessionManager`
   - runtime root 与 `state.db` 路径
 
-### 2. runtime substrate owner 已切到上游 Hermes session substrate
+### 2. Hermes session substrate 只保留为显式 proof lane
 
 - `runtime-run` / `runtime-resume` 的 attempt ledger 不再由 repo-local journal 长度主责。
 - `src/med_autogrant/upstream_hermes.py` 现在通过真实上游 `hermes_state.SessionDB` 记录 attempt。
-- 默认 Hermes runtime root 固定到：
+- 显式 Hermes proof lane 的 runtime root 固定到：
   - `$CODEX_HOME/projects/med-autogrant/runtime-state/hermes/`
 - 如需显式隔离，可通过：
   - `MED_AUTOGRANT_HERMES_HOME`
@@ -156,7 +156,7 @@ repo 现在至少有下面这些 fresh proof：
 
 这条 current truth 只说明：
 
-- 真实 upstream Hermes substrate 已经接住当前 runtime session durability
+- 真实 upstream Hermes substrate 已经证明可接住显式 proof lane 的 session durability
 - service-safe domain entry 已形成
 - author-side grant mainline 没有漂移
 - product-layer follow-up 需要查看：

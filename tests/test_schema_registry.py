@@ -356,7 +356,7 @@ class SchemaRegistryTest(unittest.TestCase):
             managed_runtime["properties"]["shared_contract_ref"]["const"],
             "contracts/opl-gateway/managed-runtime-three-layer-contract.json",
         )
-        self.assertEqual(managed_runtime["properties"]["runtime_owner"]["const"], "upstream_hermes_agent")
+        self.assertEqual(managed_runtime["properties"]["runtime_owner"]["const"], "codex_cli")
         self.assertEqual(managed_runtime["properties"]["domain_owner"]["const"], "med-autogrant")
         self.assertEqual(managed_runtime["properties"]["executor_owner"]["const"], "med-autogrant")
 

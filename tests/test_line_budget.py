@@ -35,4 +35,6 @@ def test_default_verify_delegates_line_budget_to_fast_lane_once() -> None:
     assert "python scripts/line_budget.py" not in verify_script
     assert "make test-fast" in verify_script
     assert makefile.count("$(MAKE) test-line-budget") == 1
-    assert makefile.index("$(MAKE) test-line-budget") < makefile.index("uv run pytest -q -m \"not meta and not regression\"")
+    assert makefile.index("$(MAKE) test-line-budget") < makefile.index(
+        'uv run pytest -q -m "not meta and not regression and not proof"'
+    )

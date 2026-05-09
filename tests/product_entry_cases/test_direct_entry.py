@@ -31,7 +31,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
         self.assertEqual(payload["artifact_inventory"]["surface_kind"], "artifact_inventory")
         runtime_control = payload["runtime_control"]
         self.assertEqual(runtime_control["surface_kind"], "runtime_control")
-        self.assertEqual(runtime_control["runtime_owner"], "upstream_hermes_agent")
+        self.assertEqual(runtime_control["runtime_owner"], "codex_cli")
         self.assertEqual(runtime_control["domain_owner"], "med-autogrant")
         self.assertEqual(runtime_control["executor_owner"], "med-autogrant")
         self.assertEqual(runtime_control["session_locator"]["locator_value"], payload["grant_run_id"])
@@ -180,7 +180,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                         "start_entry": "runtime-run",
                         "resume_entry": "runtime-resume",
                         "runtime_substrate_contract": {
-                            "runtime_owner": "Hermes",
+                            "runtime_owner": "codex_cli",
                             "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                             "active_phase": "P4 mature direct grant product entry",
                             "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
@@ -236,7 +236,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                         "start_entry": "runtime-run",
                         "resume_entry": "runtime-resume",
                         "runtime_substrate_contract": {
-                            "runtime_owner": "Hermes",
+                            "runtime_owner": "codex_cli",
                             "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                             "active_phase": "P4 mature direct grant product entry",
                             "active_tranche": "P4.G authoring-quality-first completion semantics alignment",

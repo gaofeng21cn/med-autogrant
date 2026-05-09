@@ -21,6 +21,9 @@ case "$lane" in
   regression)
     make test-regression
     ;;
+  proof)
+    make test-proof
+    ;;
   structure)
     make test-structure
     ;;
@@ -29,7 +32,7 @@ case "$lane" in
     ;;
   *)
     echo "Unknown lane: $lane" >&2
-    echo "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|structure|full]" >&2
+    echo "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|proof|structure|full]" >&2
     exit 2
     ;;
 esac

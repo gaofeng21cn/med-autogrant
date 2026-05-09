@@ -7,7 +7,7 @@ PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
     "workspace": "工作区诊断、摘要、阶段路由与 progress cockpit。",
     "mainline": "当前 line/current focus 概览与维护者参考记录。",
     "product": "grant direct entry、status 与 product-entry contract。",
-    "runtime": "Hermes substrate 探测与本地 runtime 运行/恢复。",
+    "runtime": "本地 runtime 运行/恢复与显式 Hermes proof 探测。",
     "pass": "authoring pass 执行入口。",
     "package": "artifact/final/hosted/submission package 导出入口。",
 }

@@ -14,9 +14,13 @@
     "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
     "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
     "compatibility_bridge": "post-R5A local runtime closeout / host-agent regression oracle",
+    "default_runtime_owner": "codex_cli",
+    "optional_hosted_carriers": [
+      "hermes_agent"
+    ],
     "runtime_manager_boundary": {
       "manager": "OPL Runtime Manager",
-      "layer_role": "product-managed adapter/projection layer over external Hermes-Agent runtime substrate",
+      "layer_role": "product-managed adapter/projection layer over MAG product-entry/runtime-control surfaces; external Hermes-Agent is an optional hosted/proof carrier",
       "mag_owned_truth": [
         "grant_run_id/workspace_id/draft_id/program_id identity boundary",
         "author-side route truth",
@@ -43,7 +47,7 @@
         "concrete authoring executor",
         "private Hermes-Agent fork"
       ],
-      "future_sidecar_promotion_gate": "only if external Hermes-Agent cannot express the task/wakeup/approval/audit/product isolation contracts required by OPL"
+      "future_sidecar_promotion_gate": "only if explicit hosted/proof carriers cannot express the task/wakeup/approval/audit/product isolation contracts required by OPL"
     }
   },
   "executor_defaults": {
@@ -137,10 +141,10 @@
     "family_top_entry": "OPL family-level orchestration surface",
     "family_runtime_manager": "OPL Runtime Manager",
     "domain_direct_entry": "Med Auto Grant Product Entry",
-    "runtime_substrate_owner": "explicit hosted runtime carrier (for example Hermes-Agent)",
+    "runtime_substrate_owner": "codex_cli by default; explicit hosted runtime carrier only when requested (for example Hermes-Agent proof lane)",
     "authoring_truth_owner": "Med Auto Grant",
     "direct_user_route": "User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> route-selected executor or optional hosted runtime carrier -> Med Auto Grant domain logic",
-    "opl_gateway_route": "User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> external Hermes-Agent runtime substrate -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry",
+    "opl_gateway_route": "User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> MAG product-entry/runtime-control projection -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry; explicit hosted carriers are opt-in",
     "opl_runtime_manager": {
       "role": "thin OPL-side runtime manager for profile wiring, task registration hydration, runtime status projection, doctor/repair/resume, native helper catalog, and high-frequency state indexes",
       "consumes_mag_surfaces": [
@@ -168,7 +172,7 @@
   "phase_map": [
     {
       "phase_id": "P1",
-      "phase_name": "Hermes substrate cutover",
+      "phase_name": "explicit Hermes proof lane",
       "status": "completed"
     },
     {

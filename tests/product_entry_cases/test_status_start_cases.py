@@ -180,7 +180,7 @@ class ProductEntryStatusStartCaseTest(unittest.TestCase):
             ),
         )
         self.assertEqual(status["product_entry_preflight"]["surface_kind"], "product_entry_preflight")
-        self.assertFalse(status["product_entry_preflight"]["ready_to_try_now"])
+        self.assertTrue(status["product_entry_preflight"]["ready_to_try_now"])
         self.assertEqual(
             status["product_entry_preflight"]["recommended_check_command"],
             public_cli_command(

@@ -18,7 +18,7 @@
 
 - `Med Auto Grant` 是独立的医学基金 domain agent，对外第一主语是单一 `Med Auto Grant` app skill；其下稳定 capability surface 由 `CLI`、`MedAutoGrantDomainEntry`、本地脚本与 schema-backed contract 组成。
 - formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
-- 默认正文执行继续继承本机 `Codex` 默认；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 或技术参考层，不改写默认公开 capability contract。
+- 默认正文执行与默认 runtime owner 继续继承本机 `Codex CLI` / `codex_cli` 默认；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 或技术参考层，默认安装不拉取 `hermes-agent`，不改写默认公开 capability contract。
 - `OPL Runtime Manager` 是目标形态中的 OPL 侧薄管理层，位于外部 `Hermes-Agent` substrate 之上；它可以消费 MAG runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue，但不持有 MAG grant truth 或 authoring execution。
 - 历史 program 记录与迁移说明统一从 `docs/history/` 进入；较早 dated specs 可以继续留在 `docs/specs/` 作为 provenance，但机器可读面通过语义化 `human_doc:*` 标识引用它们，而不是把旧路径钉成稳定接口。
 - product status、user-loop、projection 与本地 `submission-ready` package 已落地，但它们都是 app skill 下的内部 command contract 与 direct-product projection；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，且本地导出 gate 不代表外部基金官网 portal submission 已完成；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/plans/`。
@@ -101,8 +101,10 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 诊断，再报告 Sentrux 失败。
 
 默认本地验证入口是 `./scripts/verify.sh`。它只运行一次 line-budget，然后运行小
-`smoke` lane 与非重型 fast core lane。矩阵型、runtime/session、hosted/export、
-product-entry 与兼容性覆盖归入 `./scripts/verify.sh regression`；product-entry
+`smoke` lane 与不需要 optional proof dependency 的非重型 fast core lane。矩阵型、
+runtime/session、hosted/export、product-entry 与兼容性覆盖归入
+`./scripts/verify.sh regression`；显式 Hermes hosted/proof 检查归入
+`./scripts/verify.sh proof` 并使用 `proof` extra；product-entry
 case 模块直接由 `tests/product_entry_cases/` 收集，`tests/test_product_entry.py`
 只保留兼容导入面；完整基线继续由 `./scripts/verify.sh full` 承担。
 

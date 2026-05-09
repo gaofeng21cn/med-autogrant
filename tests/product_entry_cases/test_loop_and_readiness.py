@@ -104,7 +104,7 @@ class ProductEntryLoopReadinessTest(unittest.TestCase):
         )
         self.assertEqual(
             payload["grant_user_loop"]["runtime_control"]["runtime_owner"],
-            "upstream_hermes_agent",
+            "codex_cli",
         )
         self.assertEqual(
             payload["grant_user_loop"]["runtime_control"]["approval_control_surface"]["command"],
@@ -154,7 +154,7 @@ class ProductEntryLoopReadinessTest(unittest.TestCase):
             [check["check_id"] for check in captured["checks"]],  # type: ignore[index]
             [
                 "workspace_document_valid",
-                "upstream_hermes_owner_line",
+                "default_runtime_owner_line",
                 "direct_product entry surface_contract_landed",
                 "submission_ready_export_gate",
             ],
