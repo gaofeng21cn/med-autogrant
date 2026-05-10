@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-10：落地 Hermes-first OPL Family Runtime 的 MAG product sidecar adapter
+
+- 决策：新增 `product sidecar export` 与 `product sidecar dispatch`，把 MAG 的 `runtime_control`、`runtime_continuity`、TODO/explicit wakeup、autonomy-controller 与 user-loop attention queue 投影成 OPL typed family queue 可消费的 sidecar surface。
+- 理由：Hermes-first family runtime 需要 24h 在线 substrate 与 typed queue/control-plane，但 MAG 仍必须持有 grant truth、quality gate 与 artifact/export owner。sidecar adapter 让 OPL/Hermes 消费结构化 runtime/wakeup/control projection，同时不复制或改写 grant truth。
+- 影响：dispatch 只允许 `status/read`、`user-loop/wakeup`、`autonomy-controller/dry-run`、`autonomy-controller/guarded-run`、`notification/receipt` 这组 MAG-owned guarded actions；`hermes_agent` proof executor 仍是显式 opt-in，不成为默认 authoring executor。
+
 ## 2026-04-26：MAG 对齐 OPL Runtime Manager 薄管理层
 
 - 决策：MAG 与 OPL 的长期托管对齐采用 `OPL Product Entry -> OPL Runtime Manager -> MAG product-entry/runtime-control projection -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`；外部 `Hermes-Agent` 只作为显式 hosted/proof carrier 接入。MAG 只提供 domain entry contract、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue；`OPL Runtime Manager` 只负责 OPL 侧 registration hydration、status index、doctor/repair/resume 与 native helper catalog。

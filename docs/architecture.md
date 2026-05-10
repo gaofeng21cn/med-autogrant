@@ -59,7 +59,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 与 `OPL` 的家族级衔接应是：
 
-`User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> MAG product-entry/runtime-control projection -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+`User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> MAG product-entry/runtime-control/sidecar projection -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
 
 `OPL -> Med Auto Grant` 的最小 handoff envelope 至少包括：
 
@@ -75,13 +75,13 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 按当前定位，这条链路的 owner 固定为：
 
 - `OPL`：family-level session/runtime/projection 与 shared modules/contracts/indexes owner
-- `OPL Runtime Manager`：OPL 侧 product-managed adapter/projection layer，负责 MAG task registration hydration、runtime status projection、doctor/repair/resume、native helper catalog 与高频状态索引；Hermes profile/provisioning 只属于显式 hosted/proof lane
+- `OPL Runtime Manager`：OPL 侧 product-managed adapter/projection layer，负责 MAG task registration hydration、runtime status projection、doctor/repair/resume、native helper catalog 与高频状态索引；OPL-managed Hermes 是 24h 在线 substrate / wakeup carrier，不持有 MAG grant truth
 - `Med Auto Grant App Skill`：domain direct entry owner
-- `Hermes-Agent`：显式 hosted/proof lane 中可选的 runtime carrier
+- `Hermes-Agent`：OPL family runtime 的在线 substrate / wakeup carrier；作为 authoring proof executor 时仍必须显式 opt-in
 - `Med Auto Grant`：author-side grant truth / route / export owner
 
 当前并不宣称 `OPL` family orchestration surface 已在本仓实现；当前只是在为 future caller 冻结稳定 contract。
-当前也不宣称 MAG 需要自有长期常驻 runtime sidecar；自有 sidecar 只在外部 `Hermes-Agent` 无法表达 task/wakeup/approval/audit/product isolation contract 时，才由 `OPL Runtime Manager` 的 adapter/projection 边界进入 promotion 评估。
+MAG 侧当前实现的是 product sidecar adapter，而不是长期常驻 sidecar daemon。`product sidecar export --input <workspace.json> --format json` 导出 runtime_control、runtime_continuity、TODO/explicit wakeup、autonomy-controller 与 user-loop attention queue；`product sidecar dispatch --task <task.json> --format json` 只允许 MAG-owned guarded actions：`status/read`、`user-loop/wakeup`、`autonomy-controller/dry-run`、`autonomy-controller/guarded-run` 与 `notification/receipt`。
 
 ## OPL family orchestration contracts（adoption 方向）
 
@@ -101,11 +101,12 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 ## Hermes-Agent、Med Auto Grant 与 concrete executor 的分工
 
-在当前架构里，若显式启用 hosted/proof backend，`Hermes-Agent` 可以承担：
+在当前架构里，OPL-managed `Hermes-Agent` 可以承担：
 
 - session substrate
 - runtime state / attempt ledger durability
 - gateway / interrupt / resume / scheduling 这类长期在线 runtime 能力
+- sidecar dispatch 的在线唤醒 carrier
 
 `Med Auto Grant` 自己继续承担：
 
@@ -118,10 +119,11 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 - 具体 authoring pass 的执行
 - 由 route / executor adapter 选中的单步运行时
 - 当前默认 `Codex CLI` 执行器，默认模式是 `autonomous`；另有 opt-in `hermes_agent` explicit proof lane
+- sidecar dispatch 不会把 `hermes_agent` proof executor 设为默认
 
 因此，这里真实成立的是：
 
-- 默认公开 capability contract 先固定在 `CLI` / `MedAutoGrantDomainEntry` / 本地脚本 / schema-backed contract
+- 默认公开 capability contract 先固定在 `CLI` / `MedAutoGrantDomainEntry` / 本地脚本 / schema-backed contract / product sidecar adapter
 - domain governance / truth owner 仍是 `Med Auto Grant`
 - concrete executor owner 仍按 route 单独选择，当前默认是 `Codex CLI`
 

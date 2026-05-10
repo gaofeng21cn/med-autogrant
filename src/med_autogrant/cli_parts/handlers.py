@@ -146,6 +146,14 @@ def handle_product_start(args: argparse.Namespace) -> dict[str, Any]:
     )
 
 
+def handle_product_sidecar_export(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_sidecar_export(input_path=args.input)
+
+
+def handle_product_sidecar_dispatch(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().dispatch_sidecar_task(task_path=args.task)
+
+
 def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 

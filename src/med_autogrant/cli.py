@@ -15,6 +15,7 @@ from med_autogrant.public_cli import (
     PUBLIC_COMMAND_GROUP_SUMMARIES,
     PUBLIC_COMMAND_ORDER,
     PUBLIC_GROUP_COMMANDS,
+    PUBLIC_THREE_TOKEN_COMMANDS,
     PUBLIC_TO_INTERNAL_COMMAND,
     public_command_label,
 )
@@ -60,6 +61,8 @@ from med_autogrant.cli_parts.handlers import (
     handle_next_step,
     handle_probe_upstream_hermes,
     handle_product_entry_manifest,
+    handle_product_sidecar_dispatch,
+    handle_product_sidecar_export,
     handle_product_status,
     handle_product_preflight,
     handle_product_start,
@@ -85,6 +88,8 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_output_workspace_command,
     _add_phase_command,
     _add_product_entry_command,
+    _add_product_sidecar_dispatch_command,
+    _add_product_sidecar_export_command,
     _add_quality_diff_command,
     _add_refresh_cache_command,
     _add_resume_runtime_command,
@@ -373,6 +378,18 @@ def build_parser() -> argparse.ArgumentParser:
         handle_build_product_entry,
         "构建可直接进入或供 OPL handoff 复用的轻量 product entry envelope。",
     )
+    _add_product_sidecar_export_command(
+        subparsers,
+        "product-sidecar-export",
+        handle_product_sidecar_export,
+        "导出 MAG product sidecar adapter，供 OPL typed queue / Hermes substrate 消费。",
+    )
+    _add_product_sidecar_dispatch_command(
+        subparsers,
+        "product-sidecar-dispatch",
+        handle_product_sidecar_dispatch,
+        "执行 MAG-owned guarded sidecar task dispatch。",
+    )
     return parser
 
 def _print_public_help() -> None:
@@ -408,6 +425,9 @@ def _print_public_group_help(group: str) -> None:
     ]
     for subcommand in PUBLIC_GROUP_COMMANDS[group]:
         lines.append(f"  {subcommand}")
+    if group == "product":
+        lines.append("  sidecar export")
+        lines.append("  sidecar dispatch")
     print("\n".join(lines))
 
 
@@ -429,6 +449,8 @@ def _normalize_public_command_argv(argv: list[str]) -> list[str]:
         raise SystemExit(
             f"Legacy flat command `{argv[0]}` has been removed. Use `{public_command_label(argv[0])}` instead."
         )
+    if len(argv) >= 3 and (argv[0], argv[1], argv[2]) in PUBLIC_THREE_TOKEN_COMMANDS:
+        return [PUBLIC_THREE_TOKEN_COMMANDS[(argv[0], argv[1], argv[2])], *argv[3:]]
     if len(argv) >= 2 and (argv[0], argv[1]) in PUBLIC_TO_INTERNAL_COMMAND:
         return [PUBLIC_TO_INTERNAL_COMMAND[(argv[0], argv[1])], *argv[2:]]
     return argv

@@ -48,6 +48,8 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "product-preflight": ("product", "preflight"),
     "product-start": ("product", "start"),
     "build-product-entry": ("product", "build-entry"),
+    "product-sidecar-export": ("product", "sidecar-export"),
+    "product-sidecar-dispatch": ("product", "sidecar-dispatch"),
     "probe-upstream-hermes": ("runtime", "probe-hermes"),
     "runtime-run": ("runtime", "run"),
     "runtime-resume": ("runtime", "resume"),
@@ -71,6 +73,11 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
 
 PUBLIC_TO_INTERNAL_COMMAND: Final[dict[tuple[str, str], str]] = {
     value: key for key, value in INTERNAL_TO_PUBLIC_COMMAND.items()
+}
+
+PUBLIC_THREE_TOKEN_COMMANDS: Final[dict[tuple[str, str, str], str]] = {
+    ("product", "sidecar", "export"): "product-sidecar-export",
+    ("product", "sidecar", "dispatch"): "product-sidecar-dispatch",
 }
 
 PUBLIC_GROUP_COMMANDS: Final[dict[str, tuple[str, ...]]] = {
@@ -102,6 +109,11 @@ def public_cli_command(command: str, *args: str) -> str:
 
 def public_cli_argv(argv: list[str] | tuple[str, ...]) -> list[str]:
     resolved = list(argv)
+    if len(resolved) >= 3 and (resolved[0], resolved[1], resolved[2]) in PUBLIC_THREE_TOKEN_COMMANDS:
+        return [
+            PUBLIC_THREE_TOKEN_COMMANDS[(resolved[0], resolved[1], resolved[2])],
+            *resolved[3:],
+        ]
     if len(resolved) >= 1:
         command = resolved[0]
         if command in INTERNAL_TO_PUBLIC_COMMAND:

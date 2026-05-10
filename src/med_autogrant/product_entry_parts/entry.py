@@ -40,6 +40,7 @@ from med_autogrant.product_entry_parts.domain_entry_loader import build_default_
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
+from med_autogrant.product_entry_parts.sidecar import build_sidecar_export, dispatch_sidecar_task
 
 
 class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMixin, ProductEntryPreflightMixin):
@@ -259,3 +260,9 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             "output_path": str(resolved_output_path) if resolved_output_path is not None else None,
             "product_entry": product_entry,
         }
+
+    def build_sidecar_export(self, *, input_path: str | Path) -> dict[str, Any]:
+        return build_sidecar_export(self, input_path=input_path)
+
+    def dispatch_sidecar_task(self, *, task_path: str | Path) -> dict[str, Any]:
+        return dispatch_sidecar_task(self, task_path=task_path)
