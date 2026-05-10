@@ -63,6 +63,7 @@
 - “科学完成”交付面是可待审包；“形式/客观补件完成”是并行分层，不与正文语义混写。
 - 形式/客观补件默认按 `TODO + 显式唤醒` 处理，除非直接破坏正文科学成立，否则不升级为正文 blocker。
 - `OPL` 只保留 family-level 的 session/runtime/projection 与 shared modules/contracts/indexes。
+- 在 stage-led OPL family framework 中，MAG 持有基金 stage pack、prompt、skill、fundability / authoring quality gate、authoring truth 和 submission-ready export authority。OPL 可以提供 wakeup、queue、handoff、receipt 和 projection 支撑，但不会成为基金领域大脑或 route owner。
 - 目标形态中的 `OPL Runtime Manager` 可以在外部 `Hermes-Agent` substrate 之上索引 MAG runtime-control、continuity、artifact 与 wakeup projection，但 MAG 继续持有 grant truth 与 authoring contract。
 - `hosted-contract-bundle` 与 `runtime_control` 仅保留集成/参考面，用于 machine-readable handoff，不作为默认公开入口。
 - 人工 gate 仅限同一基金任务内的作者决策，不写成跨 funder 重选。
@@ -83,6 +84,7 @@
 - 然后读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。这是恢复 active product-entry shell、schema-backed surface 和当前 mainline 指针的最快路径。
 - 在改 route、入口 wording 或公开表述前，把 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 当成公开与技术真相集。
 - 当前 formal-entry matrix 是 `CLI`、`MCP` 和 `controller`。`CLI` / `MedAutoGrantDomainEntry` 是 agent entry；`product entry/product status/direct-entry/user-loop`、本地脚本与 schema-backed contract 共同构成 app skill 下的内部 command contract 和 direct-product projection。hosted / proof backend 只在显式 opt-in 集成 lane 中出现，不构成默认公开合同。
+- MAG 可以通过 Codex app skill 直接调用，也可以通过 OPL 托管调用。两条路径必须回到同一套 MAG-owned route、quality、workspace 和 export surface。
 - 如果外部 agent 或 OPL 需要直接读取 repo-tracked skill surface，用 repo-local launcher：`uv run --directory <med-autogrant-repo> medautogrant product skill-catalog --input <input_path> --format json`；返回的是一个 Med Auto Grant app skill 加底层 command contracts。
 - pre-authoring intake 用 `uv run --directory <med-autogrant-repo> medautogrant workspace initialize-intake --input <selection_input> --workspace-root <workspace_dir> --format json`；目录会带 workspace-local Git boundary，`workspace.json` 是 MAG canonical document。
 - 当前单一 skill descriptor 已携带可直接消费的 `runtime_continuity` envelope，并复用既有 `session_continuity` / `progress_projection` / `artifact_inventory` / `runtime_control` truth。

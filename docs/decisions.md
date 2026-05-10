@@ -6,6 +6,12 @@
 - 理由：OPL family Stage Control Plane 需要统一 stage descriptor，MAG 也需要保持自己的 author-side grant truth、fundability judgment、route truth 与 submission-ready export gate。用 descriptor/projection 可以让 OPL 读取 stage pack，而不复制或改写 MAG grant route truth。
 - 影响：`OPL` 只消费 stage descriptor/projection；MAG 继续持有 funding-call intake、fundability strategy、specific aims/structure、proposal authoring、review/rebuttal 与 local submission-ready export 的 authority。该变更不重写 autonomy controller、grant route truth 或 submission-ready gate。
 
+## 2026-05-10：MAG 作为 OPL stage-led framework 上的独立 domain agent
+
+- 决策：MAG 的 OPL 对齐口径固定为：MAG 是可被 Codex App skill 直接调用、也可由 OPL Codex-first stage-led family framework 托管的独立 medical grant domain agent。OPL 只持有 stage descriptor discovery、queue、wakeup、handoff、receipt、approval/retry/dead-letter、trace/projection 和 parity；MAG 持有 grant stage pack、prompt/skill、route truth、fundability / authoring quality gates、workspace truth 和 submission-ready export authority。
+- 理由：基金申请质量依赖 funder/call 语境、申请人基础、科学问题、specific aims、评审风险和正文质量闭环。OPL framework 可以提供可靠运行支撑，但不能替代 MAG 做 fundability judgement、authoring route 或 export readiness。
+- 影响：后续流程优化优先改 MAG stage pack、prompt、quality scorecard、autonomy controller 和 export gate；不得把 grant route 逻辑搬到 OPL 机械脚本。direct skill path 保持一等入口。
+
 ## 2026-05-10：落地 Hermes-first OPL Family Runtime 的 MAG product sidecar adapter
 
 - 决策：新增 `product sidecar export` 与 `product sidecar dispatch`，把 MAG 的 `runtime_control`、`runtime_continuity`、TODO/explicit wakeup、autonomy-controller 与 user-loop attention queue 投影成 OPL typed family queue 可消费的 sidecar surface。

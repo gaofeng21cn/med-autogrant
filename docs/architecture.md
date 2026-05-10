@@ -6,6 +6,8 @@
 
 `operator / Codex / OPL / generic agent caller -> single Med Auto Grant app skill -> CLI or MedAutoGrantDomainEntry -> route-selected executor -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
 
+在 OPL Codex-first、stage-led family framework 中，这条链路可以被 OPL 托管为 stage attempt，但不会改变 MAG 的 owner 边界：OPL 只提供 stage descriptor discovery、queue/wakeup、handoff、receipt、approval/retry、trace/projection；MAG 持有 grant route truth、fundability / authoring quality判断、workspace truth、artifact assembly 和 submission-ready export gate。
+
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 
 当前任务语义固定为“指定基金任务正文 authoring”。架构层显式区分两类完成态：科学完成可待审包，以及形式/客观补件完成。
@@ -82,6 +84,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 当前并不宣称 `OPL` family orchestration surface 已在本仓实现；当前只是在为 future caller 冻结稳定 contract。
 MAG 侧当前实现的是 product sidecar adapter，而不是长期常驻 sidecar daemon。`product sidecar export --input <workspace.json> --format json` 导出 runtime_control、runtime_continuity、TODO/explicit wakeup、autonomy-controller 与 user-loop attention queue；`product sidecar dispatch --task <task.json> --format json` 只允许 MAG-owned guarded actions：`status/read`、`user-loop/wakeup`、`autonomy-controller/dry-run`、`autonomy-controller/guarded-run` 与 `notification/receipt`。
+Codex App direct skill 调用与 OPL 托管调用必须在 `MedAutoGrantDomainEntry` / product-entry command contract 后收敛；OPL stage metadata 不能成为第二 route truth、第二 quality owner 或第二 export authority。
 
 ## OPL family orchestration contracts（adoption 方向）
 
