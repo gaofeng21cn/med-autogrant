@@ -43,7 +43,7 @@ MAG 的 OPL family stage pack 是 descriptor/projection，不是新的 controlle
 | `review_and_rebuttal` | `critique`、review、`grant_quality_closure_dossier`、`quality-diff` |
 | `package_and_submit_ready` | `freeze` / `frozen`、`package submission-ready`、submission-ready export gate |
 
-这层只让 OPL 读取 MAG 的 stage descriptor、operator projection 和下一步定位。MAG 继续持有 author-side grant truth、fundability judgment、route truth、quality closure 与 submission-ready export gate；外部 portal submission 继续由人工监督。
+这层只让 OPL 读取 MAG 的 stage descriptor、operator projection 和下一步定位。`product-entry-manifest` 中的 `family_stage_control_plane` 为 OPL discovery smoke 固定 stage goal、owner、skills、allowed action refs、handoff、source refs、freshness 与 authority boundary；`allowed_action_refs` 必须对齐同一 manifest 内的 `family_action_catalog`。MAG 继续持有 author-side grant truth、fundability judgment、route truth、quality closure 与 submission-ready export gate；外部 portal submission 继续由人工监督。
 
 ## Lifecycle Adapter
 

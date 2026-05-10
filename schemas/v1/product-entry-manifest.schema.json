@@ -1630,6 +1630,241 @@
         }
       }
     },
+    "familyStageControlPlane": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "version",
+        "plane_id",
+        "target_domain_id",
+        "owner",
+        "discovery_smoke",
+        "source_refs",
+        "freshness",
+        "authority_boundary",
+        "parity",
+        "stages",
+        "notes"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "family_stage_control_plane"
+        },
+        "version": {
+          "const": "family-stage-control-plane.v1"
+        },
+        "plane_id": {
+          "const": "med_autogrant_stage_control_plane"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "owner": {
+          "const": "med-autogrant"
+        },
+        "discovery_smoke": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "status",
+            "consumer",
+            "required_stage_fields",
+            "allowed_action_catalog_ref"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "family_stage_control_plane_discovery_smoke"
+            },
+            "status": {
+              "const": "ready"
+            },
+            "consumer": {
+              "const": "opl_family_manifest_discovery_smoke"
+            },
+            "required_stage_fields": {
+              "$ref": "common.schema.json#/$defs/stringList"
+            },
+            "allowed_action_catalog_ref": {
+              "const": "/product_entry_manifest/family_action_catalog"
+            }
+          }
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object"
+          }
+        },
+        "freshness": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "freshness_kind",
+            "refresh_policy",
+            "stale_if_source_refs_missing"
+          ],
+          "properties": {
+            "freshness_kind": {
+              "const": "product_entry_manifest_projection"
+            },
+            "refresh_policy": {
+              "const": "rebuild_product_entry_manifest_before_opl_discovery"
+            },
+            "stale_if_source_refs_missing": {
+              "const": true
+            }
+          }
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "domain_truth_owner",
+            "fundability_judgment_owner",
+            "submission_ready_export_gate_owner",
+            "opl_role",
+            "write_policy",
+            "can_write_grant_truth",
+            "can_override_fundability_judgment",
+            "can_bypass_submission_ready_gate"
+          ],
+          "properties": {
+            "domain_truth_owner": {
+              "const": "med-autogrant"
+            },
+            "fundability_judgment_owner": {
+              "const": "med-autogrant"
+            },
+            "submission_ready_export_gate_owner": {
+              "const": "med-autogrant"
+            },
+            "opl_role": {
+              "const": "projection_consumer_only"
+            },
+            "write_policy": {
+              "const": "no_grant_truth_writes"
+            },
+            "can_write_grant_truth": {
+              "const": false
+            },
+            "can_override_fundability_judgment": {
+              "const": false
+            },
+            "can_bypass_submission_ready_gate": {
+              "const": false
+            }
+          }
+        },
+        "parity": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "status",
+            "allowed_action_catalog_ref"
+          ],
+          "properties": {
+            "status": {
+              "const": "aligned"
+            },
+            "allowed_action_catalog_ref": {
+              "const": "/product_entry_manifest/family_action_catalog"
+            }
+          }
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "stage_id",
+              "stage_kind",
+              "title",
+              "goal",
+              "stage_goal",
+              "owner",
+              "skills",
+              "allowed_action_refs",
+              "handoff",
+              "source_refs",
+              "freshness",
+              "authority_boundary"
+            ],
+            "properties": {
+              "owner": {
+                "const": "med-autogrant"
+              },
+              "allowed_action_refs": {
+                "$ref": "common.schema.json#/$defs/stringList"
+              },
+              "source_refs": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object"
+                }
+              },
+              "freshness": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "freshness_kind",
+                  "refresh_policy",
+                  "stale_if_source_refs_missing"
+                ]
+              },
+              "authority_boundary": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "domain_truth_owner",
+                  "fundability_judgment_owner",
+                  "submission_ready_export_gate_owner",
+                  "opl_role",
+                  "maps_existing_surfaces_only",
+                  "can_write_grant_truth",
+                  "can_override_fundability_judgment",
+                  "can_bypass_submission_ready_gate"
+                ],
+                "properties": {
+                  "domain_truth_owner": {
+                    "const": "med-autogrant"
+                  },
+                  "fundability_judgment_owner": {
+                    "const": "med-autogrant"
+                  },
+                  "submission_ready_export_gate_owner": {
+                    "const": "med-autogrant"
+                  },
+                  "opl_role": {
+                    "const": "projection_consumer_only"
+                  },
+                  "maps_existing_surfaces_only": {
+                    "const": true
+                  },
+                  "can_write_grant_truth": {
+                    "const": false
+                  },
+                  "can_override_fundability_judgment": {
+                    "const": false
+                  },
+                  "can_bypass_submission_ready_gate": {
+                    "const": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "notes": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
     "skillDescriptor": {
       "type": "object",
       "additionalProperties": false,
@@ -2490,7 +2725,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -2600,6 +2835,9 @@
         },
         "family_action_catalog": {
           "$ref": "#/$defs/familyActionCatalog"
+        },
+        "family_stage_control_plane": {
+          "$ref": "#/$defs/familyStageControlPlane"
         },
         "action_catalog_projections": {
           "$ref": "#/$defs/actionCatalogProjections"

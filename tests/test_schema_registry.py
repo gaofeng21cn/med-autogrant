@@ -324,6 +324,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("autonomy_observability", manifest_required)
         self.assertIn("product_entry_quickstart", manifest_required)
         self.assertIn("family_action_catalog", manifest_required)
+        self.assertIn("family_stage_control_plane", manifest_required)
         self.assertIn("action_catalog_projections", manifest_required)
 
         status_schema = json.loads((SCHEMA_ROOT / "product-status.schema.json").read_text(encoding="utf-8"))

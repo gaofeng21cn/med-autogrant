@@ -229,6 +229,23 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(stage_plane["plane_id"], "med_autogrant_stage_control_plane")
         self.assertEqual(stage_plane["target_domain_id"], "med-autogrant")
         self.assertEqual(stage_plane["authority_boundary"]["opl_role"], "projection_consumer_only")
+        self.assertFalse(stage_plane["authority_boundary"]["can_write_grant_truth"])
+        self.assertFalse(stage_plane["authority_boundary"]["can_override_fundability_judgment"])
+        self.assertFalse(stage_plane["authority_boundary"]["can_bypass_submission_ready_gate"])
+        self.assertEqual(stage_plane["discovery_smoke"]["status"], "ready")
+        self.assertEqual(
+            stage_plane["discovery_smoke"]["allowed_action_catalog_ref"],
+            "/product_entry_manifest/family_action_catalog",
+        )
+        self.assertEqual(stage_plane["parity"]["status"], "aligned")
+        self.assertEqual(
+            stage_plane["freshness"]["refresh_policy"],
+            "rebuild_product_entry_manifest_before_opl_discovery",
+        )
+        self.assertIn(
+            {"ref_kind": "json_pointer", "ref": "/product_entry_manifest/family_action_catalog", "role": "action_catalog"},
+            stage_plane["source_refs"],
+        )
         self.assertEqual(
             [stage["stage_id"] for stage in stage_plane["stages"]],
             [
@@ -240,6 +257,23 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
                 "package_and_submit_ready",
             ],
         )
+        action_ids = {action["action_id"] for action in action_catalog["actions"]}
+        required_stage_fields = set(stage_plane["discovery_smoke"]["required_stage_fields"])
+        for stage in stage_plane["stages"]:
+            with self.subTest(stage=stage["stage_id"]):
+                self.assertLessEqual(required_stage_fields, set(stage))
+                self.assertEqual(stage["owner"], "med-autogrant")
+                self.assertEqual(stage["stage_goal"], stage["goal"])
+                self.assertTrue(set(stage["allowed_action_refs"]) <= action_ids)
+                self.assertEqual(stage["handoff"]["shared_handoff_ref"], "/shared_handoff")
+                self.assertGreaterEqual(len(stage["source_refs"]), 5)
+                self.assertEqual(
+                    stage["freshness"]["refresh_policy"],
+                    "rebuild_product_entry_manifest_before_opl_discovery",
+                )
+                self.assertFalse(stage["authority_boundary"]["can_write_grant_truth"])
+                self.assertFalse(stage["authority_boundary"]["can_override_fundability_judgment"])
+                self.assertFalse(stage["authority_boundary"]["can_bypass_submission_ready_gate"])
         proposal_stage = next(stage for stage in stage_plane["stages"] if stage["stage_id"] == "proposal_authoring")
         self.assertEqual(proposal_stage["stage_kind"], "creation")
         self.assertEqual(

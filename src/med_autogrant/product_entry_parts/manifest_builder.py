@@ -191,7 +191,9 @@ class ProductEntryManifestBuilderMixin:
         family_action_catalog = build_mag_family_action_catalog(
             action_commands=base_operator_loop_actions,
         )
-        family_stage_control_plane = build_mag_family_stage_control_plane()
+        family_stage_control_plane = build_mag_family_stage_control_plane(
+            family_action_catalog=family_action_catalog,
+        )
         action_catalog_projections = project_mag_family_action_catalog(family_action_catalog)
         operator_loop_actions = annotate_operator_loop_actions_with_catalog_refs(
             operator_loop_actions=base_operator_loop_actions,

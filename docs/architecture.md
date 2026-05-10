@@ -96,6 +96,7 @@ MAG 侧当前实现的是 product sidecar adapter，而不是长期常驻 sideca
 
 对 `Med Auto Grant` 来说，优先 adoption 的面是 `workspace progress / workspace cockpit / product direct-entry / product user-loop`，并与 family action graph / family human gate / family product-entry manifest v2 对齐；这些面仍属于 app skill 下的内部 command contract，domain 侧继续保持 `workspace / draft / program` 的真相边界。
 `family_action_catalog` 是 MAG-owned callable action metadata 单一声明面；product-entry manifest 由它派生 CLI、product-entry、single app skill metadata 与 MCP-compatible descriptor。当前 MAG 只声明 MCP descriptor/protocol-layer projection，`descriptor_only=true`、`public_runtime=false`；`OPL` 只读取该 catalog 做 family-level discovery/export/parity，不持有 grant truth、fundability judgement 或 submission-ready export gate。
+`family_stage_control_plane` 同样从 `product-entry-manifest` 暴露，但它只是一组 MAG-owned stage descriptors：每个 stage 都必须携带 stage goal、owner、skills、`allowed_action_refs`、handoff、source refs、freshness 与 authority boundary。构建时会把 `allowed_action_refs` 校验到 `family_action_catalog`，从而让 `OPL` 的 discovery smoke 读取同一份 action truth；MAG 继续持有 grant truth、fundability judgment 与 submission-ready export gate。
 
 这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL Runtime Manager` 写成 MAG runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 的外部 runtime carrier，而不是默认公开入口。
 
