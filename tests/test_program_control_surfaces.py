@@ -187,7 +187,8 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
         self.assertEqual(
             contract["ideal_target"]["runtime_substrate_owner"],
-            "explicit hosted runtime carrier (for example Hermes-Agent)",
+            "OPL-managed Hermes as online substrate for family runtime wakeup/control-plane consumption; "
+            "route-selected authoring executor remains Codex/domain-selected by default",
         )
         self.assertEqual(contract["ideal_target"]["authoring_truth_owner"], "Med Auto Grant")
         self.assertIn("runtime_control", contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"])

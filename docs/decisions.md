@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-10：声明 MAG 的 OPL family Stage Control Plane projection
+
+- 决策：在 `contracts/runtime-program/opl-family-contract-adoption.json` 中新增 `stage_control_projection`，把 OPL family stage pack 映射回 MAG 已有 `input_intake`、`direction_screening`、`question_refinement`、`argument_building`、`fit_alignment`、`outline`、`drafting`、`critique`、`revision`、`freeze/frozen` 与 `package submission-ready` surface。
+- 理由：OPL family Stage Control Plane 需要统一 stage descriptor，MAG 也需要保持自己的 author-side grant truth、fundability judgment、route truth 与 submission-ready export gate。用 descriptor/projection 可以让 OPL 读取 stage pack，而不复制或改写 MAG grant route truth。
+- 影响：`OPL` 只消费 stage descriptor/projection；MAG 继续持有 funding-call intake、fundability strategy、specific aims/structure、proposal authoring、review/rebuttal 与 local submission-ready export 的 authority。该变更不重写 autonomy controller、grant route truth 或 submission-ready gate。
+
 ## 2026-05-10：落地 Hermes-first OPL Family Runtime 的 MAG product sidecar adapter
 
 - 决策：新增 `product sidecar export` 与 `product sidecar dispatch`，把 MAG 的 `runtime_control`、`runtime_continuity`、TODO/explicit wakeup、autonomy-controller 与 user-loop attention queue 投影成 OPL typed family queue 可消费的 sidecar surface。

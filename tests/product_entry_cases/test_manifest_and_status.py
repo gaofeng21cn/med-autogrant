@@ -223,6 +223,33 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             manifest["operator_loop_actions"]["open_loop"]["command"],
             user_loop_action["source_command"]["command"],
         )
+        stage_plane = manifest["family_stage_control_plane"]
+        self.assertEqual(stage_plane["surface_kind"], "family_stage_control_plane")
+        self.assertEqual(stage_plane["version"], "family-stage-control-plane.v1")
+        self.assertEqual(stage_plane["plane_id"], "med_autogrant_stage_control_plane")
+        self.assertEqual(stage_plane["target_domain_id"], "med-autogrant")
+        self.assertEqual(stage_plane["authority_boundary"]["opl_role"], "projection_consumer_only")
+        self.assertEqual(
+            [stage["stage_id"] for stage in stage_plane["stages"]],
+            [
+                "call_and_candidate_intake",
+                "fundability_strategy",
+                "specific_aims_and_structure",
+                "proposal_authoring",
+                "review_and_rebuttal",
+                "package_and_submit_ready",
+            ],
+        )
+        proposal_stage = next(stage for stage in stage_plane["stages"] if stage["stage_id"] == "proposal_authoring")
+        self.assertEqual(proposal_stage["stage_kind"], "creation")
+        self.assertEqual(
+            proposal_stage["domain_stage_refs"],
+            ["drafting", "revision", "grant-progress", "grant-user-loop"],
+        )
+        self.assertEqual(
+            proposal_stage["authority_boundary"]["submission_ready_export_gate_owner"],
+            "med-autogrant",
+        )
         self.assertEqual(
             skill["domain_projection"]["action_catalog_ref"],
             "/product_entry_manifest/family_action_catalog",

@@ -71,10 +71,78 @@ def test_mag_operator_and_incident_projection_require_source_refs_and_mag_closur
     for non_goal in (
         "OPL owns grant truth",
         "OPL bypasses submission-ready export gate",
+        "OPL owns grant stage truth",
         "medical publication gate",
         "visual render/export proof gate",
     ):
         assert non_goal in contract["non_goals"]
+
+
+def test_mag_stage_control_projection_is_descriptor_only_and_maps_existing_stage_surfaces() -> None:
+    contract = _contract()
+    stage_projection = contract["stage_control_projection"]
+
+    assert stage_projection["surface_kind"] == "mag_opl_family_stage_control_projection.v1"
+    assert stage_projection["projection_role"] == "descriptor_only_stage_pack"
+    assert stage_projection["maps_to_opl_contract"] == "opl_family_stage_control_plane_stage_pack.v1"
+    assert stage_projection["maps_existing_surfaces_only"] is True
+    assert stage_projection["owner_boundary"] == {
+        "domain_truth_owner": "med-autogrant",
+        "fundability_judgment_owner": "med-autogrant",
+        "submission_ready_export_gate_owner": "med-autogrant",
+        "opl_role": "stage descriptor/projection consumer only",
+    }
+
+    pack = {entry["opl_stage"]: entry for entry in stage_projection["stage_pack"]}
+    assert list(pack) == [
+        "call_and_candidate_intake",
+        "fundability_strategy",
+        "specific_aims_and_structure",
+        "proposal_authoring",
+        "review_and_rebuttal",
+        "package_and_submit_ready",
+    ]
+    expected_surfaces = {
+        "call_and_candidate_intake": {
+            "discover-funding-opportunities",
+            "select-project-profile",
+            "initialize-intake-workspace",
+            "input_intake",
+        },
+        "fundability_strategy": {
+            "direction_screening",
+            "fit_alignment",
+            "grant_quality_scorecard",
+            "fundability gate",
+        },
+        "specific_aims_and_structure": {
+            "question_refinement",
+            "argument_building",
+            "outline",
+        },
+        "proposal_authoring": {
+            "drafting",
+            "revision",
+            "grant-progress",
+            "grant-user-loop",
+        },
+        "review_and_rebuttal": {
+            "critique",
+            "review",
+            "grant_quality_closure_dossier",
+            "quality-diff",
+        },
+        "package_and_submit_ready": {
+            "freeze",
+            "frozen",
+            "package submission-ready",
+            "submission-ready export gate",
+        },
+    }
+    for stage, surfaces in expected_surfaces.items():
+        assert set(pack[stage]["mag_surfaces"]) == surfaces
+        assert pack[stage]["truth_owner"] == "med-autogrant"
+        assert pack[stage]["authority"]
 
 
 def test_mag_adoption_contract_declares_lifecycle_adapter_mapping() -> None:

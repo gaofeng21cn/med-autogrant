@@ -52,6 +52,85 @@
       "human_gate_reason"
     ]
   },
+  "stage_control_projection": {
+    "surface_kind": "mag_opl_family_stage_control_projection.v1",
+    "projection_role": "descriptor_only_stage_pack",
+    "maps_to_opl_contract": "opl_family_stage_control_plane_stage_pack.v1",
+    "maps_existing_surfaces_only": true,
+    "stage_pack": [
+      {
+        "opl_stage": "call_and_candidate_intake",
+        "mag_surfaces": [
+          "discover-funding-opportunities",
+          "select-project-profile",
+          "initialize-intake-workspace",
+          "input_intake"
+        ],
+        "truth_owner": "med-autogrant",
+        "authority": "candidate/call materials are intake context until MAG selects or receives an explicit target funding call"
+      },
+      {
+        "opl_stage": "fundability_strategy",
+        "mag_surfaces": [
+          "direction_screening",
+          "fit_alignment",
+          "grant_quality_scorecard",
+          "fundability gate"
+        ],
+        "truth_owner": "med-autogrant",
+        "authority": "MAG owns fundability judgment and same-funder strategy continuity"
+      },
+      {
+        "opl_stage": "specific_aims_and_structure",
+        "mag_surfaces": [
+          "question_refinement",
+          "argument_building",
+          "outline"
+        ],
+        "truth_owner": "med-autogrant",
+        "authority": "MAG owns scientific question, claim-evidence chain, and aims/outline structure"
+      },
+      {
+        "opl_stage": "proposal_authoring",
+        "mag_surfaces": [
+          "drafting",
+          "revision",
+          "grant-progress",
+          "grant-user-loop"
+        ],
+        "truth_owner": "med-autogrant",
+        "authority": "MAG owns author-side proposal body drafting and revision truth"
+      },
+      {
+        "opl_stage": "review_and_rebuttal",
+        "mag_surfaces": [
+          "critique",
+          "review",
+          "grant_quality_closure_dossier",
+          "quality-diff"
+        ],
+        "truth_owner": "med-autogrant",
+        "authority": "MAG owns reviewer-style critique, issue closure, and rebuttal/readiness judgment"
+      },
+      {
+        "opl_stage": "package_and_submit_ready",
+        "mag_surfaces": [
+          "freeze",
+          "frozen",
+          "package submission-ready",
+          "submission-ready export gate"
+        ],
+        "truth_owner": "med-autogrant",
+        "authority": "MAG owns local submission-ready export; external portal submission remains human-supervised"
+      }
+    ],
+    "owner_boundary": {
+      "domain_truth_owner": "med-autogrant",
+      "fundability_judgment_owner": "med-autogrant",
+      "submission_ready_export_gate_owner": "med-autogrant",
+      "opl_role": "stage descriptor/projection consumer only"
+    }
+  },
   "lifecycle_adapter": {
     "surface_kind": "opl_family_lifecycle_adapter_contract",
     "adapter_id": "mag.opl_family.lifecycle_adapter.v1",
@@ -111,6 +190,7 @@
   "non_goals": [
     "OPL owns grant truth",
     "OPL owns fundability judgment",
+    "OPL owns grant stage truth",
     "OPL bypasses submission-ready export gate",
     "medical publication gate",
     "visual render/export proof gate",

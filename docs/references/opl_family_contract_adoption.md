@@ -30,6 +30,21 @@ MAG 通过 `controller_report`、`runtime_control.semantic_closure`、`workspace
 
 MAG 通过 `product status`、`product user-loop`、`workspace progress`、`workspace cockpit` 与 `product direct-entry` 映射 `opl_family_product_operator_projection.v1`。这些投影必须保留 source refs、freshness、owner split、next surface ref 和 human gate reason。
 
+## Stage Control Projection
+
+MAG 的 OPL family stage pack 是 descriptor/projection，不是新的 controller 或 route truth。它把 OPL family Stage Control Plane 的六个 stage 映射回 MAG 已有 surface：
+
+| OPL family stage | MAG-owned surfaces |
+| --- | --- |
+| `call_and_candidate_intake` | `discover-funding-opportunities`、`select-project-profile`、`initialize-intake-workspace`、`input_intake` |
+| `fundability_strategy` | `direction_screening`、`fit_alignment`、`grant_quality_scorecard`、fundability gate |
+| `specific_aims_and_structure` | `question_refinement`、`argument_building`、`outline` |
+| `proposal_authoring` | `drafting`、`revision`、`grant-progress`、`grant-user-loop` |
+| `review_and_rebuttal` | `critique`、review、`grant_quality_closure_dossier`、`quality-diff` |
+| `package_and_submit_ready` | `freeze` / `frozen`、`package submission-ready`、submission-ready export gate |
+
+这层只让 OPL 读取 MAG 的 stage descriptor、operator projection 和下一步定位。MAG 继续持有 author-side grant truth、fundability judgment、route truth、quality closure 与 submission-ready export gate；外部 portal submission 继续由人工监督。
+
 ## Lifecycle Adapter
 
 MAG 的 `opl_runtime_manager_registration` 现在携带 `family_lifecycle_adapter`。这层只把已有 `runtime_control`、`session_continuity`、`grant-progress/user-loop` 与 `artifact_inventory` 映射为 OPL family persistence、lifecycle、owner-route discovery 和 adoption projection：

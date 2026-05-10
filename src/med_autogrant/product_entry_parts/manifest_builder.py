@@ -14,6 +14,7 @@ from med_autogrant.action_catalog import (
     build_mag_family_action_catalog,
     project_mag_family_action_catalog,
 )
+from med_autogrant.stage_control_plane import build_mag_family_stage_control_plane
 from med_autogrant.product_entry_parts.autonomy_observability import build_grant_autonomy_observability
 from med_autogrant.product_entry_parts.orchestration_companions import (
     _build_family_orchestration_companion,
@@ -190,6 +191,7 @@ class ProductEntryManifestBuilderMixin:
         family_action_catalog = build_mag_family_action_catalog(
             action_commands=base_operator_loop_actions,
         )
+        family_stage_control_plane = build_mag_family_stage_control_plane()
         action_catalog_projections = project_mag_family_action_catalog(family_action_catalog)
         operator_loop_actions = annotate_operator_loop_actions_with_catalog_refs(
             operator_loop_actions=base_operator_loop_actions,
@@ -892,6 +894,7 @@ class ProductEntryManifestBuilderMixin:
             user_interaction_contract=user_interaction_contract,
             extra_payload={
                 "family_action_catalog": family_action_catalog,
+                "family_stage_control_plane": family_stage_control_plane,
                 "action_catalog_projections": action_catalog_projections,
                 "runtime_control": runtime_control,
                 "grant_authoring_readiness": grant_authoring_readiness,
