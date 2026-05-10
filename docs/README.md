@@ -19,7 +19,7 @@ This guide is for readers who need the technical records, trace records, referen
 - `Med Auto Grant` is an independent medical grant domain agent whose first public surface is the single Med Auto Grant app skill. The stable callable surface underneath it is `CLI`, `MedAutoGrantDomainEntry`, local scripts, and schema-backed contracts.
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
 - Default authoring execution and default runtime owner inherit local `Codex CLI` / `codex_cli` defaults through the existing route-selected executor path.
-- `OPL Runtime Manager` is the target OPL-side thin manager over the external `Hermes-Agent` substrate; it may consume MAG runtime_control, runtime_continuity, workspace projection, artifact locator, and explicit wakeup/TODO queues, but it does not own MAG grant truth or authoring execution.
+- `OPL Runtime Manager` is the target OPL-side thin manager over the configured family runtime provider. Temporal is the production substrate candidate; Hermes remains a legacy/optional provider or proof lane. It may consume MAG runtime_control, runtime_continuity, workspace projection, artifact locator, and explicit wakeup/TODO queues, but it does not own MAG grant truth or authoring execution.
 - `Hermes-Agent`-related lanes stay in explicit hosted/proof or technical-reference positions; they are not installed by default and do not redefine the default public capability contract.
 - Historical program records and migration notes stay reachable through `docs/history/`; older dated specs can remain in `docs/specs/` for provenance, while machine-readable surfaces refer to them through semantic `human_doc:*` ids rather than path-stability constraints.
 - The product status, user-loop, projections, and local `submission-ready` package are landed as internal command contracts and direct-product projections under the app skill. The active task boundary now distinguishes scientific review readiness from the stricter local export gate, and that export gate does not imply external funding-portal submission. Future hosted product expansion belongs in `docs/plans/` only when there is an active plan.
@@ -60,7 +60,7 @@ These files are the default public-facing entry surfaces and should stay mirrore
 The root public-doc allowlist is intentionally sparse:
 
 - `README*` is the public first page.
-- `docs/domain-positioning*` remains current for MAG owner, public subject, and OPL/Hermes boundary.
+- `docs/domain-positioning*` remains current for MAG owner, public subject, and OPL/provider boundary.
 - `docs/mvp-scope*` remains current for the NSFC MVP scope and non-goals.
 
 ## Technical Records

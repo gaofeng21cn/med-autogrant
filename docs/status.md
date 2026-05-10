@@ -7,7 +7,7 @@ Date: `2026-05-06`
 - 仓库角色：`Med Auto Grant` 是独立 medical grant domain agent，负责 author-side grant truth、route、review gate 与 package export；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
 - OPL 关系：MAG 可以作为 OPL Codex-first、stage-led family agent framework 上的 admitted domain agent 被托管、唤醒和投影，但不是 OPL 内部模块。OPL 只负责 stage descriptor discovery、queue/wakeup、handoff、receipt、approval/retry/dead-letter 和 operator projection；MAG 继续持有 grant stage pack、prompt/skill、route truth、quality gate 和 submission-ready export authority。
 - 当前执行口径：repo-tracked 默认 capability contract 收口为单一 `Med Auto Grant` app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；其中 `product entry/product status/direct-entry/user-loop` 是 app skill 下的内部 command contract 和 direct-product projection。默认正文执行与默认 runtime owner 固定继承本机 `Codex CLI` / `codex_cli` 配置；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 与技术参考层，默认安装不拉取 `hermes-agent`。
-- OPL Runtime Manager 口径：`OPL Runtime Manager` 是 OPL 侧薄运行管理/投影层，用于把 MAG 的 task registration、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue 接到 OPL-managed `Hermes-Agent` 在线 substrate、高频状态索引和 doctor/repair/resume 面；它不持有 author-side truth、quality gate、submission-ready export gate 或 concrete executor。
+- OPL Runtime Manager 口径：`OPL Runtime Manager` 是 OPL 侧薄运行管理/投影层，用于把 MAG 的 task registration、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue 接到 OPL family runtime provider、高频状态索引和 doctor/repair/resume 面；Temporal 是目标生产 provider，Hermes 是迁移期 legacy/optional provider 或 executor/proof lane。它不持有 author-side truth、quality gate、submission-ready export gate 或 concrete executor。
 - 当前 agent entry：`CLI` / `MedAutoGrantDomainEntry` 可被 `Codex`、`OPL` 和其他通用 agent 直接调用，或者先通过单一 app skill 读取 machine-readable surface。
 - Codex App direct skill 调用与 OPL 托管调用都必须回到同一套 MAG-owned route truth、workspace truth、quality surfaces 和 export gate。
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
@@ -69,7 +69,7 @@ Date: `2026-05-06`
 - 当前 controller-owned projection：`workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`
 - 当前 repo 级投影：`mainline status` 输出 current line / current focus；`mainline phase` 只承担维护者参考记录。
 - `pass critique --executor hermes_agent` 继续作为显式 proof lane；默认执行器固定为 `codex_cli` / `Codex CLI`，默认模式是 `autonomous`
-- MAG 侧当前目标是 product sidecar adapter，而不是常驻 sidecar daemon：`product sidecar export` / `dispatch` 是 CLI/product-entry 结构化 surface，供 OPL typed queue 与 OPL-managed Hermes 在线 substrate 唤醒；默认正文 executor 仍由 Codex/domain-selected route 承担。
+- MAG 侧当前目标是 product sidecar adapter，而不是常驻 sidecar daemon：`product sidecar export` / `dispatch` 是 CLI/product-entry 结构化 surface，供 OPL typed queue 与 OPL family runtime provider 唤醒；默认正文 executor 仍由 Codex/domain-selected route 承担。
 
 ## 当前目录治理
 

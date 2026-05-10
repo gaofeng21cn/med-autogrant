@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-10：MAG 对齐 OPL provider-backed runtime，Temporal 为目标生产 substrate
+
+- 决策：MAG 的 OPL 长期托管口径更新为 `OPL Runtime Manager / opl family-runtime -> configured family runtime provider -> MAG product sidecar export/dispatch -> MAG domain entry/projection`。Temporal 是 OPL durable stage attempt 的目标生产 provider；Hermes-Agent 在迁移期只作为 legacy/optional provider、显式 hosted/proof backend、executor proof lane 或 Codex CLI fallback module。
+- 理由：MAG 需要长期 authoring stage attempt、human gate、retry/dead-letter、TODO wakeup 和 operator projection，但 grant truth、fundability judgment、authoring quality gate、workspace truth 和 submission-ready export authority 必须仍由 MAG 持有。
+- 影响：`product sidecar export|dispatch` 继续是 OPL provider 到 MAG owner surface 的受控桥接。OPL/Temporal/Hermes/local provider 只能 enqueue、dispatch、signal、query、投影 attempt/receipt，不得写 grant truth、fundability verdict、authoring quality gate、workspace canonical document 或 submission-ready export gate。下方 Hermes-first sidecar adapter 决策保留为迁移背景，后续新投入按 provider-backed / Temporal target 解释。
+
 ## 2026-05-10：声明 MAG 的 OPL family Stage Control Plane projection
 
 - 决策：在 `contracts/runtime-program/opl-family-contract-adoption.json` 中新增 `stage_control_projection`，把 OPL family stage pack 映射回 MAG 已有 `input_intake`、`direction_screening`、`question_refinement`、`argument_building`、`fit_alignment`、`outline`、`drafting`、`critique`、`revision`、`freeze/frozen` 与 `package submission-ready` surface。
@@ -14,13 +20,15 @@
 
 ## 2026-05-10：落地 Hermes-first OPL Family Runtime 的 MAG product sidecar adapter
 
+- 状态：已被同日 provider-backed / Temporal target 决策 supersede。保留本段用于解释 Hermes-first sidecar adapter 的迁移背景和当前 legacy provider 口径。
+
 - 决策：新增 `product sidecar export` 与 `product sidecar dispatch`，把 MAG 的 `runtime_control`、`runtime_continuity`、TODO/explicit wakeup、autonomy-controller 与 user-loop attention queue 投影成 OPL typed family queue 可消费的 sidecar surface。
-- 理由：Hermes-first family runtime 需要 24h 在线 substrate 与 typed queue/control-plane，但 MAG 仍必须持有 grant truth、quality gate 与 artifact/export owner。sidecar adapter 让 OPL/Hermes 消费结构化 runtime/wakeup/control projection，同时不复制或改写 grant truth。
+- 理由：迁移期 Hermes-first family runtime 需要 24h 在线 substrate 与 typed queue/control-plane，但 MAG 仍必须持有 grant truth、quality gate 与 artifact/export owner。sidecar adapter 让 OPL provider 消费结构化 runtime/wakeup/control projection，同时不复制或改写 grant truth。
 - 影响：dispatch 只允许 `status/read`、`user-loop/wakeup`、`autonomy-controller/dry-run`、`autonomy-controller/guarded-run`、`notification/receipt` 这组 MAG-owned guarded actions；`hermes_agent` proof executor 仍是显式 opt-in，不成为默认 authoring executor。
 
 ## 2026-04-26：MAG 对齐 OPL Runtime Manager 薄管理层
 
-- 决策：MAG 与 OPL 的长期托管对齐采用 `OPL Product Entry -> OPL Runtime Manager -> MAG product-entry/runtime-control projection -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`；外部 `Hermes-Agent` 只作为显式 hosted/proof carrier 接入。MAG 只提供 domain entry contract、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue；`OPL Runtime Manager` 只负责 OPL 侧 registration hydration、status index、doctor/repair/resume 与 native helper catalog。
+- 决策：MAG 与 OPL 的长期托管对齐采用 `OPL Product Entry -> OPL Runtime Manager -> configured family runtime provider -> MAG product-entry/runtime-control projection -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`；外部 `Hermes-Agent` 只作为显式 hosted/proof carrier 或 legacy provider 接入。MAG 只提供 domain entry contract、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue；`OPL Runtime Manager` 只负责 OPL 侧 registration hydration、status index、doctor/repair/resume 与 native helper catalog。
 - 理由：MAG 的核心价值在 author-side grant truth、route/export contract、quality gate 和 submission-ready export gate。把长期在线管理先放在 OPL Runtime Manager 这一薄层，可以保持默认 `Codex CLI` / `codex_cli` runtime owner 清晰，并为显式 hosted/proof carrier 与未来自有 sidecar 预留 promotion 边界，同时不制造第二套 grant truth。
 - 影响：`current-program.json` 增加 runtime manager boundary；后续 docs/contracts 若提到 OPL 长期托管，必须明确 Runtime Manager 不是 MAG 的 scheduler kernel、session store、memory store、grant truth owner、authoring executor 或 private Hermes fork。
 
@@ -62,8 +70,8 @@
 
 ## 2026-04-17：冻结托管运行时三层 owner contract
 
-- 决策：把当前主线统一明确成三层 owner：默认 runtime owner 是 `Codex CLI` / `codex_cli`，显式 hosted/proof carrier 可以由外部 `Hermes-Agent` 承担，`Med Auto Grant` 只持有 grant-domain governance / progress / review / package gate truth，而 route-selected executor 只持有具体 authoring execution。
-- 理由：如果只写成“上游 Hermes substrate + repo-side domain logic”，仍然容易把 domain supervision、默认 runtime owner 和具体 executor 混成一层，后续跨仓对齐时也会反复漂移。
+- 决策：把当前主线统一明确成三层 owner：默认 runtime owner 是 `Codex CLI` / `codex_cli`，显式 hosted/proof carrier 可以由外部 `Hermes-Agent` 或 OPL provider 承担，`Med Auto Grant` 只持有 grant-domain governance / progress / review / package gate truth，而 route-selected executor 只持有具体 authoring execution。
+- 理由：如果只写成“上游 runtime substrate + repo-side domain logic”，仍然容易把 domain supervision、默认 runtime owner 和具体 executor 混成一层，后续跨仓对齐时也会反复漂移。
 - 影响：文档、spec 与入口 wording 都必须显式区分 runtime owner、domain owner 与 executor owner；这轮只冻结 contract / 文档 / 入口同构，不宣称跨仓共享代码模块已抽离完成。
 
 ## 2026-04-13：把本地 submission-ready 交付导出收口成正式 command surface

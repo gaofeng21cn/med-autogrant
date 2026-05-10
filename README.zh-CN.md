@@ -64,7 +64,7 @@
 - 形式/客观补件默认按 `TODO + 显式唤醒` 处理，除非直接破坏正文科学成立，否则不升级为正文 blocker。
 - `OPL` 只保留 family-level 的 session/runtime/projection 与 shared modules/contracts/indexes。
 - 在 stage-led OPL family framework 中，MAG 持有基金 stage pack、prompt、skill、fundability / authoring quality gate、authoring truth 和 submission-ready export authority。OPL 可以提供 wakeup、queue、handoff、receipt 和 projection 支撑，但不会成为基金领域大脑或 route owner。
-- 目标形态中的 `OPL Runtime Manager` 可以在外部 `Hermes-Agent` substrate 之上索引 MAG runtime-control、continuity、artifact 与 wakeup projection，但 MAG 继续持有 grant truth 与 authoring contract。
+- 目标形态中的 `OPL Runtime Manager` 可以在已配置的 OPL family runtime provider 之上索引 MAG runtime-control、continuity、artifact 与 wakeup projection。Temporal 是 durable stage attempt 的目标生产 substrate；Hermes 在迁移期只作为 legacy/optional provider 或 executor/proof lane。MAG 继续持有 grant truth 与 authoring contract。
 - `hosted-contract-bundle` 与 `runtime_control` 仅保留集成/参考面，用于 machine-readable handoff，不作为默认公开入口。
 - 人工 gate 仅限同一基金任务内的作者决策，不写成跨 funder 重选。
 - 外部基金官网提交由人工监督完成。

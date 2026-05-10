@@ -77,9 +77,9 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 按当前定位，这条链路的 owner 固定为：
 
 - `OPL`：family-level session/runtime/projection 与 shared modules/contracts/indexes owner
-- `OPL Runtime Manager`：OPL 侧 product-managed adapter/projection layer，负责 MAG task registration hydration、runtime status projection、doctor/repair/resume、native helper catalog 与高频状态索引；OPL-managed Hermes 是 24h 在线 substrate / wakeup carrier，不持有 MAG grant truth
+- `OPL Runtime Manager`：OPL 侧 product-managed adapter/projection layer，负责 MAG task registration hydration、runtime status projection、doctor/repair/resume、native helper catalog 与高频状态索引；OPL family runtime provider 是 24h durable stage-attempt / wakeup carrier，不持有 MAG grant truth
 - `Med Auto Grant App Skill`：domain direct entry owner
-- `Hermes-Agent`：OPL family runtime 的在线 substrate / wakeup carrier；作为 authoring proof executor 时仍必须显式 opt-in
+- `OPL family runtime provider`：Temporal 是目标生产 substrate；Hermes-Agent 在迁移期只作为 legacy/optional provider 或 authoring proof executor，且必须显式 opt-in
 - `Med Auto Grant`：author-side grant truth / route / export owner
 
 当前并不宣称 `OPL` family orchestration surface 已在本仓实现；当前只是在为 future caller 冻结稳定 contract。
@@ -101,16 +101,18 @@ Codex App direct skill 调用与 OPL 托管调用必须在 `MedAutoGrantDomainEn
 `family_action_catalog` 是 MAG-owned callable action metadata 单一声明面；product-entry manifest 由它派生 CLI、product-entry、single app skill metadata 与 MCP-compatible descriptor。当前 MAG 只声明 MCP descriptor/protocol-layer projection，`descriptor_only=true`、`public_runtime=false`；`OPL` 只读取该 catalog 做 family-level discovery/export/parity，不持有 grant truth、fundability judgement 或 submission-ready export gate。
 `family_stage_control_plane` 同样从 `product-entry-manifest` 暴露，但它只是一组 MAG-owned stage descriptors：每个 stage 都必须携带 stage goal、owner、skills、`allowed_action_refs`、handoff、source refs、freshness 与 authority boundary。构建时会把 `allowed_action_refs` 校验到 `family_action_catalog`，从而让 `OPL` 的 discovery smoke 读取同一份 action truth；MAG 继续持有 grant truth、fundability judgment 与 submission-ready export gate。
 
-这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL Runtime Manager` 写成 MAG runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 的外部 runtime carrier，而不是默认公开入口。
+这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL Runtime Manager` 写成 MAG runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 或 legacy provider 的外部 runtime carrier，而不是默认公开入口。
 
-## Hermes-Agent、Med Auto Grant 与 concrete executor 的分工
+## OPL Provider、Med Auto Grant 与 concrete executor 的分工
 
-在当前架构里，OPL-managed `Hermes-Agent` 可以承担：
+在当前架构里，OPL family runtime provider 可以承担：
 
 - session substrate
 - runtime state / attempt ledger durability
 - gateway / interrupt / resume / scheduling 这类长期在线 runtime 能力
 - sidecar dispatch 的在线唤醒 carrier
+
+其中 Temporal 是目标生产 provider；`Hermes-Agent` 只在迁移期承担 legacy/optional provider 或显式 proof executor 角色。
 
 `Med Auto Grant` 自己继续承担：
 
