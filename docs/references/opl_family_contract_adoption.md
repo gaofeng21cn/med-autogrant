@@ -2,13 +2,13 @@
 
 ## Purpose
 
-这份薄适配声明说明 `Med Auto Grant` 如何满足 `OPL` family runtime / quality / incident / operator projection 合同。它不把 `OPL` 变成 grant authoring owner，也不把医学论文质量门或视觉交付 proof 引入 MAG。
+这份薄适配声明说明 `Med Auto Grant` 如何满足 `OPL` Codex-first、stage-led runtime framework 的 family runtime / quality / incident / operator projection 合同。OPL 可以把 MAG 作为外部领域依赖托管、唤醒和投影；它不把 `OPL` 变成 grant authoring owner，也不把医学论文质量门或视觉交付 proof 引入 MAG。
 
 ## Runtime Attempt Projection
 
 MAG 通过 `runtime_control`、`runtime_continuity`、`grant-autonomy-controller-report` 和 `workspace progress` 映射 `opl_family_runtime_attempt_contract.v1`。这些 surface 可以向 `OPL` 投影 attempt state、retry/backoff、workspace boundary、failure reason、reconciliation status 和 last observed projection。
 
-`OPL Runtime Manager` 只能读取和索引；grant authoring runtime、route truth、workspace write authority 继续由 MAG 持有。
+OPL 只能读取、索引、排队、唤醒、回执和投影；grant authoring runtime、route truth、workspace write authority 继续由 MAG 持有。
 
 ## Quality Projection
 
@@ -64,7 +64,7 @@ MAG 的 `opl_runtime_manager_registration` 现在携带 `family_lifecycle_adapte
 - owner-route discovery：从 skill catalog / runtime manager registration 发现 product status、operator loop、progress 和 resume route；route truth owner 仍是 MAG。
 - adoption：映射 `opl_family_product_operator_projection.v1` 的 source refs、freshness、owner split、next surface ref 与 human gate reason。
 
-这层不重塑 runtime，不引入 SQLite 深迁移，也不把 OPL 写成 grant truth、fundability 或 submission-ready gate owner。
+这层不重塑 MAG runtime，不引入 SQLite 深迁移，也不把 OPL 写成 grant truth、fundability 或 submission-ready gate owner。字段名仍可保留 `opl_runtime_manager_registration` 作为兼容 envelope，但当前语义是 OPL stage-led runtime framework 的 MAG 侧注册/投影输入。
 
 ## Boundaries
 

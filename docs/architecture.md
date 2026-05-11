@@ -2,11 +2,11 @@
 
 ## 主链路
 
-当前主链路是“单一 app skill 优先，稳定 capability surface 仍由 CLI / domain entry 承载，hosted backend 显式可选”：
+当前主链路是“单一 app skill 优先，稳定 capability surface 仍由 CLI / domain entry 承载，OPL 托管或 hosted backend 显式可选”：
 
 `operator / Codex / OPL / generic agent caller -> single Med Auto Grant app skill -> CLI or MedAutoGrantDomainEntry -> route-selected executor -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
 
-在 OPL Codex-first、stage-led family framework 中，这条链路可以被 OPL 托管为 stage attempt，但不会改变 MAG 的 owner 边界：OPL 只提供 stage descriptor discovery、queue/wakeup、handoff、receipt、approval/retry、trace/projection；MAG 持有 grant route truth、fundability / authoring quality判断、workspace truth、artifact assembly 和 submission-ready export gate。
+在 OPL Codex-first、stage-led agent runtime framework 中，这条链路可以被 OPL 托管为 stage attempt；`Codex CLI` 是默认最小执行单元，除非活跃合同显式选择其他 provider。OPL 可以提供 stage lifecycle、queue/wakeup、handoff、receipt、approval/retry、trace/projection、shared contracts/indexes 与外部 provider 编排，但不会改变 MAG 的 owner 边界：MAG 持有 grant route truth、fundability / authoring quality判断、workspace truth、artifact assembly 和 submission-ready export gate。
 
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 
@@ -61,7 +61,7 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 与 `OPL` 的家族级衔接应是：
 
-`User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> MAG product-entry/runtime-control/sidecar projection -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+`User or agent caller -> OPL Product Entry -> OPL stage-led runtime framework -> MAG product-entry/runtime-control/sidecar projection -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
 
 `OPL -> Med Auto Grant` 的最小 handoff envelope 至少包括：
 
@@ -76,10 +76,10 @@ formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 support
 
 按当前定位，这条链路的 owner 固定为：
 
-- `OPL`：family-level session/runtime/projection 与 shared modules/contracts/indexes owner
-- `OPL Runtime Manager`：OPL 侧 product-managed adapter/projection layer，负责 MAG task registration hydration、runtime status projection、doctor/repair/resume、native helper catalog 与高频状态索引；OPL family runtime provider 是 24h durable stage-attempt / wakeup carrier，不持有 MAG grant truth
+- `OPL`：Codex-first、stage-led agent runtime framework owner，负责 family-level session/runtime/projection、stage attempt lifecycle、queue/wakeup/handoff/receipt、shared modules/contracts/indexes 与外部 provider 编排
+- `Codex CLI`：默认最小执行单元，承担未显式切换 provider 时的具体 stage attempt 执行
 - `Med Auto Grant App Skill`：domain direct entry owner
-- `OPL family runtime provider`：Temporal 是目标生产 substrate；Hermes-Agent 在迁移期只作为 legacy/optional provider 或 authoring proof executor，且必须显式 opt-in
+- `OPL family runtime provider`：可由 OPL 选择和演进的外部 provider；旧 Temporal/Hermes-first 说法属于 provider-specific 或历史实现记录，且必须显式 opt-in
 - `Med Auto Grant`：author-side grant truth / route / export owner
 
 当前并不宣称 `OPL` family orchestration surface 已在本仓实现；当前只是在为 future caller 冻结稳定 contract。
@@ -95,24 +95,25 @@ Codex App direct skill 调用与 OPL 托管调用必须在 `MedAutoGrantDomainEn
 - family action graph
 - family human gate
 - family product-entry manifest v2
-- OPL Runtime Manager registration/projection envelope
+- OPL stage-led runtime registration/projection envelope
 
 对 `Med Auto Grant` 来说，优先 adoption 的面是 `workspace progress / workspace cockpit / product direct-entry / product user-loop`，并与 family action graph / family human gate / family product-entry manifest v2 对齐；这些面仍属于 app skill 下的内部 command contract，domain 侧继续保持 `workspace / draft / program` 的真相边界。
 `family_action_catalog` 是 MAG-owned callable action metadata 单一声明面；product-entry manifest 由它派生 CLI、product-entry、single app skill metadata 与 MCP-compatible descriptor。当前 MAG 只声明 MCP descriptor/protocol-layer projection，`descriptor_only=true`、`public_runtime=false`；`OPL` 只读取该 catalog 做 family-level discovery/export/parity，不持有 grant truth、fundability judgement 或 submission-ready export gate。
 `family_stage_control_plane` 同样从 `product-entry-manifest` 暴露，但它只是一组 MAG-owned stage descriptors：每个 stage 都必须携带 stage goal、owner、skills、`allowed_action_refs`、handoff、source refs、freshness 与 authority boundary。构建时会把 `allowed_action_refs` 校验到 `family_action_catalog`，从而让 `OPL` 的 discovery smoke 读取同一份 action truth；MAG 继续持有 grant truth、fundability judgment 与 submission-ready export gate。
 
-这轮对齐不引入 `CrewAI` 依赖，也不把 `OPL Runtime Manager` 写成 MAG runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 或 legacy provider 的外部 runtime carrier，而不是默认公开入口。
+这轮对齐不引入 `CrewAI` 依赖，也不把 OPL runtime framework 写成 MAG runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent`，它也只是显式 hosted/proof lane 或 legacy provider 的外部 runtime carrier，而不是默认公开入口。
 
 ## OPL Provider、Med Auto Grant 与 concrete executor 的分工
 
-在当前架构里，OPL family runtime provider 可以承担：
+在当前架构里，OPL stage-led runtime framework 和它选定的 provider 可以承担：
 
 - session substrate
 - runtime state / attempt ledger durability
-- gateway / interrupt / resume / scheduling 这类长期在线 runtime 能力
+- interrupt / resume / scheduling 这类长期在线 runtime 能力
 - sidecar dispatch 的在线唤醒 carrier
+- stage-led queue、handoff、receipt、retry/dead-letter 与 operator projection
 
-其中 Temporal 是目标生产 provider；`Hermes-Agent` 只在迁移期承担 legacy/optional provider 或显式 proof executor 角色。
+provider 选择由 OPL 框架显式声明；历史 Temporal / Hermes-first 口径只作为 provider-specific 或迁移记录保留。
 
 `Med Auto Grant` 自己继续承担：
 
@@ -151,7 +152,7 @@ Codex App direct skill 调用与 OPL 托管调用必须在 `MedAutoGrantDomainEn
 - `runtime run` 与 `runtime resume` 继续以 journal 串联多次 pass，但 attempt index 现在来自真实上游 Hermes session substrate。
 - 对 valid workspace，Hermes session handle 继续沿用 `grant_run_id`；对 `validation_failed` path，只允许使用 journal-scoped substrate session handle 持续 durability，不得伪造新的 domain `grant_run_id`。
 - `src/med_autogrant/hermes_runtime.py` 现在应被理解为 repo-side domain adapter / orchestrator，而不是 runtime substrate owner。
-- 目标中的 `OPL Runtime Manager` 只消费 `runtime_control.semantic_closure`、`skill_catalog.domain_projection.runtime_continuity`、`workspace progress / cockpit`、hosted contract bundle 与 artifact/wakeup locator；高频索引可由 OPL Rust native helper 执行，并通过 `native_helper_consumption.proof_surface` 固定 workspace/session/artifact/TODO-wakeup/runtime-health coverage 与 `opl_index_only` 写入边界，但它不写 MAG authoring truth，也不替代 route-selected executor。
+- OPL stage-led runtime framework 只消费 `runtime_control.semantic_closure`、`skill_catalog.domain_projection.runtime_continuity`、`workspace progress / cockpit`、hosted contract bundle 与 artifact/wakeup locator；高频索引可由 OPL Rust native helper 执行，并通过 `native_helper_consumption.proof_surface` 固定 workspace/session/artifact/TODO-wakeup/runtime-health coverage 与 `opl_index_only` 写入边界，但它不写 MAG authoring truth，也不替代 route-selected executor。
 - `runtime run` / `runtime resume` 直接通过 `MedAutoGrantDomainEntry -> HermesRuntimeSubstrate` 落到当前 runtime loop。
 - `pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting`、`pass critique`、`pass revision`、`pass freeze`、`package artifact-bundle`、`package final-package`、`package hosted-contract-bundle`、`package submission-ready` 继续由 repo-side domain logic 持有输入加载、identity guard 与输出 handoff。
 - `select-project-profile` 与 `initialize-intake-workspace` 由 repo-side selector/initializer contract 持有材料池解析、profile/funding 匹配与 input-intake workspace 生成；新建 workspace 默认是目录型 scaffold，`workspace.json` 是 canonical document，workspace-local Git boundary 来自 `OPL` shared helper；在任务已锁定指定基金后，它们只作为显式唤醒的准备工具。

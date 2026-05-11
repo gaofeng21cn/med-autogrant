@@ -18,8 +18,9 @@
 
 - `Med Auto Grant` 是独立的医学基金 domain agent，对外第一主语是单一 `Med Auto Grant` app skill；其下稳定 capability surface 由 `CLI`、`MedAutoGrantDomainEntry`、本地脚本与 schema-backed contract 组成。
 - formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
-- 默认正文执行与默认 runtime owner 继续继承本机 `Codex CLI` / `codex_cli` 默认；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 或技术参考层，默认安装不拉取 `hermes-agent`，不改写默认公开 capability contract。
-- `OPL Runtime Manager` 是目标形态中的 OPL 侧薄管理层，位于已配置的 family runtime provider 之上；Temporal 是生产 substrate 候选，Hermes 保留为 legacy/optional provider 或 proof lane。它可以消费 MAG runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue，但不持有 MAG grant truth 或 authoring execution。
+- OPL 是 Codex-first、stage-led 的完整智能体运行框架。它可以把 MAG 作为外部领域依赖托管；除非活跃合同显式选择其他 provider，`Codex CLI` 是 stage attempt 的最小执行单元。
+- OPL 可以消费 MAG 的 runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue，用于调度、唤醒、交接、回执、重试和投影；它不持有 MAG grant truth、authoring execution、fundability judgment、quality verdict 或 submission-ready export authority。
+- 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 与本地 host runtime 说明只作为历史追溯或 provider-specific 实现记录保留，不再定义默认 MAG/OPL 边界。
 - 历史 program 记录与迁移说明统一从 `docs/history/` 进入；较早 dated specs 可以继续留在 `docs/specs/` 作为 provenance，但机器可读面通过语义化 `human_doc:*` 标识引用它们，而不是把旧路径钉成稳定接口。
 - product status、user-loop、projection 与本地 `submission-ready` package 已落地，但它们都是 app skill 下的内部 command contract 与 direct-product projection；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，且本地导出 gate 不代表外部基金官网 portal submission 已完成；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/plans/`。
 - `OPL` family routing 与 `Codex` skill activation 继续消费同一套 MAG capability surface；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。

@@ -62,9 +62,9 @@ You can start with prompts like:
 - MAG task scope is locked to body authoring for a specified funding call.
 - Scientific completion is delivered as a review-ready package; formal/objective supplements are tracked separately.
 - Formal/objective supplements default to `TODO + explicit wakeup` and do not block body authoring unless they directly break scientific validity.
-- `OPL` keeps family-level session/runtime/projection and shared modules/contracts/indexes.
-- In the stage-led OPL family framework, MAG owns the grant stage pack, prompts, skills, fundability/authoring quality gates, authoring truth, and submission-ready export authority. OPL may provide wakeup, queue, handoff, receipts, and projection support, but it does not become the grant brain or route owner.
-- The target `OPL Runtime Manager` can index MAG runtime-control, continuity, artifact, and wakeup projections over the configured OPL family runtime provider. Temporal is the target production substrate for durable stage attempts; Hermes remains a legacy/optional provider or executor/proof lane during migration. MAG remains the grant-truth and authoring-contract owner.
+- `OPL` is the Codex-first, stage-led agent runtime framework that can host MAG as an external domain dependency.
+- Within that framework, `Codex CLI` is the minimum execution unit: OPL can schedule stages, wakeups, handoffs, receipts, retries, and projections, while MAG keeps the grant stage pack, prompts, skills, fundability/authoring quality gates, authoring truth, and submission-ready export authority.
+- Historical `OPL Runtime Manager`, Temporal, Hermes-first, gateway, and local-host runtime wording is provenance or an implementation-provider detail unless an active contract explicitly promotes it. MAG remains the grant-truth and authoring-contract owner.
 - `hosted-contract-bundle` and `runtime_control` stay as integration/reference surfaces for machine-readable handoff, not as the primary public entry.
 - Human gate decisions stay inside the same funding-call task and are author decisions, not cross-funder reselection.
 - External funding portal submission stays under human supervision.

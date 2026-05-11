@@ -8,9 +8,9 @@
 
 # Med Auto Grant
 
-**通过单一 Med Auto Grant app skill 暴露的独立医学基金 domain agent**
+**通过单一 Med Auto Grant 技能入口推进医学基金写作的独立领域智能体**
 
-> `Med Auto Grant` 是独立的医学基金领域 agent。它把“指定基金任务的正文写作、批注、修订和科学待审包交付”放在同一条申请线上，方便持续推进和审阅。
+> `Med Auto Grant` 面向医学基金申请写作。它把指定基金任务的正文写作、评审式批注、修订和待审包交付放在同一条申请线上，方便医生、课题负责人和科研团队持续推进。
 
 <table>
   <tr>
@@ -34,16 +34,16 @@
 你可以直接这样说：
 
 - “按这个国自然项目和我当前草稿，重写标题、摘要、研究内容和方法，保证科学叙事自洽。”
-- “在不改目标基金的前提下，按 claim-evidence 缺口审稿并直接改掉正文薄弱段落。”
+- “在不改目标基金的前提下，按主张和证据的缺口审稿，并直接改掉正文薄弱段落。”
 - “按评审视角审一遍这份草稿，指出最影响中标的硬伤，并直接给我一版修改建议。”
 
 ## 适合处理的工作
 
 - 在指定基金任务下，把既有论文、预实验和个人基础收成更清楚的标题、摘要、研究内容和技术路线。
 - 在同一工作区里持续跟踪批注、修订轮次和版本变化。
-- 用结构化 scorecard、版本差异和证据缺口报告比较申请书质量。
-- 运行更长的 controller-led 写作周期，按质量 gate 判断继续、回退或带 blocker 停止。
-- 先交付“科学完成”的可待审包，再进入门户提交前的形式/客观补件。
+- 用结构化评分卡、版本差异和证据缺口报告比较申请书质量。
+- 运行较长的自动写作周期，按质量门槛判断继续、回退或带阻塞原因停止。
+- 先交付科学上可审阅的申请书包，再进入门户提交前的形式和客观材料补件。
 - 把形式/客观补件作为显式 `TODO + 唤醒` 队列管理，默认不阻塞正文 authoring。
 
 ## 工作方式
@@ -51,22 +51,22 @@
 - 申请人提供目标基金任务、已有材料、限制条件和最终判断。
 - AI 助手负责该任务内的科学结构整理、正文草拟、批注整合和修订推进。
 - 工作区持续保存版本、评审意见和交付文件，方便回看与比较。
-- 新建 intake 工作区采用目录型 scaffold：`workspace.json` 是 canonical document，轻量合同/产物可被 Git 跟踪，本地 runtime 输出保持忽略。
+- 新建材料接收工作区采用目录结构：`workspace.json` 是权威工作区文件，轻量合同和产物可以被 Git 跟踪，本地运行输出保持忽略。
 
 ## 当前边界
 
-- `Med Auto Grant` 是独立的医学基金 domain agent，不是 `OPL` 内部工作区模块。
-- 对外第一主语是单一 `Med Auto Grant` app skill；`Codex`、`OPL` 和其他通用 agent 可以通过这个 skill 入口，或直接通过 `CLI` / `MedAutoGrantDomainEntry` 访问稳定能力面。
-- 这个 app skill 背后的稳定可调用面是本地 CLI、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract。
-- `product entry/product status/direct-entry/user-loop` 保持为 app skill 下的内部 command contract 与 direct-product projection，不再写成对外第一主语。
-- MAG 当前任务边界锁定在“指定基金任务正文 authoring”。
+- `Med Auto Grant` 是独立的医学基金领域智能体，不是 `OPL` 仓库里的内部模块。
+- 对外第一入口是单一 `Med Auto Grant` 技能；`Codex`、`OPL` 和其他通用智能体可以通过这个入口，或直接通过 `CLI` / `MedAutoGrantDomainEntry` 访问稳定能力面。
+- 这个技能背后的稳定可调用面是本地 CLI、`MedAutoGrantDomainEntry`、本地脚本、产品入口/投影命令与 schema-backed 合同。
+- `product entry/product status/direct-entry/user-loop` 保持为技能下的内部命令合同与直接产品投影，不写成对外第一主语。
+- MAG 当前任务边界锁定在“指定基金任务正文写作”。
 - “科学完成”交付面是可待审包；“形式/客观补件完成”是并行分层，不与正文语义混写。
-- 形式/客观补件默认按 `TODO + 显式唤醒` 处理，除非直接破坏正文科学成立，否则不升级为正文 blocker。
-- `OPL` 只保留 family-level 的 session/runtime/projection 与 shared modules/contracts/indexes。
-- 在 stage-led OPL family framework 中，MAG 持有基金 stage pack、prompt、skill、fundability / authoring quality gate、authoring truth 和 submission-ready export authority。OPL 可以提供 wakeup、queue、handoff、receipt 和 projection 支撑，但不会成为基金领域大脑或 route owner。
-- 目标形态中的 `OPL Runtime Manager` 可以在已配置的 OPL family runtime provider 之上索引 MAG runtime-control、continuity、artifact 与 wakeup projection。Temporal 是 durable stage attempt 的目标生产 substrate；Hermes 在迁移期只作为 legacy/optional provider 或 executor/proof lane。MAG 继续持有 grant truth 与 authoring contract。
+- 形式/客观补件默认按 `TODO + 显式唤醒` 处理，除非直接破坏正文科学成立，否则不升级为正文阻塞项。
+- `OPL` 是 Codex-first、stage-led 的完整智能体运行框架，MAG 可以作为外部领域依赖接入。
+- 在这套框架中，`Codex CLI` 是最小执行单元；OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
+- 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留，除非新的活跃合同显式提升它们。
 - `hosted-contract-bundle` 与 `runtime_control` 仅保留集成/参考面，用于 machine-readable handoff，不作为默认公开入口。
-- 人工 gate 仅限同一基金任务内的作者决策，不写成跨 funder 重选。
+- 人工 gate 仅限同一基金任务内的作者决策，不写成跨基金重选。
 - 外部基金官网提交由人工监督完成。
 
 ## 这个仓库应该怎么读

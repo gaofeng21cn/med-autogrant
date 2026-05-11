@@ -1,15 +1,15 @@
 # OPL 托管运行时三层合同
 
-这份参考文档冻结 `OPL` 家族仓在托管运行时上的统一 owner 口径。
+这份参考文档保留 `OPL` 家族仓在托管运行时上的三层 owner 口径。2026-05-11 之后，当前主线应先按 `OPL = Codex-first、stage-led 的完整智能体运行框架` 理解；本文件中的 `OPL Runtime Manager` / `Hermes-Agent runtime owner` 表述只作为历史分层和 provider-specific 迁移背景，不替代核心文档。
 
-目标不是这轮就完成跨仓共享代码抽取，而是先把跨仓不能再漂移的 contract 写死。
+目标不是完成跨仓共享代码抽取，而是保留当时不能漂移的 owner contract，并说明它如何被当前 OPL runtime framework 口径吸收。
 
 ## 一句话形状
 
-统一按三层理解：
+历史上统一按三层理解：
 
-- `Hermes-Agent`
-  - 长期运行与托管能力 owner
+- `OPL stage-led runtime framework`
+  - 长期运行、托管、唤醒、队列、回执与 provider 编排 owner
 - domain supervision
   - 领域治理、质量门控、进度真相、恢复判断 owner
 - quest executor
@@ -17,8 +17,8 @@
 
 对应到 `Med Auto Grant`：
 
-- `Hermes-Agent`
-  - runtime substrate / session / run / watch / resume owner
+- `OPL`
+  - stage attempt lifecycle / session / queue / wakeup / handoff / receipt / retry / projection owner
 - `Med Auto Grant`
   - grant-domain governance / progress / review / package gate owner
 - route-selected executor
@@ -34,7 +34,7 @@
 
 三层切开后：
 
-- `Hermes-Agent` 只负责长期在线、调度、恢复和托管宿主
+- `OPL` 只负责长期在线、调度、恢复、托管、投影和 provider 编排
 - `Med Auto Grant` 只负责 grant truth、review / package gate 与进度判断
 - route-selected executor 只负责把被放行的 authoring route 跑出来
 
@@ -42,7 +42,7 @@
 
 - 这轮已完成的是跨仓 contract / 入口 / 文档同构
 - 这轮没有宣称跨仓共享代码模块已经抽离完成
-- 默认 concrete executor 仍是 `codex_cli` / `Codex CLI` executor，默认模式是 `autonomous`
+- 默认 concrete executor 仍是 `codex_cli` / `Codex CLI` executor，默认模式是 `autonomous`；在 OPL stage attempt 中它也是最小执行单元
 - `hermes_agent` 继续只是 opt-in proof lane，不改写默认 executor owner
 
 ## 共享框架下一步

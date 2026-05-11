@@ -20,14 +20,14 @@
 - 如需保留历史 session、prompt、log 或 hook 状态，应迁入用户级 `~/.codex/` 归档。
 - repo-tracked current truth 以核心五件套、`contracts/runtime-program/current-program.json`、以及 `docs/specs/README*` 中列出的 active current-truth specs 为准；较早 dated specs 与 activation package 只作为历史 provenance。
 - 当前 owner line 固定为“CLI/domain-entry stable capability surface with Codex-default execution and optional hosted backend lanes”。
-- 默认 runtime owner 固定为 `codex_cli` / `Codex CLI`；`Hermes-Agent` 只允许作为显式 hosted/proof lane 或技术参考依赖出现，不得进入默认安装依赖或默认 product-entry/runtime-registration owner。
+- 默认最小执行单元固定为 `codex_cli` / `Codex CLI`；`Hermes-Agent` 只允许作为显式 hosted/proof lane 或技术参考依赖出现，不得进入默认安装依赖或默认 product-entry/runtime-registration owner。
 - 历史 closeout label 与 baseline 只保留在归档 current-truth 材料中；核心五件套不再把它们写成当前 owner line。
 - 在没有新的 repo-tracked tranche truth 前，不得把旧 host-agent runtime closeout 材料重新写回“还有默认续推中的 active delta”。
 
 ## 目标优先级
 
-- `OPL` 当前固定只承担 family-level session/runtime/projection 与 shared modules/contracts/indexes，不承担本仓 domain truth owner 身份。
-- `OPL Runtime Manager` 当前固定为 OPL 侧 thin adapter/projection layer over the configured family runtime provider；Temporal 是目标生产 substrate，`Hermes-Agent` 只保留为迁移期 legacy/optional provider、显式 hosted/proof lane 或 executor proof lane。它不得成为 MAG grant-domain truth owner、scheduler kernel、session store、memory store、concrete authoring executor 或 private Hermes fork。
+- `OPL` 当前固定为 Codex-first、stage-led 的完整智能体运行框架，可把 MAG 作为外部领域依赖托管；它不承担本仓 domain truth owner 身份。
+- OPL runtime framework 可以持有 stage attempt lifecycle、scheduler、session store、memory store、queue/wakeup/handoff/receipt、retry/dead-letter、operator projection、shared modules/contracts/indexes 和外部 provider 编排；它不得成为 MAG grant-domain truth owner、fundability owner、authoring quality owner、submission-ready export authority、concrete authoring executor 或 private Hermes fork。
 - OPL native helper 与高频状态索引只能缓存、探测和投影 MAG 已暴露的 `runtime_control`、`runtime_continuity`、workspace projection、artifact locator 与 explicit wakeup/TODO queue；不得替代 `contracts/runtime-program/current-program.json`、authoring contract、quality gate、route truth 或 submission-ready export gate。
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态，而不是继续深磨已放弃的旧本地宿主路线。
 - 当前 `CLI-first + host-agent runtime` 是历史 repo-verified baseline，但它只允许留在归档追溯材料中，不应再被误写为长期终态。
