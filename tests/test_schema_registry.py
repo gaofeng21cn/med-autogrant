@@ -428,6 +428,7 @@ class SchemaRegistryTest(unittest.TestCase):
                 "shell_commands",
                 "runtime_continuity",
                 "opl_runtime_manager_registration",
+                "domain_agent_skeleton_mapping",
             ],
         )
         self.assertEqual(skill_projection["properties"]["skill_semantics"]["const"], "domain_app")
@@ -439,6 +440,26 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(
             skill_projection["properties"]["opl_runtime_manager_registration"]["$ref"],
             "#/$defs/oplRuntimeManagerRegistration",
+        )
+        self.assertEqual(
+            skill_projection["properties"]["domain_agent_skeleton_mapping"]["$ref"],
+            "#/$defs/domainAgentSkeletonMapping",
+        )
+        domain_skeleton = manifest_schema["$defs"]["domainAgentSkeletonMapping"]
+        self.assertEqual(domain_skeleton["properties"]["surface_kind"]["const"], "standard_domain_agent_skeleton_mapping")
+        self.assertEqual(domain_skeleton["properties"]["skeleton_id"]["const"], "mag.standard_domain_agent_skeleton.v1")
+        self.assertEqual(domain_skeleton["properties"]["artifact_locator_ref"]["const"], "/product_entry_manifest/artifact_locator_contract")
+        self.assertEqual(
+            domain_skeleton["properties"]["controlled_stage_attempt_ref"]["const"],
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+        )
+        self.assertEqual(
+            manifest_schema["$defs"]["artifactLocatorContract"]["properties"]["surface_kind"]["const"],
+            "domain_artifact_locator_contract",
+        )
+        self.assertEqual(
+            manifest_schema["$defs"]["controlledStageAttemptProjection"]["properties"]["surface_kind"]["const"],
+            "controlled_stage_attempt_projection",
         )
         self.assertEqual(
             manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["properties"]["surface_kind"]["const"],

@@ -22,6 +22,7 @@ def build_product_entry_skill_catalog(
     shell_commands: Mapping[str, str],
     domain_entry_contract: Mapping[str, Any],
     action_catalog_projections: Mapping[str, list[dict[str, Any]]],
+    domain_agent_skeleton_mapping: Mapping[str, Any],
 ) -> dict[str, Any]:
     skill_catalog_command = public_cli_command(
         "skill-catalog",
@@ -44,6 +45,7 @@ def build_product_entry_skill_catalog(
                 runtime_continuity=runtime_continuity,
                 opl_runtime_manager_registration=opl_runtime_manager_registration,
                 action_catalog_projections=action_catalog_projections,
+                domain_agent_skeleton_mapping=domain_agent_skeleton_mapping,
             )
         ],
         supported_commands=list(domain_entry_contract.get("supported_commands") or []),
@@ -57,6 +59,7 @@ def _build_med_autogrant_skill_descriptor(
     runtime_continuity: Mapping[str, Any],
     opl_runtime_manager_registration: Mapping[str, Any],
     action_catalog_projections: Mapping[str, list[dict[str, Any]]],
+    domain_agent_skeleton_mapping: Mapping[str, Any],
 ) -> dict[str, Any]:
     mcp_descriptors = list(action_catalog_projections["mcp"])
     return _build_shared_skill_descriptor(
@@ -85,6 +88,7 @@ def _build_med_autogrant_skill_descriptor(
             "shell_commands": shell_commands,
             "runtime_continuity": dict(runtime_continuity),
             "opl_runtime_manager_registration": dict(opl_runtime_manager_registration),
+            "domain_agent_skeleton_mapping": dict(domain_agent_skeleton_mapping),
             "action_catalog_ref": ACTION_CATALOG_REF,
             "mcp_descriptor": dict(mcp_descriptors[0]),
             "action_catalog_projections": {

@@ -54,6 +54,16 @@ def build_sidecar_export(
         "opl_runtime_manager_registration",
         context="sidecar_export.skill_catalog.domain_projection",
     )
+    domain_agent_skeleton = _require_mapping(
+        domain_projection,
+        "domain_agent_skeleton_mapping",
+        context="sidecar_export.skill_catalog.domain_projection",
+    )
+    controlled_stage_attempt = _require_mapping(
+        manifest,
+        "controlled_stage_attempt_projection",
+        context="sidecar_export.product_entry_manifest",
+    )
     automation = _require_mapping(manifest, "automation", context="sidecar_export.product_entry_manifest")
     autonomy_observability = _require_mapping(
         manifest,
@@ -95,6 +105,18 @@ def build_sidecar_export(
         },
         "runtime_control": dict(runtime_control),
         "runtime_continuity": dict(runtime_continuity),
+        "domain_agent_skeleton_mapping": dict(domain_agent_skeleton),
+        "artifact_locator_contract": dict(
+            _require_mapping(manifest, "artifact_locator_contract", context="sidecar_export.product_entry_manifest")
+        ),
+        "controlled_stage_attempt_projection": dict(controlled_stage_attempt),
+        "receipt_refs": dict(
+            _require_mapping(
+                controlled_stage_attempt,
+                "receipt_refs",
+                context="sidecar_export.controlled_stage_attempt_projection",
+            )
+        ),
         "todo_wakeup": _build_todo_wakeup_projection(
             automation=automation,
             manifest=manifest,
@@ -265,6 +287,11 @@ def _dispatch_notification_receipt(
             "surface_kind": "sidecar_notification_receipt",
             "receipt_status": "accepted",
             "notification": dict(notification or {}),
+            "receipt_refs": _receipt_refs_for_task(
+                task=task,
+                action="notification/receipt",
+                input_path=input_path,
+            ),
             "write_policy": "receipt_only_no_domain_truth_mutation",
         },
         executed_command=None,
@@ -297,6 +324,11 @@ def _dispatch_payload(
             "executed_by_sidecar": action in {"status/read", "user-loop/wakeup", "notification/receipt"},
             "executed_command": executed_command,
             "result": dict(result),
+            "receipt_refs": _receipt_refs_for_task(
+                task=task,
+                action=action,
+                input_path=input_path,
+            ),
             "guardrails": {
                 "allowed_actions": sorted(_ALLOWED_ACTIONS),
                 "domain_truth_owner": TARGET_DOMAIN_ID,
@@ -421,3 +453,22 @@ def _optional_nonempty_string(value: Any) -> str | None:
     if value is None:
         return None
     return _require_nonempty_string(value, field_name="task_id", context="sidecar_task")
+
+
+def _receipt_refs_for_task(
+    *,
+    task: Mapping[str, Any],
+    action: str,
+    input_path: str,
+) -> dict[str, Any]:
+    task_id = _optional_nonempty_string(task.get("task_id")) or f"{action}:ad-hoc"
+    return {
+        "receipt_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
+        "sidecar_dispatch_receipt_ref": (
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+            f"sidecar-dispatch/{task_id}.json"
+        ),
+        "input_path": str(Path(input_path).expanduser().resolve()),
+        "write_policy": "receipt_ref_only_no_domain_truth_mutation",
+        "opl_consumes_receipt_ref_only": True,
+    }

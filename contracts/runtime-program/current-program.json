@@ -35,8 +35,10 @@
         "skill_catalog.domain_projection.opl_runtime_manager_registration",
         "skill_catalog.domain_projection.opl_runtime_manager_registration.family_lifecycle_adapter",
         "skill_catalog.domain_projection.opl_runtime_manager_registration.native_helper_consumption.proof_surface",
+        "skill_catalog.domain_projection.domain_agent_skeleton_mapping",
         "workspace progress / cockpit",
-        "artifact inventory and explicit wakeup/TODO queue",
+        "artifact inventory, artifact locator contract, and explicit wakeup/TODO queue",
+        "controlled stage attempt projection and sidecar receipt refs",
         "OPL Rust native helper indexed workspace/session/artifact/TODO/runtime-health projections"
       ],
       "manager_non_goals": [
@@ -60,6 +62,28 @@
           "notification/receipt"
         ],
         "hermes_proof_executor_default": false
+      },
+      "standard_domain_agent_skeleton": {
+        "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
+        "manifest_ref": "/product_entry_manifest/domain_agent_skeleton_mapping",
+        "repo_source_boundary": [
+          "agent",
+          "contracts",
+          "runtime",
+          "docs"
+        ],
+        "runtime_declares_only": [
+          "sidecar",
+          "projection_builder",
+          "lifecycle_adapter"
+        ],
+        "artifact_locator_ref": "/product_entry_manifest/artifact_locator_contract",
+        "controlled_stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+        "opl_role": "descriptor_and_ref_consumer_only",
+        "opl_verdict_authority": {
+          "fundability": false,
+          "submission_ready_export": false
+        }
       },
       "future_sidecar_promotion_gate": "self-hosted sidecar daemon promotion remains out of scope; the landed product sidecar adapter is a CLI/product-entry projection and guarded dispatch surface"
     }
@@ -165,8 +189,12 @@
         "domain_entry_contract",
         "runtime_control",
         "runtime_continuity",
+        "domain_agent_skeleton_mapping",
         "product_sidecar_export",
         "product_sidecar_dispatch",
+        "artifact_locator_contract",
+        "controlled_stage_attempt_projection",
+        "sidecar receipt refs",
         "opl_runtime_manager_registration",
         "family_lifecycle_adapter",
         "native_helper_consumption",

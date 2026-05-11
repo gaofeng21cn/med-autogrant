@@ -284,9 +284,64 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             proposal_stage["authority_boundary"]["submission_ready_export_gate_owner"],
             "med-autogrant",
         )
+        artifact_locator = manifest["artifact_locator_contract"]
+        self.assertEqual(artifact_locator["surface_kind"], "domain_artifact_locator_contract")
+        self.assertEqual(artifact_locator["locator_id"], "mag.artifact_locator.v1")
+        self.assertFalse(artifact_locator["runtime_artifact_root"]["repo_tracked"])
+        self.assertIn(
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/artifacts/",
+            artifact_locator["runtime_artifact_root"]["path_template"],
+        )
+        self.assertEqual(
+            artifact_locator["runtime_artifact_root"]["write_policy"],
+            "mag_runtime_or_export_surface_only",
+        )
+        self.assertEqual(artifact_locator["artifact_inventory_ref"], "/product_entry_manifest/artifact_inventory")
+        self.assertFalse(artifact_locator["opl_consumption"]["can_issue_fundability_verdict"])
+        self.assertFalse(artifact_locator["opl_consumption"]["can_issue_export_verdict"])
+        self.assertTrue(artifact_locator["opl_consumption"]["requires_mag_receipt_for_domain_artifact_mutation"])
+        controlled_attempt = manifest["controlled_stage_attempt_projection"]
+        self.assertEqual(controlled_attempt["surface_kind"], "controlled_stage_attempt_projection")
+        self.assertEqual(controlled_attempt["maps_to_opl_contract"], "opl_family_runtime_attempt_contract.v1")
+        self.assertEqual(controlled_attempt["attempt_owner"], "med-autogrant")
+        self.assertEqual(controlled_attempt["attempt_state"], manifest["task_lifecycle"]["status"])
+        self.assertEqual(controlled_attempt["last_observed_projection"], manifest["progress_projection"])
+        self.assertIn(
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
+            controlled_attempt["receipt_refs"]["sidecar_dispatch_receipt_ref"],
+        )
+        self.assertFalse(controlled_attempt["opl_consumption_contract"]["can_hold_fundability_verdict"])
+        self.assertFalse(controlled_attempt["opl_consumption_contract"]["can_hold_export_verdict"])
+        self.assertIn(
+            "canonical_grant_artifact_content",
+            controlled_attempt["opl_consumption_contract"]["does_not_consume"],
+        )
+        skeleton = manifest["domain_agent_skeleton_mapping"]
+        self.assertEqual(skeleton["surface_kind"], "standard_domain_agent_skeleton_mapping")
+        self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
+        self.assertEqual(set(skeleton["repo_source_boundary"]), {"agent", "contracts", "runtime", "docs"})
+        self.assertEqual(
+            skeleton["runtime_declaration"]["runtime_only_declares"],
+            ["sidecar", "projection_builder", "lifecycle_adapter"],
+        )
+        self.assertEqual(
+            skeleton["artifact_locator_ref"],
+            "/product_entry_manifest/artifact_locator_contract",
+        )
+        self.assertEqual(
+            skeleton["controlled_stage_attempt_ref"],
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+        )
+        self.assertFalse(skeleton["authority_boundary"]["can_hold_fundability_verdict"])
+        self.assertFalse(skeleton["authority_boundary"]["can_hold_export_verdict"])
+        self.assertFalse(skeleton["authority_boundary"]["can_write_grant_artifacts"])
         self.assertEqual(
             skill["domain_projection"]["action_catalog_ref"],
             "/product_entry_manifest/family_action_catalog",
+        )
+        self.assertEqual(
+            skill["domain_projection"]["domain_agent_skeleton_mapping"],
+            skeleton,
         )
         self.assertEqual(
             skill["domain_projection"]["mcp_descriptor"],

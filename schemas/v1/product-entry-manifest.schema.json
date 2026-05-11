@@ -1441,7 +1441,8 @@
         "supporting_shell_keys",
         "shell_commands",
         "runtime_continuity",
-        "opl_runtime_manager_registration"
+        "opl_runtime_manager_registration",
+        "domain_agent_skeleton_mapping"
       ],
       "properties": {
         "plugin_name": {
@@ -1498,6 +1499,9 @@
         },
         "opl_runtime_manager_registration": {
           "$ref": "#/$defs/oplRuntimeManagerRegistration"
+        },
+        "domain_agent_skeleton_mapping": {
+          "$ref": "#/$defs/domainAgentSkeletonMapping"
         },
         "action_catalog_ref": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
@@ -1862,6 +1866,186 @@
         },
         "notes": {
           "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "artifactLocatorContract": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "locator_id",
+        "runtime_artifact_root",
+        "artifact_inventory_ref",
+        "opl_consumption"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "domain_artifact_locator_contract"
+        },
+        "locator_id": {
+          "const": "mag.artifact_locator.v1"
+        },
+        "runtime_artifact_root": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "path_template",
+            "repo_tracked",
+            "owner",
+            "write_policy"
+          ],
+          "properties": {
+            "path_template": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "repo_tracked": {
+              "const": false
+            },
+            "owner": {
+              "const": "med-autogrant"
+            },
+            "write_policy": {
+              "const": "mag_runtime_or_export_surface_only"
+            }
+          }
+        },
+        "artifact_inventory_ref": {
+          "const": "/product_entry_manifest/artifact_inventory"
+        },
+        "opl_consumption": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "role",
+            "can_issue_fundability_verdict",
+            "can_issue_export_verdict"
+          ],
+          "properties": {
+            "role": {
+              "const": "index_locator_refs_only"
+            },
+            "can_issue_fundability_verdict": {
+              "const": false
+            },
+            "can_issue_export_verdict": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
+    "controlledStageAttemptProjection": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "attempt_id",
+        "maps_to_opl_contract",
+        "receipt_refs",
+        "opl_consumption_contract",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "controlled_stage_attempt_projection"
+        },
+        "attempt_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "maps_to_opl_contract": {
+          "const": "opl_family_runtime_attempt_contract.v1"
+        },
+        "receipt_refs": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "sidecar_dispatch_receipt_ref",
+            "stage_attempt_receipt_ref"
+          ]
+        },
+        "opl_consumption_contract": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "can_hold_fundability_verdict",
+            "can_hold_export_verdict"
+          ],
+          "properties": {
+            "can_hold_fundability_verdict": {
+              "const": false
+            },
+            "can_hold_export_verdict": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
+    "domainAgentSkeletonMapping": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "skeleton_id",
+        "repo_source_boundary",
+        "runtime_declaration",
+        "artifact_locator_ref",
+        "controlled_stage_attempt_ref",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "standard_domain_agent_skeleton_mapping"
+        },
+        "skeleton_id": {
+          "const": "mag.standard_domain_agent_skeleton.v1"
+        },
+        "repo_source_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "agent",
+            "contracts",
+            "runtime",
+            "docs"
+          ]
+        },
+        "runtime_declaration": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "runtime_only_declares",
+            "sidecar_ref",
+            "projection_builder_ref",
+            "lifecycle_adapter_ref"
+          ]
+        },
+        "artifact_locator_ref": {
+          "const": "/product_entry_manifest/artifact_locator_contract"
+        },
+        "controlled_stage_attempt_ref": {
+          "const": "/product_entry_manifest/controlled_stage_attempt_projection"
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "can_hold_fundability_verdict",
+            "can_hold_export_verdict",
+            "can_write_grant_artifacts"
+          ],
+          "properties": {
+            "can_hold_fundability_verdict": {
+              "const": false
+            },
+            "can_hold_export_verdict": {
+              "const": false
+            },
+            "can_write_grant_artifacts": {
+              "const": false
+            }
+          }
         }
       }
     },
@@ -2725,7 +2909,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_agent_skeleton_mapping", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -2838,6 +3022,15 @@
         },
         "family_stage_control_plane": {
           "$ref": "#/$defs/familyStageControlPlane"
+        },
+        "artifact_locator_contract": {
+          "$ref": "#/$defs/artifactLocatorContract"
+        },
+        "controlled_stage_attempt_projection": {
+          "$ref": "#/$defs/controlledStageAttemptProjection"
+        },
+        "domain_agent_skeleton_mapping": {
+          "$ref": "#/$defs/domainAgentSkeletonMapping"
         },
         "action_catalog_projections": {
           "$ref": "#/$defs/actionCatalogProjections"

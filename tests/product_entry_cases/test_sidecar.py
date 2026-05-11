@@ -24,6 +24,32 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertFalse(export["substrate_boundary"]["hermes_proof_executor_default"])
         self.assertEqual(export["runtime_control"]["surface_kind"], "runtime_control")
         self.assertEqual(export["runtime_continuity"]["surface_kind"], "skill_runtime_continuity")
+        self.assertEqual(
+            export["domain_agent_skeleton_mapping"]["surface_kind"],
+            "standard_domain_agent_skeleton_mapping",
+        )
+        self.assertEqual(
+            export["artifact_locator_contract"]["surface_kind"],
+            "domain_artifact_locator_contract",
+        )
+        self.assertEqual(
+            export["controlled_stage_attempt_projection"]["surface_kind"],
+            "controlled_stage_attempt_projection",
+        )
+        self.assertEqual(
+            export["receipt_refs"],
+            export["controlled_stage_attempt_projection"]["receipt_refs"],
+        )
+        self.assertFalse(
+            export["controlled_stage_attempt_projection"]["opl_consumption_contract"][
+                "can_hold_fundability_verdict"
+            ]
+        )
+        self.assertFalse(
+            export["controlled_stage_attempt_projection"]["opl_consumption_contract"][
+                "can_hold_export_verdict"
+            ]
+        )
         self.assertEqual(export["todo_wakeup"]["surface_kind"], "mag_todo_wakeup_projection")
         self.assertEqual(
             export["todo_wakeup"]["authoring_loop_continuation"]["automation_id"],
@@ -174,3 +200,8 @@ class ProductSidecarTest(unittest.TestCase):
         payload = json.loads(stdout.getvalue())
         self.assertEqual(payload["sidecar_dispatch"]["action"], "notification/receipt")
         self.assertEqual(payload["sidecar_dispatch"]["result"]["receipt_status"], "accepted")
+        self.assertTrue(payload["sidecar_dispatch"]["receipt_refs"]["opl_consumes_receipt_ref_only"])
+        self.assertEqual(
+            payload["sidecar_dispatch"]["result"]["receipt_refs"],
+            payload["sidecar_dispatch"]["receipt_refs"],
+        )

@@ -52,6 +52,28 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
         )
         self.assertIn(
+            "skill_catalog.domain_projection.domain_agent_skeleton_mapping",
+            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+        )
+        self.assertIn(
+            "controlled stage attempt projection and sidecar receipt refs",
+            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+        )
+        skeleton = contract["runtime_owner"]["runtime_manager_boundary"]["standard_domain_agent_skeleton"]
+        self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
+        self.assertEqual(skeleton["repo_source_boundary"], ["agent", "contracts", "runtime", "docs"])
+        self.assertEqual(
+            skeleton["runtime_declares_only"],
+            ["sidecar", "projection_builder", "lifecycle_adapter"],
+        )
+        self.assertEqual(skeleton["artifact_locator_ref"], "/product_entry_manifest/artifact_locator_contract")
+        self.assertEqual(
+            skeleton["controlled_stage_attempt_ref"],
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+        )
+        self.assertFalse(skeleton["opl_verdict_authority"]["fundability"])
+        self.assertFalse(skeleton["opl_verdict_authority"]["submission_ready_export"])
+        self.assertIn(
             "grant-domain truth owner",
             contract["runtime_owner"]["runtime_manager_boundary"]["manager_non_goals"],
         )
@@ -206,6 +228,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertIn(
             "native_helper_consumption.proof_surface",
+            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+        )
+        self.assertIn(
+            "artifact_locator_contract",
+            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+        )
+        self.assertIn(
+            "controlled_stage_attempt_projection",
             contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
         )
         self.assertTrue(

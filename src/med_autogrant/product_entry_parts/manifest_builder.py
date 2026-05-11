@@ -48,6 +48,11 @@ from med_autogrant.product_entry_parts.loop_contracts import (
 from med_autogrant.product_entry_parts.manifest_readiness import build_manifest_readiness_surfaces
 from med_autogrant.product_entry_parts.manifest_runtime_companions import build_manifest_runtime_companions
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
+from med_autogrant.product_entry_parts.domain_agent_skeleton import (
+    build_artifact_locator_contract,
+    build_controlled_stage_attempt_projection,
+    build_domain_agent_skeleton_mapping,
+)
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_artifact_inventory_surface,
     _build_product_command_catalog,
@@ -750,6 +755,70 @@ class ProductEntryManifestBuilderMixin:
                 context="product_entry_shell.grant_user_loop",
             ),
         }
+        artifact_locator_contract = build_artifact_locator_contract(
+            input_path=resolved_input_path,
+            grant_run_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "grant_run_id",
+                context="grant-progress",
+            ),
+            workspace_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "workspace_id",
+                context="grant-progress",
+            ),
+            draft_id=_optional_string_from_mapping(verification_identity, "draft_id"),
+            lifecycle_stage=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "lifecycle_stage",
+                context="grant-progress",
+            ),
+            artifact_inventory=artifact_inventory,
+        )
+        controlled_stage_attempt_projection = build_controlled_stage_attempt_projection(
+            grant_run_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "grant_run_id",
+                context="grant-progress",
+            ),
+            workspace_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "workspace_id",
+                context="grant-progress",
+            ),
+            draft_id=_optional_string_from_mapping(verification_identity, "draft_id"),
+            lifecycle_stage=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "lifecycle_stage",
+                context="grant-progress",
+            ),
+            progress_projection=manifest_progress_projection,
+            task_lifecycle=task_lifecycle,
+        )
+        domain_agent_skeleton_mapping = build_domain_agent_skeleton_mapping(
+            input_path=resolved_input_path,
+            grant_run_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "grant_run_id",
+                context="grant-progress",
+            ),
+            workspace_id=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "workspace_id",
+                context="grant-progress",
+            ),
+            draft_id=_optional_string_from_mapping(verification_identity, "draft_id"),
+            lifecycle_stage=_require_nonempty_string_from_mapping(
+                progress_payload,
+                "lifecycle_stage",
+                context="grant-progress",
+            ),
+            family_stage_control_plane=family_stage_control_plane,
+            runtime_control=runtime_control,
+            progress_projection=manifest_progress_projection,
+            artifact_locator_contract=artifact_locator_contract,
+            controlled_stage_attempt_projection=controlled_stage_attempt_projection,
+        )
         skill_catalog = build_product_entry_skill_catalog(
             resolved_input_path=resolved_input_path,
             runtime_summary=runtime_summary,
@@ -757,6 +826,7 @@ class ProductEntryManifestBuilderMixin:
             shell_commands=shell_commands,
             domain_entry_contract=domain_entry_contract,
             action_catalog_projections=action_catalog_projections,
+            domain_agent_skeleton_mapping=domain_agent_skeleton_mapping,
         )
         automation = _build_shared_automation_catalog(
             summary="automation companion 聚合 submission-ready 导出 gate 与 authoring loop continuation 提示。",
@@ -901,6 +971,9 @@ class ProductEntryManifestBuilderMixin:
                 "runtime_control": runtime_control,
                 "grant_authoring_readiness": grant_authoring_readiness,
                 "autonomy_observability": autonomy_observability,
+                "artifact_locator_contract": artifact_locator_contract,
+                "controlled_stage_attempt_projection": controlled_stage_attempt_projection,
+                "domain_agent_skeleton_mapping": domain_agent_skeleton_mapping,
             },
         )
         payload = {

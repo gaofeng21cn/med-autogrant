@@ -45,6 +45,16 @@ MAG 的 OPL family stage pack 是 descriptor/projection，不是新的 controlle
 
 这层只让 OPL 读取 MAG 的 stage descriptor、operator projection 和下一步定位。`product-entry-manifest` 中的 `family_stage_control_plane` 为 OPL discovery smoke 固定 stage goal、owner、skills、allowed action refs、handoff、source refs、freshness 与 authority boundary；`allowed_action_refs` 必须对齐同一 manifest 内的 `family_action_catalog`。MAG 继续持有 author-side grant truth、fundability judgment、route truth、quality closure 与 submission-ready export gate；外部 portal submission 继续由人工监督。
 
+## Standard Domain-Agent Skeleton
+
+MAG 现在通过 `product-entry-manifest` 导出 `domain_agent_skeleton_mapping`。这是一层标准 skeleton adapter/manifest，不是物理目录重组，也不把 runtime 写成新的 grant executor。
+
+- repo-source 边界固定为 `agent`、`contracts`、`runtime`、`docs`。
+- `runtime` 边界只声明 `sidecar`、`projection_builder`、`lifecycle_adapter`。
+- `artifact_locator_contract` 只给 OPL 读取 locator/ref；真实申请书、receipt 实例、中间产物和 submission-ready export 都属于 workspace 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/artifacts/<grant_run_id>/`。
+- `controlled_stage_attempt_projection` 只暴露 attempt descriptor、source refs、runtime status projection 和 receipt refs。
+- OPL 只消费 descriptor/refs，不持有 fundability verdict、authoring quality verdict、submission-ready export verdict 或 canonical grant artifact content。
+
 ## Lifecycle Adapter
 
 MAG 的 `opl_runtime_manager_registration` 现在携带 `family_lifecycle_adapter`。这层只把已有 `runtime_control`、`session_continuity`、`grant-progress/user-loop` 与 `artifact_inventory` 映射为 OPL family persistence、lifecycle、owner-route discovery 和 adoption projection：

@@ -52,6 +52,33 @@
       "human_gate_reason"
     ]
   },
+  "standard_domain_agent_skeleton": {
+    "surface_kind": "standard_domain_agent_skeleton_mapping",
+    "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
+    "mapping_state": "descriptor_manifest_adapter_landed",
+    "repo_source_boundary": [
+      "agent",
+      "contracts",
+      "runtime",
+      "docs"
+    ],
+    "runtime_declares_only": [
+      "sidecar",
+      "projection_builder",
+      "lifecycle_adapter"
+    ],
+    "manifest_surface_ref": "/product_entry_manifest/domain_agent_skeleton_mapping",
+    "artifact_locator_ref": "/product_entry_manifest/artifact_locator_contract",
+    "controlled_stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+    "authority_boundary": {
+      "opl_role": "descriptor_and_ref_consumer_only",
+      "fundability_verdict_owner": "med-autogrant",
+      "submission_ready_export_verdict_owner": "med-autogrant",
+      "can_hold_fundability_verdict": false,
+      "can_hold_export_verdict": false,
+      "can_write_grant_artifacts": false
+    }
+  },
   "stage_control_projection": {
     "surface_kind": "mag_opl_family_stage_control_projection.v1",
     "projection_role": "descriptor_only_stage_pack",
@@ -130,6 +157,31 @@
       "submission_ready_export_gate_owner": "med-autogrant",
       "opl_role": "stage descriptor/projection consumer only"
     }
+  },
+  "artifact_locator_contract": {
+    "surface_kind": "domain_artifact_locator_contract",
+    "locator_id": "mag.artifact_locator.v1",
+    "manifest_surface_ref": "/product_entry_manifest/artifact_locator_contract",
+    "runtime_artifact_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/artifacts/<grant_run_id>/",
+    "repo_source_policy": "repo_source_contains_descriptors_only",
+    "opl_consumption": "index_locator_refs_only_no_fundability_or_export_verdict"
+  },
+  "controlled_stage_attempt_projection": {
+    "surface_kind": "controlled_stage_attempt_projection",
+    "manifest_surface_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+    "maps_to_opl_contract": "opl_family_runtime_attempt_contract.v1",
+    "receipt_refs_surface": "/product_entry_manifest/controlled_stage_attempt_projection/receipt_refs",
+    "opl_consumption": [
+      "descriptor",
+      "source_refs",
+      "receipt_refs",
+      "runtime_status_projection"
+    ],
+    "opl_non_consumption": [
+      "fundability_verdict",
+      "submission_ready_export_verdict",
+      "canonical_grant_artifact_content"
+    ]
   },
   "lifecycle_adapter": {
     "surface_kind": "opl_family_lifecycle_adapter_contract",
