@@ -12,3 +12,7 @@
 - `machine boundary`：仅作为人读材料。机器可读面必须使用 contracts、schemas、source path 或语义化 `human_doc:*` 标识。
 
 Reference notes 不能替代当前产品真相。MAG 当前 grant product truth 继续以核心文档、active specs 和 `contracts/runtime-program/current-program.json` 为准。
+
+当前参考入口：
+
+- [Grant Strategy Memory Policy](./grant_strategy_memory_policy.md)：说明 fundability、specific aims、reviewer grammar、template strategy 等经验如何以自然语言 memory 形式沉淀，同时保持 quality/controller/export surface 的结构化权威。

@@ -72,8 +72,10 @@ The root public-doc allowlist is intentionally sparse:
 - [Authoring completion semantics current truth](./specs/2026-04-23-authoring-completion-semantics-current-truth.md)
 - [Quality governance, autonomy controller, and family grammar current truth](./specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md)
 - [Contracts Overview](../contracts/README.md)
+- [Grant Strategy Memory Policy](./references/grant_strategy_memory_policy.md)
 
 The current grant product-entry shell remains available as the internal domain/API catalog builder behind the app skill and as part of the stable callable surface. The current schema-backed freeze also keeps `hosted contract bundle`, `domain_entry_contract`, `supported_commands`, and `command_contracts` visible as integration/reference surfaces for hosted caller / external caller consumption.
+Fundability, specific aims, reviewer grammar, and template strategy experience is managed as natural-language memory, while `workspace quality-scorecard`, `grant-quality-closure-dossier`, autonomy-controller reports, and submission-ready packages remain structured authority.
 The quality and autonomy schemas are tracked in [`schema-index.json`](../schemas/v1/schema-index.json) and in the current-program truth surface.
 For the complete repo-tracked truth-surface list, read `repo_tracked_truth_surfaces` in [`current-program.json`](../contracts/runtime-program/current-program.json); contract/schema/source surfaces stay as repo paths, and prose docs are referenced by semantic `human_doc:*` ids. The specs guide and specs lifecycle map separate active boundary records, support records, and historical provenance records.
 
