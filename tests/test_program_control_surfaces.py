@@ -31,35 +31,42 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["runtime_owner"]["active_tranche"],
             "P4.G authoring-quality-first completion semantics alignment",
         )
+        framework_boundary = contract["runtime_owner"]["stage_led_framework_boundary"]
         self.assertEqual(
-            contract["runtime_owner"]["runtime_manager_boundary"]["manager"],
-            "OPL Runtime Manager",
+            framework_boundary["framework"],
+            "OPL Codex-first stage-led agent runtime framework",
         )
+        self.assertIn("queue", framework_boundary["layer_role"])
+        self.assertIn("handoff", framework_boundary["layer_role"])
+        self.assertIn("operator projection", framework_boundary["layer_role"])
+        self.assertIn("external provider orchestration", framework_boundary["layer_role"])
+        self.assertIn("author-side route truth", framework_boundary["mag_owned_truth"])
+        self.assertIn("submission-ready export gate", framework_boundary["mag_owned_truth"])
         self.assertIn(
             "runtime_control.semantic_closure",
-            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+            framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
             "skill_catalog.domain_projection.opl_runtime_manager_registration",
-            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+            framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
             "skill_catalog.domain_projection.opl_runtime_manager_registration.family_lifecycle_adapter",
-            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+            framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
             "skill_catalog.domain_projection.opl_runtime_manager_registration.native_helper_consumption.proof_surface",
-            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+            framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
             "skill_catalog.domain_projection.domain_agent_skeleton_mapping",
-            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+            framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
             "controlled stage attempt projection and sidecar receipt refs",
-            contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"],
+            framework_boundary["framework_consumed_projection"],
         )
-        skeleton = contract["runtime_owner"]["runtime_manager_boundary"]["standard_domain_agent_skeleton"]
+        skeleton = framework_boundary["standard_domain_agent_skeleton"]
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
         self.assertEqual(skeleton["repo_source_boundary"], ["agent", "contracts", "runtime", "docs"])
         self.assertEqual(
@@ -73,10 +80,17 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertFalse(skeleton["opl_verdict_authority"]["fundability"])
         self.assertFalse(skeleton["opl_verdict_authority"]["submission_ready_export"])
+        self.assertEqual(
+            framework_boundary["product_sidecar_adapter"]["adapter_id"],
+            "mag.opl_stage_led.product_sidecar.v1",
+        )
         self.assertIn(
             "grant-domain truth owner",
-            contract["runtime_owner"]["runtime_manager_boundary"]["manager_non_goals"],
+            framework_boundary["framework_non_goals"],
         )
+        self.assertIn("fundability judgment owner", framework_boundary["framework_non_goals"])
+        self.assertIn("authoring quality verdict owner", framework_boundary["framework_non_goals"])
+        self.assertIn("submission-ready export authority", framework_boundary["framework_non_goals"])
         self.assertEqual(contract["executor_defaults"]["default_executor_name"], "codex_cli")
         self.assertEqual(contract["executor_defaults"]["default_executor_mode"], "autonomous")
         self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")
@@ -203,49 +217,53 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth", contract["repo_tracked_truth_surfaces"])
         self.assertEqual(
             contract["ideal_target"]["family_top_entry"],
-            "OPL family-level orchestration surface",
+            "OPL Codex-first stage-led agent runtime framework",
         )
-        self.assertEqual(contract["ideal_target"]["family_runtime_manager"], "OPL Runtime Manager")
+        self.assertEqual(contract["ideal_target"]["family_runtime_framework"], "OPL stage-led runtime framework")
+        self.assertEqual(contract["ideal_target"]["stage_attempt_minimum_execution_unit"], "Codex CLI")
         self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
         self.assertEqual(
             contract["ideal_target"]["runtime_substrate_owner"],
-            "configured OPL family runtime provider for family runtime wakeup/control-plane consumption; "
-            "Temporal is the production target and Hermes remains legacy/optional; "
-            "route-selected authoring executor remains Codex/domain-selected by default",
+            "OPL stage-led runtime framework may explicitly select external providers for wakeup/control-plane "
+            "consumption; route-selected authoring executor remains Codex/domain-selected by default",
         )
         self.assertEqual(contract["ideal_target"]["authoring_truth_owner"], "Med Auto Grant")
-        self.assertIn("runtime_control", contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"])
+        stage_led_framework = contract["ideal_target"]["opl_stage_led_framework"]
+        self.assertIn("queue/wakeup", stage_led_framework["role"])
+        self.assertIn("runtime_control", stage_led_framework["consumes_mag_surfaces"])
         self.assertIn(
             "opl_runtime_manager_registration",
-            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+            stage_led_framework["consumes_mag_surfaces"],
         )
         self.assertIn(
             "family_lifecycle_adapter",
-            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+            stage_led_framework["consumes_mag_surfaces"],
         )
         self.assertIn(
             "native_helper_consumption",
-            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+            stage_led_framework["consumes_mag_surfaces"],
         )
         self.assertIn(
             "native_helper_consumption.proof_surface",
-            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+            stage_led_framework["consumes_mag_surfaces"],
         )
         self.assertIn(
             "artifact_locator_contract",
-            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+            stage_led_framework["consumes_mag_surfaces"],
         )
         self.assertIn(
             "controlled_stage_attempt_projection",
-            contract["ideal_target"]["opl_runtime_manager"]["consumes_mag_surfaces"],
+            stage_led_framework["consumes_mag_surfaces"],
         )
         self.assertTrue(
             any(
                 "OPL Rust native helper" in item
-                for item in contract["runtime_owner"]["runtime_manager_boundary"]["manager_consumed_projection"]
+                for item in framework_boundary["framework_consumed_projection"]
             )
         )
-        self.assertIn("grant authoring truth", contract["ideal_target"]["opl_runtime_manager"]["does_not_own"])
+        self.assertIn("grant authoring truth", stage_led_framework["does_not_own"])
+        self.assertIn("fundability judgment", stage_led_framework["does_not_own"])
+        self.assertIn("concrete executor selection", stage_led_framework["does_not_own"])
         self.assertEqual(contract["phase_map"][0]["phase_id"], "P1")
         self.assertEqual(contract["phase_map"][0]["status"], "completed")
         self.assertEqual(contract["phase_map"][1]["phase_id"], "P2")

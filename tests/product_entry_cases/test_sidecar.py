@@ -17,11 +17,12 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(payload["command"], "product-sidecar-export")
         export = payload["sidecar_export"]
         self.assertEqual(export["surface_kind"], "mag_product_sidecar_export")
-        self.assertEqual(export["adapter_id"], "mag.hermes_family.product_sidecar.v1")
-        self.assertEqual(export["substrate_boundary"]["online_substrate_owner"], "hermes_agent")
+        self.assertEqual(export["adapter_id"], "mag.opl_stage_led.product_sidecar.v1")
+        self.assertEqual(export["substrate_boundary"]["online_substrate_owner"], "explicit_opl_provider")
         self.assertEqual(export["substrate_boundary"]["control_plane_owner"], "one-person-lab")
         self.assertEqual(export["substrate_boundary"]["domain_truth_owner"], "med-autogrant")
         self.assertFalse(export["substrate_boundary"]["hermes_proof_executor_default"])
+        self.assertIn("OPL may explicitly choose", export["substrate_boundary"]["default_executor_note"])
         self.assertEqual(export["runtime_control"]["surface_kind"], "runtime_control")
         self.assertEqual(export["runtime_continuity"]["surface_kind"], "skill_runtime_continuity")
         self.assertEqual(

@@ -18,7 +18,8 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     )
     assert payload["current_focus"]["summary"]
     assert payload["current_focus"]["focus_items"]
-    assert payload["ideal_target"]["family_top_entry"] == "OPL family-level orchestration surface"
+    assert payload["ideal_target"]["family_top_entry"] == "OPL Codex-first stage-led agent runtime framework"
+    assert payload["ideal_target"]["stage_attempt_minimum_execution_unit"] == "Codex CLI"
     assert payload["ideal_target"]["domain_direct_entry"] == "Med Auto Grant Product Entry"
     assert any(item["record_id"] == "P4.B" for item in payload["completed_records"])
     assert any(item["record_id"] == "P4.C" for item in payload["completed_records"])
@@ -51,7 +52,7 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     )
     assert any("Web UI" in item for item in payload["remaining_gaps"])
     assert any("官网提交" in item for item in payload["remaining_gaps"])
-    assert any("OPL Runtime Manager" in item for item in maintainer_references["explicitly_not_now"])
+    assert any("OPL stage-led framework" in item for item in maintainer_references["explicitly_not_now"])
     assert any("官网提交" in item for item in maintainer_references["explicitly_not_now"])
     assert any("product-entry-manifest" in item for item in payload["current_focus"]["focus_items"])
     assert any("family product-entry manifest v2" in item for item in payload["current_focus"]["focus_items"])

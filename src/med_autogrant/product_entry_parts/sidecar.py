@@ -16,7 +16,7 @@ from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateErro
 
 SIDECAR_EXPORT_KIND = "mag_product_sidecar_export"
 SIDECAR_DISPATCH_KIND = "mag_product_sidecar_dispatch"
-SIDECAR_ADAPTER_ID = "mag.hermes_family.product_sidecar.v1"
+SIDECAR_ADAPTER_ID = "mag.opl_stage_led.product_sidecar.v1"
 SIDECAR_VERSION = 1
 
 _ALLOWED_ACTIONS = {
@@ -81,15 +81,15 @@ def build_sidecar_export(
         "adapter_id": SIDECAR_ADAPTER_ID,
         "target_domain_id": TARGET_DOMAIN_ID,
         "substrate_boundary": {
-            "online_substrate_owner": "hermes_agent",
+            "online_substrate_owner": "explicit_opl_provider",
             "control_plane_owner": "one-person-lab",
             "domain_truth_owner": TARGET_DOMAIN_ID,
             "quality_gate_owner": TARGET_DOMAIN_ID,
             "artifact_owner": TARGET_DOMAIN_ID,
             "default_executor_owner": _default_executor_owner(manifest),
             "default_executor_note": (
-                "Default executor remains Codex/domain-selected; Hermes is the OPL-managed "
-                "24h online substrate and wakeup carrier."
+                "Default executor remains Codex/domain-selected; OPL may explicitly choose "
+                "a stage-led runtime provider for wakeup/control-plane carrier duties."
             ),
             "hermes_proof_executor_default": False,
         },

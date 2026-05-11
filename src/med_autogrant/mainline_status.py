@@ -245,7 +245,7 @@ def _completed_records() -> list[dict[str, str]]:
 def _remaining_gaps() -> list[str]:
     return [
         "mature direct grant Web UI / hosted runtime 仍未 landed。",
-        "repo 内仍未落地 OPL Runtime Manager 与 family-level cross-domain product status。",
+        "真实 OPL stage attempt 长跑、human-gate signal/query 与 App 可视化仍未由本仓证明。",
         "当前 product 面仍然是 CLI/controller shell，而不是完整 standalone frontend。",
         "图件生成、Word/PDF 定稿与最终版式审查仍未产品化。",
         "不会凭空补齐真实预实验、代表作、在研项目与图片素材。",
@@ -255,7 +255,7 @@ def _remaining_gaps() -> list[str]:
 
 def _explicitly_not_now() -> list[str]:
     return [
-        "把 OPL Runtime Manager 写成本仓已 landed。",
+        "把 OPL stage-led framework 写成由 MAG 仓持有或已完成 production long-run soak。",
         "提前扩 family、提前做 Human-in-the-loop sibling。",
         "把 repo-local helper 重新写回 runtime owner。",
         "把本地 submission-ready package 写成已完成外部官网提交。",

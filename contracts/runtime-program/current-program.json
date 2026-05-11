@@ -18,9 +18,9 @@
     "optional_hosted_carriers": [
       "hermes_agent"
     ],
-    "runtime_manager_boundary": {
-      "manager": "OPL Runtime Manager",
-      "layer_role": "product-managed adapter/projection layer over MAG product-entry/runtime-control surfaces; external Hermes-Agent is an optional hosted/proof carrier",
+    "stage_led_framework_boundary": {
+      "framework": "OPL Codex-first stage-led agent runtime framework",
+      "layer_role": "family-level stage lifecycle, queue, wakeup, handoff, receipt, retry/dead-letter, operator projection, shared contracts/indexes, and external provider orchestration over MAG-owned descriptor/projection surfaces",
       "mag_owned_truth": [
         "grant_run_id/workspace_id/draft_id/program_id identity boundary",
         "author-side route truth",
@@ -28,7 +28,7 @@
         "quality governance and review package truth",
         "submission-ready export gate"
       ],
-      "manager_consumed_projection": [
+      "framework_consumed_projection": [
         "domain_entry_contract",
         "runtime_control.semantic_closure",
         "skill_catalog.domain_projection.runtime_continuity",
@@ -41,19 +41,19 @@
         "controlled stage attempt projection and sidecar receipt refs",
         "OPL Rust native helper indexed workspace/session/artifact/TODO/runtime-health projections"
       ],
-      "manager_non_goals": [
+      "framework_non_goals": [
         "grant-domain truth owner",
-        "scheduler kernel",
-        "session store",
-        "memory store",
         "concrete authoring executor",
+        "fundability judgment owner",
+        "authoring quality verdict owner",
+        "submission-ready export authority",
         "private Hermes-Agent fork"
       ],
       "product_sidecar_adapter": {
-        "adapter_id": "mag.hermes_family.product_sidecar.v1",
+        "adapter_id": "mag.opl_stage_led.product_sidecar.v1",
         "export_command": "product sidecar export",
         "dispatch_command": "product sidecar dispatch",
-        "role": "MAG-owned product sidecar projection and guarded dispatch adapter for OPL typed family queue / configured family runtime provider consumption",
+        "role": "MAG-owned product sidecar projection and guarded dispatch adapter for OPL stage-led typed queue and explicit provider consumption",
         "allowed_dispatch_actions": [
           "status/read",
           "user-loop/wakeup",
@@ -176,15 +176,16 @@
     ]
   },
   "ideal_target": {
-    "family_top_entry": "OPL family-level orchestration surface",
-    "family_runtime_manager": "OPL Runtime Manager",
+    "family_top_entry": "OPL Codex-first stage-led agent runtime framework",
+    "family_runtime_framework": "OPL stage-led runtime framework",
     "domain_direct_entry": "Med Auto Grant Product Entry",
-    "runtime_substrate_owner": "configured OPL family runtime provider for family runtime wakeup/control-plane consumption; Temporal is the production target and Hermes remains legacy/optional; route-selected authoring executor remains Codex/domain-selected by default",
+    "stage_attempt_minimum_execution_unit": "Codex CLI",
+    "runtime_substrate_owner": "OPL stage-led runtime framework may explicitly select external providers for wakeup/control-plane consumption; route-selected authoring executor remains Codex/domain-selected by default",
     "authoring_truth_owner": "Med Auto Grant",
     "direct_user_route": "User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> route-selected executor or optional hosted runtime carrier -> Med Auto Grant domain logic",
-    "opl_gateway_route": "User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> configured family runtime provider -> MAG product-entry/runtime-control projection -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry; explicit hosted carriers are opt-in",
-    "opl_runtime_manager": {
-      "role": "thin OPL-side runtime manager for profile wiring, task registration hydration, runtime status projection, doctor/repair/resume, native helper catalog, and high-frequency state indexes",
+    "opl_stage_led_route": "User or agent caller -> OPL stage-led runtime framework -> MAG descriptor/projection surfaces -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry; explicit hosted carriers are opt-in",
+    "opl_stage_led_framework": {
+      "role": "family-level stage lifecycle, queue/wakeup, handoff, receipt, approval/retry/dead-letter, operator projection, shared contracts/indexes, and external provider orchestration",
       "consumes_mag_surfaces": [
         "domain_entry_contract",
         "runtime_control",
@@ -206,6 +207,7 @@
       "does_not_own": [
         "grant authoring truth",
         "route truth",
+        "fundability judgment",
         "quality gate",
         "submission-ready export gate",
         "concrete executor selection"
