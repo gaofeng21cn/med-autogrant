@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib
 
 from med_autogrant.public_cli import public_cli_command
+from support.cli import run_json_cli
 
 
 def test_mainline_status_projects_line_focus_records_and_maintainer_references() -> None:
@@ -56,22 +57,18 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     assert any("family product-entry manifest v2" in item for item in payload["current_focus"]["focus_items"])
 
 
-def test_render_mainline_status_markdown_surfaces_line_focus_records_and_references() -> None:
-    module = importlib.import_module("med_autogrant.mainline_status")
+def test_mainline_status_cli_json_exposes_structured_contract_surface() -> None:
+    payload = run_json_cli("mainline-status", "--format", "json")
 
-    markdown = module.render_mainline_status_markdown(module.read_mainline_status())
-
-    assert "# Mainline Status" in markdown
-    assert "- 当前 program:" in markdown
-    assert "- 当前 line:" in markdown
-    assert "- 当前 focus:" in markdown
-    assert "P4" in markdown
-    assert "Ideal Target" in markdown
-    assert "Current Focus Items" in markdown
-    assert "Completed Records" in markdown
-    assert "Remaining Gaps" in markdown
-    assert "Maintainer References" in markdown
-    assert "program_id:" not in markdown
+    assert payload["schema_version"] == 1
+    assert payload["program_id"] == "med-autogrant-mainline"
+    assert payload["current_line"]["current_owner_line"]
+    assert payload["current_focus"]["summary"]
+    assert payload["current_focus"]["focus_items"]
+    assert payload["completed_records"]
+    assert payload["remaining_gaps"]
+    assert payload["maintainer_references"]["runtime_owner"]["active_phase"]
+    assert payload["maintainer_references"]["current_record_detail"]["phase_id"] == "P4"
 
 
 def test_mainline_phase_status_resolves_current_and_next_phase() -> None:
@@ -115,20 +112,14 @@ def test_mainline_phase_status_resolves_current_and_next_phase() -> None:
     )
 
 
-def test_render_mainline_phase_markdown_surfaces_entry_points_and_exit_criteria() -> None:
-    module = importlib.import_module("med_autogrant.mainline_status")
+def test_mainline_phase_cli_json_exposes_entry_points_and_exit_criteria() -> None:
+    payload = run_json_cli("mainline-phase", "--phase", "P4", "--format", "json")
+    record_detail = payload["maintainer_reference"]["record_detail"]
 
-    markdown = module.render_mainline_phase_markdown(module.read_mainline_phase_status("P4"))
-
-    assert "# Mainline Maintainer Reference" in markdown
-    assert "- 维护参考记录:" in markdown
-    assert "- 记录名称:" in markdown
-    assert "- 记录状态:" in markdown
-    assert "- 当前摘要:" in markdown
-    assert "P4" in markdown
-    assert "Entry Points" in markdown
-    assert "Exit Criteria" in markdown
-    assert "phase_id:" not in markdown
-    assert "phase_name:" not in markdown
-    assert "status:" not in markdown
-    assert "summary:" not in markdown
+    assert payload["schema_version"] == 1
+    assert payload["program_id"] == "med-autogrant-mainline"
+    assert record_detail["phase_id"] == "P4"
+    assert record_detail["phase_name"]
+    assert record_detail["status"] == "next"
+    assert record_detail["entry_points"]
+    assert record_detail["exit_criteria"]

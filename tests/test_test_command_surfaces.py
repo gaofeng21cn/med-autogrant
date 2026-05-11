@@ -88,9 +88,13 @@ def test_opl_module_healthcheck_uses_product_smoke_lane() -> None:
     assert "make test-family" not in healthcheck
 
 
-def test_mag_skill_prefers_repo_local_launcher_over_path_global_cli() -> None:
+def test_mag_skill_registers_repo_local_product_entry_commands() -> None:
     skill = _read("plugins/mag/skills/mag/SKILL.md")
 
-    assert "uv run --directory <med-autogrant-repo> medautogrant" in skill
-    assert "shell PATH lookup" in skill
-    assert "用户 PATH 上的裸 `medautogrant`" in skill
+    for command_surface in (
+        "product skill-catalog",
+        "product status",
+        "product user-loop",
+        "product direct-entry",
+    ):
+        assert f"uv run --directory <med-autogrant-repo> medautogrant {command_surface}" in skill

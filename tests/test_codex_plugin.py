@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import tomllib
 from pathlib import Path
 
@@ -46,15 +47,25 @@ def test_codex_plugin_marketplace_uses_full_display_name() -> None:
     assert plugin_entry["category"] == "Research"
 
 
-def test_mag_skill_pins_domain_runtime_guardrails() -> None:
+def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
     skill_text = PLUGIN_SKILL_PATH.read_text(encoding="utf-8")
     metadata_text = PLUGIN_SKILL_UI_METADATA_PATH.read_text(encoding="utf-8")
+    frontmatter_match = re.match(r"---\n(?P<frontmatter>.*?)\n---", skill_text, re.DOTALL)
 
-    assert "Domain runtime 护栏" in skill_text
-    assert "必须通过 MAG product-entry、user-loop、direct-entry 或 schema-backed authoring contract 推进" in skill_text
-    assert "不得用通用 `documents` / Office skill、直接编辑 `.docx`" in skill_text
-    assert "ad-hoc 脚本、手写导出包或 prompt-only 文档路径" in skill_text
-    assert "回到 repo 层补最小 callable/product-entry surface" in skill_text
-    assert "不能成为绕开 runtime 的替代执行路径" in skill_text
+    assert frontmatter_match is not None
+    frontmatter = frontmatter_match.group("frontmatter")
+    assert re.search(r"^name:\s*mag$", frontmatter, re.MULTILINE)
+    assert "product entry" in frontmatter
+    assert "user-loop" in frontmatter
+    assert "schema-backed contracts" in frontmatter
+    for command_surface in (
+        "product skill-catalog",
+        "product status",
+        "product user-loop",
+        "product direct-entry",
+    ):
+        assert f"medautogrant {command_surface}" in skill_text
+    assert "descriptor_only=true" in skill_text
+    assert "public_runtime=false" in skill_text
     assert 'display_name: "Med Auto Grant"' in metadata_text
     assert 'default_prompt: "Use $mag' in metadata_text

@@ -206,7 +206,6 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertIn("当前阶段: 批注审阅", stdout)
         self.assertIn("manifest 类型:", stdout)
         self.assertIn("维护者参考 phase:", stdout)
-        self.assertIn("当前 focus:", stdout)
         self.assertNotIn("manifest_kind:", stdout)
         self.assertNotIn("active_phase:", stdout)
         self.assertNotIn("current_focus:", stdout)

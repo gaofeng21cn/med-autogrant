@@ -79,7 +79,7 @@ Date: `2026-05-11`
 ## 当前目录治理
 
 - repo-tracked 主线不再保留项目级 `.codex/`、`.omx/`、`.runtime-program/`、`.agent-contract-baseline.json` 或 `runtime-state/`；本机 session、prompt、log、report 与 hook 状态统一属于 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
-- 当前测试 lane 已收口为平衡默认：`scripts/verify.sh` 默认运行一次 line-budget、最小 `smoke` 入口健康检查和不需要 optional proof dependency 的非重型 fast core；矩阵型、runtime/session、hosted/export、product-entry 与兼容性覆盖进入显式 `regression` lane；Hermes hosted/proof 进入显式 `proof` lane 并使用 `proof` extra。`tests/product_entry_cases/` 现在是直接收集的 product-entry regression case 边界，旧 `tests/test_product_entry.py` 仅作为兼容导入面保留。
+- 当前测试 lane 已收口为平衡默认：`scripts/verify.sh` 默认运行一次 line-budget、最小 `smoke` 入口健康检查和不需要 optional proof dependency 的非重型 fast core；矩阵型、runtime/session、hosted/export、product-entry 与兼容性覆盖进入显式 `regression` lane；Hermes hosted/proof 进入显式 `proof` lane 并使用 `proof` extra。`tests/product_entry_cases/` 现在是直接收集的 product-entry regression case 边界，旧 `tests/test_product_entry.py` 仅作为兼容导入面保留。测试口径只固定 machine-readable contract、schema、CLI/API、generated artifact 结构与污染 guard；`README*`、`docs/**`、Markdown 渲染标题和 skill 正文文案不作为稳定断言面。
 - `tests/test_repository_hygiene.py` 作为 meta 验证的一部分，阻断 tracked `dist/`、`build/`、`out/`、`__pycache__`、`*.egg-info`、`.DS_Store`、项目级本地状态目录，以及除 `.agents/plugins/marketplace.json` 外的 `.agents/` 内容。
 - 同一 hygiene 测试同时固定 tracked source/test line budget，新增或增长的超长源码应先拆分到清晰子模块，而不是扩大单文件基线。
 

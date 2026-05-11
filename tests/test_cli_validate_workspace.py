@@ -529,25 +529,6 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             "P4.G authoring-quality-first completion semantics alignment",
         )
 
-    def test_mainline_status_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "mainline-status",
-            "--format",
-            "text",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前 program:", stdout)
-        self.assertIn("当前 line:", stdout)
-        self.assertIn("当前 focus:", stdout)
-        self.assertIn("- 当前 focus 项:", stdout)
-        self.assertIn("- 已完成 record P4.F:", stdout)
-        self.assertIn("- 剩余 gap:", stdout)
-        self.assertNotIn("program_id:", stdout)
-        self.assertNotIn("active_phase:", stdout)
-        self.assertNotIn("active_tranche:", stdout)
-
     def test_validate_workspace_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "validate-workspace",
@@ -633,27 +614,6 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         payload = json.loads(stdout)
         self.assertEqual(payload["maintainer_reference"]["record_detail"]["phase_id"], "P4")
         self.assertEqual(payload["maintainer_reference"]["record_detail"]["status"], "next")
-
-    def test_mainline_phase_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "mainline-phase",
-            "--phase",
-            "next",
-            "--format",
-            "text",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前 line:", stdout)
-        self.assertIn("维护参考 selector:", stdout)
-        self.assertIn("维护参考记录: P4", stdout)
-        self.assertIn("记录名称:", stdout)
-        self.assertIn("记录状态:", stdout)
-        self.assertIn("- 可用入口", stdout)
-        self.assertNotRegex(stdout, r"(?m)^phase_id:")
-        self.assertNotRegex(stdout, r"(?m)^phase_name:")
-        self.assertNotRegex(stdout, r"(?m)^status:")
 
     def test_grant_user_loop_projects_mainline_snapshot_and_route_action(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
