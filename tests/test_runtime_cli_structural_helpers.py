@@ -85,10 +85,10 @@ def test_cli_rendering_preserves_public_render_text_export() -> None:
     assert "- drafts.0: missing section" in rendered
 
 
-def test_runtime_patch_target_resolver_uses_facade_when_loaded() -> None:
+def test_runtime_patch_target_resolver_uses_current_mag_ledger_facade_when_loaded() -> None:
     sentinel = object()
-    with patch("med_autogrant.hermes_runtime.HermesGrantRunLedger", sentinel, create=True):
-        assert resolve_runtime_patch_target("HermesGrantRunLedger", object()) is sentinel
+    with patch("med_autogrant.hermes_runtime.MagGrantRunLedger", sentinel, create=True):
+        assert resolve_runtime_patch_target("MagGrantRunLedger", object()) is sentinel
 
 
 def test_product_entry_default_domain_entry_loader_is_lazy() -> None:
