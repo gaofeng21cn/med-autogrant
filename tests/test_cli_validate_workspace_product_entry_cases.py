@@ -81,10 +81,20 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
                 "grant_cockpit",
                 "grant_direct_entry",
                 "grant_user_loop",
+                "domain_memory_writeback_proposal",
+                "domain_memory_writeback_decision",
             ],
         )
         self.assertIn("product status", domain_projection["shell_commands"]["product_status"])
         self.assertIn("product user-loop", domain_projection["shell_commands"]["grant_user_loop"])
+        self.assertIn(
+            "product domain-memory-proposal",
+            domain_projection["shell_commands"]["domain_memory_writeback_proposal"],
+        )
+        self.assertIn(
+            "product domain-memory-decision",
+            domain_projection["shell_commands"]["domain_memory_writeback_decision"],
+        )
         self.assertEqual(
             domain_projection["action_catalog_ref"],
             "/product_entry_manifest/family_action_catalog",
