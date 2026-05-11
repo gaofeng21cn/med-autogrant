@@ -5,7 +5,7 @@ Date: `2026-05-11`
 Owner: `Med Auto Grant`
 Purpose: define how reusable grant-writing strategy experience should be captured without turning MAG into a rigid recipe engine.
 State: `reference`
-Machine boundary: this is a human-readable policy. Machine truth remains in MAG contracts, schemas, source code, workspace records, quality scorecards, closure dossiers, controller reports, stage route reports, and submission-ready package surfaces.
+Machine boundary: this is a human-readable policy. Machine truth remains in MAG contracts, schemas, source code, workspace records, quality scorecards, closure dossiers, controller reports, stage route reports, and submission-ready package surfaces. The repo-tracked migration/locator surfaces are `contracts/runtime-program/opl-family-contract-adoption.json`, `contracts/runtime-program/domain-memory-seed-fixture.json`, and `/product_entry_manifest/domain_memory_descriptor_locator`.
 
 ## Conclusion
 
@@ -85,13 +85,13 @@ Now:
 
 - keep this policy as the MAG memory owner reference;
 - continue using existing structured quality/controller/export surfaces as authority;
-- record reusable grant strategy lessons as prose in future stage closeouts or reference docs before runtime indexing exists.
+- expose a repo-source migration plan, seed fixture, and receipt locator for domain memory migration without storing real memory entries in repo source.
 
 Next:
 
-- expose explicit `knowledge_refs` / `memory_refs` in MAG stage descriptors when OPL's stage packet and closeout receipt mechanics are ready;
-- add writeback proposals for reusable strategy lessons from critique and autonomy-controller closeout;
-- project accepted/rejected memory writebacks to the operator surface.
+- implement the runtime writeback proposal generator from workspace/runtime closeout roots;
+- add a MAG-owned accept/reject command that writes accepted memories only to the domain-owned runtime memory store;
+- project accepted/rejected memory writeback receipt refs to the operator surface.
 
 Defer:
 

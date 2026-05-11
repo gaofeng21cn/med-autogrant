@@ -1,0 +1,69 @@
+{
+  "fixture_kind": "mag_domain_memory_seed_fixture.v1",
+  "target_domain_id": "med-autogrant",
+  "owner": "Med Auto Grant",
+  "state": "seed_fixture_no_real_memory_entries",
+  "purpose": "Define the minimal shape for migrating reusable grant strategy lessons into MAG-owned domain memory without storing real workspace artifacts or memory entries in repo source.",
+  "policy_ref": "docs/references/grant_strategy_memory_policy.md",
+  "descriptor_surface_ref": "/product_entry_manifest/domain_memory_descriptor_locator",
+  "migration_plan_ref": "/product_entry_manifest/domain_memory_descriptor_locator/migration_plan",
+  "receipt_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+  "stage_ids": [
+    "call_and_candidate_intake",
+    "fundability_strategy",
+    "specific_aims_and_structure",
+    "proposal_authoring",
+    "review_and_rebuttal",
+    "package_and_submit_ready"
+  ],
+  "candidate_template": {
+    "memory_candidate_id": "<candidate-id>",
+    "stage_id": "<stage-id-from-stage_ids>",
+    "memory_role": "strategy_context",
+    "source_locator": {
+      "locator_kind": "workspace_or_runtime_ref",
+      "workspace_locator": "<workspace-root-or-workspace-id>",
+      "runtime_ref": "$CODEX_HOME/projects/med-autogrant/runtime-state/<relative-ref>",
+      "repo_tracked": false
+    },
+    "lesson_summary": "<short reusable grant strategy lesson>",
+    "applicability": {
+      "grant_family": "<NSFC|NIH_R21|Wellcome_Discovery|future-admitted-family>",
+      "stage_scope": "<stage-id>",
+      "reuse_boundary": "strategy_guidance_only_no_verdict_authority"
+    },
+    "forbidden_content_scan": {
+      "contains_workspace_private_evidence": false,
+      "contains_canonical_grant_artifact_content": false,
+      "contains_fundability_verdict": false,
+      "contains_authoring_quality_verdict": false,
+      "contains_submission_ready_export_verdict": false
+    },
+    "writeback_proposal_ref": "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/writeback-proposals/<grant_run_id>/<proposal_id>.json",
+    "decision_receipt_ref": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/<grant_run_id>/memory-writeback-decisions/<proposal_id>.json"
+  },
+  "acceptance_receipt_template": {
+    "receipt_kind": "mag_domain_memory_writeback_decision.v1",
+    "proposal_id": "<proposal-id>",
+    "decision": "<accepted|rejected>",
+    "decision_owner": "med-autogrant",
+    "policy_ref": "docs/references/grant_strategy_memory_policy.md",
+    "accepted_memory_ref": "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/accepted/<memory_id>.json",
+    "rejected_memory_ref": "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/rejected/<proposal_id>.json",
+    "contains_memory_body": false,
+    "contains_grant_artifact_content": false,
+    "contains_quality_or_export_verdict": false
+  },
+  "repo_source_policy": {
+    "repo_contains_real_memory_entries": false,
+    "repo_contains_real_grant_artifacts": false,
+    "repo_contains_receipt_instances": false,
+    "allowed_repo_content": [
+      "descriptor",
+      "migration_plan",
+      "seed_fixture_template",
+      "receipt_locator_template",
+      "human_policy"
+    ]
+  }
+}

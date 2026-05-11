@@ -461,6 +461,21 @@ class SchemaRegistryTest(unittest.TestCase):
             manifest_schema["$defs"]["controlledStageAttemptProjection"]["properties"]["surface_kind"]["const"],
             "controlled_stage_attempt_projection",
         )
+        domain_memory = manifest_schema["$defs"]["domainMemoryDescriptorLocator"]
+        self.assertIn("migration_plan", domain_memory["required"])
+        self.assertIn("receipt_locator", domain_memory["required"])
+        self.assertEqual(
+            domain_memory["properties"]["migration_plan"]["properties"]["surface_kind"]["const"],
+            "domain_memory_migration_plan",
+        )
+        self.assertEqual(
+            domain_memory["properties"]["migration_plan"]["properties"]["plan_id"]["const"],
+            "mag.domain_memory_migration_plan.v1",
+        )
+        self.assertEqual(
+            domain_memory["properties"]["receipt_locator"]["properties"]["surface_kind"]["const"],
+            "domain_memory_receipt_locator",
+        )
         self.assertEqual(
             manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"]["surface_kind"]["const"],
             "opl_stage_runtime_domain_registration",

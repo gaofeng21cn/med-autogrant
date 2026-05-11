@@ -333,6 +333,21 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             memory_locator["memory_locator"]["retrieval_policy"],
             "stage_specific_small_relevant_sets",
         )
+        migration_plan = memory_locator["migration_plan"]
+        self.assertEqual(migration_plan["surface_kind"], "domain_memory_migration_plan")
+        self.assertEqual(migration_plan["plan_id"], "mag.domain_memory_migration_plan.v1")
+        self.assertEqual(migration_plan["migration_state"], "repo_source_plan_and_seed_fixture_landed")
+        self.assertEqual(
+            migration_plan["seed_fixture_ref"]["ref"],
+            "contracts/runtime-program/domain-memory-seed-fixture.json",
+        )
+        self.assertFalse(migration_plan["target_store"]["repo_tracked"])
+        self.assertEqual(
+            [step["step_id"] for step in migration_plan["migration_steps"]],
+            ["discover_candidates", "mag_review", "persist_acceptance"],
+        )
+        self.assertIn("no_workspace_private_evidence", migration_plan["acceptance_gates"])
+        self.assertIn("MAG memory acceptance command", migration_plan["pending_runtime_work"])
         self.assertEqual(
             [ref["stage_id"] for ref in memory_locator["stage_descriptor_refs"]],
             [stage["stage_id"] for stage in stage_plane["stages"]],
@@ -345,6 +360,14 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             memory_locator["writeback_receipt_refs"]["receipt_write_policy"],
             "receipt_ref_only_no_domain_memory_content_mutation",
         )
+        receipt_locator = memory_locator["receipt_locator"]
+        self.assertEqual(receipt_locator["surface_kind"], "domain_memory_receipt_locator")
+        self.assertEqual(receipt_locator["locator_id"], "mag.domain_memory_receipt_locator.v1")
+        self.assertEqual(
+            receipt_locator["receipt_content_policy"],
+            "locator_and_decision_metadata_only_no_memory_body",
+        )
+        self.assertFalse(receipt_locator["repo_tracked"])
         self.assertFalse(memory_locator["opl_consumption_contract"]["can_hold_memory_content"])
         self.assertFalse(memory_locator["opl_consumption_contract"]["can_issue_fundability_verdict"])
         self.assertFalse(memory_locator["opl_consumption_contract"]["can_issue_authoring_quality_verdict"])

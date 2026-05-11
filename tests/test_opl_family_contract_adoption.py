@@ -20,6 +20,10 @@ def _contract() -> dict[str, object]:
     return json.loads(_read(CONTRACT_PATH))
 
 
+def _domain_memory_seed_fixture() -> dict[str, object]:
+    return json.loads(_read("contracts/runtime-program/domain-memory-seed-fixture.json"))
+
+
 def test_mag_declares_thin_opl_family_contract_adoption() -> None:
     contract = _contract()
 
@@ -212,6 +216,33 @@ def test_mag_adoption_contract_declares_domain_memory_locator_without_opl_conten
     assert memory["writeback_policy"] == (
         "opl_may_route_writeback_receipt_refs_but_mag_accepts_or_rejects_memory_content"
     )
+    migration_plan = memory["migration_plan"]
+    assert migration_plan["surface_kind"] == "domain_memory_migration_plan"
+    assert migration_plan["plan_id"] == "mag.domain_memory_migration_plan.v1"
+    assert migration_plan["manifest_surface_ref"] == (
+        "/product_entry_manifest/domain_memory_descriptor_locator/migration_plan"
+    )
+    assert migration_plan["migration_state"] == "repo_source_plan_and_seed_fixture_landed"
+    assert migration_plan["seed_fixture_ref"] == "contracts/runtime-program/domain-memory-seed-fixture.json"
+    assert migration_plan["migration_steps"] == [
+        "discover_candidates",
+        "mag_review",
+        "persist_acceptance",
+    ]
+    assert "domain_memory_seed_fixture" in migration_plan["landed_surfaces"]
+    assert "writeback proposal generator" in migration_plan["pending_runtime_work"]
+    assert migration_plan["target_store"]["owner"] == "med-autogrant"
+    assert migration_plan["target_store"]["repo_tracked"] is False
+
+    receipt_locator = memory["receipt_locator"]
+    assert receipt_locator["surface_kind"] == "domain_memory_receipt_locator"
+    assert receipt_locator["locator_id"] == "mag.domain_memory_receipt_locator.v1"
+    assert receipt_locator["manifest_surface_ref"] == (
+        "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator"
+    )
+    assert receipt_locator["receipt_content_policy"] == "locator_and_decision_metadata_only_no_memory_body"
+    assert receipt_locator["repo_tracked"] is False
+
     authority = memory["authority_boundary"]
     assert authority["opl_role"] == "memory_locator_ref_and_receipt_ref_consumer_only"
     assert authority["can_hold_memory_content"] is False
@@ -219,3 +250,33 @@ def test_mag_adoption_contract_declares_domain_memory_locator_without_opl_conten
     assert authority["can_issue_authoring_quality_verdict"] is False
     assert authority["can_issue_export_verdict"] is False
     assert authority["can_mutate_domain_memory_store"] is False
+
+
+def test_domain_memory_seed_fixture_is_template_only_and_points_to_landed_surfaces() -> None:
+    fixture = _domain_memory_seed_fixture()
+    contract = _contract()
+    memory = contract["domain_memory_descriptor_locator"]
+
+    assert fixture["fixture_kind"] == "mag_domain_memory_seed_fixture.v1"
+    assert fixture["state"] == "seed_fixture_no_real_memory_entries"
+    assert fixture["policy_ref"] == memory["policy_ref"]
+    assert fixture["descriptor_surface_ref"] == memory["manifest_surface_ref"]
+    assert fixture["migration_plan_ref"] == memory["migration_plan"]["manifest_surface_ref"]
+    assert fixture["receipt_locator_ref"] == memory["receipt_locator"]["manifest_surface_ref"]
+    assert fixture["stage_ids"] == memory["stage_memory_refs"]
+    assert fixture["repo_source_policy"]["repo_contains_real_memory_entries"] is False
+    assert fixture["repo_source_policy"]["repo_contains_real_grant_artifacts"] is False
+    assert fixture["repo_source_policy"]["repo_contains_receipt_instances"] is False
+
+    forbidden_scan = fixture["candidate_template"]["forbidden_content_scan"]
+    assert forbidden_scan == {
+        "contains_workspace_private_evidence": False,
+        "contains_canonical_grant_artifact_content": False,
+        "contains_fundability_verdict": False,
+        "contains_authoring_quality_verdict": False,
+        "contains_submission_ready_export_verdict": False,
+    }
+    receipt_template = fixture["acceptance_receipt_template"]
+    assert receipt_template["contains_memory_body"] is False
+    assert receipt_template["contains_grant_artifact_content"] is False
+    assert receipt_template["contains_quality_or_export_verdict"] is False

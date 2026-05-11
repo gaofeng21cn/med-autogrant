@@ -14,6 +14,9 @@ SKELETON_ID = "mag.standard_domain_agent_skeleton.v1"
 ARTIFACT_LOCATOR_KIND = "domain_artifact_locator_contract"
 CONTROLLED_STAGE_ATTEMPT_KIND = "controlled_stage_attempt_projection"
 DOMAIN_MEMORY_DESCRIPTOR_LOCATOR_KIND = "domain_memory_descriptor_locator"
+DOMAIN_MEMORY_MIGRATION_PLAN_KIND = "domain_memory_migration_plan"
+DOMAIN_MEMORY_RECEIPT_LOCATOR_KIND = "domain_memory_receipt_locator"
+DOMAIN_MEMORY_SEED_FIXTURE_REF = "contracts/runtime-program/domain-memory-seed-fixture.json"
 
 
 def build_domain_agent_skeleton_mapping(
@@ -205,6 +208,81 @@ def build_domain_memory_descriptor_locator(
                 "writeback-proposals/<grant_run_id>/<proposal_id>.json"
             ),
         },
+        "migration_plan": {
+            "surface_kind": DOMAIN_MEMORY_MIGRATION_PLAN_KIND,
+            "plan_id": "mag.domain_memory_migration_plan.v1",
+            "migration_state": "repo_source_plan_and_seed_fixture_landed",
+            "maps_to_opl_contract": "opl_family_domain_memory_migration_plan.v1",
+            "source_roots": [
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/",
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json",
+                "workspace_root/.mag-domain-memory/writeback-proposals/",
+            ],
+            "target_store": {
+                "store_kind": "domain_owned_memory_store",
+                "owner": TARGET_DOMAIN_ID,
+                "accepted_memory_root": (
+                    "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/accepted/"
+                ),
+                "repo_tracked": False,
+            },
+            "seed_fixture_ref": {
+                "ref_kind": "repo_path",
+                "ref": DOMAIN_MEMORY_SEED_FIXTURE_REF,
+                "role": "schema_like_seed_fixture_no_real_memory_entries",
+            },
+            "migration_steps": [
+                {
+                    "step_id": "discover_candidates",
+                    "from": "workspace_or_runtime_root",
+                    "to": "writeback_proposal",
+                    "required_refs": [
+                        "stage_id",
+                        "source_workspace_or_runtime_ref",
+                        "lesson_summary",
+                        "prohibited_content_scan",
+                    ],
+                },
+                {
+                    "step_id": "mag_review",
+                    "from": "writeback_proposal",
+                    "to": "accepted_or_rejected_decision",
+                    "required_refs": [
+                        "policy_ref",
+                        "stage_descriptor_ref",
+                        "mag_owner_decision",
+                    ],
+                },
+                {
+                    "step_id": "persist_acceptance",
+                    "from": "accepted_decision",
+                    "to": "domain_owned_memory_store",
+                    "required_refs": [
+                        "accepted_memory_ref",
+                        "receipt_ref",
+                        "stage_memory_ref",
+                    ],
+                },
+            ],
+            "acceptance_gates": [
+                "no_workspace_private_evidence",
+                "no_canonical_grant_artifact_content",
+                "no_fundability_or_quality_or_export_verdict",
+                "mag_accepts_or_rejects_before_store_mutation",
+                "receipt_ref_emitted_for_every_decision",
+            ],
+            "landed_surface_refs": [
+                "/product_entry_manifest/domain_memory_descriptor_locator/migration_plan",
+                "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+                "/product_entry_manifest/domain_memory_descriptor_locator/memory_locator",
+                DOMAIN_MEMORY_SEED_FIXTURE_REF,
+            ],
+            "pending_runtime_work": [
+                "writeback proposal generator",
+                "MAG memory acceptance command",
+                "operator projection of accepted/rejected writeback receipts",
+            ],
+        },
         "writeback_receipt_refs": {
             "receipt_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
             "memory_writeback_receipt_ref": (
@@ -212,6 +290,23 @@ def build_domain_memory_descriptor_locator(
                 f"{grant_run_id}/memory-writeback/<proposal_id>.json"
             ),
             "receipt_write_policy": "receipt_ref_only_no_domain_memory_content_mutation",
+        },
+        "receipt_locator": {
+            "surface_kind": DOMAIN_MEMORY_RECEIPT_LOCATOR_KIND,
+            "locator_id": "mag.domain_memory_receipt_locator.v1",
+            "receipt_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
+            "proposal_receipt_ref_template": (
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+                f"{grant_run_id}/memory-writeback/<proposal_id>.json"
+            ),
+            "decision_receipt_ref_template": (
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+                f"{grant_run_id}/memory-writeback-decisions/<proposal_id>.json"
+            ),
+            "accepted_memory_ref_field": "accepted_memory_ref",
+            "rejected_memory_ref_field": "rejected_memory_ref",
+            "receipt_content_policy": "locator_and_decision_metadata_only_no_memory_body",
+            "repo_tracked": False,
         },
         "identity": {
             "grant_run_id": grant_run_id,
@@ -239,6 +334,8 @@ def build_domain_memory_descriptor_locator(
                 "policy_ref",
                 "stage_descriptor_refs",
                 "memory_locator",
+                "migration_plan",
+                "receipt_locator",
                 "writeback_receipt_refs",
             ],
             "does_not_consume": [

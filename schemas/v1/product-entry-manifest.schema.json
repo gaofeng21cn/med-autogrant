@@ -1993,7 +1993,9 @@
         "fundability_verdict_owner",
         "policy_ref",
         "memory_locator",
+        "migration_plan",
         "writeback_receipt_refs",
+        "receipt_locator",
         "opl_consumption_contract",
         "authority_boundary"
       ],
@@ -2062,6 +2064,110 @@
           "properties": {
             "receipt_write_policy": {
               "const": "receipt_ref_only_no_domain_memory_content_mutation"
+            }
+          }
+        },
+        "migration_plan": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "plan_id",
+            "migration_state",
+            "maps_to_opl_contract",
+            "source_roots",
+            "target_store",
+            "seed_fixture_ref",
+            "migration_steps",
+            "acceptance_gates",
+            "landed_surface_refs",
+            "pending_runtime_work"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "domain_memory_migration_plan"
+            },
+            "plan_id": {
+              "const": "mag.domain_memory_migration_plan.v1"
+            },
+            "migration_state": {
+              "const": "repo_source_plan_and_seed_fixture_landed"
+            },
+            "maps_to_opl_contract": {
+              "const": "opl_family_domain_memory_migration_plan.v1"
+            },
+            "target_store": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "store_kind",
+                "owner",
+                "accepted_memory_root",
+                "repo_tracked"
+              ],
+              "properties": {
+                "store_kind": {
+                  "const": "domain_owned_memory_store"
+                },
+                "owner": {
+                  "const": "med-autogrant"
+                },
+                "repo_tracked": {
+                  "const": false
+                }
+              }
+            },
+            "seed_fixture_ref": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "ref_kind",
+                "ref",
+                "role"
+              ],
+              "properties": {
+                "ref": {
+                  "const": "contracts/runtime-program/domain-memory-seed-fixture.json"
+                },
+                "role": {
+                  "const": "schema_like_seed_fixture_no_real_memory_entries"
+                }
+              }
+            }
+          }
+        },
+        "receipt_locator": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "locator_id",
+            "receipt_root",
+            "proposal_receipt_ref_template",
+            "decision_receipt_ref_template",
+            "accepted_memory_ref_field",
+            "rejected_memory_ref_field",
+            "receipt_content_policy",
+            "repo_tracked"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "domain_memory_receipt_locator"
+            },
+            "locator_id": {
+              "const": "mag.domain_memory_receipt_locator.v1"
+            },
+            "accepted_memory_ref_field": {
+              "const": "accepted_memory_ref"
+            },
+            "rejected_memory_ref_field": {
+              "const": "rejected_memory_ref"
+            },
+            "receipt_content_policy": {
+              "const": "locator_and_decision_metadata_only_no_memory_body"
+            },
+            "repo_tracked": {
+              "const": false
             }
           }
         },
