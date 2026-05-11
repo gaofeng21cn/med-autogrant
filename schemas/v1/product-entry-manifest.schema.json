@@ -1442,7 +1442,7 @@
         "shell_commands",
         "runtime_continuity",
         "opl_stage_runtime_registration",
-        "domain_agent_skeleton_mapping"
+        "standard_domain_agent_skeleton"
       ],
       "properties": {
         "plugin_name": {
@@ -1508,8 +1508,8 @@
         "opl_stage_runtime_registration": {
           "$ref": "#/$defs/oplStageRuntimeRegistration"
         },
-        "domain_agent_skeleton_mapping": {
-          "$ref": "#/$defs/domainAgentSkeletonMapping"
+        "standard_domain_agent_skeleton": {
+          "$ref": "#/$defs/standardDomainAgentSkeleton"
         },
         "action_catalog_ref": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
@@ -2664,7 +2664,7 @@
         }
       }
     },
-    "domainAgentSkeletonMapping": {
+    "standardDomainAgentSkeleton": {
       "type": "object",
       "additionalProperties": true,
       "required": [
@@ -2679,7 +2679,7 @@
       ],
       "properties": {
         "surface_kind": {
-          "const": "standard_domain_agent_skeleton_mapping"
+          "const": "standard_domain_agent_skeleton"
         },
         "skeleton_id": {
           "const": "mag.standard_domain_agent_skeleton.v1"
@@ -3595,7 +3595,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor", "domain_memory_descriptor_locator", "domain_agent_skeleton_mapping", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor", "domain_memory_descriptor_locator", "standard_domain_agent_skeleton", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -3721,8 +3721,8 @@
         "domain_memory_descriptor_locator": {
           "$ref": "#/$defs/domainMemoryDescriptorLocator"
         },
-        "domain_agent_skeleton_mapping": {
-          "$ref": "#/$defs/domainAgentSkeletonMapping"
+        "standard_domain_agent_skeleton": {
+          "$ref": "#/$defs/standardDomainAgentSkeleton"
         },
         "action_catalog_projections": {
           "$ref": "#/$defs/actionCatalogProjections"

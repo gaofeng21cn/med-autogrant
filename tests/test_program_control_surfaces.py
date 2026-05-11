@@ -59,7 +59,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
-            "skill_catalog.domain_projection.domain_agent_skeleton_mapping",
+            "skill_catalog.domain_projection.standard_domain_agent_skeleton",
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(

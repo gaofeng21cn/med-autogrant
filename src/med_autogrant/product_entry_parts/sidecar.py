@@ -56,9 +56,9 @@ def build_sidecar_export(
         "opl_stage_runtime_registration",
         context="sidecar_export.skill_catalog.domain_projection",
     )
-    domain_agent_skeleton = _require_mapping(
+    standard_domain_agent_skeleton = _require_mapping(
         domain_projection,
-        "domain_agent_skeleton_mapping",
+        "standard_domain_agent_skeleton",
         context="sidecar_export.skill_catalog.domain_projection",
     )
     controlled_stage_attempt = _require_mapping(
@@ -107,7 +107,7 @@ def build_sidecar_export(
         },
         "runtime_control": dict(runtime_control),
         "runtime_continuity": dict(runtime_continuity),
-        "domain_agent_skeleton_mapping": dict(domain_agent_skeleton),
+        "standard_domain_agent_skeleton": dict(standard_domain_agent_skeleton),
         "artifact_locator_contract": dict(
             _require_mapping(manifest, "artifact_locator_contract", context="sidecar_export.product_entry_manifest")
         ),

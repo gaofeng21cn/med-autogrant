@@ -32,7 +32,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
             product_entry = product_entry_class.return_value
             product_entry.build.return_value = expected_payload
 
@@ -73,7 +73,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
             product_entry = product_entry_class.return_value
             product_entry.read_grant_progress.return_value = expected_payload
 
@@ -106,7 +106,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
             product_entry = product_entry_class.return_value
             product_entry.read_grant_cockpit.return_value = expected_payload
 
@@ -139,7 +139,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
             product_entry = product_entry_class.return_value
             product_entry.build_grant_direct_entry.return_value = expected_payload
 
@@ -176,7 +176,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
             product_entry = product_entry_class.return_value
             product_entry.build_product_entry_manifest.return_value = expected_payload
 
@@ -210,7 +210,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
             product_entry = product_entry_class.return_value
             product_entry.build_skill_catalog.return_value = expected_payload
 
@@ -245,7 +245,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
             product_entry = product_entry_class.return_value
             product_entry.build_product_entry_preflight.return_value = expected_payload
 
@@ -273,7 +273,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
             product_entry = product_entry_class.return_value
             product_entry.build_domain_memory_writeback_proposal.return_value = expected_payload
 
@@ -321,7 +321,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
             product_entry = product_entry_class.return_value
             product_entry.build_domain_memory_writeback_decision.return_value = expected_payload
 

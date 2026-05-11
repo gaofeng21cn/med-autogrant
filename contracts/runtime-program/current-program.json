@@ -35,7 +35,7 @@
         "skill_catalog.domain_projection.opl_stage_runtime_registration",
         "skill_catalog.domain_projection.opl_stage_runtime_registration.family_lifecycle_adapter",
         "skill_catalog.domain_projection.opl_stage_runtime_registration.native_helper_consumption.proof_surface",
-        "skill_catalog.domain_projection.domain_agent_skeleton_mapping",
+        "skill_catalog.domain_projection.standard_domain_agent_skeleton",
         "workspace progress / cockpit",
         "artifact inventory, artifact locator contract, and explicit wakeup/TODO queue",
         "controlled stage attempt projection and sidecar receipt refs",
@@ -67,7 +67,7 @@
       },
       "standard_domain_agent_skeleton": {
         "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
-        "manifest_ref": "/product_entry_manifest/domain_agent_skeleton_mapping",
+        "manifest_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
         "repo_source_boundary": [
           "agent",
           "contracts",
@@ -190,7 +190,7 @@
         "domain_entry_contract",
         "runtime_control",
         "runtime_continuity",
-        "domain_agent_skeleton_mapping",
+        "standard_domain_agent_skeleton",
         "product_sidecar_export",
         "product_sidecar_dispatch",
         "artifact_locator_contract",

@@ -51,7 +51,7 @@ class OptionalHermesProofCliProbeTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantDomainEntry") as entry_class:
+        with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
             entry = entry_class.return_value
             entry.dispatch.return_value = expected_payload
             exit_code, stdout, stderr = self.run_cli("probe-upstream-hermes", "--format", "json")

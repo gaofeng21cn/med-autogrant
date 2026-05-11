@@ -417,8 +417,8 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             memory_locator["authority_boundary"]["opl_role"],
             "memory_locator_ref_and_receipt_ref_consumer_only",
         )
-        skeleton = manifest["domain_agent_skeleton_mapping"]
-        self.assertEqual(skeleton["surface_kind"], "standard_domain_agent_skeleton_mapping")
+        skeleton = manifest["standard_domain_agent_skeleton"]
+        self.assertEqual(skeleton["surface_kind"], "standard_domain_agent_skeleton")
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
         self.assertEqual(set(skeleton["repo_source_boundary"]), {"agent", "contracts", "runtime", "docs"})
         self.assertEqual(
@@ -449,7 +449,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             "/product_entry_manifest/family_action_catalog",
         )
         self.assertEqual(
-            skill["domain_projection"]["domain_agent_skeleton_mapping"],
+            skill["domain_projection"]["standard_domain_agent_skeleton"],
             skeleton,
         )
         self.assertEqual(

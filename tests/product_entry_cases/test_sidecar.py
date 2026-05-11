@@ -26,8 +26,8 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(export["runtime_control"]["surface_kind"], "runtime_control")
         self.assertEqual(export["runtime_continuity"]["surface_kind"], "skill_runtime_continuity")
         self.assertEqual(
-            export["domain_agent_skeleton_mapping"]["surface_kind"],
-            "standard_domain_agent_skeleton_mapping",
+            export["standard_domain_agent_skeleton"]["surface_kind"],
+            "standard_domain_agent_skeleton",
         )
         self.assertEqual(
             export["artifact_locator_contract"]["surface_kind"],

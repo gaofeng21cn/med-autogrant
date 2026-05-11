@@ -38,7 +38,7 @@ class GrantAutonomyCliTest(unittest.TestCase):
             },
         }
 
-        with patch("med_autogrant.cli.MedAutoGrantDomainEntry") as entry_class:
+        with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
             entry = entry_class.return_value
             entry.dispatch.return_value = expected_payload
 

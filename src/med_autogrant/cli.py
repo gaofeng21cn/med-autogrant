@@ -8,8 +8,6 @@ from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstra
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
-from med_autogrant.domain_entry import MedAutoGrantDomainEntry
-from med_autogrant.product_entry import MedAutoGrantProductEntry
 from med_autogrant.public_cli import (
     INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,

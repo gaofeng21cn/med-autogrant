@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from unittest.mock import Mock, patch
 
+import med_autogrant.cli as cli
 from med_autogrant.cli_rendering import _render_text as public_render_text
 from med_autogrant.cli_rendering_parts import _TEXT_RENDERERS, _render_text as parts_render_text
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
@@ -83,6 +84,11 @@ def test_cli_rendering_preserves_public_render_text_export() -> None:
     assert "当前 grant run: grant-structure" in rendered
     assert "当前 workspace: ws-structure" in rendered
     assert "- drafts.0: missing section" in rendered
+
+
+def test_cli_module_does_not_hold_entry_classes_as_patch_surfaces() -> None:
+    assert not hasattr(cli, "MedAutoGrantDomainEntry")
+    assert not hasattr(cli, "MedAutoGrantProductEntry")
 
 
 def test_runtime_patch_target_resolver_uses_current_mag_ledger_facade_when_loaded() -> None:

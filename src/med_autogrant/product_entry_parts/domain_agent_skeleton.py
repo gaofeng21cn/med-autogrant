@@ -9,7 +9,7 @@ from med_autogrant.product_entry_parts.primitives import (
 )
 
 
-SKELETON_SURFACE_KIND = "standard_domain_agent_skeleton_mapping"
+SKELETON_SURFACE_KIND = "standard_domain_agent_skeleton"
 SKELETON_ID = "mag.standard_domain_agent_skeleton.v1"
 ARTIFACT_LOCATOR_KIND = "domain_artifact_locator_contract"
 CONTROLLED_STAGE_ATTEMPT_KIND = "controlled_stage_attempt_projection"
@@ -19,7 +19,7 @@ DOMAIN_MEMORY_RECEIPT_LOCATOR_KIND = "domain_memory_receipt_locator"
 DOMAIN_MEMORY_SEED_FIXTURE_REF = "contracts/runtime-program/domain-memory-seed-fixture.json"
 
 
-def build_domain_agent_skeleton_mapping(
+def build_standard_domain_agent_skeleton(
     *,
     input_path: str | Path,
     grant_run_id: str,
@@ -585,12 +585,12 @@ def build_controlled_stage_attempt_projection(
                 "package_and_submit_ready",
             ],
             "direct_skill_refs": [
-                "/product_entry_manifest/skill_catalog/skills/0/domain_projection/domain_agent_skeleton_mapping",
+                "/product_entry_manifest/skill_catalog/skills/0/domain_projection/standard_domain_agent_skeleton",
                 "/product_entry_manifest/domain_memory_descriptor_locator",
                 "/product_entry_manifest/artifact_locator_contract",
             ],
             "opl_hosted_refs": [
-                "/product_entry_manifest/domain_agent_skeleton_mapping",
+                "/product_entry_manifest/standard_domain_agent_skeleton",
                 "/product_entry_manifest/controlled_stage_attempt_projection",
                 "/product_entry_manifest/domain_memory_descriptor_locator",
             ],

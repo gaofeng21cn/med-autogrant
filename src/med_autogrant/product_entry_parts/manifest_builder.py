@@ -48,7 +48,7 @@ from med_autogrant.product_entry_parts.loop_contracts import (
 from med_autogrant.product_entry_parts.manifest_readiness import build_manifest_readiness_surfaces
 from med_autogrant.product_entry_parts.manifest_runtime_companions import build_manifest_runtime_companions
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
-from med_autogrant.product_entry_parts.domain_agent_skeleton import build_artifact_locator_contract, build_controlled_stage_attempt_projection, build_domain_agent_skeleton_mapping
+from med_autogrant.product_entry_parts.domain_agent_skeleton import build_artifact_locator_contract, build_controlled_stage_attempt_projection, build_standard_domain_agent_skeleton
 from med_autogrant.product_entry_parts.domain_memory import build_manifest_domain_memory_surfaces
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_artifact_inventory_surface,
@@ -798,7 +798,7 @@ class ProductEntryManifestBuilderMixin:
             progress_payload=progress_payload, verification_identity=verification_identity
         )
         domain_memory_descriptor_locator = domain_memory_surfaces["domain_memory_descriptor_locator"]
-        domain_agent_skeleton_mapping = build_domain_agent_skeleton_mapping(
+        standard_domain_agent_skeleton = build_standard_domain_agent_skeleton(
             input_path=resolved_input_path,
             grant_run_id=_require_nonempty_string_from_mapping(
                 progress_payload,
@@ -830,7 +830,7 @@ class ProductEntryManifestBuilderMixin:
             shell_commands=shell_commands,
             domain_entry_contract=domain_entry_contract,
             action_catalog_projections=action_catalog_projections,
-            domain_agent_skeleton_mapping=domain_agent_skeleton_mapping,
+            standard_domain_agent_skeleton=standard_domain_agent_skeleton,
         )
         automation = _build_shared_automation_catalog(
             summary="automation companion 聚合 submission-ready 导出 gate 与 authoring loop continuation 提示。",
@@ -978,7 +978,7 @@ class ProductEntryManifestBuilderMixin:
                 "artifact_locator_contract": artifact_locator_contract,
                 "controlled_stage_attempt_projection": controlled_stage_attempt_projection,
                 **domain_memory_surfaces,
-                "domain_agent_skeleton_mapping": domain_agent_skeleton_mapping,
+                "standard_domain_agent_skeleton": standard_domain_agent_skeleton,
             },
         )
         payload = {

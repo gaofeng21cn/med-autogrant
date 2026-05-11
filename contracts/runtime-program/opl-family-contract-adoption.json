@@ -53,7 +53,7 @@
     ]
   },
   "standard_domain_agent_skeleton": {
-    "surface_kind": "standard_domain_agent_skeleton_mapping",
+    "surface_kind": "standard_domain_agent_skeleton",
     "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
     "mapping_state": "descriptor_manifest_adapter_landed",
     "repo_source_boundary": [
@@ -67,7 +67,7 @@
       "projection_builder",
       "lifecycle_adapter"
     ],
-    "manifest_surface_ref": "/product_entry_manifest/domain_agent_skeleton_mapping",
+    "manifest_surface_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
     "artifact_locator_ref": "/product_entry_manifest/artifact_locator_contract",
     "controlled_stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
     "authority_boundary": {

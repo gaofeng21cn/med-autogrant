@@ -369,12 +369,12 @@ def handle_build_product_entry(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def _domain_entry() -> Any:
-    from med_autogrant import cli
+    from med_autogrant import domain_entry
 
-    return cli.MedAutoGrantDomainEntry()
+    return domain_entry.MedAutoGrantDomainEntry()
 
 
 def _product_entry() -> Any:
-    from med_autogrant import cli
+    from med_autogrant import product_entry
 
-    return cli.MedAutoGrantProductEntry()
+    return product_entry.MedAutoGrantProductEntry()

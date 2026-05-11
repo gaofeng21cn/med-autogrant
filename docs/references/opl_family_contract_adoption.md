@@ -47,7 +47,7 @@ MAG 的 OPL family stage pack 是 descriptor/projection，不是新的 controlle
 
 ## Standard Domain-Agent Skeleton
 
-MAG 现在通过 `product-entry-manifest` 导出 `domain_agent_skeleton_mapping`。这是一层标准 skeleton adapter/manifest，不是物理目录重组，也不把 runtime 写成新的 grant executor。
+MAG 现在通过 `product-entry-manifest` 导出 `standard_domain_agent_skeleton`。这是一层标准 skeleton adapter/manifest，不是物理目录重组，也不把 runtime 写成新的 grant executor。
 
 - repo-source 边界固定为 `agent`、`contracts`、`runtime`、`docs`。
 - `runtime` 边界只声明 `sidecar`、`projection_builder`、`lifecycle_adapter`。
