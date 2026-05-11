@@ -37,13 +37,27 @@ def test_current_program_sidecar_actions_include_domain_memory_writeback_dispatc
     adapter = current_program["runtime_owner"]["stage_led_framework_boundary"]["product_sidecar_adapter"]
 
     assert adapter["allowed_dispatch_actions"] == [
-        "status/read",
-        "user-loop/wakeup",
         "autonomy-controller/dry-run",
         "autonomy-controller/guarded-run",
         "domain-memory/decide",
         "domain-memory/propose",
         "notification/receipt",
+        "status/read",
+        "user-loop/wakeup",
+    ]
+
+
+def test_current_program_sidecar_actions_match_implemented_sidecar_export() -> None:
+    from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+    current_program = json.loads(_read("contracts/runtime-program/current-program.json"))
+    adapter = current_program["runtime_owner"]["stage_led_framework_boundary"]["product_sidecar_adapter"]
+    export = MedAutoGrantProductEntry().build_sidecar_export(
+        input_path=REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
+    )
+
+    assert adapter["allowed_dispatch_actions"] == export["sidecar_export"]["opl_control_plane"][
+        "allowed_dispatch_actions"
     ]
 
 

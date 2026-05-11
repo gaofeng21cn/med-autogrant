@@ -55,13 +55,13 @@
         "dispatch_command": "product sidecar dispatch",
         "role": "MAG-owned product sidecar projection and guarded dispatch adapter for OPL stage-led typed queue and explicit provider consumption",
         "allowed_dispatch_actions": [
-          "status/read",
-          "user-loop/wakeup",
           "autonomy-controller/dry-run",
           "autonomy-controller/guarded-run",
           "domain-memory/decide",
           "domain-memory/propose",
-          "notification/receipt"
+          "notification/receipt",
+          "status/read",
+          "user-loop/wakeup"
         ],
         "hermes_proof_executor_default": false
       },
