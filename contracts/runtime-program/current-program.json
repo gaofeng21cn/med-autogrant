@@ -59,6 +59,8 @@
           "user-loop/wakeup",
           "autonomy-controller/dry-run",
           "autonomy-controller/guarded-run",
+          "domain-memory/decide",
+          "domain-memory/propose",
           "notification/receipt"
         ],
         "hermes_proof_executor_default": false

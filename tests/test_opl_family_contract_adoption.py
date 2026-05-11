@@ -32,6 +32,21 @@ def test_mag_declares_thin_opl_family_contract_adoption() -> None:
     assert contract["opl_role"] == "family-level projection consumer only"
 
 
+def test_current_program_sidecar_actions_include_domain_memory_writeback_dispatch() -> None:
+    current_program = json.loads(_read("contracts/runtime-program/current-program.json"))
+    adapter = current_program["runtime_owner"]["stage_led_framework_boundary"]["product_sidecar_adapter"]
+
+    assert adapter["allowed_dispatch_actions"] == [
+        "status/read",
+        "user-loop/wakeup",
+        "autonomy-controller/dry-run",
+        "autonomy-controller/guarded-run",
+        "domain-memory/decide",
+        "domain-memory/propose",
+        "notification/receipt",
+    ]
+
+
 def test_mag_runtime_projection_maps_to_grant_runtime_truth_surfaces() -> None:
     contract = _contract()
     attempt = contract["attempt_projection"]
