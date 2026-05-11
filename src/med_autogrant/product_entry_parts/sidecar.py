@@ -51,7 +51,7 @@ def build_sidecar_export(
     )
     runtime_registration = _require_mapping(
         domain_projection,
-        "opl_runtime_manager_registration",
+        "opl_stage_runtime_registration",
         context="sidecar_export.skill_catalog.domain_projection",
     )
     domain_agent_skeleton = _require_mapping(

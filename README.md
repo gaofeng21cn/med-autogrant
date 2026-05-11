@@ -64,7 +64,7 @@ You can start with prompts like:
 - Formal/objective supplements default to `TODO + explicit wakeup` and do not block body authoring unless they directly break scientific validity.
 - `OPL` is the Codex-first, stage-led agent runtime framework that can host MAG as an external domain dependency.
 - Within that framework, `Codex CLI` is the minimum execution unit: OPL can schedule stages, wakeups, handoffs, receipts, retries, and projections, while MAG keeps the grant stage pack, prompts, skills, fundability/authoring quality gates, authoring truth, and submission-ready export authority.
-- Historical `OPL Runtime Manager`, Temporal, Hermes-first, gateway, and local-host runtime wording is provenance or an implementation-provider detail unless an active contract explicitly promotes it. MAG remains the grant-truth and authoring-contract owner.
+- Historical `OPL Runtime Manager`, Temporal, Hermes-first, gateway, and local-host runtime wording is provenance or an implementation-provider detail, not an active MAG contract. MAG remains the grant-truth and authoring-contract owner.
 - `hosted-contract-bundle` and `runtime_control` stay as integration/reference surfaces for machine-readable handoff, not as the primary public entry.
 - Human gate decisions stay inside the same funding-call task and are author decisions, not cross-funder reselection.
 - External funding portal submission stays under human supervision.
@@ -96,7 +96,7 @@ You can start with prompts like:
 
 - Use `./scripts/verify.sh` for the default local gate. It runs the line-budget check, the minimal smoke lane, and the fast non-regression core lane.
 - Use `./scripts/verify.sh smoke` or `make test-cli-smoke` for quick CLI/product/runtime entry health checks.
-- Use `./scripts/verify.sh regression` for heavier matrix, product-entry, runtime/session, hosted/export, and compatibility regression coverage. Product-entry cases live under `tests/product_entry_cases/` as directly collected regression tests; `tests/test_product_entry.py` remains a compatibility import surface.
+- Use `./scripts/verify.sh regression` for heavier matrix, product-entry, runtime/session, hosted/export, and regression coverage. Product-entry cases live under `tests/product_entry_cases/` as directly collected regression tests; the old `tests/test_product_entry.py` aggregation surface has been removed.
 - Use `./scripts/verify.sh meta`, `./scripts/verify.sh structure`, and `./scripts/verify.sh full` for repo governance, architecture checks, and clean-clone/full-suite baselines.
 
 ## Further Reading

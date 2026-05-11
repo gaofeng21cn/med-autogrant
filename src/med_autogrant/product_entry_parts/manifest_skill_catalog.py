@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import PRODUCT_STATUS_KIND, TARGET_DOMAIN_ID
-from med_autogrant.product_entry_parts.runtime_registration import _build_opl_runtime_manager_registration
+from med_autogrant.product_entry_parts.runtime_registration import _build_opl_stage_runtime_registration
 from med_autogrant.public_cli import public_cli_command
 from med_autogrant.action_catalog import ACTION_CATALOG_REF
 
@@ -31,7 +31,7 @@ def build_product_entry_skill_catalog(
         "--format",
         "json",
     )
-    opl_runtime_manager_registration = _build_opl_runtime_manager_registration(
+    opl_stage_runtime_registration = _build_opl_stage_runtime_registration(
         runtime_summary=runtime_summary,
         runtime_continuity=runtime_continuity,
         shell_commands=shell_commands,
@@ -43,7 +43,7 @@ def build_product_entry_skill_catalog(
             _build_med_autogrant_skill_descriptor(
                 shell_commands=shell_commands,
                 runtime_continuity=runtime_continuity,
-                opl_runtime_manager_registration=opl_runtime_manager_registration,
+                opl_stage_runtime_registration=opl_stage_runtime_registration,
                 action_catalog_projections=action_catalog_projections,
                 domain_agent_skeleton_mapping=domain_agent_skeleton_mapping,
             )
@@ -57,7 +57,7 @@ def _build_med_autogrant_skill_descriptor(
     *,
     shell_commands: Mapping[str, str],
     runtime_continuity: Mapping[str, Any],
-    opl_runtime_manager_registration: Mapping[str, Any],
+    opl_stage_runtime_registration: Mapping[str, Any],
     action_catalog_projections: Mapping[str, list[dict[str, Any]]],
     domain_agent_skeleton_mapping: Mapping[str, Any],
 ) -> dict[str, Any]:
@@ -87,7 +87,7 @@ def _build_med_autogrant_skill_descriptor(
             ],
             "shell_commands": shell_commands,
             "runtime_continuity": dict(runtime_continuity),
-            "opl_runtime_manager_registration": dict(opl_runtime_manager_registration),
+            "opl_stage_runtime_registration": dict(opl_stage_runtime_registration),
             "domain_agent_skeleton_mapping": dict(domain_agent_skeleton_mapping),
             "action_catalog_ref": ACTION_CATALOG_REF,
             "mcp_descriptor": dict(mcp_descriptors[0]),

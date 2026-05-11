@@ -10,7 +10,7 @@ from med_autogrant.product_entry_parts.primitives import (
 from med_autogrant.runtime_defaults import DEFAULT_RUNTIME_OWNER
 
 
-def _build_opl_runtime_manager_registration(
+def _build_opl_stage_runtime_registration(
     *,
     runtime_summary: Mapping[str, Any],
     runtime_continuity: Mapping[str, Any],
@@ -18,10 +18,10 @@ def _build_opl_runtime_manager_registration(
     skill_catalog_command: str,
 ) -> dict[str, Any]:
     return {
-        "surface_kind": "opl_runtime_manager_domain_registration",
+        "surface_kind": "opl_stage_runtime_domain_registration",
         "version": "v1",
-        "registration_id": "mag.opl_runtime_manager.registration.v1",
-        "manager_surface_id": "opl_runtime_manager",
+        "registration_id": "mag.opl_stage_runtime.registration.v1",
+        "manager_surface_id": "opl_stage_runtime",
         "domain_id": "medautogrant",
         "domain_owner": TARGET_DOMAIN_ID,
         "runtime_owner": _require_nonempty_string_from_mapping(
@@ -37,7 +37,7 @@ def _build_opl_runtime_manager_registration(
         },
         "registration_surface": {
             "surface_kind": "skill_catalog",
-            "ref": "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",
+            "ref": "/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
             "command": skill_catalog_command,
         },
         "consumable_projection_refs": [
@@ -54,7 +54,7 @@ def _build_opl_runtime_manager_registration(
             "runtime_health_snapshot_index": "/runtime_inventory",
         },
         "native_helper_consumption": {
-            "protocol_ref": "contracts/opl-gateway/native-helper-contract.json",
+            "protocol_ref": "contracts/opl-framework/native-helper-contract.json",
             "language": "rust",
             "managed_by": "one-person-lab",
             "source_of_truth_rule": (
@@ -140,13 +140,13 @@ def _build_opl_family_lifecycle_adapter(
         "version": "v1",
         "adapter_id": "mag.opl_family.lifecycle_adapter.v1",
         "contract_refs": {
-            "runtime_attempt": "contracts/opl-gateway/family-runtime-attempt-contract.json",
-            "product_operator": "contracts/opl-gateway/family-product-operator-projection.json",
-            "incident_learning": "contracts/opl-gateway/family-incident-learning-loop.json",
+            "runtime_attempt": "contracts/opl-framework/family-runtime-attempt-contract.json",
+            "product_operator": "contracts/opl-framework/family-product-operator-projection.json",
+            "incident_learning": "contracts/opl-framework/family-incident-learning-loop.json",
             "adoption": "contracts/runtime-program/opl-family-contract-adoption.json",
         },
         "persistence_projection": {
-            "maps_to": "opl_runtime_manager_native_state_projection",
+            "maps_to": "opl_stage_runtime_native_state_projection",
             "source_surface_refs": [
                 "/skill_catalog/skills/0/domain_projection/runtime_continuity",
                 "/session_continuity",
@@ -182,9 +182,9 @@ def _build_opl_family_lifecycle_adapter(
             },
         },
         "owner_route_discovery": {
-            "discovery_surface_ref": "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",
+            "discovery_surface_ref": "/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
             "owner_split": {
-                "runtime_manager_owner": "one-person-lab",
+                "stage_runtime_owner": "one-person-lab",
                 "runtime_kernel_owner": DEFAULT_RUNTIME_OWNER,
                 "domain_truth_owner": TARGET_DOMAIN_ID,
                 "executor_owner": TARGET_DOMAIN_ID,

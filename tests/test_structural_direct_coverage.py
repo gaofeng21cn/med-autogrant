@@ -86,7 +86,7 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert preflight.ProductEntryPreflightMixin
     assert progress.ProductEntryProgressMixin
     assert runtime_contracts.PRODUCT_ENTRY_SCHEMA_FILE == "product-entry.schema.json"
-    assert runtime_registration._build_opl_runtime_manager_registration
+    assert runtime_registration._build_opl_stage_runtime_registration
     assert runtime_surfaces._build_runtime_continuity_surfaces
 
 

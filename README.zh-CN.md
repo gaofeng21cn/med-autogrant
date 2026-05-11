@@ -64,7 +64,7 @@
 - 形式/客观补件默认按 `TODO + 显式唤醒` 处理，除非直接破坏正文科学成立，否则不升级为正文阻塞项。
 - `OPL` 是 Codex-first、stage-led 的完整智能体运行框架，MAG 可以作为外部领域依赖接入。
 - 在这套框架中，`Codex CLI` 是最小执行单元；OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
-- 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留，除非新的活跃合同显式提升它们。
+- 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留，不再作为 MAG 活跃合同。
 - `hosted-contract-bundle` 与 `runtime_control` 仅保留集成/参考面，用于 machine-readable handoff，不作为默认公开入口。
 - 人工 gate 仅限同一基金任务内的作者决策，不写成跨基金重选。
 - 外部基金官网提交由人工监督完成。
@@ -96,7 +96,7 @@
 
 - 默认本地门禁使用 `./scripts/verify.sh`，它会运行 line-budget、最小 smoke lane 和非重型 fast core lane。
 - 快速入口健康检查使用 `./scripts/verify.sh smoke` 或 `make test-cli-smoke`。
-- 矩阵型、product-entry、runtime/session、hosted/export 与兼容性回归使用 `./scripts/verify.sh regression`。Product-entry case 现在直接放在 `tests/product_entry_cases/` 下收集；`tests/test_product_entry.py` 只保留兼容导入面。
+- 矩阵型、product-entry、runtime/session、hosted/export 与回归覆盖使用 `./scripts/verify.sh regression`。Product-entry case 现在直接放在 `tests/product_entry_cases/` 下收集；旧 `tests/test_product_entry.py` 聚合面已删除。
 - repo 治理、结构检查和 clean-clone/full-suite 基线分别使用 `./scripts/verify.sh meta`、`./scripts/verify.sh structure` 与 `./scripts/verify.sh full`。
 
 ## 延伸阅读

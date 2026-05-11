@@ -89,7 +89,7 @@ class HermesRuntimeSubstrate(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimeHa
             "default_formal_entry": "CLI",
             "supported_protocol_layer": "MCP",
             "internal_controller_surface": "controller",
-            "compatibility_bridge": "Codex-default host-agent runtime",
+            "compatibility_bridge": "Codex-default stage attempt provenance",
             "domain_logic_modules": [
                 "workspace",
                 "stage_router",
