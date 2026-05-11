@@ -20,6 +20,10 @@ The dense specs portfolio is classified in [Specs Lifecycle Map](./specs_lifecyc
 
 `contracts/runtime-program/current-program.json` remains the canonical pointer for the full repo-tracked truth-surface list. Some listed route, executor-vocabulary, hosted-caller, product-entry, and Hermes reset specs still live here because current-program or historical audit paths point to them directly.
 
+Current OPL wording is centralized in the core docs: OPL is a Codex-first, stage-led runtime framework that may consume MAG-owned descriptors and projections. Older specs that say `OPL Runtime Manager`, Temporal target, Hermes-first, active adapter, gateway, or monorepo should be read as provider-specific migration context unless the current owner docs explicitly promote that wording.
+
+The `hosted contract bundle` remains an integration/reference export surface. Hosted runtime, Web UI, public MCP runtime, external portal submission, and mature gateway/federation each require their own current owner evidence.
+
 Older dated `P*`, `R*`, `post-R5A`, activation-package, migration-board, and superseded tranche current-truth files are historical technical records. They remain here as repo-tracked provenance to avoid rewriting old audit paths, but their reading entry is now:
 
 - [Historical specs index](../history/specs/README.md)

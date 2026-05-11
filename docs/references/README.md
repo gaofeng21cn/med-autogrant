@@ -13,9 +13,9 @@ Lifecycle:
 
 Reference notes should not replace current product truth. Current MAG grant product truth remains in the core docs, active specs, and `contracts/runtime-program/current-program.json`.
 
+Historical/provider-specific handoff notes that no longer explain a current boundary have been moved to [History archive](../history/README.md). In particular, the old OPL Runtime Manager three-layer note and the older lightweight product-entry handoff note now live under `docs/history/` because their current content is absorbed by the core docs, `OPL Family Contract Adoption`, and the active specs map.
+
 Current reference entries:
 
 - [Grant Strategy Memory Policy](./grant_strategy_memory_policy.md): explains how fundability, specific aims, reviewer grammar, and template-strategy experience should be kept as natural-language memory while quality/controller/export surfaces remain structured authority.
 - [OPL Family Contract Adoption](./opl_family_contract_adoption.md): explains how MAG exposes descriptors and projections to the OPL Codex-first, stage-led runtime framework while retaining grant truth, quality, route, and export authority.
-- [OPL Managed Runtime Three-Layer Contract](./opl_managed_runtime_three_layer_contract.md): historical/provider-specific runtime-owner note, now read through the current OPL stage-led runtime framework boundary.
-- [Lightweight Product Entry and OPL Handoff](./lightweight_product_entry_and_opl_handoff.md): historical handoff note, now read through the current single app skill and OPL stage-led framework boundary.

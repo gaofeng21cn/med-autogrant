@@ -35,6 +35,61 @@ roles before expanding or moving the file:
    references, verification notes, and completed plans should appear under
    their lifecycle roles.
 
+## Current State Owner Map
+
+The May 11 content audit assigns one current owner for each recurring theme:
+
+| Theme | Current owner | Support owner | History owner |
+| --- | --- | --- | --- |
+| Public product identity | `README*`, `docs/domain-positioning*`, `docs/mvp-scope*` | `docs/README*` | `docs/history/domain-harness-os-positioning.md` |
+| MAG as independent grant domain agent | `docs/project.md`, `docs/status.md`, `docs/architecture.md` | `docs/invariants.md`, `docs/decisions.md` | older `Grant Foundry`, `Domain Harness OS`, and gateway wording |
+| OPL relationship | `docs/status.md`, `docs/architecture.md`, `docs/decisions.md` | `docs/references/opl_family_contract_adoption.md` | old OPL Runtime Manager, Temporal target, Hermes-first, gateway, monorepo, and active-adapter notes |
+| Stage semantics | `docs/status.md`, `docs/architecture.md` | `docs/references/opl_family_contract_adoption.md`, `docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md` | old pending handoff and future P5 activation packages |
+| Default execution owner | `docs/project.md`, `docs/architecture.md`, `docs/invariants.md` | `docs/specs/2026-04-13-critique-codex-cli-executor-current-truth.md` | old Hermes-backed runtime owner specs and proof boards |
+| Authoring quality and completion | `docs/status.md`, `docs/invariants.md` | `docs/specs/2026-04-27-ai-first-quality-boundary-current-truth.md`, `docs/specs/2026-04-23-authoring-completion-semantics-current-truth.md`, `docs/specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md` | completed quality/autonomy planning notes |
+| Submission-ready export | `docs/project.md`, `docs/architecture.md` | `docs/specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md` | post-R5A local export hardening notes |
+| Docs lifecycle | this file | `docs/README*`, `docs/specs/specs_lifecycle_map.md`, `docs/references/series-doc-governance-checklist.md` | prior plans and historical specs indexes |
+
+When two documents appear to provide parallel current statements, update the
+owner above and reclassify the other file as support or history. Each theme has
+one active owner surface.
+
+## Partition Disposition
+
+| Partition | Current role | Absorbed / historical handling |
+| --- | --- | --- |
+| `README*` | Public first page for applicants, domain experts, and agents. | Keep sparse and bilingual. Move implementation or provider detail into docs/specs/references/history. |
+| `docs/README*` | Technical route map and current-state summary. | It may summarize old/new relationships, but should send old routes to history instead of restating them as live options. |
+| Core five | Current owner set for project, status, architecture, invariants, and decisions. | Superseded decisions remain in `docs/decisions.md` only when explicitly marked superseded and explained as provenance. |
+| `docs/domain-positioning*` and `docs/mvp-scope*` | Root public-doc allowlist for domain role and MVP scope. | Update for public-facing current boundary changes; runtime/provider histories belong in specs, references, or history. |
+| `docs/specs/` | Mixed path-stable technical record layer. Only the active specs in `docs/specs/README*` are current owner records. | Older dated specs remain in place for audit path stability and are classified through `docs/specs/specs_lifecycle_map.md` plus `docs/history/specs/README*`. |
+| `docs/references/` | Support material for current boundaries: memory policy, OPL family adoption, and series doc governance. | Historical/provider-specific handoff notes have been moved to `docs/history/`. New reference docs must explain a current boundary. |
+| `docs/plans/` | Empty active-plan lane after this consolidation. | Completed plans live under `docs/history/plans/`; future plans return here only while they are genuinely active. |
+| `docs/history/` | Archive entry for retired lanes, completed plans, superseded specs, old provider notes, and positioning history. | History docs can preserve old wording, but must point readers back to current owner docs for live truth. |
+
+## Key Document Disposition Table
+
+| Document or group | Disposition | Reason |
+| --- | --- | --- |
+| `docs/docs_portfolio_consolidation.md` | Current docs lifecycle owner. | Holds the content-level owner map and partition rules for future maintainers. |
+| `docs/specs/specs_lifecycle_map.md` | Current lifecycle index. | Classifies dense specs without breaking path-stable audit links; product truth remains in the core docs, active specs, and `current-program.json`. |
+| `docs/specs/2026-04-13-critique-codex-cli-executor-current-truth.md` | Active spec. | Freezes default critique executor vocabulary and Codex CLI route. |
+| `docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md` | Support current-truth spec. | Explains landed `direction_screening -> frozen` route catalog, while core docs own the current product summary. |
+| `docs/specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md` | Active spec. | Owns quality governance, autonomy controller, and family grammar detail below the core docs. |
+| `docs/specs/2026-04-23-authoring-completion-semantics-current-truth.md` | Active spec. | Owns authoring completion semantics and the `TODO + explicit wakeup` boundary. |
+| `docs/specs/2026-04-27-ai-first-quality-boundary-current-truth.md` | Active spec. | Owns AI-first quality boundary and prevents schema/controller layers from becoming hidden reviewers. |
+| `docs/specs/2026-04-11-hermes-backed-*` | Historical/provider-specific support. | Their old Hermes-backed owner claims are superseded by Codex-default execution plus explicit hosted/proof lanes and OPL stage-led framework wording. |
+| `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover*` | Historical/proof-lane context. | Useful for audit and proof vocabulary; default runtime truth lives in the current owner docs. |
+| `docs/specs/2026-04-12-hosted-*` | Support/history depending on subsection. | Hosted bundle contract remains integration/reference; hosted runtime or gateway completion claims are historical. |
+| `docs/specs/2026-04-08-p5*` | Historical future activation packages. | They describe earlier gateway/federation expansion prerequisites as archive material. |
+| `docs/specs/2026-04-08-r*`, `2026-04-09-*`, `2026-04-10-post-r5a-*` | Historical local-runtime ladder and hardening provenance. | Their valid export/checkpoint lessons are absorbed into current owner docs and active specs; old local runtime maturity wording stays archival. |
+| `docs/references/opl_family_contract_adoption.md` | Current reference. | Explains current descriptor/projection adoption under OPL stage-led framework while preserving MAG authority. |
+| `docs/references/grant_strategy_memory_policy.md` | Current reference. | Explains current memory boundary without moving quality/fundability authority into memory. |
+| `docs/history/opl_managed_runtime_three_layer_contract.md` | Moved to history. | The old OPL Runtime Manager / provider owner framing is superseded by current OPL stage-led framework wording. |
+| `docs/history/lightweight_product_entry_and_opl_handoff.md` | Moved to history. | The useful current handoff content is absorbed by core docs, active specs, and `opl_family_contract_adoption.md`; old Hermes Kernel wording is historical. |
+| `docs/history/plans/**` | History. | Completed one-time plans and provenance records. |
+| `docs/history/specs/**` | History. | Superseded handoff/proof specs and archive indexes. |
+
 ## Active Layer
 
 - `README*`

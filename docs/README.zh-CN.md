@@ -20,9 +20,10 @@
 - formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
 - OPL 是 Codex-first、stage-led 的完整智能体运行框架。它可以把 MAG 作为外部领域依赖托管；除非活跃合同显式选择其他 provider，`Codex CLI` 是 stage attempt 的最小执行单元。
 - OPL 可以消费 MAG 的 runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue，用于调度、唤醒、交接、回执、重试和投影；它不持有 MAG grant truth、authoring execution、fundability judgment、quality verdict 或 submission-ready export authority。
-- 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 与本地 host runtime 说明只作为历史追溯或 provider-specific 实现记录保留，不再定义默认 MAG/OPL 边界。
+- 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 与本地 host runtime 说明作为历史追溯或 provider-specific 实现记录保留；默认 MAG/OPL 边界由核心文档和 active specs 持有。
+- [Docs portfolio consolidation boundary](./docs_portfolio_consolidation.md) 是当前文档生命周期 owner，记录逐分区当前 owner、已吸收内容和历史归位理由；旧 OPL Runtime Manager 与 lightweight handoff 说明已归入 history。
 - 历史 program 记录与迁移说明统一从 `docs/history/` 进入；较早 dated specs 可以继续留在 `docs/specs/` 作为 provenance，但机器可读面通过语义化 `human_doc:*` 标识引用它们，而不是把旧路径钉成稳定接口。
-- product status、user-loop、projection 与本地 `submission-ready` package 已落地，但它们都是 app skill 下的内部 command contract 与 direct-product projection；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，且本地导出 gate 不代表外部基金官网 portal submission 已完成；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/plans/`。
+- product status、user-loop、projection 与本地 `submission-ready` package 已作为 app skill 下的内部 command contract 与 direct-product projection 落地；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，外部基金官网 portal submission 仍是单独的人类监督步骤；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/plans/`。
 - `OPL` family routing 与 `Codex` skill activation 继续消费同一套 MAG capability surface；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。
 - MAG 当前任务边界锁定在“指定基金任务正文 authoring”；“科学完成”与“形式/客观补件完成”是显式分层。
 - 科学层交付的是可待审包，用于同任务内作者/评审决策。

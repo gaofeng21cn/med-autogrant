@@ -26,6 +26,8 @@
 
 - [Plan 完成度审计 2026-05-01](./plan-completion-audit-2026-05-01.md)
 - [Domain Harness OS 定位历史说明](./domain-harness-os-positioning.md)
+- [OPL 托管运行时三层合同](./opl_managed_runtime_three_layer_contract.md)
+- [Lightweight Product Entry and OPL Handoff](./lightweight_product_entry_and_opl_handoff.md)
 - [历史 plans](./plans/README.zh-CN.md)
 - [历史 specs 索引](./specs/README.zh-CN.md)
 - [OMX 历史资料](./omx/README.zh-CN.md)

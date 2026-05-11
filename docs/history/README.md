@@ -26,6 +26,8 @@ Archived lanes:
 
 - [Plan completion audit 2026-05-01](./plan-completion-audit-2026-05-01.md)
 - [Domain Harness OS positioning note](./domain-harness-os-positioning.md)
+- [OPL managed runtime three-layer contract](./opl_managed_runtime_three_layer_contract.md)
+- [Lightweight product entry and OPL handoff](./lightweight_product_entry_and_opl_handoff.md)
 - [Historical plans](./plans/README.md)
 - [Historical specs index](./specs/README.md)
 - [OMX historical archive](./omx/README.md)
