@@ -37,7 +37,7 @@
 - 公开文档保持中英双语；内部技术、规划、实现和历史记录默认中文。
 - `docs/domain-positioning*` 与 `docs/mvp-scope*` 是当前 root allowlist 的一部分，因为它们仍承载 public subject、domain owner、MVP boundary 与 non-goals；新增 root-level docs 必须先更新 portfolio note。
 - 核心骨架文档与 activation package / current truth 严格分层。
-- `docs/specs/**`：repo-tracked current truth、activation package、设计冻结文档与硬门槛描述。
+- `docs/specs/**`：混合 path-stable 技术记录层；只有 `docs/specs/README*` 和 `docs/specs/specs_lifecycle_map.md` 明确列出的 active specs 才是 current owner，其余 dated specs 按 lifecycle map 作为 support reference、history 或 provenance 阅读。
 - `docs/references/**`：定位、背景、审计、handoff 与非活跃支持材料。
 - `docs/plans/**`：仅承载尚未被核心文档、合同面或历史归档吸收的活跃计划或明确 future work；完成、替代或只剩追溯价值后进入 `docs/history/plans/**`。
 - `docs/history/**`：历史归档入口（含 OMX）。

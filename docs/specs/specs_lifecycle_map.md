@@ -14,6 +14,7 @@ The current rule is therefore index-first lifecycle management:
 
 - keep path-stable specs in `docs/specs/` while they are still cited by current-program, history, or old audit evidence;
 - classify their lifecycle state here and in `docs/specs/README*`;
+- keep a first-screen lifecycle note in dated support/history specs so direct-file readers do not mistake old `Current Truth` titles for the current owner line;
 - avoid adding new dated root specs unless the file is explicitly admitted as a current owner surface;
 - move records physically only in small batches after inbound path references are gone.
 

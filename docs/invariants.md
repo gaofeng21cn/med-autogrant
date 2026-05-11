@@ -54,7 +54,7 @@
 
 ## 验证与审计
 
-- 旧五个 canonical CLI surfaces 仍是 verifier/audit baseline。
+- 旧五个 canonical CLI surfaces 只作为 regression oracle / historical verifier context 保留；当前验证以 `scripts/verify.sh` 分层 lane、schema / contract / CLI behavior 和生成产物结构为准。
 - `stage-route-report` 是唯一 canonical route/checkpoint 聚合面，必须输出 `verification_checkpoint` 与 `checkpoint_status`。
 - 最小验证入口是 `scripts/verify.sh`；默认执行 `make test-fast`，保留 `meta`、`cli-smoke`、`full` 分层 lane。
 

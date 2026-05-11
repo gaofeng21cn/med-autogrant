@@ -18,6 +18,8 @@ The highest-priority active current-truth specs are the small set still referenc
 
 The dense specs portfolio is classified in [Specs Lifecycle Map](./specs_lifecycle_map.md). Use that map to distinguish active records, support current-truth records, and historical provenance before editing or moving any dated spec.
 
+Every dated support/history spec that remains in this directory now carries a first-screen lifecycle note. That note is intentionally stronger than the old `Current Truth` filenames: open a single spec only after checking whether it is active, support-only, or historical in this guide and the lifecycle map.
+
 `contracts/runtime-program/current-program.json` remains the canonical pointer for the full repo-tracked truth-surface list. Some listed route, executor-vocabulary, hosted-caller, product-entry, and Hermes reset specs still live here because current-program or historical audit paths point to them directly.
 
 Current OPL wording is centralized in the core docs: OPL is a Codex-first, stage-led runtime framework that may consume MAG-owned descriptors and projections. Older specs that say `OPL Runtime Manager`, Temporal target, Hermes-first, active adapter, gateway, or monorepo should be read as provider-specific migration context unless the current owner docs explicitly promote that wording.

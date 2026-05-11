@@ -1,5 +1,7 @@
 # Upstream Hermes-Agent Truth Reset Current Truth
 
+> Lifecycle note (`2026-05-11`): this dated spec is a path-stable history/support record unless `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `docs/status.md`, or `contracts/runtime-program/current-program.json` explicitly names a still-current subsection. Read current MAG state from `docs/status.md`, the core five docs, and `contracts/runtime-program/current-program.json` first. Older `Current Truth`, Hermes, OPL Gateway, host-agent, or federation wording in this file is provenance, not the current default owner line.
+
 ## 目的
 
 这份文档用于把 `Med Auto Grant` 当前 runtime 叙事从“仓内已切到 Hermes-backed runtime”纠正回真实状态。
