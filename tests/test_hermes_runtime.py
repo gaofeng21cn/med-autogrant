@@ -233,7 +233,7 @@ def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
     return _expected_landed_route(route_id)
 
 
-class RuntimeCliDispatchTest(unittest.TestCase):
+class MagRuntimeCliDispatchTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
         stdout = StringIO()
         stderr = StringIO()
@@ -334,11 +334,11 @@ class RuntimeCliDispatchTest(unittest.TestCase):
             )
 
 
-class RuntimeSubstrateFlowTest(unittest.TestCase):
-    def test_runtime_substrate_keeps_revision_and_export_paths_identity_stable(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+class MagDomainRuntimeFlowTest(unittest.TestCase):
+    def test_mag_runtime_keeps_revision_and_export_paths_identity_stable(self) -> None:
+        from med_autogrant.hermes_runtime import MagDomainRuntime
 
-        runtime = HermesRuntimeSubstrate()
+        runtime = MagDomainRuntime()
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
@@ -479,10 +479,10 @@ class RuntimeSubstrateFlowTest(unittest.TestCase):
         )
 
     def test_run_local_fails_closed_on_invalid_executor_routing_contract_shape(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
         from med_autogrant.workspace import WorkspaceStateError
 
-        runtime = HermesRuntimeSubstrate()
+        runtime = MagDomainRuntime()
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "critique-journal.json"
             with patch(
@@ -582,9 +582,9 @@ class HostedContractBundleBridgeTest(unittest.TestCase):
 
 class RevisionExecutionHandoffTest(unittest.TestCase):
     def test_execute_critique_pass_forwards_explicit_executor_kind(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
 
-        runtime = HermesRuntimeSubstrate()
+        runtime = MagDomainRuntime()
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             workspace_path = Path(tmp_dir) / "critique.json"

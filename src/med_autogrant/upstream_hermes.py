@@ -46,8 +46,75 @@ def probe_upstream_hermes() -> dict[str, Any]:
     }
 
 
+class MagGrantRunLedger:
+    """Record MAG runtime attempts without requiring an optional external executor."""
+
+    def __init__(self) -> None:
+        self._ledger_root = (resolve_runtime_state_root() / "sessions").resolve()
+        self._ledger_root.mkdir(parents=True, exist_ok=True)
+
+    def record_attempt(
+        self,
+        *,
+        grant_run_id: str | None,
+        workspace_id: str | None,
+        trigger: str,
+        journal_path: Path,
+        lifecycle_stage: str | None,
+        stop_reason: dict[str, Any],
+        stage_action_envelope: dict[str, Any] | None,
+        route_report: dict[str, Any],
+    ) -> int:
+        session_id, session_handle_kind = _resolve_session_handle(
+            grant_run_id=grant_run_id,
+            journal_path=journal_path,
+        )
+        ledger_path = self._ledger_root / f"{session_id}.json"
+        ledger = self._read_ledger(ledger_path)
+        attempts = ledger.setdefault("attempts", [])
+        if not isinstance(attempts, list):
+            raise WorkspaceError(f"MAG runtime attempt ledger attempts 不是 list: {ledger_path}")
+
+        attempt_index = _count_matching_attempts(attempts, journal_path=journal_path) + 1
+        attempts.append(
+            {
+                "attempt_index": attempt_index,
+                "trigger": trigger,
+                "grant_run_id": grant_run_id,
+                "workspace_id": workspace_id,
+                "journal_path": str(journal_path),
+                "lifecycle_stage": lifecycle_stage,
+                "stop_reason": stop_reason,
+                "stage_action_envelope": stage_action_envelope,
+                "route_report": route_report,
+            }
+        )
+        ledger.update(
+            {
+                "surface_kind": "mag_runtime_attempt_ledger",
+                "session_id": session_id,
+                "session_handle_kind": session_handle_kind,
+                "grant_run_id": grant_run_id,
+                "workspace_id": workspace_id,
+            }
+        )
+        _write_json(ledger_path, ledger)
+        return attempt_index
+
+    def _read_ledger(self, ledger_path: Path) -> dict[str, Any]:
+        if not ledger_path.exists():
+            return {"surface_kind": "mag_runtime_attempt_ledger", "attempts": []}
+        try:
+            payload = json.loads(ledger_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise WorkspaceError(f"MAG runtime attempt ledger JSON 解析失败: {ledger_path}") from exc
+        if not isinstance(payload, dict):
+            raise WorkspaceError(f"MAG runtime attempt ledger 顶层必须是 object: {ledger_path}")
+        return payload
+
+
 class HermesGrantRunLedger:
-    """把 grant run / validation-failed attempt 记入真实上游 Hermes session substrate。"""
+    """Explicit optional proof ledger backed by real upstream Hermes session substrate."""
 
     SESSION_SOURCE = "med-autogrant"
     SESSION_MODEL = "med-autogrant/grant-runtime"
@@ -179,6 +246,20 @@ def _resolve_session_handle(*, grant_run_id: str | None, journal_path: Path) -> 
 
     journal_digest = hashlib.sha256(str(journal_path).encode("utf-8")).hexdigest()
     return f"med-autogrant-validation-failed-{journal_digest}", "journal_path"
+
+
+def _count_matching_attempts(attempts: list[Any], *, journal_path: Path) -> int:
+    expected_journal_path = str(journal_path)
+    count = 0
+    for attempt in attempts:
+        if isinstance(attempt, dict) and attempt.get("journal_path") == expected_journal_path:
+            count += 1
+    return count
+
+
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def resolve_upstream_hermes_runtime_root() -> Path:

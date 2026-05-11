@@ -76,7 +76,7 @@ Date: `2026-05-11`
 - 当前 family grammar 已补齐 `grant_governance_adapter.py`：family-specific governance policy 现在会显式影响 controller plan hydration 与 closure package ordering，不再散落在 controller 私有 helper 中。
 - 当前 controller-owned projection：`workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`
 - 当前 repo 级投影：`mainline status` 输出 current line / current focus；`mainline phase` 只承担维护者参考记录。
-- `pass critique --executor hermes_agent` 继续作为显式 proof lane；默认执行器固定为 `codex_cli` / `Codex CLI`，默认模式是 `autonomous`
+- `pass critique --executor hermes_agent` 继续作为显式 optional proof lane；它只证明选定外部 executor 能在 MAG-owned route/quality/export contract 下工作，不等于默认 runtime、默认 authoring executor、MAG grant truth owner 或 OPL stage-led runtime owner。默认执行器固定为 `codex_cli` / `Codex CLI`，默认模式是 `autonomous`。
 - MAG 侧当前目标是 product sidecar adapter，而不是常驻 sidecar daemon：`product sidecar export` / `dispatch` 是 CLI/product-entry 结构化 surface，供 OPL typed queue 与 OPL family runtime provider 唤醒；默认正文 executor 仍由 Codex/domain-selected route 承担。
 
 ## 当前目录治理

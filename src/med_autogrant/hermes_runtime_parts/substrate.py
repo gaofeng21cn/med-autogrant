@@ -32,7 +32,7 @@ from med_autogrant.hosted_contract_bundle import (
 )
 from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.schema_loader import SchemaStore
-from med_autogrant.upstream_hermes import HermesGrantRunLedger
+from med_autogrant.upstream_hermes import MagGrantRunLedger
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.funding_landscape_discovery import discover_funding_landscape
 from med_autogrant.funding_landscape_discovery import build_funding_landscape_cache
@@ -78,18 +78,25 @@ re_export_public_names(_runtime_shared, globals())
 re_export_public_names(_handoff_surfaces, globals())
 
 
-class HermesRuntimeSubstrate(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimeHandoffSurfaceMixin):
-    """Hermes owns runtime orchestration while MedAutoGrant keeps domain semantics."""
+class MagDomainRuntime(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimeHandoffSurfaceMixin):
+    """MAG-owned domain runtime surface for grant authoring, quality, and export."""
 
-    runtime_owner = "Hermes"
+    runtime_owner = "Med Auto Grant"
 
     def describe_topology(self) -> dict[str, Any]:
         return {
             "runtime_owner": self.runtime_owner,
+            "domain_agent": "Med Auto Grant",
+            "authoring_truth_owner": "Med Auto Grant",
+            "quality_gate_owner": "Med Auto Grant",
+            "export_authority": "Med Auto Grant",
             "default_formal_entry": "CLI",
+            "default_stage_attempt_executor": "Codex CLI",
             "supported_protocol_layer": "MCP",
             "internal_controller_surface": "controller",
             "provenance_oracle": "Codex-default stage attempt provenance",
+            "optional_proof_executor": "Hermes-Agent",
+            "optional_proof_executor_boundary": "explicit opt-in only",
             "domain_logic_modules": [
                 "workspace",
                 "stage_router",
@@ -487,7 +494,7 @@ class HermesRuntimeSubstrate(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimeHa
             draft_id = None
             lifecycle_stage = document.get("lifecycle_stage")
 
-        ledger_class = resolve_runtime_patch_target("HermesGrantRunLedger", HermesGrantRunLedger)
+        ledger_class = resolve_runtime_patch_target("MagGrantRunLedger", MagGrantRunLedger)
         attempt_index = ledger_class().record_attempt(
             grant_run_id=document.get("grant_run_id"),
             workspace_id=document.get("workspace_id"),
@@ -546,8 +553,6 @@ class HermesRuntimeSubstrate(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimeHa
 
     def _load_workspace(self, input_path: str | Path) -> dict[str, Any]:
         return load_workspace_document(Path(input_path).expanduser().resolve())
-
-
 
 from med_autogrant.hermes_runtime_parts.contracts import (
     build_author_side_route_contract as _build_author_side_route_contract,

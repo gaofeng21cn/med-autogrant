@@ -22,7 +22,7 @@ def _load_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-class HermesRuntimeQualityGateTest(unittest.TestCase):
+class MagRuntimeQualityGateTest(unittest.TestCase):
     def test_quality_gate_can_force_mainline_route_to_rollback(self) -> None:
         from med_autogrant.hermes_runtime import _apply_quality_gate_to_route
 
@@ -72,9 +72,9 @@ class HermesRuntimeQualityGateTest(unittest.TestCase):
             build_grant_quality_closure_dossier as build_closure_dossier_impl,
         )
         from med_autogrant.grant_quality import build_grant_quality_scorecard as build_scorecard_impl
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
 
-        runtime = HermesRuntimeSubstrate()
+        runtime = MagDomainRuntime()
         starting_workspace = _load_json(REVISION_EXAMPLE_PATH)
         critique_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
 
@@ -122,9 +122,9 @@ class HermesRuntimeQualityGateTest(unittest.TestCase):
             build_grant_quality_closure_dossier as build_closure_dossier_impl,
         )
         from med_autogrant.grant_quality import build_grant_quality_scorecard as build_scorecard_impl
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
 
-        runtime = HermesRuntimeSubstrate()
+        runtime = MagDomainRuntime()
         workspace = _load_json(DRAFTING_EXAMPLE_PATH)
 
         with tempfile.TemporaryDirectory() as tmp_dir:

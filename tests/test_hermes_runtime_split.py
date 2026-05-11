@@ -22,31 +22,36 @@ class RuntimeSplitStructureTest(unittest.TestCase):
 
         self.assertEqual([], offenders)
 
-    def test_runtime_substrate_lives_below_runtime_parts(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+    def test_mag_domain_runtime_is_the_default_runtime_surface(self) -> None:
+        from med_autogrant.hermes_runtime import MagDomainRuntime
 
-        self.assertEqual(
-            "med_autogrant.hermes_runtime_parts.substrate",
-            HermesRuntimeSubstrate.__module__,
-        )
+        topology = MagDomainRuntime().describe_topology()
+
+        self.assertEqual(topology["runtime_owner"], "Med Auto Grant")
+        self.assertEqual(topology["authoring_truth_owner"], "Med Auto Grant")
+        self.assertEqual(topology["quality_gate_owner"], "Med Auto Grant")
+        self.assertEqual(topology["export_authority"], "Med Auto Grant")
+        self.assertEqual(topology["default_stage_attempt_executor"], "Codex CLI")
+        self.assertEqual(topology["optional_proof_executor"], "Hermes-Agent")
+        self.assertEqual(topology["optional_proof_executor_boundary"], "explicit opt-in only")
 
     def test_package_surface_owns_export_methods_under_authoring_mixin(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
         from med_autogrant.hermes_runtime_parts.authoring_surface import HermesRuntimeAuthoringSurfaceMixin
         from med_autogrant.hermes_runtime_parts.package_surface import HermesRuntimePackageSurfaceMixin
 
         self.assertTrue(issubclass(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimePackageSurfaceMixin))
         self.assertEqual(
             "med_autogrant.hermes_runtime_parts.package_surface",
-            HermesRuntimeSubstrate.build_final_package.__module__,
+            MagDomainRuntime.build_final_package.__module__,
         )
         self.assertEqual(
             "med_autogrant.hermes_runtime_parts.package_surface",
-            HermesRuntimeSubstrate.build_hosted_contract_bundle.__module__,
+            MagDomainRuntime.build_hosted_contract_bundle.__module__,
         )
         self.assertEqual(
             "med_autogrant.hermes_runtime_parts.package_surface",
-            HermesRuntimeSubstrate.build_submission_ready_package.__module__,
+            MagDomainRuntime.build_submission_ready_package.__module__,
         )
 
     def test_runtime_substrate_does_not_directly_import_handoff_owners(self) -> None:

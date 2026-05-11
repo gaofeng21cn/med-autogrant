@@ -23,7 +23,7 @@ from med_autogrant.public_cli import public_cli_argv  # noqa: E402
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 
 
-class HostedExecutorCliProbeTest(unittest.TestCase):
+class OptionalHermesProofCliProbeTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
         stdout = StringIO()
         stderr = StringIO()
@@ -62,14 +62,14 @@ class HostedExecutorCliProbeTest(unittest.TestCase):
         entry.dispatch.assert_called_once_with({"command": "probe-upstream-hermes"})
 
 
-class RuntimeLedgerTest(unittest.TestCase):
+class MagRuntimeLedgerTest(unittest.TestCase):
     def test_runtime_run_uses_grant_run_ledger_for_attempt_index(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
 
-        runtime = HermesRuntimeSubstrate()
+        runtime = MagDomainRuntime()
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "revision-journal.json"
-            with patch("med_autogrant.hermes_runtime.HermesGrantRunLedger") as ledger_class:
+            with patch("med_autogrant.hermes_runtime.MagGrantRunLedger") as ledger_class:
                 ledger = ledger_class.return_value
                 ledger.record_attempt.return_value = 7
 
@@ -89,10 +89,10 @@ class RuntimeLedgerTest(unittest.TestCase):
         self.assertEqual(kwargs["stop_reason"]["code"], "stage_action_required")
 
     def test_record_attempt_uses_journal_scoped_session_when_grant_run_id_missing(self) -> None:
-        from med_autogrant.upstream_hermes import HermesGrantRunLedger
+        from med_autogrant.upstream_hermes import MagGrantRunLedger
 
         with tempfile.TemporaryDirectory() as tmp_dir:
-            runtime_root = Path(tmp_dir) / "hermes-home"
+            runtime_root = Path(tmp_dir) / "runtime-state"
             journal_path = Path(tmp_dir) / "invalid-journal.json"
             stop_reason = {
                 "code": "validation_failed",
@@ -117,8 +117,8 @@ class RuntimeLedgerTest(unittest.TestCase):
                 },
             }
 
-            with patch.dict(os.environ, {"MED_AUTOGRANT_HERMES_HOME": str(runtime_root)}, clear=False):
-                ledger = HermesGrantRunLedger()
+            with patch.dict(os.environ, {"MED_AUTOGRANT_RUNTIME_STATE_ROOT": str(runtime_root)}, clear=False):
+                ledger = MagGrantRunLedger()
                 first_attempt = ledger.record_attempt(
                     grant_run_id=None,
                     workspace_id="nsfc-demo-001",

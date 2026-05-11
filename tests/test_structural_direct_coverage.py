@@ -75,7 +75,7 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert io._read_active_draft_id({"current_selection": {"active_draft_id": "draft-1"}}) == "draft-1"
     assert package_surface.HermesRuntimePackageSurfaceMixin.build_final_package
     assert shared.PRODUCT_ENTRY_SCHEMA_FILE == "product-entry.schema.json"
-    assert substrate.HermesRuntimeSubstrate.__name__ == "HermesRuntimeSubstrate"
+    assert substrate.MagDomainRuntime.__name__ == "MagDomainRuntime"
     assert autonomy_observability.build_grant_autonomy_observability
     assert entry.MedAutoGrantProductEntry
     assert loop_contracts._build_mainline_snapshot

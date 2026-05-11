@@ -22,7 +22,7 @@ def _load_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
+class MagRuntimeAutonomyControllerTest(unittest.TestCase):
     def _quality_summary(
         self,
         *,
@@ -92,7 +92,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
         }
 
     def test_execute_grant_autonomy_controller_validates_and_writes_report(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
 
         workspace = _load_json(FROZEN_EXAMPLE_PATH)
         quality_summary = self._quality_summary(
@@ -233,7 +233,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
 
             with patch("med_autogrant.hermes_runtime.run_grant_autonomy_controller") as run_controller:
                 run_controller.return_value = report
-                payload = HermesRuntimeSubstrate().execute_grant_autonomy_controller(
+                payload = MagDomainRuntime().execute_grant_autonomy_controller(
                     input_path=request_path,
                     output_dir=output_dir,
                 )
@@ -247,7 +247,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
                 run_controller.assert_called_once()
 
     def test_execute_grant_autonomy_controller_preserves_nih_family_grammar_from_selection_start(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
 
         selection_input = _load_json(NIH_SELECTION_INPUT_PATH)
         final_workspace = _load_json(FROZEN_EXAMPLE_PATH)
@@ -397,7 +397,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
 
             with patch("med_autogrant.hermes_runtime.run_grant_autonomy_controller") as run_controller:
                 run_controller.side_effect = _run_controller_side_effect
-                payload = HermesRuntimeSubstrate().execute_grant_autonomy_controller(
+                payload = MagDomainRuntime().execute_grant_autonomy_controller(
                     input_path=request_path,
                     output_dir=output_dir,
                 )
@@ -407,7 +407,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
                 run_controller.assert_called_once()
 
     def test_execute_grant_autonomy_controller_keeps_nih_family_trace_from_selection_input(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
 
         selection_input = _load_json(NIH_SELECTION_INPUT_PATH)
         request = {
@@ -445,7 +445,7 @@ class HermesRuntimeAutonomyControllerTest(unittest.TestCase):
             output_dir = Path(tmp_dir) / "autonomy-output"
             request_path.write_text(json.dumps(request, ensure_ascii=False), encoding="utf-8")
 
-            payload = HermesRuntimeSubstrate().execute_grant_autonomy_controller(
+            payload = MagDomainRuntime().execute_grant_autonomy_controller(
                 input_path=request_path,
                 output_dir=output_dir,
             )

@@ -237,10 +237,10 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self.assertEqual(json.loads(hosted_contract_path.read_text(encoding="utf-8")), contract_bundle)
 
     def test_build_hosted_contract_bundle_fails_closed_on_invalid_hosted_contract_shape(self) -> None:
-        from med_autogrant.hermes_runtime import HermesRuntimeSubstrate
+        from med_autogrant.hermes_runtime import MagDomainRuntime
         from med_autogrant.workspace import WorkspaceStateError
 
-        runtime = HermesRuntimeSubstrate()
+        runtime = MagDomainRuntime()
         with tempfile.TemporaryDirectory() as tmp_dir:
             final_package_path = Path(tmp_dir) / "final-package.json"
             hosted_contract_path = Path(tmp_dir) / "hosted-contract.json"

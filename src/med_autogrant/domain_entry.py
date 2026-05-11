@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
-from med_autogrant.hermes_runtime_parts.substrate import HermesRuntimeSubstrate
+from med_autogrant.hermes_runtime_parts.substrate import MagDomainRuntime
 from med_autogrant.upstream_hermes import probe_upstream_hermes
 from med_autogrant.workspace_types import WorkspaceStateError
 
@@ -113,10 +113,10 @@ class MedAutoGrantDomainEntry:
     def __init__(
         self,
         *,
-        runtime: HermesRuntimeSubstrate | None = None,
+        runtime: MagDomainRuntime | None = None,
         probe: Callable[[], dict[str, Any]] | None = None,
     ) -> None:
-        self._runtime = runtime or HermesRuntimeSubstrate()
+        self._runtime = runtime or MagDomainRuntime()
         self._probe = probe or probe_upstream_hermes
 
     def dispatch(self, request: Mapping[str, Any]) -> dict[str, Any]:
