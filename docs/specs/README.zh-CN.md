@@ -9,14 +9,14 @@
 - `state`：下方列出的 active specs 为 `current`；留在本目录用于路径 provenance 的较早 dated specs 为 `history`。
 - `machine boundary`：specs 是人读 current-truth records。机器消费者应使用 `contracts/runtime-program/current-program.json`、schema、source file 或语义化 `human_doc:*` 标识，而不是依赖 prose path。
 
-当前优先级最高、仍由 docs guide 或 status 直接引用的 active current-truth specs 是：
+当前优先级最高、仍由 docs guide 或 status 直接引用的 active current-truth specs 只有四份：
 
 - [Critique executor vocabulary current truth](./2026-04-13-critique-codex-cli-executor-current-truth.md)
 - [AI-first 质量边界 current truth](./2026-04-27-ai-first-quality-boundary-current-truth.md)
 - [Authoring completion semantics current truth](./2026-04-23-authoring-completion-semantics-current-truth.md)
 - [Quality governance, autonomy controller, and family grammar current truth](./2026-04-22-quality-autonomy-family-grammar-current-truth.md)
 
-密集 specs 组合的生命周期分类见 [Specs Lifecycle Map](./specs_lifecycle_map.md)。编辑或移动任何 dated spec 前，先用这份 map 区分 active record、support current-truth record 与 historical provenance。
+密集 specs 组合的生命周期分类见 [Specs Lifecycle Map](./specs_lifecycle_map.md)。编辑或移动任何 dated spec 前，先用这份 map 的 file-level lifecycle table 区分 active record、support current-truth record、integration reference、historical activation package 与 superseded provider proof。
 
 `contracts/runtime-program/current-program.json` 仍是完整 repo-tracked truth-surface 清单的 canonical pointer。部分 route、executor-vocabulary、hosted-caller、product-entry 与 Hermes reset specs 仍留在本目录，是因为 current-program 或历史审计路径仍直接引用这些原路径。
 
