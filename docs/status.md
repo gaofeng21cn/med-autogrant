@@ -1,15 +1,19 @@
 # 当前状态
 
-Date: `2026-05-06`
+Date: `2026-05-11`
 
 ## 当前角色
 
 - 仓库角色：`Med Auto Grant` 是独立 medical grant domain agent，负责 author-side grant truth、route、review gate 与 package export；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
 - OPL 关系：MAG 可以作为 OPL Codex-first、stage-led family agent framework 上的 admitted domain agent 被托管、唤醒和投影，但不是 OPL 内部模块。OPL 只负责 stage descriptor discovery、queue/wakeup、handoff、receipt、approval/retry/dead-letter 和 operator projection；MAG 继续持有 grant stage pack、prompt/skill、route truth、quality gate 和 submission-ready export authority。
+- OPL framework 总入口：涉及 stage-led framework、Temporal provider、执行语言、OPL-hosted path、旧 Hermes/Gateway/local-runtime surface 退役的跨仓问题，先读 `/Users/gaofeng/workspace/one-person-lab/docs/references/runtime-substrate/opl-stage-led-agent-framework-roadmap.zh-CN.md`；MAG 本仓只维护 grant-domain truth、descriptor/projection 和 direct skill 等价。
+- Standard domain-agent skeleton 目标：MAG 后续应按 OPL 统一 `agent/`、`contracts/`、`runtime/`、`docs/` repo-source 边界映射现有 grant stages、prompt/skill、knowledge/context、quality gate、sidecar、receipt schema、projection builder 和 package/export locator contract。当前先以 manifest/adapter 对齐，不要求立即物理移动目录；真实申请书、receipt 实例、中间产物和导出包属于 workspace / runtime artifact root，不属于开发仓源码目录。OPL 可上收 lifecycle/artifact/retention/restore 等 framework primitive，但不得持有 MAG grant truth、fundability judgment 或 submission-ready export verdict。
 - 当前执行口径：repo-tracked 默认 capability contract 收口为单一 `Med Auto Grant` app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；其中 `product entry/product status/direct-entry/user-loop` 是 app skill 下的内部 command contract 和 direct-product projection。默认正文执行与默认 runtime owner 固定继承本机 `Codex CLI` / `codex_cli` 配置；`Hermes-Agent` 相关路径只保留在显式 hosted/proof lane 与技术参考层，默认安装不拉取 `hermes-agent`。
 - OPL Runtime Manager 口径：`OPL Runtime Manager` 是 OPL 侧薄运行管理/投影层，用于把 MAG 的 task registration、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue 接到 OPL family runtime provider、高频状态索引和 doctor/repair/resume 面；Temporal 是目标生产 provider，Hermes 是迁移期 legacy/optional provider 或 executor/proof lane。它不持有 author-side truth、quality gate、submission-ready export gate 或 concrete executor。
 - 当前 agent entry：`CLI` / `MedAutoGrantDomainEntry` 可被 `Codex`、`OPL` 和其他通用 agent 直接调用，或者先通过单一 app skill 读取 machine-readable surface。
 - Codex App direct skill 调用与 OPL 托管调用都必须回到同一套 MAG-owned route truth、workspace truth、quality surfaces 和 export gate。
+- Stage-led OPL 对齐当前状态：MAG 已通过 `family_action_catalog`、`family_stage_control_plane`、`runtime_control`、`runtime_continuity`、`product sidecar export/dispatch` 和 `opl_runtime_manager_registration` 暴露 OPL 可发现/可排队/可投影 surface。OPL 只能消费这些 MAG-owned descriptor / projection，不能替代 MAG 做 fundability strategy、specific aims、proposal authoring、critique/revision、quality gate 或 submission-ready export 判断。当前还不能把 MAG stage attempt 写成已完成 Temporal-backed production execution；Temporal provider、human-gate signal/query、App stage-attempt visibility 和真实 long-run soak 仍在 OPL 侧后续 lane。
+- 旧面退役校准：默认公开能力已收口到单一 app skill、CLI、MedAutoGrantDomainEntry、product-entry/projection commands 与 schema-backed contract；旧 local host-agent runtime、旧 `OPL Gateway` wording、较早 Hermes-first specs、旧五个 canonical CLI verifier baseline、`product-status` compatibility traces 和 `tests/test_product_entry.py` compatibility import surface 只保留为 provenance / regression oracle / compatibility import。它们当前不拥有默认 product/runtime authority，但尚未全部物理删除；后续清理应以 active contract、current tests 和 restore/provenance 替代面成立为前提。
 - formal-entry matrix：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 - 当前主线：`Auto-only`。
 - OMX 状态：已退场，仅保留历史入口。

@@ -161,4 +161,4 @@ Date: `2026-04-13`
 
 - mature direct grant Web UI / hosted runtime 已完成
 - `OPL Gateway` 已在本仓落地
-- family product-entry manifest v2、event envelope、checkpoint lineage 已经全部落地
+- 当时语境下的 family product-entry manifest v2、event envelope、checkpoint lineage 已经落地；当前 provider-backed / stage-led 口径下，这不等于 Temporal provider、Codex stage activity runner、human-gate Signal/Query 或真实 long-run soak 已完成

@@ -149,6 +149,6 @@ grant 域在这层共享 envelope 之上继续补充：
 它不意味着：
 
 - 最终用户产品前台已经成熟
-- `OPL Gateway` 完整消费链已全部落地
+- 当时语境下的 `OPL Gateway` 完整消费链已全部落地；当前应按 `OPL Runtime Manager -> configured family runtime provider -> MAG-owned product sidecar / domain entry` 重新解读，不代表生产级 Temporal stage execution 已完成
 - actual hosted runtime 已完成
 - submission-grade autopilot 已完成

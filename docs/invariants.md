@@ -27,12 +27,14 @@
 ## 目标优先级
 
 - `OPL` 当前固定只承担 family-level session/runtime/projection 与 shared modules/contracts/indexes，不承担本仓 domain truth owner 身份。
-- `OPL Runtime Manager` 当前固定为 OPL 侧 thin adapter/projection layer over external `Hermes-Agent` substrate；它不得成为 MAG grant-domain truth owner、scheduler kernel、session store、memory store、concrete authoring executor 或 private Hermes fork。
+- `OPL Runtime Manager` 当前固定为 OPL 侧 thin adapter/projection layer over the configured family runtime provider；Temporal 是目标生产 substrate，`Hermes-Agent` 只保留为迁移期 legacy/optional provider、显式 hosted/proof lane 或 executor proof lane。它不得成为 MAG grant-domain truth owner、scheduler kernel、session store、memory store、concrete authoring executor 或 private Hermes fork。
 - OPL native helper 与高频状态索引只能缓存、探测和投影 MAG 已暴露的 `runtime_control`、`runtime_continuity`、workspace projection、artifact locator 与 explicit wakeup/TODO queue；不得替代 `contracts/runtime-program/current-program.json`、authoring contract、quality gate、route truth 或 submission-ready export gate。
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态，而不是继续深磨已放弃的旧本地宿主路线。
 - 当前 `CLI-first + host-agent runtime` 是历史 repo-verified baseline，但它只允许留在归档追溯材料中，不应再被误写为长期终态。
 - 当 hosted/proof backend 相关材料存在时，不得把 repo-side adapter 重写成默认 runtime owner，也不得把这些 lane 误写成唯一公开 capability contract。
 - 当前 landed substrate、兼容桥与 future scope 必须在 `docs/status.md` 与 `docs/README*` 中显式拆开。
+- 当前 OPL stage-led 对齐已经落到 MAG-owned `family_action_catalog`、`family_stage_control_plane`、runtime_control / runtime_continuity projection 与 product sidecar adapter；这些 surface 只供 OPL discovery、queue、wakeup、handoff、receipt、retry/dead-letter 和 operator projection 使用，不授权 OPL 生成 fundability judgment、authoring quality verdict 或 submission-ready export verdict。
+- 旧 local host-agent runtime、旧 `OPL Gateway` wording、`product-status` compatibility traces、旧五个 canonical CLI verifier baseline 和 `tests/test_product_entry.py` compatibility import surface 只能作为历史 provenance、regression oracle 或兼容导入面保留；它们不得回到默认 product/runtime owner。物理删除必须以 current contract、tests 和 restore/provenance 替代面已成立为前提。
 
 ## 任务边界与 gate 语义
 

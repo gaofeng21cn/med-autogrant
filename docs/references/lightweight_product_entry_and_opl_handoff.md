@@ -2,7 +2,7 @@
 
 > Historical reference. The current landed route catalog and direct-entry truth now live in `docs/project.md`, `docs/decisions.md`, and `contracts/runtime-program/current-program.json`.
 >
-> Current reading note: older phrases such as `Hermes Kernel` and `OPL family orchestration surface` should now be read through the current route `OPL Runtime Manager -> external Hermes-Agent runtime substrate -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`. `OPL Runtime Manager` is a thin family runtime/projection manager; it does not own MAG grant truth, authoring semantics, quality gates, or submission-ready export truth.
+> Current reading note: older phrases such as `Hermes Kernel` and `OPL family orchestration surface` should now be read through the current route `OPL Runtime Manager -> configured family runtime provider -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`. `OPL Runtime Manager` is a thin family runtime/projection manager; Temporal is the production substrate target, Hermes is legacy/optional provider or proof lane, and OPL does not own MAG grant truth, authoring semantics, quality gates, or submission-ready export truth.
 
 ## 1. 当前真相
 
@@ -13,7 +13,7 @@
 - `agent entry`
   - `CLI` / `MedAutoGrantDomainEntry`，由 `Codex` 或其他 host-agent 调用
 
-同时，这个仓的 runtime substrate 已经真正落在上游 `Hermes-Agent` 上。
+同时，这个历史文档里的 runtime substrate 口径已经被后续 provider-backed / Temporal-target 决策取代；MAG 当前默认正文执行仍继承 `Codex CLI`，OPL 侧只通过 configured family runtime provider 做唤醒、队列、handoff、receipt 和 projection。
 
 在此基础上，`product build-entry` 已经把轻量结构化 `product entry` shell 落到仓库里，并让 `direct` 与 `opl-handoff` 共用同一套 envelope。
 但即便如此，它仍然不等于成熟的用户级 `product entry` 或完整最终 UX。
@@ -29,7 +29,7 @@
 
 `User or agent caller -> OPL Product Entry -> OPL family orchestration surface -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
 
-按当前口径，上面两条历史链路里的 `Hermes Kernel` 应理解为 external `Hermes-Agent` runtime substrate；`OPL family orchestration surface` 应理解为 `OPL Runtime Manager`，并且只负责 OPL 侧托管、投影和 handoff，不接管 MAG grant truth。
+按当前口径，上面两条历史链路里的 `Hermes Kernel` 应理解为 configured family runtime provider；`OPL family orchestration surface` 应理解为 `OPL Runtime Manager`，并且只负责 OPL 侧托管、投影和 handoff，不接管 MAG grant truth。Temporal 是生产目标；Hermes 只保留 legacy/optional provider 或显式 proof lane。
 
 这意味着：
 

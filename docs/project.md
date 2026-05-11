@@ -8,6 +8,7 @@
 当前任务边界锁定在“指定基金任务正文 authoring”：科学完成的可待审包与形式/客观补件完成必须显式分层管理，默认先确保正文科学成立与可审阅，再通过补件队列收口门户前置材料。
 按当前定位，这个仓的对外第一身份是“通过单一 app skill 暴露的独立医学基金 domain agent”：`OPL` 只保留 family-level 的 session/runtime/projection 与 shared modules/contracts/indexes；目标形态中的 `OPL Runtime Manager` 是 OPL 侧的薄运行管理/投影层，负责索引 MAG 的 task registration、runtime_control、runtime_continuity、workspace projection 与 artifact/wakeup locator，并接到已配置的 OPL family runtime provider。Temporal 是目标生产 provider；外部 `Hermes-Agent` 只在显式 opt-in 时作为 legacy hosted/proof carrier、executor proof lane 或可选模块出现。`Med Auto Grant` 继续负责 grant authoring record、domain entry 与 direct grant product entry；显式 hosted/proof backend 只能挂在同一套 route/export contract 之下。
 在 OPL Codex-first、stage-led family agent framework 中，MAG 是 admitted domain agent，不是 OPL 内部模块。OPL 可以读取 MAG stage/action/projection descriptor，负责 queue、wakeup、handoff、receipt、approval/retry 和 operator projection；MAG 继续持有 call intake、fundability strategy、specific aims、proposal authoring、review/rebuttal、package gate 等 stage 语义，以及 authoring truth、quality gate 和 submission-ready export authority。
+当前 stage-led 对齐已经落到 MAG-owned descriptor/projection 层：`family_action_catalog`、`family_stage_control_plane`、`runtime_control`、`runtime_continuity`、`product sidecar export/dispatch` 与 `opl_runtime_manager_registration`。这些 surface 让 OPL 能做 discovery、typed queue、wakeup、handoff、receipt 和 operator projection；它们不让 OPL 生成 grant route、fundability verdict、authoring quality verdict 或 export readiness。
 当前统一协作模型是：稳定可调用面先固定在单一 app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；默认 concrete executor 继续继承本机 `Codex`；如果显式启用 hosted/proof backend，它也必须服从同一套 route truth、author-side contract 与 export record。`direction_screening -> frozen`、`revision` 与 packaging/export 继续通过 repo-side domain logic 与 executor adapter 落地。
 当前 hosted caller / `OPL` caller 若需要 machine-readable handoff，可以消费 `domain_entry_contract`、`schema_contract`、`authoring_contract`，并按 `supported_commands` / `command_contracts` 构造请求。`workspace progress / workspace cockpit` 保持 product-facing read-only projection，`product direct-entry` 负责组合 direct-entry contract，`mainline status`、维护者参考记录与 `product user-loop` 负责投影 repo 主线快照与 route-derived next action。`pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting` 与 `pass freeze` 已经收口成 landed command catalog，并被 route contract、`product user-loop` 与 hosted bundle 复用。
 
@@ -47,6 +48,7 @@
 - 不把 `P5.*` hosted/federation 扩展写成当前已开工的范围。
 - 不把同任务内的人工 gate 写成跨 funder 的重选流程。
 - 不把 `OPL Runtime Manager` 或未来 OPL sidecar 写成 MAG 的默认公开入口、grant truth owner、authoring executor 或 repository-local Hermes fork。
+- 不把已经退役到 provenance / regression oracle / compatibility import 的旧 local runtime、旧 `OPL Gateway` wording、旧五个 canonical verifier baseline 或 `product-status` compatibility traces 重新提升为默认 owner。
 
 ## 当前形态
 
