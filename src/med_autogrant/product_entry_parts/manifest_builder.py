@@ -751,6 +751,8 @@ class ProductEntryManifestBuilderMixin:
                 "command",
                 context="product_entry_shell.grant_user_loop",
             ),
+            "domain_memory_writeback_proposal": command_catalog["domain_memory_writeback_proposal"],
+            "domain_memory_writeback_decision": command_catalog["domain_memory_writeback_decision"],
         }
         artifact_locator_contract = build_artifact_locator_contract(
             input_path=resolved_input_path,

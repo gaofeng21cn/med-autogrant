@@ -37,6 +37,10 @@ from med_autogrant.public_cli import public_cli_command
 from med_autogrant.runtime_defaults import build_default_runtime_summary
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
+from med_autogrant.product_entry_parts.domain_memory_runtime import (
+    build_domain_memory_writeback_decision,
+    build_domain_memory_writeback_proposal,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -266,3 +270,35 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
 
     def dispatch_sidecar_task(self, *, task_path: str | Path) -> dict[str, Any]:
         return dispatch_sidecar_task(self, task_path=task_path)
+
+    def build_domain_memory_writeback_proposal(
+        self,
+        *,
+        input_path: str | Path,
+        stage_id: str,
+        source_ref: str,
+        lesson_summary: str,
+        proposal_id: str | None = None,
+    ) -> dict[str, Any]:
+        return build_domain_memory_writeback_proposal(
+            input_path=input_path,
+            stage_id=stage_id,
+            source_ref=source_ref,
+            lesson_summary=lesson_summary,
+            proposal_id=proposal_id,
+        )
+
+    def build_domain_memory_writeback_decision(
+        self,
+        *,
+        proposal_path: str | Path,
+        decision: str,
+        decision_reason: str,
+        memory_id: str | None = None,
+    ) -> dict[str, Any]:
+        return build_domain_memory_writeback_decision(
+            proposal_path=proposal_path,
+            decision=decision,
+            decision_reason=decision_reason,
+            memory_id=memory_id,
+        )

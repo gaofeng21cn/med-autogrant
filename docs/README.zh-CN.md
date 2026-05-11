@@ -76,7 +76,7 @@ root public-doc allowlist 保持稀疏：
 - [Grant Strategy Memory Policy](./references/grant_strategy_memory_policy.md)
 
 当前 grant product-entry shell 继续作为 app skill 背后的 domain/API catalog builder，也是稳定可调用面的一部分；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 作为集成/参考面暴露给 hosted caller / 外部 caller 使用。
-fundability、specific aims、reviewer grammar 和 template strategy 这类经验按自然语言 memory 管理；`workspace quality-scorecard`、`grant-quality-closure-dossier`、autonomy controller report 和 submission-ready package 继续保持结构化权威。
+fundability、specific aims、reviewer grammar 和 template strategy 这类经验按自然语言 memory 管理；`domain_memory_descriptor_locator` 现在只投影 writeback proposal / accept-reject / receipt refs，不把真实 memory entry 或 grant artifact 写进 repo。`workspace quality-scorecard`、`grant-quality-closure-dossier`、autonomy controller report 和 submission-ready package 继续保持结构化权威。
 质量治理与自治 controller schema 已进入 [`schema-index.json`](../schemas/v1/schema-index.json) 和 current-program truth surface。
 完整 repo-tracked truth surface 清单以 [`current-program.json`](../contracts/runtime-program/current-program.json) 的 `repo_tracked_truth_surfaces` 为准；contract/schema/source surface 保持 repo path，叙述文档使用语义化 `human_doc:*` 标识。Specs 索引与 specs lifecycle map 共同区分 active boundary records、support records 和 historical provenance records。
 

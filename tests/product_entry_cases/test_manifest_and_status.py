@@ -316,6 +316,11 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             "canonical_grant_artifact_content",
             controlled_attempt["opl_consumption_contract"]["does_not_consume"],
         )
+        proof = controlled_attempt["proof"]
+        self.assertEqual(proof["surface_kind"], "controlled_stage_attempt_fixture_proof")
+        self.assertTrue(proof["direct_skill_and_opl_hosted_use_same_descriptor_sidecar_quality_refs"])
+        self.assertFalse(proof["opl_verdict_authority"]["fundability"])
+        self.assertFalse(proof["opl_verdict_authority"]["submission_ready_export"])
         memory_locator = manifest["domain_memory_descriptor_locator"]
         self.assertEqual(memory_locator["surface_kind"], "domain_memory_descriptor_locator")
         self.assertEqual(memory_locator["descriptor_id"], "mag.domain_memory_descriptor_locator.v1")
@@ -336,7 +341,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         migration_plan = memory_locator["migration_plan"]
         self.assertEqual(migration_plan["surface_kind"], "domain_memory_migration_plan")
         self.assertEqual(migration_plan["plan_id"], "mag.domain_memory_migration_plan.v1")
-        self.assertEqual(migration_plan["migration_state"], "repo_source_plan_and_seed_fixture_landed")
+        self.assertEqual(migration_plan["migration_state"], "runtime_apply_contract_landed")
         self.assertEqual(
             migration_plan["seed_fixture_ref"]["ref"],
             "contracts/runtime-program/domain-memory-seed-fixture.json",
@@ -347,7 +352,34 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             ["discover_candidates", "mag_review", "persist_acceptance"],
         )
         self.assertIn("no_workspace_private_evidence", migration_plan["acceptance_gates"])
-        self.assertIn("MAG memory acceptance command", migration_plan["pending_runtime_work"])
+        self.assertEqual(migration_plan["pending_runtime_work"], [])
+        self.assertEqual(
+            migration_plan["runtime_apply_surfaces"],
+            [
+                "writeback_proposal_generator",
+                "accept_reject_command",
+                "operator_receipt_projection",
+            ],
+        )
+        proposal_generator = memory_locator["writeback_proposal_generator"]
+        self.assertEqual(proposal_generator["surface_kind"], "domain_memory_writeback_proposal_generator")
+        self.assertEqual(proposal_generator["output_surface_kind"], "mag_domain_memory_writeback_proposal")
+        self.assertEqual(proposal_generator["write_policy"], "runtime_store_only_no_repo_write")
+        accept_reject = memory_locator["accept_reject_command"]
+        self.assertEqual(accept_reject["surface_kind"], "domain_memory_accept_reject_command")
+        self.assertEqual(accept_reject["decision_owner"], "med-autogrant")
+        self.assertTrue(accept_reject["requires_mag_decision_before_store_mutation"])
+        operator_receipt = memory_locator["operator_receipt_projection"]
+        self.assertEqual(operator_receipt["surface_kind"], "mag_domain_memory_operator_receipt_projection")
+        self.assertEqual(
+            operator_receipt["receipt_content_policy"],
+            "receipt_refs_and_decision_metadata_only_no_memory_body",
+        )
+        self.assertFalse(operator_receipt["opl_consumption"]["can_hold_memory_content"])
+        controlled_fixture = memory_locator["controlled_apply_fixture"]
+        self.assertTrue(controlled_fixture["direct_skill_and_opl_hosted_use_same_refs"])
+        self.assertFalse(controlled_fixture["opl_verdict_authority"]["fundability"])
+        self.assertFalse(controlled_fixture["opl_verdict_authority"]["submission_ready_export"])
         self.assertEqual(
             [ref["stage_id"] for ref in memory_locator["stage_descriptor_refs"]],
             [stage["stage_id"] for stage in stage_plane["stages"]],

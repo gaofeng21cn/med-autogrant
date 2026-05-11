@@ -1474,7 +1474,9 @@
             "grant_progress",
             "grant_cockpit",
             "grant_direct_entry",
-            "grant_user_loop"
+            "grant_user_loop",
+            "domain_memory_writeback_proposal",
+            "domain_memory_writeback_decision"
           ],
           "properties": {
             "product_status": {
@@ -1490,6 +1492,12 @@
               "$ref": "common.schema.json#/$defs/nonEmptyString"
             },
             "grant_user_loop": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "domain_memory_writeback_proposal": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "domain_memory_writeback_decision": {
               "$ref": "common.schema.json#/$defs/nonEmptyString"
             }
           }
@@ -1994,8 +2002,11 @@
         "policy_ref",
         "memory_locator",
         "migration_plan",
+        "writeback_proposal_generator",
+        "accept_reject_command",
         "writeback_receipt_refs",
         "receipt_locator",
+        "operator_receipt_projection",
         "opl_consumption_contract",
         "authority_boundary"
       ],
@@ -2091,7 +2102,7 @@
               "const": "mag.domain_memory_migration_plan.v1"
             },
             "migration_state": {
-              "const": "repo_source_plan_and_seed_fixture_landed"
+              "const": "runtime_apply_contract_landed"
             },
             "maps_to_opl_contract": {
               "const": "opl_family_domain_memory_migration_plan.v1"
@@ -2133,6 +2144,88 @@
                   "const": "schema_like_seed_fixture_no_real_memory_entries"
                 }
               }
+            }
+          }
+        },
+        "writeback_proposal_generator": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "generator_id",
+            "command",
+            "output_surface_kind",
+            "write_policy"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "domain_memory_writeback_proposal_generator"
+            },
+            "generator_id": {
+              "const": "mag.domain_memory.writeback_proposal_generator.v1"
+            },
+            "output_surface_kind": {
+              "const": "mag_domain_memory_writeback_proposal"
+            },
+            "write_policy": {
+              "const": "runtime_store_only_no_repo_write"
+            }
+          }
+        },
+        "accept_reject_command": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "command_id",
+            "command",
+            "decision_owner",
+            "output_surface_kind",
+            "write_policy",
+            "requires_mag_decision_before_store_mutation"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "domain_memory_accept_reject_command"
+            },
+            "command_id": {
+              "const": "mag.domain_memory.accept_reject.v1"
+            },
+            "decision_owner": {
+              "const": "med-autogrant"
+            },
+            "output_surface_kind": {
+              "const": "mag_domain_memory_writeback_decision"
+            },
+            "write_policy": {
+              "const": "runtime_store_only_no_repo_write"
+            },
+            "requires_mag_decision_before_store_mutation": {
+              "const": true
+            }
+          }
+        },
+        "operator_receipt_projection": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "projection_id",
+            "maps_to_opl_contract",
+            "receipt_content_policy"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_domain_memory_operator_receipt_projection"
+            },
+            "projection_id": {
+              "const": "mag.domain_memory.operator_receipt_projection.v1"
+            },
+            "maps_to_opl_contract": {
+              "const": "opl_family_product_operator_projection.v1"
+            },
+            "receipt_content_policy": {
+              "const": "receipt_refs_and_decision_metadata_only_no_memory_body"
             }
           }
         },

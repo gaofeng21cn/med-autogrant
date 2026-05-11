@@ -5,7 +5,7 @@ Date: `2026-05-11`
 Owner: `Med Auto Grant`
 Purpose: define how reusable grant-writing strategy experience should be captured without turning MAG into a rigid recipe engine.
 State: `reference`
-Machine boundary: this is a human-readable policy. Machine truth remains in MAG contracts, schemas, source code, workspace records, quality scorecards, closure dossiers, controller reports, stage route reports, and submission-ready package surfaces. The repo-tracked migration/locator surfaces are `contracts/runtime-program/opl-family-contract-adoption.json`, `contracts/runtime-program/domain-memory-seed-fixture.json`, and `/product_entry_manifest/domain_memory_descriptor_locator`.
+Machine boundary: this is a human-readable policy. Machine truth remains in MAG contracts, schemas, source code, workspace records, quality scorecards, closure dossiers, controller reports, stage route reports, and submission-ready package surfaces. The repo-tracked migration/apply/locator surfaces are `contracts/runtime-program/opl-family-contract-adoption.json`, `contracts/runtime-program/domain-memory-seed-fixture.json`, and `/product_entry_manifest/domain_memory_descriptor_locator`.
 
 ## Conclusion
 
@@ -85,13 +85,12 @@ Now:
 
 - keep this policy as the MAG memory owner reference;
 - continue using existing structured quality/controller/export surfaces as authority;
-- expose a repo-source migration plan, seed fixture, and receipt locator for domain memory migration without storing real memory entries in repo source.
+- expose a repo-source migration plan, seed fixture, writeback proposal generator, accept/reject command, receipt locator, and operator receipt projection for domain memory migration without storing real memory entries in repo source.
 
 Next:
 
-- implement the runtime writeback proposal generator from workspace/runtime closeout roots;
-- add a MAG-owned accept/reject command that writes accepted memories only to the domain-owned runtime memory store;
-- project accepted/rejected memory writeback receipt refs to the operator surface.
+- apply real runtime memory writebacks only in workspace/runtime artifact roots after MAG accept/reject decisions;
+- extend operator UI consumption of accepted/rejected receipt refs without copying memory body into OPL.
 
 Defer:
 

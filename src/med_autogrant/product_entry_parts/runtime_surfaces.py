@@ -571,6 +571,30 @@ def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
             "--format",
             "json",
         ),
+        "domain_memory_writeback_proposal": public_cli_command(
+            "product-domain-memory-proposal",
+            "--input",
+            str(resolved_input_path),
+            "--stage-id",
+            "<stage-id>",
+            "--source-ref",
+            "<workspace-or-runtime-ref>",
+            "--lesson-summary",
+            "<strategy-lesson-summary>",
+            "--format",
+            "json",
+        ),
+        "domain_memory_writeback_decision": public_cli_command(
+            "product-domain-memory-decision",
+            "--proposal",
+            "<proposal-json>",
+            "--decision",
+            "<accepted|rejected>",
+            "--decision-reason",
+            "<decision-reason>",
+            "--format",
+            "json",
+        ),
     }
 
 def _validate_runtime_continuity_alignment(

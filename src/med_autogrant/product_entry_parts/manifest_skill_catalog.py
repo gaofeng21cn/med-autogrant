@@ -84,6 +84,8 @@ def _build_med_autogrant_skill_descriptor(
                 "grant_cockpit",
                 "grant_direct_entry",
                 "grant_user_loop",
+                "domain_memory_writeback_proposal",
+                "domain_memory_writeback_decision",
             ],
             "shell_commands": shell_commands,
             "runtime_continuity": dict(runtime_continuity),
