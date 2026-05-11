@@ -61,7 +61,7 @@ MAG 通过顶层 `domain_memory_descriptor` 暴露 OPL 可解析的 `family_doma
 
 实际 memory content、accepted/rejected writeback、fundability strategy、authoring quality verdict 和 submission-ready export verdict 继续由 MAG 持有。OPL 可以索引 locator/ref、展示 consumed-memory provenance、路由 writeback receipt；它不能保存 MAG memory content，不能接受或拒绝 MAG memory writeback，也不能用 memory 产生 fundability、authoring quality 或 export verdict。
 
-2026-05-11 状态：MAG 本仓的 migration/proposal/receipt surface、controlled consumed-memory proof、writeback receipt proof、OPL-hosted controlled grant stage attempt proof 和标准 `family_domain_memory_ref.v1` adapter 已落地。`domain_memory_descriptor` 是给 OPL family memory index 的薄引用面；`domain_memory_descriptor_locator` 仍是 MAG 侧 memory locator、migration plan、proposal、accept/reject、receipt 与 operator projection 的详细合同面。真实 proof instance 仍由 workspace/runtime artifact root 产生，不进入 repo source。
+2026-05-11 状态：MAG 本仓的 migration/proposal/receipt surface、controlled consumed-memory proof、writeback receipt proof、OPL-hosted controlled grant stage attempt proof descriptor 和标准 `family_domain_memory_ref.v1` adapter 已落地。`domain_memory_descriptor` 是给 OPL family memory index 的薄引用面；`domain_memory_descriptor_locator` 仍是 MAG 侧 memory locator、migration plan、proposal、accept/reject、receipt 与 operator projection 的详细合同面。当前是 repo-source proof contract / descriptor landed，不是 production provider-hosted grant soak completed；真实 proof instance、accepted/rejected receipt instance 和 memory body 仍由 workspace/runtime artifact root 产生，不进入 repo source。
 
 ## Lifecycle Adapter
 

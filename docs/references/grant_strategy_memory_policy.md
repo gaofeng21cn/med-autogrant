@@ -90,6 +90,7 @@ Now:
 
 Next:
 
+- keep OPL family index at `resolved_memory_descriptor_count=3` / `missing_memory_descriptor_count=0` while preserving MAG-owned memory bodies and decisions;
 - apply real runtime memory writebacks only in workspace/runtime artifact roots after MAG accept/reject decisions;
 - extend operator UI consumption of accepted/rejected receipt refs without copying memory body into OPL.
 
