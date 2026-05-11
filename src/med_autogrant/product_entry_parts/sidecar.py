@@ -25,6 +25,8 @@ _ALLOWED_ACTIONS = {
     "autonomy-controller/dry-run",
     "autonomy-controller/guarded-run",
     "notification/receipt",
+    "domain-memory/propose",
+    "domain-memory/decide",
 }
 
 
@@ -182,6 +184,10 @@ def dispatch_sidecar_task(
         return _dispatch_user_loop_wakeup(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
     if action in {"autonomy-controller/dry-run", "autonomy-controller/guarded-run"}:
         return _dispatch_autonomy_controller(task=task, input_path=input_path, task_path=resolved_task_path)
+    if action == "domain-memory/propose":
+        return _dispatch_domain_memory_proposal(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+    if action == "domain-memory/decide":
+        return _dispatch_domain_memory_decision(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
     return _dispatch_notification_receipt(task=task, input_path=input_path, task_path=resolved_task_path)
 
 
@@ -268,6 +274,63 @@ def _dispatch_autonomy_controller(
     )
 
 
+def _dispatch_domain_memory_proposal(
+    product_entry: Any,
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    proposal = product_entry.build_domain_memory_writeback_proposal(
+        input_path=input_path,
+        stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="sidecar_task"),
+        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="sidecar_task"),
+        lesson_summary=_require_nonempty_string_from_mapping(task, "lesson_summary", context="sidecar_task"),
+        proposal_id=_optional_nonempty_string(task.get("proposal_id")),
+    )
+    return _dispatch_payload(
+        action="domain-memory/propose",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "sidecar_domain_memory_writeback_proposal_result",
+            "proposal": proposal["domain_memory_writeback_proposal"],
+            "write_policy": "runtime_store_only_no_repo_write",
+        },
+        executed_command=None,
+    )
+
+
+def _dispatch_domain_memory_decision(
+    product_entry: Any,
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    decision = product_entry.build_domain_memory_writeback_decision(
+        proposal_path=_require_nonempty_string_from_mapping(task, "proposal_path", context="sidecar_task"),
+        decision=_require_nonempty_string_from_mapping(task, "decision", context="sidecar_task"),
+        decision_reason=_require_nonempty_string_from_mapping(task, "decision_reason", context="sidecar_task"),
+        memory_id=_optional_nonempty_string(task.get("memory_id")),
+    )
+    return _dispatch_payload(
+        action="domain-memory/decide",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "sidecar_domain_memory_writeback_decision_result",
+            "decision": decision["domain_memory_writeback_decision"],
+            "write_policy": "runtime_store_only_no_repo_write",
+        },
+        executed_command=None,
+    )
+
+
 def _dispatch_notification_receipt(
     *,
     task: Mapping[str, Any],
@@ -321,7 +384,14 @@ def _dispatch_payload(
             "target_domain_id": TARGET_DOMAIN_ID,
             "input_path": str(Path(input_path).expanduser().resolve()),
             "task_path": str(task_path),
-            "executed_by_sidecar": action in {"status/read", "user-loop/wakeup", "notification/receipt"},
+            "executed_by_sidecar": action
+            in {
+                "status/read",
+                "user-loop/wakeup",
+                "notification/receipt",
+                "domain-memory/propose",
+                "domain-memory/decide",
+            },
             "executed_command": executed_command,
             "result": dict(result),
             "receipt_refs": _receipt_refs_for_task(

@@ -154,6 +154,25 @@ def handle_product_sidecar_dispatch(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().dispatch_sidecar_task(task_path=args.task)
 
 
+def handle_product_domain_memory_proposal(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_domain_memory_writeback_proposal(
+        input_path=args.input,
+        stage_id=args.stage_id,
+        source_ref=args.source_ref,
+        lesson_summary=args.lesson_summary,
+        proposal_id=args.proposal_id,
+    )
+
+
+def handle_product_domain_memory_decision(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_domain_memory_writeback_decision(
+        proposal_path=args.proposal,
+        decision=args.decision,
+        decision_reason=args.decision_reason,
+        memory_id=args.memory_id,
+    )
+
+
 def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 

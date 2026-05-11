@@ -277,3 +277,32 @@ def _add_product_sidecar_dispatch_command(
     command.add_argument("--task", required=True)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
+
+def _add_product_domain_memory_proposal_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--stage-id", required=True)
+    command.add_argument("--source-ref", required=True)
+    command.add_argument("--lesson-summary", required=True)
+    command.add_argument("--proposal-id")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+def _add_product_domain_memory_decision_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--proposal", required=True)
+    command.add_argument("--decision", required=True, choices=("accepted", "rejected"))
+    command.add_argument("--decision-reason", required=True)
+    command.add_argument("--memory-id")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)

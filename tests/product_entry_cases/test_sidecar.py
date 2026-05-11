@@ -72,6 +72,8 @@ class ProductSidecarTest(unittest.TestCase):
             [
                 "autonomy-controller/dry-run",
                 "autonomy-controller/guarded-run",
+                "domain-memory/decide",
+                "domain-memory/propose",
                 "notification/receipt",
                 "status/read",
                 "user-loop/wakeup",
@@ -149,6 +151,63 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(dispatch["result"]["mode"], "dry_run")
         self.assertIn("autonomy-controller", dispatch["result"]["command"])
         self.assertFalse(dispatch["result"]["hermes_proof_executor_default"])
+
+    def test_sidecar_dispatch_domain_memory_apply_flow_projects_refs_without_repo_artifacts(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        entry = MedAutoGrantProductEntry()
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            proposal_task = Path(tmp_dir) / "proposal-task.json"
+            proposal_task.write_text(
+                json.dumps(
+                    {
+                        "task_id": "memory-proposal-1",
+                        "action": "domain-memory/propose",
+                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                        "stage_id": "review_and_rebuttal",
+                        "source_ref": "runtime-closeout://grant-run/example",
+                        "lesson_summary": "Reviewer risk framing should be handled before rebuttal closure.",
+                        "proposal_id": "review-risk-framing",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            proposal_payload = entry.dispatch_sidecar_task(task_path=proposal_task)
+            proposal_path = Path(tmp_dir) / "proposal.json"
+            proposal_path.write_text(
+                json.dumps(proposal_payload["sidecar_dispatch"]["result"]["proposal"]),
+                encoding="utf-8",
+            )
+            decision_task = Path(tmp_dir) / "decision-task.json"
+            decision_task.write_text(
+                json.dumps(
+                    {
+                        "task_id": "memory-decision-1",
+                        "action": "domain-memory/decide",
+                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                        "proposal_path": str(proposal_path),
+                        "decision": "accepted",
+                        "decision_reason": "Reusable stage strategy without grant artifact content.",
+                        "memory_id": "review-risk-framing",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            decision_payload = entry.dispatch_sidecar_task(task_path=decision_task)
+
+        proposal = proposal_payload["sidecar_dispatch"]["result"]["proposal"]
+        self.assertEqual(proposal["surface_kind"], "mag_domain_memory_writeback_proposal")
+        self.assertEqual(proposal["stage_id"], "review_and_rebuttal")
+        self.assertEqual(proposal["write_policy"], "runtime_store_only_no_repo_write")
+        self.assertFalse(proposal["forbidden_content_scan"]["contains_canonical_grant_artifact_content"])
+        decision = decision_payload["sidecar_dispatch"]["result"]["decision"]
+        self.assertEqual(decision["surface_kind"], "mag_domain_memory_writeback_decision")
+        self.assertEqual(decision["decision"], "accepted")
+        self.assertEqual(decision["write_policy"], "runtime_store_only_no_repo_write")
+        receipt_projection = decision["operator_receipt_projection"]
+        self.assertTrue(receipt_projection["opl_consumes_receipt_ref_only"])
+        self.assertFalse(receipt_projection["contains_memory_body"])
+        self.assertFalse(receipt_projection["contains_quality_or_export_verdict"])
 
     def test_sidecar_dispatch_fails_closed_on_unowned_action(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

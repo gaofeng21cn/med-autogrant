@@ -74,7 +74,9 @@
         "critique_summary",
         "build_direct_entry",
         "build_opl_handoff",
-        "build_submission_ready_package"
+        "build_submission_ready_package",
+        "domain_memory_writeback_proposal",
+        "domain_memory_writeback_decision"
       ],
       "properties": {
         "grant_progress": {
@@ -102,6 +104,12 @@
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "build_submission_ready_package": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "domain_memory_writeback_proposal": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "domain_memory_writeback_decision": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         }
       }

@@ -222,7 +222,7 @@ def test_mag_adoption_contract_declares_domain_memory_locator_without_opl_conten
     assert migration_plan["manifest_surface_ref"] == (
         "/product_entry_manifest/domain_memory_descriptor_locator/migration_plan"
     )
-    assert migration_plan["migration_state"] == "repo_source_plan_and_seed_fixture_landed"
+    assert migration_plan["migration_state"] == "runtime_apply_contract_landed"
     assert migration_plan["seed_fixture_ref"] == "contracts/runtime-program/domain-memory-seed-fixture.json"
     assert migration_plan["migration_steps"] == [
         "discover_candidates",
@@ -230,9 +230,29 @@ def test_mag_adoption_contract_declares_domain_memory_locator_without_opl_conten
         "persist_acceptance",
     ]
     assert "domain_memory_seed_fixture" in migration_plan["landed_surfaces"]
-    assert "writeback proposal generator" in migration_plan["pending_runtime_work"]
+    assert "writeback_proposal_generator" in migration_plan["landed_surfaces"]
+    assert migration_plan["runtime_apply_surfaces"] == [
+        "writeback proposal generator",
+        "MAG memory acceptance command",
+        "operator projection of accepted/rejected writeback receipts",
+    ]
+    assert migration_plan["pending_runtime_work"] == []
     assert migration_plan["target_store"]["owner"] == "med-autogrant"
     assert migration_plan["target_store"]["repo_tracked"] is False
+
+    proposal_generator = memory["writeback_proposal_generator"]
+    assert proposal_generator["surface_kind"] == "domain_memory_writeback_proposal_generator"
+    assert proposal_generator["output_surface_kind"] == "mag_domain_memory_writeback_proposal"
+    assert proposal_generator["write_policy"] == "runtime_store_only_no_repo_write"
+
+    accept_reject = memory["accept_reject_command"]
+    assert accept_reject["surface_kind"] == "domain_memory_accept_reject_command"
+    assert accept_reject["decision_owner"] == "med-autogrant"
+    assert accept_reject["requires_mag_decision_before_store_mutation"] is True
+
+    operator_projection = memory["operator_receipt_projection"]
+    assert operator_projection["surface_kind"] == "mag_domain_memory_operator_receipt_projection"
+    assert operator_projection["receipt_content_policy"] == "receipt_refs_and_decision_metadata_only_no_memory_body"
 
     receipt_locator = memory["receipt_locator"]
     assert receipt_locator["surface_kind"] == "domain_memory_receipt_locator"

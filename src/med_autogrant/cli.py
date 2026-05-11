@@ -61,6 +61,8 @@ from med_autogrant.cli_parts.handlers import (
     handle_next_step,
     handle_probe_upstream_hermes,
     handle_product_entry_manifest,
+    handle_product_domain_memory_decision,
+    handle_product_domain_memory_proposal,
     handle_product_sidecar_dispatch,
     handle_product_sidecar_export,
     handle_product_status,
@@ -87,6 +89,8 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_manifest_command,
     _add_output_workspace_command,
     _add_phase_command,
+    _add_product_domain_memory_decision_command,
+    _add_product_domain_memory_proposal_command,
     _add_product_entry_command,
     _add_product_sidecar_dispatch_command,
     _add_product_sidecar_export_command,
@@ -389,6 +393,18 @@ def build_parser() -> argparse.ArgumentParser:
         "product-sidecar-dispatch",
         handle_product_sidecar_dispatch,
         "执行 MAG-owned guarded sidecar task dispatch。",
+    )
+    _add_product_domain_memory_proposal_command(
+        subparsers,
+        "product-domain-memory-proposal",
+        handle_product_domain_memory_proposal,
+        "生成 MAG-owned domain memory writeback proposal projection。",
+    )
+    _add_product_domain_memory_decision_command(
+        subparsers,
+        "product-domain-memory-decision",
+        handle_product_domain_memory_decision,
+        "生成 MAG-owned domain memory accept/reject decision projection。",
     )
     return parser
 

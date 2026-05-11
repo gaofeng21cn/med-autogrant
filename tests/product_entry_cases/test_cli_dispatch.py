@@ -263,3 +263,96 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
         product_entry.build_product_entry_preflight.assert_called_once_with(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
+
+    def test_domain_memory_writeback_proposal_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "domain-memory-writeback-proposal",
+            "domain_memory_writeback_proposal": {
+                "surface_kind": "mag_domain_memory_writeback_proposal",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.build_domain_memory_writeback_proposal.return_value = expected_payload
+
+            stdout_buffer = StringIO()
+            stderr_buffer = StringIO()
+            with redirect_stdout(stdout_buffer), redirect_stderr(stderr_buffer):
+                exit_code = main(
+                    [
+                        "product",
+                        "domain-memory-proposal",
+                        "--input",
+                        str(CRITIQUE_EXAMPLE_PATH),
+                        "--stage-id",
+                        "review_and_rebuttal",
+                        "--source-ref",
+                        "runtime-closeout://grant-run/example",
+                        "--lesson-summary",
+                        "Keep reusable reviewer risk framing as strategy memory.",
+                        "--proposal-id",
+                        "review-risk-framing",
+                        "--format",
+                        "json",
+                    ]
+                )
+            stdout = stdout_buffer.getvalue()
+            stderr = stderr_buffer.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_domain_memory_writeback_proposal.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            stage_id="review_and_rebuttal",
+            source_ref="runtime-closeout://grant-run/example",
+            lesson_summary="Keep reusable reviewer risk framing as strategy memory.",
+            proposal_id="review-risk-framing",
+        )
+
+    def test_domain_memory_writeback_decision_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "domain-memory-writeback-decision",
+            "domain_memory_writeback_decision": {
+                "surface_kind": "mag_domain_memory_writeback_decision",
+            },
+        }
+
+        with patch("med_autogrant.cli.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.build_domain_memory_writeback_decision.return_value = expected_payload
+
+            stdout_buffer = StringIO()
+            stderr_buffer = StringIO()
+            with redirect_stdout(stdout_buffer), redirect_stderr(stderr_buffer):
+                exit_code = main(
+                    [
+                        "product",
+                        "domain-memory-decision",
+                        "--proposal",
+                        "/tmp/proposal.json",
+                        "--decision",
+                        "accepted",
+                        "--decision-reason",
+                        "Reusable strategy memory.",
+                        "--memory-id",
+                        "review-risk-framing",
+                        "--format",
+                        "json",
+                    ]
+                )
+            stdout = stdout_buffer.getvalue()
+            stderr = stderr_buffer.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_domain_memory_writeback_decision.assert_called_once_with(
+            proposal_path="/tmp/proposal.json",
+            decision="accepted",
+            decision_reason="Reusable strategy memory.",
+            memory_id="review-risk-framing",
+        )

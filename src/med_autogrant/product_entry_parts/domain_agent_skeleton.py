@@ -160,6 +160,7 @@ def build_domain_memory_descriptor_locator(
     workspace_id: str,
     draft_id: str | None,
     lifecycle_stage: str,
+    operator_receipt_projection: Mapping[str, Any],
 ) -> dict[str, Any]:
     return {
         "surface_kind": DOMAIN_MEMORY_DESCRIPTOR_LOCATOR_KIND,
@@ -211,7 +212,7 @@ def build_domain_memory_descriptor_locator(
         "migration_plan": {
             "surface_kind": DOMAIN_MEMORY_MIGRATION_PLAN_KIND,
             "plan_id": "mag.domain_memory_migration_plan.v1",
-            "migration_state": "repo_source_plan_and_seed_fixture_landed",
+            "migration_state": "runtime_apply_contract_landed",
             "maps_to_opl_contract": "opl_family_domain_memory_migration_plan.v1",
             "source_roots": [
                 "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/",
@@ -264,6 +265,11 @@ def build_domain_memory_descriptor_locator(
                     ],
                 },
             ],
+            "runtime_apply_surfaces": [
+                "writeback_proposal_generator",
+                "accept_reject_command",
+                "operator_receipt_projection",
+            ],
             "acceptance_gates": [
                 "no_workspace_private_evidence",
                 "no_canonical_grant_artifact_content",
@@ -275,13 +281,67 @@ def build_domain_memory_descriptor_locator(
                 "/product_entry_manifest/domain_memory_descriptor_locator/migration_plan",
                 "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
                 "/product_entry_manifest/domain_memory_descriptor_locator/memory_locator",
+                "/product_entry_manifest/domain_memory_descriptor_locator/writeback_proposal_generator",
+                "/product_entry_manifest/domain_memory_descriptor_locator/accept_reject_command",
+                "/product_entry_manifest/domain_memory_descriptor_locator/operator_receipt_projection",
                 DOMAIN_MEMORY_SEED_FIXTURE_REF,
             ],
-            "pending_runtime_work": [
-                "writeback proposal generator",
-                "MAG memory acceptance command",
-                "operator projection of accepted/rejected writeback receipts",
+            "pending_runtime_work": [],
+        },
+        "writeback_proposal_generator": {
+            "surface_kind": "domain_memory_writeback_proposal_generator",
+            "generator_id": "mag.domain_memory.writeback_proposal_generator.v1",
+            "command": (
+                "uv run python -m med_autogrant product domain-memory-proposal "
+                "--input <workspace-path> --stage-id <stage-id> "
+                "--source-ref <workspace-or-runtime-ref> --lesson-summary <summary> --format json"
+            ),
+            "output_surface_kind": "mag_domain_memory_writeback_proposal",
+            "write_policy": "runtime_store_only_no_repo_write",
+            "required_fields": [
+                "stage_id",
+                "source_ref",
+                "lesson_summary",
+                "forbidden_content_scan",
             ],
+            "forbidden_outputs": [
+                "workspace_private_evidence",
+                "canonical_grant_artifact_content",
+                "fundability_verdict",
+                "authoring_quality_verdict",
+                "submission_ready_export_verdict",
+            ],
+        },
+        "accept_reject_command": {
+            "surface_kind": "domain_memory_accept_reject_command",
+            "command_id": "mag.domain_memory.accept_reject.v1",
+            "command": (
+                "uv run python -m med_autogrant product domain-memory-decision "
+                "--proposal <proposal-json> --decision <accepted|rejected> "
+                "--decision-reason <reason> --format json"
+            ),
+            "decision_owner": TARGET_DOMAIN_ID,
+            "output_surface_kind": "mag_domain_memory_writeback_decision",
+            "write_policy": "runtime_store_only_no_repo_write",
+            "requires_mag_decision_before_store_mutation": True,
+        },
+        "operator_receipt_projection": dict(operator_receipt_projection),
+        "controlled_apply_fixture": {
+            "surface_kind": "domain_memory_controlled_apply_fixture",
+            "fixture_id": "mag.domain_memory.controlled_apply_fixture.v1",
+            "proof_scope": "critique_revision_package_stage_attempt_refs_only",
+            "direct_skill_and_opl_hosted_use_same_refs": True,
+            "source_refs": [
+                "/product_entry_manifest/domain_memory_descriptor_locator",
+                "/product_entry_manifest/controlled_stage_attempt_projection/proof",
+                "/product_entry_manifest/artifact_locator_contract",
+                "/product_entry_manifest/grant_authoring_readiness",
+            ],
+            "repo_tracked_real_artifacts": False,
+            "opl_verdict_authority": {
+                "fundability": False,
+                "submission_ready_export": False,
+            },
         },
         "writeback_receipt_refs": {
             "receipt_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
@@ -454,6 +514,39 @@ def build_controlled_stage_attempt_projection(
             context="controlled_stage_attempt.task_lifecycle",
         ),
         "last_observed_projection": dict(progress_projection),
+        "proof": {
+            "surface_kind": "controlled_stage_attempt_fixture_proof",
+            "proof_id": "mag.controlled_stage_attempt.critique_revision_package.fixture.v1",
+            "proof_state": "fixture_contract_landed",
+            "stage_chain": [
+                "review_and_rebuttal",
+                "proposal_authoring",
+                "package_and_submit_ready",
+            ],
+            "direct_skill_refs": [
+                "/product_entry_manifest/skill_catalog/skills/0/domain_projection/domain_agent_skeleton_mapping",
+                "/product_entry_manifest/domain_memory_descriptor_locator",
+                "/product_entry_manifest/artifact_locator_contract",
+            ],
+            "opl_hosted_refs": [
+                "/product_entry_manifest/domain_agent_skeleton_mapping",
+                "/product_entry_manifest/controlled_stage_attempt_projection",
+                "/product_entry_manifest/domain_memory_descriptor_locator",
+            ],
+            "shared_descriptor_refs": [
+                "/product_entry_manifest/domain_memory_descriptor_locator",
+                "/product_entry_manifest/domain_memory_descriptor_locator/controlled_apply_fixture",
+                "/product_entry_manifest/artifact_locator_contract",
+                "/product_entry_manifest/grant_authoring_readiness",
+            ],
+            "quality_ref_owner": TARGET_DOMAIN_ID,
+            "artifact_write_policy": "runtime_or_workspace_only_no_repo_artifact_instance",
+            "direct_skill_and_opl_hosted_use_same_descriptor_sidecar_quality_refs": True,
+            "opl_verdict_authority": {
+                "fundability": False,
+                "submission_ready_export": False,
+            },
+        },
         "receipt_refs": {
             "sidecar_dispatch_receipt_ref": (
                 "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"

@@ -463,7 +463,10 @@ class SchemaRegistryTest(unittest.TestCase):
         )
         domain_memory = manifest_schema["$defs"]["domainMemoryDescriptorLocator"]
         self.assertIn("migration_plan", domain_memory["required"])
+        self.assertIn("writeback_proposal_generator", domain_memory["required"])
+        self.assertIn("accept_reject_command", domain_memory["required"])
         self.assertIn("receipt_locator", domain_memory["required"])
+        self.assertIn("operator_receipt_projection", domain_memory["required"])
         self.assertEqual(
             domain_memory["properties"]["migration_plan"]["properties"]["surface_kind"]["const"],
             "domain_memory_migration_plan",
@@ -471,6 +474,22 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(
             domain_memory["properties"]["migration_plan"]["properties"]["plan_id"]["const"],
             "mag.domain_memory_migration_plan.v1",
+        )
+        self.assertEqual(
+            domain_memory["properties"]["migration_plan"]["properties"]["migration_state"]["const"],
+            "runtime_apply_contract_landed",
+        )
+        self.assertEqual(
+            domain_memory["properties"]["writeback_proposal_generator"]["properties"]["surface_kind"]["const"],
+            "domain_memory_writeback_proposal_generator",
+        )
+        self.assertEqual(
+            domain_memory["properties"]["accept_reject_command"]["properties"]["surface_kind"]["const"],
+            "domain_memory_accept_reject_command",
+        )
+        self.assertEqual(
+            domain_memory["properties"]["operator_receipt_projection"]["properties"]["surface_kind"]["const"],
+            "mag_domain_memory_operator_receipt_projection",
         )
         self.assertEqual(
             domain_memory["properties"]["receipt_locator"]["properties"]["surface_kind"]["const"],
