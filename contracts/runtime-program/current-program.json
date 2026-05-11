@@ -53,7 +53,7 @@
         "adapter_id": "mag.hermes_family.product_sidecar.v1",
         "export_command": "product sidecar export",
         "dispatch_command": "product sidecar dispatch",
-        "role": "MAG-owned product sidecar projection and guarded dispatch adapter for OPL typed family queue / Hermes online substrate consumption",
+        "role": "MAG-owned product sidecar projection and guarded dispatch adapter for OPL typed family queue / configured family runtime provider consumption",
         "allowed_dispatch_actions": [
           "status/read",
           "user-loop/wakeup",
@@ -179,10 +179,10 @@
     "family_top_entry": "OPL family-level orchestration surface",
     "family_runtime_manager": "OPL Runtime Manager",
     "domain_direct_entry": "Med Auto Grant Product Entry",
-    "runtime_substrate_owner": "OPL-managed Hermes as online substrate for family runtime wakeup/control-plane consumption; route-selected authoring executor remains Codex/domain-selected by default",
+    "runtime_substrate_owner": "configured OPL family runtime provider for family runtime wakeup/control-plane consumption; Temporal is the production target and Hermes remains legacy/optional; route-selected authoring executor remains Codex/domain-selected by default",
     "authoring_truth_owner": "Med Auto Grant",
     "direct_user_route": "User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> route-selected executor or optional hosted runtime carrier -> Med Auto Grant domain logic",
-    "opl_gateway_route": "User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> MAG product-entry/runtime-control projection -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry; explicit hosted carriers are opt-in",
+    "opl_gateway_route": "User or agent caller -> OPL Product Entry -> OPL Runtime Manager -> configured family runtime provider -> MAG product-entry/runtime-control projection -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry; explicit hosted carriers are opt-in",
     "opl_runtime_manager": {
       "role": "thin OPL-side runtime manager for profile wiring, task registration hydration, runtime status projection, doctor/repair/resume, native helper catalog, and high-frequency state indexes",
       "consumes_mag_surfaces": [
