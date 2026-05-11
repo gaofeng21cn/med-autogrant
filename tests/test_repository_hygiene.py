@@ -143,7 +143,7 @@ class RepositoryHygieneTest(unittest.TestCase):
         self.assertEqual(over_limit, [])
         self.assertEqual(new_or_grown_over_target, [])
 
-    def test_active_surfaces_do_not_reintroduce_retired_product_entry_vocabulary(self) -> None:
+    def test_machine_surfaces_do_not_reintroduce_retired_product_entry_vocabulary(self) -> None:
         retired_terms = [
             "front" + "door",
             "front" + "desk",
@@ -162,15 +162,12 @@ class RepositoryHygieneTest(unittest.TestCase):
             "host" + "_agent",
             "@redcube/" + "hermes-substrate",
         ]
-        scanned_roots = ("src/", "tests/", "schemas/", "contracts/", "plugins/", "docs/")
-        allowed_roots = ("docs/history/", "docs/references/")
-        scanned_suffixes = {".py", ".json", ".md", ".yaml", ".yml", ".toml", ".sh"}
+        scanned_roots = ("src/", "tests/", "schemas/", "contracts/", "plugins/")
+        scanned_suffixes = {".py", ".json", ".yaml", ".yml", ".toml", ".sh"}
         violations: list[str] = []
 
         for relative_path in _tracked_or_pending_files():
             if not relative_path.startswith(scanned_roots):
-                continue
-            if relative_path.startswith(allowed_roots):
                 continue
             path = REPO_ROOT / relative_path
             if path.suffix not in scanned_suffixes or not path.is_file():

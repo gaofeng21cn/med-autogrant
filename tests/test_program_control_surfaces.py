@@ -169,7 +169,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "human_doc:2026_04_23_authoring_completion_semantics_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
-        self.assertIn("human_doc:2026_04_12_upstream_hermes_agent_fast_cutover_current_truth", contract["repo_tracked_truth_surfaces"])
+        self.assertIn(
+            "human_doc:2026_04_22_quality_autonomy_family_grammar_current_truth",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertIn(
+            "human_doc:2026_04_27_ai_first_quality_boundary_current_truth",
+            contract["repo_tracked_truth_surfaces"],
+        )
         self.assertIn(
             "human_doc:2026_04_12_opl_aligned_ideal_target_and_phase_map_current_truth",
             contract["repo_tracked_truth_surfaces"],
@@ -214,7 +221,18 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "human_doc:2026_04_13_" + "hermes_native" + "_critique_proof_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
-        self.assertIn("human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth", contract["repo_tracked_truth_surfaces"])
+        self.assertNotIn(
+            "human_doc:2026_04_12_upstream_hermes_agent_fast_cutover_current_truth",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertNotIn(
+            "human_doc:2026_04_12_pending_authoring_route_handoff_matrix_current_truth",
+            contract["repo_tracked_truth_surfaces"],
+        )
+        self.assertNotIn(
+            "human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth",
+            contract["repo_tracked_truth_surfaces"],
+        )
         self.assertEqual(
             contract["ideal_target"]["family_top_entry"],
             "OPL Codex-first stage-led agent runtime framework",
