@@ -325,6 +325,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("product_entry_quickstart", manifest_required)
         self.assertIn("family_action_catalog", manifest_required)
         self.assertIn("family_stage_control_plane", manifest_required)
+        self.assertIn("domain_memory_descriptor", manifest_required)
         self.assertIn("action_catalog_projections", manifest_required)
 
         status_schema = json.loads((SCHEMA_ROOT / "product-status.schema.json").read_text(encoding="utf-8"))
@@ -494,6 +495,20 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(
             domain_memory["properties"]["receipt_locator"]["properties"]["surface_kind"]["const"],
             "domain_memory_receipt_locator",
+        )
+        family_memory_ref = manifest_schema["$defs"]["familyDomainMemoryRef"]
+        self.assertEqual(family_memory_ref["properties"]["surface_kind"]["const"], "family_domain_memory_ref")
+        self.assertEqual(family_memory_ref["properties"]["version"]["const"], "family-domain-memory-ref.v1")
+        self.assertIn("forbidden_opl_authority", family_memory_ref["properties"]["authority_boundary"]["required"])
+        self.assertEqual(
+            family_memory_ref["properties"]["authority_boundary"]["properties"]["forbidden_opl_authority"][
+                "contains"
+            ],
+            {"const": "memory_store_owner"},
+        )
+        self.assertEqual(
+            manifest_schema["$defs"]["productEntryManifest"]["properties"]["domain_memory_descriptor"]["$ref"],
+            "#/$defs/familyDomainMemoryRef",
         )
         self.assertEqual(
             manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"]["surface_kind"]["const"],

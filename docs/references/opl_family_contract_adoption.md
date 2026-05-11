@@ -57,11 +57,11 @@ MAG 现在通过 `product-entry-manifest` 导出 `domain_agent_skeleton_mapping`
 
 ## Domain Memory Descriptor / Locator
 
-MAG 通过 `domain_memory_descriptor_locator` 暴露 grant strategy memory 的机器可读定位面。它引用 `docs/references/grant_strategy_memory_policy.md`，并把六个 stage 的 memory context 绑定到 `family_stage_control_plane`，但 repo manifest 只携带 descriptor、policy ref、stage descriptor refs、locator template 与 writeback receipt refs。
+MAG 通过顶层 `domain_memory_descriptor` 暴露 OPL 可解析的 `family_domain_memory_ref.v1`，并通过 `domain_memory_descriptor_locator` 保留 grant strategy memory 的 MAG-owned 详细定位面。它引用 `docs/references/grant_strategy_memory_policy.md`，并把六个 stage 的 memory context 绑定到 `family_stage_control_plane`，但 repo manifest 只携带 descriptor、policy ref、stage descriptor refs、locator template 与 writeback receipt refs。
 
 实际 memory content、accepted/rejected writeback、fundability strategy、authoring quality verdict 和 submission-ready export verdict 继续由 MAG 持有。OPL 可以索引 locator/ref、展示 consumed-memory provenance、路由 writeback receipt；它不能保存 MAG memory content，不能接受或拒绝 MAG memory writeback，也不能用 memory 产生 fundability、authoring quality 或 export verdict。
 
-2026-05-11 状态：MAG 本仓的 migration/proposal/receipt surface 已落地，但 OPL 当前标准 family memory index 仍只解析 `family_domain_memory_ref.v1`。在 MAG 增加标准 descriptor adapter 前，`opl domain-memory list` 会把 MAG 计为 missing descriptor。这个状态不影响 MAG direct skill 或 product-entry memory policy，但会阻止 OPL 把 MAG 显示为 resolved family memory。
+2026-05-11 状态：MAG 本仓的 migration/proposal/receipt surface 和标准 `family_domain_memory_ref.v1` adapter 已落地。`domain_memory_descriptor` 是给 OPL family memory index 的薄引用面；`domain_memory_descriptor_locator` 仍是 MAG 侧 memory locator、migration plan、proposal、accept/reject、receipt 与 operator projection 的详细合同面。
 
 ## Lifecycle Adapter
 

@@ -272,6 +272,61 @@ def test_mag_adoption_contract_declares_domain_memory_locator_without_opl_conten
     assert authority["can_mutate_domain_memory_store"] is False
 
 
+def test_mag_adoption_contract_declares_standard_family_domain_memory_ref_adapter() -> None:
+    contract = _contract()
+    descriptor = contract["domain_memory_descriptor"]
+    locator = contract["domain_memory_descriptor_locator"]
+
+    assert descriptor["surface_kind"] == "family_domain_memory_ref"
+    assert descriptor["version"] == "family-domain-memory-ref.v1"
+    assert descriptor["memory_ref_id"] == "mag_grant_strategy_memory"
+    assert descriptor["target_domain_id"] == "med-autogrant"
+    assert descriptor["owner"] == "Med Auto Grant"
+    assert descriptor["memory_family"] == "grant_strategy_memory"
+    assert descriptor["manifest_surface_ref"] == "/product_entry_manifest/domain_memory_descriptor"
+    assert descriptor["memory_pack_ref"]["ref"] == "docs/references/grant_strategy_memory_policy.md"
+    assert descriptor["memory_pack_ref"]["runtime_locator_ref"] == (
+        "/product_entry_manifest/domain_memory_descriptor_locator/memory_locator"
+    )
+    assert descriptor["stage_applicability"] == locator["stage_memory_refs"]
+    assert descriptor["retrieval_contract_ref"]["ref"] == (
+        "/product_entry_manifest/domain_memory_descriptor_locator/memory_locator"
+    )
+    assert descriptor["writeback_contract_ref"]["ref"] == (
+        "/product_entry_manifest/domain_memory_descriptor_locator/writeback_proposal_generator"
+    )
+    assert descriptor["writeback_contract_ref"]["accept_reject_ref"] == (
+        "/product_entry_manifest/domain_memory_descriptor_locator/accept_reject_command"
+    )
+    assert descriptor["receipt_contract_ref"]["ref"] == (
+        "/product_entry_manifest/domain_memory_descriptor_locator/operator_receipt_projection"
+    )
+    assert descriptor["recall_projection_ref"]["ref"] == (
+        "/product_entry_manifest/domain_memory_descriptor_locator/stage_descriptor_refs"
+    )
+    assert descriptor["migration_plan_ref"]["ref"] == locator["migration_plan"]["manifest_surface_ref"]
+    assert descriptor["seed_corpus_ref"]["ref"] == locator["migration_plan"]["seed_fixture_ref"]
+    assert descriptor["writeback_receipt_locator_ref"]["ref"] == locator["receipt_locator"]["manifest_surface_ref"]
+    assert descriptor["freshness"]["refresh_policy"] == "rebuild_product_entry_manifest_before_opl_discovery"
+    assert descriptor["migration_readiness"]["status"] == "migration_plan_ready_descriptor_only"
+    assert descriptor["migration_readiness"]["memory_body_migration"] == "domain_owned_runtime_apply_required"
+    assert descriptor["migration_readiness"]["opl_apply_allowed"] is False
+
+    authority = descriptor["authority_boundary"]
+    assert authority["opl_role"] == "locator_projection_owner"
+    assert authority["domain_memory_owner"] == "med-autogrant"
+    assert "memory_store_owner" in authority["forbidden_opl_authority"]
+    assert "fundability_verdict_owner" in authority["forbidden_opl_authority"]
+    assert "submission_ready_export_verdict_owner" in authority["forbidden_opl_authority"]
+    assert "memory_accept_reject_owner" in authority["forbidden_opl_authority"]
+    assert authority["can_write_domain_truth"] is False
+    assert authority["can_authorize_quality_verdict"] is False
+    assert authority["can_authorize_fundability_verdict"] is False
+    assert authority["can_authorize_submission_readiness"] is False
+    assert authority["can_write_artifacts"] is False
+    assert authority["can_accept_or_reject_memory_writeback"] is False
+
+
 def test_domain_memory_seed_fixture_is_template_only_and_points_to_landed_surfaces() -> None:
     fixture = _domain_memory_seed_fixture()
     contract = _contract()

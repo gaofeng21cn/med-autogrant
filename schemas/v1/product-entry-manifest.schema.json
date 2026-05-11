@@ -1990,6 +1990,175 @@
         }
       }
     },
+    "familyMemoryRefValue": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "ref"
+      ],
+      "properties": {
+        "ref_kind": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "role": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "label": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "familyDomainMemoryRef": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "version",
+        "memory_ref_id",
+        "target_domain_id",
+        "owner",
+        "memory_family",
+        "memory_pack_ref",
+        "stage_applicability",
+        "retrieval_contract_ref",
+        "writeback_contract_ref",
+        "receipt_contract_ref",
+        "recall_projection_ref",
+        "migration_plan_ref",
+        "seed_corpus_ref",
+        "writeback_receipt_locator_ref",
+        "freshness",
+        "migration_readiness",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "family_domain_memory_ref"
+        },
+        "version": {
+          "const": "family-domain-memory-ref.v1"
+        },
+        "memory_ref_id": {
+          "const": "mag_grant_strategy_memory"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "owner": {
+          "const": "Med Auto Grant"
+        },
+        "memory_family": {
+          "const": "grant_strategy_memory"
+        },
+        "memory_pack_ref": {
+          "$ref": "#/$defs/familyMemoryRefValue"
+        },
+        "stage_applicability": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "retrieval_contract_ref": {
+          "$ref": "#/$defs/familyMemoryRefValue"
+        },
+        "writeback_contract_ref": {
+          "$ref": "#/$defs/familyMemoryRefValue"
+        },
+        "receipt_contract_ref": {
+          "$ref": "#/$defs/familyMemoryRefValue"
+        },
+        "recall_projection_ref": {
+          "$ref": "#/$defs/familyMemoryRefValue"
+        },
+        "migration_plan_ref": {
+          "$ref": "#/$defs/familyMemoryRefValue"
+        },
+        "seed_corpus_ref": {
+          "$ref": "#/$defs/familyMemoryRefValue"
+        },
+        "writeback_receipt_locator_ref": {
+          "$ref": "#/$defs/familyMemoryRefValue"
+        },
+        "freshness": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "status",
+            "refresh_policy"
+          ],
+          "properties": {
+            "refresh_policy": {
+              "const": "rebuild_product_entry_manifest_before_opl_discovery"
+            }
+          }
+        },
+        "migration_readiness": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "status",
+            "memory_body_migration",
+            "opl_apply_allowed"
+          ],
+          "properties": {
+            "status": {
+              "const": "migration_plan_ready_descriptor_only"
+            },
+            "memory_body_migration": {
+              "const": "domain_owned_runtime_apply_required"
+            },
+            "opl_apply_allowed": {
+              "const": false
+            }
+          }
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "opl_role",
+            "domain_memory_owner",
+            "forbidden_opl_authority",
+            "can_write_domain_truth",
+            "can_authorize_quality_verdict",
+            "can_write_artifacts"
+          ],
+          "properties": {
+            "opl_role": {
+              "const": "locator_projection_owner"
+            },
+            "domain_memory_owner": {
+              "const": "med-autogrant"
+            },
+            "forbidden_opl_authority": {
+              "type": "array",
+              "contains": {
+                "const": "memory_store_owner"
+              },
+              "items": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "uniqueItems": true
+            },
+            "can_write_domain_truth": {
+              "const": false
+            },
+            "can_authorize_quality_verdict": {
+              "const": false
+            },
+            "can_write_artifacts": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
     "domainMemoryDescriptorLocator": {
       "type": "object",
       "additionalProperties": true,
@@ -3263,7 +3432,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor_locator", "domain_agent_skeleton_mapping", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor", "domain_memory_descriptor_locator", "domain_agent_skeleton_mapping", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -3382,6 +3551,9 @@
         },
         "controlled_stage_attempt_projection": {
           "$ref": "#/$defs/controlledStageAttemptProjection"
+        },
+        "domain_memory_descriptor": {
+          "$ref": "#/$defs/familyDomainMemoryRef"
         },
         "domain_memory_descriptor_locator": {
           "$ref": "#/$defs/domainMemoryDescriptorLocator"
