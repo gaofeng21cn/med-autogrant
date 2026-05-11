@@ -22,15 +22,15 @@ from med_autogrant.stage_router import determine_next_step
 from med_autogrant.workspace_projection_parts import _require_workspace_context
 from med_autogrant.workspace_types import WorkspaceStateError
 
-from med_autogrant.hermes_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.io import (
     _guard_workspace_output_identity,
     _write_json_output,
     _write_revised_workspace_output,
 )
-from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
-from med_autogrant.hermes_runtime_parts.runtime_ops import _apply_quality_gate_to_route
-from med_autogrant.hermes_runtime_parts.shared import AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE
-from med_autogrant.hermes_runtime_parts.contracts import validate_schema_payload as _validate_schema_payload
+from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
+from med_autogrant.domain_runtime_parts.runtime_ops import _apply_quality_gate_to_route
+from med_autogrant.domain_runtime_parts.shared import AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE
+from med_autogrant.domain_runtime_parts.contracts import validate_schema_payload as _validate_schema_payload
 
 
 AUTHORING_MAINLINE_STAGE_NAMES = (

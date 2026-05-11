@@ -44,9 +44,9 @@ from med_autogrant.project_profile_selector import (
 )
 from med_autogrant.stage_router import _build_forced_rollback_actions, determine_next_step
 from med_autogrant.facade_exports import re_export_public_names
-from med_autogrant.hermes_runtime_parts import shared as _runtime_shared
-from med_autogrant.hermes_runtime_parts.package_surface import HermesRuntimePackageSurfaceMixin
-from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
+from med_autogrant.domain_runtime_parts import shared as _runtime_shared
+from med_autogrant.domain_runtime_parts.package_surface import DomainRuntimePackageSurfaceMixin
+from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
     build_grant_evidence_grounding,
@@ -61,7 +61,7 @@ from med_autogrant.workspace_types import WorkspaceError, WorkspaceFileError, Wo
 from med_autogrant.workspace_validation import validate_workspace_document
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 
-from med_autogrant.hermes_runtime_parts.contracts import (
+from med_autogrant.domain_runtime_parts.contracts import (
     build_hosted_authoring_contract as _build_hosted_authoring_contract,
     build_operator_contract as _build_operator_contract,
     build_runtime_state_contract as _build_runtime_state_contract,
@@ -72,7 +72,7 @@ from med_autogrant.hermes_runtime_parts.contracts import (
     validate_contract_schema as _validate_contract_schema,
     validate_hosted_contract_bundle as _validate_hosted_contract_bundle,
 )
-from med_autogrant.hermes_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.io import (
     _read_active_draft_id,
     _guard_critique_output_identity,
     _guard_revision_output_identity,
@@ -81,14 +81,14 @@ from med_autogrant.hermes_runtime_parts.io import (
     _write_json_output,
     _write_revised_workspace_output,
 )
-from med_autogrant.hermes_runtime_parts.contracts import validate_schema_payload as _validate_schema_payload
-from med_autogrant.hermes_runtime_parts.io import _load_funding_landscape_cache_if_needed
-from med_autogrant.hermes_runtime_parts.runtime_ops import (
+from med_autogrant.domain_runtime_parts.contracts import validate_schema_payload as _validate_schema_payload
+from med_autogrant.domain_runtime_parts.io import _load_funding_landscape_cache_if_needed
+from med_autogrant.domain_runtime_parts.runtime_ops import (
     _apply_quality_gate_to_route,
     _build_autonomy_quality_evaluator_output,
     _looks_like_workspace,
 )
-from med_autogrant.hermes_runtime_parts.authoring_mainline import build_authoring_mainline_payload
+from med_autogrant.domain_runtime_parts.authoring_mainline import build_authoring_mainline_payload
 
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
@@ -96,7 +96,7 @@ _editable_shared_bootstrap.ensure_editable_dependency_paths()
 re_export_public_names(_runtime_shared, globals())
 
 
-class HermesRuntimeAuthoringSurfaceMixin(HermesRuntimePackageSurfaceMixin):
+class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
     def execute_critique_revision_loop(
         self,
         *,

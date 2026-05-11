@@ -5,7 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from med_autogrant.hermes_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.io import (
     _guard_artifact_bundle_output_identity,
     _write_artifact_bundle_output,
 )

@@ -9,11 +9,11 @@ from med_autogrant.grant_quality import (
     build_grant_quality_closure_dossier,
     build_grant_quality_scorecard,
 )
-from med_autogrant.hermes_runtime_parts.contracts import (
+from med_autogrant.domain_runtime_parts.contracts import (
     build_executor_routing_contract as _build_executor_routing_contract,
     validate_executor_routing_contract as _validate_executor_routing_contract,
 )
-from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
+from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.stage_router import _build_forced_rollback_actions
 
 from .shared import LocalRuntimeStateError

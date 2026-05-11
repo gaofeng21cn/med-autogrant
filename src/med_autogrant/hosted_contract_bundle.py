@@ -5,7 +5,7 @@ from typing import Any
 
 from med_autogrant import final_package_validation as _final_package_validation
 from med_autogrant.domain_entry_contract import build_domain_entry_contract
-from med_autogrant.hermes_runtime_parts.contracts import (
+from med_autogrant.domain_runtime_parts.contracts import (
     build_hosted_authoring_contract as _build_hosted_authoring_contract,
     build_operator_contract as _build_operator_contract,
     build_runtime_state_contract as _build_runtime_state_contract,
@@ -19,7 +19,7 @@ from med_autogrant.hermes_runtime_parts.contracts import (
     select_control_plane_current_program_path,
     validate_hosted_contract_bundle as _validate_hosted_contract_bundle,
 )
-from med_autogrant.hermes_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.io import (
     _guard_hosted_contract_output_identity,
     _read_final_package as _read_final_package_from_runtime_parts,
     _write_hosted_contract_bundle_output,

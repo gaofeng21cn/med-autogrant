@@ -4,6 +4,10 @@ from __future__ import annotations
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
+OLD_RUNTIME_TOKEN = "hermes" + "_runtime"
+OLD_RUNTIME_IMPORT = f"from med_autogrant import {OLD_RUNTIME_TOKEN}"
+
+
 class ProductEntryPartsStructureTest(unittest.TestCase):
     def test_product_entry_parts_do_not_star_import_each_other(self) -> None:
         product_entry_parts = sorted(
@@ -23,8 +27,8 @@ class ProductEntryPartsStructureTest(unittest.TestCase):
             (REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts").glob("*.py")
         )
         forbidden_fragments = (
-            "from med_autogrant.hermes_runtime import",
-            "from med_autogrant import hermes_runtime",
+            "from med_autogrant.domain_runtime import",
+            OLD_RUNTIME_IMPORT,
         )
         offenders = [
             path.relative_to(REPO_ROOT).as_posix()
@@ -40,5 +44,5 @@ class ProductEntryPartsStructureTest(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn("med_autogrant.product_entry_contract_api", bridge_text)
-        self.assertNotIn("med_autogrant.hermes_runtime_parts", bridge_text)
-        self.assertNotIn("med_autogrant.hermes_runtime import", bridge_text)
+        self.assertNotIn("med_autogrant.domain_runtime_parts", bridge_text)
+        self.assertNotIn("med_autogrant.domain_runtime import", bridge_text)

@@ -14,7 +14,7 @@ from med_autogrant.domain_entry_contract import build_domain_entry_contract
 from med_autogrant.workspace_projection_parts import _require_workspace_context
 from med_autogrant.workspace_types import WorkspaceStateError
 
-from med_autogrant.hermes_runtime_parts.contracts import (
+from med_autogrant.domain_runtime_parts.contracts import (
     build_hosted_authoring_contract as _build_hosted_authoring_contract,
     build_operator_contract as _build_operator_contract,
     build_runtime_state_contract as _build_runtime_state_contract,
@@ -25,7 +25,7 @@ from med_autogrant.hermes_runtime_parts.contracts import (
     validate_contract_schema as _validate_contract_schema,
     validate_hosted_contract_bundle as _validate_hosted_contract_bundle,
 )
-from med_autogrant.hermes_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.io import (
     _guard_artifact_bundle_output_identity,
     _guard_final_package_output_identity,
     _guard_hosted_contract_output_identity,
@@ -37,15 +37,15 @@ from med_autogrant.hermes_runtime_parts.io import (
     _write_hosted_contract_bundle_output,
     _write_submission_ready_package_output,
 )
-from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
-from med_autogrant.hermes_runtime_parts.shared import SUBMISSION_READY_PACKAGE_SCHEMA_FILE
+from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
+from med_autogrant.domain_runtime_parts.shared import SUBMISSION_READY_PACKAGE_SCHEMA_FILE
 
 
 def _hosted_contract_bundle_document_builder() -> Any:
     return resolve_runtime_patch_target("build_hosted_contract_bundle_document", build_hosted_contract_bundle_document)
 
 
-class HermesRuntimePackageSurfaceMixin:
+class DomainRuntimePackageSurfaceMixin:
     def build_final_package(
         self,
         *,

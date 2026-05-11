@@ -159,7 +159,7 @@ Date: `2026-04-13`
 ## What Did Not Change
 
 - `Hermes-Agent` 仍然只代表 upstream runtime substrate owner
-- `hermes_runtime.py` 仍然只是 repo-side domain adapter / orchestrator
+- `domain_runtime.py` 仍然只是 repo-side domain adapter / orchestrator
 - 这份 contract 不是在宣称 critique / revision / export 已经全部 Hermes-native
 - `Hermes-native` 只有 full agent loop 才算；chat relay / 单次 chat completion 不算
 - 不扩 `Human-in-the-loop` sibling
@@ -170,7 +170,7 @@ Date: `2026-04-13`
 
 本 tranche 至少已覆盖：
 
-- `uv run pytest tests/test_hermes_runtime.py tests/test_product_entry.py tests/test_domain_entry.py tests/test_hosted_contract_bundle.py tests/test_hermes_runtime_truth.py -q`
+- `uv run pytest tests/test_domain_runtime.py tests/test_product_entry.py tests/test_domain_entry.py tests/test_hosted_contract_bundle.py -q`
 
 并验证：
 

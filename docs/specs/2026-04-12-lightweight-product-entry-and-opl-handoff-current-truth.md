@@ -125,7 +125,7 @@ grant 域在这层共享 envelope 之上继续补充：
 - formal entry 仍是 `CLI`
 - `supported_protocol_layer` 仍是 `MCP`
 - `internal_controller_surface` 仍是 `controller`
-- `hermes_runtime.py` 仍只是 repo-side domain adapter / orchestrator，而不是 runtime substrate owner
+- `domain_runtime.py` 仍只是 repo-side domain adapter / orchestrator，而不是 runtime substrate owner
 - 不扩 `P5` federation / second family / Human-in-the-loop sibling
 - 这层 landed shell 不等于成熟最终 UX，也不等于 actual hosted runtime
 
@@ -133,7 +133,7 @@ grant 域在这层共享 envelope 之上继续补充：
 
 本 tranche 至少已覆盖：
 
-- `uv run pytest tests/test_product_entry.py tests/test_hermes_runtime_truth.py tests/test_program_control_surfaces.py tests/test_test_command_surfaces.py -q`
+- `uv run pytest tests/test_product_entry.py tests/test_domain_runtime.py tests/test_program_control_surfaces.py tests/test_test_command_surfaces.py -q`
 - `uv run python -m med_autogrant build-product-entry --input examples/nsfc_workspace_p2c_critique.json --entry-mode direct --task-intent tighten-grant-mainline --format json`
 
 ## Honest Boundary

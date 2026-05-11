@@ -111,7 +111,7 @@
 ## 2026-04-13：critique route 升级为 Codex CLI landed route
 
 - 决策：把 `critique` route 从历史上的 `pending / handoff-required` 正式提升为已 landed 的 `execute-critique-pass` route。
-- 理由：实现层 (`hermes_runtime.py` / `critique_executor.py` / `codex_cli.py`) 与现有 route tests 已经稳定落在 landed 口径；继续把它写成 pending 会制造第二真相。
+- 理由：实现层 (`domain_runtime.py` / `critique_executor.py` / `codex_cli.py`) 与现有 route tests 已经稳定落在 landed 口径；继续把它写成 pending 会制造第二真相。
 - 影响：`current-program`、status/architecture/current-truth specs、hosted bundle route catalog 与 meta tests 全部改写为 `critique = landed`；而在同日的 full authoring landing 之后，当前 landed author-side route 已进一步扩展成 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / revision / frozen / artifact_bundle / final_package / hosted_contract_bundle`。
 
 ## 2026-04-13：critique 的默认 concrete executor 继承本机 Codex 默认
@@ -174,7 +174,7 @@
 ## 2026-04-11：`Hermes-Agent` 只指上游外部 runtime substrate
 
 - 后续凡是提到 `Hermes-Agent`，只能指上游外部 runtime 项目 / 服务本体。
-- 仓内 `hermes_runtime.py` 只代表 repo-local migration scaffold，不得写成“已接入 Hermes-Agent”。
+- 仓内 `domain_runtime.py` 只代表 repo-local migration scaffold，不得写成“已接入 Hermes-Agent”。
 
 ## 2026-04-12：runtime substrate 与 grant executor 明确分层
 
@@ -252,7 +252,7 @@
 
 - 当前可执行 runtime owner 仍是 repo-local code。
 - 旧 `CLI-first + host-agent runtime` 线只保留为归档参考材料。
-- 当前 `hermes_runtime.py` 路径只保留为本地迁移 scaffold。
+- 当前 `domain_runtime.py` 路径只保留为本地迁移 scaffold。
 - `CLI / MCP / controller / upstream Hermes-Agent target / MedAutoGrant domain logic` 的边界必须显式保留，不得偷换 formal entry 或 authoring semantics。
 
 ## 2026-04-11：旧 Hermes 命名材料降级为历史本地迁移工件

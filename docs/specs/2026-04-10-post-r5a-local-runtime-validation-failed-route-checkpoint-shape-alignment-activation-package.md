@@ -98,7 +98,7 @@ Date: `2026-04-10`
 
 当前 slice 只允许收紧：
 
-- `src/med_autogrant/hermes_runtime.py`
+- `src/med_autogrant/domain_runtime.py`
 - `tests/test_local_runtime.py`
 - 如有必要：`tests/test_program_control_surfaces.py`
 

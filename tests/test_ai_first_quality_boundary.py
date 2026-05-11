@@ -36,7 +36,7 @@ def test_scorecard_and_dossier_schemas_require_ai_reviewer_provenance() -> None:
 
 def test_quality_candidate_statuses_are_gated_by_ai_reviewer_backed_critique() -> None:
     from med_autogrant.ai_first_boundaries import AI_REVIEWER_BACKED_OWNERS
-    from med_autogrant.hermes_runtime_parts import runtime_ops
+    from med_autogrant.domain_runtime_parts import runtime_ops
 
     assert AI_REVIEWER_BACKED_OWNERS == {
         "Codex CLI critique executor",

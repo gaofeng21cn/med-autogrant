@@ -127,7 +127,7 @@ Date: `2026-04-12`
 
 ### 5. 整份 bundle 现在必须 fail-closed
 
-当前 `HermesRuntimeSubstrate.build_hosted_contract_bundle(...)` 在写出前会同时执行：
+当前 `MagDomainRuntime.build_hosted_contract_bundle(...)` 在写出前会同时执行：
 
 - final package 输入边界校验
 - `hosted-contract-bundle.schema.json` 校验
@@ -147,7 +147,7 @@ Date: `2026-04-12`
 
 本 tranche 至少已覆盖：
 
-- `uv run pytest tests/test_schema_registry.py tests/test_hosted_contract_bundle.py tests/test_hermes_runtime_truth.py -q`
+- `uv run pytest tests/test_schema_registry.py tests/test_hosted_contract_bundle.py tests/test_domain_runtime.py -q`
 
 并验证：
 
@@ -155,7 +155,7 @@ Date: `2026-04-12`
 - `build-hosted-contract-bundle` 输出必须携带 `domain_entry_contract`
 - `build-hosted-contract-bundle` 输出必须携带 `schema_contract`
 - `build-hosted-contract-bundle` 输出必须携带 `authoring_contract`
-- malformed hosted contract bundle 会被 `HermesRuntimeSubstrate` fail-closed 拒绝
+- malformed hosted contract bundle 会被 `MagDomainRuntime` fail-closed 拒绝
 
 ## Honest Boundary
 

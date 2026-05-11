@@ -119,7 +119,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         }
 
     def test_runtime_quality_evaluator_keeps_projection_only_scorecard_not_ready(self) -> None:
-        from med_autogrant.hermes_runtime_parts.runtime_ops import build_autonomy_quality_evaluator_output
+        from med_autogrant.domain_runtime_parts.runtime_ops import build_autonomy_quality_evaluator_output
 
         workspace = json.loads((REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json").read_text(encoding="utf-8"))
         for critique in workspace["mentor_critiques"]:

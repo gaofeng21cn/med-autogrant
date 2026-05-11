@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from med_autogrant.hermes_runtime_parts.contracts import (
+from med_autogrant.domain_runtime_parts.contracts import (
     build_author_side_route_contract as _build_author_side_route_contract,
     build_executor_routing_contract as _build_executor_routing_contract,
     build_operator_contract as _build_operator_contract,
@@ -10,7 +10,7 @@ from med_autogrant.hermes_runtime_parts.contracts import (
     validate_contract_schema as _validate_contract_schema,
     validate_executor_routing_contract as _validate_executor_routing_contract,
 )
-from med_autogrant.hermes_runtime_parts.shared import (
+from med_autogrant.domain_runtime_parts.shared import (
     GRANT_COCKPIT_SCHEMA_FILE,
     GRANT_DIRECT_ENTRY_SCHEMA_FILE,
     GRANT_PROGRESS_SCHEMA_FILE,

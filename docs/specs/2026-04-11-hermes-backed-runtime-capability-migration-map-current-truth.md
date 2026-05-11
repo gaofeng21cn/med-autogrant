@@ -156,8 +156,7 @@ Hermes migration map 当前明确禁止：
 
 至少覆盖：
 
-1. `uv run pytest -q tests/test_hermes_runtime.py`
-2. `uv run pytest -q tests/test_hermes_runtime_truth.py`
-3. `scripts/verify.sh`
-4. `scripts/verify.sh cli-smoke`
-5. `git diff --check`
+1. `uv run pytest -q tests/test_domain_runtime.py`
+2. `scripts/verify.sh`
+3. `scripts/verify.sh cli-smoke`
+4. `git diff --check`

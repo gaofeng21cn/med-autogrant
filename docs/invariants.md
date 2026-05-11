@@ -10,7 +10,7 @@
 - 不得把 developer control-plane entry 的存在解释成“产品 controller 已正式支持”。
 - 当前默认公开 capability contract 固定为 `CLI-first + MedAutoGrantDomainEntry + product-entry/user-loop surfaced local scripts/contracts`；local scripts/contracts 必须是 schema-backed、由 product-entry / user-loop / direct-entry surface 暴露的受控 contract，不得作为绕开 authoring runtime 的 ad-hoc 执行路径。
 - 历史 local host-agent runtime 材料只允许作为归档追溯材料，不得继续写成当前产品 runtime。
-- 当前 `hermes_runtime.py` 与 `domain_entry.py` 只允许被写成 repo-side domain adapter / entry adapter，不得再被误写成 runtime substrate owner。
+- 当前 `domain_runtime.py` 与 `domain_entry.py` 只允许被写成 repo-side domain adapter / entry adapter，不得再被误写成 runtime substrate owner。
 
 ## Control-plane 与 repo-tracked truth
 

@@ -45,7 +45,7 @@ Date: `2026-04-13`
 
 当前 `execute-critique-pass` 的实现链路是：
 
-- `HermesRuntimeSubstrate.execute_critique_pass(...)`
+- `MagDomainRuntime.execute_critique_pass(...)`
 - `build_critique_execution_document(...)`
 - `run_codex_exec(...)`
 - `codex exec --json --ephemeral ...`
@@ -112,7 +112,7 @@ Date: `2026-04-13`
 本 vocabulary 收口至少应覆盖：
 
 - `tests/test_critique_executor.py`
-- `tests/test_hermes_runtime.py`
+- `tests/test_domain_runtime.py`
 - `tests/test_domain_entry.py`
 - `tests/test_program_control_surfaces.py`
 - `tests/test_repository_hygiene.py`

@@ -64,12 +64,12 @@ class OptionalHermesProofCliProbeTest(unittest.TestCase):
 
 class MagRuntimeLedgerTest(unittest.TestCase):
     def test_runtime_run_uses_grant_run_ledger_for_attempt_index(self) -> None:
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
 
         runtime = MagDomainRuntime()
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "revision-journal.json"
-            with patch("med_autogrant.hermes_runtime.MagGrantRunLedger") as ledger_class:
+            with patch("med_autogrant.domain_runtime.MagGrantRunLedger") as ledger_class:
                 ledger = ledger_class.return_value
                 ledger.record_attempt.return_value = 7
 

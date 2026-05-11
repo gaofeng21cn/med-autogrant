@@ -24,7 +24,7 @@ def _load_json(path: Path) -> dict[str, object]:
 
 class MagRuntimeQualityGateTest(unittest.TestCase):
     def test_quality_gate_can_force_mainline_route_to_rollback(self) -> None:
-        from med_autogrant.hermes_runtime import _apply_quality_gate_to_route
+        from med_autogrant.domain_runtime import _apply_quality_gate_to_route
 
         route = {
             "current_stage": "critique",
@@ -46,7 +46,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
         self.assertIn("必要性链条未闭合", resolved["reason"])
 
     def test_quality_gate_can_veto_submission_stop(self) -> None:
-        from med_autogrant.hermes_runtime import _apply_quality_gate_to_route
+        from med_autogrant.domain_runtime import _apply_quality_gate_to_route
 
         route = {
             "current_stage": "critique",
@@ -72,7 +72,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
             build_grant_quality_closure_dossier as build_closure_dossier_impl,
         )
         from med_autogrant.grant_quality import build_grant_quality_scorecard as build_scorecard_impl
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
 
         runtime = MagDomainRuntime()
         starting_workspace = _load_json(REVISION_EXAMPLE_PATH)
@@ -80,7 +80,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             with patch.object(runtime, "_load_workspace", return_value=starting_workspace), patch(
-                "med_autogrant.hermes_runtime.run_critique_revision_closed_loop",
+                "med_autogrant.domain_runtime.run_critique_revision_closed_loop",
                 return_value={
                     "rounds": [
                         {
@@ -96,10 +96,10 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
                     "final_route": {"recommended_stage": "frozen", "reason": "ready"},
                 },
             ), patch(
-                "med_autogrant.hermes_runtime.build_grant_quality_scorecard",
+                "med_autogrant.domain_runtime.build_grant_quality_scorecard",
                 wraps=build_scorecard_impl,
             ) as build_scorecard, patch(
-                "med_autogrant.hermes_runtime.build_grant_quality_closure_dossier",
+                "med_autogrant.domain_runtime.build_grant_quality_closure_dossier",
                 wraps=build_closure_dossier_impl,
             ) as build_dossier:
                 payload = runtime.execute_critique_revision_loop(
@@ -122,14 +122,14 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
             build_grant_quality_closure_dossier as build_closure_dossier_impl,
         )
         from med_autogrant.grant_quality import build_grant_quality_scorecard as build_scorecard_impl
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
 
         runtime = MagDomainRuntime()
         workspace = _load_json(DRAFTING_EXAMPLE_PATH)
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             with patch.object(runtime, "_load_workspace", return_value=workspace), patch(
-                "med_autogrant.hermes_runtime.run_authoring_mainline_controller",
+                "med_autogrant.domain_runtime.run_authoring_mainline_controller",
                 return_value={
                     "cycles": [
                         {
@@ -145,10 +145,10 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
                     "final_route": {"recommended_stage": "frozen", "reason": "ready"},
                 },
             ), patch(
-                "med_autogrant.hermes_runtime.build_grant_quality_scorecard",
+                "med_autogrant.domain_runtime.build_grant_quality_scorecard",
                 wraps=build_scorecard_impl,
             ) as build_scorecard, patch(
-                "med_autogrant.hermes_runtime.build_grant_quality_closure_dossier",
+                "med_autogrant.domain_runtime.build_grant_quality_closure_dossier",
                 wraps=build_closure_dossier_impl,
             ) as build_dossier:
                 payload = runtime.execute_authoring_mainline_loop(

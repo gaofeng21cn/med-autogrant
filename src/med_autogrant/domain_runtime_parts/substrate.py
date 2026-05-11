@@ -65,11 +65,11 @@ from med_autogrant.workspace_types import WorkspaceError, WorkspaceFileError, Wo
 from med_autogrant.workspace_validation import validate_workspace_document
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 from med_autogrant.facade_exports import re_export_public_names
-from med_autogrant.hermes_runtime_parts import shared as _runtime_shared
-from med_autogrant.hermes_runtime_parts import handoff_surfaces as _handoff_surfaces
-from med_autogrant.hermes_runtime_parts.authoring_surface import HermesRuntimeAuthoringSurfaceMixin
-from med_autogrant.hermes_runtime_parts.handoff_surfaces import HermesRuntimeHandoffSurfaceMixin
-from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
+from med_autogrant.domain_runtime_parts import shared as _runtime_shared
+from med_autogrant.domain_runtime_parts import handoff_surfaces as _handoff_surfaces
+from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
+from med_autogrant.domain_runtime_parts.handoff_surfaces import DomainRuntimeHandoffSurfaceMixin
+from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
@@ -78,7 +78,7 @@ re_export_public_names(_runtime_shared, globals())
 re_export_public_names(_handoff_surfaces, globals())
 
 
-class MagDomainRuntime(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimeHandoffSurfaceMixin):
+class MagDomainRuntime(DomainRuntimeAuthoringSurfaceMixin, DomainRuntimeHandoffSurfaceMixin):
     """MAG-owned domain runtime surface for grant authoring, quality, and export."""
 
     runtime_owner = "Med Auto Grant"
@@ -553,7 +553,7 @@ class MagDomainRuntime(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimeHandoffS
     def _load_workspace(self, input_path: str | Path) -> dict[str, Any]:
         return load_workspace_document(Path(input_path).expanduser().resolve())
 
-from med_autogrant.hermes_runtime_parts.contracts import (
+from med_autogrant.domain_runtime_parts.contracts import (
     build_author_side_route_contract as _build_author_side_route_contract,
     build_executor_routing_contract as _build_executor_routing_contract,
     build_hosted_authoring_contract as _build_hosted_authoring_contract,
@@ -577,7 +577,7 @@ from med_autogrant.hermes_runtime_parts.contracts import (
     validate_hosted_contract_bundle as _validate_hosted_contract_bundle,
     validate_schema_payload as _validate_schema_payload,
 )
-from med_autogrant.hermes_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.io import (
     _append_attempt,
     _build_selection_input_from_discovery,
     _default_funding_landscape_cache_path,
@@ -605,7 +605,7 @@ from med_autogrant.hermes_runtime_parts.io import (
     _write_revised_workspace_output,
     _write_submission_ready_package_output,
 )
-from med_autogrant.hermes_runtime_parts.runtime_ops import (
+from med_autogrant.domain_runtime_parts.runtime_ops import (
     _apply_quality_gate_to_route,
     _build_autonomy_quality_evaluator_output,
     _looks_like_workspace,

@@ -92,7 +92,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
         }
 
     def test_execute_grant_autonomy_controller_validates_and_writes_report(self) -> None:
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
 
         workspace = _load_json(FROZEN_EXAMPLE_PATH)
         quality_summary = self._quality_summary(
@@ -231,7 +231,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
             output_dir = Path(tmp_dir) / "autonomy-output"
             request_path.write_text(json.dumps(request, ensure_ascii=False), encoding="utf-8")
 
-            with patch("med_autogrant.hermes_runtime.run_grant_autonomy_controller") as run_controller:
+            with patch("med_autogrant.domain_runtime.run_grant_autonomy_controller") as run_controller:
                 run_controller.return_value = report
                 payload = MagDomainRuntime().execute_grant_autonomy_controller(
                     input_path=request_path,
@@ -247,7 +247,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
                 run_controller.assert_called_once()
 
     def test_execute_grant_autonomy_controller_preserves_nih_family_grammar_from_selection_start(self) -> None:
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
 
         selection_input = _load_json(NIH_SELECTION_INPUT_PATH)
         final_workspace = _load_json(FROZEN_EXAMPLE_PATH)
@@ -395,7 +395,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
                 self.assertIn("execute-grant-autonomy-controller", grammar["governance_entry_points"])
                 return report
 
-            with patch("med_autogrant.hermes_runtime.run_grant_autonomy_controller") as run_controller:
+            with patch("med_autogrant.domain_runtime.run_grant_autonomy_controller") as run_controller:
                 run_controller.side_effect = _run_controller_side_effect
                 payload = MagDomainRuntime().execute_grant_autonomy_controller(
                     input_path=request_path,
@@ -407,7 +407,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
                 run_controller.assert_called_once()
 
     def test_execute_grant_autonomy_controller_keeps_nih_family_trace_from_selection_input(self) -> None:
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
 
         selection_input = _load_json(NIH_SELECTION_INPUT_PATH)
         request = {
@@ -473,7 +473,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
         )
 
     def test_autonomy_quality_evaluator_output_includes_closure_dossier(self) -> None:
-        from med_autogrant.hermes_runtime import _build_autonomy_quality_evaluator_output
+        from med_autogrant.domain_runtime import _build_autonomy_quality_evaluator_output
 
         workspace = _load_json(FROZEN_EXAMPLE_PATH)
         payload = _build_autonomy_quality_evaluator_output(workspace)

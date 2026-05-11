@@ -336,7 +336,7 @@ class MagRuntimeCliDispatchTest(unittest.TestCase):
 
 class MagDomainRuntimeFlowTest(unittest.TestCase):
     def test_mag_runtime_keeps_revision_and_export_paths_identity_stable(self) -> None:
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
 
         runtime = MagDomainRuntime()
 
@@ -443,7 +443,7 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             )
 
     def test_executor_routing_contract_publishes_landed_route_catalog_only(self) -> None:
-        from med_autogrant.hermes_runtime import _build_executor_routing_contract
+        from med_autogrant.domain_runtime import _build_executor_routing_contract
 
         drafting_contract = _build_executor_routing_contract(
             current_stage="drafting",
@@ -479,14 +479,14 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
         )
 
     def test_run_local_fails_closed_on_invalid_executor_routing_contract_shape(self) -> None:
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
         from med_autogrant.workspace import WorkspaceStateError
 
         runtime = MagDomainRuntime()
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "critique-journal.json"
             with patch(
-                "med_autogrant.hermes_runtime._build_executor_routing_contract",
+                "med_autogrant.domain_runtime._build_executor_routing_contract",
                 return_value={
                     "contract_version": 1,
                     "current_stage_route": {
@@ -582,14 +582,14 @@ class HostedContractBundleBridgeTest(unittest.TestCase):
 
 class RevisionExecutionHandoffTest(unittest.TestCase):
     def test_execute_critique_pass_forwards_explicit_executor_kind(self) -> None:
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
 
         runtime = MagDomainRuntime()
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             workspace_path = Path(tmp_dir) / "critique.json"
             with patch(
-                "med_autogrant.hermes_runtime.build_critique_execution_document",
+                "med_autogrant.domain_runtime.build_critique_execution_document",
                 create=True,
                 return_value={
                     "grant_run_id": "grant-run-test",
@@ -609,10 +609,10 @@ class RevisionExecutionHandoffTest(unittest.TestCase):
                     },
                 },
             ) as build_document, patch(
-                "med_autogrant.hermes_runtime._guard_critique_output_identity",
+                "med_autogrant.domain_runtime._guard_critique_output_identity",
                 create=True,
             ), patch(
-                "med_autogrant.hermes_runtime._write_revised_workspace_output",
+                "med_autogrant.domain_runtime._write_revised_workspace_output",
                 create=True,
             ):
                 runtime.execute_critique_pass(

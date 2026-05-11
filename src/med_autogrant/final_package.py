@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from med_autogrant import artifact_bundle_validation as _artifact_bundle_validation
-from med_autogrant.hermes_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.io import (
     _guard_final_package_output_identity,
     _read_artifact_bundle as _read_artifact_bundle_from_runtime_parts,
     _write_final_package_output,

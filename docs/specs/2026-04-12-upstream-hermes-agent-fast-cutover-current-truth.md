@@ -64,7 +64,7 @@ Date: `2026-04-12`
 - final package
 - hosted contract bundle
 
-`hermes_runtime.py` 在当前真相下应被理解为：
+`domain_runtime.py` 在当前真相下应被理解为：
 
 - repo-side domain adapter / orchestrator
 
@@ -150,7 +150,7 @@ repo 现在至少有下面这些 fresh proof：
 
 本 tranche 至少已覆盖：
 
-- `uv run pytest tests/test_upstream_hermes.py tests/test_local_runtime.py tests/test_hermes_runtime.py tests/test_domain_entry.py -q`
+- `uv run pytest tests/test_upstream_hermes.py tests/test_local_runtime.py tests/test_domain_runtime.py tests/test_domain_entry.py -q`
 - `uv run pytest tests/test_program_control_surfaces.py tests/test_hosted_contract_bundle.py -q`
 - invalid workspace 的 `runtime-run / runtime-resume` 实际手工证明
 

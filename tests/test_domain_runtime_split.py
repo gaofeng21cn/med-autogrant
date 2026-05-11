@@ -11,6 +11,12 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
+OLD_RUNTIME_TOKEN = "hermes" + "_runtime"
+OLD_RUNTIME_IMPORT = f"from med_autogrant import {OLD_RUNTIME_TOKEN}"
+OLD_RUNTIME_MODULE_IMPORT = f"from med_autogrant.{OLD_RUNTIME_TOKEN} import"
+OLD_RUNTIME_PARTS = f"{OLD_RUNTIME_TOKEN}_parts"
+OLD_RUNTIME_MODULE = f"med_autogrant.{OLD_RUNTIME_TOKEN}"
+
 
 class RuntimeSplitStructureTest(unittest.TestCase):
     def test_source_modules_do_not_use_star_imports(self) -> None:
@@ -23,7 +29,7 @@ class RuntimeSplitStructureTest(unittest.TestCase):
         self.assertEqual([], offenders)
 
     def test_mag_domain_runtime_is_the_default_runtime_surface(self) -> None:
-        from med_autogrant.hermes_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime import MagDomainRuntime
 
         topology = MagDomainRuntime().describe_topology()
 
@@ -36,26 +42,26 @@ class RuntimeSplitStructureTest(unittest.TestCase):
         self.assertEqual(topology["optional_proof_executor_boundary"], "explicit opt-in only")
 
     def test_package_surface_owns_export_methods_under_authoring_mixin(self) -> None:
-        from med_autogrant.hermes_runtime import MagDomainRuntime
-        from med_autogrant.hermes_runtime_parts.authoring_surface import HermesRuntimeAuthoringSurfaceMixin
-        from med_autogrant.hermes_runtime_parts.package_surface import HermesRuntimePackageSurfaceMixin
+        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
+        from med_autogrant.domain_runtime_parts.package_surface import DomainRuntimePackageSurfaceMixin
 
-        self.assertTrue(issubclass(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimePackageSurfaceMixin))
+        self.assertTrue(issubclass(DomainRuntimeAuthoringSurfaceMixin, DomainRuntimePackageSurfaceMixin))
         self.assertEqual(
-            "med_autogrant.hermes_runtime_parts.package_surface",
+            "med_autogrant.domain_runtime_parts.package_surface",
             MagDomainRuntime.build_final_package.__module__,
         )
         self.assertEqual(
-            "med_autogrant.hermes_runtime_parts.package_surface",
+            "med_autogrant.domain_runtime_parts.package_surface",
             MagDomainRuntime.build_hosted_contract_bundle.__module__,
         )
         self.assertEqual(
-            "med_autogrant.hermes_runtime_parts.package_surface",
+            "med_autogrant.domain_runtime_parts.package_surface",
             MagDomainRuntime.build_submission_ready_package.__module__,
         )
 
     def test_runtime_substrate_does_not_directly_import_handoff_owners(self) -> None:
-        substrate_path = SRC_ROOT / "med_autogrant" / "hermes_runtime_parts" / "substrate.py"
+        substrate_path = SRC_ROOT / "med_autogrant" / "domain_runtime_parts" / "substrate.py"
         tree = ast.parse(substrate_path.read_text(encoding="utf-8"))
         imported_modules = {
             node.module
@@ -76,19 +82,37 @@ class RuntimeSplitStructureTest(unittest.TestCase):
     def test_domain_entry_does_not_import_runtime_facade(self) -> None:
         domain_entry_text = (SRC_ROOT / "med_autogrant" / "domain_entry.py").read_text(encoding="utf-8")
 
-        self.assertNotIn("from med_autogrant.hermes_runtime import", domain_entry_text)
-        self.assertNotIn("from med_autogrant import hermes_runtime", domain_entry_text)
+        self.assertNotIn("from med_autogrant.domain_runtime import", domain_entry_text)
+        self.assertNotIn(OLD_RUNTIME_IMPORT, domain_entry_text)
 
     def test_control_plane_does_not_import_workspace_facade(self) -> None:
         control_plane_text = (SRC_ROOT / "med_autogrant" / "control_plane.py").read_text(encoding="utf-8")
 
         self.assertNotIn("from med_autogrant.workspace import", control_plane_text)
 
+    def test_retired_runtime_module_paths_are_not_present_in_source(self) -> None:
+        offenders = [
+            path.relative_to(REPO_ROOT).as_posix()
+            for path in sorted((SRC_ROOT / "med_autogrant").rglob("*.py"))
+            if OLD_RUNTIME_TOKEN in path.read_text(encoding="utf-8")
+        ]
+
+        self.assertEqual(["src/med_autogrant/upstream_hermes.py"], offenders)
+
+    def test_runtime_patch_target_resolver_uses_only_canonical_module(self) -> None:
+        patch_targets_text = (
+            SRC_ROOT / "med_autogrant" / "domain_runtime_parts" / "patch_targets.py"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn('"med_autogrant.domain_runtime"', patch_targets_text)
+        self.assertNotIn(OLD_RUNTIME_MODULE, patch_targets_text)
+
     def test_runtime_parts_do_not_import_runtime_facade(self) -> None:
-        runtime_parts = sorted((SRC_ROOT / "med_autogrant" / "hermes_runtime_parts").glob("*.py"))
+        runtime_parts = sorted((SRC_ROOT / "med_autogrant" / "domain_runtime_parts").glob("*.py"))
         forbidden_fragments = (
-            "from med_autogrant.hermes_runtime import",
-            "from med_autogrant import hermes_runtime",
+            "from med_autogrant.domain_runtime import",
+            OLD_RUNTIME_IMPORT,
+            OLD_RUNTIME_MODULE_IMPORT,
         )
         offenders = [
             path.relative_to(REPO_ROOT).as_posix()
@@ -100,12 +124,13 @@ class RuntimeSplitStructureTest(unittest.TestCase):
 
     def test_package_surface_does_not_import_runtime_facade(self) -> None:
         package_surface_text = (
-            SRC_ROOT / "med_autogrant" / "hermes_runtime_parts" / "package_surface.py"
+            SRC_ROOT / "med_autogrant" / "domain_runtime_parts" / "package_surface.py"
         ).read_text(encoding="utf-8")
 
-        self.assertIn("class HermesRuntimePackageSurfaceMixin", package_surface_text)
-        self.assertNotIn("from med_autogrant.hermes_runtime import", package_surface_text)
-        self.assertNotIn("from med_autogrant import hermes_runtime", package_surface_text)
+        self.assertIn("class DomainRuntimePackageSurfaceMixin", package_surface_text)
+        self.assertNotIn("from med_autogrant.domain_runtime import", package_surface_text)
+        self.assertNotIn(OLD_RUNTIME_IMPORT, package_surface_text)
+        self.assertNotIn(OLD_RUNTIME_PARTS, package_surface_text)
 
     def test_package_builders_do_not_import_runtime_facade(self) -> None:
         package_builders = [
@@ -118,7 +143,7 @@ class RuntimeSplitStructureTest(unittest.TestCase):
         offenders = [
             path.relative_to(REPO_ROOT).as_posix()
             for path in package_builders
-            if "med_autogrant.hermes_runtime import" in path.read_text(encoding="utf-8")
+            if "med_autogrant.domain_runtime import" in path.read_text(encoding="utf-8")
         ]
 
         self.assertEqual([], offenders)

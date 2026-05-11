@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from med_autogrant.ai_first_boundaries import require_active_ai_backed_critique
-from med_autogrant.hermes_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.io import (
     _guard_revision_output_identity,
     _write_revised_workspace_output,
 )

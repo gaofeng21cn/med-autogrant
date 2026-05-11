@@ -15,17 +15,17 @@ from med_autogrant.artifact_bundle import build_artifact_bundle_document
 from med_autogrant.critique_executor import build_critique_execution_document
 from med_autogrant.revision_executor import build_revision_execution_document
 
-from med_autogrant.hermes_runtime_parts.io import (
+from med_autogrant.domain_runtime_parts.io import (
     _guard_artifact_bundle_output_identity,
     _guard_critique_output_identity,
     _guard_revision_output_identity,
     _write_artifact_bundle_output,
     _write_revised_workspace_output,
 )
-from med_autogrant.hermes_runtime_parts.patch_targets import resolve_runtime_patch_target
+from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 
 
-class HermesRuntimeHandoffSurfaceMixin:
+class DomainRuntimeHandoffSurfaceMixin:
     def execute_direction_screening_pass(
         self,
         *,
