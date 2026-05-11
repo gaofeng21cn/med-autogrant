@@ -86,9 +86,12 @@ Now:
 - keep this policy as the MAG memory owner reference;
 - continue using existing structured quality/controller/export surfaces as authority;
 - expose a repo-source migration plan, seed fixture, writeback proposal generator, accept/reject command, receipt locator, and operator receipt projection for domain memory migration without storing real memory entries in repo source.
+- recognize current OPL family-index status accurately: MAG's domain-side memory apply surfaces are landed, but OPL still needs a standard `family_domain_memory_ref.v1` adapter before `opl domain-memory list` can count MAG as a resolved memory descriptor.
 
 Next:
 
+- add that standard OPL memory descriptor projection while keeping memory content and accept/reject authority in MAG;
+- run a controlled grant stage attempt that consumes relevant grant strategy memory refs and emits accepted/rejected writeback receipts;
 - apply real runtime memory writebacks only in workspace/runtime artifact roots after MAG accept/reject decisions;
 - extend operator UI consumption of accepted/rejected receipt refs without copying memory body into OPL.
 
