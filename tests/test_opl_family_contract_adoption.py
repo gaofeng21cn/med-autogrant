@@ -170,3 +170,52 @@ def test_mag_adoption_contract_declares_lifecycle_adapter_mapping() -> None:
     )
     assert adapter["adoption_projection"]["maps_to_opl_contract"] == "opl_family_product_operator_projection.v1"
     assert adapter["adoption_projection"]["required_operator_fields"] == operator["required_fields"]
+
+
+def test_mag_adoption_contract_declares_domain_memory_locator_without_opl_content_or_verdict_authority() -> None:
+    contract = _contract()
+    memory = contract["domain_memory_descriptor_locator"]
+
+    assert memory["surface_kind"] == "domain_memory_descriptor_locator"
+    assert memory["descriptor_id"] == "mag.domain_memory_descriptor_locator.v1"
+    assert memory["manifest_surface_ref"] == "/product_entry_manifest/domain_memory_descriptor_locator"
+    assert memory["policy_ref"] == "docs/references/grant_strategy_memory_policy.md"
+    assert memory["maps_to_opl_contract"] == "opl_family_domain_memory_locator_contract.v1"
+    assert memory["memory_owner"] == "med-autogrant"
+    assert memory["memory_content_owner"] == "med-autogrant"
+    assert memory["truth_owner"] == "med-autogrant"
+    assert memory["fundability_verdict_owner"] == "med-autogrant"
+    assert memory["locator_policy"] == "repo_tracked_descriptor_and_locator_refs_only"
+    assert memory["stage_memory_refs"] == [
+        "call_and_candidate_intake",
+        "fundability_strategy",
+        "specific_aims_and_structure",
+        "proposal_authoring",
+        "review_and_rebuttal",
+        "package_and_submit_ready",
+    ]
+    assert set(memory["opl_consumption"]) == {
+        "descriptor",
+        "policy_ref",
+        "stage_descriptor_refs",
+        "memory_locator",
+        "writeback_receipt_refs",
+    }
+    for forbidden in (
+        "memory_content",
+        "fundability_verdict",
+        "authoring_quality_verdict",
+        "submission_ready_export_verdict",
+        "canonical_grant_artifact_content",
+    ):
+        assert forbidden in memory["opl_non_consumption"]
+    assert memory["writeback_policy"] == (
+        "opl_may_route_writeback_receipt_refs_but_mag_accepts_or_rejects_memory_content"
+    )
+    authority = memory["authority_boundary"]
+    assert authority["opl_role"] == "memory_locator_ref_and_receipt_ref_consumer_only"
+    assert authority["can_hold_memory_content"] is False
+    assert authority["can_issue_fundability_verdict"] is False
+    assert authority["can_issue_authoring_quality_verdict"] is False
+    assert authority["can_issue_export_verdict"] is False
+    assert authority["can_mutate_domain_memory_store"] is False

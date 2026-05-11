@@ -13,6 +13,7 @@ SKELETON_SURFACE_KIND = "standard_domain_agent_skeleton_mapping"
 SKELETON_ID = "mag.standard_domain_agent_skeleton.v1"
 ARTIFACT_LOCATOR_KIND = "domain_artifact_locator_contract"
 CONTROLLED_STAGE_ATTEMPT_KIND = "controlled_stage_attempt_projection"
+DOMAIN_MEMORY_DESCRIPTOR_LOCATOR_KIND = "domain_memory_descriptor_locator"
 
 
 def build_domain_agent_skeleton_mapping(
@@ -27,6 +28,7 @@ def build_domain_agent_skeleton_mapping(
     progress_projection: Mapping[str, Any],
     artifact_locator_contract: Mapping[str, Any],
     controlled_stage_attempt_projection: Mapping[str, Any],
+    domain_memory_descriptor_locator: Mapping[str, Any],
 ) -> dict[str, Any]:
     return {
         "surface_kind": SKELETON_SURFACE_KIND,
@@ -119,8 +121,10 @@ def build_domain_agent_skeleton_mapping(
         },
         "artifact_locator_ref": "/product_entry_manifest/artifact_locator_contract",
         "controlled_stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+        "domain_memory_descriptor_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator",
         "artifact_locator_contract": dict(artifact_locator_contract),
         "controlled_stage_attempt_projection": dict(controlled_stage_attempt_projection),
+        "domain_memory_descriptor_locator": dict(domain_memory_descriptor_locator),
         "identity": {
             "grant_run_id": grant_run_id,
             "workspace_id": workspace_id,
@@ -135,6 +139,7 @@ def build_domain_agent_skeleton_mapping(
             "/product_entry_manifest/progress_projection",
             "/product_entry_manifest/artifact_locator_contract",
             "/product_entry_manifest/controlled_stage_attempt_projection",
+            "/product_entry_manifest/domain_memory_descriptor_locator",
         ],
         "authority_boundary": {
             "opl_role": "descriptor_and_ref_consumer_only",
@@ -142,6 +147,120 @@ def build_domain_agent_skeleton_mapping(
             "can_hold_export_verdict": False,
             "can_write_grant_artifacts": False,
             "can_mutate_runtime_artifact_root": False,
+        },
+    }
+
+
+def build_domain_memory_descriptor_locator(
+    *,
+    grant_run_id: str,
+    workspace_id: str,
+    draft_id: str | None,
+    lifecycle_stage: str,
+) -> dict[str, Any]:
+    return {
+        "surface_kind": DOMAIN_MEMORY_DESCRIPTOR_LOCATOR_KIND,
+        "version": "v1",
+        "descriptor_id": "mag.domain_memory_descriptor_locator.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "memory_owner": TARGET_DOMAIN_ID,
+        "memory_content_owner": TARGET_DOMAIN_ID,
+        "fundability_verdict_owner": TARGET_DOMAIN_ID,
+        "truth_owner": TARGET_DOMAIN_ID,
+        "policy_ref": {
+            "ref_kind": "repo_path",
+            "ref": "docs/references/grant_strategy_memory_policy.md",
+            "role": "human_policy",
+        },
+        "stage_descriptor_refs": [
+            {
+                "ref_kind": "json_pointer",
+                "ref": f"/product_entry_manifest/family_stage_control_plane/stages/{stage_index}",
+                "stage_id": stage_id,
+                "role": "stage_memory_context_descriptor",
+            }
+            for stage_index, stage_id in enumerate(
+                [
+                    "call_and_candidate_intake",
+                    "fundability_strategy",
+                    "specific_aims_and_structure",
+                    "proposal_authoring",
+                    "review_and_rebuttal",
+                    "package_and_submit_ready",
+                ]
+            )
+        ],
+        "memory_locator": {
+            "locator_kind": "domain_memory_locator",
+            "runtime_memory_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/",
+            "repo_tracked": False,
+            "content_policy": "locator_only_no_memory_content_in_repo_manifest",
+            "retrieval_policy": "stage_specific_small_relevant_sets",
+            "accepted_memory_ref_template": (
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
+                "accepted/<memory_id>.json"
+            ),
+            "writeback_proposal_ref_template": (
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
+                "writeback-proposals/<grant_run_id>/<proposal_id>.json"
+            ),
+        },
+        "writeback_receipt_refs": {
+            "receipt_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
+            "memory_writeback_receipt_ref": (
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+                f"{grant_run_id}/memory-writeback/<proposal_id>.json"
+            ),
+            "receipt_write_policy": "receipt_ref_only_no_domain_memory_content_mutation",
+        },
+        "identity": {
+            "grant_run_id": grant_run_id,
+            "workspace_id": workspace_id,
+            "draft_id": draft_id,
+            "lifecycle_stage": lifecycle_stage,
+        },
+        "allowed_memory_roles": [
+            "strategy_context",
+            "stage_retrieval_hint",
+            "writeback_proposal",
+            "writeback_receipt_ref",
+        ],
+        "forbidden_memory_roles": [
+            "fundability_verdict",
+            "authoring_quality_verdict",
+            "submission_ready_export_verdict",
+            "canonical_grant_artifact_content",
+            "workspace_private_evidence",
+        ],
+        "opl_consumption_contract": {
+            "role": "locator_ref_and_receipt_ref_consumer_only",
+            "consumes": [
+                "descriptor",
+                "policy_ref",
+                "stage_descriptor_refs",
+                "memory_locator",
+                "writeback_receipt_refs",
+            ],
+            "does_not_consume": [
+                "memory_content",
+                "fundability_verdict",
+                "authoring_quality_verdict",
+                "submission_ready_export_verdict",
+                "canonical_grant_artifact_content",
+            ],
+            "can_hold_memory_content": False,
+            "can_issue_fundability_verdict": False,
+            "can_issue_authoring_quality_verdict": False,
+            "can_issue_export_verdict": False,
+            "can_mutate_domain_memory_store": False,
+        },
+        "authority_boundary": {
+            "domain_truth_owner": TARGET_DOMAIN_ID,
+            "memory_content_owner": TARGET_DOMAIN_ID,
+            "fundability_verdict_owner": TARGET_DOMAIN_ID,
+            "authoring_quality_verdict_owner": TARGET_DOMAIN_ID,
+            "submission_ready_export_verdict_owner": TARGET_DOMAIN_ID,
+            "opl_role": "memory_locator_ref_and_receipt_ref_consumer_only",
         },
     }
 

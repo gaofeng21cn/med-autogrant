@@ -316,6 +316,52 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             "canonical_grant_artifact_content",
             controlled_attempt["opl_consumption_contract"]["does_not_consume"],
         )
+        memory_locator = manifest["domain_memory_descriptor_locator"]
+        self.assertEqual(memory_locator["surface_kind"], "domain_memory_descriptor_locator")
+        self.assertEqual(memory_locator["descriptor_id"], "mag.domain_memory_descriptor_locator.v1")
+        self.assertEqual(memory_locator["memory_owner"], "med-autogrant")
+        self.assertEqual(memory_locator["memory_content_owner"], "med-autogrant")
+        self.assertEqual(memory_locator["fundability_verdict_owner"], "med-autogrant")
+        self.assertEqual(memory_locator["policy_ref"]["ref"], "docs/references/grant_strategy_memory_policy.md")
+        self.assertEqual(memory_locator["memory_locator"]["locator_kind"], "domain_memory_locator")
+        self.assertFalse(memory_locator["memory_locator"]["repo_tracked"])
+        self.assertEqual(
+            memory_locator["memory_locator"]["content_policy"],
+            "locator_only_no_memory_content_in_repo_manifest",
+        )
+        self.assertEqual(
+            memory_locator["memory_locator"]["retrieval_policy"],
+            "stage_specific_small_relevant_sets",
+        )
+        self.assertEqual(
+            [ref["stage_id"] for ref in memory_locator["stage_descriptor_refs"]],
+            [stage["stage_id"] for stage in stage_plane["stages"]],
+        )
+        self.assertIn(
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
+            memory_locator["writeback_receipt_refs"]["memory_writeback_receipt_ref"],
+        )
+        self.assertEqual(
+            memory_locator["writeback_receipt_refs"]["receipt_write_policy"],
+            "receipt_ref_only_no_domain_memory_content_mutation",
+        )
+        self.assertFalse(memory_locator["opl_consumption_contract"]["can_hold_memory_content"])
+        self.assertFalse(memory_locator["opl_consumption_contract"]["can_issue_fundability_verdict"])
+        self.assertFalse(memory_locator["opl_consumption_contract"]["can_issue_authoring_quality_verdict"])
+        self.assertFalse(memory_locator["opl_consumption_contract"]["can_issue_export_verdict"])
+        self.assertFalse(memory_locator["opl_consumption_contract"]["can_mutate_domain_memory_store"])
+        for forbidden_memory_role in (
+            "memory_content",
+            "fundability_verdict",
+            "authoring_quality_verdict",
+            "submission_ready_export_verdict",
+            "canonical_grant_artifact_content",
+        ):
+            self.assertIn(forbidden_memory_role, memory_locator["opl_consumption_contract"]["does_not_consume"])
+        self.assertEqual(
+            memory_locator["authority_boundary"]["opl_role"],
+            "memory_locator_ref_and_receipt_ref_consumer_only",
+        )
         skeleton = manifest["domain_agent_skeleton_mapping"]
         self.assertEqual(skeleton["surface_kind"], "standard_domain_agent_skeleton_mapping")
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
@@ -331,6 +377,14 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(
             skeleton["controlled_stage_attempt_ref"],
             "/product_entry_manifest/controlled_stage_attempt_projection",
+        )
+        self.assertEqual(
+            skeleton["domain_memory_descriptor_locator_ref"],
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+        )
+        self.assertEqual(
+            skeleton["domain_memory_descriptor_locator"],
+            memory_locator,
         )
         self.assertFalse(skeleton["authority_boundary"]["can_hold_fundability_verdict"])
         self.assertFalse(skeleton["authority_boundary"]["can_hold_export_verdict"])
