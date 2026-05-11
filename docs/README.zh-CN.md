@@ -106,7 +106,7 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 
 默认本地验证入口是 `./scripts/verify.sh`。它只运行一次 line-budget，然后运行小
 `smoke` lane 与不需要 optional proof dependency 的非重型 fast core lane。矩阵型、
-runtime/session、hosted/export、product-entry 与兼容性覆盖归入
+runtime/session、hosted/export、product-entry 与 provenance-oracle 回归覆盖归入
 `./scripts/verify.sh regression`；显式 Hermes hosted/proof 检查归入
 `./scripts/verify.sh proof` 并使用 `proof` extra；product-entry
 case 模块直接由 `tests/product_entry_cases/` 收集，旧

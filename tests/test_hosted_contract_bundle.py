@@ -96,7 +96,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
                     "current_owner_line": self._current_runtime_owner()["current_owner_line"],
                     "active_phase": self._current_runtime_owner()["active_phase"],
                     "active_tranche": self._current_runtime_owner()["active_tranche"],
-                    "compatibility_bridge": self._current_runtime_owner()["compatibility_bridge"],
+                    "provenance_oracle": self._current_runtime_owner()["provenance_oracle"],
                     "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                 },
             )

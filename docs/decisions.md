@@ -76,7 +76,7 @@
 
 - 决策：公开文案与 machine-readable 描述统一收口为 `Med Auto Grant` 是独立 medical grant domain agent，可被 `Codex` / `OPL` / 其他通用 agent 直接调用；`OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes。
 - 理由：此前公开叙述里仍混入了“位于 OPL 内部 workspace”或把 `gateway / harness` 作为第一身份的表达，容易让 caller 误判 MAG 的独立边界与 direct-entry 能力。
-- 影响：`CLI` / `MedAutoGrantDomainEntry` 继续固定为 agent entry；`product entry/product status/direct-entry/user-loop` 继续固定为 lightweight direct entry / projection；`gateway / harness` 继续保留为内部架构层级术语，避免对外身份漂移。
+- 影响：`CLI` / `MedAutoGrantDomainEntry` 继续固定为 agent entry；`product entry/product status/direct-entry/user-loop` 继续固定为 lightweight direct entry / projection；旧 `gateway / harness` wording 只作为历史迁移语境保留，当前架构术语回到 single app skill、CLI/domain-entry 与 OPL stage-led framework。
 
 ## 2026-04-17：冻结托管运行时三层 owner contract
 
@@ -203,7 +203,7 @@
 ## 2026-04-12：冻结 schema-backed product entry / routing contract
 
 - 决策：把已 landed 的 `service-safe domain surface`、`executor_routing_contract` 与 `product_entry` 从“文档冻结 + 运行时 dict”进一步收口成 schema-backed contract，并在 `runtime-run` / `build-product-entry` 生成时 fail-closed。
-- 理由：`OPL Gateway` 与 future domain caller 最终消费的是 machine-readable contract，而不是 repo 内部约定。如果这些 surface 只有 current truth 没有 schema，后续最容易在 pending route、route catalog、draft-bearing/nullability 边界上悄悄漂移。
+- 理由：future OPL / domain caller 最终消费的是 machine-readable contract，而不是 repo 内部约定。如果这些 surface 只有 current truth 没有 schema，后续最容易在 pending route、route catalog、draft-bearing/nullability 边界上悄悄漂移。
 - 影响：`schemas/v1/schema-index.json` 现在会显式索引当前主线正在公开承诺的 contract schema；`product_entry` 与 `stage_action_envelope.executor_routing_contract` 必须同时满足 schema 校验和冻结 truth 比对；后续任何 contract 变更都必须同步更新 schema、tests、docs 与 current-program pointer。
 
 ## 2026-04-12：冻结 hosted contract bundle entry and route catalog

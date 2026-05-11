@@ -111,7 +111,7 @@ are generated and printed before the lane reports the Sentrux failure.
 The default local verification entry is `./scripts/verify.sh`. It runs the
 line-budget check once, then the small `smoke` lane and the fast non-regression
 core lane without optional proof dependencies. Heavier matrix, runtime/session,
-hosted/export, product-entry, and compatibility coverage belongs to
+hosted/export, product-entry, and provenance-oracle regression coverage belongs to
 `./scripts/verify.sh regression`; explicit Hermes hosted/proof checks belong to
 `./scripts/verify.sh proof` and use the `proof` extra. The
 product-entry case modules under `tests/product_entry_cases/` are directly

@@ -282,9 +282,9 @@ def build_runtime_substrate_contract(*, current_program_contract: dict[str, Any]
             "active_tranche",
             context="CURRENT_PROGRAM contract runtime_owner",
         ),
-        "compatibility_bridge": require_nonempty_string(
+        "provenance_oracle": require_nonempty_string(
             runtime_owner,
-            "compatibility_bridge",
+            "provenance_oracle",
             context="CURRENT_PROGRAM contract runtime_owner",
         ),
         "repo_tracked_current_program_contract": CURRENT_PROGRAM_RELATIVE_PATH.as_posix(),

@@ -46,7 +46,7 @@ def test_pyproject_registers_test_lane_markers() -> None:
     )
     assert "integration: cross-surface integration checks that are broader than unit contracts" in markers
     assert (
-        "regression: heavier matrix, historical compatibility, runtime/export, and product regression checks"
+        "regression: heavier matrix, provenance oracle, runtime/export, and product regression checks"
         in markers
     )
     assert "proof: explicit optional hosted/Hermes proof lane that may require optional dependencies" in markers

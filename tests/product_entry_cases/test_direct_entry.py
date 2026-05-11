@@ -184,7 +184,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                             "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                             "active_phase": "P4 mature direct grant product entry",
                             "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
-                            "compatibility_bridge": "post-R5A local runtime closeout / stage-led provenance oracle",
+                            "provenance_oracle": "post-R5A local runtime closeout / stage-led provenance oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
                         "runtime_state_contract": {
@@ -240,7 +240,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                             "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                             "active_phase": "P4 mature direct grant product entry",
                             "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
-                            "compatibility_bridge": "post-R5A local runtime closeout / stage-led provenance oracle",
+                            "provenance_oracle": "post-R5A local runtime closeout / stage-led provenance oracle",
                             "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
                         },
                         "runtime_state_contract": {
