@@ -1982,6 +1982,157 @@
         }
       }
     },
+    "domainMemoryDescriptorLocator": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "descriptor_id",
+        "memory_owner",
+        "memory_content_owner",
+        "fundability_verdict_owner",
+        "policy_ref",
+        "memory_locator",
+        "writeback_receipt_refs",
+        "opl_consumption_contract",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "domain_memory_descriptor_locator"
+        },
+        "descriptor_id": {
+          "const": "mag.domain_memory_descriptor_locator.v1"
+        },
+        "memory_owner": {
+          "const": "med-autogrant"
+        },
+        "memory_content_owner": {
+          "const": "med-autogrant"
+        },
+        "fundability_verdict_owner": {
+          "const": "med-autogrant"
+        },
+        "policy_ref": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ref_kind",
+            "ref",
+            "role"
+          ],
+          "properties": {
+            "ref": {
+              "const": "docs/references/grant_strategy_memory_policy.md"
+            }
+          }
+        },
+        "memory_locator": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "locator_kind",
+            "runtime_memory_root",
+            "repo_tracked",
+            "content_policy",
+            "retrieval_policy"
+          ],
+          "properties": {
+            "locator_kind": {
+              "const": "domain_memory_locator"
+            },
+            "repo_tracked": {
+              "const": false
+            },
+            "content_policy": {
+              "const": "locator_only_no_memory_content_in_repo_manifest"
+            },
+            "retrieval_policy": {
+              "const": "stage_specific_small_relevant_sets"
+            }
+          }
+        },
+        "writeback_receipt_refs": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "memory_writeback_receipt_ref",
+            "receipt_write_policy"
+          ],
+          "properties": {
+            "receipt_write_policy": {
+              "const": "receipt_ref_only_no_domain_memory_content_mutation"
+            }
+          }
+        },
+        "opl_consumption_contract": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "role",
+            "consumes",
+            "does_not_consume",
+            "can_hold_memory_content",
+            "can_issue_fundability_verdict",
+            "can_issue_authoring_quality_verdict",
+            "can_issue_export_verdict",
+            "can_mutate_domain_memory_store"
+          ],
+          "properties": {
+            "role": {
+              "const": "locator_ref_and_receipt_ref_consumer_only"
+            },
+            "can_hold_memory_content": {
+              "const": false
+            },
+            "can_issue_fundability_verdict": {
+              "const": false
+            },
+            "can_issue_authoring_quality_verdict": {
+              "const": false
+            },
+            "can_issue_export_verdict": {
+              "const": false
+            },
+            "can_mutate_domain_memory_store": {
+              "const": false
+            }
+          }
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "domain_truth_owner",
+            "memory_content_owner",
+            "fundability_verdict_owner",
+            "authoring_quality_verdict_owner",
+            "submission_ready_export_verdict_owner",
+            "opl_role"
+          ],
+          "properties": {
+            "domain_truth_owner": {
+              "const": "med-autogrant"
+            },
+            "memory_content_owner": {
+              "const": "med-autogrant"
+            },
+            "fundability_verdict_owner": {
+              "const": "med-autogrant"
+            },
+            "authoring_quality_verdict_owner": {
+              "const": "med-autogrant"
+            },
+            "submission_ready_export_verdict_owner": {
+              "const": "med-autogrant"
+            },
+            "opl_role": {
+              "const": "memory_locator_ref_and_receipt_ref_consumer_only"
+            }
+          }
+        }
+      }
+    },
     "domainAgentSkeletonMapping": {
       "type": "object",
       "additionalProperties": true,
@@ -1992,6 +2143,7 @@
         "runtime_declaration",
         "artifact_locator_ref",
         "controlled_stage_attempt_ref",
+        "domain_memory_descriptor_locator_ref",
         "authority_boundary"
       ],
       "properties": {
@@ -2026,6 +2178,9 @@
         },
         "controlled_stage_attempt_ref": {
           "const": "/product_entry_manifest/controlled_stage_attempt_projection"
+        },
+        "domain_memory_descriptor_locator_ref": {
+          "const": "/product_entry_manifest/domain_memory_descriptor_locator"
         },
         "authority_boundary": {
           "type": "object",
@@ -2909,7 +3064,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_agent_skeleton_mapping", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor_locator", "domain_agent_skeleton_mapping", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -3028,6 +3183,9 @@
         },
         "controlled_stage_attempt_projection": {
           "$ref": "#/$defs/controlledStageAttemptProjection"
+        },
+        "domain_memory_descriptor_locator": {
+          "$ref": "#/$defs/domainMemoryDescriptorLocator"
         },
         "domain_agent_skeleton_mapping": {
           "$ref": "#/$defs/domainAgentSkeletonMapping"

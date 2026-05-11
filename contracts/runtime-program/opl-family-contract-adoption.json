@@ -183,6 +183,49 @@
       "canonical_grant_artifact_content"
     ]
   },
+  "domain_memory_descriptor_locator": {
+    "surface_kind": "domain_memory_descriptor_locator",
+    "descriptor_id": "mag.domain_memory_descriptor_locator.v1",
+    "manifest_surface_ref": "/product_entry_manifest/domain_memory_descriptor_locator",
+    "policy_ref": "docs/references/grant_strategy_memory_policy.md",
+    "maps_to_opl_contract": "opl_family_domain_memory_locator_contract.v1",
+    "memory_owner": "med-autogrant",
+    "memory_content_owner": "med-autogrant",
+    "truth_owner": "med-autogrant",
+    "fundability_verdict_owner": "med-autogrant",
+    "locator_policy": "repo_tracked_descriptor_and_locator_refs_only",
+    "stage_memory_refs": [
+      "call_and_candidate_intake",
+      "fundability_strategy",
+      "specific_aims_and_structure",
+      "proposal_authoring",
+      "review_and_rebuttal",
+      "package_and_submit_ready"
+    ],
+    "opl_consumption": [
+      "descriptor",
+      "policy_ref",
+      "stage_descriptor_refs",
+      "memory_locator",
+      "writeback_receipt_refs"
+    ],
+    "opl_non_consumption": [
+      "memory_content",
+      "fundability_verdict",
+      "authoring_quality_verdict",
+      "submission_ready_export_verdict",
+      "canonical_grant_artifact_content"
+    ],
+    "writeback_policy": "opl_may_route_writeback_receipt_refs_but_mag_accepts_or_rejects_memory_content",
+    "authority_boundary": {
+      "opl_role": "memory_locator_ref_and_receipt_ref_consumer_only",
+      "can_hold_memory_content": false,
+      "can_issue_fundability_verdict": false,
+      "can_issue_authoring_quality_verdict": false,
+      "can_issue_export_verdict": false,
+      "can_mutate_domain_memory_store": false
+    }
+  },
   "lifecycle_adapter": {
     "surface_kind": "opl_family_lifecycle_adapter_contract",
     "adapter_id": "mag.opl_family.lifecycle_adapter.v1",

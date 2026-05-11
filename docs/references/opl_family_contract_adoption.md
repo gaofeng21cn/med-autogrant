@@ -55,6 +55,12 @@ MAG 现在通过 `product-entry-manifest` 导出 `domain_agent_skeleton_mapping`
 - `controlled_stage_attempt_projection` 只暴露 attempt descriptor、source refs、runtime status projection 和 receipt refs。
 - OPL 只消费 descriptor/refs，不持有 fundability verdict、authoring quality verdict、submission-ready export verdict 或 canonical grant artifact content。
 
+## Domain Memory Descriptor / Locator
+
+MAG 通过 `domain_memory_descriptor_locator` 暴露 grant strategy memory 的机器可读定位面。它引用 `docs/references/grant_strategy_memory_policy.md`，并把六个 stage 的 memory context 绑定到 `family_stage_control_plane`，但 repo manifest 只携带 descriptor、policy ref、stage descriptor refs、locator template 与 writeback receipt refs。
+
+实际 memory content、accepted/rejected writeback、fundability strategy、authoring quality verdict 和 submission-ready export verdict 继续由 MAG 持有。OPL 可以索引 locator/ref、展示 consumed-memory provenance、路由 writeback receipt；它不能保存 MAG memory content，不能接受或拒绝 MAG memory writeback，也不能用 memory 产生 fundability、authoring quality 或 export verdict。
+
 ## Lifecycle Adapter
 
 MAG 的 `opl_runtime_manager_registration` 现在携带 `family_lifecycle_adapter`。这层只把已有 `runtime_control`、`session_continuity`、`grant-progress/user-loop` 与 `artifact_inventory` 映射为 OPL family persistence、lifecycle、owner-route discovery 和 adoption projection：
