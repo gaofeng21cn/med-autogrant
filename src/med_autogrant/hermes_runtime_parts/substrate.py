@@ -94,7 +94,6 @@ class MagDomainRuntime(HermesRuntimeAuthoringSurfaceMixin, HermesRuntimeHandoffS
             "default_stage_attempt_executor": "Codex CLI",
             "supported_protocol_layer": "MCP",
             "internal_controller_surface": "controller",
-            "provenance_oracle": "Codex-default stage attempt provenance",
             "optional_proof_executor": "Hermes-Agent",
             "optional_proof_executor_boundary": "explicit opt-in only",
             "domain_logic_modules": [
