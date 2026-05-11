@@ -172,14 +172,22 @@
     "maps_to_opl_contract": "opl_family_runtime_attempt_contract.v1",
     "receipt_refs_surface": "/product_entry_manifest/controlled_stage_attempt_projection/receipt_refs",
     "proof_surface": "/product_entry_manifest/controlled_stage_attempt_projection/proof",
+    "opl_hosted_controlled_grant_stage_attempt_proof_surface": "/product_entry_manifest/controlled_stage_attempt_projection/opl_hosted_controlled_grant_stage_attempt_proof",
     "proof_state": "critique_revision_package_fixture_contract_landed",
     "direct_skill_and_opl_hosted_use_same_descriptor_sidecar_quality_refs": true,
+    "controlled_memory_proof_refs": [
+      "/product_entry_manifest/domain_memory_descriptor_locator/controlled_consumed_memory_proof",
+      "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof"
+    ],
     "opl_consumption": [
       "descriptor",
       "source_refs",
       "receipt_refs",
       "runtime_status_projection",
-      "controlled_stage_attempt_fixture_proof"
+      "controlled_stage_attempt_fixture_proof",
+      "opl_hosted_controlled_grant_stage_attempt_proof",
+      "controlled_consumed_memory_ref",
+      "writeback_receipt_ref"
     ],
     "opl_non_consumption": [
       "fundability_verdict",
@@ -297,6 +305,25 @@
       "decision_receipt_ref_template": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/<grant_run_id>/memory-writeback-decisions/<proposal_id>.json",
       "receipt_content_policy": "locator_and_decision_metadata_only_no_memory_body",
       "repo_tracked": false
+    },
+    "controlled_consumed_memory_proof": {
+      "surface_kind": "domain_memory_controlled_consumed_memory_proof",
+      "manifest_surface_ref": "/product_entry_manifest/domain_memory_descriptor_locator/controlled_consumed_memory_proof",
+      "maps_to_opl_contract": "opl_family_consumed_memory_proof.v1",
+      "projection_policy": "locator_and_stage_context_only_no_memory_body",
+      "repo_tracked_real_memory_body": false,
+      "opl_role": "consumed_memory_ref_consumer_only"
+    },
+    "writeback_receipt_proof": {
+      "surface_kind": "domain_memory_writeback_receipt_proof",
+      "manifest_surface_ref": "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof",
+      "maps_to_opl_contract": "opl_family_memory_writeback_receipt_proof.v1",
+      "proposal_surface_kind": "mag_domain_memory_writeback_proposal",
+      "decision_surface_kind": "mag_domain_memory_writeback_decision",
+      "receipt_content_policy": "decision_metadata_and_refs_only_no_memory_body",
+      "receipt_instance_repo_tracked": false,
+      "mag_accept_reject_required": true,
+      "opl_role": "writeback_receipt_ref_router_only"
     },
     "authority_boundary": {
       "opl_role": "memory_locator_ref_and_receipt_ref_consumer_only",

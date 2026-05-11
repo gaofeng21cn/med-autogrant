@@ -52,16 +52,16 @@ MAG 现在通过 `product-entry-manifest` 导出 `domain_agent_skeleton_mapping`
 - repo-source 边界固定为 `agent`、`contracts`、`runtime`、`docs`。
 - `runtime` 边界只声明 `sidecar`、`projection_builder`、`lifecycle_adapter`。
 - `artifact_locator_contract` 只给 OPL 读取 locator/ref；真实申请书、receipt 实例、中间产物和 submission-ready export 都属于 workspace 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/artifacts/<grant_run_id>/`。
-- `controlled_stage_attempt_projection` 只暴露 attempt descriptor、source refs、runtime status projection 和 receipt refs。
+- `controlled_stage_attempt_projection` 只暴露 attempt descriptor、source refs、runtime status projection、receipt refs 和 OPL-hosted controlled stage attempt proof refs。
 - OPL 只消费 descriptor/refs，不持有 fundability verdict、authoring quality verdict、submission-ready export verdict 或 canonical grant artifact content。
 
 ## Domain Memory Descriptor / Locator
 
-MAG 通过顶层 `domain_memory_descriptor` 暴露 OPL 可解析的 `family_domain_memory_ref.v1`，并通过 `domain_memory_descriptor_locator` 保留 grant strategy memory 的 MAG-owned 详细定位面。它引用 `docs/references/grant_strategy_memory_policy.md`，并把六个 stage 的 memory context 绑定到 `family_stage_control_plane`，但 repo manifest 只携带 descriptor、policy ref、stage descriptor refs、locator template 与 writeback receipt refs。
+MAG 通过顶层 `domain_memory_descriptor` 暴露 OPL 可解析的 `family_domain_memory_ref.v1`，并通过 `domain_memory_descriptor_locator` 保留 grant strategy memory 的 MAG-owned 详细定位面。它引用 `docs/references/grant_strategy_memory_policy.md`，并把六个 stage 的 memory context 绑定到 `family_stage_control_plane`，但 repo manifest 只携带 descriptor、policy ref、stage descriptor refs、locator template、controlled consumed-memory proof refs 与 writeback receipt proof refs。
 
 实际 memory content、accepted/rejected writeback、fundability strategy、authoring quality verdict 和 submission-ready export verdict 继续由 MAG 持有。OPL 可以索引 locator/ref、展示 consumed-memory provenance、路由 writeback receipt；它不能保存 MAG memory content，不能接受或拒绝 MAG memory writeback，也不能用 memory 产生 fundability、authoring quality 或 export verdict。
 
-2026-05-11 状态：MAG 本仓的 migration/proposal/receipt surface 和标准 `family_domain_memory_ref.v1` adapter 已落地。`domain_memory_descriptor` 是给 OPL family memory index 的薄引用面；`domain_memory_descriptor_locator` 仍是 MAG 侧 memory locator、migration plan、proposal、accept/reject、receipt 与 operator projection 的详细合同面。
+2026-05-11 状态：MAG 本仓的 migration/proposal/receipt surface、controlled consumed-memory proof、writeback receipt proof、OPL-hosted controlled grant stage attempt proof 和标准 `family_domain_memory_ref.v1` adapter 已落地。`domain_memory_descriptor` 是给 OPL family memory index 的薄引用面；`domain_memory_descriptor_locator` 仍是 MAG 侧 memory locator、migration plan、proposal、accept/reject、receipt 与 operator projection 的详细合同面。真实 proof instance 仍由 workspace/runtime artifact root 产生，不进入 repo source。
 
 ## Lifecycle Adapter
 

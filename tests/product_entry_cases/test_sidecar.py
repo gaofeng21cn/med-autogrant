@@ -37,6 +37,30 @@ class ProductSidecarTest(unittest.TestCase):
             export["controlled_stage_attempt_projection"]["surface_kind"],
             "controlled_stage_attempt_projection",
         )
+        hosted_proof = export["controlled_stage_attempt_projection"][
+            "opl_hosted_controlled_grant_stage_attempt_proof"
+        ]
+        self.assertEqual(
+            hosted_proof["surface_kind"],
+            "opl_hosted_controlled_grant_stage_attempt_proof",
+        )
+        self.assertEqual(
+            hosted_proof["maps_to_opl_contract"],
+            "opl_hosted_controlled_stage_attempt_proof.v1",
+        )
+        self.assertEqual(
+            hosted_proof["consumed_memory_proof_ref"],
+            "/product_entry_manifest/domain_memory_descriptor_locator/controlled_consumed_memory_proof",
+        )
+        self.assertEqual(
+            hosted_proof["writeback_receipt_proof_ref"],
+            "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof",
+        )
+        self.assertFalse(hosted_proof["repo_tracked_real_receipt_instance"])
+        self.assertFalse(hosted_proof["repo_tracked_real_memory_body"])
+        self.assertFalse(hosted_proof["authority_boundary"]["opl_can_hold_fundability_verdict"])
+        self.assertFalse(hosted_proof["authority_boundary"]["opl_can_hold_authoring_quality_verdict"])
+        self.assertFalse(hosted_proof["authority_boundary"]["opl_can_hold_export_verdict"])
         self.assertEqual(
             export["receipt_refs"],
             export["controlled_stage_attempt_projection"]["receipt_refs"],

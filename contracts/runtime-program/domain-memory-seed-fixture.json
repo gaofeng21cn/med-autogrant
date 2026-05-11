@@ -8,6 +8,8 @@
   "descriptor_surface_ref": "/product_entry_manifest/domain_memory_descriptor_locator",
   "migration_plan_ref": "/product_entry_manifest/domain_memory_descriptor_locator/migration_plan",
   "receipt_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+  "controlled_consumed_memory_proof_ref": "/product_entry_manifest/domain_memory_descriptor_locator/controlled_consumed_memory_proof",
+  "writeback_receipt_proof_ref": "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof",
   "stage_ids": [
     "call_and_candidate_intake",
     "fundability_strategy",
@@ -53,6 +55,26 @@
     "contains_memory_body": false,
     "contains_grant_artifact_content": false,
     "contains_quality_or_export_verdict": false
+  },
+  "controlled_consumed_memory_template": {
+    "surface_kind": "domain_memory_controlled_consumed_memory_proof",
+    "stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+    "consumed_memory_ref": "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/accepted/<memory_id>.json",
+    "contains_memory_body": false,
+    "contains_grant_artifact_content": false,
+    "contains_quality_or_export_verdict": false,
+    "repo_tracked": false
+  },
+  "writeback_receipt_proof_template": {
+    "surface_kind": "domain_memory_writeback_receipt_proof",
+    "proposal_surface_kind": "mag_domain_memory_writeback_proposal",
+    "decision_surface_kind": "mag_domain_memory_writeback_decision",
+    "receipt_ref": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/<grant_run_id>/memory-writeback-decisions/<proposal_id>.json",
+    "mag_accept_reject_required": true,
+    "contains_memory_body": false,
+    "contains_grant_artifact_content": false,
+    "contains_quality_or_export_verdict": false,
+    "repo_tracked": false
   },
   "repo_source_policy": {
     "repo_contains_real_memory_entries": false,

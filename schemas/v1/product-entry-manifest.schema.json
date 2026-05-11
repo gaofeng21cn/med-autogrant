@@ -1943,13 +1943,15 @@
         }
       }
     },
-    "controlledStageAttemptProjection": {
+        "controlledStageAttemptProjection": {
       "type": "object",
       "additionalProperties": true,
       "required": [
         "surface_kind",
         "attempt_id",
         "maps_to_opl_contract",
+        "proof",
+        "opl_hosted_controlled_grant_stage_attempt_proof",
         "receipt_refs",
         "opl_consumption_contract",
         "authority_boundary"
@@ -1971,6 +1973,83 @@
             "sidecar_dispatch_receipt_ref",
             "stage_attempt_receipt_ref"
           ]
+        },
+        "proof": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "proof_id",
+            "proof_state",
+            "shared_descriptor_refs",
+            "direct_skill_and_opl_hosted_use_same_descriptor_sidecar_quality_refs",
+            "opl_verdict_authority"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "controlled_stage_attempt_fixture_proof"
+            },
+            "proof_id": {
+              "const": "mag.controlled_stage_attempt.critique_revision_package.fixture.v1"
+            },
+            "proof_state": {
+              "const": "fixture_contract_landed"
+            },
+            "direct_skill_and_opl_hosted_use_same_descriptor_sidecar_quality_refs": {
+              "const": true
+            },
+            "opl_verdict_authority": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "fundability",
+                "submission_ready_export"
+              ],
+              "properties": {
+                "fundability": {
+                  "const": false
+                },
+                "submission_ready_export": {
+                  "const": false
+                }
+              }
+            }
+          }
+        },
+        "opl_hosted_controlled_grant_stage_attempt_proof": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "proof_id",
+            "proof_state",
+            "maps_to_opl_contract",
+            "consumed_memory_proof_ref",
+            "writeback_receipt_proof_ref",
+            "repo_tracked_real_receipt_instance",
+            "repo_tracked_real_memory_body",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "opl_hosted_controlled_grant_stage_attempt_proof"
+            },
+            "proof_id": {
+              "const": "mag.opl_hosted.controlled_grant_stage_attempt.proof.v1"
+            },
+            "proof_state": {
+              "const": "controlled_fixture_contract_landed"
+            },
+            "maps_to_opl_contract": {
+              "const": "opl_hosted_controlled_stage_attempt_proof.v1"
+            },
+            "repo_tracked_real_receipt_instance": {
+              "const": false
+            },
+            "repo_tracked_real_memory_body": {
+              "const": false
+            }
+          }
         },
         "opl_consumption_contract": {
           "type": "object",
@@ -2175,6 +2254,8 @@
         "accept_reject_command",
         "writeback_receipt_refs",
         "receipt_locator",
+        "controlled_consumed_memory_proof",
+        "writeback_receipt_proof",
         "operator_receipt_projection",
         "opl_consumption_contract",
         "authority_boundary"
@@ -2430,6 +2511,88 @@
             },
             "repo_tracked": {
               "const": false
+            }
+          }
+        },
+        "controlled_consumed_memory_proof": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "proof_id",
+            "proof_state",
+            "maps_to_opl_contract",
+            "consumed_memory_locator_ref",
+            "stage_attempt_ref",
+            "projection_policy",
+            "repo_tracked_real_memory_body",
+            "forbidden_payloads"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "domain_memory_controlled_consumed_memory_proof"
+            },
+            "proof_id": {
+              "const": "mag.domain_memory.consumed_memory.proof.v1"
+            },
+            "proof_state": {
+              "const": "controlled_fixture_contract_landed"
+            },
+            "maps_to_opl_contract": {
+              "const": "opl_family_consumed_memory_proof.v1"
+            },
+            "projection_policy": {
+              "const": "locator_and_stage_context_only_no_memory_body"
+            },
+            "repo_tracked_real_memory_body": {
+              "const": false
+            }
+          }
+        },
+        "writeback_receipt_proof": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "proof_id",
+            "proof_state",
+            "maps_to_opl_contract",
+            "proposal_surface_kind",
+            "decision_surface_kind",
+            "receipt_locator_ref",
+            "operator_projection_ref",
+            "receipt_instance_repo_tracked",
+            "receipt_content_policy",
+            "mag_accept_reject_required",
+            "forbidden_payloads"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "domain_memory_writeback_receipt_proof"
+            },
+            "proof_id": {
+              "const": "mag.domain_memory.writeback_receipt.proof.v1"
+            },
+            "proof_state": {
+              "const": "controlled_fixture_contract_landed"
+            },
+            "maps_to_opl_contract": {
+              "const": "opl_family_memory_writeback_receipt_proof.v1"
+            },
+            "proposal_surface_kind": {
+              "const": "mag_domain_memory_writeback_proposal"
+            },
+            "decision_surface_kind": {
+              "const": "mag_domain_memory_writeback_decision"
+            },
+            "receipt_instance_repo_tracked": {
+              "const": false
+            },
+            "receipt_content_policy": {
+              "const": "decision_metadata_and_refs_only_no_memory_body"
+            },
+            "mag_accept_reject_required": {
+              "const": true
             }
           }
         },

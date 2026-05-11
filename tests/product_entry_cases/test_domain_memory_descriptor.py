@@ -65,6 +65,35 @@ class ProductEntryDomainMemoryDescriptorTest(unittest.TestCase):
             descriptor["writeback_receipt_locator_ref"]["ref"],
             "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
         )
+        consumed_proof = locator["controlled_consumed_memory_proof"]
+        self.assertEqual(
+            consumed_proof["surface_kind"],
+            "domain_memory_controlled_consumed_memory_proof",
+        )
+        self.assertEqual(consumed_proof["maps_to_opl_contract"], "opl_family_consumed_memory_proof.v1")
+        self.assertEqual(consumed_proof["projection_policy"], "locator_and_stage_context_only_no_memory_body")
+        self.assertFalse(consumed_proof["repo_tracked_real_memory_body"])
+        self.assertEqual(consumed_proof["opl_role"], "consumed_memory_ref_consumer_only")
+        self.assertIn("memory_body", consumed_proof["forbidden_payloads"])
+        self.assertIn("fundability_verdict", consumed_proof["forbidden_payloads"])
+        self.assertIn("submission_ready_export_verdict", consumed_proof["forbidden_payloads"])
+
+        receipt_proof = locator["writeback_receipt_proof"]
+        self.assertEqual(receipt_proof["surface_kind"], "domain_memory_writeback_receipt_proof")
+        self.assertEqual(
+            receipt_proof["maps_to_opl_contract"],
+            "opl_family_memory_writeback_receipt_proof.v1",
+        )
+        self.assertEqual(receipt_proof["proposal_surface_kind"], "mag_domain_memory_writeback_proposal")
+        self.assertEqual(receipt_proof["decision_surface_kind"], "mag_domain_memory_writeback_decision")
+        self.assertEqual(
+            receipt_proof["receipt_content_policy"],
+            "decision_metadata_and_refs_only_no_memory_body",
+        )
+        self.assertTrue(receipt_proof["mag_accept_reject_required"])
+        self.assertFalse(receipt_proof["receipt_instance_repo_tracked"])
+        self.assertIn("memory_body", receipt_proof["forbidden_payloads"])
+        self.assertIn("authoring_quality_verdict", receipt_proof["forbidden_payloads"])
         self.assertEqual(
             descriptor["freshness"]["refresh_policy"],
             "rebuild_product_entry_manifest_before_opl_discovery",

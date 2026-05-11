@@ -343,6 +343,67 @@ def build_domain_memory_descriptor_locator(
                 "submission_ready_export": False,
             },
         },
+        "controlled_consumed_memory_proof": {
+            "surface_kind": "domain_memory_controlled_consumed_memory_proof",
+            "proof_id": "mag.domain_memory.consumed_memory.proof.v1",
+            "proof_state": "controlled_fixture_contract_landed",
+            "maps_to_opl_contract": "opl_family_consumed_memory_proof.v1",
+            "consumed_memory_locator_ref": (
+                "/product_entry_manifest/domain_memory_descriptor_locator/memory_locator"
+            ),
+            "stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+            "stage_memory_context_refs": [
+                "/product_entry_manifest/domain_memory_descriptor_locator/stage_descriptor_refs",
+                "/product_entry_manifest/family_stage_control_plane",
+            ],
+            "consumed_memory_ref_template": (
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
+                "accepted/<memory_id>.json"
+            ),
+            "projection_policy": "locator_and_stage_context_only_no_memory_body",
+            "repo_tracked_real_memory_body": False,
+            "opl_role": "consumed_memory_ref_consumer_only",
+            "forbidden_payloads": [
+                "memory_body",
+                "workspace_private_evidence",
+                "canonical_grant_artifact_content",
+                "fundability_verdict",
+                "authoring_quality_verdict",
+                "submission_ready_export_verdict",
+            ],
+        },
+        "writeback_receipt_proof": {
+            "surface_kind": "domain_memory_writeback_receipt_proof",
+            "proof_id": "mag.domain_memory.writeback_receipt.proof.v1",
+            "proof_state": "controlled_fixture_contract_landed",
+            "maps_to_opl_contract": "opl_family_memory_writeback_receipt_proof.v1",
+            "proposal_surface_kind": "mag_domain_memory_writeback_proposal",
+            "decision_surface_kind": "mag_domain_memory_writeback_decision",
+            "receipt_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+            "operator_projection_ref": (
+                "/product_entry_manifest/domain_memory_descriptor_locator/"
+                "operator_receipt_projection"
+            ),
+            "proposal_receipt_ref_template": (
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+                f"{grant_run_id}/memory-writeback/<proposal_id>.json"
+            ),
+            "decision_receipt_ref_template": (
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+                f"{grant_run_id}/memory-writeback-decisions/<proposal_id>.json"
+            ),
+            "receipt_instance_repo_tracked": False,
+            "receipt_content_policy": "decision_metadata_and_refs_only_no_memory_body",
+            "mag_accept_reject_required": True,
+            "opl_role": "writeback_receipt_ref_router_only",
+            "forbidden_payloads": [
+                "memory_body",
+                "canonical_grant_artifact_content",
+                "fundability_verdict",
+                "authoring_quality_verdict",
+                "submission_ready_export_verdict",
+            ],
+        },
         "writeback_receipt_refs": {
             "receipt_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
             "memory_writeback_receipt_ref": (
@@ -536,6 +597,8 @@ def build_controlled_stage_attempt_projection(
             "shared_descriptor_refs": [
                 "/product_entry_manifest/domain_memory_descriptor_locator",
                 "/product_entry_manifest/domain_memory_descriptor_locator/controlled_apply_fixture",
+                "/product_entry_manifest/domain_memory_descriptor_locator/controlled_consumed_memory_proof",
+                "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof",
                 "/product_entry_manifest/artifact_locator_contract",
                 "/product_entry_manifest/grant_authoring_readiness",
             ],
@@ -545,6 +608,43 @@ def build_controlled_stage_attempt_projection(
             "opl_verdict_authority": {
                 "fundability": False,
                 "submission_ready_export": False,
+            },
+        },
+        "opl_hosted_controlled_grant_stage_attempt_proof": {
+            "surface_kind": "opl_hosted_controlled_grant_stage_attempt_proof",
+            "proof_id": "mag.opl_hosted.controlled_grant_stage_attempt.proof.v1",
+            "proof_state": "controlled_fixture_contract_landed",
+            "maps_to_opl_contract": "opl_hosted_controlled_stage_attempt_proof.v1",
+            "attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+            "stage_chain": [
+                "review_and_rebuttal",
+                "proposal_authoring",
+                "package_and_submit_ready",
+            ],
+            "consumed_memory_proof_ref": (
+                "/product_entry_manifest/domain_memory_descriptor_locator/"
+                "controlled_consumed_memory_proof"
+            ),
+            "writeback_receipt_proof_ref": (
+                "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof"
+            ),
+            "sidecar_export_ref": "/product_entry_manifest/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
+            "stage_attempt_receipt_ref": (
+                "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+                f"{grant_run_id}/stage-attempt/{lifecycle_stage}.json"
+            ),
+            "provider_role": "opl_hosted_attempt_lifecycle_and_receipt_router",
+            "domain_owner": TARGET_DOMAIN_ID,
+            "repo_tracked_real_receipt_instance": False,
+            "repo_tracked_real_memory_body": False,
+            "direct_skill_and_opl_hosted_use_same_descriptor_sidecar_quality_refs": True,
+            "authority_boundary": {
+                "fundability_verdict_owner": TARGET_DOMAIN_ID,
+                "authoring_quality_verdict_owner": TARGET_DOMAIN_ID,
+                "submission_ready_export_verdict_owner": TARGET_DOMAIN_ID,
+                "opl_can_hold_fundability_verdict": False,
+                "opl_can_hold_authoring_quality_verdict": False,
+                "opl_can_hold_export_verdict": False,
             },
         },
         "receipt_refs": {

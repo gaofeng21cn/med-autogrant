@@ -355,3 +355,52 @@ def test_domain_memory_seed_fixture_is_template_only_and_points_to_landed_surfac
     assert receipt_template["contains_memory_body"] is False
     assert receipt_template["contains_grant_artifact_content"] is False
     assert receipt_template["contains_quality_or_export_verdict"] is False
+
+    consumed_template = fixture["controlled_consumed_memory_template"]
+    assert consumed_template["surface_kind"] == "domain_memory_controlled_consumed_memory_proof"
+    assert consumed_template["stage_attempt_ref"] == "/product_entry_manifest/controlled_stage_attempt_projection"
+    assert consumed_template["contains_memory_body"] is False
+    assert consumed_template["repo_tracked"] is False
+
+    receipt_proof_template = fixture["writeback_receipt_proof_template"]
+    assert receipt_proof_template["surface_kind"] == "domain_memory_writeback_receipt_proof"
+    assert receipt_proof_template["proposal_surface_kind"] == "mag_domain_memory_writeback_proposal"
+    assert receipt_proof_template["decision_surface_kind"] == "mag_domain_memory_writeback_decision"
+    assert receipt_proof_template["mag_accept_reject_required"] is True
+    assert receipt_proof_template["contains_memory_body"] is False
+    assert receipt_proof_template["repo_tracked"] is False
+
+
+def test_mag_adoption_contract_declares_controlled_memory_and_opl_hosted_attempt_proofs() -> None:
+    contract = _contract()
+    attempt = contract["controlled_stage_attempt_projection"]
+    memory = contract["domain_memory_descriptor_locator"]
+
+    assert attempt["opl_hosted_controlled_grant_stage_attempt_proof_surface"] == (
+        "/product_entry_manifest/controlled_stage_attempt_projection/"
+        "opl_hosted_controlled_grant_stage_attempt_proof"
+    )
+    assert attempt["controlled_memory_proof_refs"] == [
+        "/product_entry_manifest/domain_memory_descriptor_locator/controlled_consumed_memory_proof",
+        "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof",
+    ]
+    assert "opl_hosted_controlled_grant_stage_attempt_proof" in attempt["opl_consumption"]
+    assert "controlled_consumed_memory_ref" in attempt["opl_consumption"]
+    assert "writeback_receipt_ref" in attempt["opl_consumption"]
+    assert "fundability_verdict" in attempt["opl_non_consumption"]
+    assert "submission_ready_export_verdict" in attempt["opl_non_consumption"]
+
+    consumed = memory["controlled_consumed_memory_proof"]
+    assert consumed["surface_kind"] == "domain_memory_controlled_consumed_memory_proof"
+    assert consumed["maps_to_opl_contract"] == "opl_family_consumed_memory_proof.v1"
+    assert consumed["projection_policy"] == "locator_and_stage_context_only_no_memory_body"
+    assert consumed["repo_tracked_real_memory_body"] is False
+    assert consumed["opl_role"] == "consumed_memory_ref_consumer_only"
+
+    receipt = memory["writeback_receipt_proof"]
+    assert receipt["surface_kind"] == "domain_memory_writeback_receipt_proof"
+    assert receipt["maps_to_opl_contract"] == "opl_family_memory_writeback_receipt_proof.v1"
+    assert receipt["receipt_content_policy"] == "decision_metadata_and_refs_only_no_memory_body"
+    assert receipt["receipt_instance_repo_tracked"] is False
+    assert receipt["mag_accept_reject_required"] is True
+    assert receipt["opl_role"] == "writeback_receipt_ref_router_only"
