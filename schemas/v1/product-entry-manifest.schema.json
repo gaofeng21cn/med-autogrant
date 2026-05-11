@@ -227,7 +227,7 @@
       ],
       "properties": {
         "shared_contract_ref": {
-          "const": "contracts/opl-gateway/managed-runtime-three-layer-contract.json"
+          "const": "contracts/opl-framework/managed-runtime-three-layer-contract.json"
         },
         "runtime_owner": {
           "const": "codex_cli"
@@ -908,7 +908,7 @@
         }
       }
     },
-    "oplRuntimeManagerRegistration": {
+    "oplStageRuntimeRegistration": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -932,16 +932,16 @@
       ],
       "properties": {
         "surface_kind": {
-          "const": "opl_runtime_manager_domain_registration"
+          "const": "opl_stage_runtime_domain_registration"
         },
         "version": {
           "const": "v1"
         },
         "registration_id": {
-          "const": "mag.opl_runtime_manager.registration.v1"
+          "const": "mag.opl_stage_runtime.registration.v1"
         },
         "manager_surface_id": {
-          "const": "opl_runtime_manager"
+          "const": "opl_stage_runtime"
         },
         "domain_id": {
           "const": "medautogrant"
@@ -1053,13 +1053,13 @@
           ],
           "properties": {
             "runtime_attempt": {
-              "const": "contracts/opl-gateway/family-runtime-attempt-contract.json"
+              "const": "contracts/opl-framework/family-runtime-attempt-contract.json"
             },
             "product_operator": {
-              "const": "contracts/opl-gateway/family-product-operator-projection.json"
+              "const": "contracts/opl-framework/family-product-operator-projection.json"
             },
             "incident_learning": {
-              "const": "contracts/opl-gateway/family-incident-learning-loop.json"
+              "const": "contracts/opl-framework/family-incident-learning-loop.json"
             },
             "adoption": {
               "const": "contracts/runtime-program/opl-family-contract-adoption.json"
@@ -1098,7 +1098,7 @@
       ],
       "properties": {
         "maps_to": {
-          "const": "opl_runtime_manager_native_state_projection"
+          "const": "opl_stage_runtime_native_state_projection"
         },
         "source_surface_refs": {
           "$ref": "common.schema.json#/$defs/stringList"
@@ -1151,19 +1151,19 @@
       ],
       "properties": {
         "discovery_surface_ref": {
-          "const": "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration"
+          "const": "/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration"
         },
         "owner_split": {
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "runtime_manager_owner",
+            "stage_runtime_owner",
             "runtime_kernel_owner",
             "domain_truth_owner",
             "executor_owner"
           ],
           "properties": {
-            "runtime_manager_owner": {
+            "stage_runtime_owner": {
               "const": "one-person-lab"
             },
             "runtime_kernel_owner": {
@@ -1268,7 +1268,7 @@
       ],
       "properties": {
         "protocol_ref": {
-          "const": "contracts/opl-gateway/native-helper-contract.json"
+          "const": "contracts/opl-framework/native-helper-contract.json"
         },
         "language": {
           "const": "rust"
@@ -1441,7 +1441,7 @@
         "supporting_shell_keys",
         "shell_commands",
         "runtime_continuity",
-        "opl_runtime_manager_registration",
+        "opl_stage_runtime_registration",
         "domain_agent_skeleton_mapping"
       ],
       "properties": {
@@ -1497,8 +1497,8 @@
         "runtime_continuity": {
           "$ref": "#/$defs/skillRuntimeContinuitySurface"
         },
-        "opl_runtime_manager_registration": {
-          "$ref": "#/$defs/oplRuntimeManagerRegistration"
+        "opl_stage_runtime_registration": {
+          "$ref": "#/$defs/oplStageRuntimeRegistration"
         },
         "domain_agent_skeleton_mapping": {
           "$ref": "#/$defs/domainAgentSkeletonMapping"

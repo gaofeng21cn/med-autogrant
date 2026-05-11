@@ -4,7 +4,7 @@
 
 - `Med Auto Grant` 对外第一身份固定为独立 medical grant domain agent，不写成 `OPL` 内部 workspace 模块。
 - `CLI` / `MedAutoGrantDomainEntry` 固定为 agent entry；`product entry/product status/direct-entry/user-loop` 固定为单一 app skill 下的内部 command contract / direct-product projection，不得被提升成公开第一主语。
-- `gateway / harness` 继续保留为内部架构分层术语，不作为对外第一身份。
+- stage-led framework / domain harness 继续保留为内部架构分层术语，不作为对外第一身份。
 - formal-entry matrix 当前固定为：默认正式入口 `CLI`、支持协议层 `MCP`（future layer）、内部控制面 `controller`。
 - 不得把 `supported_protocol_layer=MCP` 解释成“当前 public runtime 已正式支持 MCP”。
 - 不得把 developer control-plane entry 的存在解释成“产品 controller 已正式支持”。
@@ -34,7 +34,7 @@
 - 当 hosted/proof backend 相关材料存在时，不得把 repo-side adapter 重写成默认 runtime owner，也不得把这些 lane 误写成唯一公开 capability contract。
 - 当前 landed substrate、兼容桥与 future scope 必须在 `docs/status.md` 与 `docs/README*` 中显式拆开。
 - 当前 OPL stage-led 对齐已经落到 MAG-owned `family_action_catalog`、`family_stage_control_plane`、runtime_control / runtime_continuity projection 与 product sidecar adapter；这些 surface 只供 OPL discovery、queue、wakeup、handoff、receipt、retry/dead-letter 和 operator projection 使用，不授权 OPL 生成 fundability judgment、authoring quality verdict 或 submission-ready export verdict。
-- 旧 local host-agent runtime、旧 `OPL Gateway` wording、`product-status` compatibility traces、旧五个 canonical CLI verifier baseline 和 `tests/test_product_entry.py` compatibility import surface 只能作为历史 provenance、regression oracle 或兼容导入面保留；它们不得回到默认 product/runtime owner。物理删除必须以 current contract、tests 和 restore/provenance 替代面已成立为前提。
+- 旧 local host-agent runtime、旧 `OPL Gateway` wording、旧 product-status traces 和旧五个 canonical CLI verifier baseline 只能作为历史 provenance 或 regression oracle 保留；它们不得回到默认 product/runtime owner。旧 `tests/test_product_entry.py` 兼容聚合面已删除。
 
 ## 任务边界与 gate 语义
 

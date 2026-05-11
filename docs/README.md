@@ -114,8 +114,8 @@ hosted/export, product-entry, and compatibility coverage belongs to
 `./scripts/verify.sh regression`; explicit Hermes hosted/proof checks belong to
 `./scripts/verify.sh proof` and use the `proof` extra. The
 product-entry case modules under `tests/product_entry_cases/` are directly
-collected there, with `tests/test_product_entry.py` kept only as the compatibility
-import surface. Full-suite baselines remain available through
+collected there; the old `tests/test_product_entry.py` aggregation surface has
+been removed. Full-suite baselines remain available through
 `./scripts/verify.sh full`.
 
 Repository hygiene is enforced in the meta verification surface through

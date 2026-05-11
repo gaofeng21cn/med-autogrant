@@ -72,8 +72,8 @@ def test_product_entry_cases_are_direct_regression_cases() -> None:
     conftest = _read("tests/conftest.py")
 
     assert 'relative_path.startswith("tests/product_entry_cases/")' in conftest
-    assert 'PRODUCT_ENTRY_AGGREGATOR = "tests/test_product_entry.py"' in conftest
-    assert "pytest_ignore_collect" in conftest
+    assert "PRODUCT_ENTRY_AGGREGATOR" not in conftest
+    assert "pytest_ignore_collect" not in conftest
 
 
 def test_opl_module_healthcheck_uses_product_smoke_lane() -> None:

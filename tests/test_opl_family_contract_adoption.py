@@ -166,7 +166,7 @@ def test_mag_adoption_contract_declares_lifecycle_adapter_mapping() -> None:
         assert field in adapter["lifecycle_projection"]["required_projection_fields"]
     assert adapter["owner_route_discovery"]["route_truth_owner"] == "med-autogrant"
     assert adapter["owner_route_discovery"]["discovery_surface_ref"] == (
-        "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration"
+        "/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration"
     )
     assert adapter["adoption_projection"]["maps_to_opl_contract"] == "opl_family_product_operator_projection.v1"
     assert adapter["adoption_projection"]["required_operator_fields"] == operator["required_fields"]

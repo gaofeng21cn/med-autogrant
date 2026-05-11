@@ -86,11 +86,11 @@ def build_domain_agent_skeleton_mapping(
                 "projection_builder",
                 "lifecycle_adapter",
             ],
-            "sidecar_ref": "/product_entry_manifest/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",
+            "sidecar_ref": "/product_entry_manifest/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
             "projection_builder_ref": "/product_entry_manifest/family_stage_control_plane",
             "lifecycle_adapter_ref": (
                 "/product_entry_manifest/skill_catalog/skills/0/domain_projection/"
-                "opl_runtime_manager_registration/family_lifecycle_adapter"
+                "opl_stage_runtime_registration/family_lifecycle_adapter"
             ),
             "default_runtime_owner": _require_nonempty_string_from_mapping(
                 runtime_control,

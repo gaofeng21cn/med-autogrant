@@ -21,7 +21,11 @@ from opl_harness_shared.family_orchestration import (
     buildFamilyIntakeEvidenceCompanion as _build_shared_family_intake_evidence_companion,
     build_family_product_entry_orchestration as _build_shared_family_product_entry_orchestration,
 )
-from opl_harness_shared.managed_runtime import build_managed_runtime_contract as _build_shared_managed_runtime_contract
+from opl_harness_shared.managed_runtime import (
+    ManagedRuntimeThreeLayerContract as _ManagedRuntimeThreeLayerContract,
+    read_bundled_managed_runtime_three_layer_contract as _read_bundled_managed_runtime_three_layer_contract,
+    build_managed_runtime_contract as _build_shared_managed_runtime_contract,
+)
 from opl_harness_shared.product_entry_companions import (
     build_product_entry_start as _build_shared_product_entry_start,
     collect_family_human_gate_ids as _collect_family_human_gate_ids,
@@ -29,6 +33,14 @@ from opl_harness_shared.product_entry_companions import (
 
 
 def _build_managed_runtime_contract() -> dict[str, Any]:
+    bundled_contract = _read_bundled_managed_runtime_three_layer_contract()
+    stage_runtime_contract = _ManagedRuntimeThreeLayerContract(
+        contract_ref="contracts/opl-framework/managed-runtime-three-layer-contract.json",
+        contract_id=bundled_contract.contract_id,
+        required_owner_fields=bundled_contract.required_owner_fields,
+        required_surface_locator_fields=bundled_contract.required_surface_locator_fields,
+        canonical_fail_closed_rules=bundled_contract.canonical_fail_closed_rules,
+    )
     return _build_shared_managed_runtime_contract(
         runtime_owner=DEFAULT_RUNTIME_OWNER,
         domain_owner=TARGET_DOMAIN_ID,
@@ -36,6 +48,7 @@ def _build_managed_runtime_contract() -> dict[str, Any]:
         supervision_status_surface="grant_progress",
         attention_queue_surface=GRANT_USER_LOOP_KIND,
         recovery_contract_surface=GRANT_USER_LOOP_KIND,
+        contract=stage_runtime_contract,
     )
 
 

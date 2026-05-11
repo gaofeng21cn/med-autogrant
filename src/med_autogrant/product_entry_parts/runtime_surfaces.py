@@ -19,7 +19,7 @@ from med_autogrant.product_entry_parts.runtime_contracts import (
 )
 from med_autogrant.product_entry_parts.runtime_registration import (
     _build_opl_native_helper_indexing_proof,
-    _build_opl_runtime_manager_registration,
+    _build_opl_stage_runtime_registration,
 )
 from med_autogrant.public_cli import public_cli_command
 from med_autogrant.workspace_types import WorkspaceStateError

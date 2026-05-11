@@ -47,15 +47,15 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
-            "skill_catalog.domain_projection.opl_runtime_manager_registration",
+            "skill_catalog.domain_projection.opl_stage_runtime_registration",
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
-            "skill_catalog.domain_projection.opl_runtime_manager_registration.family_lifecycle_adapter",
+            "skill_catalog.domain_projection.opl_stage_runtime_registration.family_lifecycle_adapter",
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
-            "skill_catalog.domain_projection.opl_runtime_manager_registration.native_helper_consumption.proof_surface",
+            "skill_catalog.domain_projection.opl_stage_runtime_registration.native_helper_consumption.proof_surface",
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
@@ -232,7 +232,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("queue/wakeup", stage_led_framework["role"])
         self.assertIn("runtime_control", stage_led_framework["consumes_mag_surfaces"])
         self.assertIn(
-            "opl_runtime_manager_registration",
+            "opl_stage_runtime_registration",
             stage_led_framework["consumes_mag_surfaces"],
         )
         self.assertIn(

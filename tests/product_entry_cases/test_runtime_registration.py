@@ -28,20 +28,20 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
         self.assertEqual(manifest["runtime_inventory"]["substrate"], "codex_cli_default_runtime")
         self.assertEqual(manifest["runtime_control"]["runtime_owner"], "codex_cli")
         self.assertEqual(
-            manifest["skill_catalog"]["skills"][0]["domain_projection"]["opl_runtime_manager_registration"][
+            manifest["skill_catalog"]["skills"][0]["domain_projection"]["opl_stage_runtime_registration"][
                 "family_lifecycle_adapter"
             ]["owner_route_discovery"]["owner_split"]["runtime_kernel_owner"],
             "codex_cli",
         )
         self.assertIn("hermes_agent", manifest["runtime_inventory"]["domain_projection"]["runtime"]["optional_carriers"])
 
-    def test_opl_runtime_manager_registration_keeps_mag_as_truth_owner(self) -> None:
+    def test_opl_stage_runtime_registration_keeps_mag_as_truth_owner(self) -> None:
         from med_autogrant.product_entry_parts.runtime_registration import (
             _build_opl_native_helper_indexing_proof,
-            _build_opl_runtime_manager_registration,
+            _build_opl_stage_runtime_registration,
         )
 
-        registration = _build_opl_runtime_manager_registration(
+        registration = _build_opl_stage_runtime_registration(
             runtime_summary={"runtime_owner": "codex-cli"},
             runtime_continuity={
                 "session_locator_field": "grant_run_id",
@@ -58,14 +58,14 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             skill_catalog_command="medautogrant skill-catalog --input workspace.json --format json",
         )
 
-        self.assertEqual(registration["surface_kind"], "opl_runtime_manager_domain_registration")
+        self.assertEqual(registration["surface_kind"], "opl_stage_runtime_domain_registration")
         self.assertEqual(registration["domain_owner"], "med-autogrant")
         self.assertEqual(registration["runtime_owner"], "codex-cli")
         self.assertEqual(registration["executor_owner"], "med-autogrant")
         self.assertEqual(registration["domain_entry_surface"]["surface_kind"], "product_status")
         self.assertEqual(
             registration["registration_surface"]["ref"],
-            "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",
+            "/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
         )
         self.assertEqual(registration["native_helper_consumption"]["managed_by"], "one-person-lab")
         self.assertEqual(

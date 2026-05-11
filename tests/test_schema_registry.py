@@ -355,7 +355,7 @@ class SchemaRegistryTest(unittest.TestCase):
         )
         self.assertEqual(
             managed_runtime["properties"]["shared_contract_ref"]["const"],
-            "contracts/opl-gateway/managed-runtime-three-layer-contract.json",
+            "contracts/opl-framework/managed-runtime-three-layer-contract.json",
         )
         self.assertEqual(managed_runtime["properties"]["runtime_owner"]["const"], "codex_cli")
         self.assertEqual(managed_runtime["properties"]["domain_owner"]["const"], "med-autogrant")
@@ -427,7 +427,7 @@ class SchemaRegistryTest(unittest.TestCase):
                 "supporting_shell_keys",
                 "shell_commands",
                 "runtime_continuity",
-                "opl_runtime_manager_registration",
+                "opl_stage_runtime_registration",
                 "domain_agent_skeleton_mapping",
             ],
         )
@@ -438,8 +438,8 @@ class SchemaRegistryTest(unittest.TestCase):
             "#/$defs/skillRuntimeContinuitySurface",
         )
         self.assertEqual(
-            skill_projection["properties"]["opl_runtime_manager_registration"]["$ref"],
-            "#/$defs/oplRuntimeManagerRegistration",
+            skill_projection["properties"]["opl_stage_runtime_registration"]["$ref"],
+            "#/$defs/oplStageRuntimeRegistration",
         )
         self.assertEqual(
             skill_projection["properties"]["domain_agent_skeleton_mapping"]["$ref"],
@@ -462,22 +462,22 @@ class SchemaRegistryTest(unittest.TestCase):
             "controlled_stage_attempt_projection",
         )
         self.assertEqual(
-            manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["properties"]["surface_kind"]["const"],
-            "opl_runtime_manager_domain_registration",
+            manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"]["surface_kind"]["const"],
+            "opl_stage_runtime_domain_registration",
         )
         self.assertIn(
             "native_helper_consumption",
-            manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["required"],
+            manifest_schema["$defs"]["oplStageRuntimeRegistration"]["required"],
         )
         self.assertIn(
             "family_lifecycle_adapter",
-            manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["required"],
+            manifest_schema["$defs"]["oplStageRuntimeRegistration"]["required"],
         )
         self.assertEqual(
-            manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["properties"]["family_lifecycle_adapter"]["$ref"],
+            manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"]["family_lifecycle_adapter"]["$ref"],
             "#/$defs/oplFamilyLifecycleAdapter",
         )
-        native_helper_consumption = manifest_schema["$defs"]["oplRuntimeManagerRegistration"]["properties"][
+        native_helper_consumption = manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"][
             "native_helper_consumption"
         ]
         self.assertEqual(native_helper_consumption["$ref"], "#/$defs/oplNativeHelperConsumption")

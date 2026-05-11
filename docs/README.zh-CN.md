@@ -108,8 +108,8 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 runtime/session、hosted/export、product-entry 与兼容性覆盖归入
 `./scripts/verify.sh regression`；显式 Hermes hosted/proof 检查归入
 `./scripts/verify.sh proof` 并使用 `proof` extra；product-entry
-case 模块直接由 `tests/product_entry_cases/` 收集，`tests/test_product_entry.py`
-只保留兼容导入面；完整基线继续由 `./scripts/verify.sh full` 承担。
+case 模块直接由 `tests/product_entry_cases/` 收集，旧
+`tests/test_product_entry.py` 聚合入口已删除；完整基线继续由 `./scripts/verify.sh full` 承担。
 
 仓库目录治理通过 `tests/test_repository_hygiene.py` 纳入 meta 验证面。repo-tracked
 主线不得包含 `dist/`、`build/`、`out/`、`__pycache__`、`*.egg-info`、`.DS_Store`、

@@ -54,7 +54,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(
             manifest["managed_runtime_contract"],
             {
-                "shared_contract_ref": "contracts/opl-gateway/managed-runtime-three-layer-contract.json",
+                "shared_contract_ref": "contracts/opl-framework/managed-runtime-three-layer-contract.json",
                 "runtime_owner": "codex_cli",
                 "domain_owner": "med-autogrant",
                 "executor_owner": "med-autogrant",

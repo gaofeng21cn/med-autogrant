@@ -8,7 +8,7 @@
 当前任务边界锁定在“指定基金任务正文 authoring”：科学完成的可待审包与形式/客观补件完成必须显式分层管理，默认先确保正文科学成立与可审阅，再通过补件队列收口门户前置材料。
 按当前定位，这个仓的对外第一身份是“通过单一 app skill 暴露的独立医学基金 domain agent”：`OPL` 是 Codex-first、stage-led 的完整智能体运行框架，可以把 MAG 作为外部领域依赖托管、唤醒和投影。OPL 负责 stage attempt 生命周期、queue、wakeup、handoff、receipt、approval/retry/dead-letter、operator projection、shared modules/contracts/indexes 与外部 provider 编排；MAG 继续负责 grant authoring record、domain entry、direct grant product entry、fundability judgment、quality gate 和 submission-ready export authority。显式 hosted/proof backend 只能挂在同一套 route/export contract 之下。
 在 OPL stage-led family agent framework 中，MAG 是 admitted domain agent，不是 OPL 内部模块。OPL 可以读取 MAG stage/action/projection descriptor，负责编排和观测；MAG 继续持有 call intake、fundability strategy、specific aims、proposal authoring、review/rebuttal、package gate 等 stage 语义，以及 authoring truth、quality gate 和 submission-ready export authority。
-当前 stage-led 对齐已经落到 MAG-owned descriptor/projection 层：`family_action_catalog`、`family_stage_control_plane`、`runtime_control`、`runtime_continuity`、`product sidecar export/dispatch` 与 `opl_runtime_manager_registration`。这些 surface 让 OPL 能做 discovery、typed queue、wakeup、handoff、receipt 和 operator projection；它们不让 OPL 生成 grant route、fundability verdict、authoring quality verdict 或 export readiness。
+当前 stage-led 对齐已经落到 MAG-owned descriptor/projection 层：`family_action_catalog`、`family_stage_control_plane`、`runtime_control`、`runtime_continuity`、`product sidecar export/dispatch` 与 `opl_stage_runtime_registration`。这些 surface 让 OPL 能做 discovery、typed queue、wakeup、handoff、receipt 和 operator projection；它们不让 OPL 生成 grant route、fundability verdict、authoring quality verdict 或 export readiness。
 当前统一协作模型是：稳定可调用面先固定在单一 app skill、`CLI`、`MedAutoGrantDomainEntry`、本地脚本、product-entry/projection commands 与 schema-backed contract；默认 concrete executor 继续继承本机 `Codex`；如果显式启用 hosted/proof backend，它也必须服从同一套 route truth、author-side contract 与 export record。`direction_screening -> frozen`、`revision` 与 packaging/export 继续通过 repo-side domain logic 与 executor adapter 落地。
 当前 hosted caller / `OPL` caller 若需要 machine-readable handoff，可以消费 `domain_entry_contract`、`schema_contract`、`authoring_contract`，并按 `supported_commands` / `command_contracts` 构造请求。`workspace progress / workspace cockpit` 保持 product-facing read-only projection，`product direct-entry` 负责组合 direct-entry contract，`mainline status`、维护者参考记录与 `product user-loop` 负责投影 repo 主线快照与 route-derived next action。`pass direction-screening`、`pass question-refinement`、`pass argument-building`、`pass fit-alignment`、`pass outline`、`pass drafting` 与 `pass freeze` 已经收口成 landed command catalog，并被 route contract、`product user-loop` 与 hosted bundle 复用。
 
@@ -37,7 +37,7 @@
 - 通过 `package submission-ready` 保持严格的本地 submission-ready 导出面，并明确它与“科学完成可待审包”的 authoring stop 不是同一完成层；同时继续保持“不对外宣称官网已提交”的边界。
 - 人工 gate 只覆盖同一基金任务内的作者决策，不扩展成跨 funder 路线重选流程。
 - 把 hosted-friendly handoff contract 收口成 caller 可直接消费的 integration/reference catalog，并保持与当前 bundle 同步。
-- 保持 `gateway / harness` 作为内部架构分层术语，不作为公开第一身份。
+- 保持 stage-led framework / domain harness 作为内部架构分层术语，不作为公开第一身份。
 - 更远期的 hosted 产品入口演进在活跃阶段统一留在 `docs/plans/`，完成后归入 `docs/history/`，不写进当前主线口径。
 
 ## 范围与非目标
@@ -48,7 +48,7 @@
 - 不把 `P5.*` hosted/federation 扩展写成当前已开工的范围。
 - 不把同任务内的人工 gate 写成跨 funder 的重选流程。
 - 不把 OPL runtime framework、旧 `OPL Runtime Manager` 口径或未来 OPL sidecar 写成 MAG 的默认公开入口、grant truth owner、authoring executor 或 repository-local Hermes fork。
-- 不把已经退役到 provenance / regression oracle / compatibility import 的旧 local runtime、旧 `OPL Gateway` wording、旧五个 canonical verifier baseline 或 `product-status` compatibility traces 重新提升为默认 owner。
+- 不把已经退役到 provenance / regression oracle 的旧 local runtime、旧 `OPL Gateway` wording、旧五个 canonical verifier baseline 或旧 product-status traces 重新提升为默认 owner。
 
 ## 当前形态
 

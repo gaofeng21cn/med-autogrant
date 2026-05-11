@@ -232,7 +232,7 @@
     "maps_existing_surfaces_only": true,
     "sqlite_migration_required": false,
     "persistence_projection": {
-      "maps_to": "opl_runtime_manager_native_state_projection",
+      "maps_to": "opl_stage_runtime_native_state_projection",
       "maps_existing_surfaces": [
         "session_continuity",
         "runtime_control.restore_point",
@@ -262,7 +262,7 @@
     },
     "owner_route_discovery": {
       "route_truth_owner": "med-autogrant",
-      "discovery_surface_ref": "/skill_catalog/skills/0/domain_projection/opl_runtime_manager_registration",
+      "discovery_surface_ref": "/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
       "route_surface_refs": [
         "/product_entry_manifest/product_entry_surface",
         "/product_entry_manifest/operator_loop_surface",
