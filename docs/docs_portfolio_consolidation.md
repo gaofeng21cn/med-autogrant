@@ -15,6 +15,26 @@ Each docs layer is governed by four lifecycle signals:
 
 `README*` and `docs/**` are human-readable surfaces. Machine-readable control must use contract/schema/source paths, or semantic `human_doc:*` ids when a machine surface needs to relate to prose. Prose paths are navigation aids, not API stability promises.
 
+## Content-Level Consolidation Rule
+
+Lifecycle decisions are made at the content level first.
+A single document can contain current facts, support explanation, historical
+provider notes, and completed plan text. Maintainers should separate those
+roles before expanding or moving the file:
+
+1. Merge current facts into the core docs, active specs, or the current-program
+   truth surface.
+2. Keep active future work in `docs/plans/` only while it still needs owner,
+   gate, or closeout tracking.
+3. Keep support material in `docs/references/` or an active spec only when it
+   explains current behavior or a current boundary.
+4. Treat older dated specs and completed plans as history/provenance even when
+   path stability keeps them under `docs/specs/`.
+5. Entry pages should first show current state, hierarchy, old/new
+   relationship, and next reading step. Active specs, historical specs,
+   references, verification notes, and completed plans should appear under
+   their lifecycle roles.
+
 ## Active Layer
 
 - `README*`
@@ -83,3 +103,11 @@ The second-round review intentionally did not bulk-move older specs out of `docs
 The 2026-05-09 family docs governance pass made that rule explicit in [Specs Lifecycle Map](./specs/specs_lifecycle_map.md): active specs, support current-truth records, and historical provenance records can share the path-stable directory only while the README/index layer makes their lifecycle state unambiguous.
 
 The 2026-05-11 OPL alignment pass further clarifies that older `OPL Runtime Manager`, Temporal, Hermes-first, gateway, monorepo, active-adapter, and local host runtime language is historical/provider-specific unless the active layer or a machine-readable contract explicitly promotes it. Current MAG docs should describe OPL as a Codex-first, stage-led agent runtime framework that may consume MAG as an external domain dependency, with `Codex CLI` as the minimum execution unit and MAG retaining grant truth, quality, route, and export authority.
+
+## Root AGENTS Alignment
+
+Root `AGENTS.md` stays a work-method file. It should point maintainers to the
+current docs reading order and lifecycle rules, while project truth remains in
+the core docs, active specs, contracts, schemas, source, and generated
+artifacts. When AGENTS wording drifts from this portfolio, update AGENTS to
+match the docs/contract owner split and keep it as routing guidance.

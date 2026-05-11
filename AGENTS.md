@@ -9,6 +9,7 @@
 - AGENTS 只管工作方式，不承载项目真相、规格或阶段判断。
 - 项目知识默认从 `README*`、`docs/README*`、`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md` 读取。
 - repo-tracked current-program pointer 固定为 `contracts/runtime-program/current-program.json`。
+- `Med Auto Grant` 是独立 grant domain agent，也可以作为 `OPL` Codex-first、stage-led 智能体运行框架中的 admitted domain agent 被托管。`Stage` 表示大型基金写作/评审步骤，`Codex CLI` 是 stage 内默认最小执行单元；MAG 持有 grant truth、quality/fundability verdict、route owner 和 export authority。
 
 ## 工作原则
 
@@ -31,12 +32,14 @@
 - `README*` 与 `docs/README*`：默认公开入口与索引。
 - `docs/docs_portfolio_consolidation.md` 是当前文档组合治理入口；维护者应先读核心五件套，再按该文件判断新增、更新、归档或 tombstone。
 - 每份长期文档都必须能说明 `owner`、`purpose`、`state`、`machine boundary`；缺少任一信号时，先补入口或归位，再继续扩写。
+- 文档治理按内容生命周期判断，文件名、日期和目录名只作为辅助信号；同一文档内的当前事实、active spec、support reference、历史 spec 和 completed plan 应分别归入当前 owner doc、spec/reference 层或 history/tombstone 语境。
+- 入口文档应先呈现当前状态、层级、新旧关系和下一跳；历史 specs、旧 hosted/provider 说明、已完成 plans 与追溯材料进入 provenance 层。
 - 公开文档保持中英双语；内部技术、规划、实现和历史记录默认中文。
 - `docs/domain-positioning*` 与 `docs/mvp-scope*` 是当前 root allowlist 的一部分，因为它们仍承载 public subject、domain owner、MVP boundary 与 non-goals；新增 root-level docs 必须先更新 portfolio note。
 - 核心骨架文档与 activation package / current truth 严格分层。
 - `docs/specs/**`：repo-tracked current truth、activation package、设计冻结文档与硬门槛描述。
 - `docs/references/**`：定位、背景、审计、handoff 与非活跃支持材料。
-- `docs/plans/**`：历史规划工件，仅用于追溯；新计划默认进入合适的 current/spec/reference owner surface，完成后进入 history。
+- `docs/plans/**`：仅承载尚未被核心文档、合同面或历史归档吸收的活跃计划或明确 future work；完成、替代或只剩追溯价值后进入 `docs/history/plans/**`。
 - `docs/history/**`：历史归档入口（含 OMX）。
 - `README*`、`docs/**` 与参考文档是人读面。代码、测试、contracts、dashboard 或 runtime 不得把 prose path、Markdown 章节或文案当成稳定机器接口；MAG 的机器真相以 `contracts/runtime-program/current-program.json`、schema/source 与 CLI/API 行为为准，确需关联人读材料时使用 `human_doc:*` 语义 ID。
 
