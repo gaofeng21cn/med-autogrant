@@ -91,6 +91,7 @@ Now:
 Next:
 
 - keep OPL family index at `resolved_memory_descriptor_count=3` / `missing_memory_descriptor_count=0` while preserving MAG-owned memory bodies and decisions;
+- after the current OPL+MAS production paper priority closes, run a controlled grant stage attempt that consumes grant-strategy memory refs and emits MAG-owned accepted/rejected receipt refs;
 - apply real runtime memory writebacks only in workspace/runtime artifact roots after MAG accept/reject decisions;
 - extend operator UI consumption of accepted/rejected receipt refs without copying memory body into OPL.
 
