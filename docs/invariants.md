@@ -27,7 +27,7 @@
 ## 目标优先级
 
 - `OPL` 当前固定为 Codex-first、stage-led 的完整智能体运行框架，可把 MAG 作为外部领域依赖托管；它不承担本仓 domain truth owner 身份。
-- OPL runtime framework 可以持有 stage attempt lifecycle、scheduler、session store、memory store、queue/wakeup/handoff/receipt、retry/dead-letter、operator projection、shared modules/contracts/indexes 和外部 provider 编排；它不得成为 MAG grant-domain truth owner、fundability owner、authoring quality owner、submission-ready export authority、concrete authoring executor 或 private Hermes fork。
+- OPL runtime framework 可以持有 stage attempt lifecycle、scheduler、session store、memory store、queue/wakeup/handoff/receipt、retry/dead-letter、operator projection、shared modules/contracts/indexes 和 Temporal-backed provider 编排；它不得成为 MAG grant-domain truth owner、fundability owner、authoring quality owner、submission-ready export authority、concrete authoring executor 或 private Hermes fork。OPL-hosted production path 必须以 Temporal readiness 为前提；local provider 只允许作为 dev/CI/offline diagnostic baseline。
 - OPL native helper 与高频状态索引只能缓存、探测和投影 MAG 已暴露的 `runtime_control`、`runtime_continuity`、workspace projection、artifact locator 与 explicit wakeup/TODO queue；不得替代 `contracts/runtime-program/current-program.json`、authoring contract、quality gate、route truth 或 submission-ready export gate。
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态，而不是继续深磨已放弃的旧本地宿主路线。
 - 当前 `CLI-first + host-agent runtime` 是历史 repo-verified baseline，但它只允许留在归档追溯材料中，不应再被误写为长期终态。

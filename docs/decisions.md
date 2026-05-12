@@ -10,7 +10,7 @@
 
 - 决策：MAG 的 OPL 关系更新为 `OPL stage-led runtime framework -> MAG-owned descriptor/projection -> Med Auto Grant app skill / CLI / MedAutoGrantDomainEntry`。OPL 是可作为外部依赖使用的完整智能体运行框架，不再只写成薄 Runtime Manager；Agent executor 是 stage attempt 的最小执行单位，`Codex CLI` 是当前第一公民 executor，除非活跃合同显式选择其他 provider。
 - 理由：OPL 当前定位已经上移为完整 agent runtime framework，负责 stage lifecycle、queue/wakeup、handoff、receipt、retry/dead-letter、operator projection、shared contracts/indexes 与 provider 编排。MAG 仍必须持有 grant stage pack、prompt/skill、fundability judgment、authoring quality gate、workspace truth 和 submission-ready export authority。
-- 影响：旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和 local host runtime 说法降为历史追溯或 provider-specific 实现记录；后续公开/核心文档默认使用 OPL stage-led framework 口径。MAG 的 skill/direct CLI 路径继续是一等入口。
+- 影响：旧 `OPL Runtime Manager`、Hermes-first、gateway 和 local host runtime 说法降为历史追溯或 provider-specific 实现记录；后续公开/核心文档默认使用 OPL stage-led framework 口径，并把 Temporal 写成 OPL-hosted production path 的必需 substrate。MAG 的 skill/direct CLI 路径继续是一等入口。
 
 ## 2026-05-12：MAG 采用 OPL 统一 Agent Executor Adapter 边界
 
@@ -18,13 +18,13 @@
 - 理由：跨仓统一后，generic executor adapter 归 OPL；MAG 不应把自己写成 generic executor owner。MAG 只持有 grant route truth、quality/fundability gate、workspace/artifact truth 与 export authority。
 - 影响：非默认 executor 只承诺可接入、可回执、可审计、fail-closed，不承诺效果等价；product-entry `executor_owner` 表示默认 concrete executor，OPL adapter owner 通过独立 `executor_defaults` / `executor_adapter_contract` surface 表达。
 
-## 2026-05-10：MAG 对齐 OPL provider-backed runtime，Temporal 为目标生产 substrate
+## 2026-05-10：MAG 对齐 OPL Temporal-backed production runtime，Temporal 为 OPL 生产必需 substrate
 
-- 状态：已被 `2026-05-11` OPL 完整 stage-led runtime framework 口径 supersede。保留本段用于解释 provider-backed / Temporal-target 迁移背景。
+- 状态：已被 `2026-05-11` OPL 完整 stage-led runtime framework 口径吸收，并被 OPL 的 Temporal-required production substrate 口径校准。保留本段用于解释 provider-backed / Temporal 迁移背景。
 
-- 决策：MAG 的 OPL 长期托管口径更新为 `OPL Runtime Manager / opl family-runtime -> configured family runtime provider -> MAG product sidecar export/dispatch -> MAG domain entry/projection`。Temporal 是 OPL durable stage attempt 的目标生产 provider；Hermes-Agent 作为可选 Agent executor adapter、显式 hosted/proof backend 或 executor proof lane。
+- 决策：MAG 的 OPL 长期托管口径更新为 `OPL Runtime Manager / opl family-runtime -> Temporal-backed family runtime provider -> MAG product sidecar export/dispatch -> MAG domain entry/projection`。Temporal 是 OPL production online runtime 的必需 substrate；Hermes-Agent 作为可选 Agent executor adapter、显式 hosted/proof backend 或 executor proof lane。
 - 理由：MAG 需要长期 authoring stage attempt、human gate、retry/dead-letter、TODO wakeup 和 operator projection，但 grant truth、fundability judgment、authoring quality gate、workspace truth 和 submission-ready export authority 必须仍由 MAG 持有。
-- 影响：`product sidecar export|dispatch` 继续是 OPL provider 到 MAG owner surface 的受控桥接。OPL/Temporal/Hermes/local provider 只能 enqueue、dispatch、signal、query、投影 attempt/receipt，不得写 grant truth、fundability verdict、authoring quality gate、workspace canonical document 或 submission-ready export gate。下方 Hermes-first sidecar adapter 决策保留为迁移背景，后续新投入按 provider-backed / Temporal target 解释。
+- 影响：`product sidecar export|dispatch` 继续是 OPL provider 到 MAG owner surface 的受控桥接。OPL/Temporal/Hermes/local provider 只能 enqueue、dispatch、signal、query、投影 attempt/receipt，不得写 grant truth、fundability verdict、authoring quality gate、workspace canonical document 或 submission-ready export gate。下方 Hermes-first sidecar adapter 决策保留为迁移背景，后续新投入按 Temporal-backed production runtime 解释。
 
 ## 2026-05-10：声明 MAG 的 OPL family Stage Control Plane projection
 
@@ -40,7 +40,7 @@
 
 ## 2026-05-10：落地 Hermes-first OPL Family Runtime 的 MAG product sidecar adapter
 
-- 状态：已被同日 provider-backed / Temporal target 决策 supersede。保留本段用于解释 Hermes-first sidecar adapter 的迁移背景和当前 legacy provider 口径。
+- 状态：已被同日 Temporal-backed production runtime 决策 supersede。保留本段用于解释 Hermes-first sidecar adapter 的迁移背景和当前 legacy provider 口径。
 
 - 决策：新增 `product sidecar export` 与 `product sidecar dispatch`，把 MAG 的 `runtime_control`、`runtime_continuity`、TODO/explicit wakeup、autonomy-controller 与 user-loop attention queue 投影成 OPL typed family queue 可消费的 sidecar surface。
 - 理由：迁移期 Hermes-first family runtime 需要 24h 在线 substrate 与 typed queue/control-plane，但 MAG 仍必须持有 grant truth、quality gate 与 artifact/export owner。sidecar adapter 让 OPL provider 消费结构化 runtime/wakeup/control projection，同时不复制或改写 grant truth。

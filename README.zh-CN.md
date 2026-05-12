@@ -80,7 +80,7 @@
 - OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
 - MAG 继续独立持有 grant truth、fundability verdict、authoring quality verdict、route owner 与 submission/export authority。
 - Domain memory apply 只允许投影 consumed memory refs、writeback proposal、MAG accept/reject decision、operator receipt projection 与 repo-source layout audit；不把 fundability verdict、真实 grant artifact 或 receipt instance 写进 repo source。
-- 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留，不再作为 MAG 活跃合同。
+- 旧 `OPL Runtime Manager`、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留；Temporal 作为 OPL production substrate 的必需性由 OPL Framework 持有，不由 MAG 改写为 grant-domain runtime truth。
 
 </details>
 

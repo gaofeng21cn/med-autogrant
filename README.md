@@ -80,7 +80,7 @@ You can start with prompts like:
 - OPL can schedule stages, wakeups, handoffs, receipts, retries, and projections, while MAG keeps the grant stage pack, prompts, skills, fundability/authoring quality gates, authoring truth, and submission-ready export authority.
 - MAG remains the owner for grant truth, fundability verdicts, authoring quality verdicts, route ownership, and submission/export authority.
 - Domain memory apply is limited to consumed memory refs, writeback proposals, MAG accept/reject decisions, operator receipt projections, and repo-source layout audit. It does not write fundability verdicts, real grant artifacts, or receipt instances into repo source.
-- Historical `OPL Runtime Manager`, Temporal, Hermes-first, gateway, and local-host runtime wording is provenance or an implementation-provider detail, not an active MAG contract. MAG remains the grant-truth and authoring-contract owner.
+- Historical `OPL Runtime Manager`, Hermes-first, gateway, and local-host runtime wording is provenance or an implementation-provider detail. Temporal's required OPL production-substrate role is owned by OPL Framework and does not become MAG grant-domain runtime truth. MAG remains the grant-truth and authoring-contract owner.
 
 </details>
 
