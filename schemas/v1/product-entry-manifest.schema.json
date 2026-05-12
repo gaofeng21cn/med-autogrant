@@ -3129,7 +3129,7 @@
           "const": "deferred_typed_blocker"
         },
         "controlled_soak_apply_contract_open": {
-          "const": false
+          "const": true
         },
         "deferred_blocker": {
           "type": "object",
@@ -3137,22 +3137,32 @@
           "required": [
             "blocker_kind",
             "blocker_id",
-            "next_hop_contract_gap",
+            "source_contract",
+            "required_return_shapes",
             "required_owner",
             "domain_owner"
           ],
           "properties": {
             "blocker_kind": {
-              "const": "domain_apply_contract_gap"
+              "const": "domain_owner_receipt_required"
             },
             "blocker_id": {
               "$ref": "common.schema.json#/$defs/nonEmptyString"
             },
-            "next_hop_contract_gap": {
+            "source_contract": {
               "const": "opl_temporal_controlled_stage_attempt_apply_contract"
             },
+            "required_return_shapes": {
+              "type": "array",
+              "items": {
+                "enum": ["domain_owner_receipt_ref", "typed_blocker", "no_regression_evidence_ref"]
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "uniqueItems": true
+            },
             "required_owner": {
-              "const": "opl_framework"
+              "const": "med-autogrant"
             },
             "domain_owner": {
               "const": "med-autogrant"

@@ -15,14 +15,18 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
         self.assertEqual(controlled_soak["surface_kind"], "controlled_soak_no_regression_attempt")
         self.assertEqual(controlled_soak["attempt_id"], "mag.controlled_soak.no_regression_attempt.v1")
         self.assertEqual(controlled_soak["state"], "deferred_typed_blocker")
-        self.assertFalse(controlled_soak["controlled_soak_apply_contract_open"])
+        self.assertTrue(controlled_soak["controlled_soak_apply_contract_open"])
         self.assertEqual(
             controlled_soak["deferred_blocker"]["blocker_kind"],
-            "domain_apply_contract_gap",
+            "domain_owner_receipt_required",
         )
         self.assertEqual(
-            controlled_soak["deferred_blocker"]["next_hop_contract_gap"],
+            controlled_soak["deferred_blocker"]["source_contract"],
             "opl_temporal_controlled_stage_attempt_apply_contract",
+        )
+        self.assertEqual(
+            controlled_soak["deferred_blocker"]["required_return_shapes"],
+            ["domain_owner_receipt_ref", "typed_blocker", "no_regression_evidence_ref"],
         )
         self.assertIn(
             "/product_entry_manifest/controlled_stage_attempt_projection",

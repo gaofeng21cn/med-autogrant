@@ -2,9 +2,9 @@
 
 ## 2026-05-12：MAG controlled soak 暂以 typed blocker 收口
 
-- 决策：MAG 在 `product-entry-manifest` 中新增 `controlled_soak_no_regression_attempt`，作为 OPL Temporal controlled stage attempt apply contract 尚未开放时的机器可读 deferred blocker。
+- 决策：MAG 在 `product-entry-manifest` 中新增 `controlled_soak_no_regression_attempt`，作为 OPL Temporal controlled stage attempt apply contract 已开放但 MAG domain owner receipt / no-regression evidence 尚未产出时的机器可读 deferred blocker。
 - 理由：MAG 不能把未运行的 OPL-hosted production soak 写成成功 receipt，也不能把 fundability、authoring quality 或 submission-ready export verdict 迁给 OPL。该 surface 只暴露 no-regression refs、owner boundary 与下一跳 contract gap。
-- 影响：`controlled_soak_no_regression_attempt.state=deferred_typed_blocker`，blocker source 是 `opl_temporal_controlled_stage_attempt_apply_contract`。真实 controlled soak 要等 OPL apply contract 开放后由 MAG-owned surface 产出 domain receipt。
+- 影响：`controlled_soak_no_regression_attempt.state=deferred_typed_blocker`，blocker source 是 `opl_temporal_controlled_stage_attempt_apply_contract`；当前 required return shapes 为 domain owner receipt、typed blocker 或 no-regression evidence。真实 controlled soak 要由 MAG-owned surface 产出 domain receipt 或 no-regression evidence 后才能关闭。
 
 ## 2026-05-12：落地 controlled grant-stage domain memory apply proof
 
