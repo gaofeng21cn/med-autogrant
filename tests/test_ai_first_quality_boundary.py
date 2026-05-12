@@ -41,6 +41,7 @@ def test_quality_candidate_statuses_are_gated_by_ai_reviewer_backed_critique() -
     assert AI_REVIEWER_BACKED_OWNERS == {
         "Codex CLI critique executor",
         "Hermes-Agent critique executor",
+        "OPL Hermes-Agent critique executor",
     }
 
     def projection_only_scorecard(workspace: dict[str, object]) -> dict[str, object]:
@@ -127,6 +128,15 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
     )
     assert codex_critique["metadata"]["owner"] == "Codex CLI critique executor"
 
+    hermes_proof = {
+        "full_agent_loop_proved": True,
+        "session_id": "session-1",
+        "api_calls": 1,
+        "tool_call_count": 1,
+        "event_count": 2,
+        "provider_reasoning_status": "unproven_custom_chat_completions",
+        "event_stream": [{"type": "tool_start", "tool": "read_file"}],
+    }
     hermes_executor = _build_hermes_executor_payload(
         {
             "entrypoint": "run_agent.AIAgent.run_conversation",
@@ -135,14 +145,22 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
             "api_mode": "chat_completions",
             "reasoning_effort": "xhigh",
         },
+        hermes_proof,
         {
-            "full_agent_loop_proved": True,
+            "surface_kind": "opl_agent_execution_receipt",
+            "executor_kind": "hermes_agent",
+            "mode": "agent_loop",
+            "cwd": "/tmp",
+            "prompt_preview": "prompt",
             "session_id": "session-1",
-            "api_calls": 1,
-            "tool_call_count": 1,
-            "event_count": 2,
-            "provider_reasoning_status": "unproven_custom_chat_completions",
-            "event_stream": [],
+            "event_summary": [{"type": "tool_start", "tool": "read_file"}],
+            "stdout_preview": "{}",
+            "stderr_preview": "",
+            "exit_code": 0,
+            "closeout_packet": None,
+            "capabilities": ["full_agent_loop_receipt", "tool_event_proof", "session_id"],
+            "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
+            "proof": hermes_proof,
         },
     )
     hermes_critique = _normalize_mentor_critique(
@@ -151,4 +169,4 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         executor_payload=hermes_executor,
         payload=payload,
     )
-    assert hermes_critique["metadata"]["owner"] == "Hermes-Agent critique executor"
+    assert hermes_critique["metadata"]["owner"] == "OPL Hermes-Agent critique executor"

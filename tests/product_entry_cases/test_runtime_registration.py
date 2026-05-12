@@ -24,9 +24,12 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
         )["product_entry_manifest"]
 
         self.assertEqual(manifest["managed_runtime_contract"]["runtime_owner"], "codex_cli")
+        self.assertEqual(manifest["managed_runtime_contract"]["executor_owner"], "codex_cli")
         self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "codex_cli")
+        self.assertEqual(manifest["runtime_inventory"]["executor_owner"], "codex_cli")
         self.assertEqual(manifest["runtime_inventory"]["substrate"], "codex_cli_default_runtime")
         self.assertEqual(manifest["runtime_control"]["runtime_owner"], "codex_cli")
+        self.assertEqual(manifest["runtime_control"]["executor_owner"], "codex_cli")
         self.assertEqual(
             manifest["skill_catalog"]["skills"][0]["domain_projection"]["opl_stage_runtime_registration"][
                 "family_lifecycle_adapter"
@@ -34,6 +37,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             "codex_cli",
         )
         self.assertIn("hermes_agent", manifest["runtime_inventory"]["domain_projection"]["runtime"]["optional_carriers"])
+        self.assertIn("claude_code", manifest["runtime_inventory"]["domain_projection"]["runtime"]["optional_carriers"])
 
     def test_opl_stage_runtime_registration_keeps_mag_as_truth_owner(self) -> None:
         from med_autogrant.product_entry_parts.runtime_registration import (
@@ -61,7 +65,21 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
         self.assertEqual(registration["surface_kind"], "opl_stage_runtime_domain_registration")
         self.assertEqual(registration["domain_owner"], "med-autogrant")
         self.assertEqual(registration["runtime_owner"], "codex-cli")
-        self.assertEqual(registration["executor_owner"], "med-autogrant")
+        self.assertEqual(registration["executor_owner"], "codex_cli")
+        self.assertEqual(registration["executor_adapter_owner"], "one-person-lab")
+        self.assertEqual(
+            registration["executor_adapter_contract"],
+            {
+                "contract_ref": "contracts/opl-framework/family-executor-adapter-defaults.json",
+                "registry_surface_kind": "opl_agent_executor_registry",
+                "request_contract": "AgentExecutionRequest",
+                "receipt_contract": "AgentExecutionReceipt",
+                "canonical_executor_backends": ["codex_cli", "hermes_agent", "claude_code"],
+                "default_executor": "codex_cli",
+                "non_default_equivalence": "connectivity_lifecycle_receipt_audit_only",
+                "fallback_allowed": False,
+            },
+        )
         self.assertEqual(registration["domain_entry_surface"]["surface_kind"], "product_status")
         self.assertEqual(
             registration["registration_surface"]["ref"],
@@ -123,6 +141,14 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
         self.assertEqual(
             family_adapter["owner_route_discovery"]["owner_split"]["domain_truth_owner"],
             "med-autogrant",
+        )
+        self.assertEqual(
+            family_adapter["owner_route_discovery"]["owner_split"]["executor_owner"],
+            "codex_cli",
+        )
+        self.assertEqual(
+            family_adapter["owner_route_discovery"]["owner_split"]["executor_adapter_owner"],
+            "one-person-lab",
         )
         self.assertIn(
             "medautogrant grant-user-loop",

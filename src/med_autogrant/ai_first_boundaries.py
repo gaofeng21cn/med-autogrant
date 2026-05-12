@@ -7,6 +7,7 @@ AI_REVIEWER_BACKED_OWNERS = frozenset(
     {
         "Codex CLI critique executor",
         "Hermes-Agent critique executor",
+        "OPL Hermes-Agent critique executor",
     }
 )
 

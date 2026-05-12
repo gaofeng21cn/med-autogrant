@@ -99,10 +99,30 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "inherit_local_codex_default",
         )
         self.assertEqual(
+            contract["executor_defaults"]["canonical_executor_backends"],
+            ["codex_cli", "hermes_agent", "claude_code"],
+        )
+        self.assertEqual(
+            contract["executor_defaults"]["executor_registry"],
+            {
+                "surface_kind": "opl_agent_executor_registry",
+                "request_contract": "AgentExecutionRequest",
+                "receipt_contract": "AgentExecutionReceipt",
+                "default_resolution_order": [
+                    "cli_flag",
+                    "stage_attempt_input",
+                    "OPL_EXECUTOR_KIND",
+                    "codex_cli",
+                ],
+                "non_default_equivalence": "connectivity_lifecycle_receipt_audit_only",
+            },
+        )
+        self.assertEqual(
             contract["executor_defaults"]["executor_labels"],
             {
                 "codex_cli": "Codex CLI",
                 "hermes_agent": "Hermes-Agent",
+                "claude_code": "Claude Code",
             },
         )
         self.assertEqual(
@@ -110,10 +130,13 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             {
                 "codex_cli": "default",
                 "hermes_agent": "experimental",
+                "claude_code": "experimental",
             },
         )
         self.assertTrue(contract["executor_defaults"]["chat_completion_only_executor_forbidden"])
         self.assertTrue(contract["executor_defaults"]["hermes_agent_requires_full_agent_loop"])
+        self.assertTrue(contract["executor_defaults"]["non_default_executor_requires_explicit_selection"])
+        self.assertTrue(contract["executor_defaults"]["non_default_executor_forbids_silent_codex_fallback"])
         self.assertNotIn("default_executor", contract["executor_defaults"])
         self.assertNotIn("hermes_native_requires_full_agent_loop", contract["executor_defaults"])
         self.assertEqual(contract["experimental_executor_proofs"][0]["route_id"], "critique")
@@ -123,6 +146,19 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "run_agent.AIAgent.run_conversation",
         )
         self.assertEqual(contract["experimental_executor_proofs"][0]["status"], "experimental")
+        self.assertEqual(contract["experimental_executor_proofs"][0]["adapter_owner"], "one-person-lab")
+        self.assertEqual(
+            contract["experimental_executor_proofs"][0]["adapter_contract_ref"],
+            "contracts/opl-framework/family-executor-adapter-defaults.json",
+        )
+        self.assertEqual(contract["experimental_executor_proofs"][0]["request_contract"], "AgentExecutionRequest")
+        self.assertEqual(contract["experimental_executor_proofs"][0]["receipt_contract"], "AgentExecutionReceipt")
+        self.assertFalse(contract["experimental_executor_proofs"][0]["fallback_allowed"])
+        self.assertTrue(contract["experimental_executor_proofs"][0]["explicit_selection_required"])
+        self.assertEqual(
+            contract["experimental_executor_proofs"][0]["non_equivalence_notice"],
+            "connectivity_lifecycle_receipt_audit_only",
+        )
         self.assertEqual(
             contract["experimental_executor_proofs"][0]["default_executor_name_unchanged"],
             "codex_cli",

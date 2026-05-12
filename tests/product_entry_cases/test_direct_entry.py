@@ -33,7 +33,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
         self.assertEqual(runtime_control["surface_kind"], "runtime_control")
         self.assertEqual(runtime_control["runtime_owner"], "codex_cli")
         self.assertEqual(runtime_control["domain_owner"], "med-autogrant")
-        self.assertEqual(runtime_control["executor_owner"], "med-autogrant")
+        self.assertEqual(runtime_control["executor_owner"], "codex_cli")
         self.assertEqual(runtime_control["session_locator"]["locator_value"], payload["grant_run_id"])
         self.assertEqual(runtime_control["restore_point"]["lifecycle_stage"], payload["lifecycle_stage"])
         self.assertIn(

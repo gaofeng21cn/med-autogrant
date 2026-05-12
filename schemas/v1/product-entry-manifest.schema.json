@@ -190,9 +190,165 @@
         "optional_carriers": {
           "type": "array",
           "items": {
-            "const": "hermes_agent"
+            "enum": [
+              "hermes_agent",
+              "claude_code"
+            ]
           },
           "minItems": 1
+        }
+      }
+    },
+    "executorDefaultsSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "default_executor_name",
+        "default_executor_mode",
+        "default_model",
+        "default_reasoning_effort",
+        "canonical_executor_backends",
+        "executor_registry",
+        "executor_labels",
+        "executor_statuses",
+        "guardrails",
+        "adapter_owner",
+        "adapter_contract_ref"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_opl_executor_defaults"
+        },
+        "default_executor_name": {
+          "const": "codex_cli"
+        },
+        "default_executor_mode": {
+          "const": "autonomous"
+        },
+        "default_model": {
+          "const": "inherit_local_codex_default"
+        },
+        "default_reasoning_effort": {
+          "const": "inherit_local_codex_default"
+        },
+        "canonical_executor_backends": {
+          "const": [
+            "codex_cli",
+            "hermes_agent",
+            "claude_code"
+          ]
+        },
+        "executor_registry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "surface_kind",
+            "request_contract",
+            "receipt_contract",
+            "default_resolution_order",
+            "non_default_equivalence"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "opl_agent_executor_registry"
+            },
+            "request_contract": {
+              "const": "AgentExecutionRequest"
+            },
+            "receipt_contract": {
+              "const": "AgentExecutionReceipt"
+            },
+            "default_resolution_order": {
+              "const": [
+                "cli_flag",
+                "stage_attempt_input",
+                "OPL_EXECUTOR_KIND",
+                "codex_cli"
+              ]
+            },
+            "non_default_equivalence": {
+              "const": "connectivity_lifecycle_receipt_audit_only"
+            }
+          }
+        },
+        "executor_labels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "codex_cli",
+            "hermes_agent",
+            "claude_code"
+          ],
+          "properties": {
+            "codex_cli": {
+              "const": "Codex CLI"
+            },
+            "hermes_agent": {
+              "const": "Hermes-Agent"
+            },
+            "claude_code": {
+              "const": "Claude Code"
+            }
+          }
+        },
+        "executor_statuses": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "codex_cli",
+            "hermes_agent",
+            "claude_code"
+          ],
+          "properties": {
+            "codex_cli": {
+              "const": "default"
+            },
+            "hermes_agent": {
+              "const": "experimental"
+            },
+            "claude_code": {
+              "const": "experimental"
+            }
+          }
+        },
+        "guardrails": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "chat_completion_only_executor_forbidden",
+            "hermes_agent_requires_full_agent_loop",
+            "non_default_executor_requires_explicit_selection",
+            "non_default_executor_forbids_silent_codex_fallback",
+            "fallback_allowed",
+            "domain_truth_stays_mag_owned"
+          ],
+          "properties": {
+            "chat_completion_only_executor_forbidden": {
+              "const": true
+            },
+            "hermes_agent_requires_full_agent_loop": {
+              "const": true
+            },
+            "non_default_executor_requires_explicit_selection": {
+              "const": true
+            },
+            "non_default_executor_forbids_silent_codex_fallback": {
+              "const": true
+            },
+            "fallback_allowed": {
+              "const": false
+            },
+            "domain_truth_stays_mag_owned": {
+              "const": true
+            }
+          }
+        },
+        "adapter_owner": {
+          "const": "one-person-lab"
+        },
+        "adapter_contract_ref": {
+          "const": "contracts/opl-framework/family-executor-adapter-defaults.json"
         }
       }
     },
@@ -236,7 +392,7 @@
           "const": "med-autogrant"
         },
         "executor_owner": {
-          "const": "med-autogrant"
+          "const": "codex_cli"
         },
         "supervision_status_surface": {
           "$ref": "#/$defs/managedRuntimeNamedSurface"
@@ -920,6 +1076,8 @@
         "domain_owner",
         "runtime_owner",
         "executor_owner",
+        "executor_adapter_owner",
+        "executor_adapter_contract",
         "domain_entry_surface",
         "registration_surface",
         "consumable_projection_refs",
@@ -953,7 +1111,13 @@
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "executor_owner": {
-          "const": "med-autogrant"
+          "const": "codex_cli"
+        },
+        "executor_adapter_owner": {
+          "const": "one-person-lab"
+        },
+        "executor_adapter_contract": {
+          "$ref": "#/$defs/executorAdapterContract"
         },
         "domain_entry_surface": {
           "type": "object",
@@ -1160,7 +1324,8 @@
             "stage_runtime_owner",
             "runtime_kernel_owner",
             "domain_truth_owner",
-            "executor_owner"
+            "executor_owner",
+            "executor_adapter_owner"
           ],
           "properties": {
             "stage_runtime_owner": {
@@ -1173,7 +1338,10 @@
               "const": "med-autogrant"
             },
             "executor_owner": {
-              "const": "med-autogrant"
+              "const": "codex_cli"
+            },
+            "executor_adapter_owner": {
+              "const": "one-person-lab"
             }
           }
         },
@@ -1208,6 +1376,50 @@
         },
         "ref": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "executorAdapterContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_ref",
+        "registry_surface_kind",
+        "request_contract",
+        "receipt_contract",
+        "canonical_executor_backends",
+        "default_executor",
+        "non_default_equivalence",
+        "fallback_allowed"
+      ],
+      "properties": {
+        "contract_ref": {
+          "const": "contracts/opl-framework/family-executor-adapter-defaults.json"
+        },
+        "registry_surface_kind": {
+          "const": "opl_agent_executor_registry"
+        },
+        "request_contract": {
+          "const": "AgentExecutionRequest"
+        },
+        "receipt_contract": {
+          "const": "AgentExecutionReceipt"
+        },
+        "canonical_executor_backends": {
+          "const": [
+            "codex_cli",
+            "hermes_agent",
+            "claude_code"
+          ]
+        },
+        "default_executor": {
+          "const": "codex_cli"
+        },
+        "non_default_equivalence": {
+          "const": "connectivity_lifecycle_receipt_audit_only"
+        },
+        "fallback_allowed": {
+          "const": false
         }
       }
     },
@@ -3595,7 +3807,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor", "domain_memory_descriptor_locator", "standard_domain_agent_skeleton", "action_catalog_projections", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor", "domain_memory_descriptor_locator", "standard_domain_agent_skeleton", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -3726,6 +3938,9 @@
         },
         "action_catalog_projections": {
           "$ref": "#/$defs/actionCatalogProjections"
+        },
+        "executor_defaults": {
+          "$ref": "#/$defs/executorDefaultsSurface"
         },
         "product_entry_status": {"$ref": "#/$defs/productEntryStatus"},
         "remaining_gaps": {

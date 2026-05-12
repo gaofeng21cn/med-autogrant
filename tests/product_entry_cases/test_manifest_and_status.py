@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 
+from product_entry_cases.executor_defaults_assertions import assert_executor_defaults
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
@@ -57,7 +58,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
                 "shared_contract_ref": "contracts/opl-framework/managed-runtime-three-layer-contract.json",
                 "runtime_owner": "codex_cli",
                 "domain_owner": "med-autogrant",
-                "executor_owner": "med-autogrant",
+                "executor_owner": "codex_cli",
                 "supervision_status_surface": {
                     "surface_kind": "grant_progress",
                     "owner": "med-autogrant",
@@ -119,7 +120,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(runtime_control["surface_kind"], "runtime_control")
         self.assertEqual(runtime_control["runtime_owner"], "codex_cli")
         self.assertEqual(runtime_control["domain_owner"], "med-autogrant")
-        self.assertEqual(runtime_control["executor_owner"], "med-autogrant")
+        self.assertEqual(runtime_control["executor_owner"], "codex_cli")
         self.assertEqual(runtime_control["session_locator"]["locator_field"], "grant_run_id")
         self.assertEqual(runtime_control["session_locator"]["locator_value"], payload["grant_run_id"])
         self.assertEqual(runtime_control["restore_point"]["session_id"], payload["grant_run_id"])
@@ -187,6 +188,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         )
         self.assertEqual(manifest["skill_catalog"]["surface_kind"], "skill_catalog")
         self.assertEqual(len(manifest["skill_catalog"]["skills"]), 1)
+        assert_executor_defaults(self, manifest["executor_defaults"])
         skill = manifest["skill_catalog"]["skills"][0]
         self.assertEqual(skill["skill_id"], "med-autogrant")
         self.assertEqual(skill["title"], "Med Auto Grant")

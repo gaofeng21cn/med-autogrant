@@ -5,6 +5,9 @@ import os
 from pathlib import Path
 from typing import Any, Callable
 
+from med_autogrant.runtime_defaults import (
+    NON_DEFAULT_EXECUTOR_EQUIVALENCE_NOTICE,
+)
 from med_autogrant.workspace_types import WorkspaceStateError
 
 
@@ -67,6 +70,7 @@ def run_hermes_agent_exec(
     config_loader: ConfigLoader | None = None,
     agent_factory: AgentFactory | None = None,
 ) -> dict[str, Any]:
+    """Domain-specific helper for OPL's explicit hermes_agent adapter path."""
     contract = read_hermes_agent_contract(env, config_loader=config_loader)
     resolved_cwd = Path(cwd).expanduser().resolve()
     if not resolved_cwd.exists():
@@ -146,10 +150,18 @@ def run_hermes_agent_exec(
             api_mode=agent_api_mode,
         ),
     }
+    receipt = _build_agent_execution_receipt(
+        prompt=prompt,
+        cwd=resolved_cwd,
+        result=result,
+        proof=proof,
+        events=events,
+    )
     return {
         "payload": payload,
         "contract": contract,
         "proof": proof,
+        "agent_execution_receipt": receipt,
     }
 
 
@@ -192,6 +204,32 @@ def _parse_json_object(payload: Any) -> dict[str, Any]:
     if not isinstance(parsed, dict):
         raise WorkspaceStateError("Hermes-native executor final response 顶层必须是 JSON object。")
     return parsed
+
+
+def _build_agent_execution_receipt(
+    *,
+    prompt: str,
+    cwd: Path,
+    result: dict[str, Any],
+    proof: dict[str, Any],
+    events: list[dict[str, Any]],
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "opl_agent_execution_receipt",
+        "executor_kind": "hermes_agent",
+        "mode": "agent_loop",
+        "cwd": str(cwd),
+        "prompt_preview": _preview_text(prompt),
+        "session_id": proof.get("session_id"),
+        "event_summary": list(events),
+        "stdout_preview": _preview_text(result.get("final_response")),
+        "stderr_preview": "",
+        "exit_code": 0,
+        "closeout_packet": None,
+        "capabilities": ["full_agent_loop_receipt", "tool_event_proof", "session_id"],
+        "non_equivalence_notice": NON_DEFAULT_EXECUTOR_EQUIVALENCE_NOTICE,
+        "proof": dict(proof),
+    }
 
 
 def _require_nonnegative_int(payload: dict[str, Any], key: str, *, context: str) -> int:

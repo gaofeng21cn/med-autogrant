@@ -311,22 +311,59 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(critique_workspace["revision_plans"][-1]["pre_revision_version_label"], "v0.4")
         self.assertEqual(validate_workspace_document(critique_workspace).ok, True)
 
-    def test_build_critique_execution_document_supports_experimental_hermes_agent_executor(self) -> None:
+    def test_build_critique_execution_document_supports_explicit_hermes_agent_receipt(self) -> None:
         from med_autogrant.critique_executor import build_critique_execution_document
 
         document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
 
-        def fake_hermes_runner(_prompt: str, *, cwd: Path) -> dict[str, object]:
+        def fake_opl_executor_runner(request: dict[str, object], *, cwd: Path) -> dict[str, object]:
             self.assertEqual(cwd, DRAFTING_EXAMPLE_PATH.resolve().parent)
+            self.assertEqual(request["executor_kind"], "hermes_agent")
+            self.assertEqual(request["mode"], "agent_loop")
+            self.assertEqual(
+                request["domain_payload"],
+                {
+                    "domain_id": "med-autogrant",
+                    "route_id": "critique",
+                    "input_path": str(DRAFTING_EXAMPLE_PATH.resolve()),
+                },
+            )
+            proof = {
+                "proof_kind": "full_agent_loop_aiaagent",
+                "full_agent_loop_proved": True,
+                "session_id": "hermes-session-proof-001",
+                "api_calls": 2,
+                "tool_call_count": 1,
+                "event_count": 4,
+                "provider_reasoning_status": "unproven_custom_chat_completions",
+                "event_stream": [
+                    {"type": "tool_start", "tool": "read_file"},
+                    {"type": "tool_complete", "tool": "read_file"},
+                ],
+            }
             return {
-                "payload": {
+                "surface_kind": "opl_agent_execution_receipt",
+                "executor_kind": "hermes_agent",
+                "mode": "agent_loop",
+                "cwd": str(DRAFTING_EXAMPLE_PATH.resolve().parent),
+                "prompt_preview": "critique prompt",
+                "session_id": "hermes-session-proof-001",
+                "event_summary": [
+                    {"type": "tool_start", "tool": "read_file"},
+                    {"type": "tool_complete", "tool": "read_file"},
+                ],
+                "stdout_preview": "{}",
+                "stderr_preview": "",
+                "exit_code": 0,
+                "closeout_packet": {
+                    "surface_kind": "mag_critique_closeout_packet",
                     "mentor_critique": {
                         "metadata": {
                             "schema_version": "v1",
                             "created_at": "2026-04-13T12:00:00Z",
                             "updated_at": "2026-04-13T12:00:00Z",
                             "source_mode": "auto",
-                            "owner": "Hermes-Agent critique executor",
+                            "owner": "OPL Hermes-Agent critique executor",
                         },
                         "critique_id": "critique-v1",
                         "draft_id": "should-be-overridden",
@@ -372,7 +409,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                             "created_at": "2026-04-13T12:05:00Z",
                             "updated_at": "2026-04-13T12:05:00Z",
                             "source_mode": "auto",
-                            "owner": "Hermes-Agent critique executor",
+                            "owner": "OPL Hermes-Agent critique executor",
                         },
                         "revision_plan_id": "revision-v1",
                         "draft_id": "should-be-overridden",
@@ -408,25 +445,15 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
                         ],
                     },
                 },
-                "contract": {
+                "capabilities": ["full_agent_loop_receipt", "tool_event_proof", "session_id"],
+                "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
+                "proof": proof,
+                "executor_contract": {
                     "entrypoint": "run_agent.AIAgent.run_conversation",
                     "model": "gpt-5.4",
                     "provider": "custom",
                     "api_mode": "chat_completions",
                     "reasoning_effort": "xhigh",
-                },
-                "proof": {
-                    "proof_kind": "full_agent_loop_aiaagent",
-                    "full_agent_loop_proved": True,
-                    "session_id": "hermes-session-proof-001",
-                    "api_calls": 2,
-                    "tool_call_count": 1,
-                    "event_count": 4,
-                    "provider_reasoning_status": "unproven_custom_chat_completions",
-                    "event_stream": [
-                        {"type": "tool_start", "tool": "read_file"},
-                        {"type": "tool_complete", "tool": "read_file"},
-                    ],
                 },
             }
 
@@ -434,7 +461,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
             document=document,
             input_path=DRAFTING_EXAMPLE_PATH,
             executor_kind="hermes_agent",
-            hermes_runner=fake_hermes_runner,
+            opl_executor_runner=fake_opl_executor_runner,
         )
 
         critique_workspace = payload["critique_workspace"]
@@ -445,7 +472,19 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(payload["active_revision_plan_id"], "revision-v1")
         self.assertEqual(payload["lifecycle_stage"], "critique")
         self.assertEqual(executor["kind"], "hermes_agent")
-        self.assertEqual(executor["mode"], "experimental_proof")
+        self.assertEqual(executor["mode"], "agent_loop")
+        self.assertEqual(executor["adapter_owner"], "one-person-lab")
+        self.assertEqual(
+            executor["adapter_contract_ref"],
+            "contracts/opl-framework/family-executor-adapter-defaults.json",
+        )
+        self.assertEqual(executor["request_contract"], "AgentExecutionRequest")
+        self.assertEqual(executor["receipt_contract"], "AgentExecutionReceipt")
+        self.assertFalse(executor["fallback_allowed"])
+        self.assertEqual(
+            executor["non_equivalence_notice"],
+            "connectivity_lifecycle_receipt_audit_only",
+        )
         self.assertEqual(executor["entrypoint"], "run_agent.AIAgent.run_conversation")
         self.assertEqual(executor["provider"], "custom")
         self.assertEqual(executor["api_mode"], "chat_completions")
@@ -454,9 +493,52 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(executor["session_id"], "hermes-session-proof-001")
         self.assertEqual(executor["tool_call_count"], 1)
         self.assertEqual(executor["reasoning_semantics_status"], "unproven_custom_chat_completions")
+        receipt = executor["agent_execution_receipt"]
+        self.assertEqual(receipt["surface_kind"], "opl_agent_execution_receipt")
+        self.assertEqual(receipt["executor_kind"], "hermes_agent")
+        self.assertEqual(receipt["mode"], "agent_loop")
+        self.assertEqual(receipt["proof"]["full_agent_loop_proved"], True)
+        self.assertEqual(receipt["proof"]["tool_call_count"], 1)
+        self.assertEqual(
+            receipt["non_equivalence_notice"],
+            "connectivity_lifecycle_receipt_audit_only",
+        )
         self.assertEqual(critique_workspace["lifecycle_stage"], "critique")
         self.assertEqual(critique_workspace["current_selection"]["active_revision_plan_id"], "revision-v1")
         self.assertEqual(validate_workspace_document(critique_workspace).ok, True)
+
+    def test_hermes_agent_executor_requires_opl_receipt_shape(self) -> None:
+        from med_autogrant.critique_executor import build_critique_execution_document
+        from med_autogrant.workspace import WorkspaceStateError
+
+        document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
+
+        def fake_opl_executor_runner(_request: dict[str, object], *, cwd: Path) -> dict[str, object]:
+            self.assertEqual(cwd, DRAFTING_EXAMPLE_PATH.resolve().parent)
+            return {
+                "proof": {
+                    "full_agent_loop_proved": True,
+                    "session_id": "hermes-session-proof-001",
+                    "tool_call_count": 1,
+                },
+                "executor_contract": {
+                    "entrypoint": "run_agent.AIAgent.run_conversation",
+                    "model": "gpt-5.4",
+                },
+                "closeout_packet": {
+                    "surface_kind": "mag_critique_closeout_packet",
+                    "mentor_critique": {},
+                    "revision_plan": {},
+                },
+            }
+
+        with self.assertRaisesRegex(WorkspaceStateError, "surface_kind"):
+            build_critique_execution_document(
+                document=document,
+                input_path=DRAFTING_EXAMPLE_PATH,
+                executor_kind="hermes_agent",
+                opl_executor_runner=fake_opl_executor_runner,
+            )
 
 
 if __name__ == "__main__":

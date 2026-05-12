@@ -109,7 +109,7 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(runtime_continuity["surface_kind"], "skill_runtime_continuity")
         self.assertEqual(runtime_continuity["runtime_owner"], "codex_cli")
         self.assertEqual(runtime_continuity["domain_owner"], "med-autogrant")
-        self.assertEqual(runtime_continuity["executor_owner"], "med-autogrant")
+        self.assertEqual(runtime_continuity["executor_owner"], "codex_cli")
         self.assertEqual(runtime_continuity["session_locator_field"], "grant_run_id")
         self.assertEqual(runtime_continuity["session_surface_ref"], "/product_entry_manifest/session_continuity")
         self.assertEqual(runtime_continuity["progress_surface_ref"], "/product_entry_manifest/progress_projection")
@@ -129,6 +129,12 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(stage_runtime_registration["registration_id"], "mag.opl_stage_runtime.registration.v1")
         self.assertEqual(stage_runtime_registration["domain_id"], "medautogrant")
         self.assertEqual(stage_runtime_registration["domain_owner"], "med-autogrant")
+        self.assertEqual(stage_runtime_registration["executor_owner"], "codex_cli")
+        self.assertEqual(stage_runtime_registration["executor_adapter_owner"], "one-person-lab")
+        self.assertEqual(
+            stage_runtime_registration["executor_adapter_contract"]["receipt_contract"],
+            "AgentExecutionReceipt",
+        )
         self.assertIn("skill-catalog", stage_runtime_registration["registration_surface"]["command"])
         self.assertIn(
             "/runtime_control/semantic_closure",

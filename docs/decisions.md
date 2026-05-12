@@ -6,6 +6,12 @@
 - 理由：OPL 当前定位已经上移为完整 agent runtime framework，负责 stage lifecycle、queue/wakeup、handoff、receipt、retry/dead-letter、operator projection、shared contracts/indexes 与 provider 编排。MAG 仍必须持有 grant stage pack、prompt/skill、fundability judgment、authoring quality gate、workspace truth 和 submission-ready export authority。
 - 影响：旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和 local host runtime 说法降为历史追溯或 provider-specific 实现记录；后续公开/核心文档默认使用 OPL stage-led framework 口径。MAG 的 skill/direct CLI 路径继续是一等入口。
 
+## 2026-05-12：MAG 采用 OPL 统一 Agent Executor Adapter 边界
+
+- 决策：MAG 的 product-entry manifest、runtime registration 与 current-program 明确采用 OPL generic Agent Executor Adapter / registry 口径；默认 concrete executor owner 固定为 `codex_cli`，`hermes_agent` 与 `claude_code` 只能作为显式 opt-in backend。`execute-critique-pass --executor hermes_agent` 必须产生 OPL `AgentExecutionReceipt` 风格 proof。
+- 理由：跨仓统一后，generic executor adapter 归 OPL；MAG 不应把自己写成 generic executor owner。MAG 只持有 grant route truth、quality/fundability gate、workspace/artifact truth 与 export authority。
+- 影响：非默认 executor 只承诺可接入、可回执、可审计、fail-closed，不承诺效果等价；product-entry `executor_owner` 表示默认 concrete executor，OPL adapter owner 通过独立 `executor_defaults` / `executor_adapter_contract` surface 表达。
+
 ## 2026-05-10：MAG 对齐 OPL provider-backed runtime，Temporal 为目标生产 substrate
 
 - 状态：已被 `2026-05-11` OPL 完整 stage-led runtime framework 口径 supersede。保留本段用于解释 provider-backed / Temporal-target 迁移背景。

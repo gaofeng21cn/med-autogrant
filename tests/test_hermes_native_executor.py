@@ -142,6 +142,23 @@ class HermesNativeExecutorRunTest(unittest.TestCase):
         self.assertEqual(result["proof"]["tool_call_count"], 1)
         self.assertEqual(result["proof"]["event_count"], 4)
         self.assertEqual(result["proof"]["provider_reasoning_status"], "unproven_custom_chat_completions")
+        receipt = result["agent_execution_receipt"]
+        self.assertEqual(receipt["surface_kind"], "opl_agent_execution_receipt")
+        self.assertEqual(receipt["executor_kind"], "hermes_agent")
+        self.assertEqual(receipt["mode"], "agent_loop")
+        self.assertEqual(receipt["cwd"], str(REPO_ROOT.resolve()))
+        self.assertEqual(receipt["session_id"], "hermes-session-test")
+        self.assertEqual(receipt["event_summary"], result["proof"]["event_stream"])
+        self.assertEqual(receipt["exit_code"], 0)
+        self.assertEqual(
+            receipt["capabilities"],
+            ["full_agent_loop_receipt", "tool_event_proof", "session_id"],
+        )
+        self.assertEqual(
+            receipt["non_equivalence_notice"],
+            "connectivity_lifecycle_receipt_audit_only",
+        )
+        self.assertEqual(receipt["proof"], result["proof"])
 
     def test_run_hermes_agent_exec_fails_closed_when_no_tool_loop_happens(self) -> None:
         from med_autogrant.hermes_native_executor import run_hermes_agent_exec

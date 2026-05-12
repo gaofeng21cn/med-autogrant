@@ -7,7 +7,15 @@ from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _require_nonempty_string_from_mapping,
 )
-from med_autogrant.runtime_defaults import DEFAULT_RUNTIME_OWNER
+from med_autogrant.runtime_defaults import (
+    DEFAULT_EXECUTOR_OWNER,
+    DEFAULT_RUNTIME_OWNER,
+    NON_DEFAULT_EXECUTOR_EQUIVALENCE_NOTICE,
+    OPL_AGENT_EXECUTION_RECEIPT_CONTRACT,
+    OPL_AGENT_EXECUTION_REQUEST_CONTRACT,
+    OPL_EXECUTOR_ADAPTER_CONTRACT_REF,
+    OPL_EXECUTOR_ADAPTER_OWNER,
+)
 
 
 def _build_opl_stage_runtime_registration(
@@ -29,7 +37,18 @@ def _build_opl_stage_runtime_registration(
             "runtime_owner",
             context="runtime_summary",
         ),
-        "executor_owner": "med-autogrant",
+        "executor_owner": DEFAULT_EXECUTOR_OWNER,
+        "executor_adapter_owner": OPL_EXECUTOR_ADAPTER_OWNER,
+        "executor_adapter_contract": {
+            "contract_ref": OPL_EXECUTOR_ADAPTER_CONTRACT_REF,
+            "registry_surface_kind": "opl_agent_executor_registry",
+            "request_contract": OPL_AGENT_EXECUTION_REQUEST_CONTRACT,
+            "receipt_contract": OPL_AGENT_EXECUTION_RECEIPT_CONTRACT,
+            "canonical_executor_backends": ["codex_cli", "hermes_agent", "claude_code"],
+            "default_executor": DEFAULT_EXECUTOR_OWNER,
+            "non_default_equivalence": NON_DEFAULT_EXECUTOR_EQUIVALENCE_NOTICE,
+            "fallback_allowed": False,
+        },
         "domain_entry_surface": {
             "surface_kind": PRODUCT_STATUS_KIND,
             "command": shell_commands["product_status"],
@@ -187,7 +206,8 @@ def _build_opl_family_lifecycle_adapter(
                 "stage_runtime_owner": "one-person-lab",
                 "runtime_kernel_owner": DEFAULT_RUNTIME_OWNER,
                 "domain_truth_owner": TARGET_DOMAIN_ID,
-                "executor_owner": TARGET_DOMAIN_ID,
+                "executor_owner": DEFAULT_EXECUTOR_OWNER,
+                "executor_adapter_owner": OPL_EXECUTOR_ADAPTER_OWNER,
             },
             "route_surface_refs": {
                 "product_entry": {

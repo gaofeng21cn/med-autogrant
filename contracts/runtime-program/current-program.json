@@ -122,16 +122,37 @@
     "default_executor_mode": "autonomous",
     "default_model": "inherit_local_codex_default",
     "default_reasoning_effort": "inherit_local_codex_default",
+    "canonical_executor_backends": [
+      "codex_cli",
+      "hermes_agent",
+      "claude_code"
+    ],
+    "executor_registry": {
+      "surface_kind": "opl_agent_executor_registry",
+      "request_contract": "AgentExecutionRequest",
+      "receipt_contract": "AgentExecutionReceipt",
+      "default_resolution_order": [
+        "cli_flag",
+        "stage_attempt_input",
+        "OPL_EXECUTOR_KIND",
+        "codex_cli"
+      ],
+      "non_default_equivalence": "connectivity_lifecycle_receipt_audit_only"
+    },
     "executor_labels": {
       "codex_cli": "Codex CLI",
-      "hermes_agent": "Hermes-Agent"
+      "hermes_agent": "Hermes-Agent",
+      "claude_code": "Claude Code"
     },
     "executor_statuses": {
       "codex_cli": "default",
-      "hermes_agent": "experimental"
+      "hermes_agent": "experimental",
+      "claude_code": "experimental"
     },
     "chat_completion_only_executor_forbidden": true,
-    "hermes_agent_requires_full_agent_loop": true
+    "hermes_agent_requires_full_agent_loop": true,
+    "non_default_executor_requires_explicit_selection": true,
+    "non_default_executor_forbids_silent_codex_fallback": true
   },
   "experimental_executor_proofs": [
     {
@@ -139,6 +160,13 @@
       "executor_kind": "hermes_agent",
       "entrypoint": "run_agent.AIAgent.run_conversation",
       "status": "experimental",
+      "adapter_owner": "one-person-lab",
+      "adapter_contract_ref": "contracts/opl-framework/family-executor-adapter-defaults.json",
+      "request_contract": "AgentExecutionRequest",
+      "receipt_contract": "AgentExecutionReceipt",
+      "fallback_allowed": false,
+      "explicit_selection_required": true,
+      "non_equivalence_notice": "connectivity_lifecycle_receipt_audit_only",
       "default_executor_name_unchanged": "codex_cli",
       "default_executor_mode_unchanged": "autonomous",
       "provider_reasoning_status": "not_repo_proved_keep_default"

@@ -50,6 +50,7 @@ from med_autogrant.product_entry_parts.manifest_runtime_companions import build_
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
 from med_autogrant.product_entry_parts.domain_agent_skeleton import build_artifact_locator_contract, build_controlled_stage_attempt_projection, build_standard_domain_agent_skeleton
 from med_autogrant.product_entry_parts.domain_memory import build_manifest_domain_memory_surfaces
+from med_autogrant.product_entry_parts.executor_defaults import build_executor_defaults_surface
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_artifact_inventory_surface,
     _build_product_command_catalog,
@@ -60,7 +61,6 @@ from med_autogrant.product_entry_parts.runtime_surfaces import (
 )
 from med_autogrant.public_cli import public_cli_command
 from med_autogrant.runtime_defaults import DEFAULT_RUNTIME_SUBSTRATE, build_default_runtime_summary
-
 from opl_harness_shared.automation_companions import (
     build_automation_catalog as _build_shared_automation_catalog,
     build_automation_descriptor as _build_shared_automation_descriptor,
@@ -80,7 +80,6 @@ from opl_harness_shared.runtime_task_companions import (
     build_runtime_inventory as _build_shared_runtime_inventory,
     build_task_lifecycle as _build_shared_task_lifecycle,
 )
-
 
 class ProductEntryManifestBuilderMixin:
     def build_product_entry_manifest(
@@ -972,6 +971,7 @@ class ProductEntryManifestBuilderMixin:
                 "family_action_catalog": family_action_catalog,
                 "family_stage_control_plane": family_stage_control_plane,
                 "action_catalog_projections": action_catalog_projections,
+                "executor_defaults": build_executor_defaults_surface(),
                 "runtime_control": runtime_control,
                 "grant_authoring_readiness": grant_authoring_readiness,
                 "autonomy_observability": autonomy_observability,

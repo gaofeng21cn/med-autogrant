@@ -360,7 +360,7 @@ class SchemaRegistryTest(unittest.TestCase):
         )
         self.assertEqual(managed_runtime["properties"]["runtime_owner"]["const"], "codex_cli")
         self.assertEqual(managed_runtime["properties"]["domain_owner"]["const"], "med-autogrant")
-        self.assertEqual(managed_runtime["properties"]["executor_owner"]["const"], "med-autogrant")
+        self.assertEqual(managed_runtime["properties"]["executor_owner"]["const"], "codex_cli")
 
     def test_product_entry_surface_schemas_pin_runtime_control_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
@@ -514,6 +514,28 @@ class SchemaRegistryTest(unittest.TestCase):
             manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"]["surface_kind"]["const"],
             "opl_stage_runtime_domain_registration",
         )
+        self.assertEqual(
+            manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"]["executor_owner"]["const"],
+            "codex_cli",
+        )
+        self.assertEqual(
+            manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"]["executor_adapter_owner"]["const"],
+            "one-person-lab",
+        )
+        executor_adapter_contract = manifest_schema["$defs"]["executorAdapterContract"]
+        self.assertEqual(
+            executor_adapter_contract["properties"]["contract_ref"]["const"],
+            "contracts/opl-framework/family-executor-adapter-defaults.json",
+        )
+        self.assertEqual(
+            executor_adapter_contract["properties"]["receipt_contract"]["const"],
+            "AgentExecutionReceipt",
+        )
+        self.assertEqual(
+            executor_adapter_contract["properties"]["canonical_executor_backends"]["const"],
+            ["codex_cli", "hermes_agent", "claude_code"],
+        )
+        self.assertFalse(executor_adapter_contract["properties"]["fallback_allowed"]["const"])
         self.assertIn(
             "native_helper_consumption",
             manifest_schema["$defs"]["oplStageRuntimeRegistration"]["required"],
@@ -556,6 +578,13 @@ class SchemaRegistryTest(unittest.TestCase):
             lifecycle_adapter["properties"]["surface_kind"]["const"],
             "opl_family_lifecycle_adapter",
         )
+        owner_split = (
+            lifecycle_adapter["properties"]["owner_route_discovery"]["$ref"],
+            manifest_schema["$defs"]["oplFamilyOwnerRouteDiscovery"]["properties"]["owner_split"],
+        )
+        self.assertEqual(owner_split[0], "#/$defs/oplFamilyOwnerRouteDiscovery")
+        self.assertEqual(owner_split[1]["properties"]["executor_owner"]["const"], "codex_cli")
+        self.assertEqual(owner_split[1]["properties"]["executor_adapter_owner"]["const"], "one-person-lab")
 
         runtime_continuity = manifest_schema["$defs"]["skillRuntimeContinuitySurface"]
         self.assertEqual(runtime_continuity["properties"]["surface_kind"]["const"], "skill_runtime_continuity")

@@ -13,7 +13,7 @@ Date: `2026-04-13`
 冻结 `critique` route 已经 landed 的当前真相，并把 executor vocabulary 收口成：
 
 - 默认输入/输出：`codex_cli`
-- 显式 proof lane：`hermes_agent`
+- 显式 receipt lane：`hermes_agent`
 
 这条 current truth 解决的是：
 
@@ -62,7 +62,7 @@ Date: `2026-04-13`
 
 - 省略时默认走 `codex_cli`
 - 显式 `codex_cli` 仍然走默认路由
-- 显式 `hermes_agent` 进入 proof lane
+- 显式 `hermes_agent` 进入 OPL-backed receipt lane
 - 其他值 fail-closed
 
 ### 3. 默认模型与默认 reasoning 都继承本机 Codex 默认
@@ -90,7 +90,7 @@ Date: `2026-04-13`
 
 - `critique` 的默认 concrete executor 已经切换到 `Hermes-Agent`
 
-只有带 session substrate、route orchestration、domain mutation 与 durable state transition 的 full agent loop 才算显式 proof lane；chat relay / prompt relay / 单次 chat completion 不算。
+只有带 session substrate、route orchestration、domain mutation、durable state transition 与 OPL `AgentExecutionReceipt` 风格 proof 的 full agent loop 才算显式 receipt lane；chat relay / prompt relay / 单次 chat completion 不算。
 
 ### 5. critique pending handoff contract 退为历史资料
 
@@ -122,7 +122,7 @@ Date: `2026-04-13`
 - `critique` 在 route contract 中是 landed
 - `execute-critique-pass` 会通过 `run_codex_exec(...)` 调用 `codex exec`
 - `critique_execution.executor` 会写出 `kind = codex_cli`
-- `executor_kind = hermes_agent` 仍会进入 explicit proof lane
+- `executor_kind = hermes_agent` 仍会进入 explicit receipt lane
 - 退役 executor alias 会 fail-closed
 - `model_selection / reasoning_selection` 默认是 `inherit_local_codex_default`
 
@@ -133,7 +133,8 @@ Date: `2026-04-13`
 - `critique` route 已经 landed
 - 当前默认 concrete executor 是 `Codex CLI`
 - 默认模型与默认 reasoning 都继承本机 Codex 默认
-- `hermes_agent` 仍然只是显式 proof lane
+- `hermes_agent` 仍然只是显式 receipt lane
+- 非默认 executor 只承诺可接入、可回执、可审计、fail-closed，不承诺效果等价
 - 其他 executor 值会 fail-closed
 
 它不意味着：
