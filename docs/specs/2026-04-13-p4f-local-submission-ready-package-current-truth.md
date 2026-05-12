@@ -12,7 +12,8 @@ Date: `2026-04-13`
 
 把“本地 submission-ready 交付”从零散的 `artifact_bundle -> final_package -> hosted_contract_bundle` 导出链，收口成一个面向用户、可一键执行、可 fail-closed 拒绝不完整材料的正式命令 `build-submission-ready-package`，同时保持下面这些边界不变：
 
-- `Hermes-Agent` 继续只持有 runtime substrate / orchestration owner
+- `Codex CLI` 继续是默认 concrete executor
+- `Hermes-Agent` 只作为显式 OPL receipt/proof lane，不持有默认 runtime、authoring executor、grant truth 或 quality verdict
 - `Med Auto Grant` 继续持有 grant domain truth、author-side route 与导出物 owner
 - 当前 landed 的只是“本地 submission-ready 交付包导出”，不是外部官网自动提交、不是成熟 Web UI，也不是 Word/PDF 全自动定稿系统
 - 这条命令面也不重写 MAG 的正文 authoring 完成语义；它只定义更严格的本地交付 gate

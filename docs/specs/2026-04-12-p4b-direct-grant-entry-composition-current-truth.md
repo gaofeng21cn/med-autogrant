@@ -19,7 +19,7 @@ Date: `2026-04-12`
 - 在已经 landed 的 `grant-progress`、`grant-cockpit`、`build-product-entry` 之上，
 - 把 direct grant product entry 继续推进到一份可直接消费的组合式 product contract，
 - 让 direct caller 一次拿到当前投影、direct entry envelope 与 `OPL` handoff envelope，
-- 同时保持 `Hermes-Agent` 继续是 runtime substrate owner，`Med Auto Grant` 继续是 grant truth / route / export owner。
+- 同时保持默认 concrete executor 为 `Codex CLI`，`Hermes-Agent` 只作为显式 OPL receipt/proof lane，`Med Auto Grant` 继续是 grant truth / route / export owner。
 
 ## Landed Facts
 

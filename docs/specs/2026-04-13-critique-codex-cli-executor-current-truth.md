@@ -83,12 +83,14 @@ Date: `2026-04-13`
 
 当前成立的是：
 
-- `Hermes-Agent` 已承担 runtime substrate / orchestration owner
+- `Codex CLI` 是当前第一公民 concrete executor
 - `critique` 的默认 concrete executor 已统一到 `Codex CLI`
+- `Hermes-Agent` 只作为显式 `hermes_agent` receipt lane，经 OPL generic Agent Executor Adapter 接入
 
 当前不成立的是：
 
 - `critique` 的默认 concrete executor 已经切换到 `Hermes-Agent`
+- `Hermes-Agent` 拥有 MAG 默认 runtime、默认 authoring executor、grant truth 或 quality verdict
 
 只有带 session substrate、route orchestration、domain mutation、durable state transition 与 OPL `AgentExecutionReceipt` 风格 proof 的 full agent loop 才算显式 receipt lane；chat relay / prompt relay / 单次 chat completion 不算。
 

@@ -190,9 +190,10 @@
 
 ## 2026-04-12：runtime substrate 与 grant executor 明确分层
 
-- 决策：既然上游 `Hermes-Agent` 已承担 runtime substrate owner，后续不把这件事偷换成“grant authoring 的每个单步都必须立刻迁成 Hermes-native executor”。
-- 理由：当前已经跑通的是长期在线 runtime substrate，不是 authoring semantics 的完全替换。若把二者混在一起，只会让已验证的 grant critique / revision / packaging 主线失去稳定边界。
-- 影响：repo-side domain logic、artifact assembly、identity guard 与 executor routing 继续保留为 domain owner；未来若要替换单步执行器，必须以新的 route truth 单独推进。
+- 状态：已被 2026-05-12 OPL 统一 Agent Executor Adapter 口径 supersede；保留本段用于解释早期 Hermes proof 语境。
+- 决策：`Hermes-Agent` 只作为显式 OPL receipt/proof lane 或历史 provenance 读取；默认 concrete executor 固定为 `Codex CLI`，MAG 继续持有 grant route truth、quality/fundability gate、workspace/artifact truth 与 export authority。
+- 理由：当前需要证明的是非默认 executor 可接入、可回执、可审计、fail-closed，而不是把 runtime substrate owner 或 authoring semantics 交给 MAG repo-local Hermes 路径。
+- 影响：repo-side domain logic、artifact assembly、identity guard 与 executor routing 继续保留为 domain owner；未来若要替换单步执行器，必须以新的 route truth 和 OPL receipt proof 单独推进。
 
 ## 2026-04-12：冻结 author-side executor routing contract
 
@@ -226,7 +227,8 @@
 
 ## 2026-04-12：冻结 OPL 对齐的理想目标与阶段图
 
-- 决策：把 `Med Auto Grant` 的长线理想目标固定为 `OPL` 顶层入口、`Hermes-Agent` substrate owner、`Med Auto Grant` domain truth owner 的分层结构，并把主线阶段固定成 `P1 completed / P2 completed / P3 completed / P4 next`。
+- 状态：已被 2026-05-11/2026-05-12 的 OPL stage-led framework 与统一 Agent Executor Adapter 口径 supersede。
+- 决策：把 `Med Auto Grant` 的长线理想目标固定为 `OPL` stage-led framework、默认 `Codex CLI` concrete executor、显式 optional executor adapter/proof lane、`Med Auto Grant` domain truth owner 的分层结构，并把主线阶段固定成 `P1 completed / P2 completed / P3 completed / P4 next`。
 - 理由：如果不把 “理想目标” 和 “当前完成态” 分开冻结，后续最容易一边拿 `OPL` 理想型讲话，一边把未完成的 hosted caller / direct product entry 写成 landed。
 - 影响：`current-program` 现在额外携带 `ideal_target` 与 `phase_map`；当前 `P3 hosted caller / OPL consumption proof` 已通过冻结合同与 proof test 落地，后续推进默认转向 `P4 mature direct grant product entry`，而不是回头重写 repo-local helper 或跳到 product overclaim。
 
