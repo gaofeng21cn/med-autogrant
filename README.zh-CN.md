@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/branding/medautogrant-logo.svg" alt="Med Auto Grant Logo" width="132" />
+  <img src="assets/branding/medautogrant-logo.png" alt="Med Auto Grant Logo" width="132" />
 </p>
 
 <p align="center">
@@ -8,9 +8,9 @@
 
 # Med Auto Grant
 
-**通过单一 Med Auto Grant 技能入口推进医学基金写作的独立领域智能体**
+**面向医学基金写作的 Foundry Agent，也是基于 OPL Framework 构建的 OPL-compatible package**
 
-> `Med Auto Grant` 面向医学基金申请写作。它把指定基金任务的正文写作、评审式批注、修订和待审包交付放在同一条申请线上，方便医生、课题负责人和科研团队持续推进。
+> `Med Auto Grant` 是独立医学基金领域智能体，也是 OPL-compatible Foundry Agent package。它把指定基金任务的正文写作、评审式批注、修订和待审包交付放在同一条申请线上，方便医生、课题负责人和科研团队持续推进。
 
 <table>
   <tr>
@@ -28,6 +28,10 @@
     </td>
   </tr>
 </table>
+
+<p align="center">
+  <img src="assets/branding/medautogrant-overview.png" alt="Med Auto Grant 主示意图" width="100%" />
+</p>
 
 ## 一句话快速启动
 
@@ -56,18 +60,28 @@
 ## 当前边界
 
 - `Med Auto Grant` 是独立的医学基金领域智能体，不是 `OPL` 仓库里的内部模块。
+- 公开发布定位：`Foundry Agent / OPL-compatible package built on OPL Framework`。
 - 对外第一入口是单一 `Med Auto Grant` 技能；`Codex`、`OPL` 和其他通用智能体可以通过这个入口，或直接通过 `CLI` / `MedAutoGrantDomainEntry` 访问稳定能力面。
 - 这个技能背后的稳定可调用面是本地 CLI、`MedAutoGrantDomainEntry`、本地脚本、产品入口/投影命令与 schema-backed 合同。
 - `product entry/product status/direct-entry/user-loop` 保持为技能下的内部命令合同与直接产品投影，不写成对外第一主语。
+- 统一发布形态由 app skill catalog、MAG-owned stage control plane、hosted-contract-bundle 交接导出和本地 `submission-ready` 交付导出共同组成。
 - MAG 当前任务边界锁定在“指定基金任务正文写作”。
 - “科学完成”交付面是可待审包；“形式/客观补件完成”是并行分层，不与正文语义混写。
 - 形式/客观补件默认按 `TODO + 显式唤醒` 处理，除非直接破坏正文科学成立，否则不升级为正文阻塞项。
-- `OPL` 是 Codex-first、stage-led 的完整智能体运行框架，MAG 可以作为外部领域依赖接入。
-- 在这套框架中，`Codex CLI` 是最小执行单元；OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
-- 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留，不再作为 MAG 活跃合同。
 - `hosted-contract-bundle` 与 `runtime_control` 仅保留集成/参考面，用于 machine-readable handoff，不作为默认公开入口。
 - 人工 gate 仅限同一基金任务内的作者决策，不写成跨基金重选。
 - 外部基金官网提交由人工监督完成。
+
+<details>
+  <summary><strong>技术层 OPL / executor 边界</strong></summary>
+
+- `OPL` 是 stage-led 的完整智能体运行框架，MAG 可以作为外部领域依赖接入。
+- 在这套框架中，Agent executor 是最小执行单位；`Codex CLI` 是当前第一公民 executor。Hermes-Agent 等其他 executor 是显式 opt-in adapter，必须产出可审计回执，不默认承诺行为或质量效果与 Codex CLI 等价。
+- OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
+- MAG 继续独立持有 grant truth、fundability verdict、authoring quality verdict、route owner 与 submission/export authority。
+- 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留，不再作为 MAG 活跃合同。
+
+</details>
 
 ## 这个仓库应该怎么读
 

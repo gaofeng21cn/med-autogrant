@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/branding/medautogrant-logo.svg" alt="Med Auto Grant logo" width="132" />
+  <img src="assets/branding/medautogrant-logo.png" alt="Med Auto Grant logo" width="132" />
 </p>
 
 <p align="center">
@@ -8,9 +8,9 @@
 
 # Med Auto Grant
 
-**An independent medical grant domain agent surfaced through a single Med Auto Grant app skill**
+**A Foundry Agent for medical grant authoring, published as an OPL-compatible package built on the OPL Framework**
 
-> `Med Auto Grant` is an independent medical grant domain agent. It keeps specified-funder body authoring, critique, revision, and scientific review-package delivery on one line for investigator-side medical grant applications.
+> `Med Auto Grant` is an independent medical grant domain agent and OPL-compatible Foundry Agent package. It keeps specified-funder body authoring, critique, revision, and scientific review-package delivery on one line for investigator-side medical grant applications.
 
 <table>
   <tr>
@@ -28,6 +28,10 @@
     </td>
   </tr>
 </table>
+
+<p align="center">
+  <img src="assets/branding/medautogrant-overview.png" alt="Med Auto Grant overview" width="100%" />
+</p>
 
 ## One-Sentence Quick Start
 
@@ -56,18 +60,28 @@ You can start with prompts like:
 ## Current Boundary
 
 - `Med Auto Grant` is an independent medical grant domain agent, not an internal module inside the `OPL` workspace.
+- Public package role: `Foundry Agent / OPL-compatible package built on OPL Framework`.
 - Its first public surface is the single Med Auto Grant app skill; `Codex`, `OPL`, and other general agents can reach the stable callable surfaces through that skill or directly through `CLI` / `MedAutoGrantDomainEntry`.
 - The stable callable surfaces behind that skill are the local CLI, `MedAutoGrantDomainEntry`, product-entry/projection commands, and only those local scripts/contracts that are schema-backed and surfaced through product-entry or user-loop semantics; they are not alternate paths around the authoring runtime.
 - `product entry/product status/direct-entry/user-loop` stay as internal command contracts and direct-product projections under the app skill, not as the public first subject.
+- The unified release shape is the app skill catalog plus MAG-owned stage control plane, hosted-contract-bundle handoff export, and local `submission-ready` delivery export.
 - MAG task scope is locked to body authoring for a specified funding call.
 - Scientific completion is delivered as a review-ready package; formal/objective supplements are tracked separately.
 - Formal/objective supplements default to `TODO + explicit wakeup` and do not block body authoring unless they directly break scientific validity.
-- `OPL` is the Codex-first, stage-led agent runtime framework that can host MAG as an external domain dependency.
-- Within that framework, `Codex CLI` is the minimum execution unit: OPL can schedule stages, wakeups, handoffs, receipts, retries, and projections, while MAG keeps the grant stage pack, prompts, skills, fundability/authoring quality gates, authoring truth, and submission-ready export authority.
-- Historical `OPL Runtime Manager`, Temporal, Hermes-first, gateway, and local-host runtime wording is provenance or an implementation-provider detail, not an active MAG contract. MAG remains the grant-truth and authoring-contract owner.
 - `hosted-contract-bundle` and `runtime_control` stay as integration/reference surfaces for machine-readable handoff, not as the primary public entry.
 - Human gate decisions stay inside the same funding-call task and are author decisions, not cross-funder reselection.
 - External funding portal submission stays under human supervision.
+
+<details>
+  <summary><strong>Technical OPL / executor boundary</strong></summary>
+
+- `OPL` is the stage-led agent runtime framework that can host MAG as an external domain dependency.
+- Within that framework, an Agent executor is the minimum execution unit. `Codex CLI` is the current first-class executor; Hermes-Agent and similar executors are explicit opt-in adapters that must produce auditable receipts and are not assumed to match Codex CLI behavior or quality.
+- OPL can schedule stages, wakeups, handoffs, receipts, retries, and projections, while MAG keeps the grant stage pack, prompts, skills, fundability/authoring quality gates, authoring truth, and submission-ready export authority.
+- MAG remains the owner for grant truth, fundability verdicts, authoring quality verdicts, route ownership, and submission/export authority.
+- Historical `OPL Runtime Manager`, Temporal, Hermes-first, gateway, and local-host runtime wording is provenance or an implementation-provider detail, not an active MAG contract. MAG remains the grant-truth and authoring-contract owner.
+
+</details>
 
 ## How To Read This Repository
 

@@ -8,6 +8,33 @@
     ],
     "internal_controller_surface": "controller"
   },
+  "product_layer_metadata": {
+    "public_positioning": "Foundry Agent / OPL-compatible package built on OPL Framework",
+    "package_kind": "opl_compatible_foundry_agent_package",
+    "framework": "OPL Framework",
+    "primary_public_entry": "Med Auto Grant app skill",
+    "direct_app_skill_path": "first_class",
+    "release_shape": {
+      "shape_summary": "A single release shape ties the app skill catalog, MAG-owned stage control plane, hosted-contract-bundle handoff export, and local submission-ready delivery export together.",
+      "unified_surfaces": [
+        "product skill-catalog",
+        "family_stage_control_plane",
+        "package hosted-contract-bundle",
+        "package submission-ready"
+      ]
+    },
+    "mag_authorities": [
+      "grant truth",
+      "fundability verdict",
+      "authoring quality verdict",
+      "route owner",
+      "submission/export authority"
+    ],
+    "non_default_runtime_context": [
+      "Hermes-Agent remains explicit hosted/proof/provider provenance",
+      "OPL Runtime Manager wording remains historical/provider-specific migration context"
+    ]
+  },
   "runtime_owner": {
     "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
     "active_phase": "P4 mature direct grant product entry",
