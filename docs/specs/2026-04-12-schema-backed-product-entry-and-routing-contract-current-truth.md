@@ -14,7 +14,7 @@ Date: `2026-04-12`
 
 在已经 landed 的：
 
-- `CLI-first + real upstream Hermes-Agent runtime substrate`
+- `CLI-first + Codex-default execution plus explicit Hermes-Agent proof/provenance lane`
 - `MedAutoGrantDomainEntry`
 - lightweight `product entry` shell
 - author-side executor routing contract

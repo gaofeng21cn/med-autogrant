@@ -24,13 +24,14 @@ Date: `2026-04-13`
 
 在已经 landed 的：
 
-- `CLI-first + real upstream Hermes-Agent runtime substrate`
+- `CLI-first + explicit upstream Hermes-Agent proof/provenance lane`
 - `MedAutoGrantDomainEntry`
 - lightweight `product entry` shell
 
 之上，冻结一份 machine-readable `executor_routing_contract`，明确：
 
-- `Hermes-Agent` 继续只持有 runtime substrate / orchestration owner
+- `Codex CLI` 继续是默认 concrete executor
+- `Hermes-Agent` 只作为显式 OPL receipt/proof lane，不持有默认 runtime、authoring executor、grant truth 或 quality verdict
 - `Med Auto Grant` 继续持有 grant author-side route truth
 - 哪些 executor route 已经 landed
 - 哪些 route 已经是 landed command surface
@@ -158,7 +159,7 @@ Date: `2026-04-13`
 
 ## What Did Not Change
 
-- `Hermes-Agent` 仍然只代表 upstream runtime substrate owner
+- `Hermes-Agent` 仍然只代表 upstream external runtime / proof backend，可通过显式 OPL executor adapter 接入
 - `domain_runtime.py` 仍然只是 repo-side domain adapter / orchestrator
 - 这份 contract 不是在宣称 critique / revision / export 已经全部 Hermes-native
 - `Hermes-native` 只有 full agent loop 才算；chat relay / 单次 chat completion 不算

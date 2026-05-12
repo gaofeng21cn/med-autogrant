@@ -24,22 +24,22 @@ def _nonempty_string(value: Any, *, context: str) -> str:
 def _phase_details() -> dict[str, dict[str, Any]]:
     return {
         "P1": {
-            "summary": "冻结真实上游 Hermes-Agent 连接证据，并把 runtime substrate owner 诚实切到上游。",
+            "summary": "保留真实上游 Hermes-Agent 连接证据作为显式 proof lane；默认 runtime / executor owner 固定为 Codex CLI。",
             "entry_points": [
                 {
                     "name": "probe_upstream_hermes",
                     "command": public_cli_command("probe-upstream-hermes", "--format", "json"),
-                    "purpose": "核对真实 upstream Hermes-Agent 依赖、入口与 session substrate 证据。",
+                    "purpose": "核对真实 upstream Hermes-Agent 依赖、入口与 explicit receipt lane 证据。",
                 },
                 {
                     "name": "run_local",
                     "command": public_cli_command("runtime-run", "--input", "<workspace-path>", "--format", "json"),
-                    "purpose": "走当前 Hermes-backed substrate 的单次本地主循环。",
+                    "purpose": "走当前 Codex-default 本地主循环；非默认 executor 只能显式选择并通过 OPL receipt 审计。",
                 },
             ],
             "exit_criteria": [
-                "真实 upstream Hermes-Agent 依赖与连接证据已经冻结。",
-                "runtime-run / runtime-resume 不再由 repo-local helper 主责 substrate durability。",
+                "真实 upstream Hermes-Agent 依赖与连接证据只作为 explicit proof/provenance 读取。",
+                "runtime-run / runtime-resume 不把 Hermes 写成默认 substrate 或 authoring executor。",
             ],
             "phase_docs": [
                 "human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth",

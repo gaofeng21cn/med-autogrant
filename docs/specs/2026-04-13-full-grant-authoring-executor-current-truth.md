@@ -12,7 +12,8 @@ Date: `2026-04-13`
 
 把此前只在 route matrix 里冻结、仍被写成 `pending / handoff-required` 的前半程 authoring route，全部收口成可执行、可验证、可审计的 landed service-safe command surface，并保持以下边界不变：
 
-- `Hermes-Agent` 继续只持有 runtime substrate / orchestration owner
+- `Codex CLI` 继续是默认 concrete executor
+- `Hermes-Agent` 只作为显式 OPL receipt/proof lane，不持有默认 runtime、authoring executor、grant truth 或 quality verdict
 - `Med Auto Grant` 继续持有 grant domain truth、author-side route 与导出物 owner
 - `grant-user-loop` / `build-product-entry` / hosted bundle 继续只投影和导出 route truth，不发明新的产品层 executor
 
