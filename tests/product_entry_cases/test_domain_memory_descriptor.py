@@ -174,7 +174,7 @@ class ProductEntryDomainMemoryDescriptorTest(unittest.TestCase):
 
         layout_audit = proof["repo_source_layout_audit"]
         self.assertEqual(layout_audit["surface_kind"], "mag_repo_source_layout_audit")
-        self.assertEqual(layout_audit["layout_state"], "repo_source_audit_landed_no_physical_move_required")
+        self.assertEqual(layout_audit["layout_state"], "physical_skeleton_roots_present_descriptor_mapping_only")
         self.assertEqual(layout_audit["boundary_keys"], ["agent", "contracts", "runtime", "docs"])
         self.assertEqual(layout_audit["retired_active_path_policy"], "explicit_proof_provenance_history_only")
         self.assertIn("default Hermes active path", layout_audit["forbidden_active_path_residue"])

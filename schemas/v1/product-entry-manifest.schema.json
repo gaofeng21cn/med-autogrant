@@ -3003,7 +3003,7 @@
               "const": "mag_repo_source_layout_audit"
             },
             "layout_state": {
-              "const": "repo_source_audit_landed_no_physical_move_required"
+              "const": "physical_skeleton_roots_present_descriptor_mapping_only"
             },
             "boundary_keys": {
               "type": "array",

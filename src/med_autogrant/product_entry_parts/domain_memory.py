@@ -338,7 +338,7 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
     return {
         "surface_kind": "mag_repo_source_layout_audit",
         "audit_id": "mag.standard_domain_agent_skeleton.repo_source_layout.audit.v1",
-        "layout_state": "repo_source_audit_landed_no_physical_move_required",
+        "layout_state": "physical_skeleton_roots_present_descriptor_mapping_only",
         "boundary_keys": list(boundary_refs),
         "physical_move_required": False,
         "repo_source_policy": "existing_repo_source_mapped_to_standard_agent_contracts_runtime_docs_boundaries",

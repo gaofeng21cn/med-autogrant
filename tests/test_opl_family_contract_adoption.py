@@ -480,12 +480,35 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
         "/product_entry_manifest/controlled_domain_memory_apply_proof/"
         "repo_source_layout_audit"
     )
-    assert audit["layout_state"] == "repo_source_audit_landed_no_physical_move_required"
+    assert audit["layout_state"] == "physical_skeleton_roots_present_descriptor_mapping_only"
     assert audit["boundary_keys"] == ["agent", "contracts", "runtime", "docs"]
     assert audit["retired_active_path_policy"] == "explicit_proof_provenance_history_only"
     assert "default Hermes active path" in audit["forbidden_active_path_residue"]
     assert "default Gateway active path" in audit["forbidden_active_path_residue"]
     assert "default local-manager active path" in audit["forbidden_active_path_residue"]
     for boundary in audit["boundary_keys"]:
+        assert (REPO_ROOT / boundary).is_dir()
         assert boundary in audit["source_refs_by_boundary"]
         assert audit["source_refs_by_boundary"][boundary]
+
+
+def test_mag_controlled_soak_deferred_without_descriptor_index_skeleton_regression() -> None:
+    contract = _contract()
+    skeleton = contract["standard_domain_agent_skeleton"]
+    controlled_soak = skeleton["controlled_soak"]
+
+    assert controlled_soak["state"] == "deferred"
+    assert controlled_soak["required_opl_substrate"] == "Temporal production online runtime"
+    assert controlled_soak["no_regression_surfaces"] == [
+        "family_action_catalog",
+        "family_stage_control_plane",
+        "standard_domain_agent_skeleton",
+        "artifact_locator_contract",
+        "controlled_stage_attempt_projection",
+        "controlled_domain_memory_apply_proof",
+        "domain_memory_descriptor_locator",
+        "repo_source_layout_audit",
+    ]
+    assert "provider_hosted_controlled_grant_stage_soak_completed" in controlled_soak["forbidden_deferred_claims"]
+    assert "accepted_or_rejected_receipt_instance_repo_tracked" in controlled_soak["forbidden_deferred_claims"]
+    assert "OPL_holds_fundability_or_submission_ready_export_verdict" in controlled_soak["forbidden_deferred_claims"]
