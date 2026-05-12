@@ -78,6 +78,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             skeleton["controlled_stage_attempt_ref"],
             "/product_entry_manifest/controlled_stage_attempt_projection",
         )
+        self.assertEqual(
+            skeleton["controlled_domain_memory_apply_proof_ref"],
+            "/product_entry_manifest/controlled_domain_memory_apply_proof",
+        )
+        self.assertEqual(
+            skeleton["repo_source_layout_audit_ref"],
+            "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+        )
         self.assertFalse(skeleton["opl_verdict_authority"]["fundability"])
         self.assertFalse(skeleton["opl_verdict_authority"]["submission_ready_export"])
         self.assertEqual(
@@ -307,6 +315,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertIn(
             "controlled_stage_attempt_projection",
+            stage_led_framework["consumes_mag_surfaces"],
+        )
+        self.assertIn(
+            "controlled_domain_memory_apply_proof",
+            stage_led_framework["consumes_mag_surfaces"],
+        )
+        self.assertIn(
+            "repo_source_layout_audit",
             stage_led_framework["consumes_mag_surfaces"],
         )
         self.assertTrue(

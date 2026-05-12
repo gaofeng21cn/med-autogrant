@@ -85,13 +85,13 @@ Now:
 
 - keep this policy as the MAG memory owner reference;
 - continue using existing structured quality/controller/export surfaces as authority;
-- expose a repo-source migration plan, seed fixture, writeback proposal generator, accept/reject command, receipt locator, controlled consumed-memory proof, writeback receipt proof, and operator receipt projection for domain memory migration without storing real memory entries in repo source.
+- expose a repo-source migration plan, seed fixture, writeback proposal generator, accept/reject command, receipt locator, controlled consumed-memory proof, writeback receipt proof, operator receipt projection, and aggregated `controlled_domain_memory_apply_proof` for domain memory migration without storing real memory entries in repo source.
 - expose the top-level `domain_memory_descriptor` as the standard `family_domain_memory_ref.v1` adapter, while keeping `domain_memory_descriptor_locator` as the MAG-owned detailed locator/apply contract.
 
 Next:
 
 - keep OPL family index at `resolved_memory_descriptor_count=3` / `missing_memory_descriptor_count=0` while preserving MAG-owned memory bodies and decisions;
-- after the current OPL+MAS production paper priority closes, run a controlled grant stage attempt that consumes grant-strategy memory refs and emits MAG-owned accepted/rejected receipt refs;
+- after the current OPL+MAS production paper priority closes, run a controlled grant stage attempt that consumes grant-strategy memory refs and emits MAG-owned accepted/rejected receipt instances from the workspace/runtime artifact root;
 - apply real runtime memory writebacks only in workspace/runtime artifact roots after MAG accept/reject decisions;
 - extend operator UI consumption of accepted/rejected receipt refs without copying memory body into OPL.
 

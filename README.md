@@ -79,6 +79,7 @@ You can start with prompts like:
 - Within that framework, an Agent executor is the minimum execution unit. `Codex CLI` is the current first-class executor; Hermes-Agent and similar executors are explicit opt-in adapters that must produce auditable receipts and are not assumed to match Codex CLI behavior or quality.
 - OPL can schedule stages, wakeups, handoffs, receipts, retries, and projections, while MAG keeps the grant stage pack, prompts, skills, fundability/authoring quality gates, authoring truth, and submission-ready export authority.
 - MAG remains the owner for grant truth, fundability verdicts, authoring quality verdicts, route ownership, and submission/export authority.
+- Domain memory apply is limited to consumed memory refs, writeback proposals, MAG accept/reject decisions, operator receipt projections, and repo-source layout audit. It does not write fundability verdicts, real grant artifacts, or receipt instances into repo source.
 - Historical `OPL Runtime Manager`, Temporal, Hermes-first, gateway, and local-host runtime wording is provenance or an implementation-provider detail, not an active MAG contract. MAG remains the grant-truth and authoring-contract owner.
 
 </details>
@@ -102,6 +103,7 @@ You can start with prompts like:
 - When an external agent or OPL wants the repo-tracked skill surface directly, use the repo-local launcher `uv run --directory <med-autogrant-repo> medautogrant product skill-catalog --input <input_path> --format json`; it returns one Med Auto Grant app skill plus the underlying command contracts.
 - For pre-authoring intake, use `uv run --directory <med-autogrant-repo> medautogrant workspace initialize-intake --input <selection_input> --workspace-root <workspace_dir> --format json`; the directory gets a workspace-local Git boundary and `workspace.json` becomes the canonical MAG document.
 - The single skill descriptor now carries a `runtime_continuity` envelope for direct family-caller consumption, reusing existing `session_continuity` / `progress_projection` / `artifact_inventory` / `runtime_control.semantic_closure` truth for authoring continuity, funding-call lock, quality closure, and the stricter submission-ready gate.
+- The product-entry manifest also carries `controlled_domain_memory_apply_proof`, which lets OPL or a direct caller audit consumed grant-strategy memory refs, writeback proposal, accept/reject decision, operator receipt projection, and repo-source layout without receiving memory body or grant artifacts.
 - Current machine-readable governance surfaces include `workspace quality-scorecard`, `workspace quality-diff`, and `pass autonomy-controller`.
 
 </details>

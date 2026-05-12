@@ -66,6 +66,11 @@ def build_sidecar_export(
         "controlled_stage_attempt_projection",
         context="sidecar_export.product_entry_manifest",
     )
+    controlled_domain_memory_apply_proof = _require_mapping(
+        manifest,
+        "controlled_domain_memory_apply_proof",
+        context="sidecar_export.product_entry_manifest",
+    )
     automation = _require_mapping(manifest, "automation", context="sidecar_export.product_entry_manifest")
     autonomy_observability = _require_mapping(
         manifest,
@@ -112,11 +117,26 @@ def build_sidecar_export(
             _require_mapping(manifest, "artifact_locator_contract", context="sidecar_export.product_entry_manifest")
         ),
         "controlled_stage_attempt_projection": dict(controlled_stage_attempt),
+        "controlled_domain_memory_apply_proof": dict(controlled_domain_memory_apply_proof),
         "receipt_refs": dict(
             _require_mapping(
                 controlled_stage_attempt,
                 "receipt_refs",
                 context="sidecar_export.controlled_stage_attempt_projection",
+            )
+        ),
+        "memory_receipt_refs": dict(
+            _require_mapping(
+                controlled_domain_memory_apply_proof,
+                "writeback_receipt_refs",
+                context="sidecar_export.controlled_domain_memory_apply_proof",
+            )
+        ),
+        "repo_source_layout_audit": dict(
+            _require_mapping(
+                controlled_domain_memory_apply_proof,
+                "repo_source_layout_audit",
+                context="sidecar_export.controlled_domain_memory_apply_proof",
             )
         ),
         "todo_wakeup": _build_todo_wakeup_projection(

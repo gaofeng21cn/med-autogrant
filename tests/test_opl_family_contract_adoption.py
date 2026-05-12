@@ -404,6 +404,7 @@ def test_mag_adoption_contract_declares_controlled_memory_and_opl_hosted_attempt
     contract = _contract()
     attempt = contract["controlled_stage_attempt_projection"]
     memory = contract["domain_memory_descriptor_locator"]
+    apply_proof = contract["controlled_domain_memory_apply_proof"]
 
     assert attempt["opl_hosted_controlled_grant_stage_attempt_proof_surface"] == (
         "/product_entry_manifest/controlled_stage_attempt_projection/"
@@ -433,3 +434,58 @@ def test_mag_adoption_contract_declares_controlled_memory_and_opl_hosted_attempt
     assert receipt["receipt_instance_repo_tracked"] is False
     assert receipt["mag_accept_reject_required"] is True
     assert receipt["opl_role"] == "writeback_receipt_ref_router_only"
+
+    assert apply_proof["surface_kind"] == "controlled_grant_stage_domain_memory_apply_proof"
+    assert apply_proof["manifest_surface_ref"] == "/product_entry_manifest/controlled_domain_memory_apply_proof"
+    assert apply_proof["proof_state"] == "repo_source_audit_landed_no_runtime_artifact_write"
+    assert apply_proof["maps_to_opl_contract"] == "opl_controlled_domain_memory_apply_proof.v1"
+    assert apply_proof["consumed_refs_surface"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof/"
+        "consumed_grant_strategy_memory_refs"
+    )
+    assert apply_proof["writeback_proposal_surface"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof/"
+        "writeback_proposal_projection"
+    )
+    assert apply_proof["accept_reject_decision_surface"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof/"
+        "accept_reject_decision_projection"
+    )
+    assert apply_proof["operator_receipt_projection_surface"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof/"
+        "operator_receipt_projection"
+    )
+    assert apply_proof["repo_source_layout_audit_surface"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof/"
+        "repo_source_layout_audit"
+    )
+    assert apply_proof["repo_payload_policy"] == {
+        "repo_tracked_real_memory_body": False,
+        "repo_tracked_real_receipt_instance": False,
+        "repo_tracked_real_grant_artifact": False,
+        "repo_contains_contracts_locators_and_seed_fixture_only": True,
+    }
+    assert apply_proof["authority_boundary"]["can_write_fundability_verdict"] is False
+    assert apply_proof["authority_boundary"]["can_write_authoring_quality_verdict"] is False
+    assert apply_proof["authority_boundary"]["can_write_submission_ready_export_verdict"] is False
+    assert apply_proof["authority_boundary"]["can_write_grant_artifact"] is False
+
+
+def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skeleton() -> None:
+    contract = _contract()
+    audit = contract["repo_source_layout_audit"]
+
+    assert audit["surface_kind"] == "mag_repo_source_layout_audit"
+    assert audit["manifest_surface_ref"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof/"
+        "repo_source_layout_audit"
+    )
+    assert audit["layout_state"] == "repo_source_audit_landed_no_physical_move_required"
+    assert audit["boundary_keys"] == ["agent", "contracts", "runtime", "docs"]
+    assert audit["retired_active_path_policy"] == "explicit_proof_provenance_history_only"
+    assert "default Hermes active path" in audit["forbidden_active_path_residue"]
+    assert "default Gateway active path" in audit["forbidden_active_path_residue"]
+    assert "default local-manager active path" in audit["forbidden_active_path_residue"]
+    for boundary in audit["boundary_keys"]:
+        assert boundary in audit["source_refs_by_boundary"]
+        assert audit["source_refs_by_boundary"][boundary]

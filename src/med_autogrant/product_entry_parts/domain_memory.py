@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.domain_agent_skeleton import (
@@ -9,6 +10,7 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_operator_projection_contract,
 )
 from med_autogrant.product_entry_parts.primitives import (
+    TARGET_DOMAIN_ID,
     _optional_string_from_mapping,
     _require_nonempty_string_from_mapping,
 )
@@ -54,6 +56,9 @@ def build_manifest_domain_memory_surfaces(
             domain_memory_descriptor_locator=locator,
         ),
         "domain_memory_descriptor_locator": locator,
+        "controlled_domain_memory_apply_proof": build_controlled_domain_memory_apply_proof(
+            domain_memory_descriptor_locator=locator,
+        ),
     }
 
 
@@ -189,3 +194,178 @@ def build_manifest_domain_memory_descriptor(
             "can_accept_or_reject_memory_writeback": False,
         },
     }
+
+
+def build_controlled_domain_memory_apply_proof(
+    *,
+    domain_memory_descriptor_locator: Mapping[str, Any],
+) -> dict[str, Any]:
+    memory_locator = _require_mapping_from_locator(domain_memory_descriptor_locator, "memory_locator")
+    proposal_generator = _require_mapping_from_locator(
+        domain_memory_descriptor_locator,
+        "writeback_proposal_generator",
+    )
+    accept_reject_command = _require_mapping_from_locator(
+        domain_memory_descriptor_locator,
+        "accept_reject_command",
+    )
+    operator_receipt_projection = _require_mapping_from_locator(
+        domain_memory_descriptor_locator,
+        "operator_receipt_projection",
+    )
+    receipt_locator = _require_mapping_from_locator(domain_memory_descriptor_locator, "receipt_locator")
+    stage_refs = [
+        stage_ref
+        for stage_ref in domain_memory_descriptor_locator.get("stage_descriptor_refs") or []
+        if isinstance(stage_ref, Mapping)
+    ]
+    accepted_template = _require_nonempty_string_from_mapping(
+        memory_locator,
+        "accepted_memory_ref_template",
+        context="domain_memory_descriptor_locator.memory_locator",
+    )
+    return {
+        "surface_kind": "controlled_grant_stage_domain_memory_apply_proof",
+        "version": "v1",
+        "proof_id": "mag.domain_memory.controlled_grant_stage_apply.proof.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "proof_state": "repo_source_audit_landed_no_runtime_artifact_write",
+        "maps_to_opl_contract": "opl_controlled_domain_memory_apply_proof.v1",
+        "domain_memory_descriptor_ref": "/product_entry_manifest/domain_memory_descriptor",
+        "domain_memory_descriptor_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator",
+        "stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+        "consumed_grant_strategy_memory_refs": [
+            {
+                "stage_id": _require_nonempty_string_from_mapping(
+                    stage_ref,
+                    "stage_id",
+                    context="domain_memory_descriptor_locator.stage_descriptor_refs",
+                ),
+                "stage_descriptor_ref": _require_nonempty_string_from_mapping(
+                    stage_ref,
+                    "ref",
+                    context="domain_memory_descriptor_locator.stage_descriptor_refs",
+                ),
+                "accepted_memory_ref_template": accepted_template,
+                "consumption_policy": "stage_context_ref_only_no_memory_body_in_repo",
+            }
+            for stage_ref in stage_refs
+        ],
+        "writeback_proposal_projection": {
+            "surface_kind": proposal_generator["surface_kind"],
+            "generator_id": proposal_generator["generator_id"],
+            "command": proposal_generator["command"],
+            "output_surface_kind": proposal_generator["output_surface_kind"],
+            "write_policy": proposal_generator["write_policy"],
+            "proposal_ref_template": _require_nonempty_string_from_mapping(
+                memory_locator,
+                "writeback_proposal_ref_template",
+                context="domain_memory_descriptor_locator.memory_locator",
+            ),
+        },
+        "accept_reject_decision_projection": {
+            "surface_kind": accept_reject_command["surface_kind"],
+            "command_id": accept_reject_command["command_id"],
+            "command": accept_reject_command["command"],
+            "decision_owner": accept_reject_command["decision_owner"],
+            "output_surface_kind": accept_reject_command["output_surface_kind"],
+            "write_policy": accept_reject_command["write_policy"],
+            "requires_mag_decision_before_store_mutation": accept_reject_command[
+                "requires_mag_decision_before_store_mutation"
+            ],
+            "decision_receipt_ref_template": receipt_locator["decision_receipt_ref_template"],
+        },
+        "operator_receipt_projection": dict(operator_receipt_projection),
+        "writeback_receipt_refs": dict(
+            _require_mapping_from_locator(domain_memory_descriptor_locator, "writeback_receipt_refs")
+        ),
+        "receipt_locator": dict(receipt_locator),
+        "repo_source_layout_audit": _build_repo_source_layout_audit(),
+        "repo_payload_policy": {
+            "repo_tracked_real_memory_body": False,
+            "repo_tracked_real_receipt_instance": False,
+            "repo_tracked_real_grant_artifact": False,
+            "repo_contains_contracts_locators_and_seed_fixture_only": True,
+        },
+        "authority_boundary": {
+            "domain_memory_owner": TARGET_DOMAIN_ID,
+            "decision_owner": TARGET_DOMAIN_ID,
+            "opl_role": "consumed_memory_ref_and_receipt_projection_consumer_only",
+            "can_write_memory_body": False,
+            "can_write_fundability_verdict": False,
+            "can_write_authoring_quality_verdict": False,
+            "can_write_submission_ready_export_verdict": False,
+            "can_write_grant_artifact": False,
+            "can_accept_or_reject_memory_writeback": False,
+        },
+    }
+
+
+def _require_mapping_from_locator(locator: Mapping[str, Any], key: str) -> Mapping[str, Any]:
+    value = locator.get(key)
+    if not isinstance(value, Mapping):
+        raise ValueError(f"domain_memory_descriptor_locator.{key} must be an object.")
+    return value
+
+
+def _build_repo_source_layout_audit() -> dict[str, Any]:
+    boundary_refs = {
+        "agent": [
+            "src/med_autogrant/domain_entry.py",
+            "src/med_autogrant/domain_entry_contract.py",
+            "src/med_autogrant/stage_control_plane.py",
+        ],
+        "contracts": [
+            "contracts/runtime-program/current-program.json",
+            "contracts/runtime-program/domain-memory-seed-fixture.json",
+            "contracts/runtime-program/opl-family-contract-adoption.json",
+            "schemas/v1/product-entry-manifest.schema.json",
+        ],
+        "runtime": [
+            "src/med_autogrant/product_entry_parts/domain_memory.py",
+            "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
+            "src/med_autogrant/product_entry_parts/sidecar.py",
+        ],
+        "docs": [
+            "docs/status.md",
+            "docs/project.md",
+            "docs/invariants.md",
+            "docs/references/grant_strategy_memory_policy.md",
+            "docs/references/opl_family_contract_adoption.md",
+        ],
+    }
+    repo_root = Path(__file__).resolve().parents[3]
+    return {
+        "surface_kind": "mag_repo_source_layout_audit",
+        "audit_id": "mag.standard_domain_agent_skeleton.repo_source_layout.audit.v1",
+        "layout_state": "repo_source_audit_landed_no_physical_move_required",
+        "boundary_keys": list(boundary_refs),
+        "physical_move_required": False,
+        "repo_source_policy": "existing_repo_source_mapped_to_standard_agent_contracts_runtime_docs_boundaries",
+        "retired_active_path_policy": "explicit_proof_provenance_history_only",
+        "forbidden_active_path_residue": [
+            "default Hermes active path",
+            "default Gateway active path",
+            "default local-manager active path",
+            "repo-local host-agent runtime as product owner",
+        ],
+        "source_ref_status": [
+            {
+                "boundary": boundary,
+                "path": path,
+                "exists": (repo_root / path).exists(),
+                "repo_source_role": _repo_source_role(boundary),
+            }
+            for boundary, paths in boundary_refs.items()
+            for path in paths
+        ],
+    }
+
+
+def _repo_source_role(boundary: str) -> str:
+    return {
+        "agent": "domain_entry_stage_pack_and_quality_gate_source",
+        "contracts": "machine_readable_contract_schema_and_seed_fixture_source",
+        "runtime": "sidecar_projection_and_memory_apply_contract_source",
+        "docs": "human_policy_status_and_opl_adoption_source",
+    }[boundary]

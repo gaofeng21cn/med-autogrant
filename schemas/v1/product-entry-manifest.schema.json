@@ -2876,6 +2876,231 @@
         }
       }
     },
+    "controlledDomainMemoryApplyProof": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "proof_id",
+        "target_domain_id",
+        "proof_state",
+        "maps_to_opl_contract",
+        "consumed_grant_strategy_memory_refs",
+        "writeback_proposal_projection",
+        "accept_reject_decision_projection",
+        "operator_receipt_projection",
+        "writeback_receipt_refs",
+        "receipt_locator",
+        "repo_source_layout_audit",
+        "repo_payload_policy",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "controlled_grant_stage_domain_memory_apply_proof"
+        },
+        "proof_id": {
+          "const": "mag.domain_memory.controlled_grant_stage_apply.proof.v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "proof_state": {
+          "const": "repo_source_audit_landed_no_runtime_artifact_write"
+        },
+        "maps_to_opl_contract": {
+          "const": "opl_controlled_domain_memory_apply_proof.v1"
+        },
+        "consumed_grant_strategy_memory_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "stage_id",
+              "stage_descriptor_ref",
+              "accepted_memory_ref_template",
+              "consumption_policy"
+            ],
+            "properties": {
+              "consumption_policy": {
+                "const": "stage_context_ref_only_no_memory_body_in_repo"
+              }
+            }
+          },
+          "minItems": 6
+        },
+        "writeback_proposal_projection": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "generator_id",
+            "output_surface_kind",
+            "write_policy",
+            "proposal_ref_template"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "domain_memory_writeback_proposal_generator"
+            },
+            "output_surface_kind": {
+              "const": "mag_domain_memory_writeback_proposal"
+            },
+            "write_policy": {
+              "const": "runtime_store_only_no_repo_write"
+            }
+          }
+        },
+        "accept_reject_decision_projection": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "command_id",
+            "decision_owner",
+            "output_surface_kind",
+            "write_policy",
+            "requires_mag_decision_before_store_mutation",
+            "decision_receipt_ref_template"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "domain_memory_accept_reject_command"
+            },
+            "decision_owner": {
+              "const": "med-autogrant"
+            },
+            "output_surface_kind": {
+              "const": "mag_domain_memory_writeback_decision"
+            },
+            "write_policy": {
+              "const": "runtime_store_only_no_repo_write"
+            },
+            "requires_mag_decision_before_store_mutation": {
+              "const": true
+            }
+          }
+        },
+        "operator_receipt_projection": {
+          "$ref": "#/$defs/domainMemoryDescriptorLocator/properties/operator_receipt_projection"
+        },
+        "repo_source_layout_audit": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "audit_id",
+            "layout_state",
+            "boundary_keys",
+            "physical_move_required",
+            "retired_active_path_policy",
+            "forbidden_active_path_residue",
+            "source_ref_status"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_repo_source_layout_audit"
+            },
+            "layout_state": {
+              "const": "repo_source_audit_landed_no_physical_move_required"
+            },
+            "boundary_keys": {
+              "type": "array",
+              "items": {
+                "enum": ["agent", "contracts", "runtime", "docs"]
+              },
+              "minItems": 4
+            },
+            "physical_move_required": {
+              "const": false
+            },
+            "retired_active_path_policy": {
+              "const": "explicit_proof_provenance_history_only"
+            },
+            "source_ref_status": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": ["boundary", "path", "exists", "repo_source_role"],
+                "properties": {
+                  "exists": {
+                    "const": true
+                  }
+                }
+              },
+              "minItems": 10
+            }
+          }
+        },
+        "repo_payload_policy": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "repo_tracked_real_memory_body",
+            "repo_tracked_real_receipt_instance",
+            "repo_tracked_real_grant_artifact",
+            "repo_contains_contracts_locators_and_seed_fixture_only"
+          ],
+          "properties": {
+            "repo_tracked_real_memory_body": {
+              "const": false
+            },
+            "repo_tracked_real_receipt_instance": {
+              "const": false
+            },
+            "repo_tracked_real_grant_artifact": {
+              "const": false
+            },
+            "repo_contains_contracts_locators_and_seed_fixture_only": {
+              "const": true
+            }
+          }
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "domain_memory_owner",
+            "decision_owner",
+            "opl_role",
+            "can_write_memory_body",
+            "can_write_fundability_verdict",
+            "can_write_authoring_quality_verdict",
+            "can_write_submission_ready_export_verdict",
+            "can_write_grant_artifact",
+            "can_accept_or_reject_memory_writeback"
+          ],
+          "properties": {
+            "domain_memory_owner": {
+              "const": "med-autogrant"
+            },
+            "decision_owner": {
+              "const": "med-autogrant"
+            },
+            "can_write_memory_body": {
+              "const": false
+            },
+            "can_write_fundability_verdict": {
+              "const": false
+            },
+            "can_write_authoring_quality_verdict": {
+              "const": false
+            },
+            "can_write_submission_ready_export_verdict": {
+              "const": false
+            },
+            "can_write_grant_artifact": {
+              "const": false
+            },
+            "can_accept_or_reject_memory_writeback": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
     "standardDomainAgentSkeleton": {
       "type": "object",
       "additionalProperties": true,
@@ -2924,6 +3149,12 @@
         },
         "domain_memory_descriptor_locator_ref": {
           "const": "/product_entry_manifest/domain_memory_descriptor_locator"
+        },
+        "controlled_domain_memory_apply_proof_ref": {
+          "const": "/product_entry_manifest/controlled_domain_memory_apply_proof"
+        },
+        "repo_source_layout_audit_ref": {
+          "const": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit"
         },
         "authority_boundary": {
           "type": "object",
@@ -3807,7 +4038,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor", "domain_memory_descriptor_locator", "standard_domain_agent_skeleton", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -3932,6 +4163,9 @@
         },
         "domain_memory_descriptor_locator": {
           "$ref": "#/$defs/domainMemoryDescriptorLocator"
+        },
+        "controlled_domain_memory_apply_proof": {
+          "$ref": "#/$defs/controlledDomainMemoryApplyProof"
         },
         "standard_domain_agent_skeleton": {
           "$ref": "#/$defs/standardDomainAgentSkeleton"

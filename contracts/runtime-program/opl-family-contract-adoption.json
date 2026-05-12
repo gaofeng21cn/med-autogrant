@@ -429,6 +429,78 @@
       "can_accept_or_reject_memory_writeback": false
     }
   },
+  "controlled_domain_memory_apply_proof": {
+    "surface_kind": "controlled_grant_stage_domain_memory_apply_proof",
+    "manifest_surface_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
+    "proof_state": "repo_source_audit_landed_no_runtime_artifact_write",
+    "maps_to_opl_contract": "opl_controlled_domain_memory_apply_proof.v1",
+    "consumed_refs_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/consumed_grant_strategy_memory_refs",
+    "writeback_proposal_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/writeback_proposal_projection",
+    "accept_reject_decision_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/accept_reject_decision_projection",
+    "operator_receipt_projection_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/operator_receipt_projection",
+    "repo_source_layout_audit_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+    "repo_payload_policy": {
+      "repo_tracked_real_memory_body": false,
+      "repo_tracked_real_receipt_instance": false,
+      "repo_tracked_real_grant_artifact": false,
+      "repo_contains_contracts_locators_and_seed_fixture_only": true
+    },
+    "authority_boundary": {
+      "domain_memory_owner": "med-autogrant",
+      "decision_owner": "med-autogrant",
+      "opl_role": "consumed_memory_ref_and_receipt_projection_consumer_only",
+      "can_write_memory_body": false,
+      "can_write_fundability_verdict": false,
+      "can_write_authoring_quality_verdict": false,
+      "can_write_submission_ready_export_verdict": false,
+      "can_write_grant_artifact": false,
+      "can_accept_or_reject_memory_writeback": false
+    }
+  },
+  "repo_source_layout_audit": {
+    "surface_kind": "mag_repo_source_layout_audit",
+    "manifest_surface_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+    "layout_state": "repo_source_audit_landed_no_physical_move_required",
+    "boundary_keys": [
+      "agent",
+      "contracts",
+      "runtime",
+      "docs"
+    ],
+    "physical_move_required": false,
+    "retired_active_path_policy": "explicit_proof_provenance_history_only",
+    "forbidden_active_path_residue": [
+      "default Hermes active path",
+      "default Gateway active path",
+      "default local-manager active path",
+      "repo-local host-agent runtime as product owner"
+    ],
+    "source_refs_by_boundary": {
+      "agent": [
+        "src/med_autogrant/domain_entry.py",
+        "src/med_autogrant/domain_entry_contract.py",
+        "src/med_autogrant/stage_control_plane.py"
+      ],
+      "contracts": [
+        "contracts/runtime-program/current-program.json",
+        "contracts/runtime-program/domain-memory-seed-fixture.json",
+        "contracts/runtime-program/opl-family-contract-adoption.json",
+        "schemas/v1/product-entry-manifest.schema.json"
+      ],
+      "runtime": [
+        "src/med_autogrant/product_entry_parts/domain_memory.py",
+        "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
+        "src/med_autogrant/product_entry_parts/sidecar.py"
+      ],
+      "docs": [
+        "docs/status.md",
+        "docs/project.md",
+        "docs/invariants.md",
+        "docs/references/grant_strategy_memory_policy.md",
+        "docs/references/opl_family_contract_adoption.md"
+      ]
+    }
+  },
   "lifecycle_adapter": {
     "surface_kind": "opl_family_lifecycle_adapter_contract",
     "adapter_id": "mag.opl_family.lifecycle_adapter.v1",

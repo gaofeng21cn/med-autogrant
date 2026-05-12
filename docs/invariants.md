@@ -34,8 +34,8 @@
 - 当 hosted/proof backend 相关材料存在时，不得把 repo-side adapter 重写成默认 runtime owner，也不得把这些 lane 误写成唯一公开 capability contract。
 - 当前 landed substrate、兼容桥与 future scope 必须在 `docs/status.md` 与 `docs/README*` 中显式拆开。
 - 当前 OPL stage-led 对齐已经落到 MAG-owned `family_action_catalog`、`family_stage_control_plane`、runtime_control / runtime_continuity projection 与 product sidecar adapter；这些 surface 只供 OPL discovery、queue、wakeup、handoff、receipt、retry/dead-letter 和 operator projection 使用，不授权 OPL 生成 fundability judgment、authoring quality verdict 或 submission-ready export verdict。
-- Domain memory apply 只能通过 MAG-owned descriptor、writeback proposal、accept/reject decision 与 operator receipt projection 推进；repo 只保存 contract、schema、locator 和 seed fixture，不保存真实 memory entry、grant artifact、workspace private evidence 或 receipt instance。OPL 只能消费 refs / receipt projection，不能写 memory body、fundability verdict、authoring quality verdict 或 submission-ready export verdict。
-- 旧 local host-agent runtime、旧 `OPL Gateway` wording、旧 product-status traces 和旧五个 canonical CLI verifier baseline 只能作为历史 provenance 或 regression oracle 保留；它们不得回到默认 product/runtime owner。旧 `tests/test_product_entry.py` 兼容聚合面已删除。
+- Domain memory apply 只能通过 MAG-owned descriptor、writeback proposal、accept/reject decision、operator receipt projection 与 `controlled_domain_memory_apply_proof` 推进；repo 只保存 contract、schema、locator、seed fixture 和 repo-source layout audit，不保存真实 memory entry、grant artifact、workspace private evidence 或 receipt instance。OPL 只能消费 refs / receipt projection，不能写 memory body、fundability verdict、authoring quality verdict 或 submission-ready export verdict。
+- 旧 local host-agent runtime、旧 `OPL Gateway` wording、默认 Hermes/Gateway/local-manager active path、旧 product-status traces 和旧五个 canonical CLI verifier baseline 只能作为历史 provenance、explicit proof history 或 regression oracle 保留；它们不得回到默认 product/runtime owner。旧 `tests/test_product_entry.py` 兼容聚合面已删除。
 
 ## 任务边界与 gate 语义
 

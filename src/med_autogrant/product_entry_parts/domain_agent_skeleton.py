@@ -125,6 +125,10 @@ def build_standard_domain_agent_skeleton(
         "artifact_locator_ref": "/product_entry_manifest/artifact_locator_contract",
         "controlled_stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
         "domain_memory_descriptor_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator",
+        "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
+        "repo_source_layout_audit_ref": (
+            "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit"
+        ),
         "artifact_locator_contract": dict(artifact_locator_contract),
         "controlled_stage_attempt_projection": dict(controlled_stage_attempt_projection),
         "domain_memory_descriptor_locator": dict(domain_memory_descriptor_locator),

@@ -65,6 +65,24 @@ class ProductSidecarTest(unittest.TestCase):
             export["receipt_refs"],
             export["controlled_stage_attempt_projection"]["receipt_refs"],
         )
+        apply_proof = export["controlled_domain_memory_apply_proof"]
+        self.assertEqual(
+            apply_proof["surface_kind"],
+            "controlled_grant_stage_domain_memory_apply_proof",
+        )
+        self.assertEqual(
+            apply_proof["operator_receipt_projection"]["surface_kind"],
+            "mag_domain_memory_operator_receipt_projection",
+        )
+        self.assertFalse(apply_proof["authority_boundary"]["can_write_fundability_verdict"])
+        self.assertEqual(
+            export["memory_receipt_refs"],
+            apply_proof["writeback_receipt_refs"],
+        )
+        self.assertEqual(
+            export["repo_source_layout_audit"],
+            apply_proof["repo_source_layout_audit"],
+        )
         self.assertFalse(
             export["controlled_stage_attempt_projection"]["opl_consumption_contract"][
                 "can_hold_fundability_verdict"

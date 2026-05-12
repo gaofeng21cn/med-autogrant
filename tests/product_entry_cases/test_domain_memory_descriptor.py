@@ -118,3 +118,69 @@ class ProductEntryDomainMemoryDescriptorTest(unittest.TestCase):
         self.assertFalse(authority["can_authorize_quality_verdict"])
         self.assertFalse(authority["can_write_artifacts"])
         self.assertFalse(authority["can_accept_or_reject_memory_writeback"])
+
+    def test_manifest_exposes_controlled_grant_stage_domain_memory_apply_proof(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_product_entry_manifest(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+        manifest = payload["product_entry_manifest"]
+        proof = manifest["controlled_domain_memory_apply_proof"]
+
+        self.assertEqual(proof["surface_kind"], "controlled_grant_stage_domain_memory_apply_proof")
+        self.assertEqual(proof["proof_id"], "mag.domain_memory.controlled_grant_stage_apply.proof.v1")
+        self.assertEqual(proof["target_domain_id"], "med-autogrant")
+        self.assertEqual(proof["proof_state"], "repo_source_audit_landed_no_runtime_artifact_write")
+        self.assertEqual(
+            proof["consumed_grant_strategy_memory_refs"],
+            [
+                {
+                    "stage_id": stage["stage_id"],
+                    "stage_descriptor_ref": f"/product_entry_manifest/family_stage_control_plane/stages/{index}",
+                    "accepted_memory_ref_template": (
+                        "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
+                        "accepted/<memory_id>.json"
+                    ),
+                    "consumption_policy": "stage_context_ref_only_no_memory_body_in_repo",
+                }
+                for index, stage in enumerate(manifest["family_stage_control_plane"]["stages"])
+            ],
+        )
+        self.assertEqual(
+            proof["writeback_proposal_projection"]["surface_kind"],
+            "domain_memory_writeback_proposal_generator",
+        )
+        self.assertEqual(
+            proof["writeback_proposal_projection"]["proposal_ref_template"],
+            manifest["domain_memory_descriptor_locator"]["memory_locator"]["writeback_proposal_ref_template"],
+        )
+        self.assertEqual(
+            proof["accept_reject_decision_projection"]["surface_kind"],
+            "domain_memory_accept_reject_command",
+        )
+        self.assertTrue(proof["accept_reject_decision_projection"]["requires_mag_decision_before_store_mutation"])
+        self.assertEqual(
+            proof["operator_receipt_projection"],
+            manifest["domain_memory_descriptor_locator"]["operator_receipt_projection"],
+        )
+        self.assertFalse(proof["authority_boundary"]["can_write_fundability_verdict"])
+        self.assertFalse(proof["authority_boundary"]["can_write_authoring_quality_verdict"])
+        self.assertFalse(proof["authority_boundary"]["can_write_submission_ready_export_verdict"])
+        self.assertFalse(proof["authority_boundary"]["can_write_grant_artifact"])
+        self.assertFalse(proof["repo_payload_policy"]["repo_tracked_real_memory_body"])
+        self.assertFalse(proof["repo_payload_policy"]["repo_tracked_real_receipt_instance"])
+        self.assertFalse(proof["repo_payload_policy"]["repo_tracked_real_grant_artifact"])
+
+        layout_audit = proof["repo_source_layout_audit"]
+        self.assertEqual(layout_audit["surface_kind"], "mag_repo_source_layout_audit")
+        self.assertEqual(layout_audit["layout_state"], "repo_source_audit_landed_no_physical_move_required")
+        self.assertEqual(layout_audit["boundary_keys"], ["agent", "contracts", "runtime", "docs"])
+        self.assertEqual(layout_audit["retired_active_path_policy"], "explicit_proof_provenance_history_only")
+        self.assertIn("default Hermes active path", layout_audit["forbidden_active_path_residue"])
+        self.assertIn("default Gateway active path", layout_audit["forbidden_active_path_residue"])
+        self.assertIn("default local-manager active path", layout_audit["forbidden_active_path_residue"])
+        for ref_status in layout_audit["source_ref_status"]:
+            with self.subTest(source_ref=ref_status["path"]):
+                self.assertTrue(ref_status["exists"])
+                self.assertTrue((REPO_ROOT / ref_status["path"]).exists())

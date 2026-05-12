@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-12：落地 controlled grant-stage domain memory apply proof
+
+- 决策：MAG 在 `product-entry-manifest` 中新增 `controlled_domain_memory_apply_proof`，把 consumed grant strategy memory refs、writeback proposal、MAG accept/reject decision、operator receipt projection 和 repo-source layout audit 收成一个可验证 proof surface。
+- 理由：OPL family memory index 已能解析 MAG domain memory descriptor，但 MAG 仍需要 repo-source 级证据说明 controlled grant-stage memory apply 只路由 refs 与 receipt projection，不写真实 memory body、grant artifact、fundability verdict、authoring quality verdict 或 submission-ready export verdict。
+- 影响：`contracts/runtime-program/opl-family-contract-adoption.json`、`current-program.json`、manifest schema、sidecar export 与核心文档共同指向该 proof；真实 accepted/rejected receipt instance 仍只允许由 workspace/runtime artifact root 产生。默认 Hermes/Gateway/local-manager active path 继续退役为 explicit proof/provenance/history。
+
 ## 2026-05-11：MAG 对齐 OPL 完整 stage-led runtime framework
 
 - 决策：MAG 的 OPL 关系更新为 `OPL stage-led runtime framework -> MAG-owned descriptor/projection -> Med Auto Grant app skill / CLI / MedAutoGrantDomainEntry`。OPL 是可作为外部依赖使用的完整智能体运行框架，不再只写成薄 Runtime Manager；Agent executor 是 stage attempt 的最小执行单位，`Codex CLI` 是当前第一公民 executor，除非活跃合同显式选择其他 provider。
