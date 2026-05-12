@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from pathlib import Path
 from typing import Any
 
@@ -48,7 +47,7 @@ from med_autogrant.product_entry_parts.loop_contracts import (
 from med_autogrant.product_entry_parts.manifest_readiness import build_manifest_readiness_surfaces
 from med_autogrant.product_entry_parts.manifest_runtime_companions import build_manifest_runtime_companions
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
-from med_autogrant.product_entry_parts.domain_agent_skeleton import build_artifact_locator_contract, build_controlled_stage_attempt_projection, build_standard_domain_agent_skeleton
+from med_autogrant.product_entry_parts import domain_agent_skeleton
 from med_autogrant.product_entry_parts.domain_memory import build_manifest_domain_memory_surfaces
 from med_autogrant.product_entry_parts.executor_defaults import build_executor_defaults_surface
 from med_autogrant.product_entry_parts.runtime_surfaces import (
@@ -753,7 +752,7 @@ class ProductEntryManifestBuilderMixin:
             "domain_memory_writeback_proposal": command_catalog["domain_memory_writeback_proposal"],
             "domain_memory_writeback_decision": command_catalog["domain_memory_writeback_decision"],
         }
-        artifact_locator_contract = build_artifact_locator_contract(
+        artifact_locator_contract = domain_agent_skeleton.build_artifact_locator_contract(
             input_path=resolved_input_path,
             grant_run_id=_require_nonempty_string_from_mapping(
                 progress_payload,
@@ -773,7 +772,7 @@ class ProductEntryManifestBuilderMixin:
             ),
             artifact_inventory=artifact_inventory,
         )
-        controlled_stage_attempt_projection = build_controlled_stage_attempt_projection(
+        controlled_stage_attempt_projection = domain_agent_skeleton.build_controlled_stage_attempt_projection(
             grant_run_id=_require_nonempty_string_from_mapping(
                 progress_payload,
                 "grant_run_id",
@@ -797,7 +796,7 @@ class ProductEntryManifestBuilderMixin:
             progress_payload=progress_payload, verification_identity=verification_identity
         )
         domain_memory_descriptor_locator = domain_memory_surfaces["domain_memory_descriptor_locator"]
-        standard_domain_agent_skeleton = build_standard_domain_agent_skeleton(
+        standard_domain_agent_skeleton = domain_agent_skeleton.build_standard_domain_agent_skeleton(
             input_path=resolved_input_path,
             grant_run_id=_require_nonempty_string_from_mapping(
                 progress_payload,
@@ -977,6 +976,7 @@ class ProductEntryManifestBuilderMixin:
                 "autonomy_observability": autonomy_observability,
                 "artifact_locator_contract": artifact_locator_contract,
                 "controlled_stage_attempt_projection": controlled_stage_attempt_projection,
+                "controlled_soak_no_regression_attempt": domain_agent_skeleton.build_controlled_soak_no_regression_attempt(),
                 **domain_memory_surfaces,
                 "standard_domain_agent_skeleton": standard_domain_agent_skeleton,
             },

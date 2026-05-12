@@ -683,3 +683,39 @@ def build_controlled_stage_attempt_projection(
             "opl_role": "controlled_attempt_descriptor_and_receipt_ref_consumer",
         },
     }
+
+
+def build_controlled_soak_no_regression_attempt() -> dict[str, Any]:
+    return {
+        "surface_kind": "controlled_soak_no_regression_attempt",
+        "attempt_id": "mag.controlled_soak.no_regression_attempt.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "state": "deferred_typed_blocker",
+        "controlled_soak_apply_contract_open": False,
+        "deferred_blocker": {
+            "blocker_kind": "domain_apply_contract_gap",
+            "blocker_id": "mag_controlled_soak_apply_contract_not_open",
+            "next_hop_contract_gap": "opl_temporal_controlled_stage_attempt_apply_contract",
+            "required_owner": "opl_framework",
+            "domain_owner": TARGET_DOMAIN_ID,
+        },
+        "no_regression_surface_refs": [
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+            "/product_entry_manifest/controlled_domain_memory_apply_proof",
+            "/product_entry_manifest/artifact_locator_contract",
+            "/product_entry_manifest/grant_authoring_readiness",
+        ],
+        "authority_boundary": {
+            "opl_role": "controlled_soak_attempt_router_only",
+            "domain_truth_owner": TARGET_DOMAIN_ID,
+            "can_hold_fundability_verdict": False,
+            "can_hold_authoring_quality_verdict": False,
+            "can_hold_submission_ready_export_verdict": False,
+            "can_write_grant_truth": False,
+        },
+        "repository_boundary": {
+            "repo_tracks_grant_artifact": False,
+            "repo_tracks_receipt_instance": False,
+            "repo_tracks_no_regression_projection": True,
+        },
+    }

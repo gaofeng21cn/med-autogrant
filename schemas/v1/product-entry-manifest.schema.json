@@ -3101,6 +3101,100 @@
         }
       }
     },
+    "controlledSoakNoRegressionAttempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "attempt_id",
+        "target_domain_id",
+        "state",
+        "controlled_soak_apply_contract_open",
+        "deferred_blocker",
+        "no_regression_surface_refs",
+        "authority_boundary",
+        "repository_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "controlled_soak_no_regression_attempt"
+        },
+        "attempt_id": {
+          "const": "mag.controlled_soak.no_regression_attempt.v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "state": {
+          "const": "deferred_typed_blocker"
+        },
+        "controlled_soak_apply_contract_open": {
+          "const": false
+        },
+        "deferred_blocker": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "blocker_kind",
+            "blocker_id",
+            "next_hop_contract_gap",
+            "required_owner",
+            "domain_owner"
+          ],
+          "properties": {
+            "blocker_kind": {
+              "const": "domain_apply_contract_gap"
+            },
+            "blocker_id": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "next_hop_contract_gap": {
+              "const": "opl_temporal_controlled_stage_attempt_apply_contract"
+            },
+            "required_owner": {
+              "const": "opl_framework"
+            },
+            "domain_owner": {
+              "const": "med-autogrant"
+            }
+          }
+        },
+        "no_regression_surface_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "opl_role",
+            "domain_truth_owner",
+            "can_hold_fundability_verdict",
+            "can_hold_submission_ready_export_verdict",
+            "can_write_grant_truth"
+          ]
+        },
+        "repository_boundary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repo_tracks_grant_artifact",
+            "repo_tracks_receipt_instance",
+            "repo_tracks_no_regression_projection"
+          ],
+          "properties": {
+            "repo_tracks_grant_artifact": {
+              "const": false
+            },
+            "repo_tracks_receipt_instance": {
+              "const": false
+            },
+            "repo_tracks_no_regression_projection": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
     "standardDomainAgentSkeleton": {
       "type": "object",
       "additionalProperties": true,
@@ -4038,7 +4132,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -4157,6 +4251,9 @@
         },
         "controlled_stage_attempt_projection": {
           "$ref": "#/$defs/controlledStageAttemptProjection"
+        },
+        "controlled_soak_no_regression_attempt": {
+          "$ref": "#/$defs/controlledSoakNoRegressionAttempt"
         },
         "domain_memory_descriptor": {
           "$ref": "#/$defs/familyDomainMemoryRef"
