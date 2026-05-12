@@ -2,15 +2,15 @@
 
 ## 2026-05-11：MAG 对齐 OPL 完整 stage-led runtime framework
 
-- 决策：MAG 的 OPL 关系更新为 `OPL Codex-first stage-led runtime framework -> MAG-owned descriptor/projection -> Med Auto Grant app skill / CLI / MedAutoGrantDomainEntry`。OPL 是可作为外部依赖使用的完整智能体运行框架，不再只写成薄 Runtime Manager；`Codex CLI` 是 stage attempt 的最小执行单元，除非活跃合同显式选择其他 provider。
+- 决策：MAG 的 OPL 关系更新为 `OPL stage-led runtime framework -> MAG-owned descriptor/projection -> Med Auto Grant app skill / CLI / MedAutoGrantDomainEntry`。OPL 是可作为外部依赖使用的完整智能体运行框架，不再只写成薄 Runtime Manager；Agent executor 是 stage attempt 的最小执行单位，`Codex CLI` 是当前第一公民 executor，除非活跃合同显式选择其他 provider。
 - 理由：OPL 当前定位已经上移为完整 agent runtime framework，负责 stage lifecycle、queue/wakeup、handoff、receipt、retry/dead-letter、operator projection、shared contracts/indexes 与 provider 编排。MAG 仍必须持有 grant stage pack、prompt/skill、fundability judgment、authoring quality gate、workspace truth 和 submission-ready export authority。
-- 影响：旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和 local host runtime 说法降为历史追溯或 provider-specific 实现记录；后续公开/核心文档默认使用 OPL Codex-first stage-led framework 口径。MAG 的 skill/direct CLI 路径继续是一等入口。
+- 影响：旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 和 local host runtime 说法降为历史追溯或 provider-specific 实现记录；后续公开/核心文档默认使用 OPL stage-led framework 口径。MAG 的 skill/direct CLI 路径继续是一等入口。
 
 ## 2026-05-10：MAG 对齐 OPL provider-backed runtime，Temporal 为目标生产 substrate
 
 - 状态：已被 `2026-05-11` OPL 完整 stage-led runtime framework 口径 supersede。保留本段用于解释 provider-backed / Temporal-target 迁移背景。
 
-- 决策：MAG 的 OPL 长期托管口径更新为 `OPL Runtime Manager / opl family-runtime -> configured family runtime provider -> MAG product sidecar export/dispatch -> MAG domain entry/projection`。Temporal 是 OPL durable stage attempt 的目标生产 provider；Hermes-Agent 在迁移期只作为 legacy/optional provider、显式 hosted/proof backend、executor proof lane 或 Codex CLI fallback module。
+- 决策：MAG 的 OPL 长期托管口径更新为 `OPL Runtime Manager / opl family-runtime -> configured family runtime provider -> MAG product sidecar export/dispatch -> MAG domain entry/projection`。Temporal 是 OPL durable stage attempt 的目标生产 provider；Hermes-Agent 作为可选 Agent executor adapter、显式 hosted/proof backend 或 executor proof lane。
 - 理由：MAG 需要长期 authoring stage attempt、human gate、retry/dead-letter、TODO wakeup 和 operator projection，但 grant truth、fundability judgment、authoring quality gate、workspace truth 和 submission-ready export authority 必须仍由 MAG 持有。
 - 影响：`product sidecar export|dispatch` 继续是 OPL provider 到 MAG owner surface 的受控桥接。OPL/Temporal/Hermes/local provider 只能 enqueue、dispatch、signal、query、投影 attempt/receipt，不得写 grant truth、fundability verdict、authoring quality gate、workspace canonical document 或 submission-ready export gate。下方 Hermes-first sidecar adapter 决策保留为迁移背景，后续新投入按 provider-backed / Temporal target 解释。
 
@@ -22,7 +22,7 @@
 
 ## 2026-05-10：MAG 作为 OPL stage-led framework 上的独立 domain agent
 
-- 决策：MAG 的 OPL 对齐口径固定为：MAG 是可被 Codex App skill 直接调用、也可由 OPL Codex-first stage-led family framework 托管的独立 medical grant domain agent。OPL 只持有 stage descriptor discovery、queue、wakeup、handoff、receipt、approval/retry/dead-letter、trace/projection 和 parity；MAG 持有 grant stage pack、prompt/skill、route truth、fundability / authoring quality gates、workspace truth 和 submission-ready export authority。
+- 决策：MAG 的 OPL 对齐口径固定为：MAG 是可被 Codex App skill 直接调用、也可由 OPL stage-led family framework 托管的独立 medical grant domain agent。OPL 只持有 stage descriptor discovery、queue、wakeup、handoff、receipt、approval/retry-dead-letter、trace/projection 和 parity；MAG 持有 grant stage pack、prompt/skill、route truth、fundability / authoring quality gates、workspace truth 和 submission-ready export authority。
 - 理由：基金申请质量依赖 funder/call 语境、申请人基础、科学问题、specific aims、评审风险和正文质量闭环。OPL framework 可以提供可靠运行支撑，但不能替代 MAG 做 fundability judgement、authoring route 或 export readiness。
 - 影响：后续流程优化优先改 MAG stage pack、prompt、quality scorecard、autonomy controller 和 export gate；不得把 grant route 逻辑搬到 OPL 机械脚本。direct skill path 保持一等入口。
 
@@ -114,7 +114,7 @@
 - 理由：实现层 (`domain_runtime.py` / `critique_executor.py` / `codex_cli.py`) 与现有 route tests 已经稳定落在 landed 口径；继续把它写成 pending 会制造第二真相。
 - 影响：`current-program`、status/architecture/current-truth specs、hosted bundle route catalog 与 meta tests 全部改写为 `critique = landed`；而在同日的 full authoring landing 之后，当前 landed author-side route 已进一步扩展成 `direction_screening / question_refinement / argument_building / fit_alignment / outline / drafting / critique / revision / frozen / artifact_bundle / final_package / hosted_contract_bundle`。
 
-## 2026-04-13：critique 的默认 concrete executor 继承本机 Codex 默认
+## 2026-04-13：critique 的 Codex CLI executor 继承本机 Codex 默认
 
 - 决策：`execute-critique-pass` 的默认模型与默认 reasoning effort 统一收口到 `inherit_local_codex_default`，不在 repo 内固定 `gpt-5.4 / xhigh`。
 - 理由：当前真实入口是 `read_codex_cli_contract()` + `run_codex_exec(...)`；未显式配置环境变量覆盖时，本就应该跟随本机 Codex 默认配置，避免四仓未来一起追着改 model pin。

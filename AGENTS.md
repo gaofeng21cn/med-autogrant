@@ -9,7 +9,7 @@
 - AGENTS 只管工作方式，不承载项目真相、规格或阶段判断。
 - 项目知识默认从 `README*`、`docs/README*`、`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md` 读取。
 - repo-tracked current-program pointer 固定为 `contracts/runtime-program/current-program.json`。
-- `Med Auto Grant` 是独立 grant domain agent，也可以作为 `OPL` Codex-first、stage-led 智能体运行框架中的 admitted domain agent 被托管。`Stage` 表示大型基金写作/评审步骤，`Codex CLI` 是 stage 内默认最小执行单元；MAG 持有 grant truth、quality/fundability verdict、route owner 和 export authority。
+- `Med Auto Grant` 是独立 grant domain agent，也可以作为 `OPL` stage-led 智能体运行框架中的 admitted domain agent 被托管。`Stage` 表示大型基金写作/评审步骤，Agent executor 是 stage 内最小执行单位；`Codex CLI` 是当前第一公民 executor，其他 executor adapter 只能显式接入且不承诺行为效果等价。MAG 持有 grant truth、quality/fundability verdict、route owner 和 export authority。
 
 ## 工作原则
 
