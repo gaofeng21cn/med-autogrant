@@ -1,6 +1,6 @@
 # OPL 托管运行时三层合同
 
-这份参考文档保留 `OPL` 家族仓在托管运行时上的三层 owner 口径。2026-05-11 之后，当前主线应先按 `OPL = Codex-first、stage-led 的完整智能体运行框架` 理解；本文件中的 `OPL Runtime Manager` / `Hermes-Agent runtime owner` 表述只作为历史分层和 provider-specific 迁移背景，不替代核心文档。
+这份参考文档保留 `OPL` 家族仓在托管运行时上的三层 owner 口径。2026-05-11 之后，当前主线应先按 `OPL = stage-led、以 Agent executor 为最小执行单位的完整智能体运行框架` 理解；本文件中的 `OPL Runtime Manager` / `Hermes-Agent runtime owner` 表述只作为历史分层和 provider-specific 迁移背景，不替代核心文档。
 
 目标不是完成跨仓共享代码抽取，而是保留当时不能漂移的 owner contract，并说明它如何被当前 OPL runtime framework 口径吸收。
 

@@ -18,7 +18,7 @@ This guide is for readers who need the technical records, trace records, referen
 
 - `Med Auto Grant` is an independent medical grant domain agent whose first public surface is the single Med Auto Grant app skill. The stable callable surface underneath it is `CLI`, `MedAutoGrantDomainEntry`, local scripts, and schema-backed contracts.
 - The formal-entry matrix remains `CLI`, `MCP`, and `controller`.
-- OPL is the Codex-first, stage-led agent runtime framework. It may host MAG as an external domain dependency, and `Codex CLI` is the minimum execution unit for stage attempts unless an active contract explicitly selects another provider.
+- OPL is the stage-led runtime framework with Agent executors as the minimum execution unit. It may host MAG as an external domain dependency, and `Codex CLI` is the minimum execution unit for stage attempts unless an active contract explicitly selects another provider.
 - OPL may consume MAG runtime_control, runtime_continuity, workspace projection, artifact locator, and explicit wakeup/TODO queues for scheduling, wakeup, handoff, receipt, retry, and projection. It does not own MAG grant truth, authoring execution, fundability judgment, quality verdicts, or submission-ready export authority.
 - Older `OPL Runtime Manager`, Temporal, Hermes-first, gateway, and local-host runtime notes remain as provenance or provider-specific implementation records, not the default MAG/OPL boundary.
 - `Hermes-Agent`-related lanes stay in explicit hosted/proof or technical-reference positions; the default public capability contract remains the MAG direct grant-authoring surface plus OPL stage-led framework consumption.

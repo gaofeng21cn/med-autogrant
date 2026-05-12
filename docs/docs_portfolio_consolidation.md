@@ -157,7 +157,7 @@ The second-round review intentionally did not bulk-move older specs out of `docs
 
 The 2026-05-09 family docs governance pass made that rule explicit in [Specs Lifecycle Map](./specs/specs_lifecycle_map.md): active specs, support current-truth records, and historical provenance records can share the path-stable directory only while the README/index layer makes their lifecycle state unambiguous.
 
-The 2026-05-11 OPL alignment pass further clarifies that older `OPL Runtime Manager`, Temporal, Hermes-first, gateway, monorepo, active-adapter, and local host runtime language is historical/provider-specific unless the active layer or a machine-readable contract explicitly promotes it. Current MAG docs should describe OPL as a Codex-first, stage-led agent runtime framework that may consume MAG as an external domain dependency, with `Codex CLI` as the minimum execution unit and MAG retaining grant truth, quality, route, and export authority.
+The 2026-05-11 OPL alignment pass further clarifies that older `OPL Runtime Manager`, Temporal, Hermes-first, gateway, monorepo, active-adapter, and local host runtime language is historical/provider-specific unless the active layer or a machine-readable contract explicitly promotes it. Current MAG docs should describe OPL as a stage-led runtime framework with Agent executors as the minimum execution unit that may consume MAG as an external domain dependency, with `Codex CLI` as the minimum execution unit and MAG retaining grant truth, quality, route, and export authority.
 
 ## Root AGENTS Alignment
 

@@ -102,7 +102,7 @@ Codex App direct skill 调用与 OPL 托管调用必须在 `MedAutoGrantDomainEn
 `family_stage_control_plane` 同样从 `product-entry-manifest` 暴露，但它只是一组 MAG-owned stage descriptors：每个 stage 都必须携带 stage goal、owner、skills、`allowed_action_refs`、handoff、source refs、freshness 与 authority boundary。构建时会把 `allowed_action_refs` 校验到 `family_action_catalog`，从而让 `OPL` 的 discovery smoke 读取同一份 action truth；MAG 继续持有 grant truth、fundability judgment 与 submission-ready export gate。
 `controlled_domain_memory_apply_proof` 聚合 consumed grant strategy memory refs、writeback proposal、MAG accept/reject decision、operator receipt projection 与 repo-source layout audit。它是 controlled grant-stage memory apply 的 repo-source proof surface，不写真实 memory body、fundability verdict、authoring quality verdict、submission-ready export verdict、grant artifact 或 receipt instance。
 
-这轮对齐不引入 `CrewAI` 依赖，也不把 OPL runtime framework 写成 MAG runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态仍是 MAG 作为独立 domain agent 聚焦 family-level contract-first 对齐与 domain-owned truth 维持；若启用 `Hermes-Agent` 或 `Claude Code`，它也只是显式 opt-in executor backend，要求 receipt/audit/fail-closed，不是默认公开入口。
+这轮对齐不引入 `CrewAI` 依赖，也不把 OPL runtime framework 写成 MAG runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态是 MAG 作为独立 domain agent 维持 family-level contract-first 对齐与 domain-owned truth；OPL 统一 Agent Executor Adapter 的 MAG 边界已经落地，若启用 `Hermes-Agent` 或 `Claude Code`，它也只是显式 opt-in executor backend，要求 receipt/audit/fail-closed，不是默认公开入口。剩余缺口是 OPL-hosted controlled grant stage soak、真实 receipt instance 和 no-forbidden-write proof。
 
 ## OPL Provider、Med Auto Grant 与 concrete executor 的分工
 

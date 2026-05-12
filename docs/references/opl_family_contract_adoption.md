@@ -2,7 +2,7 @@
 
 ## Purpose
 
-这份薄适配声明说明 `Med Auto Grant` 如何满足 `OPL` Codex-first、stage-led runtime framework 的 family runtime / quality / incident / operator projection 合同。OPL 可以把 MAG 作为外部领域依赖托管、唤醒和投影；它不把 `OPL` 变成 grant authoring owner，也不把医学论文质量门或视觉交付 proof 引入 MAG。
+这份薄适配声明说明 `Med Auto Grant` 如何满足 `OPL` stage-led、以 Agent executor 为最小执行单位 runtime framework 的 family runtime / quality / incident / operator projection 合同。OPL 可以把 MAG 作为外部领域依赖托管、唤醒和投影；它不把 `OPL` 变成 grant authoring owner，也不把医学论文质量门或视觉交付 proof 引入 MAG。
 
 ## Runtime Attempt Projection
 

@@ -23,6 +23,7 @@
 - 决策：MAG 的 product-entry manifest、runtime registration 与 current-program 明确采用 OPL generic Agent Executor Adapter / registry 口径；默认 concrete executor owner 固定为 `codex_cli`，`hermes_agent` 与 `claude_code` 只能作为显式 opt-in backend。`execute-critique-pass --executor hermes_agent` 必须产生 OPL `AgentExecutionReceipt` 风格 proof。
 - 理由：跨仓统一后，generic executor adapter 归 OPL；MAG 不应把自己写成 generic executor owner。MAG 只持有 grant route truth、quality/fundability gate、workspace/artifact truth 与 export authority。
 - 影响：非默认 executor 只承诺可接入、可回执、可审计、fail-closed，不承诺效果等价；product-entry `executor_owner` 表示默认 concrete executor，OPL adapter owner 通过独立 `executor_defaults` / `executor_adapter_contract` surface 表达。
+- 当前状态：除真实 production-hosted grant-stage soak 外，本决策已落地到 manifest/runtime registration/current-program/sidecar/receipt proof 边界；旧 Hermes/Gateway/local-manager active path 已降为 explicit proof/provenance/history，默认 caller 仍是 Codex CLI。
 
 ## 2026-05-10：MAG 对齐 OPL Temporal-backed production runtime，Temporal 为 OPL 生产必需 substrate
 

@@ -20,7 +20,7 @@
 
 `contracts/runtime-program/current-program.json` 仍是完整 repo-tracked truth-surface 清单的 canonical pointer。部分 route、executor-vocabulary、hosted-caller、product-entry 与 Hermes reset specs 仍留在本目录，是因为 current-program 或历史审计路径仍直接引用这些原路径。
 
-当前 OPL 口径集中在核心文档：OPL 是 Codex-first、stage-led 的完整运行框架，可以消费 MAG-owned descriptor/projection。旧 spec 中出现的 `OPL Runtime Manager`、Temporal target、Hermes-first、active adapter、gateway 或 monorepo 说法，除非被当前 owner 文档显式提升，否则都按 provider-specific 迁移背景阅读。
+当前 OPL 口径集中在核心文档：OPL 是 stage-led、以 Agent executor 为最小执行单位的完整运行框架，可以消费 MAG-owned descriptor/projection。旧 spec 中出现的 `OPL Runtime Manager`、Temporal target、Hermes-first、active adapter、gateway 或 monorepo 说法，除非被当前 owner 文档显式提升，否则都按 provider-specific 迁移背景阅读。
 
 `hosted contract bundle` 继续是 integration/reference export surface。hosted runtime、Web UI、public MCP runtime、外部官网提交和成熟 gateway/federation 各自需要当前 owner evidence。
 

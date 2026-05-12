@@ -18,4 +18,4 @@ Reference notes 不能替代当前产品真相。MAG 当前 grant product truth 
 当前参考入口：
 
 - [Grant Strategy Memory Policy](./grant_strategy_memory_policy.md)：说明 fundability、specific aims、reviewer grammar、template strategy 等经验如何以自然语言 memory 形式沉淀，同时保持 quality/controller/export surface 的结构化权威。
-- [OPL Family Contract Adoption](./opl_family_contract_adoption.md)：说明 MAG 如何向 OPL Codex-first、stage-led runtime framework 暴露 descriptor/projection，同时保留 grant truth、quality、route 和 export authority。
+- [OPL Family Contract Adoption](./opl_family_contract_adoption.md)：说明 MAG 如何向 OPL stage-led、以 Agent executor 为最小执行单位 runtime framework 暴露 descriptor/projection，同时保留 grant truth、quality、route 和 export authority。

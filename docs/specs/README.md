@@ -22,7 +22,7 @@ Every dated support/history spec that remains in this directory now carries a fi
 
 `contracts/runtime-program/current-program.json` remains the canonical pointer for the full repo-tracked truth-surface list. Some listed route, executor-vocabulary, hosted-caller, product-entry, and Hermes reset specs still live here because current-program or historical audit paths point to them directly.
 
-Current OPL wording is centralized in the core docs: OPL is a Codex-first, stage-led runtime framework that may consume MAG-owned descriptors and projections. Older specs that say `OPL Runtime Manager`, Temporal target, Hermes-first, active adapter, gateway, or monorepo should be read as provider-specific migration context unless the current owner docs explicitly promote that wording.
+Current OPL wording is centralized in the core docs: OPL is a stage-led runtime framework with Agent executors as the minimum execution unit that may consume MAG-owned descriptors and projections. Older specs that say `OPL Runtime Manager`, Temporal target, Hermes-first, active adapter, gateway, or monorepo should be read as provider-specific migration context unless the current owner docs explicitly promote that wording.
 
 The `hosted contract bundle` remains an integration/reference export surface. Hosted runtime, Web UI, public MCP runtime, external portal submission, and mature gateway/federation each require their own current owner evidence.
 

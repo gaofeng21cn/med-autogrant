@@ -86,7 +86,7 @@ The content audit assigns older provider-runtime families to these current dispo
 | `Hermes-backed runtime substrate owner` in `2026-04-11-hermes-backed-*` | Historical/provider-specific. Current default execution is Codex CLI, with Hermes kept as explicit hosted/proof lane or external provider only when selected. |
 | `upstream Hermes-Agent fast cutover` board and proof records | Historical/proof context. They remain useful for proof-lane vocabulary and fail-closed evidence; default install/runtime ownership lives in the current owner docs. |
 | `OPL Gateway`, `gateway/federation`, and `future P5` language | Historical or future activation context unless the core docs or current contracts explicitly promote it. |
-| `OPL Runtime Manager`, Temporal target, provider-backed runtime, or active-adapter wording | Historical/provider-specific migration context. Current MAG wording is OPL Codex-first stage-led framework consuming MAG-owned descriptor/projection; MAG retains grant truth, quality, route, and export authority. |
+| `OPL Runtime Manager`, Temporal target, provider-backed runtime, or active-adapter wording | Historical/provider-specific migration context. Current MAG wording is that OPL is a stage-led framework with Agent executors as the minimum execution unit, consuming MAG-owned descriptor/projection; MAG retains grant truth, quality, route, and export authority. |
 | `hosted contract bundle` | Current integration/reference export surface. Hosted runtime, Web UI, and external portal submission need separate current owner evidence. |
 
 ## Historical Provenance Records

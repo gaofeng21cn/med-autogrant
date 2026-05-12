@@ -2,7 +2,7 @@
 
 > Historical reference. The current landed route catalog and direct-entry truth now live in `docs/project.md`, `docs/decisions.md`, and `contracts/runtime-program/current-program.json`.
 >
-> Current reading note: older phrases such as `Hermes Kernel`, `OPL Runtime Manager`, and `OPL family orchestration surface` should now be read through the current route `OPL Codex-first stage-led runtime framework -> MAG projection/descriptor -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`. `Codex CLI` is the minimum execution unit unless an active contract selects another provider. OPL may host, schedule, wake, hand off, receipt, retry, and project MAG stages, but it does not own MAG grant truth, authoring semantics, quality gates, or submission-ready export truth.
+> Current reading note: older phrases such as `Hermes Kernel`, `OPL Runtime Manager`, and `OPL family orchestration surface` should now be read through the current route `OPL stage-led runtime framework with Agent executors as the minimum execution unit -> MAG projection/descriptor -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`. `Codex CLI` is the default minimum execution unit unless an active contract selects another provider. OPL may host, schedule, wake, hand off, receipt, retry, and project MAG stages, but it does not own MAG grant truth, authoring semantics, quality gates, or submission-ready export truth.
 
 ## 1. 当前真相
 

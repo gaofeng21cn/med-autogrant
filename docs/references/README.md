@@ -18,4 +18,4 @@ Historical/provider-specific handoff notes that no longer explain a current boun
 Current reference entries:
 
 - [Grant Strategy Memory Policy](./grant_strategy_memory_policy.md): explains how fundability, specific aims, reviewer grammar, and template-strategy experience should be kept as natural-language memory while quality/controller/export surfaces remain structured authority.
-- [OPL Family Contract Adoption](./opl_family_contract_adoption.md): explains how MAG exposes descriptors and projections to the OPL Codex-first, stage-led runtime framework while retaining grant truth, quality, route, and export authority.
+- [OPL Family Contract Adoption](./opl_family_contract_adoption.md): explains how MAG exposes descriptors and projections to the OPL stage-led runtime framework with Agent executors as the minimum execution unit while retaining grant truth, quality, route, and export authority.

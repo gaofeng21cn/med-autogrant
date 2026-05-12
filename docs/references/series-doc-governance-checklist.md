@@ -33,8 +33,8 @@
 
 ## 四、系列一致性检查
 
-- 文档必须把 `Med Auto Grant` 写成医学 `Grant Ops` 的 author-side / proposal-facing domain agent，明确它可被 `OPL` Codex-first、stage-led agent runtime framework 托管，但不是 `OPL` 内部模块、顶层 gateway 或 runtime substrate owner。
-- 系列项目名称与角色要与四仓当前真相同步：`One Person Lab` 是完整的 Codex-first、stage-led agent runtime framework，`Med Auto Science` 是 `Research Ops`，`RedCube AI` 是 visual-deliverable / `Presentation Ops`。
+- 文档必须把 `Med Auto Grant` 写成医学 `Grant Ops` 的 author-side / proposal-facing domain agent，明确它可被 `OPL` stage-led、以 Agent executor 为最小执行单位 agent runtime framework 托管，但不是 `OPL` 内部模块、顶层 gateway 或 runtime substrate owner。
+- 系列项目名称与角色要与四仓当前真相同步：`One Person Lab` 是完整的 stage-led、以 Agent executor 为最小执行单位 agent runtime framework，`Med Auto Science` 是 `Research Ops`，`RedCube AI` 是 visual-deliverable / `Presentation Ops`。
 - 若提到 `Hermes-Agent`，只能指上游外部 runtime 项目 / 服务；repo-side adapter、helper、pilot、scaffold 都不能被写成“已接入 Hermes-Agent”。
 - 默认公开入口、repo-tracked current truth、内部参考、schema/contract surface 与历史档案必须继续分层。
 - 修改 docs skeleton、公开入口、schema-backed frontdoor、runtime program pointer 或 authoring wording 时，必须同步更新相关 contract/test；但不得用测试固定 README/docs prose、标题或状态文案。

@@ -18,7 +18,7 @@
 
 - `Med Auto Grant` 是独立的医学基金 domain agent，对外第一主语是单一 `Med Auto Grant` app skill；其下稳定 capability surface 由 `CLI`、`MedAutoGrantDomainEntry`、本地脚本与 schema-backed contract 组成。
 - formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
-- OPL 是 Codex-first、stage-led 的完整智能体运行框架。它可以把 MAG 作为外部领域依赖托管；除非活跃合同显式选择其他 provider，`Codex CLI` 是 stage attempt 的最小执行单元。
+- OPL 是 stage-led、以 Agent executor 为最小执行单位的完整智能体运行框架。它可以把 MAG 作为外部领域依赖托管；除非活跃合同显式选择其他 provider，`Codex CLI` 是 stage attempt 的最小执行单元。
 - OPL 可以消费 MAG 的 runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue，用于调度、唤醒、交接、回执、重试和投影；它不持有 MAG grant truth、authoring execution、fundability judgment、quality verdict 或 submission-ready export authority。
 - 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 与本地 host runtime 说明作为历史追溯或 provider-specific 实现记录保留；默认 MAG/OPL 边界由核心文档和 active specs 持有。
 - [Docs portfolio consolidation boundary](./docs_portfolio_consolidation.md) 是当前文档生命周期 owner，记录逐分区当前 owner、已吸收内容和历史归位理由；旧 OPL Runtime Manager 与 lightweight handoff 说明已归入 history。
