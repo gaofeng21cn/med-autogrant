@@ -46,7 +46,8 @@ class GrantAutonomyCliTest(unittest.TestCase):
                 request_path = Path(tmp_dir) / "autonomy-request.json"
                 output_dir = Path(tmp_dir) / "autonomy-output"
                 exit_code, stdout, stderr = self.run_cli(
-                    "execute-grant-autonomy-controller",
+                    "pass",
+                    "autonomy-controller",
                     "--input",
                     str(request_path),
                     "--output-dir",

@@ -105,7 +105,7 @@ from med_autogrant.cli_parts.parser_adders import (
 )
 
 
-LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND) - {"product-status"}
+LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND)
 
 
 def build_parser() -> argparse.ArgumentParser:

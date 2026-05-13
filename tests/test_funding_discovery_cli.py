@@ -31,7 +31,8 @@ class FundingDiscoveryCliTest(unittest.TestCase):
 
     def test_discover_funding_opportunities_returns_candidate_pool(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "discover-funding-opportunities",
+            "workspace",
+            "discover-funding",
             "--input",
             str(DISCOVERY_INPUT),
             "--format",
@@ -67,7 +68,8 @@ class FundingDiscoveryCliTest(unittest.TestCase):
             entry = entry_class.return_value
             entry.dispatch.return_value = expected_payload
             exit_code, stdout, stderr = self.run_cli(
-                "refresh-funding-opportunities-cache",
+                "workspace",
+                "refresh-funding-cache",
                 "--input",
                 str(DISCOVERY_INPUT),
                 "--output",

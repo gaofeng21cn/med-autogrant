@@ -37,7 +37,8 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             product_entry.build.return_value = expected_payload
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-product-entry",
+                "product",
+                "build-entry",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
                 "--entry-mode",
@@ -78,7 +79,8 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             product_entry.read_grant_progress.return_value = expected_payload
 
             exit_code, stdout, stderr = self.run_cli(
-                "grant-progress",
+                "workspace",
+                "progress",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
                 "--format",
@@ -111,7 +113,8 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             product_entry.read_grant_cockpit.return_value = expected_payload
 
             exit_code, stdout, stderr = self.run_cli(
-                "grant-cockpit",
+                "workspace",
+                "cockpit",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
                 "--format",
@@ -144,7 +147,8 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             product_entry.build_grant_direct_entry.return_value = expected_payload
 
             exit_code, stdout, stderr = self.run_cli(
-                "grant-direct-entry",
+                "product",
+                "direct-entry",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
                 "--task-intent",
@@ -181,7 +185,8 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             product_entry.build_product_entry_manifest.return_value = expected_payload
 
             exit_code, stdout, stderr = self.run_cli(
-                "product-entry-manifest",
+                "product",
+                "manifest",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
                 "--format",
@@ -215,6 +220,7 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             product_entry.build_skill_catalog.return_value = expected_payload
 
             exit_code, stdout, stderr = self.run_cli(
+                "product",
                 "skill-catalog",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
@@ -250,7 +256,8 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             product_entry.build_product_entry_preflight.return_value = expected_payload
 
             exit_code, stdout, stderr = self.run_cli(
-                "product-preflight",
+                "product",
+                "preflight",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
                 "--format",
@@ -263,6 +270,21 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
         product_entry.build_product_entry_preflight.assert_called_once_with(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
+
+    def test_flat_product_status_alias_is_rejected(self) -> None:
+        with self.assertRaisesRegex(
+            SystemExit,
+            "Legacy flat command `product-status` has been removed. Use `product status` instead.",
+        ):
+            main(
+                [
+                    "product-status",
+                    "--input",
+                    str(CRITIQUE_EXAMPLE_PATH),
+                    "--format",
+                    "json",
+                ]
+            )
 
     def test_domain_memory_writeback_proposal_dispatches_product_surface(self) -> None:
         expected_payload = {

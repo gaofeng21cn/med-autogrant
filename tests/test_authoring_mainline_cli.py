@@ -50,7 +50,8 @@ class AuthoringMainlineCliTest(unittest.TestCase):
 
             with tempfile.TemporaryDirectory() as tmp_dir:
                 exit_code, stdout, stderr = self.run_cli(
-                    "execute-authoring-mainline-loop",
+                    "pass",
+                    "mainline-loop",
                     "--input",
                     str(INPUT_EXAMPLE_PATH),
                     "--output-dir",

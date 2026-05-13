@@ -111,15 +111,4 @@ def public_cli_command(command: str, *args: str) -> str:
 
 
 def public_cli_argv(argv: list[str] | tuple[str, ...]) -> list[str]:
-    resolved = list(argv)
-    if len(resolved) >= 3 and (resolved[0], resolved[1], resolved[2]) in PUBLIC_THREE_TOKEN_COMMANDS:
-        return [
-            PUBLIC_THREE_TOKEN_COMMANDS[(resolved[0], resolved[1], resolved[2])],
-            *resolved[3:],
-        ]
-    if len(resolved) >= 1:
-        command = resolved[0]
-        if command in INTERNAL_TO_PUBLIC_COMMAND:
-            group, subcommand = INTERNAL_TO_PUBLIC_COMMAND[command]
-            return [group, subcommand, *resolved[1:]]
-    return resolved
+    return list(argv)

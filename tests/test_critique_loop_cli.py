@@ -50,7 +50,8 @@ class CritiqueLoopCliTest(unittest.TestCase):
 
             with tempfile.TemporaryDirectory() as tmp_dir:
                 exit_code, stdout, stderr = self.run_cli(
-                    "execute-critique-revision-loop",
+                    "pass",
+                    "critique-loop",
                     "--input",
                     str(DRAFTING_EXAMPLE_PATH),
                     "--output-dir",

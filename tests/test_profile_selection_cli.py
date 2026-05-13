@@ -70,7 +70,8 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
 
     def test_select_project_profile_returns_nsfc_recommendation(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "select-project-profile",
+            "workspace",
+            "select-profile",
             "--input",
             str(NSFC_SELECTION_INPUT),
             "--format",
@@ -94,7 +95,8 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
 
     def test_select_project_profile_returns_nih_r21_recommendation(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "select-project-profile",
+            "workspace",
+            "select-profile",
             "--input",
             str(NIH_SELECTION_INPUT),
             "--format",
@@ -122,7 +124,8 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
 
     def test_select_project_profile_returns_wellcome_recommendation(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "select-project-profile",
+            "workspace",
+            "select-profile",
             "--input",
             str(WELLCOME_SELECTION_INPUT),
             "--format",
@@ -155,7 +158,8 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
             output_path = Path(tmp_dir) / "initialized-workspace.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "initialize-intake-workspace",
+                "workspace",
+                "initialize-intake",
                 "--input",
                 str(NSFC_SELECTION_INPUT),
                 "--output",
@@ -180,7 +184,8 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
             workspace_root = Path(tmp_dir) / "mag-workspace"
 
             exit_code, stdout, stderr = self.run_cli(
-                "initialize-intake-workspace",
+                "workspace",
+                "initialize-intake",
                 "--input",
                 str(NSFC_SELECTION_INPUT),
                 "--workspace-root",
@@ -217,7 +222,8 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
             self.assertEqual(check_ignore.returncode, 0)
 
             validate_exit, validate_stdout, validate_stderr = self.run_cli(
-                "validate-workspace",
+                "workspace",
+                "validate",
                 "--input",
                 str(workspace_root),
                 "--format",
@@ -232,7 +238,8 @@ class ProjectProfileSelectionCliTest(unittest.TestCase):
             workspace_root = Path(tmp_dir) / "mag-workspace"
 
             exit_code, stdout, stderr = self.run_cli(
-                "initialize-intake-workspace",
+                "workspace",
+                "initialize-intake",
                 "--input",
                 str(NSFC_SELECTION_INPUT),
                 "--workspace-root",

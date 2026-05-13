@@ -50,7 +50,8 @@ class RevisionExecutorCliTest(unittest.TestCase):
             workspace_path.write_text(json.dumps(workspace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(workspace_path),
                 "--output",
@@ -70,7 +71,8 @@ class RevisionExecutorCliTest(unittest.TestCase):
             output_path = Path(tmp_dir) / "revised-workspace.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(P2C_CRITIQUE_EXAMPLE_PATH),
                 "--output",
@@ -169,7 +171,8 @@ class RevisionExecutorCliTest(unittest.TestCase):
             output_path = Path(tmp_dir) / "re_review-revised-workspace.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(P3B_RE_REVIEW_EXAMPLE_PATH),
                 "--output",
@@ -237,7 +240,8 @@ class RevisionExecutorCliTest(unittest.TestCase):
             output_path = Path(tmp_dir) / "re_review-validated-workspace.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(P3B_RE_REVIEW_EXAMPLE_PATH),
                 "--output",
@@ -285,7 +289,8 @@ class RevisionExecutorCliTest(unittest.TestCase):
             output_path = Path(tmp_dir) / "initial-validated-workspace.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(P2C_CRITIQUE_EXAMPLE_PATH),
                 "--output",
@@ -350,7 +355,8 @@ class RevisionExecutorCliTest(unittest.TestCase):
                 with self.subTest(example=input_path.name):
                     output_path = Path(tmp_dir) / f"{input_path.stem}-revised.json"
                     exit_code, stdout, stderr = self.run_cli(
-                        "execute-revision-pass",
+                        "pass",
+                        "revision",
                         "--input",
                         str(input_path),
                         "--output",
@@ -428,7 +434,8 @@ class RevisionExecutorCliTest(unittest.TestCase):
             )
 
             exit_code, stdout, stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(P2C_CRITIQUE_EXAMPLE_PATH),
                 "--output",
@@ -452,7 +459,8 @@ class RevisionExecutorCliTest(unittest.TestCase):
             input_path.write_text(json.dumps(document, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(input_path),
                 "--output",

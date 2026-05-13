@@ -59,7 +59,7 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
 
 
 def test_mainline_status_cli_json_exposes_structured_contract_surface() -> None:
-    payload = run_json_cli("mainline-status", "--format", "json")
+    payload = run_json_cli("mainline", "status", "--format", "json")
 
     assert payload["schema_version"] == 1
     assert payload["program_id"] == "med-autogrant-mainline"
@@ -114,7 +114,7 @@ def test_mainline_phase_status_resolves_current_and_next_phase() -> None:
 
 
 def test_mainline_phase_cli_json_exposes_entry_points_and_exit_criteria() -> None:
-    payload = run_json_cli("mainline-phase", "--phase", "P4", "--format", "json")
+    payload = run_json_cli("mainline", "phase", "--phase", "P4", "--format", "json")
     record_detail = payload["maintainer_reference"]["record_detail"]
 
     assert payload["schema_version"] == 1
