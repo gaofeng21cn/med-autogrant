@@ -752,6 +752,7 @@ class ProductEntryManifestBuilderMixin:
             ),
             "domain_memory_writeback_proposal": command_catalog["domain_memory_writeback_proposal"],
             "domain_memory_writeback_decision": command_catalog["domain_memory_writeback_decision"],
+            "domain_memory_receipt_evidence": command_catalog["domain_memory_receipt_evidence"],
         }
         artifact_locator_contract = domain_agent_skeleton.build_artifact_locator_contract(
             input_path=resolved_input_path,

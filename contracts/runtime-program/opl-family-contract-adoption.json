@@ -294,11 +294,13 @@
         "domain_memory_receipt_locator",
         "writeback_proposal_generator",
         "accept_reject_command",
-        "operator_receipt_projection"
+        "operator_receipt_projection",
+        "runtime_receipt_evidence_writer"
       ],
       "runtime_apply_surfaces": [
         "writeback proposal generator",
         "MAG memory acceptance command",
+        "runtime receipt evidence writer",
         "operator projection of accepted/rejected writeback receipts"
       ],
       "pending_runtime_work": []
@@ -360,6 +362,20 @@
       "can_issue_authoring_quality_verdict": false,
       "can_issue_export_verdict": false,
       "can_mutate_domain_memory_store": false
+    },
+    "runtime_receipt_evidence_writer": {
+      "surface_kind": "domain_memory_runtime_receipt_evidence_writer",
+      "manifest_surface_ref": "/product_entry_manifest/domain_memory_descriptor_locator/runtime_receipt_evidence_writer",
+      "output_surface_kind": "mag_domain_memory_runtime_receipt_evidence",
+      "write_policy": "runtime_receipt_instance_only_no_repo_write",
+      "receipt_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+      "forbidden_outputs": [
+        "memory_body",
+        "canonical_grant_artifact_content",
+        "fundability_verdict",
+        "authoring_quality_verdict",
+        "submission_ready_export_verdict"
+      ]
     }
   },
   "domain_memory_descriptor": {
@@ -484,7 +500,10 @@
       "can_write_submission_ready_export_verdict": false,
       "can_write_grant_artifact": false,
       "can_accept_or_reject_memory_writeback": false
-    }
+    },
+    "runtime_receipt_evidence_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/runtime_receipt_evidence_projection",
+    "controlled_receipt_instances_state": "runtime_receipt_evidence_path_verified",
+    "runtime_receipt_instance_writable": true
   },
   "owner_receipt_contract": {
     "surface_kind": "mag_owner_receipt_contract",
@@ -553,13 +572,8 @@
       "docs"
     ],
     "physical_move_required": "low_risk_source_moves_only_after_path_compatibility_audit",
-    "retired_active_path_policy": "explicit_proof_provenance_history_only",
-    "forbidden_active_path_residue": [
-      "default Hermes active path",
-      "default Gateway active path",
-      "default local-manager active path",
-      "repo-local host-agent runtime as product owner"
-    ],
+    "retired_active_path_policy": "physically_removed_or_history_tombstone_only",
+    "forbidden_active_path_residue": [],
     "source_refs_by_boundary": {
       "agent": [
         "agent/README.md",
@@ -588,7 +602,29 @@
         "docs/references/grant_strategy_memory_policy.md",
         "docs/references/opl_family_contract_adoption.md"
       ]
-    }
+    },
+    "legacy_active_path_residue": [
+      {
+        "path_family": "default Hermes active path",
+        "state": "tombstone_only",
+        "evidence_ref": "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md"
+      },
+      {
+        "path_family": "default Gateway active path",
+        "state": "physically_removed_from_active_source",
+        "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording"
+      },
+      {
+        "path_family": "default local-manager active path",
+        "state": "physically_removed_from_active_source",
+        "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording"
+      },
+      {
+        "path_family": "repo-local host-agent runtime as product owner",
+        "state": "physically_removed_from_active_source",
+        "evidence_ref": "docs/status.md#旧面退役校准"
+      }
+    ]
   },
   "lifecycle_adapter": {
     "surface_kind": "opl_family_lifecycle_adapter_contract",

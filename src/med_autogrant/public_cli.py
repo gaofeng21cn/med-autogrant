@@ -52,6 +52,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "product-sidecar-dispatch": ("product", "sidecar-dispatch"),
     "product-domain-memory-proposal": ("product", "domain-memory-proposal"),
     "product-domain-memory-decision": ("product", "domain-memory-decision"),
+    "product-domain-memory-receipt-evidence": ("product", "domain-memory-receipt-evidence"),
     "probe-upstream-hermes": ("runtime", "probe-hermes"),
     "runtime-run": ("runtime", "run"),
     "runtime-resume": ("runtime", "resume"),

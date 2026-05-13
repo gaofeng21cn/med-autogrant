@@ -278,6 +278,7 @@ def build_domain_memory_descriptor_locator(
             "runtime_apply_surfaces": [
                 "writeback_proposal_generator",
                 "accept_reject_command",
+                "runtime_receipt_evidence_writer",
                 "operator_receipt_projection",
             ],
             "acceptance_gates": [
@@ -334,6 +335,24 @@ def build_domain_memory_descriptor_locator(
             "output_surface_kind": "mag_domain_memory_writeback_decision",
             "write_policy": "runtime_store_only_no_repo_write",
             "requires_mag_decision_before_store_mutation": True,
+        },
+        "runtime_receipt_evidence_writer": {
+            "surface_kind": "domain_memory_runtime_receipt_evidence_writer",
+            "command_id": "mag.domain_memory.runtime_receipt_evidence_writer.v1",
+            "command": (
+                "uv run python -m med_autogrant product domain-memory-receipt-evidence "
+                "--decision <decision-json> --runtime-root <runtime-state-root> --format json"
+            ),
+            "output_surface_kind": "mag_domain_memory_runtime_receipt_evidence",
+            "write_policy": "runtime_receipt_instance_only_no_repo_write",
+            "receipt_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+            "forbidden_outputs": [
+                "memory_body",
+                "canonical_grant_artifact_content",
+                "fundability_verdict",
+                "authoring_quality_verdict",
+                "submission_ready_export_verdict",
+            ],
         },
         "operator_receipt_projection": dict(operator_receipt_projection),
         "controlled_apply_fixture": {

@@ -173,6 +173,13 @@ def handle_product_domain_memory_decision(args: argparse.Namespace) -> dict[str,
     )
 
 
+def handle_product_domain_memory_receipt_evidence(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().write_domain_memory_receipt_evidence(
+        decision_payload=args.decision,
+        runtime_root=args.runtime_root,
+    )
+
+
 def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 

@@ -30,7 +30,7 @@
 - 形式/客观补件默认按 `TODO + 显式唤醒` 管理；除非直接破坏正文科学成立，否则不作为正文 authoring blocker。
 - 人工 gate 只作用于同一基金任务内的作者决策，不扩展成跨 funder 重选。
 - 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`，并在作者侧主线之上保持 schema-backed 边界。
-- MAG 现在通过 `controlled_domain_memory_apply_proof` 暴露 controlled grant-stage domain memory apply proof：consumed grant strategy memory refs、writeback proposal、MAG accept/reject decision、operator receipt projection 与 repo-source layout audit 都可验证，但不把 memory body、grant artifact 或 receipt instance 存入 repo source。
+- MAG 现在通过 `controlled_domain_memory_apply_proof` 暴露 controlled grant-stage domain memory apply proof：consumed grant strategy memory refs、writeback proposal、MAG accept/reject decision、runtime receipt evidence、operator receipt projection 与 repo-source layout audit 都可验证，但不把 memory body、grant artifact 或 receipt instance 存入 repo source。
 - 当前 grouped shell 也已经把 `product build-entry`、`product manifest`、`product status` 与 `package submission-ready` 暴露成 skill-backed CLI 命令面。
 - 当前轻量 grant `product entry` shell 是 app skill 背后的内部产品入口 shell 与 domain/API catalog builder；未来 hosted 产品形态在活跃阶段放入 `docs/plans/`，完成后归入 history。
 - 质量治理已经通过 `workspace quality-scorecard` 与 `workspace quality-diff` 收成 schema-backed surface。
@@ -77,7 +77,7 @@ root public-doc allowlist 保持稀疏：
 - [Grant Strategy Memory Policy](./references/grant_strategy_memory_policy.md)
 
 当前 grant product-entry shell 继续作为 app skill 背后的 domain/API catalog builder，也是稳定可调用面的一部分；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 作为集成/参考面暴露给 hosted caller / 外部 caller 使用。
-fundability、specific aims、reviewer grammar 和 template strategy 这类经验按自然语言 memory 管理；`domain_memory_descriptor_locator` 与 `controlled_domain_memory_apply_proof` 现在只投影 writeback proposal / accept-reject / receipt refs 和 repo-source layout audit，不把真实 memory entry 或 grant artifact 写进 repo。`workspace quality-scorecard`、`grant-quality-closure-dossier`、autonomy controller report 和 submission-ready package 继续保持结构化权威。
+fundability、specific aims、reviewer grammar 和 template strategy 这类经验按自然语言 memory 管理；`domain_memory_descriptor_locator` 与 `controlled_domain_memory_apply_proof` 现在只投影 writeback proposal / accept-reject / runtime receipt evidence refs 和 repo-source layout audit，不把真实 memory entry 或 grant artifact 写进 repo。`workspace quality-scorecard`、`grant-quality-closure-dossier`、autonomy controller report 和 submission-ready package 继续保持结构化权威。
 质量治理与自治 controller schema 已进入 [`schema-index.json`](../schemas/v1/schema-index.json) 和 current-program truth surface。
 完整 repo-tracked truth surface 清单以 [`current-program.json`](../contracts/runtime-program/current-program.json) 的 `repo_tracked_truth_surfaces` 为准；contract/schema/source surface 保持 repo path，叙述文档使用语义化 `human_doc:*` 标识。Specs 索引与 specs lifecycle map 共同区分 active boundary records、support records 和 historical provenance records。
 

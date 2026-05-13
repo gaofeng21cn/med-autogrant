@@ -280,5 +280,14 @@ class ProductEntryProgressCockpitTest(unittest.TestCase):
                     "--format",
                     "json",
                 ),
+                "domain_memory_receipt_evidence": public_cli_command(
+                    "product-domain-memory-receipt-evidence",
+                    "--decision",
+                    "<decision-json>",
+                    "--runtime-root",
+                    "<runtime-state-root>",
+                    "--format",
+                    "json",
+                ),
             },
         )

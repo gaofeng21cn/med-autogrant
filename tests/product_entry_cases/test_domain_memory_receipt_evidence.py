@@ -1,0 +1,86 @@
+from __future__ import annotations
+
+import tempfile
+
+from product_entry_cases.support import *  # noqa: F401,F403
+
+
+class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
+    def _write_proposal(self, proposal_payload: dict[str, object]) -> Path:
+        proposal_path = Path(tempfile.mkdtemp()) / "proposal.json"
+        proposal_path.write_text(json.dumps(proposal_payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        return proposal_path
+
+    def test_product_entry_writes_accepted_runtime_receipt_instance_without_memory_body(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        product_entry = MedAutoGrantProductEntry()
+        proposal_payload = product_entry.build_domain_memory_writeback_proposal(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            stage_id="review_and_rebuttal",
+            source_ref="runtime-closeout://grant-run/example",
+            lesson_summary="Keep reusable reviewer risk framing as strategy memory.",
+            proposal_id="review-risk-framing",
+        )
+        decision_payload = product_entry.build_domain_memory_writeback_decision(
+            proposal_path=self._write_proposal(proposal_payload),
+            decision="accepted",
+            decision_reason="Reusable reviewer risk framing.",
+            memory_id="review-risk-framing",
+        )
+
+        with tempfile.TemporaryDirectory() as runtime_root:
+            evidence = product_entry.write_domain_memory_receipt_evidence(
+                decision_payload=decision_payload,
+                runtime_root=runtime_root,
+            )
+
+            receipt = evidence["domain_memory_receipt_evidence"]
+            receipt_path = Path(receipt["receipt_instance_ref"])
+            self.assertTrue(receipt_path.exists())
+            self.assertEqual(receipt["surface_kind"], "mag_domain_memory_runtime_receipt_evidence")
+            self.assertEqual(receipt["state"], "runtime_receipt_instance_written")
+            self.assertEqual(receipt["decision"], "accepted")
+            self.assertEqual(receipt["owner"], "med-autogrant")
+            self.assertFalse(receipt["repo_tracked"])
+            self.assertFalse(receipt["contains_memory_body"])
+            self.assertFalse(receipt["contains_grant_artifact_content"])
+            self.assertFalse(receipt["contains_quality_or_export_verdict"])
+            self.assertIsNotNone(receipt["accepted_memory_ref"])
+            self.assertIsNone(receipt["rejected_memory_ref"])
+
+            receipt_instance = json.loads(receipt_path.read_text(encoding="utf-8"))
+            self.assertEqual(receipt_instance, receipt)
+            self.assertNotIn("lesson_summary", receipt_instance)
+
+    def test_product_entry_writes_rejected_runtime_receipt_instance_without_memory_body(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        product_entry = MedAutoGrantProductEntry()
+        proposal_payload = product_entry.build_domain_memory_writeback_proposal(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            stage_id="review_and_rebuttal",
+            source_ref="runtime-closeout://grant-run/example",
+            lesson_summary="Do not store this text in the receipt evidence.",
+            proposal_id="reject-review-risk-framing",
+        )
+        decision_payload = product_entry.build_domain_memory_writeback_decision(
+            proposal_path=self._write_proposal(proposal_payload),
+            decision="rejected",
+            decision_reason="Not broadly reusable enough.",
+        )
+
+        with tempfile.TemporaryDirectory() as runtime_root:
+            evidence = product_entry.write_domain_memory_receipt_evidence(
+                decision_payload=decision_payload,
+                runtime_root=runtime_root,
+            )
+
+            receipt = evidence["domain_memory_receipt_evidence"]
+            receipt_path = Path(receipt["receipt_instance_ref"])
+            self.assertTrue(receipt_path.exists())
+            self.assertEqual(receipt["decision"], "rejected")
+            self.assertIsNone(receipt["accepted_memory_ref"])
+            self.assertIsNotNone(receipt["rejected_memory_ref"])
+            self.assertFalse(receipt["contains_memory_body"])
+            self.assertNotIn("lesson_summary", json.loads(receipt_path.read_text(encoding="utf-8")))

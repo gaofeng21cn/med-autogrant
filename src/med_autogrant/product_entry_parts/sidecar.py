@@ -354,6 +354,10 @@ def _dispatch_domain_memory_decision(
         decision_reason=_require_nonempty_string_from_mapping(task, "decision_reason", context="sidecar_task"),
         memory_id=_optional_nonempty_string(task.get("memory_id")),
     )
+    receipt_evidence = product_entry.write_domain_memory_receipt_evidence(
+        decision_payload=decision,
+        runtime_root=_optional_nonempty_string(task.get("runtime_root")),
+    )
     return _dispatch_payload(
         action="domain-memory/decide",
         task=task,
@@ -363,6 +367,7 @@ def _dispatch_domain_memory_decision(
         result={
             "surface_kind": "sidecar_domain_memory_writeback_decision_result",
             "decision": decision["domain_memory_writeback_decision"],
+            "receipt_evidence": receipt_evidence["domain_memory_receipt_evidence"],
             "write_policy": "runtime_store_only_no_repo_write",
         },
         executed_command=None,

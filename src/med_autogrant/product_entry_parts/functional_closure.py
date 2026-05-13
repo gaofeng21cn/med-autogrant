@@ -276,8 +276,26 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
             "manifest exposes root anchors",
             "repo-source layout audit requires root anchors to exist",
             "workspace artifacts and runtime receipts stay outside repo source",
+            "domain-memory receipt evidence writer persists accepted/rejected receipt instances under runtime roots only",
         ],
-        "legacy_active_path_policy": "history_or_tombstone_only_after_no_active_caller",
+        "legacy_active_path_policy": "physically_removed_or_history_tombstone_only",
+        "legacy_active_path_residue": [
+            {
+                "path_family": "default Hermes active path",
+                "state": "tombstone_only",
+                "evidence_ref": "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
+            },
+            {
+                "path_family": "default Gateway active path",
+                "state": "physically_removed_from_active_source",
+                "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
+            },
+            {
+                "path_family": "default local-manager active path",
+                "state": "physically_removed_from_active_source",
+                "evidence_ref": "docs/status.md#旧面退役校准",
+            },
+        ],
         "next_physical_moves": [
             {
                 "path_family": "domain entry and stage descriptors",

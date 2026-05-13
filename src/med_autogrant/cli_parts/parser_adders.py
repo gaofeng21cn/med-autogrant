@@ -306,3 +306,15 @@ def _add_product_domain_memory_decision_command(
     command.add_argument("--memory-id")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
+
+def _add_product_domain_memory_receipt_evidence_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--decision", required=True)
+    command.add_argument("--runtime-root")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)

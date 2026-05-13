@@ -53,7 +53,7 @@ MAG 现在通过 `product-entry-manifest` 导出 `standard_domain_agent_skeleton
 - `runtime` 边界只声明 `sidecar`、`projection_builder`、`lifecycle_adapter`。
 - `artifact_locator_contract` 只给 OPL 读取 locator/ref；真实申请书、receipt 实例、中间产物和 submission-ready export 都属于 workspace 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/artifacts/<grant_run_id>/`。
 - `controlled_stage_attempt_projection` 只暴露 attempt descriptor、source refs、runtime status projection、receipt refs 和 OPL-hosted controlled stage attempt proof refs。
-- `controlled_domain_memory_apply_proof.repo_source_layout_audit` 暴露 `agent`、`contracts`、`runtime`、`docs` source refs，用于证明当前 physical skeleton repo-source layout 已可审计；不要求立即物理移动目录。
+- `controlled_domain_memory_apply_proof.repo_source_layout_audit` 暴露 `agent`、`contracts`、`runtime`、`docs` source refs，并把 legacy active-path residue 标记为 tombstone-only 或 active source 已物理移除，用于证明当前 physical skeleton repo-source layout 已可审计。
 - OPL 只消费 descriptor/refs，不持有 fundability verdict、authoring quality verdict、submission-ready export verdict 或 canonical grant artifact content。
 
 ## Domain Memory Descriptor / Locator
@@ -62,7 +62,7 @@ MAG 通过顶层 `domain_memory_descriptor` 暴露 OPL 可解析的 `family_doma
 
 实际 memory content、accepted/rejected writeback、fundability strategy、authoring quality verdict 和 submission-ready export verdict 继续由 MAG 持有。OPL 可以索引 locator/ref、展示 consumed-memory provenance、路由 writeback receipt；它不能保存 MAG memory content，不能接受或拒绝 MAG memory writeback，也不能用 memory 产生 fundability、authoring quality 或 export verdict。
 
-2026-05-12 状态：MAG 本仓的 migration/proposal/receipt surface、controlled consumed-memory proof、writeback receipt proof、operator receipt projection、OPL-hosted controlled grant stage attempt proof descriptor、标准 `family_domain_memory_ref.v1` adapter、`controlled_domain_memory_apply_proof` 和 repo-source layout audit 已落地。`domain_memory_descriptor` 是给 OPL family memory index 的薄引用面；`domain_memory_descriptor_locator` 仍是 MAG 侧 memory locator、migration plan、proposal、accept/reject、receipt 与 operator projection 的详细合同面。OPL fresh `domain-memory list --json` 已把 MAG 解析为 resolved descriptor，但当前仍是 repo-source proof contract / descriptor landed，不是 production provider-hosted grant soak completed；真实 proof instance、accepted/rejected receipt instance 和 memory body 仍由 workspace/runtime artifact root 产生，不进入 repo source。本轮 OPL+MAS 优先，MAG controlled grant stage soak 延后；延后期间不得退化 descriptor、sidecar、quality refs 或 direct skill parity。
+2026-05-13 状态：MAG 本仓的 migration/proposal/receipt surface、controlled consumed-memory proof、writeback receipt proof、runtime receipt evidence writer、operator receipt projection、OPL-hosted controlled grant stage attempt proof descriptor、标准 `family_domain_memory_ref.v1` adapter、`controlled_domain_memory_apply_proof` 和 repo-source layout audit 已落地。`domain_memory_descriptor` 是给 OPL family memory index 的薄引用面；`domain_memory_descriptor_locator` 仍是 MAG 侧 memory locator、migration plan、proposal、accept/reject、receipt 与 operator projection 的详细合同面。OPL fresh `domain-memory list --json` 已把 MAG 解析为 resolved descriptor；当前已具备 MAG-owned accepted/rejected receipt evidence 写入路径，但仍不是 production provider-hosted grant soak completed。真实 memory body 仍由 workspace/runtime artifact root 产生，不进入 repo source；后续 OPL-hosted controlled grant stage soak 必须返回 MAG owner receipt、typed blocker 或 no-regression evidence。
 
 ## Lifecycle Adapter
 

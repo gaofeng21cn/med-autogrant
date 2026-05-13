@@ -360,6 +360,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             [
                 "writeback_proposal_generator",
                 "accept_reject_command",
+                "runtime_receipt_evidence_writer",
                 "operator_receipt_projection",
             ],
         )
@@ -371,6 +372,10 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(accept_reject["surface_kind"], "domain_memory_accept_reject_command")
         self.assertEqual(accept_reject["decision_owner"], "med-autogrant")
         self.assertTrue(accept_reject["requires_mag_decision_before_store_mutation"])
+        receipt_writer = memory_locator["runtime_receipt_evidence_writer"]
+        self.assertEqual(receipt_writer["surface_kind"], "domain_memory_runtime_receipt_evidence_writer")
+        self.assertEqual(receipt_writer["output_surface_kind"], "mag_domain_memory_runtime_receipt_evidence")
+        self.assertEqual(receipt_writer["write_policy"], "runtime_receipt_instance_only_no_repo_write")
         operator_receipt = memory_locator["operator_receipt_projection"]
         self.assertEqual(operator_receipt["surface_kind"], "mag_domain_memory_operator_receipt_projection")
         self.assertEqual(

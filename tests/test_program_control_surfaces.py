@@ -74,7 +74,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(skeleton["repo_source_boundary"], ["agent", "contracts", "runtime", "docs"])
         self.assertEqual(
             skeleton["runtime_declares_only"],
-            ["sidecar", "projection_builder", "lifecycle_adapter"],
+            ["sidecar", "projection_builder", "lifecycle_adapter", "receipt_evidence_writer"],
         )
         self.assertEqual(skeleton["artifact_locator_ref"], "/product_entry_manifest/artifact_locator_contract")
         self.assertEqual(

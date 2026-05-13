@@ -79,7 +79,7 @@
 - 在这套框架中，Agent executor 是最小执行单位；`Codex CLI` 是当前第一公民 executor。Hermes-Agent 等其他 executor 是显式 opt-in adapter，必须产出可审计回执，不默认承诺行为或质量效果与 Codex CLI 等价。
 - OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
 - MAG 继续独立持有 grant truth、fundability verdict、authoring quality verdict、route owner 与 submission/export authority。
-- Domain memory apply 只允许投影 consumed memory refs、writeback proposal、MAG accept/reject decision、operator receipt projection 与 repo-source layout audit；不把 fundability verdict、真实 grant artifact 或 receipt instance 写进 repo source。
+- Domain memory apply 只允许投影 consumed memory refs、writeback proposal、MAG accept/reject decision、runtime receipt evidence、operator receipt projection 与 repo-source layout audit；不把 fundability verdict、真实 grant artifact 或 receipt instance 写进 repo source。
 - 旧 `OPL Runtime Manager`、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留；Temporal 作为 OPL production substrate 的必需性由 OPL Framework 持有，不由 MAG 改写为 grant-domain runtime truth。
 
 </details>
@@ -103,7 +103,7 @@
 - 如果外部 agent 或 OPL 需要直接读取 repo-tracked skill surface，用 repo-local launcher：`uv run --directory <med-autogrant-repo> medautogrant product skill-catalog --input <input_path> --format json`；返回的是一个 Med Auto Grant app skill 加底层 command contracts。
 - pre-authoring intake 用 `uv run --directory <med-autogrant-repo> medautogrant workspace initialize-intake --input <selection_input> --workspace-root <workspace_dir> --format json`；目录会带 workspace-local Git boundary，`workspace.json` 是 MAG canonical document。
 - 当前单一 skill descriptor 已携带可直接消费的 `runtime_continuity` envelope，并复用既有 `session_continuity` / `progress_projection` / `artifact_inventory` / `runtime_control` truth。
-- 当前 product-entry manifest 也携带 `controlled_domain_memory_apply_proof`，让 OPL 或 direct caller 可以审计 consumed grant-strategy memory refs、writeback proposal、accept/reject decision、operator receipt projection 与 repo-source layout，而不会拿到 memory body 或 grant artifact。
+- 当前 product-entry manifest 也携带 `controlled_domain_memory_apply_proof`，让 OPL 或 direct caller 可以审计 consumed grant-strategy memory refs、writeback proposal、accept/reject decision、runtime receipt evidence、operator receipt projection 与 repo-source layout，而不会拿到 memory body 或 grant artifact。
 - 当前可机读治理面包括 `workspace quality-scorecard`、`workspace quality-diff` 和 `pass autonomy-controller`。
 
 </details>

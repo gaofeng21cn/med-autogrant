@@ -240,6 +240,7 @@ class ProductSidecarTest(unittest.TestCase):
                 encoding="utf-8",
             )
             decision_task = Path(tmp_dir) / "decision-task.json"
+            runtime_root = Path(tmp_dir) / "runtime-state"
             decision_task.write_text(
                 json.dumps(
                     {
@@ -250,11 +251,14 @@ class ProductSidecarTest(unittest.TestCase):
                         "decision": "accepted",
                         "decision_reason": "Reusable stage strategy without grant artifact content.",
                         "memory_id": "review-risk-framing",
+                        "runtime_root": str(runtime_root),
                     }
                 ),
                 encoding="utf-8",
             )
             decision_payload = entry.dispatch_sidecar_task(task_path=decision_task)
+            receipt_evidence = decision_payload["sidecar_dispatch"]["result"]["receipt_evidence"]
+            receipt_exists = Path(receipt_evidence["receipt_instance_ref"]).exists()
 
         proposal = proposal_payload["sidecar_dispatch"]["result"]["proposal"]
         self.assertEqual(proposal["surface_kind"], "mag_domain_memory_writeback_proposal")
@@ -269,6 +273,11 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertTrue(receipt_projection["opl_consumes_receipt_ref_only"])
         self.assertFalse(receipt_projection["contains_memory_body"])
         self.assertFalse(receipt_projection["contains_quality_or_export_verdict"])
+        self.assertEqual(receipt_evidence["surface_kind"], "mag_domain_memory_runtime_receipt_evidence")
+        self.assertEqual(receipt_evidence["state"], "runtime_receipt_instance_written")
+        self.assertFalse(receipt_evidence["repo_tracked"])
+        self.assertFalse(receipt_evidence["contains_memory_body"])
+        self.assertTrue(receipt_exists)
 
     def test_sidecar_dispatch_fails_closed_on_unowned_action(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

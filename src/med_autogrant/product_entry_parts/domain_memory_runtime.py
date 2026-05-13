@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
+from med_autogrant.control_plane import resolve_runtime_state_root
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _require_nonempty_string,
@@ -15,6 +16,7 @@ from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateErro
 DOMAIN_MEMORY_WRITEBACK_PROPOSAL_KIND = "mag_domain_memory_writeback_proposal"
 DOMAIN_MEMORY_WRITEBACK_DECISION_KIND = "mag_domain_memory_writeback_decision"
 DOMAIN_MEMORY_OPERATOR_RECEIPT_PROJECTION_KIND = "mag_domain_memory_operator_receipt_projection"
+DOMAIN_MEMORY_RUNTIME_RECEIPT_EVIDENCE_KIND = "mag_domain_memory_runtime_receipt_evidence"
 DOMAIN_MEMORY_POLICY_REF = "docs/references/grant_strategy_memory_policy.md"
 
 STAGE_IDS = (
@@ -160,6 +162,99 @@ def build_domain_memory_writeback_decision(
     }
 
 
+def write_domain_memory_receipt_evidence(
+    *,
+    decision_payload: str | Path | Mapping[str, Any],
+    runtime_root: str | Path | None = None,
+) -> dict[str, Any]:
+    decision_body = _require_decision_body(_coerce_decision_payload(decision_payload))
+    proposal_id = _require_nonempty_string_from_mapping(
+        decision_body,
+        "proposal_id",
+        context="domain_memory_writeback_decision",
+    )
+    decision = _require_decision(
+        _require_nonempty_string_from_mapping(
+            decision_body,
+            "decision",
+            context="domain_memory_writeback_decision",
+        )
+    )
+    stage_id = _require_stage_id(
+        _require_nonempty_string_from_mapping(
+            decision_body,
+            "stage_id",
+            context="domain_memory_writeback_decision",
+        )
+    )
+    receipt_ref = _require_nonempty_string_from_mapping(
+        decision_body,
+        "decision_receipt_ref",
+        context="domain_memory_writeback_decision",
+    )
+    resolved_runtime_root = (
+        Path(runtime_root).expanduser().resolve()
+        if runtime_root is not None
+        else resolve_runtime_state_root()
+    )
+    receipt_path = resolved_runtime_root / "receipts" / "domain-memory" / f"{proposal_id}.json"
+    receipt = {
+        "surface_kind": DOMAIN_MEMORY_RUNTIME_RECEIPT_EVIDENCE_KIND,
+        "version": "v1",
+        "receipt_id": f"mag.domain_memory.receipt.{proposal_id}",
+        "state": "runtime_receipt_instance_written",
+        "owner": TARGET_DOMAIN_ID,
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "proposal_id": proposal_id,
+        "decision": decision,
+        "decision_owner": TARGET_DOMAIN_ID,
+        "stage_id": stage_id,
+        "policy_ref": _require_nonempty_string_from_mapping(
+            decision_body,
+            "policy_ref",
+            context="domain_memory_writeback_decision",
+        ),
+        "receipt_ref": receipt_ref,
+        "receipt_instance_ref": str(receipt_path),
+        "accepted_memory_ref": decision_body.get("accepted_memory_ref") if decision == "accepted" else None,
+        "rejected_memory_ref": decision_body.get("rejected_memory_ref") if decision == "rejected" else None,
+        "source_refs": [
+            "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+            "/product_entry_manifest/controlled_domain_memory_apply_proof",
+            "/product_entry_manifest/owner_receipt_contract",
+        ],
+        "artifact_mutation": "none",
+        "memory_mutation": "decision_receipt_metadata_only",
+        "lifecycle_mutation": "none",
+        "repo_tracked": False,
+        "contains_memory_body": False,
+        "contains_grant_artifact_content": False,
+        "contains_quality_or_export_verdict": False,
+        "forbidden_write_proof": {
+            "repo_receipt_instance_written": False,
+            "memory_body_written": False,
+            "grant_artifact_written": False,
+            "fundability_verdict_written": False,
+            "authoring_quality_verdict_written": False,
+            "submission_ready_export_verdict_written": False,
+        },
+        "opl_consumption": {
+            "role": "receipt_ref_consumer_only",
+            "can_hold_memory_content": False,
+            "can_issue_fundability_verdict": False,
+            "can_issue_authoring_quality_verdict": False,
+            "can_issue_export_verdict": False,
+        },
+    }
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return {
+        "ok": True,
+        "command": "domain-memory-receipt-evidence",
+        "domain_memory_receipt_evidence": receipt,
+    }
+
+
 def build_domain_memory_operator_projection_contract() -> dict[str, Any]:
     return {
         "surface_kind": DOMAIN_MEMORY_OPERATOR_RECEIPT_PROJECTION_KIND,
@@ -188,6 +283,21 @@ def build_domain_memory_operator_projection_contract() -> dict[str, Any]:
             "can_issue_export_verdict": False,
         },
     }
+
+
+def _coerce_decision_payload(payload: str | Path | Mapping[str, Any]) -> Mapping[str, Any]:
+    if isinstance(payload, Mapping):
+        return payload
+    return _read_json_mapping(Path(payload).expanduser().resolve(), context="domain_memory_writeback_decision")
+
+
+def _require_decision_body(payload: Mapping[str, Any]) -> Mapping[str, Any]:
+    if payload.get("surface_kind") == DOMAIN_MEMORY_WRITEBACK_DECISION_KIND:
+        return payload
+    body = payload.get("domain_memory_writeback_decision")
+    if isinstance(body, Mapping):
+        return body
+    raise WorkspaceStateError("domain_memory_writeback_decision 缺少 decision body。")
 
 
 def _require_proposal_body(payload: Mapping[str, Any]) -> Mapping[str, Any]:

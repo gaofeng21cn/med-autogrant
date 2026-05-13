@@ -40,6 +40,7 @@ from med_autogrant.product_entry_parts.domain_entry_loader import build_default_
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_writeback_decision,
     build_domain_memory_writeback_proposal,
+    write_domain_memory_receipt_evidence,
 )
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
@@ -301,4 +302,15 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             decision=decision,
             decision_reason=decision_reason,
             memory_id=memory_id,
+        )
+
+    def write_domain_memory_receipt_evidence(
+        self,
+        *,
+        decision_payload: str | Path | dict[str, Any],
+        runtime_root: str | Path | None = None,
+    ) -> dict[str, Any]:
+        return write_domain_memory_receipt_evidence(
+            decision_payload=decision_payload,
+            runtime_root=runtime_root,
         )

@@ -595,6 +595,15 @@ def _build_product_command_catalog(input_path: Path) -> dict[str, str]:
             "--format",
             "json",
         ),
+        "domain_memory_receipt_evidence": public_cli_command(
+            "product-domain-memory-receipt-evidence",
+            "--decision",
+            "<decision-json>",
+            "--runtime-root",
+            "<runtime-state-root>",
+            "--format",
+            "json",
+        ),
     }
 
 def _validate_runtime_continuity_alignment(

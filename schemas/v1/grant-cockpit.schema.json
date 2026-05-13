@@ -76,7 +76,8 @@
         "build_opl_handoff",
         "build_submission_ready_package",
         "domain_memory_writeback_proposal",
-        "domain_memory_writeback_decision"
+        "domain_memory_writeback_decision",
+        "domain_memory_receipt_evidence"
       ],
       "properties": {
         "grant_progress": {
@@ -110,6 +111,9 @@
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "domain_memory_writeback_decision": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "domain_memory_receipt_evidence": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         }
       }

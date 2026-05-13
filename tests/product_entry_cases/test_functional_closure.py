@@ -48,16 +48,19 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
 
         fixtures = proof["controlled_receipt_instances"]
         self.assertEqual(fixtures["surface_kind"], "mag_domain_memory_controlled_receipt_instances")
-        self.assertEqual(fixtures["state"], "accepted_rejected_fixture_instances_projected")
+        self.assertEqual(fixtures["state"], "runtime_receipt_evidence_path_verified")
         self.assertFalse(fixtures["repo_tracked_real_receipt_instance"])
+        self.assertTrue(fixtures["runtime_receipt_instance_writable"])
         self.assertFalse(fixtures["contains_memory_body"])
         self.assertFalse(fixtures["contains_quality_or_export_verdict"])
         self.assertEqual(fixtures["accepted_receipt"]["decision"], "accepted")
         self.assertEqual(fixtures["rejected_receipt"]["decision"], "rejected")
         self.assertIsNotNone(fixtures["accepted_receipt"]["accepted_memory_ref"])
+        self.assertIn("domain-memory/accepted-strategy-context-fixture.json", fixtures["accepted_receipt_instance_ref"])
         self.assertIsNone(fixtures["accepted_receipt"]["rejected_memory_ref"])
         self.assertIsNone(fixtures["rejected_receipt"]["accepted_memory_ref"])
         self.assertIsNotNone(fixtures["rejected_receipt"]["rejected_memory_ref"])
+        self.assertIn("domain-memory/rejected-strategy-context-fixture.json", fixtures["rejected_receipt_instance_ref"])
         self.assertEqual(
             fixtures["missing_receipt_blocker"]["blocker_kind"],
             "domain_memory_owner_receipt_required",
@@ -111,7 +114,13 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertEqual(audit["layout_state"], "physical_skeleton_follow_through_landed_minimum_anchors")
         self.assertFalse(follow_through["moves_workspace_artifacts"])
         self.assertFalse(follow_through["moves_runtime_receipt_instances"])
-        self.assertEqual(follow_through["legacy_active_path_policy"], "history_or_tombstone_only_after_no_active_caller")
+        self.assertEqual(follow_through["legacy_active_path_policy"], "physically_removed_or_history_tombstone_only")
+        self.assertEqual(audit["retired_active_path_policy"], "physically_removed_or_history_tombstone_only")
+        self.assertEqual(audit["forbidden_active_path_residue"], [])
+        residue_states = {entry["path_family"]: entry["state"] for entry in audit["legacy_active_path_residue"]}
+        self.assertEqual(residue_states["default Hermes active path"], "tombstone_only")
+        self.assertEqual(residue_states["default Gateway active path"], "physically_removed_from_active_source")
+        self.assertEqual(residue_states["default local-manager active path"], "physically_removed_from_active_source")
         for root_key, root in follow_through["roots"].items():
             with self.subTest(root=root_key):
                 self.assertTrue((REPO_ROOT / root["anchor_ref"]).exists())

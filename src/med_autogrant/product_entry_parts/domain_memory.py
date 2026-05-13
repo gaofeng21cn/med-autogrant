@@ -278,6 +278,18 @@ def build_controlled_domain_memory_apply_proof(
             ],
             "decision_receipt_ref_template": receipt_locator["decision_receipt_ref_template"],
         },
+        "runtime_receipt_evidence_projection": {
+            "surface_kind": "domain_memory_runtime_receipt_evidence_projection",
+            "command_id": "mag.domain_memory.runtime_receipt_evidence.v1",
+            "command": (
+                "uv run python -m med_autogrant product domain-memory-receipt-evidence "
+                "--decision <decision-json> --runtime-root <runtime-state-root> --format json"
+            ),
+            "output_surface_kind": "mag_domain_memory_runtime_receipt_evidence",
+            "write_policy": "runtime_receipt_instance_only_no_repo_write",
+            "receipt_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+            "requires_mag_decision_payload": True,
+        },
         "operator_receipt_projection": dict(operator_receipt_projection),
         "writeback_receipt_refs": dict(
             _require_mapping_from_locator(domain_memory_descriptor_locator, "writeback_receipt_refs")
@@ -320,8 +332,20 @@ def _build_controlled_receipt_instances(
         "surface_kind": "mag_domain_memory_controlled_receipt_instances",
         "version": "v1",
         "fixture_id": "mag.domain_memory.controlled_receipt_instances.v1",
-        "state": "accepted_rejected_fixture_instances_projected",
+        "state": "runtime_receipt_evidence_path_verified",
         "receipt_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+        "runtime_receipt_evidence_command_ref": (
+            "/product_entry_manifest/controlled_domain_memory_apply_proof/"
+            "runtime_receipt_evidence_projection"
+        ),
+        "accepted_receipt_instance_ref": (
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+            "domain-memory/accepted-strategy-context-fixture.json"
+        ),
+        "rejected_receipt_instance_ref": (
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+            "domain-memory/rejected-strategy-context-fixture.json"
+        ),
         "accepted_receipt": _build_memory_receipt_fixture(
             proposal_id="accepted-strategy-context-fixture",
             decision="accepted",
@@ -343,10 +367,11 @@ def _build_controlled_receipt_instances(
             "opl_can_synthesize_receipt": False,
         },
         "repo_tracked_real_receipt_instance": False,
+        "runtime_receipt_instance_writable": True,
         "contains_memory_body": False,
         "contains_grant_artifact_content": False,
         "contains_quality_or_export_verdict": False,
-        "opl_consumption_policy": "receipt_fixture_shape_only_ref_consumption",
+        "opl_consumption_policy": "runtime_receipt_ref_only_no_memory_body",
     }
 
 
@@ -425,13 +450,30 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
         "boundary_keys": list(boundary_refs),
         "physical_move_required": "low_risk_source_moves_only_after_path_compatibility_audit",
         "repo_source_policy": "existing_repo_source_mapped_to_standard_agent_contracts_runtime_docs_boundaries",
-        "retired_active_path_policy": "explicit_proof_provenance_history_only",
-        "forbidden_active_path_residue": [
-            "default Hermes active path",
-            "default Gateway active path",
-            "default local-manager active path",
-            "repo-local host-agent runtime as product owner",
+        "retired_active_path_policy": "physically_removed_or_history_tombstone_only",
+        "legacy_active_path_residue": [
+            {
+                "path_family": "default Hermes active path",
+                "state": "tombstone_only",
+                "evidence_ref": "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
+            },
+            {
+                "path_family": "default Gateway active path",
+                "state": "physically_removed_from_active_source",
+                "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
+            },
+            {
+                "path_family": "default local-manager active path",
+                "state": "physically_removed_from_active_source",
+                "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
+            },
+            {
+                "path_family": "repo-local host-agent runtime as product owner",
+                "state": "physically_removed_from_active_source",
+                "evidence_ref": "docs/status.md#旧面退役校准",
+            },
         ],
+        "forbidden_active_path_residue": [],
         "source_ref_status": [
             {
                 "boundary": boundary,

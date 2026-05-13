@@ -1688,7 +1688,8 @@
             "grant_direct_entry",
             "grant_user_loop",
             "domain_memory_writeback_proposal",
-            "domain_memory_writeback_decision"
+            "domain_memory_writeback_decision",
+            "domain_memory_receipt_evidence"
           ],
           "properties": {
             "product_status": {
@@ -1710,6 +1711,9 @@
               "$ref": "common.schema.json#/$defs/nonEmptyString"
             },
             "domain_memory_writeback_decision": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "domain_memory_receipt_evidence": {
               "$ref": "common.schema.json#/$defs/nonEmptyString"
             }
           }
@@ -2888,6 +2892,7 @@
         "consumed_grant_strategy_memory_refs",
         "writeback_proposal_projection",
         "accept_reject_decision_projection",
+        "runtime_receipt_evidence_projection",
         "operator_receipt_projection",
         "writeback_receipt_refs",
         "receipt_locator",
@@ -2986,6 +2991,31 @@
         "operator_receipt_projection": {
           "$ref": "#/$defs/domainMemoryDescriptorLocator/properties/operator_receipt_projection"
         },
+        "runtime_receipt_evidence_projection": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "command_id",
+            "output_surface_kind",
+            "write_policy",
+            "requires_mag_decision_payload"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "domain_memory_runtime_receipt_evidence_projection"
+            },
+            "output_surface_kind": {
+              "const": "mag_domain_memory_runtime_receipt_evidence"
+            },
+            "write_policy": {
+              "const": "runtime_receipt_instance_only_no_repo_write"
+            },
+            "requires_mag_decision_payload": {
+              "const": true
+            }
+          }
+        },
         "controlled_receipt_instances": {
           "type": "object",
           "additionalProperties": true,
@@ -2996,6 +3026,7 @@
             "rejected_receipt",
             "missing_receipt_blocker",
             "repo_tracked_real_receipt_instance",
+            "runtime_receipt_instance_writable",
             "contains_memory_body",
             "contains_quality_or_export_verdict"
           ],
@@ -3004,10 +3035,13 @@
               "const": "mag_domain_memory_controlled_receipt_instances"
             },
             "state": {
-              "const": "accepted_rejected_fixture_instances_projected"
+              "const": "runtime_receipt_evidence_path_verified"
             },
             "repo_tracked_real_receipt_instance": {
               "const": false
+            },
+            "runtime_receipt_instance_writable": {
+              "const": true
             },
             "contains_memory_body": {
               "const": false
@@ -3048,7 +3082,7 @@
               "$ref": "common.schema.json#/$defs/nonEmptyString"
             },
             "retired_active_path_policy": {
-              "const": "explicit_proof_provenance_history_only"
+              "const": "physically_removed_or_history_tombstone_only"
             },
             "source_ref_status": {
               "type": "array",
@@ -3462,7 +3496,8 @@
         "moves_workspace_artifacts",
         "moves_runtime_receipt_instances",
         "moves_memory_body",
-        "legacy_active_path_policy"
+        "legacy_active_path_policy",
+        "legacy_active_path_residue"
       ],
       "properties": {
         "surface_kind": {
@@ -3475,7 +3510,21 @@
         "moves_runtime_receipt_instances": {"const": false},
         "moves_memory_body": {"const": false},
         "legacy_active_path_policy": {
-          "const": "history_or_tombstone_only_after_no_active_caller"
+          "const": "physically_removed_or_history_tombstone_only"
+        },
+        "legacy_active_path_residue": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["path_family", "state", "evidence_ref"],
+            "properties": {
+              "state": {
+                "enum": ["physically_removed_from_active_source", "tombstone_only"]
+              }
+            }
+          },
+          "minItems": 1
         }
       }
     },

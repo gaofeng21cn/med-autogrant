@@ -263,6 +263,7 @@ def test_mag_adoption_contract_declares_domain_memory_locator_without_opl_conten
     assert migration_plan["runtime_apply_surfaces"] == [
         "writeback proposal generator",
         "MAG memory acceptance command",
+        "runtime receipt evidence writer",
         "operator projection of accepted/rejected writeback receipts",
     ]
     assert migration_plan["pending_runtime_work"] == []
@@ -278,6 +279,11 @@ def test_mag_adoption_contract_declares_domain_memory_locator_without_opl_conten
     assert accept_reject["surface_kind"] == "domain_memory_accept_reject_command"
     assert accept_reject["decision_owner"] == "med-autogrant"
     assert accept_reject["requires_mag_decision_before_store_mutation"] is True
+
+    receipt_writer = memory["runtime_receipt_evidence_writer"]
+    assert receipt_writer["surface_kind"] == "domain_memory_runtime_receipt_evidence_writer"
+    assert receipt_writer["output_surface_kind"] == "mag_domain_memory_runtime_receipt_evidence"
+    assert receipt_writer["write_policy"] == "runtime_receipt_instance_only_no_repo_write"
 
     operator_projection = memory["operator_receipt_projection"]
     assert operator_projection["surface_kind"] == "mag_domain_memory_operator_receipt_projection"
@@ -451,6 +457,12 @@ def test_mag_adoption_contract_declares_controlled_memory_and_opl_hosted_attempt
         "/product_entry_manifest/controlled_domain_memory_apply_proof/"
         "accept_reject_decision_projection"
     )
+    assert apply_proof["runtime_receipt_evidence_surface"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof/"
+        "runtime_receipt_evidence_projection"
+    )
+    assert apply_proof["controlled_receipt_instances_state"] == "runtime_receipt_evidence_path_verified"
+    assert apply_proof["runtime_receipt_instance_writable"] is True
     assert apply_proof["operator_receipt_projection_surface"] == (
         "/product_entry_manifest/controlled_domain_memory_apply_proof/"
         "operator_receipt_projection"
@@ -487,10 +499,14 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
     assert audit["layout_state"] == "physical_skeleton_follow_through_landed_minimum_anchors"
     assert audit["boundary_keys"] == ["agent", "contracts", "runtime", "docs"]
     assert audit["physical_move_required"] == "low_risk_source_moves_only_after_path_compatibility_audit"
-    assert audit["retired_active_path_policy"] == "explicit_proof_provenance_history_only"
-    assert "default Hermes active path" in audit["forbidden_active_path_residue"]
-    assert "default Gateway active path" in audit["forbidden_active_path_residue"]
-    assert "default local-manager active path" in audit["forbidden_active_path_residue"]
+    assert audit["retired_active_path_policy"] == "physically_removed_or_history_tombstone_only"
+    assert audit["forbidden_active_path_residue"] == []
+    assert {entry["path_family"]: entry["state"] for entry in audit["legacy_active_path_residue"]} == {
+        "default Hermes active path": "tombstone_only",
+        "default Gateway active path": "physically_removed_from_active_source",
+        "default local-manager active path": "physically_removed_from_active_source",
+        "repo-local host-agent runtime as product owner": "physically_removed_from_active_source",
+    }
     for boundary in audit["boundary_keys"]:
         assert (REPO_ROOT / boundary).is_dir()
         assert boundary in audit["source_refs_by_boundary"]

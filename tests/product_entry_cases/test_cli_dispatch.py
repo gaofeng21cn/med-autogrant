@@ -356,3 +356,42 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             decision_reason="Reusable strategy memory.",
             memory_id="review-risk-framing",
         )
+
+    def test_domain_memory_receipt_evidence_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "domain-memory-receipt-evidence",
+            "domain_memory_receipt_evidence": {
+                "surface_kind": "mag_domain_memory_runtime_receipt_evidence",
+            },
+        }
+
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.write_domain_memory_receipt_evidence.return_value = expected_payload
+
+            stdout_buffer = StringIO()
+            stderr_buffer = StringIO()
+            with redirect_stdout(stdout_buffer), redirect_stderr(stderr_buffer):
+                exit_code = main(
+                    [
+                        "product",
+                        "domain-memory-receipt-evidence",
+                        "--decision",
+                        "/tmp/decision.json",
+                        "--runtime-root",
+                        "/tmp/runtime-state",
+                        "--format",
+                        "json",
+                    ]
+                )
+            stdout = stdout_buffer.getvalue()
+            stderr = stderr_buffer.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.write_domain_memory_receipt_evidence.assert_called_once_with(
+            decision_payload="/tmp/decision.json",
+            runtime_root="/tmp/runtime-state",
+        )

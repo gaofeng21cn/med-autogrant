@@ -161,6 +161,18 @@ class ProductEntryDomainMemoryDescriptorTest(unittest.TestCase):
         )
         self.assertTrue(proof["accept_reject_decision_projection"]["requires_mag_decision_before_store_mutation"])
         self.assertEqual(
+            proof["runtime_receipt_evidence_projection"]["surface_kind"],
+            "domain_memory_runtime_receipt_evidence_projection",
+        )
+        self.assertEqual(
+            proof["runtime_receipt_evidence_projection"]["output_surface_kind"],
+            "mag_domain_memory_runtime_receipt_evidence",
+        )
+        self.assertEqual(
+            proof["runtime_receipt_evidence_projection"]["write_policy"],
+            "runtime_receipt_instance_only_no_repo_write",
+        )
+        self.assertEqual(
             proof["operator_receipt_projection"],
             manifest["domain_memory_descriptor_locator"]["operator_receipt_projection"],
         )
@@ -176,10 +188,17 @@ class ProductEntryDomainMemoryDescriptorTest(unittest.TestCase):
         self.assertEqual(layout_audit["surface_kind"], "mag_repo_source_layout_audit")
         self.assertEqual(layout_audit["layout_state"], "physical_skeleton_follow_through_landed_minimum_anchors")
         self.assertEqual(layout_audit["boundary_keys"], ["agent", "contracts", "runtime", "docs"])
-        self.assertEqual(layout_audit["retired_active_path_policy"], "explicit_proof_provenance_history_only")
-        self.assertIn("default Hermes active path", layout_audit["forbidden_active_path_residue"])
-        self.assertIn("default Gateway active path", layout_audit["forbidden_active_path_residue"])
-        self.assertIn("default local-manager active path", layout_audit["forbidden_active_path_residue"])
+        self.assertEqual(layout_audit["retired_active_path_policy"], "physically_removed_or_history_tombstone_only")
+        self.assertEqual(layout_audit["forbidden_active_path_residue"], [])
+        self.assertEqual(
+            {entry["path_family"]: entry["state"] for entry in layout_audit["legacy_active_path_residue"]},
+            {
+                "default Hermes active path": "tombstone_only",
+                "default Gateway active path": "physically_removed_from_active_source",
+                "default local-manager active path": "physically_removed_from_active_source",
+                "repo-local host-agent runtime as product owner": "physically_removed_from_active_source",
+            },
+        )
         for ref_status in layout_audit["source_ref_status"]:
             with self.subTest(source_ref=ref_status["path"]):
                 self.assertTrue(ref_status["exists"])
