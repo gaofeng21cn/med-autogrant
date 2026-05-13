@@ -214,6 +214,9 @@ def build_controlled_domain_memory_apply_proof(
         "operator_receipt_projection",
     )
     receipt_locator = _require_mapping_from_locator(domain_memory_descriptor_locator, "receipt_locator")
+    controlled_receipt_instances = _build_controlled_receipt_instances(
+        receipt_locator=receipt_locator,
+    )
     stage_refs = [
         stage_ref
         for stage_ref in domain_memory_descriptor_locator.get("stage_descriptor_refs") or []
@@ -280,6 +283,7 @@ def build_controlled_domain_memory_apply_proof(
             _require_mapping_from_locator(domain_memory_descriptor_locator, "writeback_receipt_refs")
         ),
         "receipt_locator": dict(receipt_locator),
+        "controlled_receipt_instances": controlled_receipt_instances,
         "repo_source_layout_audit": _build_repo_source_layout_audit(),
         "repo_payload_policy": {
             "repo_tracked_real_memory_body": False,
@@ -308,22 +312,101 @@ def _require_mapping_from_locator(locator: Mapping[str, Any], key: str) -> Mappi
     return value
 
 
+def _build_controlled_receipt_instances(
+    *,
+    receipt_locator: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_domain_memory_controlled_receipt_instances",
+        "version": "v1",
+        "fixture_id": "mag.domain_memory.controlled_receipt_instances.v1",
+        "state": "accepted_rejected_fixture_instances_projected",
+        "receipt_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator",
+        "accepted_receipt": _build_memory_receipt_fixture(
+            proposal_id="accepted-strategy-context-fixture",
+            decision="accepted",
+            receipt_locator=receipt_locator,
+        ),
+        "rejected_receipt": _build_memory_receipt_fixture(
+            proposal_id="rejected-strategy-context-fixture",
+            decision="rejected",
+            receipt_locator=receipt_locator,
+        ),
+        "missing_receipt_blocker": {
+            "blocker_kind": "domain_memory_owner_receipt_required",
+            "blocker_id": "mag_domain_memory_missing_owner_receipt",
+            "owner": TARGET_DOMAIN_ID,
+            "required_surface": "mag_domain_memory_writeback_decision",
+            "required_receipt_locator_ref": (
+                "/product_entry_manifest/domain_memory_descriptor_locator/receipt_locator"
+            ),
+            "opl_can_synthesize_receipt": False,
+        },
+        "repo_tracked_real_receipt_instance": False,
+        "contains_memory_body": False,
+        "contains_grant_artifact_content": False,
+        "contains_quality_or_export_verdict": False,
+        "opl_consumption_policy": "receipt_fixture_shape_only_ref_consumption",
+    }
+
+
+def _build_memory_receipt_fixture(
+    *,
+    proposal_id: str,
+    decision: str,
+    receipt_locator: Mapping[str, Any],
+) -> dict[str, Any]:
+    decision_ref_template = _require_nonempty_string_from_mapping(
+        receipt_locator,
+        "decision_receipt_ref_template",
+        context="domain_memory_descriptor_locator.receipt_locator",
+    )
+    return {
+        "surface_kind": "mag_domain_memory_writeback_decision",
+        "proposal_id": proposal_id,
+        "decision": decision,
+        "decision_owner": TARGET_DOMAIN_ID,
+        "stage_id": "review_and_rebuttal",
+        "receipt_ref": decision_ref_template.replace("<proposal_id>", proposal_id),
+        "accepted_memory_ref": (
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
+            f"accepted/{proposal_id}.json"
+            if decision == "accepted"
+            else None
+        ),
+        "rejected_memory_ref": (
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/"
+            f"rejected/{proposal_id}.json"
+            if decision == "rejected"
+            else None
+        ),
+        "contains_memory_body": False,
+        "contains_grant_artifact_content": False,
+        "contains_quality_or_export_verdict": False,
+        "repo_tracked": False,
+    }
+
+
 def _build_repo_source_layout_audit() -> dict[str, Any]:
     boundary_refs = {
         "agent": [
+            "agent/README.md",
             "src/med_autogrant/domain_entry.py",
             "src/med_autogrant/domain_entry_contract.py",
             "src/med_autogrant/stage_control_plane.py",
         ],
         "contracts": [
+            "contracts/README.md",
             "contracts/runtime-program/current-program.json",
             "contracts/runtime-program/domain-memory-seed-fixture.json",
             "contracts/runtime-program/opl-family-contract-adoption.json",
             "schemas/v1/product-entry-manifest.schema.json",
         ],
         "runtime": [
+            "runtime/README.md",
             "src/med_autogrant/product_entry_parts/domain_memory.py",
             "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
+            "src/med_autogrant/product_entry_parts/functional_closure.py",
             "src/med_autogrant/product_entry_parts/sidecar.py",
         ],
         "docs": [
@@ -338,9 +421,9 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
     return {
         "surface_kind": "mag_repo_source_layout_audit",
         "audit_id": "mag.standard_domain_agent_skeleton.repo_source_layout.audit.v1",
-        "layout_state": "physical_skeleton_roots_present_descriptor_mapping_only",
+        "layout_state": "physical_skeleton_follow_through_landed_minimum_anchors",
         "boundary_keys": list(boundary_refs),
-        "physical_move_required": False,
+        "physical_move_required": "low_risk_source_moves_only_after_path_compatibility_audit",
         "repo_source_policy": "existing_repo_source_mapped_to_standard_agent_contracts_runtime_docs_boundaries",
         "retired_active_path_policy": "explicit_proof_provenance_history_only",
         "forbidden_active_path_residue": [

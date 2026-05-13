@@ -83,6 +83,25 @@ class ProductSidecarTest(unittest.TestCase):
             export["repo_source_layout_audit"],
             apply_proof["repo_source_layout_audit"],
         )
+        self.assertEqual(export["owner_receipt_contract"]["surface_kind"], "mag_owner_receipt_contract")
+        self.assertEqual(
+            export["owner_receipt_contract"]["allowed_return_shapes"],
+            ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
+        )
+        self.assertFalse(export["owner_receipt_contract"]["forbidden_write_proof"]["opl_can_write_grant_truth"])
+        self.assertEqual(
+            export["lifecycle_guarded_apply_proof"]["surface_kind"],
+            "mag_lifecycle_guarded_apply_proof",
+        )
+        self.assertEqual(
+            [operation["operation"] for operation in export["lifecycle_guarded_apply_proof"]["operations"]],
+            ["cleanup", "restore", "retention"],
+        )
+        self.assertEqual(
+            export["physical_skeleton_follow_through"]["surface_kind"],
+            "mag_physical_skeleton_follow_through",
+        )
+        self.assertFalse(export["physical_skeleton_follow_through"]["moves_workspace_artifacts"])
         self.assertFalse(
             export["controlled_stage_attempt_projection"]["opl_consumption_contract"][
                 "can_hold_fundability_verdict"

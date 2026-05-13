@@ -66,6 +66,9 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "controlled stage attempt projection and sidecar receipt refs",
             framework_boundary["framework_consumed_projection"],
         )
+        self.assertIn("owner_receipt_contract", framework_boundary["framework_consumed_projection"])
+        self.assertIn("lifecycle_guarded_apply_proof", framework_boundary["framework_consumed_projection"])
+        self.assertIn("physical_skeleton_follow_through", framework_boundary["framework_consumed_projection"])
         skeleton = framework_boundary["standard_domain_agent_skeleton"]
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
         self.assertEqual(skeleton["repo_source_boundary"], ["agent", "contracts", "runtime", "docs"])
@@ -81,6 +84,18 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(
             skeleton["controlled_domain_memory_apply_proof_ref"],
             "/product_entry_manifest/controlled_domain_memory_apply_proof",
+        )
+        self.assertEqual(
+            skeleton["owner_receipt_contract_ref"],
+            "/product_entry_manifest/owner_receipt_contract",
+        )
+        self.assertEqual(
+            skeleton["lifecycle_guarded_apply_proof_ref"],
+            "/product_entry_manifest/lifecycle_guarded_apply_proof",
+        )
+        self.assertEqual(
+            skeleton["physical_skeleton_follow_through_ref"],
+            "/product_entry_manifest/physical_skeleton_follow_through",
         )
         self.assertEqual(
             skeleton["repo_source_layout_audit_ref"],
@@ -321,6 +336,9 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "controlled_domain_memory_apply_proof",
             stage_led_framework["consumes_mag_surfaces"],
         )
+        self.assertIn("owner_receipt_contract", stage_led_framework["consumes_mag_surfaces"])
+        self.assertIn("lifecycle_guarded_apply_proof", stage_led_framework["consumes_mag_surfaces"])
+        self.assertIn("physical_skeleton_follow_through", stage_led_framework["consumes_mag_surfaces"])
         self.assertIn(
             "repo_source_layout_audit",
             stage_led_framework["consumes_mag_surfaces"],

@@ -49,6 +49,7 @@ from med_autogrant.product_entry_parts.manifest_runtime_companions import build_
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
 from med_autogrant.product_entry_parts import domain_agent_skeleton
 from med_autogrant.product_entry_parts.domain_memory import build_manifest_domain_memory_surfaces
+from med_autogrant.product_entry_parts.functional_closure import build_manifest_functional_closure_surfaces
 from med_autogrant.product_entry_parts.executor_defaults import build_executor_defaults_surface
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_artifact_inventory_surface,
@@ -795,32 +796,18 @@ class ProductEntryManifestBuilderMixin:
         domain_memory_surfaces = build_manifest_domain_memory_surfaces(
             progress_payload=progress_payload, verification_identity=verification_identity
         )
-        domain_memory_descriptor_locator = domain_memory_surfaces["domain_memory_descriptor_locator"]
-        standard_domain_agent_skeleton = domain_agent_skeleton.build_standard_domain_agent_skeleton(
+        functional_closure_surfaces = build_manifest_functional_closure_surfaces(
             input_path=resolved_input_path,
-            grant_run_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "grant_run_id",
-                context="grant-progress",
-            ),
-            workspace_id=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "workspace_id",
-                context="grant-progress",
-            ),
-            draft_id=_optional_string_from_mapping(verification_identity, "draft_id"),
-            lifecycle_stage=_require_nonempty_string_from_mapping(
-                progress_payload,
-                "lifecycle_stage",
-                context="grant-progress",
-            ),
+            progress_payload=progress_payload,
+            verification_identity=verification_identity,
             family_stage_control_plane=family_stage_control_plane,
             runtime_control=runtime_control,
             progress_projection=manifest_progress_projection,
             artifact_locator_contract=artifact_locator_contract,
             controlled_stage_attempt_projection=controlled_stage_attempt_projection,
-            domain_memory_descriptor_locator=domain_memory_descriptor_locator,
+            domain_memory_surfaces=domain_memory_surfaces,
         )
+        standard_domain_agent_skeleton = functional_closure_surfaces["standard_domain_agent_skeleton"]
         skill_catalog = build_product_entry_skill_catalog(
             resolved_input_path=resolved_input_path,
             runtime_summary=runtime_summary,
@@ -978,7 +965,7 @@ class ProductEntryManifestBuilderMixin:
                 "controlled_stage_attempt_projection": controlled_stage_attempt_projection,
                 "controlled_soak_no_regression_attempt": domain_agent_skeleton.build_controlled_soak_no_regression_attempt(),
                 **domain_memory_surfaces,
-                "standard_domain_agent_skeleton": standard_domain_agent_skeleton,
+                **functional_closure_surfaces,
             },
         )
         payload = {

@@ -126,6 +126,9 @@ def build_standard_domain_agent_skeleton(
         "controlled_stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
         "domain_memory_descriptor_locator_ref": "/product_entry_manifest/domain_memory_descriptor_locator",
         "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
+        "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+        "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
+        "physical_skeleton_follow_through_ref": "/product_entry_manifest/physical_skeleton_follow_through",
         "repo_source_layout_audit_ref": (
             "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit"
         ),
@@ -147,6 +150,9 @@ def build_standard_domain_agent_skeleton(
             "/product_entry_manifest/artifact_locator_contract",
             "/product_entry_manifest/controlled_stage_attempt_projection",
             "/product_entry_manifest/domain_memory_descriptor_locator",
+            "/product_entry_manifest/owner_receipt_contract",
+            "/product_entry_manifest/lifecycle_guarded_apply_proof",
+            "/product_entry_manifest/physical_skeleton_follow_through",
         ],
         "authority_boundary": {
             "opl_role": "descriptor_and_ref_consumer_only",
@@ -566,6 +572,7 @@ def build_controlled_stage_attempt_projection(
         "draft_id": draft_id,
         "lifecycle_stage": lifecycle_stage,
         "maps_to_opl_contract": "opl_family_runtime_attempt_contract.v1",
+        "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
         "source_refs": [
             "/product_entry_manifest/task_lifecycle",
             "/product_entry_manifest/progress_projection",
@@ -660,6 +667,7 @@ def build_controlled_stage_attempt_projection(
                 "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
                 f"{grant_run_id}/stage-attempt/{lifecycle_stage}.json"
             ),
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
         },
         "opl_consumption_contract": {
             "consumes": [
@@ -692,6 +700,7 @@ def build_controlled_soak_no_regression_attempt() -> dict[str, Any]:
         "target_domain_id": TARGET_DOMAIN_ID,
         "state": "deferred_typed_blocker",
         "controlled_soak_apply_contract_open": True,
+        "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
         "deferred_blocker": {
             "blocker_kind": "domain_owner_receipt_required",
             "blocker_id": "mag_controlled_soak_domain_receipt_required",

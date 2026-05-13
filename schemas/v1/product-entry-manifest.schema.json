@@ -2891,6 +2891,7 @@
         "operator_receipt_projection",
         "writeback_receipt_refs",
         "receipt_locator",
+        "controlled_receipt_instances",
         "repo_source_layout_audit",
         "repo_payload_policy",
         "authority_boundary"
@@ -2985,6 +2986,37 @@
         "operator_receipt_projection": {
           "$ref": "#/$defs/domainMemoryDescriptorLocator/properties/operator_receipt_projection"
         },
+        "controlled_receipt_instances": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "state",
+            "accepted_receipt",
+            "rejected_receipt",
+            "missing_receipt_blocker",
+            "repo_tracked_real_receipt_instance",
+            "contains_memory_body",
+            "contains_quality_or_export_verdict"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_domain_memory_controlled_receipt_instances"
+            },
+            "state": {
+              "const": "accepted_rejected_fixture_instances_projected"
+            },
+            "repo_tracked_real_receipt_instance": {
+              "const": false
+            },
+            "contains_memory_body": {
+              "const": false
+            },
+            "contains_quality_or_export_verdict": {
+              "const": false
+            }
+          }
+        },
         "repo_source_layout_audit": {
           "type": "object",
           "additionalProperties": true,
@@ -3003,7 +3035,7 @@
               "const": "mag_repo_source_layout_audit"
             },
             "layout_state": {
-              "const": "physical_skeleton_roots_present_descriptor_mapping_only"
+              "const": "physical_skeleton_follow_through_landed_minimum_anchors"
             },
             "boundary_keys": {
               "type": "array",
@@ -3013,7 +3045,7 @@
               "minItems": 4
             },
             "physical_move_required": {
-              "const": false
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
             },
             "retired_active_path_policy": {
               "const": "explicit_proof_provenance_history_only"
@@ -3130,6 +3162,9 @@
         },
         "controlled_soak_apply_contract_open": {
           "const": true
+        },
+        "owner_receipt_contract_ref": {
+          "const": "/product_entry_manifest/owner_receipt_contract"
         },
         "deferred_blocker": {
           "type": "object",
@@ -3257,6 +3292,15 @@
         "controlled_domain_memory_apply_proof_ref": {
           "const": "/product_entry_manifest/controlled_domain_memory_apply_proof"
         },
+        "owner_receipt_contract_ref": {
+          "const": "/product_entry_manifest/owner_receipt_contract"
+        },
+        "lifecycle_guarded_apply_proof_ref": {
+          "const": "/product_entry_manifest/lifecycle_guarded_apply_proof"
+        },
+        "physical_skeleton_follow_through_ref": {
+          "const": "/product_entry_manifest/physical_skeleton_follow_through"
+        },
         "repo_source_layout_audit_ref": {
           "const": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit"
         },
@@ -3279,6 +3323,159 @@
               "const": false
             }
           }
+        }
+      }
+    },
+    "ownerReceiptContract": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "contract_id",
+        "target_domain_id",
+        "receipt_owner",
+        "maps_to_opl_contract",
+        "allowed_return_shapes",
+        "receipt_ref_templates",
+        "forbidden_write_proof"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_owner_receipt_contract"
+        },
+        "contract_id": {
+          "const": "mag.owner_receipt.contract.v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "receipt_owner": {
+          "const": "med-autogrant"
+        },
+        "maps_to_opl_contract": {
+          "const": "opl_domain_owner_receipt_envelope.v1"
+        },
+        "allowed_return_shapes": {
+          "type": "array",
+          "items": {
+            "enum": ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"]
+          },
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "forbidden_write_proof": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "opl_can_write_grant_truth",
+            "opl_can_write_grant_artifacts",
+            "opl_can_write_memory_body",
+            "opl_can_hold_fundability_verdict",
+            "opl_can_hold_authoring_quality_verdict",
+            "opl_can_hold_submission_ready_export_verdict"
+          ],
+          "properties": {
+            "opl_can_write_grant_truth": {"const": false},
+            "opl_can_write_grant_artifacts": {"const": false},
+            "opl_can_write_memory_body": {"const": false},
+            "opl_can_hold_fundability_verdict": {"const": false},
+            "opl_can_hold_authoring_quality_verdict": {"const": false},
+            "opl_can_hold_submission_ready_export_verdict": {"const": false}
+          }
+        }
+      }
+    },
+    "lifecycleGuardedApplyProof": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "proof_id",
+        "target_domain_id",
+        "owner_receipt_contract_ref",
+        "operations",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_lifecycle_guarded_apply_proof"
+        },
+        "proof_id": {
+          "const": "mag.lifecycle.guarded_apply.proof.v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "owner_receipt_contract_ref": {
+          "const": "/product_entry_manifest/owner_receipt_contract"
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "operation",
+              "opl_apply_scope",
+              "domain_mutation_policy",
+              "artifact_mutation_authority",
+              "typed_blocker"
+            ],
+            "properties": {
+              "opl_apply_scope": {
+                "const": "opl_owned_ledger_and_locator_only"
+              },
+              "domain_mutation_policy": {
+                "const": "requires_mag_owner_receipt"
+              },
+              "artifact_mutation_authority": {
+                "const": "med-autogrant"
+              }
+            }
+          },
+          "minItems": 3
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "opl_can_delete_grant_artifacts",
+            "opl_can_restore_grant_artifacts",
+            "opl_can_set_retention_for_grant_truth"
+          ],
+          "properties": {
+            "opl_can_delete_grant_artifacts": {"const": false},
+            "opl_can_restore_grant_artifacts": {"const": false},
+            "opl_can_set_retention_for_grant_truth": {"const": false}
+          }
+        }
+      }
+    },
+    "physicalSkeletonFollowThrough": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "state",
+        "roots",
+        "moves_workspace_artifacts",
+        "moves_runtime_receipt_instances",
+        "moves_memory_body",
+        "legacy_active_path_policy"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_physical_skeleton_follow_through"
+        },
+        "state": {
+          "const": "minimum_repo_source_anchors_landed"
+        },
+        "moves_workspace_artifacts": {"const": false},
+        "moves_runtime_receipt_instances": {"const": false},
+        "moves_memory_body": {"const": false},
+        "legacy_active_path_policy": {
+          "const": "history_or_tombstone_only_after_no_active_caller"
         }
       }
     },
@@ -4142,7 +4339,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -4276,6 +4473,15 @@
         },
         "standard_domain_agent_skeleton": {
           "$ref": "#/$defs/standardDomainAgentSkeleton"
+        },
+        "owner_receipt_contract": {
+          "$ref": "#/$defs/ownerReceiptContract"
+        },
+        "lifecycle_guarded_apply_proof": {
+          "$ref": "#/$defs/lifecycleGuardedApplyProof"
+        },
+        "physical_skeleton_follow_through": {
+          "$ref": "#/$defs/physicalSkeletonFollowThrough"
         },
         "action_catalog_projections": {
           "$ref": "#/$defs/actionCatalogProjections"

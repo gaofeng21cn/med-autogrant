@@ -455,6 +455,10 @@ def test_mag_adoption_contract_declares_controlled_memory_and_opl_hosted_attempt
         "/product_entry_manifest/controlled_domain_memory_apply_proof/"
         "operator_receipt_projection"
     )
+    assert apply_proof["controlled_receipt_instances_surface"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof/"
+        "controlled_receipt_instances"
+    )
     assert apply_proof["repo_source_layout_audit_surface"] == (
         "/product_entry_manifest/controlled_domain_memory_apply_proof/"
         "repo_source_layout_audit"
@@ -480,8 +484,9 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
         "/product_entry_manifest/controlled_domain_memory_apply_proof/"
         "repo_source_layout_audit"
     )
-    assert audit["layout_state"] == "physical_skeleton_roots_present_descriptor_mapping_only"
+    assert audit["layout_state"] == "physical_skeleton_follow_through_landed_minimum_anchors"
     assert audit["boundary_keys"] == ["agent", "contracts", "runtime", "docs"]
+    assert audit["physical_move_required"] == "low_risk_source_moves_only_after_path_compatibility_audit"
     assert audit["retired_active_path_policy"] == "explicit_proof_provenance_history_only"
     assert "default Hermes active path" in audit["forbidden_active_path_residue"]
     assert "default Gateway active path" in audit["forbidden_active_path_residue"]
@@ -490,6 +495,74 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
         assert (REPO_ROOT / boundary).is_dir()
         assert boundary in audit["source_refs_by_boundary"]
         assert audit["source_refs_by_boundary"][boundary]
+    for anchor_ref in (
+        "agent/README.md",
+        "contracts/README.md",
+        "runtime/README.md",
+        "src/med_autogrant/product_entry_parts/functional_closure.py",
+    ):
+        assert any(
+            anchor_ref in refs
+            for refs in audit["source_refs_by_boundary"].values()
+        )
+        assert (REPO_ROOT / anchor_ref).exists()
+
+
+def test_mag_adoption_contract_declares_owner_receipt_lifecycle_and_skeleton_follow_through() -> None:
+    contract = _contract()
+    skeleton = contract["standard_domain_agent_skeleton"]
+    owner_receipt = contract["owner_receipt_contract"]
+    lifecycle = contract["lifecycle_guarded_apply_proof"]
+    follow_through = contract["physical_skeleton_follow_through"]
+
+    assert skeleton["mapping_state"] == "minimum_physical_skeleton_follow_through_landed"
+    assert skeleton["controlled_domain_memory_apply_proof_ref"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof"
+    )
+    assert skeleton["owner_receipt_contract_ref"] == "/product_entry_manifest/owner_receipt_contract"
+    assert skeleton["lifecycle_guarded_apply_proof_ref"] == "/product_entry_manifest/lifecycle_guarded_apply_proof"
+    assert skeleton["physical_skeleton_follow_through_ref"] == (
+        "/product_entry_manifest/physical_skeleton_follow_through"
+    )
+    assert skeleton["repo_source_layout_audit_ref"] == (
+        "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit"
+    )
+
+    assert owner_receipt["surface_kind"] == "mag_owner_receipt_contract"
+    assert owner_receipt["manifest_surface_ref"] == "/product_entry_manifest/owner_receipt_contract"
+    assert owner_receipt["contract_id"] == "mag.owner_receipt.contract.v1"
+    assert owner_receipt["maps_to_opl_contract"] == "opl_domain_owner_receipt_envelope.v1"
+    assert owner_receipt["allowed_return_shapes"] == [
+        "domain_owner_receipt",
+        "typed_blocker",
+        "no_regression_evidence",
+    ]
+    assert owner_receipt["opl_role"] == "owner_receipt_ref_consumer_only"
+    assert "fundability_verdict_owner" in owner_receipt["forbidden_opl_authority"]
+    assert "grant_artifact_writer" in owner_receipt["forbidden_opl_authority"]
+    assert "memory_body_writer" in owner_receipt["forbidden_opl_authority"]
+
+    assert lifecycle["surface_kind"] == "mag_lifecycle_guarded_apply_proof"
+    assert lifecycle["manifest_surface_ref"] == "/product_entry_manifest/lifecycle_guarded_apply_proof"
+    assert lifecycle["owner_receipt_contract_ref"] == "/product_entry_manifest/owner_receipt_contract"
+    assert lifecycle["operations"] == ["cleanup", "restore", "retention"]
+    assert lifecycle["opl_apply_scope"] == "opl_owned_ledger_and_locator_only"
+    assert lifecycle["domain_mutation_policy"] == "requires_mag_owner_receipt"
+    assert lifecycle["typed_blocker_kind"] == "mag_domain_artifact_owner_receipt_required"
+
+    assert follow_through["surface_kind"] == "mag_physical_skeleton_follow_through"
+    assert follow_through["manifest_surface_ref"] == "/product_entry_manifest/physical_skeleton_follow_through"
+    assert follow_through["state"] == "minimum_repo_source_anchors_landed"
+    assert follow_through["repo_source_boundary"] == ["agent", "contracts", "runtime", "docs"]
+    assert follow_through["anchor_refs"] == [
+        "agent/README.md",
+        "contracts/README.md",
+        "runtime/README.md",
+        "docs/status.md",
+    ]
+    assert follow_through["moves_workspace_artifacts"] is False
+    assert follow_through["moves_runtime_receipt_instances"] is False
+    assert follow_through["moves_memory_body"] is False
 
 
 def test_mag_controlled_soak_deferred_without_descriptor_index_skeleton_regression() -> None:
@@ -506,6 +579,9 @@ def test_mag_controlled_soak_deferred_without_descriptor_index_skeleton_regressi
         "artifact_locator_contract",
         "controlled_stage_attempt_projection",
         "controlled_domain_memory_apply_proof",
+        "owner_receipt_contract",
+        "lifecycle_guarded_apply_proof",
+        "physical_skeleton_follow_through",
         "domain_memory_descriptor_locator",
         "repo_source_layout_audit",
     ]

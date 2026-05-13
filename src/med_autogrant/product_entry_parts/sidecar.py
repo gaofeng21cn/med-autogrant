@@ -71,6 +71,21 @@ def build_sidecar_export(
         "controlled_domain_memory_apply_proof",
         context="sidecar_export.product_entry_manifest",
     )
+    owner_receipt_contract = _require_mapping(
+        manifest,
+        "owner_receipt_contract",
+        context="sidecar_export.product_entry_manifest",
+    )
+    lifecycle_guarded_apply_proof = _require_mapping(
+        manifest,
+        "lifecycle_guarded_apply_proof",
+        context="sidecar_export.product_entry_manifest",
+    )
+    physical_skeleton_follow_through = _require_mapping(
+        manifest,
+        "physical_skeleton_follow_through",
+        context="sidecar_export.product_entry_manifest",
+    )
     automation = _require_mapping(manifest, "automation", context="sidecar_export.product_entry_manifest")
     autonomy_observability = _require_mapping(
         manifest,
@@ -118,6 +133,9 @@ def build_sidecar_export(
         ),
         "controlled_stage_attempt_projection": dict(controlled_stage_attempt),
         "controlled_domain_memory_apply_proof": dict(controlled_domain_memory_apply_proof),
+        "owner_receipt_contract": dict(owner_receipt_contract),
+        "lifecycle_guarded_apply_proof": dict(lifecycle_guarded_apply_proof),
+        "physical_skeleton_follow_through": dict(physical_skeleton_follow_through),
         "receipt_refs": dict(
             _require_mapping(
                 controlled_stage_attempt,

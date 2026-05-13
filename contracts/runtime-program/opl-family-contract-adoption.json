@@ -55,7 +55,7 @@
   "standard_domain_agent_skeleton": {
     "surface_kind": "standard_domain_agent_skeleton",
     "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
-    "mapping_state": "descriptor_manifest_adapter_landed",
+    "mapping_state": "minimum_physical_skeleton_follow_through_landed",
     "repo_source_boundary": [
       "agent",
       "contracts",
@@ -70,6 +70,11 @@
     "manifest_surface_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
     "artifact_locator_ref": "/product_entry_manifest/artifact_locator_contract",
     "controlled_stage_attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+    "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
+    "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+    "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
+    "physical_skeleton_follow_through_ref": "/product_entry_manifest/physical_skeleton_follow_through",
+    "repo_source_layout_audit_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
     "controlled_soak": {
       "state": "deferred",
       "deferred_reason": "OPL+MAS production closure has priority; MAG keeps descriptor/index/skeleton no-regression only in this lane.",
@@ -81,6 +86,9 @@
         "artifact_locator_contract",
         "controlled_stage_attempt_projection",
         "controlled_domain_memory_apply_proof",
+        "owner_receipt_contract",
+        "lifecycle_guarded_apply_proof",
+        "physical_skeleton_follow_through",
         "domain_memory_descriptor_locator",
         "repo_source_layout_audit"
       ],
@@ -458,6 +466,7 @@
     "writeback_proposal_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/writeback_proposal_projection",
     "accept_reject_decision_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/accept_reject_decision_projection",
     "operator_receipt_projection_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/operator_receipt_projection",
+    "controlled_receipt_instances_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/controlled_receipt_instances",
     "repo_source_layout_audit_surface": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
     "repo_payload_policy": {
       "repo_tracked_real_memory_body": false,
@@ -477,17 +486,73 @@
       "can_accept_or_reject_memory_writeback": false
     }
   },
+  "owner_receipt_contract": {
+    "surface_kind": "mag_owner_receipt_contract",
+    "manifest_surface_ref": "/product_entry_manifest/owner_receipt_contract",
+    "contract_id": "mag.owner_receipt.contract.v1",
+    "maps_to_opl_contract": "opl_domain_owner_receipt_envelope.v1",
+    "allowed_return_shapes": [
+      "domain_owner_receipt",
+      "typed_blocker",
+      "no_regression_evidence"
+    ],
+    "opl_role": "owner_receipt_ref_consumer_only",
+    "forbidden_opl_authority": [
+      "grant_truth_owner",
+      "fundability_verdict_owner",
+      "authoring_quality_verdict_owner",
+      "submission_ready_export_verdict_owner",
+      "grant_artifact_writer",
+      "memory_body_writer"
+    ]
+  },
+  "lifecycle_guarded_apply_proof": {
+    "surface_kind": "mag_lifecycle_guarded_apply_proof",
+    "manifest_surface_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
+    "proof_id": "mag.lifecycle.guarded_apply.proof.v1",
+    "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+    "operations": [
+      "cleanup",
+      "restore",
+      "retention"
+    ],
+    "opl_apply_scope": "opl_owned_ledger_and_locator_only",
+    "domain_mutation_policy": "requires_mag_owner_receipt",
+    "typed_blocker_kind": "mag_domain_artifact_owner_receipt_required"
+  },
+  "physical_skeleton_follow_through": {
+    "surface_kind": "mag_physical_skeleton_follow_through",
+    "manifest_surface_ref": "/product_entry_manifest/physical_skeleton_follow_through",
+    "follow_through_id": "mag.physical_skeleton.follow_through.v1",
+    "state": "minimum_repo_source_anchors_landed",
+    "repo_source_boundary": [
+      "agent",
+      "contracts",
+      "runtime",
+      "docs"
+    ],
+    "anchor_refs": [
+      "agent/README.md",
+      "contracts/README.md",
+      "runtime/README.md",
+      "docs/status.md"
+    ],
+    "moves_workspace_artifacts": false,
+    "moves_runtime_receipt_instances": false,
+    "moves_memory_body": false,
+    "next_physical_moves_condition": "path compatibility audit and no-active-caller proof"
+  },
   "repo_source_layout_audit": {
     "surface_kind": "mag_repo_source_layout_audit",
     "manifest_surface_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
-    "layout_state": "physical_skeleton_roots_present_descriptor_mapping_only",
+    "layout_state": "physical_skeleton_follow_through_landed_minimum_anchors",
     "boundary_keys": [
       "agent",
       "contracts",
       "runtime",
       "docs"
     ],
-    "physical_move_required": false,
+    "physical_move_required": "low_risk_source_moves_only_after_path_compatibility_audit",
     "retired_active_path_policy": "explicit_proof_provenance_history_only",
     "forbidden_active_path_residue": [
       "default Hermes active path",
@@ -497,19 +562,23 @@
     ],
     "source_refs_by_boundary": {
       "agent": [
+        "agent/README.md",
         "src/med_autogrant/domain_entry.py",
         "src/med_autogrant/domain_entry_contract.py",
         "src/med_autogrant/stage_control_plane.py"
       ],
       "contracts": [
+        "contracts/README.md",
         "contracts/runtime-program/current-program.json",
         "contracts/runtime-program/domain-memory-seed-fixture.json",
         "contracts/runtime-program/opl-family-contract-adoption.json",
         "schemas/v1/product-entry-manifest.schema.json"
       ],
       "runtime": [
+        "runtime/README.md",
         "src/med_autogrant/product_entry_parts/domain_memory.py",
         "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
+        "src/med_autogrant/product_entry_parts/functional_closure.py",
         "src/med_autogrant/product_entry_parts/sidecar.py"
       ],
       "docs": [
