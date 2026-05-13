@@ -63,7 +63,7 @@ one active owner surface.
 | Core five | Current owner set for project, status, architecture, invariants, and decisions. | Superseded decisions remain in `docs/decisions.md` only when explicitly marked superseded and explained as provenance. |
 | `docs/domain-positioning*` and `docs/mvp-scope*` | Root public-doc allowlist for domain role and MVP scope. | Update for public-facing current boundary changes; runtime/provider histories belong in specs, references, or history. |
 | `docs/specs/` | Mixed path-stable technical record layer. Only the active specs in `docs/specs/README*` are current owner records. | Older dated specs remain in place for audit path stability and are classified through `docs/specs/specs_lifecycle_map.md` plus `docs/history/specs/README*`. |
-| `docs/references/` | Support material for current boundaries: memory policy, OPL family adoption, and series doc governance. | Historical/provider-specific handoff notes have been moved to `docs/history/`. New reference docs must explain a current boundary. |
+| `docs/references/` | Support material for current boundaries: memory policy, OPL family adoption, MAG north-star target state, and series doc governance. | Historical/provider-specific handoff notes have been moved to `docs/history/`. New reference docs must explain a current boundary or explicitly mark itself as target-state support material. |
 | `docs/plans/` | Empty active-plan lane after this consolidation. | Completed plans live under `docs/history/plans/`; future plans return here only while they are genuinely active. |
 | `docs/history/` | Archive entry for retired lanes, completed plans, superseded specs, old provider notes, and positioning history. | History docs can preserve old wording, but must point readers back to current owner docs for live truth. |
 
@@ -85,6 +85,7 @@ one active owner surface.
 | `docs/specs/2026-04-08-r*`, `2026-04-09-*`, `2026-04-10-post-r5a-*` | Historical local-runtime ladder and hardening provenance. | Their valid export/checkpoint lessons are absorbed into current owner docs and active specs; old local runtime maturity wording stays archival. |
 | `docs/references/opl_family_contract_adoption.md` | Current reference. | Explains current descriptor/projection adoption under OPL stage-led framework while preserving MAG authority. |
 | `docs/references/grant_strategy_memory_policy.md` | Current reference. | Explains current memory boundary without moving quality/fundability authority into memory. |
+| `docs/references/med-auto-grant-ideal-state.zh-CN.md` | Active support reference. | Preserves the MAG north-star target state while pointing live truth back to core docs and `current-program.json`. |
 | `docs/history/opl_managed_runtime_three_layer_contract.md` | Moved to history. | The old OPL Runtime Manager / provider owner framing is superseded by current OPL stage-led framework wording. |
 | `docs/history/lightweight_product_entry_and_opl_handoff.md` | Moved to history. | The useful current handoff content is absorbed by core docs, active specs, and `opl_family_contract_adoption.md`; old Hermes Kernel wording is historical. |
 | `docs/history/plans/**` | History. | Completed one-time plans and provenance records. |
