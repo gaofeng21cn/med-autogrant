@@ -1,6 +1,7 @@
 # Docs Portfolio Consolidation
 
 Date: `2026-05-11`
+Last updated: `2026-05-14`
 
 This note freezes the documentation portfolio boundary after the May 2026 consolidation and the OPL stage-led runtime alignment pass.
 
@@ -10,7 +11,8 @@ Each docs layer is governed by four lifecycle signals:
 
 - `owner`: the surface owner responsible for keeping the document aligned.
 - `purpose`: the reason the document exists in the portfolio.
-- `state`: one of `current`, `reference`, or `history`.
+- `state`: one of `current`, `reference`, `history`, or `active_plan`
+  for work that is still explicitly tracked under `docs/plans/`.
 - `machine boundary`: whether machine consumers may rely on the surface directly.
 
 `README*` and `docs/**` are human-readable surfaces. Machine-readable control must use contract/schema/source paths, or semantic `human_doc:*` ids when a machine surface needs to relate to prose. Prose paths are navigation aids, not API stability promises.
@@ -64,7 +66,7 @@ one active owner surface.
 | `docs/domain-positioning*` and `docs/mvp-scope*` | Root public-doc allowlist for domain role and MVP scope. | Update for public-facing current boundary changes; runtime/provider histories belong in specs, references, or history. |
 | `docs/specs/` | Mixed path-stable technical record layer. Only the active specs in `docs/specs/README*` are current owner records. | Older dated specs remain in place for audit path stability and are classified through `docs/specs/specs_lifecycle_map.md` plus `docs/history/specs/README*`. |
 | `docs/references/` | Support material for current boundaries: memory policy, OPL family adoption, MAG north-star target state, and series doc governance. | Historical/provider-specific handoff notes have been moved to `docs/history/`. New reference docs must explain a current boundary or explicitly mark itself as target-state support material. |
-| `docs/plans/` | Empty active-plan lane after this consolidation. | Completed plans live under `docs/history/plans/`; future plans return here only while they are genuinely active. |
+| `docs/plans/` | Active-plan lane. It currently tracks the MAG ideal-state cross-repo gap and completion plan. | Completed plans live under `docs/history/plans/`; active plans stay here only while they still need owner, gate, or closeout tracking. |
 | `docs/history/` | Archive entry for retired lanes, completed plans, superseded specs, old provider notes, and positioning history. | History docs can preserve old wording, but must point readers back to current owner docs for live truth. |
 
 ## Key Document Disposition Table
@@ -86,6 +88,7 @@ one active owner surface.
 | `docs/references/opl_family_contract_adoption.md` | Current reference. | Explains current descriptor/projection adoption under OPL stage-led framework while preserving MAG authority. |
 | `docs/references/grant_strategy_memory_policy.md` | Current reference. | Explains current memory boundary without moving quality/fundability authority into memory. |
 | `docs/references/med-auto-grant-ideal-state.zh-CN.md` | Active support reference. | Preserves the MAG north-star target state while pointing live truth back to core docs and `current-program.json`. |
+| `docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md` | Active plan. | Tracks the gap between the MAG north-star target, current MAG state, and current OPL/MAS/RCA family evidence; it guides production closure work without replacing current truth. |
 | `docs/history/opl_managed_runtime_three_layer_contract.md` | Moved to history. | The old OPL Runtime Manager / provider owner framing is superseded by current OPL stage-led framework wording. |
 | `docs/history/lightweight_product_entry_and_opl_handoff.md` | Moved to history. | The useful current handoff content is absorbed by core docs, active specs, and `opl_family_contract_adoption.md`; old Hermes Kernel wording is historical. |
 | `docs/history/plans/**` | History. | Completed one-time plans and provenance records. |
@@ -119,6 +122,24 @@ Root-doc allowlist:
 - `docs/domain-positioning*` remains current because it states the active domain owner, public subject, and OPL/Hermes boundary.
 - `docs/mvp-scope*` remains current because it states the current NSFC MVP scope and non-goals.
 - No other root-level docs should be added to the default public path without updating this portfolio note and the docs guide.
+
+## Active Plan Layer
+
+- `docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md`
+
+Active plans are owner-tracked future work. They may compare target state,
+current state, and completion gates, but they do not replace the core docs,
+active specs, contracts, schemas, source, generated artifacts, or
+`contracts/runtime-program/current-program.json`.
+
+Lifecycle:
+
+- `owner`: MAG maintainers.
+- `purpose`: track explicit future work until absorbed into current owner docs,
+  machine contracts, implementation, or history.
+- `state`: `active_plan`.
+- `machine boundary`: not machine-consumed; machine surfaces must use
+  contracts/schema/source paths or semantic `human_doc:*` ids.
 
 ## Reference Layer
 
