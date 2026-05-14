@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import tempfile
+from pathlib import Path
+
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
@@ -98,6 +101,69 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(proof["authority_boundary"]["opl_can_delete_grant_artifacts"])
         self.assertFalse(proof["authority_boundary"]["opl_can_restore_grant_artifacts"])
         self.assertFalse(proof["authority_boundary"]["opl_can_set_retention_for_grant_truth"])
+
+    def test_owner_receipt_evidence_writer_persists_no_regression_receipt_without_domain_writes(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            payload = MedAutoGrantProductEntry().write_owner_receipt_evidence(
+                input_path=str(CRITIQUE_EXAMPLE_PATH),
+                receipt_shape="no_regression_evidence",
+                stage_id="review_and_rebuttal",
+                source_ref="opl-stage-attempt://attempt-1",
+                closeout_summary="Controlled OPL-hosted attempt reused MAG refs without mutating grant truth.",
+                runtime_root=tmp_dir,
+                receipt_id="attempt-1",
+            )
+            receipt = payload["owner_receipt_evidence"]
+            receipt_path = Path(receipt["receipt_instance_ref"])
+            receipt_exists = receipt_path.exists()
+
+        self.assertEqual(payload["command"], "owner-receipt-evidence")
+        self.assertEqual(receipt["surface_kind"], "mag_owner_receipt_evidence")
+        self.assertEqual(receipt["state"], "runtime_receipt_instance_written")
+        self.assertEqual(receipt["receipt_shape"], "no_regression_evidence")
+        self.assertEqual(receipt["stage_id"], "review_and_rebuttal")
+        self.assertTrue(receipt_exists)
+        self.assertFalse(receipt["repo_tracked"])
+        self.assertFalse(receipt["forbidden_write_proof"]["grant_truth_written"])
+        self.assertFalse(receipt["forbidden_write_proof"]["memory_body_written"])
+        self.assertFalse(receipt["forbidden_write_proof"]["submission_ready_export_verdict_written"])
+        self.assertTrue(receipt["opl_consumption"]["consumes_receipt_ref_only"])
+        self.assertIn(
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+            receipt["source_refs"],
+        )
+
+    def test_lifecycle_receipt_evidence_writer_persists_guarded_apply_receipt_without_artifact_mutation(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            payload = MedAutoGrantProductEntry().write_lifecycle_receipt_evidence(
+                input_path=str(CRITIQUE_EXAMPLE_PATH),
+                operation="cleanup",
+                receipt_shape="typed_blocker",
+                source_ref="opl-lifecycle://cleanup/attempt-1",
+                closeout_summary="Cleanup request requires MAG owner receipt before artifact mutation.",
+                runtime_root=tmp_dir,
+                receipt_id="cleanup-blocker-1",
+            )
+            receipt = payload["lifecycle_receipt_evidence"]
+            receipt_path = Path(receipt["receipt_instance_ref"])
+            receipt_exists = receipt_path.exists()
+
+        self.assertEqual(payload["command"], "lifecycle-receipt-evidence")
+        self.assertEqual(receipt["surface_kind"], "mag_lifecycle_receipt_evidence")
+        self.assertEqual(receipt["state"], "runtime_receipt_instance_written")
+        self.assertEqual(receipt["operation"], "cleanup")
+        self.assertEqual(receipt["receipt_shape"], "typed_blocker")
+        self.assertTrue(receipt_exists)
+        self.assertFalse(receipt["repo_tracked"])
+        self.assertEqual(receipt["artifact_mutation"], "none")
+        self.assertEqual(receipt["lifecycle_mutation"], "receipt_metadata_only")
+        self.assertFalse(receipt["forbidden_write_proof"]["grant_artifact_written"])
+        self.assertFalse(receipt["forbidden_write_proof"]["memory_body_written"])
+        self.assertTrue(receipt["opl_consumption"]["consumes_receipt_ref_only"])
 
     def test_manifest_exposes_physical_skeleton_follow_through_with_repo_source_anchors(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

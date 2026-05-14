@@ -180,6 +180,30 @@ def handle_product_domain_memory_receipt_evidence(args: argparse.Namespace) -> d
     )
 
 
+def handle_product_owner_receipt_evidence(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().write_owner_receipt_evidence(
+        input_path=args.input,
+        receipt_shape=args.receipt_shape,
+        stage_id=args.stage_id,
+        source_ref=args.source_ref,
+        closeout_summary=args.closeout_summary,
+        runtime_root=args.runtime_root,
+        receipt_id=args.receipt_id,
+    )
+
+
+def handle_product_lifecycle_receipt_evidence(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().write_lifecycle_receipt_evidence(
+        input_path=args.input,
+        operation=args.operation,
+        receipt_shape=args.receipt_shape,
+        source_ref=args.source_ref,
+        closeout_summary=args.closeout_summary,
+        runtime_root=args.runtime_root,
+        receipt_id=args.receipt_id,
+    )
+
+
 def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 

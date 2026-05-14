@@ -62,6 +62,8 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_domain_memory_decision,
     handle_product_domain_memory_proposal,
     handle_product_domain_memory_receipt_evidence,
+    handle_product_lifecycle_receipt_evidence,
+    handle_product_owner_receipt_evidence,
     handle_product_sidecar_dispatch,
     handle_product_sidecar_export,
     handle_product_status,
@@ -91,6 +93,8 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_domain_memory_decision_command,
     _add_product_domain_memory_proposal_command,
     _add_product_domain_memory_receipt_evidence_command,
+    _add_product_lifecycle_receipt_evidence_command,
+    _add_product_owner_receipt_evidence_command,
     _add_product_entry_command,
     _add_product_sidecar_dispatch_command,
     _add_product_sidecar_export_command,
@@ -411,6 +415,18 @@ def build_parser() -> argparse.ArgumentParser:
         "product-domain-memory-receipt-evidence",
         handle_product_domain_memory_receipt_evidence,
         "把 MAG-owned domain memory accept/reject decision 写成 runtime receipt evidence。",
+    )
+    _add_product_owner_receipt_evidence_command(
+        subparsers,
+        "product-owner-receipt-evidence",
+        handle_product_owner_receipt_evidence,
+        "把 OPL-hosted stage attempt closeout 写成 MAG owner receipt runtime evidence。",
+    )
+    _add_product_lifecycle_receipt_evidence_command(
+        subparsers,
+        "product-lifecycle-receipt-evidence",
+        handle_product_lifecycle_receipt_evidence,
+        "把 cleanup/restore/retention guarded apply closeout 写成 MAG lifecycle receipt runtime evidence。",
     )
     return parser
 

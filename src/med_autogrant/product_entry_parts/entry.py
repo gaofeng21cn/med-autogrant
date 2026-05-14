@@ -42,6 +42,10 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_writeback_proposal,
     write_domain_memory_receipt_evidence,
 )
+from med_autogrant.product_entry_parts.owner_receipts import (
+    write_lifecycle_receipt_evidence,
+    write_owner_receipt_evidence,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -313,4 +317,46 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
         return write_domain_memory_receipt_evidence(
             decision_payload=decision_payload,
             runtime_root=runtime_root,
+        )
+
+    def write_owner_receipt_evidence(
+        self,
+        *,
+        input_path: str | Path,
+        receipt_shape: str,
+        stage_id: str,
+        source_ref: str,
+        closeout_summary: str,
+        runtime_root: str | Path | None = None,
+        receipt_id: str | None = None,
+    ) -> dict[str, Any]:
+        return write_owner_receipt_evidence(
+            input_path=input_path,
+            receipt_shape=receipt_shape,
+            stage_id=stage_id,
+            source_ref=source_ref,
+            closeout_summary=closeout_summary,
+            runtime_root=runtime_root,
+            receipt_id=receipt_id,
+        )
+
+    def write_lifecycle_receipt_evidence(
+        self,
+        *,
+        input_path: str | Path,
+        operation: str,
+        receipt_shape: str,
+        source_ref: str,
+        closeout_summary: str,
+        runtime_root: str | Path | None = None,
+        receipt_id: str | None = None,
+    ) -> dict[str, Any]:
+        return write_lifecycle_receipt_evidence(
+            input_path=input_path,
+            operation=operation,
+            receipt_shape=receipt_shape,
+            source_ref=source_ref,
+            closeout_summary=closeout_summary,
+            runtime_root=runtime_root,
+            receipt_id=receipt_id,
         )

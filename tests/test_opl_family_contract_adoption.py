@@ -41,7 +41,9 @@ def test_current_program_sidecar_actions_include_domain_memory_writeback_dispatc
         "autonomy-controller/guarded-run",
         "domain-memory/decide",
         "domain-memory/propose",
+        "lifecycle/receipt",
         "notification/receipt",
+        "stage-attempt/closeout",
         "status/read",
         "user-loop/wakeup",
     ]
@@ -421,6 +423,7 @@ def test_mag_adoption_contract_declares_controlled_memory_and_opl_hosted_attempt
         "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof",
     ]
     assert "opl_hosted_controlled_grant_stage_attempt_proof" in attempt["opl_consumption"]
+    assert "owner_receipt_runtime_evidence_ref" in attempt["opl_consumption"]
     assert "controlled_consumed_memory_ref" in attempt["opl_consumption"]
     assert "writeback_receipt_ref" in attempt["opl_consumption"]
     assert "fundability_verdict" in attempt["opl_non_consumption"]
@@ -554,6 +557,10 @@ def test_mag_adoption_contract_declares_owner_receipt_lifecycle_and_skeleton_fol
         "no_regression_evidence",
     ]
     assert owner_receipt["opl_role"] == "owner_receipt_ref_consumer_only"
+    assert owner_receipt["runtime_receipt_evidence_command"] == "product owner-receipt-evidence"
+    assert owner_receipt["runtime_receipt_evidence_surface_kind"] == "mag_owner_receipt_evidence"
+    assert owner_receipt["runtime_receipt_instance_writable"] is True
+    assert owner_receipt["receipt_instance_repo_tracked"] is False
     assert "fundability_verdict_owner" in owner_receipt["forbidden_opl_authority"]
     assert "grant_artifact_writer" in owner_receipt["forbidden_opl_authority"]
     assert "memory_body_writer" in owner_receipt["forbidden_opl_authority"]
@@ -565,6 +572,10 @@ def test_mag_adoption_contract_declares_owner_receipt_lifecycle_and_skeleton_fol
     assert lifecycle["opl_apply_scope"] == "opl_owned_ledger_and_locator_only"
     assert lifecycle["domain_mutation_policy"] == "requires_mag_owner_receipt"
     assert lifecycle["typed_blocker_kind"] == "mag_domain_artifact_owner_receipt_required"
+    assert lifecycle["runtime_receipt_evidence_command"] == "product lifecycle-receipt-evidence"
+    assert lifecycle["runtime_receipt_evidence_surface_kind"] == "mag_lifecycle_receipt_evidence"
+    assert lifecycle["runtime_receipt_instance_writable"] is True
+    assert lifecycle["receipt_instance_repo_tracked"] is False
 
     assert follow_through["surface_kind"] == "mag_physical_skeleton_follow_through"
     assert follow_through["manifest_surface_ref"] == "/product_entry_manifest/physical_skeleton_follow_through"

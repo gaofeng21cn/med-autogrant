@@ -2,7 +2,9 @@
 
 This directory is reserved for active or explicitly future planning work that has not yet been absorbed into the core docs, contract surfaces, or historical archive.
 
-There are no active plan files in this directory after the May 2026 portfolio consolidation.
+Current active plan:
+
+- [MAG ideal-state gap and completion plan](./mag-ideal-state-cross-repo-gap-plan.zh-CN.md)
 
 Completed one-time planning artifacts now live under:
 

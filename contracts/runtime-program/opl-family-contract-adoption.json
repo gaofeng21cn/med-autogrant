@@ -214,6 +214,7 @@
       "runtime_status_projection",
       "controlled_stage_attempt_fixture_proof",
       "opl_hosted_controlled_grant_stage_attempt_proof",
+      "owner_receipt_runtime_evidence_ref",
       "controlled_consumed_memory_ref",
       "writeback_receipt_ref"
     ],
@@ -516,6 +517,10 @@
       "no_regression_evidence"
     ],
     "opl_role": "owner_receipt_ref_consumer_only",
+    "runtime_receipt_evidence_command": "product owner-receipt-evidence",
+    "runtime_receipt_evidence_surface_kind": "mag_owner_receipt_evidence",
+    "runtime_receipt_instance_writable": true,
+    "receipt_instance_repo_tracked": false,
     "forbidden_opl_authority": [
       "grant_truth_owner",
       "fundability_verdict_owner",
@@ -537,7 +542,11 @@
     ],
     "opl_apply_scope": "opl_owned_ledger_and_locator_only",
     "domain_mutation_policy": "requires_mag_owner_receipt",
-    "typed_blocker_kind": "mag_domain_artifact_owner_receipt_required"
+    "typed_blocker_kind": "mag_domain_artifact_owner_receipt_required",
+    "runtime_receipt_evidence_command": "product lifecycle-receipt-evidence",
+    "runtime_receipt_evidence_surface_kind": "mag_lifecycle_receipt_evidence",
+    "runtime_receipt_instance_writable": true,
+    "receipt_instance_repo_tracked": false
   },
   "physical_skeleton_follow_through": {
     "surface_kind": "mag_physical_skeleton_follow_through",
