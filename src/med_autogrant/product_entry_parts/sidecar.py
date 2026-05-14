@@ -414,6 +414,8 @@ def _dispatch_stage_attempt_closeout(
                 "opl_consumes_receipt_ref_only": True,
             },
             "source_refs": list(receipt["source_refs"]),
+            "consumed_memory_refs": _optional_string_list(task.get("consumed_memory_refs")),
+            "writeback_receipt_refs": _optional_string_list(task.get("writeback_receipt_refs")),
             "owner_receipt_evidence": receipt,
             "write_policy": "runtime_receipt_instance_only_no_repo_write",
             "typed_blocker": _typed_blocker_for_receipt(
@@ -677,6 +679,17 @@ def _optional_nonempty_string(value: Any) -> str | None:
     if value is None:
         return None
     return _require_nonempty_string(value, field_name="task_id", context="sidecar_task")
+
+
+def _optional_string_list(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise WorkspaceStateError("sidecar_task refs 必须是 string list。")
+    refs: list[str] = []
+    for item in value:
+        refs.append(_require_nonempty_string(item, field_name="ref", context="sidecar_task"))
+    return refs
 
 
 def _receipt_refs_for_task(

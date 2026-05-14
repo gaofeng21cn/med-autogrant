@@ -298,6 +298,13 @@ class ProductSidecarTest(unittest.TestCase):
                         "source_ref": "opl-stage-attempt://stage-closeout-1",
                         "closeout_summary": "No regression evidence over MAG-owned refs.",
                         "runtime_root": str(runtime_root),
+                        "consumed_memory_refs": [
+                            "mag-memory:accepted:review-risk-framing",
+                        ],
+                        "writeback_receipt_refs": [
+                            "mag-memory-writeback:accepted:review-risk-framing",
+                            "mag-memory-writeback:rejected:review-style",
+                        ],
                     }
                 ),
                 encoding="utf-8",
@@ -314,6 +321,17 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(
             dispatch["result"]["receipt_refs"]["owner_receipt_ref"],
             receipt["receipt_instance_ref"],
+        )
+        self.assertEqual(
+            dispatch["result"]["consumed_memory_refs"],
+            ["mag-memory:accepted:review-risk-framing"],
+        )
+        self.assertEqual(
+            dispatch["result"]["writeback_receipt_refs"],
+            [
+                "mag-memory-writeback:accepted:review-risk-framing",
+                "mag-memory-writeback:rejected:review-style",
+            ],
         )
         self.assertTrue(dispatch["result"]["receipt_refs"]["opl_consumes_receipt_ref_only"])
         self.assertIn(
