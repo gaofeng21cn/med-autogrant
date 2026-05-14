@@ -135,7 +135,9 @@ class ProductSidecarTest(unittest.TestCase):
                 "autonomy-controller/guarded-run",
                 "domain-memory/decide",
                 "domain-memory/propose",
+                "lifecycle/receipt",
                 "notification/receipt",
+                "stage-attempt/closeout",
                 "status/read",
                 "user-loop/wakeup",
             ],
@@ -277,6 +279,97 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(receipt_evidence["state"], "runtime_receipt_instance_written")
         self.assertFalse(receipt_evidence["repo_tracked"])
         self.assertFalse(receipt_evidence["contains_memory_body"])
+        self.assertTrue(receipt_exists)
+
+    def test_sidecar_dispatch_controlled_stage_closeout_writes_owner_receipt_evidence(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            task_path = Path(tmp_dir) / "stage-closeout-task.json"
+            runtime_root = Path(tmp_dir) / "runtime-state"
+            task_path.write_text(
+                json.dumps(
+                    {
+                        "task_id": "stage-closeout-1",
+                        "action": "stage-attempt/closeout",
+                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                        "receipt_shape": "no_regression_evidence",
+                        "stage_id": "review_and_rebuttal",
+                        "source_ref": "opl-stage-attempt://stage-closeout-1",
+                        "closeout_summary": "No regression evidence over MAG-owned refs.",
+                        "runtime_root": str(runtime_root),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
+            receipt = payload["sidecar_dispatch"]["result"]["owner_receipt_evidence"]
+            receipt_exists = Path(receipt["receipt_instance_ref"]).exists()
+
+        dispatch = payload["sidecar_dispatch"]
+        self.assertEqual(dispatch["action"], "stage-attempt/closeout")
+        self.assertTrue(dispatch["executed_by_sidecar"])
+        self.assertEqual(dispatch["result"]["return_shape"], "no_regression_evidence")
+        self.assertEqual(dispatch["result"]["receipt_ref"], receipt["receipt_instance_ref"])
+        self.assertEqual(
+            dispatch["result"]["receipt_refs"]["owner_receipt_ref"],
+            receipt["receipt_instance_ref"],
+        )
+        self.assertTrue(dispatch["result"]["receipt_refs"]["opl_consumes_receipt_ref_only"])
+        self.assertIn(
+            "/product_entry_manifest/owner_receipt_contract",
+            dispatch["result"]["source_refs"],
+        )
+        self.assertIsNone(dispatch["result"]["typed_blocker"])
+        self.assertEqual(receipt["surface_kind"], "mag_owner_receipt_evidence")
+        self.assertEqual(receipt["receipt_shape"], "no_regression_evidence")
+        self.assertFalse(receipt["forbidden_write_proof"]["grant_truth_written"])
+        self.assertFalse(receipt["forbidden_write_proof"]["memory_body_written"])
+        self.assertTrue(receipt_exists)
+
+    def test_sidecar_dispatch_lifecycle_receipt_writes_guarded_apply_receipt_evidence(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            task_path = Path(tmp_dir) / "lifecycle-task.json"
+            runtime_root = Path(tmp_dir) / "runtime-state"
+            task_path.write_text(
+                json.dumps(
+                    {
+                        "task_id": "lifecycle-cleanup-1",
+                        "action": "lifecycle/receipt",
+                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                        "operation": "cleanup",
+                        "receipt_shape": "typed_blocker",
+                        "source_ref": "opl-lifecycle://cleanup/1",
+                        "closeout_summary": "OPL cleanup can only route ledger refs.",
+                        "runtime_root": str(runtime_root),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
+            receipt = payload["sidecar_dispatch"]["result"]["lifecycle_receipt_evidence"]
+            receipt_exists = Path(receipt["receipt_instance_ref"]).exists()
+
+        dispatch = payload["sidecar_dispatch"]
+        self.assertEqual(dispatch["action"], "lifecycle/receipt")
+        self.assertTrue(dispatch["executed_by_sidecar"])
+        self.assertEqual(dispatch["result"]["return_shape"], "typed_blocker")
+        self.assertEqual(dispatch["result"]["receipt_ref"], receipt["receipt_instance_ref"])
+        self.assertEqual(
+            dispatch["result"]["receipt_refs"]["lifecycle_receipt_ref"],
+            receipt["receipt_instance_ref"],
+        )
+        self.assertEqual(
+            dispatch["result"]["typed_blocker"]["blocker_kind"],
+            "mag_lifecycle_owner_receipt_required",
+        )
+        self.assertTrue(dispatch["result"]["receipt_refs"]["opl_consumes_receipt_ref_only"])
+        self.assertEqual(receipt["surface_kind"], "mag_lifecycle_receipt_evidence")
+        self.assertEqual(receipt["operation"], "cleanup")
+        self.assertEqual(receipt["artifact_mutation"], "none")
+        self.assertFalse(receipt["forbidden_write_proof"]["grant_artifact_written"])
         self.assertTrue(receipt_exists)
 
     def test_sidecar_dispatch_fails_closed_on_unowned_action(self) -> None:

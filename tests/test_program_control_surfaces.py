@@ -67,7 +67,9 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn("owner_receipt_contract", framework_boundary["framework_consumed_projection"])
+        self.assertIn("owner_receipt_runtime_evidence", framework_boundary["framework_consumed_projection"])
         self.assertIn("lifecycle_guarded_apply_proof", framework_boundary["framework_consumed_projection"])
+        self.assertIn("lifecycle_receipt_runtime_evidence", framework_boundary["framework_consumed_projection"])
         self.assertIn("physical_skeleton_follow_through", framework_boundary["framework_consumed_projection"])
         skeleton = framework_boundary["standard_domain_agent_skeleton"]
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
@@ -336,6 +338,8 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "controlled_domain_memory_apply_proof",
             stage_led_framework["consumes_mag_surfaces"],
         )
+        self.assertIn("owner_receipt_runtime_evidence", stage_led_framework["consumes_mag_surfaces"])
+        self.assertIn("lifecycle_receipt_runtime_evidence", stage_led_framework["consumes_mag_surfaces"])
         self.assertIn("owner_receipt_contract", stage_led_framework["consumes_mag_surfaces"])
         self.assertIn("lifecycle_guarded_apply_proof", stage_led_framework["consumes_mag_surfaces"])
         self.assertIn("physical_skeleton_follow_through", stage_led_framework["consumes_mag_surfaces"])

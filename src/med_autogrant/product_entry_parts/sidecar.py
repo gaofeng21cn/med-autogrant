@@ -27,6 +27,8 @@ _ALLOWED_ACTIONS = {
     "notification/receipt",
     "domain-memory/propose",
     "domain-memory/decide",
+    "stage-attempt/closeout",
+    "lifecycle/receipt",
 }
 
 
@@ -226,6 +228,10 @@ def dispatch_sidecar_task(
         return _dispatch_domain_memory_proposal(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "domain-memory/decide":
         return _dispatch_domain_memory_decision(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+    if action == "stage-attempt/closeout":
+        return _dispatch_stage_attempt_closeout(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+    if action == "lifecycle/receipt":
+        return _dispatch_lifecycle_receipt(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
     return _dispatch_notification_receipt(task=task, input_path=input_path, task_path=resolved_task_path)
 
 
@@ -374,6 +380,97 @@ def _dispatch_domain_memory_decision(
     )
 
 
+def _dispatch_stage_attempt_closeout(
+    product_entry: Any,
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    receipt_evidence = product_entry.write_owner_receipt_evidence(
+        input_path=input_path,
+        receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="sidecar_task"),
+        stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="sidecar_task"),
+        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="sidecar_task"),
+        closeout_summary=_require_nonempty_string_from_mapping(task, "closeout_summary", context="sidecar_task"),
+        runtime_root=_optional_nonempty_string(task.get("runtime_root")),
+        receipt_id=_optional_nonempty_string(task.get("receipt_id") or task.get("task_id")),
+    )
+    receipt = receipt_evidence["owner_receipt_evidence"]
+    return _dispatch_payload(
+        action="stage-attempt/closeout",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "sidecar_stage_attempt_closeout_result",
+            "return_shape": receipt["receipt_shape"],
+            "receipt_ref": receipt["receipt_instance_ref"],
+            "receipt_refs": {
+                "owner_receipt_ref": receipt["receipt_instance_ref"],
+                "owner_receipt_contract_ref": receipt["owner_receipt_contract_ref"],
+                "source_ref": receipt["source_ref"],
+                "opl_consumes_receipt_ref_only": True,
+            },
+            "source_refs": list(receipt["source_refs"]),
+            "owner_receipt_evidence": receipt,
+            "write_policy": "runtime_receipt_instance_only_no_repo_write",
+            "typed_blocker": _typed_blocker_for_receipt(
+                receipt,
+                blocker_kind="mag_stage_attempt_owner_receipt_required",
+            ),
+        },
+        executed_command=None,
+    )
+
+
+def _dispatch_lifecycle_receipt(
+    product_entry: Any,
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    receipt_evidence = product_entry.write_lifecycle_receipt_evidence(
+        input_path=input_path,
+        operation=_require_nonempty_string_from_mapping(task, "operation", context="sidecar_task"),
+        receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="sidecar_task"),
+        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="sidecar_task"),
+        closeout_summary=_require_nonempty_string_from_mapping(task, "closeout_summary", context="sidecar_task"),
+        runtime_root=_optional_nonempty_string(task.get("runtime_root")),
+        receipt_id=_optional_nonempty_string(task.get("receipt_id") or task.get("task_id")),
+    )
+    receipt = receipt_evidence["lifecycle_receipt_evidence"]
+    return _dispatch_payload(
+        action="lifecycle/receipt",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "sidecar_lifecycle_receipt_result",
+            "return_shape": receipt["receipt_shape"],
+            "receipt_ref": receipt["receipt_instance_ref"],
+            "receipt_refs": {
+                "lifecycle_receipt_ref": receipt["receipt_instance_ref"],
+                "owner_receipt_contract_ref": receipt["owner_receipt_contract_ref"],
+                "lifecycle_guarded_apply_proof_ref": receipt["lifecycle_guarded_apply_proof_ref"],
+                "source_ref": receipt["source_ref"],
+                "opl_consumes_receipt_ref_only": True,
+            },
+            "source_refs": list(receipt["source_refs"]),
+            "lifecycle_receipt_evidence": receipt,
+            "write_policy": "runtime_receipt_instance_only_no_repo_write",
+            "typed_blocker": _typed_blocker_for_receipt(
+                receipt,
+                blocker_kind="mag_lifecycle_owner_receipt_required",
+            ),
+        },
+        executed_command=None,
+    )
+
+
 def _dispatch_notification_receipt(
     *,
     task: Mapping[str, Any],
@@ -434,6 +531,8 @@ def _dispatch_payload(
                 "notification/receipt",
                 "domain-memory/propose",
                 "domain-memory/decide",
+                "stage-attempt/closeout",
+                "lifecycle/receipt",
             },
             "executed_command": executed_command,
             "result": dict(result),
@@ -548,6 +647,18 @@ def _first_skill(skill_catalog: Mapping[str, Any]) -> Mapping[str, Any]:
     if not isinstance(skills, list) or not skills or not isinstance(skills[0], Mapping):
         raise WorkspaceStateError("sidecar_export.skill_catalog 缺少首个 skill。")
     return skills[0]
+
+
+def _typed_blocker_for_receipt(receipt: Mapping[str, Any], *, blocker_kind: str) -> dict[str, Any] | None:
+    if receipt.get("receipt_shape") != "typed_blocker":
+        return None
+    return {
+        "blocker_kind": blocker_kind,
+        "owner": TARGET_DOMAIN_ID,
+        "receipt_ref": receipt.get("receipt_instance_ref"),
+        "source_ref": receipt.get("source_ref"),
+        "next_action": "Route the blocker back to MAG owner surface before mutating grant truth, memory body, or artifact content.",
+    }
 
 
 def _read_json_mapping(path: Path, *, context: str) -> Mapping[str, Any]:

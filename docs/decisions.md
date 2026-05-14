@@ -6,6 +6,12 @@
 - 理由：`domain_runtime.py` 已经收敛为薄 facade / public import surface，继续允许 runtime parts 反向读取 facade 上的 monkeypatch target 会把旧聚合模块重新变成兼容注入层，和当前拆分后的 owner 边界冲突。
 - 影响：`med_autogrant.domain_runtime.*` 不再是 runtime 内部依赖替换面；CLI regression tests 也同步迁到当前 grouped public command tokens。内部 flat command names 只保留在 payload / schema / dispatch contract 中。
 
+## 2026-05-14：补齐 owner / lifecycle runtime receipt evidence path
+
+- 决策：MAG 新增 `product owner-receipt-evidence` 与 `product lifecycle-receipt-evidence`，并让 sidecar `stage-attempt/closeout` 与 `lifecycle/receipt` 写出 MAG-owned runtime receipt evidence instance。
+- 理由：`owner_receipt_contract` 和 `lifecycle_guarded_apply_proof` 已经固定 return shape 与 authority boundary，但 production closure 需要可调用的 receipt writer，让 OPL-hosted attempt closeout、typed blocker、no-regression evidence 和 cleanup/restore/retention guarded apply 都能落到 runtime receipt instance，同时仍不让 OPL 写 grant truth、memory body、quality verdict 或 submission-ready verdict。
+- 影响：MAG repo 内 P1/P4 所需的 receipt evidence path 已可执行；真实 production closure 仍需要 OPL ledger 中的 controlled stage attempt 与 MAG runtime receipt instance 对账，并完成 live soak。新 writer 属于 MAG product-entry/sidecar callable surface，不提升为公开第一入口，也不改变 Codex CLI 默认 executor。
+
 ## 2026-05-13：落地 MAG production functional closure 最小可用 surfaces
 
 - 决策：MAG 在 `product-entry-manifest`、sidecar export、`current-program` 与 OPL family adoption contract 中落地 `owner_receipt_contract`、`controlled_domain_memory_apply_proof.controlled_receipt_instances`、`lifecycle_guarded_apply_proof` 和 `physical_skeleton_follow_through`。

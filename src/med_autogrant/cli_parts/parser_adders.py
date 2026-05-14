@@ -318,3 +318,45 @@ def _add_product_domain_memory_receipt_evidence_command(
     command.add_argument("--runtime-root")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
+
+def _add_product_owner_receipt_evidence_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument(
+        "--receipt-shape",
+        required=True,
+        choices=("domain_owner_receipt", "typed_blocker", "no_regression_evidence"),
+    )
+    command.add_argument("--stage-id", required=True)
+    command.add_argument("--source-ref", required=True)
+    command.add_argument("--closeout-summary", required=True)
+    command.add_argument("--runtime-root")
+    command.add_argument("--receipt-id")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+def _add_product_lifecycle_receipt_evidence_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--input", required=True)
+    command.add_argument("--operation", required=True, choices=("cleanup", "restore", "retention"))
+    command.add_argument(
+        "--receipt-shape",
+        required=True,
+        choices=("domain_owner_receipt", "typed_blocker", "no_regression_evidence"),
+    )
+    command.add_argument("--source-ref", required=True)
+    command.add_argument("--closeout-summary", required=True)
+    command.add_argument("--runtime-root")
+    command.add_argument("--receipt-id")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)

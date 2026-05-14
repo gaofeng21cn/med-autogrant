@@ -417,3 +417,111 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             decision_payload="/tmp/decision.json",
             runtime_root="/tmp/runtime-state",
         )
+
+    def test_owner_receipt_evidence_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "owner-receipt-evidence",
+            "owner_receipt_evidence": {
+                "surface_kind": "mag_owner_receipt_evidence",
+            },
+        }
+
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.write_owner_receipt_evidence.return_value = expected_payload
+
+            stdout_buffer = StringIO()
+            stderr_buffer = StringIO()
+            with redirect_stdout(stdout_buffer), redirect_stderr(stderr_buffer):
+                exit_code = main(
+                    [
+                        "product",
+                        "owner-receipt-evidence",
+                        "--input",
+                        str(CRITIQUE_EXAMPLE_PATH),
+                        "--receipt-shape",
+                        "no_regression_evidence",
+                        "--stage-id",
+                        "review_and_rebuttal",
+                        "--source-ref",
+                        "opl-stage-attempt://attempt-1",
+                        "--closeout-summary",
+                        "No regression evidence.",
+                        "--runtime-root",
+                        "/tmp/runtime-state",
+                        "--receipt-id",
+                        "attempt-1",
+                        "--format",
+                        "json",
+                    ]
+                )
+            stdout = stdout_buffer.getvalue()
+            stderr = stderr_buffer.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.write_owner_receipt_evidence.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            receipt_shape="no_regression_evidence",
+            stage_id="review_and_rebuttal",
+            source_ref="opl-stage-attempt://attempt-1",
+            closeout_summary="No regression evidence.",
+            runtime_root="/tmp/runtime-state",
+            receipt_id="attempt-1",
+        )
+
+    def test_lifecycle_receipt_evidence_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "lifecycle-receipt-evidence",
+            "lifecycle_receipt_evidence": {
+                "surface_kind": "mag_lifecycle_receipt_evidence",
+            },
+        }
+
+        with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+            product_entry = product_entry_class.return_value
+            product_entry.write_lifecycle_receipt_evidence.return_value = expected_payload
+
+            stdout_buffer = StringIO()
+            stderr_buffer = StringIO()
+            with redirect_stdout(stdout_buffer), redirect_stderr(stderr_buffer):
+                exit_code = main(
+                    [
+                        "product",
+                        "lifecycle-receipt-evidence",
+                        "--input",
+                        str(CRITIQUE_EXAMPLE_PATH),
+                        "--operation",
+                        "cleanup",
+                        "--receipt-shape",
+                        "typed_blocker",
+                        "--source-ref",
+                        "opl-lifecycle://cleanup/1",
+                        "--closeout-summary",
+                        "Cleanup requires MAG owner receipt.",
+                        "--runtime-root",
+                        "/tmp/runtime-state",
+                        "--receipt-id",
+                        "cleanup-1",
+                        "--format",
+                        "json",
+                    ]
+                )
+            stdout = stdout_buffer.getvalue()
+            stderr = stderr_buffer.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.write_lifecycle_receipt_evidence.assert_called_once_with(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            operation="cleanup",
+            receipt_shape="typed_blocker",
+            source_ref="opl-lifecycle://cleanup/1",
+            closeout_summary="Cleanup requires MAG owner receipt.",
+            runtime_root="/tmp/runtime-state",
+            receipt_id="cleanup-1",
+        )
