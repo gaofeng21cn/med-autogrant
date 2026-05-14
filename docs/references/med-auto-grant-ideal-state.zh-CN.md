@@ -138,7 +138,8 @@ MAG 保持：
 - workspace、draft、review、revision 和 package truth；
 - fundability、authoring quality 和 submission/export verdict；
 - domain memory accept/reject；
-- stage closeout 和 owner receipt。
+- stage closeout 和 owner receipt；
+- grant transition table / oracle fixtures：把 funding call、fundability、specific aims、review/rebuttal、package/export 和 human gate 状态映射为下一 owner、typed blocker、repair action 或 closeout receipt。OPL runner 可执行这份 spec，但不能解释 fundability-ready、quality-ready 或 export-ready。
 
 ## Domain Memory 理想态
 
@@ -174,6 +175,7 @@ Repo source 应保存：
 OPL 应保存或索引：
 
 - workspace locator、artifact locator、runtime root locator、stage attempt metadata、queue metadata、receipt refs、freshness、repair hints 和 operator projection。
+- transition execution metadata、dispatch receipt refs、human gate refs、retry/dead-letter refs 和 matrix-runner audit refs；grant transition truth、fundability verdict、quality verdict 和 export verdict 仍归 MAG。
 
 这个边界让仓库保持可审查、可发布，运行文件保持可恢复、可清理、可迁移。
 

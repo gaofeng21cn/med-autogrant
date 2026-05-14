@@ -79,6 +79,7 @@ MAG 必须继续持有：
 OPL Framework / One Person Lab App 应提供：
 
 - provider-backed runtime、stage attempt ledger、queue、heartbeat、resume、human gate 和 retry/dead-letter；
+- generic state-machine runner、transition schema、matrix runner、dispatch receipt 和 transition execution audit；
 - workspace/source intake shell、artifact locator、package/export lifecycle shell、restore/retention 和 migration ledger；
 - domain memory locator/index、receipt ref projection、freshness、operator grouping 和 writeback transport 壳；
 - route/decision graph、quality/readiness projection shell、attention queue、operator drilldown、repair command projection 和 observability/SLO；
@@ -94,6 +95,7 @@ OPL Framework / One Person Lab App 应提供：
 | MAG direct path | 单一 app skill / CLI / domain entry 能独立完成 grant authoring、review、package 和 owner receipt | direct capability surface 已落地，product status / user-loop / direct-entry / package submission-ready / quality surfaces 可调用 | 真实 end-to-end grant workspace 的长期 owner receipt、memory writeback 和 package lifecycle proof 不足 | 选一条真实 grant workspace 跑完整 stage closeout，留下 owner receipt、quality closure、package refs 和 no-forbidden-write proof |
 | OPL-hosted MAG path | OPL 托管 stage attempt，MAG 返回 domain receipt、typed blocker 或 no-regression evidence | OPL 可解析 MAG descriptor/stages/memory，已能从 MAG sidecar closeout 观察 owner receipt refs 与 controlled no-regression evidence refs | 真实 grant-stage long-run soak、quality/export owner verdict 和跨 workspace 持续对账仍未闭合 | 继续以真实 grant-stage line 做 long-run soak，并保持 MAG sidecar/direct entry 返回 owner receipt、typed blocker 或 no-regression evidence |
 | Stage-led grant control plane | 6 个 grant stage 具备输入、prompt/skill、knowledge、quality gate、handoff、closeout | OPL `stages list` 可解析 MAG 6-stage plane | stage plane 仍偏 descriptor/projection；真实 provider-hosted stage activity 证据不足 | 对 `fundability_strategy`、`proposal_authoring`、`review_and_rebuttal`、`package_and_submit_ready` 优先跑 controlled attempts |
+| Grant transition table | MAG 理想上声明 domain transition spec，OPL 只执行通用 runner | 当前已有 6-stage plane、owner receipt contract 和 sidecar closeout；OPL generic runner / matrix runner 基础已存在，但 fundability / aims / review / package 的状态组合还未固化成 MAG-owned transition table | MAG 还没有可交给 OPL 执行的 transition matrix / oracle fixture，OPL runner 也还未接入 MAG provider attempt bridge | MAG 定义 grant transition table、guard、oracle fixture、typed blocker 和 owner action；接入 OPL runner，不让 OPL 判断 fundability / quality / export ready |
 | Grant strategy memory | stage 检索少量 memory refs，closeout 生成 proposal，MAG owner accept/reject 并写 receipt | OPL memory descriptor resolved；MAG 已有 descriptor、proposal、accept/reject、runtime receipt evidence writer | retrieval/writeback apply、memory body migration 和真实 workspace receipts 未形成长线闭环 | 把真实 memory body 保持在 workspace/runtime root；OPL 只上收 locator/index/receipt projection 和 freshness |
 | Package/export lifecycle | MAG 持 export gate，OPL/App 展示 package refs、gap report、restore/provenance 和 manual portal boundary | `package submission-ready` 是 MAG-owned export gate；OPL 只读 package/export refs 的通用壳还不完整 | App/workbench 无通用 package/export lifecycle shell，容易把 provider completion误读成 export ready | OPL 提供 package/export shell；MAG 返回 submission-ready verdict、gap report 和 owner receipt |
 | Artifact lifecycle | OPL 管 locator/retention/restore ledger，domain artifact mutation 需 MAG receipt | MAG 已有 lifecycle guarded apply proof；OPL closeout 已观察到 lifecycle receipt refs | cleanup/restore/retention 的长期 workspace coverage 和 App/workbench drilldown 仍不足 | 扩展到真实 grant workspace 的 cleanup/restore/retention guarded receipt，并保持 OPL 只写自有 ledger/locator |
@@ -113,6 +115,7 @@ OPL Framework / One Person Lab App 应提供：
 | Memory writeback transport | proposal refs、receipt refs、accepted/rejected projection、SLO | 是否接受写回、写回正文、fundability/quality 影响 | MAG workspace/runtime root 有 accepted/rejected receipt；OPL 只读 receipt ref |
 | Artifact/package lifecycle shell | artifact locator、package refs、gap report slot、restore/retention ledger、manual portal boundary | submission-ready verdict、export gate、grant package authority | App 显示 refs/gaps/provenance，但不推断 export readiness |
 | Route/decision graph | stage route graph renderer、decision history view、handoff graph | fundability decision、aims strategy、revision rationale | OPL 画图，MAG 输出 route nodes/edges/rationale refs |
+| State-machine runner / transition matrix | transition schema、matrix runner、tick/retry/dead-letter/human gate、dispatch receipt、transition audit | grant transition table、fundability / aims / review / package guards、typed blocker、owner action | OPL 只执行 MAG-declared spec，不产生 fundability-ready、quality-ready 或 export-ready verdict |
 | Quality/readiness projection shell | quality panel、issue lineage viewer、closure dossier locator、attention item | AI critique、authoring quality verdict、hard blocker verdict | 无 active AI critique 时 App 只能显示 projection-only |
 | Operator observability/SLO | provider proof freshness、attempt age、receipt latency、repair actions | domain success/failure meaning | provider ready 不等于 MAG ready；所有状态轴分开显示 |
 | No-forbidden-write / idempotency | source fingerprint、attempt idempotency、forbidden write audit、receipt ledger | workspace mutation permission、artifact write authority | OPL 能证明自己未写 grant truth/artifact/memory body |
@@ -292,8 +295,9 @@ RCA 当前提供了 artifact-heavy domain 的 sibling 样板：direct route 已 
 
 1. 在 MAG 选定一个低风险真实 grant-stage line，目标是把已有 owner receipt / no-regression path 推进到 live-soak 对账或明确 typed blocker。
 2. 与 OPL 对齐 generic primitive absorption 的最小切片：memory locator/writeback transport、package/export lifecycle shell 和 quality/readiness projection shell。
-3. 用真实 workspace 把 grant strategy memory accepted/rejected receipts 推进到 memory body migration 与 retrieval/writeback apply 泛化。
-4. 用真实 workspace 跑 package/export lifecycle 与 cleanup/restore/retention guarded receipts。
-5. 按 latest owner surface 推进 physical skeleton migration；凡是旧模块、旧接口、旧测试已被替代，直接清理或归档，不保留兼容层。
+3. 把 MAG grant transition table / oracle fixtures 固化成 domain spec，并接入 OPL generic runner / transition matrix runner；接入前 MAG 不新建自己的通用 runner。
+4. 用真实 workspace 把 grant strategy memory accepted/rejected receipts 推进到 memory body migration 与 retrieval/writeback apply 泛化。
+5. 用真实 workspace 跑 package/export lifecycle 与 cleanup/restore/retention guarded receipts。
+6. 按 latest owner surface 推进 physical skeleton migration；凡是旧模块、旧接口、旧测试已被替代，直接清理或归档，不保留兼容层。
 
 完成上述步骤后，MAG 才能从 “OPL-compatible descriptor / functional closure ready with controlled evidence” 进入更接近 “production-hosted grant agent” 的状态。
