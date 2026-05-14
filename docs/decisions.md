@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-14：退役 domain runtime facade patch bridge
+
+- 决策：删除 `domain_runtime_parts.patch_targets`，runtime parts 直接引用真实 owner module；测试 patch target 收回到 `domain_runtime_parts.*` owner 模块或实例方法。
+- 理由：`domain_runtime.py` 已经收敛为薄 facade / public import surface，继续允许 runtime parts 反向读取 facade 上的 monkeypatch target 会把旧聚合模块重新变成兼容注入层，和当前拆分后的 owner 边界冲突。
+- 影响：`med_autogrant.domain_runtime.*` 不再是 runtime 内部依赖替换面；CLI regression tests 也同步迁到当前 grouped public command tokens。内部 flat command names 只保留在 payload / schema / dispatch contract 中。
+
 ## 2026-05-13：落地 MAG production functional closure 最小可用 surfaces
 
 - 决策：MAG 在 `product-entry-manifest`、sidecar export、`current-program` 与 OPL family adoption contract 中落地 `owner_receipt_contract`、`controlled_domain_memory_apply_proof.controlled_receipt_instances`、`lifecycle_guarded_apply_proof` 和 `physical_skeleton_follow_through`。

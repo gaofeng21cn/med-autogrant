@@ -61,8 +61,9 @@ class HostedContractBundleCheckpointCasesTest(unittest.TestCase):
                     )
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-hosted-contract-bundle",
-                        "--final-package",
+                        "package",
+                "hosted-contract-bundle",
+                "--final-package",
                         str(final_package_path),
                         "--output",
                         str(hosted_contract_path),
@@ -96,8 +97,9 @@ class HostedContractBundleCheckpointCasesTest(unittest.TestCase):
                     )
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-hosted-contract-bundle",
-                        "--final-package",
+                        "package",
+                "hosted-contract-bundle",
+                "--final-package",
                         str(final_package_path),
                         "--output",
                         str(hosted_contract_path),
@@ -136,8 +138,9 @@ class HostedContractBundleCheckpointCasesTest(unittest.TestCase):
                     )
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-hosted-contract-bundle",
-                        "--final-package",
+                        "package",
+                "hosted-contract-bundle",
+                "--final-package",
                         str(final_package_path),
                         "--output",
                         str(hosted_contract_path),
@@ -163,7 +166,8 @@ class HostedContractBundleCheckpointCasesTest(unittest.TestCase):
             final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -190,7 +194,8 @@ class HostedContractBundleCheckpointCasesTest(unittest.TestCase):
             final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -217,7 +222,8 @@ class HostedContractBundleCheckpointCasesTest(unittest.TestCase):
             final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -268,8 +274,9 @@ class HostedContractBundleCheckpointCasesTest(unittest.TestCase):
                     )
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-hosted-contract-bundle",
-                        "--final-package",
+                        "package",
+                "hosted-contract-bundle",
+                "--final-package",
                         str(final_package_path),
                         "--output",
                         str(hosted_contract_path),
@@ -288,7 +295,8 @@ class HostedContractBundleCheckpointCasesTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             bundle_path = Path(tmp_dir) / "bundle.json"
             build_bundle_exit, _, build_bundle_stderr = self.run_cli(
-                "build-artifact-bundle",
+                "package",
+                "artifact-bundle",
                 "--input",
                 str(input_path),
                 "--output",
@@ -300,7 +308,8 @@ class HostedContractBundleCheckpointCasesTest(unittest.TestCase):
             self.assertEqual(build_bundle_stderr, "")
 
             build_package_exit, _, build_package_stderr = self.run_cli(
-                "build-final-package",
+                "package",
+                "final-package",
                 "--input",
                 str(input_path),
                 "--artifact-bundle",

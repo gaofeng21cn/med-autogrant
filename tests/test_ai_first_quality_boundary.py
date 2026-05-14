@@ -60,14 +60,8 @@ def test_quality_candidate_statuses_are_gated_by_ai_reviewer_backed_critique() -
         return {"surface_kind": "grant_quality_closure_dossier"}
 
     with pytest.MonkeyPatch.context() as monkeypatch:
-        monkeypatch.setattr(
-            runtime_ops,
-            "resolve_runtime_patch_target",
-            lambda name, default: {
-                "build_grant_quality_scorecard": projection_only_scorecard,
-                "build_grant_quality_closure_dossier": closure_dossier,
-            }.get(name, default),
-        )
+        monkeypatch.setattr(runtime_ops, "build_grant_quality_scorecard", projection_only_scorecard)
+        monkeypatch.setattr(runtime_ops, "build_grant_quality_closure_dossier", closure_dossier)
         quality_output = runtime_ops.build_autonomy_quality_evaluator_output({})
 
     assert quality_output["quality_status"] == "not_ready"

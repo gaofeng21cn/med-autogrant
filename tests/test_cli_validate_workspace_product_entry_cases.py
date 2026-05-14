@@ -6,8 +6,9 @@ from cli_validate_cases import *  # noqa: F401,F403
 class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
     def test_product_entry_manifest_exposes_family_orchestration_v2(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "product-entry-manifest",
-            "--input",
+            "product",
+                "manifest",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -48,6 +49,7 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
 
     def test_skill_catalog_returns_machine_readable_app_skill_surface(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
+            "product",
             "skill-catalog",
             "--input",
             str(CRITIQUE_EXAMPLE_PATH),
@@ -83,6 +85,7 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
                 "grant_user_loop",
                 "domain_memory_writeback_proposal",
                 "domain_memory_writeback_decision",
+                "domain_memory_receipt_evidence",
             ],
         )
         self.assertIn("product status", domain_projection["shell_commands"]["product_status"])
@@ -90,6 +93,10 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertIn(
             "product domain-memory-proposal",
             domain_projection["shell_commands"]["domain_memory_writeback_proposal"],
+        )
+        self.assertIn(
+            "product domain-memory-receipt-evidence",
+            domain_projection["shell_commands"]["domain_memory_receipt_evidence"],
         )
         self.assertIn(
             "product domain-memory-decision",
@@ -207,8 +214,9 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
 
     def test_product_entry_manifest_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "product-entry-manifest",
-            "--input",
+            "product",
+                "manifest",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "text",
@@ -228,8 +236,9 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
 
     def test_product_preflight_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "product-preflight",
-            "--input",
+            "product",
+                "preflight",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "text",
@@ -250,8 +259,9 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
 
     def test_product_status_projects_product_entry_surface_and_current_loop(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "product-status",
-            "--input",
+            "product",
+                "status",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -268,8 +278,9 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
 
     def test_product_status_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "product-status",
-            "--input",
+            "product",
+                "status",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "text",
@@ -288,8 +299,9 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
 
     def test_product_start_projects_unified_start_surface(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "product-start",
-            "--input",
+            "product",
+                "start",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -311,7 +323,8 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         with tempfile.TemporaryDirectory() as tmp_dir:
             output_path = Path(tmp_dir) / "product-entry.json"
             exit_code, stdout, stderr = self.run_cli(
-                "build-product-entry",
+                "product",
+                "build-entry",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
                 "--entry-mode",
@@ -343,8 +356,9 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
 
     def test_product_start_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "product-start",
-            "--input",
+            "product",
+                "start",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "text",

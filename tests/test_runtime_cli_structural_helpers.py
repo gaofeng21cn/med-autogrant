@@ -1,16 +1,20 @@
 from __future__ import annotations
 
 import sys
-from types import SimpleNamespace
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 import med_autogrant.cli as cli
+import med_autogrant.domain_runtime_parts.runtime_ops as runtime_ops
 from med_autogrant.cli_rendering import _render_text as public_render_text
 from med_autogrant.cli_rendering_parts import _TEXT_RENDERERS, _render_text as parts_render_text
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
-from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
 from med_autogrant.workspace_stage_validation import _find_active_draft, _validate_active_draft_sections
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
 
 
 def _valid_autonomy_request() -> dict[str, object]:
@@ -93,18 +97,41 @@ def test_cli_module_does_not_hold_entry_classes_as_patch_surfaces() -> None:
     assert not hasattr(cli, "MedAutoGrantProductEntry")
 
 
-def test_runtime_patch_target_resolver_uses_current_mag_ledger_facade_when_loaded() -> None:
-    sentinel = object()
-    with patch("med_autogrant.domain_runtime.MagGrantRunLedger", sentinel, create=True):
-        assert resolve_runtime_patch_target("MagGrantRunLedger", object()) is sentinel
+def test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge() -> None:
+    runtime_parts_root = SRC_ROOT / "med_autogrant" / "domain_runtime_parts"
+    offenders = [
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in sorted(runtime_parts_root.glob("*.py"))
+        if "resolve_runtime_patch_target" in path.read_text(encoding="utf-8")
+    ]
+
+    assert offenders == []
 
 
-def test_runtime_patch_target_resolver_ignores_retired_runtime_facade_module() -> None:
-    default = object()
-    retired_only_target = object()
-    retired_name = "med_autogrant." + "hermes" + "_runtime"
-    with patch.dict(sys.modules, {retired_name: SimpleNamespace(RetiredOnlyTarget=retired_only_target)}):
-        assert resolve_runtime_patch_target("RetiredOnlyTarget", default) is default
+def test_autonomy_quality_evaluator_uses_owner_module_quality_builders() -> None:
+    sentinel_scorecard = {
+        "surface_kind": "grant_quality_scorecard",
+        "overall_status": "submission_grade_candidate",
+        "ai_reviewer_required": False,
+        "unresolved_hard_issues": [],
+        "tracked_issues": [],
+        "dimensions": [],
+        "evidence_supply_queue": [],
+    }
+    sentinel_dossier = {"surface_kind": "grant_quality_closure_dossier"}
+
+    with patch.object(runtime_ops, "build_grant_quality_scorecard", return_value=sentinel_scorecard) as scorecard, patch.object(
+        runtime_ops,
+        "build_grant_quality_closure_dossier",
+        return_value=sentinel_dossier,
+    ) as dossier:
+        payload = runtime_ops.build_autonomy_quality_evaluator_output({"workspace_id": "ws-structure"})
+
+    assert payload["quality_status"] == "submission_grade_candidate"
+    assert payload["blocker_report"] is sentinel_scorecard
+    assert payload["quality_closure_dossier"] is sentinel_dossier
+    scorecard.assert_called_once_with({"workspace_id": "ws-structure"})
+    dossier.assert_called_once_with({"workspace_id": "ws-structure"})
 
 
 def test_product_entry_default_domain_entry_loader_is_lazy() -> None:

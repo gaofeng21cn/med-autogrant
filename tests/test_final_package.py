@@ -33,7 +33,8 @@ class FinalPackageCliTest(unittest.TestCase):
             self._build_bundle(FREEZE_READY_EXAMPLE_PATH, bundle_path)
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-final-package",
+                "package",
+                "final-package",
                 "--input",
                 str(FREEZE_READY_EXAMPLE_PATH),
                 "--artifact-bundle",
@@ -111,7 +112,8 @@ class FinalPackageCliTest(unittest.TestCase):
             self._build_bundle(FROZEN_EXAMPLE_PATH, bundle_path)
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-final-package",
+                "package",
+                "final-package",
                 "--input",
                 str(FROZEN_EXAMPLE_PATH),
                 "--artifact-bundle",
@@ -138,7 +140,8 @@ class FinalPackageCliTest(unittest.TestCase):
             self._build_bundle(FORWARD_PROGRESS_EXAMPLE_PATH, bundle_path)
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-final-package",
+                "package",
+                "final-package",
                 "--input",
                 str(FORWARD_PROGRESS_EXAMPLE_PATH),
                 "--artifact-bundle",
@@ -175,7 +178,8 @@ class FinalPackageCliTest(unittest.TestCase):
             )
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-final-package",
+                "package",
+                "final-package",
                 "--input",
                 str(FREEZE_READY_EXAMPLE_PATH),
                 "--artifact-bundle",
@@ -202,7 +206,8 @@ class FinalPackageCliTest(unittest.TestCase):
             bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-final-package",
+                "package",
+                "final-package",
                 "--input",
                 str(FROZEN_EXAMPLE_PATH),
                 "--artifact-bundle",
@@ -231,7 +236,8 @@ class FinalPackageCliTest(unittest.TestCase):
             bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-final-package",
+                "package",
+                "final-package",
                 "--input",
                 str(FROZEN_EXAMPLE_PATH),
                 "--artifact-bundle",
@@ -287,8 +293,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -335,8 +342,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -372,8 +380,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -409,8 +418,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -449,8 +459,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -492,8 +503,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -526,8 +538,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -565,8 +578,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -611,8 +625,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -688,8 +703,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -733,8 +749,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -771,8 +788,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -807,8 +825,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -845,8 +864,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -886,8 +906,9 @@ class FinalPackageCliTest(unittest.TestCase):
                     bundle_path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-final-package",
-                        "--input",
+                        "package",
+                "final-package",
+                "--input",
                         str(FROZEN_EXAMPLE_PATH),
                         "--artifact-bundle",
                         str(bundle_path),
@@ -923,7 +944,8 @@ class FinalPackageCliTest(unittest.TestCase):
             )
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-final-package",
+                "package",
+                "final-package",
                 "--input",
                 str(FREEZE_READY_EXAMPLE_PATH),
                 "--artifact-bundle",
@@ -942,8 +964,9 @@ class FinalPackageCliTest(unittest.TestCase):
 
     def _build_bundle(self, input_path: Path, output_path: Path) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "build-artifact-bundle",
-            "--input",
+            "package",
+                "artifact-bundle",
+                "--input",
             str(input_path),
             "--output",
             str(output_path),

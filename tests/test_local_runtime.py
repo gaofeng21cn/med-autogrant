@@ -72,8 +72,9 @@ class RuntimeCliTest(unittest.TestCase):
                 clear=False,
             ):
                 exit_code, stdout, stderr = self.run_cli(
-                    "runtime-run",
-                    "--input",
+                    "runtime",
+                "run",
+                "--input",
                     str(REVISION_EXAMPLE_PATH),
                     "--format",
                     "json",
@@ -90,7 +91,8 @@ class RuntimeCliTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "revision-journal.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(REVISION_EXAMPLE_PATH),
                 "--journal",
@@ -132,7 +134,8 @@ class RuntimeCliTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "revision-envelope-journal.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(REVISION_EXAMPLE_PATH),
                 "--journal",
@@ -198,7 +201,8 @@ class RuntimeCliTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "major-revision-envelope-journal.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH),
                 "--journal",
@@ -235,7 +239,8 @@ class RuntimeCliTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "p3b-revised-journal.json"
 
             execute_exit, execute_stdout, execute_stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH),
                 "--output",
@@ -249,7 +254,8 @@ class RuntimeCliTest(unittest.TestCase):
             self.assertTrue(json.loads(execute_stdout)["ok"])
 
             exit_code, stdout, stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(revised_output),
                 "--journal",
@@ -291,8 +297,9 @@ class RuntimeCliTest(unittest.TestCase):
                 with self.subTest(input_path=input_path.name):
                     journal_path = Path(tmp_dir) / journal_name
                     exit_code, stdout, stderr = self.run_cli(
-                        "runtime-run",
-                        "--input",
+                        "runtime",
+                "run",
+                "--input",
                         str(input_path),
                         "--journal",
                         str(journal_path),
@@ -314,7 +321,8 @@ class RuntimeCliTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "rollback-journal.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(FORCED_ROLLBACK_EXAMPLE_PATH),
                 "--journal",
@@ -337,7 +345,8 @@ class RuntimeCliTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "freeze-ready-journal.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
                 "--journal",
@@ -360,7 +369,8 @@ class RuntimeCliTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "frozen-journal.json"
 
             exit_code, stdout, stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
                 "--journal",
@@ -386,7 +396,8 @@ class RuntimeCliTest(unittest.TestCase):
             invalid_workspace.write_text(json.dumps(document, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(invalid_workspace),
                 "--journal",
@@ -444,7 +455,8 @@ class RuntimeCliTest(unittest.TestCase):
             invalid_workspace.write_text(json.dumps(document, ensure_ascii=False, indent=2), encoding="utf-8")
 
             first_exit, first_stdout, first_stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(invalid_workspace),
                 "--journal",
@@ -457,7 +469,8 @@ class RuntimeCliTest(unittest.TestCase):
             self.assertFalse(json.loads(first_stdout)["ok"])
 
             second_exit, second_stdout, second_stderr = self.run_cli(
-                "runtime-resume",
+                "runtime",
+                "resume",
                 "--journal",
                 str(journal_path),
                 "--format",
@@ -491,7 +504,8 @@ class RuntimeCliTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "resume-journal.json"
 
             first_exit, first_stdout, first_stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(REVISION_EXAMPLE_PATH),
                 "--journal",
@@ -505,7 +519,8 @@ class RuntimeCliTest(unittest.TestCase):
             self.assertEqual(first_payload["attempt_index"], 1)
 
             second_exit, second_stdout, second_stderr = self.run_cli(
-                "runtime-resume",
+                "runtime",
+                "resume",
                 "--journal",
                 str(journal_path),
                 "--format",
@@ -543,7 +558,8 @@ class RuntimeCliTest(unittest.TestCase):
             journal_path = Path(tmp_dir) / "shared-journal.json"
 
             first_exit, _, first_stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(REVISION_EXAMPLE_PATH),
                 "--journal",
@@ -555,7 +571,8 @@ class RuntimeCliTest(unittest.TestCase):
             self.assertEqual(first_stderr, "")
 
             second_exit, second_stdout, second_stderr = self.run_cli(
-                "runtime-run",
+                "runtime",
+                "run",
                 "--input",
                 str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
                 "--journal",

@@ -27,7 +27,6 @@ from med_autogrant.domain_runtime_parts.io import (
     _write_json_output,
     _write_revised_workspace_output,
 )
-from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.domain_runtime_parts.runtime_ops import _apply_quality_gate_to_route
 from med_autogrant.domain_runtime_parts.shared import AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE
 from med_autogrant.domain_runtime_parts.contracts import validate_schema_payload as _validate_schema_payload
@@ -66,11 +65,7 @@ class AuthoringMainlineRuntime:
 
     def quality_aware_route_resolver(self, workspace: dict[str, Any]) -> dict[str, Any]:
         route = determine_next_step(workspace)
-        build_scorecard = resolve_runtime_patch_target(
-            "build_grant_quality_scorecard",
-            build_grant_quality_scorecard,
-        )
-        quality_scorecard = build_scorecard(workspace)
+        quality_scorecard = build_grant_quality_scorecard(workspace)
         return _apply_quality_gate_to_route(route=route, quality_scorecard=quality_scorecard)
 
     def write_final_workspace(self, workspace: dict[str, Any]) -> Path:
@@ -87,16 +82,8 @@ class AuthoringMainlineRuntime:
         loop: dict[str, Any],
         max_cycles: int,
     ) -> dict[str, Any]:
-        build_scorecard = resolve_runtime_patch_target(
-            "build_grant_quality_scorecard",
-            build_grant_quality_scorecard,
-        )
-        build_dossier = resolve_runtime_patch_target(
-            "build_grant_quality_closure_dossier",
-            build_grant_quality_closure_dossier,
-        )
-        quality_scorecard = build_scorecard(final_workspace)
-        quality_closure_dossier = build_dossier(final_workspace)
+        quality_scorecard = build_grant_quality_scorecard(final_workspace)
+        quality_closure_dossier = build_grant_quality_closure_dossier(final_workspace)
         mainline_loop_report = {
             "surface_kind": "authoring_mainline_loop_report",
             "loop_version": 1,

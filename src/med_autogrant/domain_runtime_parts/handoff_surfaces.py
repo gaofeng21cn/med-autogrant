@@ -22,7 +22,6 @@ from med_autogrant.domain_runtime_parts.io import (
     _write_artifact_bundle_output,
     _write_revised_workspace_output,
 )
-from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 
 
 class DomainRuntimeHandoffSurfaceMixin:
@@ -141,28 +140,16 @@ class DomainRuntimeHandoffSurfaceMixin:
         output_path: str | Path,
     ) -> dict[str, Any]:
         document = self._load_workspace(input_path)
-        build_bundle_document = resolve_runtime_patch_target(
-            "build_artifact_bundle_document",
-            build_artifact_bundle_document,
-        )
-        guard_bundle_output = resolve_runtime_patch_target(
-            "_guard_artifact_bundle_output_identity",
-            _guard_artifact_bundle_output_identity,
-        )
-        write_bundle_output = resolve_runtime_patch_target(
-            "_write_artifact_bundle_output",
-            _write_artifact_bundle_output,
-        )
-        bundle = build_bundle_document(document=document)
+        bundle = build_artifact_bundle_document(document=document)
         resolved_output_path = Path(output_path).expanduser().resolve()
-        guard_bundle_output(
+        _guard_artifact_bundle_output_identity(
             resolved_output_path,
             grant_run_id=bundle["grant_run_id"],
             workspace_id=bundle["workspace_id"],
             draft_id=bundle["draft_id"],
             lifecycle_stage=bundle["lifecycle_stage"],
         )
-        write_bundle_output(resolved_output_path, bundle)
+        _write_artifact_bundle_output(resolved_output_path, bundle)
         return {
             "ok": True,
             "command": "build-artifact-bundle",
@@ -181,21 +168,9 @@ class DomainRuntimeHandoffSurfaceMixin:
         output_path: str | Path,
     ) -> dict[str, Any]:
         document = self._load_workspace(input_path)
-        build_revision_document = resolve_runtime_patch_target(
-            "build_revision_execution_document",
-            build_revision_execution_document,
-        )
-        guard_revision_output = resolve_runtime_patch_target(
-            "_guard_revision_output_identity",
-            _guard_revision_output_identity,
-        )
-        write_revised_workspace_output = resolve_runtime_patch_target(
-            "_write_revised_workspace_output",
-            _write_revised_workspace_output,
-        )
-        revision_document = build_revision_document(document=document)
+        revision_document = build_revision_execution_document(document=document)
         resolved_output_path = Path(output_path).expanduser().resolve()
-        guard_revision_output(
+        _guard_revision_output_identity(
             resolved_output_path,
             grant_run_id=revision_document["grant_run_id"],
             workspace_id=revision_document["workspace_id"],
@@ -203,7 +178,7 @@ class DomainRuntimeHandoffSurfaceMixin:
             active_revision_plan_id=revision_document["active_revision_plan_id"],
             lifecycle_stage=revision_document["lifecycle_stage"],
         )
-        write_revised_workspace_output(
+        _write_revised_workspace_output(
             resolved_output_path,
             revision_document["revised_workspace"],
         )
@@ -226,25 +201,13 @@ class DomainRuntimeHandoffSurfaceMixin:
         output_path: str | Path,
         executor_kind: str | None = None,
     ) -> dict[str, Any]:
-        build_critique_document = resolve_runtime_patch_target(
-            "build_critique_execution_document",
-            build_critique_execution_document,
-        )
-        guard_critique_output = resolve_runtime_patch_target(
-            "_guard_critique_output_identity",
-            _guard_critique_output_identity,
-        )
-        write_revised_workspace_output = resolve_runtime_patch_target(
-            "_write_revised_workspace_output",
-            _write_revised_workspace_output,
-        )
-        critique_document = build_critique_document(
+        critique_document = build_critique_execution_document(
             document=self._load_workspace(input_path),
             input_path=input_path,
             executor_kind=executor_kind,
         )
         resolved_output_path = Path(output_path).expanduser().resolve()
-        guard_critique_output(
+        _guard_critique_output_identity(
             resolved_output_path,
             grant_run_id=critique_document["grant_run_id"],
             workspace_id=critique_document["workspace_id"],
@@ -252,7 +215,7 @@ class DomainRuntimeHandoffSurfaceMixin:
             active_revision_plan_id=critique_document["active_revision_plan_id"],
             lifecycle_stage=critique_document["lifecycle_stage"],
         )
-        write_revised_workspace_output(
+        _write_revised_workspace_output(
             resolved_output_path,
             critique_document["critique_workspace"],
         )

@@ -53,8 +53,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p2a_input_intake_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(INPUT_EXAMPLE_PATH),
             "--format",
             "json",
@@ -68,8 +69,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p2a_direction_screening_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(DIRECTION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -83,8 +85,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_non_nsfc_profiled_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(NON_NSFC_INPUT_EXAMPLE_PATH),
             "--format",
             "json",
@@ -98,8 +101,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p2b_argument_building_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(ARGUMENT_EXAMPLE_PATH),
             "--format",
             "json",
@@ -113,8 +117,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p2b_fit_alignment_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(FIT_EXAMPLE_PATH),
             "--format",
             "json",
@@ -128,8 +133,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p2b_outline_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(OUTLINE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -143,8 +149,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p2c_drafting_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(DRAFTING_EXAMPLE_PATH),
             "--format",
             "json",
@@ -158,8 +165,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p2c_critique_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -173,8 +181,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p2c_revision_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(REVISION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -188,8 +197,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p3a_major_reframe_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(MAJOR_REFRAME_EXAMPLE_PATH),
             "--format",
             "json",
@@ -203,8 +213,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_accepts_p3a_ready_for_submission_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -235,7 +246,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             entry = entry_class.return_value
             entry.dispatch.return_value = expected_payload
             exit_code, stdout, stderr = self.run_cli(
-                "grant-intake-audit",
+                "workspace",
+                "intake-audit",
                 "--input",
                 str(INPUT_EXAMPLE_PATH),
                 "--format",
@@ -271,7 +283,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             entry = entry_class.return_value
             entry.dispatch.return_value = expected_payload
             exit_code, stdout, stderr = self.run_cli(
-                "grant-evidence-grounding",
+                "workspace",
+                "evidence-grounding",
                 "--input",
                 str(INPUT_EXAMPLE_PATH),
                 "--format",
@@ -316,7 +329,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
             entry = entry_class.return_value
             entry.dispatch.return_value = expected_payload
             exit_code, stdout, stderr = self.run_cli(
-                "execute-critique-pass",
+                "pass",
+                "critique",
                 "--input",
                 str(DRAFTING_EXAMPLE_PATH),
                 "--output",
@@ -341,8 +355,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_summarize_workspace_exposes_current_selection_for_question_refinement(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "summarize-workspace",
-            "--input",
+            "workspace",
+                "summarize",
+                "--input",
             str(QUESTION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -358,8 +373,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_summarize_workspace_exposes_intake_and_evidence_surfaces_for_input_intake(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "summarize-workspace",
-            "--input",
+            "workspace",
+                "summarize",
+                "--input",
             str(INPUT_EXAMPLE_PATH),
             "--format",
             "json",
@@ -374,8 +390,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_grant_intake_audit_projects_machine_readable_intake_surface(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-intake-audit",
-            "--input",
+            "workspace",
+                "intake-audit",
+                "--input",
             str(INPUT_EXAMPLE_PATH),
             "--format",
             "json",
@@ -391,8 +408,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_grant_evidence_grounding_projects_machine_readable_grounding_surface(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-evidence-grounding",
-            "--input",
+            "workspace",
+                "evidence-grounding",
+                "--input",
             str(INPUT_EXAMPLE_PATH),
             "--format",
             "json",
@@ -411,8 +429,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_grant_progress_projects_user_facing_stage_summary_for_critique_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-progress",
-            "--input",
+            "workspace",
+                "progress",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -437,8 +456,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_grant_progress_plain_text_prefers_shared_human_status_narration(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-progress",
-            "--input",
+            "workspace",
+                "progress",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "text",
@@ -454,8 +474,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_grant_cockpit_projects_workspace_alerts_and_commands(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-cockpit",
-            "--input",
+            "workspace",
+                "cockpit",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -479,8 +500,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_grant_direct_entry_composes_product_surface_for_critique_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-direct-entry",
-            "--input",
+            "product",
+                "direct-entry",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--task-intent",
             "tighten-grant-mainline",
@@ -510,8 +532,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_mainline_status_projects_current_line_focus_and_maintainer_references(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "mainline-status",
-            "--format",
+            "mainline",
+                "status",
+                "--format",
             "json",
         )
 
@@ -531,8 +554,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_validate_workspace_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(EXAMPLE_PATH),
             "--format",
             "text",
@@ -552,8 +576,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_summarize_workspace_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "summarize-workspace",
-            "--input",
+            "workspace",
+                "summarize",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "text",
@@ -578,8 +603,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_critique_summary_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(EXAMPLE_PATH),
             "--format",
             "text",
@@ -602,7 +628,8 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_mainline_phase_resolves_next_selector(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "mainline-phase",
+            "mainline",
+            "phase",
             "--phase",
             "next",
             "--format",
@@ -617,8 +644,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_grant_user_loop_projects_mainline_snapshot_and_route_action(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-user-loop",
-            "--input",
+            "product",
+                "user-loop",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--task-intent",
             "tighten-grant-mainline",
@@ -647,8 +675,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_grant_user_loop_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-user-loop",
-            "--input",
+            "product",
+                "user-loop",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--task-intent",
             "tighten-grant-mainline",
@@ -679,8 +708,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         for example_path, current_stage, recommended_stage in cases:
             with self.subTest(example=example_path.name):
                 exit_code, stdout, stderr = self.run_cli(
-                    "next-step",
-                    "--input",
+                    "workspace",
+                "next-step",
+                "--input",
                     str(example_path),
                     "--format",
                     "json",
@@ -694,8 +724,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_summarize_workspace_exposes_active_fit_mapping_for_fit_alignment(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "summarize-workspace",
-            "--input",
+            "workspace",
+                "summarize",
+                "--input",
             str(FIT_EXAMPLE_PATH),
             "--format",
             "json",
@@ -719,8 +750,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         for example_path, current_stage, recommended_stage in cases:
             with self.subTest(example=example_path.name):
                 exit_code, stdout, stderr = self.run_cli(
-                    "next-step",
-                    "--input",
+                    "workspace",
+                "next-step",
+                "--input",
                     str(example_path),
                     "--format",
                     "json",
@@ -734,8 +766,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_summarize_workspace_exposes_draft_audit_for_p2c_drafting(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "summarize-workspace",
-            "--input",
+            "workspace",
+                "summarize",
+                "--input",
             str(DRAFTING_EXAMPLE_PATH),
             "--format",
             "json",
@@ -759,8 +792,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         for example_path, current_stage, recommended_stage in cases:
             with self.subTest(example=example_path.name):
                 exit_code, stdout, stderr = self.run_cli(
-                    "next-step",
-                    "--input",
+                    "workspace",
+                "next-step",
+                "--input",
                     str(example_path),
                     "--format",
                     "json",
@@ -774,8 +808,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_next_step_routes_major_reframe_back_to_question_refinement(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "next-step",
-            "--input",
+            "workspace",
+                "next-step",
+                "--input",
             str(MAJOR_REFRAME_EXAMPLE_PATH),
             "--format",
             "json",
@@ -790,8 +825,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_next_step_routes_ready_for_submission_to_frozen(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "next-step",
-            "--input",
+            "workspace",
+                "next-step",
+                "--input",
             str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -806,8 +842,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_next_step_routes_forced_rollback_to_argument_building(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "next-step",
-            "--input",
+            "workspace",
+                "next-step",
+                "--input",
             str(FORCED_ROLLBACK_EXAMPLE_PATH),
             "--format",
             "json",
@@ -823,8 +860,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
 
     def test_next_step_keeps_presubmission_frozen_workspace_at_frozen(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "next-step",
-            "--input",
+            "workspace",
+                "next-step",
+                "--input",
             str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
             "--format",
             "json",

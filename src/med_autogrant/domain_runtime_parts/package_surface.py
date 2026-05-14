@@ -37,12 +37,7 @@ from med_autogrant.domain_runtime_parts.io import (
     _write_hosted_contract_bundle_output,
     _write_submission_ready_package_output,
 )
-from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.domain_runtime_parts.shared import SUBMISSION_READY_PACKAGE_SCHEMA_FILE
-
-
-def _hosted_contract_bundle_document_builder() -> Any:
-    return resolve_runtime_patch_target("build_hosted_contract_bundle_document", build_hosted_contract_bundle_document)
 
 
 class DomainRuntimePackageSurfaceMixin:
@@ -56,39 +51,26 @@ class DomainRuntimePackageSurfaceMixin:
         document = self._load_workspace(input_path)
         context = _require_workspace_context(document)
         active_draft = context.active_draft
-        read_artifact_bundle = resolve_runtime_patch_target("_read_artifact_bundle", _read_artifact_bundle)
-        build_final_package = resolve_runtime_patch_target(
-            "build_final_package_document",
-            build_final_package_document,
-        )
-        guard_final_package_output = resolve_runtime_patch_target(
-            "_guard_final_package_output_identity",
-            _guard_final_package_output_identity,
-        )
-        write_final_package_output = resolve_runtime_patch_target(
-            "_write_final_package_output",
-            _write_final_package_output,
-        )
-        artifact_bundle = read_artifact_bundle(
+        artifact_bundle = _read_artifact_bundle(
             artifact_bundle_path,
             grant_run_id=document["grant_run_id"],
             workspace_id=document["workspace_id"],
             draft_id=active_draft["draft_id"],
             lifecycle_stage=document.get("lifecycle_stage"),
         )
-        final_package = build_final_package(
+        final_package = build_final_package_document(
             document=document,
             artifact_bundle=artifact_bundle,
         )
         resolved_output_path = Path(output_path).expanduser().resolve()
-        guard_final_package_output(
+        _guard_final_package_output_identity(
             resolved_output_path,
             grant_run_id=final_package["grant_run_id"],
             workspace_id=final_package["workspace_id"],
             draft_id=final_package["draft_id"],
             lifecycle_stage=final_package["lifecycle_stage"],
         )
-        write_final_package_output(resolved_output_path, final_package)
+        _write_final_package_output(resolved_output_path, final_package)
         return {
             "ok": True,
             "command": "build-final-package",
@@ -110,7 +92,7 @@ class DomainRuntimePackageSurfaceMixin:
         _validate_required_final_package_fields(final_package)
         current_program_contract = _read_current_program_contract()
         program_id = _read_program_id()
-        hosted_contract_bundle = _hosted_contract_bundle_document_builder()(
+        hosted_contract_bundle = build_hosted_contract_bundle_document(
             final_package=final_package,
             program_id=program_id,
             runtime_substrate_contract=_build_runtime_substrate_contract(

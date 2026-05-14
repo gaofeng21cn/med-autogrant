@@ -50,7 +50,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -247,7 +248,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
 
             with patch(
-                "med_autogrant.domain_runtime.build_hosted_contract_bundle_document",
+                "med_autogrant.domain_runtime_parts.package_surface.build_hosted_contract_bundle_document",
                 return_value={
                     "contract_version": 1,
                     "bundle_kind": "hosted_contract_bundle",
@@ -278,7 +279,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             )
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -303,7 +305,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -330,7 +333,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -357,7 +361,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -384,7 +389,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -411,7 +417,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             final_package_path.write_text(json.dumps(final_package, ensure_ascii=False, indent=2), encoding="utf-8")
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -448,8 +455,9 @@ class HostedContractBundleCliTest(unittest.TestCase):
                     )
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-hosted-contract-bundle",
-                        "--final-package",
+                        "package",
+                "hosted-contract-bundle",
+                "--final-package",
                         str(final_package_path),
                         "--output",
                         str(hosted_contract_path),
@@ -488,8 +496,9 @@ class HostedContractBundleCliTest(unittest.TestCase):
                     )
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-hosted-contract-bundle",
-                        "--final-package",
+                        "package",
+                "hosted-contract-bundle",
+                "--final-package",
                         str(final_package_path),
                         "--output",
                         str(hosted_contract_path),
@@ -528,8 +537,9 @@ class HostedContractBundleCliTest(unittest.TestCase):
                     )
 
                     exit_code, stdout, stderr = self.run_cli(
-                        "build-hosted-contract-bundle",
-                        "--final-package",
+                        "package",
+                "hosted-contract-bundle",
+                "--final-package",
                         str(final_package_path),
                         "--output",
                         str(hosted_contract_path),
@@ -563,7 +573,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             )
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -601,7 +612,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             )
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -625,7 +637,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self._build_final_package(FROZEN_EXAMPLE_PATH, final_package_path)
 
             first_exit, first_stdout, first_stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -639,7 +652,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self.assertTrue(first_payload["ok"])
 
             second_exit, second_stdout, second_stderr = self.run_cli(
-                "build-hosted-contract-bundle",
+                "package",
+                "hosted-contract-bundle",
                 "--final-package",
                 str(final_package_path),
                 "--output",
@@ -661,7 +675,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             bundle_path = Path(tmp_dir) / "bundle.json"
             build_bundle_exit, _, build_bundle_stderr = self.run_cli(
-                "build-artifact-bundle",
+                "package",
+                "artifact-bundle",
                 "--input",
                 str(input_path),
                 "--output",
@@ -673,7 +688,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self.assertEqual(build_bundle_stderr, "")
 
             build_package_exit, _, build_package_stderr = self.run_cli(
-                "build-final-package",
+                "package",
+                "final-package",
                 "--input",
                 str(input_path),
                 "--artifact-bundle",

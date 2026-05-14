@@ -54,7 +54,7 @@ class OptionalHermesProofCliProbeTest(unittest.TestCase):
         with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
             entry = entry_class.return_value
             entry.dispatch.return_value = expected_payload
-            exit_code, stdout, stderr = self.run_cli("probe-upstream-hermes", "--format", "json")
+            exit_code, stdout, stderr = self.run_cli("runtime", "probe-hermes", "--format", "json")
 
         self.assertEqual(exit_code, 0)
         self.assertEqual(stderr, "")
@@ -69,7 +69,7 @@ class MagRuntimeLedgerTest(unittest.TestCase):
         runtime = MagDomainRuntime()
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "revision-journal.json"
-            with patch("med_autogrant.domain_runtime.MagGrantRunLedger") as ledger_class:
+            with patch("med_autogrant.domain_runtime_parts.substrate.MagGrantRunLedger") as ledger_class:
                 ledger = ledger_class.return_value
                 ledger.record_attempt.return_value = 7
 

@@ -46,7 +46,6 @@ from med_autogrant.stage_router import _build_forced_rollback_actions, determine
 from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.domain_runtime_parts import shared as _runtime_shared
 from med_autogrant.domain_runtime_parts.package_surface import DomainRuntimePackageSurfaceMixin
-from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
     build_grant_evidence_grounding,
@@ -152,11 +151,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
                 "revised_workspace": revision_document["revised_workspace"],
             }
 
-        run_critique_loop = resolve_runtime_patch_target(
-            "run_critique_revision_closed_loop",
-            run_critique_revision_closed_loop,
-        )
-        loop = run_critique_loop(
+        loop = run_critique_revision_closed_loop(
             current_document=starting_document,
             max_rounds=max_rounds,
             critique_runner=critique_runner,
@@ -175,16 +170,8 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
             else None,
         )
         _write_revised_workspace_output(final_workspace_path, final_workspace)
-        build_scorecard = resolve_runtime_patch_target(
-            "build_grant_quality_scorecard",
-            build_grant_quality_scorecard,
-        )
-        build_dossier = resolve_runtime_patch_target(
-            "build_grant_quality_closure_dossier",
-            build_grant_quality_closure_dossier,
-        )
-        quality_scorecard = build_scorecard(final_workspace)
-        quality_closure_dossier = build_dossier(final_workspace)
+        quality_scorecard = build_grant_quality_scorecard(final_workspace)
+        quality_closure_dossier = build_grant_quality_closure_dossier(final_workspace)
         loop_report = {
             "surface_kind": "critique_loop_report",
             "loop_version": 1,
@@ -251,10 +238,6 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
         resolved_output_dir = Path(output_dir).expanduser().resolve()
         resolved_output_dir.mkdir(parents=True, exist_ok=True)
 
-        run_mainline_controller = resolve_runtime_patch_target(
-            "run_authoring_mainline_controller",
-            run_authoring_mainline_controller,
-        )
         return build_authoring_mainline_payload(
             runtime=self,
             input_path=resolved_input_path,
@@ -262,7 +245,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
             starting_workspace=starting_workspace,
             max_cycles=max_cycles,
             executor_kind=executor_kind,
-            run_authoring_mainline_controller=run_mainline_controller,
+            run_authoring_mainline_controller=run_authoring_mainline_controller,
         )
 
     def execute_grant_autonomy_controller(
@@ -336,11 +319,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
                 "mainline_loop_report": mainline_payload["mainline_loop_report"],
             }
 
-        run_controller = resolve_runtime_patch_target(
-            "run_grant_autonomy_controller",
-            run_grant_autonomy_controller,
-        )
-        report = run_controller(
+        report = run_grant_autonomy_controller(
             request=request,
             selector=_selector,
             initializer=_initializer,

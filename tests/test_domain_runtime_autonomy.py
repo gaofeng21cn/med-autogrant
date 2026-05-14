@@ -231,7 +231,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
             output_dir = Path(tmp_dir) / "autonomy-output"
             request_path.write_text(json.dumps(request, ensure_ascii=False), encoding="utf-8")
 
-            with patch("med_autogrant.domain_runtime.run_grant_autonomy_controller") as run_controller:
+            with patch("med_autogrant.domain_runtime_parts.authoring_surface.run_grant_autonomy_controller") as run_controller:
                 run_controller.return_value = report
                 payload = MagDomainRuntime().execute_grant_autonomy_controller(
                     input_path=request_path,
@@ -395,7 +395,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
                 self.assertIn("execute-grant-autonomy-controller", grammar["governance_entry_points"])
                 return report
 
-            with patch("med_autogrant.domain_runtime.run_grant_autonomy_controller") as run_controller:
+            with patch("med_autogrant.domain_runtime_parts.authoring_surface.run_grant_autonomy_controller") as run_controller:
                 run_controller.side_effect = _run_controller_side_effect
                 payload = MagDomainRuntime().execute_grant_autonomy_controller(
                     input_path=request_path,

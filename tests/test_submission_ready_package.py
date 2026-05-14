@@ -29,7 +29,8 @@ class SubmissionReadyPackageCliTest(unittest.TestCase):
             output_dir = Path(tmp_dir) / "submission-ready"
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-submission-ready-package",
+                "package",
+                "submission-ready",
                 "--input",
                 str(workspace_path),
                 "--output-dir",
@@ -83,7 +84,8 @@ class SubmissionReadyPackageCliTest(unittest.TestCase):
             output_dir = Path(tmp_dir) / "submission-ready"
 
             exit_code, stdout, stderr = self.run_cli(
-                "build-submission-ready-package",
+                "package",
+                "submission-ready",
                 "--input",
                 str(FROZEN_EXAMPLE_PATH),
                 "--output-dir",

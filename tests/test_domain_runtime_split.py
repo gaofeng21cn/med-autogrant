@@ -99,13 +99,16 @@ class RuntimeSplitStructureTest(unittest.TestCase):
 
         self.assertEqual(["src/med_autogrant/upstream_hermes.py"], offenders)
 
-    def test_runtime_patch_target_resolver_uses_only_canonical_module(self) -> None:
-        patch_targets_text = (
-            SRC_ROOT / "med_autogrant" / "domain_runtime_parts" / "patch_targets.py"
-        ).read_text(encoding="utf-8")
+    def test_runtime_patch_target_bridge_is_retired(self) -> None:
+        self.assertFalse((SRC_ROOT / "med_autogrant" / "domain_runtime_parts" / "patch_targets.py").exists())
 
-        self.assertIn('"med_autogrant.domain_runtime"', patch_targets_text)
-        self.assertNotIn(OLD_RUNTIME_MODULE, patch_targets_text)
+        offenders = [
+            path.relative_to(REPO_ROOT).as_posix()
+            for path in sorted((SRC_ROOT / "med_autogrant" / "domain_runtime_parts").glob("*.py"))
+            if "resolve_runtime_patch_target" in path.read_text(encoding="utf-8")
+        ]
+
+        self.assertEqual([], offenders)
 
     def test_runtime_parts_do_not_import_runtime_facade(self) -> None:
         runtime_parts = sorted((SRC_ROOT / "med_autogrant" / "domain_runtime_parts").glob("*.py"))

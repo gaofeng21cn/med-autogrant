@@ -6,8 +6,9 @@ from cli_validate_cases import *  # noqa: F401,F403
 class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
     def test_validate_workspace_json_output(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(EXAMPLE_PATH),
             "--format",
             "json",
@@ -26,8 +27,9 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
 
     def test_critique_summary_json_output(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(EXAMPLE_PATH),
             "--format",
             "json",
@@ -77,8 +79,9 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_json_output(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(EXAMPLE_PATH),
             "--format",
             "json",
@@ -104,8 +107,9 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         invalid_path = self.write_invalid_workspace()
 
         exit_code, stdout, stderr = self.run_cli(
-            "summarize-workspace",
-            "--input",
+            "workspace",
+                "summarize",
+                "--input",
             str(invalid_path),
             "--format",
             "json",
@@ -127,8 +131,9 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         invalid_path = self.write_invalid_workspace()
 
         exit_code, stdout, stderr = self.run_cli(
-            "next-step",
-            "--input",
+            "workspace",
+                "next-step",
+                "--input",
             str(invalid_path),
             "--format",
             "json",
@@ -150,8 +155,9 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         invalid_path = self.write_invalid_workspace()
 
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(invalid_path),
             "--format",
             "json",
@@ -173,8 +179,9 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         invalid_path = self.write_outline_only_critique_workspace()
 
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(invalid_path),
             "--format",
             "json",
@@ -196,8 +203,9 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         invalid_path = self.write_revision_outline_workspace()
 
         exit_code, stdout, stderr = self.run_cli(
-            "next-step",
-            "--input",
+            "workspace",
+                "next-step",
+                "--input",
             str(invalid_path),
             "--format",
             "json",
@@ -219,8 +227,9 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         invalid_path = self.write_revision_completed_without_revised_workspace()
 
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(invalid_path),
             "--format",
             "json",
@@ -247,8 +256,9 @@ class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):
         valid_path = self.write_completed_revision_workspace()
 
         exit_code, stdout, stderr = self.run_cli(
-            "next-step",
-            "--input",
+            "workspace",
+                "next-step",
+                "--input",
             str(valid_path),
             "--format",
             "json",

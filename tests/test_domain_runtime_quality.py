@@ -80,7 +80,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             with patch.object(runtime, "_load_workspace", return_value=starting_workspace), patch(
-                "med_autogrant.domain_runtime.run_critique_revision_closed_loop",
+                "med_autogrant.domain_runtime_parts.authoring_surface.run_critique_revision_closed_loop",
                 return_value={
                     "rounds": [
                         {
@@ -96,10 +96,10 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
                     "final_route": {"recommended_stage": "frozen", "reason": "ready"},
                 },
             ), patch(
-                "med_autogrant.domain_runtime.build_grant_quality_scorecard",
+                "med_autogrant.domain_runtime_parts.authoring_surface.build_grant_quality_scorecard",
                 wraps=build_scorecard_impl,
             ) as build_scorecard, patch(
-                "med_autogrant.domain_runtime.build_grant_quality_closure_dossier",
+                "med_autogrant.domain_runtime_parts.authoring_surface.build_grant_quality_closure_dossier",
                 wraps=build_closure_dossier_impl,
             ) as build_dossier:
                 payload = runtime.execute_critique_revision_loop(
@@ -129,7 +129,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             with patch.object(runtime, "_load_workspace", return_value=workspace), patch(
-                "med_autogrant.domain_runtime.run_authoring_mainline_controller",
+                "med_autogrant.domain_runtime_parts.authoring_surface.run_authoring_mainline_controller",
                 return_value={
                     "cycles": [
                         {
@@ -145,10 +145,10 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
                     "final_route": {"recommended_stage": "frozen", "reason": "ready"},
                 },
             ), patch(
-                "med_autogrant.domain_runtime.build_grant_quality_scorecard",
+                "med_autogrant.domain_runtime_parts.authoring_mainline.build_grant_quality_scorecard",
                 wraps=build_scorecard_impl,
             ) as build_scorecard, patch(
-                "med_autogrant.domain_runtime.build_grant_quality_closure_dossier",
+                "med_autogrant.domain_runtime_parts.authoring_mainline.build_grant_quality_closure_dossier",
                 wraps=build_closure_dossier_impl,
             ) as build_dossier:
                 payload = runtime.execute_authoring_mainline_loop(

@@ -11,6 +11,7 @@
 - 当前默认公开 capability contract 固定为 `CLI-first + MedAutoGrantDomainEntry + product-entry/user-loop surfaced local scripts/contracts`；local scripts/contracts 必须是 schema-backed、由 product-entry / user-loop / direct-entry surface 暴露的受控 contract，不得作为绕开 authoring runtime 的 ad-hoc 执行路径。
 - 历史 local host-agent runtime 材料只允许作为归档追溯材料，不得继续写成当前产品 runtime。
 - 当前 `domain_runtime.py` 与 `domain_entry.py` 只允许被写成 repo-side domain adapter / entry adapter，不得再被误写成 runtime substrate owner。
+- `domain_runtime.py` 只保留薄 facade / public import surface；runtime parts 不得通过 `med_autogrant.domain_runtime` facade 读取 monkeypatch target，也不得重新引入 `domain_runtime_parts.patch_targets` 这类兼容桥。测试应 patch 真实 owner module 或显式注入对象。
 
 ## Control-plane 与 repo-tracked truth
 
@@ -56,6 +57,7 @@
 ## 验证与审计
 
 - 旧五个 canonical CLI surfaces 只作为 regression oracle / historical verifier context 保留；当前验证以 `scripts/verify.sh` 分层 lane、schema / contract / CLI behavior 和生成产物结构为准。
+- 测试调用 CLI 时必须使用当前 grouped public command tokens；内部 flat command string 只能作为 payload / schema / dispatch contract 字段存在，不得再作为 public shell alias 调用。
 - `stage-route-report` 是唯一 canonical route/checkpoint 聚合面，必须输出 `verification_checkpoint` 与 `checkpoint_status`。
 - 最小验证入口是 `scripts/verify.sh`；默认执行 `make test-fast`，保留 `meta`、`cli-smoke`、`full` 分层 lane。
 

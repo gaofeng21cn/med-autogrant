@@ -260,7 +260,8 @@ class MagRuntimeCliDispatchTest(unittest.TestCase):
             entry.dispatch.return_value = expected_payload
 
             exit_code, stdout, stderr = self.run_cli(
-                "validate-workspace",
+                "workspace",
+                "validate",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
                 "--format",
@@ -313,7 +314,8 @@ class MagRuntimeCliDispatchTest(unittest.TestCase):
                 entry.dispatch.return_value = expected_payload
 
                 exit_code, stdout, stderr = self.run_cli(
-                    "runtime-run",
+                    "runtime",
+                    "run",
                     "--input",
                     str(CRITIQUE_EXAMPLE_PATH),
                     "--journal",
@@ -486,7 +488,7 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "critique-journal.json"
             with patch(
-                "med_autogrant.domain_runtime._build_executor_routing_contract",
+                "med_autogrant.domain_runtime_parts.runtime_ops._build_executor_routing_contract",
                 return_value={
                     "contract_version": 1,
                     "current_stage_route": {
@@ -589,8 +591,7 @@ class RevisionExecutionHandoffTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             workspace_path = Path(tmp_dir) / "critique.json"
             with patch(
-                "med_autogrant.domain_runtime.build_critique_execution_document",
-                create=True,
+                "med_autogrant.domain_runtime_parts.handoff_surfaces.build_critique_execution_document",
                 return_value={
                     "grant_run_id": "grant-run-test",
                     "workspace_id": "workspace-test",
@@ -609,11 +610,9 @@ class RevisionExecutionHandoffTest(unittest.TestCase):
                     },
                 },
             ) as build_document, patch(
-                "med_autogrant.domain_runtime._guard_critique_output_identity",
-                create=True,
+                "med_autogrant.domain_runtime_parts.handoff_surfaces._guard_critique_output_identity",
             ), patch(
-                "med_autogrant.domain_runtime._write_revised_workspace_output",
-                create=True,
+                "med_autogrant.domain_runtime_parts.handoff_surfaces._write_revised_workspace_output",
             ):
                 runtime.execute_critique_pass(
                     input_path=str(REVISION_EXAMPLE_PATH),

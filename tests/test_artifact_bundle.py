@@ -29,7 +29,8 @@ class ArtifactBundleCliTest(unittest.TestCase):
             bundle_path = Path(tmp_dir) / 'outline-bundle.json'
 
             exit_code, stdout, stderr = self.run_cli(
-                'build-artifact-bundle',
+                'package',
+                'artifact-bundle',
                 '--input',
                 str(OUTLINE_EXAMPLE_PATH),
                 '--output',
@@ -89,7 +90,8 @@ class ArtifactBundleCliTest(unittest.TestCase):
             bundle_path = Path(tmp_dir) / 'revision-bundle.json'
 
             exit_code, stdout, stderr = self.run_cli(
-                'build-artifact-bundle',
+                'package',
+                'artifact-bundle',
                 '--input',
                 str(REVISION_EXAMPLE_PATH),
                 '--output',
@@ -120,7 +122,8 @@ class ArtifactBundleCliTest(unittest.TestCase):
             bundle_path = Path(tmp_dir) / 'p3b-revised-bundle.json'
 
             execute_exit, execute_stdout, execute_stderr = self.run_cli(
-                'execute-revision-pass',
+                'pass',
+                'revision',
                 '--input',
                 str(RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH),
                 '--output',
@@ -134,7 +137,8 @@ class ArtifactBundleCliTest(unittest.TestCase):
             self.assertTrue(json.loads(execute_stdout)['ok'])
 
             exit_code, stdout, stderr = self.run_cli(
-                'build-artifact-bundle',
+                'package',
+                'artifact-bundle',
                 '--input',
                 str(revised_output),
                 '--output',
@@ -172,7 +176,8 @@ class ArtifactBundleCliTest(unittest.TestCase):
             )
 
             exit_code, stdout, stderr = self.run_cli(
-                'build-artifact-bundle',
+                'package',
+                'artifact-bundle',
                 '--input',
                 str(REVISION_EXAMPLE_PATH),
                 '--output',

@@ -7,8 +7,9 @@ from cli_validate_cases import *  # noqa: F401,F403
 class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
     def test_stage_route_report_aggregates_p2a_question_refinement_without_critique_summary(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(QUESTION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -34,8 +35,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "text",
@@ -52,8 +54,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_next_step_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "next-step",
-            "--input",
+            "workspace",
+                "next-step",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "text",
@@ -71,8 +74,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_aggregates_p2b_outline_without_critique_summary(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(OUTLINE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -90,8 +94,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_aggregates_p2c_drafting_without_critique_summary(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(DRAFTING_EXAMPLE_PATH),
             "--format",
             "json",
@@ -108,8 +113,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_critique_summary_exposes_revision_audit_for_p2c_critique(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -126,8 +132,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_grant_cockpit_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-cockpit",
-            "--input",
+            "workspace",
+                "cockpit",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "text",
@@ -143,8 +150,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_grant_direct_entry_plain_text_prefers_human_facing_labels(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "grant-direct-entry",
-            "--input",
+            "product",
+                "direct-entry",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--task-intent",
             "tighten-grant-mainline",
@@ -164,8 +172,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_critique_summary_exposes_completed_revision_evidence_for_p2c_revision(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(REVISION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -183,8 +192,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_critique_summary_exposes_major_reframe_verdict(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(MAJOR_REFRAME_EXAMPLE_PATH),
             "--format",
             "json",
@@ -198,8 +208,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_critique_summary_exposes_ready_for_submission_verdict(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -213,8 +224,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_aggregates_p2c_critique_with_critique_summary(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
             "json",
@@ -230,8 +242,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_aggregates_p2c_revision_with_re_review_boundary(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(REVISION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -247,8 +260,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_aggregates_p3a_major_reframe_branch(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(MAJOR_REFRAME_EXAMPLE_PATH),
             "--format",
             "json",
@@ -264,8 +278,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_aggregates_p3a_ready_for_submission_branch(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
             "--format",
             "json",
@@ -284,8 +299,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_validate_workspace_accepts_re_review_critique_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(RE_REVIEW_EXAMPLE_PATH),
             "--format",
             "json",
@@ -299,8 +315,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_validate_workspace_accepts_forced_rollback_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(FORCED_ROLLBACK_EXAMPLE_PATH),
             "--format",
             "json",
@@ -314,8 +331,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_validate_workspace_accepts_presubmission_frozen_workspace(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "validate-workspace",
-            "--input",
+            "workspace",
+                "validate",
+                "--input",
             str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
             "--format",
             "json",
@@ -339,8 +357,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                 with self.subTest(example=input_path.name):
                     revised_path = tmp_path / f"{input_path.stem}-revised.json"
                     revised_payload = self.run_json_cli(
-                        "execute-revision-pass",
-                        "--input",
+                        "pass",
+                "revision",
+                "--input",
                         str(input_path),
                         "--output",
                         str(revised_path),
@@ -350,8 +369,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     self.assertTrue(revised_payload["ok"])
 
                     validate_payload = self.run_json_cli(
-                        "validate-workspace",
-                        "--input",
+                        "workspace",
+                "validate",
+                "--input",
                         str(revised_path),
                         "--format",
                         "json",
@@ -360,8 +380,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     self.assertEqual(validate_payload["lifecycle_stage"], "critique")
 
                     summary_payload = self.run_json_cli(
-                        "summarize-workspace",
-                        "--input",
+                        "workspace",
+                "summarize",
+                "--input",
                         str(revised_path),
                         "--format",
                         "json",
@@ -371,8 +392,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     self.assertEqual(summary_payload["active_revision_plan"]["execution_status"], "completed")
 
                     next_step_payload = self.run_json_cli(
-                        "next-step",
-                        "--input",
+                        "workspace",
+                "next-step",
+                "--input",
                         str(revised_path),
                         "--format",
                         "json",
@@ -381,8 +403,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     self.assertEqual(next_step_payload["recommended_stage"], "revision")
 
                     critique_payload = self.run_json_cli(
-                        "critique-summary",
-                        "--input",
+                        "workspace",
+                "critique-summary",
+                "--input",
                         str(revised_path),
                         "--format",
                         "json",
@@ -396,8 +419,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
                     )
 
                     route_payload = self.run_json_cli(
-                        "stage-route-report",
-                        "--input",
+                        "workspace",
+                "route-report",
+                "--input",
                         str(revised_path),
                         "--format",
                         "json",
@@ -427,8 +451,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_critique_summary_exposes_re_review_linkage(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(RE_REVIEW_EXAMPLE_PATH),
             "--format",
             "json",
@@ -444,8 +469,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_critique_summary_exposes_forced_rollback_fields(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(FORCED_ROLLBACK_EXAMPLE_PATH),
             "--format",
             "json",
@@ -462,8 +488,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_critique_summary_exposes_presubmission_frozen_fields(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "critique-summary",
-            "--input",
+            "workspace",
+                "critique-summary",
+                "--input",
             str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
             "--format",
             "json",
@@ -479,8 +506,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_summarize_workspace_exposes_re_review_evidence(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "summarize-workspace",
-            "--input",
+            "workspace",
+                "summarize",
+                "--input",
             str(RE_REVIEW_EXAMPLE_PATH),
             "--format",
             "json",
@@ -495,8 +523,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_summarize_workspace_exposes_forced_rollback_evidence(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "summarize-workspace",
-            "--input",
+            "workspace",
+                "summarize",
+                "--input",
             str(FORCED_ROLLBACK_EXAMPLE_PATH),
             "--format",
             "json",
@@ -512,8 +541,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_summarize_workspace_exposes_presubmission_frozen_gate(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "summarize-workspace",
-            "--input",
+            "workspace",
+                "summarize",
+                "--input",
             str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
             "--format",
             "json",
@@ -528,8 +558,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_aggregates_p3b_re_review_branch(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(RE_REVIEW_EXAMPLE_PATH),
             "--format",
             "json",
@@ -552,8 +583,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_aggregates_p3c_forced_rollback_branch(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(FORCED_ROLLBACK_EXAMPLE_PATH),
             "--format",
             "json",
@@ -576,8 +608,9 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
 
     def test_stage_route_report_aggregates_p3c_presubmission_frozen_branch(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
-            "stage-route-report",
-            "--input",
+            "workspace",
+                "route-report",
+                "--input",
             str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
             "--format",
             "json",
@@ -599,7 +632,8 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             revised_output = Path(tmp_dir) / "p3b-revised.json"
 
             execute_exit, execute_stdout, execute_stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(RE_REVIEW_EXAMPLE_PATH),
                 "--output",
@@ -613,7 +647,8 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             self.assertTrue(json.loads(execute_stdout)["ok"])
 
             exit_code, stdout, stderr = self.run_cli(
-                "validate-workspace",
+                "workspace",
+                "validate",
                 "--input",
                 str(revised_output),
                 "--format",
@@ -632,7 +667,8 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             revised_output = Path(tmp_dir) / "p2c-revised.json"
 
             execute_exit, execute_stdout, execute_stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(CRITIQUE_EXAMPLE_PATH),
                 "--output",
@@ -646,6 +682,7 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             self.assertTrue(json.loads(execute_stdout)["ok"])
 
             exit_code, stdout, stderr = self.run_cli(
+                "workspace",
                 "next-step",
                 "--input",
                 str(revised_output),
@@ -665,7 +702,8 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             revised_output = Path(tmp_dir) / "p3b-revised.json"
 
             execute_exit, execute_stdout, execute_stderr = self.run_cli(
-                "execute-revision-pass",
+                "pass",
+                "revision",
                 "--input",
                 str(RE_REVIEW_EXAMPLE_PATH),
                 "--output",
@@ -679,7 +717,8 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
             self.assertTrue(json.loads(execute_stdout)["ok"])
 
             exit_code, stdout, stderr = self.run_cli(
-                "stage-route-report",
+                "workspace",
+                "route-report",
                 "--input",
                 str(revised_output),
                 "--format",

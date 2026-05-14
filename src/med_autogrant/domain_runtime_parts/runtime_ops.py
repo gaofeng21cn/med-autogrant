@@ -13,7 +13,6 @@ from med_autogrant.domain_runtime_parts.contracts import (
     build_executor_routing_contract as _build_executor_routing_contract,
     validate_executor_routing_contract as _validate_executor_routing_contract,
 )
-from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 from med_autogrant.stage_router import _build_forced_rollback_actions
 
 from .shared import LocalRuntimeStateError
@@ -121,19 +120,11 @@ def derive_stage_action_envelope(
     checkpoint = route_report["verification_checkpoint"]
     selection = summary.get("current_selection") or {}
     actions = next_step.get("actions") or []
-    build_executor_routing_contract = resolve_runtime_patch_target(
-        "_build_executor_routing_contract",
-        _build_executor_routing_contract,
-    )
-    validate_executor_routing_contract = resolve_runtime_patch_target(
-        "_validate_executor_routing_contract",
-        _validate_executor_routing_contract,
-    )
-    executor_routing_contract = build_executor_routing_contract(
+    executor_routing_contract = _build_executor_routing_contract(
         current_stage=next_step["current_stage"],
         recommended_next_stage=next_step["recommended_stage"],
     )
-    validate_executor_routing_contract(
+    _validate_executor_routing_contract(
         executor_routing_contract,
         current_stage=next_step["current_stage"],
         recommended_next_stage=next_step["recommended_stage"],
@@ -229,13 +220,8 @@ def _apply_quality_gate_to_route(
 
 
 def _build_autonomy_quality_evaluator_output(workspace: dict[str, Any]) -> dict[str, Any]:
-    build_scorecard = resolve_runtime_patch_target("build_grant_quality_scorecard", build_grant_quality_scorecard)
-    build_closure_dossier = resolve_runtime_patch_target(
-        "build_grant_quality_closure_dossier",
-        build_grant_quality_closure_dossier,
-    )
-    scorecard = build_scorecard(workspace)
-    closure_dossier = build_closure_dossier(workspace)
+    scorecard = build_grant_quality_scorecard(workspace)
+    closure_dossier = build_grant_quality_closure_dossier(workspace)
     overall_status = str(scorecard.get("overall_status") or "")
     ai_reviewer_required = bool(scorecard.get("ai_reviewer_required"))
     quality_status = overall_status if not ai_reviewer_required and overall_status in {

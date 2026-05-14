@@ -69,7 +69,6 @@ from med_autogrant.domain_runtime_parts import shared as _runtime_shared
 from med_autogrant.domain_runtime_parts import handoff_surfaces as _handoff_surfaces
 from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
 from med_autogrant.domain_runtime_parts.handoff_surfaces import DomainRuntimeHandoffSurfaceMixin
-from med_autogrant.domain_runtime_parts.patch_targets import resolve_runtime_patch_target
 
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
@@ -493,8 +492,7 @@ class MagDomainRuntime(DomainRuntimeAuthoringSurfaceMixin, DomainRuntimeHandoffS
             draft_id = None
             lifecycle_stage = document.get("lifecycle_stage")
 
-        ledger_class = resolve_runtime_patch_target("MagGrantRunLedger", MagGrantRunLedger)
-        attempt_index = ledger_class().record_attempt(
+        attempt_index = MagGrantRunLedger().record_attempt(
             grant_run_id=document.get("grant_run_id"),
             workspace_id=document.get("workspace_id"),
             trigger=trigger,
