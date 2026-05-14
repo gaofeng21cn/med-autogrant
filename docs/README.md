@@ -12,7 +12,7 @@ This guide is for readers who need the technical records, trace records, referen
 | --- | --- | --- |
 | Potential users and domain experts | [Repository home](../README.md), [Domain Positioning](./domain-positioning.md), [MVP Scope](./mvp-scope.md) | Understand what the grant line is for before reading technical internals |
 | Technical readers and planners | [Project](./project.md), [Status](./status.md), [Architecture](./architecture.md), [Invariants](./invariants.md), [Decisions](./decisions.md), [Contracts Overview](../contracts/README.md) | Get the current technical shape, boundaries, and mainline direction quickly |
-| Developers and maintainers | [Specs guide](./specs/README.md), [Specs lifecycle map](./specs/specs_lifecycle_map.md), [References directory](./references/), [Active plans](./active/README.md), [History archive](./history/README.md) | Inspect technical records, reference notes, future work, and archival material |
+| Developers and maintainers | [Specs guide](./specs/README.md), [Specs lifecycle map](./specs/specs_lifecycle_map.md), [References directory](./references/), [Active baton and current plans](./active/README.md), [History archive](./history/README.md) | Inspect technical records, reference notes, active baton material, and archival material |
 
 ## OPL Family Layering
 
@@ -144,12 +144,15 @@ The only tracked `.agents/` entrypoint is `.agents/plugins/marketplace.json`.
 The same test also keeps tracked source and test files within the current line
 budget unless a legacy baseline is explicitly recorded.
 
-## Plans And Historical Planning Artifacts
+## Active Baton And Historical Planning Artifacts
 
-- [Active plans](./active/README.md)
+- [Active baton and current plans](./active/README.md)
 - [Historical plans](./history/plans/README.md)
 
-Completed planning artifacts now live in `docs/history/plans/`.
+The former `docs/plans/**` active lane has been retired. Current execution,
+current plans, current gaps, active baton, and closeout evidence live in
+`docs/active/**`; completed or superseded planning artifacts live in
+`docs/history/plans/**`.
 Current mainline truth continues to live in the core docs, active specs listed in `docs/specs/README.md`, and [`current-program.json`](../contracts/runtime-program/current-program.json).
 
 ## Documentation Rules

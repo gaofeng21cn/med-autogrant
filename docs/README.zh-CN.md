@@ -12,7 +12,7 @@
 | --- | --- | --- |
 | 潜在用户与领域专家 | [仓库首页](../README.zh-CN.md)、[领域定位](./domain-positioning.zh-CN.md)、[MVP 范围](./mvp-scope.zh-CN.md) | 先理解这条基金主线是干什么的，再决定是否进入技术细节 |
 | 技术规划者、架构读者、方向同步读者 | [项目概览](./project.md)、[当前状态](./status.md)、[架构](./architecture.md)、[不变量](./invariants.md)、[决策记录](./decisions.md)、[合同说明](../contracts/README.md) | 快速抓住当前技术形态、边界和主线方向 |
-| 开发者与维护者 | [Specs 索引](./specs/README.zh-CN.md)、[Specs lifecycle map](./specs/specs_lifecycle_map.md)、[References 目录](./references/)、[活跃 plans](./active/README.zh-CN.md)、[历史归档](./history/README.zh-CN.md) | 查看技术记录、内部参考、未来工作和归档材料 |
+| 开发者与维护者 | [Specs 索引](./specs/README.zh-CN.md)、[Specs lifecycle map](./specs/specs_lifecycle_map.md)、[References 目录](./references/)、[Active baton 与当前计划](./active/README.zh-CN.md)、[历史归档](./history/README.zh-CN.md) | 查看技术记录、内部参考、active baton 材料和归档材料 |
 
 ## OPL 系列分层
 
@@ -126,12 +126,14 @@ case 模块直接由 `tests/product_entry_cases/` 收集，旧
 入口是 `.agents/plugins/marketplace.json`。同一测试也继续约束 tracked source/test
 line budget，新增或增长的超长文件应拆分，而不是扩大单文件基线。
 
-## Plans 与历史规划工件
+## Active baton 与历史规划工件
 
-- [活跃 plans](./active/README.zh-CN.md)
+- [Active baton 与当前计划](./active/README.zh-CN.md)
 - [历史 plans](./history/plans/README.zh-CN.md)
 
-已完成的规划工件现已统一迁入 `docs/history/plans/`。
+旧 `docs/plans/**` 活跃计划层已退役。当前执行、当前计划、当前差距、
+active baton 与 closeout evidence 进入 `docs/active/**`；已完成或被替代的规划工件进入
+`docs/history/plans/**`。
 当前主线真相继续以核心文档、`docs/specs/README.zh-CN.md` 中列出的 active specs 和 [`current-program.json`](../contracts/runtime-program/current-program.json) 为准。
 
 ## 文档规则

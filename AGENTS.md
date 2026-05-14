@@ -39,7 +39,8 @@
 - 核心骨架文档与 activation package / current truth 严格分层。
 - `docs/specs/**`：混合 path-stable 技术记录层；只有 `docs/specs/README*` 和 `docs/specs/specs_lifecycle_map.md` 明确列出的 active specs 才是 current owner，其余 dated specs 按 lifecycle map 作为 support reference、history 或 provenance 阅读。
 - `docs/references/**`：定位、背景、审计、handoff 与非活跃支持材料。
-- `docs/plans/**`：仅承载尚未被核心文档、合同面或历史归档吸收的活跃计划或明确 future work；完成、替代或只剩追溯价值后进入 `docs/history/plans/**`。
+- `docs/active/**`：承载当前执行、当前计划、当前差距、active baton 与 closeout evidence；旧 `docs/plans/**` 活跃计划层已退役，新增 recurring active material 不再进入旧目录。
+- `docs/history/plans/**`：承载已完成、已替代或只剩追溯价值的历史计划；若旧路径仍出现在历史材料中，只按 provenance 阅读。
 - `docs/history/**`：历史归档入口（含 OMX）。
 - `README*`、`docs/**` 与参考文档是人读面。代码、测试、contracts、dashboard 或 runtime 不得把 prose path、Markdown 章节或文案当成稳定机器接口；MAG 的机器真相以 `contracts/runtime-program/current-program.json`、schema/source 与 CLI/API 行为为准，确需关联人读材料时使用 `human_doc:*` 语义 ID。
 

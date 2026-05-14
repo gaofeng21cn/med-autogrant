@@ -145,11 +145,11 @@ Root-doc allowlist:
 - `docs/mvp-scope*` remains current because it states the current NSFC MVP scope and non-goals.
 - No other root-level docs should be added to the default public path without updating this portfolio note and the docs guide.
 
-## Active Plan Layer
+## Active Baton Layer
 
 - `docs/active/mag-ideal-state-cross-repo-gap-plan.zh-CN.md`
 
-Active plans are owner-tracked future work or evidence ledgers. They may
+Active baton records and current plans are owner-tracked future work or evidence ledgers. They may
 compare target state, current state, and completion gates, but they do not
 replace the core docs, active specs, contracts, schemas, source, generated
 artifacts, or `contracts/runtime-program/current-program.json`. When a plan has
