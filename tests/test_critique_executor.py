@@ -38,7 +38,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
 
     def test_build_critique_prompt_spells_out_weighted_score_block_field_names(self) -> None:
         from med_autogrant.critique_executor import _build_critique_context, _build_critique_prompt
-        from med_autogrant.workspace import _build_workspace_state
+        from med_autogrant.workspace_projection_parts import _build_workspace_state
 
         document = load_workspace_document(DRAFTING_EXAMPLE_PATH)
         context = _build_critique_context(
@@ -61,7 +61,7 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
 
     def test_build_critique_prompt_uses_project_profile_policy_resolver(self) -> None:
         from med_autogrant.critique_executor import _build_critique_context, _build_critique_prompt
-        from med_autogrant.workspace import _build_workspace_state
+        from med_autogrant.workspace_projection_parts import _build_workspace_state
 
         document = deepcopy(load_workspace_document(DRAFTING_EXAMPLE_PATH))
         document["project_profile"]["preset_id"] = "nih_r21_translational_v1"

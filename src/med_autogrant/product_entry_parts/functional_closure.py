@@ -60,6 +60,7 @@ def build_manifest_functional_closure_surfaces(
             **identity,
         ),
         "physical_skeleton_follow_through": build_physical_skeleton_follow_through(),
+        "ideal_state_closure_status": build_ideal_state_closure_status(),
     }
 
 
@@ -308,6 +309,160 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
                 "condition": "direct skill and OPL-hosted parity proof",
             },
         ],
+    }
+
+
+def build_ideal_state_closure_status() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_ideal_state_closure_status",
+        "version": "v1",
+        "closure_id": "mag.ideal_state.cross_repo_gap.closure_status.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "state": "repo_closure_landed_external_evidence_gated",
+        "plan_ref": "docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md",
+        "north_star_ref": "docs/references/med-auto-grant-ideal-state.zh-CN.md",
+        "current_truth_refs": [
+            "docs/status.md",
+            "docs/architecture.md",
+            "docs/invariants.md",
+            "docs/decisions.md",
+            "contracts/runtime-program/current-program.json",
+            "/product_entry_manifest",
+        ],
+        "claims_production_long_run_soak_complete": False,
+        "repo_source_exclusions": {
+            "workspace_artifacts": True,
+            "runtime_receipt_instances": True,
+            "memory_body": True,
+            "export_packages": True,
+        },
+        "authority_boundary": {
+            "domain_truth_owner": TARGET_DOMAIN_ID,
+            "fundability_verdict_owner": TARGET_DOMAIN_ID,
+            "authoring_quality_verdict_owner": TARGET_DOMAIN_ID,
+            "submission_ready_export_verdict_owner": TARGET_DOMAIN_ID,
+            "memory_body_owner": TARGET_DOMAIN_ID,
+            "opl_role": "framework_ledger_projection_and_transport_only",
+            "opl_can_write_domain_truth": False,
+            "opl_can_write_memory_body": False,
+            "opl_can_declare_export_ready": False,
+            "opl_can_mutate_grant_artifacts": False,
+        },
+        "phases": [
+            _build_ideal_state_phase_status(
+                phase_id="P0",
+                title="gap plan and owner boundary",
+                state="landed",
+                mag_surface_refs=[
+                    "docs/plans/README.md",
+                    "docs/docs_portfolio_consolidation.md",
+                    "docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md",
+                ],
+                required_evidence_refs=["scripts_verify_meta"],
+            ),
+            _build_ideal_state_phase_status(
+                phase_id="P1",
+                title="OPL-hosted MAG grant-stage receipt evidence to live soak",
+                state="external_evidence_gate",
+                mag_surface_refs=[
+                    "/product_entry_manifest/controlled_stage_attempt_projection",
+                    "/product_entry_manifest/owner_receipt_contract",
+                    "/product_entry_manifest/controlled_soak_no_regression_attempt",
+                    "product owner-receipt-evidence",
+                    "product sidecar-dispatch stage-attempt/closeout",
+                ],
+                required_evidence_refs=[
+                    "opl_runtime_ledger_mag_controlled_stage_attempt_ref",
+                    "mag_runtime_owner_receipt_instance_ref",
+                    "mag_no_regression_evidence_or_typed_blocker_ref",
+                ],
+            ),
+            _build_ideal_state_phase_status(
+                phase_id="P2",
+                title="OPL generic primitive absorption",
+                state="external_opl_primitive_gate",
+                mag_surface_refs=[
+                    "/product_entry_manifest/family_action_catalog",
+                    "/product_entry_manifest/family_stage_control_plane",
+                    "/product_entry_manifest/artifact_locator_contract",
+                    "/product_entry_manifest/domain_memory_descriptor",
+                    "/product_entry_manifest/ideal_state_closure_status",
+                ],
+                required_evidence_refs=[
+                    "opl_generic_primitive_consumes_two_or_more_domains_ref",
+                    "opl_workbench_authority_boundary_projection_ref",
+                ],
+            ),
+            _build_ideal_state_phase_status(
+                phase_id="P3",
+                title="grant strategy memory live apply generalization",
+                state="runtime_workspace_evidence_gate",
+                mag_surface_refs=[
+                    "/product_entry_manifest/domain_memory_descriptor_locator",
+                    "/product_entry_manifest/controlled_domain_memory_apply_proof",
+                    "product domain-memory-proposal",
+                    "product domain-memory-decision",
+                    "product domain-memory-receipt-evidence",
+                ],
+                required_evidence_refs=[
+                    "mag_runtime_memory_body_migration_ref",
+                    "mag_runtime_accepted_memory_receipt_ref",
+                    "mag_runtime_rejected_memory_receipt_ref",
+                    "opl_domain_memory_locator_projection_without_body_ref",
+                ],
+            ),
+            _build_ideal_state_phase_status(
+                phase_id="P4",
+                title="package export and lifecycle productionization",
+                state="runtime_workspace_evidence_gate",
+                mag_surface_refs=[
+                    "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                    "/product_entry_manifest/artifact_locator_contract",
+                    "package submission-ready",
+                    "product lifecycle-receipt-evidence",
+                    "product sidecar-dispatch lifecycle/receipt",
+                ],
+                required_evidence_refs=[
+                    "mag_runtime_lifecycle_cleanup_receipt_ref",
+                    "mag_runtime_lifecycle_restore_receipt_ref",
+                    "mag_runtime_lifecycle_retention_receipt_ref",
+                    "opl_package_export_lifecycle_shell_ref",
+                ],
+            ),
+            _build_ideal_state_phase_status(
+                phase_id="P5",
+                title="physical skeleton follow-through and legacy direct retirement",
+                state="landed_with_external_delete_audit_gate",
+                mag_surface_refs=[
+                    "/product_entry_manifest/standard_domain_agent_skeleton",
+                    "/product_entry_manifest/physical_skeleton_follow_through",
+                    "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+                    "docs/status.md#旧面退役校准",
+                ],
+                required_evidence_refs=[
+                    "opl_agents_list_mag_descriptor_no_drift_ref",
+                    "active_path_scan_no_legacy_default_caller_ref",
+                ],
+            ),
+        ],
+    }
+
+
+def _build_ideal_state_phase_status(
+    *,
+    phase_id: str,
+    title: str,
+    state: str,
+    mag_surface_refs: list[str],
+    required_evidence_refs: list[str],
+) -> dict[str, Any]:
+    return {
+        "phase_id": phase_id,
+        "title": title,
+        "state": state,
+        "mag_surface_refs": mag_surface_refs,
+        "required_evidence_refs": required_evidence_refs,
     }
 
 

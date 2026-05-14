@@ -5,7 +5,6 @@ from pathlib import Path
 import med_autogrant.artifact_bundle as artifact_bundle
 import med_autogrant.artifact_bundle_validation as artifact_bundle_validation
 import med_autogrant.authoring_executor_parts as authoring_executor_parts
-import med_autogrant.facade_exports as facade_exports
 import med_autogrant.final_package as final_package
 import med_autogrant.final_package_validation as final_package_validation
 import med_autogrant.grant_autonomy_parts as grant_autonomy_parts
@@ -55,6 +54,7 @@ def test_structural_leaf_modules_expose_expected_contract_surfaces() -> None:
     assert grant_autonomy_start._resolve_grant_autonomy_start
     assert grant_quality_assessment._resolve_dimension_status
     assert grant_quality_closure._build_quality_closure_packages
+    assert grant_quality_parts._build_issue
     assert grant_quality_parts._read_active_draft_id
     assert mainline_status.read_mainline_status
     assert revision_executor.build_revision_execution_document
@@ -90,7 +90,7 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert runtime_surfaces._build_runtime_continuity_surfaces
 
 
-def test_workspace_index_and_facade_export_helpers_have_direct_behavior() -> None:
+def test_workspace_index_has_direct_behavior_and_facade_export_helper_is_retired() -> None:
     issues: list[workspace_types.ValidationIssue] = []
     indexed = workspace_index._index_objects(
         [{"item_id": "a"}, {"item_id": "a"}],
@@ -101,8 +101,4 @@ def test_workspace_index_and_facade_export_helpers_have_direct_behavior() -> Non
 
     assert indexed == {"a": {"item_id": "a"}}
     assert [(issue.path, issue.message) for issue in issues] == [("items[1].item_id", "item_id 不能重复。")]
-
-    namespace: dict[str, object] = {}
-    facade_exports.re_export_public_names(Path, namespace)
-    assert "cwd" in namespace
-    assert "_flavour" not in namespace
+    assert not (Path(__file__).resolve().parents[1] / "src" / "med_autogrant" / "facade_exports.py").exists()

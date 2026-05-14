@@ -5,20 +5,31 @@ import copy
 from pathlib import Path
 from typing import Any
 
-from med_autogrant import workspace_parts as _workspace_parts
-from med_autogrant import workspace_projection_parts as _workspace_projection_parts
-from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.workspace_validation import _SchemaSubsetValidator, _validate_schema
 from med_autogrant.workspace_parts import (
+    _draft_links_argument_chain,
+    _draft_links_fit_mapping,
+    _draft_sections_link_object,
     _collect_known_ids,
+    _validate_forced_rollback_contract,
+    _validate_presubmission_gate_contract,
     _validate_reference_sets,
     _validate_runtime_constraints,
+    _validate_revision_transition_contract,
     _validate_stage_requirements,
 )
 from med_autogrant.workspace_projection_parts import (
     _EVIDENCE_TRUST_LEVELS,
+    _active_argument_chain_evidence_ids,
+    _active_fit_mapping_evidence_ids,
+    _active_project_evidence_ids,
+    _build_intake_section,
     _build_workspace_state,
+    _collect_primary_evidence_ids,
     _collect_trust_ranked_evidence,
+    _index_objects,
+    _preliminary_evidence_ids,
+    _preliminary_evidence_item_ids,
     _require_workspace_context,
     _serialize_argument_chain,
     _serialize_critique,
@@ -28,6 +39,11 @@ from med_autogrant.workspace_projection_parts import (
     _serialize_question,
     _serialize_reviewed_revision_evidence,
     _serialize_revision_plan,
+    _selected_direction_evidence_ids,
+    _selected_question_evidence_ids,
+    _selection_context,
+    _track_record_evidence_ids,
+    _trust_level_from_preliminary_item,
 )
 from med_autogrant.workspace_types import (
     ValidationIssue,
@@ -40,9 +56,6 @@ from med_autogrant.workspace_types import (
 )
 from med_autogrant.workspace_scaffold import resolve_mag_workspace_document_path
 from med_autogrant.workspace_validation import validate_workspace_document
-
-re_export_public_names(_workspace_parts, globals())
-re_export_public_names(_workspace_projection_parts, globals())
 
 
 def load_workspace_document(path: str | Path) -> dict[str, Any]:
@@ -422,7 +435,6 @@ def build_critique_summary(document: dict[str, Any]) -> dict[str, Any]:
         "applicant_fit_repairs": list(critique.get("applicant_fit_repairs", [])),
         "next_review_focus": list(revision_plan.get("next_review_focus", [])),
     }
-
 
 
 

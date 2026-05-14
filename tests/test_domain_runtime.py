@@ -445,9 +445,9 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             )
 
     def test_executor_routing_contract_publishes_landed_route_catalog_only(self) -> None:
-        from med_autogrant.domain_runtime import _build_executor_routing_contract
+        from med_autogrant.product_entry_contract_api import build_executor_routing_contract
 
-        drafting_contract = _build_executor_routing_contract(
+        drafting_contract = build_executor_routing_contract(
             current_stage="drafting",
             recommended_next_stage="critique",
             include_route_catalog=True,
@@ -462,7 +462,7 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
         )
         self.assertNotIn("handoff_requirements", drafting_contract["recommended_executor_route"])
 
-        critique_reroute_contract = _build_executor_routing_contract(
+        critique_reroute_contract = build_executor_routing_contract(
             current_stage="critique",
             recommended_next_stage="question_refinement",
         )

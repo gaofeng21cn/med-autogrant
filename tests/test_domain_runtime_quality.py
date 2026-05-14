@@ -24,7 +24,7 @@ def _load_json(path: Path) -> dict[str, object]:
 
 class MagRuntimeQualityGateTest(unittest.TestCase):
     def test_quality_gate_can_force_mainline_route_to_rollback(self) -> None:
-        from med_autogrant.domain_runtime import _apply_quality_gate_to_route
+        from med_autogrant.domain_runtime_parts.runtime_ops import _apply_quality_gate_to_route
 
         route = {
             "current_stage": "critique",
@@ -46,7 +46,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
         self.assertIn("必要性链条未闭合", resolved["reason"])
 
     def test_quality_gate_can_veto_submission_stop(self) -> None:
-        from med_autogrant.domain_runtime import _apply_quality_gate_to_route
+        from med_autogrant.domain_runtime_parts.runtime_ops import _apply_quality_gate_to_route
 
         route = {
             "current_stage": "critique",

@@ -195,3 +195,53 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             with self.subTest(source_ref=ref_status["path"]):
                 self.assertTrue(ref_status["exists"])
                 self.assertTrue((REPO_ROOT / ref_status["path"]).exists())
+
+    def test_manifest_exposes_ideal_state_closure_status_without_claiming_live_soak(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_product_entry_manifest(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+        manifest = payload["product_entry_manifest"]
+
+        closure_status = manifest["ideal_state_closure_status"]
+        self.assertEqual(closure_status["surface_kind"], "mag_ideal_state_closure_status")
+        self.assertEqual(closure_status["state"], "repo_closure_landed_external_evidence_gated")
+        self.assertEqual(closure_status["plan_ref"], "docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md")
+        self.assertEqual(closure_status["owner"], "med-autogrant")
+        self.assertFalse(closure_status["claims_production_long_run_soak_complete"])
+        self.assertFalse(closure_status["authority_boundary"]["opl_can_write_domain_truth"])
+        self.assertFalse(closure_status["authority_boundary"]["opl_can_write_memory_body"])
+        self.assertFalse(closure_status["authority_boundary"]["opl_can_declare_export_ready"])
+        phase_states = {phase["phase_id"]: phase["state"] for phase in closure_status["phases"]}
+        self.assertEqual(
+            phase_states,
+            {
+                "P0": "landed",
+                "P1": "external_evidence_gate",
+                "P2": "external_opl_primitive_gate",
+                "P3": "runtime_workspace_evidence_gate",
+                "P4": "runtime_workspace_evidence_gate",
+                "P5": "landed_with_external_delete_audit_gate",
+            },
+        )
+        p1 = next(phase for phase in closure_status["phases"] if phase["phase_id"] == "P1")
+        self.assertEqual(
+            p1["required_evidence_refs"],
+            [
+                "opl_runtime_ledger_mag_controlled_stage_attempt_ref",
+                "mag_runtime_owner_receipt_instance_ref",
+                "mag_no_regression_evidence_or_typed_blocker_ref",
+            ],
+        )
+        self.assertIn(
+            "/product_entry_manifest/owner_receipt_contract",
+            p1["mag_surface_refs"],
+        )
+        p3 = next(phase for phase in closure_status["phases"] if phase["phase_id"] == "P3")
+        self.assertIn(
+            "mag_runtime_memory_body_migration_ref",
+            p3["required_evidence_refs"],
+        )
+        self.assertTrue(closure_status["repo_source_exclusions"]["memory_body"])
+        self.assertTrue(closure_status["repo_source_exclusions"]["runtime_receipt_instances"])

@@ -7,9 +7,31 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Callable
 
+from med_autogrant.authoring_executor_parts import (
+    _allocate_sequence_ids,
+    _build_argument_building_prompt,
+    _build_codex_executor_payload,
+    _build_direction_screening_prompt,
+    _build_drafting_prompt,
+    _build_fit_alignment_prompt,
+    _build_outline_prompt,
+    _build_question_refinement_prompt,
+    _bump_version_label,
+    _finalize_execution_workspace,
+    _fresh_metadata,
+    _next_versioned_id,
+    _normalize_direction_status,
+    _optional_string,
+    _optional_string_list,
+    _require_known_string_list,
+    _require_mapping,
+    _require_nonempty_string,
+    _require_nonnegative_int,
+    _require_object_list,
+    _run_codex_generation,
+    _validate_schema_payload,
+)
 from med_autogrant.codex_cli import read_codex_cli_contract, run_codex_exec
-from med_autogrant import authoring_executor_parts as _authoring_executor_parts
-from med_autogrant.facade_exports import re_export_public_names
 from med_autogrant.schema_loader import SchemaStore
 from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
@@ -19,8 +41,6 @@ from med_autogrant.workspace_projection_parts import _build_workspace_state
 from med_autogrant.workspace_reference_validation import _collect_known_ids
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
-
-re_export_public_names(_authoring_executor_parts, globals())
 
 
 CodexRunner = Callable[..., dict[str, Any]]
@@ -750,7 +770,6 @@ def build_freeze_execution_document(
         },
         "frozen_workspace": next_workspace,
     }
-
 
 
 

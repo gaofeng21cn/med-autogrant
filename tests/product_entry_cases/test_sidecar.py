@@ -102,6 +102,11 @@ class ProductSidecarTest(unittest.TestCase):
             "mag_physical_skeleton_follow_through",
         )
         self.assertFalse(export["physical_skeleton_follow_through"]["moves_workspace_artifacts"])
+        self.assertEqual(
+            export["ideal_state_closure_status"]["surface_kind"],
+            "mag_ideal_state_closure_status",
+        )
+        self.assertFalse(export["ideal_state_closure_status"]["claims_production_long_run_soak_complete"])
         self.assertFalse(
             export["controlled_stage_attempt_projection"]["opl_consumption_contract"][
                 "can_hold_fundability_verdict"

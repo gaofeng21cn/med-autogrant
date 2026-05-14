@@ -3,11 +3,12 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Callable
 
-from med_autogrant import grant_autonomy_parts as _grant_autonomy_parts
-from med_autogrant.facade_exports import re_export_public_names
+from med_autogrant.grant_autonomy_parts import (
+    _extract_mapping,
+    _fail_closed_report,
+    _normalize_resume_seed_from_report,
+)
 from med_autogrant.grant_autonomy_trace import spend_budget_step
-
-re_export_public_names(_grant_autonomy_parts, globals())
 
 Discoverer = Callable[[dict[str, Any]], dict[str, Any]]
 Selector = Callable[[dict[str, Any]], dict[str, Any]]

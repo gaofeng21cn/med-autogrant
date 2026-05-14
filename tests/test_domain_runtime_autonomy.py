@@ -473,7 +473,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
         )
 
     def test_autonomy_quality_evaluator_output_includes_closure_dossier(self) -> None:
-        from med_autogrant.domain_runtime import _build_autonomy_quality_evaluator_output
+        from med_autogrant.domain_runtime_parts.runtime_ops import _build_autonomy_quality_evaluator_output
 
         workspace = _load_json(FROZEN_EXAMPLE_PATH)
         payload = _build_autonomy_quality_evaluator_output(workspace)

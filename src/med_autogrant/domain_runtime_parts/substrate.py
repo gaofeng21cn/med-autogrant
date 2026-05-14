@@ -64,17 +64,25 @@ from med_autogrant.workspace_scaffold import (
 from med_autogrant.workspace_types import WorkspaceError, WorkspaceFileError, WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
-from med_autogrant.facade_exports import re_export_public_names
-from med_autogrant.domain_runtime_parts import shared as _runtime_shared
-from med_autogrant.domain_runtime_parts import handoff_surfaces as _handoff_surfaces
+from med_autogrant.domain_runtime_parts.shared import (
+    FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
+    FUNDING_LANDSCAPE_DIFF_REPORT_SCHEMA_FILE,
+    FUNDING_LANDSCAPE_DISCOVERY_INPUT_SCHEMA_FILE,
+    FUNDING_LANDSCAPE_DISCOVERY_SCHEMA_FILE,
+    GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE,
+    GRANT_INTAKE_AUDIT_SCHEMA_FILE,
+    GRANT_QUALITY_CLOSURE_DOSSIER_SCHEMA_FILE,
+    GRANT_QUALITY_DIFF_SCHEMA_FILE,
+    GRANT_QUALITY_SCORECARD_SCHEMA_FILE,
+    LocalRuntimeStateError,
+    PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE,
+    PROJECT_PROFILE_SELECTION_SCHEMA_FILE,
+)
 from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
 from med_autogrant.domain_runtime_parts.handoff_surfaces import DomainRuntimeHandoffSurfaceMixin
 
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
-
-re_export_public_names(_runtime_shared, globals())
-re_export_public_names(_handoff_surfaces, globals())
 
 
 class MagDomainRuntime(DomainRuntimeAuthoringSurfaceMixin, DomainRuntimeHandoffSurfaceMixin):

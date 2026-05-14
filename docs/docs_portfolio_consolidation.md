@@ -92,7 +92,7 @@ one active owner surface.
 | `docs/references/opl_family_contract_adoption.md` | Current reference. | Explains current descriptor/projection adoption under OPL stage-led framework while preserving MAG authority. |
 | `docs/references/grant_strategy_memory_policy.md` | Current reference. | Explains current memory boundary without moving quality/fundability authority into memory. |
 | `docs/references/med-auto-grant-ideal-state.zh-CN.md` | Active support reference. | Preserves the MAG north-star target state while pointing live truth back to core docs and `current-program.json`. |
-| `docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md` | Active plan. | Tracks the gap between the MAG north-star target, current MAG state, and current OPL/MAS/RCA family evidence; it guides production closure work without replacing current truth. It now treats obsolete modules/interfaces/tests as direct-retirement targets, not compatibility surfaces. |
+| `docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md` | Active plan / evidence ledger. | Tracks the gap between the MAG north-star target, current MAG state, and current OPL/MAS/RCA family evidence; its MAG repo closure projection is `product-entry-manifest.ideal_state_closure_status`, while production soak and workspace runtime evidence remain external gates. It treats obsolete modules/interfaces/tests as direct-retirement targets, not compatibility surfaces. |
 | `docs/history/opl_managed_runtime_three_layer_contract.md` | Moved to history. | The old OPL Runtime Manager / provider owner framing is superseded by current OPL stage-led framework wording. |
 | `docs/history/lightweight_product_entry_and_opl_handoff.md` | Moved to history. | The useful current handoff content is absorbed by core docs, active specs, and `opl_family_contract_adoption.md`; old Hermes Kernel wording is historical. |
 | `docs/history/plans/**` | History. | Completed one-time plans and provenance records. |
@@ -131,10 +131,13 @@ Root-doc allowlist:
 
 - `docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md`
 
-Active plans are owner-tracked future work. They may compare target state,
-current state, and completion gates, but they do not replace the core docs,
-active specs, contracts, schemas, source, generated artifacts, or
-`contracts/runtime-program/current-program.json`.
+Active plans are owner-tracked future work or evidence ledgers. They may
+compare target state, current state, and completion gates, but they do not
+replace the core docs, active specs, contracts, schemas, source, generated
+artifacts, or `contracts/runtime-program/current-program.json`. When a plan has
+a machine-readable repo closure projection, the projection must live in an
+owner manifest or contract surface; the current MAG projection is
+`product-entry-manifest.ideal_state_closure_status`.
 They also must not keep old modules, old CLI aliases, facade patch bridges, or
 aggregate compatibility tests alive after the latest owner surface has replaced
 them.

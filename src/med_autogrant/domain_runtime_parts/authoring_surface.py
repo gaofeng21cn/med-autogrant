@@ -42,34 +42,20 @@ from med_autogrant.project_profile_selector import (
     build_initialized_intake_workspace,
     select_project_profile,
 )
-from med_autogrant.stage_router import _build_forced_rollback_actions, determine_next_step
-from med_autogrant.facade_exports import re_export_public_names
-from med_autogrant.domain_runtime_parts import shared as _runtime_shared
+from med_autogrant.stage_router import determine_next_step
 from med_autogrant.domain_runtime_parts.package_surface import DomainRuntimePackageSurfaceMixin
-from med_autogrant.schema_subset_validator import SchemaSubsetValidator as _SchemaSubsetValidator
 from med_autogrant.workspace import (
-    build_grant_evidence_grounding,
-    build_grant_intake_audit,
-    build_critique_summary,
     load_workspace_document,
-    materialize_workspace_surfaces,
-    summarize_workspace_document,
 )
 from med_autogrant.workspace_projection_parts import _require_workspace_context
-from med_autogrant.workspace_types import WorkspaceError, WorkspaceFileError, WorkspaceStateError
+from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
 from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstrap
 
-from med_autogrant.domain_runtime_parts.contracts import (
-    build_hosted_authoring_contract as _build_hosted_authoring_contract,
-    build_operator_contract as _build_operator_contract,
-    build_runtime_state_contract as _build_runtime_state_contract,
-    build_runtime_substrate_contract as _build_runtime_substrate_contract,
-    build_schema_contract as _build_schema_contract,
-    read_current_program_contract as _read_current_program_contract,
-    read_program_id as _read_program_id,
-    validate_contract_schema as _validate_contract_schema,
-    validate_hosted_contract_bundle as _validate_hosted_contract_bundle,
+from med_autogrant.domain_runtime_parts.shared import (
+    CRITIQUE_LOOP_REPORT_SCHEMA_FILE,
+    GRANT_AUTONOMY_CONTROLLER_INPUT_SCHEMA_FILE,
+    GRANT_AUTONOMY_CONTROLLER_REPORT_SCHEMA_FILE,
 )
 from med_autogrant.domain_runtime_parts.io import (
     _read_active_draft_id,
@@ -81,9 +67,11 @@ from med_autogrant.domain_runtime_parts.io import (
     _write_revised_workspace_output,
 )
 from med_autogrant.domain_runtime_parts.contracts import validate_schema_payload as _validate_schema_payload
-from med_autogrant.domain_runtime_parts.io import _load_funding_landscape_cache_if_needed
+from med_autogrant.domain_runtime_parts.io import (
+    _build_selection_input_from_discovery,
+    _load_funding_landscape_cache_if_needed,
+)
 from med_autogrant.domain_runtime_parts.runtime_ops import (
-    _apply_quality_gate_to_route,
     _build_autonomy_quality_evaluator_output,
     _looks_like_workspace,
 )
@@ -91,8 +79,6 @@ from med_autogrant.domain_runtime_parts.authoring_mainline import build_authorin
 
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
-
-re_export_public_names(_runtime_shared, globals())
 
 
 class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):

@@ -8,6 +8,7 @@ from med_autogrant.grant_quality_parts import (
     _nonempty_string,
     _optional_action_hint,
     _read_nonempty_string_list,
+    _stable_digest,
 )
 
 def _build_quality_closure_packages(

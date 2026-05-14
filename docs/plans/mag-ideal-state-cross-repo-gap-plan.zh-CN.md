@@ -3,9 +3,22 @@
 Owner: `Med Auto Grant`
 Purpose: 对照 MAG 理想目标态和 OPL family 各仓当前实际状态，记录差距、OPL Framework 应上收的通用能力，以及 MAG production closure 的分阶段完善计划。
 State: `active_plan`
-Machine boundary: 本文是人读 gap / completion plan，不是机器真相。机器可读真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、OPL runtime ledger、domain-owned manifest、workspace/runtime artifact root、receipt、质量报告和导出包。
+Machine boundary: 本文是人读 gap / completion plan，不是机器真相。机器可读真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、OPL runtime ledger、domain-owned manifest、workspace/runtime artifact root、receipt、质量报告和导出包；本文的 MAG repo closure 投影由 `product-entry-manifest` 顶层 `ideal_state_closure_status` 承载。
 Date: `2026-05-14`
 Cleanup posture: 当前计划不再要求保留旧模块、旧接口、旧测试或 compatibility shell。已经被核心文档、合同面、源码或测试替代的旧面，后续按最新 owner surface 直接删除、归档到 history/tombstone，或从测试入口移除；不新增兼容 alias、facade patch bridge 或旧 CLI shell 调用。
+
+## Repo Closure Update 2026-05-14
+
+本计划的 MAG 仓内开发项已收口到 `ideal_state_closure_status`：
+
+- P0：文档计划、owner 边界与 direct retirement posture 已在 `docs/plans/README*`、`docs/docs_portfolio_consolidation.md` 与本文冻结。
+- P1：MAG 已暴露 `controlled_stage_attempt_projection`、`owner_receipt_contract`、`controlled_soak_no_regression_attempt`、`product owner-receipt-evidence` 与 sidecar `stage-attempt/closeout`；真实 OPL-hosted ledger / MAG runtime receipt 对账与 live soak 仍是外部 evidence gate。
+- P2：MAG manifest 只输出 action/stage/memory/artifact refs、receipt refs、typed blocker 与 verdict refs；OPL generic primitive 是否已由两个以上 domain 生产消费，继续由 OPL 仓 evidence gate 关闭。
+- P3：MAG 已有 domain-memory proposal / accept-reject / receipt evidence writer 与 no-body operator projection；真实 workspace memory body migration、accepted/rejected runtime receipts 泛化与 OPL body-free read model 仍是 workspace/runtime evidence gate。
+- P4：MAG 已有 submission-ready gate、artifact locator、lifecycle guarded apply proof 与 lifecycle receipt evidence writer；真实 grant workspace 的 cleanup/restore/retention lifecycle receipts 与 OPL package/export shell 仍是 workspace/runtime evidence gate。
+- P5：MAG manifest 已暴露 standard skeleton、physical skeleton follow-through 与 repo-source layout audit；OPL `agents list` no-drift 与 active path legacy scan 继续作为外部 delete audit gate。
+
+因此，本文后续不再作为未实现代码清单阅读；它是 active plan / evidence ledger。MAG 仓内不再新增兼容层或第二真相源，后续只补真实外部证据、workspace runtime receipt 和必要的 legacy delete audit。
 
 ## 结论
 

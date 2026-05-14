@@ -88,6 +88,11 @@ def build_sidecar_export(
         "physical_skeleton_follow_through",
         context="sidecar_export.product_entry_manifest",
     )
+    ideal_state_closure_status = _require_mapping(
+        manifest,
+        "ideal_state_closure_status",
+        context="sidecar_export.product_entry_manifest",
+    )
     automation = _require_mapping(manifest, "automation", context="sidecar_export.product_entry_manifest")
     autonomy_observability = _require_mapping(
         manifest,
@@ -138,6 +143,7 @@ def build_sidecar_export(
         "owner_receipt_contract": dict(owner_receipt_contract),
         "lifecycle_guarded_apply_proof": dict(lifecycle_guarded_apply_proof),
         "physical_skeleton_follow_through": dict(physical_skeleton_follow_through),
+        "ideal_state_closure_status": dict(ideal_state_closure_status),
         "receipt_refs": dict(
             _require_mapping(
                 controlled_stage_attempt,
