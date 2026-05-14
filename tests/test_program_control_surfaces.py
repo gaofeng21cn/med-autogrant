@@ -71,6 +71,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("lifecycle_guarded_apply_proof", framework_boundary["framework_consumed_projection"])
         self.assertIn("lifecycle_receipt_runtime_evidence", framework_boundary["framework_consumed_projection"])
         self.assertIn("physical_skeleton_follow_through", framework_boundary["framework_consumed_projection"])
+        self.assertIn("ideal_state_closure_status", framework_boundary["framework_consumed_projection"])
         skeleton = framework_boundary["standard_domain_agent_skeleton"]
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
         self.assertEqual(skeleton["repo_source_boundary"], ["agent", "contracts", "runtime", "docs"])
@@ -98,6 +99,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(
             skeleton["physical_skeleton_follow_through_ref"],
             "/product_entry_manifest/physical_skeleton_follow_through",
+        )
+        self.assertEqual(
+            skeleton["ideal_state_closure_status_ref"],
+            "/product_entry_manifest/ideal_state_closure_status",
         )
         self.assertEqual(
             skeleton["repo_source_layout_audit_ref"],
@@ -343,6 +348,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("owner_receipt_contract", stage_led_framework["consumes_mag_surfaces"])
         self.assertIn("lifecycle_guarded_apply_proof", stage_led_framework["consumes_mag_surfaces"])
         self.assertIn("physical_skeleton_follow_through", stage_led_framework["consumes_mag_surfaces"])
+        self.assertIn("ideal_state_closure_status", stage_led_framework["consumes_mag_surfaces"])
         self.assertIn(
             "repo_source_layout_audit",
             stage_led_framework["consumes_mag_surfaces"],

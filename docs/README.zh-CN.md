@@ -12,7 +12,13 @@
 | --- | --- | --- |
 | 潜在用户与领域专家 | [仓库首页](../README.zh-CN.md)、[领域定位](./domain-positioning.zh-CN.md)、[MVP 范围](./mvp-scope.zh-CN.md) | 先理解这条基金主线是干什么的，再决定是否进入技术细节 |
 | 技术规划者、架构读者、方向同步读者 | [项目概览](./project.md)、[当前状态](./status.md)、[架构](./architecture.md)、[不变量](./invariants.md)、[决策记录](./decisions.md)、[合同说明](../contracts/README.md) | 快速抓住当前技术形态、边界和主线方向 |
-| 开发者与维护者 | [Specs 索引](./specs/README.zh-CN.md)、[Specs lifecycle map](./specs/specs_lifecycle_map.md)、[References 目录](./references/)、[活跃 plans](./plans/README.zh-CN.md)、[历史归档](./history/README.zh-CN.md) | 查看技术记录、内部参考、未来工作和归档材料 |
+| 开发者与维护者 | [Specs 索引](./specs/README.zh-CN.md)、[Specs lifecycle map](./specs/specs_lifecycle_map.md)、[References 目录](./references/)、[活跃 plans](./active/README.zh-CN.md)、[历史归档](./history/README.zh-CN.md) | 查看技术记录、内部参考、未来工作和归档材料 |
+
+## OPL 系列分层
+
+OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/docs/active/opl-family-development-reference.zh-CN.md`。它维护 OPL Framework 的全局目标、全局差距、通用能力上收边界、App/workbench 目标和跨仓开发顺序。
+
+MAG 本仓只维护 grant domain agent 的目标、当前差距、grant truth、fundability/quality/export authority、direct app skill path、OPL-hosted sidecar/projection/receipt 边界，以及哪些通用 workspace/source intake、memory locator、artifact/package lifecycle、quality/readiness projection 和 observability primitive 应上收到 OPL。MAS、RCA、MDS 或 OPL-owned App/workbench 的并行 backlog 不写入 MAG 活跃计划。
 
 ## 当前技术图景
 
@@ -23,7 +29,7 @@
 - 旧 `OPL Runtime Manager`、Temporal、Hermes-first、gateway 与本地 host runtime 说明作为历史追溯或 provider-specific 实现记录保留；默认 MAG/OPL 边界由核心文档和 active specs 持有。
 - [Docs portfolio consolidation boundary](./docs_portfolio_consolidation.md) 是当前文档生命周期 owner，记录逐分区当前 owner、已吸收内容和历史归位理由；旧 OPL Runtime Manager 与 lightweight handoff 说明已归入 history。
 - 历史 program 记录与迁移说明统一从 `docs/history/` 进入；较早 dated specs 可以继续留在 `docs/specs/` 作为 provenance，但机器可读面通过语义化 `human_doc:*` 标识引用它们，而不是把旧路径钉成稳定接口。
-- product status、user-loop、projection 与本地 `submission-ready` package 已作为 app skill 下的内部 command contract 与 direct-product projection 落地；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，外部基金官网 portal submission 仍是单独的人类监督步骤；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/plans/`。
+- product status、user-loop、projection 与本地 `submission-ready` package 已作为 app skill 下的内部 command contract 与 direct-product projection 落地；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，外部基金官网 portal submission 仍是单独的人类监督步骤；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/active/`。
 - `OPL` family routing 与 `Codex` skill activation 继续消费同一套 MAG capability surface；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。
 - MAG 当前任务边界锁定在“指定基金任务正文 authoring”；“科学完成”与“形式/客观补件完成”是显式分层。
 - 科学层交付的是可待审包，用于同任务内作者/评审决策。
@@ -32,7 +38,7 @@
 - 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`，并在作者侧主线之上保持 schema-backed 边界。
 - MAG 现在通过 `controlled_domain_memory_apply_proof`、`owner_receipt_contract` 与 `lifecycle_guarded_apply_proof` 暴露 controlled grant-stage domain memory 与 owner/lifecycle receipt apply proof：consumed grant strategy memory refs、writeback proposal、MAG accept/reject decision、owner/no-regression receipt refs、lifecycle receipt refs、runtime receipt evidence、operator receipt projection 与 repo-source layout audit 都可验证，但不把 memory body、grant artifact、export verdict 或 receipt instance 存入 repo source。
 - 当前 grouped shell 也已经把 `product build-entry`、`product manifest`、`product status` 与 `package submission-ready` 暴露成 skill-backed CLI 命令面。
-- 当前轻量 grant `product entry` shell 是 app skill 背后的内部产品入口 shell 与 domain/API catalog builder；未来 hosted 产品形态在活跃阶段放入 `docs/plans/`，完成后归入 history。
+- 当前轻量 grant `product entry` shell 是 app skill 背后的内部产品入口 shell 与 domain/API catalog builder；未来 hosted 产品形态在活跃阶段放入 `docs/active/`，完成后归入 history。
 - 质量治理已经通过 `workspace quality-scorecard` 与 `workspace quality-diff` 收成 schema-backed surface。
 - 长时间自治已经通过 `pass autonomy-controller` 暴露为正式入口，并输出结构化 blocker 与 evidence-gap report。
 - 通用 grant grammar 与 funder-specific family profile 规则继续在 `grant_family_registry.py` 分层；跨 funder 重选不进入默认正文 authoring gate 语义。
@@ -122,7 +128,7 @@ line budget，新增或增长的超长文件应拆分，而不是扩大单文件
 
 ## Plans 与历史规划工件
 
-- [活跃 plans](./plans/README.zh-CN.md)
+- [活跃 plans](./active/README.zh-CN.md)
 - [历史 plans](./history/plans/README.zh-CN.md)
 
 已完成的规划工件现已统一迁入 `docs/history/plans/`。
@@ -142,6 +148,14 @@ line budget，新增或增长的超长文件应拆分，而不是扩大单文件
 
 - 文档治理统一冻结在 [系列项目文档治理清单](./references/series-doc-governance-checklist.md)、技术工作集和仓库跟踪的 contract/doc surface 中，而不再只写在 `AGENTS.md`。
 - `README*` 与 `docs/README*` 是默认公开入口。
-- `docs/specs/**` 承载 active 技术记录和较早 provenance specs；`docs/history/specs/` 是较早 dated records 的历史阅读索引。
-- `docs/references/**` 承载内部参考说明。
-- `docs/plans/**` 只保留活跃未来工作；`docs/history/**` 承载已完成计划和历史追溯材料。
+- MAG 采用 OPL-family canonical docs taxonomy：
+  `active/public/product/runtime/delivery/source/policies/specs/references/history`。
+- `docs/active/**` 承接当前执行、当前计划、当前差距与 active baton；旧 `docs/plans/**`
+  活跃计划层已退役。
+- `docs/public/**` 承接公开叙事索引；当前 root public allowlist 暂由
+  `docs/domain-positioning*` 与 `docs/mvp-scope*` 保持路径稳定。
+- `docs/product/**`、`docs/runtime/**`、`docs/delivery/**`、`docs/source/**`
+  分别承接 direct product entry、runtime、submission/package delivery 与 workspace/source intake 支撑。
+- `docs/policies/**` 承接稳定规则；`docs/specs/**` 承载 active 技术记录和较早
+  provenance specs；`docs/references/**` 承载内部参考说明；`docs/history/**`
+  承载已完成计划和历史追溯材料。

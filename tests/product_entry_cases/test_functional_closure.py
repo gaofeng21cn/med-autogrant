@@ -207,7 +207,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         closure_status = manifest["ideal_state_closure_status"]
         self.assertEqual(closure_status["surface_kind"], "mag_ideal_state_closure_status")
         self.assertEqual(closure_status["state"], "repo_closure_landed_external_evidence_gated")
-        self.assertEqual(closure_status["plan_ref"], "docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md")
+        self.assertEqual(closure_status["plan_ref"], "docs/active/mag-ideal-state-cross-repo-gap-plan.zh-CN.md")
         self.assertEqual(closure_status["owner"], "med-autogrant")
         self.assertFalse(closure_status["claims_production_long_run_soak_complete"])
         self.assertFalse(closure_status["authority_boundary"]["opl_can_write_domain_truth"])

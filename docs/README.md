@@ -12,7 +12,22 @@ This guide is for readers who need the technical records, trace records, referen
 | --- | --- | --- |
 | Potential users and domain experts | [Repository home](../README.md), [Domain Positioning](./domain-positioning.md), [MVP Scope](./mvp-scope.md) | Understand what the grant line is for before reading technical internals |
 | Technical readers and planners | [Project](./project.md), [Status](./status.md), [Architecture](./architecture.md), [Invariants](./invariants.md), [Decisions](./decisions.md), [Contracts Overview](../contracts/README.md) | Get the current technical shape, boundaries, and mainline direction quickly |
-| Developers and maintainers | [Specs guide](./specs/README.md), [Specs lifecycle map](./specs/specs_lifecycle_map.md), [References directory](./references/), [Active plans](./plans/README.md), [History archive](./history/README.md) | Inspect technical records, reference notes, future work, and archival material |
+| Developers and maintainers | [Specs guide](./specs/README.md), [Specs lifecycle map](./specs/specs_lifecycle_map.md), [References directory](./references/), [Active plans](./active/README.md), [History archive](./history/README.md) | Inspect technical records, reference notes, future work, and archival material |
+
+## OPL Family Layering
+
+The global OPL-family development reference lives at
+`/Users/gaofeng/workspace/one-person-lab/docs/active/opl-family-development-reference.zh-CN.md`.
+It owns OPL Framework global targets, global gaps, generic primitive
+absorption, App/workbench targets, and cross-repo execution order.
+
+This MAG repo only owns the grant-domain-agent target state, current gaps,
+grant truth, fundability/quality/export authority, the direct app-skill path,
+OPL-hosted sidecar/projection/receipt boundaries, and the list of generic
+workspace/source intake, memory locator, artifact/package lifecycle,
+quality/readiness projection, and observability primitives that should move up
+into OPL. MAS, RCA, MDS, and OPL-owned App/workbench backlogs are not
+maintained in MAG active plans.
 
 ## Current Technical Picture
 
@@ -24,7 +39,7 @@ This guide is for readers who need the technical records, trace records, referen
 - `Hermes-Agent`-related lanes stay in explicit hosted/proof or technical-reference positions; the default public capability contract remains the MAG direct grant-authoring surface plus OPL stage-led framework consumption.
 - [Docs portfolio consolidation boundary](./docs_portfolio_consolidation.md) is the current docs lifecycle owner. It records partition owners, absorbed content, and why old OPL Runtime Manager / lightweight handoff notes now live in history.
 - Historical program records and migration notes stay reachable through `docs/history/`; older dated specs can remain in `docs/specs/` for provenance, while machine-readable surfaces refer to them through semantic `human_doc:*` ids rather than path-stability constraints.
-- The product status, user-loop, projections, and local `submission-ready` package are landed as internal command contracts and direct-product projections under the app skill. The active task boundary now distinguishes scientific review readiness from the stricter local export gate; external funding-portal submission remains a separate supervised step. Future hosted product expansion belongs in `docs/plans/` only when there is an active plan.
+- The product status, user-loop, projections, and local `submission-ready` package are landed as internal command contracts and direct-product projections under the app skill. The active task boundary now distinguishes scientific review readiness from the stricter local export gate; external funding-portal submission remains a separate supervised step. Future hosted product expansion belongs in `docs/active/` only when there is an active plan.
 - `OPL` family routing and `Codex` skill activation consume the same MAG capability surface; MAG keeps grant-domain truth, direct grant entry, and execution routing.
 - The active MAG task boundary is specified-funder body authoring; scientific completion and formal/objective supplement completion are explicitly separated layers.
 - The scientific completion layer delivers a review-ready package for author and reviewer decision flow.
@@ -33,7 +48,7 @@ This guide is for readers who need the technical records, trace records, referen
 - Current controller-owned, read-only projections continue to include `workspace progress`, `workspace cockpit`, `product direct-entry`, and `product user-loop`, with schema-backed boundaries above the author-side line.
 - MAG now exposes controlled grant-stage domain memory and owner/lifecycle receipt apply proof through `controlled_domain_memory_apply_proof`, `owner_receipt_contract`, and `lifecycle_guarded_apply_proof`: consumed grant strategy memory refs, writeback proposal, MAG accept/reject decision, owner/no-regression receipt refs, lifecycle receipt refs, runtime receipt evidence, operator receipt projection, and repo-source layout audit are verifiable without storing memory body, grant artifacts, export verdicts, or receipt instances in repo source.
 - The current grouped shell also exposes `product build-entry`, `product manifest`, `product status`, and `package submission-ready` as the skill-backed CLI command surface.
-- The current lightweight grant `product entry` shell is the internal product-entry shell and domain/API catalog builder behind the app skill. Future hosted product work stays in `docs/plans/` only while it is active, then moves to history.
+- The current lightweight grant `product entry` shell is the internal product-entry shell and domain/API catalog builder behind the app skill. Future hosted product work stays in `docs/active/` only while it is active, then moves to history.
 - Quality governance is now schema-backed through `workspace quality-scorecard` and `workspace quality-diff`.
 - Long-horizon autonomy is now exposed as `pass autonomy-controller`, with structured blocker and evidence-gap reporting.
 - Common grant grammar and funder-specific family profile rules remain separated in `grant_family_registry.py`, while cross-funder reselection stays outside default body-authoring gate semantics.
@@ -131,7 +146,7 @@ budget unless a legacy baseline is explicitly recorded.
 
 ## Plans And Historical Planning Artifacts
 
-- [Active plans](./plans/README.md)
+- [Active plans](./active/README.md)
 - [Historical plans](./history/plans/README.md)
 
 Completed planning artifacts now live in `docs/history/plans/`.
@@ -151,6 +166,17 @@ Current mainline truth continues to live in the core docs, active specs listed i
 
 - Documentation governance freezes in [series doc governance checklist](./references/series-doc-governance-checklist.md), the technical working set, and repo-tracked contract/doc surfaces rather than in `AGENTS.md` alone.
 - `README*` and `docs/README*` are the default public entry.
-- `docs/specs/**` holds active technical records plus older provenance specs; `docs/history/specs/` is the archival reading index for older dated records.
-- `docs/references/**` holds internal reference notes.
-- `docs/plans/**` is reserved for active future work; `docs/history/**` holds completed plans and archival traceability.
+- MAG follows the OPL-family canonical docs taxonomy:
+  `active/public/product/runtime/delivery/source/policies/specs/references/history`.
+- `docs/active/**` holds current execution, current plans, current gaps, and
+  active baton; the former `docs/plans/**` active lane has been retired.
+- `docs/public/**` holds the public narrative index; the current root public
+  allowlist remains path-stable in `docs/domain-positioning*` and
+  `docs/mvp-scope*`.
+- `docs/product/**`, `docs/runtime/**`, `docs/delivery/**`, and
+  `docs/source/**` hold direct product-entry, runtime, submission/package
+  delivery, and workspace/source-intake support.
+- `docs/policies/**` holds stable rules; `docs/specs/**` holds active
+  technical records plus older provenance specs; `docs/references/**` holds
+  internal reference notes; `docs/history/**` holds completed plans and
+  archival traceability.

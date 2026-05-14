@@ -5,14 +5,26 @@ Last updated: `2026-05-14`
 
 This note freezes the documentation portfolio boundary after the May 2026 consolidation and the OPL stage-led runtime alignment pass. The May 14 plan refresh also freezes direct retirement as the cleanup posture for obsolete modules, interfaces, CLI aliases, facade patch bridges, and aggregate compatibility tests.
 
+The OPL-family global development reference is
+`/Users/gaofeng/workspace/one-person-lab/docs/active/opl-family-development-reference.zh-CN.md`.
+It owns global framework targets, cross-repo gap ordering, shared primitive
+absorption, App/workbench targets, and same-name docs taxonomy. MAG docs only own
+MAG target state, MAG gaps, MAG grant authority boundaries, MAG direct/hosted
+surfaces, and MAG-to-OPL absorption candidates.
+
+MAG follows the OPL-family canonical docs taxonomy:
+`active/public/product/runtime/delivery/source/policies/specs/references/history`.
+The former `docs/plans/` active lane has been physically retired. Current plans,
+active gaps, active baton records, and closeout evidence now live under
+`docs/active/`; completed plans remain under `docs/history/plans/`.
+
 ## Lifecycle Signals
 
 Each docs layer is governed by four lifecycle signals:
 
 - `owner`: the surface owner responsible for keeping the document aligned.
 - `purpose`: the reason the document exists in the portfolio.
-- `state`: one of `current`, `reference`, `history`, or `active_plan`
-  for work that is still explicitly tracked under `docs/plans/`.
+- `state`: one of `current`, `reference`, `history`, or `active_plan`.
 - `machine boundary`: whether machine consumers may rely on the surface directly.
 
 `README*` and `docs/**` are human-readable surfaces. Machine-readable control must use contract/schema/source paths, or semantic `human_doc:*` ids when a machine surface needs to relate to prose. Prose paths are navigation aids, not API stability promises.
@@ -26,7 +38,7 @@ roles before expanding or moving the file:
 
 1. Merge current facts into the core docs, active specs, or the current-program
    truth surface.
-2. Keep active future work in `docs/plans/` only while it still needs owner,
+2. Keep active future work in `docs/active/` only while it still needs owner,
    gate, or closeout tracking.
 3. Keep support material in `docs/references/` or an active spec only when it
    explains current behavior or a current boundary.
@@ -67,10 +79,16 @@ one active owner surface.
 | `README*` | Public first page for applicants, domain experts, and agents. | Keep sparse and bilingual. Move implementation or provider detail into docs/specs/references/history. |
 | `docs/README*` | Technical route map and current-state summary. | It may summarize old/new relationships, but should send old routes to history instead of restating them as live options. |
 | Core five | Current owner set for project, status, architecture, invariants, and decisions. | Superseded decisions remain in `docs/decisions.md` only when explicitly marked superseded and explained as provenance. |
+| `docs/active/` | Current execution, current plans, active gap plan, and active baton. | Replaces the retired `docs/plans/` active lane. |
+| `docs/public/` | Public narrative index after the repository home. | Root public-doc allowlist remains path-stable until safe migration. |
+| `docs/product/` | Product entry, user loop, product status, and operator-facing guidance. | Does not own grant truth, fundability verdict, or export authority. |
+| `docs/runtime/` | Runtime/control/projection support. | Machine truth stays in contracts, schemas, source, and runtime evidence. |
+| `docs/delivery/` | Submission-ready package, export, and delivery support. | Grant artifact authority stays MAG-owned. |
+| `docs/source/` | Workspace/source intake and source truth support. | Generic shell candidates are recorded as MAG-to-OPL absorption candidates. |
+| `docs/policies/` | Stable rules and governance. | One-off plans stay in active or history, not policies. |
 | `docs/domain-positioning*` and `docs/mvp-scope*` | Root public-doc allowlist for domain role and MVP scope. | Update for public-facing current boundary changes; runtime/provider histories belong in specs, references, or history. |
 | `docs/specs/` | Mixed path-stable technical record layer. Only the active specs in `docs/specs/README*` are current owner records. | Older dated specs remain in place for audit path stability and are classified through `docs/specs/specs_lifecycle_map.md` plus `docs/history/specs/README*`. |
 | `docs/references/` | Support material for current boundaries: memory policy, OPL family adoption, MAG north-star target state, and series doc governance. | Historical/provider-specific handoff notes have been moved to `docs/history/`. New reference docs must explain a current boundary or explicitly mark itself as target-state support material. |
-| `docs/plans/` | Active-plan lane. It currently tracks the MAG ideal-state cross-repo gap and completion plan. | Completed plans live under `docs/history/plans/`; active plans stay here only while they still need owner, gate, or closeout tracking. Current plans use direct retirement for obsolete compatibility surfaces rather than preserving old aliases or aggregate tests. |
 | `docs/history/` | Archive entry for retired lanes, completed plans, superseded specs, old provider notes, and positioning history. | History docs can preserve old wording, but must point readers back to current owner docs for live truth. |
 
 ## Key Document Disposition Table
@@ -92,7 +110,7 @@ one active owner surface.
 | `docs/references/opl_family_contract_adoption.md` | Current reference. | Explains current descriptor/projection adoption under OPL stage-led framework while preserving MAG authority. |
 | `docs/references/grant_strategy_memory_policy.md` | Current reference. | Explains current memory boundary without moving quality/fundability authority into memory. |
 | `docs/references/med-auto-grant-ideal-state.zh-CN.md` | Active support reference. | Preserves the MAG north-star target state while pointing live truth back to core docs and `current-program.json`. |
-| `docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md` | Active plan / evidence ledger. | Tracks the gap between the MAG north-star target, current MAG state, and current OPL/MAS/RCA family evidence; its MAG repo closure projection is `product-entry-manifest.ideal_state_closure_status`, while production soak and workspace runtime evidence remain external gates. It treats obsolete modules/interfaces/tests as direct-retirement targets, not compatibility surfaces. |
+| `docs/active/mag-ideal-state-cross-repo-gap-plan.zh-CN.md` | Active plan / evidence ledger. | Tracks the gap between the MAG north-star target, current MAG state, and current OPL/MAS/RCA family evidence; its MAG repo closure projection is `product-entry-manifest.ideal_state_closure_status`, while production soak and workspace runtime evidence remain external gates. It treats obsolete modules/interfaces/tests as direct-retirement targets, not compatibility surfaces. |
 | `docs/history/opl_managed_runtime_three_layer_contract.md` | Moved to history. | The old OPL Runtime Manager / provider owner framing is superseded by current OPL stage-led framework wording. |
 | `docs/history/lightweight_product_entry_and_opl_handoff.md` | Moved to history. | The useful current handoff content is absorbed by core docs, active specs, and `opl_family_contract_adoption.md`; old Hermes Kernel wording is historical. |
 | `docs/history/plans/**` | History. | Completed one-time plans and provenance records. |
@@ -129,7 +147,7 @@ Root-doc allowlist:
 
 ## Active Plan Layer
 
-- `docs/plans/mag-ideal-state-cross-repo-gap-plan.zh-CN.md`
+- `docs/active/mag-ideal-state-cross-repo-gap-plan.zh-CN.md`
 
 Active plans are owner-tracked future work or evidence ledgers. They may
 compare target state, current state, and completion gates, but they do not
@@ -141,6 +159,13 @@ owner manifest or contract surface; the current MAG projection is
 They also must not keep old modules, old CLI aliases, facade patch bridges, or
 aggregate compatibility tests alive after the latest owner surface has replaced
 them.
+
+If a `docs/active/` plan turns out to be a generic framework primitive rather
+than MAG grant authority, document the MAG evidence and handoff boundary, then
+move the implementation owner to OPL. Do not maintain a parallel MAG plan for
+provider runtime, generic queue, workspace/source intake shell, memory
+locator/index, package/export shell, quality/readiness UI shell, or
+observability/SLO once the owner is OPL.
 
 Lifecycle:
 

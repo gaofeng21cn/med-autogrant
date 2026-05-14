@@ -73,6 +73,7 @@
         "owner_receipt_contract",
         "lifecycle_guarded_apply_proof",
         "physical_skeleton_follow_through",
+        "ideal_state_closure_status",
         "repo_source_layout_audit",
         "OPL Rust native helper indexed workspace/session/artifact/TODO/runtime-health projections"
       ],
@@ -123,6 +124,7 @@
         "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
         "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
         "physical_skeleton_follow_through_ref": "/product_entry_manifest/physical_skeleton_follow_through",
+        "ideal_state_closure_status_ref": "/product_entry_manifest/ideal_state_closure_status",
         "repo_source_layout_audit_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
         "opl_role": "descriptor_and_ref_consumer_only",
         "opl_verdict_authority": {
@@ -272,6 +274,7 @@
         "owner_receipt_contract",
         "lifecycle_guarded_apply_proof",
         "physical_skeleton_follow_through",
+        "ideal_state_closure_status",
         "repo_source_layout_audit",
         "sidecar receipt refs",
         "opl_stage_runtime_registration",

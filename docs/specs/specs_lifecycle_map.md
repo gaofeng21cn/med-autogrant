@@ -112,6 +112,6 @@ New technical records should not default to another dated file in `docs/specs/`.
 Use this decision path:
 
 1. If it changes current public role, runtime boundary, authoring quality, or active command semantics, update the core five, `current-program.json`, schemas/source, and a small active spec only when the boundary needs a narrative explanation.
-2. If it is implementation work still in progress, put it in `docs/plans/` while active and move it to `docs/history/plans/` after closeout.
+2. If it is implementation work still in progress, put it in `docs/active/` while active and move it to `docs/history/plans/` after closeout.
 3. If it is background, OPL handoff, distribution, or support material, put it in `docs/references/`.
 4. If it is a completed activation package, migration record, or superseded tranche, put it in `docs/history/` or leave it path-stable under `docs/specs/` with this map marking it historical.

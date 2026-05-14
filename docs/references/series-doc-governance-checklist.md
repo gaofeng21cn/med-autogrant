@@ -27,7 +27,7 @@
 - `README*` 与 `docs/README*` 继续承担双语公开入口。
 - `docs/specs/README*` 与 `docs/specs/specs_lifecycle_map.md` 承担 specs 组合治理；只有索引列出的四份 active specs 承担 current boundary。其余 dated specs 是 support reference、integration reference、historical activation package、superseded provider proof 或 provenance。
 - `docs/references/**` 承担内部参考说明；默认中文维护。
-- `docs/plans/**` 只承担活跃未来计划；`docs/history/**` 承担已完成 plans、历史 specs 索引与归档追溯，不得重新回灌成当前公开入口。
+- `docs/active/**` 承担活跃未来计划、当前差距和 active baton；`docs/history/**` 承担已完成 plans、历史 specs 索引与归档追溯，不得重新回灌成当前公开入口。
 - `schemas/v1/` 与 `contracts/runtime-program/` 继续只承载 machine-readable contract，不承载 narrative second source。
 - 长期规则要冻结进核心文档、repo-tracked current truth、reference 或 contract surface；不要把 `AGENTS.md` 继续当第二真相源。
 
