@@ -393,6 +393,7 @@ def _dispatch_stage_attempt_closeout(
     input_path: str,
     task_path: Path,
 ) -> dict[str, Any]:
+    closeout_refs = _stage_attempt_closeout_refs(task)
     receipt_evidence = product_entry.write_owner_receipt_evidence(
         input_path=input_path,
         receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="sidecar_task"),
@@ -401,8 +402,10 @@ def _dispatch_stage_attempt_closeout(
         closeout_summary=_require_nonempty_string_from_mapping(task, "closeout_summary", context="sidecar_task"),
         runtime_root=_optional_nonempty_string(task.get("runtime_root")),
         receipt_id=_optional_nonempty_string(task.get("receipt_id") or task.get("task_id")),
+        closeout_refs=closeout_refs,
     )
     receipt = receipt_evidence["owner_receipt_evidence"]
+    receipt_refs = _stage_attempt_receipt_refs(receipt)
     return _dispatch_payload(
         action="stage-attempt/closeout",
         task=task,
@@ -413,12 +416,8 @@ def _dispatch_stage_attempt_closeout(
             "surface_kind": "sidecar_stage_attempt_closeout_result",
             "return_shape": receipt["receipt_shape"],
             "receipt_ref": receipt["receipt_instance_ref"],
-            "receipt_refs": {
-                "owner_receipt_ref": receipt["receipt_instance_ref"],
-                "owner_receipt_contract_ref": receipt["owner_receipt_contract_ref"],
-                "source_ref": receipt["source_ref"],
-                "opl_consumes_receipt_ref_only": True,
-            },
+            "receipt_refs": receipt_refs,
+            "closeout_refs": closeout_refs,
             "source_refs": list(receipt["source_refs"]),
             "consumed_memory_refs": _optional_string_list(task.get("consumed_memory_refs")),
             "writeback_receipt_refs": _optional_string_list(task.get("writeback_receipt_refs")),
@@ -667,6 +666,36 @@ def _typed_blocker_for_receipt(receipt: Mapping[str, Any], *, blocker_kind: str)
         "source_ref": receipt.get("source_ref"),
         "next_action": "Route the blocker back to MAG owner surface before mutating grant truth, memory body, or artifact content.",
     }
+
+
+def _stage_attempt_closeout_refs(task: Mapping[str, Any]) -> dict[str, Any]:
+    refs: dict[str, Any] = {
+        "grant_transition_oracle_ref": _optional_nonempty_string(task.get("grant_transition_oracle_ref"))
+        or "/product_entry_manifest/grant_transition_oracle",
+        "controlled_soak_no_regression_attempt_ref": (
+            "/product_entry_manifest/controlled_soak_no_regression_attempt"
+        ),
+        "sidecar_stage_attempt_closeout_action": "stage-attempt/closeout",
+    }
+    transition_id = _optional_nonempty_string(task.get("transition_id"))
+    if transition_id is not None:
+        refs["transition_id"] = transition_id
+    oracle_fixture_id = _optional_nonempty_string(task.get("oracle_fixture_id"))
+    if oracle_fixture_id is not None:
+        refs["oracle_fixture_id"] = oracle_fixture_id
+    return refs
+
+
+def _stage_attempt_receipt_refs(receipt: Mapping[str, Any]) -> dict[str, Any]:
+    refs = {
+        "owner_receipt_ref": receipt["receipt_instance_ref"],
+        "owner_receipt_contract_ref": receipt["owner_receipt_contract_ref"],
+        "source_ref": receipt["source_ref"],
+        "opl_consumes_receipt_ref_only": True,
+    }
+    if receipt.get("receipt_shape") == "no_regression_evidence":
+        refs["no_regression_evidence_ref"] = receipt["receipt_instance_ref"]
+    return refs
 
 
 def _read_json_mapping(path: Path, *, context: str) -> Mapping[str, Any]:
