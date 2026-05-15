@@ -1,58 +1,56 @@
-**English** | [中文](./mvp-scope.zh-CN.md)
-
 # Med Auto Grant MVP Scope
 
-## MVP Goal
+## MVP 目标
 
-The first MVP targets a medical `NSFC` generic application skeleton rather than one narrowly specialized program type.
+第一阶段 MVP 聚焦医学场景下的 `NSFC` 通用申请骨架，而不是先绑定某一个高度特化的项目类型。
 
-This first version is designed to help refine:
+这一版系统优先解决的是：
 
-- scientific questions
-- necessity and scientific value
-- applicant-problem fit
-- application structure and drafting
-- mentor-style critique and revision loops
+- 科学问题提纯
+- 必要性与科学价值论证
+- 申请人与问题的适配度
+- 申请书结构与草稿生成
+- 导师式批注与修订闭环
 
-## Evaluation Core
+## 评审内核
 
-The initial critique kernel is frozen around:
+第一版批注内核先冻结为：
 
-- `60%`: necessity and scientific value
-- `30%`: applicant competence and uniqueness
-- `10%`: feasibility
+- `60%`：必要性与科学价值
+- `30%`：申请人胜任力与独特性
+- `10%`：可行性
 
-The highest-priority requirement is to distinguish a real scientific question from:
+其中最高优先级要求是：严格区分真正的科学问题与以下对象：
 
-- an engineering task
-- a clinical demand statement
-- a generic accuracy-improvement target
+- 工程任务
+- 临床需求陈述
+- 泛泛的准确率提升目标
 
-## MVP Inputs
+## MVP 输入
 
-- applicant CV or bio
-- representative outputs
-- active projects
-- reusable evidence and preliminary results
-- candidate directions or topics
-- `NSFC` application requirements and section structure
+- 申请人简历或 bio
+- 代表性成果
+- 在研项目
+- 可复用证据与预实验结果
+- 候选方向或题目
+- `NSFC` 申请要求与章节结构
 
-## MVP Outputs
+## MVP 输出
 
-- direction convergence suggestions
-- refined scientific-question statement
-- necessity / scientific-value argument chain
-- applicant-fit explanation
-- draft application sections
-- mentor-style critique
-- revision plan and evidence-gap list
+- 方向收敛建议
+- 凝练后的科学问题表述
+- 必要性 / 科学价值论证链
+- 申请人与课题的适配度说明
+- 申请书关键章节草稿
+- 导师式批注
+- 修订计划与证据缺口清单
 
-## Non-Goals
+## 非目标
 
-The first MVP does not attempt to:
+第一阶段 MVP 不尝试：
 
-- cover every funding system
-- become a reviewer-owned grant review platform
-- optimize every program-specific template difference up front
-- replace medical `Research Ops`
+- 覆盖所有基金体系
+- 变成 reviewer-owned 的基金评审平台
+- 一开始就优化所有项目类型的模板差异
+- 取代医学 `Research Ops`
 

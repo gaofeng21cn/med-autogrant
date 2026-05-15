@@ -320,8 +320,8 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
         "state": "repo_closure_landed_external_evidence_gated",
-        "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.zh-CN.md",
-        "north_star_ref": "docs/references/med-auto-grant-ideal-state.zh-CN.md",
+        "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
+        "north_star_ref": "docs/references/med-auto-grant-ideal-state.md",
         "current_truth_refs": [
             "docs/status.md",
             "docs/architecture.md",
@@ -357,7 +357,7 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
                 mag_surface_refs=[
                     "docs/active/README.md",
                     "docs/docs_portfolio_consolidation.md",
-                    "docs/active/mag-ideal-state-cross-repo-gap-plan.zh-CN.md",
+                    "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
                 ],
                 required_evidence_refs=["scripts_verify_meta"],
             ),

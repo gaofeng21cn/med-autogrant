@@ -21,9 +21,7 @@ Date: `2026-04-07`
 当前 reviewer 应能仅凭以下 repo-tracked review surfaces 理解 runtime baseline 的正式合同：
 
 - `README.md`
-- `README.zh-CN.md`
 - `docs/README.md`
-- `docs/README.zh-CN.md`
 - `docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`
 - `docs/specs/2026-04-06-object-model-schema-v1.md`
 - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`

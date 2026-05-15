@@ -77,7 +77,7 @@ The retrieved memory can influence reasoning and drafting strategy. It cannot is
 
 OPL may index memory refs, carry stage knowledge refs, display consumed-memory provenance, and route writeback receipts. OPL must not own MAG grant strategy content, fundability judgment, authoring quality verdict, or submission-ready export authority.
 
-Family-level governance for this boundary is tracked in `/Users/gaofeng/workspace/one-person-lab/docs/references/operating-governance/family-domain-memory-governance.zh-CN.md`.
+Family-level governance for this boundary is tracked in `/Users/gaofeng/workspace/one-person-lab/docs/references/operating-governance/family-domain-memory-governance.md`.
 
 ## Now / Next / Defer
 

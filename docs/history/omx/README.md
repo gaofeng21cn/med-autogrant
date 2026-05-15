@@ -1,9 +1,9 @@
-# OMX Historical Archive
+# OMX 历史资料索引
 
-This directory is the historical archive entry for OMX-era workflow materials in `Med Auto Grant`.
+这里收录 `Med Auto Grant` 仓库内与 OMX 时代相关的历史资料入口。
 
-It is not an active execution surface.
-If you need the current project rules or current working entrypoints, start from:
+它不是当前活跃执行入口。
+如果要看当前项目规则或当前工作入口，请先读：
 
 - `../../../AGENTS.md`
 - `../../README.md`
@@ -14,9 +14,9 @@ If you need the current project rules or current working entrypoints, start from
 - `../../decisions.md`
 - `../../../contracts/runtime-program/current-program.json`
 
-Historical OMX materials kept for audit and migration context:
+保留为审计与迁移背景的 OMX 历史资料：
 
-- [Historical domain-harness-os positioning](../domain-harness-os-positioning.md)
+- [历史 domain-harness-os positioning](../domain-harness-os-positioning.md)
 - [Formal entry matrix historical/support spec](../../specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability model historical/support spec](../../specs/2026-04-07-durability-model-clarification.md)
-- [Mainline And OMX Bridge](../../specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
+- [主线与 OMX Bridge](../../specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)

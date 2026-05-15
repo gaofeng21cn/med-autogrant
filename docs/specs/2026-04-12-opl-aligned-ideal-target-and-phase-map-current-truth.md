@@ -8,7 +8,9 @@ Date: `2026-04-12`
 
 - Phase: `OPL-Aligned Target Shape Freeze`
 - Active tranche: `Ideal target / phase map`
-- Status: `landed / current truth`
+- Status: `superseded_reference`
+
+当前阅读规则：本文只保留 2026-04-12 的 OPL 对齐历史快照。当前 MAG 目标态以 `docs/references/med-auto-grant-ideal-state.md`、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、核心五件套、`docs/specs/specs_lifecycle_map.md` 和 `contracts/runtime-program/current-program.json` 为准。下文旧 `Hermes Kernel`、`OPL Gateway`、`Domain Harness OS`、`runtime substrate owner` 等表述只作为 provenance 阅读，不是当前目标路线、默认 runtime owner 或 active compatibility interface。
 
 ## 文档目的
 
@@ -19,26 +21,30 @@ Date: `2026-04-12`
 1. 按 `OPL` 与当前仓设计，明确 `Med Auto Grant` 的理想目标到底是什么。
 2. 明确当前已经完成到哪个阶段、下一阶段应该推进什么、哪些还只是 future scope。
 
-## 理想目标
+## 当前替代目标
 
 按 `OPL` 对齐后的理想目标应固定为：
 
-- `OPL`：family-level 顶层入口与 gateway owner
-- `Med Auto Grant Product Entry`：grant domain direct entry owner
-- `Hermes-Agent`：runtime substrate owner
-- `Med Auto Grant`：author-side grant truth / route / export owner
+- `OPL`：stage-led、以 Agent executor 为最小执行单位的 family runtime framework，负责 provider-backed stage attempt、queue/wakeup、receipt/projection、shared lifecycle/index primitives 和 App/workbench shell。
+- `Codex CLI`：当前第一公民 executor；其他 executor adapter 只能显式接入且不承诺行为效果等价。
+- `Med Auto Grant Product Entry`：grant domain direct entry owner，与 OPL-hosted path 共享 MAG-owned descriptor/projection/receipt 边界。
+- `Med Auto Grant`：author-side grant truth、fundability/quality verdict、route owner 与 export authority。
 
-理想 direct user route 是：
+当前 direct user route 是：
 
-`User -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant Domain Harness OS`
+`User -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Codex CLI executor -> MAG grant truth / route / export surfaces`
 
-理想 family-level route 是：
+当前 OPL-hosted route 是：
 
-`User -> OPL Product Entry -> OPL Gateway -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+`User -> OPL stage-led framework / App shell -> provider-backed stage attempt -> MAG domain entry -> MAG owner receipt / typed blocker / artifact refs`
 
 当前这条目标强调的是 owner split，而不是把所有能力混成同一个 runtime body。
 
-## 当前已经完成的部分
+## 历史快照
+
+以下 P1/P2 描述是 2026-04-12 的历史快照，用于说明当时为什么形成 OPL 对齐计划。它不能覆盖当前 MAG docs taxonomy、runtime owner、executor boundary 或 direct retirement 规则。
+
+## 当时已经完成的部分
 
 ### P1. Hermes substrate cutover
 

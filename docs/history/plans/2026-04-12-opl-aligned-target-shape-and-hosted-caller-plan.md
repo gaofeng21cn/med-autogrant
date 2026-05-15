@@ -98,7 +98,7 @@ git commit -m "Freeze hosted caller proof boundary"
 **Files:**
 - Modify: `docs/plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md`
 - Modify: `docs/README.md`
-- Modify: `docs/README.zh-CN.md`
+- Modify: `docs/README.md`
 - Test: `tests/test_hermes_runtime_truth.py`
 
 - [ ] **Step 1: Write the failing test**
@@ -131,6 +131,6 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add docs/plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md docs/README.md docs/README.zh-CN.md tests/test_hermes_runtime_truth.py
+git add docs/plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md docs/README.md docs/README.md tests/test_hermes_runtime_truth.py
 git commit -m "Add OPL-aligned hosted caller execution plan"
 ```

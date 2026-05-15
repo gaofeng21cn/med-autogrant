@@ -2,7 +2,7 @@
 
 ## 2026-05-14：把 MAG ideal-state plan 收成机器可读 closure status
 
-- 决策：`product-entry-manifest` 新增顶层 `ideal_state_closure_status`，sidecar export 同步投影该 surface；它把 `docs/active/mag-ideal-state-cross-repo-gap-plan.zh-CN.md` 的 P0-P5 拆成 MAG repo 已落地 surface 与外部 evidence gate。
+- 决策：`product-entry-manifest` 新增顶层 `ideal_state_closure_status`，sidecar export 同步投影该 surface；它把 `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 的 P0-P5 拆成 MAG repo 已落地 surface 与外部 evidence gate。
 - 理由：计划中的 P1/P2/P3/P4 同时包含 OPL-hosted live soak、OPL generic primitive 生产消费、真实 workspace memory body migration 和 lifecycle receipt 对账，这些不能由 MAG repo 内代码伪造成完成。MAG 应把可负责的 owner surface、receipt writer、schema 与 authority boundary 落到 manifest，并把真实运行证据明确留作 typed gate。
 - 影响：MAG repo 内不再把该 plan 当作未实现代码清单；本轮已补 OPL ledger / MAG runtime receipt 的 controlled no-regression evidence 对账，后续推进应补 workspace memory body / lifecycle receipt 泛化、legacy active-path scan 和真实长时 live soak 证据。`ideal_state_closure_status.claims_production_long_run_soak_complete=false`，OPL 仍不能写 grant truth、memory body、artifact 或 export-ready verdict。
 

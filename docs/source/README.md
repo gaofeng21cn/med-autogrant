@@ -1,14 +1,14 @@
-# Source Docs
+# Source 文档
 
 Owner: `MedAutoGrant`
 Purpose: `grant_source_workspace_support`
 State: `active_support`
-Machine boundary: Human-readable index. Source truth remains in grant workspaces, funder/task inputs, schemas, source contracts, and owner receipts.
+Machine boundary: 人读索引。Source truth 继续归 grant workspaces、funder/task inputs、schemas、source contracts 与 owner receipts。
 
-This directory holds workspace/source intake, funder/task material handling, and source truth consumption support. Generic workspace/source shell candidates should be recorded as MAG-to-OPL absorption candidates.
+本目录承接 workspace/source intake、funder/task material handling 和 source truth consumption 支撑。通用 workspace/source shell 候选应记录为 MAG-to-OPL 上收候选。
 
-Start with:
+当前入口先看：
 
-- [Architecture](../architecture.md)
-- [Status](../status.md)
+- [架构](../architecture.md)
+- [当前状态](../status.md)
 - [References](../references/README.md)

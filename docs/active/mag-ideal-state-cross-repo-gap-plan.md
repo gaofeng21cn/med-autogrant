@@ -24,7 +24,7 @@ Cleanup posture: 当前计划不再要求保留旧模块、旧接口、旧测试
 
 MAG 的理想目标态已经很清晰：MAG 是医学基金申请 domain agent，持有 grant truth、fundability、specific aims、authoring quality、grant strategy memory body/accept-reject、submission-ready package 与 export authority；OPL Framework 提供长期在线、stage attempt、queue/wakeup、human gate、receipt、retry/dead-letter、operator projection、workspace/artifact lifecycle、shared contracts 和 provider-backed runtime。
 
-OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/docs/active/opl-family-development-reference.zh-CN.md`。本文只维护 MAG 自己的目标、差距、evidence ledger、grant authority 和 MAG-to-OPL 上收候选；OPL、MAS、RCA、MDS 或 OPL-owned App/workbench 的并行计划回到各自 owner surface。
+OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/docs/active/opl-family-development-reference.md`。本文只维护 MAG 自己的目标、差距、evidence ledger、grant authority 和 MAG-to-OPL 上收候选；OPL、MAS、RCA、MDS 或 OPL-owned App/workbench 的并行计划回到各自 owner surface。
 
 当前 MAG 已完成 direct app skill / CLI / `MedAutoGrantDomainEntry` / product-entry / sidecar / 6-stage control plane / domain memory descriptor / owner receipt contract / lifecycle guarded apply / standard skeleton descriptor 等基础面。OPL family 当前也已经能把 MAS/MAG/RCA 三仓识别为 descriptor-level aligned 的 standard domain agents，三仓 stage plane 与 memory descriptor 均 resolved，Temporal provider residency proof 已通过，OPL functional closeout 已进入 `functional_closure_ready_for_live_soak`。
 
@@ -56,7 +56,7 @@ OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/d
 
 当前状态和目标态的权威入口仍是：
 
-- [MAG 理想目标态](../references/med-auto-grant-ideal-state.zh-CN.md)
+- [MAG 理想目标态](../references/med-auto-grant-ideal-state.md)
 - [MAG 当前状态](../status.md)
 - [MAG 架构](../architecture.md)
 - [MAG 不变量](../invariants.md)
@@ -183,7 +183,7 @@ RCA 当前提供了 artifact-heavy domain 的 sibling 样板：direct route 已 
 动作：
 
 1. 保持本文为 MAG active plan，核心 current truth 继续归 `docs/status.md`、核心五件套和 `current-program.json`。
-2. 在后续 MAG work 中优先引用 `docs/references/med-auto-grant-ideal-state.zh-CN.md` 和本文，区分 north-star、current truth 和 active plan。
+2. 在后续 MAG work 中优先引用 `docs/references/med-auto-grant-ideal-state.md` 和本文，区分 north-star、current truth 和 active plan。
 3. 不在 MAG 文档中把 OPL provider readiness、descriptor aligned 或 receipt packet 写成 production long-run soak 完成。
 4. 旧模块、旧接口、旧测试、flat shell alias、facade monkeypatch bridge、聚合测试入口和旧 runtime owner wording 只要已经被最新 owner surface 替代，就直接删除或归档；不得新增兼容 alias、兼容 facade 或兼容测试入口。
 

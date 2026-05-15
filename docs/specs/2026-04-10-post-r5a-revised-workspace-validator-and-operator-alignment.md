@@ -143,7 +143,6 @@ closeout 这条 slice 时，至少要同步：
   - `README.md`
   - `README.zh-CN.md`
   - `docs/README.md`
-  - `docs/README.zh-CN.md`
   - 本文
 - local active control plane：
   - `CURRENT_PROGRAM.md`

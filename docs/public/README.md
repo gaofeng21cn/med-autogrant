@@ -1,14 +1,14 @@
-# Public Docs
+# 公开文档
 
 Owner: `MedAutoGrant`
 Purpose: `public_narrative_index`
 State: `active_support`
-Machine boundary: Human-readable public index. Product truth remains in core docs, contracts, source, runtime evidence, and grant artifacts.
+Machine boundary: 人读公开索引。产品真相继续归核心文档、contracts、source、runtime evidence 与 grant artifacts。
 
-This directory is the canonical OPL-family location for MAG public narrative after the repository home. The current root public-doc allowlist remains path-stable in `docs/domain-positioning*` and `docs/mvp-scope*` until safe migration.
+本目录是 OPL-family canonical 目录中承接 MAG 仓库首页之后公开叙事的位置。当前 root public-doc allowlist 仍由 `docs/domain-positioning*` 和 `docs/mvp-scope*` 保持路径稳定，后续确认安全后再迁移。
 
-Start with:
+当前入口先看：
 
-- [Repository home](../../README.md)
-- [Domain Positioning](../domain-positioning.md)
-- [MVP Scope](../mvp-scope.md)
+- [仓库首页](../../README.md)
+- [领域定位](../domain-positioning.md)
+- [MVP 范围](../mvp-scope.md)

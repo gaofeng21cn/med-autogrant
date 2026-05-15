@@ -1,33 +1,31 @@
-# Specs Guide
+# Specs 索引
 
-This directory keeps the current technical record layer for `Med Auto Grant`.
+本目录保留 `Med Auto Grant` 的当前技术记录层。
 
-Lifecycle:
+生命周期信号：
 
-- `owner`: MAG maintainers and the owning runtime/product-governance lane for each active spec.
-- `purpose`: index active current-truth records and route older dated records to historical reading.
-- `state`: `current` for active specs listed below; `history` for older dated specs retained here for path provenance.
-- `machine boundary`: specs are human-readable current-truth records. Machine consumers should use `contracts/runtime-program/current-program.json`, schema files, source files, or semantic `human_doc:*` ids rather than depending on prose paths.
+- `owner`：MAG maintainers，以及每份 active spec 对应的 runtime/product-governance lane。
+- `purpose`：索引 active current-truth records，并把较早 dated records 导向历史阅读入口。
+- `state`：下方列出的 active specs 为 `current`；留在本目录用于路径 provenance 的较早 dated specs 为 `history`。
+- `machine boundary`：specs 是人读 current-truth records。机器消费者应使用 `contracts/runtime-program/current-program.json`、schema、source file 或语义化 `human_doc:*` 标识，而不是依赖 prose path。
 
-The highest-priority active current-truth specs are the small set still referenced directly from the docs guide or current status:
+当前优先级最高、仍由 docs guide 或 status 直接引用的 active current-truth specs 只有四份：
 
 - [Critique executor vocabulary current truth](./2026-04-13-critique-codex-cli-executor-current-truth.md)
-- [AI-first quality boundary current truth](./2026-04-27-ai-first-quality-boundary-current-truth.md)
+- [AI-first 质量边界 current truth](./2026-04-27-ai-first-quality-boundary-current-truth.md)
 - [Authoring completion semantics current truth](./2026-04-23-authoring-completion-semantics-current-truth.md)
 - [Quality governance, autonomy controller, and family grammar current truth](./2026-04-22-quality-autonomy-family-grammar-current-truth.md)
 
-The dense specs portfolio is classified in [Specs Lifecycle Map](./specs_lifecycle_map.md). Use that map to distinguish active records, support current-truth records, and historical provenance before editing or moving any dated spec.
+密集 specs 组合的生命周期分类见 [Specs Lifecycle Map](./specs_lifecycle_map.md)。编辑或移动任何 dated spec 前，先用这份 map 的 file-level lifecycle table 区分 active record、support current-truth record、integration reference、historical activation package 与 superseded provider proof。
 
-Every dated support/history spec that remains in this directory now carries a first-screen lifecycle note. That note is intentionally stronger than the old `Current Truth` filenames: open a single spec only after checking whether it is active, support-only, or historical in this guide and the lifecycle map.
+`contracts/runtime-program/current-program.json` 仍是完整 repo-tracked truth-surface 清单的 canonical pointer。部分 route、executor-vocabulary、hosted-caller、product-entry 与 Hermes reset specs 仍留在本目录，是因为 current-program 或历史审计路径仍直接引用这些原路径。
 
-`contracts/runtime-program/current-program.json` remains the canonical pointer for the full repo-tracked truth-surface list. Some listed route, executor-vocabulary, hosted-caller, product-entry, and Hermes reset specs still live here because current-program or historical audit paths point to them directly.
+当前 OPL 口径集中在核心文档：OPL 是 stage-led、以 Agent executor 为最小执行单位的完整运行框架，可以消费 MAG-owned descriptor/projection。旧 spec 中出现的 `OPL Runtime Manager`、Temporal target、Hermes-first、active adapter、gateway 或 monorepo 说法，除非被当前 owner 文档显式提升，否则都按 provider-specific 迁移背景阅读。
 
-Current OPL wording is centralized in the core docs: OPL is a stage-led runtime framework with Agent executors as the minimum execution unit that may consume MAG-owned descriptors and projections. Older specs that say `OPL Runtime Manager`, Temporal target, Hermes-first, active adapter, gateway, or monorepo should be read as provider-specific migration context unless the current owner docs explicitly promote that wording.
+`hosted contract bundle` 继续是 integration/reference export surface。hosted runtime、Web UI、public MCP runtime、外部官网提交和成熟 gateway/federation 各自需要当前 owner evidence。
 
-The `hosted contract bundle` remains an integration/reference export surface. Hosted runtime, Web UI, public MCP runtime, external portal submission, and mature gateway/federation each require their own current owner evidence.
+更早的 dated `P*`、`R*`、`post-R5A`、activation-package、migration-board 与已被 supersede 的 tranche current-truth 文件属于历史技术记录。它们继续留在本目录作为 repo-tracked provenance，避免大范围重写旧审计路径；统一阅读入口改为：
 
-Older dated `P*`, `R*`, `post-R5A`, activation-package, migration-board, and superseded tranche current-truth files are historical technical records. They remain here as repo-tracked provenance to avoid rewriting old audit paths, but their reading entry is now:
+- [历史 specs 索引](../history/specs/README.md)
 
-- [Historical specs index](../history/specs/README.md)
-
-Current product truth is not derived by choosing the newest spec by filename alone. Read the core docs and `current-program.json` first, then use active specs for the specific boundary they freeze. Historical files can preserve old task wording, old paths, and superseded tranche labels.
+当前产品真相不能只按文件名日期取最新 spec。请先读核心五件套和 `current-program.json`，再按需要读取 active specs 所冻结的具体边界。历史文件可以保留旧任务 wording、旧路径和已被 supersede 的 tranche label。

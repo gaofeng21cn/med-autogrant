@@ -3560,7 +3560,7 @@
           "const": "repo_closure_landed_external_evidence_gated"
         },
         "plan_ref": {
-          "const": "docs/active/mag-ideal-state-cross-repo-gap-plan.zh-CN.md"
+          "const": "docs/active/mag-ideal-state-cross-repo-gap-plan.md"
         },
         "claims_production_long_run_soak_complete": {
           "const": false

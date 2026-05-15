@@ -113,12 +113,11 @@
 
 ## Required Truth Sources
 
-执行前，`OMX` 必须先读：
+执行前，旧 `OMX` handoff 快照当时要求读取：
 
 - `AGENTS.md`
-- `AGENTS.md`
 - `README.md`
-- `README.zh-CN.md`
+- `docs/README.md`
 - `docs/specs/2026-04-08-runtime-first-productization-program.md`
 - `docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
 - `docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`

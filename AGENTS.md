@@ -34,7 +34,8 @@
 - 每份长期文档都必须能说明 `owner`、`purpose`、`state`、`machine boundary`；缺少任一信号时，先补入口或归位，再继续扩写。
 - 文档治理按内容生命周期判断，文件名、日期和目录名只作为辅助信号；同一文档内的当前事实、active spec、support reference、历史 spec 和 completed plan 应分别归入当前 owner doc、spec/reference 层或 history/tombstone 语境。
 - 入口文档应先呈现当前状态、层级、新旧关系和下一跳；历史 specs、旧 hosted/provider 说明、已完成 plans 与追溯材料进入 provenance 层。
-- 公开文档保持中英双语；内部技术、规划、实现和历史记录默认中文。
+- `docs/**` 默认只维护中文 canonical 内容；稳定路径优先使用无语言后缀 `.md`。
+- 根层 `README*` 是否保留公开双语入口，由产品分发和 public 需求单独决定。
 - `docs/domain-positioning*` 与 `docs/mvp-scope*` 是当前 root allowlist 的一部分，因为它们仍承载 public subject、domain owner、MVP boundary 与 non-goals；新增 root-level docs 必须先更新 portfolio note。
 - 核心骨架文档与 activation package / current truth 严格分层。
 - `docs/specs/**`：混合 path-stable 技术记录层；只有 `docs/specs/README*` 和 `docs/specs/specs_lifecycle_map.md` 明确列出的 active specs 才是 current owner，其余 dated specs 按 lifecycle map 作为 support reference、history 或 provenance 阅读。
