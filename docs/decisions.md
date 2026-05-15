@@ -1,10 +1,16 @@
 # 决策记录
 
+## 2026-05-15：落地 MAG-owned grant transition oracle table / oracle fixtures
+
+- 决策：`product-entry-manifest` 新增顶层 `grant_transition_oracle`，并让 `ideal_state_closure_status.mag_owned_transition_oracle` 指向同一 MAG-owned surface。该 surface 固化 grant transition table、oracle fixtures、stage/action/ref validation 和 OPL 不可裁决 fundability / authoring quality / submission-ready export 的边界。
+- 理由：MAG gap plan 中的 transition/oracle 缺口已经可以由 MAG 自己落成 domain spec；generic state-machine runner、matrix runner、queue、retry/dead-letter 和 provider attempt 仍归 OPL。把 MAG 语义先落成 schema-backed manifest surface，可以让后续 OPL runner ingest 有稳定输入，同时避免在 MAG 内复制通用 runner。
+- 影响：transition table / oracle fixtures 不再是 `not_landed` gap；剩余 gate 是 OPL runner ingest、真实 provider-hosted transition attempt、retry/dead-letter 和 live receipt 对账。本决策不声明 OPL-hosted production long-run soak 完成，也不改变 MAG 对 grant truth、fundability、authoring quality 和 export verdict 的 owner authority。
+
 ## 2026-05-15：把 transition/oracle gap 与 direct-retirement posture 投影到 ideal-state closure status
 
-- 决策：`product-entry-manifest.ideal_state_closure_status` 新增 `mag_owned_transition_oracle` 与 `direct_retirement_posture`。前者把 MAG-owned transition table / oracle fixture 记录为 planned spec gap，并把 generic runner / matrix runner / queue / retry-dead-letter 边界留给 OPL；后者把 active plan 中的 direct retirement posture 变成机器可读投影。
+- 决策：`product-entry-manifest.ideal_state_closure_status` 新增 `mag_owned_transition_oracle` 与 `direct_retirement_posture`。前者先把 MAG-owned transition table / oracle fixture 记录为 planned spec gap，并把 generic runner / matrix runner / queue / retry-dead-letter 边界留给 OPL；后者把 active plan 中的 direct retirement posture 变成机器可读投影。随后同日 follow-through 已把 `mag_owned_transition_oracle` 升级为 landed domain spec surface。
 - 理由：当前可落地工作是把 gap plan 的 MAG-owned 后续边界固化到 manifest、schema、测试和文档索引，而不是伪造真实 long-run soak 或在 MAG 仓里建设通用 runner。OPL 可以执行 MAG 声明的 transition spec，但不能解释 fundability-ready、quality-ready 或 export-ready。
-- 影响：MAG 后续 transition/oracle 实施有单一 active plan 入口和 manifest gap surface；旧 compatibility alias、facade patch bridge、re-export facade、compatibility-only 聚合测试和 legacy flat shell alias 不再作为保留目标。本决策不声明 transition table / oracle fixtures 已落地，也不声明 OPL-hosted production long-run soak 完成。
+- 影响：MAG 后续 transition/oracle 实施有单一 active plan 入口和 manifest surface；旧 compatibility alias、facade patch bridge、re-export facade、compatibility-only 聚合测试和 legacy flat shell alias 不再作为保留目标。本决策本身不声明 OPL-hosted production long-run soak 完成。
 
 ## 2026-05-14：把 MAG ideal-state plan 收成机器可读 closure status
 

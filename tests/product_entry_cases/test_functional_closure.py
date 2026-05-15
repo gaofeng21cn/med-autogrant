@@ -216,14 +216,20 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         transition_oracle = closure_status["mag_owned_transition_oracle"]
         self.assertEqual(
             transition_oracle["surface_kind"],
-            "mag_grant_transition_oracle_gap_status",
+            "mag_grant_transition_oracle",
         )
-        self.assertEqual(transition_oracle["state"], "domain_spec_planned_external_runner_gate")
+        self.assertEqual(transition_oracle["state"], "domain_spec_landed_external_runner_gate")
         self.assertEqual(transition_oracle["runner_owner"], "one-person-lab")
-        self.assertEqual(transition_oracle["oracle_fixture_status"], "not_landed")
-        self.assertIn("grant transition table", transition_oracle["mag_will_define"])
-        self.assertIn("generic state-machine runner", transition_oracle["mag_will_not_define"])
-        self.assertIn("submission_ready_export_ready", transition_oracle["opl_must_not_infer"])
+        self.assertEqual(transition_oracle["oracle_fixture_status"], "landed")
+        self.assertEqual(transition_oracle["transition_table_status"], "landed")
+        self.assertEqual(transition_oracle["validation"]["status"], "ready_for_opl_runner_ingestion")
+        self.assertGreaterEqual(transition_oracle["validation"]["transition_count"], 6)
+        self.assertGreaterEqual(transition_oracle["validation"]["oracle_fixture_count"], 6)
+        self.assertFalse(transition_oracle["authority_boundary"]["opl_can_infer_submission_ready_export_ready"])
+        self.assertIn(
+            "review_closed_to_package_and_submit_ready",
+            {transition["transition_id"] for transition in transition_oracle["transition_table"]},
+        )
         direct_retirement = closure_status["direct_retirement_posture"]
         self.assertEqual(direct_retirement["state"], "active")
         self.assertEqual(

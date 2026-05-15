@@ -13,7 +13,7 @@ from med_autogrant.action_catalog import (
     build_mag_family_action_catalog,
     project_mag_family_action_catalog,
 )
-from med_autogrant.stage_control_plane import build_mag_family_stage_control_plane
+from med_autogrant.stage_control_plane import build_mag_family_stage_control_plane, build_mag_grant_transition_oracle
 from med_autogrant.product_entry_parts.autonomy_observability import build_grant_autonomy_observability
 from med_autogrant.product_entry_parts.orchestration_companions import (
     _build_family_orchestration_companion,
@@ -193,6 +193,10 @@ class ProductEntryManifestBuilderMixin:
             action_commands=base_operator_loop_actions,
         )
         family_stage_control_plane = build_mag_family_stage_control_plane(
+            family_action_catalog=family_action_catalog,
+        )
+        grant_transition_oracle = build_mag_grant_transition_oracle(
+            family_stage_control_plane=family_stage_control_plane,
             family_action_catalog=family_action_catalog,
         )
         action_catalog_projections = project_mag_family_action_catalog(family_action_catalog)
@@ -957,6 +961,7 @@ class ProductEntryManifestBuilderMixin:
             extra_payload={
                 "family_action_catalog": family_action_catalog,
                 "family_stage_control_plane": family_stage_control_plane,
+                "grant_transition_oracle": grant_transition_oracle,
                 "action_catalog_projections": action_catalog_projections,
                 "executor_defaults": build_executor_defaults_surface(),
                 "runtime_control": runtime_control,

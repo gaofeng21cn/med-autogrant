@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
+from med_autogrant.stage_control_plane import build_mag_grant_transition_oracle
 from med_autogrant.product_entry_parts import domain_agent_skeleton
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
@@ -349,34 +350,10 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
             "opl_can_declare_export_ready": False,
             "opl_can_mutate_grant_artifacts": False,
         },
-        "mag_owned_transition_oracle": {
-            "surface_kind": "mag_grant_transition_oracle_gap_status",
-            "owner": TARGET_DOMAIN_ID,
-            "state": "domain_spec_planned_external_runner_gate",
-            "domain_spec_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md#P5",
-            "oracle_fixture_status": "not_landed",
-            "transition_table_status": "not_landed",
-            "runner_owner": "one-person-lab",
-            "runner_status": "external_opl_generic_runner_gate",
-            "mag_will_define": [
-                "grant transition table",
-                "fundability / aims / review / package guards",
-                "typed blocker mapping",
-                "domain owner action",
-                "oracle fixtures",
-            ],
-            "mag_will_not_define": [
-                "generic state-machine runner",
-                "generic queue",
-                "generic retry/dead-letter runtime",
-                "OPL provider completion verdict",
-            ],
-            "opl_must_not_infer": [
-                "fundability_ready",
-                "authoring_quality_ready",
-                "submission_ready_export_ready",
-            ],
-        },
+        "mag_owned_transition_oracle": build_mag_grant_transition_oracle(
+            family_stage_control_plane=_minimal_family_stage_control_plane_for_transition_oracle(),
+            family_action_catalog=_minimal_family_action_catalog_for_transition_oracle(),
+        ),
         "direct_retirement_posture": {
             "state": "active",
             "policy": "migrate_active_callers_then_delete_or_history_tombstone",
@@ -487,6 +464,28 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
                 ],
             ),
         ],
+    }
+
+
+def _minimal_family_stage_control_plane_for_transition_oracle() -> dict[str, Any]:
+    return {
+        "stages": [
+            {"stage_id": "call_and_candidate_intake"},
+            {"stage_id": "fundability_strategy"},
+            {"stage_id": "specific_aims_and_structure"},
+            {"stage_id": "proposal_authoring"},
+            {"stage_id": "review_and_rebuttal"},
+            {"stage_id": "package_and_submit_ready"},
+        ]
+    }
+
+
+def _minimal_family_action_catalog_for_transition_oracle() -> dict[str, Any]:
+    return {
+        "actions": [
+            {"action_id": "open_grant_user_loop"},
+            {"action_id": "build_submission_ready_package"},
+        ]
     }
 
 

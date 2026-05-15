@@ -3528,6 +3528,167 @@
         }
       }
     },
+    "grantTransitionOracle": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "version",
+        "oracle_id",
+        "target_domain_id",
+        "owner",
+        "state",
+        "runner_owner",
+        "runner_contract_ref",
+        "transition_table_status",
+        "oracle_fixture_status",
+        "stage_control_plane_ref",
+        "action_catalog_ref",
+        "authority_boundary",
+        "transition_table",
+        "oracle_fixtures",
+        "validation"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_grant_transition_oracle"
+        },
+        "version": {
+          "const": "mag-grant-transition-oracle.v1"
+        },
+        "oracle_id": {
+          "const": "mag.grant_transition.oracle.v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "owner": {
+          "const": "med-autogrant"
+        },
+        "state": {
+          "const": "domain_spec_landed_external_runner_gate"
+        },
+        "runner_owner": {
+          "const": "one-person-lab"
+        },
+        "runner_contract_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "transition_table_status": {
+          "const": "landed"
+        },
+        "oracle_fixture_status": {
+          "const": "landed"
+        },
+        "stage_control_plane_ref": {
+          "const": "/product_entry_manifest/family_stage_control_plane"
+        },
+        "action_catalog_ref": {
+          "const": "/product_entry_manifest/family_action_catalog"
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "domain_truth_owner",
+            "fundability_verdict_owner",
+            "authoring_quality_verdict_owner",
+            "submission_ready_export_verdict_owner",
+            "opl_role",
+            "opl_can_infer_fundability_ready",
+            "opl_can_infer_authoring_quality_ready",
+            "opl_can_infer_submission_ready_export_ready",
+            "opl_can_write_grant_truth"
+          ],
+          "properties": {
+            "domain_truth_owner": {"const": "med-autogrant"},
+            "fundability_verdict_owner": {"const": "med-autogrant"},
+            "authoring_quality_verdict_owner": {"const": "med-autogrant"},
+            "submission_ready_export_verdict_owner": {"const": "med-autogrant"},
+            "opl_role": {"const": "generic_transition_runner_only"},
+            "opl_can_infer_fundability_ready": {"const": false},
+            "opl_can_infer_authoring_quality_ready": {"const": false},
+            "opl_can_infer_submission_ready_export_ready": {"const": false},
+            "opl_can_write_grant_truth": {"const": false}
+          }
+        },
+        "transition_table": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "transition_id",
+              "from_stage_id",
+              "to_stage_id",
+              "guard_id",
+              "owner_action",
+              "return_shape",
+              "receipt_requirement",
+              "blocked_shape"
+            ],
+            "properties": {
+              "transition_id": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+              "from_stage_id": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+              "to_stage_id": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+              "guard_id": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+              "owner_action": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+              "return_shape": {
+                "enum": ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"]
+              },
+              "receipt_requirement": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+              "blocked_shape": {
+                "const": "typed_blocker"
+              }
+            }
+          }
+        },
+        "oracle_fixtures": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "fixture_id",
+              "source_stage_id",
+              "input_state",
+              "expected_transition_id"
+            ],
+            "properties": {
+              "fixture_id": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+              "source_stage_id": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+              "input_state": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "expected_transition_id": {"$ref": "common.schema.json#/$defs/nonEmptyString"}
+            }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "status",
+            "transition_count",
+            "oracle_fixture_count",
+            "missing_stage_refs",
+            "missing_action_refs",
+            "missing_fixture_transition_refs"
+          ],
+          "properties": {
+            "status": {"const": "ready_for_opl_runner_ingestion"},
+            "transition_count": {"type": "integer", "minimum": 1},
+            "oracle_fixture_count": {"type": "integer", "minimum": 1},
+            "missing_stage_refs": {"type": "array", "maxItems": 0},
+            "missing_action_refs": {"type": "array", "maxItems": 0},
+            "missing_fixture_transition_refs": {"type": "array", "maxItems": 0}
+          }
+        }
+      }
+    },
     "idealStateClosureStatus": {
       "type": "object",
       "additionalProperties": true,
@@ -3541,6 +3702,7 @@
         "claims_production_long_run_soak_complete",
         "repo_source_exclusions",
         "authority_boundary",
+        "mag_owned_transition_oracle",
         "phases"
       ],
       "properties": {
@@ -3608,52 +3770,7 @@
           }
         },
         "mag_owned_transition_oracle": {
-          "type": "object",
-          "additionalProperties": true,
-          "required": [
-            "surface_kind",
-            "owner",
-            "state",
-            "oracle_fixture_status",
-            "transition_table_status",
-            "runner_owner",
-            "runner_status",
-            "mag_will_define",
-            "mag_will_not_define",
-            "opl_must_not_infer"
-          ],
-          "properties": {
-            "surface_kind": {
-              "const": "mag_grant_transition_oracle_gap_status"
-            },
-            "owner": {
-              "const": "med-autogrant"
-            },
-            "state": {
-              "const": "domain_spec_planned_external_runner_gate"
-            },
-            "oracle_fixture_status": {
-              "const": "not_landed"
-            },
-            "transition_table_status": {
-              "const": "not_landed"
-            },
-            "runner_owner": {
-              "const": "one-person-lab"
-            },
-            "runner_status": {
-              "const": "external_opl_generic_runner_gate"
-            },
-            "mag_will_define": {
-              "$ref": "common.schema.json#/$defs/stringList"
-            },
-            "mag_will_not_define": {
-              "$ref": "common.schema.json#/$defs/stringList"
-            },
-            "opl_must_not_infer": {
-              "$ref": "common.schema.json#/$defs/stringList"
-            }
-          }
+          "$ref": "#/$defs/grantTransitionOracle"
         },
         "direct_retirement_posture": {
           "type": "object",
@@ -4577,7 +4694,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "artifact_locator_contract", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "artifact_locator_contract", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -4690,6 +4807,9 @@
         },
         "family_stage_control_plane": {
           "$ref": "#/$defs/familyStageControlPlane"
+        },
+        "grant_transition_oracle": {
+          "$ref": "#/$defs/grantTransitionOracle"
         },
         "artifact_locator_contract": {
           "$ref": "#/$defs/artifactLocatorContract"
