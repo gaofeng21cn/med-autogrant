@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import tempfile
+
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
@@ -36,3 +38,104 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
         self.assertFalse(controlled_soak["authority_boundary"]["can_hold_submission_ready_export_verdict"])
         self.assertFalse(controlled_soak["repository_boundary"]["repo_tracks_grant_artifact"])
         self.assertFalse(controlled_soak["repository_boundary"]["repo_tracks_receipt_instance"])
+
+    def test_controlled_soak_receipt_reconciliation_probe_links_mag_receipt_and_opl_ledger_ref(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            task_path = Path(tmp_dir) / "stage-closeout-task.json"
+            runtime_root = Path(tmp_dir) / "runtime-state"
+            task_path.write_text(
+                json.dumps(
+                    {
+                        "task_id": "controlled-soak-reconcile-1",
+                        "action": "stage-attempt/closeout",
+                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                        "receipt_shape": "no_regression_evidence",
+                        "stage_id": "review_and_rebuttal",
+                        "source_ref": "opl-ledger://mag/stage-attempt/closeout/1",
+                        "closeout_summary": "MAG owner no-regression receipt for deferred controlled soak probe.",
+                        "runtime_root": str(runtime_root),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            entry = MedAutoGrantProductEntry()
+            closeout = entry.dispatch_sidecar_task(task_path=task_path)["sidecar_dispatch"]["result"]
+            receipt = closeout["owner_receipt_evidence"]
+            payload = entry.build_controlled_soak_receipt_reconciliation_proof(
+                owner_receipt_evidence=receipt,
+                opl_ledger_ref="opl-ledger://mag/stage-attempt/closeout/1",
+                sidecar_closeout_result=closeout,
+            )
+
+        proof = payload["receipt_reconciliation_proof"]
+        self.assertEqual(
+            proof["surface_kind"],
+            "mag_controlled_soak_receipt_reconciliation_proof",
+        )
+        self.assertEqual(proof["state"], "probe_reconciled_not_live_soak_complete")
+        self.assertFalse(proof["claims_production_long_run_soak_complete"])
+        self.assertFalse(proof["rebuilds_opl_runtime"])
+        self.assertEqual(
+            proof["reconciliation"]["status"],
+            "no_regression_evidence_reconciled",
+        )
+        self.assertTrue(proof["reconciliation"]["receipt_ref_matches_sidecar"])
+        self.assertTrue(proof["reconciliation"]["opl_ledger_ref_matches_receipt_source"])
+        self.assertEqual(
+            proof["mag_owner_receipt"]["receipt_ref"],
+            closeout["receipt_ref"],
+        )
+        self.assertEqual(
+            proof["no_regression_evidence"]["evidence_refs"],
+            [closeout["receipt_ref"]],
+        )
+        self.assertIsNone(proof["typed_blocker"])
+        self.assertFalse(proof["authority_boundary"]["can_declare_submission_ready_export"])
+        self.assertFalse(proof["forbidden_write_proof"]["grant_truth_written"])
+        self.assertFalse(proof["forbidden_write_proof"]["memory_body_written"])
+
+    def test_controlled_soak_receipt_reconciliation_probe_keeps_typed_blocker_as_blocker(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            runtime_root = Path(tmp_dir) / "runtime-state"
+            entry = MedAutoGrantProductEntry()
+            receipt = entry.write_owner_receipt_evidence(
+                input_path=CRITIQUE_EXAMPLE_PATH,
+                receipt_shape="typed_blocker",
+                stage_id="review_and_rebuttal",
+                source_ref="opl-ledger://mag/stage-attempt/blocked/1",
+                closeout_summary="MAG owner route is still blocked; no live soak completion claim.",
+                runtime_root=runtime_root,
+                receipt_id="controlled-soak-blocker-1",
+                closeout_refs={
+                    "controlled_soak_no_regression_attempt_ref": (
+                        "/product_entry_manifest/controlled_soak_no_regression_attempt"
+                    ),
+                },
+            )["owner_receipt_evidence"]
+            payload = entry.build_controlled_soak_receipt_reconciliation_proof(
+                owner_receipt_evidence=receipt,
+                opl_ledger_ref="opl-ledger://mag/stage-attempt/blocked/1",
+            )
+
+        proof = payload["receipt_reconciliation_proof"]
+        self.assertEqual(
+            proof["reconciliation"]["status"],
+            "typed_blocker_reconciled",
+        )
+        self.assertIsNone(proof["reconciliation"]["receipt_ref_matches_sidecar"])
+        self.assertTrue(proof["reconciliation"]["opl_ledger_ref_matches_receipt_source"])
+        self.assertEqual(
+            proof["typed_blocker"]["blocker_kind"],
+            "mag_stage_attempt_owner_receipt_required",
+        )
+        self.assertEqual(
+            proof["typed_blocker"]["receipt_ref"],
+            proof["mag_owner_receipt"]["receipt_ref"],
+        )
+        self.assertFalse(proof["no_regression_evidence"]["present"])
+        self.assertFalse(proof["claims_production_long_run_soak_complete"])
+        self.assertFalse(proof["authority_boundary"]["can_declare_fundability_ready"])

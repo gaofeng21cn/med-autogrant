@@ -43,6 +43,7 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
     write_domain_memory_receipt_evidence,
 )
 from med_autogrant.product_entry_parts.owner_receipts import (
+    build_controlled_soak_receipt_reconciliation_proof,
     write_lifecycle_receipt_evidence,
     write_owner_receipt_evidence,
 )
@@ -361,4 +362,17 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             closeout_summary=closeout_summary,
             runtime_root=runtime_root,
             receipt_id=receipt_id,
+        )
+
+    def build_controlled_soak_receipt_reconciliation_proof(
+        self,
+        *,
+        owner_receipt_evidence: Mapping[str, Any],
+        opl_ledger_ref: str,
+        sidecar_closeout_result: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        return build_controlled_soak_receipt_reconciliation_proof(
+            owner_receipt_evidence=owner_receipt_evidence,
+            opl_ledger_ref=opl_ledger_ref,
+            sidecar_closeout_result=sidecar_closeout_result,
         )

@@ -28,7 +28,7 @@ OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/d
 
 主要差距已经不在概念、命名、descriptor 或 MAG repo 内 receipt writer，而在 production closure：
 
-- OPL closeout 已经能观察到 MAG stage closeout packet、owner receipt refs、controlled no-regression evidence refs、lifecycle receipt refs 与 accepted/rejected memory writeback receipt refs；MAG repo-local focused case 也已把 `grant_transition_oracle` fixture、sidecar `stage-attempt/closeout` 和 owner/no-regression receipt refs 固定为可测试闭环。OPL runtime workbench 现在还能把 provider-hosted transition bridge 的 owner receipt refs、no-regression evidence refs 与 typed blocker refs 投影成 operator drilldown。这证明 receipt evidence path 与 OPL ref-only read model 可用，但还没有把真实 grant-stage long-run soak 写成完成。
+- OPL closeout 已经能观察到 MAG stage closeout packet、owner receipt refs、controlled no-regression evidence refs、lifecycle receipt refs 与 accepted/rejected memory writeback receipt refs；MAG repo-local focused case 也已把 `grant_transition_oracle` fixture、sidecar `stage-attempt/closeout`、owner/no-regression receipt refs，以及 `mag_controlled_soak_receipt_reconciliation_proof` 对账 payload 固定为可测试闭环。OPL runtime workbench 现在还能把 provider-hosted transition bridge 的 owner receipt refs、no-regression evidence refs 与 typed blocker refs 投影成 operator drilldown。这证明 receipt evidence path 与 OPL ref-only read model 可用，但还没有把真实 grant-stage long-run soak 写成完成。
 - Grant strategy memory 已经超过 descriptor / locator 层，进入 consumed-memory 与 writeback receipt ref proof；真实 memory body migration、retrieval/writeback apply 的 workspace-runtime 泛化和跨 workspace policy 仍没有闭合。
 - Package/export、artifact lifecycle、restore/retention、operator drilldown、route/decision graph 和 quality/readiness projection 需要由 OPL Framework / App 提供通用壳，MAG 只回传 authority refs、gap report、receipt 和 verdict。
 - 物理 skeleton 迁移、旧 Hermes/Gateway/local-manager active path、`domain_runtime_parts.patch_targets`、旧 flat CLI shell alias 和旧 `tests/test_product_entry.py` 聚合测试已经不再是兼容目标；后续发现 active caller 缺口时直接改到最新 owner surface，旧面只保留 history/provenance 或回归 oracle 语义。
@@ -196,7 +196,7 @@ RCA 当前提供了 artifact-heavy domain 的 sibling 样板：direct route 已 
 
 1. 继续使用 OPL task-bound provider-backed attempt 触发 MAG sidecar / direct entry，优先覆盖 `fundability_strategy`、`review_and_rebuttal` 与 `package_and_submit_ready`。
 2. 对每次 attempt 固定三类结果之一：`domain_receipt`、`typed_blocker`、`no_regression_evidence`；已有 owner receipt path 不再作为待建新能力处理。
-3. 在 OPL runtime ledger 与 MAG workspace/runtime root 之间对账 receipt ref，确认重复 closeout packet 不制造第二真相。
+3. 在 OPL runtime ledger 与 MAG workspace/runtime root 之间对账 receipt ref；MAG 侧使用 `controlled-soak-receipt-reconciliation-proof` 生成 repo-local probe payload，确认重复 closeout packet 不制造第二真相。
 4. 对至少一条真实 grant-stage line 运行长时 soak，且输出 no-regression evidence 或明确 typed blocker。
 5. 持续证明 OPL 没有写 grant truth、memory body、quality verdict 或 export package。
 
