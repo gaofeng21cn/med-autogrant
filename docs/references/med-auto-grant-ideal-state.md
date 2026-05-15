@@ -127,7 +127,7 @@ OPL 负责 stage 的发现、排队、恢复、唤醒、投影和 receipt 汇总
 
 - stage attempt ledger、queue、retry、dead-letter、heartbeat、resume 和 human gate；
 - provider-backed long-run runtime；
-- generic state-machine runner、transition schema 和 matrix runner；
+- generic state-machine runner、transition schema、matrix runner 和 transition bridge evidence refs-only workbench drilldown；
 - workspace/artifact lifecycle locator；
 - operator projection 和 App attention queue；
 - framework-level no-forbidden-write、source fingerprint、attempt replay safety 和 receipt audit。
@@ -175,7 +175,7 @@ Repo source 应保存：
 OPL 应保存或索引：
 
 - workspace locator、artifact locator、runtime root locator、stage attempt metadata、queue metadata、receipt refs、freshness、repair hints 和 operator projection。
-- transition execution metadata、dispatch receipt refs、human gate refs、retry/dead-letter refs 和 matrix-runner audit refs；grant transition truth、fundability verdict、quality verdict 和 export verdict 仍归 MAG。
+- transition execution metadata、dispatch receipt refs、owner receipt refs、no-regression evidence refs、typed blocker refs、human gate refs、retry/dead-letter refs、matrix-runner audit refs 和 transition evidence operator projection；grant transition truth、fundability verdict、quality verdict 和 export verdict 仍归 MAG。
 
 这个边界让仓库保持可审查、可发布，运行文件保持可恢复、可清理、可迁移。
 
@@ -237,7 +237,7 @@ MAG 达到理想生产级状态时，应满足以下门槛：
 
 - Direct app skill path 与 OPL-hosted path 都回到同一套 MAG route truth、workspace truth、quality gate 和 export gate。
 - 每个 stage attempt 都有 typed closeout、owner receipt、typed blocker、human gate receipt 或 no-regression evidence。
-- 真实 OPL-hosted controlled grant-stage attempt 能返回 MAG domain owner receipt 或 no-regression evidence。
+- 真实 OPL-hosted controlled grant-stage attempt 能返回 MAG domain owner receipt、typed blocker 或 no-regression evidence，并能被 OPL workbench refs-only 展示。
 - Domain memory 检索、writeback proposal、MAG accept/reject、runtime receipt evidence 和 operator projection 在真实 workspace/runtime root 中可运行。
 - `package submission-ready` 对 frozen workspace fail-closed，并明确区分本地提交包与外部 portal submission。
 - AI-first quality gate 在没有 active critique 时保持 projection-only，在有 AI-authored review 时输出可追溯 closure dossier。
