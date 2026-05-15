@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import json
+from pathlib import Path
 from typing import Any
 
 from med_autogrant import mainline_status
+
+
 def handle_validate_workspace(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "validate-workspace", "input_path": args.input})
 
@@ -201,6 +205,17 @@ def handle_product_lifecycle_receipt_evidence(args: argparse.Namespace) -> dict[
         closeout_summary=args.closeout_summary,
         runtime_root=args.runtime_root,
         receipt_id=args.receipt_id,
+    )
+
+
+def handle_product_receipt_reconciliation_proof(args: argparse.Namespace) -> dict[str, Any]:
+    sidecar_closeout_result = None
+    if args.sidecar_closeout_result is not None:
+        sidecar_closeout_result = _read_json_object(args.sidecar_closeout_result)
+    return _product_entry().build_controlled_soak_receipt_reconciliation_proof(
+        owner_receipt_evidence=_read_json_object(args.owner_receipt_evidence),
+        opl_ledger_ref=args.opl_ledger_ref,
+        sidecar_closeout_result=sidecar_closeout_result,
     )
 
 
@@ -409,3 +424,10 @@ def _product_entry() -> Any:
     from med_autogrant import product_entry
 
     return product_entry.MedAutoGrantProductEntry()
+
+
+def _read_json_object(path: str) -> dict[str, Any]:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Expected JSON object at {path}.")
+    return payload

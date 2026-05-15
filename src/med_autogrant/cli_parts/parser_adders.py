@@ -360,3 +360,17 @@ def _add_product_lifecycle_receipt_evidence_command(
     command.add_argument("--receipt-id")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
+
+
+def _add_product_receipt_reconciliation_proof_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--owner-receipt-evidence", required=True)
+    command.add_argument("--opl-ledger-ref", required=True)
+    command.add_argument("--sidecar-closeout-result")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)

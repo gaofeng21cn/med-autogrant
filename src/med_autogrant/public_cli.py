@@ -55,6 +55,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "product-domain-memory-receipt-evidence": ("product", "domain-memory-receipt-evidence"),
     "product-owner-receipt-evidence": ("product", "owner-receipt-evidence"),
     "product-lifecycle-receipt-evidence": ("product", "lifecycle-receipt-evidence"),
+    "controlled-soak-receipt-reconciliation-proof": ("product", "receipt-reconciliation-proof"),
     "probe-upstream-hermes": ("runtime", "probe-hermes"),
     "runtime-run": ("runtime", "run"),
     "runtime-resume": ("runtime", "resume"),

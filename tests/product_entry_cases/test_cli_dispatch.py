@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import tempfile
 
 from product_entry_cases.support import *  # noqa: F401,F403
 
@@ -524,4 +525,52 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             closeout_summary="Cleanup requires MAG owner receipt.",
             runtime_root="/tmp/runtime-state",
             receipt_id="cleanup-1",
+        )
+
+    def test_receipt_reconciliation_proof_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "controlled-soak-receipt-reconciliation-proof",
+            "receipt_reconciliation_proof": {
+                "surface_kind": "mag_controlled_soak_receipt_reconciliation_proof",
+            },
+        }
+        owner_receipt = {
+            "surface_kind": "mag_owner_receipt_evidence",
+            "receipt_instance_ref": "/tmp/runtime-state/receipts/receipt-1.json",
+        }
+        sidecar_closeout_result = {
+            "receipt_ref": "/tmp/runtime-state/receipts/receipt-1.json",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            owner_receipt_path = Path(tmp_dir) / "owner-receipt.json"
+            sidecar_closeout_path = Path(tmp_dir) / "sidecar-closeout.json"
+            owner_receipt_path.write_text(json.dumps(owner_receipt), encoding="utf-8")
+            sidecar_closeout_path.write_text(json.dumps(sidecar_closeout_result), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_controlled_soak_receipt_reconciliation_proof.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "receipt-reconciliation-proof",
+                    "--owner-receipt-evidence",
+                    str(owner_receipt_path),
+                    "--opl-ledger-ref",
+                    "opl-ledger://mag/stage-attempt/closeout/1",
+                    "--sidecar-closeout-result",
+                    str(sidecar_closeout_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_controlled_soak_receipt_reconciliation_proof.assert_called_once_with(
+            owner_receipt_evidence=owner_receipt,
+            opl_ledger_ref="opl-ledger://mag/stage-attempt/closeout/1",
+            sidecar_closeout_result=sidecar_closeout_result,
         )
