@@ -1,12 +1,20 @@
 # P4.F Local Submission-Ready Package Current Truth
 
+> Lifecycle note (`2026-05-15`): this dated spec is `support_current_truth` only for the local `submission-ready package` export gate that remains current in MAG package/export authority, schema/source, and product-entry manifest. Read current MAG product state from `docs/status.md`, the core five docs, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`, and `contracts/runtime-program/current-program.json` first. Older Gateway/hosted runtime language below is provenance and must not be read as a current OPL target or compatibility surface.
+
+Current disposition:
+
+- Keep: `build-submission-ready-package`, `submission-ready-package.schema.json`, fail-closed local export gate, and honest boundary between authoring completion and package readiness.
+- Superseded: old `OPL Gateway` / hosted runtime implication. OPL consumes MAG descriptor/projection through the current stage-led framework; MAG keeps package/export authority.
+- Direct retirement posture: old wrappers, tests, or docs that only preserve the superseded Gateway reading should be migrated to the latest package/export owner surface and then deleted or archived, without compatibility aliases.
+
 Date: `2026-04-13`
 
 ## Activation Status
 
 - Phase: `P4 mature direct grant product entry`
-- Active tranche: `P4.F local submission-ready package landing`
-- Status: `landed / current truth`
+- Active boundary: `local submission-ready package export gate`
+- Status: `support_current_truth_by_subsection`
 
 ## Goal
 
@@ -151,6 +159,7 @@ Date: `2026-04-13`
 它不意味着：
 
 - mature direct grant Web UI / hosted runtime 已完成
-- `OPL Gateway` 已在本仓落地
+- 旧 `OPL Gateway` 已在本仓落地
 - 图件、Word/PDF、官网提交流程已经全自动产品化
 - 系统可以在缺少真实材料时凭空生成可信、可提交的国自然标书
+- Gateway / hosted runtime compatibility surface 不是当前目标

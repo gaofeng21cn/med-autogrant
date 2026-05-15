@@ -1,14 +1,20 @@
 # Schema-Backed Product Entry And Routing Contract Current Truth
 
-> Lifecycle note (`2026-05-11`): this dated spec is a path-stable history/support record unless `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `docs/status.md`, or `contracts/runtime-program/current-program.json` explicitly names a still-current subsection. Read current MAG state from `docs/status.md`, the core five docs, and `contracts/runtime-program/current-program.json` first. Older `Current Truth`, Hermes, OPL Gateway, host-agent, or federation wording in this file is provenance, not the current default owner line.
+> Lifecycle note (`2026-05-15`): this dated spec is `support_current_truth` only for the schema-backed product-entry / route contract subsection that is still referenced by current owner surfaces. Current owner is MAG schema/source/product-entry manifest plus `contracts/runtime-program/current-program.json`; OPL only consumes MAG descriptor/projection through the current stage-led framework path. Older `Current Truth`, Upstream Hermes fast-cutover, `future OPL Gateway`, host-agent, or federation wording below is provenance, not current owner line or compatibility target.
+
+Current disposition:
+
+- Keep: schema-backed `product_entry` / `executor_routing_contract` validation and fail-closed drift guard.
+- Superseded: `Upstream Hermes-Agent Fast Cutover`, `future OPL Gateway`, Hermes substrate runtime owner, gateway/federation caller language.
+- Direct retirement posture: if an old module/interface/test only exists to preserve the superseded Gateway/Hermes wording and has no current caller, migrate the caller to MAG schema/source/product-entry manifest and delete or archive the old surface; do not add compatibility aliases.
 
 Date: `2026-04-12`
 
 ## Activation Status
 
-- Phase: `Upstream Hermes-Agent Fast Cutover`
-- Active tranche: `Schema-backed product entry / routing contract`
-- Status: `landed / current truth`
+- Phase: `schema-backed product-entry support record`
+- Active boundary: `MAG product-entry / executor-routing contract schema validation`
+- Status: `support_current_truth_by_subsection`
 
 ## Goal
 
@@ -24,7 +30,7 @@ Date: `2026-04-12`
 这条 current truth 解决的是：
 
 - `product_entry` 与 `executor_routing_contract` 不再只是“代码里手工拼 dict + 文档约定”
-- future `OPL Gateway` / domain caller 可以直接消费 repo-tracked schema
+- OPL stage-led framework / domain caller 可以通过当前 MAG descriptor/projection 和 repo-tracked schema 消费这层 contract
 - landed route catalog、nullability 与 route truth 边界不会悄悄漂移
 
 ## Landed Facts
@@ -102,11 +108,11 @@ Date: `2026-04-12`
 - 没有把 `Hermes-Agent` 写回 author-side executor owner
 - 没有把 `OPL` / gateway story 扩成新的平台叙事
 
-也就是说，这条 truth 仍然只服务：
+也就是说，这条 support truth 仍然只服务：
 
-- 上游 Hermes substrate 持有 runtime substrate owner
-- `Med Auto Grant` 持有 author-side grant contract truth
-- future `OPL Gateway` / domain caller 通过统一 envelope 直接协作
+- MAG 持有 author-side grant contract truth、schema/source、product-entry manifest 和 route truth
+- OPL stage-led framework / domain caller 通过统一 envelope 消费 MAG descriptor/projection
+- 旧 Hermes/Gateway 叙事只作 provenance，不恢复为 runtime owner 或 compatibility layer
 
 ## Verification
 
@@ -135,4 +141,5 @@ Date: `2026-04-12`
 - mature product UX 已完成
 - critique executor 已 landed
 - hosted runtime 已完成
-- `OPL Gateway` 全链路已在本仓落地
+- 旧 `OPL Gateway` 全链路已在本仓落地
+- Hermes-backed runtime owner、Gateway/federation caller 或 compatibility bridge 不是当前目标

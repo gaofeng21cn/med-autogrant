@@ -18,9 +18,9 @@
 
 密集 specs 组合的生命周期分类见 [Specs Lifecycle Map](./specs_lifecycle_map.md)。编辑或移动任何 dated spec 前，先用这份 map 的 file-level lifecycle table 区分 active record、support current-truth record、integration reference、historical activation package 与 superseded provider proof。
 
-`contracts/runtime-program/current-program.json` 仍是完整 repo-tracked truth-surface 清单的 canonical pointer。部分 route、executor-vocabulary、hosted-caller、product-entry 与 Hermes reset specs 仍留在本目录，是因为 current-program 或历史审计路径仍直接引用这些原路径。
+`contracts/runtime-program/current-program.json` 仍是完整 repo-tracked truth-surface 清单的 canonical pointer。它可能引用少量 support `human_doc:*` 或 path-stable specs，但这种引用不提升整份 dated spec 为当前 owner。Hermes-backed、Hermes reset、Gateway、hosted caller 和旧 provider specs 只保留 history / provenance / audit path；只有 lifecycle map 明确列为 active 的 subsection 才能作为当前边界阅读。
 
-当前 OPL 口径集中在核心文档：OPL 是 stage-led、以 Agent executor 为最小执行单位的完整运行框架，可以消费 MAG-owned descriptor/projection。旧 spec 中出现的 `OPL Runtime Manager`、Temporal target、Hermes-first、active adapter、gateway 或 monorepo 说法，除非被当前 owner 文档显式提升，否则都按 provider-specific 迁移背景阅读。
+当前 OPL 口径集中在核心文档：OPL 是 stage-led、以 Agent executor 为最小执行单位的完整运行框架，可以消费 MAG-owned descriptor/projection。旧 spec 中出现的 `OPL Runtime Manager`、Temporal target、Hermes-first、active adapter、gateway、compatibility bridge 或 monorepo 说法，除非被当前 owner 文档显式提升，否则都按 provider-specific 迁移背景或历史 proof 阅读；不得据此恢复旧接口、旧 CLI alias、旧测试聚合入口或旧 provider owner。
 
 `hosted contract bundle` 继续是 integration/reference export surface。hosted runtime、Web UI、public MCP runtime、外部官网提交和成熟 gateway/federation 各自需要当前 owner evidence。
 

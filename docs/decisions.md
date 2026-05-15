@@ -222,6 +222,7 @@
 
 ## 2026-04-11：`Hermes-Agent` 只指上游外部 runtime substrate
 
+- 状态：已被 2026-05-11 OPL stage-led framework 口径与 2026-05-12 OPL 统一 Agent Executor Adapter 口径 supersede。当前 `hermes_agent` 只表示显式非默认 executor/proof/provenance lane，不是 MAG 当前 runtime substrate target、compatibility bridge 或 default provider owner。
 - 后续凡是提到 `Hermes-Agent`，只能指上游外部 runtime 项目 / 服务本体。
 - 仓内 `domain_runtime.py` 只代表 repo-local migration scaffold，不得写成“已接入 Hermes-Agent”。
 
@@ -301,6 +302,7 @@
 
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
+- 状态：已被 2026-05-11 OPL stage-led framework + 2026-05-12 executor adapter boundary supersede。保留本段仅为解释当时从 Hermes 命名误读回到 repo-local truth 的校准过程；不得把“上游 Hermes-Agent 目标”恢复为 current mainline。
 - 当前可执行 runtime owner 仍是 repo-local code。
 - 旧 `CLI-first + host-agent runtime` 线只保留为归档参考材料。
 - 当前 `domain_runtime.py` 路径只保留为本地迁移 scaffold。

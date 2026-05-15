@@ -1,12 +1,18 @@
 # Hermes-Backed Runtime Substrate Program Current Truth
 
-> Lifecycle note (`2026-05-11`): this dated spec is a path-stable history/support record unless `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `docs/status.md`, or `contracts/runtime-program/current-program.json` explicitly names a still-current subsection. Read current MAG state from `docs/status.md`, the core five docs, and `contracts/runtime-program/current-program.json` first. Older `Current Truth`, Hermes, OPL Gateway, host-agent, or federation wording in this file is provenance, not the current default owner line.
+> Lifecycle note (`2026-05-15`): this dated spec is `superseded_provider_proof` / historical provenance. It does not define the current MAG runtime owner, provider owner, compatibility bridge, or required runnable path. Current owner line is `codex_cli` default executor + MAG-owned grant truth / quality / route / export authority + OPL stage-led framework consuming MAG descriptor/projection. `hermes_agent` is only an explicit non-default executor/proof/provenance lane.
+
+Current disposition:
+
+- Superseded: Hermes-backed runtime substrate as mainline owner, local host-agent compatibility bridge, future Hermes host compatibility handoff.
+- Retained: proof vocabulary, fail-closed lessons, runtime-state provenance, and audit path for why Hermes-first was not kept as default.
+- Direct retirement posture: any old module/interface/test that exists only to preserve this Hermes-backed owner or compatibility bridge should be migrated to the current owner surface and deleted or archived when no active caller remains.
 
 Date: `2026-04-11`
 
 ## Goal
 
-把 `Med Auto Grant` 的产品 runtime 主线从旧的 `CLI-first + host-agent runtime` closeout，重新冻结为一条可继续 repo-track 的 `CLI-first + Hermes-backed runtime substrate` program。
+本文记录 2026-04-11 曾经尝试把 `Med Auto Grant` 的产品 runtime 主线从旧的 `CLI-first + host-agent runtime` closeout 转向 `CLI-first + Hermes-backed runtime substrate` program。该路线现在只作 historical/provider proof 读取。
 
 这里冻结的不是：
 
@@ -14,15 +20,15 @@ Date: `2026-04-11`
 - `MCP` 或 `controller` 已变成 public runtime formal entry；
 - submission-grade autopilot 已成立。
 
-这里冻结的是：
+当时冻结的是：
 
-- `Hermes-backed runtime substrate` 成为新的 runtime owner；
-- 旧 local host-agent runtime 只保留为 migration baseline、compatibility bridge、regression oracle；
+- `Hermes-backed runtime substrate` 作为当时设想的新 runtime owner；
+- 旧 local host-agent runtime 作为当时设想的 migration baseline、compatibility bridge、regression oracle；
 - `CLI / MCP / controller / Hermes substrate / MedAutoGrant domain logic` 的边界；
 - `contracts/runtime-program/current-program.json` 成为 repo-tracked current-program pointer；
 - 机器本地 session / log / report / prompt 状态统一下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`；
 - `runtime-run / runtime-resume` 的默认 journal durable surface 固定为 `$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`；
-- `build-hosted-contract-bundle` 必须继续显式导出 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract`，作为 future Hermes host 的兼容 handoff contract；
+- `build-hosted-contract-bundle` 当时需要显式导出 `runtime_substrate_contract`、`runtime_state_contract` 与 `operator_contract`，作为 future Hermes host 的 handoff contract；
 - 在当前 repo 内哪些能力可以诚实迁入 Hermes，哪些必须继续留在 domain logic。
 
 ## Current Pointer
@@ -31,9 +37,9 @@ Date: `2026-04-11`
 - Current `program_id`: `med-autogrant-mainline`
 - Previous absorbed baseline: `R5.A / Hosted-Friendly Session Boundary`
 - Previous truthful closeout: `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
-- Current phase: `Hermes Runtime Substrate Program`
-- Active tranche: `H1 / Hermes-Owned Runtime Path`
-- Current owner line: `Hermes-backed runtime substrate migration`
+- Historical phase: `Hermes Runtime Substrate Program`
+- Historical tranche: `H1 / Hermes-Owned Runtime Path`
+- Current owner line: superseded; see `docs/status.md`, `docs/decisions.md`, and `docs/specs/specs_lifecycle_map.md`
 
 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP` 继续作为历史 closeout truth 保留，但它现在只回答：
 
@@ -42,7 +48,7 @@ Date: `2026-04-11`
 
 ## Runtime Topology
 
-当前冻结的产品 runtime topology 是：
+当时冻结的产品 runtime topology 是：
 
 `operator / agent -> CLI -> Hermes-backed runtime substrate -> MedAutoGrant domain logic -> durable artifacts / final package / hosted contract bundle`
 
@@ -70,7 +76,7 @@ Date: `2026-04-11`
 
 ### 4. Hermes substrate
 
-`Hermes-backed runtime substrate` 当前负责：
+`Hermes-backed runtime substrate` 当时被设想负责：
 
 - workspace/final-package 输入加载与 runtime dispatch；
 - canonical audit path dispatch：
@@ -100,13 +106,13 @@ Date: `2026-04-11`
 
 ### 6. host-agent bridge / oracle
 
-旧 `Codex-default host-agent runtime` 当前只保留为：
+旧 `Codex-default host-agent runtime` 在当时路线中只保留为：
 
 - migration baseline；
 - compatibility bridge；
 - regression oracle。
 
-它不再是长期产品 runtime owner，也不再是后续 truth 的默认落点。
+这段已经被当前 OPL stage-led framework + executor adapter 边界取代；不能据此恢复 compatibility bridge 或把 Hermes-backed runtime 写回当前 owner。
 
 ## Promotion Invariants
 

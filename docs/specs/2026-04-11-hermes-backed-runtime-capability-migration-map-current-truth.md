@@ -1,20 +1,26 @@
 # Hermes-Backed Runtime Capability Migration Map Current Truth
 
-> Lifecycle note (`2026-05-11`): this dated spec is a path-stable history/support record unless `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `docs/status.md`, or `contracts/runtime-program/current-program.json` explicitly names a still-current subsection. Read current MAG state from `docs/status.md`, the core five docs, and `contracts/runtime-program/current-program.json` first. Older `Current Truth`, Hermes, OPL Gateway, host-agent, or federation wording in this file is provenance, not the current default owner line.
+> Lifecycle note (`2026-05-15`): this dated spec is `superseded_provider_proof` / historical provenance. The capability split below records a past Hermes-backed migration proposal; it is not the current required runtime path, active provider owner, or compatibility bridge. Current MAG owner line is `codex_cli` default executor, MAG-owned grant semantics / quality / route / export authority, and OPL stage-led framework consuming MAG descriptor/projection.
+
+Current disposition:
+
+- Superseded: assigning audit dispatch, runtime orchestration, revision/export handoff, or hosted export execution to Hermes-Agent as current owner.
+- Retained: proof-lane vocabulary and fail-closed migration lessons.
+- Direct retirement posture: wrappers/tests that only preserve the old Hermes capability split should be migrated to the latest owner module or explicit proof lane, then deleted or archived when no active caller remains.
 
 Date: `2026-04-11`
 
 ## Goal
 
-把当前 runtime 主线中哪些能力归 `Hermes-Agent`、哪些继续保留在 `Med Auto Grant` domain supervision、以及哪些由 route-selected executor 承担，冻结成可执行 current truth。
+本文记录当时 runtime 主线中哪些能力曾计划归 `Hermes-Agent`、哪些继续保留在 `Med Auto Grant` domain supervision、以及哪些由 route-selected executor 承担。该表现在只作 proof/provenance，不再冻结可执行 current truth。
 
 当前 repo-tracked current-program pointer 固定为 `contracts/runtime-program/current-program.json`；机器本地 runtime state 固定下沉到 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
 
 ## Capability Split
 
-### A. Hermes-Agent runtime owner
+### A. Historical Hermes-Agent runtime owner proposal
 
-下面这些能力当前由 `Hermes-Agent` 持有：
+下面这些能力在当时 proposal 中曾分配给 `Hermes-Agent`：
 
 - `validate-workspace` dispatch
 - `summarize-workspace` dispatch
@@ -48,16 +54,16 @@ Date: `2026-04-11`
 - 默认 `Codex CLI autonomous executor`
 - 显式 opt-in 的 `Hermes-native` proof lane
 
-换句话说：
+按当前读取规则：
 
-- `Hermes-Agent` 负责 runtime path owner；
+- `Hermes-Agent` 不负责当前 default runtime path owner；
 - `Med Auto Grant` 继续拥有 author-side semantics 与 supervision truth；
 - concrete executor 只负责把被放行的 authoring route 跑出来。
-- `build_revision_execution_payload / build_artifact_bundle_payload / build_final_package_payload / build_hosted_contract_bundle_payload` 仅保留为 compatibility bridge / regression oracle wrapper，不再拥有产品 runtime path。
+- `build_revision_execution_payload / build_artifact_bundle_payload / build_final_package_payload / build_hosted_contract_bundle_payload` 如果只为旧 compatibility bridge 存在，后续按 no-active-caller / replacement proof 直接删除或归档；不再作为兼容目标。
 
 ### D. migration baseline / bridge / oracle
 
-下面这些内容只保留为 migration baseline、compatibility bridge、regression oracle：
+下面这些内容只保留为 migration baseline、regression oracle 或 historical provenance，不再作为 compatibility bridge 维护目标：
 
 - post-`R5.A` honest-stop closeout truth
 - 旧 `CLI-first + host-agent runtime` 叙事
@@ -111,11 +117,11 @@ Date: `2026-04-11`
   - Hermes substrate：为 hosted handoff 注入 `runtime_substrate_contract`、`runtime_state_contract`、`operator_contract`
   - Grant domain logic：hosted-friendly contract export 组装、`program_id` routing identity preservation
 
-## Minimal Hermes-Backed Runnable Paths
+## Historical Hermes-Backed Runnable Paths
 
 ### 1. critique -> revision -> re-entry path
 
-以下路径当前必须可以在 Hermes runtime 上运行：
+以下路径是当时的 Hermes proof proposal，不是当前 required runtime path：
 
 1. `validate-workspace`
 2. `summarize-workspace`
@@ -130,7 +136,7 @@ Date: `2026-04-11`
 
 ### 2. frozen -> final -> hosted export path
 
-以下路径当前必须可以在 Hermes runtime 上运行：
+以下路径是当时的 Hermes proof proposal，不是当前 required runtime path：
 
 1. `validate-workspace`
 2. `summarize-workspace`
