@@ -11,6 +11,59 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_nonempty_string_from_mapping,
 )
 
+_ACTIVE_PATH_SCAN_ROOTS = ("src", "tests", "schemas", "contracts", "scripts", "plugins")
+_ACTIVE_PATH_SCAN_FILES = ("Makefile", "pyproject.toml", ".agents/plugins/marketplace.json")
+_ACTIVE_PATH_SCAN_SUFFIXES = {".py", ".json", ".toml", ".sh", ".yaml", ".yml"}
+_RETIRED_ACTIVE_PATHS = (
+    "tests/test_product_entry.py",
+    "src/med_autogrant/domain_runtime_parts/patch_targets.py",
+    "src/med_autogrant/gateway.py",
+    "src/med_autogrant/local_manager.py",
+    "src/med_autogrant/" + "host" + "_agent.py",
+)
+_FORBIDDEN_DEFAULT_CALLER_PATTERNS = (
+    {
+        "pattern_id": "domain_runtime_patch_bridge_import",
+        "literal_parts": ("med_autogrant.domain_runtime_parts", ".patch_targets"),
+        "policy": "patch runtime owner modules directly; do not use retired facade patch bridge",
+    },
+    {
+        "pattern_id": "hermes_default_runtime_owner",
+        "literal_parts": ("DEFAULT_RUNTIME_OWNER = \"", "hermes_agent", "\""),
+        "policy": "Hermes-Agent remains explicit proof/provider provenance only",
+    },
+    {
+        "pattern_id": "hermes_default_executor_owner",
+        "literal_parts": ("DEFAULT_EXECUTOR_OWNER = \"", "hermes_agent", "\""),
+        "policy": "default executor stays Codex CLI",
+    },
+    {
+        "pattern_id": "claude_default_executor_owner",
+        "literal_parts": ("DEFAULT_EXECUTOR_OWNER = \"", "claude_code", "\""),
+        "policy": "non-default executors require explicit OPL adapter selection",
+    },
+    {
+        "pattern_id": "gateway_default_runtime_owner",
+        "literal_parts": ("DEFAULT_RUNTIME_OWNER = \"", "gateway", "\""),
+        "policy": "Gateway/local-manager wording is retired from active runtime ownership",
+    },
+    {
+        "pattern_id": "local_manager_default_runtime_owner",
+        "literal_parts": ("DEFAULT_RUNTIME_OWNER = \"", "local_manager", "\""),
+        "policy": "local-manager is not a default product/runtime owner",
+    },
+    {
+        "pattern_id": "host" + "_agent_default_runtime_owner",
+        "literal_parts": ("DEFAULT_RUNTIME_OWNER = \"", "host" + "_agent", "\""),
+        "policy": "repo-local host-agent runtime is not a product owner",
+    },
+    {
+        "pattern_id": "json_hermes_default_executor",
+        "literal_parts": ("\"default_executor_name\": \"", "hermes_agent", "\""),
+        "policy": "manifest/contracts must keep Codex CLI as default executor",
+    },
+)
+
 
 def build_manifest_functional_closure_surfaces(
     *,
@@ -255,6 +308,7 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
         },
     }
     repo_root = Path(__file__).resolve().parents[3]
+    active_path_scan = _build_active_path_scan_no_legacy_default_caller(repo_root)
     return {
         "surface_kind": "mag_physical_skeleton_follow_through",
         "version": "v1",
@@ -274,10 +328,16 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
         "moves_workspace_artifacts": False,
         "moves_runtime_receipt_instances": False,
         "moves_memory_body": False,
+        "active_path_scan_no_legacy_default_caller_ref": (
+            "/product_entry_manifest/physical_skeleton_follow_through/"
+            "active_path_scan_no_legacy_default_caller"
+        ),
+        "active_path_scan_no_legacy_default_caller": active_path_scan,
         "first_follow_through_scope": [
             "manifest exposes root anchors",
             "repo-source layout audit requires root anchors to exist",
             "workspace artifacts and runtime receipts stay outside repo source",
+            "active-path scan proves retired default callers are not used by machine surfaces",
             "domain-memory receipt evidence writer persists accepted/rejected receipt instances under runtime roots only",
         ],
         "legacy_active_path_policy": "physically_removed_or_history_tombstone_only",
@@ -366,6 +426,10 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
             ],
             "current_manifest_surface_ref": "/product_entry_manifest/physical_skeleton_follow_through",
             "current_audit_surface_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+            "active_path_scan_no_legacy_default_caller_ref": (
+                "/product_entry_manifest/physical_skeleton_follow_through/"
+                "active_path_scan_no_legacy_default_caller"
+            ),
         },
         "phases": [
             _build_ideal_state_phase_status(
@@ -455,6 +519,10 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
                 mag_surface_refs=[
                     "/product_entry_manifest/standard_domain_agent_skeleton",
                     "/product_entry_manifest/physical_skeleton_follow_through",
+                    (
+                        "/product_entry_manifest/physical_skeleton_follow_through/"
+                        "active_path_scan_no_legacy_default_caller"
+                    ),
                     "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
                     "docs/status.md#旧面退役校准",
                 ],
@@ -465,6 +533,101 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
             ),
         ],
     }
+
+
+def _build_active_path_scan_no_legacy_default_caller(repo_root: Path) -> dict[str, Any]:
+    scanned_paths = _active_path_scan_paths(repo_root)
+    forbidden_patterns = [
+        {
+            "pattern_id": str(pattern["pattern_id"]),
+            "literal": "".join(pattern["literal_parts"]),
+            "policy": str(pattern["policy"]),
+        }
+        for pattern in _FORBIDDEN_DEFAULT_CALLER_PATTERNS
+    ]
+    matches: list[dict[str, Any]] = []
+    for path in scanned_paths:
+        text = _read_scan_text(path)
+        if text is None:
+            continue
+        relative_path = path.relative_to(repo_root).as_posix()
+        for pattern in forbidden_patterns:
+            literal = pattern["literal"]
+            if literal in text:
+                matches.append(
+                    {
+                        "path": relative_path,
+                        "pattern_id": pattern["pattern_id"],
+                        "literal": literal,
+                    }
+                )
+    retired_surface_path_status = [
+        {
+            "path": path,
+            "exists": (repo_root / path).exists(),
+            "state": "absent" if not (repo_root / path).exists() else "present_forbidden",
+        }
+        for path in _RETIRED_ACTIVE_PATHS
+    ]
+    retired_surface_path_matches = [
+        status for status in retired_surface_path_status if status["state"] != "absent"
+    ]
+    return {
+        "surface_kind": "mag_active_path_scan_no_legacy_default_caller",
+        "version": "v1",
+        "scan_id": "mag.active_path_scan.no_legacy_default_caller.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "state": "passed" if not matches and not retired_surface_path_matches else "failed",
+        "evidence_ref_id": "active_path_scan_no_legacy_default_caller_ref",
+        "no_legacy_default_caller": not matches and not retired_surface_path_matches,
+        "scanned_scope": {
+            "roots": list(_ACTIVE_PATH_SCAN_ROOTS),
+            "files": list(_ACTIVE_PATH_SCAN_FILES),
+            "suffixes": sorted(_ACTIVE_PATH_SCAN_SUFFIXES),
+            "excludes_human_docs": True,
+            "human_doc_policy": "docs/history/provenance may name retired surfaces without making them default callers",
+            "scans_repo_source_only": True,
+        },
+        "scanned_file_count": len(scanned_paths),
+        "scanned_sample_refs": [
+            path.relative_to(repo_root).as_posix()
+            for path in scanned_paths[:12]
+        ],
+        "forbidden_default_caller_patterns": forbidden_patterns,
+        "forbidden_default_caller_matches": matches,
+        "retired_surface_path_status": retired_surface_path_status,
+        "claims_production_long_run_soak_complete": False,
+        "authority_boundary": {
+            "proves_repo_local_active_machine_surface_only": True,
+            "proves_opl_hosted_production_soak": False,
+            "proves_grant_quality_or_export_readiness": False,
+            "opl_can_write_domain_truth": False,
+            "opl_can_declare_export_ready": False,
+        },
+    }
+
+
+def _active_path_scan_paths(repo_root: Path) -> list[Path]:
+    paths: set[Path] = set()
+    for root_name in _ACTIVE_PATH_SCAN_ROOTS:
+        root = repo_root / root_name
+        if not root.exists():
+            continue
+        for path in root.rglob("*"):
+            if path.is_file() and path.suffix in _ACTIVE_PATH_SCAN_SUFFIXES:
+                paths.add(path)
+    for file_name in _ACTIVE_PATH_SCAN_FILES:
+        path = repo_root / file_name
+        if path.is_file():
+            paths.add(path)
+    return sorted(paths, key=lambda path: path.relative_to(repo_root).as_posix())
+
+
+def _read_scan_text(path: Path) -> str | None:
+    try:
+        return path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return None
 
 
 def _minimal_family_stage_control_plane_for_transition_oracle() -> dict[str, Any]:

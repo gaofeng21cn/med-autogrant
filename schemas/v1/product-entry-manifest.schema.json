@@ -3496,6 +3496,8 @@
         "moves_workspace_artifacts",
         "moves_runtime_receipt_instances",
         "moves_memory_body",
+        "active_path_scan_no_legacy_default_caller_ref",
+        "active_path_scan_no_legacy_default_caller",
         "legacy_active_path_policy",
         "legacy_active_path_residue"
       ],
@@ -3509,6 +3511,85 @@
         "moves_workspace_artifacts": {"const": false},
         "moves_runtime_receipt_instances": {"const": false},
         "moves_memory_body": {"const": false},
+        "active_path_scan_no_legacy_default_caller_ref": {
+          "const": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+        },
+        "active_path_scan_no_legacy_default_caller": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "scan_id",
+            "target_domain_id",
+            "state",
+            "no_legacy_default_caller",
+            "scanned_scope",
+            "scanned_file_count",
+            "forbidden_default_caller_patterns",
+            "forbidden_default_caller_matches",
+            "retired_surface_path_status",
+            "claims_production_long_run_soak_complete",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_active_path_scan_no_legacy_default_caller"
+            },
+            "scan_id": {
+              "const": "mag.active_path_scan.no_legacy_default_caller.v1"
+            },
+            "target_domain_id": {
+              "const": "med-autogrant"
+            },
+            "state": {
+              "const": "passed"
+            },
+            "no_legacy_default_caller": {
+              "const": true
+            },
+            "scanned_scope": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["roots", "excludes_human_docs", "scans_repo_source_only"],
+              "properties": {
+                "roots": {
+                  "type": "array",
+                  "items": {
+                    "enum": ["src", "tests", "schemas", "contracts", "scripts", "plugins"]
+                  },
+                  "minItems": 6
+                },
+                "excludes_human_docs": {"const": true},
+                "scans_repo_source_only": {"const": true}
+              }
+            },
+            "forbidden_default_caller_matches": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "claims_production_long_run_soak_complete": {
+              "const": false
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "proves_repo_local_active_machine_surface_only",
+                "proves_opl_hosted_production_soak",
+                "proves_grant_quality_or_export_readiness",
+                "opl_can_write_domain_truth",
+                "opl_can_declare_export_ready"
+              ],
+              "properties": {
+                "proves_repo_local_active_machine_surface_only": {"const": true},
+                "proves_opl_hosted_production_soak": {"const": false},
+                "proves_grant_quality_or_export_readiness": {"const": false},
+                "opl_can_write_domain_truth": {"const": false},
+                "opl_can_declare_export_ready": {"const": false}
+              }
+            }
+          }
+        },
         "legacy_active_path_policy": {
           "const": "physically_removed_or_history_tombstone_only"
         },
@@ -3780,7 +3861,8 @@
             "policy",
             "forbidden_compatibility_surfaces",
             "current_manifest_surface_ref",
-            "current_audit_surface_ref"
+            "current_audit_surface_ref",
+            "active_path_scan_no_legacy_default_caller_ref"
           ],
           "properties": {
             "state": {
@@ -3797,6 +3879,9 @@
             },
             "current_audit_surface_ref": {
               "const": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit"
+            },
+            "active_path_scan_no_legacy_default_caller_ref": {
+              "const": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
             }
           }
         },

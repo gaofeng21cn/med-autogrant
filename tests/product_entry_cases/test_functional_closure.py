@@ -181,6 +181,33 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(follow_through["moves_workspace_artifacts"])
         self.assertFalse(follow_through["moves_runtime_receipt_instances"])
         self.assertEqual(follow_through["legacy_active_path_policy"], "physically_removed_or_history_tombstone_only")
+        self.assertEqual(
+            follow_through["active_path_scan_no_legacy_default_caller_ref"],
+            "/product_entry_manifest/physical_skeleton_follow_through/"
+            "active_path_scan_no_legacy_default_caller",
+        )
+        active_path_scan = follow_through["active_path_scan_no_legacy_default_caller"]
+        self.assertEqual(active_path_scan["surface_kind"], "mag_active_path_scan_no_legacy_default_caller")
+        self.assertEqual(active_path_scan["state"], "passed")
+        self.assertTrue(active_path_scan["no_legacy_default_caller"])
+        self.assertGreater(active_path_scan["scanned_file_count"], 0)
+        self.assertEqual(active_path_scan["forbidden_default_caller_matches"], [])
+        self.assertFalse(active_path_scan["claims_production_long_run_soak_complete"])
+        self.assertTrue(active_path_scan["authority_boundary"]["proves_repo_local_active_machine_surface_only"])
+        self.assertFalse(active_path_scan["authority_boundary"]["proves_opl_hosted_production_soak"])
+        self.assertFalse(active_path_scan["authority_boundary"]["proves_grant_quality_or_export_readiness"])
+        self.assertFalse(active_path_scan["authority_boundary"]["opl_can_write_domain_truth"])
+        self.assertFalse(active_path_scan["authority_boundary"]["opl_can_declare_export_ready"])
+        self.assertEqual(
+            {entry["path"]: entry["state"] for entry in active_path_scan["retired_surface_path_status"]},
+            {
+                "tests/test_product_entry.py": "absent",
+                "src/med_autogrant/domain_runtime_parts/patch_targets.py": "absent",
+                "src/med_autogrant/gateway.py": "absent",
+                "src/med_autogrant/local_manager.py": "absent",
+                "src/med_autogrant/" + "host" + "_agent.py": "absent",
+            },
+        )
         self.assertEqual(audit["retired_active_path_policy"], "physically_removed_or_history_tombstone_only")
         self.assertEqual(audit["forbidden_active_path_residue"], [])
         residue_states = {entry["path_family"]: entry["state"] for entry in audit["legacy_active_path_residue"]}
@@ -237,6 +264,11 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             "migrate_active_callers_then_delete_or_history_tombstone",
         )
         self.assertIn("facade patch bridge", direct_retirement["forbidden_compatibility_surfaces"])
+        self.assertEqual(
+            direct_retirement["active_path_scan_no_legacy_default_caller_ref"],
+            "/product_entry_manifest/physical_skeleton_follow_through/"
+            "active_path_scan_no_legacy_default_caller",
+        )
         phase_states = {phase["phase_id"]: phase["state"] for phase in closure_status["phases"]}
         self.assertEqual(
             phase_states,
