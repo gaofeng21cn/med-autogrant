@@ -6,10 +6,10 @@
 
 ## 定位
 
-- AGENTS 只管工作方式，不承载项目真相、规格或阶段判断。
+- AGENTS 只管工作方式、少量稳定身份边界和文档生命周期纪律，不承载项目真相、规格或阶段判断。
 - 项目知识默认从 `README*`、`docs/README*`、`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md` 读取。
 - repo-tracked current-program pointer 固定为 `contracts/runtime-program/current-program.json`。
-- `Med Auto Grant` 是独立 grant domain agent，也可以作为 `OPL` stage-led 智能体运行框架中的 admitted domain agent 被托管。`Stage` 表示大型基金写作/评审步骤，Agent executor 是 stage 内最小执行单位；`Codex CLI` 是当前第一公民 executor，其他 executor adapter 只能显式接入且不承诺行为效果等价。MAG 持有 grant truth、quality/fundability verdict、route owner 和 export authority。
+- `Med Auto Grant` 是独立 grant domain agent，也可以作为 `OPL` stage-led 智能体运行框架中的 admitted domain agent 被托管。`Stage` 表示大型基金写作/评审步骤，Agent executor 是 stage 内最小执行单位；`Codex CLI` 是当前第一公民 executor，其他 executor adapter 只能显式接入且不承诺行为效果等价。MAG 持有 grant truth、fundability/quality/export verdict、route owner、package authority、grant strategy memory accept/reject authority 和 owner receipt；通用 runtime、queue、attempt ledger、state-machine runner、workspace/source intake shell、memory locator、package/artifact lifecycle、quality/readiness projection 与 App/workbench shell 归 OPL Framework / shared family layer。
 
 ## 工作原则
 
@@ -20,6 +20,7 @@
 - 新增能力或继续重构时，优先采用稳定薄入口加 `parts/`、`cases/`、`modules/` 等子模块拆分；不要把新逻辑继续堆回单个超长文件。
 - 若文档提到 `Hermes-Agent`，只能指上游外部 runtime 项目 / 服务；仓内自写的 runtime helper、shim、pilot 或 scaffold，不得写成“已接入 Hermes-Agent”。
 - 一旦新的 runtime substrate 目标已经明确，新增投入默认服务目标形态；旧本地 runtime 只允许作为迁移桥、兼容层或回归 oracle 存在。
+- 已被当前 owner surface 替代的模块、接口、CLI alias、wrapper、facade、patch bridge、聚合测试和文档入口，默认迁移 active caller 后直接退役；需要来龙去脉时只保留 history/tombstone/provenance，不新增 compatibility shim、re-export facade、别名或兼容测试。
 - 不做降级处理、兜底补丁、启发式修补或“先糊住再说”式实现。
 
 ## 文档分层与生命周期治理
@@ -36,13 +37,19 @@
 - 入口文档应先呈现当前状态、层级、新旧关系和下一跳；历史 specs、旧 hosted/provider 说明、已完成 plans 与追溯材料进入 provenance 层。
 - `docs/**` 默认只维护中文 canonical 内容；稳定路径优先使用无语言后缀 `.md`。
 - 根层 `README*` 是否保留公开双语入口，由产品分发和 public 需求单独决定。
-- `docs/domain-positioning*` 与 `docs/mvp-scope*` 是当前 root allowlist 的一部分，因为它们仍承载 public subject、domain owner、MVP boundary 与 non-goals；新增 root-level docs 必须先更新 portfolio note。
-- 核心骨架文档与 activation package / current truth 严格分层。
-- `docs/specs/**`：混合 path-stable 技术记录层；只有 `docs/specs/README*` 和 `docs/specs/specs_lifecycle_map.md` 明确列出的 active specs 才是 current owner，其余 dated specs 按 lifecycle map 作为 support reference、history 或 provenance 阅读。
-- `docs/references/**`：定位、背景、审计、handoff 与非活跃支持材料。
-- `docs/active/**`：承载当前执行、当前计划、当前差距、active baton 与 closeout evidence；旧 `docs/plans/**` 活跃计划层已退役，新增 recurring active material 不再进入旧目录。
-- `docs/history/plans/**`：承载已完成、已替代或只剩追溯价值的历史计划；若旧路径仍出现在历史材料中，只按 provenance 阅读。
-- `docs/history/**`：历史归档入口（含 OMX）。
+- MAG 采用 OPL-family canonical docs taxonomy：`active/public/product/runtime/delivery/source/policies/specs/references/history`。目录按长期生命周期职责保留，不按当前文件数量判断。
+- `docs/domain-positioning.md` 与 `docs/mvp-scope.md` 当前仍是 root public allowlist，因为它们承载 public subject、domain owner、MVP boundary 与 non-goals；新增 root-level docs 必须先更新 portfolio note，后续若迁入 `docs/public/`，需先处理 path stability。
+- 核心骨架文档、activation package、active plan 与 current truth 严格分层。
+- `docs/active/`：当前执行、当前计划、当前差距、active baton 与 closeout evidence；旧 `docs/plans/` 活跃计划层已退役，新增 recurring active material 不再进入旧目录。
+- `docs/public/`：public narrative index；当前 root public allowlist 暂保持路径稳定。
+- `docs/product/`：app skill、product status、user-loop、direct entry 与 operator guidance。
+- `docs/runtime/`：runtime/control/projection、OPL-hosted boundary、receipt/projection 支撑；机器真相仍归 contracts/source/runtime evidence。
+- `docs/delivery/`：submission-ready package、export、delivery 和 manual portal boundary 支撑。
+- `docs/source/`：funder/task/source intake、workspace canonical document 和 source truth consumption 支撑。
+- `docs/policies/`：稳定治理规则、文档规则和 repo-local operating discipline。
+- `docs/specs/`：path-stable 技术记录和 active specs；只有 `docs/specs/README.md` 与 `docs/specs/specs_lifecycle_map.md` 明确列为 active 的 specs 才是 current owner，其余 dated specs 按 support/history/provenance 阅读。
+- `docs/references/`：north-star、OPL adoption、memory policy、governance checklist、定位、背景、审计、handoff 与非活跃支持材料。
+- `docs/history/`：完成计划、旧 specs、旧 provider/runtime/OMX/provenance 和 tombstone；`docs/history/plans/` 承载已完成、已替代或只剩追溯价值的历史计划。
 - `README*`、`docs/**` 与参考文档是人读面。代码、测试、contracts、dashboard 或 runtime 不得把 prose path、Markdown 章节或文案当成稳定机器接口；MAG 的机器真相以 `contracts/runtime-program/current-program.json`、schema/source 与 CLI/API 行为为准，确需关联人读材料时使用 `human_doc:*` 语义 ID。
 
 ## Worktree 规则
