@@ -219,6 +219,20 @@ def handle_product_receipt_reconciliation_proof(args: argparse.Namespace) -> dic
     )
 
 
+def handle_product_receipt_reconciliation_inventory(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_controlled_soak_receipt_reconciliation_inventory(
+        owner_receipt_evidence_items=[
+            _read_json_object(owner_receipt_path)
+            for owner_receipt_path in args.owner_receipt_evidence
+        ],
+        opl_ledger_ref=args.opl_ledger_ref,
+        sidecar_closeout_results=[
+            _read_json_object(sidecar_closeout_path)
+            for sidecar_closeout_path in args.sidecar_closeout_result or []
+        ],
+    )
+
+
 def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 

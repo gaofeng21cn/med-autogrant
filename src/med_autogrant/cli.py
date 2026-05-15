@@ -64,6 +64,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_domain_memory_receipt_evidence,
     handle_product_lifecycle_receipt_evidence,
     handle_product_owner_receipt_evidence,
+    handle_product_receipt_reconciliation_inventory,
     handle_product_receipt_reconciliation_proof,
     handle_product_sidecar_dispatch,
     handle_product_sidecar_export,
@@ -96,6 +97,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_domain_memory_receipt_evidence_command,
     _add_product_lifecycle_receipt_evidence_command,
     _add_product_owner_receipt_evidence_command,
+    _add_product_receipt_reconciliation_inventory_command,
     _add_product_receipt_reconciliation_proof_command,
     _add_product_entry_command,
     _add_product_sidecar_dispatch_command,
@@ -435,6 +437,12 @@ def build_parser() -> argparse.ArgumentParser:
         "controlled-soak-receipt-reconciliation-proof",
         handle_product_receipt_reconciliation_proof,
         "把 MAG owner receipt evidence 与外部 OPL ledger ref 对账成 controlled soak probe proof。",
+    )
+    _add_product_receipt_reconciliation_inventory_command(
+        subparsers,
+        "controlled-soak-receipt-reconciliation-inventory",
+        handle_product_receipt_reconciliation_inventory,
+        "把多条 MAG owner receipt evidence 对账成 controlled soak read-only inventory。",
     )
     return parser
 

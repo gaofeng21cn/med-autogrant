@@ -139,3 +139,50 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
         self.assertFalse(proof["no_regression_evidence"]["present"])
         self.assertFalse(proof["claims_production_long_run_soak_complete"])
         self.assertFalse(proof["authority_boundary"]["can_declare_fundability_ready"])
+
+    def test_controlled_soak_receipt_reconciliation_inventory_summarizes_refs_only(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            runtime_root = Path(tmp_dir) / "runtime-state"
+            entry = MedAutoGrantProductEntry()
+            no_regression = entry.write_owner_receipt_evidence(
+                input_path=CRITIQUE_EXAMPLE_PATH,
+                receipt_shape="no_regression_evidence",
+                stage_id="review_and_rebuttal",
+                source_ref="opl-ledger://mag/stage-attempt/inventory",
+                closeout_summary="MAG owner no-regression receipt for inventory projection.",
+                runtime_root=runtime_root,
+                receipt_id="inventory-no-regression",
+            )["owner_receipt_evidence"]
+            typed_blocker = entry.write_owner_receipt_evidence(
+                input_path=CRITIQUE_EXAMPLE_PATH,
+                receipt_shape="typed_blocker",
+                stage_id="package_and_submit_ready",
+                source_ref="opl-ledger://mag/stage-attempt/inventory",
+                closeout_summary="MAG owner blocker receipt for inventory projection.",
+                runtime_root=runtime_root,
+                receipt_id="inventory-typed-blocker",
+            )["owner_receipt_evidence"]
+            payload = entry.build_controlled_soak_receipt_reconciliation_inventory(
+                owner_receipt_evidence_items=[no_regression, typed_blocker],
+                opl_ledger_ref="opl-ledger://mag/stage-attempt/inventory",
+                sidecar_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],
+            )
+
+        inventory = payload["receipt_reconciliation_inventory"]
+        self.assertEqual(
+            inventory["surface_kind"],
+            "mag_controlled_soak_receipt_reconciliation_inventory",
+        )
+        self.assertEqual(inventory["state"], "read_projection_only_not_live_soak_complete")
+        self.assertFalse(inventory["claims_production_long_run_soak_complete"])
+        self.assertEqual(inventory["summary"]["item_count"], 2)
+        self.assertEqual(inventory["summary"]["sidecar_closeout_result_count"], 1)
+        self.assertEqual(inventory["summary"]["by_receipt_shape"]["no_regression_evidence"], 1)
+        self.assertEqual(inventory["summary"]["by_receipt_shape"]["typed_blocker"], 1)
+        self.assertEqual(inventory["summary"]["typed_blocker_count"], 1)
+        self.assertEqual(inventory["summary"]["no_regression_evidence_ref_count"], 1)
+        self.assertFalse(inventory["authority_boundary"]["can_declare_submission_ready_export"])
+        self.assertFalse(inventory["forbidden_write_proof"]["grant_truth_written"])
+        self.assertFalse(inventory["forbidden_write_proof"]["grant_artifact_written"])

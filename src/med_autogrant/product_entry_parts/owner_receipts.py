@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from med_autogrant.control_plane import resolve_runtime_state_root
 from med_autogrant.product_entry_parts.primitives import (
@@ -15,6 +15,7 @@ from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateErro
 OWNER_RECEIPT_EVIDENCE_KIND = "mag_owner_receipt_evidence"
 LIFECYCLE_RECEIPT_EVIDENCE_KIND = "mag_lifecycle_receipt_evidence"
 RECEIPT_RECONCILIATION_PROOF_KIND = "mag_controlled_soak_receipt_reconciliation_proof"
+RECEIPT_RECONCILIATION_INVENTORY_KIND = "mag_controlled_soak_receipt_reconciliation_inventory"
 
 _RECEIPT_SHAPES = ("domain_owner_receipt", "typed_blocker", "no_regression_evidence")
 _STAGE_IDS = (
@@ -238,6 +239,81 @@ def build_controlled_soak_receipt_reconciliation_proof(
     }
 
 
+def build_controlled_soak_receipt_reconciliation_inventory(
+    *,
+    owner_receipt_evidence_items: Sequence[Mapping[str, Any]],
+    opl_ledger_ref: str,
+    sidecar_closeout_results: Sequence[Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    resolved_ledger_ref = _require_nonempty_string(opl_ledger_ref, field_name="opl_ledger_ref")
+    if not owner_receipt_evidence_items:
+        raise WorkspaceStateError("owner_receipt_evidence_items 至少需要一条 receipt evidence。")
+    closeout_by_receipt_ref = _index_closeout_results_by_receipt_ref(sidecar_closeout_results or [])
+    items: list[dict[str, Any]] = []
+    for receipt_payload in owner_receipt_evidence_items:
+        receipt = _require_owner_receipt_evidence(receipt_payload)
+        receipt_ref = _require_nonempty_string_from_receipt(receipt, "receipt_instance_ref")
+        proof = build_controlled_soak_receipt_reconciliation_proof(
+            owner_receipt_evidence=receipt,
+            opl_ledger_ref=resolved_ledger_ref,
+            sidecar_closeout_result=closeout_by_receipt_ref.get(receipt_ref),
+        )["receipt_reconciliation_proof"]
+        items.append(
+            {
+                "receipt_ref": receipt_ref,
+                "receipt_shape": proof["mag_owner_receipt"]["receipt_shape"],
+                "stage_id": proof["mag_owner_receipt"]["stage_id"],
+                "source_ref": proof["mag_owner_receipt"]["source_ref"],
+                "reconciliation_status": proof["reconciliation"]["status"],
+                "receipt_ref_matches_sidecar": proof["reconciliation"]["receipt_ref_matches_sidecar"],
+                "opl_ledger_ref_matches_receipt_source": proof["reconciliation"][
+                    "opl_ledger_ref_matches_receipt_source"
+                ],
+                "typed_blocker_present": proof["typed_blocker"] is not None,
+                "no_regression_evidence_refs": list(proof["no_regression_evidence"]["evidence_refs"]),
+                "authority_boundary": dict(proof["authority_boundary"]),
+            }
+        )
+    payload = {
+        "surface_kind": RECEIPT_RECONCILIATION_INVENTORY_KIND,
+        "version": "v1",
+        "state": "read_projection_only_not_live_soak_complete",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "opl_ledger": {
+            "ledger_ref": resolved_ledger_ref,
+            "role": "external_ref_for_inventory_reconciliation_only",
+            "mag_writes_opl_ledger": False,
+            "opl_holds_grant_truth": False,
+        },
+        "summary": {
+            "item_count": len(items),
+            "sidecar_closeout_result_count": len(closeout_by_receipt_ref),
+            "by_receipt_shape": _count_by(items, "receipt_shape"),
+            "by_reconciliation_status": _count_by(items, "reconciliation_status"),
+            "typed_blocker_count": sum(1 for item in items if item["typed_blocker_present"]),
+            "no_regression_evidence_ref_count": sum(
+                len(item["no_regression_evidence_refs"]) for item in items
+            ),
+        },
+        "items": items,
+        "claims_production_long_run_soak_complete": False,
+        "authority_boundary": {
+            "mag_owner_receipt_authority": True,
+            "opl_ref_consumer_only": True,
+            "can_declare_fundability_ready": False,
+            "can_declare_authoring_quality_ready": False,
+            "can_declare_submission_ready_export": False,
+        },
+        "forbidden_write_proof": _forbidden_write_proof(),
+    }
+    return {
+        "ok": True,
+        "command": "controlled-soak-receipt-reconciliation-inventory",
+        "receipt_reconciliation_inventory": payload,
+    }
+
+
 def _resolve_runtime_root(runtime_root: str | Path | None) -> Path:
     if runtime_root is not None:
         return Path(runtime_root).expanduser().resolve()
@@ -279,6 +355,28 @@ def _write_receipt(path: Path, receipt: Mapping[str, Any]) -> None:
         path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     except OSError as exc:
         raise WorkspaceFileError(f"写入 receipt evidence 失败: {path}") from exc
+
+
+def _index_closeout_results_by_receipt_ref(
+    closeout_results: Sequence[Mapping[str, Any]],
+) -> dict[str, Mapping[str, Any]]:
+    indexed: dict[str, Mapping[str, Any]] = {}
+    for closeout in closeout_results:
+        receipt_ref = closeout.get("receipt_ref")
+        if not isinstance(receipt_ref, str) or not receipt_ref.strip():
+            raise WorkspaceStateError("sidecar_closeout_result.receipt_ref 必须是非空字符串。")
+        if receipt_ref in indexed:
+            raise WorkspaceStateError(f"sidecar_closeout_result.receipt_ref 重复: {receipt_ref}")
+        indexed[receipt_ref] = closeout
+    return indexed
+
+
+def _count_by(items: Sequence[Mapping[str, Any]], key: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for item in items:
+        value = _require_nonempty_string(item.get(key), field_name=key)
+        counts[value] = counts.get(value, 0) + 1
+    return counts
 
 
 def _require_owner_receipt_evidence(payload: Mapping[str, Any]) -> Mapping[str, Any]:

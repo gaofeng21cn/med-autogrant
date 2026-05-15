@@ -16,7 +16,7 @@ MAG 的核心价值是基金申请专业性：它持有 funding-call 语境、fu
 
 本文描述目标态，不替代当前状态判断。当前落地程度以 [当前状态](../status.md)、[架构](../architecture.md)、[不变量](../invariants.md)、[OPL Family Contract Adoption](./opl_family_contract_adoption.md) 与 [`current-program.json`](../../contracts/runtime-program/current-program.json) 为准。
 
-2026-05-15 当前代码已把 MAG 侧 receipt reconciliation 推进到 repo-local proof surface：`controlled-soak-receipt-reconciliation-proof` 可以读取 MAG owner receipt evidence 或 sidecar `stage-attempt/closeout` result，并与外部 OPL ledger ref 对账，输出 owner receipt、typed blocker 或 no-regression evidence probe payload。该能力是理想态中 OPL-hosted attempt 对账面的前置形状证明，不是 production long-run soak；真实 grant-stage owner chain、memory body apply 和 package/export verdict 仍必须由 MAG workspace/runtime owner surface 产生。
+2026-05-15 当前代码已把 MAG 侧 receipt reconciliation 推进到 repo-local proof surface：`controlled-soak-receipt-reconciliation-proof` 可以读取 MAG owner receipt evidence 或 sidecar `stage-attempt/closeout` result，并与外部 OPL ledger ref 对账，输出 owner receipt、typed blocker 或 no-regression evidence probe payload；`controlled-soak-receipt-reconciliation-inventory` 则在不写 receipt instance 的前提下汇总多条 owner receipt evidence 的 reconciliation status、typed blocker 和 no-regression refs。该能力是理想态中 OPL-hosted attempt 对账面的前置形状证明，不是 production long-run soak；真实 grant-stage owner chain、memory body apply 和 package/export verdict 仍必须由 MAG workspace/runtime owner surface 产生。
 
 ## 产品分层
 
@@ -240,7 +240,7 @@ MAG 达到理想生产级状态时，应满足以下门槛：
 - Direct app skill path 与 OPL-hosted path 都回到同一套 MAG route truth、workspace truth、quality gate 和 export gate。
 - 每个 stage attempt 都有 typed closeout、owner receipt、typed blocker、human gate receipt 或 no-regression evidence。
 - 真实 OPL-hosted controlled grant-stage attempt 能返回 MAG domain owner receipt、typed blocker 或 no-regression evidence，并能被 OPL workbench refs-only 展示。
-- Receipt reconciliation proof 必须能从 repo-local probe 推进到真实 OPL-hosted grant-stage line 的持续对账，但不能把 no-regression evidence 或 typed blocker 写成 grant quality verdict。
+- Receipt reconciliation proof / inventory 必须能从 repo-local probe 推进到真实 OPL-hosted grant-stage line 的持续对账，但不能把 no-regression evidence 或 typed blocker 写成 grant quality verdict，也不能把 read projection 写成 runtime receipt instance。
 - Domain memory 检索、writeback proposal、MAG accept/reject、runtime receipt evidence 和 operator projection 在真实 workspace/runtime root 中可运行。
 - `package submission-ready` 对 frozen workspace fail-closed，并明确区分本地提交包与外部 portal submission。
 - AI-first quality gate 在没有 active critique 时保持 projection-only，在有 AI-authored review 时输出可追溯 closure dossier。
