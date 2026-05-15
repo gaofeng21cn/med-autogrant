@@ -12,7 +12,7 @@ Date: `2026-05-14`
 
 MAG 的核心价值是基金申请专业性：它持有 funding-call 语境、fundability strategy、specific aims、正文写作、AI-first review/revision、quality closure、submission-ready package 与 grant strategy memory 的 domain truth。OPL Framework 负责长期在线、stage attempt 生命周期、queue/wakeup、handoff、receipt、retry/dead-letter、operator projection、artifact/file lifecycle、shared contracts 和 provider-backed runtime。两者通过 descriptor、projection、receipt 和 owner boundary 协作。
 
-因此，MAG 的理想形态是医学基金 `Domain Knowledge / Authority Pack + thin adapter`。MAG 不维护独立 agent runtime platform，也不长期维护 generic scheduler、generic queue、generic attempt ledger、generic state-machine runner、generic workspace/source intake shell、generic memory locator、generic artifact/package lifecycle、generic observability 或通用 App/workbench runtime。MAG 的 product sidecar、domain entry、projection builder 和 lifecycle adapter 只负责把 grant stage pack、fundability/quality/export authority、typed blocker、owner receipt、artifact locator 和 domain transition spec 暴露给 OPL。
+因此，MAG 的理想形态是医学基金 `Domain Knowledge / Authority Pack + thin program surface`。MAG 不维护独立 agent runtime platform，也不长期维护 generic scheduler、generic queue、generic attempt ledger、generic state-machine runner、generic workspace/source intake shell、generic memory locator、generic artifact/package lifecycle、generic observability 或通用 App/workbench runtime。MAG 的 descriptor、contract/schema、product sidecar、domain entry、projection builder、domain transition spec/table、quality gate、artifact locator、receipt schema、tests 和 lifecycle adapter 只负责把 grant stage pack、fundability/quality/export authority、typed blocker、owner receipt、artifact locator 和 domain transition spec 暴露给 OPL。这些薄程序面服务 OPL 发现、托管、审计和投影，不构成第二套通用平台。
 
 本文描述目标态，不替代当前状态判断。当前落地程度以 [当前状态](../status.md)、[架构](../architecture.md)、[不变量](../invariants.md)、[OPL Family Contract Adoption](./opl_family_contract_adoption.md) 与 [`current-program.json`](../../contracts/runtime-program/current-program.json) 为准。
 
@@ -119,7 +119,7 @@ OPL 负责 stage 的发现、排队、恢复、唤醒、投影和 receipt 汇总
 
 ## Runtime 与执行器边界
 
-理想 MAG 不维护通用长期在线 runtime 或通用运行平台。它暴露 OPL 可消费的 descriptor、sidecar projection、guarded dispatch、artifact locator、owner receipt contract、domain transition spec 和 lifecycle adapter。
+理想 MAG 不维护通用长期在线 runtime 或通用运行平台。它暴露 OPL 可消费的 descriptor、contract/schema、sidecar projection、guarded dispatch、artifact locator、owner receipt contract、domain transition spec/table、projection builder、focused tests 和 lifecycle adapter。
 
 默认 concrete executor 是 `Codex CLI`。非默认 executor，例如 `Hermes-Agent` 或 `Claude Code`，只能通过 OPL generic Agent Executor Adapter 显式选择，并产生可审计 receipt。非默认 executor 的 proof 只证明 connectivity、lifecycle、receipt、audit 和 fail-closed；结果质量和行为语义必须回到 MAG quality gate 验收。
 
