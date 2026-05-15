@@ -36,6 +36,7 @@ def write_owner_receipt_evidence(
     closeout_summary: str,
     runtime_root: str | Path | None = None,
     receipt_id: str | None = None,
+    closeout_refs: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     resolved_input_path = Path(input_path).expanduser().resolve()
     resolved_stage_id = _require_choice(stage_id, choices=_STAGE_IDS, field_name="stage_id")
@@ -80,6 +81,7 @@ def write_owner_receipt_evidence(
         "repo_tracked": False,
         "forbidden_write_proof": _forbidden_write_proof(),
         "opl_consumption": _opl_receipt_ref_consumption(),
+        "closeout_refs": dict(closeout_refs or {}),
     }
     _write_receipt(receipt_path, receipt)
     return {

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from med_autogrant.domain_entry_contract import build_domain_entry_contract
 from med_autogrant.mainline_status import read_mainline_status
@@ -329,6 +329,7 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
         closeout_summary: str,
         runtime_root: str | Path | None = None,
         receipt_id: str | None = None,
+        closeout_refs: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
         return write_owner_receipt_evidence(
             input_path=input_path,
@@ -338,6 +339,7 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             closeout_summary=closeout_summary,
             runtime_root=runtime_root,
             receipt_id=receipt_id,
+            closeout_refs=closeout_refs,
         )
 
     def write_lifecycle_receipt_evidence(
