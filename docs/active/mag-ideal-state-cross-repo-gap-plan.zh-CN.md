@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: 对照 MAG 理想目标态和 OPL family 各仓当前实际状态，记录差距、OPL Framework 应上收的通用能力，以及 MAG production closure 的分阶段完善计划。
 State: `active_plan`
 Machine boundary: 本文是人读 gap / completion plan，不是机器真相。机器可读真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、OPL runtime ledger、domain-owned manifest、workspace/runtime artifact root、receipt、质量报告和导出包；本文的 MAG repo closure 投影由 `product-entry-manifest` 顶层 `ideal_state_closure_status` 承载。
-Date: `2026-05-14`
+Date: `2026-05-15`
 Cleanup posture: 当前计划不再要求保留旧模块、旧接口、旧测试或 compatibility shell。已经被核心文档、合同面、源码或测试替代的旧面，后续按最新 owner surface 直接删除、归档到 history/tombstone，或从测试入口移除；不新增兼容 alias、facade patch bridge 或旧 CLI shell 调用。
 
 ## Repo Closure Update 2026-05-14
@@ -37,16 +37,17 @@ OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/d
 
 这份计划的核心判断是：MAG 后续不应继续在仓内重复建设通用运行外围；应把可复用的 transport、lifecycle、projection、operator workbench 能力上收到 OPL Framework，MAG 仓保持 grant-domain authority pack 和薄 adapter。
 
-## Fresh Evidence 2026-05-14
+## Fresh Evidence 2026-05-15
 
 本计划基于本轮只读检查和各仓当前文档/机器面：
 
 | surface | fresh result | 读法 |
 | --- | --- | --- |
-| `med-autogrant git status --short --branch` | root `main...origin/main [ahead 8]`，文档更新在 root checkout，contract/test 更新在 `codex/mag-ideal-evidence` worktree | 文档与机器面都保持 repo-tracked；runtime receipt 实例仍只在用户级 runtime-state。 |
-| `one-person-lab git status --short --branch` | root `main...origin/main [ahead 6]`，存在多处未提交文档/源码改动；本轮 OPL 修复在 `codex/mag-production-evidence` worktree | OPL root dirty diff 不被覆盖；MAG evidence 只引用已验证的 OPL worktree/read-model 输出。 |
-| `med-autoscience git status --short --branch` | `main...origin/main [ahead 1]`，存在多处未提交文档/源码改动 | MAS 现状作为 sibling input 使用；本计划不修改 MAS。 |
-| `redcube-ai git status --short --branch` | `main...origin/main [ahead 2]`，未显示未提交改动 | RCA 现状可作为相对稳定 sibling input。 |
+| `med-autogrant git status --short --branch` | root `main...origin/main [ahead 3]`，当前 checkout 干净 | 文档与机器面都保持 repo-tracked；runtime receipt 实例仍只在用户级 runtime-state。 |
+| `one-person-lab git status --short --branch` | root `main...origin/main`，当前 checkout 干净；超过 1 小时未更新的 `automation/ci-line-budget` worktree/branch 已清理 | OPL 已回到干净 main 基线；MAG evidence 只引用已验证的 OPL read-model 输出。 |
+| `med-autoscience git status --short --branch` | `main...origin/main`，当前 checkout 干净；超过 1 小时未更新的 `automation/sdist-stage-route-contract` worktree/branch 已清理 | MAS 现状作为 sibling input 使用；本计划不修改 MAS。 |
+| `redcube-ai git status --short --branch` | `main...origin/main [ahead 6]`，当前 checkout 干净 | RCA 现状可作为相对稳定 sibling input。 |
+| `opl-aion-shell git status --short --branch` | `main...gaofeng/main`，存在既有未提交产品线修改；`gaofeng/main` 是 OPL 产品主线，`origin/main` 只是 upstream AionUi sync input | App 仓当前不作为本计划的写入对象；保留用户已有本地修改，不把 upstream AionUi branch 当 OPL 基线。 |
 | OPL `agents list --json` | `aligned_count=3`、`missing_count=0`、`drift_detected_count=0`、`physical_skeleton_evidence_observed_count=3`、`physical_skeleton_audit_pending_count=0`、`production_closure_gap_count=12`、`provider_temporal_residency_gap_status=closed_by_fresh_proven_proof` | MAS/MAG/RCA descriptor 与 repo-source anchors 已被 OPL 读模型识别；production closure gap 仍存在。 |
 | OPL `stages list --json` | `resolved_planes_count=3`、`stages_count=18` | 三仓各 6 个 stage plane 已可被 OPL 解析。 |
 | OPL `domain-memory list --json` | `resolved_memory_descriptor_count=3`、`missing_memory_descriptor_count=0`；MAG descriptor 仍标记 `retrieval_apply_landed=false`、`writeback_apply_landed=false`、`memory_body_migration_landed=false` | 三仓 memory descriptor 已 resolved；MAG 已有 receipt-evidence path，但 OPL 继续只做 descriptor/receipt-locator projection，不写 memory body。 |
