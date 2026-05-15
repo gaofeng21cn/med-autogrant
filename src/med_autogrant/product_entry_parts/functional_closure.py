@@ -349,6 +349,47 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
             "opl_can_declare_export_ready": False,
             "opl_can_mutate_grant_artifacts": False,
         },
+        "mag_owned_transition_oracle": {
+            "surface_kind": "mag_grant_transition_oracle_gap_status",
+            "owner": TARGET_DOMAIN_ID,
+            "state": "domain_spec_planned_external_runner_gate",
+            "domain_spec_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md#P5",
+            "oracle_fixture_status": "not_landed",
+            "transition_table_status": "not_landed",
+            "runner_owner": "one-person-lab",
+            "runner_status": "external_opl_generic_runner_gate",
+            "mag_will_define": [
+                "grant transition table",
+                "fundability / aims / review / package guards",
+                "typed blocker mapping",
+                "domain owner action",
+                "oracle fixtures",
+            ],
+            "mag_will_not_define": [
+                "generic state-machine runner",
+                "generic queue",
+                "generic retry/dead-letter runtime",
+                "OPL provider completion verdict",
+            ],
+            "opl_must_not_infer": [
+                "fundability_ready",
+                "authoring_quality_ready",
+                "submission_ready_export_ready",
+            ],
+        },
+        "direct_retirement_posture": {
+            "state": "active",
+            "policy": "migrate_active_callers_then_delete_or_history_tombstone",
+            "forbidden_compatibility_surfaces": [
+                "compatibility alias",
+                "facade patch bridge",
+                "re-export facade",
+                "compatibility-only aggregate test",
+                "legacy flat CLI shell alias",
+            ],
+            "current_manifest_surface_ref": "/product_entry_manifest/physical_skeleton_follow_through",
+            "current_audit_surface_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+        },
         "phases": [
             _build_ideal_state_phase_status(
                 phase_id="P0",

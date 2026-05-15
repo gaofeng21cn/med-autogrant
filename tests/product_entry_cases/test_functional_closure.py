@@ -213,6 +213,24 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(closure_status["authority_boundary"]["opl_can_write_domain_truth"])
         self.assertFalse(closure_status["authority_boundary"]["opl_can_write_memory_body"])
         self.assertFalse(closure_status["authority_boundary"]["opl_can_declare_export_ready"])
+        transition_oracle = closure_status["mag_owned_transition_oracle"]
+        self.assertEqual(
+            transition_oracle["surface_kind"],
+            "mag_grant_transition_oracle_gap_status",
+        )
+        self.assertEqual(transition_oracle["state"], "domain_spec_planned_external_runner_gate")
+        self.assertEqual(transition_oracle["runner_owner"], "one-person-lab")
+        self.assertEqual(transition_oracle["oracle_fixture_status"], "not_landed")
+        self.assertIn("grant transition table", transition_oracle["mag_will_define"])
+        self.assertIn("generic state-machine runner", transition_oracle["mag_will_not_define"])
+        self.assertIn("submission_ready_export_ready", transition_oracle["opl_must_not_infer"])
+        direct_retirement = closure_status["direct_retirement_posture"]
+        self.assertEqual(direct_retirement["state"], "active")
+        self.assertEqual(
+            direct_retirement["policy"],
+            "migrate_active_callers_then_delete_or_history_tombstone",
+        )
+        self.assertIn("facade patch bridge", direct_retirement["forbidden_compatibility_surfaces"])
         phase_states = {phase["phase_id"]: phase["state"] for phase in closure_status["phases"]}
         self.assertEqual(
             phase_states,

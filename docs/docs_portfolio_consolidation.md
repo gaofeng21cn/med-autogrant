@@ -57,3 +57,11 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 ## Direct Retirement
 
 当旧模块、旧接口、旧 CLI alias、旧 wrapper、旧 facade、patch bridge、旧测试入口或旧文档入口已被当前 owner surface 替代时，默认直接退役。迁移 active caller 后删除旧面；需要来龙去脉时只保留 history/tombstone/provenance，不新增 compatibility shim、别名、re-export facade 或 compatibility-only 聚合测试。
+
+当前 direct retirement posture 的 active owner 是 `docs/active/mag-ideal-state-cross-repo-gap-plan.md`，机器投影是 `product-entry-manifest.ideal_state_closure_status.direct_retirement_posture`。维护时应先看 manifest 中的 `physical_skeleton_follow_through` 与 `controlled_domain_memory_apply_proof.repo_source_layout_audit`，确认旧面已经没有 active caller，再删除或归档；不要用旧路径稳定性作为保留兼容壳的理由。
+
+## Transition / Oracle Gap
+
+MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 管理。MAG 只定义 grant transition table、fundability / aims / review / package guards、typed blocker、owner action 和 oracle fixtures；generic state-machine runner、matrix runner、queue、retry/dead-letter、provider lifecycle 与 operator workbench 归 OPL Framework。
+
+`product-entry-manifest.ideal_state_closure_status.mag_owned_transition_oracle` 现在把该 gap 投影为 `domain_spec_planned_external_runner_gate`。这表示 MAG 还没有落地 transition table / oracle fixture，OPL 也不能从 provider completion 推断 `fundability_ready`、`authoring_quality_ready` 或 `submission_ready_export_ready`。

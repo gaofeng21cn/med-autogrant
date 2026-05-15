@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-15：把 transition/oracle gap 与 direct-retirement posture 投影到 ideal-state closure status
+
+- 决策：`product-entry-manifest.ideal_state_closure_status` 新增 `mag_owned_transition_oracle` 与 `direct_retirement_posture`。前者把 MAG-owned transition table / oracle fixture 记录为 planned spec gap，并把 generic runner / matrix runner / queue / retry-dead-letter 边界留给 OPL；后者把 active plan 中的 direct retirement posture 变成机器可读投影。
+- 理由：当前可落地工作是把 gap plan 的 MAG-owned 后续边界固化到 manifest、schema、测试和文档索引，而不是伪造真实 long-run soak 或在 MAG 仓里建设通用 runner。OPL 可以执行 MAG 声明的 transition spec，但不能解释 fundability-ready、quality-ready 或 export-ready。
+- 影响：MAG 后续 transition/oracle 实施有单一 active plan 入口和 manifest gap surface；旧 compatibility alias、facade patch bridge、re-export facade、compatibility-only 聚合测试和 legacy flat shell alias 不再作为保留目标。本决策不声明 transition table / oracle fixtures 已落地，也不声明 OPL-hosted production long-run soak 完成。
+
 ## 2026-05-14：把 MAG ideal-state plan 收成机器可读 closure status
 
 - 决策：`product-entry-manifest` 新增顶层 `ideal_state_closure_status`，sidecar export 同步投影该 surface；它把 `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 的 P0-P5 拆成 MAG repo 已落地 surface 与外部 evidence gate。

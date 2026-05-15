@@ -3607,6 +3607,82 @@
             "opl_can_mutate_grant_artifacts": {"const": false}
           }
         },
+        "mag_owned_transition_oracle": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "owner",
+            "state",
+            "oracle_fixture_status",
+            "transition_table_status",
+            "runner_owner",
+            "runner_status",
+            "mag_will_define",
+            "mag_will_not_define",
+            "opl_must_not_infer"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_grant_transition_oracle_gap_status"
+            },
+            "owner": {
+              "const": "med-autogrant"
+            },
+            "state": {
+              "const": "domain_spec_planned_external_runner_gate"
+            },
+            "oracle_fixture_status": {
+              "const": "not_landed"
+            },
+            "transition_table_status": {
+              "const": "not_landed"
+            },
+            "runner_owner": {
+              "const": "one-person-lab"
+            },
+            "runner_status": {
+              "const": "external_opl_generic_runner_gate"
+            },
+            "mag_will_define": {
+              "$ref": "common.schema.json#/$defs/stringList"
+            },
+            "mag_will_not_define": {
+              "$ref": "common.schema.json#/$defs/stringList"
+            },
+            "opl_must_not_infer": {
+              "$ref": "common.schema.json#/$defs/stringList"
+            }
+          }
+        },
+        "direct_retirement_posture": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "state",
+            "policy",
+            "forbidden_compatibility_surfaces",
+            "current_manifest_surface_ref",
+            "current_audit_surface_ref"
+          ],
+          "properties": {
+            "state": {
+              "const": "active"
+            },
+            "policy": {
+              "const": "migrate_active_callers_then_delete_or_history_tombstone"
+            },
+            "forbidden_compatibility_surfaces": {
+              "$ref": "common.schema.json#/$defs/stringList"
+            },
+            "current_manifest_surface_ref": {
+              "const": "/product_entry_manifest/physical_skeleton_follow_through"
+            },
+            "current_audit_surface_ref": {
+              "const": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit"
+            }
+          }
+        },
         "phases": {
           "type": "array",
           "minItems": 6,
