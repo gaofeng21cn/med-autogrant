@@ -3939,6 +3939,8 @@
         "sidecar_contract_ref",
         "allowed_return_shapes",
         "mag_owned_outputs",
+        "thin_surface_output_guard",
+        "standard_agent_scaffold_alignment",
         "exposed_sidecar_return_refs",
         "opl_replacement_expectations",
         "forbidden_mag_owned_generic_primitives",
@@ -4072,8 +4074,135 @@
             "generic_lifecycle_owner",
             "generic_queue_owner",
             "generic_attempt_ledger_owner",
-            "generic_state_machine_runner_owner"
+            "generic_state_machine_runner_owner",
+            "generic_workbench_owner"
           ]
+        },
+        "thin_surface_output_guard": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "guard_id",
+            "target_domain_id",
+            "output_policy",
+            "allowed_output_classes",
+            "required_sidecar_return_refs",
+            "forbidden_output_classes",
+            "consumes_opl_replacement_expectations",
+            "replacement_expectations_ref",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_thin_surface_output_guard"
+            },
+            "guard_id": {
+              "const": "mag.thin_surface.output_guard.v1"
+            },
+            "target_domain_id": {
+              "const": "med-autogrant"
+            },
+            "output_policy": {
+              "const": "grant_refs_and_receipts_only_no_generic_runtime_state"
+            },
+            "allowed_output_classes": {
+              "const": [
+                "grant_owned_refs",
+                "owner_receipt",
+                "typed_blocker",
+                "verdict_refs",
+                "domain_action_metadata"
+              ]
+            },
+            "forbidden_output_classes": {
+              "type": "array",
+              "contains": {"const": "generic_scheduler_state"}
+            },
+            "consumes_opl_replacement_expectations": {
+              "const": true
+            },
+            "replacement_expectations_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations"
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "mag_can_emit_generic_runtime_state",
+                "mag_can_emit_generic_workbench_state"
+              ],
+              "properties": {
+                "mag_can_emit_generic_runtime_state": {"const": false},
+                "mag_can_emit_generic_workbench_state": {"const": false}
+              }
+            }
+          }
+        },
+        "standard_agent_scaffold_alignment": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "guard_id",
+            "target_domain_id",
+            "scaffold_ref",
+            "output_guard_ref",
+            "knowledge_only_repository",
+            "retains_domain_program_surfaces",
+            "required_repo_boundaries",
+            "retained_program_surface_refs",
+            "retained_program_surface_kinds",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_standard_agent_scaffold_thin_surface_guard"
+            },
+            "guard_id": {
+              "const": "mag.standard_agent_scaffold.thin_surface_guard.v1"
+            },
+            "target_domain_id": {
+              "const": "med-autogrant"
+            },
+            "scaffold_ref": {
+              "const": "/product_entry_manifest/standard_domain_agent_skeleton"
+            },
+            "output_guard_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+            },
+            "knowledge_only_repository": {
+              "const": false
+            },
+            "retains_domain_program_surfaces": {
+              "const": true
+            },
+            "required_repo_boundaries": {
+              "const": ["agent", "contracts", "runtime", "docs"]
+            },
+            "retained_program_surface_refs": {
+              "type": "array",
+              "minItems": 4
+            },
+            "retained_program_surface_kinds": {
+              "type": "array",
+              "contains": {"const": "product_sidecar_adapter"}
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "mag_owns_generic_scaffold_template",
+                "mag_owns_generic_runtime_framework",
+                "mag_is_knowledge_only_repository"
+              ],
+              "properties": {
+                "mag_owns_generic_scaffold_template": {"const": false},
+                "mag_owns_generic_runtime_framework": {"const": false},
+                "mag_is_knowledge_only_repository": {"const": false}
+              }
+            }
+          }
         },
         "authority_boundary": {
           "type": "object",

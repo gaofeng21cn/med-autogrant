@@ -111,6 +111,20 @@ class ProductSidecarTest(unittest.TestCase):
         )
         self.assertFalse(thinning["authority_boundary"]["mag_rebuilds_opl_runtime"])
         self.assertEqual(thinning["forbidden_mag_owned_generic_primitives"], [])
+        self.assertIn("generic_workbench_owner", thinning["forbidden_mag_generic_owner_roles"])
+        output_guard = thinning["thin_surface_output_guard"]
+        self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
+        self.assertEqual(output_guard["allowed_output_classes"], thinning["mag_owned_outputs"])
+        self.assertEqual(output_guard["required_sidecar_return_refs"], thinning["exposed_sidecar_return_refs"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_runtime_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_workbench_state"])
+        scaffold_guard = thinning["standard_agent_scaffold_alignment"]
+        self.assertEqual(
+            scaffold_guard["surface_kind"],
+            "mag_standard_agent_scaffold_thin_surface_guard",
+        )
+        self.assertFalse(scaffold_guard["knowledge_only_repository"])
+        self.assertTrue(scaffold_guard["retains_domain_program_surfaces"])
         self.assertFalse(export["owner_receipt_contract"]["forbidden_write_proof"]["opl_can_write_grant_truth"])
         self.assertEqual(
             export["lifecycle_guarded_apply_proof"]["surface_kind"],

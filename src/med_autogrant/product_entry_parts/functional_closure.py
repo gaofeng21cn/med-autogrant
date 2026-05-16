@@ -21,6 +21,22 @@ _RETIRED_ACTIVE_PATHS = (
     "src/med_autogrant/local_manager.py",
     "src/med_autogrant/" + "host" + "_agent.py",
 )
+MAG_THIN_SURFACE_OUTPUT_CLASSES = (
+    "grant_owned_refs",
+    "owner_receipt",
+    "typed_blocker",
+    "verdict_refs",
+    "domain_action_metadata",
+)
+FORBIDDEN_MAG_GENERIC_OWNER_ROLES = (
+    "generic_scheduler_owner",
+    "generic_daemon_owner",
+    "generic_lifecycle_owner",
+    "generic_queue_owner",
+    "generic_attempt_ledger_owner",
+    "generic_state_machine_runner_owner",
+    "generic_workbench_owner",
+)
 _FORBIDDEN_DEFAULT_CALLER_PATTERNS = (
     {
         "pattern_id": "domain_runtime_patch_bridge_import",
@@ -403,13 +419,9 @@ def build_mag_consumer_thinning_contract(
             "typed_blocker",
             "no_regression_evidence",
         ],
-        "mag_owned_outputs": [
-            "grant_owned_refs",
-            "owner_receipt",
-            "typed_blocker",
-            "verdict_refs",
-            "domain_action_metadata",
-        ],
+        "mag_owned_outputs": list(MAG_THIN_SURFACE_OUTPUT_CLASSES),
+        "thin_surface_output_guard": _build_thin_surface_output_guard(),
+        "standard_agent_scaffold_alignment": _build_standard_agent_scaffold_alignment(),
         "exposed_sidecar_return_refs": {
             "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
             "controlled_stage_attempt_projection_ref": (
@@ -465,14 +477,7 @@ def build_mag_consumer_thinning_contract(
             ),
         ],
         "forbidden_mag_owned_generic_primitives": [],
-        "forbidden_mag_generic_owner_roles": [
-            "generic_scheduler_owner",
-            "generic_daemon_owner",
-            "generic_lifecycle_owner",
-            "generic_queue_owner",
-            "generic_attempt_ledger_owner",
-            "generic_state_machine_runner_owner",
-        ],
+        "forbidden_mag_generic_owner_roles": list(FORBIDDEN_MAG_GENERIC_OWNER_ROLES),
         "guarded_by_active_path_scan_ref": (
             "/product_entry_manifest/physical_skeleton_follow_through/"
             "active_path_scan_no_legacy_default_caller"
@@ -502,6 +507,87 @@ def build_mag_consumer_thinning_contract(
             "mag_implements_generic_attempt_ledger": False,
             "mag_implements_generic_runner": False,
             "mag_implements_app_workbench": False,
+        },
+    }
+
+
+def _build_thin_surface_output_guard() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_thin_surface_output_guard",
+        "guard_id": "mag.thin_surface.output_guard.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "output_policy": "grant_refs_and_receipts_only_no_generic_runtime_state",
+        "allowed_output_classes": list(MAG_THIN_SURFACE_OUTPUT_CLASSES),
+        "required_sidecar_return_refs": {
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "controlled_stage_attempt_projection_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+            "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
+            "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
+            "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
+        },
+        "forbidden_output_classes": [
+            "generic_scheduler_state",
+            "generic_daemon_state",
+            "generic_lifecycle_ledger",
+            "generic_queue_record",
+            "generic_attempt_ledger_record",
+            "generic_runner_decision",
+            "generic_workbench_state",
+            "grant_artifact_content",
+            "memory_body",
+        ],
+        "consumes_opl_replacement_expectations": True,
+        "replacement_expectations_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations",
+        "authority_boundary": {
+            "domain_truth_owner": TARGET_DOMAIN_ID,
+            "owner_receipt_authority": TARGET_DOMAIN_ID,
+            "opl_role": "replacement_owner_and_ref_consumer_only",
+            "opl_can_write_domain_truth": False,
+            "opl_can_write_memory_body": False,
+            "opl_can_declare_export_ready": False,
+            "mag_can_emit_generic_runtime_state": False,
+            "mag_can_emit_generic_workbench_state": False,
+        },
+    }
+
+
+def _build_standard_agent_scaffold_alignment() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_standard_agent_scaffold_thin_surface_guard",
+        "guard_id": "mag.standard_agent_scaffold.thin_surface_guard.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "scaffold_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
+        "physical_follow_through_ref": "/product_entry_manifest/physical_skeleton_follow_through",
+        "output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
+        "forbidden_owner_roles_ref": "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
+        "knowledge_only_repository": False,
+        "retains_domain_program_surfaces": True,
+        "required_repo_boundaries": ["agent", "contracts", "runtime", "docs"],
+        "retained_program_surface_refs": [
+            "src/med_autogrant/domain_entry.py",
+            "src/med_autogrant/product_entry.py",
+            "src/med_autogrant/product_entry_parts/sidecar.py",
+            "schemas/v1/product-entry-manifest.schema.json",
+            "tests/product_entry_cases/test_sidecar.py",
+            "tests/product_entry_cases/test_functional_closure.py",
+        ],
+        "retained_program_surface_kinds": [
+            "domain_entry",
+            "product_entry_manifest_builder",
+            "product_sidecar_adapter",
+            "schema_contract",
+            "focused_product_entry_tests",
+        ],
+        "authority_boundary": {
+            "domain_truth_owner": TARGET_DOMAIN_ID,
+            "domain_entry_owner": TARGET_DOMAIN_ID,
+            "sidecar_owner": TARGET_DOMAIN_ID,
+            "schema_owner": TARGET_DOMAIN_ID,
+            "test_owner": TARGET_DOMAIN_ID,
+            "opl_scaffold_owner": "one-person-lab",
+            "mag_owns_generic_scaffold_template": False,
+            "mag_owns_generic_runtime_framework": False,
+            "mag_is_knowledge_only_repository": False,
         },
     }
 

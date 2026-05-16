@@ -614,7 +614,17 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "generic_queue_owner",
         "generic_attempt_ledger_owner",
         "generic_state_machine_runner_owner",
+        "generic_workbench_owner",
     ]
+    assert thinning["thin_surface_output_guard_ref"] == (
+        "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+    )
+    assert thinning["standard_agent_scaffold_alignment_ref"] == (
+        "/product_entry_manifest/mag_consumer_thinning_contract/standard_agent_scaffold_alignment"
+    )
+    assert thinning["sidecar_output_policy"] == "grant_refs_and_receipts_only_no_generic_runtime_state"
+    assert thinning["knowledge_only_repository"] is False
+    assert thinning["retains_domain_program_surfaces"] is True
     assert thinning["authority_boundary"] == {
         "grant_truth_owner": "med-autogrant",
         "grant_memory_body_owner": "med-autogrant",

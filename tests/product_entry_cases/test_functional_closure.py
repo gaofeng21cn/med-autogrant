@@ -337,6 +337,46 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             },
         )
         self.assertEqual(thinning["forbidden_mag_owned_generic_primitives"], [])
+        self.assertEqual(
+            thinning["forbidden_mag_generic_owner_roles"],
+            [
+                "generic_scheduler_owner",
+                "generic_daemon_owner",
+                "generic_lifecycle_owner",
+                "generic_queue_owner",
+                "generic_attempt_ledger_owner",
+                "generic_state_machine_runner_owner",
+                "generic_workbench_owner",
+            ],
+        )
+        output_guard = thinning["thin_surface_output_guard"]
+        self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
+        self.assertEqual(
+            output_guard["allowed_output_classes"],
+            thinning["mag_owned_outputs"],
+        )
+        self.assertEqual(
+            output_guard["required_sidecar_return_refs"],
+            thinning["exposed_sidecar_return_refs"],
+        )
+        self.assertIn("generic_scheduler_state", output_guard["forbidden_output_classes"])
+        self.assertIn("generic_workbench_state", output_guard["forbidden_output_classes"])
+        self.assertIn("grant_artifact_content", output_guard["forbidden_output_classes"])
+        self.assertIn("memory_body", output_guard["forbidden_output_classes"])
+        self.assertTrue(output_guard["consumes_opl_replacement_expectations"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_runtime_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_workbench_state"])
+        scaffold_guard = thinning["standard_agent_scaffold_alignment"]
+        self.assertEqual(
+            scaffold_guard["surface_kind"],
+            "mag_standard_agent_scaffold_thin_surface_guard",
+        )
+        self.assertFalse(scaffold_guard["knowledge_only_repository"])
+        self.assertTrue(scaffold_guard["retains_domain_program_surfaces"])
+        self.assertEqual(scaffold_guard["required_repo_boundaries"], ["agent", "contracts", "runtime", "docs"])
+        self.assertIn("product_sidecar_adapter", scaffold_guard["retained_program_surface_kinds"])
+        self.assertFalse(scaffold_guard["authority_boundary"]["mag_owns_generic_runtime_framework"])
+        self.assertFalse(scaffold_guard["authority_boundary"]["mag_is_knowledge_only_repository"])
         authority = thinning["authority_boundary"]
         self.assertFalse(authority["opl_can_write_domain_truth"])
         self.assertFalse(authority["opl_can_write_memory_body"])

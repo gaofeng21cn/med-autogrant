@@ -146,6 +146,8 @@
           "verdict_refs",
           "domain_action_metadata"
         ],
+        "thin_surface_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
+        "standard_agent_scaffold_alignment_ref": "/product_entry_manifest/mag_consumer_thinning_contract/standard_agent_scaffold_alignment",
         "opl_replacement_expectations": [
           "workspace_source_intake_shell",
           "memory_locator_writeback_transport",
@@ -160,8 +162,12 @@
           "generic_lifecycle_owner",
           "generic_queue_owner",
           "generic_attempt_ledger_owner",
-          "generic_state_machine_runner_owner"
+          "generic_state_machine_runner_owner",
+          "generic_workbench_owner"
         ],
+        "sidecar_output_policy": "grant_refs_and_receipts_only_no_generic_runtime_state",
+        "knowledge_only_repository": false,
+        "retains_domain_program_surfaces": true,
         "claims_opl_replacement_exists": false,
         "claims_production_long_run_soak_complete": false,
         "mag_rebuilds_opl_runtime": false,
