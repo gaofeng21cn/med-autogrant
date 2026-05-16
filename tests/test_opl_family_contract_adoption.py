@@ -614,7 +614,11 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "generic_queue_owner",
         "generic_attempt_ledger_owner",
         "generic_state_machine_runner_owner",
-        "generic_workbench_owner",
+        "generic_workspace_source_intake_owner",
+        "generic_memory_transport_owner",
+        "generic_artifact_gallery_owner",
+        "generic_operator_workbench_owner",
+        "generic_observability_slo_owner",
     ]
     assert thinning["thin_surface_output_guard_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
@@ -622,6 +626,19 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert thinning["standard_agent_scaffold_alignment_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/standard_agent_scaffold_alignment"
     )
+    assert thinning["opl_family_conflict_blocker_projection_ref"] == (
+        "/product_entry_manifest/mag_consumer_thinning_contract/opl_family_conflict_blocker_projection"
+    )
+    assert thinning["opl_runtime_observability_consumption_ref"] == (
+        "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption"
+    )
+    assert thinning["consumed_opl_projection_surfaces"] == [
+        "family_conflict_envelope",
+        "stage_attempt_usage_projection",
+        "stage_attempt_control_loop_projection",
+        "runtime_observability_export",
+        "family_product_operator_projection",
+    ]
     assert thinning["sidecar_output_policy"] == "grant_refs_and_receipts_only_no_generic_runtime_state"
     assert thinning["knowledge_only_repository"] is False
     assert thinning["retains_domain_program_surfaces"] is True
@@ -640,6 +657,13 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "mag_implements_generic_attempt_ledger": False,
         "mag_implements_generic_runner": False,
         "mag_implements_app_workbench": False,
+        "mag_implements_generic_workspace_source_intake": False,
+        "mag_implements_generic_memory_transport": False,
+        "mag_implements_generic_artifact_gallery": False,
+        "mag_implements_generic_operator_workbench": False,
+        "mag_implements_generic_observability_slo": False,
+        "provider_completion_is_grant_ready": False,
+        "mag_executes_opl_repair": False,
     }
     assert thinning["claims_opl_replacement_exists"] is False
     assert thinning["claims_production_long_run_soak_complete"] is False

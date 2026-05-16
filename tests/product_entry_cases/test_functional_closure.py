@@ -346,9 +346,11 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "generic_queue_owner",
                 "generic_attempt_ledger_owner",
                 "generic_state_machine_runner_owner",
-                "generic_workbench_owner",
+                "generic_workspace_source_intake_owner",
                 "generic_memory_transport_owner",
-                "generic_artifact_lifecycle_owner",
+                "generic_artifact_gallery_owner",
+                "generic_operator_workbench_owner",
+                "generic_observability_slo_owner",
             ],
         )
         consumed = thinning["consumed_opl_standard_surfaces"]
@@ -362,10 +364,21 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             [
                 "workspace_source_intake_shell",
                 "memory_locator_writeback_transport",
-                "package_export_lifecycle_shell",
+                "artifact_package_lifecycle_shell",
                 "generic_transition_runner",
-                "operator_workbench_observability_slo",
+                "operator_workbench_drilldown_shell",
+                "observability_repair_projection",
                 "agent_scaffold_checklist",
+            ],
+        )
+        self.assertEqual(
+            consumed["consumed_projection_surfaces"],
+            [
+                "family_conflict_envelope",
+                "stage_attempt_usage_projection",
+                "stage_attempt_control_loop_projection",
+                "runtime_observability_export",
+                "family_product_operator_projection",
             ],
         )
         self.assertEqual(
@@ -383,7 +396,29 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertTrue(consumed["authority_boundary"]["mag_consumes_standard_scaffold"])
         self.assertTrue(consumed["authority_boundary"]["mag_consumes_generic_primitives"])
         self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_memory_transport"])
-        self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_artifact_lifecycle"])
+        self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_artifact_gallery"])
+        self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_operator_workbench"])
+        self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_observability_slo"])
+        conflict_projection = thinning["opl_family_conflict_blocker_projection"]
+        self.assertEqual(conflict_projection["envelope_kind"], "opl_conflict_or_blocker.v1")
+        self.assertEqual(conflict_projection["projection_policy"], "typed_blocker_only_no_fallback_completion")
+        self.assertIn("receipt_conflict", conflict_projection["allowed_classifications"])
+        self.assertIn("provider_completion_is_domain_ready", conflict_projection["forbidden_claims"])
+        self.assertFalse(conflict_projection["authority_boundary"]["provider_completion_is_domain_ready"])
+        self.assertFalse(conflict_projection["authority_boundary"]["can_fallback_complete"])
+        observability = thinning["opl_runtime_observability_consumption"]
+        self.assertEqual(observability["observability_export_kind"], "opl_runtime_observability_export")
+        self.assertEqual(observability["consumption_policy"], "read_only_refs_and_counts_no_repair_execution")
+        self.assertIn("stage_attempt_usage_projection", observability["consumed_opl_surfaces"])
+        self.assertIn("stage_attempt_control_loop_projection", observability["consumed_opl_surfaces"])
+        self.assertIn("runtime_observability_export", observability["consumed_opl_surfaces"])
+        self.assertIn("safe_action_refs", observability["mag_provides_refs"])
+        stage_projection = observability["stage_attempt_projection_consumption"]
+        self.assertFalse(stage_projection["mag_can_schedule_retry_dead_letter"])
+        self.assertFalse(stage_projection["mag_can_write_opl_stage_attempt_ledger"])
+        self.assertFalse(stage_projection["provider_completion_is_grant_ready"])
+        self.assertFalse(observability["authority_boundary"]["can_execute_repair"])
+        self.assertFalse(observability["authority_boundary"]["can_authorize_artifact_export"])
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(
@@ -398,11 +433,16 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertIn("generic_workbench_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_memory_transport_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_artifact_lifecycle_state", output_guard["forbidden_output_classes"])
+        self.assertIn("generic_operator_workbench_state", output_guard["forbidden_output_classes"])
+        self.assertIn("generic_observability_slo_state", output_guard["forbidden_output_classes"])
+        self.assertIn("family_conflict_envelope_completion_claim", output_guard["forbidden_output_classes"])
         self.assertIn("grant_artifact_content", output_guard["forbidden_output_classes"])
         self.assertIn("memory_body", output_guard["forbidden_output_classes"])
         self.assertTrue(output_guard["consumes_opl_replacement_expectations"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_runtime_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_workbench_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_observability_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_family_conflict_completion_claim"])
         scaffold_guard = thinning["standard_agent_scaffold_alignment"]
         self.assertEqual(
             scaffold_guard["surface_kind"],
@@ -420,16 +460,19 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(authority["opl_can_declare_export_ready"])
         self.assertFalse(authority["mag_rebuilds_opl_runtime"])
         self.assertFalse(authority["mag_implements_generic_memory_transport"])
-        self.assertFalse(authority["mag_implements_generic_artifact_lifecycle"])
+        self.assertFalse(authority["mag_implements_generic_artifact_gallery"])
+        self.assertFalse(authority["mag_implements_generic_operator_workbench"])
+        self.assertFalse(authority["mag_implements_generic_observability_slo"])
         replacement_ids = {item["primitive_id"] for item in thinning["opl_replacement_expectations"]}
         self.assertEqual(
             replacement_ids,
             {
                 "workspace_source_intake_shell",
                 "memory_locator_writeback_transport",
-                "package_export_lifecycle_shell",
+                "artifact_package_lifecycle_shell",
                 "generic_transition_runner",
-                "operator_workbench_observability_slo",
+                "operator_workbench_drilldown_shell",
+                "observability_repair_projection",
                 "agent_scaffold_checklist",
             },
         )

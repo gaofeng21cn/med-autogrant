@@ -3938,6 +3938,8 @@
         "claims_production_long_run_soak_complete",
         "sidecar_contract_ref",
         "consumed_opl_standard_surfaces",
+        "opl_family_conflict_blocker_projection",
+        "opl_runtime_observability_consumption",
         "allowed_return_shapes",
         "mag_owned_outputs",
         "thin_surface_output_guard",
@@ -3987,10 +3989,11 @@
             "standard_scaffold_manifest_ref",
             "generic_primitives_contract_ref",
             "sidecar_projection_ref",
-            "consumption_policy",
-            "consumed_generic_primitives",
-            "mag_retained_authority",
-            "authority_boundary"
+                "consumption_policy",
+                "consumed_generic_primitives",
+                "consumed_projection_surfaces",
+                "mag_retained_authority",
+                "authority_boundary"
           ],
           "properties": {
             "surface_kind": {
@@ -4012,10 +4015,20 @@
               "const": [
                 "workspace_source_intake_shell",
                 "memory_locator_writeback_transport",
-                "package_export_lifecycle_shell",
+                "artifact_package_lifecycle_shell",
                 "generic_transition_runner",
-                "operator_workbench_observability_slo",
+                "operator_workbench_drilldown_shell",
+                "observability_repair_projection",
                 "agent_scaffold_checklist"
+              ]
+            },
+            "consumed_projection_surfaces": {
+              "const": [
+                "family_conflict_envelope",
+                "stage_attempt_usage_projection",
+                "stage_attempt_control_loop_projection",
+                "runtime_observability_export",
+                "family_product_operator_projection"
               ]
             },
             "mag_retained_authority": {
@@ -4042,8 +4055,11 @@
                 "mag_can_own_generic_queue",
                 "mag_can_own_generic_attempt_ledger",
                 "mag_can_own_generic_runner",
-                "mag_can_own_generic_workbench",
+                "mag_can_own_generic_workspace_source_intake",
                 "mag_can_own_generic_memory_transport",
+                "mag_can_own_generic_artifact_gallery",
+                "mag_can_own_generic_operator_workbench",
+                "mag_can_own_generic_observability_slo",
                 "mag_can_own_generic_artifact_lifecycle"
               ],
               "properties": {
@@ -4056,9 +4072,133 @@
                 "mag_can_own_generic_queue": {"const": false},
                 "mag_can_own_generic_attempt_ledger": {"const": false},
                 "mag_can_own_generic_runner": {"const": false},
-                "mag_can_own_generic_workbench": {"const": false},
+                "mag_can_own_generic_workspace_source_intake": {"const": false},
                 "mag_can_own_generic_memory_transport": {"const": false},
+                "mag_can_own_generic_artifact_gallery": {"const": false},
+                "mag_can_own_generic_operator_workbench": {"const": false},
+                "mag_can_own_generic_observability_slo": {"const": false},
                 "mag_can_own_generic_artifact_lifecycle": {"const": false}
+              }
+            }
+          }
+        },
+        "opl_family_conflict_blocker_projection": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "envelope_kind",
+            "projection_policy",
+            "allowed_classifications",
+            "forbidden_claims",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_opl_family_conflict_blocker_projection"
+            },
+            "envelope_kind": {
+              "const": "opl_conflict_or_blocker.v1"
+            },
+            "projection_policy": {
+              "const": "typed_blocker_only_no_fallback_completion"
+            },
+            "allowed_classifications": {
+              "type": "array",
+              "contains": {"const": "receipt_conflict"}
+            },
+            "forbidden_claims": {
+              "type": "array",
+              "allOf": [
+                {"contains": {"const": "provider_completion_is_domain_ready"}},
+                {"contains": {"const": "fallback_complete"}},
+                {"contains": {"const": "opl_can_declare_export_ready"}}
+              ]
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "provider_completion_is_domain_ready",
+                "can_write_domain_truth",
+                "can_fallback_complete"
+              ],
+              "properties": {
+                "provider_completion_is_domain_ready": {"const": false},
+                "can_write_domain_truth": {"const": false},
+                "can_fallback_complete": {"const": false}
+              }
+            }
+          }
+        },
+        "opl_runtime_observability_consumption": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "observability_export_kind",
+            "consumption_policy",
+            "consumed_opl_surfaces",
+            "mag_provides_refs",
+            "stage_attempt_projection_consumption",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_opl_runtime_observability_consumption"
+            },
+            "observability_export_kind": {
+              "const": "opl_runtime_observability_export"
+            },
+            "consumption_policy": {
+              "const": "read_only_refs_and_counts_no_repair_execution"
+            },
+            "consumed_opl_surfaces": {
+              "type": "array",
+              "allOf": [
+                {"contains": {"const": "stage_attempt_usage_projection"}},
+                {"contains": {"const": "stage_attempt_control_loop_projection"}},
+                {"contains": {"const": "runtime_observability_export"}}
+              ]
+            },
+            "mag_provides_refs": {
+              "type": "array",
+              "allOf": [
+                {"contains": {"const": "owner_receipt_refs"}},
+                {"contains": {"const": "typed_blocker_refs"}},
+                {"contains": {"const": "safe_action_refs"}}
+              ]
+            },
+            "stage_attempt_projection_consumption": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "mag_can_schedule_retry_dead_letter",
+                "mag_can_write_opl_stage_attempt_ledger",
+                "provider_completion_is_grant_ready"
+              ],
+              "properties": {
+                "mag_can_schedule_retry_dead_letter": {"const": false},
+                "mag_can_write_opl_stage_attempt_ledger": {"const": false},
+                "provider_completion_is_grant_ready": {"const": false}
+              }
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "can_execute_repair",
+                "can_write_domain_truth",
+                "can_authorize_quality_verdict",
+                "can_authorize_ready_verdict",
+                "can_authorize_artifact_export"
+              ],
+              "properties": {
+                "can_execute_repair": {"const": false},
+                "can_write_domain_truth": {"const": false},
+                "can_authorize_quality_verdict": {"const": false},
+                "can_authorize_ready_verdict": {"const": false},
+                "can_authorize_artifact_export": {"const": false}
               }
             }
           }
@@ -4160,9 +4300,11 @@
             "generic_queue_owner",
             "generic_attempt_ledger_owner",
             "generic_state_machine_runner_owner",
-            "generic_workbench_owner",
+            "generic_workspace_source_intake_owner",
             "generic_memory_transport_owner",
-            "generic_artifact_lifecycle_owner"
+            "generic_artifact_gallery_owner",
+            "generic_operator_workbench_owner",
+            "generic_observability_slo_owner"
           ]
         },
         "thin_surface_output_guard": {
@@ -4208,7 +4350,9 @@
               "allOf": [
                 {"contains": {"const": "generic_workbench_state"}},
                 {"contains": {"const": "generic_memory_transport_state"}},
-                {"contains": {"const": "generic_artifact_lifecycle_state"}}
+                {"contains": {"const": "generic_artifact_lifecycle_state"}},
+                {"contains": {"const": "generic_operator_workbench_state"}},
+                {"contains": {"const": "generic_observability_slo_state"}}
               ]
             },
             "consumes_opl_replacement_expectations": {
@@ -4222,11 +4366,15 @@
               "additionalProperties": true,
               "required": [
                 "mag_can_emit_generic_runtime_state",
-                "mag_can_emit_generic_workbench_state"
+                "mag_can_emit_generic_workbench_state",
+                "mag_can_emit_generic_observability_state",
+                "mag_can_emit_family_conflict_completion_claim"
               ],
               "properties": {
                 "mag_can_emit_generic_runtime_state": {"const": false},
-                "mag_can_emit_generic_workbench_state": {"const": false}
+                "mag_can_emit_generic_workbench_state": {"const": false},
+                "mag_can_emit_generic_observability_state": {"const": false},
+                "mag_can_emit_family_conflict_completion_claim": {"const": false}
               }
             }
           }

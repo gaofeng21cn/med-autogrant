@@ -155,6 +155,20 @@ def build_sidecar_export(
                 context="sidecar_export.mag_consumer_thinning_contract",
             )
         ),
+        "opl_family_conflict_blocker_projection": dict(
+            _require_mapping(
+                mag_consumer_thinning_contract,
+                "opl_family_conflict_blocker_projection",
+                context="sidecar_export.mag_consumer_thinning_contract",
+            )
+        ),
+        "opl_runtime_observability_consumption": dict(
+            _require_mapping(
+                mag_consumer_thinning_contract,
+                "opl_runtime_observability_consumption",
+                context="sidecar_export.mag_consumer_thinning_contract",
+            )
+        ),
         "physical_skeleton_follow_through": dict(physical_skeleton_follow_through),
         "ideal_state_closure_status": dict(ideal_state_closure_status),
         "receipt_refs": dict(

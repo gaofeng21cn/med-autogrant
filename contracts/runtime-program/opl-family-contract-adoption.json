@@ -586,6 +586,15 @@
     ],
     "thin_surface_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
     "standard_agent_scaffold_alignment_ref": "/product_entry_manifest/mag_consumer_thinning_contract/standard_agent_scaffold_alignment",
+    "opl_family_conflict_blocker_projection_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_family_conflict_blocker_projection",
+    "opl_runtime_observability_consumption_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
+    "consumed_opl_projection_surfaces": [
+      "family_conflict_envelope",
+      "stage_attempt_usage_projection",
+      "stage_attempt_control_loop_projection",
+      "runtime_observability_export",
+      "family_product_operator_projection"
+    ],
     "forbidden_mag_generic_owner_roles": [
       "generic_scheduler_owner",
       "generic_daemon_owner",
@@ -593,7 +602,11 @@
       "generic_queue_owner",
       "generic_attempt_ledger_owner",
       "generic_state_machine_runner_owner",
-      "generic_workbench_owner"
+      "generic_workspace_source_intake_owner",
+      "generic_memory_transport_owner",
+      "generic_artifact_gallery_owner",
+      "generic_operator_workbench_owner",
+      "generic_observability_slo_owner"
     ],
     "sidecar_output_policy": "grant_refs_and_receipts_only_no_generic_runtime_state",
     "knowledge_only_repository": false,
@@ -612,7 +625,14 @@
       "mag_implements_generic_queue": false,
       "mag_implements_generic_attempt_ledger": false,
       "mag_implements_generic_runner": false,
-      "mag_implements_app_workbench": false
+      "mag_implements_app_workbench": false,
+      "mag_implements_generic_workspace_source_intake": false,
+      "mag_implements_generic_memory_transport": false,
+      "mag_implements_generic_artifact_gallery": false,
+      "mag_implements_generic_operator_workbench": false,
+      "mag_implements_generic_observability_slo": false,
+      "provider_completion_is_grant_ready": false,
+      "mag_executes_opl_repair": false
     },
     "claims_opl_replacement_exists": false,
     "claims_production_long_run_soak_complete": false,
