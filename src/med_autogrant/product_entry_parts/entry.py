@@ -48,6 +48,13 @@ from med_autogrant.product_entry_parts.owner_receipts import (
     write_lifecycle_receipt_evidence,
     write_owner_receipt_evidence,
 )
+from med_autogrant.product_entry_parts.conflict_envelopes import build_opl_conflict_or_blocker_envelope
+from med_autogrant.product_entry_parts.receipt_observability import (
+    build_controlled_soak_receipt_observability_summary,
+)
+from med_autogrant.product_entry_parts.stage_attempt_observability import (
+    build_stage_attempt_observability_projection,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -389,4 +396,55 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             owner_receipt_evidence_items=owner_receipt_evidence_items,
             opl_ledger_ref=opl_ledger_ref,
             sidecar_closeout_results=sidecar_closeout_results,
+        )
+
+    def build_controlled_soak_receipt_observability_summary(
+        self,
+        *,
+        receipt_reconciliation_inventory: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        return build_controlled_soak_receipt_observability_summary(
+            receipt_reconciliation_inventory=receipt_reconciliation_inventory,
+        )
+
+    def build_stage_attempt_observability_projection(
+        self,
+        *,
+        controlled_stage_attempt_projection: Mapping[str, Any],
+        receipt_reconciliation_inventory: Mapping[str, Any],
+        opl_usage_projection_ref: str,
+        opl_control_loop_projection_ref: str,
+    ) -> dict[str, Any]:
+        return build_stage_attempt_observability_projection(
+            controlled_stage_attempt_projection=controlled_stage_attempt_projection,
+            receipt_reconciliation_inventory=receipt_reconciliation_inventory,
+            opl_usage_projection_ref=opl_usage_projection_ref,
+            opl_control_loop_projection_ref=opl_control_loop_projection_ref,
+        )
+
+    def build_opl_conflict_or_blocker_envelope(
+        self,
+        payload: Mapping[str, Any] | None = None,
+        *,
+        classification: str | None = None,
+        severity: str | None = None,
+        owner_receipt: Mapping[str, Any] | None = None,
+        typed_blocker: Mapping[str, Any] | None = None,
+        no_regression_evidence: Mapping[str, Any] | None = None,
+        source_refs: list[str] | tuple[str, ...] | None = None,
+        receipt_refs: Mapping[str, Any] | None = None,
+        verdict_refs: Mapping[str, Any] | None = None,
+        safe_action_refs: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        return build_opl_conflict_or_blocker_envelope(
+            payload,
+            classification=classification,
+            severity=severity,
+            owner_receipt=owner_receipt,
+            typed_blocker=typed_blocker,
+            no_regression_evidence=no_regression_evidence,
+            source_refs=source_refs,
+            receipt_refs=receipt_refs,
+            verdict_refs=verdict_refs,
+            safe_action_refs=safe_action_refs,
         )

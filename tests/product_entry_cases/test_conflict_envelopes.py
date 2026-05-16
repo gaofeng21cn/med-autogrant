@@ -7,6 +7,7 @@ from product_entry_cases.support import *  # noqa: F401,F403
 
 class ProductEntryConflictEnvelopeTest(unittest.TestCase):
     def test_receipt_conflict_envelope_projects_owner_receipt_refs_only(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
         from med_autogrant.product_entry_parts.conflict_envelopes import (
             build_opl_conflict_or_blocker_envelope,
         )
@@ -25,8 +26,23 @@ class ProductEntryConflictEnvelopeTest(unittest.TestCase):
             verdict_refs={"quality_verdict_ref": "mag-verdict://quality/review-1"},
             safe_action_refs={"operator_action_ref": "mag-action://repair/request-human-review"},
         )
+        method_envelope = MedAutoGrantProductEntry().build_opl_conflict_or_blocker_envelope(
+            classification="receipt_conflict",
+            severity="blocking",
+            owner_receipt={
+                "receipt_instance_ref": "runtime://mag/receipts/owner/attempt-1.json",
+                "receipt_id": "mag.owner_receipt.attempt-1",
+                "receipt_shape": "typed_blocker",
+                "source_ref": "opl-ledger://stage-attempt/attempt-1",
+                "closeout_summary": "MAG owner receipt ref exists; OPL displays it read-only.",
+            },
+            source_refs=["/product_entry_manifest/owner_receipt_contract"],
+            verdict_refs={"quality_verdict_ref": "mag-verdict://quality/review-1"},
+            safe_action_refs={"operator_action_ref": "mag-action://repair/request-human-review"},
+        )
 
         self.assertEqual(envelope["surface_kind"], "mag_opl_conflict_or_blocker_envelope")
+        self.assertEqual(method_envelope, envelope)
         self.assertEqual(envelope["envelope_kind"], "opl_conflict_or_blocker.v1")
         self.assertEqual(envelope["owner"], "med-autogrant")
         self.assertEqual(envelope["target_domain_id"], "med-autogrant")
