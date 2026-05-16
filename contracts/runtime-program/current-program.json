@@ -73,6 +73,7 @@
         "owner_receipt_contract",
         "lifecycle_guarded_apply_proof",
         "physical_skeleton_follow_through",
+        "mag_consumer_thinning_contract",
         "ideal_state_closure_status",
         "repo_source_layout_audit",
         "OPL Rust native helper indexed workspace/session/artifact/TODO/runtime-health projections"
@@ -124,6 +125,7 @@
         "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
         "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
         "physical_skeleton_follow_through_ref": "/product_entry_manifest/physical_skeleton_follow_through",
+        "mag_consumer_thinning_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
         "ideal_state_closure_status_ref": "/product_entry_manifest/ideal_state_closure_status",
         "repo_source_layout_audit_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
         "opl_role": "descriptor_and_ref_consumer_only",
@@ -131,6 +133,45 @@
           "fundability": false,
           "submission_ready_export": false
         }
+      },
+      "consumer_thinning_contract": {
+        "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+        "state": "handoff_ready_external_opl_replacement_gated",
+        "consumes_opl_family_primitive": "family_scheduler_replacement",
+        "mag_adapter_role": "domain_authority_pack_with_thin_program_surface",
+        "mag_outputs_only": [
+          "grant_owned_refs",
+          "owner_receipt",
+          "typed_blocker",
+          "verdict_refs",
+          "domain_action_metadata"
+        ],
+        "opl_replacement_expectations": [
+          "workspace_source_intake_shell",
+          "memory_locator_writeback_transport",
+          "package_export_lifecycle_shell",
+          "generic_transition_runner",
+          "operator_workbench_observability_slo",
+          "agent_scaffold_checklist"
+        ],
+        "forbidden_mag_generic_owner_roles": [
+          "generic_scheduler_owner",
+          "generic_daemon_owner",
+          "generic_lifecycle_owner",
+          "generic_queue_owner",
+          "generic_attempt_ledger_owner",
+          "generic_state_machine_runner_owner"
+        ],
+        "claims_opl_replacement_exists": false,
+        "claims_production_long_run_soak_complete": false,
+        "mag_rebuilds_opl_runtime": false,
+        "mag_implements_generic_scheduler": false,
+        "mag_implements_generic_daemon": false,
+        "mag_implements_generic_lifecycle_owner": false,
+        "mag_implements_generic_queue": false,
+        "mag_implements_generic_attempt_ledger": false,
+        "mag_implements_generic_runner": false,
+        "mag_implements_app_workbench": false
       },
       "future_sidecar_promotion_gate": "self-hosted sidecar daemon promotion remains out of scope; the landed product sidecar adapter is a CLI/product-entry projection and guarded dispatch surface"
     }

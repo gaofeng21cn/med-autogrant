@@ -3784,6 +3784,7 @@
         "repo_source_exclusions",
         "authority_boundary",
         "mag_owned_transition_oracle",
+        "consumer_thinning_contract_ref",
         "phases"
       ],
       "properties": {
@@ -3853,6 +3854,9 @@
         "mag_owned_transition_oracle": {
           "$ref": "#/$defs/grantTransitionOracle"
         },
+        "consumer_thinning_contract_ref": {
+          "const": "/product_entry_manifest/mag_consumer_thinning_contract"
+        },
         "direct_retirement_posture": {
           "type": "object",
           "additionalProperties": true,
@@ -3900,7 +3904,7 @@
             ],
             "properties": {
               "phase_id": {
-                "enum": ["P0", "P1", "P2", "P3", "P4", "P5"]
+                "enum": ["P0", "P1", "P2", "P3", "P4", "P5", "P6"]
               },
               "title": {
                 "$ref": "common.schema.json#/$defs/nonEmptyString"
@@ -3915,6 +3919,210 @@
                 "$ref": "common.schema.json#/$defs/stringList"
               }
             }
+          }
+        }
+      }
+    },
+    "magConsumerThinningContract": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "contract_id",
+        "target_domain_id",
+        "owner",
+        "adapter_role",
+        "state",
+        "consumes_opl_family_primitive",
+        "claims_opl_replacement_exists",
+        "claims_production_long_run_soak_complete",
+        "sidecar_contract_ref",
+        "allowed_return_shapes",
+        "mag_owned_outputs",
+        "exposed_sidecar_return_refs",
+        "opl_replacement_expectations",
+        "forbidden_mag_owned_generic_primitives",
+        "forbidden_mag_generic_owner_roles",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_consumer_thinning_contract"
+        },
+        "contract_id": {
+          "const": "mag.consumer_thinning.contract.v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "owner": {
+          "const": "med-autogrant"
+        },
+        "adapter_role": {
+          "const": "domain_authority_pack_with_thin_program_surface"
+        },
+        "state": {
+          "const": "handoff_ready_external_opl_replacement_gated"
+        },
+        "consumes_opl_family_primitive": {
+          "const": "family_scheduler_replacement"
+        },
+        "claims_opl_replacement_exists": {
+          "const": false
+        },
+        "claims_production_long_run_soak_complete": {
+          "const": false
+        },
+        "sidecar_contract_ref": {
+          "const": "/product_entry_manifest/mag_consumer_thinning_contract"
+        },
+        "allowed_return_shapes": {
+          "type": "array",
+          "items": {
+            "enum": ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"]
+          },
+          "minItems": 3
+        },
+        "mag_owned_outputs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "exposed_sidecar_return_refs": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "owner_receipt_contract_ref",
+            "controlled_stage_attempt_projection_ref",
+            "controlled_domain_memory_apply_proof_ref",
+            "lifecycle_guarded_apply_proof_ref",
+            "grant_transition_oracle_ref"
+          ],
+          "properties": {
+            "owner_receipt_contract_ref": {
+              "const": "/product_entry_manifest/owner_receipt_contract"
+            },
+            "controlled_stage_attempt_projection_ref": {
+              "const": "/product_entry_manifest/controlled_stage_attempt_projection"
+            },
+            "controlled_domain_memory_apply_proof_ref": {
+              "const": "/product_entry_manifest/controlled_domain_memory_apply_proof"
+            },
+            "lifecycle_guarded_apply_proof_ref": {
+              "const": "/product_entry_manifest/lifecycle_guarded_apply_proof"
+            },
+            "grant_transition_oracle_ref": {
+              "const": "/product_entry_manifest/grant_transition_oracle"
+            }
+          }
+        },
+        "opl_replacement_expectations": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "primitive_id",
+              "owner",
+              "state",
+              "mag_handoff_policy",
+              "implemented_in_mag",
+              "authority_boundary"
+            ],
+            "properties": {
+              "primitive_id": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "owner": {
+                "const": "one-person-lab"
+              },
+              "state": {
+                "const": "external_replacement_contract_expected"
+              },
+              "mag_handoff_policy": {
+                "const": "contract_expectation_only"
+              },
+              "implemented_in_mag": {
+                "const": false
+              },
+              "authority_boundary": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "opl_can_write_domain_truth",
+                  "opl_can_write_memory_body",
+                  "opl_can_declare_export_ready"
+                ],
+                "properties": {
+                  "opl_can_write_domain_truth": {"const": false},
+                  "opl_can_write_memory_body": {"const": false},
+                  "opl_can_declare_export_ready": {"const": false}
+                }
+              }
+            }
+          }
+        },
+        "forbidden_mag_owned_generic_primitives": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "forbidden_mag_generic_owner_roles": {
+          "const": [
+            "generic_scheduler_owner",
+            "generic_daemon_owner",
+            "generic_lifecycle_owner",
+            "generic_queue_owner",
+            "generic_attempt_ledger_owner",
+            "generic_state_machine_runner_owner"
+          ]
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "domain_truth_owner",
+            "memory_body_owner",
+            "grant_truth_owner",
+            "grant_memory_body_owner",
+            "quality_verdict_owner",
+            "export_authority_owner",
+            "package_authority_owner",
+            "owner_receipt_authority",
+            "safe_action_refs_owner",
+            "opl_family_scheduler_replacement_owner",
+            "opl_can_write_domain_truth",
+            "opl_can_write_memory_body",
+            "opl_can_declare_export_ready",
+            "mag_rebuilds_opl_runtime",
+            "mag_implements_generic_scheduler",
+            "mag_implements_generic_daemon",
+            "mag_implements_generic_lifecycle_owner",
+            "mag_implements_generic_queue",
+            "mag_implements_generic_attempt_ledger",
+            "mag_implements_generic_runner",
+            "mag_implements_app_workbench"
+          ],
+          "properties": {
+            "domain_truth_owner": {"const": "med-autogrant"},
+            "memory_body_owner": {"const": "med-autogrant"},
+            "grant_truth_owner": {"const": "med-autogrant"},
+            "grant_memory_body_owner": {"const": "med-autogrant"},
+            "quality_verdict_owner": {"const": "med-autogrant"},
+            "export_authority_owner": {"const": "med-autogrant"},
+            "package_authority_owner": {"const": "med-autogrant"},
+            "owner_receipt_authority": {"const": "med-autogrant"},
+            "safe_action_refs_owner": {"const": "med-autogrant"},
+            "opl_family_scheduler_replacement_owner": {"const": "one-person-lab"},
+            "opl_can_write_domain_truth": {"const": false},
+            "opl_can_write_memory_body": {"const": false},
+            "opl_can_declare_export_ready": {"const": false},
+            "mag_rebuilds_opl_runtime": {"const": false},
+            "mag_implements_generic_scheduler": {"const": false},
+            "mag_implements_generic_daemon": {"const": false},
+            "mag_implements_generic_lifecycle_owner": {"const": false},
+            "mag_implements_generic_queue": {"const": false},
+            "mag_implements_generic_attempt_ledger": {"const": false},
+            "mag_implements_generic_runner": {"const": false},
+            "mag_implements_app_workbench": {"const": false}
           }
         }
       }
@@ -4779,7 +4987,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "artifact_locator_contract", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "artifact_locator_contract", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "mag_consumer_thinning_contract", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -4925,6 +5133,9 @@
         },
         "physical_skeleton_follow_through": {
           "$ref": "#/$defs/physicalSkeletonFollowThrough"
+        },
+        "mag_consumer_thinning_contract": {
+          "$ref": "#/$defs/magConsumerThinningContract"
         },
         "ideal_state_closure_status": {
           "$ref": "#/$defs/idealStateClosureStatus"

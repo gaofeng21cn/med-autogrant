@@ -592,6 +592,50 @@ def test_mag_adoption_contract_declares_owner_receipt_lifecycle_and_skeleton_fol
     assert follow_through["moves_memory_body"] is False
 
 
+def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generic_owner() -> None:
+    contract = _contract()
+    thinning = contract["mag_consumer_thinning_contract"]
+
+    assert thinning["surface_kind"] == "mag_consumer_thinning_contract"
+    assert thinning["manifest_surface_ref"] == "/product_entry_manifest/mag_consumer_thinning_contract"
+    assert thinning["consumes_opl_family_primitive"] == "family_scheduler_replacement"
+    assert thinning["adapter_role"] == "domain_authority_pack_with_thin_program_surface"
+    assert thinning["mag_owned_outputs"] == [
+        "grant_owned_refs",
+        "owner_receipt",
+        "typed_blocker",
+        "verdict_refs",
+        "domain_action_metadata",
+    ]
+    assert thinning["forbidden_mag_generic_owner_roles"] == [
+        "generic_scheduler_owner",
+        "generic_daemon_owner",
+        "generic_lifecycle_owner",
+        "generic_queue_owner",
+        "generic_attempt_ledger_owner",
+        "generic_state_machine_runner_owner",
+    ]
+    assert thinning["authority_boundary"] == {
+        "grant_truth_owner": "med-autogrant",
+        "grant_memory_body_owner": "med-autogrant",
+        "quality_verdict_owner": "med-autogrant",
+        "export_authority_owner": "med-autogrant",
+        "owner_receipt_authority": "med-autogrant",
+        "safe_action_refs_owner": "med-autogrant",
+        "opl_family_scheduler_replacement_owner": "one-person-lab",
+        "mag_implements_generic_scheduler": False,
+        "mag_implements_generic_daemon": False,
+        "mag_implements_generic_lifecycle_owner": False,
+        "mag_implements_generic_queue": False,
+        "mag_implements_generic_attempt_ledger": False,
+        "mag_implements_generic_runner": False,
+        "mag_implements_app_workbench": False,
+    }
+    assert thinning["claims_opl_replacement_exists"] is False
+    assert thinning["claims_production_long_run_soak_complete"] is False
+    assert thinning["mag_rebuilds_opl_runtime"] is False
+
+
 def test_mag_controlled_soak_deferred_without_descriptor_index_skeleton_regression() -> None:
     contract = _contract()
     skeleton = contract["standard_domain_agent_skeleton"]

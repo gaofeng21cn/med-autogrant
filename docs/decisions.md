@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-16：落地 MAG consumer/thinning contract
+
+- 决策：`product-entry-manifest` 新增 `mag_consumer_thinning_contract`，`product sidecar export` 同步投影该 surface。该合同把 MAG adapter 角色固定为 grant domain authority pack + thin program surface，只输出 grant-owned refs、owner receipt、typed blocker、verdict refs 和 domain action metadata。
+- 理由：当前优先级是让 MAG 配合 OPL-led program 收薄，而不是在 MAG 内继续实现 workspace/source intake shell、memory locator/writeback transport、package/export lifecycle shell、generic transition runner、operator workbench/observability/SLO 或 agent scaffold template。OPL replacement 如果尚未存在，MAG 只能写 contract expectation / handoff note / guard，不能删除仍承担真实功能的 active path。
+- 影响：`ideal_state_closure_status` 的 phase map 按 active plan 调整为 P1 adapter thinning、P2 package/export lifecycle handoff、P3 memory locator/writeback handoff、P4 scaffold/legacy cleanup、P5 focused hosted receipt verification、P6 live soak。该决策不声明 OPL replacement 已存在，不声明 production long-run soak 完成，也不改变 MAG 对 fundability、quality、export verdict 和 owner receipt 的 authority。
+
 ## 2026-05-15：落地 MAG-owned grant transition oracle table / oracle fixtures
 
 - 决策：`product-entry-manifest` 新增顶层 `grant_transition_oracle`，并让 `ideal_state_closure_status.mag_owned_transition_oracle` 指向同一 MAG-owned surface。该 surface 固化 grant transition table、oracle fixtures、stage/action/ref validation 和 OPL 不可裁决 fundability / authoring quality / submission-ready export 的边界。

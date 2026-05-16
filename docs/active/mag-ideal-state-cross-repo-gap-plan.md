@@ -34,6 +34,8 @@ OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/d
 
 2026-05-16 校准：MAG 的功能边界当前没有发现类似 MAS local LaunchAgent scheduler 的默认运行 owner 残留；MAG 主要保留 grant authoring domain entry、product-entry、sidecar、receipt reconciliation、memory/package/export/lifecycle proof surface 和 grant transition oracle。它仍不是“纯知识文件仓”，因为 descriptor、schema、sidecar、projection builder、receipt proof、tests 和 domain entry 都是 OPL 需要的 thin program surface；这些薄程序面属于 domain package 外壳，不应被误判为必须上收到 OPL 的通用框架功能。真正需要上收的是 workspace/source intake shell、memory locator/writeback transport、package/export lifecycle shell、generic transition runner、operator workbench、observability/SLO 和 provider runtime。
 
+2026-05-16 consumer/thinning lane 进展：MAG 侧已把上述边界落成 `product-entry-manifest.mag_consumer_thinning_contract`，并由 `product sidecar export` 投影。该合同固定 MAG adapter 只输出 grant-owned refs、owner receipt、typed blocker、verdict refs 和 domain action metadata，并声明消费 OPL `family_scheduler_replacement`；workspace/source intake shell、memory locator/writeback transport、package/export lifecycle shell、generic transition runner、operator workbench/observability/SLO 和 agent scaffold checklist 都是 OPL replacement expectation。MAG 不持 generic scheduler、daemon、lifecycle owner、queue、attempt ledger 或 generic state-machine runner owner 角色。该进展只关闭 MAG 侧 P1 adapter-thinning machine surface，不关闭 OPL replacement consumption、真实 workspace memory/package/lifecycle evidence、focused hosted receipt verification 或 live soak。
+
 主要差距已经不在概念、命名、descriptor 或 MAG repo 内 receipt writer。后续计划也不应把 production closure / long soak 放成所有已知工作的前置条件。MAG 当前已经有清楚的功能性要求：先把可复用 workspace/source intake、memory locator/writeback transport、package/export lifecycle shell、generic transition runner、operator workbench、observability/SLO 和 scaffold/template 规则收敛到 OPL Framework / App，MAG 仓继续收窄为 grant authority pack 与薄程序面；之后再用真实 grant-stage receipt、focused parity 和 live soak 验收。
 
 当前缺口按执行顺序应读成：
@@ -214,8 +216,9 @@ RCA 当前提供了 artifact-heavy domain 的 sibling 样板：direct route 已 
 
 验收：
 
-- 至少一个 OPL primitive 的 contract/checklist 能同时覆盖 MAS/MAG/RCA 中两个以上 domain 的 refs；
-- MAG sidecar/direct entry 不再新增 generic scheduler、queue、attempt ledger、workbench 或 lifecycle OS；
+- `product-entry-manifest.mag_consumer_thinning_contract` 和 `product sidecar export.mag_consumer_thinning_contract` 存在，且只声明 refs、receipt、typed blocker、verdict refs 和 domain action metadata；
+- 至少一个 OPL primitive 的 contract/checklist 能同时覆盖 MAS/MAG/RCA 中两个以上 domain 的 refs；当前仍是 OPL 外部 evidence gate；
+- MAG sidecar/direct entry 不再新增 generic scheduler、daemon、queue、attempt ledger、generic runner、workbench 或 generic lifecycle owner；
 - App/workbench 展示 owner、freshness、next action 和 repair command，但不越权下 fundability / quality / export verdict。
 
 ### P2：Package/export 与 artifact lifecycle shell handoff

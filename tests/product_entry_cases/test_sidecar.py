@@ -88,6 +88,29 @@ class ProductSidecarTest(unittest.TestCase):
             export["owner_receipt_contract"]["allowed_return_shapes"],
             ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
         )
+        thinning = export["mag_consumer_thinning_contract"]
+        self.assertEqual(thinning["surface_kind"], "mag_consumer_thinning_contract")
+        self.assertEqual(thinning["state"], "handoff_ready_external_opl_replacement_gated")
+        self.assertEqual(
+            thinning["sidecar_contract_ref"],
+            "/product_entry_manifest/mag_consumer_thinning_contract",
+        )
+        self.assertEqual(
+            thinning["exposed_sidecar_return_refs"],
+            {
+                "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+                "controlled_stage_attempt_projection_ref": (
+                    "/product_entry_manifest/controlled_stage_attempt_projection"
+                ),
+                "controlled_domain_memory_apply_proof_ref": (
+                    "/product_entry_manifest/controlled_domain_memory_apply_proof"
+                ),
+                "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
+            },
+        )
+        self.assertFalse(thinning["authority_boundary"]["mag_rebuilds_opl_runtime"])
+        self.assertEqual(thinning["forbidden_mag_owned_generic_primitives"], [])
         self.assertFalse(export["owner_receipt_contract"]["forbidden_write_proof"]["opl_can_write_grant_truth"])
         self.assertEqual(
             export["lifecycle_guarded_apply_proof"]["surface_kind"],
@@ -132,6 +155,10 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(
             export["opl_control_plane"]["write_policy"],
             "opl_index_only_no_grant_truth_writes",
+        )
+        self.assertEqual(
+            export["opl_control_plane"]["replacement_expectations_ref"],
+            "/sidecar_export/mag_consumer_thinning_contract/opl_replacement_expectations",
         )
         self.assertEqual(
             export["opl_control_plane"]["allowed_dispatch_actions"],

@@ -274,24 +274,25 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             phase_states,
             {
                 "P0": "landed",
-                "P1": "external_evidence_gate",
-                "P2": "external_opl_primitive_gate",
+                "P1": "mag_adapter_thinning_contract_landed_external_opl_replacement_gate",
+                "P2": "external_opl_package_lifecycle_shell_gate",
                 "P3": "runtime_workspace_evidence_gate",
-                "P4": "runtime_workspace_evidence_gate",
-                "P5": "landed_with_external_delete_audit_gate",
+                "P4": "landed_with_external_scaffold_template_handoff_gate",
+                "P5": "external_evidence_gate",
+                "P6": "production_soak_gate",
             },
         )
         p1 = next(phase for phase in closure_status["phases"] if phase["phase_id"] == "P1")
         self.assertEqual(
             p1["required_evidence_refs"],
             [
-                "opl_runtime_ledger_mag_controlled_stage_attempt_ref",
-                "mag_runtime_owner_receipt_instance_ref",
-                "mag_no_regression_evidence_or_typed_blocker_ref",
+                "mag_consumer_thinning_contract_ref",
+                "sidecar_refs_only_projection_ref",
+                "opl_generic_primitive_replacement_contract_ref",
             ],
         )
         self.assertIn(
-            "/product_entry_manifest/owner_receipt_contract",
+            "/product_entry_manifest/mag_consumer_thinning_contract",
             p1["mag_surface_refs"],
         )
         p3 = next(phase for phase in closure_status["phases"] if phase["phase_id"] == "P3")
@@ -299,5 +300,70 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             "mag_runtime_memory_body_migration_ref",
             p3["required_evidence_refs"],
         )
+        p6 = next(phase for phase in closure_status["phases"] if phase["phase_id"] == "P6")
+        self.assertIn("long_run_soak_no_forbidden_write_proof_ref", p6["required_evidence_refs"])
         self.assertTrue(closure_status["repo_source_exclusions"]["memory_body"])
         self.assertTrue(closure_status["repo_source_exclusions"]["runtime_receipt_instances"])
+
+    def test_manifest_exposes_consumer_thinning_contract_for_opl_replacement_handoff(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_product_entry_manifest(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+        manifest = payload["product_entry_manifest"]
+
+        thinning = manifest["mag_consumer_thinning_contract"]
+        self.assertEqual(thinning["surface_kind"], "mag_consumer_thinning_contract")
+        self.assertEqual(thinning["contract_id"], "mag.consumer_thinning.contract.v1")
+        self.assertEqual(thinning["target_domain_id"], "med-autogrant")
+        self.assertEqual(thinning["owner"], "med-autogrant")
+        self.assertEqual(thinning["adapter_role"], "domain_authority_pack_with_thin_program_surface")
+        self.assertEqual(thinning["state"], "handoff_ready_external_opl_replacement_gated")
+        self.assertFalse(thinning["claims_opl_replacement_exists"])
+        self.assertFalse(thinning["claims_production_long_run_soak_complete"])
+        self.assertEqual(
+            thinning["allowed_return_shapes"],
+            ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
+        )
+        self.assertEqual(
+            set(thinning["mag_owned_outputs"]),
+            {
+                "grant_owned_refs",
+                "owner_receipt",
+                "typed_blocker",
+                "verdict_refs",
+                "domain_action_metadata",
+            },
+        )
+        self.assertEqual(thinning["forbidden_mag_owned_generic_primitives"], [])
+        authority = thinning["authority_boundary"]
+        self.assertFalse(authority["opl_can_write_domain_truth"])
+        self.assertFalse(authority["opl_can_write_memory_body"])
+        self.assertFalse(authority["opl_can_declare_export_ready"])
+        self.assertFalse(authority["mag_rebuilds_opl_runtime"])
+        replacement_ids = {item["primitive_id"] for item in thinning["opl_replacement_expectations"]}
+        self.assertEqual(
+            replacement_ids,
+            {
+                "workspace_source_intake_shell",
+                "memory_locator_writeback_transport",
+                "package_export_lifecycle_shell",
+                "generic_transition_runner",
+                "operator_workbench_observability_slo",
+                "agent_scaffold_checklist",
+            },
+        )
+        for item in thinning["opl_replacement_expectations"]:
+            with self.subTest(primitive_id=item["primitive_id"]):
+                self.assertEqual(item["owner"], "one-person-lab")
+                self.assertEqual(item["mag_handoff_policy"], "contract_expectation_only")
+                self.assertFalse(item["implemented_in_mag"])
+        self.assertEqual(
+            thinning["sidecar_contract_ref"],
+            "/product_entry_manifest/mag_consumer_thinning_contract",
+        )
+        self.assertEqual(
+            manifest["ideal_state_closure_status"]["consumer_thinning_contract_ref"],
+            "/product_entry_manifest/mag_consumer_thinning_contract",
+        )

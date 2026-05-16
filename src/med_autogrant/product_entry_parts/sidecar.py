@@ -83,6 +83,11 @@ def build_sidecar_export(
         "lifecycle_guarded_apply_proof",
         context="sidecar_export.product_entry_manifest",
     )
+    mag_consumer_thinning_contract = _require_mapping(
+        manifest,
+        "mag_consumer_thinning_contract",
+        context="sidecar_export.product_entry_manifest",
+    )
     physical_skeleton_follow_through = _require_mapping(
         manifest,
         "physical_skeleton_follow_through",
@@ -142,6 +147,7 @@ def build_sidecar_export(
         "controlled_domain_memory_apply_proof": dict(controlled_domain_memory_apply_proof),
         "owner_receipt_contract": dict(owner_receipt_contract),
         "lifecycle_guarded_apply_proof": dict(lifecycle_guarded_apply_proof),
+        "mag_consumer_thinning_contract": dict(mag_consumer_thinning_contract),
         "physical_skeleton_follow_through": dict(physical_skeleton_follow_through),
         "ideal_state_closure_status": dict(ideal_state_closure_status),
         "receipt_refs": dict(
@@ -190,6 +196,9 @@ def build_sidecar_export(
             ),
             "write_policy": "opl_index_only_no_grant_truth_writes",
             "allowed_dispatch_actions": sorted(_ALLOWED_ACTIONS),
+            "replacement_expectations_ref": (
+                "/sidecar_export/mag_consumer_thinning_contract/opl_replacement_expectations"
+            ),
         },
         "guardrails": {
             "dispatch_boundary": "MAG-owned guarded product actions only.",
