@@ -11,7 +11,7 @@ Date: `2026-05-16`
 - `定位`：本文只写 MAG 的 north-star 目标态和长期 owner boundary；当前差距、执行顺序和 production evidence 缺口回到 `mag-ideal-state-cross-repo-gap-plan.md`。
 - `当前实态校准`：带日期的校准段只记录当前 repo surface 或 fresh evidence，不把目标态写成已完成事实。
 - `Owner 边界`：MAG 持有 grant truth、fundability/quality/export verdict、grant strategy memory body/accept-reject、package authority 和 owner receipt；OPL 持有 provider runtime、queue、attempt ledger、workspace/source intake shell、memory locator、package/artifact lifecycle、quality/readiness projection 和 App/workbench shell。
-- `最短路径`：MAG consumer/thin adapter 功能面已经把 workspace/source intake、memory locator/writeback transport、package/export lifecycle、route/decision/workbench、observability/SLO 和 scaffold/template 规则归位为 OPL Framework / App replacement expectation；后续用真实 workspace/runtime evidence、focused hosted receipt verification 和 live soak 验收。
+- `最短路径`：MAG consumer/thin adapter 功能面已经把 workspace/source intake、memory locator/writeback transport、package/export lifecycle、route/decision/workbench、observability/SLO 和 scaffold/template 规则归位为 OPL Framework / App replacement expectation；2026-05-17 后目标进一步收紧为 OPL pack compiler / generated surface：MAG 默认提交声明式 grant pack 和少量 grant authority functions，CLI/product-entry/sidecar/status/workbench 外壳由 OPL 生成或托管；后续用真实 workspace/runtime evidence、focused hosted receipt verification 和 live soak 验收。
 - `禁写口径`：MAG 当前 skeleton anchors 不是完整新 Agent 目录模板；OPL provider completion、receipt reconciliation proof 或 no-regression evidence 都不能写成 fundability-ready、quality-ready、export-ready 或 production long-run soak 完成。
 
 ## 结论
@@ -20,7 +20,7 @@ Date: `2026-05-16`
 
 MAG 的核心价值是基金申请专业性：它持有 funding-call 语境、fundability strategy、specific aims、正文写作、AI-first review/revision、quality closure、submission-ready package 与 grant strategy memory 的 domain truth。OPL Framework 负责长期在线、stage attempt 生命周期、queue/wakeup、handoff、receipt、retry/dead-letter、operator projection、artifact/file lifecycle、shared contracts 和 provider-backed runtime。两者通过 descriptor、projection、receipt 和 owner boundary 协作。
 
-因此，MAG 的理想形态是医学基金 `Domain Knowledge / Authority Pack + thin program surface`。MAG 不维护独立 agent runtime platform，也不长期维护 generic scheduler、generic daemon、generic lifecycle owner、generic queue、generic attempt ledger、generic state-machine runner、generic workspace/source intake shell、generic memory locator、generic artifact/package lifecycle、generic observability 或通用 App/workbench runtime。MAG 的 descriptor、contract/schema、product sidecar、domain entry、projection builder、domain transition spec/table、quality gate、artifact locator、receipt schema、tests 和 lifecycle adapter 只负责把 grant stage pack、fundability/quality/export authority、typed blocker、owner receipt、artifact locator、safe action refs 和 domain transition spec 暴露给 OPL；当前 thin consumer contract 明确声明消费 OPL `family_scheduler_replacement`。这些薄程序面服务 OPL 发现、托管、审计和投影，不构成第二套通用平台。
+因此，MAG 的理想形态是医学基金 `Declarative Grant Pack + minimal authority functions`。MAG 不维护独立 agent runtime platform，也不长期维护 generic scheduler、generic daemon、generic lifecycle owner、generic queue、generic attempt ledger、generic state-machine runner、generic workspace/source intake shell、generic memory locator、generic artifact/package lifecycle、generic observability、通用 App/workbench runtime，或手写的 generic CLI/product-entry/sidecar/status wrapper。MAG 的 descriptor、contract/schema、domain transition spec/table、quality gate、artifact locator、receipt schema、tests、grant policy tables 和 authority function manifest 只负责把 grant stage pack、fundability/quality/export authority、typed blocker、owner receipt、artifact locator、safe action refs 和 domain transition spec 暴露给 OPL；当前 thin consumer contract 明确声明消费 OPL `family_scheduler_replacement`。product sidecar、projection builder、lifecycle adapter 和 grouped CLI/API 长期应成为 OPL pack compiler 的生成目标或显式迁移桥；只有 fundability verdict、authoring quality/export verdict、package readiness、grant memory accept/reject、owner receipt signer 和 grant-native helper 这类无法声明化的 authority function 可以留在 MAG。
 
 本文描述目标态，不替代当前状态判断。当前落地程度以 [当前状态](../status.md)、[架构](../architecture.md)、[不变量](../invariants.md)、[OPL Family Contract Adoption](./opl_family_contract_adoption.md) 与 [`current-program.json`](../../contracts/runtime-program/current-program.json) 为准。
 
@@ -38,7 +38,7 @@ MAG 的核心价值是基金申请专业性：它持有 funding-call 语境、fu
 
 同日 thin output guard follow-through 后，MAG 的 sidecar / manifest 输出层也被锁定：local runtime journal state、local attempt ledger state、attention queue state、stage attempt ledger state、package lifecycle state、source intake state、operator workbench state、scheduler daemon state 和 Hermes state-db runtime state 都是 forbidden output class。理想态下 MAG 可以保留 grant domain thin adapter 和 explicit proof/provenance lane，但不能把这些私有功能状态作为 MAG-owned runtime surface 输出给 OPL 或 App。
 
-执行顺序上，MAG 理想态的已知功能面上收和收薄在 MAG 仓内已经完成为 consumer follow-through：workspace/source intake、memory locator/writeback transport、package/export lifecycle、route/decision/workbench、observability/SLO 和 scaffold/template 规则已回到 OPL Framework / App replacement expectation，MAG 保留 grant authority pack 与薄程序面。剩余工作是外部 OPL replacement 证据、真实 workspace/runtime memory-package-lifecycle receipt、focused OPL-hosted receipt verification 和 live soak；其中 live soak 是后置生产验收。
+执行顺序上，MAG 理想态的已知功能面上收和收薄在 MAG 仓内已经完成为 consumer follow-through；2026-05-17 后还要继续把“薄程序面”向声明式 pack 收缩：workspace/source intake、memory locator/writeback transport、package/export lifecycle、route/decision/workbench、observability/SLO、scaffold/template 规则和 generated wrapper owner 都回到 OPL Framework / App replacement expectation，MAG 保留 grant authority pack、policy/schema/fixtures 和少量 authority function。剩余工作是外部 OPL pack compiler / replacement 证据、真实 workspace/runtime memory-package-lifecycle receipt、focused OPL-hosted receipt verification 和 live soak；其中 live soak 是后置生产验收。
 
 ## 产品分层
 
@@ -47,7 +47,7 @@ MAG 的核心价值是基金申请专业性：它持有 funding-call 语境、fu
 1. `Med Auto Grant App Skill`
    用户和 Codex 看到的单一领域入口。它展示 product status、user loop、workspace progress/cockpit、direct entry、可调用 command catalog、质量状态和交付状态。
 2. `MAG Domain Agent Package`
-   grant-domain 专业包。它提供 stage pack、prompt/skill、family profile、route truth、quality gate、controller、domain transition spec、domain memory policy、product sidecar adapter、artifact locator contract 和 submission/export authority。
+   grant-domain 专业包。它提供 stage pack、prompt/skill、family profile、route truth、quality gate、domain transition spec、domain memory policy、artifact locator contract、submission/export authority、receipt schemas、policy tables 和 authority function manifest；product sidecar adapter 和 status/product wrappers 默认由 OPL generated surface 承担。
 3. `OPL Framework Hosted Path`
    family-level runtime。它提供 stage attempt ledger、typed queue、provider-backed runtime、resume/human gate、receipt、retry/dead-letter、workspace/artifact lifecycle、operator projection 和 App 投影协议。
 4. `Grant Workspace`
@@ -143,7 +143,7 @@ OPL 负责 stage 的发现、排队、恢复、唤醒、投影和 receipt 汇总
 
 ## Runtime 与执行器边界
 
-理想 MAG 不维护通用长期在线 runtime 或通用运行平台。它暴露 OPL 可消费的 descriptor、contract/schema、sidecar projection、guarded dispatch、artifact locator、owner receipt contract、domain transition spec/table、projection builder、focused tests 和 lifecycle adapter。
+理想 MAG 不维护通用长期在线 runtime 或通用运行平台。它暴露 OPL 可消费的 descriptor、contract/schema、artifact locator、owner receipt contract、domain transition spec/table、focused tests、policy tables 和 authority function manifest。sidecar projection、guarded dispatch、status/read model、projection builder、grouped CLI/API 和 lifecycle adapter 默认由 OPL pack compiler 生成或托管；MAG 手写实现只作为迁移桥或 grant authority function。
 
 默认 concrete executor 是 `Codex CLI`。非默认 executor，例如 `Hermes-Agent` 或 `Claude Code`，只能通过 OPL generic Agent Executor Adapter 显式选择，并产生可审计 receipt。非默认 executor 的 proof 只证明 connectivity、lifecycle、receipt、audit 和 fail-closed；结果质量和行为语义必须回到 MAG quality gate 验收。
 
@@ -237,9 +237,8 @@ med-autogrant/
     receipt schemas
     artifact locator contracts
   runtime/
-    sidecar/
-    projection_builders/
-    lifecycle_adapters/
+    authority_functions/
+    native_helpers/
     receipt_evidence_writers/
   src/
     med_autogrant/
@@ -253,7 +252,7 @@ med-autogrant/
     decisions.md
 ```
 
-该 skeleton 是发现、验证、托管和审计边界。内部实现可以继续按 Python package 和现有模块组织，只要外部 descriptor、contract、projection 和 tests 保持稳定。
+该 skeleton 是发现、验证、托管和审计边界。`runtime/authority_functions` 只放无法声明化的 fundability / quality / export verdict、package authority、memory accept/reject、owner receipt signer 或 grant-native helper；sidecar、projection builder、lifecycle adapter、status wrapper 和 product shell 长期由 OPL 生成或托管。内部实现可以继续按 Python package 和现有模块组织，只要外部 descriptor、contract、policy、authority manifest 和 tests 保持稳定。
 
 ## 理想完成门槛
 
@@ -267,6 +266,7 @@ MAG 达到理想生产级状态时，应满足以下门槛：
 - `package submission-ready` 对 frozen workspace fail-closed，并明确区分本地提交包与外部 portal submission。
 - AI-first quality gate 在没有 active critique 时保持 projection-only，在有 AI-authored review 时输出可追溯 closure dossier。
 - OPL/App 只消费 refs、receipt、freshness、locator 和 projection；grant truth、fundability、quality verdict 和 export authority 留在 MAG。
+- MAG repo 内仍保留的非知识代码均能归类为 authority function 或迁移桥；每项都有 active caller、cannot-absorb reason、receipt/schema 边界和 OPL generated/replacement expectation。能由 OPL pack compiler 生成的 CLI/product-entry/sidecar/status/projection/harness 不再作为 MAG 长期私有实现扩展。
 - Repo source 不写入真实 runtime artifacts、private evidence、receipt instance、memory body 或 export package。
 - 旧 local host-agent runtime、Gateway/local-manager、Hermes-first 默认路径和旧 product-status traces 保持 history/provenance/explicit proof 语境，不回到 active path。
 
