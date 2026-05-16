@@ -62,6 +62,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_domain_memory_decision,
     handle_product_domain_memory_proposal,
     handle_product_domain_memory_receipt_evidence,
+    handle_product_focused_hosted_receipt_verification,
     handle_product_lifecycle_receipt_evidence,
     handle_product_owner_receipt_evidence,
     handle_product_receipt_reconciliation_inventory,
@@ -95,6 +96,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_domain_memory_decision_command,
     _add_product_domain_memory_proposal_command,
     _add_product_domain_memory_receipt_evidence_command,
+    _add_product_focused_hosted_receipt_verification_command,
     _add_product_lifecycle_receipt_evidence_command,
     _add_product_owner_receipt_evidence_command,
     _add_product_receipt_reconciliation_inventory_command,
@@ -443,6 +445,12 @@ def build_parser() -> argparse.ArgumentParser:
         "controlled-soak-receipt-reconciliation-inventory",
         handle_product_receipt_reconciliation_inventory,
         "把多条 MAG owner receipt evidence 对账成 controlled soak read-only inventory。",
+    )
+    _add_product_focused_hosted_receipt_verification_command(
+        subparsers,
+        "focused-hosted-receipt-verification",
+        handle_product_focused_hosted_receipt_verification,
+        "把 OPL-hosted attempt evidence 与 MAG owner receipt evidence 对账成 focused verification。",
     )
     return parser
 

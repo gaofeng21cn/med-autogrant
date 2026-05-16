@@ -60,6 +60,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
         "product",
         "receipt-reconciliation-inventory",
     ),
+    "focused-hosted-receipt-verification": ("product", "hosted-receipt-verification"),
     "probe-upstream-hermes": ("runtime", "probe-hermes"),
     "runtime-run": ("runtime", "run"),
     "runtime-resume": ("runtime", "resume"),

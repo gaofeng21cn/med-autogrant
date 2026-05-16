@@ -40,6 +40,8 @@ OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/d
 
 2026-05-16 consumer projection follow-up：MAG 现在补齐三组 OPL-led program 可直接消费的 helper。`build_opl_conflict_or_blocker_envelope` 给 OPL family conflict envelope 提供 MAG-owned refs-only payload；`build_controlled_soak_receipt_observability_summary` 把 MAG receipt reconciliation inventory 收成 runtime observability summary；`build_stage_attempt_observability_projection` 把 MAG controlled stage attempt 与 receipt inventory 收成 stage-attempt usage/control-loop projection。三者都挂在 `MedAutoGrantProductEntry` 薄方法下，便于 OPL 或 Codex direct caller 调用；它们不新增 CLI alias、不接入 sidecar generic action、不写 OPL ledger、不实现 retry/dead-letter/control-loop、不包含 memory body 或 grant artifact，也不声明 provider completion、grant readiness、quality readiness、export readiness 或 production soak。
 
+2026-05-16 focused hosted receipt verification follow-up：MAG 现在可以通过 `product hosted-receipt-verification` / `MedAutoGrantProductEntry.build_focused_hosted_receipt_verification` 读取外部 OPL attempt evidence JSON、MAG owner receipt evidence 和可选 sidecar closeout result，生成 `mag_focused_hosted_receipt_verification`。该 surface 只负责对账 `owner_receipt_ref`、`ledger_ref`、sidecar receipt ref 和 allowed result shape，证明单次 focused hosted attempt 返回 `domain_owner_receipt`、`typed_blocker` 或 `no_regression_evidence` 之一；它不调用 OPL、不写 OPL ledger、不实现 provider/retry/dead-letter，也不声明持续 live reconciliation 或 production soak。
+
 主要差距已经不在概念、命名、descriptor、MAG repo 内 receipt writer 或 consumer/thin adapter 功能面。后续计划也不应把 production closure / long soak 放成所有已知工作的前置条件。MAG 当前已经把可复用 workspace/source intake、memory locator/writeback transport、package/export lifecycle shell、generic transition runner、operator workbench、observability/SLO 和 scaffold/template 规则声明为 OPL-owned replacement expectation，并把本仓收窄为 grant authority pack 与薄程序面；之后再用真实 grant-stage receipt、focused parity 和 live soak 验收。
 
 当前缺口按执行顺序应读成：
@@ -295,13 +297,13 @@ RCA 当前提供了 artifact-heavy domain 的 sibling 样板：direct route 已 
 
 1. 使用 OPL task-bound provider-backed attempt 触发 MAG sidecar / direct entry，优先覆盖 `fundability_strategy`、`review_and_rebuttal` 与 `package_and_submit_ready`。
 2. 对每次 attempt 固定三类结果之一：`domain_receipt`、`typed_blocker`、`no_regression_evidence`。
-3. 在 OPL runtime ledger 与 MAG workspace/runtime root 之间对账 receipt ref；MAG 侧使用 `controlled-soak-receipt-reconciliation-proof` 生成 repo-local probe payload，使用 `controlled-soak-receipt-reconciliation-inventory` 汇总多条 receipt evidence 的 read-only projection，确认重复 closeout packet 不制造第二真相。
+3. 在 OPL runtime ledger 与 MAG workspace/runtime root 之间对账 receipt ref；MAG 侧使用 `focused-hosted-receipt-verification` 验证单次 hosted attempt evidence 与 MAG owner receipt refs，使用 `controlled-soak-receipt-reconciliation-proof` 生成 repo-local probe payload，使用 `controlled-soak-receipt-reconciliation-inventory` 汇总多条 receipt evidence 的 read-only projection，确认重复 closeout packet 不制造第二真相。
 4. 持续证明 OPL 没有写 grant truth、memory body、quality verdict 或 export package。
 
 验收：
 
 - OPL closeout 中 MAG domain breakdown 出现 owner receipt ref，并能观察 no-regression evidence ref 或明确 typed blocker；
-- MAG workspace/runtime root 有对应 receipt evidence，且同一 receipt ref 可与 OPL ledger 对账；
+- MAG workspace/runtime root 有对应 receipt evidence，且同一 receipt ref 可通过 `focused-hosted-receipt-verification` 与 OPL attempt evidence 对账；
 - provider completion 和 MAG ready verdict 在 projection 中保持分轴显示。
 
 ### P6：Live soak and production closure
