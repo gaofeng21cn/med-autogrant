@@ -658,7 +658,30 @@
         "runtime_observability_export",
         "operator_workbench_shell",
         "generic_scheduler_daemon"
-      ]
+      ],
+      "mag_thin_adapter_code_surfaces": [
+        "product_entry_manifest_builder",
+        "product_sidecar_adapter",
+        "domain_entry",
+        "receipt_schema_and_writer",
+        "grant_transition_oracle",
+        "refs_only_projection_builders",
+        "focused_contract_tests"
+      ],
+      "representative_private_functional_surfaces": {
+        "local_runtime_journal_attempt_ledger": {
+          "active_caller_status": "active_local_journal_and_refs_pending_opl_ledger_absorption",
+          "migration_action": "OPL_absorbs_session_and_attempt_ledger_MAG_keeps_safe_action_refs"
+        },
+        "sidecar_dispatch_product_shell": {
+          "active_caller_status": "active_domain_sidecar_adapter_not_generic_product_shell",
+          "migration_action": "OPL_absorbs_product_operator_shell_MAG_keeps_guarded_domain_adapter"
+        },
+        "optional_hermes_state_db": {
+          "active_caller_status": "optional_proof_only_not_default_runtime_owner",
+          "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_explicit_receipt_proof_helper"
+        }
+      }
     },
     "forbidden_mag_generic_owner_roles": [
       "generic_scheduler_owner",

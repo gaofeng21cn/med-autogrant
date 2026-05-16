@@ -226,6 +226,31 @@ class ProductSidecarTest(unittest.TestCase):
         )
         self.assertIn("package_readiness_submission_ready", audit["domain_authority_do_not_retire"])
         self.assertIn("fundability_verdict", audit["domain_authority_do_not_retire"])
+        consumer_modules = {
+            item["module_id"]: item
+            for item in audit["opl_owned_generic_primitive_consumers"]
+        }
+        self.assertEqual(
+            consumer_modules["source_intake_shell"]["active_caller_status"],
+            "active_workspace_truth_adapter_pending_opl_source_shell",
+        )
+        self.assertIn(
+            "src/med_autogrant/workspace_validation.py",
+            consumer_modules["source_intake_shell"]["code_paths"],
+        )
+        self.assertIn(
+            "funding call interpretation",
+            consumer_modules["source_intake_shell"]["cannot_absorb_reason"],
+        )
+        retire_modules = {item["module_id"]: item for item in audit["retire_or_tombstone_surfaces"]}
+        self.assertEqual(
+            retire_modules["default_hermes_gateway_local_manager_runtime_owner"]["active_caller_status"],
+            "optional_proof_only_not_default_runtime_owner",
+        )
+        self.assertIn(
+            "src/med_autogrant/upstream_hermes.py",
+            retire_modules["default_hermes_gateway_local_manager_runtime_owner"]["code_paths"],
+        )
         self.assertFalse(audit["fail_closed_rules"]["provider_completion_is_grant_ready"])
         self.assertFalse(audit["fail_closed_rules"]["mag_can_rebuild_generic_runtime"])
         output_guard = thinning["thin_surface_output_guard"]

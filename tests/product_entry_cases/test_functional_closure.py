@@ -507,10 +507,34 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             consumer_modules["task_lifecycle"]["classification"],
             "opl_owned_generic_primitive_consumer",
         )
+        self.assertEqual(
+            consumer_modules["session_ledger_attention_queue"]["active_caller_status"],
+            "active_local_journal_and_refs_pending_opl_ledger_absorption",
+        )
+        self.assertIn(
+            "src/med_autogrant/domain_runtime_parts/io.py",
+            consumer_modules["session_ledger_attention_queue"]["code_paths"],
+        )
+        self.assertIn(
+            "runtime run/resume local journal",
+            consumer_modules["session_ledger_attention_queue"]["active_callers"],
+        )
+        self.assertIn(
+            "OPL should absorb session ledger",
+            consumer_modules["session_ledger_attention_queue"]["migration_action"],
+        )
         self.assertIn("grant_lifecycle_stage", consumer_modules["task_lifecycle"]["mag_retained_authority"])
         self.assertIn(
             "artifact_package_lifecycle_shell",
             consumer_modules["package_lifecycle_shell"]["opl_expected_primitives"],
+        )
+        self.assertEqual(
+            consumer_modules["sidecar_product_status_shell"]["active_caller_status"],
+            "active_domain_sidecar_adapter_not_generic_product_shell",
+        )
+        self.assertIn(
+            "src/med_autogrant/product_entry_parts/sidecar.py",
+            consumer_modules["sidecar_product_status_shell"]["code_paths"],
         )
         mag_modules = {item["module_id"]: item for item in audit["mag_owned_grant_authority_surfaces"]}
         self.assertEqual(
@@ -532,9 +556,45 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             "submission_ready_verdict",
             mag_modules["package_readiness_submission_ready"]["mag_retained_authority"],
         )
+        self.assertEqual(
+            mag_modules["grant_memory_accept_reject"]["active_caller_status"],
+            "active_mag_memory_body_decision_keep",
+        )
+        self.assertIn(
+            "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
+            mag_modules["grant_memory_accept_reject"]["code_paths"],
+        )
+        self.assertIn(
+            "cannot own memory body",
+            mag_modules["grant_memory_accept_reject"]["cannot_absorb_reason"],
+        )
         retire_modules = {item["module_id"]: item for item in audit["retire_or_tombstone_surfaces"]}
         self.assertIn("repo_owned_scheduler_daemon", retire_modules)
         self.assertFalse(retire_modules["repo_owned_scheduler_daemon"]["active_caller_allowed"])
+        self.assertEqual(
+            retire_modules["repo_owned_scheduler_daemon"]["active_caller_status"],
+            "no_default_daemon_local_diagnostic_only",
+        )
+        self.assertIn(
+            "src/med_autogrant/runtime_defaults.py",
+            retire_modules["repo_owned_scheduler_daemon"]["code_paths"],
+        )
+        self.assertEqual(
+            retire_modules["domain_runtime_patch_bridge"]["active_caller_status"],
+            "retired_no_active_caller_expected",
+        )
+        self.assertEqual(
+            audit["mag_thin_adapter_code_surfaces"],
+            [
+                "product_entry_manifest_builder",
+                "product_sidecar_adapter",
+                "domain_entry",
+                "receipt_schema_and_writer",
+                "grant_transition_oracle",
+                "refs_only_projection_builders",
+                "focused_contract_tests",
+            ],
+        )
         self.assertEqual(
             audit["domain_authority_do_not_retire"],
             [

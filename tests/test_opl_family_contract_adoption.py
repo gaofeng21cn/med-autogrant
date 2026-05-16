@@ -697,6 +697,29 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     ]
     assert "workspace_source_intake_shell" in audit["opl_must_absorb_code_surfaces"]
     assert "generic_scheduler_daemon" in audit["opl_must_absorb_code_surfaces"]
+    assert audit["mag_thin_adapter_code_surfaces"] == [
+        "product_entry_manifest_builder",
+        "product_sidecar_adapter",
+        "domain_entry",
+        "receipt_schema_and_writer",
+        "grant_transition_oracle",
+        "refs_only_projection_builders",
+        "focused_contract_tests",
+    ]
+    assert audit["representative_private_functional_surfaces"] == {
+        "local_runtime_journal_attempt_ledger": {
+            "active_caller_status": "active_local_journal_and_refs_pending_opl_ledger_absorption",
+            "migration_action": "OPL_absorbs_session_and_attempt_ledger_MAG_keeps_safe_action_refs",
+        },
+        "sidecar_dispatch_product_shell": {
+            "active_caller_status": "active_domain_sidecar_adapter_not_generic_product_shell",
+            "migration_action": "OPL_absorbs_product_operator_shell_MAG_keeps_guarded_domain_adapter",
+        },
+        "optional_hermes_state_db": {
+            "active_caller_status": "optional_proof_only_not_default_runtime_owner",
+            "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_explicit_receipt_proof_helper",
+        },
+    }
     assert thinning["sidecar_output_policy"] == "grant_refs_and_receipts_only_no_generic_runtime_state"
     assert thinning["knowledge_only_repository"] is False
     assert thinning["retains_domain_program_surfaces"] is True

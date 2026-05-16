@@ -4371,6 +4371,8 @@
             "retire_or_tombstone_surfaces",
             "domain_authority_do_not_retire",
             "opl_must_absorb_code_surfaces",
+            "mag_thin_adapter_code_surfaces",
+            "representative_private_functional_surfaces",
             "audit_refs",
             "fail_closed_rules"
           ],
@@ -4408,6 +4410,35 @@
             "opl_owned_generic_primitive_consumers": {
               "type": "array",
               "minItems": 9,
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "module_id",
+                  "classification",
+                  "owner",
+                  "mag_role",
+                  "code_paths",
+                  "active_callers",
+                  "active_caller_status",
+                  "migration_action",
+                  "retention_reason",
+                  "cannot_absorb_reason",
+                  "current_surface_refs",
+                  "opl_expected_primitives",
+                  "mag_retained_authority"
+                ],
+                "properties": {
+                  "classification": {"const": "opl_owned_generic_primitive_consumer"},
+                  "owner": {"const": "one-person-lab"},
+                  "code_paths": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                  "active_callers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                  "active_caller_status": {"type": "string", "minLength": 1},
+                  "migration_action": {"type": "string", "minLength": 1},
+                  "retention_reason": {"type": "string", "minLength": 1},
+                  "cannot_absorb_reason": {"type": "string", "minLength": 1}
+                }
+              },
               "contains": {
                 "type": "object",
                 "required": ["module_id", "classification", "owner"],
@@ -4421,6 +4452,35 @@
             "mag_owned_grant_authority_surfaces": {
               "type": "array",
               "minItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "module_id",
+                  "classification",
+                  "owner",
+                  "mag_role",
+                  "code_paths",
+                  "active_callers",
+                  "active_caller_status",
+                  "migration_action",
+                  "retention_reason",
+                  "cannot_absorb_reason",
+                  "current_surface_refs",
+                  "opl_expected_primitives",
+                  "mag_retained_authority"
+                ],
+                "properties": {
+                  "classification": {"const": "mag_owned_grant_truth_receipt_verdict"},
+                  "owner": {"const": "med-autogrant"},
+                  "code_paths": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                  "active_callers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                  "active_caller_status": {"type": "string", "minLength": 1},
+                  "migration_action": {"type": "string", "minLength": 1},
+                  "retention_reason": {"type": "string", "minLength": 1},
+                  "cannot_absorb_reason": {"type": "string", "minLength": 1}
+                }
+              },
               "contains": {
                 "type": "object",
                 "required": ["module_id", "classification", "owner"],
@@ -4434,6 +4494,38 @@
             "retire_or_tombstone_surfaces": {
               "type": "array",
               "minItems": 5,
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "module_id",
+                  "classification",
+                  "owner",
+                  "state",
+                  "code_paths",
+                  "active_callers",
+                  "active_caller_status",
+                  "migration_action",
+                  "retention_reason",
+                  "cannot_absorb_reason",
+                  "evidence_refs",
+                  "active_caller_allowed",
+                  "compatibility_alias_allowed"
+                ],
+                "properties": {
+                  "classification": {"const": "retire_tombstone"},
+                  "owner": {"const": "none_active"},
+                  "state": {"const": "retired_or_tombstone_only"},
+                  "code_paths": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                  "active_callers": {"type": "array", "items": {"type": "string"}},
+                  "active_caller_status": {"type": "string", "minLength": 1},
+                  "migration_action": {"type": "string", "minLength": 1},
+                  "retention_reason": {"type": "string", "minLength": 1},
+                  "cannot_absorb_reason": {"type": "string", "minLength": 1},
+                  "active_caller_allowed": {"const": false},
+                  "compatibility_alias_allowed": {"const": false}
+                }
+              },
               "contains": {
                 "type": "object",
                 "required": ["module_id", "classification", "active_caller_allowed"],
@@ -4466,6 +4558,70 @@
                 {"contains": {"const": "artifact_package_lifecycle_shell"}},
                 {"contains": {"const": "operator_workbench_shell"}}
               ]
+            },
+            "mag_thin_adapter_code_surfaces": {
+              "const": [
+                "product_entry_manifest_builder",
+                "product_sidecar_adapter",
+                "domain_entry",
+                "receipt_schema_and_writer",
+                "grant_transition_oracle",
+                "refs_only_projection_builders",
+                "focused_contract_tests"
+              ]
+            },
+            "representative_private_functional_surfaces": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "local_runtime_journal_attempt_ledger",
+                "sidecar_dispatch_product_shell",
+                "optional_hermes_state_db"
+              ],
+              "properties": {
+                "local_runtime_journal_attempt_ledger": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": ["module_ref", "active_caller_status", "migration_action"],
+                  "properties": {
+                    "module_ref": {"const": "session_ledger_attention_queue"},
+                    "active_caller_status": {
+                      "const": "active_local_journal_and_refs_pending_opl_ledger_absorption"
+                    },
+                    "migration_action": {
+                      "const": "OPL_absorbs_session_and_attempt_ledger_MAG_keeps_safe_action_refs"
+                    }
+                  }
+                },
+                "sidecar_dispatch_product_shell": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": ["module_ref", "active_caller_status", "migration_action"],
+                  "properties": {
+                    "module_ref": {"const": "sidecar_product_status_shell"},
+                    "active_caller_status": {
+                      "const": "active_domain_sidecar_adapter_not_generic_product_shell"
+                    },
+                    "migration_action": {
+                      "const": "OPL_absorbs_product_operator_shell_MAG_keeps_guarded_domain_adapter"
+                    }
+                  }
+                },
+                "optional_hermes_state_db": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": ["module_ref", "active_caller_status", "migration_action"],
+                  "properties": {
+                    "module_ref": {"const": "default_hermes_gateway_local_manager_runtime_owner"},
+                    "active_caller_status": {
+                      "const": "optional_proof_only_not_default_runtime_owner"
+                    },
+                    "migration_action": {
+                      "const": "OPL_owns_generic_executor_adapter_MAG_keeps_explicit_receipt_proof_helper"
+                    }
+                  }
+                }
+              }
             },
             "audit_refs": {
               "type": "object",
