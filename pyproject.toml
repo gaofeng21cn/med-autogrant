@@ -26,6 +26,7 @@ medautogrant = "med_autogrant.cli:entrypoint"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+cache_dir = "/tmp/med-autogrant-pytest-cache"
 markers = [
   "meta: repo-tracked program control and repository hygiene checks",
   "smoke: minimal default CLI/product entry health checks that do not require optional proof dependencies",

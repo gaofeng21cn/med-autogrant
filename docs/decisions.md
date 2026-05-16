@@ -6,6 +6,12 @@
 - 理由：当前优先级是让 MAG 配合 OPL-led program 收薄，而不是在 MAG 内继续实现 workspace/source intake shell、memory locator/writeback transport、package/export lifecycle shell、generic transition runner、operator workbench/observability/SLO 或 agent scaffold template。OPL replacement 如果尚未存在，MAG 只能写 contract expectation / handoff note / guard，不能删除仍承担真实功能的 active path。
 - 影响：`ideal_state_closure_status` 的 phase map 按 active plan 调整为 P1 adapter thinning、P2 package/export lifecycle handoff、P3 memory locator/writeback handoff、P4 scaffold/legacy cleanup、P5 focused hosted receipt verification、P6 live soak。该决策不声明 OPL replacement 已存在，不声明 production long-run soak 完成，也不改变 MAG 对 fundability、quality、export verdict 和 owner receipt 的 authority。
 
+## 2026-05-16：补齐 MAG-owned refs-only handoff projections
+
+- 决策：MAG 新增 `lifecycle-receipt-bundle`、`memory-receipt-projection`、`package-lifecycle-handoff` 与 `continuous-receipt-reconciliation` 四个 product-entry / grouped CLI surface。它们分别把 cleanup/restore/retention lifecycle receipt refs、accepted/rejected memory receipt refs、package/export lifecycle handoff refs，以及 focused hosted receipt verification + inventory + observability projection 汇总成 OPL shell 可消费的 read projection。
+- 理由：这些仍属于 MAG domain package 的 thin program surface：MAG 必须给 OPL 提供 refs、receipt、typed blocker、gap/export verdict refs、manual portal boundary 和 reconciliation counts，才能让 OPL generic shell 消费；但 MAG 不能在仓内实现 OPL memory transport、artifact/package lifecycle shell、attempt ledger、generic runner、operator workbench、repair 或 live reconciliation daemon。
+- 影响：P2/P3/P5 的 MAG repo-local surface gap 进一步关闭，剩余变为真实 workspace/runtime receipt 泛化、OPL/App shell 生产消费、持续 live receipt reconciliation 和 long-run soak evidence。本决策不声明 OPL replacement 已生产接入，不把 receipt verification、no-regression evidence、provider completion 或 continuous snapshot 写成 fundability-ready、quality-ready、export-ready 或 production long-run soak。
+
 ## 2026-05-16：跟进 OPL conflict / observability / workbench projection surface
 
 - 决策：`mag_consumer_thinning_contract` 对齐 OPL 最新 standard scaffold generator 与 runtime projection surface，把 `artifact_package_lifecycle_shell`、`operator_workbench_drilldown_shell`、`observability_repair_projection`、family conflict envelope、stage-attempt usage/control-loop 和 runtime observability export 写成 MAG 只读消费/refs 投影边界。

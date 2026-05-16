@@ -402,3 +402,58 @@ def _add_product_focused_hosted_receipt_verification_command(
     command.add_argument("--sidecar-closeout-result")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
+
+
+def _add_product_lifecycle_receipt_bundle_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--lifecycle-receipt-evidence", required=True, action="append")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_product_memory_receipt_projection_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--receipt", required=True, action="append")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_product_package_lifecycle_handoff_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--package-refs", required=True)
+    command.add_argument("--gap-report", required=True)
+    command.add_argument("--export-verdict", required=True)
+    command.add_argument("--manual-portal-boundary", required=True)
+    command.add_argument("--lifecycle-receipt-refs", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_product_continuous_receipt_reconciliation_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--hosted-receipt-verification", required=True, action="append")
+    command.add_argument("--receipt-reconciliation-inventory", required=True)
+    command.add_argument("--receipt-observability-summary")
+    command.add_argument("--stage-attempt-observability-projection")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)

@@ -58,6 +58,18 @@ from med_autogrant.product_entry_parts.stage_attempt_observability import (
 from med_autogrant.product_entry_parts.hosted_receipt_verification import (
     build_focused_hosted_receipt_verification,
 )
+from med_autogrant.product_entry_parts.continuous_reconciliation import (
+    build_continuous_receipt_reconciliation_snapshot,
+)
+from med_autogrant.product_entry_parts.lifecycle_receipt_bundle import (
+    build_lifecycle_receipt_bundle,
+)
+from med_autogrant.product_entry_parts.memory_receipt_projection import (
+    build_memory_receipt_read_projection,
+)
+from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
+    build_package_lifecycle_handoff_projection,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -463,4 +475,52 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             owner_receipt_evidence=owner_receipt_evidence,
             opl_attempt_evidence=opl_attempt_evidence,
             sidecar_closeout_result=sidecar_closeout_result,
+        )
+
+    def build_lifecycle_receipt_bundle(
+        self,
+        *,
+        lifecycle_receipt_evidence_items: list[Mapping[str, Any]],
+    ) -> dict[str, Any]:
+        return build_lifecycle_receipt_bundle(
+            lifecycle_receipt_evidence_items=lifecycle_receipt_evidence_items,
+        )
+
+    def build_memory_receipt_read_projection(
+        self,
+        *,
+        receipt_items: list[Mapping[str, Any]],
+    ) -> dict[str, Any]:
+        return build_memory_receipt_read_projection(receipt_items)
+
+    def build_package_lifecycle_handoff_projection(
+        self,
+        *,
+        package_refs: Mapping[str, Any],
+        gap_report: Mapping[str, Any],
+        export_verdict: Mapping[str, Any],
+        manual_portal_boundary: Mapping[str, Any],
+        lifecycle_receipt_refs: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        return build_package_lifecycle_handoff_projection(
+            package_refs=package_refs,
+            gap_report=gap_report,
+            export_verdict=export_verdict,
+            manual_portal_boundary=manual_portal_boundary,
+            lifecycle_receipt_refs=lifecycle_receipt_refs,
+        )
+
+    def build_continuous_receipt_reconciliation_snapshot(
+        self,
+        *,
+        focused_hosted_receipt_verification_items: list[Mapping[str, Any]],
+        receipt_reconciliation_inventory: Mapping[str, Any],
+        receipt_observability_summary: Mapping[str, Any] | None = None,
+        stage_attempt_observability_projection: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        return build_continuous_receipt_reconciliation_snapshot(
+            focused_hosted_receipt_verification_items=focused_hosted_receipt_verification_items,
+            receipt_reconciliation_inventory=receipt_reconciliation_inventory,
+            receipt_observability_summary=receipt_observability_summary,
+            stage_attempt_observability_projection=stage_attempt_observability_projection,
         )

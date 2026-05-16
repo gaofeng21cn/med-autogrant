@@ -109,8 +109,10 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 `.sentrux/rules.toml` sidecar。若 Sentrux gate/check 失败，脚本会先生成并打印这些
 诊断，再报告 Sentrux 失败。
 
-默认本地验证入口是 `./scripts/verify.sh`。它只运行一次 line-budget，然后运行小
-`smoke` lane 与不需要 optional proof dependency 的非重型 fast core lane。矩阵型、
+默认本地验证入口是 `./scripts/verify.sh`。它只运行一次 line-budget，然后通过
+repo-local clean runner 运行小 `smoke` lane 与不需要 optional proof dependency
+的非重型 fast core lane；Python bytecode、pytest cache 和临时同步副产物不得写回开发 checkout。
+矩阵型、
 runtime/session、hosted/export、product-entry 与 provenance-oracle 回归覆盖归入
 `./scripts/verify.sh regression`；显式 Hermes hosted/proof 检查归入
 `./scripts/verify.sh proof` 并使用 `proof` extra；product-entry

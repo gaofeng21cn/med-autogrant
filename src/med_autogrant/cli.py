@@ -59,12 +59,16 @@ from med_autogrant.cli_parts.handlers import (
     handle_next_step,
     handle_probe_upstream_hermes,
     handle_product_entry_manifest,
+    handle_product_continuous_receipt_reconciliation,
     handle_product_domain_memory_decision,
     handle_product_domain_memory_proposal,
     handle_product_domain_memory_receipt_evidence,
     handle_product_focused_hosted_receipt_verification,
+    handle_product_lifecycle_receipt_bundle,
     handle_product_lifecycle_receipt_evidence,
+    handle_product_memory_receipt_projection,
     handle_product_owner_receipt_evidence,
+    handle_product_package_lifecycle_handoff,
     handle_product_receipt_reconciliation_inventory,
     handle_product_receipt_reconciliation_proof,
     handle_product_sidecar_dispatch,
@@ -96,9 +100,13 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_domain_memory_decision_command,
     _add_product_domain_memory_proposal_command,
     _add_product_domain_memory_receipt_evidence_command,
+    _add_product_continuous_receipt_reconciliation_command,
     _add_product_focused_hosted_receipt_verification_command,
+    _add_product_lifecycle_receipt_bundle_command,
     _add_product_lifecycle_receipt_evidence_command,
+    _add_product_memory_receipt_projection_command,
     _add_product_owner_receipt_evidence_command,
+    _add_product_package_lifecycle_handoff_command,
     _add_product_receipt_reconciliation_inventory_command,
     _add_product_receipt_reconciliation_proof_command,
     _add_product_entry_command,
@@ -451,6 +459,30 @@ def build_parser() -> argparse.ArgumentParser:
         "focused-hosted-receipt-verification",
         handle_product_focused_hosted_receipt_verification,
         "把 OPL-hosted attempt evidence 与 MAG owner receipt evidence 对账成 focused verification。",
+    )
+    _add_product_lifecycle_receipt_bundle_command(
+        subparsers,
+        "lifecycle-receipt-bundle",
+        handle_product_lifecycle_receipt_bundle,
+        "把 cleanup/restore/retention MAG lifecycle receipt refs 聚合成 OPL shell 可消费 bundle。",
+    )
+    _add_product_memory_receipt_projection_command(
+        subparsers,
+        "memory-receipt-projection",
+        handle_product_memory_receipt_projection,
+        "把 MAG domain memory accept/reject receipt 聚合成 body-free refs projection。",
+    )
+    _add_product_package_lifecycle_handoff_command(
+        subparsers,
+        "package-lifecycle-handoff",
+        handle_product_package_lifecycle_handoff,
+        "把 MAG package refs、gap、export verdict refs 和 lifecycle receipt refs 投影给 OPL package shell。",
+    )
+    _add_product_continuous_receipt_reconciliation_command(
+        subparsers,
+        "continuous-receipt-reconciliation",
+        handle_product_continuous_receipt_reconciliation,
+        "把 focused hosted verification 与 receipt inventory 聚合成持续 reconciliation read snapshot。",
     )
     return parser
 

@@ -678,3 +678,233 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             opl_attempt_evidence=opl_attempt_evidence,
             sidecar_closeout_result=sidecar_closeout_result,
         )
+
+    def test_lifecycle_receipt_bundle_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "ok": True,
+            "command": "lifecycle-receipt-bundle",
+            "lifecycle_receipt_bundle": {
+                "surface_kind": "mag_lifecycle_receipt_bundle",
+            },
+        }
+        cleanup_receipt = {
+            "surface_kind": "mag_lifecycle_receipt_evidence",
+            "operation": "cleanup",
+            "receipt_instance_ref": "/tmp/runtime-state/receipts/lifecycle/cleanup.json",
+        }
+        restore_receipt = {
+            "surface_kind": "mag_lifecycle_receipt_evidence",
+            "operation": "restore",
+            "receipt_instance_ref": "/tmp/runtime-state/receipts/lifecycle/restore.json",
+        }
+        retention_receipt = {
+            "surface_kind": "mag_lifecycle_receipt_evidence",
+            "operation": "retention",
+            "receipt_instance_ref": "/tmp/runtime-state/receipts/lifecycle/retention.json",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            cleanup_path = Path(tmp_dir) / "cleanup.json"
+            restore_path = Path(tmp_dir) / "restore.json"
+            retention_path = Path(tmp_dir) / "retention.json"
+            cleanup_path.write_text(json.dumps(cleanup_receipt), encoding="utf-8")
+            restore_path.write_text(json.dumps(restore_receipt), encoding="utf-8")
+            retention_path.write_text(json.dumps(retention_receipt), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_lifecycle_receipt_bundle.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "lifecycle-receipt-bundle",
+                    "--lifecycle-receipt-evidence",
+                    str(cleanup_path),
+                    "--lifecycle-receipt-evidence",
+                    str(restore_path),
+                    "--lifecycle-receipt-evidence",
+                    str(retention_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_lifecycle_receipt_bundle.assert_called_once_with(
+            lifecycle_receipt_evidence_items=[
+                cleanup_receipt,
+                restore_receipt,
+                retention_receipt,
+            ],
+        )
+
+    def test_memory_receipt_projection_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "surface_kind": "mag_memory_receipt_read_projection",
+            "accepted_count": 1,
+            "rejected_count": 0,
+        }
+        receipt = {
+            "surface_kind": "mag_domain_memory_runtime_receipt_evidence",
+            "receipt_ref": "runtime://receipts/domain-memory/review-risk.json",
+            "proposal_id": "review-risk",
+            "decision": "accepted",
+            "decision_owner": "med-autogrant",
+            "accepted_memory_ref": "runtime://domain-memory/accepted/review-risk.json",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            receipt_path = Path(tmp_dir) / "memory-receipt.json"
+            receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_memory_receipt_read_projection.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "memory-receipt-projection",
+                    "--receipt",
+                    str(receipt_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_memory_receipt_read_projection.assert_called_once_with(
+            receipt_items=[receipt],
+        )
+
+    def test_package_lifecycle_handoff_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "surface_kind": "mag_package_lifecycle_handoff_projection",
+            "state": "refs_ready_for_opl_artifact_package_lifecycle_shell",
+        }
+        package_refs = {"final_package_ref": "mag-package://final/p3c"}
+        gap_report = {
+            "gap_report_ref": "mag-gap://package-export/p3c",
+            "summary": "manual portal remains external",
+        }
+        export_verdict = {"export_verdict_ref": "mag-verdict://submission-ready-export/p3c"}
+        manual_portal_boundary = {
+            "manual_portal_boundary_ref": "mag-boundary://manual-portal/p3c",
+        }
+        lifecycle_receipt_refs = {
+            "lifecycle_receipt_ref": "runtime://mag/receipts/lifecycle/p3c.json",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            package_refs_path = Path(tmp_dir) / "package-refs.json"
+            gap_report_path = Path(tmp_dir) / "gap-report.json"
+            export_verdict_path = Path(tmp_dir) / "export-verdict.json"
+            manual_portal_boundary_path = Path(tmp_dir) / "manual-portal-boundary.json"
+            lifecycle_receipt_refs_path = Path(tmp_dir) / "lifecycle-receipt-refs.json"
+            package_refs_path.write_text(json.dumps(package_refs), encoding="utf-8")
+            gap_report_path.write_text(json.dumps(gap_report), encoding="utf-8")
+            export_verdict_path.write_text(json.dumps(export_verdict), encoding="utf-8")
+            manual_portal_boundary_path.write_text(
+                json.dumps(manual_portal_boundary),
+                encoding="utf-8",
+            )
+            lifecycle_receipt_refs_path.write_text(
+                json.dumps(lifecycle_receipt_refs),
+                encoding="utf-8",
+            )
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_package_lifecycle_handoff_projection.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "package-lifecycle-handoff",
+                    "--package-refs",
+                    str(package_refs_path),
+                    "--gap-report",
+                    str(gap_report_path),
+                    "--export-verdict",
+                    str(export_verdict_path),
+                    "--manual-portal-boundary",
+                    str(manual_portal_boundary_path),
+                    "--lifecycle-receipt-refs",
+                    str(lifecycle_receipt_refs_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_package_lifecycle_handoff_projection.assert_called_once_with(
+            package_refs=package_refs,
+            gap_report=gap_report,
+            export_verdict=export_verdict,
+            manual_portal_boundary=manual_portal_boundary,
+            lifecycle_receipt_refs=lifecycle_receipt_refs,
+        )
+
+    def test_continuous_receipt_reconciliation_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "surface_kind": "mag_continuous_receipt_reconciliation_snapshot",
+            "state": "read_only_snapshot_not_live_soak_complete",
+        }
+        verification = {
+            "surface_kind": "mag_focused_hosted_receipt_verification",
+            "mag_owner_receipt": {
+                "receipt_ref": "/tmp/runtime-state/receipts/receipt-1.json",
+            },
+        }
+        inventory = {
+            "surface_kind": "mag_controlled_soak_receipt_reconciliation_inventory",
+            "items": [],
+        }
+        observability_summary = {
+            "surface_kind": "mag_receipt_observability_summary",
+            "state": "summary",
+        }
+        stage_attempt_projection = {
+            "surface_kind": "mag_stage_attempt_observability_projection",
+            "state": "projection",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            verification_path = Path(tmp_dir) / "verification.json"
+            inventory_path = Path(tmp_dir) / "inventory.json"
+            observability_path = Path(tmp_dir) / "observability.json"
+            stage_attempt_path = Path(tmp_dir) / "stage-attempt.json"
+            verification_path.write_text(json.dumps(verification), encoding="utf-8")
+            inventory_path.write_text(json.dumps(inventory), encoding="utf-8")
+            observability_path.write_text(json.dumps(observability_summary), encoding="utf-8")
+            stage_attempt_path.write_text(json.dumps(stage_attempt_projection), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_continuous_receipt_reconciliation_snapshot.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "continuous-receipt-reconciliation",
+                    "--hosted-receipt-verification",
+                    str(verification_path),
+                    "--receipt-reconciliation-inventory",
+                    str(inventory_path),
+                    "--receipt-observability-summary",
+                    str(observability_path),
+                    "--stage-attempt-observability-projection",
+                    str(stage_attempt_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_continuous_receipt_reconciliation_snapshot.assert_called_once_with(
+            focused_hosted_receipt_verification_items=[verification],
+            receipt_reconciliation_inventory=inventory,
+            receipt_observability_summary=observability_summary,
+            stage_attempt_observability_projection=stage_attempt_projection,
+        )

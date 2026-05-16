@@ -244,6 +244,56 @@ def handle_product_focused_hosted_receipt_verification(args: argparse.Namespace)
     )
 
 
+def handle_product_lifecycle_receipt_bundle(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_lifecycle_receipt_bundle(
+        lifecycle_receipt_evidence_items=[
+            _read_json_object(lifecycle_receipt_path)
+            for lifecycle_receipt_path in args.lifecycle_receipt_evidence
+        ],
+    )
+
+
+def handle_product_memory_receipt_projection(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_memory_receipt_read_projection(
+        receipt_items=[
+            _read_json_object(receipt_path)
+            for receipt_path in args.receipt
+        ],
+    )
+
+
+def handle_product_package_lifecycle_handoff(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_package_lifecycle_handoff_projection(
+        package_refs=_read_json_object(args.package_refs),
+        gap_report=_read_json_object(args.gap_report),
+        export_verdict=_read_json_object(args.export_verdict),
+        manual_portal_boundary=_read_json_object(args.manual_portal_boundary),
+        lifecycle_receipt_refs=_read_json_object(args.lifecycle_receipt_refs),
+    )
+
+
+def handle_product_continuous_receipt_reconciliation(args: argparse.Namespace) -> dict[str, Any]:
+    receipt_observability_summary = None
+    if args.receipt_observability_summary is not None:
+        receipt_observability_summary = _read_json_object(args.receipt_observability_summary)
+    stage_attempt_observability_projection = None
+    if args.stage_attempt_observability_projection is not None:
+        stage_attempt_observability_projection = _read_json_object(
+            args.stage_attempt_observability_projection
+        )
+    return _product_entry().build_continuous_receipt_reconciliation_snapshot(
+        focused_hosted_receipt_verification_items=[
+            _read_json_object(verification_path)
+            for verification_path in args.hosted_receipt_verification
+        ],
+        receipt_reconciliation_inventory=_read_json_object(
+            args.receipt_reconciliation_inventory
+        ),
+        receipt_observability_summary=receipt_observability_summary,
+        stage_attempt_observability_projection=stage_attempt_observability_projection,
+    )
+
+
 def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 

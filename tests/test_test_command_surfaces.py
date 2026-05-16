@@ -15,30 +15,45 @@ def test_makefile_exposes_layered_test_entrypoints() -> None:
     makefile = _read("Makefile")
 
     assert "test-fast:" in makefile
-    assert 'uv run pytest -q -m "not meta and not regression and not proof"' in makefile
+    assert "PYTHON_CLEAN := ./scripts/run-python-clean.sh" in makefile
+    assert "PYTEST_CLEAN := ./scripts/run-pytest-clean.sh" in makefile
+    assert '$(PYTEST_CLEAN) -q -m "not meta and not regression and not proof"' in makefile
     assert "test-line-budget:" in makefile
-    assert "uv run python scripts/line_budget.py" in makefile
+    assert "$(PYTHON_CLEAN) scripts/line_budget.py" in makefile
     assert "test-cli-smoke:" in makefile
-    assert "uv run pytest -q -m smoke" in makefile
+    assert "$(PYTEST_CLEAN) -q -m smoke" in makefile
     assert "test-regression:" in makefile
-    assert 'uv run pytest -q -m "regression and not proof"' in makefile
+    assert '$(PYTEST_CLEAN) -q -m "regression and not proof"' in makefile
     assert "test-proof:" in makefile
-    assert "uv run --extra proof pytest -q -m proof" in makefile
+    assert "MAG_CLEAN_RUNNER_UV_EXTRA=proof $(PYTEST_CLEAN) -q -m proof" in makefile
     assert "test-family:" in makefile
     assert (
-        "uv run pytest tests/test_repository_hygiene.py tests/test_test_command_surfaces.py "
+        "$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py "
         "tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q"
     ) in makefile
     assert "test-meta:" in makefile
-    assert "uv run pytest -q -m meta" in makefile
+    assert "$(PYTEST_CLEAN) -q -m meta" in makefile
     assert "test-full:" in makefile
-    assert 'uv run pytest -q -m "not proof"' in makefile
+    assert '$(PYTEST_CLEAN) -q -m "not proof"' in makefile
+
+
+def test_clean_python_runners_route_caches_outside_checkout() -> None:
+    python_runner = _read("scripts/run-python-clean.sh")
+    pytest_runner = _read("scripts/run-pytest-clean.sh")
+
+    assert "PYTHONDONTWRITEBYTECODE=1" in python_runner
+    assert "PYTHONPYCACHEPREFIX" in python_runner
+    assert "-p no:cacheprovider -o cache_dir=${tmp_root}/pytest-cache" in python_runner
+    assert "uv sync --frozen --group dev --no-install-project --inexact" in python_runner
+    assert "-m pytest" in pytest_runner
 
 
 def test_pyproject_registers_test_lane_markers() -> None:
     pyproject = tomllib.loads(_read("pyproject.toml"))
-    markers = pyproject["tool"]["pytest"]["ini_options"]["markers"]
+    pytest_options = pyproject["tool"]["pytest"]["ini_options"]
+    markers = pytest_options["markers"]
 
+    assert pytest_options["cache_dir"] == "/tmp/med-autogrant-pytest-cache"
     assert "meta: repo-tracked program control and repository hygiene checks" in markers
     assert (
         "smoke: minimal default CLI/product entry health checks that do not require optional proof dependencies"
