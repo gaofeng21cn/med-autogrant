@@ -36,6 +36,8 @@ MAG 的核心价值是基金申请专业性：它持有 funding-call 语境、fu
 
 该审计面现在逐项列出 `code_paths`、`active_callers`、`active_caller_status`、`migration_action`、`retention_reason` 和 `cannot_absorb_reason`。当前目标态不是把 MAG 压成纯知识文件仓：`MedAutoGrantDomainEntry`、product-entry manifest builder、product sidecar adapter、receipt schema/writer、grant transition oracle、refs-only projection builder 和 focused contract tests 仍是 MAG 必要薄程序面。需要从 MAG 私有实现中继续抽离到 OPL 的，是 local journal / attempt ledger、attention queue、generic stage-attempt ledger、workspace/source intake shell、artifact/package lifecycle shell、operator workbench、runtime observability/SLO、scheduler/daemon 和 generic transition runner。optional `Hermes-Agent` / `hermes_state.SessionDB` 只保留为显式 proof/provenance lane，不是默认 runtime owner，也不是 MAG 要继续私有化维护的 provider substrate。
 
+同日 thin output guard follow-through 后，MAG 的 sidecar / manifest 输出层也被锁定：local runtime journal state、local attempt ledger state、attention queue state、stage attempt ledger state、package lifecycle state、source intake state、operator workbench state、scheduler daemon state 和 Hermes state-db runtime state 都是 forbidden output class。理想态下 MAG 可以保留 grant domain thin adapter 和 explicit proof/provenance lane，但不能把这些私有功能状态作为 MAG-owned runtime surface 输出给 OPL 或 App。
+
 执行顺序上，MAG 理想态的已知功能面上收和收薄在 MAG 仓内已经完成为 consumer follow-through：workspace/source intake、memory locator/writeback transport、package/export lifecycle、route/decision/workbench、observability/SLO 和 scaffold/template 规则已回到 OPL Framework / App replacement expectation，MAG 保留 grant authority pack 与薄程序面。剩余工作是外部 OPL replacement 证据、真实 workspace/runtime memory-package-lifecycle receipt、focused OPL-hosted receipt verification 和 live soak；其中 live soak 是后置生产验收。
 
 ## 产品分层

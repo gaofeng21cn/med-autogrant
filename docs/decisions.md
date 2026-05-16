@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-16：收紧 MAG thin surface 输出层的私有功能状态 guard
+
+- 决策：`mag_consumer_thinning_contract.thin_surface_output_guard` 现在显式列出 `private_functional_state_output_classes_forbidden`，禁止 MAG sidecar / manifest 输出 local runtime journal、local attempt ledger、attention queue、stage attempt ledger、package lifecycle、source intake、operator workbench、scheduler daemon 和 Hermes state-db runtime state。
+- 理由：只把私有功能模块分类为 OPL-owned replacement 不够；输出层也必须 fail-closed，避免 MAG 通过 sidecar/product surface 继续泄露或固化 repo-local runtime state，从而重新形成私有 generic runtime owner。
+- 影响：MAG 仍可输出 grant-owned refs、owner receipt、typed blocker、verdict refs 和 domain action metadata；OPL 继续持有这些私有功能状态对应的 generic ledger、queue、source/lifecycle/workbench/scheduler/observability shell。该 guard 不删除仍承担 domain thin adapter 或 explicit proof lane 的 active code path，也不声明 production long-run soak 完成。
+
 ## 2026-05-16：落地 MAG privatized functional module audit
 
 - 决策：`mag_consumer_thinning_contract` 新增 `privatized_functional_module_audit`，并由 sidecar export 同步投影。该审计面把 runtime registration、task lifecycle、session ledger / attention queue、lifecycle adapter、observability、sidecar/product status、package lifecycle、source intake、human workbench / scheduler / daemon 分成三类：OPL-owned generic primitive consumer、MAG-owned grant truth / receipt / verdict、retire/tombstone。

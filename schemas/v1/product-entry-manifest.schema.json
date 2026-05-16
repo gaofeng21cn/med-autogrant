@@ -4786,6 +4786,7 @@
             "target_domain_id",
             "output_policy",
             "allowed_output_classes",
+            "private_functional_state_output_classes_forbidden",
             "required_sidecar_return_refs",
             "forbidden_output_classes",
             "consumes_opl_replacement_expectations",
@@ -4814,6 +4815,19 @@
                 "domain_action_metadata"
               ]
             },
+            "private_functional_state_output_classes_forbidden": {
+              "const": [
+                "local_runtime_journal_state",
+                "local_attempt_ledger_state",
+                "attention_queue_state",
+                "stage_attempt_ledger_state",
+                "package_lifecycle_state",
+                "source_intake_state",
+                "operator_workbench_state",
+                "scheduler_daemon_state",
+                "hermes_state_db_runtime_state"
+              ]
+            },
             "forbidden_output_classes": {
               "type": "array",
               "contains": {"const": "generic_scheduler_state"},
@@ -4823,6 +4837,15 @@
                 {"contains": {"const": "generic_artifact_lifecycle_state"}},
                 {"contains": {"const": "generic_operator_workbench_state"}},
                 {"contains": {"const": "generic_observability_slo_state"}},
+                {"contains": {"const": "local_runtime_journal_state"}},
+                {"contains": {"const": "local_attempt_ledger_state"}},
+                {"contains": {"const": "attention_queue_state"}},
+                {"contains": {"const": "stage_attempt_ledger_state"}},
+                {"contains": {"const": "package_lifecycle_state"}},
+                {"contains": {"const": "source_intake_state"}},
+                {"contains": {"const": "operator_workbench_state"}},
+                {"contains": {"const": "scheduler_daemon_state"}},
+                {"contains": {"const": "hermes_state_db_runtime_state"}},
                 {"contains": {"const": "functional_harness_runtime_state"}},
                 {"contains": {"const": "opl_harness_pass_grant_ready"}},
                 {"contains": {"const": "opl_harness_pass_export_ready"}}
@@ -4841,6 +4864,11 @@
                 "mag_can_emit_generic_runtime_state",
                 "mag_can_emit_generic_workbench_state",
                 "mag_can_emit_generic_observability_state",
+                "mag_can_emit_private_functional_state",
+                "mag_can_emit_local_attempt_ledger_state",
+                "mag_can_emit_source_intake_state",
+                "mag_can_emit_package_lifecycle_state",
+                "mag_can_emit_hermes_state_db_runtime_state",
                 "mag_can_emit_family_conflict_completion_claim",
                 "mag_can_emit_functional_harness_runtime_state",
                 "opl_harness_pass_can_declare_grant_ready",
@@ -4850,6 +4878,11 @@
                 "mag_can_emit_generic_runtime_state": {"const": false},
                 "mag_can_emit_generic_workbench_state": {"const": false},
                 "mag_can_emit_generic_observability_state": {"const": false},
+                "mag_can_emit_private_functional_state": {"const": false},
+                "mag_can_emit_local_attempt_ledger_state": {"const": false},
+                "mag_can_emit_source_intake_state": {"const": false},
+                "mag_can_emit_package_lifecycle_state": {"const": false},
+                "mag_can_emit_hermes_state_db_runtime_state": {"const": false},
                 "mag_can_emit_family_conflict_completion_claim": {"const": false},
                 "mag_can_emit_functional_harness_runtime_state": {"const": false},
                 "opl_harness_pass_can_declare_grant_ready": {"const": false},

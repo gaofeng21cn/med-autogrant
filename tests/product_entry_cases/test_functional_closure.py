@@ -623,12 +623,29 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             output_guard["required_sidecar_return_refs"],
             thinning["exposed_sidecar_return_refs"],
         )
+        self.assertEqual(
+            output_guard["private_functional_state_output_classes_forbidden"],
+            [
+                "local_runtime_journal_state",
+                "local_attempt_ledger_state",
+                "attention_queue_state",
+                "stage_attempt_ledger_state",
+                "package_lifecycle_state",
+                "source_intake_state",
+                "operator_workbench_state",
+                "scheduler_daemon_state",
+                "hermes_state_db_runtime_state",
+            ],
+        )
         self.assertIn("generic_scheduler_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_workbench_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_memory_transport_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_artifact_lifecycle_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_operator_workbench_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_observability_slo_state", output_guard["forbidden_output_classes"])
+        for forbidden_state in output_guard["private_functional_state_output_classes_forbidden"]:
+            with self.subTest(forbidden_state=forbidden_state):
+                self.assertIn(forbidden_state, output_guard["forbidden_output_classes"])
         self.assertIn("family_conflict_envelope_completion_claim", output_guard["forbidden_output_classes"])
         self.assertIn("functional_harness_runtime_state", output_guard["forbidden_output_classes"])
         self.assertIn("opl_harness_pass_grant_ready", output_guard["forbidden_output_classes"])
@@ -639,6 +656,11 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_runtime_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_workbench_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_observability_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_private_functional_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_local_attempt_ledger_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_source_intake_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_package_lifecycle_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_hermes_state_db_runtime_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_family_conflict_completion_claim"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_functional_harness_runtime_state"])
         self.assertFalse(output_guard["authority_boundary"]["opl_harness_pass_can_declare_grant_ready"])

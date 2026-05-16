@@ -721,6 +721,17 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         },
     }
     assert thinning["sidecar_output_policy"] == "grant_refs_and_receipts_only_no_generic_runtime_state"
+    assert thinning["private_functional_state_output_classes_forbidden"] == [
+        "local_runtime_journal_state",
+        "local_attempt_ledger_state",
+        "attention_queue_state",
+        "stage_attempt_ledger_state",
+        "package_lifecycle_state",
+        "source_intake_state",
+        "operator_workbench_state",
+        "scheduler_daemon_state",
+        "hermes_state_db_runtime_state",
+    ]
     assert thinning["knowledge_only_repository"] is False
     assert thinning["retains_domain_program_surfaces"] is True
     assert thinning["authority_boundary"] == {
@@ -743,6 +754,11 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "mag_implements_generic_artifact_gallery": False,
         "mag_implements_generic_operator_workbench": False,
         "mag_implements_generic_observability_slo": False,
+        "mag_can_emit_private_functional_state": False,
+        "mag_can_emit_local_attempt_ledger_state": False,
+        "mag_can_emit_source_intake_state": False,
+        "mag_can_emit_package_lifecycle_state": False,
+        "mag_can_emit_hermes_state_db_runtime_state": False,
         "provider_completion_is_grant_ready": False,
         "mag_executes_opl_repair": False,
     }

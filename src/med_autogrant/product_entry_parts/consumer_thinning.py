@@ -33,6 +33,18 @@ OPL_FUNCTIONAL_HARNESS_COVERAGE_CHAINS = (
     "restart_dead_letter_repair_human_gate_chain",
 )
 
+PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES = (
+    "local_runtime_journal_state",
+    "local_attempt_ledger_state",
+    "attention_queue_state",
+    "stage_attempt_ledger_state",
+    "package_lifecycle_state",
+    "source_intake_state",
+    "operator_workbench_state",
+    "scheduler_daemon_state",
+    "hermes_state_db_runtime_state",
+)
+
 
 def build_mag_consumer_thinning_contract(
     *,
@@ -1318,6 +1330,9 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
         "target_domain_id": TARGET_DOMAIN_ID,
         "output_policy": "grant_refs_and_receipts_only_no_generic_runtime_state",
         "allowed_output_classes": list(MAG_THIN_SURFACE_OUTPUT_CLASSES),
+        "private_functional_state_output_classes_forbidden": list(
+            PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES
+        ),
         "required_sidecar_return_refs": {
             "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
             "controlled_stage_attempt_projection_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
@@ -1347,6 +1362,7 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "generic_artifact_gallery_state",
             "generic_operator_workbench_state",
             "generic_observability_slo_state",
+            *PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES,
             "family_conflict_envelope_completion_claim",
             "functional_harness_runtime_state",
             "opl_harness_pass_grant_ready",
@@ -1367,6 +1383,11 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "mag_can_emit_generic_runtime_state": False,
             "mag_can_emit_generic_workbench_state": False,
             "mag_can_emit_generic_observability_state": False,
+            "mag_can_emit_private_functional_state": False,
+            "mag_can_emit_local_attempt_ledger_state": False,
+            "mag_can_emit_source_intake_state": False,
+            "mag_can_emit_package_lifecycle_state": False,
+            "mag_can_emit_hermes_state_db_runtime_state": False,
             "mag_can_emit_family_conflict_completion_claim": False,
             "mag_can_emit_functional_harness_runtime_state": False,
             "opl_harness_pass_can_declare_grant_ready": False,

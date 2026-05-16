@@ -697,6 +697,17 @@
       "generic_observability_slo_owner"
     ],
     "sidecar_output_policy": "grant_refs_and_receipts_only_no_generic_runtime_state",
+    "private_functional_state_output_classes_forbidden": [
+      "local_runtime_journal_state",
+      "local_attempt_ledger_state",
+      "attention_queue_state",
+      "stage_attempt_ledger_state",
+      "package_lifecycle_state",
+      "source_intake_state",
+      "operator_workbench_state",
+      "scheduler_daemon_state",
+      "hermes_state_db_runtime_state"
+    ],
     "knowledge_only_repository": false,
     "retains_domain_program_surfaces": true,
     "authority_boundary": {
@@ -719,6 +730,11 @@
       "mag_implements_generic_artifact_gallery": false,
       "mag_implements_generic_operator_workbench": false,
       "mag_implements_generic_observability_slo": false,
+      "mag_can_emit_private_functional_state": false,
+      "mag_can_emit_local_attempt_ledger_state": false,
+      "mag_can_emit_source_intake_state": false,
+      "mag_can_emit_package_lifecycle_state": false,
+      "mag_can_emit_hermes_state_db_runtime_state": false,
       "provider_completion_is_grant_ready": false,
       "mag_executes_opl_repair": false
     },
