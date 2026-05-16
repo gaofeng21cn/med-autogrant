@@ -31,11 +31,12 @@ These records are still directly linked from the docs guide or current status an
 
 ## File-Level Lifecycle Table
 
-This table is the direct-reader guard for the dense path-stable specs set. It
-uses exact files where the file is an active owner or a high-risk singleton, and
-exact filename families where a batch shares the same lifecycle, owner, and next
-hop. A file can remain under `docs/specs/` for path stability while its current
-content owner is elsewhere.
+This table is the direct-reader guard for the dense specs set. It uses exact
+files where the file is an active owner or a high-risk singleton, and exact
+filename families where a batch shares the same lifecycle, owner, and next hop.
+A file can remain under `docs/specs/` for path stability while its current
+content owner is elsewhere; explicitly retired provider-proof files can move to
+`docs/history/specs/` once they no longer carry an active owner role.
 
 | File or exact family | Lifecycle | Current owner / replacement | Reader action |
 | --- | --- | --- | --- |
@@ -61,7 +62,7 @@ content owner is elsewhere.
 | `2026-04-08-runtime-first-productization-program.md`, `2026-04-08-runtime-first-r1-to-r5-boundary-map.md` | `historical_program_record` | core docs + history/specs index | Use for R1-R5 formation history, not current execution order. |
 | `2026-04-09-post-r5a-local-runtime-hardening-brief.md`, `2026-04-10-post-r5a-local-runtime-*`, `2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md` | `support_or_history_by_subsection` | core docs + route/runtime owner docs | Use fail-closed and honest-stop lessons; do not restore old local runtime owner. |
 | `2026-04-10-post-r5a-final-package-*`, `2026-04-10-post-r5a-hosted-contract-bundle-*`, `2026-04-10-post-r5a-stage-route-*`, `2026-04-10-post-r5a-worktree-aware-*`, `2026-04-10-post-r5a-revised-*` | `historical_fail_closed_record` | package/export schemas + history/specs index | Use for fail-closed provenance and path-stable audit. |
-| `2026-04-11-hermes-backed-*`, `2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`, `2026-04-12-upstream-hermes-agent-fast-cutover-*` | `superseded_provider_proof` | current core docs + explicit hosted/proof refs | Use as Hermes proof/provenance only; default runtime owner remains `codex_cli`. |
+| `../history/specs/2026-04-11-hermes-backed-*`, `../history/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`, `../history/specs/2026-04-12-upstream-hermes-agent-fast-cutover-*` | `retired_provider_proof` | current core docs + explicit hosted/proof refs | Read from history only. Do not restore Hermes-backed owner, Gateway/local-manager, compatibility alias, or default-runtime wording. |
 
 ## Support Current-Truth Records
 
@@ -83,8 +84,8 @@ The content audit assigns older provider-runtime families to these current dispo
 
 | Wording family | Current disposition |
 | --- | --- |
-| `Hermes-backed runtime substrate owner` in `2026-04-11-hermes-backed-*` | Superseded provider proof / provenance. `hermes_agent` is only an explicit non-default executor/proof/provenance lane; it is not an active provider owner, compatibility target, or default runtime path. |
-| `upstream Hermes-Agent fast cutover` board and proof records | Historical/proof context. They remain useful for proof-lane vocabulary and fail-closed evidence; default execution, runtime ownership, and OPL handoff boundaries live in the current owner docs. |
+| `Hermes-backed runtime substrate owner` in historical `2026-04-11-hermes-backed-*` specs | Retired provider proof / provenance under `docs/history/specs/`. `hermes_agent` is only an explicit non-default executor/proof/provenance lane; it is not an active provider owner, compatibility target, or default runtime path. |
+| `upstream Hermes-Agent fast cutover` board and proof records | Historical/proof context now physically archived under `docs/history/specs/`. They remain useful for proof-lane vocabulary and fail-closed evidence; default execution, runtime ownership, and OPL handoff boundaries live in the current owner docs. |
 | `OPL Gateway`, `gateway/federation`, and `future P5` language | Historical or future activation context. There is no active Gateway/federation/compat surface to preserve; new callers use the current OPL stage-led framework + MAG descriptor/projection path. |
 | `OPL Runtime Manager`, Temporal target, provider-backed runtime, active-adapter, or compatibility-bridge wording | Historical/provider-specific migration context. Current MAG wording is that OPL is a stage-led framework with Agent executors as the minimum execution unit, consuming MAG-owned descriptor/projection; MAG retains grant truth, quality, route, and export authority. |
 | `hosted contract bundle` | Current integration/reference export surface. Hosted runtime, Web UI, and external portal submission need separate current owner evidence. |
@@ -101,7 +102,7 @@ These records are retained for auditability and path stability. They do not defi
 | R3/R4/R5 activation packages | `2026-04-09-*` |
 | Post-R5A fail-closed artifact-bundle notes | `2026-04-10-post-r5a-final-package-*`, `2026-04-10-post-r5a-hosted-contract-bundle-*`, malformed/fail-closed variants |
 | Other post-R5A activation notes | `2026-04-10-post-r5a-local-runtime-validation-*`, `2026-04-10-post-r5a-revised-*`, `2026-04-10-post-r5a-stage-route-*`, `2026-04-10-post-r5a-worktree-aware-*` |
-| Superseded Hermes/provider records | `2026-04-11-hermes-backed-*`, `2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`, `2026-04-12-upstream-hermes-agent-fast-cutover-board.md`, `2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` |
+| Retired Hermes/provider records | `../history/specs/2026-04-11-hermes-backed-*`, `../history/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`, `../history/specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md`, `../history/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` |
 
 The archive reading entry for these groups remains [Historical specs](../history/specs/README.md).
 
