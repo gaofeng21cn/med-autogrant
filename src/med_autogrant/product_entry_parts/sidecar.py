@@ -148,6 +148,13 @@ def build_sidecar_export(
         "owner_receipt_contract": dict(owner_receipt_contract),
         "lifecycle_guarded_apply_proof": dict(lifecycle_guarded_apply_proof),
         "mag_consumer_thinning_contract": dict(mag_consumer_thinning_contract),
+        "functional_harness_consumer_coverage": dict(
+            _require_mapping(
+                mag_consumer_thinning_contract,
+                "functional_harness_consumer_coverage",
+                context="sidecar_export.mag_consumer_thinning_contract",
+            )
+        ),
         "consumed_opl_standard_surfaces": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,

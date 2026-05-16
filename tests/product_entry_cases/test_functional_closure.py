@@ -366,6 +366,8 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "memory_locator_writeback_transport",
                 "artifact_package_lifecycle_shell",
                 "generic_transition_runner",
+                "functional_harness_queue_stage_attempt_typed_closeout",
+                "functional_harness_restart_dead_letter_repair_human_gate",
                 "operator_workbench_drilldown_shell",
                 "observability_repair_projection",
                 "agent_scaffold_checklist",
@@ -380,6 +382,11 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "runtime_observability_export",
                 "family_product_operator_projection",
             ],
+        )
+        self.assertEqual(
+            consumed["functional_harness_consumer_coverage_ref"],
+            "/product_entry_manifest/mag_consumer_thinning_contract/"
+            "functional_harness_consumer_coverage",
         )
         self.assertEqual(
             set(consumed["mag_retained_authority"]),
@@ -399,6 +406,9 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_artifact_gallery"])
         self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_operator_workbench"])
         self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_observability_slo"])
+        self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_artifact_lifecycle"])
+        self.assertFalse(consumed["authority_boundary"]["opl_harness_pass_can_declare_grant_ready"])
+        self.assertFalse(consumed["authority_boundary"]["opl_harness_pass_can_declare_export_ready"])
         conflict_projection = thinning["opl_family_conflict_blocker_projection"]
         self.assertEqual(conflict_projection["envelope_kind"], "opl_conflict_or_blocker.v1")
         self.assertEqual(conflict_projection["projection_policy"], "typed_blocker_only_no_fallback_completion")
@@ -419,6 +429,55 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(stage_projection["provider_completion_is_grant_ready"])
         self.assertFalse(observability["authority_boundary"]["can_execute_repair"])
         self.assertFalse(observability["authority_boundary"]["can_authorize_artifact_export"])
+        coverage = thinning["functional_harness_consumer_coverage"]
+        self.assertEqual(coverage["surface_kind"], "mag_functional_harness_consumer_coverage")
+        self.assertEqual(coverage["owner"], "med-autogrant")
+        self.assertEqual(coverage["harness_owner"], "one-person-lab")
+        self.assertEqual(coverage["adapter_role"], "domain_authority_pack_consumer_only")
+        self.assertFalse(coverage["claims_opl_functional_harness_pass"])
+        self.assertFalse(coverage["claims_grant_ready"])
+        self.assertFalse(coverage["claims_export_ready"])
+        self.assertEqual(
+            coverage["coverage_chain_ids"],
+            [
+                "memory_refs_only_writeback_chain",
+                "queue_stage_attempt_typed_closeout_chain",
+                "generic_transition_runner_chain",
+                "restart_dead_letter_repair_human_gate_chain",
+            ],
+        )
+        self.assertEqual(
+            {chain["chain_id"] for chain in coverage["coverage_chains"]},
+            set(coverage["coverage_chain_ids"]),
+        )
+        self.assertEqual(
+            set(coverage["mag_retained_authority"]),
+            {
+                "grant_truth",
+                "fundability_verdict",
+                "quality_verdict",
+                "export_verdict",
+                "grant_memory_body_accept_reject",
+                "package_authority",
+                "owner_receipt",
+                "typed_blocker",
+                "sidecar_projection_adapter",
+            },
+        )
+        self.assertFalse(coverage["fail_closed_rules"]["opl_harness_pass_is_grant_ready"])
+        self.assertFalse(coverage["fail_closed_rules"]["opl_harness_pass_is_export_ready"])
+        self.assertFalse(coverage["fail_closed_rules"]["opl_can_hold_generic_runtime_in_mag"])
+        for chain in coverage["coverage_chains"]:
+            with self.subTest(chain=chain["chain_id"]):
+                self.assertEqual(chain["mag_role"], "consumer_domain_authority_pack")
+                self.assertFalse(chain["implemented_in_mag"])
+                self.assertFalse(chain["mag_claims_generic_runtime_owner"])
+                self.assertEqual(chain["harness_owner"], "one-person-lab")
+                self.assertFalse(chain["fail_closed_boundary"]["harness_pass_can_set_grant_ready"])
+                self.assertFalse(chain["fail_closed_boundary"]["harness_pass_can_set_export_ready"])
+                self.assertFalse(chain["fail_closed_boundary"]["opl_can_write_grant_truth"])
+                self.assertFalse(chain["fail_closed_boundary"]["opl_can_write_memory_body"])
+                self.assertTrue(chain["fail_closed_boundary"]["mag_owner_receipt_required"])
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(
@@ -436,6 +495,9 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertIn("generic_operator_workbench_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_observability_slo_state", output_guard["forbidden_output_classes"])
         self.assertIn("family_conflict_envelope_completion_claim", output_guard["forbidden_output_classes"])
+        self.assertIn("functional_harness_runtime_state", output_guard["forbidden_output_classes"])
+        self.assertIn("opl_harness_pass_grant_ready", output_guard["forbidden_output_classes"])
+        self.assertIn("opl_harness_pass_export_ready", output_guard["forbidden_output_classes"])
         self.assertIn("grant_artifact_content", output_guard["forbidden_output_classes"])
         self.assertIn("memory_body", output_guard["forbidden_output_classes"])
         self.assertTrue(output_guard["consumes_opl_replacement_expectations"])
@@ -443,6 +505,9 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_workbench_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_observability_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_family_conflict_completion_claim"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_functional_harness_runtime_state"])
+        self.assertFalse(output_guard["authority_boundary"]["opl_harness_pass_can_declare_grant_ready"])
+        self.assertFalse(output_guard["authority_boundary"]["opl_harness_pass_can_declare_export_ready"])
         scaffold_guard = thinning["standard_agent_scaffold_alignment"]
         self.assertEqual(
             scaffold_guard["surface_kind"],
@@ -463,6 +528,9 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(authority["mag_implements_generic_artifact_gallery"])
         self.assertFalse(authority["mag_implements_generic_operator_workbench"])
         self.assertFalse(authority["mag_implements_generic_observability_slo"])
+        self.assertFalse(authority["mag_implements_generic_artifact_lifecycle"])
+        self.assertFalse(authority["opl_harness_pass_can_declare_grant_ready"])
+        self.assertFalse(authority["opl_harness_pass_can_declare_export_ready"])
         replacement_ids = {item["primitive_id"] for item in thinning["opl_replacement_expectations"]}
         self.assertEqual(
             replacement_ids,
@@ -471,6 +539,8 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "memory_locator_writeback_transport",
                 "artifact_package_lifecycle_shell",
                 "generic_transition_runner",
+                "functional_harness_queue_stage_attempt_typed_closeout",
+                "functional_harness_restart_dead_letter_repair_human_gate",
                 "operator_workbench_drilldown_shell",
                 "observability_repair_projection",
                 "agent_scaffold_checklist",

@@ -413,6 +413,65 @@ class SchemaRegistryTest(unittest.TestCase):
             "#/$defs/runtimeControlDirectEntry",
         )
 
+    def test_product_entry_manifest_schema_pins_functional_harness_consumer_boundary(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        thinning = manifest_schema["$defs"]["magConsumerThinningContract"]
+        self.assertIn("functional_harness_consumer_coverage", thinning["required"])
+
+        consumed = thinning["properties"]["consumed_opl_standard_surfaces"]
+        self.assertIn("functional_harness_consumer_coverage_ref", consumed["required"])
+        self.assertIn(
+            "functional_harness_queue_stage_attempt_typed_closeout",
+            consumed["properties"]["consumed_generic_primitives"]["const"],
+        )
+        self.assertIn(
+            "functional_harness_restart_dead_letter_repair_human_gate",
+            consumed["properties"]["consumed_generic_primitives"]["const"],
+        )
+
+        coverage = thinning["properties"]["functional_harness_consumer_coverage"]
+        self.assertEqual(
+            coverage["properties"]["surface_kind"]["const"],
+            "mag_functional_harness_consumer_coverage",
+        )
+        self.assertEqual(
+            coverage["properties"]["coverage_chain_ids"]["const"],
+            [
+                "memory_refs_only_writeback_chain",
+                "queue_stage_attempt_typed_closeout_chain",
+                "generic_transition_runner_chain",
+                "restart_dead_letter_repair_human_gate_chain",
+            ],
+        )
+        self.assertFalse(coverage["properties"]["claims_opl_functional_harness_pass"]["const"])
+        self.assertFalse(coverage["properties"]["claims_grant_ready"]["const"])
+        self.assertFalse(coverage["properties"]["claims_export_ready"]["const"])
+        self.assertFalse(
+            coverage["properties"]["fail_closed_rules"]["properties"]["opl_harness_pass_is_grant_ready"][
+                "const"
+            ]
+        )
+        self.assertFalse(
+            coverage["properties"]["fail_closed_rules"]["properties"]["opl_harness_pass_is_export_ready"][
+                "const"
+            ]
+        )
+        self.assertFalse(
+            coverage["properties"]["fail_closed_rules"]["properties"]["opl_can_hold_generic_runtime_in_mag"][
+                "const"
+            ]
+        )
+
+        output_guard = thinning["properties"]["thin_surface_output_guard"]
+        forbidden_output_classes = output_guard["properties"]["forbidden_output_classes"]["allOf"]
+        forbidden_consts = {entry["contains"]["const"] for entry in forbidden_output_classes}
+        self.assertIn("functional_harness_runtime_state", forbidden_consts)
+        self.assertIn("opl_harness_pass_grant_ready", forbidden_consts)
+        self.assertIn("opl_harness_pass_export_ready", forbidden_consts)
+        authority = thinning["properties"]["authority_boundary"]["properties"]
+        self.assertFalse(authority["opl_harness_pass_can_declare_grant_ready"]["const"])
+        self.assertFalse(authority["opl_harness_pass_can_declare_export_ready"]["const"])
+
     def test_product_entry_surface_schemas_pin_skill_runtime_continuity_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         skill_projection = manifest_schema["$defs"]["skillDomainProjection"]

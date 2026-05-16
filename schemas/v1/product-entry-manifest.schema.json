@@ -3940,6 +3940,7 @@
         "consumed_opl_standard_surfaces",
         "opl_family_conflict_blocker_projection",
         "opl_runtime_observability_consumption",
+        "functional_harness_consumer_coverage",
         "allowed_return_shapes",
         "mag_owned_outputs",
         "thin_surface_output_guard",
@@ -3989,11 +3990,12 @@
             "standard_scaffold_manifest_ref",
             "generic_primitives_contract_ref",
             "sidecar_projection_ref",
-                "consumption_policy",
-                "consumed_generic_primitives",
-                "consumed_projection_surfaces",
-                "mag_retained_authority",
-                "authority_boundary"
+            "consumption_policy",
+            "consumed_generic_primitives",
+            "consumed_projection_surfaces",
+            "functional_harness_consumer_coverage_ref",
+            "mag_retained_authority",
+            "authority_boundary"
           ],
           "properties": {
             "surface_kind": {
@@ -4017,6 +4019,8 @@
                 "memory_locator_writeback_transport",
                 "artifact_package_lifecycle_shell",
                 "generic_transition_runner",
+                "functional_harness_queue_stage_attempt_typed_closeout",
+                "functional_harness_restart_dead_letter_repair_human_gate",
                 "operator_workbench_drilldown_shell",
                 "observability_repair_projection",
                 "agent_scaffold_checklist"
@@ -4030,6 +4034,9 @@
                 "runtime_observability_export",
                 "family_product_operator_projection"
               ]
+            },
+            "functional_harness_consumer_coverage_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/functional_harness_consumer_coverage"
             },
             "mag_retained_authority": {
               "const": [
@@ -4060,7 +4067,9 @@
                 "mag_can_own_generic_artifact_gallery",
                 "mag_can_own_generic_operator_workbench",
                 "mag_can_own_generic_observability_slo",
-                "mag_can_own_generic_artifact_lifecycle"
+                "mag_can_own_generic_artifact_lifecycle",
+                "opl_harness_pass_can_declare_grant_ready",
+                "opl_harness_pass_can_declare_export_ready"
               ],
               "properties": {
                 "opl_standard_scaffold_owner": {"const": "one-person-lab"},
@@ -4077,7 +4086,9 @@
                 "mag_can_own_generic_artifact_gallery": {"const": false},
                 "mag_can_own_generic_operator_workbench": {"const": false},
                 "mag_can_own_generic_observability_slo": {"const": false},
-                "mag_can_own_generic_artifact_lifecycle": {"const": false}
+                "mag_can_own_generic_artifact_lifecycle": {"const": false},
+                "opl_harness_pass_can_declare_grant_ready": {"const": false},
+                "opl_harness_pass_can_declare_export_ready": {"const": false}
               }
             }
           }
@@ -4203,6 +4214,143 @@
             }
           }
         },
+        "functional_harness_consumer_coverage": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "coverage_id",
+            "target_domain_id",
+            "owner",
+            "adapter_role",
+            "state",
+            "harness_owner",
+            "claims_opl_functional_harness_pass",
+            "claims_grant_ready",
+            "claims_export_ready",
+            "coverage_chains",
+            "coverage_chain_ids",
+            "mag_retained_authority",
+            "fail_closed_rules",
+            "sidecar_projection_policy",
+            "output_guard_ref"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_functional_harness_consumer_coverage"
+            },
+            "coverage_id": {
+              "const": "mag.functional_harness.consumer_coverage.v1"
+            },
+            "target_domain_id": {
+              "const": "med-autogrant"
+            },
+            "owner": {
+              "const": "med-autogrant"
+            },
+            "adapter_role": {
+              "const": "domain_authority_pack_consumer_only"
+            },
+            "state": {
+              "const": "consumer_coverage_declared_external_opl_harness_gate"
+            },
+            "harness_owner": {
+              "const": "one-person-lab"
+            },
+            "claims_opl_functional_harness_pass": {
+              "const": false
+            },
+            "claims_grant_ready": {
+              "const": false
+            },
+            "claims_export_ready": {
+              "const": false
+            },
+            "coverage_chain_ids": {
+              "const": [
+                "memory_refs_only_writeback_chain",
+                "queue_stage_attempt_typed_closeout_chain",
+                "generic_transition_runner_chain",
+                "restart_dead_letter_repair_human_gate_chain"
+              ]
+            },
+            "coverage_chains": {
+              "type": "array",
+              "minItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "chain_id",
+                  "harness_owner",
+                  "mag_role",
+                  "implemented_in_mag",
+                  "mag_claims_generic_runtime_owner",
+                  "opl_owned",
+                  "mag_retained",
+                  "mag_surface_refs",
+                  "fail_closed_boundary"
+                ],
+                "properties": {
+                  "chain_id": {
+                    "enum": [
+                      "memory_refs_only_writeback_chain",
+                      "queue_stage_attempt_typed_closeout_chain",
+                      "generic_transition_runner_chain",
+                      "restart_dead_letter_repair_human_gate_chain"
+                    ]
+                  },
+                  "harness_owner": {"const": "one-person-lab"},
+                  "mag_role": {"const": "consumer_domain_authority_pack"},
+                  "implemented_in_mag": {"const": false},
+                  "mag_claims_generic_runtime_owner": {"const": false},
+                  "fail_closed_boundary": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "required": [
+                      "harness_pass_can_set_grant_ready",
+                      "harness_pass_can_set_export_ready",
+                      "opl_can_write_grant_truth",
+                      "opl_can_write_memory_body",
+                      "mag_owner_receipt_required"
+                    ],
+                    "properties": {
+                      "harness_pass_can_set_grant_ready": {"const": false},
+                      "harness_pass_can_set_export_ready": {"const": false},
+                      "opl_can_write_grant_truth": {"const": false},
+                      "opl_can_write_memory_body": {"const": false},
+                      "mag_owner_receipt_required": {"const": true}
+                    }
+                  }
+                }
+              }
+            },
+            "fail_closed_rules": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "opl_harness_pass_is_grant_ready",
+                "opl_harness_pass_is_export_ready",
+                "opl_can_hold_generic_runtime_in_mag",
+                "opl_can_write_memory_body",
+                "opl_can_write_grant_truth"
+              ],
+              "properties": {
+                "opl_harness_pass_is_grant_ready": {"const": false},
+                "opl_harness_pass_is_export_ready": {"const": false},
+                "opl_can_hold_generic_runtime_in_mag": {"const": false},
+                "opl_can_write_memory_body": {"const": false},
+                "opl_can_write_grant_truth": {"const": false}
+              }
+            },
+            "sidecar_projection_policy": {
+              "const": "refs_receipts_blockers_verdict_refs_action_metadata_only"
+            },
+            "output_guard_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+            }
+          }
+        },
         "allowed_return_shapes": {
           "type": "array",
           "items": {
@@ -4221,7 +4369,8 @@
             "controlled_stage_attempt_projection_ref",
             "controlled_domain_memory_apply_proof_ref",
             "lifecycle_guarded_apply_proof_ref",
-            "grant_transition_oracle_ref"
+            "grant_transition_oracle_ref",
+            "functional_harness_consumer_coverage_ref"
           ],
           "properties": {
             "owner_receipt_contract_ref": {
@@ -4238,6 +4387,9 @@
             },
             "grant_transition_oracle_ref": {
               "const": "/product_entry_manifest/grant_transition_oracle"
+            },
+            "functional_harness_consumer_coverage_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/functional_harness_consumer_coverage"
             }
           }
         },
@@ -4352,7 +4504,10 @@
                 {"contains": {"const": "generic_memory_transport_state"}},
                 {"contains": {"const": "generic_artifact_lifecycle_state"}},
                 {"contains": {"const": "generic_operator_workbench_state"}},
-                {"contains": {"const": "generic_observability_slo_state"}}
+                {"contains": {"const": "generic_observability_slo_state"}},
+                {"contains": {"const": "functional_harness_runtime_state"}},
+                {"contains": {"const": "opl_harness_pass_grant_ready"}},
+                {"contains": {"const": "opl_harness_pass_export_ready"}}
               ]
             },
             "consumes_opl_replacement_expectations": {
@@ -4368,13 +4523,19 @@
                 "mag_can_emit_generic_runtime_state",
                 "mag_can_emit_generic_workbench_state",
                 "mag_can_emit_generic_observability_state",
-                "mag_can_emit_family_conflict_completion_claim"
+                "mag_can_emit_family_conflict_completion_claim",
+                "mag_can_emit_functional_harness_runtime_state",
+                "opl_harness_pass_can_declare_grant_ready",
+                "opl_harness_pass_can_declare_export_ready"
               ],
               "properties": {
                 "mag_can_emit_generic_runtime_state": {"const": false},
                 "mag_can_emit_generic_workbench_state": {"const": false},
                 "mag_can_emit_generic_observability_state": {"const": false},
-                "mag_can_emit_family_conflict_completion_claim": {"const": false}
+                "mag_can_emit_family_conflict_completion_claim": {"const": false},
+                "mag_can_emit_functional_harness_runtime_state": {"const": false},
+                "opl_harness_pass_can_declare_grant_ready": {"const": false},
+                "opl_harness_pass_can_declare_export_ready": {"const": false}
               }
             }
           }
@@ -4470,7 +4631,11 @@
             "mag_implements_generic_runner",
             "mag_implements_app_workbench",
             "mag_implements_generic_memory_transport",
-            "mag_implements_generic_artifact_lifecycle"
+            "mag_implements_generic_artifact_lifecycle",
+            "mag_implements_generic_operator_workbench",
+            "mag_implements_generic_observability_slo",
+            "opl_harness_pass_can_declare_grant_ready",
+            "opl_harness_pass_can_declare_export_ready"
           ],
           "properties": {
             "domain_truth_owner": {"const": "med-autogrant"},
@@ -4495,7 +4660,11 @@
             "mag_implements_generic_runner": {"const": false},
             "mag_implements_app_workbench": {"const": false},
             "mag_implements_generic_memory_transport": {"const": false},
-            "mag_implements_generic_artifact_lifecycle": {"const": false}
+            "mag_implements_generic_artifact_lifecycle": {"const": false},
+            "mag_implements_generic_operator_workbench": {"const": false},
+            "mag_implements_generic_observability_slo": {"const": false},
+            "opl_harness_pass_can_declare_grant_ready": {"const": false},
+            "opl_harness_pass_can_declare_export_ready": {"const": false}
           }
         }
       }

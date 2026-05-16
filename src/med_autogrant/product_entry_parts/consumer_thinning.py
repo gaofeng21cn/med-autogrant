@@ -26,6 +26,13 @@ FORBIDDEN_MAG_GENERIC_OWNER_ROLES = (
     "generic_observability_slo_owner",
 )
 
+OPL_FUNCTIONAL_HARNESS_COVERAGE_CHAINS = (
+    "memory_refs_only_writeback_chain",
+    "queue_stage_attempt_typed_closeout_chain",
+    "generic_transition_runner_chain",
+    "restart_dead_letter_repair_human_gate_chain",
+)
+
 
 def build_mag_consumer_thinning_contract(
     *,
@@ -51,6 +58,7 @@ def build_mag_consumer_thinning_contract(
         "consumed_opl_standard_surfaces": _build_consumed_opl_standard_surfaces(),
         "opl_family_conflict_blocker_projection": _build_opl_family_conflict_blocker_projection(),
         "opl_runtime_observability_consumption": _build_opl_runtime_observability_consumption(),
+        "functional_harness_consumer_coverage": _build_functional_harness_consumer_coverage(),
         "allowed_return_shapes": [
             "domain_owner_receipt",
             "typed_blocker",
@@ -69,6 +77,10 @@ def build_mag_consumer_thinning_contract(
             ),
             "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
             "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
+            "functional_harness_consumer_coverage_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "functional_harness_consumer_coverage"
+            ),
         },
         "verdict_authority_refs": {
             "fundability_verdict_owner": TARGET_DOMAIN_ID,
@@ -119,6 +131,8 @@ def build_mag_consumer_thinning_contract(
             "mag_implements_generic_operator_workbench": False,
             "mag_implements_generic_observability_slo": False,
             "mag_implements_generic_artifact_lifecycle": False,
+            "opl_harness_pass_can_declare_grant_ready": False,
+            "opl_harness_pass_can_declare_export_ready": False,
         },
     }
 
@@ -144,6 +158,16 @@ def _build_opl_replacement_expectations() -> list[dict[str, Any]]:
             "generic_transition_runner",
             mag_keeps=["grant_transition_oracle", "stage_guard", "typed_blocker", "owner_action_metadata"],
             opl_provides=["matrix_runner", "retry_dead_letter", "dispatch_receipt", "transition_audit"],
+        ),
+        _build_opl_replacement_expectation(
+            "functional_harness_queue_stage_attempt_typed_closeout",
+            mag_keeps=["grant_stage_truth", "owner_receipt", "typed_blocker", "no_regression_evidence"],
+            opl_provides=["typed_queue", "stage_attempt_ledger", "attempt_dispatch", "typed_closeout_envelope"],
+        ),
+        _build_opl_replacement_expectation(
+            "functional_harness_restart_dead_letter_repair_human_gate",
+            mag_keeps=["grant_blocker_meaning", "owner_receipt", "manual_portal_boundary", "safe_action_refs"],
+            opl_provides=["restart_token", "dead_letter_record", "repair_command_projection", "human_gate_state"],
         ),
         _build_opl_replacement_expectation(
             "operator_workbench_drilldown_shell",
@@ -179,6 +203,8 @@ def _build_consumed_opl_standard_surfaces() -> dict[str, Any]:
             "memory_locator_writeback_transport",
             "artifact_package_lifecycle_shell",
             "generic_transition_runner",
+            "functional_harness_queue_stage_attempt_typed_closeout",
+            "functional_harness_restart_dead_letter_repair_human_gate",
             "operator_workbench_drilldown_shell",
             "observability_repair_projection",
             "agent_scaffold_checklist",
@@ -190,6 +216,10 @@ def _build_consumed_opl_standard_surfaces() -> dict[str, Any]:
             "runtime_observability_export",
             "family_product_operator_projection",
         ],
+        "functional_harness_consumer_coverage_ref": (
+            "/product_entry_manifest/mag_consumer_thinning_contract/"
+            "functional_harness_consumer_coverage"
+        ),
         "mag_retained_authority": [
             "grant_truth",
             "fundability_verdict",
@@ -215,6 +245,149 @@ def _build_consumed_opl_standard_surfaces() -> dict[str, Any]:
             "mag_can_own_generic_operator_workbench": False,
             "mag_can_own_generic_observability_slo": False,
             "mag_can_own_generic_artifact_lifecycle": False,
+            "opl_harness_pass_can_declare_grant_ready": False,
+            "opl_harness_pass_can_declare_export_ready": False,
+        },
+    }
+
+
+def _build_functional_harness_consumer_coverage() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_functional_harness_consumer_coverage",
+        "version": "v1",
+        "coverage_id": "mag.functional_harness.consumer_coverage.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "adapter_role": "domain_authority_pack_consumer_only",
+        "state": "consumer_coverage_declared_external_opl_harness_gate",
+        "harness_owner": "one-person-lab",
+        "claims_opl_functional_harness_pass": False,
+        "claims_grant_ready": False,
+        "claims_export_ready": False,
+        "coverage_chains": [
+            _build_functional_harness_chain(
+                "memory_refs_only_writeback_chain",
+                opl_owned=[
+                    "memory_ref_locator",
+                    "writeback_proposal_transport",
+                    "accepted_rejected_receipt_ref_projection",
+                    "freshness_and_grouping",
+                ],
+                mag_retained=[
+                    "grant_memory_body",
+                    "writeback_body_accept_reject",
+                    "memory_receipt_writer",
+                ],
+                mag_refs=[
+                    "/product_entry_manifest/domain_memory_descriptor_locator",
+                    "/product_entry_manifest/controlled_domain_memory_apply_proof",
+                ],
+            ),
+            _build_functional_harness_chain(
+                "queue_stage_attempt_typed_closeout_chain",
+                opl_owned=[
+                    "typed_queue",
+                    "stage_attempt_ledger",
+                    "attempt_dispatch",
+                    "typed_closeout_envelope",
+                ],
+                mag_retained=[
+                    "grant_stage_truth",
+                    "owner_receipt",
+                    "typed_blocker",
+                    "no_regression_evidence",
+                ],
+                mag_refs=[
+                    "/product_entry_manifest/controlled_stage_attempt_projection",
+                    "/product_entry_manifest/owner_receipt_contract",
+                ],
+            ),
+            _build_functional_harness_chain(
+                "generic_transition_runner_chain",
+                opl_owned=[
+                    "generic_transition_runner",
+                    "matrix_runner",
+                    "dispatch_receipt",
+                    "transition_execution_audit",
+                ],
+                mag_retained=[
+                    "grant_transition_oracle",
+                    "stage_guard",
+                    "fundability_quality_export_verdict_refs",
+                    "domain_action_metadata",
+                ],
+                mag_refs=[
+                    "/product_entry_manifest/grant_transition_oracle",
+                    "/product_entry_manifest/family_stage_control_plane",
+                ],
+            ),
+            _build_functional_harness_chain(
+                "restart_dead_letter_repair_human_gate_chain",
+                opl_owned=[
+                    "restart_token",
+                    "dead_letter_record",
+                    "repair_command_projection",
+                    "human_gate_state",
+                ],
+                mag_retained=[
+                    "grant_blocker_meaning",
+                    "owner_receipt",
+                    "manual_portal_boundary",
+                    "safe_action_refs",
+                ],
+                mag_refs=[
+                    "/product_entry_manifest/task_lifecycle",
+                    "/product_entry_manifest/family_orchestration",
+                    "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                ],
+            ),
+        ],
+        "coverage_chain_ids": list(OPL_FUNCTIONAL_HARNESS_COVERAGE_CHAINS),
+        "mag_retained_authority": [
+            "grant_truth",
+            "fundability_verdict",
+            "quality_verdict",
+            "export_verdict",
+            "grant_memory_body_accept_reject",
+            "package_authority",
+            "owner_receipt",
+            "typed_blocker",
+            "sidecar_projection_adapter",
+        ],
+        "fail_closed_rules": {
+            "opl_harness_pass_is_grant_ready": False,
+            "opl_harness_pass_is_export_ready": False,
+            "opl_can_hold_generic_runtime_in_mag": False,
+            "opl_can_write_memory_body": False,
+            "opl_can_write_grant_truth": False,
+        },
+        "sidecar_projection_policy": "refs_receipts_blockers_verdict_refs_action_metadata_only",
+        "output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
+    }
+
+
+def _build_functional_harness_chain(
+    chain_id: str,
+    *,
+    opl_owned: list[str],
+    mag_retained: list[str],
+    mag_refs: list[str],
+) -> dict[str, Any]:
+    return {
+        "chain_id": chain_id,
+        "harness_owner": "one-person-lab",
+        "mag_role": "consumer_domain_authority_pack",
+        "implemented_in_mag": False,
+        "mag_claims_generic_runtime_owner": False,
+        "opl_owned": opl_owned,
+        "mag_retained": mag_retained,
+        "mag_surface_refs": mag_refs,
+        "fail_closed_boundary": {
+            "harness_pass_can_set_grant_ready": False,
+            "harness_pass_can_set_export_ready": False,
+            "opl_can_write_grant_truth": False,
+            "opl_can_write_memory_body": False,
+            "mag_owner_receipt_required": True,
         },
     }
 
@@ -305,6 +478,10 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
             "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
             "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
+            "functional_harness_consumer_coverage_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "functional_harness_consumer_coverage"
+            ),
         },
         "forbidden_output_classes": [
             "generic_scheduler_state",
@@ -321,6 +498,9 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "generic_operator_workbench_state",
             "generic_observability_slo_state",
             "family_conflict_envelope_completion_claim",
+            "functional_harness_runtime_state",
+            "opl_harness_pass_grant_ready",
+            "opl_harness_pass_export_ready",
             "observability_export_execution_result",
             "grant_artifact_content",
             "memory_body",
@@ -338,6 +518,9 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "mag_can_emit_generic_workbench_state": False,
             "mag_can_emit_generic_observability_state": False,
             "mag_can_emit_family_conflict_completion_claim": False,
+            "mag_can_emit_functional_harness_runtime_state": False,
+            "opl_harness_pass_can_declare_grant_ready": False,
+            "opl_harness_pass_can_declare_export_ready": False,
         },
     }
 
