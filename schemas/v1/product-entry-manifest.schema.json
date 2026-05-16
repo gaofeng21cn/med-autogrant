@@ -3941,6 +3941,7 @@
         "opl_family_conflict_blocker_projection",
         "opl_runtime_observability_consumption",
         "functional_harness_consumer_coverage",
+        "privatized_functional_module_audit",
         "allowed_return_shapes",
         "mag_owned_outputs",
         "thin_surface_output_guard",
@@ -4351,6 +4352,163 @@
             }
           }
         },
+        "privatized_functional_module_audit": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "audit_id",
+            "target_domain_id",
+            "owner",
+            "state",
+            "classification_policy",
+            "opl_unified_audit_read_model",
+            "claims_generic_runtime_removed_from_mag",
+            "claims_opl_replacement_exists",
+            "claims_production_long_run_soak_complete",
+            "opl_owned_generic_primitive_consumers",
+            "mag_owned_grant_authority_surfaces",
+            "retire_or_tombstone_surfaces",
+            "domain_authority_do_not_retire",
+            "opl_must_absorb_code_surfaces",
+            "audit_refs",
+            "fail_closed_rules"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_privatized_functional_module_audit"
+            },
+            "audit_id": {
+              "const": "mag.privatized_functional_module_audit.v1"
+            },
+            "target_domain_id": {
+              "const": "med-autogrant"
+            },
+            "owner": {
+              "const": "med-autogrant"
+            },
+            "state": {
+              "const": "manifest_projected_for_opl_unified_audit"
+            },
+            "classification_policy": {
+              "const": "classify_non_knowledge_functional_surfaces_without_reclassifying_grant_authority"
+            },
+            "opl_unified_audit_read_model": {
+              "const": true
+            },
+            "claims_generic_runtime_removed_from_mag": {
+              "const": false
+            },
+            "claims_opl_replacement_exists": {
+              "const": false
+            },
+            "claims_production_long_run_soak_complete": {
+              "const": false
+            },
+            "opl_owned_generic_primitive_consumers": {
+              "type": "array",
+              "minItems": 9,
+              "contains": {
+                "type": "object",
+                "required": ["module_id", "classification", "owner"],
+                "properties": {
+                  "module_id": {"const": "runtime_registration"},
+                  "classification": {"const": "opl_owned_generic_primitive_consumer"},
+                  "owner": {"const": "one-person-lab"}
+                }
+              }
+            },
+            "mag_owned_grant_authority_surfaces": {
+              "type": "array",
+              "minItems": 6,
+              "contains": {
+                "type": "object",
+                "required": ["module_id", "classification", "owner"],
+                "properties": {
+                  "module_id": {"const": "package_readiness_submission_ready"},
+                  "classification": {"const": "mag_owned_grant_truth_receipt_verdict"},
+                  "owner": {"const": "med-autogrant"}
+                }
+              }
+            },
+            "retire_or_tombstone_surfaces": {
+              "type": "array",
+              "minItems": 5,
+              "contains": {
+                "type": "object",
+                "required": ["module_id", "classification", "active_caller_allowed"],
+                "properties": {
+                  "module_id": {"const": "repo_owned_scheduler_daemon"},
+                  "classification": {"const": "retire_tombstone"},
+                  "active_caller_allowed": {"const": false}
+                }
+              }
+            },
+            "domain_authority_do_not_retire": {
+              "const": [
+                "grant_lifecycle_stage",
+                "package_readiness_submission_ready",
+                "fundability_verdict",
+                "authoring_quality_verdict",
+                "submission_ready_export_verdict",
+                "grant_transition_oracle",
+                "owner_receipt",
+                "grant_strategy_memory_accept_reject"
+              ]
+            },
+            "opl_must_absorb_code_surfaces": {
+              "type": "array",
+              "allOf": [
+                {"contains": {"const": "workspace_source_intake_shell"}},
+                {"contains": {"const": "session_ledger"}},
+                {"contains": {"const": "attention_queue"}},
+                {"contains": {"const": "generic_scheduler_daemon"}},
+                {"contains": {"const": "artifact_package_lifecycle_shell"}},
+                {"contains": {"const": "operator_workbench_shell"}}
+              ]
+            },
+            "audit_refs": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "manifest_ref",
+                "sidecar_projection_ref",
+                "consumer_thinning_ref",
+                "thin_output_guard_ref",
+                "ideal_state_ref"
+              ],
+              "properties": {
+                "manifest_ref": {"const": "/product_entry_manifest/mag_consumer_thinning_contract"},
+                "sidecar_projection_ref": {"const": "/sidecar_export/mag_consumer_thinning_contract"},
+                "consumer_thinning_ref": {"const": "/product_entry_manifest/mag_consumer_thinning_contract"},
+                "thin_output_guard_ref": {
+                  "const": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+                },
+                "ideal_state_ref": {"const": "/product_entry_manifest/ideal_state_closure_status"}
+              }
+            },
+            "fail_closed_rules": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "delete_grant_lifecycle_stage_as_generic_lifecycle",
+                "delete_package_readiness_as_generic_package_lifecycle",
+                "delete_fundability_or_quality_verdict_as_generic_readiness",
+                "provider_completion_is_grant_ready",
+                "opl_observability_can_create_verdict",
+                "mag_can_rebuild_generic_runtime"
+              ],
+              "properties": {
+                "delete_grant_lifecycle_stage_as_generic_lifecycle": {"const": false},
+                "delete_package_readiness_as_generic_package_lifecycle": {"const": false},
+                "delete_fundability_or_quality_verdict_as_generic_readiness": {"const": false},
+                "provider_completion_is_grant_ready": {"const": false},
+                "opl_observability_can_create_verdict": {"const": false},
+                "mag_can_rebuild_generic_runtime": {"const": false}
+              }
+            }
+          }
+        },
         "allowed_return_shapes": {
           "type": "array",
           "items": {
@@ -4370,7 +4528,8 @@
             "controlled_domain_memory_apply_proof_ref",
             "lifecycle_guarded_apply_proof_ref",
             "grant_transition_oracle_ref",
-            "functional_harness_consumer_coverage_ref"
+            "functional_harness_consumer_coverage_ref",
+            "privatized_functional_module_audit_ref"
           ],
           "properties": {
             "owner_receipt_contract_ref": {
@@ -4390,6 +4549,9 @@
             },
             "functional_harness_consumer_coverage_ref": {
               "const": "/product_entry_manifest/mag_consumer_thinning_contract/functional_harness_consumer_coverage"
+            },
+            "privatized_functional_module_audit_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
             }
           }
         },

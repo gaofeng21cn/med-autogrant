@@ -59,6 +59,7 @@ def build_mag_consumer_thinning_contract(
         "opl_family_conflict_blocker_projection": _build_opl_family_conflict_blocker_projection(),
         "opl_runtime_observability_consumption": _build_opl_runtime_observability_consumption(),
         "functional_harness_consumer_coverage": _build_functional_harness_consumer_coverage(),
+        "privatized_functional_module_audit": _build_privatized_functional_module_audit(),
         "allowed_return_shapes": [
             "domain_owner_receipt",
             "typed_blocker",
@@ -80,6 +81,10 @@ def build_mag_consumer_thinning_contract(
             "functional_harness_consumer_coverage_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "functional_harness_consumer_coverage"
+            ),
+            "privatized_functional_module_audit_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "privatized_functional_module_audit"
             ),
         },
         "verdict_authority_refs": {
@@ -134,6 +139,396 @@ def build_mag_consumer_thinning_contract(
             "opl_harness_pass_can_declare_grant_ready": False,
             "opl_harness_pass_can_declare_export_ready": False,
         },
+}
+
+
+def _build_privatized_functional_module_audit() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_privatized_functional_module_audit",
+        "audit_id": "mag.privatized_functional_module_audit.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "state": "manifest_projected_for_opl_unified_audit",
+        "classification_policy": (
+            "classify_non_knowledge_functional_surfaces_without_reclassifying_grant_authority"
+        ),
+        "opl_unified_audit_read_model": True,
+        "claims_generic_runtime_removed_from_mag": False,
+        "claims_opl_replacement_exists": False,
+        "claims_production_long_run_soak_complete": False,
+        "opl_owned_generic_primitive_consumers": [
+            _build_functional_module_audit_item(
+                "runtime_registration",
+                classification="opl_owned_generic_primitive_consumer",
+                owner="one-person-lab",
+                mag_role="descriptor_projection_consumer",
+                current_surface_refs=[
+                    "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
+                    "/sidecar_export/opl_control_plane/registration",
+                ],
+                opl_expected_primitives=[
+                    "domain_runtime_registry",
+                    "stage_led_activation",
+                    "provider_backed_runtime_registration",
+                ],
+                mag_retained_authority=["domain_id", "stage_pack_refs", "safe_action_refs"],
+            ),
+            _build_functional_module_audit_item(
+                "task_lifecycle",
+                classification="opl_owned_generic_primitive_consumer",
+                owner="one-person-lab",
+                mag_role="grant_checkpoint_read_model_provider",
+                current_surface_refs=[
+                    "/product_entry_manifest/task_lifecycle",
+                    "/product_entry_manifest/progress_projection",
+                ],
+                opl_expected_primitives=[
+                    "generic_task_checkpoint_shell",
+                    "stage_attempt_lifecycle",
+                    "human_gate_projection",
+                ],
+                mag_retained_authority=["grant_lifecycle_stage", "grant_checkpoint_meaning"],
+            ),
+            _build_functional_module_audit_item(
+                "session_ledger_attention_queue",
+                classification="opl_owned_generic_primitive_consumer",
+                owner="one-person-lab",
+                mag_role="wakeup_refs_and_safe_action_provider",
+                current_surface_refs=[
+                    "/product_entry_manifest/session_continuity",
+                    "/product_entry_manifest/automation",
+                    "/sidecar_export/user_loop_attention_queue",
+                ],
+                opl_expected_primitives=[
+                    "session_ledger",
+                    "typed_attention_queue",
+                    "wakeup_scheduler",
+                ],
+                mag_retained_authority=["safe_action_refs", "grant_next_action_meaning"],
+            ),
+            _build_functional_module_audit_item(
+                "lifecycle_adapter",
+                classification="opl_owned_generic_primitive_consumer",
+                owner="one-person-lab",
+                mag_role="guarded_receipt_authority_provider",
+                current_surface_refs=[
+                    "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                    "/sidecar_export/opl_control_plane/family_lifecycle_adapter",
+                ],
+                opl_expected_primitives=[
+                    "cleanup_restore_retention_shell",
+                    "artifact_locator_ledger",
+                    "lifecycle_receipt_transport",
+                ],
+                mag_retained_authority=[
+                    "domain_mutation_requires_mag_owner_receipt",
+                    "package_authority",
+                ],
+            ),
+            _build_functional_module_audit_item(
+                "observability",
+                classification="opl_owned_generic_primitive_consumer",
+                owner="one-person-lab",
+                mag_role="refs_counts_blockers_provider",
+                current_surface_refs=[
+                    "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
+                    "/sidecar_export/opl_runtime_observability_consumption",
+                ],
+                opl_expected_primitives=[
+                    "runtime_observability_export",
+                    "slo_projection",
+                    "repair_projection",
+                ],
+                mag_retained_authority=["owner_receipt_refs", "typed_blocker_refs", "verdict_refs"],
+            ),
+            _build_functional_module_audit_item(
+                "sidecar_product_status_shell",
+                classification="opl_owned_generic_primitive_consumer",
+                owner="one-person-lab",
+                mag_role="thin_product_projection_adapter",
+                current_surface_refs=[
+                    "/product_entry_manifest/product_entry_status",
+                    "/sidecar_export",
+                ],
+                opl_expected_primitives=[
+                    "product_status_shell",
+                    "operator_projection_shell",
+                    "action_routing_shell",
+                ],
+                mag_retained_authority=[
+                    "grant_status_meaning",
+                    "owner_receipt_refs",
+                    "safe_action_refs",
+                ],
+            ),
+            _build_functional_module_audit_item(
+                "package_lifecycle_shell",
+                classification="opl_owned_generic_primitive_consumer",
+                owner="one-person-lab",
+                mag_role="package_authority_and_gap_refs_provider",
+                current_surface_refs=[
+                    "/product_entry_manifest/artifact_locator_contract",
+                    "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                ],
+                opl_expected_primitives=[
+                    "artifact_package_lifecycle_shell",
+                    "restore_retention_ledger",
+                    "package_refs_index",
+                ],
+                mag_retained_authority=[
+                    "submission_ready_verdict",
+                    "export_gate",
+                    "manual_portal_boundary",
+                ],
+            ),
+            _build_functional_module_audit_item(
+                "source_intake_shell",
+                classification="opl_owned_generic_primitive_consumer",
+                owner="one-person-lab",
+                mag_role="funding_call_task_lock_adapter",
+                current_surface_refs=[
+                    "/product_entry_manifest/workspace_locator",
+                    "/product_entry_manifest/product_entry_preflight",
+                ],
+                opl_expected_primitives=[
+                    "workspace_source_intake_shell",
+                    "source_receipt",
+                    "freshness_repair_projection",
+                ],
+                mag_retained_authority=[
+                    "funding_call_interpretation",
+                    "profile_selection",
+                    "grant_task_lock",
+                ],
+            ),
+            _build_functional_module_audit_item(
+                "human_workbench_scheduler_daemon",
+                classification="opl_owned_generic_primitive_consumer",
+                owner="one-person-lab",
+                mag_role="no_runtime_owner_refs_only",
+                current_surface_refs=[
+                    "/product_entry_manifest/mag_consumer_thinning_contract/consumed_opl_standard_surfaces",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
+                ],
+                opl_expected_primitives=[
+                    "app_workbench_shell",
+                    "generic_scheduler",
+                    "provider_daemon",
+                    "repair_command_projection",
+                ],
+                mag_retained_authority=["domain_action_metadata", "typed_blocker"],
+            ),
+        ],
+        "mag_owned_grant_authority_surfaces": [
+            _build_functional_module_audit_item(
+                "grant_lifecycle_stage",
+                classification="mag_owned_grant_truth_receipt_verdict",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="grant_truth_owner",
+                current_surface_refs=[
+                    "/product_entry_manifest/owner_receipt_contract/identity/lifecycle_stage",
+                    "/product_entry_manifest/task_lifecycle",
+                ],
+                opl_expected_primitives=["display_and_route_only"],
+                mag_retained_authority=["lifecycle_stage", "stage_meaning", "owner_receipt"],
+            ),
+            _build_functional_module_audit_item(
+                "fundability_quality_export_verdicts",
+                classification="mag_owned_grant_truth_receipt_verdict",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="verdict_authority_owner",
+                current_surface_refs=[
+                    "/product_entry_manifest/grant_authoring_readiness",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/verdict_authority_refs",
+                ],
+                opl_expected_primitives=["refs_only_quality_readiness_projection_shell"],
+                mag_retained_authority=[
+                    "fundability_verdict",
+                    "authoring_quality_verdict",
+                    "submission_ready_export_verdict",
+                ],
+            ),
+            _build_functional_module_audit_item(
+                "package_readiness_submission_ready",
+                classification="mag_owned_grant_truth_receipt_verdict",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="package_authority_owner",
+                current_surface_refs=[
+                    "/product_entry_manifest/artifact_locator_contract",
+                    "package submission-ready",
+                ],
+                opl_expected_primitives=["artifact_package_lifecycle_shell"],
+                mag_retained_authority=[
+                    "package_authority",
+                    "submission_ready_verdict",
+                    "export_gate",
+                ],
+            ),
+            _build_functional_module_audit_item(
+                "grant_transition_oracle",
+                classification="mag_owned_grant_truth_receipt_verdict",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="domain_transition_spec_owner",
+                current_surface_refs=[
+                    "/product_entry_manifest/grant_transition_oracle",
+                    "/product_entry_manifest/ideal_state_closure_status/mag_owned_transition_oracle",
+                ],
+                opl_expected_primitives=["generic_transition_runner"],
+                mag_retained_authority=[
+                    "fundability_guards",
+                    "authoring_quality_guards",
+                    "package_human_gate_guards",
+                ],
+            ),
+            _build_functional_module_audit_item(
+                "owner_receipt_and_no_regression_evidence",
+                classification="mag_owned_grant_truth_receipt_verdict",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="receipt_authority_owner",
+                current_surface_refs=[
+                    "/product_entry_manifest/owner_receipt_contract",
+                    "/product_entry_manifest/controlled_soak_no_regression_attempt",
+                ],
+                opl_expected_primitives=["receipt_transport_and_ledger_projection"],
+                mag_retained_authority=[
+                    "domain_owner_receipt",
+                    "typed_blocker",
+                    "no_regression_evidence",
+                ],
+            ),
+            _build_functional_module_audit_item(
+                "grant_memory_accept_reject",
+                classification="mag_owned_grant_truth_receipt_verdict",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="memory_body_decision_owner",
+                current_surface_refs=[
+                    "/product_entry_manifest/domain_memory_descriptor_locator",
+                    "/product_entry_manifest/controlled_domain_memory_apply_proof",
+                ],
+                opl_expected_primitives=["memory_locator_writeback_transport"],
+                mag_retained_authority=[
+                    "grant_strategy_memory_body",
+                    "writeback_accept_reject",
+                    "memory_receipt_writer",
+                ],
+            ),
+        ],
+        "retire_or_tombstone_surfaces": [
+            _build_retired_functional_module_audit_item(
+                "default_hermes_gateway_local_manager_runtime_owner",
+                evidence_refs=[
+                    "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+                    "docs/status.md#旧面退役校准",
+                ],
+            ),
+            _build_retired_functional_module_audit_item(
+                "domain_runtime_patch_bridge",
+                evidence_refs=[
+                    "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
+                    "src/med_autogrant/domain_runtime_parts/patch_targets.py",
+                ],
+            ),
+            _build_retired_functional_module_audit_item(
+                "compatibility_only_product_entry_aggregate_test",
+                evidence_refs=[
+                    "tests/test_product_entry.py",
+                    "tests/product_entry_cases/",
+                ],
+            ),
+            _build_retired_functional_module_audit_item(
+                "legacy_flat_shell_aliases",
+                evidence_refs=[
+                    "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
+                    "docs/status.md#旧面退役校准",
+                ],
+            ),
+            _build_retired_functional_module_audit_item(
+                "repo_owned_scheduler_daemon",
+                evidence_refs=[
+                    "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
+                    "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+                ],
+            ),
+        ],
+        "domain_authority_do_not_retire": [
+            "grant_lifecycle_stage",
+            "package_readiness_submission_ready",
+            "fundability_verdict",
+            "authoring_quality_verdict",
+            "submission_ready_export_verdict",
+            "grant_transition_oracle",
+            "owner_receipt",
+            "grant_strategy_memory_accept_reject",
+        ],
+        "opl_must_absorb_code_surfaces": [
+            "workspace_source_intake_shell",
+            "session_ledger",
+            "attention_queue",
+            "typed_queue",
+            "stage_attempt_ledger",
+            "generic_lifecycle_adapter",
+            "artifact_package_lifecycle_shell",
+            "runtime_observability_export",
+            "operator_workbench_shell",
+            "generic_scheduler_daemon",
+        ],
+        "audit_refs": {
+            "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+            "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
+            "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+            "thin_output_guard_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+            ),
+            "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
+        },
+        "fail_closed_rules": {
+            "delete_grant_lifecycle_stage_as_generic_lifecycle": False,
+            "delete_package_readiness_as_generic_package_lifecycle": False,
+            "delete_fundability_or_quality_verdict_as_generic_readiness": False,
+            "provider_completion_is_grant_ready": False,
+            "opl_observability_can_create_verdict": False,
+            "mag_can_rebuild_generic_runtime": False,
+        },
+    }
+
+
+def _build_functional_module_audit_item(
+    module_id: str,
+    *,
+    classification: str,
+    owner: str,
+    mag_role: str,
+    current_surface_refs: list[str],
+    opl_expected_primitives: list[str],
+    mag_retained_authority: list[str],
+) -> dict[str, Any]:
+    return {
+        "module_id": module_id,
+        "classification": classification,
+        "owner": owner,
+        "mag_role": mag_role,
+        "current_surface_refs": current_surface_refs,
+        "opl_expected_primitives": opl_expected_primitives,
+        "mag_retained_authority": mag_retained_authority,
+        "implemented_as_generic_runtime_in_mag": False,
+        "opl_can_write_grant_truth": False,
+        "opl_can_declare_verdict": False,
+    }
+
+
+def _build_retired_functional_module_audit_item(
+    module_id: str,
+    *,
+    evidence_refs: list[str],
+) -> dict[str, Any]:
+    return {
+        "module_id": module_id,
+        "classification": "retire_tombstone",
+        "owner": "none_active",
+        "state": "retired_or_tombstone_only",
+        "evidence_refs": evidence_refs,
+        "active_caller_allowed": False,
+        "compatibility_alias_allowed": False,
     }
 
 
@@ -481,6 +876,10 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "functional_harness_consumer_coverage_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "functional_harness_consumer_coverage"
+            ),
+            "privatized_functional_module_audit_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "privatized_functional_module_audit"
             ),
         },
         "forbidden_output_classes": [

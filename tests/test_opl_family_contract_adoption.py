@@ -634,6 +634,9 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert thinning["opl_runtime_observability_consumption_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption"
     )
+    assert thinning["privatized_functional_module_audit_ref"] == (
+        "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+    )
     assert thinning["consumed_opl_projection_surfaces"] == [
         "family_conflict_envelope",
         "stage_attempt_usage_projection",
@@ -641,6 +644,25 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "runtime_observability_export",
         "family_product_operator_projection",
     ]
+    audit = thinning["privatized_functional_module_audit"]
+    assert audit["state"] == "manifest_projected_for_opl_unified_audit"
+    assert audit["classification_buckets"] == [
+        "opl_owned_generic_primitive_consumer",
+        "mag_owned_grant_truth_receipt_verdict",
+        "retire_tombstone",
+    ]
+    assert audit["domain_authority_do_not_retire"] == [
+        "grant_lifecycle_stage",
+        "package_readiness_submission_ready",
+        "fundability_verdict",
+        "authoring_quality_verdict",
+        "submission_ready_export_verdict",
+        "grant_transition_oracle",
+        "owner_receipt",
+        "grant_strategy_memory_accept_reject",
+    ]
+    assert "workspace_source_intake_shell" in audit["opl_must_absorb_code_surfaces"]
+    assert "generic_scheduler_daemon" in audit["opl_must_absorb_code_surfaces"]
     assert thinning["sidecar_output_policy"] == "grant_refs_and_receipts_only_no_generic_runtime_state"
     assert thinning["knowledge_only_repository"] is False
     assert thinning["retains_domain_program_surfaces"] is True

@@ -155,6 +155,13 @@ def build_sidecar_export(
                 context="sidecar_export.mag_consumer_thinning_contract",
             )
         ),
+        "privatized_functional_module_audit": dict(
+            _require_mapping(
+                mag_consumer_thinning_contract,
+                "privatized_functional_module_audit",
+                context="sidecar_export.mag_consumer_thinning_contract",
+            )
+        ),
         "consumed_opl_standard_surfaces": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,

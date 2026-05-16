@@ -150,6 +150,7 @@
         "standard_agent_scaffold_alignment_ref": "/product_entry_manifest/mag_consumer_thinning_contract/standard_agent_scaffold_alignment",
         "opl_family_conflict_blocker_projection_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_family_conflict_blocker_projection",
         "opl_runtime_observability_consumption_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
+        "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
         "opl_replacement_expectations": [
           "workspace_source_intake_shell",
           "memory_locator_writeback_transport",
@@ -166,6 +167,36 @@
           "runtime_observability_export",
           "family_product_operator_projection"
         ],
+        "privatized_functional_module_audit": {
+          "state": "manifest_projected_for_opl_unified_audit",
+          "classification_buckets": [
+            "opl_owned_generic_primitive_consumer",
+            "mag_owned_grant_truth_receipt_verdict",
+            "retire_tombstone"
+          ],
+          "domain_authority_do_not_retire": [
+            "grant_lifecycle_stage",
+            "package_readiness_submission_ready",
+            "fundability_verdict",
+            "authoring_quality_verdict",
+            "submission_ready_export_verdict",
+            "grant_transition_oracle",
+            "owner_receipt",
+            "grant_strategy_memory_accept_reject"
+          ],
+          "opl_must_absorb_code_surfaces": [
+            "workspace_source_intake_shell",
+            "session_ledger",
+            "attention_queue",
+            "typed_queue",
+            "stage_attempt_ledger",
+            "generic_lifecycle_adapter",
+            "artifact_package_lifecycle_shell",
+            "runtime_observability_export",
+            "operator_workbench_shell",
+            "generic_scheduler_daemon"
+          ]
+        },
         "forbidden_mag_generic_owner_roles": [
           "generic_scheduler_owner",
           "generic_daemon_owner",

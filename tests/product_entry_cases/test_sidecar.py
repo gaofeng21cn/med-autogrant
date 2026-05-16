@@ -111,6 +111,10 @@ class ProductSidecarTest(unittest.TestCase):
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "functional_harness_consumer_coverage"
                 ),
+                "privatized_functional_module_audit_ref": (
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "privatized_functional_module_audit"
+                ),
             },
         )
         self.assertFalse(thinning["authority_boundary"]["mag_rebuilds_opl_runtime"])
@@ -172,6 +176,31 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertFalse(coverage["fail_closed_rules"]["opl_harness_pass_is_grant_ready"])
         self.assertFalse(coverage["fail_closed_rules"]["opl_harness_pass_is_export_ready"])
         self.assertFalse(coverage["fail_closed_rules"]["opl_can_hold_generic_runtime_in_mag"])
+        audit = export["privatized_functional_module_audit"]
+        self.assertEqual(audit, thinning["privatized_functional_module_audit"])
+        self.assertEqual(audit["surface_kind"], "mag_privatized_functional_module_audit")
+        self.assertEqual(
+            {
+                item["module_id"]
+                for item in audit["opl_owned_generic_primitive_consumers"]
+                if item["classification"] == "opl_owned_generic_primitive_consumer"
+            },
+            {
+                "runtime_registration",
+                "task_lifecycle",
+                "session_ledger_attention_queue",
+                "lifecycle_adapter",
+                "observability",
+                "sidecar_product_status_shell",
+                "package_lifecycle_shell",
+                "source_intake_shell",
+                "human_workbench_scheduler_daemon",
+            },
+        )
+        self.assertIn("package_readiness_submission_ready", audit["domain_authority_do_not_retire"])
+        self.assertIn("fundability_verdict", audit["domain_authority_do_not_retire"])
+        self.assertFalse(audit["fail_closed_rules"]["provider_completion_is_grant_ready"])
+        self.assertFalse(audit["fail_closed_rules"]["mag_can_rebuild_generic_runtime"])
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(output_guard["allowed_output_classes"], thinning["mag_owned_outputs"])

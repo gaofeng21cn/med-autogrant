@@ -478,6 +478,81 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 self.assertFalse(chain["fail_closed_boundary"]["opl_can_write_grant_truth"])
                 self.assertFalse(chain["fail_closed_boundary"]["opl_can_write_memory_body"])
                 self.assertTrue(chain["fail_closed_boundary"]["mag_owner_receipt_required"])
+        audit = thinning["privatized_functional_module_audit"]
+        self.assertEqual(audit["surface_kind"], "mag_privatized_functional_module_audit")
+        self.assertEqual(audit["state"], "manifest_projected_for_opl_unified_audit")
+        self.assertTrue(audit["opl_unified_audit_read_model"])
+        self.assertFalse(audit["claims_generic_runtime_removed_from_mag"])
+        self.assertFalse(audit["claims_opl_replacement_exists"])
+        self.assertFalse(audit["claims_production_long_run_soak_complete"])
+        consumer_modules = {
+            item["module_id"]: item
+            for item in audit["opl_owned_generic_primitive_consumers"]
+        }
+        self.assertEqual(
+            set(consumer_modules),
+            {
+                "runtime_registration",
+                "task_lifecycle",
+                "session_ledger_attention_queue",
+                "lifecycle_adapter",
+                "observability",
+                "sidecar_product_status_shell",
+                "package_lifecycle_shell",
+                "source_intake_shell",
+                "human_workbench_scheduler_daemon",
+            },
+        )
+        self.assertEqual(
+            consumer_modules["task_lifecycle"]["classification"],
+            "opl_owned_generic_primitive_consumer",
+        )
+        self.assertIn("grant_lifecycle_stage", consumer_modules["task_lifecycle"]["mag_retained_authority"])
+        self.assertIn(
+            "artifact_package_lifecycle_shell",
+            consumer_modules["package_lifecycle_shell"]["opl_expected_primitives"],
+        )
+        mag_modules = {item["module_id"]: item for item in audit["mag_owned_grant_authority_surfaces"]}
+        self.assertEqual(
+            set(mag_modules),
+            {
+                "grant_lifecycle_stage",
+                "fundability_quality_export_verdicts",
+                "package_readiness_submission_ready",
+                "grant_transition_oracle",
+                "owner_receipt_and_no_regression_evidence",
+                "grant_memory_accept_reject",
+            },
+        )
+        self.assertEqual(
+            mag_modules["package_readiness_submission_ready"]["classification"],
+            "mag_owned_grant_truth_receipt_verdict",
+        )
+        self.assertIn(
+            "submission_ready_verdict",
+            mag_modules["package_readiness_submission_ready"]["mag_retained_authority"],
+        )
+        retire_modules = {item["module_id"]: item for item in audit["retire_or_tombstone_surfaces"]}
+        self.assertIn("repo_owned_scheduler_daemon", retire_modules)
+        self.assertFalse(retire_modules["repo_owned_scheduler_daemon"]["active_caller_allowed"])
+        self.assertEqual(
+            audit["domain_authority_do_not_retire"],
+            [
+                "grant_lifecycle_stage",
+                "package_readiness_submission_ready",
+                "fundability_verdict",
+                "authoring_quality_verdict",
+                "submission_ready_export_verdict",
+                "grant_transition_oracle",
+                "owner_receipt",
+                "grant_strategy_memory_accept_reject",
+            ],
+        )
+        self.assertIn("workspace_source_intake_shell", audit["opl_must_absorb_code_surfaces"])
+        self.assertIn("generic_scheduler_daemon", audit["opl_must_absorb_code_surfaces"])
+        self.assertFalse(audit["fail_closed_rules"]["delete_grant_lifecycle_stage_as_generic_lifecycle"])
+        self.assertFalse(audit["fail_closed_rules"]["delete_package_readiness_as_generic_package_lifecycle"])
+        self.assertFalse(audit["fail_closed_rules"]["delete_fundability_or_quality_verdict_as_generic_readiness"])
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(
