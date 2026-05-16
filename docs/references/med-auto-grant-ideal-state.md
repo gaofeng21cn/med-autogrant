@@ -4,7 +4,15 @@ Owner: `Med Auto Grant`
 Purpose: `north_star_reference`
 State: `active_support`
 Machine boundary: 本文是人读目标态参考。机器可读真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、workspace/runtime artifact root、receipt、质量报告、导出包和 `contracts/runtime-program/current-program.json`。
-Date: `2026-05-14`
+Date: `2026-05-16`
+
+## 文档读法
+
+- `定位`：本文只写 MAG 的 north-star 目标态和长期 owner boundary；当前差距、执行顺序和 production evidence 缺口回到 `mag-ideal-state-cross-repo-gap-plan.md`。
+- `当前实态校准`：带日期的校准段只记录当前 repo surface 或 fresh evidence，不把目标态写成已完成事实。
+- `Owner 边界`：MAG 持有 grant truth、fundability/quality/export verdict、grant strategy memory body/accept-reject、package authority 和 owner receipt；OPL 持有 provider runtime、queue、attempt ledger、workspace/source intake shell、memory locator、package/artifact lifecycle、quality/readiness projection 和 App/workbench shell。
+- `最短路径`：先把 workspace/source intake、memory locator/writeback transport、package/export lifecycle、route/decision/workbench、observability/SLO 和 scaffold/template 规则归位到 OPL Framework / App 或 OPL checklist，再跑 focused hosted receipt verification 和 live soak。
+- `禁写口径`：MAG 当前 skeleton anchors 不是完整新 Agent 目录模板；OPL provider completion、receipt reconciliation proof 或 no-regression evidence 都不能写成 fundability-ready、quality-ready、export-ready 或 production long-run soak 完成。
 
 ## 结论
 
@@ -17,6 +25,10 @@ MAG 的核心价值是基金申请专业性：它持有 funding-call 语境、fu
 本文描述目标态，不替代当前状态判断。当前落地程度以 [当前状态](../status.md)、[架构](../architecture.md)、[不变量](../invariants.md)、[OPL Family Contract Adoption](./opl_family_contract_adoption.md) 与 [`current-program.json`](../../contracts/runtime-program/current-program.json) 为准。
 
 2026-05-15 当前代码已把 MAG 侧 receipt reconciliation 推进到 repo-local proof surface：`controlled-soak-receipt-reconciliation-proof` 可以读取 MAG owner receipt evidence 或 sidecar `stage-attempt/closeout` result，并与外部 OPL ledger ref 对账，输出 owner receipt、typed blocker 或 no-regression evidence probe payload；`controlled-soak-receipt-reconciliation-inventory` 则在不写 receipt instance 的前提下汇总多条 owner receipt evidence 的 reconciliation status、typed blocker 和 no-regression refs。该能力是理想态中 OPL-hosted attempt 对账面的前置形状证明，不是 production long-run soak；真实 grant-stage owner chain、memory body apply 和 package/export verdict 仍必须由 MAG workspace/runtime owner surface 产生。
+
+2026-05-16 校准：MAG 当前目录和 contract 已经比早期更接近 OPL Foundry Agent 范本：repo 根层具备 `agent/`、`contracts/runtime-program/`、`plugins/mag`、`runtime/`、`schemas/`、`docs/active|public|product|runtime|delivery|source|policies|specs|references|history` 和单一 app skill/CLI/product-entry 面。当前 `standard skeleton` 的真实状态应读作 `minimum anchors / descriptor-index surface`：`agent/` 与 `runtime/` 主要提供 stage descriptor、skill/knowledge/quality gate 索引、projection builder / lifecycle adapter 索引和 no-artifact-boundary，不表示全仓已经完成理想物理迁移。MAG 适合作为“grant-domain authority pack 如何接入 OPL”的范本，但还不是可复制的新 Agent 物理 skeleton 模板：Python package、historical docs、runtime proof surface 和 grant-specific schemas 仍带有 MAG 语境。新 Agent 应复用 MAG 的 owner-boundary、receipt/schema、docs taxonomy、descriptor/action/stage/memory/artifact locator 纪律，而不是直接复制整棵目录。
+
+执行顺序上，MAG 理想态要求先完成已知功能面的上收和收薄：workspace/source intake、memory locator/writeback transport、package/export lifecycle、route/decision/workbench、observability/SLO 和 scaffold/template 规则应先回到 OPL Framework / App 或形成 OPL checklist，MAG 保留 grant authority pack 与薄程序面。OPL-hosted receipt verification 和 live soak 是后置验收，不应阻塞这些已经明确的迁移、清理和完善工作。
 
 ## 产品分层
 
