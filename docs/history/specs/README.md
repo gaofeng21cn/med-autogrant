@@ -1,10 +1,17 @@
-# 历史 specs
+# 历史 Specs
 
 本索引是旧技术 specs 与 tranche 记录的历史入口。部分 path-stable
 源文件仍保留在 `docs/specs/`，这样旧审计链接、current-program 指针和历史绝对路径说明仍可读；明确退役的 provider proof、tombstone 和 superseded
 handoff 文件可以物理归档到本目录。
 
 阅读旧 program 背景时从这里进入。当前真相请回到 [Specs 索引](../../specs/README.md)、核心五件套与 `current-program.json`。
+
+生命周期信号：
+
+- `owner`：MAG 维护者。
+- `purpose`：保留旧 specs、activation package、provider proof、tombstone 和 path-stable provenance 的历史入口。
+- `state`：`history`。
+- `machine boundary`：本目录只做人读 provenance。机器面必须使用当前 contracts/schema/source path、CLI/API behavior 或语义化 `human_doc:*` id。
 
 由本归档入口承接的历史分组：
 

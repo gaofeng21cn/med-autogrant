@@ -1,12 +1,12 @@
 # P4.F Local Submission-Ready Package Current Truth
 
-> Lifecycle note (`2026-05-15`): this dated spec is `support_current_truth` only for the local `submission-ready package` export gate that remains current in MAG package/export authority, schema/source, and product-entry manifest. Read current MAG product state from `docs/status.md`, the core five docs, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`, and `contracts/runtime-program/current-program.json` first. Older Gateway/hosted runtime language below is provenance and must not be read as a current OPL target or compatibility surface.
+> 生命周期注记（`2026-05-17`）：这份 dated spec 只在 MAG package/export authority、schema/source 与 product-entry manifest 仍持有的本地 `submission-ready package` export gate 范围内是 `support_current_truth`。请先读取 `docs/status.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md` 与 `contracts/runtime-program/current-program.json`。下方旧 Gateway/hosted runtime language 是 provenance，不得读成当前 OPL target 或 compatibility surface。
 
-Current disposition:
+当前处置：
 
-- Keep: `build-submission-ready-package`, `submission-ready-package.schema.json`, fail-closed local export gate, and honest boundary between authoring completion and package readiness.
-- Superseded: old `OPL Gateway` / hosted runtime implication. OPL consumes MAG descriptor/projection through the current stage-led framework; MAG keeps package/export authority.
-- Direct retirement posture: old wrappers, tests, or docs that only preserve the superseded Gateway reading should be migrated to the latest package/export owner surface and then deleted or archived, without compatibility aliases.
+- Keep：`build-submission-ready-package`、`submission-ready-package.schema.json`、fail-closed local export gate，以及 authoring completion 和 package readiness 之间的诚实边界。
+- Superseded：旧 `OPL Gateway` / hosted runtime implication。OPL 通过当前 stage-led framework 消费 MAG descriptor/projection；MAG 保留 package/export authority。
+- Direct retirement posture：只为保留 superseded Gateway reading 的旧 wrappers、tests 或 docs，应迁到最新 package/export owner surface 后删除或归档，不新增 compatibility aliases。
 
 Date: `2026-04-13`
 

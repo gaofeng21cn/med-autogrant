@@ -2,6 +2,13 @@
 
 本文记录 2026-05-01 对 Med Auto Grant 相关 Plan Mode 计划的完成度核查。它是历史审计记录，不替代当前项目真相；当前 truth 仍以 `docs/status.md`、`docs/specs/README*` 中列出的 active specs 与 `contracts/runtime-program/current-program.json` 为准。
 
+生命周期信号：
+
+- `owner`：MAG 维护者。
+- `purpose`：保留 2026-05-01 计划完成度审计和当时未完成项的 provenance。
+- `state`：`history`。
+- `machine boundary`：本文只做人读历史审计。当前验证入口、runtime owner、patch bridge 和 test owner 以核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、源码与当前测试为准。
+
 ## 审计范围
 
 - 本次只纳入明确影响 `/Users/gaofeng/workspace/med-autogrant` 的计划。
@@ -23,7 +30,7 @@
 
 - `test_gaps` 仍是显式债务：只补真实高风险行为测试，不创建 import-only tests。
 - product-entry 大模块仍可继续按真实语义拆分；每轮只选一个 owner，避免机械分片。
-- runtime authoring surface 仍可继续拆成更细 owner，但必须保持 `med_autogrant.hermes_runtime` 兼容 facade 与 monkeypatch target。
+- runtime authoring surface 当时仍有继续拆成更细 owner 的余量；关于 `med_autogrant.hermes_runtime` 兼容 facade 与 monkeypatch target 的旧要求已被后续 direct retirement posture supersede，当前不作为保留目标。
 
 ## 当前验收口径
 

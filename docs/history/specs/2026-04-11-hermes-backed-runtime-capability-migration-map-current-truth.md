@@ -1,12 +1,12 @@
 # Hermes-Backed Runtime Capability Migration Map Current Truth
 
-> Lifecycle note (`2026-05-15`): this dated spec is `superseded_provider_proof` / historical provenance. The capability split below records a past Hermes-backed migration proposal; it is not the current required runtime path, active provider owner, or compatibility bridge. Current MAG owner line is `codex_cli` default executor, MAG-owned grant semantics / quality / route / export authority, and OPL stage-led framework consuming MAG descriptor/projection.
+> 生命周期注记（`2026-05-17`）：这份 dated spec 是 `superseded_provider_proof` / historical provenance。下方 capability split 记录的是过去 Hermes-backed migration proposal；它不是当前 required runtime path、active provider owner 或 compatibility bridge。当前 MAG owner line 是 `codex_cli` default executor、MAG-owned grant semantics / quality / route / export authority，以及 OPL stage-led framework consuming MAG descriptor/projection。
 
-Current disposition:
+当前处置：
 
-- Superseded: assigning audit dispatch, runtime orchestration, revision/export handoff, or hosted export execution to Hermes-Agent as current owner.
-- Retained: proof-lane vocabulary and fail-closed migration lessons.
-- Direct retirement posture: wrappers/tests that only preserve the old Hermes capability split should be migrated to the latest owner module or explicit proof lane, then deleted or archived when no active caller remains.
+- Superseded：把 audit dispatch、runtime orchestration、revision/export handoff 或 hosted export execution 分配给 Hermes-Agent 作为 current owner。
+- Retained：proof-lane vocabulary 和 fail-closed migration lessons。
+- Direct retirement posture：只为保留旧 Hermes capability split 的 wrappers/tests，应迁到最新 owner module 或 explicit proof lane；没有 active caller 后删除或归档。
 
 Date: `2026-04-11`
 
