@@ -3937,6 +3937,7 @@
         "claims_opl_replacement_exists",
         "claims_production_long_run_soak_complete",
         "sidecar_contract_ref",
+        "consumed_opl_standard_surfaces",
         "allowed_return_shapes",
         "mag_owned_outputs",
         "thin_surface_output_guard",
@@ -3977,6 +3978,90 @@
         },
         "sidecar_contract_ref": {
           "const": "/product_entry_manifest/mag_consumer_thinning_contract"
+        },
+        "consumed_opl_standard_surfaces": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "standard_scaffold_manifest_ref",
+            "generic_primitives_contract_ref",
+            "sidecar_projection_ref",
+            "consumption_policy",
+            "consumed_generic_primitives",
+            "mag_retained_authority",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {
+              "const": "mag_consumed_opl_standard_surfaces"
+            },
+            "standard_scaffold_manifest_ref": {
+              "const": "/product_entry_manifest/standard_domain_agent_skeleton"
+            },
+            "generic_primitives_contract_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations"
+            },
+            "sidecar_projection_ref": {
+              "const": "/sidecar_export/mag_consumer_thinning_contract"
+            },
+            "consumption_policy": {
+              "const": "consume_opl_standard_scaffold_and_generic_primitives_no_mag_runtime_rebuild"
+            },
+            "consumed_generic_primitives": {
+              "const": [
+                "workspace_source_intake_shell",
+                "memory_locator_writeback_transport",
+                "package_export_lifecycle_shell",
+                "generic_transition_runner",
+                "operator_workbench_observability_slo",
+                "agent_scaffold_checklist"
+              ]
+            },
+            "mag_retained_authority": {
+              "const": [
+                "grant_truth",
+                "fundability_verdict",
+                "quality_verdict",
+                "export_verdict",
+                "memory_body_accept_reject",
+                "package_authority",
+                "owner_receipt"
+              ]
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "opl_standard_scaffold_owner",
+                "opl_generic_primitives_owner",
+                "mag_consumes_standard_scaffold",
+                "mag_consumes_generic_primitives",
+                "mag_can_own_generic_scheduler",
+                "mag_can_own_generic_daemon",
+                "mag_can_own_generic_queue",
+                "mag_can_own_generic_attempt_ledger",
+                "mag_can_own_generic_runner",
+                "mag_can_own_generic_workbench",
+                "mag_can_own_generic_memory_transport",
+                "mag_can_own_generic_artifact_lifecycle"
+              ],
+              "properties": {
+                "opl_standard_scaffold_owner": {"const": "one-person-lab"},
+                "opl_generic_primitives_owner": {"const": "one-person-lab"},
+                "mag_consumes_standard_scaffold": {"const": true},
+                "mag_consumes_generic_primitives": {"const": true},
+                "mag_can_own_generic_scheduler": {"const": false},
+                "mag_can_own_generic_daemon": {"const": false},
+                "mag_can_own_generic_queue": {"const": false},
+                "mag_can_own_generic_attempt_ledger": {"const": false},
+                "mag_can_own_generic_runner": {"const": false},
+                "mag_can_own_generic_workbench": {"const": false},
+                "mag_can_own_generic_memory_transport": {"const": false},
+                "mag_can_own_generic_artifact_lifecycle": {"const": false}
+              }
+            }
+          }
         },
         "allowed_return_shapes": {
           "type": "array",
@@ -4075,7 +4160,9 @@
             "generic_queue_owner",
             "generic_attempt_ledger_owner",
             "generic_state_machine_runner_owner",
-            "generic_workbench_owner"
+            "generic_workbench_owner",
+            "generic_memory_transport_owner",
+            "generic_artifact_lifecycle_owner"
           ]
         },
         "thin_surface_output_guard": {
@@ -4117,7 +4204,12 @@
             },
             "forbidden_output_classes": {
               "type": "array",
-              "contains": {"const": "generic_scheduler_state"}
+              "contains": {"const": "generic_scheduler_state"},
+              "allOf": [
+                {"contains": {"const": "generic_workbench_state"}},
+                {"contains": {"const": "generic_memory_transport_state"}},
+                {"contains": {"const": "generic_artifact_lifecycle_state"}}
+              ]
             },
             "consumes_opl_replacement_expectations": {
               "const": true
@@ -4228,7 +4320,9 @@
             "mag_implements_generic_queue",
             "mag_implements_generic_attempt_ledger",
             "mag_implements_generic_runner",
-            "mag_implements_app_workbench"
+            "mag_implements_app_workbench",
+            "mag_implements_generic_memory_transport",
+            "mag_implements_generic_artifact_lifecycle"
           ],
           "properties": {
             "domain_truth_owner": {"const": "med-autogrant"},
@@ -4251,7 +4345,9 @@
             "mag_implements_generic_queue": {"const": false},
             "mag_implements_generic_attempt_ledger": {"const": false},
             "mag_implements_generic_runner": {"const": false},
-            "mag_implements_app_workbench": {"const": false}
+            "mag_implements_app_workbench": {"const": false},
+            "mag_implements_generic_memory_transport": {"const": false},
+            "mag_implements_generic_artifact_lifecycle": {"const": false}
           }
         }
       }

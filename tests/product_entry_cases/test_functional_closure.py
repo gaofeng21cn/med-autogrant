@@ -347,8 +347,43 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "generic_attempt_ledger_owner",
                 "generic_state_machine_runner_owner",
                 "generic_workbench_owner",
+                "generic_memory_transport_owner",
+                "generic_artifact_lifecycle_owner",
             ],
         )
+        consumed = thinning["consumed_opl_standard_surfaces"]
+        self.assertEqual(consumed["surface_kind"], "mag_consumed_opl_standard_surfaces")
+        self.assertEqual(
+            consumed["consumption_policy"],
+            "consume_opl_standard_scaffold_and_generic_primitives_no_mag_runtime_rebuild",
+        )
+        self.assertEqual(
+            consumed["consumed_generic_primitives"],
+            [
+                "workspace_source_intake_shell",
+                "memory_locator_writeback_transport",
+                "package_export_lifecycle_shell",
+                "generic_transition_runner",
+                "operator_workbench_observability_slo",
+                "agent_scaffold_checklist",
+            ],
+        )
+        self.assertEqual(
+            set(consumed["mag_retained_authority"]),
+            {
+                "grant_truth",
+                "fundability_verdict",
+                "quality_verdict",
+                "export_verdict",
+                "memory_body_accept_reject",
+                "package_authority",
+                "owner_receipt",
+            },
+        )
+        self.assertTrue(consumed["authority_boundary"]["mag_consumes_standard_scaffold"])
+        self.assertTrue(consumed["authority_boundary"]["mag_consumes_generic_primitives"])
+        self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_memory_transport"])
+        self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_artifact_lifecycle"])
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(
@@ -361,6 +396,8 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         )
         self.assertIn("generic_scheduler_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_workbench_state", output_guard["forbidden_output_classes"])
+        self.assertIn("generic_memory_transport_state", output_guard["forbidden_output_classes"])
+        self.assertIn("generic_artifact_lifecycle_state", output_guard["forbidden_output_classes"])
         self.assertIn("grant_artifact_content", output_guard["forbidden_output_classes"])
         self.assertIn("memory_body", output_guard["forbidden_output_classes"])
         self.assertTrue(output_guard["consumes_opl_replacement_expectations"])
@@ -382,6 +419,8 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(authority["opl_can_write_memory_body"])
         self.assertFalse(authority["opl_can_declare_export_ready"])
         self.assertFalse(authority["mag_rebuilds_opl_runtime"])
+        self.assertFalse(authority["mag_implements_generic_memory_transport"])
+        self.assertFalse(authority["mag_implements_generic_artifact_lifecycle"])
         replacement_ids = {item["primitive_id"] for item in thinning["opl_replacement_expectations"]}
         self.assertEqual(
             replacement_ids,

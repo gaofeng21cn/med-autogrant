@@ -36,6 +36,8 @@ FORBIDDEN_MAG_GENERIC_OWNER_ROLES = (
     "generic_attempt_ledger_owner",
     "generic_state_machine_runner_owner",
     "generic_workbench_owner",
+    "generic_memory_transport_owner",
+    "generic_artifact_lifecycle_owner",
 )
 _FORBIDDEN_DEFAULT_CALLER_PATTERNS = (
     {
@@ -414,6 +416,7 @@ def build_mag_consumer_thinning_contract(
         "claims_opl_replacement_exists": False,
         "claims_production_long_run_soak_complete": False,
         "sidecar_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+        "consumed_opl_standard_surfaces": _build_consumed_opl_standard_surfaces(),
         "allowed_return_shapes": [
             "domain_owner_receipt",
             "typed_blocker",
@@ -507,6 +510,53 @@ def build_mag_consumer_thinning_contract(
             "mag_implements_generic_attempt_ledger": False,
             "mag_implements_generic_runner": False,
             "mag_implements_app_workbench": False,
+            "mag_implements_generic_memory_transport": False,
+            "mag_implements_generic_artifact_lifecycle": False,
+        },
+    }
+
+
+def _build_consumed_opl_standard_surfaces() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_consumed_opl_standard_surfaces",
+        "standard_scaffold_manifest_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
+        "generic_primitives_contract_ref": (
+            "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations"
+        ),
+        "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
+        "consumption_policy": (
+            "consume_opl_standard_scaffold_and_generic_primitives_no_mag_runtime_rebuild"
+        ),
+        "consumed_generic_primitives": [
+            "workspace_source_intake_shell",
+            "memory_locator_writeback_transport",
+            "package_export_lifecycle_shell",
+            "generic_transition_runner",
+            "operator_workbench_observability_slo",
+            "agent_scaffold_checklist",
+        ],
+        "mag_retained_authority": [
+            "grant_truth",
+            "fundability_verdict",
+            "quality_verdict",
+            "export_verdict",
+            "memory_body_accept_reject",
+            "package_authority",
+            "owner_receipt",
+        ],
+        "authority_boundary": {
+            "opl_standard_scaffold_owner": "one-person-lab",
+            "opl_generic_primitives_owner": "one-person-lab",
+            "mag_consumes_standard_scaffold": True,
+            "mag_consumes_generic_primitives": True,
+            "mag_can_own_generic_scheduler": False,
+            "mag_can_own_generic_daemon": False,
+            "mag_can_own_generic_queue": False,
+            "mag_can_own_generic_attempt_ledger": False,
+            "mag_can_own_generic_runner": False,
+            "mag_can_own_generic_workbench": False,
+            "mag_can_own_generic_memory_transport": False,
+            "mag_can_own_generic_artifact_lifecycle": False,
         },
     }
 
@@ -533,6 +583,8 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "generic_attempt_ledger_record",
             "generic_runner_decision",
             "generic_workbench_state",
+            "generic_memory_transport_state",
+            "generic_artifact_lifecycle_state",
             "grant_artifact_content",
             "memory_body",
         ],
