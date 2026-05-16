@@ -501,7 +501,9 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
     )
     assert audit["layout_state"] == "physical_skeleton_follow_through_landed_minimum_anchors"
     assert audit["boundary_keys"] == ["agent", "contracts", "runtime", "docs"]
-    assert audit["physical_move_required"] == "low_risk_source_moves_only_after_path_compatibility_audit"
+    assert audit["physical_move_required"] == (
+        "low_risk_source_moves_only_after_direct_hosted_parity_restore_provenance_and_no_active_caller_proof"
+    )
     assert audit["retired_active_path_policy"] == "physically_removed_or_history_tombstone_only"
     assert audit["forbidden_active_path_residue"] == []
     assert {entry["path_family"]: entry["state"] for entry in audit["legacy_active_path_residue"]} == {

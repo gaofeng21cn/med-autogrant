@@ -367,7 +367,7 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
             {
                 "path_family": "domain entry and stage descriptors",
                 "source_owner": TARGET_DOMAIN_ID,
-                "condition": "path compatibility audit and no-active-caller proof",
+                "condition": "direct/hosted parity, restore/provenance proof, and no-active-caller proof",
             },
             {
                 "path_family": "runtime descriptors and sidecar declarations",

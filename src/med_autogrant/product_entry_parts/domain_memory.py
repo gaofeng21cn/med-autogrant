@@ -448,7 +448,9 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
         "audit_id": "mag.standard_domain_agent_skeleton.repo_source_layout.audit.v1",
         "layout_state": "physical_skeleton_follow_through_landed_minimum_anchors",
         "boundary_keys": list(boundary_refs),
-        "physical_move_required": "low_risk_source_moves_only_after_path_compatibility_audit",
+        "physical_move_required": (
+            "low_risk_source_moves_only_after_direct_hosted_parity_restore_provenance_and_no_active_caller_proof"
+        ),
         "repo_source_policy": "existing_repo_source_mapped_to_standard_agent_contracts_runtime_docs_boundaries",
         "retired_active_path_policy": "physically_removed_or_history_tombstone_only",
         "legacy_active_path_residue": [

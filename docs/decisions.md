@@ -46,7 +46,7 @@
 
 - 决策：MAG 在 `product-entry-manifest`、sidecar export、`current-program` 与 OPL family adoption contract 中落地 `owner_receipt_contract`、`controlled_domain_memory_apply_proof.controlled_receipt_instances`、`lifecycle_guarded_apply_proof` 和 `physical_skeleton_follow_through`。
 - 理由：OPL production functional closure 需要同构 owner receipt envelope、domain-memory accepted/rejected receipt shape、cleanup/restore/retention guarded apply proof 和 `agent/contracts/runtime/docs` physical skeleton anchor，但 MAG 仍必须持有 grant truth、fundability/authoring quality 和 submission-ready export authority。
-- 影响：这是同日 follow-through 前的 minimum surface decision；随后 `product domain-memory-receipt-evidence` 已把 accepted/rejected receipt 从 shape proof 推进到 workspace/runtime evidence path。OPL 仍只能消费 MAG owner receipt refs、typed blocker、no-regression evidence、locator 和 audit refs；真实 OPL-hosted controlled grant-stage attempt、no-regression evidence 和更大范围 source path migration 继续以 typed blocker / path compatibility / no-active-caller proof 推进。
+- 影响：这是同日 follow-through 前的 minimum surface decision；随后 `product domain-memory-receipt-evidence` 已把 accepted/rejected receipt 从 shape proof 推进到 workspace/runtime evidence path。OPL 仍只能消费 MAG owner receipt refs、typed blocker、no-regression evidence、locator 和 audit refs；真实 OPL-hosted controlled grant-stage attempt、no-regression evidence 和更大范围 source path migration 继续以 typed blocker、direct/hosted parity、restore/provenance proof 与 no-active-caller proof 推进。
 
 ## 2026-05-13：补齐 domain-memory runtime receipt evidence path
 
