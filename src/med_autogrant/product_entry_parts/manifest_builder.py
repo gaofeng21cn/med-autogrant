@@ -50,6 +50,7 @@ from med_autogrant.product_entry_parts.manifest_skill_catalog import build_produ
 from med_autogrant.product_entry_parts import domain_agent_skeleton
 from med_autogrant.product_entry_parts.domain_memory import build_manifest_domain_memory_surfaces
 from med_autogrant.product_entry_parts.functional_closure import build_manifest_functional_closure_surfaces
+from med_autogrant.product_entry_parts.opl_substrate_adapter import build_manifest_opl_substrate_adapter_export
 from med_autogrant.product_entry_parts.executor_defaults import build_executor_defaults_surface
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_artifact_inventory_surface,
@@ -822,6 +823,7 @@ class ProductEntryManifestBuilderMixin:
             action_catalog_projections=action_catalog_projections,
             standard_domain_agent_skeleton=standard_domain_agent_skeleton,
         )
+        opl_substrate_adapter_export = build_manifest_opl_substrate_adapter_export(manifest_context=locals())
         automation = _build_shared_automation_catalog(
             summary="automation companion 聚合 submission-ready 导出 gate 与 authoring loop continuation 提示。",
             readiness_summary=(
@@ -968,6 +970,7 @@ class ProductEntryManifestBuilderMixin:
                 "grant_authoring_readiness": grant_authoring_readiness,
                 "autonomy_observability": autonomy_observability,
                 "artifact_locator_contract": artifact_locator_contract,
+                "opl_substrate_adapter_export": opl_substrate_adapter_export,
                 "controlled_stage_attempt_projection": controlled_stage_attempt_projection,
                 "controlled_soak_no_regression_attempt": domain_agent_skeleton.build_controlled_soak_no_regression_attempt(),
                 **domain_memory_surfaces,

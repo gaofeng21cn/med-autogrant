@@ -98,6 +98,11 @@ def build_sidecar_export(
         "ideal_state_closure_status",
         context="sidecar_export.product_entry_manifest",
     )
+    opl_substrate_adapter_export = _require_mapping(
+        manifest,
+        "opl_substrate_adapter_export",
+        context="sidecar_export.product_entry_manifest",
+    )
     automation = _require_mapping(manifest, "automation", context="sidecar_export.product_entry_manifest")
     autonomy_observability = _require_mapping(
         manifest,
@@ -143,6 +148,7 @@ def build_sidecar_export(
         "artifact_locator_contract": dict(
             _require_mapping(manifest, "artifact_locator_contract", context="sidecar_export.product_entry_manifest")
         ),
+        "opl_substrate_adapter_export": dict(opl_substrate_adapter_export),
         "controlled_stage_attempt_projection": dict(controlled_stage_attempt),
         "controlled_domain_memory_apply_proof": dict(controlled_domain_memory_apply_proof),
         "owner_receipt_contract": dict(owner_receipt_contract),
@@ -230,6 +236,7 @@ def build_sidecar_export(
                 )
             ),
             "write_policy": "opl_index_only_no_grant_truth_writes",
+            "substrate_adapter_export_ref": "/sidecar_export/opl_substrate_adapter_export",
             "allowed_dispatch_actions": sorted(_ALLOWED_ACTIONS),
             "replacement_expectations_ref": (
                 "/sidecar_export/mag_consumer_thinning_contract/opl_replacement_expectations"

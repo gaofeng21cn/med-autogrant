@@ -63,6 +63,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
+            "opl_substrate_adapter_export",
+            framework_boundary["framework_consumed_projection"],
+        )
+        self.assertIn(
             "controlled stage attempt projection and sidecar receipt refs",
             framework_boundary["framework_consumed_projection"],
         )
@@ -87,6 +91,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(
             skeleton["controlled_domain_memory_apply_proof_ref"],
             "/product_entry_manifest/controlled_domain_memory_apply_proof",
+        )
+        self.assertEqual(
+            skeleton["opl_substrate_adapter_export_ref"],
+            "/product_entry_manifest/opl_substrate_adapter_export",
         )
         self.assertEqual(
             skeleton["owner_receipt_contract_ref"],

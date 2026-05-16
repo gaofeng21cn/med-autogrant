@@ -194,6 +194,40 @@
     "repo_source_policy": "repo_source_contains_descriptors_only",
     "opl_consumption": "index_locator_refs_only_no_fundability_or_export_verdict"
   },
+  "opl_substrate_adapter_export": {
+    "surface_kind": "mag_opl_substrate_adapter_export",
+    "adapter_id": "mag.opl_substrate_adapter.export.v1",
+    "manifest_surface_ref": "/product_entry_manifest/opl_substrate_adapter_export",
+    "sidecar_surface_ref": "/sidecar_export/opl_substrate_adapter_export",
+    "export_policy": "opaque_index_only_refs_no_domain_truth_payloads",
+    "workspace_ref_index": "/product_entry_manifest/opl_substrate_adapter_export/workspace_ref_index",
+    "source_ref_index": "/product_entry_manifest/opl_substrate_adapter_export/source_ref_index",
+    "artifact_ref_index": "/product_entry_manifest/opl_substrate_adapter_export/artifact_ref_index",
+    "memory_ref_index": "/product_entry_manifest/opl_substrate_adapter_export/memory_ref_index",
+    "lifecycle_ref_index": "/product_entry_manifest/opl_substrate_adapter_export/lifecycle_ref_index",
+    "projection_ref_index": "/product_entry_manifest/opl_substrate_adapter_export/projection_ref_index",
+    "body_exposure_policy": {
+      "workspace": "opaque_ref_and_locator_ref_only",
+      "source": "json_pointer_refs_only",
+      "artifact": "locator_index_only_no_package_body",
+      "memory": "locator_receipt_refs_only_no_memory_body",
+      "owner_receipt": "receipt_ref_only_no_authority_transfer"
+    },
+    "authority_boundary": {
+      "domain_truth_owner": "med-autogrant",
+      "fundability_verdict_owner": "med-autogrant",
+      "authoring_quality_verdict_owner": "med-autogrant",
+      "submission_ready_export_verdict_owner": "med-autogrant",
+      "package_body_owner": "med-autogrant",
+      "memory_body_owner": "med-autogrant",
+      "owner_receipt_authority_owner": "med-autogrant",
+      "opl_role": "opaque_index_and_locator_ref_consumer_only",
+      "opl_can_write_grant_truth": false,
+      "opl_can_read_package_body": false,
+      "opl_can_read_memory_body": false,
+      "opl_can_issue_owner_receipt": false
+    }
+  },
   "controlled_stage_attempt_projection": {
     "surface_kind": "controlled_stage_attempt_projection",
     "manifest_surface_ref": "/product_entry_manifest/controlled_stage_attempt_projection",

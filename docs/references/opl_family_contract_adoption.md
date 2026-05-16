@@ -56,6 +56,18 @@ MAG 现在通过 `product-entry-manifest` 导出 `standard_domain_agent_skeleton
 - `controlled_domain_memory_apply_proof.repo_source_layout_audit` 暴露 `agent`、`contracts`、`runtime`、`docs` source refs，并把 legacy active-path residue 标记为 tombstone-only 或 active source 已物理移除，用于证明当前 physical skeleton repo-source layout 已可审计。
 - OPL 只消费 descriptor/refs，不持有 fundability verdict、authoring quality verdict、submission-ready export verdict 或 canonical grant artifact content。
 
+## OPL Substrate Adapter Export
+
+MAG 现在在 `product-entry-manifest` 与 `product sidecar export` 中导出 `opl_substrate_adapter_export`。这层是 MAG-owned 薄导出面，专门给 OPL 建 workspace/source/artifact/memory/lifecycle/projection 索引：
+
+- workspace 只给 opaque ref、workspace locator、session/ref 与 restore/progress ref。
+- source 只给 JSON pointer refs，不给 source body。
+- artifact 只给 artifact locator、inventory ref 与 runtime artifact root ref，不给 package body 或 canonical grant artifact content。
+- memory 只给 domain memory descriptor/locator、receipt locator 与 writeback receipt refs，不给 memory body，也不让 OPL accept/reject memory writeback。
+- lifecycle/owner receipt 只给 receipt refs、owner receipt contract ref 与 guarded lifecycle proof ref，不转移 owner receipt authority。
+
+这层不声明 OPL 替代 MAG 的 grant truth、fundability verdict、authoring quality verdict、submission-ready export verdict、package body、memory body 或 owner receipt authority。它的作用是把现有 sidecar/product-entry/export/contract surface 收成一个 OPL 可直接消费的 opaque/index-only substrate adapter。
+
 ## Domain Memory Descriptor / Locator
 
 MAG 通过顶层 `domain_memory_descriptor` 暴露 OPL 可解析的 `family_domain_memory_ref.v1`，并通过 `domain_memory_descriptor_locator` 保留 grant strategy memory 的 MAG-owned 详细定位面。它引用 `docs/references/grant_strategy_memory_policy.md`，并把六个 stage 的 memory context 绑定到 `family_stage_control_plane`，但 repo manifest 只携带 descriptor、policy ref、stage descriptor refs、locator template、controlled consumed-memory proof refs 与 writeback receipt proof refs。

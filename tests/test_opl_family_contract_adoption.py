@@ -364,6 +364,40 @@ def test_mag_adoption_contract_declares_standard_family_domain_memory_ref_adapte
     assert authority["can_accept_or_reject_memory_writeback"] is False
 
 
+def test_mag_adoption_contract_declares_opl_substrate_adapter_as_index_only_export() -> None:
+    contract = _contract()
+    adapter = contract["opl_substrate_adapter_export"]
+
+    assert adapter["surface_kind"] == "mag_opl_substrate_adapter_export"
+    assert adapter["adapter_id"] == "mag.opl_substrate_adapter.export.v1"
+    assert adapter["manifest_surface_ref"] == "/product_entry_manifest/opl_substrate_adapter_export"
+    assert adapter["sidecar_surface_ref"] == "/sidecar_export/opl_substrate_adapter_export"
+    assert adapter["export_policy"] == "opaque_index_only_refs_no_domain_truth_payloads"
+    assert adapter["workspace_ref_index"].endswith("/workspace_ref_index")
+    assert adapter["source_ref_index"].endswith("/source_ref_index")
+    assert adapter["artifact_ref_index"].endswith("/artifact_ref_index")
+    assert adapter["memory_ref_index"].endswith("/memory_ref_index")
+    assert adapter["lifecycle_ref_index"].endswith("/lifecycle_ref_index")
+    assert adapter["projection_ref_index"].endswith("/projection_ref_index")
+    assert adapter["body_exposure_policy"] == {
+        "workspace": "opaque_ref_and_locator_ref_only",
+        "source": "json_pointer_refs_only",
+        "artifact": "locator_index_only_no_package_body",
+        "memory": "locator_receipt_refs_only_no_memory_body",
+        "owner_receipt": "receipt_ref_only_no_authority_transfer",
+    }
+    authority = adapter["authority_boundary"]
+    assert authority["domain_truth_owner"] == "med-autogrant"
+    assert authority["package_body_owner"] == "med-autogrant"
+    assert authority["memory_body_owner"] == "med-autogrant"
+    assert authority["owner_receipt_authority_owner"] == "med-autogrant"
+    assert authority["opl_role"] == "opaque_index_and_locator_ref_consumer_only"
+    assert authority["opl_can_write_grant_truth"] is False
+    assert authority["opl_can_read_package_body"] is False
+    assert authority["opl_can_read_memory_body"] is False
+    assert authority["opl_can_issue_owner_receipt"] is False
+
+
 def test_domain_memory_seed_fixture_is_template_only_and_points_to_landed_surfaces() -> None:
     fixture = _domain_memory_seed_fixture()
     contract = _contract()

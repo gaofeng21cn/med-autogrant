@@ -33,6 +33,33 @@ class ProductSidecarTest(unittest.TestCase):
             export["artifact_locator_contract"]["surface_kind"],
             "domain_artifact_locator_contract",
         )
+        substrate_adapter = export["opl_substrate_adapter_export"]
+        self.assertEqual(substrate_adapter["surface_kind"], "mag_opl_substrate_adapter_export")
+        self.assertEqual(substrate_adapter["adapter_id"], "mag.opl_substrate_adapter.export.v1")
+        self.assertEqual(substrate_adapter["workspace_ref_index"]["body_policy"], "locator_only_no_workspace_body")
+        self.assertEqual(
+            substrate_adapter["source_ref_index"]["index_policy"],
+            "source_refs_only_no_source_body",
+        )
+        self.assertEqual(
+            substrate_adapter["artifact_ref_index"]["body_policy"],
+            "locator_and_inventory_refs_only_no_package_body",
+        )
+        self.assertEqual(
+            substrate_adapter["memory_ref_index"]["body_policy"],
+            "locator_and_receipt_refs_only_no_memory_body",
+        )
+        self.assertEqual(
+            substrate_adapter["body_exposure_policy"]["owner_receipt"],
+            "receipt_ref_only_no_authority_transfer",
+        )
+        self.assertFalse(substrate_adapter["authority_boundary"]["opl_can_read_package_body"])
+        self.assertFalse(substrate_adapter["authority_boundary"]["opl_can_read_memory_body"])
+        self.assertFalse(substrate_adapter["authority_boundary"]["opl_can_issue_owner_receipt"])
+        self.assertEqual(
+            export["opl_control_plane"]["substrate_adapter_export_ref"],
+            "/sidecar_export/opl_substrate_adapter_export",
+        )
         self.assertEqual(
             export["controlled_stage_attempt_projection"]["surface_kind"],
             "controlled_stage_attempt_projection",
