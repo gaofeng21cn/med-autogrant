@@ -1,6 +1,6 @@
 # Upstream Hermes-Agent Fast Cutover Board
 
-> Lifecycle note (`2026-05-16`): this dated spec is a physically archived `retired_provider_proof` under `docs/history/specs/`. Read current MAG state from `docs/status.md`, the core five docs, `docs/specs/specs_lifecycle_map.md`, and `contracts/runtime-program/current-program.json` first. Older `Current Truth`, Hermes, OPL Gateway, host-agent, or federation wording in this file is provenance, not the current default owner line.
+> 生命周期注记（`2026-05-17`）：这份 dated spec 是已物理归档到 `docs/history/specs/` 的 `retired_provider_proof`。请先读取 `docs/status.md`、核心五件套、`docs/specs/specs_lifecycle_map.md` 与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
 状态锚点：`2026-04-12`
 

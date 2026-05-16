@@ -1,8 +1,8 @@
 # Med Auto Grant 轻量产品入口与 OPL Handoff
 
-> Historical reference. The current landed route catalog and direct-entry truth now live in `docs/project.md`, `docs/decisions.md`, and `contracts/runtime-program/current-program.json`.
+> 历史参考说明：当前 landed route catalog 与 direct-entry truth 已归 `docs/project.md`、`docs/decisions.md` 和 `contracts/runtime-program/current-program.json` 持有。
 >
-> Current reading note: older phrases such as `Hermes Kernel`, `OPL Runtime Manager`, and `OPL family orchestration surface` should now be read through the current route `OPL stage-led runtime framework with Agent executors as the minimum execution unit -> MAG projection/descriptor -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`. `Codex CLI` is the default minimum execution unit unless an active contract selects another provider. OPL may host, schedule, wake, hand off, receipt, retry, and project MAG stages, but it does not own MAG grant truth, authoring semantics, quality gates, or submission-ready export truth.
+> 当前阅读注记：本文中的 `Hermes Kernel`、`OPL Runtime Manager` 与 `OPL family orchestration surface` 等旧表述，应按当前链路理解为 `OPL stage-led runtime framework with Agent executors as the minimum execution unit -> MAG projection/descriptor -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`。除非活跃合同显式选择其他 provider，`Codex CLI` 是默认最小执行单元。OPL 可以托管、调度、唤醒、handoff、receipt、retry 和投影 MAG stage，但不持有 MAG grant truth、authoring semantics、quality gates 或 submission-ready export truth。
 
 ## 1. 当前真相
 
@@ -23,17 +23,17 @@
 
 这个仓理想中的 domain 级产品链路应是：
 
-`User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> Hermes Kernel -> Med Auto Grant domain logic`
+`User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> OPL explicit provider or Codex CLI executor -> Med Auto Grant domain logic`
 
 在 `OPL` 家族级入口下，则应兼容：
 
-`User or agent caller -> OPL Product Entry -> OPL family orchestration surface -> Hermes Kernel -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
+`User or agent caller -> OPL Product Entry -> OPL stage-led runtime framework -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`
 
 按当前口径，上面两条历史链路里的 `Hermes Kernel` / `OPL Runtime Manager` 应理解为 OPL stage-led runtime framework 的 provider-specific 或历史实现记录；`OPL family orchestration surface` 应理解为 OPL 对外部 domain agent 的托管、投影和 handoff，不接管 MAG grant truth。Temporal / Hermes 只在显式 provider 或 proof lane 中出现。
 
 这意味着：
 
-- `Med Auto Grant` 是独立 grant domain agent，可 direct entry，也可被 `OPL` federation
+- `Med Auto Grant` 是独立 grant domain agent，可 direct entry，也可被 `OPL` 托管和投影。
 - `OPL` 只保留 family-level session/runtime/projection 与 shared modules/contracts/indexes
 - runtime substrate 已经具备，当前剩下的是产品入口层和 handoff 层
 

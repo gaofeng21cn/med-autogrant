@@ -1,12 +1,12 @@
 # Schema-Backed Product Entry And Routing Contract Current Truth
 
-> Lifecycle note (`2026-05-15`): this dated spec is `support_current_truth` only for the schema-backed product-entry / route contract subsection that is still referenced by current owner surfaces. Current owner is MAG schema/source/product-entry manifest plus `contracts/runtime-program/current-program.json`; OPL only consumes MAG descriptor/projection through the current stage-led framework path. Older `Current Truth`, Upstream Hermes fast-cutover, `future OPL Gateway`, host-agent, or federation wording below is provenance, not current owner line or compatibility target.
+> 生命周期注记（`2026-05-17`）：这份 dated spec 只在仍被当前 owner surfaces 引用的 schema-backed product-entry / route contract subsection 内是 `support_current_truth`。当前 owner 是 MAG schema/source/product-entry manifest 与 `contracts/runtime-program/current-program.json`；OPL 只通过当前 stage-led framework path 消费 MAG descriptor/projection。下方旧 `Current Truth`、Upstream Hermes fast-cutover、`future OPL Gateway`、host-agent 或 federation wording 是 provenance，不是当前 owner line 或 compatibility target。
 
-Current disposition:
+当前处置：
 
-- Keep: schema-backed `product_entry` / `executor_routing_contract` validation and fail-closed drift guard.
-- Superseded: `Upstream Hermes-Agent Fast Cutover`, `future OPL Gateway`, Hermes substrate runtime owner, gateway/federation caller language.
-- Direct retirement posture: if an old module/interface/test only exists to preserve the superseded Gateway/Hermes wording and has no current caller, migrate the caller to MAG schema/source/product-entry manifest and delete or archive the old surface; do not add compatibility aliases.
+- Keep：schema-backed `product_entry` / `executor_routing_contract` validation 和 fail-closed drift guard。
+- Superseded：`Upstream Hermes-Agent Fast Cutover`、`future OPL Gateway`、Hermes substrate runtime owner、gateway/federation caller language。
+- Direct retirement posture：如果旧 module/interface/test 只为保留 superseded Gateway/Hermes wording 且没有 current caller，应把 caller 迁到 MAG schema/source/product-entry manifest，并删除或归档旧 surface；不新增 compatibility aliases。
 
 Date: `2026-04-12`
 

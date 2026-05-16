@@ -1,7 +1,5 @@
 # 历史归档索引
 
-[English](./README.md) | **中文**
-
 这里是 `Med Auto Grant` 已退役文档路线的统一归档入口。
 
 仓库跟踪的历史材料应从这里进入。
@@ -17,7 +15,7 @@
 
 生命周期信号：
 
-- `owner`：MAG maintainers。
+- `owner`：MAG 维护者。
 - `purpose`：保留已退役文档路线、已完成计划、被 supersede 的定位说明和审计 provenance。
 - `state`：`history`。
 - `machine boundary`：历史文档只是人读 provenance；机器面必须使用当前 contracts/schema/source path 或语义化 `human_doc:*` 标识。
@@ -27,7 +25,7 @@
 - [Plan 完成度审计 2026-05-01](./plan-completion-audit-2026-05-01.md)
 - [Domain Harness OS 定位历史说明](./domain-harness-os-positioning.md)
 - [OPL 托管运行时三层合同](./opl_managed_runtime_three_layer_contract.md)
-- [Lightweight Product Entry and OPL Handoff](./lightweight_product_entry_and_opl_handoff.md)
+- [轻量产品入口与 OPL Handoff 历史说明](./lightweight_product_entry_and_opl_handoff.md)
 - [历史 plans](./plans/README.md)
 - [历史 specs 索引](./specs/README.md)
 - [OMX 历史资料](./omx/README.md)

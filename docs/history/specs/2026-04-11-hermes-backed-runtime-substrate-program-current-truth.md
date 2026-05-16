@@ -1,12 +1,12 @@
 # Hermes-Backed Runtime Substrate Program Current Truth
 
-> Lifecycle note (`2026-05-15`): this dated spec is `superseded_provider_proof` / historical provenance. It does not define the current MAG runtime owner, provider owner, compatibility bridge, or required runnable path. Current owner line is `codex_cli` default executor + MAG-owned grant truth / quality / route / export authority + OPL stage-led framework consuming MAG descriptor/projection. `hermes_agent` is only an explicit non-default executor/proof/provenance lane.
+> 生命周期注记（`2026-05-17`）：这份 dated spec 是 `superseded_provider_proof` / historical provenance。它不定义当前 MAG runtime owner、provider owner、compatibility bridge 或 required runnable path。当前 owner line 是 `codex_cli` default executor + MAG-owned grant truth / quality / route / export authority + OPL stage-led framework consuming MAG descriptor/projection。`hermes_agent` 只表示显式非默认 executor/proof/provenance lane。
 
-Current disposition:
+当前处置：
 
-- Superseded: Hermes-backed runtime substrate as mainline owner, local host-agent compatibility bridge, future Hermes host compatibility handoff.
-- Retained: proof vocabulary, fail-closed lessons, runtime-state provenance, and audit path for why Hermes-first was not kept as default.
-- Direct retirement posture: any old module/interface/test that exists only to preserve this Hermes-backed owner or compatibility bridge should be migrated to the current owner surface and deleted or archived when no active caller remains.
+- Superseded：Hermes-backed runtime substrate as mainline owner、local host-agent compatibility bridge、future Hermes host compatibility handoff。
+- Retained：proof vocabulary、fail-closed lessons、runtime-state provenance，以及解释为什么 Hermes-first 没有保留为默认路线的 audit path。
+- Direct retirement posture：任何只为保留 Hermes-backed owner 或 compatibility bridge 的旧 module/interface/test，都应迁到当前 owner surface；没有 active caller 后删除或归档。
 
 Date: `2026-04-11`
 
