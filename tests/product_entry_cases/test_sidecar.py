@@ -112,10 +112,28 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertFalse(thinning["authority_boundary"]["mag_rebuilds_opl_runtime"])
         self.assertEqual(thinning["forbidden_mag_owned_generic_primitives"], [])
         self.assertIn("generic_workbench_owner", thinning["forbidden_mag_generic_owner_roles"])
+        self.assertIn("generic_memory_transport_owner", thinning["forbidden_mag_generic_owner_roles"])
+        self.assertIn("generic_artifact_lifecycle_owner", thinning["forbidden_mag_generic_owner_roles"])
+        consumed = export["consumed_opl_standard_surfaces"]
+        self.assertEqual(consumed, thinning["consumed_opl_standard_surfaces"])
+        self.assertEqual(consumed["surface_kind"], "mag_consumed_opl_standard_surfaces")
+        self.assertEqual(
+            consumed["sidecar_projection_ref"],
+            "/sidecar_export/mag_consumer_thinning_contract",
+        )
+        self.assertEqual(consumed["authority_boundary"]["opl_standard_scaffold_owner"], "one-person-lab")
+        self.assertTrue(consumed["authority_boundary"]["mag_consumes_standard_scaffold"])
+        self.assertTrue(consumed["authority_boundary"]["mag_consumes_generic_primitives"])
+        self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_memory_transport"])
+        self.assertFalse(consumed["authority_boundary"]["mag_can_own_generic_artifact_lifecycle"])
+        self.assertIn("grant_truth", consumed["mag_retained_authority"])
+        self.assertIn("package_authority", consumed["mag_retained_authority"])
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(output_guard["allowed_output_classes"], thinning["mag_owned_outputs"])
         self.assertEqual(output_guard["required_sidecar_return_refs"], thinning["exposed_sidecar_return_refs"])
+        self.assertIn("generic_memory_transport_state", output_guard["forbidden_output_classes"])
+        self.assertIn("generic_artifact_lifecycle_state", output_guard["forbidden_output_classes"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_runtime_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_workbench_state"])
         scaffold_guard = thinning["standard_agent_scaffold_alignment"]

@@ -148,6 +148,13 @@ def build_sidecar_export(
         "owner_receipt_contract": dict(owner_receipt_contract),
         "lifecycle_guarded_apply_proof": dict(lifecycle_guarded_apply_proof),
         "mag_consumer_thinning_contract": dict(mag_consumer_thinning_contract),
+        "consumed_opl_standard_surfaces": dict(
+            _require_mapping(
+                mag_consumer_thinning_contract,
+                "consumed_opl_standard_surfaces",
+                context="sidecar_export.mag_consumer_thinning_contract",
+            )
+        ),
         "physical_skeleton_follow_through": dict(physical_skeleton_follow_through),
         "ideal_state_closure_status": dict(ideal_state_closure_status),
         "receipt_refs": dict(
