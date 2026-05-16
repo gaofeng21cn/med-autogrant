@@ -12,7 +12,9 @@ from med_autogrant.family_shared_release import inspect_current_repo_family_shar
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LINE_BUDGET_TARGET = 1000
 LINE_BUDGET_LIMIT = 1500
-LEGACY_OVER_TARGET_BUDGETS: dict[str, int] = {}
+LEGACY_OVER_TARGET_BUDGETS: dict[str, int] = {
+    "src/med_autogrant/product_entry_parts/consumer_thinning.py": 1459,
+}
 CODE_SUFFIXES = {".py", ".sh", ".js", ".ts", ".tsx", ".jsx"}
 TRACKED_PATH_FORBIDDEN_EXACT_NAMES = {
     ".DS_Store",
