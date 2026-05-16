@@ -11,15 +11,16 @@ Cleanup posture: 当前计划不再要求保留旧模块、旧接口、旧测试
 
 本文是 MAG 的长期 gap plan，不是一次性 repo closeout 记录。已经落地的 receipt writer、sidecar guarded action、descriptor、skeleton descriptor 和 direct-retirement posture 只作为当前基础面阅读；后续维护重点是把这些基础面持续用于真实 grant workspace、OPL-hosted attempt、memory writeback、package/export lifecycle 和 legacy delete audit。
 
-MAG 仓内不再新增兼容层或第二真相源。新增能力必须先归类为两类之一：
+MAG 仓内不再新增兼容层或第二真相源。新增能力必须先归类为三类之一：
 
 - `MAG-owned domain package`：grant truth、fundability / quality / export verdict、stage pack、domain transition spec/table、memory accept/reject、artifact/package authority、descriptor、contract/schema、sidecar/thin adapter、projection builder、artifact locator、receipt schema、tests 和 domain entry。
 - `OPL-owned generic framework/runtime`：scheduler、queue、attempt ledger、generic state-machine runner、workspace/source intake shell、memory locator/index、artifact/package lifecycle shell、workbench、observability、SLO、App routing 和 cross-domain projection。
+- `OPL-generated surface`：CLI/product-entry/sidecar/status/read-model/workbench/harness wrapper，输入来自 MAG descriptor、stage graph、action metadata、receipt schema、policy table 和 authority function manifest；MAG 手写同类 surface 只能作为迁移桥。
 
 若旧模块、旧接口、旧测试或旧 CLI alias 已被最新 owner surface 替代，处理方式是 direct retirement：改 active caller 到最新 surface 后直接删除或归档到 history/tombstone；不保留 compatibility alias、facade patch bridge、monkeypatch test 或旧 runtime owner wording。
 
 - `定位`：本文是 MAG 的 active gap / implementation order，不是 north-star 目标态本身；目标态回到 `med-auto-grant-ideal-state.md`。
-- `当前实态`：MAG 没有发现类似 MAS local LaunchAgent scheduler 的默认运行 owner 残留；MAG 作为 OPL standard scaffold / generic primitives consumer 的功能面 follow-through 已落到 manifest、sidecar projection、schema 和 focused guard。MAG repo-local refs-only surface 现在已覆盖 focused hosted receipt verification、memory receipt read projection、package lifecycle handoff projection、cleanup/restore/retention lifecycle receipt bundle 和 continuous receipt reconciliation snapshot。当前剩余缺口是外部 OPL replacement production consumption、真实 workspace memory/package/lifecycle receipt 泛化、持续 live receipt 对账和 long-run soak。
+- `当前实态`：MAG 没有发现类似 MAS local LaunchAgent scheduler 的默认运行 owner 残留；MAG 作为 OPL standard scaffold / generic primitives consumer 的功能面 follow-through 已落到 manifest、sidecar projection、schema 和 focused guard。2026-05-17 后目标收紧为 OPL pack compiler / generated surface：MAG repo-local refs-only surface 已覆盖 focused hosted receipt verification、memory receipt read projection、package lifecycle handoff projection、cleanup/restore/retention lifecycle receipt bundle 和 continuous receipt reconciliation snapshot，但这些手写 shell 长期应被 OPL 生成或托管。当前剩余缺口是外部 OPL generated/replacement production consumption、真实 workspace memory/package/lifecycle receipt 泛化、持续 live receipt 对账和 long-run soak。
 - `最短路径`：MAG consumer follow-through 已完成；后续先用真实 workspace/runtime evidence 验证 memory/package/lifecycle refs 被 OPL/App shell 消费，再做持续 live receipt reconciliation，最后做 long-run live soak。
 - `验收顺序`：focused OPL-hosted receipt verification 在 MAG consumer 功能面收口之后执行；long-run live soak 是最后的 production closure，不是 MAG 侧 contract/manifest/sidecar follow-through 的前置条件。
 - `禁写口径`：不能把 descriptor resolved、receipt writer、receipt reconciliation inventory、OPL provider completion 或 no-regression evidence 写成 grant-stage production soak、fundability-ready、quality-ready 或 export-ready。
@@ -42,7 +43,7 @@ OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/d
 
 2026-05-16 privatized functional module audit closeout：MAG 侧新增 `mag_consumer_thinning_contract.privatized_functional_module_audit`，并由 sidecar export 投影给 OPL 统一审计。该审计把 runtime registration、task lifecycle、session ledger / attention queue、lifecycle adapter、observability、sidecar/product status、package lifecycle、source intake、人用 workbench / scheduler / daemon 归为 OPL-owned generic primitive consumer；把 grant lifecycle stage、fundability / quality / export verdict、package readiness / submission-ready、grant transition oracle、owner receipt / no-regression evidence、grant strategy memory accept/reject 归为 MAG-owned grant truth / receipt / verdict；把默认 Hermes/Gateway/local-manager runtime owner、domain runtime patch bridge、compatibility aggregate test、legacy flat shell alias 和 repo-owned scheduler/daemon 归为 retire/tombstone。该 closeout 明确保护 grant `lifecycle_stage`、package readiness、submission-ready、fundability、quality、export verdict 与 owner receipt，防止它们被当作通用 lifecycle/readiness/package 面误删。
 
-2026-05-16 private functional audit 落地校准：该审计面现在不只给分类，还对每个 audit item 暴露 `code_paths`、`active_callers`、`active_caller_status`、`migration_action`、`retention_reason` 与 `cannot_absorb_reason`。当前代码真实状态是：MAG 仍有本地 `runtime run/resume` journal / attempt ledger、`grant_autonomy_controller` / critique / mainline loop、workspace/source validation、memory receipt writer、package/export helpers、product status/user-loop/sidecar adapter、generic CLI grouped wrappers，以及 optional `hermes_agent` proof lane / upstream `hermes_state.SessionDB` 探测。它们不能被写成“已经全部清空”。迁移动作是把 session ledger、attention queue、stage attempt ledger、generic lifecycle adapter、workspace/source intake shell、artifact/package lifecycle shell、runtime observability、operator workbench 和 scheduler/daemon 上收到 OPL generic primitives；MAG 只保留 grant lifecycle、fundability/quality/export verdict、package authority、memory accept/reject、owner receipt、grant transition oracle、sidecar guarded dispatch、schema/contract 和 focused tests。不能上收的原因也已机器化：OPL 可以承接 transport、ledger、display、SLO、runner 和 lifecycle 壳，但不能解释 funding call、决定 grant readiness、签 owner receipt、写 memory body、批准 submission-ready export 或改写 MAG grant truth。
+2026-05-16/17 private functional audit 落地校准：该审计面现在不只给分类，还对每个 audit item 暴露 `code_paths`、`active_callers`、`active_caller_status`、`migration_action`、`retention_reason` 与 `cannot_absorb_reason`。当前代码真实状态是：MAG 仍有本地 `runtime run/resume` journal / attempt ledger、`grant_autonomy_controller` / critique / mainline loop、workspace/source validation、memory receipt writer、package/export helpers、product status/user-loop/sidecar adapter、generic CLI grouped wrappers，以及 optional `hermes_agent` proof lane / upstream `hermes_state.SessionDB` 探测。它们不能被写成“已经全部清空”。迁移动作是把 session ledger、attention queue、stage attempt ledger、generic lifecycle adapter、workspace/source intake shell、artifact/package lifecycle shell、runtime observability、operator workbench、scheduler/daemon 和 generated wrapper owner 上收到 OPL generic primitives / pack compiler；MAG 只保留 grant lifecycle、fundability/quality/export verdict、package authority、memory accept/reject、owner receipt、grant transition oracle、schema/contract、focused tests 和真正无法声明化的 grant authority functions。不能上收的原因也已机器化：OPL 可以承接 transport、ledger、display、SLO、runner、lifecycle 壳和 generated entry surface，但不能解释 funding call、决定 grant readiness、签 owner receipt、写 memory body、批准 submission-ready export 或改写 MAG grant truth。
 
 2026-05-16 thin output guard follow-through：`thin_surface_output_guard` 现在不只禁止 generic runtime / workbench / memory / artifact / observability state，也把 MAG 历史私有功能状态逐项列为 forbidden output class：local runtime journal、local attempt ledger、attention queue、stage attempt ledger、package lifecycle、source intake、operator workbench、scheduler daemon 和 Hermes state-db runtime state。该 guard 让 MAG 即使保留 domain thin adapter 或 explicit proof lane，也不能通过 sidecar / manifest 把这些状态重新输出成 MAG-owned runtime surface。
 
@@ -52,7 +53,7 @@ OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/d
 
 2026-05-17 OPL Agent Lab migration guard：MAG 已新增 repo-native `meta` 测试，直接调用 OPL Agent Lab `agent-lab longline --json` 并断言 MAG 出现在 passed suite、`ready_to_reduce_domain_longline_tests=true`、`recommended_repo_test_disposition` 把 controlled grant-stage soak orchestration / receipt reconciliation projection / no-forbidden-write cross-domain regression 迁到 OPL Agent Lab，同时把 fundability scorer / grant owner receipt fixture / proposal artifact authority checks 留在 MAG。本轮完成的是测试 ownership 迁移 guard：framework-level longline orchestration、recovery probe 与 forbidden-write cross-domain regression 由 OPL Agent Lab 承接；MAG 仍保留 domain authority tests 和 grant-owned scorer、receipt fixture、artifact authority checks。该 guard 同步断言 OPL Agent Lab 不允许写 domain truth、memory body、memory accept/reject、quality verdict、fundability verdict 或 export/submission readiness verdict。
 
-主要差距已经不在概念、命名、descriptor、MAG repo 内 receipt writer 或 consumer/thin adapter 功能面。后续计划也不应把 production closure / long soak 放成所有已知工作的前置条件。MAG 当前已经把可复用 workspace/source intake、memory locator/writeback transport、package/export lifecycle shell、generic transition runner、operator workbench、observability/SLO 和 scaffold/template 规则声明为 OPL-owned replacement expectation，并把本仓收窄为 grant authority pack 与薄程序面；之后再用真实 grant-stage receipt、focused parity 和 live soak 验收。
+主要差距已经不在概念、命名、descriptor、MAG repo 内 receipt writer 或 consumer/thin adapter 功能面。后续计划也不应把 production closure / long soak 放成所有已知工作的前置条件。MAG 当前已经把可复用 workspace/source intake、memory locator/writeback transport、package/export lifecycle shell、generic transition runner、operator workbench、observability/SLO 和 scaffold/template 规则声明为 OPL-owned replacement expectation，并把本仓收窄为 grant authority pack 与薄程序面；2026-05-17 后进一步要求把 product status/user-loop/sidecar adapter、grouped CLI/API、projection builder 和 lifecycle adapter 这类仍手写的 thin shell 迁向 OPL generated surface。之后再用真实 grant-stage receipt、focused parity 和 live soak 验收。
 
 当前缺口按执行顺序应读成：
 
@@ -126,6 +127,7 @@ OPL Framework / One Person Lab App 应提供：
 | Quality/readiness projection | App 展示 quality state、issue lineage、closure dossier、next action，但不替 MAG 下 verdict | MAG quality scorecard / closure dossier / diff 已落地 | 通用 quality/readiness drilldown 与 operator action shell 仍需 OPL/App 上收 | OPL 提供 projection shell；MAG 返回 AI critique-backed verdict、issue refs 和 hard blockers |
 | Physical skeleton | repo-source 按 `agent/ contracts/ runtime/ docs/` 清晰分层，workspace artifacts 不进 source | MAG 已有 minimum repo-source anchors，OPL 读模型识别为 evidence observed；consumer contract 通过 `consumed_opl_standard_surfaces` 明确 MAG 消费 OPL standard scaffold | 更大范围物理迁移仍需 direct/hosted parity、restore/provenance proof 和 no-forbidden-artifact-blob proof | 按最新 owner surface 迁移；发现旧 import/caller/test 时直接改到新 surface，不保留 path compatibility shell |
 | New-agent template readiness | 新 OPL Agent 应能按统一 docs taxonomy、descriptor/stage/action/memory/artifact locator、sidecar/receipt schema 和 no-forbidden-write gate 建仓 | MAG 已具备 `agent/`、`contracts/runtime-program/`、`plugins/mag`、`runtime/`、`schemas/`、canonical docs taxonomy 和 domain package 薄程序面；MAG 当前声明消费 OPL scaffold/checklist，不持有通用模板 owner | 目录仍混有 MAG-specific Python package、grant schemas、historical proof surface 和 artifacts/proof 输出；不能直接复制为通用 scaffold | 抽取 template 文档/contract checklist 到 OPL；MAG 保持 grant-specific 实现。 |
+| OPL pack compiler / generated surface | OPL 应从 MAG descriptor、stage graph、action metadata、receipt schema、policy table 和 authority manifest 生成 CLI/product-entry/sidecar/status/workbench/harness | MAG 当前仍有手写 product status/user-loop/sidecar adapter、grouped CLI/API、projection builder、receipt/lifecycle helpers | 这些 thin shell 仍可能被误判为 MAG 必要私有功能；缺 OPL generated surface production consumption | 先把手写 shell 输入抽成声明式 pack，再把 active caller 迁到 OPL generated/replacement；MAG 只保留 fundability/quality/export verdict、package authority、memory accept/reject、owner receipt signer 和 grant helper。 |
 | Legacy retirement | 旧 Hermes/Gateway/local-manager active path 只保留 history/proof/provenance | MAG status 已记录 tombstone / physically removed evidence；runtime patch bridge 与旧 product-entry 聚合测试已删除 | OPL closeout 仍把 physical delete 标记为 blocker，但 MAG 不再把旧面作为兼容目标 | 旧模块/接口/测试一旦无 active owner，直接删除或归档；只保留必要 provenance，不新增 alias/facade/compat test |
 
 ## OPL Framework 应上收的 MAG 通用外围
@@ -219,7 +221,7 @@ RCA 当前提供了 artifact-heavy domain 的 sibling 样板：direct route 已 
 
 ### P1：OPL generic primitive absorption design and MAG adapter thinning
 
-目标：把 MAG 已明确不应长期持有的通用外围能力声明为 OPL owner primitive，并把 MAG 侧 adapter 收薄；不等待真实 grant-stage live soak。
+目标：把 MAG 已明确不应长期持有的通用外围能力声明为 OPL owner primitive，并把 MAG 侧 adapter 收薄；不等待真实 grant-stage live soak。2026-05-17 后新增要求：能由 OPL pack compiler 生成的 product status/user-loop/sidecar/grouped CLI/API/projection/lifecycle wrapper 不再作为 MAG 长期私有实现。
 
 当前状态：MAG 侧功能面 follow-through 已完成。`mag_consumer_thinning_contract`、`consumed_opl_standard_surfaces`、`functional_harness_consumer_coverage`、`thin_surface_output_guard`、sidecar export、schema 和 focused tests 已经固定 MAG 只消费 OPL standard scaffold / generic primitives / functional harness，不持有 generic scheduler/daemon/queue/attempt ledger/runner/workbench/memory transport/artifact lifecycle，也不把 OPL harness pass 提升成 grant-ready 或 export-ready。
 
@@ -229,6 +231,7 @@ RCA 当前提供了 artifact-heavy domain 的 sibling 样板：direct route 已 
 2. 继续把 workspace/source intake shell、memory locator/writeback transport、package/export lifecycle shell、generic transition runner、operator workbench/observability/SLO 和 agent scaffold checklist 作为 OPL replacement expectation。
 3. MAG 后续新增 contract 时同步保留 authority boundary 字段：`opl_can_write_domain_truth=false`、`opl_can_write_memory_body=false`、`opl_can_declare_export_ready=false`。
 4. 若发现 MAG 新增 generic scheduler、daemon、queue、attempt ledger、generic runner、workbench、memory transport 或 artifact lifecycle owner 角色，视为回归。
+5. 将 MAG hand-written thin shell 的输入抽成 declarative grant pack：stage graph、action intent、source/package/memory policies、transition oracle、receipt schema、authority function manifest 和 fixtures；OPL generated surface 可用后迁移 active caller。
 
 验收：
 
@@ -282,17 +285,18 @@ RCA 当前提供了 artifact-heavy domain 的 sibling 样板：direct route 已 
 
 ### P4：Physical skeleton/template extraction and legacy direct retirement
 
-目标：把 MAG 作为 grant-domain 参考实现中可复用的 skeleton 规则抽到 OPL template/checklist，同时按最新 owner surface 清理旧面，不保留过时兼容接口。
+目标：把 MAG 作为 grant-domain 参考实现中可复用的 skeleton 规则抽到 OPL template/checklist，同时按最新 owner surface 清理旧面，不保留过时兼容接口；把 hand-written thin shell 继续降为迁移桥。
 
 当前状态：MAG 侧 consumer contract 已通过 `standard_agent_scaffold_alignment` 与 `consumed_opl_standard_surfaces` 固定为 OPL standard scaffold 的消费方；MAG 保留 grant-domain source、descriptor、schema、sidecar、projection builder、receipt writer 和 focused tests，不持有通用 scaffold template owner。剩余是 OPL 抽取通用 template/checklist 的外部证据，以及后续发现旧 caller 时按最新 owner surface 继续 direct retirement。
 
 动作：
 
 1. 抽取 OPL-compatible agent 的 docs taxonomy、descriptor/stage/action/memory/artifact locator、sidecar/receipt schema、no-forbidden-write、runtime artifact 不进 source、direct/hosted parity checklist。
-2. 以 `agent/ contracts/ runtime/ docs/` 作为 repo-source owner layout，验证 direct app skill path、MAG CLI、OPL-hosted path、restore/provenance proof 和 focused tests。
-3. 发现旧 Hermes/Gateway/local-manager 命名、旧 facade patch target、flat CLI shell alias、旧聚合测试或旧 product-status trace 仍被 active caller 使用时，改 caller 到最新 owner surface。
-4. caller 迁完后直接删除旧模块/接口/测试，或移入 history/tombstone；不保留 compatibility shim、alias、re-export 或 monkeypatch bridge。
-5. 保留必要 provenance 和 regression oracle 语义，但旧名不得重新取得 default runtime、public integration authority 或测试入口地位。
+2. 抽取 OPL pack compiler 输入清单：domain descriptor、stage graph、action metadata、policy table、receipt schema、authority function manifest、fixtures、no-forbidden-write contract。
+3. 以 `agent/ contracts/ runtime/ docs/` 作为 repo-source owner layout，验证 direct app skill path、MAG CLI、OPL-hosted path、restore/provenance proof 和 focused tests。
+4. 发现旧 Hermes/Gateway/local-manager 命名、旧 facade patch target、flat CLI shell alias、旧聚合测试、旧 product-status trace 或手写 generated-wrapper 替代面仍被 active caller 使用时，改 caller 到最新 owner surface。
+5. caller 迁完后直接删除旧模块/接口/测试，或移入 history/tombstone；不保留 compatibility shim、alias、re-export 或 monkeypatch bridge。
+6. 保留必要 provenance 和 regression oracle 语义，但旧名不得重新取得 default runtime、public integration authority 或测试入口地位。
 
 验收：
 
@@ -349,8 +353,9 @@ RCA 当前提供了 artifact-heavy domain 的 sibling 样板：direct route 已 
 1. 用真实 workspace 把 grant strategy memory accepted/rejected receipts 推进到 memory body migration 与 retrieval/writeback apply 泛化，并让 OPL/App 消费 `memory-receipt-projection` 的 body-free refs。
 2. 用真实 workspace 跑 package/export lifecycle 与 cleanup/restore/retention guarded receipts，并让 OPL/App 消费 `package-lifecycle-handoff` 与 `lifecycle-receipt-bundle`。
 3. 在 OPL/App 侧补齐 generic primitive replacement 的生产证据：memory locator/writeback transport、package/export lifecycle shell、quality/readiness projection shell、operator observability/SLO 和 scaffold/template checklist。
-4. 按 latest owner surface 推进 MAG legacy cleanup；旧模块、旧接口、旧测试已被替代就直接清理或归档。
-5. 选定一个低风险真实 grant-stage line，用已可 ingest / hydrate 的 `grant_transition_oracle` 跑 focused hosted receipt verification、continuous receipt reconciliation 与 live receipt 对账。
-6. 最后扩展到 long-run live soak；live soak 是生产验收，不再作为 MAG consumer/thin adapter 功能迁移、上收、清理的前置条件。
+4. 在 OPL 侧补齐 pack compiler / generated surface，把 MAG 当前手写 product status、sidecar、grouped CLI/API、projection、lifecycle wrapper 的输入迁到 declarative grant pack。
+5. 按 latest owner surface 推进 MAG legacy cleanup；旧模块、旧接口、旧测试或 hand-written thin shell 已被替代就直接清理或归档。
+6. 选定一个低风险真实 grant-stage line，用已可 ingest / hydrate 的 `grant_transition_oracle` 跑 focused hosted receipt verification、continuous receipt reconciliation 与 live receipt 对账。
+7. 最后扩展到 long-run live soak；live soak 是生产验收，不再作为 MAG consumer/thin adapter 功能迁移、上收、清理的前置条件。
 
 完成上述步骤后，MAG 才能从 “OPL-compatible domain authority pack + thin program surface consumer follow-through complete” 进入更接近 “production-hosted grant agent” 的状态。
