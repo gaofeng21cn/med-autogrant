@@ -55,6 +55,9 @@ from med_autogrant.product_entry_parts.receipt_observability import (
 from med_autogrant.product_entry_parts.stage_attempt_observability import (
     build_stage_attempt_observability_projection,
 )
+from med_autogrant.product_entry_parts.hosted_receipt_verification import (
+    build_focused_hosted_receipt_verification,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -447,4 +450,17 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             receipt_refs=receipt_refs,
             verdict_refs=verdict_refs,
             safe_action_refs=safe_action_refs,
+        )
+
+    def build_focused_hosted_receipt_verification(
+        self,
+        *,
+        owner_receipt_evidence: Mapping[str, Any],
+        opl_attempt_evidence: Mapping[str, Any],
+        sidecar_closeout_result: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        return build_focused_hosted_receipt_verification(
+            owner_receipt_evidence=owner_receipt_evidence,
+            opl_attempt_evidence=opl_attempt_evidence,
+            sidecar_closeout_result=sidecar_closeout_result,
         )

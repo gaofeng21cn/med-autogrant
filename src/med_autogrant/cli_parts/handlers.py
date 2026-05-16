@@ -233,6 +233,17 @@ def handle_product_receipt_reconciliation_inventory(args: argparse.Namespace) ->
     )
 
 
+def handle_product_focused_hosted_receipt_verification(args: argparse.Namespace) -> dict[str, Any]:
+    sidecar_closeout_result = None
+    if args.sidecar_closeout_result is not None:
+        sidecar_closeout_result = _read_json_object(args.sidecar_closeout_result)
+    return _product_entry().build_focused_hosted_receipt_verification(
+        owner_receipt_evidence=_read_json_object(args.owner_receipt_evidence),
+        opl_attempt_evidence=_read_json_object(args.opl_attempt_evidence),
+        sidecar_closeout_result=sidecar_closeout_result,
+    )
+
+
 def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
 
