@@ -172,9 +172,42 @@
         "privatized_functional_module_audit": {
           "state": "manifest_projected_for_opl_unified_audit",
           "classification_buckets": [
-            "opl_owned_generic_primitive_consumer",
-            "mag_owned_grant_truth_receipt_verdict",
-            "retire_tombstone"
+            "declarative_pack_surface",
+            "refs_only_adapter",
+            "minimal_authority_function",
+            "legacy_proof_tombstone"
+          ],
+          "declarative_pack_surface_count": 3,
+          "refs_only_adapter_surface_count": 5,
+          "minimal_authority_function_count": 6,
+          "legacy_proof_tombstone_count": 6,
+          "declarative_pack_surfaces": [
+            "runtime_registration",
+            "task_lifecycle",
+            "source_intake_shell"
+          ],
+          "refs_only_adapter_surfaces": [
+            "lifecycle_adapter",
+            "observability",
+            "sidecar_product_status_shell",
+            "package_lifecycle_shell",
+            "human_workbench_scheduler_daemon"
+          ],
+          "minimal_authority_functions": [
+            "grant_lifecycle_stage",
+            "fundability_quality_export_verdicts",
+            "package_readiness_submission_ready",
+            "grant_transition_oracle",
+            "owner_receipt_and_no_regression_evidence",
+            "grant_memory_accept_reject"
+          ],
+          "legacy_proof_tombstones": [
+            "default_hermes_gateway_local_manager_runtime_owner",
+            "local_runtime_journal_attempt_ledger",
+            "domain_runtime_patch_bridge",
+            "compatibility_only_product_entry_aggregate_test",
+            "legacy_flat_shell_aliases",
+            "repo_owned_scheduler_daemon"
           ],
           "domain_authority_do_not_retire": [
             "grant_lifecycle_stage",
@@ -186,39 +219,21 @@
             "owner_receipt",
             "grant_strategy_memory_accept_reject"
           ],
-          "opl_must_absorb_code_surfaces": [
-            "workspace_source_intake_shell",
-            "session_ledger",
-            "attention_queue",
-            "typed_queue",
-            "stage_attempt_ledger",
-            "generic_lifecycle_adapter",
-            "artifact_package_lifecycle_shell",
-            "runtime_observability_export",
-            "operator_workbench_shell",
-            "generic_scheduler_daemon"
-          ],
-          "mag_thin_adapter_code_surfaces": [
-            "product_entry_manifest_builder",
-            "product_sidecar_adapter",
-            "domain_entry",
-            "receipt_schema_and_writer",
-            "grant_transition_oracle",
-            "refs_only_projection_builders",
-            "focused_contract_tests"
-          ],
           "representative_private_functional_surfaces": {
             "local_runtime_journal_attempt_ledger": {
-              "active_caller_status": "active_local_journal_and_refs_pending_opl_ledger_absorption",
-              "migration_action": "OPL_absorbs_session_and_attempt_ledger_MAG_keeps_safe_action_refs"
+              "module_ref": "local_runtime_journal_attempt_ledger",
+              "active_caller_status": "legacy_local_journal_attempt_ledger_no_active_caller",
+              "migration_action": "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs"
             },
             "sidecar_dispatch_product_shell": {
-              "active_caller_status": "active_domain_sidecar_adapter_not_generic_product_shell",
-              "migration_action": "OPL_absorbs_product_operator_shell_MAG_keeps_guarded_domain_adapter"
+              "module_ref": "sidecar_product_status_shell",
+              "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+              "migration_action": "OPL_generates_product_operator_shell_MAG_keeps_guarded_domain_adapter_refs"
             },
             "optional_hermes_state_db": {
-              "active_caller_status": "optional_proof_only_not_default_runtime_owner",
-              "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_explicit_receipt_proof_helper"
+              "module_ref": "default_hermes_gateway_local_manager_runtime_owner",
+              "active_caller_status": "legacy_proof_tombstone_no_active_default_caller",
+              "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_legacy_proof_refs_only"
             }
           }
         },

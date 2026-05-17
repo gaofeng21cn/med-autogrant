@@ -35,6 +35,10 @@
 - 当 hosted/proof backend 相关材料存在时，不得把 repo-side adapter 重写成默认 runtime owner，也不得把这些 lane 误写成唯一公开 capability contract。
 - 当前 landed substrate、兼容桥与 future scope 必须在 `docs/status.md` 与 `docs/README*` 中显式拆开。
 - 当前 OPL stage-led 对齐已经落到 MAG-owned `family_action_catalog`、`family_stage_control_plane`、runtime_control / runtime_continuity projection 与 product sidecar adapter；这些 surface 只供 OPL discovery、queue、wakeup、handoff、receipt、retry/dead-letter 和 operator projection 使用，不授权 OPL 生成 fundability judgment、authoring quality verdict 或 submission-ready export verdict。
+- MAG 的目标态高于当前实现分布。当前仓内已经存在的 product-entry、sidecar、grouped CLI/API、projection builder、lifecycle adapter、local journal、attempt ledger、workspace/source intake、package/memory helper 或 product wrapper 只能作为迁移输入；不得因为已有 active caller 或当前能跑就写成长期合理。
+- MAG 作为标准 OPL Agent 的长期形态是 `Declarative Grant Pack + OPL generated/hosted surfaces + minimal authority functions`。通用 transport、ledger、index、lifecycle、runner、workbench、observability、source/package/memory shell 和 generated wrapper 必须上收到 OPL primitive / pack compiler / App shell，或收薄成 refs-only adapter / diagnostic cleanup path。
+- 保留在 MAG 的私有程序面必须是无法声明化的 grant authority function：funding call 解释、fundability verdict、specific aims / authoring quality / export verdict、package authority、memory accept/reject、owner receipt signer 或 grant-native helper implementation。缺少接口、active caller、不能上收原因、receipt/blocker/ref 输出边界和 no-forbidden-write 证据时，必须作为功能/结构差距处理。
+- 文档和计划必须先设理想态，再找差距；差距不是妥协清单。为了理想态，可以革命式重构并完全抛弃旧模块、旧接口、旧测试、旧目录和旧文案；处理清楚 active caller、替代 surface、provenance 和必要证据后，不保留历史兼容面。
 - Domain memory apply 只能通过 MAG-owned descriptor、writeback proposal、accept/reject decision、runtime receipt evidence writer、operator receipt projection 与 `controlled_domain_memory_apply_proof` 推进；repo 只保存 contract、schema、locator、seed fixture、receipt evidence writer contract 和 repo-source layout audit，不保存真实 memory entry、grant artifact、workspace private evidence 或 receipt instance。OPL 只能消费 refs / receipt projection，不能写 memory body、fundability verdict、authoring quality verdict 或 submission-ready export verdict。
 - MAG owner receipt 与 lifecycle guarded apply 必须保持 ref-only 边界：`owner_receipt_contract` 只允许 OPL 消费 `domain_owner_receipt`、`typed_blocker` 或 `no_regression_evidence` refs；`lifecycle_guarded_apply_proof` 只允许 OPL apply 自有 ledger/locator，cleanup/restore/retention 若触及 grant artifact、memory body、quality verdict 或 submission-ready export verdict，必须返回 MAG owner receipt requirement 或 typed blocker。
 - 旧 local host-agent runtime、旧 `OPL Gateway` wording、默认 Hermes/Gateway/local-manager active path、旧 product-status traces 和旧五个 canonical CLI verifier baseline 只能作为历史 provenance、explicit proof history 或 regression oracle 保留；它们不得回到默认 product/runtime owner。旧 `tests/test_product_entry.py` 兼容聚合面已删除。
@@ -66,4 +70,6 @@
 
 - `AGENTS.md` 只管工作方式，不堆项目事实。
 - 项目事实优先收敛到 `docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`。
+- 理想态差距和开发计划必须按目标态拆分 `功能/结构差距` 与 `测试/证据差距`；现有通用功能面应由 OPL 承担时，即使可运行，也写成功能/结构差距。
+- `当前实际` 只能作为迁移起点、风险和证据来源；不得反向约束理想态，不得把现有私有实现包装成长期设计。
 - 历史 OMX 资料只从 `docs/history/omx/` 进入。

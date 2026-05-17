@@ -13,18 +13,24 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
         "owner": TARGET_DOMAIN_ID,
         "state": "manifest_projected_for_opl_unified_audit",
         "classification_policy": (
-            "classify_non_knowledge_functional_surfaces_without_reclassifying_grant_authority"
+            "classify_private_functional_surfaces_as_pack_refs_authority_or_legacy_proof"
         ),
         "opl_unified_audit_read_model": True,
         "claims_generic_runtime_removed_from_mag": False,
         "claims_opl_replacement_exists": False,
         "claims_production_long_run_soak_complete": False,
-        "opl_owned_generic_primitive_consumers": [
+        "classification_buckets": [
+            "declarative_pack_surface",
+            "refs_only_adapter",
+            "minimal_authority_function",
+            "legacy_proof_tombstone",
+        ],
+        "declarative_pack_surfaces": [
             _build_functional_module_audit_item(
                 "runtime_registration",
-                classification="opl_owned_generic_primitive_consumer",
-                owner="one-person-lab",
-                mag_role="descriptor_projection_consumer",
+                classification="declarative_pack_surface",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="domain_descriptor_pack_input",
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/runtime_registration.py",
                     "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py",
@@ -35,10 +41,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "product sidecar export OPL control plane registration",
                     "contracts/runtime-program/opl-family-contract-adoption.json",
                 ],
-                active_caller_status="active_thin_projection_no_generic_runtime_owner",
+                active_caller_status="active_declarative_pack_projection",
                 migration_action=(
-                    "OPL owns domain runtime registry and provider-backed activation; "
-                    "MAG keeps descriptor refs and safe action refs only."
+                    "Express as declarative grant pack metadata; OPL generated registry surfaces "
+                    "consume refs without MAG owning generic runtime registration."
                 ),
                 retention_reason=(
                     "MAG must expose its domain id, stage pack refs, and safe action refs "
@@ -61,9 +67,9 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_functional_module_audit_item(
                 "task_lifecycle",
-                classification="opl_owned_generic_primitive_consumer",
-                owner="one-person-lab",
-                mag_role="grant_checkpoint_read_model_provider",
+                classification="declarative_pack_surface",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="grant_stage_pack_and_checkpoint_semantics",
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/progress.py",
                     "src/med_autogrant/product_entry_parts/progress_projection_helpers.py",
@@ -74,10 +80,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "product status",
                     "product user-loop",
                 ],
-                active_caller_status="active_domain_checkpoint_projection",
+                active_caller_status="active_declarative_stage_pack_projection",
                 migration_action=(
-                    "OPL should own generic task checkpoint and stage-attempt lifecycle; "
-                    "MAG should keep grant checkpoint meaning as read projection."
+                    "Move generic checkpoint/lifecycle shell to generated OPL surfaces; keep MAG "
+                    "stage ids and checkpoint semantics in the declarative grant pack."
                 ),
                 retention_reason=(
                     "Grant stages such as critique, revision, freeze, and package readiness "
@@ -99,53 +105,57 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 mag_retained_authority=["grant_lifecycle_stage", "grant_checkpoint_meaning"],
             ),
             _build_functional_module_audit_item(
-                "session_ledger_attention_queue",
-                classification="opl_owned_generic_primitive_consumer",
-                owner="one-person-lab",
-                mag_role="wakeup_refs_and_safe_action_provider",
+                "source_intake_shell",
+                classification="declarative_pack_surface",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="funding_call_task_lock_pack_input",
                 code_paths=[
-                    "src/med_autogrant/product_entry_parts/loop_contracts.py",
-                    "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
-                    "src/med_autogrant/hosted_contract_bundle.py",
-                    "src/med_autogrant/domain_runtime_parts/io.py",
-                    "src/med_autogrant/domain_runtime_parts/runtime_ops.py",
+                    "src/med_autogrant/workspace.py",
+                    "src/med_autogrant/workspace_index.py",
+                    "src/med_autogrant/workspace_scaffold.py",
+                    "src/med_autogrant/workspace_validation.py",
+                    "src/med_autogrant/product_entry_parts/preflight.py",
                 ],
                 active_callers=[
-                    "product user-loop",
-                    "product sidecar export user_loop_attention_queue",
-                    "runtime run/resume local journal",
+                    "workspace summarize/validate/scaffold commands",
+                    "product-entry preflight",
+                    "product manifest workspace_locator",
                 ],
-                active_caller_status="active_local_journal_and_refs_pending_opl_ledger_absorption",
+                active_caller_status="active_declarative_source_requirements_pack_projection",
                 migration_action=(
-                    "OPL should absorb session ledger, attention queue, wakeup scheduling, "
-                    "and stage-attempt ledger; MAG should keep only safe action refs and "
-                    "grant next-action meaning."
+                    "Represent funding-call/task-lock requirements as declarative pack inputs; "
+                    "OPL owns source transport, freshness, and repair shell."
                 ),
                 retention_reason=(
-                    "The current MAG journal/attention payload is still the local caller's "
-                    "durable anchor until OPL production ledger consumption is proven."
+                    "Funding-call interpretation, applicant profile fit, and grant task lock are "
+                    "domain authority decisions."
                 ),
                 cannot_absorb_reason=(
-                    "OPL can absorb ledger transport, but cannot decide the grant-specific "
-                    "meaning of next actions or safe action refs."
+                    "OPL can absorb source transport and freshness shell; it cannot own funding "
+                    "call interpretation or grant task lock."
                 ),
                 current_surface_refs=[
-                    "/product_entry_manifest/session_continuity",
-                    "/product_entry_manifest/automation",
-                    "/sidecar_export/user_loop_attention_queue",
+                    "/product_entry_manifest/workspace_locator",
+                    "/product_entry_manifest/product_entry_preflight",
                 ],
                 opl_expected_primitives=[
-                    "session_ledger",
-                    "typed_attention_queue",
-                    "wakeup_scheduler",
+                    "workspace_source_intake_shell",
+                    "source_receipt",
+                    "freshness_repair_projection",
                 ],
-                mag_retained_authority=["safe_action_refs", "grant_next_action_meaning"],
+                mag_retained_authority=[
+                    "funding_call_interpretation",
+                    "profile_selection",
+                    "grant_task_lock",
+                ],
             ),
+        ],
+        "refs_only_adapter_surfaces": [
             _build_functional_module_audit_item(
                 "lifecycle_adapter",
-                classification="opl_owned_generic_primitive_consumer",
-                owner="one-person-lab",
-                mag_role="guarded_receipt_authority_provider",
+                classification="refs_only_adapter",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="guarded_receipt_refs_adapter",
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
                     "src/med_autogrant/product_entry_parts/owner_receipts.py",
@@ -157,10 +167,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "product lifecycle-receipt-bundle",
                     "product sidecar dispatch lifecycle/receipt",
                 ],
-                active_caller_status="active_receipt_authority_projection_no_generic_lifecycle_owner",
+                active_caller_status="active_refs_only_adapter_no_generic_lifecycle_owner",
                 migration_action=(
-                    "OPL should provide cleanup/restore/retention lifecycle shell and "
-                    "receipt transport; MAG should retain guarded owner receipt authority."
+                    "Keep only owner receipt/blocker refs for OPL lifecycle shell; do not expose "
+                    "MAG package body, memory body, or lifecycle state."
                 ),
                 retention_reason=(
                     "Cleanup, restore, and retention events that touch grant artifacts need "
@@ -186,8 +196,8 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_functional_module_audit_item(
                 "observability",
-                classification="opl_owned_generic_primitive_consumer",
-                owner="one-person-lab",
+                classification="refs_only_adapter",
+                owner=TARGET_DOMAIN_ID,
                 mag_role="refs_counts_blockers_provider",
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/receipt_observability.py",
@@ -200,10 +210,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "product stage-attempt-observability",
                     "product continuous-receipt-reconciliation",
                 ],
-                active_caller_status="active_refs_counts_projection_no_repair_execution",
+                active_caller_status="active_refs_only_observability_adapter_no_repair_execution",
                 migration_action=(
-                    "OPL should own runtime observability export, SLO, repair projection, "
-                    "and workbench display; MAG should provide refs, counts, blockers, and verdict refs."
+                    "Expose refs, counts, blockers, and verdict refs only; OPL owns display, SLO, "
+                    "repair projection, and workbench shell."
                 ),
                 retention_reason=(
                     "MAG observability projections carry grant owner receipt refs, typed blockers, "
@@ -226,9 +236,9 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_functional_module_audit_item(
                 "sidecar_product_status_shell",
-                classification="opl_owned_generic_primitive_consumer",
-                owner="one-person-lab",
-                mag_role="thin_product_projection_adapter",
+                classification="refs_only_adapter",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="guarded_domain_sidecar_refs_adapter",
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/sidecar.py",
                     "src/med_autogrant/product_entry_parts/entry.py",
@@ -240,10 +250,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "product sidecar dispatch",
                     "product manifest/status/direct-entry/user-loop",
                 ],
-                active_caller_status="active_domain_sidecar_adapter_not_generic_product_shell",
+                active_caller_status="active_refs_only_domain_sidecar_adapter",
                 migration_action=(
-                    "OPL should own product/operator/action-routing shell; MAG should keep "
-                    "domain sidecar projection and guarded dispatch adapter."
+                    "Keep guarded domain dispatch and sidecar refs; OPL generated surfaces own "
+                    "product/operator/action-routing shell."
                 ),
                 retention_reason=(
                     "OPL needs a MAG-owned sidecar adapter to read receipts and invoke guarded "
@@ -270,8 +280,8 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_functional_module_audit_item(
                 "package_lifecycle_shell",
-                classification="opl_owned_generic_primitive_consumer",
-                owner="one-person-lab",
+                classification="refs_only_adapter",
+                owner=TARGET_DOMAIN_ID,
                 mag_role="package_authority_and_gap_refs_provider",
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
@@ -284,10 +294,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "package submission-ready",
                     "domain runtime package surface",
                 ],
-                active_caller_status="active_package_authority_projection_pending_opl_lifecycle_shell",
+                active_caller_status="active_refs_only_package_authority_adapter",
                 migration_action=(
-                    "OPL should own artifact/package lifecycle shell, restore/retention ledger, "
-                    "and package refs index; MAG should retain export gate and submission-ready verdict."
+                    "Expose package refs, gap refs, and verdict refs only; OPL owns lifecycle shell, "
+                    "restore/retention ledger, and package refs index."
                 ),
                 retention_reason=(
                     "Submission-ready export is a grant-domain authority surface, not a generic "
@@ -313,55 +323,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 ],
             ),
             _build_functional_module_audit_item(
-                "source_intake_shell",
-                classification="opl_owned_generic_primitive_consumer",
-                owner="one-person-lab",
-                mag_role="funding_call_task_lock_adapter",
-                code_paths=[
-                    "src/med_autogrant/workspace.py",
-                    "src/med_autogrant/workspace_index.py",
-                    "src/med_autogrant/workspace_scaffold.py",
-                    "src/med_autogrant/workspace_validation.py",
-                    "src/med_autogrant/product_entry_parts/preflight.py",
-                ],
-                active_callers=[
-                    "workspace summarize/validate/scaffold commands",
-                    "product-entry preflight",
-                    "product manifest workspace_locator",
-                ],
-                active_caller_status="active_workspace_truth_adapter_pending_opl_source_shell",
-                migration_action=(
-                    "OPL should own workspace/source intake shell, source receipts, freshness, "
-                    "and repair projection; MAG should retain funding-call interpretation and task lock."
-                ),
-                retention_reason=(
-                    "Funding-call interpretation, applicant profile fit, and grant task lock are "
-                    "domain authority decisions."
-                ),
-                cannot_absorb_reason=(
-                    "OPL can absorb source transport and freshness shell; it cannot own funding "
-                    "call interpretation or grant task lock."
-                ),
-                current_surface_refs=[
-                    "/product_entry_manifest/workspace_locator",
-                    "/product_entry_manifest/product_entry_preflight",
-                ],
-                opl_expected_primitives=[
-                    "workspace_source_intake_shell",
-                    "source_receipt",
-                    "freshness_repair_projection",
-                ],
-                mag_retained_authority=[
-                    "funding_call_interpretation",
-                    "profile_selection",
-                    "grant_task_lock",
-                ],
-            ),
-            _build_functional_module_audit_item(
                 "human_workbench_scheduler_daemon",
-                classification="opl_owned_generic_primitive_consumer",
-                owner="one-person-lab",
-                mag_role="no_runtime_owner_refs_only",
+                classification="refs_only_adapter",
+                owner=TARGET_DOMAIN_ID,
+                mag_role="action_metadata_and_blocker_refs_only",
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/loop_contracts.py",
                     "src/med_autogrant/product_entry_parts/receipt_observability.py",
@@ -369,14 +334,14 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "src/med_autogrant/runtime_defaults.py",
                 ],
                 active_callers=[
-                    "product user-loop and status projections",
+                    "product user-loop and status refs projections",
                     "product sidecar export/dispatch",
                     "runtime defaults for local diagnostic commands",
                 ],
                 active_caller_status="active_refs_only_no_repo_daemon_owner",
                 migration_action=(
-                    "OPL should own app workbench, generic scheduler, provider daemon, and "
-                    "repair command projection; MAG should expose only action metadata and blockers."
+                    "Expose action metadata and typed blockers only; OPL owns app workbench, generic "
+                    "scheduler, provider daemon, and repair command projection."
                 ),
                 retention_reason=(
                     "MAG still needs refs-only user-loop/status projections for direct skill "
@@ -402,7 +367,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
         "mag_owned_grant_authority_surfaces": [
             _build_functional_module_audit_item(
                 "grant_lifecycle_stage",
-                classification="mag_owned_grant_truth_receipt_verdict",
+                classification="minimal_authority_function",
                 owner=TARGET_DOMAIN_ID,
                 mag_role="grant_truth_owner",
                 code_paths=[
@@ -431,7 +396,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_functional_module_audit_item(
                 "fundability_quality_export_verdicts",
-                classification="mag_owned_grant_truth_receipt_verdict",
+                classification="minimal_authority_function",
                 owner=TARGET_DOMAIN_ID,
                 mag_role="verdict_authority_owner",
                 code_paths=[
@@ -463,7 +428,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_functional_module_audit_item(
                 "package_readiness_submission_ready",
-                classification="mag_owned_grant_truth_receipt_verdict",
+                classification="minimal_authority_function",
                 owner=TARGET_DOMAIN_ID,
                 mag_role="package_authority_owner",
                 code_paths=[
@@ -498,7 +463,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_functional_module_audit_item(
                 "grant_transition_oracle",
-                classification="mag_owned_grant_truth_receipt_verdict",
+                classification="minimal_authority_function",
                 owner=TARGET_DOMAIN_ID,
                 mag_role="domain_transition_spec_owner",
                 code_paths=[
@@ -533,7 +498,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_functional_module_audit_item(
                 "owner_receipt_and_no_regression_evidence",
-                classification="mag_owned_grant_truth_receipt_verdict",
+                classification="minimal_authority_function",
                 owner=TARGET_DOMAIN_ID,
                 mag_role="receipt_authority_owner",
                 code_paths=[
@@ -569,7 +534,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_functional_module_audit_item(
                 "grant_memory_accept_reject",
-                classification="mag_owned_grant_truth_receipt_verdict",
+                classification="minimal_authority_function",
                 owner=TARGET_DOMAIN_ID,
                 mag_role="memory_body_decision_owner",
                 code_paths=[
@@ -614,17 +579,15 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "src/med_autogrant/opl_hermes_executor_helper.py",
                     "src/med_autogrant/product_entry_parts/executor_defaults.py",
                 ],
-                active_callers=[
-                    "explicit hermes_agent proof lane",
-                    "optional upstream Hermes session substrate probe",
-                ],
-                active_caller_status="optional_proof_only_not_default_runtime_owner",
+                active_callers=[],
+                active_caller_status="legacy_proof_tombstone_no_active_default_caller",
                 migration_action=(
-                    "Keep as explicit executor/proof provenance only; OPL owns generic executor adapter "
-                    "and production provider substrate."
+                    "Keep old Hermes/Gateway/local-manager wording as legacy proof provenance only; "
+                    "current active callers must use explicit executor adapter refs."
                 ),
                 retention_reason=(
-                    "Optional proof lane still validates non-default executor receipt behavior under MAG guards."
+                    "Historical proof files help audit non-default executor receipt behavior, but they are not "
+                    "an active runtime owner or default caller."
                 ),
                 cannot_absorb_reason=(
                     "Default runtime ownership must not stay in MAG; optional proof helpers remain only "
@@ -633,6 +596,35 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 evidence_refs=[
                     "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
                     "docs/status.md#旧面退役校准",
+                ],
+            ),
+            _build_retired_functional_module_audit_item(
+                "local_runtime_journal_attempt_ledger",
+                code_paths=[
+                    "src/med_autogrant/product_entry_parts/loop_contracts.py",
+                    "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
+                    "src/med_autogrant/hosted_contract_bundle.py",
+                    "src/med_autogrant/domain_runtime_parts/io.py",
+                    "src/med_autogrant/domain_runtime_parts/runtime_ops.py",
+                ],
+                active_callers=[],
+                active_caller_status="legacy_local_journal_attempt_ledger_no_active_caller",
+                migration_action=(
+                    "Treat old local journal and attempt ledger state as tombstone/proof history; "
+                    "OPL owns session ledger, typed attention queue, wakeup scheduler, and stage-attempt ledger."
+                ),
+                retention_reason=(
+                    "Historical local journal proof remains useful as a regression oracle for refs-only "
+                    "closeout behavior, not as a live MAG ledger owner."
+                ),
+                cannot_absorb_reason=(
+                    "The legacy local ledger itself should not be absorbed as MAG-owned code; OPL should "
+                    "provide the generic ledger while MAG keeps safe action refs and grant next-action meaning."
+                ),
+                evidence_refs=[
+                    "/product_entry_manifest/session_continuity",
+                    "/product_entry_manifest/automation",
+                    "/sidecar_export/user_loop_attention_queue",
                 ],
             ),
             _build_retired_functional_module_audit_item(
@@ -741,24 +733,24 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
         ],
         "representative_private_functional_surfaces": {
             "local_runtime_journal_attempt_ledger": {
-                "module_ref": "session_ledger_attention_queue",
-                "active_caller_status": "active_local_journal_and_refs_pending_opl_ledger_absorption",
+                "module_ref": "local_runtime_journal_attempt_ledger",
+                "active_caller_status": "legacy_local_journal_attempt_ledger_no_active_caller",
                 "migration_action": (
-                    "OPL_absorbs_session_and_attempt_ledger_MAG_keeps_safe_action_refs"
+                    "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs"
                 ),
             },
             "sidecar_dispatch_product_shell": {
                 "module_ref": "sidecar_product_status_shell",
-                "active_caller_status": "active_domain_sidecar_adapter_not_generic_product_shell",
+                "active_caller_status": "active_refs_only_domain_sidecar_adapter",
                 "migration_action": (
-                    "OPL_absorbs_product_operator_shell_MAG_keeps_guarded_domain_adapter"
+                    "OPL_generates_product_operator_shell_MAG_keeps_guarded_domain_adapter_refs"
                 ),
             },
             "optional_hermes_state_db": {
                 "module_ref": "default_hermes_gateway_local_manager_runtime_owner",
-                "active_caller_status": "optional_proof_only_not_default_runtime_owner",
+                "active_caller_status": "legacy_proof_tombstone_no_active_default_caller",
                 "migration_action": (
-                    "OPL_owns_generic_executor_adapter_MAG_keeps_explicit_receipt_proof_helper"
+                    "OPL_owns_generic_executor_adapter_MAG_keeps_legacy_proof_refs_only"
                 ),
             },
         },
@@ -831,7 +823,7 @@ def _build_retired_functional_module_audit_item(
 ) -> dict[str, Any]:
     return {
         "module_id": module_id,
-        "classification": "retire_tombstone",
+        "classification": "legacy_proof_tombstone",
         "owner": "none_active",
         "state": "retired_or_tombstone_only",
         "code_paths": code_paths,

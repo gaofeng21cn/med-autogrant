@@ -681,10 +681,15 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     audit = thinning["privatized_functional_module_audit"]
     assert audit["state"] == "manifest_projected_for_opl_unified_audit"
     assert audit["classification_buckets"] == [
-        "opl_owned_generic_primitive_consumer",
-        "mag_owned_grant_truth_receipt_verdict",
-        "retire_tombstone",
+        "declarative_pack_surface",
+        "refs_only_adapter",
+        "minimal_authority_function",
+        "legacy_proof_tombstone",
     ]
+    assert len(audit["declarative_pack_surfaces"]) == 3
+    assert len(audit["refs_only_adapter_surfaces"]) == 5
+    assert len(audit["mag_owned_grant_authority_surfaces"]) == 6
+    assert len(audit["retire_or_tombstone_surfaces"]) == 6
     assert audit["domain_authority_do_not_retire"] == [
         "grant_lifecycle_stage",
         "package_readiness_submission_ready",
@@ -708,16 +713,19 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     ]
     assert audit["representative_private_functional_surfaces"] == {
         "local_runtime_journal_attempt_ledger": {
-            "active_caller_status": "active_local_journal_and_refs_pending_opl_ledger_absorption",
-            "migration_action": "OPL_absorbs_session_and_attempt_ledger_MAG_keeps_safe_action_refs",
+            "module_ref": "local_runtime_journal_attempt_ledger",
+            "active_caller_status": "legacy_local_journal_attempt_ledger_no_active_caller",
+            "migration_action": "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs",
         },
         "sidecar_dispatch_product_shell": {
-            "active_caller_status": "active_domain_sidecar_adapter_not_generic_product_shell",
-            "migration_action": "OPL_absorbs_product_operator_shell_MAG_keeps_guarded_domain_adapter",
+            "module_ref": "sidecar_product_status_shell",
+            "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+            "migration_action": "OPL_generates_product_operator_shell_MAG_keeps_guarded_domain_adapter_refs",
         },
         "optional_hermes_state_db": {
-            "active_caller_status": "optional_proof_only_not_default_runtime_owner",
-            "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_explicit_receipt_proof_helper",
+            "module_ref": "default_hermes_gateway_local_manager_runtime_owner",
+            "active_caller_status": "legacy_proof_tombstone_no_active_default_caller",
+            "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_legacy_proof_refs_only",
         },
     }
     assert thinning["sidecar_output_policy"] == "grant_refs_and_receipts_only_no_generic_runtime_state"

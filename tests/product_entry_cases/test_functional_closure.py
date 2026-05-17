@@ -487,56 +487,61 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(audit["claims_generic_runtime_removed_from_mag"])
         self.assertFalse(audit["claims_opl_replacement_exists"])
         self.assertFalse(audit["claims_production_long_run_soak_complete"])
-        consumer_modules = {
+        self.assertEqual(
+            audit["classification_buckets"],
+            [
+                "declarative_pack_surface",
+                "refs_only_adapter",
+                "minimal_authority_function",
+                "legacy_proof_tombstone",
+            ],
+        )
+        pack_modules = {
             item["module_id"]: item
-            for item in audit["opl_owned_generic_primitive_consumers"]
+            for item in audit["declarative_pack_surfaces"]
         }
         self.assertEqual(
-            set(consumer_modules),
+            set(pack_modules),
             {
                 "runtime_registration",
                 "task_lifecycle",
-                "session_ledger_attention_queue",
+                "source_intake_shell",
+            },
+        )
+        self.assertEqual(
+            pack_modules["task_lifecycle"]["classification"],
+            "declarative_pack_surface",
+        )
+        self.assertEqual(
+            pack_modules["source_intake_shell"]["active_caller_status"],
+            "active_declarative_source_requirements_pack_projection",
+        )
+        refs_modules = {
+            item["module_id"]: item
+            for item in audit["refs_only_adapter_surfaces"]
+        }
+        self.assertEqual(
+            set(refs_modules),
+            {
                 "lifecycle_adapter",
                 "observability",
                 "sidecar_product_status_shell",
                 "package_lifecycle_shell",
-                "source_intake_shell",
                 "human_workbench_scheduler_daemon",
             },
         )
-        self.assertEqual(
-            consumer_modules["task_lifecycle"]["classification"],
-            "opl_owned_generic_primitive_consumer",
-        )
-        self.assertEqual(
-            consumer_modules["session_ledger_attention_queue"]["active_caller_status"],
-            "active_local_journal_and_refs_pending_opl_ledger_absorption",
-        )
-        self.assertIn(
-            "src/med_autogrant/domain_runtime_parts/io.py",
-            consumer_modules["session_ledger_attention_queue"]["code_paths"],
-        )
-        self.assertIn(
-            "runtime run/resume local journal",
-            consumer_modules["session_ledger_attention_queue"]["active_callers"],
-        )
-        self.assertIn(
-            "OPL should absorb session ledger",
-            consumer_modules["session_ledger_attention_queue"]["migration_action"],
-        )
-        self.assertIn("grant_lifecycle_stage", consumer_modules["task_lifecycle"]["mag_retained_authority"])
+        self.assertIn("grant_lifecycle_stage", pack_modules["task_lifecycle"]["mag_retained_authority"])
         self.assertIn(
             "artifact_package_lifecycle_shell",
-            consumer_modules["package_lifecycle_shell"]["opl_expected_primitives"],
+            refs_modules["package_lifecycle_shell"]["opl_expected_primitives"],
         )
         self.assertEqual(
-            consumer_modules["sidecar_product_status_shell"]["active_caller_status"],
-            "active_domain_sidecar_adapter_not_generic_product_shell",
+            refs_modules["sidecar_product_status_shell"]["active_caller_status"],
+            "active_refs_only_domain_sidecar_adapter",
         )
         self.assertIn(
             "src/med_autogrant/product_entry_parts/sidecar.py",
-            consumer_modules["sidecar_product_status_shell"]["code_paths"],
+            refs_modules["sidecar_product_status_shell"]["code_paths"],
         )
         mag_modules = {item["module_id"]: item for item in audit["mag_owned_grant_authority_surfaces"]}
         self.assertEqual(
@@ -552,7 +557,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         )
         self.assertEqual(
             mag_modules["package_readiness_submission_ready"]["classification"],
-            "mag_owned_grant_truth_receipt_verdict",
+            "minimal_authority_function",
         )
         self.assertIn(
             "submission_ready_verdict",
@@ -576,6 +581,10 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertEqual(
             retire_modules["repo_owned_scheduler_daemon"]["active_caller_status"],
             "no_default_daemon_local_diagnostic_only",
+        )
+        self.assertEqual(
+            retire_modules["local_runtime_journal_attempt_ledger"]["active_caller_status"],
+            "legacy_local_journal_attempt_ledger_no_active_caller",
         )
         self.assertIn(
             "src/med_autogrant/runtime_defaults.py",

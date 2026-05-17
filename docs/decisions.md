@@ -8,9 +8,9 @@
 
 ## 2026-05-16：落地 MAG privatized functional module audit
 
-- 决策：`mag_consumer_thinning_contract` 新增 `privatized_functional_module_audit`，并由 sidecar export 同步投影。该审计面把 runtime registration、task lifecycle、session ledger / attention queue、lifecycle adapter、observability、sidecar/product status、package lifecycle、source intake、human workbench / scheduler / daemon 分成三类：OPL-owned generic primitive consumer、MAG-owned grant truth / receipt / verdict、retire/tombstone。
+- 决策：`mag_consumer_thinning_contract` 新增 `privatized_functional_module_audit`，并由 sidecar export 同步投影。2026-05-17 后该审计面不再把通用功能面长期标成 replacement/tombstone，而是分成四类：`declarative_pack_surface`、`refs_only_adapter`、`minimal_authority_function`、`legacy_proof_tombstone`。
 - 理由：MAG 需要让 OPL 统一审计读取非知识层面的功能边界，同时不能把 grant `lifecycle_stage`、package readiness / submission-ready、fundability / quality / export verdict、grant transition oracle、owner receipt 或 strategy memory accept/reject 误判成可删除的通用 runtime 面。
-- 影响：OPL 后续应上收或提供的真实代码面是 workspace/source intake shell、session ledger、attention queue、typed queue、stage attempt ledger、generic lifecycle adapter、artifact/package lifecycle shell、runtime observability export、operator workbench shell 和 generic scheduler/daemon。MAG 继续保留 grant authority pack 与 thin program surface；本决策不声明 OPL replacement 已存在，也不声明 production long-run soak 完成。
+- 影响：runtime registration、task lifecycle、source intake 作为 declarative grant pack 输入；lifecycle/observability/sidecar/package/workbench 只作为 refs-only adapter；grant lifecycle、fundability/quality/export verdict、package authority、transition oracle、owner receipt 和 memory accept/reject 是最小 authority function；旧 Hermes/Gateway/local-manager、local journal/attempt ledger、patch bridge、compat aggregate test、legacy shell alias 和 repo-owned scheduler/daemon 是 no-active-caller legacy proof tombstone。本决策不声明 OPL generated/hosted surface 已生产接入，也不声明 production long-run soak 完成。
 
 ## 2026-05-16：落地 MAG consumer/thinning contract
 

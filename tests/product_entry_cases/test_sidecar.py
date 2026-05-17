@@ -217,18 +217,26 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(
             {
                 item["module_id"]
-                for item in audit["opl_owned_generic_primitive_consumers"]
-                if item["classification"] == "opl_owned_generic_primitive_consumer"
+                for item in audit["declarative_pack_surfaces"]
+                if item["classification"] == "declarative_pack_surface"
             },
             {
                 "runtime_registration",
                 "task_lifecycle",
-                "session_ledger_attention_queue",
+                "source_intake_shell",
+            },
+        )
+        self.assertEqual(
+            {
+                item["module_id"]
+                for item in audit["refs_only_adapter_surfaces"]
+                if item["classification"] == "refs_only_adapter"
+            },
+            {
                 "lifecycle_adapter",
                 "observability",
                 "sidecar_product_status_shell",
                 "package_lifecycle_shell",
-                "source_intake_shell",
                 "human_workbench_scheduler_daemon",
             },
         )
@@ -236,11 +244,11 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertIn("fundability_verdict", audit["domain_authority_do_not_retire"])
         consumer_modules = {
             item["module_id"]: item
-            for item in audit["opl_owned_generic_primitive_consumers"]
+            for item in audit["declarative_pack_surfaces"]
         }
         self.assertEqual(
             consumer_modules["source_intake_shell"]["active_caller_status"],
-            "active_workspace_truth_adapter_pending_opl_source_shell",
+            "active_declarative_source_requirements_pack_projection",
         )
         self.assertIn(
             "src/med_autogrant/workspace_validation.py",
@@ -253,7 +261,7 @@ class ProductSidecarTest(unittest.TestCase):
         retire_modules = {item["module_id"]: item for item in audit["retire_or_tombstone_surfaces"]}
         self.assertEqual(
             retire_modules["default_hermes_gateway_local_manager_runtime_owner"]["active_caller_status"],
-            "optional_proof_only_not_default_runtime_owner",
+            "legacy_proof_tombstone_no_active_default_caller",
         )
         self.assertIn(
             "src/med_autogrant/upstream_hermes.py",

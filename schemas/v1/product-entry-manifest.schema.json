@@ -4585,7 +4585,9 @@
             "claims_generic_runtime_removed_from_mag",
             "claims_opl_replacement_exists",
             "claims_production_long_run_soak_complete",
-            "opl_owned_generic_primitive_consumers",
+            "classification_buckets",
+            "declarative_pack_surfaces",
+            "refs_only_adapter_surfaces",
             "mag_owned_grant_authority_surfaces",
             "retire_or_tombstone_surfaces",
             "domain_authority_do_not_retire",
@@ -4612,7 +4614,7 @@
               "const": "manifest_projected_for_opl_unified_audit"
             },
             "classification_policy": {
-              "const": "classify_non_knowledge_functional_surfaces_without_reclassifying_grant_authority"
+              "const": "classify_private_functional_surfaces_as_pack_refs_authority_or_legacy_proof"
             },
             "opl_unified_audit_read_model": {
               "const": true
@@ -4626,9 +4628,17 @@
             "claims_production_long_run_soak_complete": {
               "const": false
             },
-            "opl_owned_generic_primitive_consumers": {
+            "classification_buckets": {
+              "const": [
+                "declarative_pack_surface",
+                "refs_only_adapter",
+                "minimal_authority_function",
+                "legacy_proof_tombstone"
+              ]
+            },
+            "declarative_pack_surfaces": {
               "type": "array",
-              "minItems": 9,
+              "minItems": 3,
               "items": {
                 "type": "object",
                 "additionalProperties": true,
@@ -4648,8 +4658,8 @@
                   "mag_retained_authority"
                 ],
                 "properties": {
-                  "classification": {"const": "opl_owned_generic_primitive_consumer"},
-                  "owner": {"const": "one-person-lab"},
+                  "classification": {"const": "declarative_pack_surface"},
+                  "owner": {"const": "med-autogrant"},
                   "code_paths": {"type": "array", "minItems": 1, "items": {"type": "string"}},
                   "active_callers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
                   "active_caller_status": {"type": "string", "minLength": 1},
@@ -4663,8 +4673,50 @@
                 "required": ["module_id", "classification", "owner"],
                 "properties": {
                   "module_id": {"const": "runtime_registration"},
-                  "classification": {"const": "opl_owned_generic_primitive_consumer"},
-                  "owner": {"const": "one-person-lab"}
+                  "classification": {"const": "declarative_pack_surface"},
+                  "owner": {"const": "med-autogrant"}
+                }
+              }
+            },
+            "refs_only_adapter_surfaces": {
+              "type": "array",
+              "minItems": 5,
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "module_id",
+                  "classification",
+                  "owner",
+                  "mag_role",
+                  "code_paths",
+                  "active_callers",
+                  "active_caller_status",
+                  "migration_action",
+                  "retention_reason",
+                  "cannot_absorb_reason",
+                  "current_surface_refs",
+                  "opl_expected_primitives",
+                  "mag_retained_authority"
+                ],
+                "properties": {
+                  "classification": {"const": "refs_only_adapter"},
+                  "owner": {"const": "med-autogrant"},
+                  "code_paths": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                  "active_callers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                  "active_caller_status": {"type": "string", "minLength": 1},
+                  "migration_action": {"type": "string", "minLength": 1},
+                  "retention_reason": {"type": "string", "minLength": 1},
+                  "cannot_absorb_reason": {"type": "string", "minLength": 1}
+                }
+              },
+              "contains": {
+                "type": "object",
+                "required": ["module_id", "classification", "owner"],
+                "properties": {
+                  "module_id": {"const": "sidecar_product_status_shell"},
+                  "classification": {"const": "refs_only_adapter"},
+                  "owner": {"const": "med-autogrant"}
                 }
               }
             },
@@ -4690,7 +4742,7 @@
                   "mag_retained_authority"
                 ],
                 "properties": {
-                  "classification": {"const": "mag_owned_grant_truth_receipt_verdict"},
+                  "classification": {"const": "minimal_authority_function"},
                   "owner": {"const": "med-autogrant"},
                   "code_paths": {"type": "array", "minItems": 1, "items": {"type": "string"}},
                   "active_callers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
@@ -4705,7 +4757,7 @@
                 "required": ["module_id", "classification", "owner"],
                 "properties": {
                   "module_id": {"const": "package_readiness_submission_ready"},
-                  "classification": {"const": "mag_owned_grant_truth_receipt_verdict"},
+                  "classification": {"const": "minimal_authority_function"},
                   "owner": {"const": "med-autogrant"}
                 }
               }
@@ -4732,7 +4784,7 @@
                   "compatibility_alias_allowed"
                 ],
                 "properties": {
-                  "classification": {"const": "retire_tombstone"},
+                  "classification": {"const": "legacy_proof_tombstone"},
                   "owner": {"const": "none_active"},
                   "state": {"const": "retired_or_tombstone_only"},
                   "code_paths": {"type": "array", "minItems": 1, "items": {"type": "string"}},
@@ -4750,7 +4802,7 @@
                 "required": ["module_id", "classification", "active_caller_allowed"],
                 "properties": {
                   "module_id": {"const": "repo_owned_scheduler_daemon"},
-                  "classification": {"const": "retire_tombstone"},
+                  "classification": {"const": "legacy_proof_tombstone"},
                   "active_caller_allowed": {"const": false}
                 }
               }
@@ -4803,12 +4855,12 @@
                   "additionalProperties": true,
                   "required": ["module_ref", "active_caller_status", "migration_action"],
                   "properties": {
-                    "module_ref": {"const": "session_ledger_attention_queue"},
+                    "module_ref": {"const": "local_runtime_journal_attempt_ledger"},
                     "active_caller_status": {
-                      "const": "active_local_journal_and_refs_pending_opl_ledger_absorption"
+                      "const": "legacy_local_journal_attempt_ledger_no_active_caller"
                     },
                     "migration_action": {
-                      "const": "OPL_absorbs_session_and_attempt_ledger_MAG_keeps_safe_action_refs"
+                      "const": "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs"
                     }
                   }
                 },
@@ -4819,10 +4871,10 @@
                   "properties": {
                     "module_ref": {"const": "sidecar_product_status_shell"},
                     "active_caller_status": {
-                      "const": "active_domain_sidecar_adapter_not_generic_product_shell"
+                      "const": "active_refs_only_domain_sidecar_adapter"
                     },
                     "migration_action": {
-                      "const": "OPL_absorbs_product_operator_shell_MAG_keeps_guarded_domain_adapter"
+                      "const": "OPL_generates_product_operator_shell_MAG_keeps_guarded_domain_adapter_refs"
                     }
                   }
                 },
@@ -4833,10 +4885,10 @@
                   "properties": {
                     "module_ref": {"const": "default_hermes_gateway_local_manager_runtime_owner"},
                     "active_caller_status": {
-                      "const": "optional_proof_only_not_default_runtime_owner"
+                      "const": "legacy_proof_tombstone_no_active_default_caller"
                     },
                     "migration_action": {
-                      "const": "OPL_owns_generic_executor_adapter_MAG_keeps_explicit_receipt_proof_helper"
+                      "const": "OPL_owns_generic_executor_adapter_MAG_keeps_legacy_proof_refs_only"
                     }
                   }
                 }
