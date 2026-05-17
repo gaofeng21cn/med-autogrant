@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Callable, Mapping
+from typing import Any, Mapping
 
 from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
-from med_autogrant.upstream_hermes import probe_upstream_hermes
 from med_autogrant.workspace_types import WorkspaceStateError
 
 
@@ -44,8 +43,6 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     "next-step": DomainEntryCommandSpec("next_step", ("input_path",)),
     "critique-summary": DomainEntryCommandSpec("critique_summary", ("input_path",)),
     "stage-route-report": DomainEntryCommandSpec("stage_route_report", ("input_path",)),
-    "runtime-run": DomainEntryCommandSpec("run_local", ("input_path",), ("journal_path",)),
-    "runtime-resume": DomainEntryCommandSpec("resume_local", ("journal_path",)),
     "execute-direction-screening-pass": DomainEntryCommandSpec(
         "execute_direction_screening_pass",
         ("input_path", "output_path"),
@@ -114,15 +111,11 @@ class MedAutoGrantDomainEntry:
         self,
         *,
         runtime: MagDomainRuntime | None = None,
-        probe: Callable[[], dict[str, Any]] | None = None,
     ) -> None:
         self._runtime = runtime or MagDomainRuntime()
-        self._probe = probe or probe_upstream_hermes
 
     def dispatch(self, request: Mapping[str, Any]) -> dict[str, Any]:
         command = _normalize_command(_require_command(request))
-        if command == "probe-upstream-hermes":
-            return self._probe()
 
         spec = SERVICE_SAFE_DOMAIN_COMMANDS.get(command)
         if spec is None:

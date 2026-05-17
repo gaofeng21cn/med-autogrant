@@ -28,7 +28,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
         self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "codex_cli")
         self.assertEqual(manifest["runtime_inventory"]["executor_owner"], "codex_cli")
         self.assertEqual(manifest["runtime_inventory"]["substrate"], "codex_cli_default_runtime")
-        self.assertEqual(manifest["runtime_control"]["runtime_owner"], "codex_cli")
+        self.assertEqual(manifest["runtime_control"]["runtime_owner"], "one-person-lab")
         self.assertEqual(manifest["runtime_control"]["executor_owner"], "codex_cli")
         self.assertEqual(
             manifest["skill_catalog"]["skills"][0]["domain_projection"]["opl_stage_runtime_registration"][

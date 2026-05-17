@@ -31,7 +31,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
         self.assertEqual(payload["artifact_inventory"]["surface_kind"], "artifact_inventory")
         runtime_control = payload["runtime_control"]
         self.assertEqual(runtime_control["surface_kind"], "runtime_control")
-        self.assertEqual(runtime_control["runtime_owner"], "codex_cli")
+        self.assertEqual(runtime_control["runtime_owner"], "one-person-lab")
         self.assertEqual(runtime_control["domain_owner"], "med-autogrant")
         self.assertEqual(runtime_control["executor_owner"], "codex_cli")
         self.assertEqual(runtime_control["session_locator"]["locator_value"], payload["grant_run_id"])
@@ -177,8 +177,10 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                     "runtime_session_contract": {
                         "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
                         "session_handle_kind": "grant_run_id",
-                        "start_entry": "runtime-run",
-                        "resume_entry": "runtime-resume",
+                        "session_owner": "one-person-lab",
+                        "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
+                        "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
+                        "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
                         "runtime_substrate_contract": {
                             "runtime_owner": "codex_cli",
                             "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
@@ -233,8 +235,10 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                     "runtime_session_contract": {
                         "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
                         "session_handle_kind": "grant_run_id",
-                        "start_entry": "runtime-run",
-                        "resume_entry": "runtime-resume",
+                        "session_owner": "one-person-lab",
+                        "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
+                        "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
+                        "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
                         "runtime_substrate_contract": {
                             "runtime_owner": "codex_cli",
                             "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",

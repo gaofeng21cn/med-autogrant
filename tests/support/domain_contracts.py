@@ -17,7 +17,6 @@ AUTHOR_SIDE_ROUTE_IDS = (
 )
 
 SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
-    "probe-upstream-hermes",
     "validate-workspace",
     "summarize-workspace",
     "grant-intake-audit",
@@ -32,8 +31,6 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
     "next-step",
     "critique-summary",
     "stage-route-report",
-    "runtime-run",
-    "runtime-resume",
     "execute-direction-screening-pass",
     "execute-question-refinement-pass",
     "execute-argument-building-pass",
@@ -53,7 +50,6 @@ SUPPORTED_DOMAIN_ENTRY_COMMANDS = [
 ]
 
 DOMAIN_ENTRY_COMMAND_CONTRACTS = [
-    {"command": "probe-upstream-hermes", "required_fields": [], "optional_fields": []},
     {"command": "validate-workspace", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "summarize-workspace", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "grant-intake-audit", "required_fields": ["input_path"], "optional_fields": []},
@@ -80,8 +76,6 @@ DOMAIN_ENTRY_COMMAND_CONTRACTS = [
     {"command": "next-step", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "critique-summary", "required_fields": ["input_path"], "optional_fields": []},
     {"command": "stage-route-report", "required_fields": ["input_path"], "optional_fields": []},
-    {"command": "runtime-run", "required_fields": ["input_path"], "optional_fields": ["journal_path"]},
-    {"command": "runtime-resume", "required_fields": ["journal_path"], "optional_fields": []},
     {"command": "execute-direction-screening-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {"command": "execute-question-refinement-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},
     {"command": "execute-argument-building-pass", "required_fields": ["input_path", "output_path"], "optional_fields": []},

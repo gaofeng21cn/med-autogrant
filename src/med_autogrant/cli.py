@@ -57,7 +57,6 @@ from med_autogrant.cli_parts.handlers import (
     handle_mainline_phase,
     handle_mainline_status,
     handle_next_step,
-    handle_probe_upstream_hermes,
     handle_product_entry_manifest,
     handle_product_continuous_receipt_reconciliation,
     handle_product_domain_memory_decision,
@@ -77,8 +76,6 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_preflight,
     handle_product_start,
     handle_refresh_funding_opportunities_cache,
-    handle_runtime_resume,
-    handle_runtime_run,
     handle_select_project_profile,
     handle_skill_catalog,
     handle_stage_route_report,
@@ -114,9 +111,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_sidecar_export_command,
     _add_quality_diff_command,
     _add_refresh_cache_command,
-    _add_resume_runtime_command,
     _add_revision_executor_command,
-    _add_runtime_entry_command,
     _add_simple_command,
     _add_submission_ready_package_command,
     _add_workspace_command,
@@ -279,24 +274,6 @@ def build_parser() -> argparse.ArgumentParser:
         "product-start",
         handle_product_start,
         "输出当前 direct grant product-entry start surface。",
-    )
-    _add_simple_command(
-        subparsers,
-        "probe-upstream-hermes",
-        handle_probe_upstream_hermes,
-        "探测真实上游 Hermes-Agent 依赖、入口与 session substrate。",
-    )
-    _add_runtime_entry_command(
-        subparsers,
-        "runtime-run",
-        handle_runtime_run,
-        "运行本地 runtime 单次主循环。",
-    )
-    _add_resume_runtime_command(
-        subparsers,
-        "runtime-resume",
-        handle_runtime_resume,
-        "从 durable run journal 恢复本地 runtime 单次主循环。",
     )
     _add_artifact_bundle_command(
         subparsers,
@@ -500,7 +477,6 @@ def _print_public_help() -> None:
             "Examples:",
             "  medautogrant workspace validate --input <workspace-path> --format json",
             "  medautogrant product build-entry --input <workspace-path> --entry-mode direct --task-intent <task-intent> --format json",
-            "  medautogrant runtime probe-hermes --format json",
             "",
             "Use `medautogrant <group>` to inspect the available commands in that group.",
         ]

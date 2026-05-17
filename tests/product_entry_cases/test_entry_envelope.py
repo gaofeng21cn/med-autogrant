@@ -59,8 +59,19 @@ class ProductEntryEnvelopeTest(unittest.TestCase):
             direct_envelope["runtime_session_contract"]["grant_run_id"],
             "grant-run-nsfc-demo-001-baseline-001",
         )
-        self.assertEqual(direct_envelope["runtime_session_contract"]["start_entry"], "runtime-run")
-        self.assertEqual(direct_envelope["runtime_session_contract"]["resume_entry"], "runtime-resume")
+        self.assertEqual(direct_envelope["runtime_session_contract"]["session_owner"], "one-person-lab")
+        self.assertEqual(
+            direct_envelope["runtime_session_contract"]["generated_session_surface_ref"],
+            "opl://generated-surfaces/mag/product-entry-session",
+        )
+        self.assertEqual(
+            direct_envelope["runtime_session_contract"]["generated_resume_surface_ref"],
+            "opl://generated-surfaces/mag/product-entry-session#resume",
+        )
+        self.assertEqual(
+            direct_envelope["runtime_session_contract"]["domain_authority_surface_ref"],
+            "/product_entry_manifest/owner_receipt_contract",
+        )
         self.assertEqual(
             direct_envelope["return_surface_contract"]["entry_adapter"],
             "MedAutoGrantDomainEntry",

@@ -101,8 +101,10 @@ class ProductEntryFailureModeTest(unittest.TestCase):
                         "runtime_session_contract": {
                             "grant_run_id": "grant-run-test",
                             "session_handle_kind": "grant_run_id",
-                            "start_entry": "runtime-run",
-                            "resume_entry": "runtime-resume",
+                            "session_owner": "one-person-lab",
+                            "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
+                            "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
+                            "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
                             "runtime_substrate_contract": {
                                 "runtime_owner": "codex_cli",
                                 "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
@@ -195,8 +197,10 @@ class ProductEntryFailureModeTest(unittest.TestCase):
                         "runtime_session_contract": {
                             "grant_run_id": "grant-run-test",
                             "session_handle_kind": "grant_run_id",
-                            "start_entry": "runtime-run",
-                            "resume_entry": "runtime-resume",
+                            "session_owner": "one-person-lab",
+                            "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
+                            "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
+                            "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
                             "runtime_substrate_contract": {
                                 "runtime_owner": "codex_cli",
                                 "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",

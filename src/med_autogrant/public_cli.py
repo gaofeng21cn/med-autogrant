@@ -7,7 +7,6 @@ PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
     "workspace": "工作区诊断、摘要、阶段路由与 progress cockpit。",
     "mainline": "当前 line/current focus 概览与维护者参考记录。",
     "product": "grant direct entry、status 与 product-entry contract。",
-    "runtime": "本地 runtime 运行/恢复与显式 Hermes proof 探测。",
     "pass": "authoring pass 执行入口。",
     "package": "artifact/final/hosted/submission package 导出入口。",
 }
@@ -16,7 +15,6 @@ PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
     "workspace",
     "mainline",
     "product",
-    "runtime",
     "pass",
     "package",
 )
@@ -65,9 +63,6 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "memory-receipt-projection": ("product", "memory-receipt-projection"),
     "package-lifecycle-handoff": ("product", "package-lifecycle-handoff"),
     "continuous-receipt-reconciliation": ("product", "continuous-receipt-reconciliation"),
-    "probe-upstream-hermes": ("runtime", "probe-hermes"),
-    "runtime-run": ("runtime", "run"),
-    "runtime-resume": ("runtime", "resume"),
     "execute-direction-screening-pass": ("pass", "direction-screening"),
     "execute-question-refinement-pass": ("pass", "question-refinement"),
     "execute-argument-building-pass": ("pass", "argument-building"),

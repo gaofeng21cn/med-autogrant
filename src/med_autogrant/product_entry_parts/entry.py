@@ -30,6 +30,9 @@ from med_autogrant.product_entry_parts.runtime_contracts import (
     _validate_executor_routing_contract,
 )
 from med_autogrant.product_entry_parts.runtime_surfaces import (
+    DOMAIN_AUTHORITY_SURFACE_REF,
+    GENERATED_SESSION_RESUME_SURFACE_REF,
+    GENERATED_SESSION_SURFACE_REF,
     _build_product_command_catalog,
     _build_runtime_continuity_surfaces,
 )
@@ -237,8 +240,10 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             "runtime_session_contract": {
                 "grant_run_id": grant_run_id,
                 "session_handle_kind": "grant_run_id",
-                "start_entry": "runtime-run",
-                "resume_entry": "runtime-resume",
+                "session_owner": "one-person-lab",
+                "generated_session_surface_ref": GENERATED_SESSION_SURFACE_REF,
+                "generated_resume_surface_ref": GENERATED_SESSION_RESUME_SURFACE_REF,
+                "domain_authority_surface_ref": DOMAIN_AUTHORITY_SURFACE_REF,
                 "runtime_substrate_contract": _build_runtime_substrate_contract(
                     current_program_contract=current_program_contract,
                 ),

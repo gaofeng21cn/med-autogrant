@@ -621,8 +621,10 @@
         "session_locator_field",
         "session_handle_kind",
         "session_id",
-        "journal_path",
-        "runtime_state_contract",
+        "session_owner",
+        "generated_session_surface_ref",
+        "generated_resume_surface_ref",
+        "domain_authority_surface_ref",
         "workspace_id",
         "lifecycle_stage",
         "repo_owned_truth"
@@ -647,21 +649,23 @@
         "session_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
-        "journal_path": {
-          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        "session_owner": {
+          "const": "one-person-lab"
         },
-        "runtime_state_contract": {
-          "$ref": "product-entry.schema.json#/$defs/runtimeStateContract"
+        "generated_session_surface_ref": {
+          "const": "opl://generated-surfaces/mag/product-entry-session"
+        },
+        "generated_resume_surface_ref": {
+          "const": "opl://generated-surfaces/mag/product-entry-session#resume"
+        },
+        "domain_authority_surface_ref": {
+          "const": "/product_entry_manifest/owner_receipt_contract"
         },
         "workspace_id": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "lifecycle_stage": {
           "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
-        },
-        "runtime_entries": {
-          "type": "object",
-          "additionalProperties": true
         },
         "repo_owned_truth": {
           "type": "object",
@@ -728,9 +732,10 @@
         "session_id",
         "workspace_id",
         "lifecycle_stage",
-        "journal_path",
-        "resume_command",
-        "resume_surface_kind"
+        "session_owner",
+        "resume_surface_ref",
+        "resume_surface_kind",
+        "domain_authority_surface_ref"
       ],
       "properties": {
         "session_id": {
@@ -742,14 +747,17 @@
         "lifecycle_stage": {
           "$ref": "executor-routing-contract.schema.json#/$defs/authorSideRouteId"
         },
-        "journal_path": {
-          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        "session_owner": {
+          "const": "one-person-lab"
         },
-        "resume_command": {
-          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        "resume_surface_ref": {
+          "const": "opl://generated-surfaces/mag/product-entry-session#resume"
         },
         "resume_surface_kind": {
-          "const": "runtime_resume"
+          "const": "opl_generated_session_resume"
+        },
+        "domain_authority_surface_ref": {
+          "const": "/product_entry_manifest/owner_receipt_contract"
         }
       }
     },

@@ -53,28 +53,35 @@
       "additionalProperties": false,
       "required": [
         "session_handle_kind",
-        "start_entry",
-        "resume_entry",
-        "required_local_surfaces"
+        "session_owner",
+        "generated_session_surface_ref",
+        "generated_resume_surface_ref",
+        "domain_authority_surface_ref",
+        "required_mag_authority_surfaces"
       ],
       "properties": {
         "session_handle_kind": {
           "const": "grant_run_id"
         },
-        "start_entry": {
-          "const": "runtime-run"
+        "session_owner": {
+          "const": "one-person-lab"
         },
-        "resume_entry": {
-          "const": "runtime-resume"
+        "generated_session_surface_ref": {
+          "const": "opl://generated-surfaces/mag/product-entry-session"
         },
-        "required_local_surfaces": {
+        "generated_resume_surface_ref": {
+          "const": "opl://generated-surfaces/mag/product-entry-session#resume"
+        },
+        "domain_authority_surface_ref": {
+          "const": "/product_entry_manifest/owner_receipt_contract"
+        },
+        "required_mag_authority_surfaces": {
           "const": [
-            "runtime-run",
-            "runtime-resume",
             "build-artifact-bundle",
             "build-final-package",
-            "run_journal",
-            "stage_action_envelope"
+            "build-submission-ready-package",
+            "owner_receipt_contract",
+            "grant_transition_oracle"
           ]
         }
       }
@@ -188,7 +195,6 @@
         },
         "supported_commands": {
           "const": [
-            "probe-upstream-hermes",
             "validate-workspace",
             "summarize-workspace",
             "grant-intake-audit",
@@ -203,8 +209,6 @@
             "next-step",
             "critique-summary",
             "stage-route-report",
-            "runtime-run",
-            "runtime-resume",
             "execute-direction-screening-pass",
             "execute-question-refinement-pass",
             "execute-argument-building-pass",
@@ -228,7 +232,7 @@
           "items": {
             "$ref": "product-entry.schema.json#/$defs/domainEntryCommandContract"
           },
-          "minItems": 32
+          "minItems": 29
         }
       }
     },

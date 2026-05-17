@@ -24,22 +24,22 @@ def _nonempty_string(value: Any, *, context: str) -> str:
 def _phase_details() -> dict[str, dict[str, Any]]:
     return {
         "P1": {
-            "summary": "保留真实上游 Hermes-Agent 连接证据作为显式 proof lane；默认 runtime / executor owner 固定为 Codex CLI。",
+            "summary": "旧上游 Hermes-Agent 和本地 journal runtime 只保留 history/proof 语境；默认 session/runtime shell 交给 OPL generated/hosted surface。",
             "entry_points": [
                 {
-                    "name": "probe_upstream_hermes",
-                    "command": public_cli_command("probe-upstream-hermes", "--format", "json"),
-                    "purpose": "核对真实 upstream Hermes-Agent 依赖、入口与 explicit receipt lane 证据。",
+                    "name": "opl_generated_session_shell",
+                    "command": "opl generated surface: mag/product-entry-session",
+                    "purpose": "由 OPL 生成或托管 session/resume shell；MAG 只返回 grant locator、receipt、verdict refs 与 authority actions。",
                 },
                 {
-                    "name": "run_local",
-                    "command": public_cli_command("runtime-run", "--input", "<workspace-path>", "--format", "json"),
-                    "purpose": "走当前 Codex-default 本地主循环；非默认 executor 只能显式选择并通过 OPL receipt 审计。",
+                    "name": "grant_authority_entry",
+                    "command": public_cli_command("stage-route-report", "--input", "<workspace-path>", "--format", "json"),
+                    "purpose": "读取 MAG grant route truth；通用 run/resume/attempt ledger 不再作为 MAG 默认 callable surface。",
                 },
             ],
             "exit_criteria": [
-                "真实 upstream Hermes-Agent 依赖与连接证据只作为 explicit proof/provenance 读取。",
-                "runtime-run / runtime-resume 不把 Hermes 写成默认 substrate 或 authoring executor。",
+                "真实 upstream Hermes-Agent 依赖与连接证据只作为 history/proof/provenance 读取。",
+                "runtime-run / runtime-resume / probe-upstream-hermes 不再进入 MAG public CLI、domain-entry catalog、product-entry schema 或 hosted bundle。",
             ],
             "phase_docs": [
                 "human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth",

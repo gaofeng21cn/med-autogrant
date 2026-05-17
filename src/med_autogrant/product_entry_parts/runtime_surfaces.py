@@ -25,6 +25,10 @@ from med_autogrant.public_cli import public_cli_command
 from med_autogrant.workspace_types import WorkspaceStateError
 
 
+GENERATED_SESSION_SURFACE_REF = "opl://generated-surfaces/mag/product-entry-session"
+GENERATED_SESSION_RESUME_SURFACE_REF = "opl://generated-surfaces/mag/product-entry-session#resume"
+DOMAIN_AUTHORITY_SURFACE_REF = "/product_entry_manifest/owner_receipt_contract"
+
 
 def _build_runtime_continuity_surfaces(
     *,
@@ -72,24 +76,6 @@ def _build_runtime_continuity_surfaces(
         grant_run_id=grant_run_id,
         workspace_id=workspace_id,
         lifecycle_stage=lifecycle_stage,
-        journal_path=_require_nonempty_string_from_mapping(
-            session_continuity,
-            "journal_path",
-            context="session_continuity",
-        ),
-        runtime_resume_command=_require_nonempty_string_from_mapping(
-            _require_mapping(
-                _require_mapping(
-                    session_continuity,
-                    "runtime_entries",
-                    context="session_continuity",
-                ),
-                "runtime_resume",
-                context="session_continuity.runtime_entries",
-            ),
-            "command",
-            context="session_continuity.runtime_entries.runtime_resume",
-        ),
         funding_call=funding_call,
         grant_progress_command=grant_progress_command,
         summarize_workspace_command=summarize_workspace_command,
@@ -206,7 +192,7 @@ def _build_skill_runtime_continuity_envelope(
         "restore_point_surface_ref": "/product_entry_manifest/runtime_control/restore_point",
         "recommended_resume_command": _require_nonempty_string_from_mapping(
             runtime_control_restore_point,
-            "resume_command",
+            "resume_surface_ref",
             context="runtime_control.restore_point",
         ),
         "recommended_progress_command": _require_nonempty_string_from_mapping(
@@ -229,52 +215,19 @@ def _build_session_continuity_surface(
     lifecycle_stage: str,
     input_path: str,
 ) -> dict[str, Any]:
-    runtime_state_contract = _build_runtime_state_contract()
-    session_journal_root = _require_nonempty_string_from_mapping(
-        runtime_state_contract,
-        "session_journal_root",
-        context="runtime_state_contract",
-    )
-    journal_path = f"{session_journal_root}{grant_run_id}.json"
-    runtime_run_command = public_cli_command(
-        "runtime-run",
-        "--input",
-        input_path,
-        "--journal",
-        journal_path,
-        "--format",
-        "json",
-    )
-    runtime_resume_command = public_cli_command(
-        "runtime-resume",
-        "--journal",
-        journal_path,
-        "--format",
-        "json",
-    )
     return {
         "surface_kind": "session_continuity",
         "version": 1,
-        "summary": "显式锚定 session locator 与 journal durable anchor，避免依赖默认 journal 推断。",
+        "summary": "显式锚定 grant session locator，并把通用 session shell 交给 OPL generated surface。",
         "session_locator_field": "grant_run_id",
         "session_handle_kind": "grant_run_id",
         "session_id": grant_run_id,
+        "session_owner": "one-person-lab",
+        "generated_session_surface_ref": GENERATED_SESSION_SURFACE_REF,
+        "generated_resume_surface_ref": GENERATED_SESSION_RESUME_SURFACE_REF,
+        "domain_authority_surface_ref": DOMAIN_AUTHORITY_SURFACE_REF,
         "workspace_id": workspace_id,
         "lifecycle_stage": lifecycle_stage,
-        "runtime_state_contract": dict(runtime_state_contract),
-        "journal_path": journal_path,
-        "runtime_entries": {
-            "runtime_run": {
-                "command": runtime_run_command,
-                "surface_kind": "runtime_run",
-                "summary": "用显式 --journal 启动或继续当前 workspace 的 runtime run。",
-            },
-            "runtime_resume": {
-                "command": runtime_resume_command,
-                "surface_kind": "runtime_resume",
-                "summary": "用显式 --journal 恢复当前 session。",
-            },
-        },
         "repo_owned_truth": {
             "workspace_surface_kind": "nsfc_workspace",
             "workspace_path": input_path,
@@ -289,8 +242,6 @@ def _build_runtime_control_surface(
     grant_run_id: str,
     workspace_id: str,
     lifecycle_stage: str,
-    journal_path: str,
-    runtime_resume_command: str,
     funding_call: str,
     grant_progress_command: str,
     summarize_workspace_command: str,
@@ -301,14 +252,10 @@ def _build_runtime_control_surface(
         "surface_kind": "runtime_control",
         "version": 2,
         "summary": (
-            "repo-owned runtime control reference：显式导出 owner 语义、restore point、"
-            "progress/artifact/approval surface 与 direct-entry locator。"
+            "OPL generated runtime/session control reference：MAG 只导出 locator、"
+            "progress/artifact/approval surface 与 direct-entry authority refs。"
         ),
-        "runtime_owner": _require_nonempty_string_from_mapping(
-            runtime_summary,
-            "runtime_owner",
-            context="runtime_summary",
-        ),
+        "runtime_owner": "one-person-lab",
         "domain_owner": _require_nonempty_string_from_mapping(
             managed_runtime_contract,
             "domain_owner",
@@ -329,9 +276,10 @@ def _build_runtime_control_surface(
             "session_id": grant_run_id,
             "workspace_id": workspace_id,
             "lifecycle_stage": lifecycle_stage,
-            "journal_path": journal_path,
-            "resume_command": runtime_resume_command,
-            "resume_surface_kind": "runtime_resume",
+            "session_owner": "one-person-lab",
+            "resume_surface_ref": GENERATED_SESSION_RESUME_SURFACE_REF,
+            "resume_surface_kind": "opl_generated_session_resume",
+            "domain_authority_surface_ref": DOMAIN_AUTHORITY_SURFACE_REF,
         },
         "semantic_closure": {
             "surface_kind": "runtime_control_semantic_closure",

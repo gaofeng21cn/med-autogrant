@@ -155,8 +155,10 @@
       "required": [
         "grant_run_id",
         "session_handle_kind",
-        "start_entry",
-        "resume_entry",
+        "session_owner",
+        "generated_session_surface_ref",
+        "generated_resume_surface_ref",
+        "domain_authority_surface_ref",
         "runtime_substrate_contract",
         "runtime_state_contract"
       ],
@@ -167,11 +169,17 @@
         "session_handle_kind": {
           "const": "grant_run_id"
         },
-        "start_entry": {
-          "const": "runtime-run"
+        "session_owner": {
+          "const": "one-person-lab"
         },
-        "resume_entry": {
-          "const": "runtime-resume"
+        "generated_session_surface_ref": {
+          "const": "opl://generated-surfaces/mag/product-entry-session"
+        },
+        "generated_resume_surface_ref": {
+          "const": "opl://generated-surfaces/mag/product-entry-session#resume"
+        },
+        "domain_authority_surface_ref": {
+          "const": "/product_entry_manifest/owner_receipt_contract"
         },
         "runtime_substrate_contract": {
           "$ref": "#/$defs/runtimeSubstrateContract"
@@ -333,7 +341,6 @@
         },
         "supported_commands": {
           "const": [
-            "probe-upstream-hermes",
             "validate-workspace",
             "summarize-workspace",
             "grant-intake-audit",
@@ -348,8 +355,6 @@
             "next-step",
             "critique-summary",
             "stage-route-report",
-            "runtime-run",
-            "runtime-resume",
             "execute-direction-screening-pass",
             "execute-question-refinement-pass",
             "execute-argument-building-pass",
@@ -373,7 +378,7 @@
           "items": {
             "$ref": "#/$defs/domainEntryCommandContract"
           },
-          "minItems": 32
+          "minItems": 29
         }
       }
     },

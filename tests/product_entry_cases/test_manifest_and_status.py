@@ -105,26 +105,37 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(manifest["session_continuity"]["session_locator_field"], "grant_run_id")
         self.assertEqual(manifest["session_continuity"]["session_handle_kind"], "grant_run_id")
         self.assertEqual(manifest["session_continuity"]["session_id"], payload["grant_run_id"])
-        self.assertIn(
-            "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
-            manifest["session_continuity"]["journal_path"],
+        self.assertEqual(manifest["session_continuity"]["session_owner"], "one-person-lab")
+        self.assertEqual(
+            manifest["session_continuity"]["generated_session_surface_ref"],
+            "opl://generated-surfaces/mag/product-entry-session",
         )
-        self.assertTrue(
-            manifest["session_continuity"]["journal_path"].endswith(f"{payload['grant_run_id']}.json")
+        self.assertEqual(
+            manifest["session_continuity"]["generated_resume_surface_ref"],
+            "opl://generated-surfaces/mag/product-entry-session#resume",
         )
-        self.assertIn(
-            "--journal",
-            manifest["session_continuity"]["runtime_entries"]["runtime_run"]["command"],
+        self.assertEqual(
+            manifest["session_continuity"]["domain_authority_surface_ref"],
+            "/product_entry_manifest/owner_receipt_contract",
         )
         runtime_control = manifest["runtime_control"]
         self.assertEqual(runtime_control["surface_kind"], "runtime_control")
-        self.assertEqual(runtime_control["runtime_owner"], "codex_cli")
+        self.assertEqual(runtime_control["runtime_owner"], "one-person-lab")
         self.assertEqual(runtime_control["domain_owner"], "med-autogrant")
         self.assertEqual(runtime_control["executor_owner"], "codex_cli")
         self.assertEqual(runtime_control["session_locator"]["locator_field"], "grant_run_id")
         self.assertEqual(runtime_control["session_locator"]["locator_value"], payload["grant_run_id"])
         self.assertEqual(runtime_control["restore_point"]["session_id"], payload["grant_run_id"])
         self.assertEqual(runtime_control["restore_point"]["lifecycle_stage"], payload["lifecycle_stage"])
+        self.assertEqual(runtime_control["restore_point"]["session_owner"], "one-person-lab")
+        self.assertEqual(
+            runtime_control["restore_point"]["resume_surface_ref"],
+            "opl://generated-surfaces/mag/product-entry-session#resume",
+        )
+        self.assertEqual(
+            runtime_control["restore_point"]["domain_authority_surface_ref"],
+            "/product_entry_manifest/owner_receipt_contract",
+        )
         semantic_closure = runtime_control["semantic_closure"]
         self.assertEqual(semantic_closure["surface_kind"], "runtime_control_semantic_closure")
         self.assertEqual(semantic_closure["authoring_continuity"], "same_funding_call_task")

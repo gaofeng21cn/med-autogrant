@@ -24,6 +24,11 @@ from med_autogrant.domain_runtime_parts.io import (
     _read_final_package as _read_final_package_from_runtime_parts,
     _write_hosted_contract_bundle_output,
 )
+from med_autogrant.product_entry_parts.runtime_surfaces import (
+    DOMAIN_AUTHORITY_SURFACE_REF,
+    GENERATED_SESSION_RESUME_SURFACE_REF,
+    GENERATED_SESSION_SURFACE_REF,
+)
 from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
 
 
@@ -90,15 +95,16 @@ def build_hosted_contract_bundle_document(
         "runtime_state_contract": runtime_state_contract,
         "session_contract": {
             "session_handle_kind": "grant_run_id",
-            "start_entry": "runtime-run",
-            "resume_entry": "runtime-resume",
-            "required_local_surfaces": [
-                "runtime-run",
-                "runtime-resume",
+            "session_owner": "one-person-lab",
+            "generated_session_surface_ref": GENERATED_SESSION_SURFACE_REF,
+            "generated_resume_surface_ref": GENERATED_SESSION_RESUME_SURFACE_REF,
+            "domain_authority_surface_ref": DOMAIN_AUTHORITY_SURFACE_REF,
+            "required_mag_authority_surfaces": [
                 "build-artifact-bundle",
                 "build-final-package",
-                "run_journal",
-                "stage_action_envelope",
+                "build-submission-ready-package",
+                "owner_receipt_contract",
+                "grant_transition_oracle",
             ],
         },
         "operator_contract": operator_contract,

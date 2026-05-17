@@ -294,24 +294,6 @@ def handle_product_continuous_receipt_reconciliation(args: argparse.Namespace) -
     )
 
 
-def handle_probe_upstream_hermes(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "probe-upstream-hermes"})
-
-
-def handle_runtime_run(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch(
-        {
-            "command": "runtime-run",
-            "input_path": args.input,
-            "journal_path": args.journal,
-        }
-    )
-
-
-def handle_runtime_resume(args: argparse.Namespace) -> dict[str, Any]:
-    return _domain_entry().dispatch({"command": "runtime-resume", "journal_path": args.journal})
-
-
 def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(
         {

@@ -574,24 +574,6 @@ class ProductEntryManifestBuilderMixin:
                 "lifecycle_stage",
                 context="grant-progress",
             ),
-            journal_path=_require_nonempty_string_from_mapping(
-                session_continuity,
-                "journal_path",
-                context="session_continuity",
-            ),
-            runtime_resume_command=_require_nonempty_string_from_mapping(
-                _require_mapping(
-                    _require_mapping(
-                        session_continuity,
-                        "runtime_entries",
-                        context="session_continuity",
-                    ),
-                    "runtime_resume",
-                    context="session_continuity.runtime_entries",
-                ),
-                "command",
-                context="session_continuity.runtime_entries.runtime_resume",
-            ),
             funding_call=_read_funding_call_from_summary(workspace_summary),
             grant_progress_command=command_catalog["grant_progress"],
             summarize_workspace_command=command_catalog["summarize_workspace"],

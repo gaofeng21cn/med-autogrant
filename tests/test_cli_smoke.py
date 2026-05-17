@@ -1,12 +1,9 @@
 from __future__ import annotations
 
 import json
-import os
-import tempfile
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -45,7 +42,7 @@ def test_public_cli_help_renders_group_index() -> None:
     assert "Public command groups:" in stdout
     assert "workspace" in stdout
     assert "product" in stdout
-    assert "runtime" in stdout
+    assert "runtime" not in stdout
 
 
 @pytest.mark.smoke
@@ -128,47 +125,3 @@ def test_mainline_status_projects_current_program_pointer() -> None:
     assert payload["program_id"] == "med-autogrant-mainline"
     assert "current_owner_line" in payload["current_line"]
     assert payload["current_focus"]["summary"]
-
-
-@pytest.mark.proof
-def test_runtime_run_writes_session_journal_under_runtime_state_root() -> None:
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        codex_home = Path(tmp_dir) / "codex-home"
-        expected_journal_path = (
-            codex_home
-            / "projects"
-            / "med-autogrant"
-            / "runtime-state"
-            / "sessions"
-            / "grant-run-nsfc-demo-001-baseline-001.json"
-        )
-        with patch.dict(
-            os.environ,
-            {
-                "CODEX_HOME": str(codex_home),
-                "MED_AUTOGRANT_RUNTIME_STATE_ROOT": "",
-            },
-            clear=False,
-        ):
-            payload = _run_json_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(REVISION_EXAMPLE_PATH),
-                "--format",
-                "json",
-            )
-            journal_exists = expected_journal_path.exists()
-
-    assert payload["command"] == "runtime-run"
-    assert payload["ok"] is True
-    assert payload["journal_path"] == str(expected_journal_path.resolve())
-    assert journal_exists
-
-
-@pytest.mark.proof
-def test_domain_entry_probe_smoke_dispatches_without_workspace() -> None:
-    payload = _run_json_cli("runtime", "probe-hermes", "--format", "json")
-
-    assert payload["command"] == "probe-upstream-hermes"
-    assert "ok" in payload

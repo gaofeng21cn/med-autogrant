@@ -41,32 +41,23 @@ class DomainEntryDispatchTest(unittest.TestCase):
                 }
             )
 
-    def test_domain_entry_dispatches_runtime_command(self) -> None:
-        runtime = Mock()
-        runtime.run_local.return_value = {"ok": True, "command": "runtime-run"}
+    def test_domain_entry_rejects_retired_runtime_commands(self) -> None:
+        entry = MedAutoGrantDomainEntry(runtime=Mock())
 
-        payload = MedAutoGrantDomainEntry(runtime=runtime).dispatch(
-            {
-                "command": "runtime-run",
-                "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                "journal_path": "/tmp/test-journal.json",
-            }
-        )
+        with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-run"):
+            entry.dispatch(
+                {
+                    "command": "runtime-run",
+                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                    "journal_path": "/tmp/test-journal.json",
+                }
+            )
 
-        self.assertEqual(payload, {"ok": True, "command": "runtime-run"})
-        runtime.run_local.assert_called_once_with(
-            input_path=str(CRITIQUE_EXAMPLE_PATH),
-            journal_path="/tmp/test-journal.json",
-        )
+        with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-resume"):
+            entry.dispatch({"command": "runtime-resume", "journal_path": "/tmp/test-journal.json"})
 
-    def test_domain_entry_dispatches_probe_command(self) -> None:
-        expected_payload = {"ok": True, "command": "probe-upstream-hermes"}
-        payload = MedAutoGrantDomainEntry(
-            runtime=Mock(),
-            probe=lambda: expected_payload,
-        ).dispatch({"command": "probe-upstream-hermes"})
-
-        self.assertEqual(payload, expected_payload)
+        with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: probe-upstream-hermes"):
+            entry.dispatch({"command": "probe-upstream-hermes"})
 
     def test_domain_entry_dispatches_grant_intake_audit(self) -> None:
         runtime = Mock()
@@ -472,11 +463,6 @@ class DomainEntryFreshProofTest(unittest.TestCase):
             ):
                 entry = MedAutoGrantDomainEntry()
 
-                probe_payload = entry.dispatch({"command": "probe-upstream-hermes"})
-                self.assertTrue(probe_payload["ok"])
-                self.assertEqual(Path(probe_payload["runtime_root"]), hermes_home.resolve())
-                self.assertEqual(Path(probe_payload["state_db_path"]), (hermes_home / "state.db").resolve())
-
                 critique_report = entry.dispatch(
                     {
                         "command": "stage-route-report",
@@ -489,29 +475,14 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                     "grant-run-nsfc-demo-001-baseline-001",
                 )
 
-                reroute_payload = entry.dispatch(
-                    {
-                        "command": "runtime-run",
-                        "input_path": str(REVISION_EXAMPLE_PATH),
-                        "journal_path": str(reroute_journal_path),
-                    }
-                )
-                self.assertTrue(reroute_payload["ok"])
-                self.assertEqual(reroute_payload["stop_reason"]["recommended_next_stage"], "critique")
-                self.assertEqual(
-                    reroute_payload["stage_action_envelope"]["executor_routing_contract"]["recommended_executor_route"],
-                    {
-                        "route_id": "critique",
-                        "route_status": "landed",
-                        "executor_owner": "med-autogrant",
-                        "execution_surface": {
-                            "surface_kind": "service-safe-domain-entry-command",
-                            "entry_adapter": "MedAutoGrantDomainEntry",
-                            "command": "execute-critique-pass",
-                        },
-                        "handoff_contract_kind": "service-safe-domain-entry-command",
-                    },
-                )
+                with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-run"):
+                    entry.dispatch(
+                        {
+                            "command": "runtime-run",
+                            "input_path": str(REVISION_EXAMPLE_PATH),
+                            "journal_path": str(reroute_journal_path),
+                        }
+                    )
 
                 revision_payload = entry.dispatch(
                     {
@@ -523,26 +494,22 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                 self.assertTrue(revision_payload["ok"])
                 self.assertEqual(revision_payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
 
-                run_payload = entry.dispatch(
-                    {
-                        "command": "runtime-run",
-                        "input_path": str(revised_workspace_path),
-                        "journal_path": str(revised_journal_path),
-                    }
-                )
-                self.assertTrue(run_payload["ok"])
-                self.assertEqual(run_payload["attempt_index"], 1)
-                self.assertEqual(run_payload["stop_reason"]["recommended_next_stage"], "revision")
+                with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-run"):
+                    entry.dispatch(
+                        {
+                            "command": "runtime-run",
+                            "input_path": str(revised_workspace_path),
+                            "journal_path": str(revised_journal_path),
+                        }
+                    )
 
-                resume_payload = entry.dispatch(
-                    {
-                        "command": "runtime-resume",
-                        "journal_path": str(revised_journal_path),
-                    }
-                )
-                self.assertTrue(resume_payload["ok"])
-                self.assertEqual(resume_payload["attempt_index"], 2)
-                self.assertEqual(resume_payload["stop_reason"]["recommended_next_stage"], "revision")
+                with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-resume"):
+                    entry.dispatch(
+                        {
+                            "command": "runtime-resume",
+                            "journal_path": str(revised_journal_path),
+                        }
+                    )
 
                 bundle_payload = entry.dispatch(
                     {

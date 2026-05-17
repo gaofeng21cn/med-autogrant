@@ -117,15 +117,16 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 contract_bundle["session_contract"],
                 {
                     "session_handle_kind": "grant_run_id",
-                    "start_entry": "runtime-run",
-                    "resume_entry": "runtime-resume",
-                    "required_local_surfaces": [
-                        "runtime-run",
-                        "runtime-resume",
+                    "session_owner": "one-person-lab",
+                    "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
+                    "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
+                    "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
+                    "required_mag_authority_surfaces": [
                         "build-artifact-bundle",
                         "build-final-package",
-                        "run_journal",
-                        "stage_action_envelope",
+                        "build-submission-ready-package",
+                        "owner_receipt_contract",
+                        "grant_transition_oracle",
                     ],
                 },
             )
