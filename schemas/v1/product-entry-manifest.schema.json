@@ -3389,6 +3389,213 @@
         "maps_to_opl_contract": {
           "const": "opl_domain_owner_receipt_envelope.v1"
         },
+        "declarative_grant_pack_compiler_input": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind", "compiler_input_id", "target_domain_id", "owner", "pack_owner",
+            "compiler_owner", "state", "input_policy", "source_refs", "pack_sections",
+            "generated_surface_targets", "forbidden_payload_classes", "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {"const": "mag_declarative_grant_pack_compiler_input"},
+            "compiler_input_id": {"const": "mag.declarative_grant_pack.compiler_input.v1"},
+            "target_domain_id": {"const": "med-autogrant"},
+            "owner": {"const": "med-autogrant"},
+            "pack_owner": {"const": "med-autogrant"},
+            "compiler_owner": {"const": "one-person-lab"},
+            "state": {"const": "ready_for_opl_pack_compiler_ingest"},
+            "input_policy": {"const": "declarative_refs_and_authority_manifest_only"},
+            "source_refs": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "stage_graph_ref", "action_metadata_ref", "transition_oracle_ref",
+                "receipt_schema_ref", "memory_policy_ref", "artifact_locator_ref",
+                "lifecycle_policy_ref", "output_guard_ref"
+              ],
+              "properties": {
+                "stage_graph_ref": {"const": "/product_entry_manifest/family_stage_control_plane"},
+                "action_metadata_ref": {"const": "/product_entry_manifest/family_action_catalog"},
+                "transition_oracle_ref": {"const": "/product_entry_manifest/grant_transition_oracle"},
+                "receipt_schema_ref": {"const": "/product_entry_manifest/owner_receipt_contract"},
+                "memory_policy_ref": {"const": "/product_entry_manifest/domain_memory_descriptor_locator"},
+                "artifact_locator_ref": {"const": "/product_entry_manifest/artifact_locator_contract"},
+                "lifecycle_policy_ref": {"const": "/product_entry_manifest/lifecycle_guarded_apply_proof"},
+                "output_guard_ref": {
+                  "const": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+                }
+              }
+            },
+            "generated_surface_targets": {
+              "const": [
+                "product_status", "product_user_loop", "product_sidecar",
+                "grouped_cli_api", "projection_builder", "lifecycle_wrapper"
+              ]
+            },
+            "pack_sections": {
+              "type": "array",
+              "allOf": [
+                {"contains": {"const": "stage_graph"}},
+                {"contains": {"const": "action_metadata"}},
+                {"contains": {"const": "transition_oracle"}},
+                {"contains": {"const": "receipt_schema"}},
+                {"contains": {"const": "authority_function_manifest"}}
+              ]
+            },
+            "forbidden_payload_classes": {
+              "type": "array",
+              "allOf": [
+                {"contains": {"const": "grant_artifact_content"}},
+                {"contains": {"const": "memory_body"}},
+                {"contains": {"const": "generic_runtime_state"}},
+                {"contains": {"const": "generic_workbench_state"}}
+              ]
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "mag_pack_owner", "opl_compiler_owner", "opl_can_generate_product_status",
+                "opl_can_generate_user_loop", "opl_can_generate_sidecar_wrapper",
+                "opl_can_generate_grouped_cli_api", "opl_can_generate_projection_wrapper",
+                "opl_can_generate_lifecycle_wrapper", "opl_can_write_grant_truth",
+                "opl_can_write_memory_body", "opl_can_sign_owner_receipt",
+                "opl_can_declare_fundability_verdict", "opl_can_declare_quality_verdict",
+                "opl_can_declare_export_verdict"
+              ],
+              "properties": {
+                "mag_pack_owner": {"const": "med-autogrant"},
+                "opl_compiler_owner": {"const": "one-person-lab"},
+                "opl_can_generate_product_status": {"const": true},
+                "opl_can_generate_user_loop": {"const": true},
+                "opl_can_generate_sidecar_wrapper": {"const": true},
+                "opl_can_generate_grouped_cli_api": {"const": true},
+                "opl_can_generate_projection_wrapper": {"const": true},
+                "opl_can_generate_lifecycle_wrapper": {"const": true},
+                "opl_can_write_grant_truth": {"const": false},
+                "opl_can_write_memory_body": {"const": false},
+                "opl_can_sign_owner_receipt": {"const": false},
+                "opl_can_declare_fundability_verdict": {"const": false},
+                "opl_can_declare_quality_verdict": {"const": false},
+                "opl_can_declare_export_verdict": {"const": false}
+              }
+            }
+          }
+        },
+        "generated_surface_handoff": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind", "handoff_id", "target_domain_id", "owner", "target_generator_owner",
+            "state", "handoff_policy", "declarative_input_ref", "generated_surface_ids",
+            "generated_or_bridge_surfaces", "mag_long_term_owner_surface_ids", "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {"const": "mag_generated_surface_handoff"},
+            "handoff_id": {"const": "mag.generated_surface_handoff.v1"},
+            "target_domain_id": {"const": "med-autogrant"},
+            "owner": {"const": "med-autogrant"},
+            "target_generator_owner": {"const": "one-person-lab"},
+            "state": {"const": "declarative_input_landed_external_generated_surface_gate"},
+            "handoff_policy": {"const": "OPL_generates_or_hosts_generic_wrappers_from_MAG_pack_input"},
+            "declarative_input_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input"
+            },
+            "generated_surface_ids": {
+              "const": [
+                "product_status", "product_user_loop", "product_sidecar",
+                "grouped_cli_api", "projection_builder", "lifecycle_wrapper"
+              ]
+            },
+            "generated_or_bridge_surfaces": {
+              "type": "array",
+              "minItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "surface_id", "surface_status", "current_owner", "target_owner",
+                  "compiler_input_refs", "generated_by_opl_in_target",
+                  "current_mag_long_term_owner", "keeps_mag_authority_functions"
+                ],
+                "properties": {
+                  "surface_id": {
+                    "enum": [
+                      "product_status", "product_user_loop", "product_sidecar",
+                      "grouped_cli_api", "projection_builder", "lifecycle_wrapper"
+                    ]
+                  },
+                  "surface_status": {"const": "migration_bridge_until_opl_generated_surface"},
+                  "current_owner": {"const": "med-autogrant"},
+                  "target_owner": {"const": "one-person-lab"},
+                  "generated_by_opl_in_target": {"const": true},
+                  "current_mag_long_term_owner": {"const": false},
+                  "keeps_mag_authority_functions": {"const": false}
+                }
+              }
+            },
+            "mag_long_term_owner_surface_ids": {"type": "array", "maxItems": 0},
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "long_term_generated_surface_owner", "mag_long_term_owner",
+                "mag_can_own_generated_product_status", "mag_can_own_generated_user_loop",
+                "mag_can_own_generated_sidecar", "mag_can_own_generated_grouped_cli_api",
+                "mag_can_own_generated_projection", "mag_can_own_generated_lifecycle_wrapper",
+                "generated_surface_can_write_grant_truth", "generated_surface_can_write_memory_body",
+                "generated_surface_can_sign_owner_receipt", "generated_surface_can_declare_verdict"
+              ],
+              "properties": {
+                "long_term_generated_surface_owner": {"const": "one-person-lab"},
+                "mag_long_term_owner": {"const": false},
+                "mag_can_own_generated_product_status": {"const": false},
+                "mag_can_own_generated_user_loop": {"const": false},
+                "mag_can_own_generated_sidecar": {"const": false},
+                "mag_can_own_generated_grouped_cli_api": {"const": false},
+                "mag_can_own_generated_projection": {"const": false},
+                "mag_can_own_generated_lifecycle_wrapper": {"const": false},
+                "generated_surface_can_write_grant_truth": {"const": false},
+                "generated_surface_can_write_memory_body": {"const": false},
+                "generated_surface_can_sign_owner_receipt": {"const": false},
+                "generated_surface_can_declare_verdict": {"const": false}
+              }
+            }
+          }
+        },
+        "minimal_authority_functions": {
+          "type": "array",
+          "minItems": 7,
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "function_id", "owner", "retention_class", "generated_by_opl",
+              "opl_generated_wrapper_allowed", "authority_output_class", "source_refs",
+              "cannot_generate_reason"
+            ],
+            "properties": {
+              "function_id": {
+                "enum": [
+                  "fundability_verdict", "quality_verdict", "export_verdict",
+                  "package_authority", "memory_accept_reject", "owner_receipt_signer",
+                  "grant_helper"
+                ]
+              },
+              "owner": {"const": "med-autogrant"},
+              "retention_class": {"const": "mag_minimal_authority_function"},
+              "generated_by_opl": {"const": false},
+              "opl_generated_wrapper_allowed": {"const": true}
+            }
+          }
+        },
+        "minimal_authority_function_ids": {
+          "const": [
+            "fundability_verdict", "quality_verdict", "export_verdict",
+            "package_authority", "memory_accept_reject", "owner_receipt_signer", "grant_helper"
+          ]
+        },
         "allowed_return_shapes": {
           "type": "array",
           "items": {
@@ -3942,6 +4149,10 @@
         "opl_runtime_observability_consumption",
         "functional_harness_consumer_coverage",
         "privatized_functional_module_audit",
+        "declarative_grant_pack_compiler_input",
+        "generated_surface_handoff",
+        "minimal_authority_functions",
+        "minimal_authority_function_ids",
         "allowed_return_shapes",
         "mag_owned_outputs",
         "thin_surface_output_guard",
@@ -4024,7 +4235,8 @@
                 "functional_harness_restart_dead_letter_repair_human_gate",
                 "operator_workbench_drilldown_shell",
                 "observability_repair_projection",
-                "agent_scaffold_checklist"
+                "agent_scaffold_checklist",
+                "pack_compiler_generated_surface"
               ]
             },
             "consumed_projection_surfaces": {
@@ -4047,7 +4259,8 @@
                 "export_verdict",
                 "memory_body_accept_reject",
                 "package_authority",
-                "owner_receipt"
+                "owner_receipt",
+                "grant_helper"
               ]
             },
             "authority_boundary": {
@@ -4056,8 +4269,10 @@
               "required": [
                 "opl_standard_scaffold_owner",
                 "opl_generic_primitives_owner",
+                "opl_pack_compiler_owner",
                 "mag_consumes_standard_scaffold",
                 "mag_consumes_generic_primitives",
+                "mag_consumes_generated_surfaces",
                 "mag_can_own_generic_scheduler",
                 "mag_can_own_generic_daemon",
                 "mag_can_own_generic_queue",
@@ -4069,14 +4284,17 @@
                 "mag_can_own_generic_operator_workbench",
                 "mag_can_own_generic_observability_slo",
                 "mag_can_own_generic_artifact_lifecycle",
+                "mag_can_long_term_own_generated_wrappers",
                 "opl_harness_pass_can_declare_grant_ready",
                 "opl_harness_pass_can_declare_export_ready"
               ],
               "properties": {
                 "opl_standard_scaffold_owner": {"const": "one-person-lab"},
                 "opl_generic_primitives_owner": {"const": "one-person-lab"},
+                "opl_pack_compiler_owner": {"const": "one-person-lab"},
                 "mag_consumes_standard_scaffold": {"const": true},
                 "mag_consumes_generic_primitives": {"const": true},
+                "mag_consumes_generated_surfaces": {"const": true},
                 "mag_can_own_generic_scheduler": {"const": false},
                 "mag_can_own_generic_daemon": {"const": false},
                 "mag_can_own_generic_queue": {"const": false},
@@ -4088,6 +4306,7 @@
                 "mag_can_own_generic_operator_workbench": {"const": false},
                 "mag_can_own_generic_observability_slo": {"const": false},
                 "mag_can_own_generic_artifact_lifecycle": {"const": false},
+                "mag_can_long_term_own_generated_wrappers": {"const": false},
                 "opl_harness_pass_can_declare_grant_ready": {"const": false},
                 "opl_harness_pass_can_declare_export_ready": {"const": false}
               }
@@ -4685,7 +4904,9 @@
             "lifecycle_guarded_apply_proof_ref",
             "grant_transition_oracle_ref",
             "functional_harness_consumer_coverage_ref",
-            "privatized_functional_module_audit_ref"
+            "privatized_functional_module_audit_ref",
+            "declarative_grant_pack_compiler_input_ref",
+            "generated_surface_handoff_ref"
           ],
           "properties": {
             "owner_receipt_contract_ref": {
@@ -4708,6 +4929,12 @@
             },
             "privatized_functional_module_audit_ref": {
               "const": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+            },
+            "declarative_grant_pack_compiler_input_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input"
+            },
+            "generated_surface_handoff_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
             }
           }
         },
@@ -4848,7 +5075,13 @@
                 {"contains": {"const": "hermes_state_db_runtime_state"}},
                 {"contains": {"const": "functional_harness_runtime_state"}},
                 {"contains": {"const": "opl_harness_pass_grant_ready"}},
-                {"contains": {"const": "opl_harness_pass_export_ready"}}
+                {"contains": {"const": "opl_harness_pass_export_ready"}},
+                {"contains": {"const": "generated_product_status_owner_state"}},
+                {"contains": {"const": "generated_user_loop_owner_state"}},
+                {"contains": {"const": "generated_sidecar_owner_state"}},
+                {"contains": {"const": "generated_grouped_cli_api_owner_state"}},
+                {"contains": {"const": "generated_projection_owner_state"}},
+                {"contains": {"const": "generated_lifecycle_wrapper_owner_state"}}
               ]
             },
             "consumes_opl_replacement_expectations": {
@@ -4871,6 +5104,7 @@
                 "mag_can_emit_hermes_state_db_runtime_state",
                 "mag_can_emit_family_conflict_completion_claim",
                 "mag_can_emit_functional_harness_runtime_state",
+                "mag_can_emit_generated_wrapper_owner_state",
                 "opl_harness_pass_can_declare_grant_ready",
                 "opl_harness_pass_can_declare_export_ready"
               ],
@@ -4885,6 +5119,7 @@
                 "mag_can_emit_hermes_state_db_runtime_state": {"const": false},
                 "mag_can_emit_family_conflict_completion_claim": {"const": false},
                 "mag_can_emit_functional_harness_runtime_state": {"const": false},
+                "mag_can_emit_generated_wrapper_owner_state": {"const": false},
                 "opl_harness_pass_can_declare_grant_ready": {"const": false},
                 "opl_harness_pass_can_declare_export_ready": {"const": false}
               }
@@ -4985,6 +5220,12 @@
             "mag_implements_generic_artifact_lifecycle",
             "mag_implements_generic_operator_workbench",
             "mag_implements_generic_observability_slo",
+            "mag_long_term_owns_generated_product_status",
+            "mag_long_term_owns_generated_user_loop",
+            "mag_long_term_owns_generated_sidecar",
+            "mag_long_term_owns_generated_grouped_cli_api",
+            "mag_long_term_owns_generated_projection",
+            "mag_long_term_owns_generated_lifecycle_wrapper",
             "opl_harness_pass_can_declare_grant_ready",
             "opl_harness_pass_can_declare_export_ready"
           ],
@@ -5014,6 +5255,12 @@
             "mag_implements_generic_artifact_lifecycle": {"const": false},
             "mag_implements_generic_operator_workbench": {"const": false},
             "mag_implements_generic_observability_slo": {"const": false},
+            "mag_long_term_owns_generated_product_status": {"const": false},
+            "mag_long_term_owns_generated_user_loop": {"const": false},
+            "mag_long_term_owns_generated_sidecar": {"const": false},
+            "mag_long_term_owns_generated_grouped_cli_api": {"const": false},
+            "mag_long_term_owns_generated_projection": {"const": false},
+            "mag_long_term_owns_generated_lifecycle_wrapper": {"const": false},
             "opl_harness_pass_can_declare_grant_ready": {"const": false},
             "opl_harness_pass_can_declare_export_ready": {"const": false}
           }

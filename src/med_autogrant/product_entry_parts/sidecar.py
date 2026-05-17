@@ -168,6 +168,23 @@ def build_sidecar_export(
                 context="sidecar_export.mag_consumer_thinning_contract",
             )
         ),
+        "declarative_grant_pack_compiler_input": dict(
+            _require_mapping(
+                mag_consumer_thinning_contract,
+                "declarative_grant_pack_compiler_input",
+                context="sidecar_export.mag_consumer_thinning_contract",
+            )
+        ),
+        "generated_surface_handoff": dict(
+            _require_mapping(
+                mag_consumer_thinning_contract,
+                "generated_surface_handoff",
+                context="sidecar_export.mag_consumer_thinning_contract",
+            )
+        ),
+        "minimal_authority_functions": list(
+            mag_consumer_thinning_contract.get("minimal_authority_functions") or []
+        ),
         "consumed_opl_standard_surfaces": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
