@@ -68,7 +68,7 @@
 - `make test-cli-smoke` 是 CLI/local-runtime smoke lane，`make test-full` 是 clean-clone baseline。
 - 更新验证命令、控制面或测试入口时，必须同步更新 `Makefile`、`pyproject.toml`、`README*`、`docs/README*`、`scripts/verify.sh` 与相关 tests。
 - 叙述性 `README*`、`docs/**` 和参考文档不作为脚本/测试的断言对象；可以测试 machine-readable contract、schema、CLI/API 行为、生成产物结构与路径，但不要用测试固定文档措辞、章节或状态文案。
-- 默认 Python / pytest 验证必须经由 `scripts/run-python-clean.sh` 或 `scripts/run-pytest-clean.sh`，把 bytecode、pytest cache 和安装/同步副产物导向仓库外部；禁止把 `__pycache__`、`.pytest_cache` 或 `*.egg-info` 写回开发 checkout 后再靠清理兜底。
+- 默认 Python / pytest 验证必须经由 `scripts/run-python-clean.sh` 或 `scripts/run-pytest-clean.sh`，把 bytecode、pytest cache、`uv sync` project venv 和安装/同步副产物导向仓库外部；禁止把 `.venv`、`__pycache__`、`.pytest_cache` 或 `*.egg-info` 写回开发 checkout 后再靠清理兜底。
 
 ## 变更同步
 

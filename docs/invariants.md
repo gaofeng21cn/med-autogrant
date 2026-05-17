@@ -60,7 +60,7 @@
 - 测试调用 CLI 时必须使用当前 grouped public command tokens；内部 flat command string 只能作为 payload / schema / dispatch contract 字段存在，不得再作为 public shell alias 调用。
 - `stage-route-report` 是唯一 canonical route/checkpoint 聚合面，必须输出 `verification_checkpoint` 与 `checkpoint_status`。
 - 最小验证入口是 `scripts/verify.sh`；默认执行 `make test-fast`，保留 `meta`、`cli-smoke`、`full` 分层 lane。
-- Python / pytest 验证必须通过 clean runner 路由缓存与 bytecode；开发 checkout 不应产生 `__pycache__`、`.pytest_cache` 或 `*.egg-info` 副产物。
+- Python / pytest 验证必须通过 clean runner 路由缓存、bytecode 与 `uv sync` project venv；开发 checkout 不应产生 `.venv`、`__pycache__`、`.pytest_cache` 或 `*.egg-info` 副产物。
 
 ## 文档治理
 
