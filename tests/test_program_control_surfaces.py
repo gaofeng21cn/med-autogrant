@@ -75,6 +75,10 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("lifecycle_guarded_apply_proof", framework_boundary["framework_consumed_projection"])
         self.assertIn("lifecycle_receipt_runtime_evidence", framework_boundary["framework_consumed_projection"])
         self.assertIn("physical_skeleton_follow_through", framework_boundary["framework_consumed_projection"])
+        self.assertIn(
+            "functional_structure_gap_zero_classification",
+            framework_boundary["framework_consumed_projection"],
+        )
         self.assertIn("ideal_state_closure_status", framework_boundary["framework_consumed_projection"])
         skeleton = framework_boundary["standard_domain_agent_skeleton"]
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")

@@ -54,6 +54,22 @@ PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES = (
     "hermes_state_db_runtime_state",
 )
 
+MAG_FUNCTIONAL_STRUCTURE_GAP_IDS = (
+    "P1_adapter_thinning_and_pack_input",
+    "P2_package_export_artifact_lifecycle_handoff",
+    "P3_grant_strategy_memory_locator_writeback_handoff",
+    "P4_skeleton_generated_surface_and_legacy_retirement",
+)
+
+MAG_RECLASSIFIED_EVIDENCE_GAP_IDS = (
+    "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
+    "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
+    "opl_generated_surface_production_consumption_no_regression",
+    "focused_opl_hosted_receipt_verification",
+    "continuous_live_receipt_reconciliation",
+    "long_run_live_soak_and_no_forbidden_write_proof",
+)
+
 
 def build_mag_consumer_thinning_contract(
     *,
@@ -85,6 +101,9 @@ def build_mag_consumer_thinning_contract(
         "generated_surface_handoff": build_generated_surface_handoff(),
         "minimal_authority_functions": build_mag_minimal_authority_functions(),
         "minimal_authority_function_ids": list(MAG_MINIMAL_AUTHORITY_FUNCTION_IDS),
+        "functional_structure_gap_zero_classification": (
+            _build_functional_structure_gap_zero_classification()
+        ),
         "allowed_return_shapes": [
             "domain_owner_receipt",
             "typed_blocker",
@@ -118,6 +137,10 @@ def build_mag_consumer_thinning_contract(
             "generated_surface_handoff_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "generated_surface_handoff"
+            ),
+            "functional_structure_gap_zero_classification_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "functional_structure_gap_zero_classification"
             ),
         },
         "verdict_authority_refs": {
@@ -179,6 +202,210 @@ def build_mag_consumer_thinning_contract(
             "opl_harness_pass_can_declare_export_ready": False,
         },
 }
+
+
+def _build_functional_structure_gap_zero_classification() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_functional_structure_gap_zero_classification",
+        "classification_id": "mag.functional_structure_gap_zero.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "state": "mag_functional_structure_gaps_zero_external_evidence_gated",
+        "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
+        "mag_functional_structure_gap_count": 0,
+        "remaining_mag_functional_structure_gaps": [],
+        "closed_mag_functional_structure_gap_ids": list(MAG_FUNCTIONAL_STRUCTURE_GAP_IDS),
+        "reclassified_testing_evidence_gap_ids": list(MAG_RECLASSIFIED_EVIDENCE_GAP_IDS),
+        "closed_mag_functional_structure_gaps": [
+            _closed_mag_functional_gap(
+                "P1_adapter_thinning_and_pack_input",
+                closed_by_refs=[
+                    "/product_entry_manifest/mag_consumer_thinning_contract",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "declarative_grant_pack_compiler_input",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "generated_surface_handoff",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "minimal_authority_functions",
+                ],
+            ),
+            _closed_mag_functional_gap(
+                "P2_package_export_artifact_lifecycle_handoff",
+                closed_by_refs=[
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "opl_replacement_expectations",
+                    "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                    "product package-lifecycle-handoff",
+                    "product lifecycle-receipt-bundle",
+                ],
+            ),
+            _closed_mag_functional_gap(
+                "P3_grant_strategy_memory_locator_writeback_handoff",
+                closed_by_refs=[
+                    "/product_entry_manifest/domain_memory_descriptor_locator",
+                    "/product_entry_manifest/controlled_domain_memory_apply_proof",
+                    "product memory-receipt-projection",
+                ],
+            ),
+            _closed_mag_functional_gap(
+                "P4_skeleton_generated_surface_and_legacy_retirement",
+                closed_by_refs=[
+                    "/product_entry_manifest/standard_domain_agent_skeleton",
+                    "/product_entry_manifest/physical_skeleton_follow_through/"
+                    "active_path_scan_no_legacy_default_caller",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "generated_surface_handoff",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "privatized_functional_module_audit",
+                ],
+            ),
+        ],
+        "external_owner_gates": [
+            _external_owner_gate(
+                "opl_generated_surface_production_consumption",
+                required_surface_owner="one-person-lab",
+                evidence_gate=(
+                    "OPL generated product/status/sidecar/grouped CLI/projection/lifecycle "
+                    "surface consumes MAG declarative pack input in production."
+                ),
+            ),
+            _external_owner_gate(
+                "opl_app_package_memory_lifecycle_shell_consumption",
+                required_surface_owner="one-person-lab",
+                evidence_gate=(
+                    "OPL/App shell consumes MAG package, memory, lifecycle, quality, "
+                    "observability, and workbench refs without writing grant truth."
+                ),
+            ),
+        ],
+        "reclassified_as_testing_evidence_gaps": [
+            _testing_evidence_gap(
+                "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
+                required_evidence=(
+                    "accepted and rejected real workspace memory receipts plus body-free "
+                    "retrieval/writeback projection"
+                ),
+                mag_surface_refs=[
+                    "/product_entry_manifest/domain_memory_descriptor_locator",
+                    "product memory-receipt-projection",
+                ],
+            ),
+            _testing_evidence_gap(
+                "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
+                required_evidence=(
+                    "real workspace package handoff plus cleanup, restore, and retention "
+                    "receipt bundle"
+                ),
+                mag_surface_refs=[
+                    "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                    "product package-lifecycle-handoff",
+                    "product lifecycle-receipt-bundle",
+                ],
+            ),
+            _testing_evidence_gap(
+                "opl_generated_surface_production_consumption_no_regression",
+                required_evidence=(
+                    "external OPL generated/replacement caller consumes MAG pack input "
+                    "without regressing direct MAG surfaces"
+                ),
+                mag_surface_refs=[
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "declarative_grant_pack_compiler_input",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "generated_surface_handoff",
+                ],
+            ),
+            _testing_evidence_gap(
+                "focused_opl_hosted_receipt_verification",
+                required_evidence=(
+                    "OPL-hosted attempt evidence reconciles with MAG owner receipt, "
+                    "typed blocker, or no-regression refs"
+                ),
+                mag_surface_refs=[
+                    "product hosted-receipt-verification",
+                    "/product_entry_manifest/owner_receipt_contract",
+                ],
+            ),
+            _testing_evidence_gap(
+                "continuous_live_receipt_reconciliation",
+                required_evidence=(
+                    "continuous reconciliation snapshot observes repeated receipt refs "
+                    "without creating a second truth source"
+                ),
+                mag_surface_refs=[
+                    "product continuous-receipt-reconciliation",
+                    "product controlled-soak-receipt-reconciliation-inventory",
+                ],
+            ),
+            _testing_evidence_gap(
+                "long_run_live_soak_and_no_forbidden_write_proof",
+                required_evidence=(
+                    "long-run live soak includes OPL provider receipt, MAG owner receipt "
+                    "or typed blocker, and no-forbidden-write proof"
+                ),
+                mag_surface_refs=[
+                    "/product_entry_manifest/controlled_stage_attempt_projection",
+                    "/product_entry_manifest/physical_skeleton_follow_through/"
+                    "active_path_scan_no_legacy_default_caller",
+                ],
+            ),
+        ],
+        "authority_boundary": {
+            "mag_repo_functional_structure_gaps_zero": True,
+            "claims_opl_replacement_exists": False,
+            "claims_opl_generated_surface_production_consumed": False,
+            "claims_real_workspace_memory_migration_complete": False,
+            "claims_real_workspace_package_lifecycle_complete": False,
+            "claims_focused_hosted_receipt_verification_complete": False,
+            "claims_continuous_live_receipt_reconciliation_complete": False,
+            "claims_production_long_run_soak_complete": False,
+            "opl_can_write_domain_truth": False,
+            "opl_can_write_memory_body": False,
+            "opl_can_declare_export_ready": False,
+        },
+    }
+
+
+def _closed_mag_functional_gap(gap_id: str, *, closed_by_refs: list[str]) -> dict[str, Any]:
+    return {
+        "gap_id": gap_id,
+        "previous_bucket": "functional_structure_gap",
+        "current_bucket": "closed_mag_functional_structure_surface",
+        "owner": TARGET_DOMAIN_ID,
+        "closed_by_refs": closed_by_refs,
+    }
+
+
+def _external_owner_gate(
+    gate_id: str,
+    *,
+    required_surface_owner: str,
+    evidence_gate: str,
+) -> dict[str, Any]:
+    return {
+        "gate_id": gate_id,
+        "previous_bucket": "functional_structure_gap",
+        "current_bucket": "external_owner_gate",
+        "required_surface_owner": required_surface_owner,
+        "evidence_gate": evidence_gate,
+        "mag_must_not_implement": True,
+    }
+
+
+def _testing_evidence_gap(
+    gap_id: str,
+    *,
+    required_evidence: str,
+    mag_surface_refs: list[str],
+) -> dict[str, Any]:
+    return {
+        "gap_id": gap_id,
+        "previous_bucket": "functional_structure_gap",
+        "current_bucket": "testing_evidence_gap",
+        "owner": "evidence_gate",
+        "required_evidence": required_evidence,
+        "mag_surface_refs": mag_surface_refs,
+    }
 
 
 def _build_opl_replacement_expectations() -> list[dict[str, Any]]:
@@ -545,6 +772,10 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "generated_surface_handoff_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "generated_surface_handoff"
+            ),
+            "functional_structure_gap_zero_classification_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "functional_structure_gap_zero_classification"
             ),
         },
         "forbidden_output_classes": [

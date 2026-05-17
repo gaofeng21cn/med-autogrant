@@ -1430,7 +1430,46 @@
     },
     "claims_opl_replacement_exists": false,
     "claims_production_long_run_soak_complete": false,
-    "mag_rebuilds_opl_runtime": false
+    "mag_rebuilds_opl_runtime": false,
+    "functional_structure_gap_zero_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_structure_gap_zero_classification",
+    "functional_structure_gap_zero_classification": {
+      "surface_kind": "mag_functional_structure_gap_zero_classification",
+      "classification_id": "mag.functional_structure_gap_zero.v1",
+      "state": "mag_functional_structure_gaps_zero_external_evidence_gated",
+      "mag_functional_structure_gap_count": 0,
+      "remaining_mag_functional_structure_gaps": [],
+      "closed_mag_functional_structure_gap_ids": [
+        "P1_adapter_thinning_and_pack_input",
+        "P2_package_export_artifact_lifecycle_handoff",
+        "P3_grant_strategy_memory_locator_writeback_handoff",
+        "P4_skeleton_generated_surface_and_legacy_retirement"
+      ],
+      "reclassified_testing_evidence_gap_ids": [
+        "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
+        "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
+        "opl_generated_surface_production_consumption_no_regression",
+        "focused_opl_hosted_receipt_verification",
+        "continuous_live_receipt_reconciliation",
+        "long_run_live_soak_and_no_forbidden_write_proof"
+      ],
+      "external_owner_gates": [
+        "opl_generated_surface_production_consumption",
+        "opl_app_package_memory_lifecycle_shell_consumption"
+      ],
+      "authority_boundary": {
+        "mag_repo_functional_structure_gaps_zero": true,
+        "claims_opl_replacement_exists": false,
+        "claims_opl_generated_surface_production_consumed": false,
+        "claims_real_workspace_memory_migration_complete": false,
+        "claims_real_workspace_package_lifecycle_complete": false,
+        "claims_focused_hosted_receipt_verification_complete": false,
+        "claims_continuous_live_receipt_reconciliation_complete": false,
+        "claims_production_long_run_soak_complete": false,
+        "opl_can_write_domain_truth": false,
+        "opl_can_write_memory_body": false,
+        "opl_can_declare_export_ready": false
+      }
+    }
   },
   "repo_source_layout_audit": {
     "surface_kind": "mag_repo_source_layout_audit",

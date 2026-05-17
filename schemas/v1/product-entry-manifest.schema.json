@@ -4153,6 +4153,7 @@
         "generated_surface_handoff",
         "minimal_authority_functions",
         "minimal_authority_function_ids",
+        "functional_structure_gap_zero_classification",
         "allowed_return_shapes",
         "mag_owned_outputs",
         "thin_surface_output_guard",
@@ -4943,6 +4944,138 @@
           },
           "minItems": 3
         },
+        "functional_structure_gap_zero_classification": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "classification_id",
+            "target_domain_id",
+            "owner",
+            "state",
+            "plan_ref",
+            "mag_functional_structure_gap_count",
+            "remaining_mag_functional_structure_gaps",
+            "closed_mag_functional_structure_gap_ids",
+            "reclassified_testing_evidence_gap_ids",
+            "closed_mag_functional_structure_gaps",
+            "external_owner_gates",
+            "reclassified_as_testing_evidence_gaps",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {"const": "mag_functional_structure_gap_zero_classification"},
+            "classification_id": {"const": "mag.functional_structure_gap_zero.v1"},
+            "target_domain_id": {"const": "med-autogrant"},
+            "owner": {"const": "med-autogrant"},
+            "state": {"const": "mag_functional_structure_gaps_zero_external_evidence_gated"},
+            "plan_ref": {"const": "docs/active/mag-ideal-state-cross-repo-gap-plan.md"},
+            "mag_functional_structure_gap_count": {"const": 0},
+            "remaining_mag_functional_structure_gaps": {"type": "array", "maxItems": 0},
+            "closed_mag_functional_structure_gap_ids": {
+              "const": [
+                "P1_adapter_thinning_and_pack_input",
+                "P2_package_export_artifact_lifecycle_handoff",
+                "P3_grant_strategy_memory_locator_writeback_handoff",
+                "P4_skeleton_generated_surface_and_legacy_retirement"
+              ]
+            },
+            "reclassified_testing_evidence_gap_ids": {
+              "const": [
+                "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
+                "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
+                "opl_generated_surface_production_consumption_no_regression",
+                "focused_opl_hosted_receipt_verification",
+                "continuous_live_receipt_reconciliation",
+                "long_run_live_soak_and_no_forbidden_write_proof"
+              ]
+            },
+            "closed_mag_functional_structure_gaps": {
+              "type": "array",
+              "minItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "gap_id", "previous_bucket", "current_bucket", "owner", "closed_by_refs"
+                ],
+                "properties": {
+                  "previous_bucket": {"const": "functional_structure_gap"},
+                  "current_bucket": {"const": "closed_mag_functional_structure_surface"},
+                  "owner": {"const": "med-autogrant"},
+                  "closed_by_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+                }
+              }
+            },
+            "external_owner_gates": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "gate_id", "previous_bucket", "current_bucket",
+                  "required_surface_owner", "evidence_gate", "mag_must_not_implement"
+                ],
+                "properties": {
+                  "previous_bucket": {"const": "functional_structure_gap"},
+                  "current_bucket": {"const": "external_owner_gate"},
+                  "required_surface_owner": {"const": "one-person-lab"},
+                  "mag_must_not_implement": {"const": true}
+                }
+              }
+            },
+            "reclassified_as_testing_evidence_gaps": {
+              "type": "array",
+              "minItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "gap_id", "previous_bucket", "current_bucket",
+                  "owner", "required_evidence", "mag_surface_refs"
+                ],
+                "properties": {
+                  "previous_bucket": {"const": "functional_structure_gap"},
+                  "current_bucket": {"const": "testing_evidence_gap"},
+                  "owner": {"const": "evidence_gate"},
+                  "required_evidence": {"type": "string", "minLength": 1},
+                  "mag_surface_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+                }
+              }
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "mag_repo_functional_structure_gaps_zero",
+                "claims_opl_replacement_exists",
+                "claims_opl_generated_surface_production_consumed",
+                "claims_real_workspace_memory_migration_complete",
+                "claims_real_workspace_package_lifecycle_complete",
+                "claims_focused_hosted_receipt_verification_complete",
+                "claims_continuous_live_receipt_reconciliation_complete",
+                "claims_production_long_run_soak_complete",
+                "opl_can_write_domain_truth",
+                "opl_can_write_memory_body",
+                "opl_can_declare_export_ready"
+              ],
+              "properties": {
+                "mag_repo_functional_structure_gaps_zero": {"const": true},
+                "claims_opl_replacement_exists": {"const": false},
+                "claims_opl_generated_surface_production_consumed": {"const": false},
+                "claims_real_workspace_memory_migration_complete": {"const": false},
+                "claims_real_workspace_package_lifecycle_complete": {"const": false},
+                "claims_focused_hosted_receipt_verification_complete": {"const": false},
+                "claims_continuous_live_receipt_reconciliation_complete": {"const": false},
+                "claims_production_long_run_soak_complete": {"const": false},
+                "opl_can_write_domain_truth": {"const": false},
+                "opl_can_write_memory_body": {"const": false},
+                "opl_can_declare_export_ready": {"const": false}
+              }
+            }
+          }
+        },
         "mag_owned_outputs": {
           "$ref": "common.schema.json#/$defs/stringList"
         },
@@ -4958,7 +5091,8 @@
             "functional_harness_consumer_coverage_ref",
             "privatized_functional_module_audit_ref",
             "declarative_grant_pack_compiler_input_ref",
-            "generated_surface_handoff_ref"
+            "generated_surface_handoff_ref",
+            "functional_structure_gap_zero_classification_ref"
           ],
           "properties": {
             "owner_receipt_contract_ref": {
@@ -4987,6 +5121,9 @@
             },
             "generated_surface_handoff_ref": {
               "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
+            },
+            "functional_structure_gap_zero_classification_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/functional_structure_gap_zero_classification"
             }
           }
         },
