@@ -1,0 +1,2902 @@
+{
+  "authority_boundary": {
+    "domain_can_claim_generic_runtime_owner": false,
+    "domain_repo_can_own_generated_surface": false,
+    "opl_can_authorize_quality_or_export": false,
+    "opl_can_write_domain_truth": false,
+    "opl_can_write_memory_body": false
+  },
+  "domain_id": "med-autogrant",
+  "functional_structure_gap_zero_classification": {
+    "authority_boundary": {
+      "claims_continuous_live_receipt_reconciliation_complete": false,
+      "claims_focused_hosted_receipt_verification_complete": false,
+      "claims_opl_generated_surface_production_consumed": false,
+      "claims_opl_replacement_exists": false,
+      "claims_production_long_run_soak_complete": false,
+      "claims_real_workspace_memory_migration_complete": false,
+      "claims_real_workspace_package_lifecycle_complete": false,
+      "mag_repo_functional_structure_gaps_zero": true,
+      "opl_can_declare_export_ready": false,
+      "opl_can_write_domain_truth": false,
+      "opl_can_write_memory_body": false
+    },
+    "classification_id": "mag.functional_structure_gap_zero.v1",
+    "closed_mag_functional_structure_gap_ids": [
+      "P1_adapter_thinning_and_pack_input",
+      "P2_package_export_artifact_lifecycle_handoff",
+      "P3_grant_strategy_memory_locator_writeback_handoff",
+      "P4_skeleton_generated_surface_and_legacy_retirement"
+    ],
+    "closed_mag_functional_structure_gaps": [
+      {
+        "closed_by_refs": [
+          "/product_entry_manifest/mag_consumer_thinning_contract",
+          "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+          "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+          "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions"
+        ],
+        "current_bucket": "closed_mag_functional_structure_surface",
+        "gap_id": "P1_adapter_thinning_and_pack_input",
+        "owner": "med-autogrant",
+        "previous_bucket": "functional_structure_gap"
+      },
+      {
+        "closed_by_refs": [
+          "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations",
+          "/product_entry_manifest/lifecycle_guarded_apply_proof",
+          "product package-lifecycle-handoff",
+          "product lifecycle-receipt-bundle"
+        ],
+        "current_bucket": "closed_mag_functional_structure_surface",
+        "gap_id": "P2_package_export_artifact_lifecycle_handoff",
+        "owner": "med-autogrant",
+        "previous_bucket": "functional_structure_gap"
+      },
+      {
+        "closed_by_refs": [
+          "/product_entry_manifest/domain_memory_descriptor_locator",
+          "/product_entry_manifest/controlled_domain_memory_apply_proof",
+          "product memory-receipt-projection"
+        ],
+        "current_bucket": "closed_mag_functional_structure_surface",
+        "gap_id": "P3_grant_strategy_memory_locator_writeback_handoff",
+        "owner": "med-autogrant",
+        "previous_bucket": "functional_structure_gap"
+      },
+      {
+        "closed_by_refs": [
+          "/product_entry_manifest/standard_domain_agent_skeleton",
+          "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+          "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+          "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+        ],
+        "current_bucket": "closed_mag_functional_structure_surface",
+        "gap_id": "P4_skeleton_generated_surface_and_legacy_retirement",
+        "owner": "med-autogrant",
+        "previous_bucket": "functional_structure_gap"
+      }
+    ],
+    "external_owner_gates": [
+      {
+        "current_bucket": "external_owner_gate",
+        "evidence_gate": "OPL generated product/status/sidecar/grouped CLI/projection/lifecycle surface consumes MAG declarative pack input in production.",
+        "gate_id": "opl_generated_surface_production_consumption",
+        "mag_must_not_implement": true,
+        "previous_bucket": "functional_structure_gap",
+        "required_surface_owner": "one-person-lab"
+      },
+      {
+        "current_bucket": "external_owner_gate",
+        "evidence_gate": "OPL/App shell consumes MAG package, memory, lifecycle, quality, observability, and workbench refs without writing grant truth.",
+        "gate_id": "opl_app_package_memory_lifecycle_shell_consumption",
+        "mag_must_not_implement": true,
+        "previous_bucket": "functional_structure_gap",
+        "required_surface_owner": "one-person-lab"
+      }
+    ],
+    "mag_functional_structure_gap_count": 0,
+    "owner": "med-autogrant",
+    "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
+    "reclassified_as_testing_evidence_gaps": [
+      {
+        "current_bucket": "testing_evidence_gap",
+        "gap_id": "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
+        "mag_surface_refs": [
+          "/product_entry_manifest/domain_memory_descriptor_locator",
+          "product memory-receipt-projection"
+        ],
+        "owner": "evidence_gate",
+        "previous_bucket": "functional_structure_gap",
+        "required_evidence": "accepted and rejected real workspace memory receipts plus body-free retrieval/writeback projection"
+      },
+      {
+        "current_bucket": "testing_evidence_gap",
+        "gap_id": "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
+        "mag_surface_refs": [
+          "/product_entry_manifest/lifecycle_guarded_apply_proof",
+          "product package-lifecycle-handoff",
+          "product lifecycle-receipt-bundle"
+        ],
+        "owner": "evidence_gate",
+        "previous_bucket": "functional_structure_gap",
+        "required_evidence": "real workspace package handoff plus cleanup, restore, and retention receipt bundle"
+      },
+      {
+        "current_bucket": "testing_evidence_gap",
+        "gap_id": "opl_generated_surface_production_consumption_no_regression",
+        "mag_surface_refs": [
+          "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+          "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
+        ],
+        "owner": "evidence_gate",
+        "previous_bucket": "functional_structure_gap",
+        "required_evidence": "external OPL generated/replacement caller consumes MAG pack input without regressing direct MAG surfaces"
+      },
+      {
+        "current_bucket": "testing_evidence_gap",
+        "gap_id": "focused_opl_hosted_receipt_verification",
+        "mag_surface_refs": [
+          "product hosted-receipt-verification",
+          "/product_entry_manifest/owner_receipt_contract"
+        ],
+        "owner": "evidence_gate",
+        "previous_bucket": "functional_structure_gap",
+        "required_evidence": "OPL-hosted attempt evidence reconciles with MAG owner receipt, typed blocker, or no-regression refs"
+      },
+      {
+        "current_bucket": "testing_evidence_gap",
+        "gap_id": "continuous_live_receipt_reconciliation",
+        "mag_surface_refs": [
+          "product continuous-receipt-reconciliation",
+          "product controlled-soak-receipt-reconciliation-inventory"
+        ],
+        "owner": "evidence_gate",
+        "previous_bucket": "functional_structure_gap",
+        "required_evidence": "continuous reconciliation snapshot observes repeated receipt refs without creating a second truth source"
+      },
+      {
+        "current_bucket": "testing_evidence_gap",
+        "gap_id": "long_run_live_soak_and_no_forbidden_write_proof",
+        "mag_surface_refs": [
+          "/product_entry_manifest/controlled_stage_attempt_projection",
+          "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+        ],
+        "owner": "evidence_gate",
+        "previous_bucket": "functional_structure_gap",
+        "required_evidence": "long-run live soak includes OPL provider receipt, MAG owner receipt or typed blocker, and no-forbidden-write proof"
+      }
+    ],
+    "reclassified_testing_evidence_gap_ids": [
+      "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
+      "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
+      "opl_generated_surface_production_consumption_no_regression",
+      "focused_opl_hosted_receipt_verification",
+      "continuous_live_receipt_reconciliation",
+      "long_run_live_soak_and_no_forbidden_write_proof"
+    ],
+    "remaining_mag_functional_structure_gaps": [],
+    "state": "mag_functional_structure_gaps_zero_external_evidence_gated",
+    "surface_kind": "mag_functional_structure_gap_zero_classification",
+    "target_domain_id": "med-autogrant"
+  },
+  "mag_consumer_thinning_contract": {
+    "active_path_scan_state": "not_available",
+    "adapter_role": "domain_authority_pack_with_thin_program_surface",
+    "allowed_return_shapes": [
+      "domain_owner_receipt",
+      "typed_blocker",
+      "no_regression_evidence"
+    ],
+    "authority_boundary": {
+      "domain_truth_owner": "med-autogrant",
+      "export_authority_owner": "med-autogrant",
+      "grant_memory_body_owner": "med-autogrant",
+      "grant_truth_owner": "med-autogrant",
+      "mag_implements_app_workbench": false,
+      "mag_implements_generic_artifact_gallery": false,
+      "mag_implements_generic_artifact_lifecycle": false,
+      "mag_implements_generic_attempt_ledger": false,
+      "mag_implements_generic_daemon": false,
+      "mag_implements_generic_lifecycle_owner": false,
+      "mag_implements_generic_memory_transport": false,
+      "mag_implements_generic_observability_slo": false,
+      "mag_implements_generic_operator_workbench": false,
+      "mag_implements_generic_queue": false,
+      "mag_implements_generic_runner": false,
+      "mag_implements_generic_scheduler": false,
+      "mag_implements_generic_workspace_source_intake": false,
+      "mag_long_term_owns_generated_grouped_cli_api": false,
+      "mag_long_term_owns_generated_lifecycle_wrapper": false,
+      "mag_long_term_owns_generated_product_status": false,
+      "mag_long_term_owns_generated_projection": false,
+      "mag_long_term_owns_generated_sidecar": false,
+      "mag_long_term_owns_generated_user_loop": false,
+      "mag_rebuilds_opl_runtime": false,
+      "memory_body_owner": "med-autogrant",
+      "opl_can_declare_export_ready": false,
+      "opl_can_mutate_grant_artifacts": false,
+      "opl_can_write_domain_truth": false,
+      "opl_can_write_memory_body": false,
+      "opl_family_scheduler_replacement_owner": "one-person-lab",
+      "opl_harness_pass_can_declare_export_ready": false,
+      "opl_harness_pass_can_declare_grant_ready": false,
+      "opl_role": "replacement_owner_and_ref_consumer_only",
+      "owner_receipt_authority": "med-autogrant",
+      "package_authority_owner": "med-autogrant",
+      "quality_verdict_owner": "med-autogrant",
+      "safe_action_refs_owner": "med-autogrant"
+    },
+    "claims_opl_replacement_exists": false,
+    "claims_production_long_run_soak_complete": false,
+    "consumed_opl_standard_surfaces": {
+      "authority_boundary": {
+        "mag_can_long_term_own_generated_wrappers": false,
+        "mag_can_own_generic_artifact_gallery": false,
+        "mag_can_own_generic_artifact_lifecycle": false,
+        "mag_can_own_generic_attempt_ledger": false,
+        "mag_can_own_generic_daemon": false,
+        "mag_can_own_generic_memory_transport": false,
+        "mag_can_own_generic_observability_slo": false,
+        "mag_can_own_generic_operator_workbench": false,
+        "mag_can_own_generic_queue": false,
+        "mag_can_own_generic_runner": false,
+        "mag_can_own_generic_scheduler": false,
+        "mag_can_own_generic_workspace_source_intake": false,
+        "mag_consumes_generated_surfaces": true,
+        "mag_consumes_generic_primitives": true,
+        "mag_consumes_standard_scaffold": true,
+        "opl_generic_primitives_owner": "one-person-lab",
+        "opl_harness_pass_can_declare_export_ready": false,
+        "opl_harness_pass_can_declare_grant_ready": false,
+        "opl_pack_compiler_owner": "one-person-lab",
+        "opl_standard_scaffold_owner": "one-person-lab"
+      },
+      "consumed_generic_primitives": [
+        "workspace_source_intake_shell",
+        "memory_locator_writeback_transport",
+        "artifact_package_lifecycle_shell",
+        "generic_transition_runner",
+        "functional_harness_queue_stage_attempt_typed_closeout",
+        "functional_harness_restart_dead_letter_repair_human_gate",
+        "operator_workbench_drilldown_shell",
+        "observability_repair_projection",
+        "agent_scaffold_checklist",
+        "pack_compiler_generated_surface"
+      ],
+      "consumed_projection_surfaces": [
+        "family_conflict_envelope",
+        "stage_attempt_usage_projection",
+        "stage_attempt_control_loop_projection",
+        "runtime_observability_export",
+        "family_product_operator_projection"
+      ],
+      "consumption_policy": "consume_opl_standard_scaffold_and_generic_primitives_no_mag_runtime_rebuild",
+      "functional_harness_consumer_coverage_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_harness_consumer_coverage",
+      "generic_primitives_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations",
+      "mag_retained_authority": [
+        "grant_truth",
+        "fundability_verdict",
+        "quality_verdict",
+        "export_verdict",
+        "memory_body_accept_reject",
+        "package_authority",
+        "owner_receipt",
+        "grant_helper"
+      ],
+      "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
+      "standard_scaffold_manifest_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
+      "surface_kind": "mag_consumed_opl_standard_surfaces"
+    },
+    "consumes_opl_family_primitive": "family_scheduler_replacement",
+    "contract_id": "mag.consumer_thinning.contract.v1",
+    "declarative_grant_pack_compiler_input": {
+      "authority_boundary": {
+        "mag_pack_owner": "med-autogrant",
+        "opl_can_declare_export_verdict": false,
+        "opl_can_declare_fundability_verdict": false,
+        "opl_can_declare_quality_verdict": false,
+        "opl_can_generate_grouped_cli_api": true,
+        "opl_can_generate_lifecycle_wrapper": true,
+        "opl_can_generate_product_status": true,
+        "opl_can_generate_projection_wrapper": true,
+        "opl_can_generate_sidecar_wrapper": true,
+        "opl_can_generate_user_loop": true,
+        "opl_can_sign_owner_receipt": false,
+        "opl_can_write_grant_truth": false,
+        "opl_can_write_memory_body": false,
+        "opl_compiler_owner": "one-person-lab"
+      },
+      "compiler_input_id": "mag.declarative_grant_pack.compiler_input.v1",
+      "compiler_owner": "one-person-lab",
+      "forbidden_payload_classes": [
+        "grant_artifact_content",
+        "memory_body",
+        "workspace_private_evidence",
+        "generic_runtime_state",
+        "generic_workbench_state",
+        "generic_lifecycle_ledger"
+      ],
+      "generated_surface_handoff_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+      "generated_surface_targets": [
+        "product_status",
+        "product_user_loop",
+        "product_sidecar",
+        "grouped_cli_api",
+        "projection_builder",
+        "lifecycle_wrapper"
+      ],
+      "input_policy": "declarative_refs_and_authority_manifest_only",
+      "minimal_authority_functions_ref": "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions",
+      "owner": "med-autogrant",
+      "pack_owner": "med-autogrant",
+      "pack_sections": [
+        "stage_graph",
+        "action_metadata",
+        "transition_oracle",
+        "receipt_schema",
+        "memory_policy",
+        "artifact_locator",
+        "authority_function_manifest"
+      ],
+      "source_refs": {
+        "action_metadata_ref": "/product_entry_manifest/family_action_catalog",
+        "artifact_locator_ref": "/product_entry_manifest/artifact_locator_contract",
+        "lifecycle_policy_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
+        "memory_policy_ref": "/product_entry_manifest/domain_memory_descriptor_locator",
+        "output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
+        "receipt_schema_ref": "/product_entry_manifest/owner_receipt_contract",
+        "stage_graph_ref": "/product_entry_manifest/family_stage_control_plane",
+        "transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle"
+      },
+      "state": "ready_for_opl_pack_compiler_ingest",
+      "surface_kind": "mag_declarative_grant_pack_compiler_input",
+      "target_domain_id": "med-autogrant"
+    },
+    "domain_action_metadata_refs": [
+      "/product_entry_manifest/family_action_catalog",
+      "/product_entry_manifest/family_stage_control_plane",
+      "/product_entry_manifest/grant_transition_oracle"
+    ],
+    "exposed_sidecar_return_refs": {
+      "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
+      "controlled_stage_attempt_projection_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+      "declarative_grant_pack_compiler_input_ref": "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+      "functional_harness_consumer_coverage_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_harness_consumer_coverage",
+      "functional_structure_gap_zero_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_structure_gap_zero_classification",
+      "generated_surface_handoff_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+      "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
+      "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
+      "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+      "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+    },
+    "forbidden_mag_generic_owner_roles": [
+      "generic_scheduler_owner",
+      "generic_daemon_owner",
+      "generic_lifecycle_owner",
+      "generic_queue_owner",
+      "generic_attempt_ledger_owner",
+      "generic_state_machine_runner_owner",
+      "generic_workspace_source_intake_owner",
+      "generic_memory_transport_owner",
+      "generic_artifact_gallery_owner",
+      "generic_operator_workbench_owner",
+      "generic_observability_slo_owner"
+    ],
+    "forbidden_mag_owned_generic_primitives": [],
+    "functional_harness_consumer_coverage": {
+      "adapter_role": "domain_authority_pack_consumer_only",
+      "claims_export_ready": false,
+      "claims_grant_ready": false,
+      "claims_opl_functional_harness_pass": false,
+      "coverage_chain_ids": [
+        "memory_refs_only_writeback_chain",
+        "queue_stage_attempt_typed_closeout_chain",
+        "generic_transition_runner_chain",
+        "restart_dead_letter_repair_human_gate_chain"
+      ],
+      "coverage_chains": [
+        {
+          "chain_id": "memory_refs_only_writeback_chain",
+          "fail_closed_boundary": {
+            "harness_pass_can_set_export_ready": false,
+            "harness_pass_can_set_grant_ready": false,
+            "mag_owner_receipt_required": true,
+            "opl_can_write_grant_truth": false,
+            "opl_can_write_memory_body": false
+          },
+          "harness_owner": "one-person-lab",
+          "implemented_in_mag": false,
+          "mag_claims_generic_runtime_owner": false,
+          "mag_retained": [
+            "grant_memory_body",
+            "writeback_body_accept_reject",
+            "memory_receipt_writer"
+          ],
+          "mag_role": "consumer_domain_authority_pack",
+          "mag_surface_refs": [
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+            "/product_entry_manifest/controlled_domain_memory_apply_proof"
+          ],
+          "opl_owned": [
+            "memory_ref_locator",
+            "writeback_proposal_transport",
+            "accepted_rejected_receipt_ref_projection",
+            "freshness_and_grouping"
+          ]
+        },
+        {
+          "chain_id": "queue_stage_attempt_typed_closeout_chain",
+          "fail_closed_boundary": {
+            "harness_pass_can_set_export_ready": false,
+            "harness_pass_can_set_grant_ready": false,
+            "mag_owner_receipt_required": true,
+            "opl_can_write_grant_truth": false,
+            "opl_can_write_memory_body": false
+          },
+          "harness_owner": "one-person-lab",
+          "implemented_in_mag": false,
+          "mag_claims_generic_runtime_owner": false,
+          "mag_retained": [
+            "grant_stage_truth",
+            "owner_receipt",
+            "typed_blocker",
+            "no_regression_evidence"
+          ],
+          "mag_role": "consumer_domain_authority_pack",
+          "mag_surface_refs": [
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+            "/product_entry_manifest/owner_receipt_contract"
+          ],
+          "opl_owned": [
+            "typed_queue",
+            "stage_attempt_ledger",
+            "attempt_dispatch",
+            "typed_closeout_envelope"
+          ]
+        },
+        {
+          "chain_id": "generic_transition_runner_chain",
+          "fail_closed_boundary": {
+            "harness_pass_can_set_export_ready": false,
+            "harness_pass_can_set_grant_ready": false,
+            "mag_owner_receipt_required": true,
+            "opl_can_write_grant_truth": false,
+            "opl_can_write_memory_body": false
+          },
+          "harness_owner": "one-person-lab",
+          "implemented_in_mag": false,
+          "mag_claims_generic_runtime_owner": false,
+          "mag_retained": [
+            "grant_transition_oracle",
+            "stage_guard",
+            "fundability_quality_export_verdict_refs",
+            "domain_action_metadata"
+          ],
+          "mag_role": "consumer_domain_authority_pack",
+          "mag_surface_refs": [
+            "/product_entry_manifest/grant_transition_oracle",
+            "/product_entry_manifest/family_stage_control_plane"
+          ],
+          "opl_owned": [
+            "generic_transition_runner",
+            "matrix_runner",
+            "dispatch_receipt",
+            "transition_execution_audit"
+          ]
+        },
+        {
+          "chain_id": "restart_dead_letter_repair_human_gate_chain",
+          "fail_closed_boundary": {
+            "harness_pass_can_set_export_ready": false,
+            "harness_pass_can_set_grant_ready": false,
+            "mag_owner_receipt_required": true,
+            "opl_can_write_grant_truth": false,
+            "opl_can_write_memory_body": false
+          },
+          "harness_owner": "one-person-lab",
+          "implemented_in_mag": false,
+          "mag_claims_generic_runtime_owner": false,
+          "mag_retained": [
+            "grant_blocker_meaning",
+            "owner_receipt",
+            "manual_portal_boundary",
+            "safe_action_refs"
+          ],
+          "mag_role": "consumer_domain_authority_pack",
+          "mag_surface_refs": [
+            "/product_entry_manifest/task_lifecycle",
+            "/product_entry_manifest/family_orchestration",
+            "/product_entry_manifest/lifecycle_guarded_apply_proof"
+          ],
+          "opl_owned": [
+            "restart_token",
+            "dead_letter_record",
+            "repair_command_projection",
+            "human_gate_state"
+          ]
+        }
+      ],
+      "coverage_id": "mag.functional_harness.consumer_coverage.v1",
+      "fail_closed_rules": {
+        "opl_can_hold_generic_runtime_in_mag": false,
+        "opl_can_write_grant_truth": false,
+        "opl_can_write_memory_body": false,
+        "opl_harness_pass_is_export_ready": false,
+        "opl_harness_pass_is_grant_ready": false
+      },
+      "harness_owner": "one-person-lab",
+      "mag_retained_authority": [
+        "grant_truth",
+        "fundability_verdict",
+        "quality_verdict",
+        "export_verdict",
+        "grant_memory_body_accept_reject",
+        "package_authority",
+        "owner_receipt",
+        "typed_blocker",
+        "sidecar_projection_adapter"
+      ],
+      "output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
+      "owner": "med-autogrant",
+      "sidecar_projection_policy": "refs_receipts_blockers_verdict_refs_action_metadata_only",
+      "state": "consumer_coverage_declared_external_opl_harness_gate",
+      "surface_kind": "mag_functional_harness_consumer_coverage",
+      "target_domain_id": "med-autogrant",
+      "version": "v1"
+    },
+    "functional_structure_gap_zero_classification": {
+      "authority_boundary": {
+        "claims_continuous_live_receipt_reconciliation_complete": false,
+        "claims_focused_hosted_receipt_verification_complete": false,
+        "claims_opl_generated_surface_production_consumed": false,
+        "claims_opl_replacement_exists": false,
+        "claims_production_long_run_soak_complete": false,
+        "claims_real_workspace_memory_migration_complete": false,
+        "claims_real_workspace_package_lifecycle_complete": false,
+        "mag_repo_functional_structure_gaps_zero": true,
+        "opl_can_declare_export_ready": false,
+        "opl_can_write_domain_truth": false,
+        "opl_can_write_memory_body": false
+      },
+      "classification_id": "mag.functional_structure_gap_zero.v1",
+      "closed_mag_functional_structure_gap_ids": [
+        "P1_adapter_thinning_and_pack_input",
+        "P2_package_export_artifact_lifecycle_handoff",
+        "P3_grant_strategy_memory_locator_writeback_handoff",
+        "P4_skeleton_generated_surface_and_legacy_retirement"
+      ],
+      "closed_mag_functional_structure_gaps": [
+        {
+          "closed_by_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract",
+            "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+            "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+            "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions"
+          ],
+          "current_bucket": "closed_mag_functional_structure_surface",
+          "gap_id": "P1_adapter_thinning_and_pack_input",
+          "owner": "med-autogrant",
+          "previous_bucket": "functional_structure_gap"
+        },
+        {
+          "closed_by_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations",
+            "/product_entry_manifest/lifecycle_guarded_apply_proof",
+            "product package-lifecycle-handoff",
+            "product lifecycle-receipt-bundle"
+          ],
+          "current_bucket": "closed_mag_functional_structure_surface",
+          "gap_id": "P2_package_export_artifact_lifecycle_handoff",
+          "owner": "med-autogrant",
+          "previous_bucket": "functional_structure_gap"
+        },
+        {
+          "closed_by_refs": [
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+            "/product_entry_manifest/controlled_domain_memory_apply_proof",
+            "product memory-receipt-projection"
+          ],
+          "current_bucket": "closed_mag_functional_structure_surface",
+          "gap_id": "P3_grant_strategy_memory_locator_writeback_handoff",
+          "owner": "med-autogrant",
+          "previous_bucket": "functional_structure_gap"
+        },
+        {
+          "closed_by_refs": [
+            "/product_entry_manifest/standard_domain_agent_skeleton",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+            "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+          ],
+          "current_bucket": "closed_mag_functional_structure_surface",
+          "gap_id": "P4_skeleton_generated_surface_and_legacy_retirement",
+          "owner": "med-autogrant",
+          "previous_bucket": "functional_structure_gap"
+        }
+      ],
+      "external_owner_gates": [
+        {
+          "current_bucket": "external_owner_gate",
+          "evidence_gate": "OPL generated product/status/sidecar/grouped CLI/projection/lifecycle surface consumes MAG declarative pack input in production.",
+          "gate_id": "opl_generated_surface_production_consumption",
+          "mag_must_not_implement": true,
+          "previous_bucket": "functional_structure_gap",
+          "required_surface_owner": "one-person-lab"
+        },
+        {
+          "current_bucket": "external_owner_gate",
+          "evidence_gate": "OPL/App shell consumes MAG package, memory, lifecycle, quality, observability, and workbench refs without writing grant truth.",
+          "gate_id": "opl_app_package_memory_lifecycle_shell_consumption",
+          "mag_must_not_implement": true,
+          "previous_bucket": "functional_structure_gap",
+          "required_surface_owner": "one-person-lab"
+        }
+      ],
+      "mag_functional_structure_gap_count": 0,
+      "owner": "med-autogrant",
+      "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
+      "reclassified_as_testing_evidence_gaps": [
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
+          "mag_surface_refs": [
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+            "product memory-receipt-projection"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "accepted and rejected real workspace memory receipts plus body-free retrieval/writeback projection"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
+          "mag_surface_refs": [
+            "/product_entry_manifest/lifecycle_guarded_apply_proof",
+            "product package-lifecycle-handoff",
+            "product lifecycle-receipt-bundle"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "real workspace package handoff plus cleanup, restore, and retention receipt bundle"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "opl_generated_surface_production_consumption_no_regression",
+          "mag_surface_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+            "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "external OPL generated/replacement caller consumes MAG pack input without regressing direct MAG surfaces"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "focused_opl_hosted_receipt_verification",
+          "mag_surface_refs": [
+            "product hosted-receipt-verification",
+            "/product_entry_manifest/owner_receipt_contract"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "OPL-hosted attempt evidence reconciles with MAG owner receipt, typed blocker, or no-regression refs"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "continuous_live_receipt_reconciliation",
+          "mag_surface_refs": [
+            "product continuous-receipt-reconciliation",
+            "product controlled-soak-receipt-reconciliation-inventory"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "continuous reconciliation snapshot observes repeated receipt refs without creating a second truth source"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "long_run_live_soak_and_no_forbidden_write_proof",
+          "mag_surface_refs": [
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "long-run live soak includes OPL provider receipt, MAG owner receipt or typed blocker, and no-forbidden-write proof"
+        }
+      ],
+      "reclassified_testing_evidence_gap_ids": [
+        "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
+        "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
+        "opl_generated_surface_production_consumption_no_regression",
+        "focused_opl_hosted_receipt_verification",
+        "continuous_live_receipt_reconciliation",
+        "long_run_live_soak_and_no_forbidden_write_proof"
+      ],
+      "remaining_mag_functional_structure_gaps": [],
+      "state": "mag_functional_structure_gaps_zero_external_evidence_gated",
+      "surface_kind": "mag_functional_structure_gap_zero_classification",
+      "target_domain_id": "med-autogrant"
+    },
+    "generated_surface_handoff": {
+      "authority_boundary": {
+        "generated_surface_can_declare_verdict": false,
+        "generated_surface_can_sign_owner_receipt": false,
+        "generated_surface_can_write_grant_truth": false,
+        "generated_surface_can_write_memory_body": false,
+        "long_term_generated_surface_owner": "one-person-lab",
+        "mag_can_own_generated_grouped_cli_api": false,
+        "mag_can_own_generated_lifecycle_wrapper": false,
+        "mag_can_own_generated_product_status": false,
+        "mag_can_own_generated_projection": false,
+        "mag_can_own_generated_sidecar": false,
+        "mag_can_own_generated_user_loop": false,
+        "mag_long_term_owner": false
+      },
+      "bridge_policy": "MAG handwritten product/status/sidecar/projection wrappers are migration bridges, not long-term MAG owner surfaces.",
+      "declarative_input_ref": "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+      "generated_or_bridge_surfaces": [
+        {
+          "compiler_input_refs": [
+            "/product_entry_manifest/product_entry_status",
+            "/product_entry_manifest/grant_authoring_readiness"
+          ],
+          "current_mag_long_term_owner": false,
+          "current_mag_paths": [
+            "src/med_autogrant/product_entry_parts/manifest.py"
+          ],
+          "current_owner": "med-autogrant",
+          "generated_by_opl_in_target": true,
+          "keeps_mag_authority_functions": false,
+          "surface_id": "product_status",
+          "surface_status": "migration_bridge_until_opl_generated_surface",
+          "target_owner": "one-person-lab"
+        },
+        {
+          "compiler_input_refs": [
+            "/product_entry_manifest/operator_loop_surface",
+            "/product_entry_manifest/operator_loop_actions"
+          ],
+          "current_mag_long_term_owner": false,
+          "current_mag_paths": [
+            "src/med_autogrant/product_entry_parts/loop_contracts.py",
+            "src/med_autogrant/product_entry_parts/entry.py"
+          ],
+          "current_owner": "med-autogrant",
+          "generated_by_opl_in_target": true,
+          "keeps_mag_authority_functions": false,
+          "surface_id": "product_user_loop",
+          "surface_status": "migration_bridge_until_opl_generated_surface",
+          "target_owner": "one-person-lab"
+        },
+        {
+          "compiler_input_refs": [
+            "/product_entry_manifest/runtime_control",
+            "/product_entry_manifest/mag_consumer_thinning_contract"
+          ],
+          "current_mag_long_term_owner": false,
+          "current_mag_paths": [
+            "src/med_autogrant/product_entry_parts/sidecar.py"
+          ],
+          "current_owner": "med-autogrant",
+          "generated_by_opl_in_target": true,
+          "keeps_mag_authority_functions": false,
+          "surface_id": "product_sidecar",
+          "surface_status": "migration_bridge_until_opl_generated_surface",
+          "target_owner": "one-person-lab"
+        },
+        {
+          "compiler_input_refs": [
+            "/product_entry_manifest/family_action_catalog",
+            "/product_entry_manifest/product_entry_shell"
+          ],
+          "current_mag_long_term_owner": false,
+          "current_mag_paths": [
+            "src/med_autogrant/cli_parts/parser_adders.py",
+            "src/med_autogrant/cli_parts/handlers.py",
+            "src/med_autogrant/public_cli.py"
+          ],
+          "current_owner": "med-autogrant",
+          "generated_by_opl_in_target": true,
+          "keeps_mag_authority_functions": false,
+          "surface_id": "grouped_cli_api",
+          "surface_status": "migration_bridge_until_opl_generated_surface",
+          "target_owner": "one-person-lab"
+        },
+        {
+          "compiler_input_refs": [
+            "/product_entry_manifest/progress_projection",
+            "/product_entry_manifest/artifact_inventory",
+            "/product_entry_manifest/controlled_stage_attempt_projection"
+          ],
+          "current_mag_long_term_owner": false,
+          "current_mag_paths": [
+            "src/med_autogrant/product_entry_parts/progress.py",
+            "src/med_autogrant/product_entry_parts/manifest_builder.py",
+            "src/med_autogrant/product_entry_parts/receipt_observability.py"
+          ],
+          "current_owner": "med-autogrant",
+          "generated_by_opl_in_target": true,
+          "keeps_mag_authority_functions": false,
+          "surface_id": "projection_builder",
+          "surface_status": "migration_bridge_until_opl_generated_surface",
+          "target_owner": "one-person-lab"
+        },
+        {
+          "compiler_input_refs": [
+            "/product_entry_manifest/lifecycle_guarded_apply_proof",
+            "/product_entry_manifest/artifact_locator_contract"
+          ],
+          "current_mag_long_term_owner": false,
+          "current_mag_paths": [
+            "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
+            "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py"
+          ],
+          "current_owner": "med-autogrant",
+          "generated_by_opl_in_target": true,
+          "keeps_mag_authority_functions": false,
+          "surface_id": "lifecycle_wrapper",
+          "surface_status": "migration_bridge_until_opl_generated_surface",
+          "target_owner": "one-person-lab"
+        }
+      ],
+      "generated_surface_ids": [
+        "product_status",
+        "product_user_loop",
+        "product_sidecar",
+        "grouped_cli_api",
+        "projection_builder",
+        "lifecycle_wrapper"
+      ],
+      "handoff_id": "mag.generated_surface_handoff.v1",
+      "handoff_policy": "OPL_generates_or_hosts_generic_wrappers_from_MAG_pack_input",
+      "mag_long_term_owner_surface_ids": [],
+      "owner": "med-autogrant",
+      "state": "declarative_input_landed_external_generated_surface_gate",
+      "surface_kind": "mag_generated_surface_handoff",
+      "target_domain_id": "med-autogrant",
+      "target_generator_owner": "one-person-lab"
+    },
+    "guarded_by_active_path_scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+    "mag_owned_outputs": [
+      "grant_owned_refs",
+      "owner_receipt",
+      "typed_blocker",
+      "verdict_refs",
+      "domain_action_metadata"
+    ],
+    "minimal_authority_function_ids": [
+      "fundability_verdict",
+      "quality_verdict",
+      "export_verdict",
+      "package_authority",
+      "memory_accept_reject",
+      "owner_receipt_signer",
+      "grant_helper"
+    ],
+    "minimal_authority_functions": [
+      {
+        "authority_output_class": "verdict_refs",
+        "cannot_generate_reason": "Fundability is a grant-review judgment over call fit and applicant evidence.",
+        "function_id": "fundability_verdict",
+        "generated_by_opl": false,
+        "opl_generated_wrapper_allowed": true,
+        "owner": "med-autogrant",
+        "retention_class": "mag_minimal_authority_function",
+        "source_refs": [
+          "/product_entry_manifest/family_stage_control_plane/stages",
+          "/product_entry_manifest/grant_transition_oracle"
+        ]
+      },
+      {
+        "authority_output_class": "verdict_refs",
+        "cannot_generate_reason": "Authoring quality requires MAG-owned AI critique and issue closure semantics.",
+        "function_id": "quality_verdict",
+        "generated_by_opl": false,
+        "opl_generated_wrapper_allowed": true,
+        "owner": "med-autogrant",
+        "retention_class": "mag_minimal_authority_function",
+        "source_refs": [
+          "/product_entry_manifest/grant_authoring_readiness",
+          "/product_entry_manifest/controlled_stage_attempt_projection"
+        ]
+      },
+      {
+        "authority_output_class": "verdict_refs",
+        "cannot_generate_reason": "Submission/export readiness is a grant package gate, not package existence.",
+        "function_id": "export_verdict",
+        "generated_by_opl": false,
+        "opl_generated_wrapper_allowed": true,
+        "owner": "med-autogrant",
+        "retention_class": "mag_minimal_authority_function",
+        "source_refs": [
+          "package submission-ready",
+          "/product_entry_manifest/artifact_locator_contract"
+        ]
+      },
+      {
+        "authority_output_class": "grant_owned_refs",
+        "cannot_generate_reason": "Grant package mutation and release require MAG package authority.",
+        "function_id": "package_authority",
+        "generated_by_opl": false,
+        "opl_generated_wrapper_allowed": true,
+        "owner": "med-autogrant",
+        "retention_class": "mag_minimal_authority_function",
+        "source_refs": [
+          "/product_entry_manifest/artifact_locator_contract",
+          "/product_entry_manifest/lifecycle_guarded_apply_proof"
+        ]
+      },
+      {
+        "authority_output_class": "owner_receipt",
+        "cannot_generate_reason": "Grant strategy memory body and accept/reject decisions are MAG authority.",
+        "function_id": "memory_accept_reject",
+        "generated_by_opl": false,
+        "opl_generated_wrapper_allowed": true,
+        "owner": "med-autogrant",
+        "retention_class": "mag_minimal_authority_function",
+        "source_refs": [
+          "/product_entry_manifest/domain_memory_descriptor_locator",
+          "/product_entry_manifest/controlled_domain_memory_apply_proof"
+        ]
+      },
+      {
+        "authority_output_class": "owner_receipt",
+        "cannot_generate_reason": "Only MAG can sign domain owner receipts or no-regression evidence.",
+        "function_id": "owner_receipt_signer",
+        "generated_by_opl": false,
+        "opl_generated_wrapper_allowed": true,
+        "owner": "med-autogrant",
+        "retention_class": "mag_minimal_authority_function",
+        "source_refs": [
+          "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/controlled_soak_no_regression_attempt"
+        ]
+      },
+      {
+        "authority_output_class": "domain_action_metadata",
+        "cannot_generate_reason": "Grant-native helpers encode funder, route, and blocker semantics.",
+        "function_id": "grant_helper",
+        "generated_by_opl": false,
+        "opl_generated_wrapper_allowed": true,
+        "owner": "med-autogrant",
+        "retention_class": "mag_minimal_authority_function",
+        "source_refs": [
+          "/product_entry_manifest/family_action_catalog",
+          "/product_entry_manifest/grant_transition_oracle"
+        ]
+      }
+    ],
+    "opl_family_conflict_blocker_projection": {
+      "allowed_classifications": [
+        "authority_conflict",
+        "evidence_blocker",
+        "quality_blocker",
+        "human_gate",
+        "receipt_conflict"
+      ],
+      "authority_boundary": {
+        "can_fallback_complete": false,
+        "can_write_domain_truth": false,
+        "domain": "truth_quality_artifact_gate_owner",
+        "opl": "route_project_audit_only",
+        "provider_completion_is_domain_ready": false
+      },
+      "envelope_kind": "opl_conflict_or_blocker.v1",
+      "forbidden_claims": [
+        "provider_completion_is_domain_ready",
+        "fallback_complete",
+        "opl_can_write_domain_truth",
+        "opl_can_declare_fundability_ready",
+        "opl_can_declare_export_ready"
+      ],
+      "mag_owned_inputs": [
+        "owner_receipt",
+        "typed_blocker",
+        "no_regression_evidence",
+        "verdict_refs"
+      ],
+      "projection_policy": "typed_blocker_only_no_fallback_completion",
+      "schema_ref": "contracts/family-orchestration/family-conflict-envelope.schema.json",
+      "surface_kind": "mag_opl_family_conflict_blocker_projection"
+    },
+    "opl_replacement_expectations": [
+      {
+        "authority_boundary": {
+          "opl_can_declare_export_ready": false,
+          "opl_can_replace_mag_authority_function": false,
+          "opl_can_write_domain_truth": false,
+          "opl_can_write_memory_body": false
+        },
+        "implemented_in_mag": false,
+        "mag_handoff_policy": "contract_expectation_only",
+        "mag_keeps": [
+          "funding_call_profile_task_lock_adapter",
+          "domain_blocker",
+          "owner_receipt"
+        ],
+        "opl_provides": [
+          "workspace_locator",
+          "source_receipt",
+          "freshness",
+          "repair_command"
+        ],
+        "owner": "one-person-lab",
+        "primitive_id": "workspace_source_intake_shell",
+        "state": "external_replacement_contract_expected"
+      },
+      {
+        "authority_boundary": {
+          "opl_can_declare_export_ready": false,
+          "opl_can_replace_mag_authority_function": false,
+          "opl_can_write_domain_truth": false,
+          "opl_can_write_memory_body": false
+        },
+        "implemented_in_mag": false,
+        "mag_handoff_policy": "contract_expectation_only",
+        "mag_keeps": [
+          "strategy_memory_policy",
+          "writeback_proposal",
+          "accept_reject",
+          "receipt_writer"
+        ],
+        "opl_provides": [
+          "body_free_locator",
+          "index",
+          "freshness",
+          "receipt_ref_projection"
+        ],
+        "owner": "one-person-lab",
+        "primitive_id": "memory_locator_writeback_transport",
+        "state": "external_replacement_contract_expected"
+      },
+      {
+        "authority_boundary": {
+          "opl_can_declare_export_ready": false,
+          "opl_can_replace_mag_authority_function": false,
+          "opl_can_write_domain_truth": false,
+          "opl_can_write_memory_body": false
+        },
+        "implemented_in_mag": false,
+        "mag_handoff_policy": "contract_expectation_only",
+        "mag_keeps": [
+          "package_refs",
+          "gap_report",
+          "submission_ready_verdict",
+          "manual_portal_boundary"
+        ],
+        "opl_provides": [
+          "package_lifecycle_shell",
+          "restore_provenance",
+          "retention",
+          "artifact_index"
+        ],
+        "owner": "one-person-lab",
+        "primitive_id": "artifact_package_lifecycle_shell",
+        "state": "external_replacement_contract_expected"
+      },
+      {
+        "authority_boundary": {
+          "opl_can_declare_export_ready": false,
+          "opl_can_replace_mag_authority_function": false,
+          "opl_can_write_domain_truth": false,
+          "opl_can_write_memory_body": false
+        },
+        "implemented_in_mag": false,
+        "mag_handoff_policy": "contract_expectation_only",
+        "mag_keeps": [
+          "grant_transition_oracle",
+          "stage_guard",
+          "typed_blocker",
+          "owner_action_metadata"
+        ],
+        "opl_provides": [
+          "matrix_runner",
+          "retry_dead_letter",
+          "dispatch_receipt",
+          "transition_audit"
+        ],
+        "owner": "one-person-lab",
+        "primitive_id": "generic_transition_runner",
+        "state": "external_replacement_contract_expected"
+      },
+      {
+        "authority_boundary": {
+          "opl_can_declare_export_ready": false,
+          "opl_can_replace_mag_authority_function": false,
+          "opl_can_write_domain_truth": false,
+          "opl_can_write_memory_body": false
+        },
+        "implemented_in_mag": false,
+        "mag_handoff_policy": "contract_expectation_only",
+        "mag_keeps": [
+          "grant_stage_truth",
+          "owner_receipt",
+          "typed_blocker",
+          "no_regression_evidence"
+        ],
+        "opl_provides": [
+          "typed_queue",
+          "stage_attempt_ledger",
+          "attempt_dispatch",
+          "typed_closeout_envelope"
+        ],
+        "owner": "one-person-lab",
+        "primitive_id": "functional_harness_queue_stage_attempt_typed_closeout",
+        "state": "external_replacement_contract_expected"
+      },
+      {
+        "authority_boundary": {
+          "opl_can_declare_export_ready": false,
+          "opl_can_replace_mag_authority_function": false,
+          "opl_can_write_domain_truth": false,
+          "opl_can_write_memory_body": false
+        },
+        "implemented_in_mag": false,
+        "mag_handoff_policy": "contract_expectation_only",
+        "mag_keeps": [
+          "grant_blocker_meaning",
+          "owner_receipt",
+          "manual_portal_boundary",
+          "safe_action_refs"
+        ],
+        "opl_provides": [
+          "restart_token",
+          "dead_letter_record",
+          "repair_command_projection",
+          "human_gate_state"
+        ],
+        "owner": "one-person-lab",
+        "primitive_id": "functional_harness_restart_dead_letter_repair_human_gate",
+        "state": "external_replacement_contract_expected"
+      },
+      {
+        "authority_boundary": {
+          "opl_can_declare_export_ready": false,
+          "opl_can_replace_mag_authority_function": false,
+          "opl_can_write_domain_truth": false,
+          "opl_can_write_memory_body": false
+        },
+        "implemented_in_mag": false,
+        "mag_handoff_policy": "contract_expectation_only",
+        "mag_keeps": [
+          "quality_verdict_refs",
+          "hard_blockers",
+          "safe_action_refs"
+        ],
+        "opl_provides": [
+          "workbench_panel",
+          "attention_queue",
+          "repair_command_projection"
+        ],
+        "owner": "one-person-lab",
+        "primitive_id": "operator_workbench_drilldown_shell",
+        "state": "external_replacement_contract_expected"
+      },
+      {
+        "authority_boundary": {
+          "opl_can_declare_export_ready": false,
+          "opl_can_replace_mag_authority_function": false,
+          "opl_can_write_domain_truth": false,
+          "opl_can_write_memory_body": false
+        },
+        "implemented_in_mag": false,
+        "mag_handoff_policy": "contract_expectation_only",
+        "mag_keeps": [
+          "owner_receipt_refs",
+          "typed_blocker_refs",
+          "verdict_refs",
+          "safe_action_refs"
+        ],
+        "opl_provides": [
+          "runtime_observability_export",
+          "slo_projection",
+          "repair_projection"
+        ],
+        "owner": "one-person-lab",
+        "primitive_id": "observability_repair_projection",
+        "state": "external_replacement_contract_expected"
+      },
+      {
+        "authority_boundary": {
+          "opl_can_declare_export_ready": false,
+          "opl_can_replace_mag_authority_function": false,
+          "opl_can_write_domain_truth": false,
+          "opl_can_write_memory_body": false
+        },
+        "implemented_in_mag": false,
+        "mag_handoff_policy": "contract_expectation_only",
+        "mag_keeps": [
+          "grant_domain_authority_pack",
+          "receipt_schema_examples",
+          "docs_taxonomy_example"
+        ],
+        "opl_provides": [
+          "new_agent_template",
+          "owner_boundary_checklist",
+          "no_forbidden_write_rule"
+        ],
+        "owner": "one-person-lab",
+        "primitive_id": "agent_scaffold_checklist",
+        "state": "external_replacement_contract_expected"
+      }
+    ],
+    "opl_runtime_observability_consumption": {
+      "authority_boundary": {
+        "can_authorize_artifact_export": false,
+        "can_authorize_quality_verdict": false,
+        "can_authorize_ready_verdict": false,
+        "can_execute_repair": false,
+        "can_write_domain_truth": false
+      },
+      "consumed_opl_surfaces": [
+        "runtime_tray_snapshot",
+        "stage_attempt_workbench",
+        "stage_attempt_usage_projection",
+        "stage_attempt_control_loop_projection",
+        "runtime_observability_export"
+      ],
+      "consumption_policy": "read_only_refs_and_counts_no_repair_execution",
+      "mag_provides_refs": [
+        "owner_receipt_refs",
+        "typed_blocker_refs",
+        "artifact_locator_refs",
+        "memory_receipt_refs",
+        "grant_transition_oracle_ref",
+        "safe_action_refs"
+      ],
+      "observability_export_kind": "opl_runtime_observability_export",
+      "stage_attempt_projection_consumption": {
+        "consumption_policy": "OPL_may_count_and_display_MAG_refs_only",
+        "mag_can_schedule_retry_dead_letter": false,
+        "mag_can_write_opl_stage_attempt_ledger": false,
+        "provider_completion_is_grant_ready": false,
+        "surface_kind": "mag_stage_attempt_projection_consumption"
+      },
+      "surface_kind": "mag_opl_runtime_observability_consumption"
+    },
+    "owner": "med-autogrant",
+    "privatized_functional_module_audit": {
+      "audit_id": "mag.privatized_functional_module_audit.v1",
+      "audit_refs": {
+        "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+        "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
+        "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+        "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
+        "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+      },
+      "claims_generic_runtime_removed_from_mag": false,
+      "claims_opl_replacement_exists": false,
+      "claims_production_long_run_soak_complete": false,
+      "classification_buckets": [
+        "declarative_pack_surface",
+        "refs_only_adapter",
+        "minimal_authority_function",
+        "legacy_proof_tombstone"
+      ],
+      "classification_policy": "classify_private_functional_surfaces_as_pack_refs_authority_or_legacy_proof",
+      "declarative_pack_surfaces": [
+        {
+          "active_caller_status": "active_declarative_pack_projection",
+          "active_callers": [
+            "product-entry-manifest runtime registration projection",
+            "product sidecar export OPL control plane registration",
+            "contracts/runtime-program/opl-family-contract-adoption.json"
+          ],
+          "cannot_absorb_reason": "OPL can absorb the registry shell, but cannot absorb MAG's domain id, stage semantics, or safe action metadata.",
+          "classification": "declarative_pack_surface",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/runtime_registration.py",
+            "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py",
+            "src/med_autogrant/product_entry_parts/manifest_runtime_companions.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
+            "/sidecar_export/opl_control_plane/registration"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "domain_id",
+            "stage_pack_refs",
+            "safe_action_refs"
+          ],
+          "mag_role": "domain_descriptor_pack_input",
+          "migration_action": "Express as declarative grant pack metadata; OPL generated registry surfaces consume refs without MAG owning generic runtime registration.",
+          "module_id": "runtime_registration",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "domain_runtime_registry",
+            "stage_led_activation",
+            "provider_backed_runtime_registration"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "MAG must expose its domain id, stage pack refs, and safe action refs so OPL can discover the grant agent without owning grant truth."
+        },
+        {
+          "active_caller_status": "active_declarative_stage_pack_projection",
+          "active_callers": [
+            "product-entry-manifest task_lifecycle/progress_projection",
+            "product status",
+            "product user-loop"
+          ],
+          "cannot_absorb_reason": "Generic lifecycle can be absorbed; grant lifecycle stage semantics and checkpoint interpretation remain MAG authority.",
+          "classification": "declarative_pack_surface",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/progress.py",
+            "src/med_autogrant/product_entry_parts/progress_projection_helpers.py",
+            "src/med_autogrant/product_entry_parts/runtime_surfaces.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/task_lifecycle",
+            "/product_entry_manifest/progress_projection"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "grant_lifecycle_stage",
+            "grant_checkpoint_meaning"
+          ],
+          "mag_role": "grant_stage_pack_and_checkpoint_semantics",
+          "migration_action": "Move generic checkpoint/lifecycle shell to generated OPL surfaces; keep MAG stage ids and checkpoint semantics in the declarative grant pack.",
+          "module_id": "task_lifecycle",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "generic_task_checkpoint_shell",
+            "stage_attempt_lifecycle",
+            "human_gate_projection"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "Grant stages such as critique, revision, freeze, and package readiness carry domain meaning that OPL cannot infer generically."
+        },
+        {
+          "active_caller_status": "active_declarative_source_requirements_pack_projection",
+          "active_callers": [
+            "workspace summarize/validate/scaffold commands",
+            "product-entry preflight",
+            "product manifest workspace_locator"
+          ],
+          "cannot_absorb_reason": "OPL can absorb source transport and freshness shell; it cannot own funding call interpretation or grant task lock.",
+          "classification": "declarative_pack_surface",
+          "code_paths": [
+            "src/med_autogrant/workspace.py",
+            "src/med_autogrant/workspace_index.py",
+            "src/med_autogrant/workspace_scaffold.py",
+            "src/med_autogrant/workspace_validation.py",
+            "src/med_autogrant/product_entry_parts/preflight.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/workspace_locator",
+            "/product_entry_manifest/product_entry_preflight"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "funding_call_interpretation",
+            "profile_selection",
+            "grant_task_lock"
+          ],
+          "mag_role": "funding_call_task_lock_pack_input",
+          "migration_action": "Represent funding-call/task-lock requirements as declarative pack inputs; OPL owns source transport, freshness, and repair shell.",
+          "module_id": "source_intake_shell",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "workspace_source_intake_shell",
+            "source_receipt",
+            "freshness_repair_projection"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "Funding-call interpretation, applicant profile fit, and grant task lock are domain authority decisions."
+        }
+      ],
+      "domain_authority_do_not_retire": [
+        "grant_lifecycle_stage",
+        "package_readiness_submission_ready",
+        "fundability_verdict",
+        "authoring_quality_verdict",
+        "submission_ready_export_verdict",
+        "grant_transition_oracle",
+        "owner_receipt",
+        "grant_strategy_memory_accept_reject"
+      ],
+      "fail_closed_rules": {
+        "delete_fundability_or_quality_verdict_as_generic_readiness": false,
+        "delete_grant_lifecycle_stage_as_generic_lifecycle": false,
+        "delete_package_readiness_as_generic_package_lifecycle": false,
+        "mag_can_rebuild_generic_runtime": false,
+        "opl_observability_can_create_verdict": false,
+        "provider_completion_is_grant_ready": false
+      },
+      "mag_owned_grant_authority_surfaces": [
+        {
+          "active_caller_status": "active_mag_authority_keep",
+          "active_callers": [
+            "owner receipt contract identity lifecycle_stage",
+            "task lifecycle projection",
+            "stage attempt closeout"
+          ],
+          "cannot_absorb_reason": "OPL generic lifecycle cannot determine grant-stage readiness, critique meaning, or package-stage transition validity.",
+          "classification": "minimal_authority_function",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/runtime_contracts.py",
+            "src/med_autogrant/product_entry_parts/progress.py",
+            "src/med_autogrant/product_entry_parts/owner_receipts.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/owner_receipt_contract/identity/lifecycle_stage",
+            "/product_entry_manifest/task_lifecycle"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "lifecycle_stage",
+            "stage_meaning",
+            "owner_receipt"
+          ],
+          "mag_role": "grant_truth_owner",
+          "migration_action": "Expose refs to OPL display/routing; do not migrate authority.",
+          "module_id": "grant_lifecycle_stage",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "display_and_route_only"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "Grant lifecycle stage is domain truth and gates owner receipts."
+        },
+        {
+          "active_caller_status": "active_mag_verdict_authority_keep",
+          "active_callers": [
+            "product-entry manifest grant readiness",
+            "thin surface verdict_authority_refs",
+            "submission-ready package validation"
+          ],
+          "cannot_absorb_reason": "OPL can show readiness refs, but cannot make fundability, quality, or export verdicts.",
+          "classification": "minimal_authority_function",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/manifest_readiness.py",
+            "src/med_autogrant/product_entry_parts/consumer_thinning.py",
+            "src/med_autogrant/final_package_validation.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/grant_authoring_readiness",
+            "/product_entry_manifest/mag_consumer_thinning_contract/verdict_authority_refs"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "fundability_verdict",
+            "authoring_quality_verdict",
+            "submission_ready_export_verdict"
+          ],
+          "mag_role": "verdict_authority_owner",
+          "migration_action": "Expose verdict refs to OPL readiness shell; do not migrate verdict authority.",
+          "module_id": "fundability_quality_export_verdicts",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "refs_only_quality_readiness_projection_shell"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "Fundability, authoring quality, and export readiness are grant-review judgments."
+        },
+        {
+          "active_caller_status": "active_mag_package_authority_keep",
+          "active_callers": [
+            "product package-lifecycle-handoff",
+            "package submission-ready",
+            "artifact locator contract"
+          ],
+          "cannot_absorb_reason": "OPL artifact lifecycle can manage refs and retention, but cannot approve a grant package.",
+          "classification": "minimal_authority_function",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
+            "src/med_autogrant/final_package.py",
+            "src/med_autogrant/final_package_validation.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/artifact_locator_contract",
+            "package submission-ready"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "package_authority",
+            "submission_ready_verdict",
+            "export_gate"
+          ],
+          "mag_role": "package_authority_owner",
+          "migration_action": "Let OPL own artifact/package lifecycle shell; keep submission-ready and export gate authority in MAG.",
+          "module_id": "package_readiness_submission_ready",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "artifact_package_lifecycle_shell"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "Submission-ready is a domain export gate, not generic package existence."
+        },
+        {
+          "active_caller_status": "active_domain_oracle_keep_generic_runner_external",
+          "active_callers": [
+            "grant_transition_oracle manifest surface",
+            "family stage control plane",
+            "OPL generic transition runner expected input"
+          ],
+          "cannot_absorb_reason": "OPL can execute a generic runner, but cannot own the grant transition table's meaning.",
+          "classification": "minimal_authority_function",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/functional_closure.py",
+            "src/med_autogrant/product_entry_parts/orchestration_companions.py",
+            "src/med_autogrant/product_entry_parts/consumer_thinning.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/grant_transition_oracle",
+            "/product_entry_manifest/ideal_state_closure_status/mag_owned_transition_oracle"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "fundability_guards",
+            "authoring_quality_guards",
+            "package_human_gate_guards"
+          ],
+          "mag_role": "domain_transition_spec_owner",
+          "migration_action": "OPL should run the generic transition matrix; MAG keeps oracle fixtures and grant guard semantics.",
+          "module_id": "grant_transition_oracle",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "generic_transition_runner"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "The oracle encodes grant-specific stage guards and quality/export blockers."
+        },
+        {
+          "active_caller_status": "active_mag_receipt_authority_keep",
+          "active_callers": [
+            "product owner-receipt-evidence",
+            "product hosted-receipt-verification",
+            "product sidecar dispatch stage-attempt/closeout"
+          ],
+          "cannot_absorb_reason": "OPL ledger can store refs, but cannot sign or reinterpret MAG owner receipt.",
+          "classification": "minimal_authority_function",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/owner_receipts.py",
+            "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
+            "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
+            "src/med_autogrant/product_entry_parts/sidecar.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/owner_receipt_contract",
+            "/product_entry_manifest/controlled_soak_no_regression_attempt"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "domain_owner_receipt",
+            "typed_blocker",
+            "no_regression_evidence"
+          ],
+          "mag_role": "receipt_authority_owner",
+          "migration_action": "OPL should own receipt transport/ledger projection; MAG retains receipt authority and no-regression meaning.",
+          "module_id": "owner_receipt_and_no_regression_evidence",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "receipt_transport_and_ledger_projection"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "Owner receipt is the domain authorization boundary for grant mutations."
+        },
+        {
+          "active_caller_status": "active_mag_memory_body_decision_keep",
+          "active_callers": [
+            "product domain-memory-receipt-evidence",
+            "product memory-receipt-projection",
+            "product sidecar dispatch domain-memory/decide"
+          ],
+          "cannot_absorb_reason": "OPL can transport refs and writeback proposals, but cannot own memory body or accept/reject decisions.",
+          "classification": "minimal_authority_function",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/domain_memory.py",
+            "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
+            "src/med_autogrant/product_entry_parts/memory_receipt_projection.py",
+            "contracts/runtime-program/domain-memory-seed-fixture.json"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+            "/product_entry_manifest/controlled_domain_memory_apply_proof"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "grant_strategy_memory_body",
+            "writeback_accept_reject",
+            "memory_receipt_writer"
+          ],
+          "mag_role": "memory_body_decision_owner",
+          "migration_action": "OPL should own body-free memory locator/writeback transport; MAG keeps memory body, accept/reject decision, and receipt writer.",
+          "module_id": "grant_memory_accept_reject",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "memory_locator_writeback_transport"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "Grant strategy memory body and accept/reject policy are domain knowledge authority."
+        }
+      ],
+      "mag_thin_adapter_code_surfaces": [
+        "product_entry_manifest_builder",
+        "product_sidecar_adapter",
+        "domain_entry",
+        "receipt_schema_and_writer",
+        "grant_transition_oracle",
+        "refs_only_projection_builders",
+        "focused_contract_tests"
+      ],
+      "opl_must_absorb_code_surfaces": [
+        "workspace_source_intake_shell",
+        "session_ledger",
+        "attention_queue",
+        "typed_queue",
+        "stage_attempt_ledger",
+        "generic_lifecycle_adapter",
+        "artifact_package_lifecycle_shell",
+        "runtime_observability_export",
+        "operator_workbench_shell",
+        "generic_scheduler_daemon"
+      ],
+      "opl_unified_audit_read_model": true,
+      "owner": "med-autogrant",
+      "refs_only_adapter_surfaces": [
+        {
+          "active_caller_status": "active_refs_only_adapter_no_generic_lifecycle_owner",
+          "active_callers": [
+            "product lifecycle-receipt-evidence",
+            "product lifecycle-receipt-bundle",
+            "product sidecar dispatch lifecycle/receipt"
+          ],
+          "cannot_absorb_reason": "Generic lifecycle transport is absorbable; domain mutation approval and package authority cannot move out of MAG.",
+          "classification": "refs_only_adapter",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
+            "src/med_autogrant/product_entry_parts/owner_receipts.py",
+            "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
+            "src/med_autogrant/product_entry_parts/runtime_registration.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/lifecycle_guarded_apply_proof",
+            "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "domain_mutation_requires_mag_owner_receipt",
+            "package_authority"
+          ],
+          "mag_role": "guarded_receipt_refs_adapter",
+          "migration_action": "Keep only owner receipt/blocker refs for OPL lifecycle shell; do not expose MAG package body, memory body, or lifecycle state.",
+          "module_id": "lifecycle_adapter",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "cleanup_restore_retention_shell",
+            "artifact_locator_ledger",
+            "lifecycle_receipt_transport"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "Cleanup, restore, and retention events that touch grant artifacts need MAG owner receipt and package authority refs."
+        },
+        {
+          "active_caller_status": "active_refs_only_observability_adapter_no_repair_execution",
+          "active_callers": [
+            "product controlled-soak-receipt-observability",
+            "product stage-attempt-observability",
+            "product continuous-receipt-reconciliation"
+          ],
+          "cannot_absorb_reason": "OPL can absorb display/SLO/repair shell; it cannot create grant verdicts or mutate receipt authority from observability data.",
+          "classification": "refs_only_adapter",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/receipt_observability.py",
+            "src/med_autogrant/product_entry_parts/stage_attempt_observability.py",
+            "src/med_autogrant/product_entry_parts/autonomy_observability.py",
+            "src/med_autogrant/product_entry_parts/continuous_reconciliation.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
+            "/sidecar_export/opl_runtime_observability_consumption"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "owner_receipt_refs",
+            "typed_blocker_refs",
+            "verdict_refs"
+          ],
+          "mag_role": "refs_counts_blockers_provider",
+          "migration_action": "Expose refs, counts, blockers, and verdict refs only; OPL owns display, SLO, repair projection, and workbench shell.",
+          "module_id": "observability",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "runtime_observability_export",
+            "slo_projection",
+            "repair_projection"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "MAG observability projections carry grant owner receipt refs, typed blockers, and verdict refs needed by the OPL read model."
+        },
+        {
+          "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+          "active_callers": [
+            "product sidecar export",
+            "product sidecar dispatch",
+            "product manifest/status/direct-entry/user-loop"
+          ],
+          "cannot_absorb_reason": "The generic shell can be absorbed, but MAG-specific dispatch validation, receipt refs, and safe action semantics remain domain owned.",
+          "classification": "refs_only_adapter",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/sidecar.py",
+            "src/med_autogrant/product_entry_parts/entry.py",
+            "src/med_autogrant/product_entry_parts/manifest.py",
+            "src/med_autogrant/product_entry.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/product_entry_status",
+            "/sidecar_export"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "grant_status_meaning",
+            "owner_receipt_refs",
+            "safe_action_refs"
+          ],
+          "mag_role": "guarded_domain_sidecar_refs_adapter",
+          "migration_action": "Keep guarded domain dispatch and sidecar refs; OPL generated surfaces own product/operator/action-routing shell.",
+          "module_id": "sidecar_product_status_shell",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "product_status_shell",
+            "operator_projection_shell",
+            "action_routing_shell"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "OPL needs a MAG-owned sidecar adapter to read receipts and invoke guarded domain actions without owning grant truth."
+        },
+        {
+          "active_caller_status": "active_refs_only_package_authority_adapter",
+          "active_callers": [
+            "product package-lifecycle-handoff",
+            "package submission-ready",
+            "domain runtime package surface"
+          ],
+          "cannot_absorb_reason": "OPL can absorb artifact lifecycle transport and gallery shell; it cannot declare MAG package readiness or export verdict.",
+          "classification": "refs_only_adapter",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
+            "src/med_autogrant/final_package.py",
+            "src/med_autogrant/final_package_validation.py",
+            "src/med_autogrant/domain_runtime_parts/package_surface.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/artifact_locator_contract",
+            "/product_entry_manifest/lifecycle_guarded_apply_proof"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "submission_ready_verdict",
+            "export_gate",
+            "manual_portal_boundary"
+          ],
+          "mag_role": "package_authority_and_gap_refs_provider",
+          "migration_action": "Expose package refs, gap refs, and verdict refs only; OPL owns lifecycle shell, restore/retention ledger, and package refs index.",
+          "module_id": "package_lifecycle_shell",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "artifact_package_lifecycle_shell",
+            "restore_retention_ledger",
+            "package_refs_index"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "Submission-ready export is a grant-domain authority surface, not a generic artifact lifecycle success flag."
+        },
+        {
+          "active_caller_status": "active_refs_only_no_repo_daemon_owner",
+          "active_callers": [
+            "product user-loop and status refs projections",
+            "product sidecar export/dispatch",
+            "runtime defaults for local diagnostic commands"
+          ],
+          "cannot_absorb_reason": "The workbench and scheduler can be absorbed; MAG's domain action metadata and typed blocker meaning cannot.",
+          "classification": "refs_only_adapter",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/loop_contracts.py",
+            "src/med_autogrant/product_entry_parts/receipt_observability.py",
+            "src/med_autogrant/product_entry_parts/sidecar.py",
+            "src/med_autogrant/runtime_defaults.py"
+          ],
+          "current_surface_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract/consumed_opl_standard_surfaces",
+            "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+          ],
+          "implemented_as_generic_runtime_in_mag": false,
+          "mag_retained_authority": [
+            "domain_action_metadata",
+            "typed_blocker"
+          ],
+          "mag_role": "action_metadata_and_blocker_refs_only",
+          "migration_action": "Expose action metadata and typed blockers only; OPL owns app workbench, generic scheduler, provider daemon, and repair command projection.",
+          "module_id": "human_workbench_scheduler_daemon",
+          "opl_can_declare_verdict": false,
+          "opl_can_write_grant_truth": false,
+          "opl_expected_primitives": [
+            "app_workbench_shell",
+            "generic_scheduler",
+            "provider_daemon",
+            "repair_command_projection"
+          ],
+          "owner": "med-autogrant",
+          "retention_reason": "MAG still needs refs-only user-loop/status projections for direct skill and OPL sidecar callers."
+        }
+      ],
+      "representative_private_functional_surfaces": {
+        "local_runtime_journal_attempt_ledger": {
+          "active_caller_status": "legacy_local_journal_attempt_ledger_no_active_caller",
+          "migration_action": "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs",
+          "module_ref": "local_runtime_journal_attempt_ledger"
+        },
+        "optional_hermes_state_db": {
+          "active_caller_status": "legacy_proof_tombstone_no_active_default_caller",
+          "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_legacy_proof_refs_only",
+          "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
+        },
+        "sidecar_dispatch_product_shell": {
+          "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+          "migration_action": "OPL_generates_product_operator_shell_MAG_keeps_guarded_domain_adapter_refs",
+          "module_ref": "sidecar_product_status_shell"
+        }
+      },
+      "retire_or_tombstone_surfaces": [
+        {
+          "active_caller_allowed": false,
+          "active_caller_status": "legacy_proof_tombstone_no_active_default_caller",
+          "active_callers": [],
+          "cannot_absorb_reason": "Default runtime ownership must not stay in MAG; optional proof helpers remain only because they bind MAG closeout packets to external executor receipts.",
+          "classification": "legacy_proof_tombstone",
+          "code_paths": [
+            "src/med_autogrant/upstream_hermes.py",
+            "src/med_autogrant/hermes_native_executor.py",
+            "src/med_autogrant/opl_hermes_executor_helper.py",
+            "src/med_autogrant/product_entry_parts/executor_defaults.py"
+          ],
+          "compatibility_alias_allowed": false,
+          "evidence_refs": [
+            "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+            "docs/status.md#旧面退役校准"
+          ],
+          "migration_action": "Keep old Hermes/Gateway/local-manager wording as legacy proof provenance only; current active callers must use explicit executor adapter refs.",
+          "module_id": "default_hermes_gateway_local_manager_runtime_owner",
+          "owner": "none_active",
+          "retention_reason": "Historical proof files help audit non-default executor receipt behavior, but they are not an active runtime owner or default caller.",
+          "state": "retired_or_tombstone_only"
+        },
+        {
+          "active_caller_allowed": false,
+          "active_caller_status": "legacy_local_journal_attempt_ledger_no_active_caller",
+          "active_callers": [],
+          "cannot_absorb_reason": "The legacy local ledger itself should not be absorbed as MAG-owned code; OPL should provide the generic ledger while MAG keeps safe action refs and grant next-action meaning.",
+          "classification": "legacy_proof_tombstone",
+          "code_paths": [
+            "src/med_autogrant/product_entry_parts/loop_contracts.py",
+            "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
+            "src/med_autogrant/hosted_contract_bundle.py",
+            "src/med_autogrant/domain_runtime_parts/io.py",
+            "src/med_autogrant/domain_runtime_parts/runtime_ops.py"
+          ],
+          "compatibility_alias_allowed": false,
+          "evidence_refs": [
+            "/product_entry_manifest/session_continuity",
+            "/product_entry_manifest/automation",
+            "/sidecar_export/user_loop_attention_queue"
+          ],
+          "migration_action": "Treat old local journal and attempt ledger state as tombstone/proof history; OPL owns session ledger, typed attention queue, wakeup scheduler, and stage-attempt ledger.",
+          "module_id": "local_runtime_journal_attempt_ledger",
+          "owner": "none_active",
+          "retention_reason": "Historical local journal proof remains useful as a regression oracle for refs-only closeout behavior, not as a live MAG ledger owner.",
+          "state": "retired_or_tombstone_only"
+        },
+        {
+          "active_caller_allowed": false,
+          "active_caller_status": "retired_no_active_caller_expected",
+          "active_callers": [],
+          "cannot_absorb_reason": "This is retired compatibility glue, not an OPL primitive to absorb.",
+          "classification": "legacy_proof_tombstone",
+          "code_paths": [
+            "src/med_autogrant/domain_runtime_parts/patch_targets.py",
+            "src/med_autogrant/domain_runtime.py"
+          ],
+          "compatibility_alias_allowed": false,
+          "evidence_refs": [
+            "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
+            "src/med_autogrant/domain_runtime_parts/patch_targets.py"
+          ],
+          "migration_action": "Remove or keep only tombstone/provenance; do not add compatibility aliases.",
+          "module_id": "domain_runtime_patch_bridge",
+          "owner": "none_active",
+          "retention_reason": "No active runtime authority should depend on the patch bridge.",
+          "state": "retired_or_tombstone_only"
+        },
+        {
+          "active_caller_allowed": false,
+          "active_caller_status": "aggregate_removed_focused_cases_active",
+          "active_callers": [
+            "focused product_entry_cases tests"
+          ],
+          "cannot_absorb_reason": "Testing layout is repo-local hygiene, not a generic OPL runtime primitive.",
+          "classification": "legacy_proof_tombstone",
+          "code_paths": [
+            "tests/test_product_entry.py",
+            "tests/product_entry_cases/"
+          ],
+          "compatibility_alias_allowed": false,
+          "evidence_refs": [
+            "tests/test_product_entry.py",
+            "tests/product_entry_cases/"
+          ],
+          "migration_action": "Keep focused tests and remove aggregate compatibility assertions.",
+          "module_id": "compatibility_only_product_entry_aggregate_test",
+          "owner": "none_active",
+          "retention_reason": "Focused tests protect machine-readable contracts without preserving old facade shape.",
+          "state": "retired_or_tombstone_only"
+        },
+        {
+          "active_caller_allowed": false,
+          "active_caller_status": "legacy_alias_retired_grouped_commands_active",
+          "active_callers": [
+            "grouped public command tokens"
+          ],
+          "cannot_absorb_reason": "Flat aliases are retired local CLI surface, not a reusable OPL primitive.",
+          "classification": "legacy_proof_tombstone",
+          "code_paths": [
+            "src/med_autogrant/cli_parts/parser_adders.py",
+            "src/med_autogrant/cli_parts/handlers.py",
+            "src/med_autogrant/public_cli.py"
+          ],
+          "compatibility_alias_allowed": false,
+          "evidence_refs": [
+            "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
+            "docs/status.md#旧面退役校准"
+          ],
+          "migration_action": "Route callers to grouped product/workspace/pass/package commands.",
+          "module_id": "legacy_flat_shell_aliases",
+          "owner": "none_active",
+          "retention_reason": "Machine command fields may stay stable, but user-facing flat aliases should not.",
+          "state": "retired_or_tombstone_only"
+        },
+        {
+          "active_caller_allowed": false,
+          "active_caller_status": "no_default_daemon_local_diagnostic_only",
+          "active_callers": [
+            "runtime run/resume local diagnostic commands",
+            "product-entry runtime_control projection"
+          ],
+          "cannot_absorb_reason": "OPL can absorb production scheduler/daemon; MAG local diagnostics remain scoped to workspace validation and grant route checks.",
+          "classification": "legacy_proof_tombstone",
+          "code_paths": [
+            "src/med_autogrant/runtime_defaults.py",
+            "src/med_autogrant/domain_runtime_parts/substrate.py",
+            "src/med_autogrant/product_entry_parts/runtime_surfaces.py"
+          ],
+          "compatibility_alias_allowed": false,
+          "evidence_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+          ],
+          "migration_action": "OPL should own provider scheduler/daemon; MAG keeps local diagnostic run/resume and refs-only runtime_control projection.",
+          "module_id": "repo_owned_scheduler_daemon",
+          "owner": "none_active",
+          "retention_reason": "Local diagnostic commands help direct callers, but are not production daemon ownership.",
+          "state": "retired_or_tombstone_only"
+        }
+      ],
+      "state": "manifest_projected_for_opl_unified_audit",
+      "surface_kind": "mag_privatized_functional_module_audit",
+      "target_domain_id": "med-autogrant"
+    },
+    "sidecar_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+    "standard_agent_scaffold_alignment": {
+      "authority_boundary": {
+        "domain_entry_owner": "med-autogrant",
+        "domain_truth_owner": "med-autogrant",
+        "mag_is_knowledge_only_repository": false,
+        "mag_owns_generated_product_surface_template": false,
+        "mag_owns_generic_runtime_framework": false,
+        "mag_owns_generic_scaffold_template": false,
+        "opl_scaffold_owner": "one-person-lab",
+        "schema_owner": "med-autogrant",
+        "sidecar_owner": "med-autogrant",
+        "test_owner": "med-autogrant"
+      },
+      "forbidden_owner_roles_ref": "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
+      "guard_id": "mag.standard_agent_scaffold.thin_surface_guard.v1",
+      "knowledge_only_repository": false,
+      "output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
+      "physical_follow_through_ref": "/product_entry_manifest/physical_skeleton_follow_through",
+      "required_repo_boundaries": [
+        "agent",
+        "contracts",
+        "runtime",
+        "docs"
+      ],
+      "retained_program_surface_kinds": [
+        "domain_entry",
+        "product_entry_manifest_builder",
+        "product_sidecar_adapter",
+        "schema_contract",
+        "focused_product_entry_tests",
+        "declarative_grant_pack_compiler_input",
+        "minimal_authority_functions"
+      ],
+      "retained_program_surface_refs": [
+        "src/med_autogrant/domain_entry.py",
+        "src/med_autogrant/product_entry.py",
+        "src/med_autogrant/product_entry_parts/sidecar.py",
+        "schemas/v1/product-entry-manifest.schema.json",
+        "tests/product_entry_cases/test_sidecar.py",
+        "tests/product_entry_cases/test_functional_closure.py"
+      ],
+      "retains_domain_program_surfaces": true,
+      "scaffold_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
+      "surface_kind": "mag_standard_agent_scaffold_thin_surface_guard",
+      "target_domain_id": "med-autogrant"
+    },
+    "state": "handoff_ready_external_opl_replacement_gated",
+    "surface_kind": "mag_consumer_thinning_contract",
+    "target_domain_id": "med-autogrant",
+    "thin_surface_output_guard": {
+      "allowed_output_classes": [
+        "grant_owned_refs",
+        "owner_receipt",
+        "typed_blocker",
+        "verdict_refs",
+        "domain_action_metadata"
+      ],
+      "authority_boundary": {
+        "domain_truth_owner": "med-autogrant",
+        "mag_can_emit_family_conflict_completion_claim": false,
+        "mag_can_emit_functional_harness_runtime_state": false,
+        "mag_can_emit_generated_wrapper_owner_state": false,
+        "mag_can_emit_generic_observability_state": false,
+        "mag_can_emit_generic_runtime_state": false,
+        "mag_can_emit_generic_workbench_state": false,
+        "mag_can_emit_hermes_state_db_runtime_state": false,
+        "mag_can_emit_local_attempt_ledger_state": false,
+        "mag_can_emit_package_lifecycle_state": false,
+        "mag_can_emit_private_functional_state": false,
+        "mag_can_emit_source_intake_state": false,
+        "opl_can_declare_export_ready": false,
+        "opl_can_write_domain_truth": false,
+        "opl_can_write_memory_body": false,
+        "opl_harness_pass_can_declare_export_ready": false,
+        "opl_harness_pass_can_declare_grant_ready": false,
+        "opl_role": "replacement_owner_and_ref_consumer_only",
+        "owner_receipt_authority": "med-autogrant"
+      },
+      "consumes_opl_replacement_expectations": true,
+      "forbidden_output_classes": [
+        "generic_scheduler_state",
+        "generic_daemon_state",
+        "generic_lifecycle_ledger",
+        "generic_queue_record",
+        "generic_attempt_ledger_record",
+        "generic_runner_decision",
+        "generic_workbench_state",
+        "generic_workspace_source_intake_state",
+        "generic_memory_transport_state",
+        "generic_artifact_lifecycle_state",
+        "generic_artifact_gallery_state",
+        "generic_operator_workbench_state",
+        "generic_observability_slo_state",
+        "local_runtime_journal_state",
+        "local_attempt_ledger_state",
+        "attention_queue_state",
+        "stage_attempt_ledger_state",
+        "package_lifecycle_state",
+        "source_intake_state",
+        "operator_workbench_state",
+        "scheduler_daemon_state",
+        "hermes_state_db_runtime_state",
+        "family_conflict_envelope_completion_claim",
+        "functional_harness_runtime_state",
+        "opl_harness_pass_grant_ready",
+        "opl_harness_pass_export_ready",
+        "observability_export_execution_result",
+        "grant_artifact_content",
+        "memory_body",
+        "generated_product_status_owner_state",
+        "generated_user_loop_owner_state",
+        "generated_sidecar_owner_state",
+        "generated_grouped_cli_api_owner_state",
+        "generated_projection_owner_state",
+        "generated_lifecycle_wrapper_owner_state"
+      ],
+      "guard_id": "mag.thin_surface.output_guard.v1",
+      "output_policy": "grant_refs_and_receipts_only_no_generic_runtime_state",
+      "private_functional_state_output_classes_forbidden": [
+        "local_runtime_journal_state",
+        "local_attempt_ledger_state",
+        "attention_queue_state",
+        "stage_attempt_ledger_state",
+        "package_lifecycle_state",
+        "source_intake_state",
+        "operator_workbench_state",
+        "scheduler_daemon_state",
+        "hermes_state_db_runtime_state"
+      ],
+      "replacement_expectations_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations",
+      "required_sidecar_return_refs": {
+        "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
+        "controlled_stage_attempt_projection_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+        "declarative_grant_pack_compiler_input_ref": "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+        "functional_harness_consumer_coverage_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_harness_consumer_coverage",
+        "functional_structure_gap_zero_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_structure_gap_zero_classification",
+        "generated_surface_handoff_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+        "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
+        "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
+        "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+        "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+      },
+      "surface_kind": "mag_thin_surface_output_guard",
+      "target_domain_id": "med-autogrant"
+    },
+    "verdict_authority_refs": {
+      "export_verdict_owner": "med-autogrant",
+      "fundability_verdict_owner": "med-autogrant",
+      "quality_verdict_owner": "med-autogrant",
+      "submission_ready_gate_ref": "package submission-ready"
+    },
+    "version": "v1"
+  },
+  "privatized_functional_module_audit": {
+    "audit_id": "mag.privatized_functional_module_audit.v1",
+    "audit_refs": {
+      "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+      "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
+      "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+      "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
+      "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+    },
+    "claims_generic_runtime_removed_from_mag": false,
+    "claims_opl_replacement_exists": false,
+    "claims_production_long_run_soak_complete": false,
+    "classification_buckets": [
+      "declarative_pack_surface",
+      "refs_only_adapter",
+      "minimal_authority_function",
+      "legacy_proof_tombstone"
+    ],
+    "classification_policy": "classify_private_functional_surfaces_as_pack_refs_authority_or_legacy_proof",
+    "declarative_pack_surfaces": [
+      {
+        "active_caller_status": "active_declarative_pack_projection",
+        "active_callers": [
+          "product-entry-manifest runtime registration projection",
+          "product sidecar export OPL control plane registration",
+          "contracts/runtime-program/opl-family-contract-adoption.json"
+        ],
+        "cannot_absorb_reason": "OPL can absorb the registry shell, but cannot absorb MAG's domain id, stage semantics, or safe action metadata.",
+        "classification": "declarative_pack_surface",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/runtime_registration.py",
+          "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py",
+          "src/med_autogrant/product_entry_parts/manifest_runtime_companions.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
+          "/sidecar_export/opl_control_plane/registration"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "domain_id",
+          "stage_pack_refs",
+          "safe_action_refs"
+        ],
+        "mag_role": "domain_descriptor_pack_input",
+        "migration_action": "Express as declarative grant pack metadata; OPL generated registry surfaces consume refs without MAG owning generic runtime registration.",
+        "module_id": "runtime_registration",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "domain_runtime_registry",
+          "stage_led_activation",
+          "provider_backed_runtime_registration"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "MAG must expose its domain id, stage pack refs, and safe action refs so OPL can discover the grant agent without owning grant truth."
+      },
+      {
+        "active_caller_status": "active_declarative_stage_pack_projection",
+        "active_callers": [
+          "product-entry-manifest task_lifecycle/progress_projection",
+          "product status",
+          "product user-loop"
+        ],
+        "cannot_absorb_reason": "Generic lifecycle can be absorbed; grant lifecycle stage semantics and checkpoint interpretation remain MAG authority.",
+        "classification": "declarative_pack_surface",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/progress.py",
+          "src/med_autogrant/product_entry_parts/progress_projection_helpers.py",
+          "src/med_autogrant/product_entry_parts/runtime_surfaces.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/task_lifecycle",
+          "/product_entry_manifest/progress_projection"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "grant_lifecycle_stage",
+          "grant_checkpoint_meaning"
+        ],
+        "mag_role": "grant_stage_pack_and_checkpoint_semantics",
+        "migration_action": "Move generic checkpoint/lifecycle shell to generated OPL surfaces; keep MAG stage ids and checkpoint semantics in the declarative grant pack.",
+        "module_id": "task_lifecycle",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "generic_task_checkpoint_shell",
+          "stage_attempt_lifecycle",
+          "human_gate_projection"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "Grant stages such as critique, revision, freeze, and package readiness carry domain meaning that OPL cannot infer generically."
+      },
+      {
+        "active_caller_status": "active_declarative_source_requirements_pack_projection",
+        "active_callers": [
+          "workspace summarize/validate/scaffold commands",
+          "product-entry preflight",
+          "product manifest workspace_locator"
+        ],
+        "cannot_absorb_reason": "OPL can absorb source transport and freshness shell; it cannot own funding call interpretation or grant task lock.",
+        "classification": "declarative_pack_surface",
+        "code_paths": [
+          "src/med_autogrant/workspace.py",
+          "src/med_autogrant/workspace_index.py",
+          "src/med_autogrant/workspace_scaffold.py",
+          "src/med_autogrant/workspace_validation.py",
+          "src/med_autogrant/product_entry_parts/preflight.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/workspace_locator",
+          "/product_entry_manifest/product_entry_preflight"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "funding_call_interpretation",
+          "profile_selection",
+          "grant_task_lock"
+        ],
+        "mag_role": "funding_call_task_lock_pack_input",
+        "migration_action": "Represent funding-call/task-lock requirements as declarative pack inputs; OPL owns source transport, freshness, and repair shell.",
+        "module_id": "source_intake_shell",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "workspace_source_intake_shell",
+          "source_receipt",
+          "freshness_repair_projection"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "Funding-call interpretation, applicant profile fit, and grant task lock are domain authority decisions."
+      }
+    ],
+    "domain_authority_do_not_retire": [
+      "grant_lifecycle_stage",
+      "package_readiness_submission_ready",
+      "fundability_verdict",
+      "authoring_quality_verdict",
+      "submission_ready_export_verdict",
+      "grant_transition_oracle",
+      "owner_receipt",
+      "grant_strategy_memory_accept_reject"
+    ],
+    "fail_closed_rules": {
+      "delete_fundability_or_quality_verdict_as_generic_readiness": false,
+      "delete_grant_lifecycle_stage_as_generic_lifecycle": false,
+      "delete_package_readiness_as_generic_package_lifecycle": false,
+      "mag_can_rebuild_generic_runtime": false,
+      "opl_observability_can_create_verdict": false,
+      "provider_completion_is_grant_ready": false
+    },
+    "mag_owned_grant_authority_surfaces": [
+      {
+        "active_caller_status": "active_mag_authority_keep",
+        "active_callers": [
+          "owner receipt contract identity lifecycle_stage",
+          "task lifecycle projection",
+          "stage attempt closeout"
+        ],
+        "cannot_absorb_reason": "OPL generic lifecycle cannot determine grant-stage readiness, critique meaning, or package-stage transition validity.",
+        "classification": "minimal_authority_function",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/runtime_contracts.py",
+          "src/med_autogrant/product_entry_parts/progress.py",
+          "src/med_autogrant/product_entry_parts/owner_receipts.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/owner_receipt_contract/identity/lifecycle_stage",
+          "/product_entry_manifest/task_lifecycle"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "lifecycle_stage",
+          "stage_meaning",
+          "owner_receipt"
+        ],
+        "mag_role": "grant_truth_owner",
+        "migration_action": "Expose refs to OPL display/routing; do not migrate authority.",
+        "module_id": "grant_lifecycle_stage",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "display_and_route_only"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "Grant lifecycle stage is domain truth and gates owner receipts."
+      },
+      {
+        "active_caller_status": "active_mag_verdict_authority_keep",
+        "active_callers": [
+          "product-entry manifest grant readiness",
+          "thin surface verdict_authority_refs",
+          "submission-ready package validation"
+        ],
+        "cannot_absorb_reason": "OPL can show readiness refs, but cannot make fundability, quality, or export verdicts.",
+        "classification": "minimal_authority_function",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/manifest_readiness.py",
+          "src/med_autogrant/product_entry_parts/consumer_thinning.py",
+          "src/med_autogrant/final_package_validation.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/grant_authoring_readiness",
+          "/product_entry_manifest/mag_consumer_thinning_contract/verdict_authority_refs"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "fundability_verdict",
+          "authoring_quality_verdict",
+          "submission_ready_export_verdict"
+        ],
+        "mag_role": "verdict_authority_owner",
+        "migration_action": "Expose verdict refs to OPL readiness shell; do not migrate verdict authority.",
+        "module_id": "fundability_quality_export_verdicts",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "refs_only_quality_readiness_projection_shell"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "Fundability, authoring quality, and export readiness are grant-review judgments."
+      },
+      {
+        "active_caller_status": "active_mag_package_authority_keep",
+        "active_callers": [
+          "product package-lifecycle-handoff",
+          "package submission-ready",
+          "artifact locator contract"
+        ],
+        "cannot_absorb_reason": "OPL artifact lifecycle can manage refs and retention, but cannot approve a grant package.",
+        "classification": "minimal_authority_function",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
+          "src/med_autogrant/final_package.py",
+          "src/med_autogrant/final_package_validation.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/artifact_locator_contract",
+          "package submission-ready"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "package_authority",
+          "submission_ready_verdict",
+          "export_gate"
+        ],
+        "mag_role": "package_authority_owner",
+        "migration_action": "Let OPL own artifact/package lifecycle shell; keep submission-ready and export gate authority in MAG.",
+        "module_id": "package_readiness_submission_ready",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "artifact_package_lifecycle_shell"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "Submission-ready is a domain export gate, not generic package existence."
+      },
+      {
+        "active_caller_status": "active_domain_oracle_keep_generic_runner_external",
+        "active_callers": [
+          "grant_transition_oracle manifest surface",
+          "family stage control plane",
+          "OPL generic transition runner expected input"
+        ],
+        "cannot_absorb_reason": "OPL can execute a generic runner, but cannot own the grant transition table's meaning.",
+        "classification": "minimal_authority_function",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/functional_closure.py",
+          "src/med_autogrant/product_entry_parts/orchestration_companions.py",
+          "src/med_autogrant/product_entry_parts/consumer_thinning.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/grant_transition_oracle",
+          "/product_entry_manifest/ideal_state_closure_status/mag_owned_transition_oracle"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "fundability_guards",
+          "authoring_quality_guards",
+          "package_human_gate_guards"
+        ],
+        "mag_role": "domain_transition_spec_owner",
+        "migration_action": "OPL should run the generic transition matrix; MAG keeps oracle fixtures and grant guard semantics.",
+        "module_id": "grant_transition_oracle",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "generic_transition_runner"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "The oracle encodes grant-specific stage guards and quality/export blockers."
+      },
+      {
+        "active_caller_status": "active_mag_receipt_authority_keep",
+        "active_callers": [
+          "product owner-receipt-evidence",
+          "product hosted-receipt-verification",
+          "product sidecar dispatch stage-attempt/closeout"
+        ],
+        "cannot_absorb_reason": "OPL ledger can store refs, but cannot sign or reinterpret MAG owner receipt.",
+        "classification": "minimal_authority_function",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/owner_receipts.py",
+          "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
+          "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
+          "src/med_autogrant/product_entry_parts/sidecar.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/controlled_soak_no_regression_attempt"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "domain_owner_receipt",
+          "typed_blocker",
+          "no_regression_evidence"
+        ],
+        "mag_role": "receipt_authority_owner",
+        "migration_action": "OPL should own receipt transport/ledger projection; MAG retains receipt authority and no-regression meaning.",
+        "module_id": "owner_receipt_and_no_regression_evidence",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "receipt_transport_and_ledger_projection"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "Owner receipt is the domain authorization boundary for grant mutations."
+      },
+      {
+        "active_caller_status": "active_mag_memory_body_decision_keep",
+        "active_callers": [
+          "product domain-memory-receipt-evidence",
+          "product memory-receipt-projection",
+          "product sidecar dispatch domain-memory/decide"
+        ],
+        "cannot_absorb_reason": "OPL can transport refs and writeback proposals, but cannot own memory body or accept/reject decisions.",
+        "classification": "minimal_authority_function",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/domain_memory.py",
+          "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
+          "src/med_autogrant/product_entry_parts/memory_receipt_projection.py",
+          "contracts/runtime-program/domain-memory-seed-fixture.json"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/domain_memory_descriptor_locator",
+          "/product_entry_manifest/controlled_domain_memory_apply_proof"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "grant_strategy_memory_body",
+          "writeback_accept_reject",
+          "memory_receipt_writer"
+        ],
+        "mag_role": "memory_body_decision_owner",
+        "migration_action": "OPL should own body-free memory locator/writeback transport; MAG keeps memory body, accept/reject decision, and receipt writer.",
+        "module_id": "grant_memory_accept_reject",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "memory_locator_writeback_transport"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "Grant strategy memory body and accept/reject policy are domain knowledge authority."
+      }
+    ],
+    "mag_thin_adapter_code_surfaces": [
+      "product_entry_manifest_builder",
+      "product_sidecar_adapter",
+      "domain_entry",
+      "receipt_schema_and_writer",
+      "grant_transition_oracle",
+      "refs_only_projection_builders",
+      "focused_contract_tests"
+    ],
+    "opl_must_absorb_code_surfaces": [
+      "workspace_source_intake_shell",
+      "session_ledger",
+      "attention_queue",
+      "typed_queue",
+      "stage_attempt_ledger",
+      "generic_lifecycle_adapter",
+      "artifact_package_lifecycle_shell",
+      "runtime_observability_export",
+      "operator_workbench_shell",
+      "generic_scheduler_daemon"
+    ],
+    "opl_unified_audit_read_model": true,
+    "owner": "med-autogrant",
+    "refs_only_adapter_surfaces": [
+      {
+        "active_caller_status": "active_refs_only_adapter_no_generic_lifecycle_owner",
+        "active_callers": [
+          "product lifecycle-receipt-evidence",
+          "product lifecycle-receipt-bundle",
+          "product sidecar dispatch lifecycle/receipt"
+        ],
+        "cannot_absorb_reason": "Generic lifecycle transport is absorbable; domain mutation approval and package authority cannot move out of MAG.",
+        "classification": "refs_only_adapter",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
+          "src/med_autogrant/product_entry_parts/owner_receipts.py",
+          "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
+          "src/med_autogrant/product_entry_parts/runtime_registration.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/lifecycle_guarded_apply_proof",
+          "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "domain_mutation_requires_mag_owner_receipt",
+          "package_authority"
+        ],
+        "mag_role": "guarded_receipt_refs_adapter",
+        "migration_action": "Keep only owner receipt/blocker refs for OPL lifecycle shell; do not expose MAG package body, memory body, or lifecycle state.",
+        "module_id": "lifecycle_adapter",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "cleanup_restore_retention_shell",
+          "artifact_locator_ledger",
+          "lifecycle_receipt_transport"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "Cleanup, restore, and retention events that touch grant artifacts need MAG owner receipt and package authority refs."
+      },
+      {
+        "active_caller_status": "active_refs_only_observability_adapter_no_repair_execution",
+        "active_callers": [
+          "product controlled-soak-receipt-observability",
+          "product stage-attempt-observability",
+          "product continuous-receipt-reconciliation"
+        ],
+        "cannot_absorb_reason": "OPL can absorb display/SLO/repair shell; it cannot create grant verdicts or mutate receipt authority from observability data.",
+        "classification": "refs_only_adapter",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/receipt_observability.py",
+          "src/med_autogrant/product_entry_parts/stage_attempt_observability.py",
+          "src/med_autogrant/product_entry_parts/autonomy_observability.py",
+          "src/med_autogrant/product_entry_parts/continuous_reconciliation.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
+          "/sidecar_export/opl_runtime_observability_consumption"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "owner_receipt_refs",
+          "typed_blocker_refs",
+          "verdict_refs"
+        ],
+        "mag_role": "refs_counts_blockers_provider",
+        "migration_action": "Expose refs, counts, blockers, and verdict refs only; OPL owns display, SLO, repair projection, and workbench shell.",
+        "module_id": "observability",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "runtime_observability_export",
+          "slo_projection",
+          "repair_projection"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "MAG observability projections carry grant owner receipt refs, typed blockers, and verdict refs needed by the OPL read model."
+      },
+      {
+        "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+        "active_callers": [
+          "product sidecar export",
+          "product sidecar dispatch",
+          "product manifest/status/direct-entry/user-loop"
+        ],
+        "cannot_absorb_reason": "The generic shell can be absorbed, but MAG-specific dispatch validation, receipt refs, and safe action semantics remain domain owned.",
+        "classification": "refs_only_adapter",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/sidecar.py",
+          "src/med_autogrant/product_entry_parts/entry.py",
+          "src/med_autogrant/product_entry_parts/manifest.py",
+          "src/med_autogrant/product_entry.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/product_entry_status",
+          "/sidecar_export"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "grant_status_meaning",
+          "owner_receipt_refs",
+          "safe_action_refs"
+        ],
+        "mag_role": "guarded_domain_sidecar_refs_adapter",
+        "migration_action": "Keep guarded domain dispatch and sidecar refs; OPL generated surfaces own product/operator/action-routing shell.",
+        "module_id": "sidecar_product_status_shell",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "product_status_shell",
+          "operator_projection_shell",
+          "action_routing_shell"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "OPL needs a MAG-owned sidecar adapter to read receipts and invoke guarded domain actions without owning grant truth."
+      },
+      {
+        "active_caller_status": "active_refs_only_package_authority_adapter",
+        "active_callers": [
+          "product package-lifecycle-handoff",
+          "package submission-ready",
+          "domain runtime package surface"
+        ],
+        "cannot_absorb_reason": "OPL can absorb artifact lifecycle transport and gallery shell; it cannot declare MAG package readiness or export verdict.",
+        "classification": "refs_only_adapter",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
+          "src/med_autogrant/final_package.py",
+          "src/med_autogrant/final_package_validation.py",
+          "src/med_autogrant/domain_runtime_parts/package_surface.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/artifact_locator_contract",
+          "/product_entry_manifest/lifecycle_guarded_apply_proof"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "submission_ready_verdict",
+          "export_gate",
+          "manual_portal_boundary"
+        ],
+        "mag_role": "package_authority_and_gap_refs_provider",
+        "migration_action": "Expose package refs, gap refs, and verdict refs only; OPL owns lifecycle shell, restore/retention ledger, and package refs index.",
+        "module_id": "package_lifecycle_shell",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "artifact_package_lifecycle_shell",
+          "restore_retention_ledger",
+          "package_refs_index"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "Submission-ready export is a grant-domain authority surface, not a generic artifact lifecycle success flag."
+      },
+      {
+        "active_caller_status": "active_refs_only_no_repo_daemon_owner",
+        "active_callers": [
+          "product user-loop and status refs projections",
+          "product sidecar export/dispatch",
+          "runtime defaults for local diagnostic commands"
+        ],
+        "cannot_absorb_reason": "The workbench and scheduler can be absorbed; MAG's domain action metadata and typed blocker meaning cannot.",
+        "classification": "refs_only_adapter",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/loop_contracts.py",
+          "src/med_autogrant/product_entry_parts/receipt_observability.py",
+          "src/med_autogrant/product_entry_parts/sidecar.py",
+          "src/med_autogrant/runtime_defaults.py"
+        ],
+        "current_surface_refs": [
+          "/product_entry_manifest/mag_consumer_thinning_contract/consumed_opl_standard_surfaces",
+          "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+        ],
+        "implemented_as_generic_runtime_in_mag": false,
+        "mag_retained_authority": [
+          "domain_action_metadata",
+          "typed_blocker"
+        ],
+        "mag_role": "action_metadata_and_blocker_refs_only",
+        "migration_action": "Expose action metadata and typed blockers only; OPL owns app workbench, generic scheduler, provider daemon, and repair command projection.",
+        "module_id": "human_workbench_scheduler_daemon",
+        "opl_can_declare_verdict": false,
+        "opl_can_write_grant_truth": false,
+        "opl_expected_primitives": [
+          "app_workbench_shell",
+          "generic_scheduler",
+          "provider_daemon",
+          "repair_command_projection"
+        ],
+        "owner": "med-autogrant",
+        "retention_reason": "MAG still needs refs-only user-loop/status projections for direct skill and OPL sidecar callers."
+      }
+    ],
+    "representative_private_functional_surfaces": {
+      "local_runtime_journal_attempt_ledger": {
+        "active_caller_status": "legacy_local_journal_attempt_ledger_no_active_caller",
+        "migration_action": "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs",
+        "module_ref": "local_runtime_journal_attempt_ledger"
+      },
+      "optional_hermes_state_db": {
+        "active_caller_status": "legacy_proof_tombstone_no_active_default_caller",
+        "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_legacy_proof_refs_only",
+        "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
+      },
+      "sidecar_dispatch_product_shell": {
+        "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+        "migration_action": "OPL_generates_product_operator_shell_MAG_keeps_guarded_domain_adapter_refs",
+        "module_ref": "sidecar_product_status_shell"
+      }
+    },
+    "retire_or_tombstone_surfaces": [
+      {
+        "active_caller_allowed": false,
+        "active_caller_status": "legacy_proof_tombstone_no_active_default_caller",
+        "active_callers": [],
+        "cannot_absorb_reason": "Default runtime ownership must not stay in MAG; optional proof helpers remain only because they bind MAG closeout packets to external executor receipts.",
+        "classification": "legacy_proof_tombstone",
+        "code_paths": [
+          "src/med_autogrant/upstream_hermes.py",
+          "src/med_autogrant/hermes_native_executor.py",
+          "src/med_autogrant/opl_hermes_executor_helper.py",
+          "src/med_autogrant/product_entry_parts/executor_defaults.py"
+        ],
+        "compatibility_alias_allowed": false,
+        "evidence_refs": [
+          "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+          "docs/status.md#旧面退役校准"
+        ],
+        "migration_action": "Keep old Hermes/Gateway/local-manager wording as legacy proof provenance only; current active callers must use explicit executor adapter refs.",
+        "module_id": "default_hermes_gateway_local_manager_runtime_owner",
+        "owner": "none_active",
+        "retention_reason": "Historical proof files help audit non-default executor receipt behavior, but they are not an active runtime owner or default caller.",
+        "state": "retired_or_tombstone_only"
+      },
+      {
+        "active_caller_allowed": false,
+        "active_caller_status": "legacy_local_journal_attempt_ledger_no_active_caller",
+        "active_callers": [],
+        "cannot_absorb_reason": "The legacy local ledger itself should not be absorbed as MAG-owned code; OPL should provide the generic ledger while MAG keeps safe action refs and grant next-action meaning.",
+        "classification": "legacy_proof_tombstone",
+        "code_paths": [
+          "src/med_autogrant/product_entry_parts/loop_contracts.py",
+          "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
+          "src/med_autogrant/hosted_contract_bundle.py",
+          "src/med_autogrant/domain_runtime_parts/io.py",
+          "src/med_autogrant/domain_runtime_parts/runtime_ops.py"
+        ],
+        "compatibility_alias_allowed": false,
+        "evidence_refs": [
+          "/product_entry_manifest/session_continuity",
+          "/product_entry_manifest/automation",
+          "/sidecar_export/user_loop_attention_queue"
+        ],
+        "migration_action": "Treat old local journal and attempt ledger state as tombstone/proof history; OPL owns session ledger, typed attention queue, wakeup scheduler, and stage-attempt ledger.",
+        "module_id": "local_runtime_journal_attempt_ledger",
+        "owner": "none_active",
+        "retention_reason": "Historical local journal proof remains useful as a regression oracle for refs-only closeout behavior, not as a live MAG ledger owner.",
+        "state": "retired_or_tombstone_only"
+      },
+      {
+        "active_caller_allowed": false,
+        "active_caller_status": "retired_no_active_caller_expected",
+        "active_callers": [],
+        "cannot_absorb_reason": "This is retired compatibility glue, not an OPL primitive to absorb.",
+        "classification": "legacy_proof_tombstone",
+        "code_paths": [
+          "src/med_autogrant/domain_runtime_parts/patch_targets.py",
+          "src/med_autogrant/domain_runtime.py"
+        ],
+        "compatibility_alias_allowed": false,
+        "evidence_refs": [
+          "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
+          "src/med_autogrant/domain_runtime_parts/patch_targets.py"
+        ],
+        "migration_action": "Remove or keep only tombstone/provenance; do not add compatibility aliases.",
+        "module_id": "domain_runtime_patch_bridge",
+        "owner": "none_active",
+        "retention_reason": "No active runtime authority should depend on the patch bridge.",
+        "state": "retired_or_tombstone_only"
+      },
+      {
+        "active_caller_allowed": false,
+        "active_caller_status": "aggregate_removed_focused_cases_active",
+        "active_callers": [
+          "focused product_entry_cases tests"
+        ],
+        "cannot_absorb_reason": "Testing layout is repo-local hygiene, not a generic OPL runtime primitive.",
+        "classification": "legacy_proof_tombstone",
+        "code_paths": [
+          "tests/test_product_entry.py",
+          "tests/product_entry_cases/"
+        ],
+        "compatibility_alias_allowed": false,
+        "evidence_refs": [
+          "tests/test_product_entry.py",
+          "tests/product_entry_cases/"
+        ],
+        "migration_action": "Keep focused tests and remove aggregate compatibility assertions.",
+        "module_id": "compatibility_only_product_entry_aggregate_test",
+        "owner": "none_active",
+        "retention_reason": "Focused tests protect machine-readable contracts without preserving old facade shape.",
+        "state": "retired_or_tombstone_only"
+      },
+      {
+        "active_caller_allowed": false,
+        "active_caller_status": "legacy_alias_retired_grouped_commands_active",
+        "active_callers": [
+          "grouped public command tokens"
+        ],
+        "cannot_absorb_reason": "Flat aliases are retired local CLI surface, not a reusable OPL primitive.",
+        "classification": "legacy_proof_tombstone",
+        "code_paths": [
+          "src/med_autogrant/cli_parts/parser_adders.py",
+          "src/med_autogrant/cli_parts/handlers.py",
+          "src/med_autogrant/public_cli.py"
+        ],
+        "compatibility_alias_allowed": false,
+        "evidence_refs": [
+          "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
+          "docs/status.md#旧面退役校准"
+        ],
+        "migration_action": "Route callers to grouped product/workspace/pass/package commands.",
+        "module_id": "legacy_flat_shell_aliases",
+        "owner": "none_active",
+        "retention_reason": "Machine command fields may stay stable, but user-facing flat aliases should not.",
+        "state": "retired_or_tombstone_only"
+      },
+      {
+        "active_caller_allowed": false,
+        "active_caller_status": "no_default_daemon_local_diagnostic_only",
+        "active_callers": [
+          "runtime run/resume local diagnostic commands",
+          "product-entry runtime_control projection"
+        ],
+        "cannot_absorb_reason": "OPL can absorb production scheduler/daemon; MAG local diagnostics remain scoped to workspace validation and grant route checks.",
+        "classification": "legacy_proof_tombstone",
+        "code_paths": [
+          "src/med_autogrant/runtime_defaults.py",
+          "src/med_autogrant/domain_runtime_parts/substrate.py",
+          "src/med_autogrant/product_entry_parts/runtime_surfaces.py"
+        ],
+        "compatibility_alias_allowed": false,
+        "evidence_refs": [
+          "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
+          "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+        ],
+        "migration_action": "OPL should own provider scheduler/daemon; MAG keeps local diagnostic run/resume and refs-only runtime_control projection.",
+        "module_id": "repo_owned_scheduler_daemon",
+        "owner": "none_active",
+        "retention_reason": "Local diagnostic commands help direct callers, but are not production daemon ownership.",
+        "state": "retired_or_tombstone_only"
+      }
+    ],
+    "state": "manifest_projected_for_opl_unified_audit",
+    "surface_kind": "mag_privatized_functional_module_audit",
+    "target_domain_id": "med-autogrant"
+  },
+  "schema_version": 1,
+  "surface_kind": "functional_privatization_audit",
+  "target_domain_id": "med-autogrant"
+}

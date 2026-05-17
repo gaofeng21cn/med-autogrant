@@ -1,0 +1,845 @@
+{
+  "authority_boundary": {
+    "can_bypass_submission_ready_gate": false,
+    "can_override_fundability_judgment": false,
+    "can_write_grant_truth": false,
+    "domain_truth_owner": "med-autogrant",
+    "fundability_judgment_owner": "med-autogrant",
+    "opl_role": "projection_consumer_only",
+    "submission_ready_export_gate_owner": "med-autogrant",
+    "write_policy": "no_grant_truth_writes"
+  },
+  "discovery_smoke": {
+    "allowed_action_catalog_ref": "/product_entry_manifest/family_action_catalog",
+    "consumer": "opl_family_manifest_discovery_smoke",
+    "required_stage_fields": [
+      "stage_id",
+      "stage_goal",
+      "owner",
+      "skills",
+      "allowed_action_refs",
+      "handoff",
+      "source_refs",
+      "freshness",
+      "authority_boundary"
+    ],
+    "status": "ready",
+    "surface_kind": "family_stage_control_plane_discovery_smoke"
+  },
+  "freshness": {
+    "freshness_kind": "product_entry_manifest_projection",
+    "refresh_policy": "rebuild_product_entry_manifest_before_opl_discovery",
+    "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+    "stale_if_source_refs_missing": true
+  },
+  "notes": [
+    "Descriptor-only projection over existing MAG grant authoring surfaces.",
+    "OPL discovery must not own grant truth, fundability judgment, or submission-ready export authority."
+  ],
+  "owner": "med-autogrant",
+  "parity": {
+    "allowed_action_catalog_ref": "/product_entry_manifest/family_action_catalog",
+    "checked_action_count": 5,
+    "status": "aligned"
+  },
+  "plane_id": "med_autogrant_stage_control_plane",
+  "source_refs": [
+    {
+      "ref": "/product_entry_manifest/family_action_catalog",
+      "ref_kind": "json_pointer",
+      "role": "action_catalog"
+    },
+    {
+      "ref": "/product_entry_manifest/progress_projection",
+      "ref_kind": "json_pointer",
+      "role": "progress_read_model"
+    },
+    {
+      "ref": "/product_entry_manifest/task_lifecycle",
+      "ref_kind": "json_pointer",
+      "role": "checkpoint_read_model"
+    },
+    {
+      "ref": "/product_entry_manifest/runtime_control",
+      "ref_kind": "json_pointer",
+      "role": "authority_boundary"
+    },
+    {
+      "ref": "/product_entry_manifest/shared_handoff",
+      "ref_kind": "json_pointer",
+      "role": "handoff_contract"
+    }
+  ],
+  "stages": [
+    {
+      "allowed_action_refs": [
+        "inspect_progress",
+        "inspect_cockpit"
+      ],
+      "authority_boundary": {
+        "can_bypass_submission_ready_gate": false,
+        "can_override_fundability_judgment": false,
+        "can_write_grant_truth": false,
+        "domain_truth_owner": "med-autogrant",
+        "fundability_judgment_owner": "med-autogrant",
+        "maps_existing_surfaces_only": true,
+        "opl_role": "projection_consumer_only",
+        "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "domain_stage_refs": [
+        "discover-funding-opportunities",
+        "select-project-profile",
+        "initialize-intake-workspace",
+        "input_intake"
+      ],
+      "evaluation": [
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_readiness"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control"
+        }
+      ],
+      "freshness": {
+        "freshness_kind": "product_entry_manifest_projection",
+        "refresh_policy": "rebuild_product_entry_manifest_before_opl_discovery",
+        "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+        "stale_if_source_refs_missing": true
+      },
+      "goal": "Read call guidance, applicant/team context, candidate directions, and eligibility constraints.",
+      "handoff": {
+        "next_owner": "med-autogrant",
+        "progress_surface_ref": "/progress_projection",
+        "resume_surface_ref": "/operator_loop_surface",
+        "shared_handoff_ref": "/shared_handoff"
+      },
+      "inputs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "allowed_action_catalog"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "grant_progress_read_model"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control_projection"
+        }
+      ],
+      "outputs": [
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_status"
+        },
+        {
+          "ref": "/artifact_inventory",
+          "ref_kind": "json_pointer",
+          "role": "artifact_inventory"
+        }
+      ],
+      "owner": "med-autogrant",
+      "prompt_refs": [
+        {
+          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
+        }
+      ],
+      "skills": [
+        {
+          "ref": "med-autogrant",
+          "ref_kind": "skill_id",
+          "role": "domain_skill"
+        },
+        {
+          "ref": "officecli-docx",
+          "ref_kind": "skill_id",
+          "role": "optional_document_helper"
+        }
+      ],
+      "source_refs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "action_authority"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_progress"
+        },
+        {
+          "ref": "/task_lifecycle",
+          "ref_kind": "json_pointer",
+          "role": "checkpoint_status"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_boundary"
+        },
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_gate"
+        }
+      ],
+      "stage_goal": "Read call guidance, applicant/team context, candidate directions, and eligibility constraints.",
+      "stage_id": "call_and_candidate_intake",
+      "stage_kind": "intake",
+      "summary": "Call and candidate intake projected from MAG-owned grant authoring surfaces for OPL discovery.",
+      "title": "Call and candidate intake"
+    },
+    {
+      "allowed_action_refs": [
+        "open_grant_user_loop",
+        "inspect_progress"
+      ],
+      "authority_boundary": {
+        "can_bypass_submission_ready_gate": false,
+        "can_override_fundability_judgment": false,
+        "can_write_grant_truth": false,
+        "domain_truth_owner": "med-autogrant",
+        "fundability_judgment_owner": "med-autogrant",
+        "maps_existing_surfaces_only": true,
+        "opl_role": "projection_consumer_only",
+        "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "domain_stage_refs": [
+        "direction_screening",
+        "fit_alignment",
+        "grant_quality_scorecard",
+        "fundability gate"
+      ],
+      "evaluation": [
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_readiness"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control"
+        }
+      ],
+      "freshness": {
+        "freshness_kind": "product_entry_manifest_projection",
+        "refresh_policy": "rebuild_product_entry_manifest_before_opl_discovery",
+        "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+        "stale_if_source_refs_missing": true
+      },
+      "goal": "Evaluate topic competitiveness, innovation, risk, fit, and funder-specific strategy.",
+      "handoff": {
+        "next_owner": "med-autogrant",
+        "progress_surface_ref": "/progress_projection",
+        "resume_surface_ref": "/operator_loop_surface",
+        "shared_handoff_ref": "/shared_handoff"
+      },
+      "inputs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "allowed_action_catalog"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "grant_progress_read_model"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control_projection"
+        }
+      ],
+      "outputs": [
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_status"
+        },
+        {
+          "ref": "/artifact_inventory",
+          "ref_kind": "json_pointer",
+          "role": "artifact_inventory"
+        }
+      ],
+      "owner": "med-autogrant",
+      "prompt_refs": [
+        {
+          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
+        }
+      ],
+      "skills": [
+        {
+          "ref": "med-autogrant",
+          "ref_kind": "skill_id",
+          "role": "domain_skill"
+        },
+        {
+          "ref": "officecli-docx",
+          "ref_kind": "skill_id",
+          "role": "optional_document_helper"
+        }
+      ],
+      "source_refs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "action_authority"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_progress"
+        },
+        {
+          "ref": "/task_lifecycle",
+          "ref_kind": "json_pointer",
+          "role": "checkpoint_status"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_boundary"
+        },
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_gate"
+        }
+      ],
+      "stage_goal": "Evaluate topic competitiveness, innovation, risk, fit, and funder-specific strategy.",
+      "stage_id": "fundability_strategy",
+      "stage_kind": "planning",
+      "summary": "Fundability strategy projected from MAG-owned grant authoring surfaces for OPL discovery.",
+      "title": "Fundability strategy"
+    },
+    {
+      "allowed_action_refs": [
+        "open_grant_user_loop",
+        "inspect_progress"
+      ],
+      "authority_boundary": {
+        "can_bypass_submission_ready_gate": false,
+        "can_override_fundability_judgment": false,
+        "can_write_grant_truth": false,
+        "domain_truth_owner": "med-autogrant",
+        "fundability_judgment_owner": "med-autogrant",
+        "maps_existing_surfaces_only": true,
+        "opl_role": "projection_consumer_only",
+        "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "domain_stage_refs": [
+        "question_refinement",
+        "argument_building",
+        "outline"
+      ],
+      "evaluation": [
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_readiness"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control"
+        }
+      ],
+      "freshness": {
+        "freshness_kind": "product_entry_manifest_projection",
+        "refresh_policy": "rebuild_product_entry_manifest_before_opl_discovery",
+        "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+        "stale_if_source_refs_missing": true
+      },
+      "goal": "Shape research question, aims, technical route, innovation, and argument structure.",
+      "handoff": {
+        "next_owner": "med-autogrant",
+        "progress_surface_ref": "/progress_projection",
+        "resume_surface_ref": "/operator_loop_surface",
+        "shared_handoff_ref": "/shared_handoff"
+      },
+      "inputs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "allowed_action_catalog"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "grant_progress_read_model"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control_projection"
+        }
+      ],
+      "outputs": [
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_status"
+        },
+        {
+          "ref": "/artifact_inventory",
+          "ref_kind": "json_pointer",
+          "role": "artifact_inventory"
+        }
+      ],
+      "owner": "med-autogrant",
+      "prompt_refs": [
+        {
+          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
+        }
+      ],
+      "skills": [
+        {
+          "ref": "med-autogrant",
+          "ref_kind": "skill_id",
+          "role": "domain_skill"
+        },
+        {
+          "ref": "officecli-docx",
+          "ref_kind": "skill_id",
+          "role": "optional_document_helper"
+        }
+      ],
+      "source_refs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "action_authority"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_progress"
+        },
+        {
+          "ref": "/task_lifecycle",
+          "ref_kind": "json_pointer",
+          "role": "checkpoint_status"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_boundary"
+        },
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_gate"
+        }
+      ],
+      "stage_goal": "Shape research question, aims, technical route, innovation, and argument structure.",
+      "stage_id": "specific_aims_and_structure",
+      "stage_kind": "planning",
+      "summary": "Specific aims and structure projected from MAG-owned grant authoring surfaces for OPL discovery.",
+      "title": "Specific aims and structure"
+    },
+    {
+      "allowed_action_refs": [
+        "open_grant_user_loop",
+        "build_direct_entry"
+      ],
+      "authority_boundary": {
+        "can_bypass_submission_ready_gate": false,
+        "can_override_fundability_judgment": false,
+        "can_write_grant_truth": false,
+        "domain_truth_owner": "med-autogrant",
+        "fundability_judgment_owner": "med-autogrant",
+        "maps_existing_surfaces_only": true,
+        "opl_role": "projection_consumer_only",
+        "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "domain_stage_refs": [
+        "drafting",
+        "revision",
+        "grant-progress",
+        "grant-user-loop"
+      ],
+      "evaluation": [
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_readiness"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control"
+        }
+      ],
+      "freshness": {
+        "freshness_kind": "product_entry_manifest_projection",
+        "refresh_policy": "rebuild_product_entry_manifest_before_opl_discovery",
+        "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+        "stale_if_source_refs_missing": true
+      },
+      "goal": "Draft and revise the proposal body within the locked funding-call context.",
+      "handoff": {
+        "next_owner": "med-autogrant",
+        "progress_surface_ref": "/progress_projection",
+        "resume_surface_ref": "/operator_loop_surface",
+        "shared_handoff_ref": "/shared_handoff"
+      },
+      "inputs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "allowed_action_catalog"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "grant_progress_read_model"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control_projection"
+        }
+      ],
+      "outputs": [
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_status"
+        },
+        {
+          "ref": "/artifact_inventory",
+          "ref_kind": "json_pointer",
+          "role": "artifact_inventory"
+        }
+      ],
+      "owner": "med-autogrant",
+      "prompt_refs": [
+        {
+          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
+        }
+      ],
+      "skills": [
+        {
+          "ref": "med-autogrant",
+          "ref_kind": "skill_id",
+          "role": "domain_skill"
+        },
+        {
+          "ref": "officecli-docx",
+          "ref_kind": "skill_id",
+          "role": "optional_document_helper"
+        }
+      ],
+      "source_refs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "action_authority"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_progress"
+        },
+        {
+          "ref": "/task_lifecycle",
+          "ref_kind": "json_pointer",
+          "role": "checkpoint_status"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_boundary"
+        },
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_gate"
+        }
+      ],
+      "stage_goal": "Draft and revise the proposal body within the locked funding-call context.",
+      "stage_id": "proposal_authoring",
+      "stage_kind": "creation",
+      "summary": "Proposal authoring projected from MAG-owned grant authoring surfaces for OPL discovery.",
+      "title": "Proposal authoring"
+    },
+    {
+      "allowed_action_refs": [
+        "open_grant_user_loop",
+        "inspect_progress"
+      ],
+      "authority_boundary": {
+        "can_bypass_submission_ready_gate": false,
+        "can_override_fundability_judgment": false,
+        "can_write_grant_truth": false,
+        "domain_truth_owner": "med-autogrant",
+        "fundability_judgment_owner": "med-autogrant",
+        "maps_existing_surfaces_only": true,
+        "opl_role": "projection_consumer_only",
+        "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "domain_stage_refs": [
+        "critique",
+        "review",
+        "grant_quality_closure_dossier",
+        "quality-diff"
+      ],
+      "evaluation": [
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_readiness"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control"
+        }
+      ],
+      "freshness": {
+        "freshness_kind": "product_entry_manifest_projection",
+        "refresh_policy": "rebuild_product_entry_manifest_before_opl_discovery",
+        "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+        "stale_if_source_refs_missing": true
+      },
+      "goal": "Run reviewer-style critique, issue closure, rebuttal planning, and quality-diff checks.",
+      "handoff": {
+        "next_owner": "med-autogrant",
+        "progress_surface_ref": "/progress_projection",
+        "resume_surface_ref": "/operator_loop_surface",
+        "shared_handoff_ref": "/shared_handoff"
+      },
+      "inputs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "allowed_action_catalog"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "grant_progress_read_model"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control_projection"
+        }
+      ],
+      "outputs": [
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_status"
+        },
+        {
+          "ref": "/artifact_inventory",
+          "ref_kind": "json_pointer",
+          "role": "artifact_inventory"
+        }
+      ],
+      "owner": "med-autogrant",
+      "prompt_refs": [
+        {
+          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
+        }
+      ],
+      "skills": [
+        {
+          "ref": "med-autogrant",
+          "ref_kind": "skill_id",
+          "role": "domain_skill"
+        },
+        {
+          "ref": "officecli-docx",
+          "ref_kind": "skill_id",
+          "role": "optional_document_helper"
+        }
+      ],
+      "source_refs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "action_authority"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_progress"
+        },
+        {
+          "ref": "/task_lifecycle",
+          "ref_kind": "json_pointer",
+          "role": "checkpoint_status"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_boundary"
+        },
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_gate"
+        }
+      ],
+      "stage_goal": "Run reviewer-style critique, issue closure, rebuttal planning, and quality-diff checks.",
+      "stage_id": "review_and_rebuttal",
+      "stage_kind": "review",
+      "summary": "Review and rebuttal projected from MAG-owned grant authoring surfaces for OPL discovery.",
+      "title": "Review and rebuttal"
+    },
+    {
+      "allowed_action_refs": [
+        "build_submission_ready_package",
+        "inspect_progress"
+      ],
+      "authority_boundary": {
+        "can_bypass_submission_ready_gate": false,
+        "can_override_fundability_judgment": false,
+        "can_write_grant_truth": false,
+        "domain_truth_owner": "med-autogrant",
+        "fundability_judgment_owner": "med-autogrant",
+        "maps_existing_surfaces_only": true,
+        "opl_role": "projection_consumer_only",
+        "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "domain_stage_refs": [
+        "freeze",
+        "frozen",
+        "package submission-ready",
+        "submission-ready export gate"
+      ],
+      "evaluation": [
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_readiness"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control"
+        }
+      ],
+      "freshness": {
+        "freshness_kind": "product_entry_manifest_projection",
+        "refresh_policy": "rebuild_product_entry_manifest_before_opl_discovery",
+        "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+        "stale_if_source_refs_missing": true
+      },
+      "goal": "Freeze final local delivery package and run submission-ready export checks.",
+      "handoff": {
+        "next_owner": "med-autogrant",
+        "progress_surface_ref": "/progress_projection",
+        "resume_surface_ref": "/operator_loop_surface",
+        "shared_handoff_ref": "/shared_handoff"
+      },
+      "inputs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "allowed_action_catalog"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "grant_progress_read_model"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_control_projection"
+        }
+      ],
+      "outputs": [
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_status"
+        },
+        {
+          "ref": "/artifact_inventory",
+          "ref_kind": "json_pointer",
+          "role": "artifact_inventory"
+        }
+      ],
+      "owner": "med-autogrant",
+      "prompt_refs": [
+        {
+          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
+        }
+      ],
+      "skills": [
+        {
+          "ref": "med-autogrant",
+          "ref_kind": "skill_id",
+          "role": "domain_skill"
+        },
+        {
+          "ref": "officecli-docx",
+          "ref_kind": "skill_id",
+          "role": "optional_document_helper"
+        }
+      ],
+      "source_refs": [
+        {
+          "ref": "/family_action_catalog",
+          "ref_kind": "json_pointer",
+          "role": "action_authority"
+        },
+        {
+          "ref": "/progress_projection",
+          "ref_kind": "json_pointer",
+          "role": "stage_progress"
+        },
+        {
+          "ref": "/task_lifecycle",
+          "ref_kind": "json_pointer",
+          "role": "checkpoint_status"
+        },
+        {
+          "ref": "/runtime_control",
+          "ref_kind": "json_pointer",
+          "role": "runtime_boundary"
+        },
+        {
+          "ref": "/grant_authoring_readiness",
+          "ref_kind": "json_pointer",
+          "role": "authoring_gate"
+        }
+      ],
+      "stage_goal": "Freeze final local delivery package and run submission-ready export checks.",
+      "stage_id": "package_and_submit_ready",
+      "stage_kind": "packaging",
+      "summary": "Package and submit-ready projected from MAG-owned grant authoring surfaces for OPL discovery.",
+      "title": "Package and submit-ready"
+    }
+  ],
+  "surface_kind": "family_stage_control_plane",
+  "target_domain_id": "med-autogrant",
+  "version": "family-stage-control-plane.v1"
+}
