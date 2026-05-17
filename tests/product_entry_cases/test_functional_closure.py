@@ -371,6 +371,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "operator_workbench_drilldown_shell",
                 "observability_repair_projection",
                 "agent_scaffold_checklist",
+                "pack_compiler_generated_surface",
             ],
         )
         self.assertEqual(
@@ -398,6 +399,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "memory_body_accept_reject",
                 "package_authority",
                 "owner_receipt",
+                "grant_helper",
             },
         )
         self.assertTrue(consumed["authority_boundary"]["mag_consumes_standard_scaffold"])
