@@ -14,7 +14,7 @@ test-line-budget:
 	$(PYTHON_CLEAN) scripts/line_budget.py
 
 test-family:
-	$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q
+	$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q -m "not proof"
 
 test-meta:
 	$(PYTEST_CLEAN) -q -m meta

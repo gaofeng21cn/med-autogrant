@@ -31,11 +31,11 @@ def test_bootstrap_prefers_explicit_shared_path_from_sys_path(monkeypatch, tmp_p
     assert module.ensure_editable_dependency_paths() == (explicit_root,)
 
 
-def test_bootstrap_adds_repo_venv_site_packages_when_shared_helper_imports_from_site_packages(
+def test_bootstrap_adds_external_site_packages_when_shared_helper_imports_from_site_packages(
     monkeypatch,
     tmp_path: Path,
 ) -> None:
-    fake_site_packages = tmp_path / ".venv" / "lib" / "python3.12" / "site-packages"
+    fake_site_packages = tmp_path / "shared-env" / "venv" / "lib" / "python3.12" / "site-packages"
     fake_site_packages.mkdir(parents=True)
     fake_site_packages_str = str(fake_site_packages)
     original_sys_path = list(sys.path)
@@ -170,7 +170,7 @@ def test_bootstrap_returns_added_site_packages_when_shared_helper_remains_unavai
     monkeypatch,
     tmp_path: Path,
 ) -> None:
-    fake_site_packages = tmp_path / ".venv" / "lib" / "python3.12" / "site-packages"
+    fake_site_packages = tmp_path / "shared-env" / "venv" / "lib" / "python3.12" / "site-packages"
     fake_site_packages.mkdir(parents=True)
     fake_site_packages_str = str(fake_site_packages)
     original_sys_path = list(sys.path)
@@ -187,6 +187,17 @@ def test_bootstrap_returns_added_site_packages_when_shared_helper_remains_unavai
         sys.path[:] = original_sys_path
 
     assert added == (fake_site_packages,)
+
+
+def test_bootstrap_default_site_packages_candidates_stay_outside_checkout(monkeypatch, tmp_path: Path) -> None:
+    repo_root = tmp_path / "med-autogrant"
+    repo_root.mkdir()
+    monkeypatch.setattr(module, "_repo_root", lambda: repo_root)
+
+    candidates = module._candidate_repo_site_packages_roots()
+
+    assert candidates
+    assert all(repo_root not in candidate.parents for candidate in candidates)
 
 
 def test_required_shared_entrypoints_are_resolvable_from_current_checkout() -> None:

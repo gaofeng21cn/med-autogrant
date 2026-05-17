@@ -29,7 +29,7 @@ def test_makefile_exposes_layered_test_entrypoints() -> None:
     assert "test-family:" in makefile
     assert (
         "$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py "
-        "tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q"
+        'tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q -m "not proof"'
     ) in makefile
     assert "test-meta:" in makefile
     assert "$(PYTEST_CLEAN) -q -m meta" in makefile
@@ -44,6 +44,7 @@ def test_clean_python_runners_route_caches_outside_checkout() -> None:
     assert "PYTHONDONTWRITEBYTECODE=1" in python_runner
     assert "PYTHONPYCACHEPREFIX" in python_runner
     assert 'export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-${tmp_root}/venv}"' in python_runner
+    assert "MED_AUTOGRANT_EDITABLE_SHARED_ENV_ROOT" in _read("src/med_autogrant/editable_shared_bootstrap.py")
     assert "-p no:cacheprovider -o cache_dir=${tmp_root}/pytest-cache" in python_runner
     assert "uv sync --frozen --group dev --no-install-project --inexact" in python_runner
     assert 'venv_python="${UV_PROJECT_ENVIRONMENT}/bin/python"' in python_runner

@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import importlib
 import importlib.util
+import os
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -24,7 +26,11 @@ def _repo_root() -> Path:
 
 def _candidate_repo_site_packages_roots() -> tuple[Path, ...]:
     repo_root = _repo_root()
-    venv_root = repo_root / ".venv"
+    external_root = Path(
+        os.environ.get("MED_AUTOGRANT_EDITABLE_SHARED_ENV_ROOT", "")
+        or Path(tempfile.gettempdir()) / "med-autogrant-editable-shared" / repo_root.name
+    ).expanduser()
+    venv_root = external_root / "venv"
     versioned_site_packages = (
         venv_root / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages"
     )
