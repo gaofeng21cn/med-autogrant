@@ -45,6 +45,8 @@ MAG 可以保留的私有程序面必须小到能解释为 grant authority funct
 
 执行顺序上，MAG 理想态的已知功能面上收和收薄在 MAG 仓内已经完成为 consumer follow-through；2026-05-17 后 `functional_structure_gap_zero_classification` 进一步把 P1-P4 功能/结构差距收口为 MAG repo 侧 `0`。workspace/source intake、memory locator/writeback transport、package/export lifecycle、route/decision/workbench、observability/SLO、scaffold/template 规则和 generated wrapper owner 都回到 OPL Framework / App replacement expectation，MAG 保留 grant authority pack、policy/schema/fixtures 和少量 authority function。剩余工作是外部 OPL pack compiler / replacement 证据、真实 workspace/runtime memory-package-lifecycle receipt、focused OPL-hosted verification 的真实 grant-stage attempt 证据和 live soak；其中 live soak 是后置生产验收。
 
+同日 physical thinning follow-through 后，MAG 不再把 repo-local `runtime-run`、`runtime-resume` 或 `probe-upstream-hermes` 作为 public CLI、domain-entry、product-entry、hosted bundle 或默认 smoke 的 active surface。session/resume shell 由 OPL generated/hosted surface 持有，MAG 只暴露 `opl://generated-surfaces/mag/product-entry-session` / `#resume` 这类 refs，并继续输出 grant locator、owner receipt、typed blocker、verdict refs、transition oracle、package/export authority 与 memory accept/reject。旧 local journal runtime、attempt ledger 和 upstream Hermes probe 只能作为 history/proof/provenance 或 fixture 读取，不进入标准 Agent 模板。
+
 ## 产品分层
 
 目标产品认知保持四层：

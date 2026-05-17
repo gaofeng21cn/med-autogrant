@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-17：退役 MAG 本地 runtime / Hermes probe active surface
+
+- 决策：`runtime-run`、`runtime-resume` 与 `probe-upstream-hermes` 从 MAG public CLI、`MedAutoGrantDomainEntry` service-safe catalog、product-entry session continuity、hosted bundle schema 和默认 smoke 断言中移除；session/resume 入口改由 OPL generated surface refs 表达。
+- 理由：本地 journal runtime、attempt ledger 和 upstream Hermes probe 属于通用 session/runtime/proof 外围。标准 OPL Agent 目标态要求这类 shell 由 OPL generated/hosted surface 持有，MAG 只提交 declarative grant pack、refs 和最小 authority function。
+- 影响：MAG 继续保留 grant route truth、fundability/quality/export verdict、package authority、grant transition oracle、memory accept/reject、owner receipt 和 grant-native helper；旧 runtime/probe 面只能作为 history/proof/provenance 或 fixture 读取，不能作为 compatibility alias、active contract、标准模板或默认入口恢复。
+
 ## 2026-05-16：收紧 MAG thin surface 输出层的私有功能状态 guard
 
 - 决策：`mag_consumer_thinning_contract.thin_surface_output_guard` 现在显式列出 `private_functional_state_output_classes_forbidden`，禁止 MAG sidecar / manifest 输出 local runtime journal、local attempt ledger、attention queue、stage attempt ledger、package lifecycle、source intake、operator workbench、scheduler daemon 和 Hermes state-db runtime state。
