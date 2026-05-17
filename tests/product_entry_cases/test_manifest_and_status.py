@@ -286,6 +286,81 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             proposal_stage["authority_boundary"]["submission_ready_export_gate_owner"],
             "med-autogrant",
         )
+        thinning = manifest["mag_consumer_thinning_contract"]
+        compiler_input = thinning["declarative_grant_pack_compiler_input"]
+        self.assertEqual(
+            compiler_input["surface_kind"],
+            "mag_declarative_grant_pack_compiler_input",
+        )
+        self.assertEqual(compiler_input["compiler_owner"], "one-person-lab")
+        self.assertEqual(compiler_input["pack_owner"], "med-autogrant")
+        self.assertEqual(
+            compiler_input["input_policy"],
+            "declarative_refs_and_authority_manifest_only",
+        )
+        self.assertEqual(
+            compiler_input["source_refs"]["stage_graph_ref"],
+            "/product_entry_manifest/family_stage_control_plane",
+        )
+        self.assertEqual(
+            compiler_input["source_refs"]["action_metadata_ref"],
+            "/product_entry_manifest/family_action_catalog",
+        )
+        self.assertEqual(
+            compiler_input["source_refs"]["transition_oracle_ref"],
+            "/product_entry_manifest/grant_transition_oracle",
+        )
+        self.assertFalse(compiler_input["authority_boundary"]["opl_can_write_grant_truth"])
+        self.assertFalse(compiler_input["authority_boundary"]["opl_can_sign_owner_receipt"])
+        self.assertFalse(compiler_input["authority_boundary"]["opl_can_declare_fundability_verdict"])
+        generated_handoff = thinning["generated_surface_handoff"]
+        self.assertEqual(generated_handoff["surface_kind"], "mag_generated_surface_handoff")
+        self.assertEqual(generated_handoff["target_generator_owner"], "one-person-lab")
+        self.assertEqual(
+            generated_handoff["generated_surface_ids"],
+            [
+                "product_status",
+                "product_user_loop",
+                "product_sidecar",
+                "grouped_cli_api",
+                "projection_builder",
+                "lifecycle_wrapper",
+            ],
+        )
+        self.assertEqual(generated_handoff["mag_long_term_owner_surface_ids"], [])
+        for surface in generated_handoff["generated_or_bridge_surfaces"]:
+            with self.subTest(generated_surface=surface["surface_id"]):
+                self.assertEqual(surface["surface_status"], "migration_bridge_until_opl_generated_surface")
+                self.assertEqual(surface["current_owner"], "med-autogrant")
+                self.assertEqual(surface["target_owner"], "one-person-lab")
+                self.assertTrue(surface["generated_by_opl_in_target"])
+                self.assertFalse(surface["current_mag_long_term_owner"])
+                self.assertFalse(surface["keeps_mag_authority_functions"])
+        self.assertFalse(generated_handoff["authority_boundary"]["mag_long_term_owner"])
+        self.assertFalse(generated_handoff["authority_boundary"]["generated_surface_can_sign_owner_receipt"])
+        self.assertFalse(generated_handoff["authority_boundary"]["generated_surface_can_declare_verdict"])
+        self.assertEqual(
+            thinning["minimal_authority_function_ids"],
+            [
+                "fundability_verdict",
+                "quality_verdict",
+                "export_verdict",
+                "package_authority",
+                "memory_accept_reject",
+                "owner_receipt_signer",
+                "grant_helper",
+            ],
+        )
+        authority_functions = {
+            item["function_id"]: item for item in thinning["minimal_authority_functions"]
+        }
+        self.assertEqual(set(authority_functions), set(thinning["minimal_authority_function_ids"]))
+        for authority_function in authority_functions.values():
+            with self.subTest(authority_function=authority_function["function_id"]):
+                self.assertEqual(authority_function["owner"], "med-autogrant")
+                self.assertEqual(authority_function["retention_class"], "mag_minimal_authority_function")
+                self.assertFalse(authority_function["generated_by_opl"])
+                self.assertTrue(authority_function["opl_generated_wrapper_allowed"])
         artifact_locator = manifest["artifact_locator_contract"]
         self.assertEqual(artifact_locator["surface_kind"], "domain_artifact_locator_contract")
         self.assertEqual(artifact_locator["locator_id"], "mag.artifact_locator.v1")

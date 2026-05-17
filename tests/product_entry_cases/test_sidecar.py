@@ -142,6 +142,14 @@ class ProductSidecarTest(unittest.TestCase):
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "privatized_functional_module_audit"
                 ),
+                "declarative_grant_pack_compiler_input_ref": (
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "declarative_grant_pack_compiler_input"
+                ),
+                "generated_surface_handoff_ref": (
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "generated_surface_handoff"
+                ),
             },
         )
         self.assertFalse(thinning["authority_boundary"]["mag_rebuilds_opl_runtime"])
@@ -253,6 +261,43 @@ class ProductSidecarTest(unittest.TestCase):
         )
         self.assertFalse(audit["fail_closed_rules"]["provider_completion_is_grant_ready"])
         self.assertFalse(audit["fail_closed_rules"]["mag_can_rebuild_generic_runtime"])
+        self.assertEqual(
+            export["declarative_grant_pack_compiler_input"],
+            thinning["declarative_grant_pack_compiler_input"],
+        )
+        self.assertEqual(export["generated_surface_handoff"], thinning["generated_surface_handoff"])
+        self.assertEqual(export["minimal_authority_functions"], thinning["minimal_authority_functions"])
+        self.assertEqual(
+            export["generated_surface_handoff"]["generated_surface_ids"],
+            [
+                "product_status",
+                "product_user_loop",
+                "product_sidecar",
+                "grouped_cli_api",
+                "projection_builder",
+                "lifecycle_wrapper",
+            ],
+        )
+        self.assertFalse(
+            export["generated_surface_handoff"]["authority_boundary"][
+                "generated_surface_can_declare_verdict"
+            ]
+        )
+        self.assertEqual(
+            {
+                item["function_id"]
+                for item in export["minimal_authority_functions"]
+            },
+            {
+                "fundability_verdict",
+                "quality_verdict",
+                "export_verdict",
+                "package_authority",
+                "memory_accept_reject",
+                "owner_receipt_signer",
+                "grant_helper",
+            },
+        )
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(output_guard["allowed_output_classes"], thinning["mag_owned_outputs"])
