@@ -27,7 +27,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 | 目录 | 长期职责 | 当前 MAG 承载 |
 | --- | --- | --- |
 | `docs/` root | docs 入口、核心五件套、docs governance、root public allowlist | `README.md`、核心五件套、`domain-positioning.md`、`mvp-scope.md`、本文件。 |
-| `docs/active/` | 当前计划、当前 gap、active baton、closeout evidence | `mag-ideal-state-cross-repo-gap-plan.md`。 |
+| `docs/active/` | 当前计划、当前 gap、active baton、当前完成门槛 | `mag-ideal-state-cross-repo-gap-plan.md`。 |
 | `docs/public/` | public narrative index | 当前较薄；未来可吸收 `domain-positioning.md`、`mvp-scope.md`，但需先处理 path stability。 |
 | `docs/product/` | app skill、product status、user-loop、direct entry、operator guidance | 当前较薄；后续从 core docs/specs/contracts 抽取仍 current 的 product-entry 内容。 |
 | `docs/runtime/` | runtime/control/projection、OPL-hosted boundary、receipt/projection 支撑 | 当前较薄；runtime truth 仍在 contracts/source/status/specs。 |
@@ -60,13 +60,11 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 当前 direct retirement posture 的 active owner 是 `docs/active/mag-ideal-state-cross-repo-gap-plan.md`，机器投影是 `product-entry-manifest.ideal_state_closure_status.direct_retirement_posture`。维护时应先看 manifest 中的 `physical_skeleton_follow_through` 与 `controlled_domain_memory_apply_proof.repo_source_layout_audit`，确认旧面已经没有 active caller，再删除或归档；不要用旧路径稳定性作为保留兼容壳的理由。
 
-## 2026-05-16 生命周期收敛批次
-
-本轮审阅以 `docs/references/med-auto-grant-ideal-state.md`、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、OPL family 主参考和当前代码/合同面为准，做出以下文档生命周期决策：
+## 当前生命周期决策
 
 - `docs/specs/2026-04-11-hermes-backed-*`、`docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md` 与 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-*` 已无 active owner 角色，物理移动到 `docs/history/specs/`。
 - product-entry、package/export、formal-entry、authoring completion、AI-first quality、quality/autonomy/family grammar 相关 support specs 仍留在 `docs/specs/`，但只按 lifecycle map 标注的具体 subsection 阅读；它们不承担 public identity、runtime owner 或 production soak 结论。
-- `docs/product/`、`docs/runtime/`、`docs/delivery/`、`docs/source/`、`docs/policies/` 当前保持薄索引职责；本轮不把核心五件套内容拆散到这些目录，避免为归档而制造第二真相源。
+- `docs/product/`、`docs/runtime/`、`docs/delivery/`、`docs/source/`、`docs/policies/` 当前保持薄索引职责；不要为了填目录把核心五件套内容拆散成第二真相源。
 - 旧 `tests/test_product_entry.py` 聚合入口、`domain_runtime_parts.patch_targets` patch bridge、Gateway/local-manager default path 与 legacy flat CLI shell alias 继续按 direct retirement posture 处理；文档层只保留 history/provenance，不新增兼容入口。
 
 ## Transition / Oracle Gap

@@ -132,7 +132,7 @@ line budget，新增或增长的超长文件应拆分，而不是扩大单文件
 - [历史 plans](./history/plans/README.md)
 
 旧 `docs/plans/**` 活跃计划层已退役。当前执行、当前计划、当前差距、
-active baton 与 closeout evidence 进入 `docs/active/**`；已完成或被替代的规划工件进入
+active baton 与当前完成门槛进入 `docs/active/**`；已完成或被替代的规划工件进入
 `docs/history/plans/**`。
 当前主线真相继续以核心文档、`docs/specs/README.md` 中列出的 active specs 和 [`current-program.json`](../contracts/runtime-program/current-program.json) 为准。
 
