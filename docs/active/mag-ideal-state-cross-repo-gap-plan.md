@@ -58,6 +58,7 @@ OPL 必须持有：
 
 5. `contract_source_ref_refresh`
    privatized audit、generated-surface handoff 和 consumer/thinning contract 中的 code path / source_ref 已作为当前 bridge-exit 证据读取；后续若路径漂移，只能进入 source-ref refresh、history/provenance 或 tombstone，不能用漂移路径证明当前状态。
+   当前 machine-readable handoff 已为每个 generated/bridge surface 的 `current_mag_paths` 投影 `current_mag_path_status`；aggregate `missing_current_mag_path_count=0`、`stale_path_policy=history_or_source_ref_refresh_only`。这只证明 MAG 当前 source refs 存在并可刷新，不声明 OPL replacement exists、bridge exit complete 或 production soak complete。
 
 ## Retained Private Authority Functions
 

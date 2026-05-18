@@ -790,6 +790,19 @@
         "target_domain_id": "med-autogrant"
       },
       "bridge_policy": "MAG handwritten product/status/sidecar/projection wrappers are migration bridges, not long-term MAG owner surfaces.",
+      "current_mag_path_status": {
+        "checked_path_count": 12,
+        "checked_surface_count": 6,
+        "claims_all_bridge_exits_complete": false,
+        "claims_opl_replacement_exists": false,
+        "claims_production_long_run_soak_complete": false,
+        "missing_current_mag_path_count": 0,
+        "missing_current_mag_paths": [],
+        "proof_policy": "listed current_mag_paths must exist in the MAG repo; stale paths may only be moved to history/provenance or refreshed as source refs.",
+        "stale_path_policy": "history_or_source_ref_refresh_only",
+        "status": "current",
+        "surface_kind": "mag_generated_surface_handoff_currentness_proof"
+      },
       "declarative_input_ref": "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
       "domain_handler_owner": "med-autogrant",
       "domain_handler_target": "med-autogrant",
@@ -862,6 +875,22 @@
           ],
           "current_mag_long_term_owner": false,
           "current_mag_path_role": "domain_handler_ref_only_adapter_not_generic_wrapper_owner",
+          "current_mag_path_status": {
+            "checked_path_count": 1,
+            "missing_count": 0,
+            "missing_paths": [],
+            "paths": [
+              {
+                "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/manifest.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              }
+            ],
+            "stale_path_policy": "history_or_source_ref_refresh_only",
+            "status": "current",
+            "surface_kind": "mag_current_path_status"
+          },
           "current_mag_paths": [
             "src/med_autogrant/product_entry_parts/manifest.py"
           ],
@@ -870,6 +899,8 @@
           "domain_handler_target": "med-autogrant",
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
+          "missing_current_mag_path_count": 0,
+          "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "product_status",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
           "target_owner": "one-person-lab"
@@ -942,6 +973,28 @@
           ],
           "current_mag_long_term_owner": false,
           "current_mag_path_role": "domain_handler_ref_only_adapter_not_generic_wrapper_owner",
+          "current_mag_path_status": {
+            "checked_path_count": 2,
+            "missing_count": 0,
+            "missing_paths": [],
+            "paths": [
+              {
+                "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/loop_contracts.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              },
+              {
+                "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/entry.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              }
+            ],
+            "stale_path_policy": "history_or_source_ref_refresh_only",
+            "status": "current",
+            "surface_kind": "mag_current_path_status"
+          },
           "current_mag_paths": [
             "src/med_autogrant/product_entry_parts/loop_contracts.py",
             "src/med_autogrant/product_entry_parts/entry.py"
@@ -951,6 +1004,8 @@
           "domain_handler_target": "med-autogrant",
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
+          "missing_current_mag_path_count": 0,
+          "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "product_user_loop",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
           "target_owner": "one-person-lab"
@@ -1023,6 +1078,22 @@
           ],
           "current_mag_long_term_owner": false,
           "current_mag_path_role": "domain_handler_ref_only_adapter_not_generic_wrapper_owner",
+          "current_mag_path_status": {
+            "checked_path_count": 1,
+            "missing_count": 0,
+            "missing_paths": [],
+            "paths": [
+              {
+                "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/sidecar.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              }
+            ],
+            "stale_path_policy": "history_or_source_ref_refresh_only",
+            "status": "current",
+            "surface_kind": "mag_current_path_status"
+          },
           "current_mag_paths": [
             "src/med_autogrant/product_entry_parts/sidecar.py"
           ],
@@ -1031,6 +1102,8 @@
           "domain_handler_target": "med-autogrant",
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
+          "missing_current_mag_path_count": 0,
+          "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "product_sidecar",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
           "target_owner": "one-person-lab"
@@ -1103,6 +1176,34 @@
           ],
           "current_mag_long_term_owner": false,
           "current_mag_path_role": "domain_handler_ref_only_adapter_not_generic_wrapper_owner",
+          "current_mag_path_status": {
+            "checked_path_count": 3,
+            "missing_count": 0,
+            "missing_paths": [],
+            "paths": [
+              {
+                "exists": true,
+                "path": "src/med_autogrant/cli_parts/parser_adders.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              },
+              {
+                "exists": true,
+                "path": "src/med_autogrant/cli_parts/handlers.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              },
+              {
+                "exists": true,
+                "path": "src/med_autogrant/public_cli.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              }
+            ],
+            "stale_path_policy": "history_or_source_ref_refresh_only",
+            "status": "current",
+            "surface_kind": "mag_current_path_status"
+          },
           "current_mag_paths": [
             "src/med_autogrant/cli_parts/parser_adders.py",
             "src/med_autogrant/cli_parts/handlers.py",
@@ -1113,6 +1214,8 @@
           "domain_handler_target": "med-autogrant",
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
+          "missing_current_mag_path_count": 0,
+          "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "grouped_cli_api",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
           "target_owner": "one-person-lab"
@@ -1186,6 +1289,34 @@
           ],
           "current_mag_long_term_owner": false,
           "current_mag_path_role": "domain_handler_ref_only_adapter_not_generic_wrapper_owner",
+          "current_mag_path_status": {
+            "checked_path_count": 3,
+            "missing_count": 0,
+            "missing_paths": [],
+            "paths": [
+              {
+                "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/progress.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              },
+              {
+                "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/manifest_builder.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              },
+              {
+                "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/receipt_observability.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              }
+            ],
+            "stale_path_policy": "history_or_source_ref_refresh_only",
+            "status": "current",
+            "surface_kind": "mag_current_path_status"
+          },
           "current_mag_paths": [
             "src/med_autogrant/product_entry_parts/progress.py",
             "src/med_autogrant/product_entry_parts/manifest_builder.py",
@@ -1196,6 +1327,8 @@
           "domain_handler_target": "med-autogrant",
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
+          "missing_current_mag_path_count": 0,
+          "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "projection_builder",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
           "target_owner": "one-person-lab"
@@ -1268,6 +1401,28 @@
           ],
           "current_mag_long_term_owner": false,
           "current_mag_path_role": "domain_handler_ref_only_adapter_not_generic_wrapper_owner",
+          "current_mag_path_status": {
+            "checked_path_count": 2,
+            "missing_count": 0,
+            "missing_paths": [],
+            "paths": [
+              {
+                "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              },
+              {
+                "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              }
+            ],
+            "stale_path_policy": "history_or_source_ref_refresh_only",
+            "status": "current",
+            "surface_kind": "mag_current_path_status"
+          },
           "current_mag_paths": [
             "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
             "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py"
@@ -1277,6 +1432,8 @@
           "domain_handler_target": "med-autogrant",
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
+          "missing_current_mag_path_count": 0,
+          "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "lifecycle_wrapper",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
           "target_owner": "one-person-lab"
@@ -1294,7 +1451,9 @@
       "handoff_policy": "OPL_generates_or_hosts_generic_wrappers_from_MAG_pack_input",
       "mag_long_term_owner_surface_ids": [],
       "mag_role": "domain_handler_ref_only_adapter_and_minimal_authority_functions",
+      "missing_current_mag_path_count": 0,
       "owner": "med-autogrant",
+      "stale_path_policy": "history_or_source_ref_refresh_only",
       "state": "mag_handler_boundary_ready_external_caller_evidence_gated",
       "surface_kind": "mag_generated_surface_handoff",
       "target_domain_id": "med-autogrant",

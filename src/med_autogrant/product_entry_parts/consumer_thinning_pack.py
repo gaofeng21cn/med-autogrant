@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 MAG_MINIMAL_AUTHORITY_FUNCTION_IDS = (
     "fundability_verdict",
@@ -229,6 +232,72 @@ def build_declarative_grant_pack_compiler_input() -> dict[str, Any]:
 
 
 def build_generated_surface_handoff() -> dict[str, Any]:
+    generated_surfaces = [
+        _generated_surface(
+            "product_status",
+            current_mag_paths=["src/med_autogrant/product_entry_parts/manifest.py"],
+            input_refs=[
+                "/product_entry_manifest/product_entry_status",
+                "/product_entry_manifest/grant_authoring_readiness",
+            ],
+        ),
+        _generated_surface(
+            "product_user_loop",
+            current_mag_paths=[
+                "src/med_autogrant/product_entry_parts/loop_contracts.py",
+                "src/med_autogrant/product_entry_parts/entry.py",
+            ],
+            input_refs=[
+                "/product_entry_manifest/operator_loop_surface",
+                "/product_entry_manifest/operator_loop_actions",
+            ],
+        ),
+        _generated_surface(
+            "product_sidecar",
+            current_mag_paths=["src/med_autogrant/product_entry_parts/sidecar.py"],
+            input_refs=[
+                "/product_entry_manifest/runtime_control",
+                "/product_entry_manifest/mag_consumer_thinning_contract",
+            ],
+        ),
+        _generated_surface(
+            "grouped_cli_api",
+            current_mag_paths=[
+                "src/med_autogrant/cli_parts/parser_adders.py",
+                "src/med_autogrant/cli_parts/handlers.py",
+                "src/med_autogrant/public_cli.py",
+            ],
+            input_refs=[
+                "/product_entry_manifest/family_action_catalog",
+                "/product_entry_manifest/product_entry_shell",
+            ],
+        ),
+        _generated_surface(
+            "projection_builder",
+            current_mag_paths=[
+                "src/med_autogrant/product_entry_parts/progress.py",
+                "src/med_autogrant/product_entry_parts/manifest_builder.py",
+                "src/med_autogrant/product_entry_parts/receipt_observability.py",
+            ],
+            input_refs=[
+                "/product_entry_manifest/progress_projection",
+                "/product_entry_manifest/artifact_inventory",
+                "/product_entry_manifest/controlled_stage_attempt_projection",
+            ],
+        ),
+        _generated_surface(
+            "lifecycle_wrapper",
+            current_mag_paths=[
+                "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
+                "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
+            ],
+            input_refs=[
+                "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                "/product_entry_manifest/artifact_locator_contract",
+            ],
+        ),
+    ]
+    currentness_proof = _handoff_currentness_proof(generated_surfaces)
     return {
         "surface_kind": "mag_generated_surface_handoff",
         "handoff_id": "mag.generated_surface_handoff.v1",
@@ -256,71 +325,10 @@ def build_generated_surface_handoff() -> dict[str, Any]:
             "declarative_grant_pack_compiler_input"
         ),
         "generated_surface_ids": list(GENERATED_OR_BRIDGE_SURFACE_IDS),
-        "generated_or_bridge_surfaces": [
-            _generated_surface(
-                "product_status",
-                current_mag_paths=["src/med_autogrant/product_entry_parts/manifest.py"],
-                input_refs=[
-                    "/product_entry_manifest/product_entry_status",
-                    "/product_entry_manifest/grant_authoring_readiness",
-                ],
-            ),
-            _generated_surface(
-                "product_user_loop",
-                current_mag_paths=[
-                    "src/med_autogrant/product_entry_parts/loop_contracts.py",
-                    "src/med_autogrant/product_entry_parts/entry.py",
-                ],
-                input_refs=[
-                    "/product_entry_manifest/operator_loop_surface",
-                    "/product_entry_manifest/operator_loop_actions",
-                ],
-            ),
-            _generated_surface(
-                "product_sidecar",
-                current_mag_paths=["src/med_autogrant/product_entry_parts/sidecar.py"],
-                input_refs=[
-                    "/product_entry_manifest/runtime_control",
-                    "/product_entry_manifest/mag_consumer_thinning_contract",
-                ],
-            ),
-            _generated_surface(
-                "grouped_cli_api",
-                current_mag_paths=[
-                    "src/med_autogrant/cli_parts/parser_adders.py",
-                    "src/med_autogrant/cli_parts/handlers.py",
-                    "src/med_autogrant/public_cli.py",
-                ],
-                input_refs=[
-                    "/product_entry_manifest/family_action_catalog",
-                    "/product_entry_manifest/product_entry_shell",
-                ],
-            ),
-            _generated_surface(
-                "projection_builder",
-                current_mag_paths=[
-                    "src/med_autogrant/product_entry_parts/progress.py",
-                    "src/med_autogrant/product_entry_parts/manifest_builder.py",
-                    "src/med_autogrant/product_entry_parts/receipt_observability.py",
-                ],
-                input_refs=[
-                    "/product_entry_manifest/progress_projection",
-                    "/product_entry_manifest/artifact_inventory",
-                    "/product_entry_manifest/controlled_stage_attempt_projection",
-                ],
-            ),
-            _generated_surface(
-                "lifecycle_wrapper",
-                current_mag_paths=[
-                    "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
-                    "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
-                ],
-                input_refs=[
-                    "/product_entry_manifest/lifecycle_guarded_apply_proof",
-                    "/product_entry_manifest/artifact_locator_contract",
-                ],
-            ),
-        ],
+        "current_mag_path_status": currentness_proof,
+        "missing_current_mag_path_count": currentness_proof["missing_current_mag_path_count"],
+        "stale_path_policy": "history_or_source_ref_refresh_only",
+        "generated_or_bridge_surfaces": generated_surfaces,
         "mag_long_term_owner_surface_ids": [],
         "authority_boundary": {
             "long_term_generated_surface_owner": "one-person-lab",
@@ -380,6 +388,7 @@ def _generated_surface(
     current_mag_paths: list[str],
     input_refs: list[str],
 ) -> dict[str, Any]:
+    current_mag_path_status = _current_mag_path_status(current_mag_paths)
     return {
         "surface_id": surface_id,
         "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
@@ -395,10 +404,63 @@ def _generated_surface(
             exit_action="delete_or_history_tombstone_this_mag_wrapper_keep_domain_handler",
         ),
         "current_mag_paths": current_mag_paths,
+        "current_mag_path_status": current_mag_path_status,
+        "missing_current_mag_path_count": current_mag_path_status["missing_count"],
+        "stale_path_policy": "history_or_source_ref_refresh_only",
         "compiler_input_refs": input_refs,
         "generated_by_opl_in_target": True,
         "current_mag_long_term_owner": False,
         "keeps_mag_authority_functions": False,
+    }
+
+
+def _current_mag_path_status(current_mag_paths: list[str]) -> dict[str, Any]:
+    path_statuses = []
+    for path in current_mag_paths:
+        path_statuses.append(
+            {
+                "path": path,
+                "exists": (REPO_ROOT / path).is_file(),
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path",
+            }
+        )
+    missing_paths = [status["path"] for status in path_statuses if not status["exists"]]
+    return {
+        "surface_kind": "mag_current_path_status",
+        "status": "current" if not missing_paths else "missing_current_paths",
+        "checked_path_count": len(path_statuses),
+        "missing_count": len(missing_paths),
+        "missing_paths": missing_paths,
+        "stale_path_policy": "history_or_source_ref_refresh_only",
+        "paths": path_statuses,
+    }
+
+
+def _handoff_currentness_proof(generated_surfaces: list[dict[str, Any]]) -> dict[str, Any]:
+    missing_paths = [
+        path
+        for surface in generated_surfaces
+        for path in surface["current_mag_path_status"]["missing_paths"]
+    ]
+    return {
+        "surface_kind": "mag_generated_surface_handoff_currentness_proof",
+        "status": "current" if not missing_paths else "missing_current_paths",
+        "checked_surface_count": len(generated_surfaces),
+        "checked_path_count": sum(
+            surface["current_mag_path_status"]["checked_path_count"]
+            for surface in generated_surfaces
+        ),
+        "missing_current_mag_path_count": len(missing_paths),
+        "missing_current_mag_paths": missing_paths,
+        "stale_path_policy": "history_or_source_ref_refresh_only",
+        "proof_policy": (
+            "listed current_mag_paths must exist in the MAG repo; stale paths may only be "
+            "moved to history/provenance or refreshed as source refs."
+        ),
+        "claims_opl_replacement_exists": False,
+        "claims_all_bridge_exits_complete": False,
+        "claims_production_long_run_soak_complete": False,
     }
 
 
