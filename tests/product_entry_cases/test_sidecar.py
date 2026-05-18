@@ -401,6 +401,21 @@ class ProductSidecarTest(unittest.TestCase):
                 "grant_helper",
             },
         )
+        for authority_function in export["minimal_authority_functions"]:
+            with self.subTest(sidecar_authority_function=authority_function["function_id"]):
+                self.assertEqual(
+                    authority_function["ai_first_guard_policy"],
+                    "stage_artifact_or_owner_receipt_required",
+                )
+                self.assertEqual(
+                    authority_function["output_boundary"]["allowed_return_shapes"],
+                    authority_function["allowed_return_shapes"],
+                )
+                self.assertIn("typed_blocker", authority_function["allowed_return_shapes"])
+                self.assertIn(
+                    "mechanical_ready_verdict",
+                    authority_function["output_boundary"]["forbidden_outputs"],
+                )
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(output_guard["allowed_output_classes"], thinning["mag_owned_outputs"])

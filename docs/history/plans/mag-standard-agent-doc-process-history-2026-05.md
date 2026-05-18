@@ -19,6 +19,7 @@ Machine boundary: 本文是人读过程归档，不是 current truth、active pl
 - 从“拥有自己的 product/status/user-loop/sidecar/grouped CLI/projection/lifecycle shell”校准为 OPL standard agent consumer。
 - `mag_consumer_thinning_contract` 将 MAG adapter 角色收窄为 grant authority pack + thin program surface，只输出 grant-owned refs、owner receipt、typed blocker、verdict refs 和 domain action metadata。
 - `privatized_functional_module_audit` 将非知识功能面拆成 declarative pack surface、refs-only adapter、minimal authority function 和 legacy proof tombstone。
+- retained private authority functions 后续补齐了 AI-first guard、allowed return shapes 和 forbidden output boundary，用机器面固定 fundability、quality、export、package、memory、owner receipt 与 grant helper 不能由 provider completion、package existence、schema completeness 或 scorecard 分数机械生成 ready verdict。
 - `grant_transition_oracle`、receipt reconciliation proof、lifecycle receipt bundle、memory receipt projection、package lifecycle handoff 和 continuous receipt reconciliation 成为 MAG-to-OPL handoff 输入，而不是 production soak success。
 - local runtime journal、attempt ledger、upstream Hermes probe、flat shell alias、facade patch bridge 和 compatibility aggregate test 被降为 cleanup / tombstone / provenance 对象。
 

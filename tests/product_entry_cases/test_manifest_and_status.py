@@ -404,6 +404,24 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
                 self.assertEqual(authority_function["retention_class"], "mag_minimal_authority_function")
                 self.assertFalse(authority_function["generated_by_opl"])
                 self.assertTrue(authority_function["opl_generated_wrapper_allowed"])
+                self.assertEqual(
+                    authority_function["cannot_absorb_reason"],
+                    authority_function["cannot_generate_reason"],
+                )
+                self.assertEqual(
+                    authority_function["ai_first_guard_policy"],
+                    "stage_artifact_or_owner_receipt_required",
+                )
+                self.assertTrue(authority_function["ai_first_guard"])
+                self.assertEqual(
+                    authority_function["output_boundary"]["allowed_return_shapes"],
+                    authority_function["allowed_return_shapes"],
+                )
+                self.assertIn("typed_blocker", authority_function["allowed_return_shapes"])
+                self.assertIn(
+                    "mechanical_ready_verdict",
+                    authority_function["output_boundary"]["forbidden_outputs"],
+                )
         artifact_locator = manifest["artifact_locator_contract"]
         self.assertEqual(artifact_locator["surface_kind"], "domain_artifact_locator_contract")
         self.assertEqual(artifact_locator["locator_id"], "mag.artifact_locator.v1")

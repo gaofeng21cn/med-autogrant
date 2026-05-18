@@ -65,65 +65,100 @@ def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
         _authority_function(
             "fundability_verdict",
             authority_output_class="verdict_refs",
+            allowed_return_shapes=["verdict_refs", "typed_blocker", "domain_owner_receipt"],
             source_refs=[
                 "/product_entry_manifest/family_stage_control_plane/stages",
                 "/product_entry_manifest/grant_transition_oracle",
             ],
             cannot_generate_reason="Fundability is a grant-review judgment over call fit and applicant evidence.",
+            ai_first_guard=(
+                "fundability must be backed by a grant-review or fundability stage artifact; "
+                "schema completeness or OPL provider completion cannot set this verdict"
+            ),
         ),
         _authority_function(
             "quality_verdict",
             authority_output_class="verdict_refs",
+            allowed_return_shapes=["verdict_refs", "typed_blocker", "domain_owner_receipt"],
             source_refs=[
                 "/product_entry_manifest/grant_authoring_readiness",
                 "/product_entry_manifest/controlled_stage_attempt_projection",
             ],
             cannot_generate_reason="Authoring quality requires MAG-owned AI critique and issue closure semantics.",
+            ai_first_guard=(
+                "quality must be backed by an AI-authored critique, quality closure dossier, "
+                "or reviewer artifact; numeric scorecards cannot independently declare ready"
+            ),
         ),
         _authority_function(
             "export_verdict",
             authority_output_class="verdict_refs",
+            allowed_return_shapes=["verdict_refs", "typed_blocker", "domain_owner_receipt"],
             source_refs=[
                 "package submission-ready",
                 "/product_entry_manifest/artifact_locator_contract",
             ],
             cannot_generate_reason="Submission/export readiness is a grant package gate, not package existence.",
+            ai_first_guard=(
+                "export readiness must trace to MAG package/export stage authority; "
+                "artifact presence or generic lifecycle completion cannot declare submission-ready"
+            ),
         ),
         _authority_function(
             "package_authority",
             authority_output_class="grant_owned_refs",
+            allowed_return_shapes=["domain_owner_receipt", "typed_blocker", "grant_owned_refs"],
             source_refs=[
                 "/product_entry_manifest/artifact_locator_contract",
                 "/product_entry_manifest/lifecycle_guarded_apply_proof",
             ],
             cannot_generate_reason="Grant package mutation and release require MAG package authority.",
+            ai_first_guard=(
+                "package mutation requires MAG owner receipt tied to the grant package stage; "
+                "OPL artifact lifecycle may only carry refs and receipts"
+            ),
         ),
         _authority_function(
             "memory_accept_reject",
             authority_output_class="owner_receipt",
+            allowed_return_shapes=["domain_owner_receipt", "typed_blocker", "ref"],
             source_refs=[
                 "/product_entry_manifest/domain_memory_descriptor_locator",
                 "/product_entry_manifest/controlled_domain_memory_apply_proof",
             ],
             cannot_generate_reason="Grant strategy memory body and accept/reject decisions are MAG authority.",
+            ai_first_guard=(
+                "memory accept/reject must be a grant-strategy decision over domain memory meaning; "
+                "OPL memory transport can only carry body-free refs and writeback proposals"
+            ),
         ),
         _authority_function(
             "owner_receipt_signer",
             authority_output_class="owner_receipt",
+            allowed_return_shapes=["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
             source_refs=[
                 "/product_entry_manifest/owner_receipt_contract",
                 "/product_entry_manifest/controlled_soak_no_regression_attempt",
             ],
             cannot_generate_reason="Only MAG can sign domain owner receipts or no-regression evidence.",
+            ai_first_guard=(
+                "owner receipts can sign only MAG domain receipts, typed blockers, safe action refs, "
+                "or no-regression evidence; they cannot create grant verdicts from runtime state"
+            ),
         ),
         _authority_function(
             "grant_helper",
             authority_output_class="domain_action_metadata",
+            allowed_return_shapes=["domain_action_metadata", "typed_blocker", "ref"],
             source_refs=[
                 "/product_entry_manifest/family_action_catalog",
                 "/product_entry_manifest/grant_transition_oracle",
             ],
             cannot_generate_reason="Grant-native helpers encode funder, route, and blocker semantics.",
+            ai_first_guard=(
+                "grant helpers may validate funder, route, blocker, and action metadata only; "
+                "they cannot bypass grant-stage AI review or owner receipt authority"
+            ),
         ),
     ]
 
@@ -308,8 +343,10 @@ def _authority_function(
     function_id: str,
     *,
     authority_output_class: str,
+    allowed_return_shapes: list[str],
     source_refs: list[str],
     cannot_generate_reason: str,
+    ai_first_guard: str,
 ) -> dict[str, Any]:
     return {
         "function_id": function_id,
@@ -318,8 +355,22 @@ def _authority_function(
         "generated_by_opl": False,
         "opl_generated_wrapper_allowed": True,
         "authority_output_class": authority_output_class,
+        "allowed_return_shapes": allowed_return_shapes,
+        "output_boundary": {
+            "allowed_return_shapes": allowed_return_shapes,
+            "forbidden_outputs": [
+                "grant_truth_write",
+                "memory_body_write",
+                "artifact_body_write_without_owner_receipt",
+                "opl_owned_runtime_state",
+                "mechanical_ready_verdict",
+            ],
+        },
         "source_refs": source_refs,
         "cannot_generate_reason": cannot_generate_reason,
+        "cannot_absorb_reason": cannot_generate_reason,
+        "ai_first_guard": ai_first_guard,
+        "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
     }
 
 

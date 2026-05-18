@@ -1319,11 +1319,33 @@
     ],
     "minimal_authority_functions": [
       {
+        "ai_first_guard": "fundability must be backed by a grant-review or fundability stage artifact; schema completeness or OPL provider completion cannot set this verdict",
+        "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "allowed_return_shapes": [
+          "verdict_refs",
+          "typed_blocker",
+          "domain_owner_receipt"
+        ],
         "authority_output_class": "verdict_refs",
+        "cannot_absorb_reason": "Fundability is a grant-review judgment over call fit and applicant evidence.",
         "cannot_generate_reason": "Fundability is a grant-review judgment over call fit and applicant evidence.",
         "function_id": "fundability_verdict",
         "generated_by_opl": false,
         "opl_generated_wrapper_allowed": true,
+        "output_boundary": {
+          "allowed_return_shapes": [
+            "verdict_refs",
+            "typed_blocker",
+            "domain_owner_receipt"
+          ],
+          "forbidden_outputs": [
+            "grant_truth_write",
+            "memory_body_write",
+            "artifact_body_write_without_owner_receipt",
+            "opl_owned_runtime_state",
+            "mechanical_ready_verdict"
+          ]
+        },
         "owner": "med-autogrant",
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
@@ -1332,11 +1354,33 @@
         ]
       },
       {
+        "ai_first_guard": "quality must be backed by an AI-authored critique, quality closure dossier, or reviewer artifact; numeric scorecards cannot independently declare ready",
+        "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "allowed_return_shapes": [
+          "verdict_refs",
+          "typed_blocker",
+          "domain_owner_receipt"
+        ],
         "authority_output_class": "verdict_refs",
+        "cannot_absorb_reason": "Authoring quality requires MAG-owned AI critique and issue closure semantics.",
         "cannot_generate_reason": "Authoring quality requires MAG-owned AI critique and issue closure semantics.",
         "function_id": "quality_verdict",
         "generated_by_opl": false,
         "opl_generated_wrapper_allowed": true,
+        "output_boundary": {
+          "allowed_return_shapes": [
+            "verdict_refs",
+            "typed_blocker",
+            "domain_owner_receipt"
+          ],
+          "forbidden_outputs": [
+            "grant_truth_write",
+            "memory_body_write",
+            "artifact_body_write_without_owner_receipt",
+            "opl_owned_runtime_state",
+            "mechanical_ready_verdict"
+          ]
+        },
         "owner": "med-autogrant",
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
@@ -1345,11 +1389,33 @@
         ]
       },
       {
+        "ai_first_guard": "export readiness must trace to MAG package/export stage authority; artifact presence or generic lifecycle completion cannot declare submission-ready",
+        "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "allowed_return_shapes": [
+          "verdict_refs",
+          "typed_blocker",
+          "domain_owner_receipt"
+        ],
         "authority_output_class": "verdict_refs",
+        "cannot_absorb_reason": "Submission/export readiness is a grant package gate, not package existence.",
         "cannot_generate_reason": "Submission/export readiness is a grant package gate, not package existence.",
         "function_id": "export_verdict",
         "generated_by_opl": false,
         "opl_generated_wrapper_allowed": true,
+        "output_boundary": {
+          "allowed_return_shapes": [
+            "verdict_refs",
+            "typed_blocker",
+            "domain_owner_receipt"
+          ],
+          "forbidden_outputs": [
+            "grant_truth_write",
+            "memory_body_write",
+            "artifact_body_write_without_owner_receipt",
+            "opl_owned_runtime_state",
+            "mechanical_ready_verdict"
+          ]
+        },
         "owner": "med-autogrant",
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
@@ -1358,11 +1424,33 @@
         ]
       },
       {
+        "ai_first_guard": "package mutation requires MAG owner receipt tied to the grant package stage; OPL artifact lifecycle may only carry refs and receipts",
+        "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "allowed_return_shapes": [
+          "domain_owner_receipt",
+          "typed_blocker",
+          "grant_owned_refs"
+        ],
         "authority_output_class": "grant_owned_refs",
+        "cannot_absorb_reason": "Grant package mutation and release require MAG package authority.",
         "cannot_generate_reason": "Grant package mutation and release require MAG package authority.",
         "function_id": "package_authority",
         "generated_by_opl": false,
         "opl_generated_wrapper_allowed": true,
+        "output_boundary": {
+          "allowed_return_shapes": [
+            "domain_owner_receipt",
+            "typed_blocker",
+            "grant_owned_refs"
+          ],
+          "forbidden_outputs": [
+            "grant_truth_write",
+            "memory_body_write",
+            "artifact_body_write_without_owner_receipt",
+            "opl_owned_runtime_state",
+            "mechanical_ready_verdict"
+          ]
+        },
         "owner": "med-autogrant",
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
@@ -1371,11 +1459,33 @@
         ]
       },
       {
+        "ai_first_guard": "memory accept/reject must be a grant-strategy decision over domain memory meaning; OPL memory transport can only carry body-free refs and writeback proposals",
+        "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "allowed_return_shapes": [
+          "domain_owner_receipt",
+          "typed_blocker",
+          "ref"
+        ],
         "authority_output_class": "owner_receipt",
+        "cannot_absorb_reason": "Grant strategy memory body and accept/reject decisions are MAG authority.",
         "cannot_generate_reason": "Grant strategy memory body and accept/reject decisions are MAG authority.",
         "function_id": "memory_accept_reject",
         "generated_by_opl": false,
         "opl_generated_wrapper_allowed": true,
+        "output_boundary": {
+          "allowed_return_shapes": [
+            "domain_owner_receipt",
+            "typed_blocker",
+            "ref"
+          ],
+          "forbidden_outputs": [
+            "grant_truth_write",
+            "memory_body_write",
+            "artifact_body_write_without_owner_receipt",
+            "opl_owned_runtime_state",
+            "mechanical_ready_verdict"
+          ]
+        },
         "owner": "med-autogrant",
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
@@ -1384,11 +1494,33 @@
         ]
       },
       {
+        "ai_first_guard": "owner receipts can sign only MAG domain receipts, typed blockers, safe action refs, or no-regression evidence; they cannot create grant verdicts from runtime state",
+        "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "allowed_return_shapes": [
+          "domain_owner_receipt",
+          "typed_blocker",
+          "no_regression_evidence"
+        ],
         "authority_output_class": "owner_receipt",
+        "cannot_absorb_reason": "Only MAG can sign domain owner receipts or no-regression evidence.",
         "cannot_generate_reason": "Only MAG can sign domain owner receipts or no-regression evidence.",
         "function_id": "owner_receipt_signer",
         "generated_by_opl": false,
         "opl_generated_wrapper_allowed": true,
+        "output_boundary": {
+          "allowed_return_shapes": [
+            "domain_owner_receipt",
+            "typed_blocker",
+            "no_regression_evidence"
+          ],
+          "forbidden_outputs": [
+            "grant_truth_write",
+            "memory_body_write",
+            "artifact_body_write_without_owner_receipt",
+            "opl_owned_runtime_state",
+            "mechanical_ready_verdict"
+          ]
+        },
         "owner": "med-autogrant",
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
@@ -1397,11 +1529,33 @@
         ]
       },
       {
+        "ai_first_guard": "grant helpers may validate funder, route, blocker, and action metadata only; they cannot bypass grant-stage AI review or owner receipt authority",
+        "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "allowed_return_shapes": [
+          "domain_action_metadata",
+          "typed_blocker",
+          "ref"
+        ],
         "authority_output_class": "domain_action_metadata",
+        "cannot_absorb_reason": "Grant-native helpers encode funder, route, and blocker semantics.",
         "cannot_generate_reason": "Grant-native helpers encode funder, route, and blocker semantics.",
         "function_id": "grant_helper",
         "generated_by_opl": false,
         "opl_generated_wrapper_allowed": true,
+        "output_boundary": {
+          "allowed_return_shapes": [
+            "domain_action_metadata",
+            "typed_blocker",
+            "ref"
+          ],
+          "forbidden_outputs": [
+            "grant_truth_write",
+            "memory_body_write",
+            "artifact_body_write_without_owner_receipt",
+            "opl_owned_runtime_state",
+            "mechanical_ready_verdict"
+          ]
+        },
         "owner": "med-autogrant",
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [

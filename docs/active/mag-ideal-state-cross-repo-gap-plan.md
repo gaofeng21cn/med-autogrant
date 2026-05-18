@@ -54,6 +54,7 @@ OPL 必须持有：
 
 4. `private_authority_ai_first_guard`
    fundability、quality、export、package、memory、transition oracle、owner receipt 和 grant helper 是 MAG 可保留的 minimal authority functions，但不能用函数调用跳过 OPL stage。fundability / authoring quality / critique / export readiness 必须来自 AI-first grant stage artifact；代码只做 schema validator、materializer、receipt signer、guard 和 refs projection。
+   当前机器面已把 `fundability_verdict`、`quality_verdict`、`export_verdict`、`package_authority`、`memory_accept_reject`、`owner_receipt_signer` 和 `grant_helper` 的 `ai_first_guard`、`allowed_return_shapes` 与 `output_boundary` 投影到 `functional_privatization_audit`、product-entry manifest 和 sidecar export；这只证明 retained authority function 的 MAG 边界可验，不证明外部 OPL generated caller、真实 App 消费或 production soak 已完成。
 
 5. `contract_source_ref_refresh`
    privatized audit、generated-surface handoff 和 consumer/thinning contract 中的 code path / source_ref 已作为当前 bridge-exit 证据读取；后续若路径漂移，只能进入 source-ref refresh、history/provenance 或 tombstone，不能用漂移路径证明当前状态。
