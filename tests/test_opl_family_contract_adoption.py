@@ -636,6 +636,8 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert thinning["manifest_surface_ref"] == "/product_entry_manifest/mag_consumer_thinning_contract"
     assert thinning["consumes_opl_family_primitive"] == "family_scheduler_replacement"
     assert thinning["adapter_role"] == "domain_authority_pack_with_thin_program_surface"
+    assert thinning["active_caller_owner"] == "med-autogrant"
+    assert thinning["active_caller_surface"] == "mag_direct_domain_entry_until_opl_caller_evidence"
     assert thinning["mag_owned_outputs"] == [
         "grant_owned_refs",
         "owner_receipt",
@@ -670,6 +672,9 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     )
     assert thinning["privatized_functional_module_audit_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+    )
+    assert thinning["external_evidence_request_pack_ref"] == (
+        "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
     )
     assert thinning["functional_followthrough_gap_classification_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/"
@@ -756,6 +761,30 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
             "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_legacy_proof_refs_only",
         },
     }
+    assert audit["audit_refs"]["external_evidence_request_pack_ref"] == (
+        "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
+    )
+    evidence_pack = thinning["external_evidence_request_pack"]
+    assert evidence_pack["surface_kind"] == "mag_external_evidence_request_pack"
+    assert evidence_pack["state"] == "request_pack_declared_external_evidence_not_claimed"
+    assert evidence_pack["required_request_ids"] == [
+        "opl_generated_hosted_caller_pack_consumption",
+        "app_workbench_package_ref_consumption",
+        "production_default_caller_release_dist_consumption",
+        "owner_receipt_typed_blocker_ref_roundtrip",
+        "continuous_no_forbidden_write_guard",
+        "direct_hosted_parity_no_regression",
+        "temporal_provider_long_soak_receipt_reconciliation",
+    ]
+    assert evidence_pack["forbidden_completion_claims"]["claims_opl_replacement_exists"] is False
+    assert (
+        evidence_pack["forbidden_completion_claims"]["claims_production_long_run_soak_complete"]
+        is False
+    )
+    assert evidence_pack["authority_boundary"]["mag_request_pack_only"] is True
+    assert evidence_pack["authority_boundary"]["mag_implements_opl_runtime"] is False
+    assert evidence_pack["authority_boundary"]["mag_implements_app_workbench"] is False
+    assert evidence_pack["authority_boundary"]["mag_claims_external_evidence_exists"] is False
     assert thinning["sidecar_output_policy"] == "grant_refs_and_receipts_only_no_generic_runtime_state"
     assert thinning["private_functional_state_output_classes_forbidden"] == [
         "local_runtime_journal_state",

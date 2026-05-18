@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-18：落地 MAG external evidence request pack
+
+- 决策：`mag_consumer_thinning_contract` 新增 `external_evidence_request_pack`，并由 product-entry manifest、sidecar export、schema、`functional_privatization_audit`、`current-program` 与 `opl-family-contract-adoption` 共同投影。该 pack 只请求 OPL/App/production caller 返回 refs、receipt shapes、typed blocker、no-regression evidence 和 parity evidence。
+- 理由：MAG repo 侧功能/结构 gap 已收敛到 handler/ref-only/minimal authority 边界；剩余缺口属于外部 OPL generated/hosted caller、Codex App workbench、production/default caller、Temporal provider long-soak 和 continuous live receipt reconciliation 证据。用 request pack 可以把这些需求机器化，同时避免在 MAG 内重建 OPL runtime、generic runner、queue、attempt ledger 或 App workbench。
+- 影响：current truth 现在明确 `active_caller_owner=med-autogrant` / `mag_direct_domain_entry_until_opl_caller_evidence`，并继续声明 `claims_opl_replacement_exists=false`、`claims_all_bridge_exits_complete=false`、`claims_production_long_run_soak_complete=false`。该决策不关闭任何外部证据门，不把 provider completion、receipt request 或 package refs 写成 fundability-ready、quality-ready、export-ready 或 production soak success。
+
 ## 2026-05-17：退役 MAG 本地 runtime / Hermes probe active surface
 
 - 决策：`runtime-run`、`runtime-resume` 与 `probe-upstream-hermes` 从 MAG public CLI、`MedAutoGrantDomainEntry` service-safe catalog、product-entry session continuity、hosted bundle schema 和默认 smoke 断言中移除；session/resume 入口改由 OPL generated surface refs 表达。

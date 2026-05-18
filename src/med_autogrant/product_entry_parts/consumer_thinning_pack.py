@@ -62,6 +62,207 @@ GENERATED_SURFACE_BRIDGE_EXIT_EVIDENCE_REFS = {
     ],
 }
 
+EXTERNAL_EVIDENCE_REQUEST_IDS = (
+    "opl_generated_hosted_caller_pack_consumption",
+    "app_workbench_package_ref_consumption",
+    "production_default_caller_release_dist_consumption",
+    "owner_receipt_typed_blocker_ref_roundtrip",
+    "continuous_no_forbidden_write_guard",
+    "direct_hosted_parity_no_regression",
+    "temporal_provider_long_soak_receipt_reconciliation",
+)
+
+
+def build_external_evidence_request_pack() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_external_evidence_request_pack",
+        "request_pack_id": "mag.external_evidence_request_pack.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "request_owner": TARGET_DOMAIN_ID,
+        "requested_from": ["one-person-lab", "codex_app", "production_caller"],
+        "state": "request_pack_declared_external_evidence_not_claimed",
+        "policy": "request_refs_receipt_shapes_and_parity_only_no_runtime_implementation",
+        "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
+        "consumer_thinning_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+        "sidecar_projection_ref": "/sidecar_export/external_evidence_request_pack",
+        "required_request_ids": list(EXTERNAL_EVIDENCE_REQUEST_IDS),
+        "requests": [
+            _external_evidence_request(
+                "opl_generated_hosted_caller_pack_consumption",
+                requested_from="one-person-lab",
+                evidence_class="generated_hosted_caller_consumption",
+                required_refs=[
+                    "opl://generated-surfaces/mag/product-entry-manifest",
+                    "opl://generated-surfaces/mag/product-sidecar",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+                ],
+                required_receipt_shapes=[
+                    "opl_generated_interface_compile_receipt",
+                    "opl_hosted_domain_handler_call_receipt",
+                ],
+            ),
+            _external_evidence_request(
+                "app_workbench_package_ref_consumption",
+                requested_from="codex_app",
+                evidence_class="app_workbench_refs_consumption",
+                required_refs=[
+                    "/product_entry_manifest/artifact_locator_contract",
+                    "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                    "/product_entry_manifest/grant_transition_oracle",
+                    "/product_entry_manifest/owner_receipt_contract",
+                ],
+                required_receipt_shapes=[
+                    "app_consumed_package_ref_receipt",
+                    "app_consumed_quality_ref_receipt",
+                    "app_consumed_safe_action_ref_receipt",
+                ],
+            ),
+            _external_evidence_request(
+                "production_default_caller_release_dist_consumption",
+                requested_from="production_caller",
+                evidence_class="external_default_caller_consumption",
+                required_refs=[
+                    "release://med-autogrant/direct-domain-handler",
+                    "dist://med-autogrant/declarative-grant-pack",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/exposed_sidecar_return_refs",
+                ],
+                required_receipt_shapes=[
+                    "production_default_caller_receipt",
+                    "release_dist_consumption_receipt",
+                ],
+            ),
+            _external_evidence_request(
+                "owner_receipt_typed_blocker_ref_roundtrip",
+                requested_from="one-person-lab",
+                evidence_class="receipt_shape_roundtrip",
+                required_refs=[
+                    "/product_entry_manifest/owner_receipt_contract",
+                    "/product_entry_manifest/controlled_stage_attempt_projection",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/allowed_return_shapes",
+                ],
+                required_receipt_shapes=[
+                    "domain_owner_receipt",
+                    "typed_blocker",
+                    "no_regression_evidence",
+                ],
+            ),
+            _external_evidence_request(
+                "continuous_no_forbidden_write_guard",
+                requested_from="production_caller",
+                evidence_class="continuous_no_forbidden_write",
+                required_refs=[
+                    "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
+                    "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+                ],
+                required_receipt_shapes=[
+                    "no_forbidden_write_scan_receipt",
+                    "continuous_guard_snapshot_receipt",
+                ],
+            ),
+            _external_evidence_request(
+                "direct_hosted_parity_no_regression",
+                requested_from="one-person-lab",
+                evidence_class="direct_hosted_parity",
+                required_refs=[
+                    "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
+                    "/product_entry_manifest/owner_receipt_contract",
+                    "/product_entry_manifest/grant_transition_oracle",
+                ],
+                required_receipt_shapes=[
+                    "direct_hosted_parity_receipt",
+                    "direct_mag_domain_handler_no_regression_receipt",
+                ],
+            ),
+            _external_evidence_request(
+                "temporal_provider_long_soak_receipt_reconciliation",
+                requested_from="one-person-lab",
+                evidence_class="long_soak_receipt_reconciliation",
+                required_refs=[
+                    "opl://runtime/temporal-provider/long-soak",
+                    "/product_entry_manifest/controlled_stage_attempt_projection",
+                    "/product_entry_manifest/controlled_domain_memory_apply_proof",
+                    "/product_entry_manifest/lifecycle_guarded_apply_proof",
+                ],
+                required_receipt_shapes=[
+                    "temporal_provider_long_soak_receipt",
+                    "continuous_receipt_reconciliation_snapshot",
+                    "repair_cadence_evidence_receipt",
+                ],
+            ),
+        ],
+        "required_refs_summary": {
+            "mag_request_surface_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "external_evidence_request_pack"
+            ),
+            "sidecar_projection_ref": "/sidecar_export/external_evidence_request_pack",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "thin_output_guard_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "thin_surface_output_guard"
+            ),
+            "direct_hosted_parity_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "external_evidence_request_pack/requests/direct_hosted_parity_no_regression"
+            ),
+        },
+        "forbidden_completion_claims": {
+            "provider_completion_is_fundability_ready": False,
+            "provider_completion_is_quality_ready": False,
+            "provider_completion_is_export_ready": False,
+            "provider_completion_is_submission_ready": False,
+            "claims_opl_replacement_exists": False,
+            "claims_all_bridge_exits_complete": False,
+            "claims_production_soak_complete": False,
+            "claims_production_long_run_soak_complete": False,
+        },
+        "authority_boundary": {
+            "mag_request_pack_only": True,
+            "mag_implements_opl_runtime": False,
+            "mag_implements_app_workbench": False,
+            "mag_claims_external_evidence_exists": False,
+            "mag_claims_production_default_caller_migrated": False,
+            "mag_claims_direct_hosted_parity_passed": False,
+            "mag_claims_long_soak_complete": False,
+            "opl_can_write_grant_truth": False,
+            "opl_can_write_memory_body": False,
+            "opl_can_mutate_grant_artifacts": False,
+            "opl_can_declare_fundability_verdict": False,
+            "opl_can_declare_quality_verdict": False,
+            "opl_can_declare_export_verdict": False,
+        },
+    }
+
+
+def _external_evidence_request(
+    request_id: str,
+    *,
+    requested_from: str,
+    evidence_class: str,
+    required_refs: list[str],
+    required_receipt_shapes: list[str],
+) -> dict[str, Any]:
+    return {
+        "request_id": request_id,
+        "requested_from": requested_from,
+        "evidence_class": evidence_class,
+        "state": "requested_not_received",
+        "required_refs": required_refs,
+        "required_receipt_shapes": required_receipt_shapes,
+        "mag_role": "requester_and_contract_owner_only",
+        "evidence_not_claimed_by_mag_repo": True,
+        "accepted_payload_policy": "refs_receipts_and_shape_metadata_only",
+        "forbidden_payload_classes": [
+            "grant_artifact_content",
+            "memory_body",
+            "workspace_private_evidence_body",
+            "opl_runtime_state_body",
+            "app_workbench_state_body",
+        ],
+    }
+
 
 def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
     return [

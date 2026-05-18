@@ -60,6 +60,9 @@ OPL 必须持有：
    privatized audit、generated-surface handoff 和 consumer/thinning contract 中的 code path / source_ref 已作为当前 bridge-exit 证据读取；后续若路径漂移，只能进入 source-ref refresh、history/provenance 或 tombstone，不能用漂移路径证明当前状态。
    当前 machine-readable handoff 已为每个 generated/bridge surface 的 `current_mag_paths` 投影 `current_mag_path_status`；aggregate `missing_current_mag_path_count=0`、`stale_path_policy=history_or_source_ref_refresh_only`。这只证明 MAG 当前 source refs 存在并可刷新，不声明 OPL replacement exists、bridge exit complete 或 production soak complete。
 
+6. `external_evidence_request_pack`
+   `mag_consumer_thinning_contract.external_evidence_request_pack` 已把剩余外部证据门收成 machine-readable request pack：OPL generated/hosted caller consumption、Codex App workbench refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 的状态是 `request_pack_declared_external_evidence_not_claimed`，每个 request 仍是 `requested_not_received`；它只固定 required refs、receipt shapes 和 forbidden payload classes，不实现 OPL runtime / App workbench，也不声明外部证据已完成。
+
 ## Retained Private Authority Functions
 
 MAG 只允许保留 grant domain 的 minimal authority functions：
@@ -86,15 +89,20 @@ AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof
 - external production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 证据。
 - Temporal provider long SLO、repair cadence 和 live receipt reconciliation。
 
+这些 evidence gate 的 repo-local request surface 已落地为 `mag.external_evidence_request_pack.v1`；后续关闭证据门必须来自 OPL/App/production caller 的真实 receipt 或 no-regression evidence，不在 MAG 仓内生成替代 runtime proof。
+
 ## 完善顺序
 
-1. `external_production_consumption_evidence`
+1. `consume_external_evidence_request_pack`
+   OPL/App/production caller 从 `/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack` 读取 request ids、required refs 和 required receipt shapes，并返回 body-free receipts / typed blockers / no-regression evidence。
+
+2. `external_production_consumption_evidence`
    从 OPL/App/production caller 侧拿到真实消费 MAG declarative pack、domain handler target、owner receipt / typed blocker refs、no-forbidden-write 和 direct/hosted parity 的持续证据。
 
-2. `real_workspace_receipt_scaleout`
+3. `real_workspace_receipt_scaleout`
    推进真实 grant-stage attempt、memory/package/lifecycle receipt、continuous receipt reconciliation、cleanup/restore/retention 和 provider SLO long soak。
 
-3. `private_authority_ai_first_guard`
+4. `private_authority_ai_first_guard`
    审计 retained authority functions，确保 fundability / quality / export / package / memory 的判断都来自 AI-first stage output 或 owner receipt，代码只做 validator、materializer、receipt signer、guard 和 refs projection。
 
 ## 当前不能写成

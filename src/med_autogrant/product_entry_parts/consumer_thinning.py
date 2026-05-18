@@ -9,6 +9,7 @@ from med_autogrant.product_entry_parts.consumer_thinning_audit import (
 from med_autogrant.product_entry_parts.consumer_thinning_pack import (
     MAG_MINIMAL_AUTHORITY_FUNCTION_IDS,
     build_declarative_grant_pack_compiler_input,
+    build_external_evidence_request_pack,
     build_generated_surface_handoff,
     build_mag_minimal_authority_functions,
 )
@@ -103,6 +104,7 @@ def build_mag_consumer_thinning_contract(
         "privatized_functional_module_audit": _build_privatized_functional_module_audit(),
         "declarative_grant_pack_compiler_input": build_declarative_grant_pack_compiler_input(),
         "generated_surface_handoff": build_generated_surface_handoff(),
+        "external_evidence_request_pack": build_external_evidence_request_pack(),
         "minimal_authority_functions": build_mag_minimal_authority_functions(),
         "minimal_authority_function_ids": list(MAG_MINIMAL_AUTHORITY_FUNCTION_IDS),
         "functional_followthrough_gap_classification": (
@@ -163,6 +165,10 @@ def build_mag_consumer_thinning_contract(
             "functional_followthrough_gap_classification_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "functional_followthrough_gap_classification"
+            ),
+            "external_evidence_request_pack_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "external_evidence_request_pack"
             ),
         },
         "verdict_authority_refs": {
@@ -808,6 +814,10 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "functional_followthrough_gap_classification_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "functional_followthrough_gap_classification"
+            ),
+            "external_evidence_request_pack_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "external_evidence_request_pack"
             ),
         },
         "forbidden_output_classes": [

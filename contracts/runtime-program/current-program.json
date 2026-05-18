@@ -76,6 +76,7 @@
         "physical_skeleton_follow_through",
         "mag_consumer_thinning_contract",
         "functional_followthrough_gap_classification",
+        "external_evidence_request_pack",
         "ideal_state_closure_status",
         "repo_source_layout_audit",
         "OPL Rust native helper indexed workspace/session/artifact/TODO/runtime-health projections"
@@ -154,6 +155,7 @@
         "opl_family_conflict_blocker_projection_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_family_conflict_blocker_projection",
         "opl_runtime_observability_consumption_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
         "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
+        "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
         "opl_replacement_expectations": [
           "workspace_source_intake_shell",
           "memory_locator_writeback_transport",
@@ -289,6 +291,45 @@
         "mag_can_emit_hermes_state_db_runtime_state": false,
         "provider_completion_is_grant_ready": false,
         "mag_executes_opl_repair": false,
+        "external_evidence_request_pack": {
+          "surface_kind": "mag_external_evidence_request_pack",
+          "request_pack_id": "mag.external_evidence_request_pack.v1",
+          "state": "request_pack_declared_external_evidence_not_claimed",
+          "requested_from": [
+            "one-person-lab",
+            "codex_app",
+            "production_caller"
+          ],
+          "required_request_ids": [
+            "opl_generated_hosted_caller_pack_consumption",
+            "app_workbench_package_ref_consumption",
+            "production_default_caller_release_dist_consumption",
+            "owner_receipt_typed_blocker_ref_roundtrip",
+            "continuous_no_forbidden_write_guard",
+            "direct_hosted_parity_no_regression",
+            "temporal_provider_long_soak_receipt_reconciliation"
+          ],
+          "request_policy": "refs_receipts_and_shape_metadata_only_no_runtime_implementation",
+          "forbidden_completion_claims": {
+            "provider_completion_is_fundability_ready": false,
+            "provider_completion_is_quality_ready": false,
+            "provider_completion_is_export_ready": false,
+            "claims_opl_replacement_exists": false,
+            "claims_all_bridge_exits_complete": false,
+            "claims_production_long_run_soak_complete": false
+          },
+          "authority_boundary": {
+            "mag_request_pack_only": true,
+            "mag_implements_opl_runtime": false,
+            "mag_implements_app_workbench": false,
+            "mag_claims_external_evidence_exists": false,
+            "mag_claims_direct_hosted_parity_passed": false,
+            "mag_claims_long_soak_complete": false,
+            "opl_can_declare_fundability_verdict": false,
+            "opl_can_declare_quality_verdict": false,
+            "opl_can_declare_export_verdict": false
+          }
+        },
         "functional_followthrough_gap_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_followthrough_gap_classification",
         "functional_followthrough_gap_classification": {
           "authority_boundary": {
@@ -450,8 +491,8 @@
           "surface_kind": "mag_functional_followthrough_gap_classification",
           "target_domain_id": "med-autogrant"
         },
-        "active_caller_owner": "one-person-lab",
-        "active_caller_surface": "opl_generated_or_hosted_surface",
+        "active_caller_owner": "med-autogrant",
+        "active_caller_surface": "mag_direct_domain_entry_until_opl_caller_evidence",
         "domain_handler_target": "med-autogrant",
         "domain_handler_owner": "med-autogrant"
       },

@@ -79,6 +79,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             "functional_followthrough_gap_classification",
             framework_boundary["framework_consumed_projection"],
         )
+        self.assertIn("external_evidence_request_pack", framework_boundary["framework_consumed_projection"])
         self.assertIn("ideal_state_closure_status", framework_boundary["framework_consumed_projection"])
         skeleton = framework_boundary["standard_domain_agent_skeleton"]
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
@@ -133,6 +134,44 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("fundability judgment owner", framework_boundary["framework_non_goals"])
         self.assertIn("authoring quality verdict owner", framework_boundary["framework_non_goals"])
         self.assertIn("submission-ready export authority", framework_boundary["framework_non_goals"])
+        consumer_thinning = framework_boundary["consumer_thinning_contract"]
+        self.assertEqual(consumer_thinning["active_caller_owner"], "med-autogrant")
+        self.assertEqual(
+            consumer_thinning["active_caller_surface"],
+            "mag_direct_domain_entry_until_opl_caller_evidence",
+        )
+        self.assertEqual(
+            consumer_thinning["external_evidence_request_pack_ref"],
+            "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
+        )
+        external_pack = consumer_thinning["external_evidence_request_pack"]
+        self.assertEqual(external_pack["surface_kind"], "mag_external_evidence_request_pack")
+        self.assertEqual(
+            external_pack["state"],
+            "request_pack_declared_external_evidence_not_claimed",
+        )
+        self.assertEqual(
+            external_pack["required_request_ids"],
+            [
+                "opl_generated_hosted_caller_pack_consumption",
+                "app_workbench_package_ref_consumption",
+                "production_default_caller_release_dist_consumption",
+                "owner_receipt_typed_blocker_ref_roundtrip",
+                "continuous_no_forbidden_write_guard",
+                "direct_hosted_parity_no_regression",
+                "temporal_provider_long_soak_receipt_reconciliation",
+            ],
+        )
+        self.assertFalse(
+            external_pack["forbidden_completion_claims"]["claims_opl_replacement_exists"]
+        )
+        self.assertFalse(
+            external_pack["forbidden_completion_claims"]["claims_production_long_run_soak_complete"]
+        )
+        self.assertTrue(external_pack["authority_boundary"]["mag_request_pack_only"])
+        self.assertFalse(external_pack["authority_boundary"]["mag_implements_opl_runtime"])
+        self.assertFalse(external_pack["authority_boundary"]["mag_implements_app_workbench"])
+        self.assertFalse(external_pack["authority_boundary"]["mag_claims_external_evidence_exists"])
         self.assertEqual(contract["executor_defaults"]["default_executor_name"], "codex_cli")
         self.assertEqual(contract["executor_defaults"]["default_executor_mode"], "autonomous")
         self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")

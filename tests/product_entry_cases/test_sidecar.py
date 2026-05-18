@@ -178,6 +178,10 @@ class ProductSidecarTest(unittest.TestCase):
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "functional_followthrough_gap_classification"
                 ),
+                "external_evidence_request_pack_ref": (
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "external_evidence_request_pack"
+                ),
             },
         )
         bridge_refs = thinning["bridge_exit_gate_refs"]
@@ -337,6 +341,44 @@ class ProductSidecarTest(unittest.TestCase):
             thinning["declarative_grant_pack_compiler_input"],
         )
         self.assertEqual(export["generated_surface_handoff"], thinning["generated_surface_handoff"])
+        self.assertEqual(
+            export["external_evidence_request_pack"],
+            thinning["external_evidence_request_pack"],
+        )
+        external_pack = export["external_evidence_request_pack"]
+        self.assertEqual(external_pack["surface_kind"], "mag_external_evidence_request_pack")
+        self.assertEqual(external_pack["state"], "request_pack_declared_external_evidence_not_claimed")
+        self.assertIn("one-person-lab", external_pack["requested_from"])
+        self.assertIn("codex_app", external_pack["requested_from"])
+        self.assertIn("production_caller", external_pack["requested_from"])
+        self.assertEqual(
+            external_pack["consumer_thinning_contract_ref"],
+            "/product_entry_manifest/mag_consumer_thinning_contract",
+        )
+        self.assertEqual(
+            external_pack["required_refs_summary"]["sidecar_projection_ref"],
+            "/sidecar_export/external_evidence_request_pack",
+        )
+        self.assertFalse(
+            external_pack["forbidden_completion_claims"][
+                "provider_completion_is_fundability_ready"
+            ]
+        )
+        self.assertFalse(
+            external_pack["forbidden_completion_claims"]["provider_completion_is_quality_ready"]
+        )
+        self.assertFalse(
+            external_pack["forbidden_completion_claims"]["provider_completion_is_export_ready"]
+        )
+        self.assertFalse(external_pack["forbidden_completion_claims"]["claims_all_bridge_exits_complete"])
+        self.assertFalse(
+            external_pack["forbidden_completion_claims"][
+                "claims_production_long_run_soak_complete"
+            ]
+        )
+        self.assertFalse(external_pack["authority_boundary"]["mag_claims_external_evidence_exists"])
+        self.assertFalse(external_pack["authority_boundary"]["mag_claims_direct_hosted_parity_passed"])
+        self.assertFalse(external_pack["authority_boundary"]["opl_can_declare_fundability_verdict"])
         self.assertEqual(export["minimal_authority_functions"], thinning["minimal_authority_functions"])
         bridge_exit = export["generated_surface_handoff"]["bridge_exit_gate"]
         self.assertEqual(bridge_exit["surface_kind"], "mag_bridge_exit_gate")
