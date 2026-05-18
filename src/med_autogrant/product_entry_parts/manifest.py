@@ -72,7 +72,7 @@ class ProductEntryManifestMixin(ProductEntryManifestBuilderMixin):
             },
             schema_ref=f"contracts/schemas/v1/{PRODUCT_STATUS_SCHEMA_FILE}",
             notes=[
-                "This status surface is a controller-owned direct grant product status over the landed product-entry shell.",
+                "This status surface is an OPL generated/hosted caller read model over MAG domain handler refs.",
                 "It does not claim that mature Web UI or hosted runtime is already landed.",
             ],
             extra_payload={
@@ -104,6 +104,18 @@ class ProductEntryManifestMixin(ProductEntryManifestBuilderMixin):
             },
         )
         product_status["surface_kind"] = "product_status"
+        product_status["caller_owner_contract"] = {
+            "active_caller_owner": "med-autogrant",
+            "active_caller_surface": "mag_product_status_handler_until_opl_caller_evidence",
+            "target_caller_owner": "one-person-lab",
+            "target_caller_surface": "opl_generated_or_hosted_status_read_model",
+            "domain_handler_target": "med-autogrant",
+            "domain_handler_owner": "med-autogrant",
+            "mag_role": "status_handler_target_and_grant_authority_refs_only",
+            "claims_fully_cleaned": False,
+            "mag_handler_boundary_ready": True,
+            "external_opl_generated_or_hosted_caller_evidence_required": True,
+        }
         product_status["product_entry_surfaces"] = product_status.pop("entry_surfaces")
 
         payload = {

@@ -374,7 +374,7 @@ class ProductEntryManifestBuilderMixin:
         )
         product_entry_quickstart = _build_shared_product_entry_quickstart(
             summary=(
-                "先从 direct grant product status 进入当前 product entry surface，"
+                "先从 OPL-hosted grant status caller 进入 MAG domain handler target，"
                 "再回到 grant-user-loop，必要时读取 progress 或 cockpit projection。"
             ),
             recommended_step_id="open_product_entry",
@@ -537,7 +537,7 @@ class ProductEntryManifestBuilderMixin:
             shell_key="product_status",
             shell_surface=product_entry_shell["product_status"],
             summary=(
-                "当前 direct grant product status 先暴露前台入口、user loop、projection 与 shared handoff。"
+                "OPL generated/hosted status caller 只读消费 MAG handler refs、user loop、projection 与 handoff。"
             ),
         )
         operator_loop_surface = _build_shared_product_entry_shell_linked_surface(

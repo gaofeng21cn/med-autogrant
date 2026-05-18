@@ -87,7 +87,11 @@ def build_mag_consumer_thinning_contract(
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
         "adapter_role": "domain_authority_pack_with_thin_program_surface",
-        "state": "handoff_ready_external_opl_replacement_gated",
+        "active_caller_owner": "med-autogrant",
+        "active_caller_surface": "mag_direct_domain_entry_until_opl_caller_evidence",
+        "domain_handler_target": TARGET_DOMAIN_ID,
+        "domain_handler_owner": TARGET_DOMAIN_ID,
+        "state": "mag_handler_boundary_ready_external_caller_evidence_gated",
         "consumes_opl_family_primitive": "family_scheduler_replacement",
         "claims_opl_replacement_exists": False,
         "claims_production_long_run_soak_complete": False,
@@ -104,6 +108,20 @@ def build_mag_consumer_thinning_contract(
         "functional_followthrough_gap_classification": (
             _build_functional_followthrough_gap_classification()
         ),
+        "bridge_exit_gate_refs": {
+            "generated_surface_bridge_exit_gate_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "generated_surface_handoff/bridge_exit_gate"
+            ),
+            "privatized_functional_module_audit_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "privatized_functional_module_audit"
+            ),
+            "legacy_exit_gate_policy": "delete_or_history_tombstone_after_replacement_proof",
+            "claims_all_bridge_exits_complete": False,
+            "mag_handler_boundary_ready": True,
+            "external_opl_generated_or_hosted_caller_evidence_required": True,
+        },
         "allowed_return_shapes": [
             "domain_owner_receipt",
             "typed_blocker",
@@ -137,6 +155,10 @@ def build_mag_consumer_thinning_contract(
             "generated_surface_handoff_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "generated_surface_handoff"
+            ),
+            "generated_surface_bridge_exit_gate_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "generated_surface_handoff/bridge_exit_gate"
             ),
             "functional_followthrough_gap_classification_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
@@ -173,6 +195,8 @@ def build_mag_consumer_thinning_contract(
             "package_authority_owner": TARGET_DOMAIN_ID,
             "owner_receipt_authority": TARGET_DOMAIN_ID,
             "opl_family_scheduler_replacement_owner": "one-person-lab",
+            "generic_wrapper_active_caller_owner": "evidence_required_from_one-person-lab",
+            "mag_role_for_generated_wrappers": "domain_handler_ref_only_adapter_and_minimal_authority_functions",
             "opl_role": "replacement_owner_and_ref_consumer_only",
             "opl_can_write_domain_truth": False,
             "opl_can_write_memory_body": False,
@@ -210,58 +234,12 @@ def _build_functional_followthrough_gap_classification() -> dict[str, Any]:
         "classification_id": "mag.functional_followthrough_gap.v1",
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
-        "state": "classification_closed_followthrough_gaps_open",
+        "state": "mag_handler_boundary_ready_external_evidence_gated",
         "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
         "classification_gap_count": 0,
-        "mag_functional_structure_gap_count": 4,
-        "remaining_mag_functional_structure_gap_ids": [
-            "opl_generated_surface_production_consumption",
-            "active_caller_cutover_and_wrapper_retirement",
-            "opl_app_package_memory_lifecycle_shell_consumption",
-            "legacy_runtime_session_physical_cleanup",
-        ],
-        "remaining_mag_functional_structure_gaps": [
-            _followthrough_gap(
-                "opl_generated_surface_production_consumption",
-                owner="one-person-lab",
-                evidence_required=(
-                    "OPL generated product/status/sidecar/grouped CLI/projection/lifecycle "
-                    "surface consumes MAG declarative pack input as the production caller."
-                ),
-                mag_role=(
-                    "provide declarative grant pack input, grant authority functions, owner "
-                    "receipt refs, typed blockers, and no-forbidden-write guard"
-                ),
-            ),
-            _followthrough_gap(
-                "active_caller_cutover_and_wrapper_retirement",
-                owner="one-person-lab",
-                evidence_required=(
-                    "active callers move from MAG hand-written product/status/user-loop/"
-                    "sidecar/grouped wrappers to OPL generated surfaces with direct path "
-                    "no-regression proof"
-                ),
-                mag_role="keep direct domain handlers and grant authority functions only",
-            ),
-            _followthrough_gap(
-                "opl_app_package_memory_lifecycle_shell_consumption",
-                owner="one-person-lab",
-                evidence_required=(
-                    "OPL/App shell consumes MAG package, memory, lifecycle, quality, "
-                    "observability, and workbench refs without writing grant truth"
-                ),
-                mag_role="export body-free refs, owner receipts, verdict refs, and typed blockers",
-            ),
-            _followthrough_gap(
-                "legacy_runtime_session_physical_cleanup",
-                owner=TARGET_DOMAIN_ID,
-                evidence_required=(
-                    "no-active-caller scan, explicit proof/provenance retention, and focused "
-                    "tests allow local runtime/session/probe residue to be deleted or tombstoned"
-                ),
-                mag_role="remove or tombstone non-authority legacy runtime/session surfaces",
-            ),
-        ],
+        "mag_functional_structure_gap_count": 0,
+        "remaining_mag_functional_structure_gap_ids": [],
+        "remaining_mag_functional_structure_gaps": [],
         "closed_classification_surface_ids": list(MAG_FUNCTIONAL_STRUCTURE_GAP_IDS),
         "closed_classification_surfaces": [
             _closed_mag_functional_gap(
@@ -382,9 +360,9 @@ def _build_functional_followthrough_gap_classification() -> dict[str, Any]:
         ],
         "reclassified_testing_evidence_gap_ids": list(MAG_RECLASSIFIED_EVIDENCE_GAP_IDS),
         "authority_boundary": {
-            "mag_repo_functional_structure_gaps_zero": False,
+            "mag_repo_functional_structure_gaps_zero": True,
             "classification_closed": True,
-            "followthrough_gaps_open": True,
+            "followthrough_gaps_open": False,
             "claims_opl_replacement_exists": False,
             "claims_opl_generated_surface_production_consumed": False,
             "claims_real_workspace_memory_migration_complete": False,
@@ -403,7 +381,7 @@ def _closed_mag_functional_gap(gap_id: str, *, closed_by_refs: list[str]) -> dic
     return {
         "gap_id": gap_id,
         "previous_bucket": "functional_structure_gap",
-        "current_bucket": "classification_surface_closed_followthrough_open",
+        "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
         "owner": TARGET_DOMAIN_ID,
         "closed_by_refs": closed_by_refs,
     }
@@ -822,6 +800,10 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "generated_surface_handoff_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "generated_surface_handoff"
+            ),
+            "generated_surface_bridge_exit_gate_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "generated_surface_handoff/bridge_exit_gate"
             ),
             "functional_followthrough_gap_classification_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"

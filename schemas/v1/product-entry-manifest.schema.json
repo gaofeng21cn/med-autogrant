@@ -3496,7 +3496,9 @@
           "additionalProperties": true,
           "required": [
             "surface_kind", "handoff_id", "target_domain_id", "owner", "target_generator_owner",
-            "state", "handoff_policy", "declarative_input_ref", "generated_surface_ids",
+            "active_caller_owner", "active_caller_surface", "domain_handler_target",
+            "domain_handler_owner", "state", "handoff_policy", "bridge_exit_gate",
+            "declarative_input_ref", "generated_surface_ids",
             "generated_or_bridge_surfaces", "mag_long_term_owner_surface_ids", "authority_boundary"
           ],
           "properties": {
@@ -3505,8 +3507,42 @@
             "target_domain_id": {"const": "med-autogrant"},
             "owner": {"const": "med-autogrant"},
             "target_generator_owner": {"const": "one-person-lab"},
-            "state": {"const": "declarative_input_landed_external_generated_surface_gate"},
+            "active_caller_owner": {"const": "med-autogrant"},
+            "active_caller_surface": {"const": "mag_direct_domain_entry_until_opl_caller_evidence"},
+            "domain_handler_target": {"const": "med-autogrant"},
+            "domain_handler_owner": {"const": "med-autogrant"},
+            "state": {"const": "mag_handler_boundary_ready_external_caller_evidence_gated"},
             "handoff_policy": {"const": "OPL_generates_or_hosts_generic_wrappers_from_MAG_pack_input"},
+            "bridge_exit_gate": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "surface_kind", "gate_id", "gate_status", "replacement_owner",
+                "domain_handler_owner", "domain_handler_target", "required_evidence",
+                "exit_action", "claims_exit_complete",
+                "claims_production_long_run_soak_complete",
+                "production_soak_gate_status", "authority_boundary"
+              ],
+              "properties": {
+                "surface_kind": {"const": "mag_bridge_exit_gate"},
+                "gate_status": {"const": "mag_handler_boundary_ready_external_caller_evidence_required"},
+                "replacement_owner": {"const": "one-person-lab"},
+                "domain_handler_owner": {"const": "med-autogrant"},
+                "domain_handler_target": {"const": "med-autogrant"},
+                "required_evidence": {
+                  "type": "array",
+                  "contains": {"const": "no_active_legacy_wrapper_caller_scan"}
+                },
+                "exit_action": {
+                  "const": "delete_or_history_tombstone_mag_handwritten_wrapper_keep_domain_handler"
+                },
+                "claims_exit_complete": {"const": false},
+                "claims_production_long_run_soak_complete": {"const": false},
+                "production_soak_gate_status": {
+                  "const": "external_live_soak_and_caller_evidence_not_claimed_by_mag_repo"
+                }
+              }
+            },
             "declarative_input_ref": {
               "const": "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input"
             },
@@ -3523,7 +3559,9 @@
                 "type": "object",
                 "additionalProperties": true,
                 "required": [
-                  "surface_id", "surface_status", "current_owner", "target_owner",
+                  "surface_id", "surface_status", "active_caller_owner", "current_owner", "target_owner",
+                  "domain_handler_target", "domain_handler_owner", "current_mag_path_role",
+                  "bridge_exit_gate",
                   "compiler_input_refs", "generated_by_opl_in_target",
                   "current_mag_long_term_owner", "keeps_mag_authority_functions"
                 ],
@@ -3534,9 +3572,39 @@
                       "grouped_cli_api", "projection_builder", "lifecycle_wrapper"
                     ]
                   },
-                  "surface_status": {"const": "migration_bridge_until_opl_generated_surface"},
+                  "surface_status": {
+                    "const": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence"
+                  },
+                  "active_caller_owner": {"const": "med-autogrant"},
                   "current_owner": {"const": "med-autogrant"},
                   "target_owner": {"const": "one-person-lab"},
+                  "domain_handler_target": {"const": "med-autogrant"},
+                  "domain_handler_owner": {"const": "med-autogrant"},
+                  "current_mag_path_role": {"const": "domain_handler_ref_only_adapter_not_generic_wrapper_owner"},
+                  "bridge_exit_gate": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "required": [
+                      "surface_kind", "gate_status", "replacement_owner",
+                      "domain_handler_owner", "claims_exit_complete", "exit_action",
+                      "claims_production_long_run_soak_complete",
+                      "production_soak_gate_status"
+                    ],
+                    "properties": {
+                      "surface_kind": {"const": "mag_bridge_exit_gate"},
+                      "gate_status": {"const": "mag_handler_boundary_ready_external_caller_evidence_required"},
+                      "replacement_owner": {"const": "one-person-lab"},
+                      "domain_handler_owner": {"const": "med-autogrant"},
+                      "claims_exit_complete": {"const": false},
+                      "claims_production_long_run_soak_complete": {"const": false},
+                      "production_soak_gate_status": {
+                        "const": "external_live_soak_and_caller_evidence_not_claimed_by_mag_repo"
+                      },
+                      "exit_action": {
+                        "const": "delete_or_history_tombstone_this_mag_wrapper_keep_domain_handler"
+                      }
+                    }
+                  },
                   "generated_by_opl_in_target": {"const": true},
                   "current_mag_long_term_owner": {"const": false},
                   "keeps_mag_authority_functions": {"const": false}
@@ -4162,6 +4230,7 @@
         "minimal_authority_functions",
         "minimal_authority_function_ids",
         "functional_followthrough_gap_classification",
+        "bridge_exit_gate_refs",
         "allowed_return_shapes",
         "mag_owned_outputs",
         "thin_surface_output_guard",
@@ -4189,7 +4258,7 @@
           "const": "domain_authority_pack_with_thin_program_surface"
         },
         "state": {
-          "const": "handoff_ready_external_opl_replacement_gated"
+          "const": "mag_handler_boundary_ready_external_caller_evidence_gated"
         },
         "consumes_opl_family_primitive": {
           "const": "family_scheduler_replacement"
@@ -4866,7 +4935,7 @@
                   "properties": {
                     "module_ref": {"const": "local_runtime_journal_attempt_ledger"},
                     "active_caller_status": {
-                      "const": "legacy_local_journal_attempt_ledger_no_active_caller"
+                      "const": "legacy_local_journal_attempt_ledger_exit_complete"
                     },
                     "migration_action": {
                       "const": "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs"
@@ -4978,19 +5047,14 @@
             "classification_id": {"const": "mag.functional_followthrough_gap.v1"},
             "target_domain_id": {"const": "med-autogrant"},
             "owner": {"const": "med-autogrant"},
-            "state": {"const": "classification_closed_followthrough_gaps_open"},
+            "state": {"const": "mag_handler_boundary_ready_external_evidence_gated"},
             "plan_ref": {"const": "docs/active/mag-ideal-state-cross-repo-gap-plan.md"},
             "classification_gap_count": {"const": 0},
-            "mag_functional_structure_gap_count": {"const": 4},
+            "mag_functional_structure_gap_count": {"const": 0},
             "remaining_mag_functional_structure_gap_ids": {
-              "const": [
-                "opl_generated_surface_production_consumption",
-                "active_caller_cutover_and_wrapper_retirement",
-                "opl_app_package_memory_lifecycle_shell_consumption",
-                "legacy_runtime_session_physical_cleanup"
-              ]
+              "const": []
             },
-            "remaining_mag_functional_structure_gaps": {"type": "array", "minItems": 4},
+            "remaining_mag_functional_structure_gaps": {"type": "array", "maxItems": 0},
             "closed_classification_surface_ids": {
               "const": [
                 "P1_adapter_thinning_and_pack_input",
@@ -5020,7 +5084,7 @@
                 ],
                 "properties": {
                   "previous_bucket": {"const": "functional_structure_gap"},
-                  "current_bucket": {"const": "classification_surface_closed_followthrough_open"},
+                  "current_bucket": {"const": "classification_surface_closed_active_bridge_exit_closed"},
                   "owner": {"const": "med-autogrant"},
                   "closed_by_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}}
                 }
@@ -5078,9 +5142,9 @@
                 "opl_can_declare_export_ready"
               ],
                 "properties": {
-                  "mag_repo_functional_structure_gaps_zero": {"const": false},
+                  "mag_repo_functional_structure_gaps_zero": {"const": true},
                   "classification_closed": {"const": true},
-                  "followthrough_gaps_open": {"const": true},
+                  "followthrough_gaps_open": {"const": false},
                 "claims_opl_replacement_exists": {"const": false},
                 "claims_opl_generated_surface_production_consumed": {"const": false},
                 "claims_real_workspace_memory_migration_complete": {"const": false},
@@ -5092,6 +5156,38 @@
                 "opl_can_write_memory_body": {"const": false},
                 "opl_can_declare_export_ready": {"const": false}
               }
+            }
+          }
+        },
+        "bridge_exit_gate_refs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "generated_surface_bridge_exit_gate_ref",
+            "privatized_functional_module_audit_ref",
+            "legacy_exit_gate_policy",
+            "claims_all_bridge_exits_complete",
+            "mag_handler_boundary_ready",
+            "external_opl_generated_or_hosted_caller_evidence_required"
+          ],
+          "properties": {
+            "generated_surface_bridge_exit_gate_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate"
+            },
+            "privatized_functional_module_audit_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+            },
+            "legacy_exit_gate_policy": {
+              "const": "delete_or_history_tombstone_after_replacement_proof"
+            },
+            "claims_all_bridge_exits_complete": {
+              "const": false
+            },
+            "mag_handler_boundary_ready": {
+              "const": true
+            },
+            "external_opl_generated_or_hosted_caller_evidence_required": {
+              "const": true
             }
           }
         },
@@ -5111,6 +5207,7 @@
             "privatized_functional_module_audit_ref",
             "declarative_grant_pack_compiler_input_ref",
             "generated_surface_handoff_ref",
+            "generated_surface_bridge_exit_gate_ref",
             "functional_followthrough_gap_classification_ref"
           ],
           "properties": {
@@ -5140,6 +5237,9 @@
             },
             "generated_surface_handoff_ref": {
               "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
+            },
+            "generated_surface_bridge_exit_gate_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate"
             },
             "functional_followthrough_gap_classification_ref": {
               "const": "/product_entry_manifest/mag_consumer_thinning_contract/functional_followthrough_gap_classification"

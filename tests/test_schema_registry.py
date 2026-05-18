@@ -420,15 +420,19 @@ class SchemaRegistryTest(unittest.TestCase):
 
         consumed = thinning["properties"]["consumed_opl_standard_surfaces"]
         self.assertIn("functional_harness_consumer_coverage_ref", consumed["required"])
-        self.assertIn(
-            "functional_harness_queue_stage_attempt_typed_closeout",
-            consumed["properties"]["consumed_generic_primitives"]["const"],
-        )
-        self.assertIn(
-            "functional_harness_restart_dead_letter_repair_human_gate",
-            consumed["properties"]["consumed_generic_primitives"]["const"],
-        )
+        consumed_primitives = consumed["properties"]["consumed_generic_primitives"]["const"]
+        self.assertIn("functional_harness_queue_stage_attempt_typed_closeout", consumed_primitives)
+        self.assertIn("functional_harness_restart_dead_letter_repair_human_gate", consumed_primitives)
 
+        exposed_refs = thinning["properties"]["exposed_sidecar_return_refs"]
+        self.assertIn("generated_surface_bridge_exit_gate_ref", exposed_refs["required"])
+        bridge_ref = "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate"
+        self.assertEqual(exposed_refs["properties"]["generated_surface_bridge_exit_gate_ref"]["const"], bridge_ref)
+        bridge_refs = thinning["properties"]["bridge_exit_gate_refs"]
+        self.assertIn("bridge_exit_gate_refs", thinning["required"])
+        self.assertEqual(bridge_refs["properties"]["legacy_exit_gate_policy"]["const"], "delete_or_history_tombstone_after_replacement_proof")
+        self.assertFalse(bridge_refs["properties"]["claims_all_bridge_exits_complete"]["const"])
+        self.assertTrue(bridge_refs["properties"]["mag_handler_boundary_ready"]["const"])
         coverage = thinning["properties"]["functional_harness_consumer_coverage"]
         self.assertEqual(
             coverage["properties"]["surface_kind"]["const"],
@@ -519,15 +523,15 @@ class SchemaRegistryTest(unittest.TestCase):
         )
         self.assertEqual(
             followthrough["properties"]["state"]["const"],
-            "classification_closed_followthrough_gaps_open",
+            "mag_handler_boundary_ready_external_evidence_gated",
         )
         self.assertEqual(
             followthrough["properties"]["mag_functional_structure_gap_count"]["const"],
-            4,
+            0,
         )
         self.assertEqual(
-            followthrough["properties"]["remaining_mag_functional_structure_gaps"]["minItems"],
-            4,
+            followthrough["properties"]["remaining_mag_functional_structure_gaps"]["maxItems"],
+            0,
         )
         self.assertEqual(
             followthrough["properties"]["closed_classification_surface_ids"]["const"],
@@ -550,9 +554,9 @@ class SchemaRegistryTest(unittest.TestCase):
             ],
         )
         followthrough_authority = followthrough["properties"]["authority_boundary"]["properties"]
-        self.assertFalse(followthrough_authority["mag_repo_functional_structure_gaps_zero"]["const"])
+        self.assertTrue(followthrough_authority["mag_repo_functional_structure_gaps_zero"]["const"])
         self.assertTrue(followthrough_authority["classification_closed"]["const"])
-        self.assertTrue(followthrough_authority["followthrough_gaps_open"]["const"])
+        self.assertFalse(followthrough_authority["followthrough_gaps_open"]["const"])
         self.assertFalse(followthrough_authority["claims_opl_replacement_exists"]["const"])
         self.assertFalse(
             followthrough_authority["claims_opl_generated_surface_production_consumed"]["const"]

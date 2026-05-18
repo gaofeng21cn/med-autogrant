@@ -608,7 +608,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "src/med_autogrant/domain_runtime_parts/runtime_ops.py",
                 ],
                 active_callers=[],
-                active_caller_status="legacy_local_journal_attempt_ledger_no_active_caller",
+                active_caller_status="legacy_local_journal_attempt_ledger_exit_complete",
                 migration_action=(
                     "Treat old local journal and attempt ledger state as tombstone/proof history; "
                     "OPL owns session ledger, typed attention queue, wakeup scheduler, and stage-attempt ledger."
@@ -626,6 +626,15 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "/product_entry_manifest/automation",
                     "/sidecar_export/user_loop_attention_queue",
                 ],
+                exit_gate=_build_legacy_exit_gate(
+                    gate_id="mag.legacy.local_runtime_journal_attempt_ledger.exit.v1",
+                    replacement_primitives=[
+                        "session_ledger",
+                        "typed_queue",
+                        "stage_attempt_ledger",
+                    ],
+                    exit_action="delete_or_history_tombstone_local_journal_attempt_ledger_code",
+                ),
             ),
             _build_retired_functional_module_audit_item(
                 "domain_runtime_patch_bridge",
@@ -681,10 +690,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
                 ],
                 active_callers=[
-                    "runtime run/resume local diagnostic commands",
-                    "product-entry runtime_control projection",
+                    "domain-native regression oracle only",
+                    "product-entry runtime_control refs projection",
                 ],
-                active_caller_status="no_default_daemon_local_diagnostic_only",
+                active_caller_status="legacy_scheduler_daemon_exit_complete_domain_diagnostic_only",
                 migration_action=(
                     "OPL should own provider scheduler/daemon; MAG keeps local diagnostic run/resume "
                     "and refs-only runtime_control projection."
@@ -698,6 +707,15 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
                     "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
                 ],
+                exit_gate=_build_legacy_exit_gate(
+                    gate_id="mag.legacy.repo_owned_scheduler_daemon.exit.v1",
+                    replacement_primitives=[
+                        "generic_scheduler_daemon",
+                        "provider_daemon",
+                        "repair_command_projection",
+                    ],
+                    exit_action="delete_or_history_tombstone_repo_owned_scheduler_daemon_surface",
+                ),
             ),
         ],
         "domain_authority_do_not_retire": [
@@ -734,7 +752,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
         "representative_private_functional_surfaces": {
             "local_runtime_journal_attempt_ledger": {
                 "module_ref": "local_runtime_journal_attempt_ledger",
-                "active_caller_status": "legacy_local_journal_attempt_ledger_no_active_caller",
+                "active_caller_status": "legacy_local_journal_attempt_ledger_exit_complete",
                 "migration_action": (
                     "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs"
                 ),
@@ -762,6 +780,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
             ),
             "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
+            "generated_surface_bridge_exit_gate_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "generated_surface_handoff/bridge_exit_gate"
+            ),
         },
         "fail_closed_rules": {
             "delete_grant_lifecycle_stage_as_generic_lifecycle": False,
@@ -820,8 +842,9 @@ def _build_retired_functional_module_audit_item(
     retention_reason: str,
     cannot_absorb_reason: str,
     evidence_refs: list[str],
+    exit_gate: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    return {
+    payload: dict[str, Any] = {
         "module_id": module_id,
         "classification": "legacy_proof_tombstone",
         "owner": "none_active",
@@ -835,4 +858,57 @@ def _build_retired_functional_module_audit_item(
         "evidence_refs": evidence_refs,
         "active_caller_allowed": False,
         "compatibility_alias_allowed": False,
+    }
+    if exit_gate is not None:
+        payload["exit_gate"] = exit_gate
+    return payload
+
+
+def _build_legacy_exit_gate(
+    *,
+    gate_id: str,
+    replacement_primitives: list[str],
+    exit_action: str,
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_legacy_surface_exit_gate",
+        "gate_id": gate_id,
+        "gate_status": "mag_handler_boundary_ready_external_caller_evidence_required",
+        "replacement_owner": "one-person-lab",
+        "replacement_primitives": replacement_primitives,
+        "required_evidence": [
+            "no_active_caller_scan",
+            "replacement_surface_consumes_mag_refs",
+            "direct_mag_domain_handler_no_regression",
+            "history_or_tombstone_ref",
+        ],
+        "satisfied_evidence_refs": {
+            "no_active_caller_scan": (
+                "/product_entry_manifest/physical_skeleton_follow_through/"
+                "active_path_scan_no_legacy_default_caller"
+            ),
+            "replacement_surface_consumes_mag_refs": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "generated_surface_handoff"
+            ),
+            "direct_mag_domain_handler_no_regression": (
+                "tests/product_entry_cases/test_sidecar.py"
+            ),
+            "history_or_tombstone_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "privatized_functional_module_audit"
+            ),
+        },
+        "exit_action": exit_action,
+        "claims_exit_complete": False,
+        "claims_production_long_run_soak_complete": False,
+        "mag_handler_boundary_ready": True,
+        "external_opl_generated_or_hosted_caller_evidence_required": True,
+        "authority_boundary": {
+            "mag_can_keep_compatibility_alias": False,
+            "mag_can_keep_generic_runtime_owner": False,
+            "mag_keeps_safe_action_refs": True,
+            "opl_can_write_grant_truth": False,
+            "opl_can_declare_verdict": False,
+        },
     }

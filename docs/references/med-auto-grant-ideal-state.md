@@ -108,8 +108,10 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 ## 理想完成门槛
 
 - Direct MAG app skill path 与 OPL-hosted path 使用同一 MAG owner surfaces。
-- OPL generated / hosted surfaces 成为 MAG 生产默认 wrapper/caller；MAG 手写 shell 只保留 domain handler、authority function、refs-only adapter、diagnostic cleanup 或 provenance fixture。
-- `mag_functional_structure_gap_count=4` 所列 generated surface production consumption、generic shell handoff、package/memory/lifecycle refs-only thinning、legacy cleanup 全部关闭。
+- OPL generated / hosted surfaces 是 MAG generic wrapper/caller 的长期 owner；MAG 手写 shell 只保留 domain handler、authority function、refs-only adapter、diagnostic cleanup 或 provenance fixture。MAG repo 侧 bridge 退出必须经过 generated-surface bridge exit gate 或 legacy exit gate；外部 production/default caller 和 live soak 另走证据门。
+- `mag_functional_structure_gap_count=0` 只表示 MAG repo 侧 active bridge exit 已闭合，不表示 external production/default caller、真实 App/workbench consumption 或 production long-run soak 已完成。
+- MAG retained private authority functions 完成逐项 AI-first 审计：fundability、authoring quality/export、package authority、grant strategy memory accept/reject、transition oracle 和 owner receipt 都回到 grant stage output、AI critique artifact 或 owner receipt；程序只做 schema validator、materializer、receipt signer、guard 和 refs projection。
+- privatized audit 与 generated-surface handoff 中的 code path / source_ref 与当前 physical source tree 对齐；漂移路径只能进入 history/tombstone/source-ref refresh，不作为完成证明。
 - 真实 grant workspace 产生 owner receipt、quality movement、package/export receipt、memory receipt、lifecycle receipt、typed blocker 或 no-regression evidence。
 - Legacy Hermes/Gateway/local-manager/journal/probe/compat residue 完成 no-active-caller scan、replacement proof、history/provenance 分类和 physical retirement。
 

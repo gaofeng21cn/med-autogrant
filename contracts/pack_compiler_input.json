@@ -21,6 +21,7 @@
   "generated_surfaces_requested": [
     "cli",
     "mcp",
+    "skill",
     "product_entry_manifest",
     "sidecar_export_dispatch",
     "status_read_model",

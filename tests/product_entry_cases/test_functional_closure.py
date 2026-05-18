@@ -319,13 +319,26 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertEqual(thinning["target_domain_id"], "med-autogrant")
         self.assertEqual(thinning["owner"], "med-autogrant")
         self.assertEqual(thinning["adapter_role"], "domain_authority_pack_with_thin_program_surface")
-        self.assertEqual(thinning["state"], "handoff_ready_external_opl_replacement_gated")
+        self.assertEqual(thinning["active_caller_owner"], "med-autogrant")
+        self.assertEqual(
+            thinning["active_caller_surface"],
+            "mag_direct_domain_entry_until_opl_caller_evidence",
+        )
+        self.assertEqual(thinning["domain_handler_target"], "med-autogrant")
+        self.assertEqual(thinning["domain_handler_owner"], "med-autogrant")
+        self.assertEqual(thinning["state"], "mag_handler_boundary_ready_external_caller_evidence_gated")
         self.assertFalse(thinning["claims_opl_replacement_exists"])
         self.assertFalse(thinning["claims_production_long_run_soak_complete"])
         self.assertEqual(
             thinning["allowed_return_shapes"],
             ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
         )
+        self.assertEqual(
+            thinning["bridge_exit_gate_refs"]["legacy_exit_gate_policy"],
+            "delete_or_history_tombstone_after_replacement_proof",
+        )
+        self.assertFalse(thinning["bridge_exit_gate_refs"]["claims_all_bridge_exits_complete"])
+        self.assertTrue(thinning["bridge_exit_gate_refs"]["mag_handler_boundary_ready"])
         self.assertEqual(
             set(thinning["mag_owned_outputs"]),
             {
@@ -580,11 +593,11 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(retire_modules["repo_owned_scheduler_daemon"]["active_caller_allowed"])
         self.assertEqual(
             retire_modules["repo_owned_scheduler_daemon"]["active_caller_status"],
-            "no_default_daemon_local_diagnostic_only",
+            "legacy_scheduler_daemon_exit_complete_domain_diagnostic_only",
         )
         self.assertEqual(
             retire_modules["local_runtime_journal_attempt_ledger"]["active_caller_status"],
-            "legacy_local_journal_attempt_ledger_no_active_caller",
+            "legacy_local_journal_attempt_ledger_exit_complete",
         )
         self.assertIn(
             "src/med_autogrant/runtime_defaults.py",
@@ -629,18 +642,13 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             followthrough["surface_kind"],
             "mag_functional_followthrough_gap_classification",
         )
-        self.assertEqual(followthrough["state"], "classification_closed_followthrough_gaps_open")
-        self.assertEqual(followthrough["mag_functional_structure_gap_count"], 4)
         self.assertEqual(
-            followthrough["remaining_mag_functional_structure_gap_ids"],
-            [
-                "opl_generated_surface_production_consumption",
-                "active_caller_cutover_and_wrapper_retirement",
-                "opl_app_package_memory_lifecycle_shell_consumption",
-                "legacy_runtime_session_physical_cleanup",
-            ],
+            followthrough["state"],
+            "mag_handler_boundary_ready_external_evidence_gated",
         )
-        self.assertEqual(len(followthrough["remaining_mag_functional_structure_gaps"]), 4)
+        self.assertEqual(followthrough["mag_functional_structure_gap_count"], 0)
+        self.assertEqual(followthrough["remaining_mag_functional_structure_gap_ids"], [])
+        self.assertEqual(followthrough["remaining_mag_functional_structure_gaps"], [])
         self.assertEqual(
             followthrough["closed_classification_surface_ids"],
             [
@@ -666,7 +674,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 self.assertEqual(closed_gap["previous_bucket"], "functional_structure_gap")
                 self.assertEqual(
                     closed_gap["current_bucket"],
-                    "classification_surface_closed_followthrough_open",
+                    "classification_surface_closed_active_bridge_exit_closed",
                 )
                 self.assertEqual(closed_gap["owner"], "med-autogrant")
                 self.assertTrue(closed_gap["closed_by_refs"])
@@ -676,9 +684,9 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 self.assertEqual(evidence_gap["current_bucket"], "testing_evidence_gap")
                 self.assertEqual(evidence_gap["owner"], "evidence_gate")
                 self.assertTrue(evidence_gap["mag_surface_refs"])
-        self.assertFalse(followthrough["authority_boundary"]["mag_repo_functional_structure_gaps_zero"])
+        self.assertTrue(followthrough["authority_boundary"]["mag_repo_functional_structure_gaps_zero"])
         self.assertTrue(followthrough["authority_boundary"]["classification_closed"])
-        self.assertTrue(followthrough["authority_boundary"]["followthrough_gaps_open"])
+        self.assertFalse(followthrough["authority_boundary"]["followthrough_gaps_open"])
         self.assertFalse(followthrough["authority_boundary"]["claims_opl_replacement_exists"])
         self.assertFalse(
             followthrough["authority_boundary"]["claims_opl_generated_surface_production_consumed"]

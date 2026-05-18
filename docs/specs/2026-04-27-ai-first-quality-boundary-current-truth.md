@@ -1,52 +1,52 @@
-# AI-first Quality Boundary Current Truth
+# AI-first 质量边界当前真相
 
 Date: `2026-04-27`
 
-This note freezes the AI-first quality boundary for `Med Auto Grant`. It captures the cross-project lesson from the RCA fix: schema-backed packs, scorecards, dossiers, gates, and controller reports can preserve structure, evidence references, and mechanical readiness, but they do not own grant-quality judgment. Authoring quality and critique judgment must come from AI-authored author / reviewer artifacts.
+本文冻结 `Med Auto Grant` 的 AI-first 质量边界：schema-backed pack、scorecard、dossier、gate 和 controller report 可以保存结构、证据引用和机械 readiness，但不持有基金写作质量判断。写作质量、评审判断和 revision intent 必须来自 AI-authored author / reviewer artifact。
 
-## Boundary
+## 边界
 
-- Authoring executor and critique executor own AI-authored prose, scientific critique, reviewer judgment, and revision intent.
-- `grant_quality_scorecard` and `grant_quality_closure_dossier` are AI-critique-backed aggregators. They can summarize completeness, structural scores, evidence links, lineage, queues, and blockers.
-- Scorecard fields, schema completeness, evidence-link presence, and numeric scores are structural signals. They cannot independently promote a workspace to `near_submission_candidate` or `submission_grade_candidate`.
-- Without an active AI-backed critique or equivalent AI-authored quality assessment, the scorecard must stay `assessment_owner=projection_only` with `ai_reviewer_required=true`.
+- authoring executor 与 critique executor 持有 AI-authored 正文、科学 critique、reviewer judgment 和 revision intent。
+- `grant_quality_scorecard` 与 `grant_quality_closure_dossier` 是 AI-critique-backed aggregator；它们可以汇总完整度、结构评分、证据链接、lineage、queue 和 blocker。
+- scorecard 字段、schema 完整度、证据链接存在性和数字分数只是结构信号，不能独立把 workspace 提升为 `near_submission_candidate` 或 `submission_grade_candidate`。
+- 缺少 active AI-backed critique 或等价 AI-authored quality assessment 时，scorecard 必须保持 `assessment_owner=projection_only` 和 `ai_reviewer_required=true`。
 
-## Candidate status rule
+## 候选状态规则
 
-Candidate-ready states are allowed only when the active critique provenance is AI reviewer backed.
+只有 active critique provenance 由 AI reviewer 支撑时，才允许 candidate-ready 状态。
 
-Allowed AI-backed critique owners are:
+允许的 AI-backed critique owner 是：
 
 - `Codex CLI critique executor`
-- `Hermes-native critique proof executor`
+- `explicit hosted/proof critique executor`
 
-If the active critique is missing, stale, unowned, or not one of those owners:
+如果 active critique 缺失、过期、无 owner，或不属于上述 owner：
 
 - `overall_status` must not become `near_submission_candidate`.
 - `overall_status` must not become `submission_grade_candidate`.
 - Autonomy controller `quality_status` must remain `not_ready`.
-- The blocker list must include `ai_reviewer_required` semantics.
+- blocker list 必须包含 `ai_reviewer_required` 语义。
 
-## Revision executor rule
+## Revision executor 规则
 
-`revision_executor` is a mechanical apply layer. It may only apply AI-authored `revision_plan.items[].mutation_payload`.
+`revision_executor` 是机械 apply 层，只能应用 AI-authored `revision_plan.items[].mutation_payload`。
 
-It must not:
+它不能：
 
-- generate replacement prose itself;
-- synthesize fallback text;
-- fill missing mutation payloads from templates;
-- repair prose by heuristic post-processing.
+- 自己生成 replacement prose；
+- 合成 fallback text；
+- 用模板补齐缺失 mutation payload；
+- 用 heuristic post-processing 修正文案。
 
-If the active AI-backed critique or mutation payload is absent, the revision executor must fail closed.
+缺少 active AI-backed critique 或 mutation payload 时，revision executor 必须 fail closed。
 
-## Development checklist
+## 开发检查
 
-- Before adding a quality-ready state, identify the AI artifact that owns the judgment.
-- Before mapping a scorecard into autonomy status, check `assessment_owner` and `ai_reviewer_required`.
-- Before adding revision execution behavior, confirm every prose mutation comes from `mutation_payload`.
-- Keep schema/gate/controller code as aggregation and routing layers; do not let them become hidden authors or hidden reviewers.
-- Add or update AI-first boundary tests when any scorecard, dossier, critique, revision, or autonomy quality mapping changes.
+- 新增 quality-ready state 前，先识别持有判断的 AI artifact。
+- 将 scorecard 映射到 autonomy status 前，检查 `assessment_owner` 和 `ai_reviewer_required`。
+- 新增 revision execution 行为前，确认每个 prose mutation 都来自 `mutation_payload`。
+- schema/gate/controller code 只能作为 aggregation 和 routing layer，不能变成 hidden author 或 hidden reviewer。
+- 修改 scorecard、dossier、critique、revision 或 autonomy quality mapping 时，同步新增或更新 AI-first boundary tests。
 
 ## Verification
 

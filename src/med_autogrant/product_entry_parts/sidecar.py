@@ -119,6 +119,18 @@ def build_sidecar_export(
         "schema_version": SIDECAR_VERSION,
         "adapter_id": SIDECAR_ADAPTER_ID,
         "target_domain_id": TARGET_DOMAIN_ID,
+        "caller_owner_contract": {
+            "active_caller_owner": TARGET_DOMAIN_ID,
+            "active_caller_surface": "mag_product_sidecar_handler_until_opl_caller_evidence",
+            "target_caller_owner": "one-person-lab",
+            "target_caller_surface": "opl_generated_or_hosted_sidecar",
+            "domain_handler_target": TARGET_DOMAIN_ID,
+            "domain_handler_owner": TARGET_DOMAIN_ID,
+            "mag_role": "guarded_domain_handler_target_and_authority_refs_only",
+            "claims_fully_cleaned": False,
+            "mag_handler_boundary_ready": True,
+            "external_opl_generated_or_hosted_caller_evidence_required": True,
+        },
         "substrate_boundary": {
             "online_substrate_owner": "explicit_opl_provider",
             "control_plane_owner": "one-person-lab",
@@ -267,7 +279,7 @@ def build_sidecar_export(
             ),
         },
         "guardrails": {
-            "dispatch_boundary": "MAG-owned guarded product actions only.",
+            "dispatch_boundary": "OPL-hosted caller may invoke only MAG domain handler guarded actions.",
             "forbidden_defaults": [
                 "hermes_proof_executor",
                 "grant_truth_mutation_by_opl",
@@ -604,6 +616,18 @@ def _dispatch_payload(
             "action": action,
             "status": status,
             "target_domain_id": TARGET_DOMAIN_ID,
+            "caller_owner_contract": {
+                "active_caller_owner": TARGET_DOMAIN_ID,
+                "active_caller_surface": "mag_product_sidecar_dispatch_handler_until_opl_caller_evidence",
+                "target_caller_owner": "one-person-lab",
+                "target_caller_surface": "opl_generated_or_hosted_sidecar_dispatch",
+                "domain_handler_target": TARGET_DOMAIN_ID,
+                "domain_handler_owner": TARGET_DOMAIN_ID,
+                "mag_role": "guarded_domain_handler_target_only",
+                "claims_fully_cleaned": False,
+                "mag_handler_boundary_ready": True,
+                "external_opl_generated_or_hosted_caller_evidence_required": True,
+            },
             "input_path": str(Path(input_path).expanduser().resolve()),
             "task_path": str(task_path),
             "executed_by_sidecar": action
@@ -626,8 +650,8 @@ def _dispatch_payload(
             "guardrails": {
                 "allowed_actions": sorted(_ALLOWED_ACTIONS),
                 "domain_truth_owner": TARGET_DOMAIN_ID,
-                "opl_role": "typed_family_queue_control_plane",
-                "hermes_role": "online_substrate_wakeup_carrier",
+                "opl_role": "generated_hosted_caller_and_typed_family_queue_control_plane",
+                "hermes_role": "explicit_diagnostic_or_executor_proof_carrier_only",
                 "hermes_proof_executor_default": False,
             },
         },

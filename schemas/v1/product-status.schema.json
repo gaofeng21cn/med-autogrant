@@ -66,6 +66,54 @@
         }
       }
     },
+    "callerOwnerContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "active_caller_owner",
+        "active_caller_surface",
+        "target_caller_owner",
+        "target_caller_surface",
+        "domain_handler_target",
+        "domain_handler_owner",
+        "mag_role",
+        "claims_fully_cleaned",
+        "mag_handler_boundary_ready",
+        "external_opl_generated_or_hosted_caller_evidence_required"
+      ],
+      "properties": {
+        "active_caller_owner": {
+          "const": "med-autogrant"
+        },
+        "active_caller_surface": {
+          "const": "mag_product_status_handler_until_opl_caller_evidence"
+        },
+        "target_caller_owner": {
+          "const": "one-person-lab"
+        },
+        "target_caller_surface": {
+          "const": "opl_generated_or_hosted_status_read_model"
+        },
+        "domain_handler_target": {
+          "const": "med-autogrant"
+        },
+        "domain_handler_owner": {
+          "const": "med-autogrant"
+        },
+        "mag_role": {
+          "const": "status_handler_target_and_grant_authority_refs_only"
+        },
+        "claims_fully_cleaned": {
+          "const": false
+        },
+        "mag_handler_boundary_ready": {
+          "const": true
+        },
+        "external_opl_generated_or_hosted_caller_evidence_required": {
+          "const": true
+        }
+      }
+    },
     "productStatus": {
       "type": "object",
       "additionalProperties": false,
@@ -89,6 +137,7 @@
         "progress_projection",
         "artifact_inventory",
         "runtime_control",
+        "caller_owner_contract",
         "family_orchestration",
         "product_entry_manifest",
         "product_entry_surfaces",
@@ -152,6 +201,9 @@
         },
         "runtime_control": {
           "$ref": "product-entry-manifest.schema.json#/$defs/runtimeControlSurface"
+        },
+        "caller_owner_contract": {
+          "$ref": "#/$defs/callerOwnerContract"
         },
         "family_orchestration": {
           "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"

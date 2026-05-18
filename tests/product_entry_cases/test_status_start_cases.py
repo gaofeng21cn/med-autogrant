@@ -82,6 +82,18 @@ class ProductEntryStatusStartCaseTest(unittest.TestCase):
         self.assertEqual(status["surface_kind"], "product_status")
         self.assertEqual(status["recommended_action"], "inspect_or_prepare_grant_loop")
         self.assertEqual(status["target_domain_id"], "med-autogrant")
+        caller_owner = status["caller_owner_contract"]
+        self.assertEqual(caller_owner["active_caller_owner"], "med-autogrant")
+        self.assertEqual(
+            caller_owner["active_caller_surface"],
+            "mag_product_status_handler_until_opl_caller_evidence",
+        )
+        self.assertEqual(caller_owner["target_caller_owner"], "one-person-lab")
+        self.assertEqual(
+            caller_owner["target_caller_surface"],
+            "opl_generated_or_hosted_status_read_model",
+        )
+        self.assertTrue(caller_owner["external_opl_generated_or_hosted_caller_evidence_required"])
         self.assertEqual(status["product_entry_surface"]["shell_key"], "product_status")
         self.assertEqual(
             status["product_entry_surface"]["command"],

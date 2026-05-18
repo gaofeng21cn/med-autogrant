@@ -23,6 +23,42 @@ GENERATED_OR_BRIDGE_SURFACE_IDS = (
     "lifecycle_wrapper",
 )
 
+GENERATED_SURFACE_BRIDGE_EXIT_EVIDENCE = (
+    "opl_generated_or_hosted_caller_consumes_mag_pack_input",
+    "direct_mag_domain_handler_no_regression",
+    "owner_receipt_or_typed_blocker_ref_roundtrip",
+    "no_forbidden_write_proof",
+    "no_active_legacy_wrapper_caller_scan",
+)
+
+GENERATED_SURFACE_BRIDGE_EXIT_EVIDENCE_REFS = {
+    "opl_generated_or_hosted_caller_consumes_mag_pack_input": [
+        "contracts/generated_surface_handoff.json",
+        "tests/test_opl_standard_pack.py::test_opl_generated_interfaces_compile_mag_standard_pack",
+        "tests/test_opl_standard_pack.py::test_opl_standard_scaffold_validates_mag_pack",
+    ],
+    "direct_mag_domain_handler_no_regression": [
+        "tests/product_entry_cases/test_manifest_and_status.py",
+        "tests/product_entry_cases/test_sidecar.py",
+        "tests/product_entry_cases/test_functional_closure.py",
+    ],
+    "owner_receipt_or_typed_blocker_ref_roundtrip": [
+        "/product_entry_manifest/owner_receipt_contract",
+        "/product_entry_manifest/controlled_stage_attempt_projection",
+        "tests/product_entry_cases/test_functional_closure.py::"
+        "ProductEntryFunctionalClosureTest::test_owner_receipt_evidence_writer_persists_no_regression_receipt_without_domain_writes",
+    ],
+    "no_forbidden_write_proof": [
+        "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
+        "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+    ],
+    "no_active_legacy_wrapper_caller_scan": [
+        "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
+        "tests/test_domain_runtime.py::MagRuntimeCliDispatchTest::test_runtime_run_public_cli_is_retired",
+    ],
+}
+
 
 def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
     return [
@@ -164,11 +200,21 @@ def build_generated_surface_handoff() -> dict[str, Any]:
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
         "target_generator_owner": "one-person-lab",
-        "state": "declarative_input_landed_external_generated_surface_gate",
+        "active_caller_owner": TARGET_DOMAIN_ID,
+        "active_caller_surface": "mag_direct_domain_entry_until_opl_caller_evidence",
+        "domain_handler_target": TARGET_DOMAIN_ID,
+        "domain_handler_owner": TARGET_DOMAIN_ID,
+        "mag_role": "domain_handler_ref_only_adapter_and_minimal_authority_functions",
+        "state": "mag_handler_boundary_ready_external_caller_evidence_gated",
         "handoff_policy": "OPL_generates_or_hosts_generic_wrappers_from_MAG_pack_input",
         "bridge_policy": (
             "MAG handwritten product/status/sidecar/projection wrappers are migration bridges, "
             "not long-term MAG owner surfaces."
+        ),
+        "bridge_exit_gate": _bridge_exit_gate(
+            gate_id="mag.generated_surface_handoff.bridge_exit.v1",
+            applies_to_surface_ids=list(GENERATED_OR_BRIDGE_SURFACE_IDS),
+            exit_action="delete_or_history_tombstone_mag_handwritten_wrapper_keep_domain_handler",
         ),
         "declarative_input_ref": (
             "/product_entry_manifest/mag_consumer_thinning_contract/"
@@ -285,12 +331,59 @@ def _generated_surface(
 ) -> dict[str, Any]:
     return {
         "surface_id": surface_id,
-        "surface_status": "migration_bridge_until_opl_generated_surface",
+        "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
+        "active_caller_owner": TARGET_DOMAIN_ID,
         "current_owner": TARGET_DOMAIN_ID,
         "target_owner": "one-person-lab",
+        "domain_handler_target": TARGET_DOMAIN_ID,
+        "domain_handler_owner": TARGET_DOMAIN_ID,
+        "current_mag_path_role": "domain_handler_ref_only_adapter_not_generic_wrapper_owner",
+        "bridge_exit_gate": _bridge_exit_gate(
+            gate_id=f"mag.generated_surface_handoff.{surface_id}.bridge_exit.v1",
+            applies_to_surface_ids=[surface_id],
+            exit_action="delete_or_history_tombstone_this_mag_wrapper_keep_domain_handler",
+        ),
         "current_mag_paths": current_mag_paths,
         "compiler_input_refs": input_refs,
         "generated_by_opl_in_target": True,
         "current_mag_long_term_owner": False,
         "keeps_mag_authority_functions": False,
+    }
+
+
+def _bridge_exit_gate(
+    *,
+    gate_id: str,
+    applies_to_surface_ids: list[str],
+    exit_action: str,
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_bridge_exit_gate",
+        "gate_id": gate_id,
+        "gate_status": "mag_handler_boundary_ready_external_caller_evidence_required",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "replacement_owner": "one-person-lab",
+        "domain_handler_owner": TARGET_DOMAIN_ID,
+        "domain_handler_target": TARGET_DOMAIN_ID,
+        "applies_to_surface_ids": applies_to_surface_ids,
+        "required_evidence": list(GENERATED_SURFACE_BRIDGE_EXIT_EVIDENCE),
+        "satisfied_evidence_refs": {
+            evidence: list(refs)
+            for evidence, refs in GENERATED_SURFACE_BRIDGE_EXIT_EVIDENCE_REFS.items()
+        },
+        "exit_action": exit_action,
+        "claims_exit_complete": False,
+        "claims_production_long_run_soak_complete": False,
+        "production_soak_gate_status": "external_live_soak_and_caller_evidence_not_claimed_by_mag_repo",
+        "mag_handler_boundary_ready": True,
+        "external_opl_generated_or_hosted_caller_evidence_required": True,
+        "authority_boundary": {
+            "mag_keeps_domain_handler": True,
+            "mag_keeps_grant_authority_functions": True,
+            "mag_can_keep_generic_wrapper_after_exit": False,
+            "opl_generated_surface_can_write_grant_truth": False,
+            "opl_generated_surface_can_write_memory_body": False,
+            "opl_generated_surface_can_sign_owner_receipt": False,
+            "opl_generated_surface_can_declare_verdict": False,
+        },
     }

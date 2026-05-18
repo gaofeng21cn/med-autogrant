@@ -278,41 +278,10 @@ class MagRuntimeCliDispatchTest(unittest.TestCase):
             }
         )
 
-    def test_runtime_run_dispatches_through_domain_entry(self) -> None:
+    def test_runtime_run_public_cli_is_retired(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "journal.json"
-            expected_payload = {
-                "ok": True,
-                "command": "runtime-run",
-                "grant_run_id": "grant-run-test",
-                "workspace_id": "workspace-test",
-                "draft_id": "draft-test",
-                "lifecycle_stage": "critique",
-                "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                "journal_path": str(journal_path),
-                "attempt_index": 1,
-                "stop_reason": {
-                    "code": "stage_action_required",
-                    "reason": "stage action required",
-                    "current_stage": "critique",
-                    "recommended_next_stage": "revision",
-                    "checkpoint_status": "forward_progress",
-                    "requires_human_confirmation": False,
-                    "forced_rollback_stage": None,
-                    "forced_rollback_reason": None,
-                },
-                "stage_action_envelope": None,
-                "route_report": {"ok": True},
-                "resume": {
-                    "command": "runtime-resume",
-                    "journal_path": str(journal_path),
-                },
-            }
-
             with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
-                entry = entry_class.return_value
-                entry.dispatch.return_value = expected_payload
-
                 exit_code, stdout, stderr = self.run_cli(
                     "runtime",
                     "run",
@@ -324,16 +293,10 @@ class MagRuntimeCliDispatchTest(unittest.TestCase):
                     "json",
                 )
 
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            self.assertEqual(json.loads(stdout), expected_payload)
-            entry.dispatch.assert_called_once_with(
-                {
-                    "command": "runtime-run",
-                    "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                    "journal_path": str(journal_path),
-                }
-            )
+            self.assertEqual(exit_code, 2)
+            self.assertEqual(stdout, "")
+            self.assertIn("invalid choice", stderr)
+            entry_class.assert_not_called()
 
 
 class MagDomainRuntimeFlowTest(unittest.TestCase):

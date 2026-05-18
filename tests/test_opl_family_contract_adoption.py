@@ -676,15 +676,10 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "functional_followthrough_gap_classification"
     )
     followthrough = thinning["functional_followthrough_gap_classification"]
-    assert followthrough["state"] == "classification_closed_followthrough_gaps_open"
-    assert followthrough["mag_functional_structure_gap_count"] == 4
-    assert followthrough["remaining_mag_functional_structure_gap_ids"] == [
-        "opl_generated_surface_production_consumption",
-        "active_caller_cutover_and_wrapper_retirement",
-        "opl_app_package_memory_lifecycle_shell_consumption",
-        "legacy_runtime_session_physical_cleanup",
-    ]
-    assert len(followthrough["remaining_mag_functional_structure_gaps"]) == 4
+    assert followthrough["state"] == "mag_handler_boundary_ready_external_evidence_gated"
+    assert followthrough["mag_functional_structure_gap_count"] == 0
+    assert followthrough["remaining_mag_functional_structure_gap_ids"] == []
+    assert followthrough["remaining_mag_functional_structure_gaps"] == []
     assert followthrough["closed_classification_surface_ids"] == [
         "P1_adapter_thinning_and_pack_input",
         "P2_package_export_artifact_lifecycle_handoff",
@@ -699,9 +694,9 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "continuous_live_receipt_reconciliation",
         "long_run_live_soak_and_no_forbidden_write_proof",
     ]
-    assert followthrough["authority_boundary"]["mag_repo_functional_structure_gaps_zero"] is False
+    assert followthrough["authority_boundary"]["mag_repo_functional_structure_gaps_zero"] is True
     assert followthrough["authority_boundary"]["classification_closed"] is True
-    assert followthrough["authority_boundary"]["followthrough_gaps_open"] is True
+    assert followthrough["authority_boundary"]["followthrough_gaps_open"] is False
     assert followthrough["authority_boundary"]["claims_opl_replacement_exists"] is False
     assert followthrough["authority_boundary"]["claims_production_long_run_soak_complete"] is False
     assert thinning["consumed_opl_projection_surfaces"] == [
@@ -747,7 +742,7 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert audit["representative_private_functional_surfaces"] == {
         "local_runtime_journal_attempt_ledger": {
             "module_ref": "local_runtime_journal_attempt_ledger",
-            "active_caller_status": "legacy_local_journal_attempt_ledger_no_active_caller",
+            "active_caller_status": "legacy_local_journal_attempt_ledger_exit_complete",
             "migration_action": "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs",
         },
         "sidecar_dispatch_product_shell": {

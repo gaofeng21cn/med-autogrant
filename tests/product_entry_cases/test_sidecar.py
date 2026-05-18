@@ -18,6 +18,19 @@ class ProductSidecarTest(unittest.TestCase):
         export = payload["sidecar_export"]
         self.assertEqual(export["surface_kind"], "mag_product_sidecar_export")
         self.assertEqual(export["adapter_id"], "mag.opl_stage_led.product_sidecar.v1")
+        caller_owner = export["caller_owner_contract"]
+        self.assertEqual(caller_owner["active_caller_owner"], "med-autogrant")
+        self.assertEqual(
+            caller_owner["active_caller_surface"],
+            "mag_product_sidecar_handler_until_opl_caller_evidence",
+        )
+        self.assertEqual(caller_owner["target_caller_owner"], "one-person-lab")
+        self.assertEqual(caller_owner["target_caller_surface"], "opl_generated_or_hosted_sidecar")
+        self.assertEqual(caller_owner["domain_handler_target"], "med-autogrant")
+        self.assertEqual(caller_owner["domain_handler_owner"], "med-autogrant")
+        self.assertFalse(caller_owner["claims_fully_cleaned"])
+        self.assertTrue(caller_owner["mag_handler_boundary_ready"])
+        self.assertTrue(caller_owner["external_opl_generated_or_hosted_caller_evidence_required"])
         self.assertEqual(export["substrate_boundary"]["online_substrate_owner"], "explicit_opl_provider")
         self.assertEqual(export["substrate_boundary"]["control_plane_owner"], "one-person-lab")
         self.assertEqual(export["substrate_boundary"]["domain_truth_owner"], "med-autogrant")
@@ -117,7 +130,14 @@ class ProductSidecarTest(unittest.TestCase):
         )
         thinning = export["mag_consumer_thinning_contract"]
         self.assertEqual(thinning["surface_kind"], "mag_consumer_thinning_contract")
-        self.assertEqual(thinning["state"], "handoff_ready_external_opl_replacement_gated")
+        self.assertEqual(thinning["active_caller_owner"], "med-autogrant")
+        self.assertEqual(
+            thinning["active_caller_surface"],
+            "mag_direct_domain_entry_until_opl_caller_evidence",
+        )
+        self.assertEqual(thinning["domain_handler_target"], "med-autogrant")
+        self.assertEqual(thinning["domain_handler_owner"], "med-autogrant")
+        self.assertEqual(thinning["state"], "mag_handler_boundary_ready_external_caller_evidence_gated")
         self.assertEqual(
             thinning["sidecar_contract_ref"],
             "/product_entry_manifest/mag_consumer_thinning_contract",
@@ -150,12 +170,28 @@ class ProductSidecarTest(unittest.TestCase):
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "generated_surface_handoff"
                 ),
+                "generated_surface_bridge_exit_gate_ref": (
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "generated_surface_handoff/bridge_exit_gate"
+                ),
                 "functional_followthrough_gap_classification_ref": (
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "functional_followthrough_gap_classification"
                 ),
             },
         )
+        bridge_refs = thinning["bridge_exit_gate_refs"]
+        self.assertEqual(
+            bridge_refs["generated_surface_bridge_exit_gate_ref"],
+            "/product_entry_manifest/mag_consumer_thinning_contract/"
+            "generated_surface_handoff/bridge_exit_gate",
+        )
+        self.assertEqual(
+            bridge_refs["legacy_exit_gate_policy"],
+            "delete_or_history_tombstone_after_replacement_proof",
+        )
+        self.assertFalse(bridge_refs["claims_all_bridge_exits_complete"])
+        self.assertTrue(bridge_refs["mag_handler_boundary_ready"])
         self.assertEqual(
             export["functional_followthrough_gap_classification"],
             thinning["functional_followthrough_gap_classification"],
@@ -164,7 +200,7 @@ class ProductSidecarTest(unittest.TestCase):
             export["functional_followthrough_gap_classification"][
                 "mag_functional_structure_gap_count"
             ],
-            4,
+            0,
         )
         self.assertFalse(
             export["functional_followthrough_gap_classification"]["authority_boundary"][
@@ -172,6 +208,14 @@ class ProductSidecarTest(unittest.TestCase):
             ]
         )
         self.assertFalse(thinning["authority_boundary"]["mag_rebuilds_opl_runtime"])
+        self.assertEqual(
+            thinning["authority_boundary"]["generic_wrapper_active_caller_owner"],
+            "evidence_required_from_one-person-lab",
+        )
+        self.assertEqual(
+            thinning["authority_boundary"]["mag_role_for_generated_wrappers"],
+            "domain_handler_ref_only_adapter_and_minimal_authority_functions",
+        )
         self.assertEqual(thinning["forbidden_mag_owned_generic_primitives"], [])
         self.assertIn("generic_operator_workbench_owner", thinning["forbidden_mag_generic_owner_roles"])
         self.assertIn("generic_workspace_source_intake_owner", thinning["forbidden_mag_generic_owner_roles"])
@@ -294,6 +338,28 @@ class ProductSidecarTest(unittest.TestCase):
         )
         self.assertEqual(export["generated_surface_handoff"], thinning["generated_surface_handoff"])
         self.assertEqual(export["minimal_authority_functions"], thinning["minimal_authority_functions"])
+        bridge_exit = export["generated_surface_handoff"]["bridge_exit_gate"]
+        self.assertEqual(bridge_exit["surface_kind"], "mag_bridge_exit_gate")
+        self.assertEqual(bridge_exit["replacement_owner"], "one-person-lab")
+        self.assertEqual(bridge_exit["domain_handler_owner"], "med-autogrant")
+        self.assertEqual(
+            bridge_exit["exit_action"],
+            "delete_or_history_tombstone_mag_handwritten_wrapper_keep_domain_handler",
+        )
+        self.assertFalse(bridge_exit["claims_exit_complete"])
+        self.assertTrue(bridge_exit["mag_handler_boundary_ready"])
+        self.assertFalse(bridge_exit["claims_production_long_run_soak_complete"])
+        self.assertEqual(
+            bridge_exit["production_soak_gate_status"],
+            "external_live_soak_and_caller_evidence_not_claimed_by_mag_repo",
+        )
+        self.assertIn(
+            "no_active_legacy_wrapper_caller_scan",
+            bridge_exit["required_evidence"],
+        )
+        self.assertFalse(
+            bridge_exit["authority_boundary"]["mag_can_keep_generic_wrapper_after_exit"]
+        )
         self.assertEqual(
             export["generated_surface_handoff"]["generated_surface_ids"],
             [
@@ -310,6 +376,16 @@ class ProductSidecarTest(unittest.TestCase):
                 "generated_surface_can_declare_verdict"
             ]
         )
+        for surface in export["generated_surface_handoff"]["generated_or_bridge_surfaces"]:
+            with self.subTest(bridge_surface=surface["surface_id"]):
+                self.assertEqual(surface["bridge_exit_gate"]["surface_kind"], "mag_bridge_exit_gate")
+                self.assertEqual(surface["bridge_exit_gate"]["replacement_owner"], "one-person-lab")
+                self.assertFalse(surface["bridge_exit_gate"]["claims_exit_complete"])
+                self.assertFalse(surface["bridge_exit_gate"]["claims_production_long_run_soak_complete"])
+                self.assertEqual(
+                    surface["bridge_exit_gate"]["exit_action"],
+                    "delete_or_history_tombstone_this_mag_wrapper_keep_domain_handler",
+                )
         self.assertEqual(
             {
                 item["function_id"]
@@ -437,6 +513,10 @@ class ProductSidecarTest(unittest.TestCase):
             ],
         )
         self.assertIn("hermes_proof_executor", export["guardrails"]["forbidden_defaults"])
+        self.assertEqual(
+            export["guardrails"]["dispatch_boundary"],
+            "OPL-hosted caller may invoke only MAG domain handler guarded actions.",
+        )
 
     def test_sidecar_dispatch_status_read_and_user_loop_wakeup_are_mag_owned(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

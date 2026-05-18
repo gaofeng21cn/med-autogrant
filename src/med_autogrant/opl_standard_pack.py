@@ -53,6 +53,7 @@ FORBIDDEN_GENERIC_OWNER_ROLES = [
 GENERATED_SURFACES = [
     "cli",
     "mcp",
+    "skill",
     "product_entry_manifest",
     "sidecar_export_dispatch",
     "status_read_model",

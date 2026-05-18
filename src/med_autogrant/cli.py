@@ -255,13 +255,13 @@ def build_parser() -> argparse.ArgumentParser:
         subparsers,
         "product-entry-manifest",
         handle_product_entry_manifest,
-        "输出当前 direct grant product-entry manifest，收口 repo 主线、当前壳与 shared handoff 模板。",
+        "输出 MAG domain handler manifest，供 OPL generated/hosted caller 消费。",
     )
     _add_manifest_command(
         subparsers,
         "product-status",
         handle_product_status,
-        "输出 controller-owned 的 direct grant product status。",
+        "输出 OPL-hosted status caller 可消费的 MAG domain status refs。",
     )
     _add_workspace_command(
         subparsers,
@@ -381,13 +381,13 @@ def build_parser() -> argparse.ArgumentParser:
         subparsers,
         "product-sidecar-export",
         handle_product_sidecar_export,
-        "导出 MAG product sidecar adapter，供 OPL typed queue / Hermes substrate 消费。",
+        "导出 OPL-hosted sidecar caller 的 MAG guarded domain handler target。",
     )
     _add_product_sidecar_dispatch_command(
         subparsers,
         "product-sidecar-dispatch",
         handle_product_sidecar_dispatch,
-        "执行 MAG-owned guarded sidecar task dispatch。",
+        "执行 OPL-hosted caller 发起的 MAG guarded domain handler action。",
     )
     _add_product_domain_memory_proposal_command(
         subparsers,

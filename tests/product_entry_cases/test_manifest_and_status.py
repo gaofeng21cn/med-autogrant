@@ -51,7 +51,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             ),
         )
         self.assertEqual(manifest["product_entry_surface"]["surface_kind"], "product_status")
-        self.assertIn("direct grant product status", manifest["product_entry_surface"]["summary"])
+        self.assertIn("OPL generated/hosted status caller", manifest["product_entry_surface"]["summary"])
         self.assertEqual(
             manifest["managed_runtime_contract"],
             {
@@ -326,7 +326,27 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertFalse(compiler_input["authority_boundary"]["opl_can_declare_fundability_verdict"])
         generated_handoff = thinning["generated_surface_handoff"]
         self.assertEqual(generated_handoff["surface_kind"], "mag_generated_surface_handoff")
+        self.assertEqual(generated_handoff["owner"], "med-autogrant")
         self.assertEqual(generated_handoff["target_generator_owner"], "one-person-lab")
+        self.assertEqual(generated_handoff["active_caller_owner"], "med-autogrant")
+        self.assertEqual(generated_handoff["domain_handler_target"], "med-autogrant")
+        self.assertEqual(generated_handoff["domain_handler_owner"], "med-autogrant")
+        self.assertEqual(
+            generated_handoff["bridge_exit_gate"]["gate_status"],
+            "mag_handler_boundary_ready_external_caller_evidence_required",
+        )
+        self.assertIn(
+            "no_active_legacy_wrapper_caller_scan",
+            generated_handoff["bridge_exit_gate"]["required_evidence"],
+        )
+        self.assertFalse(generated_handoff["bridge_exit_gate"]["claims_exit_complete"])
+        self.assertFalse(
+            generated_handoff["bridge_exit_gate"]["claims_production_long_run_soak_complete"]
+        )
+        self.assertEqual(
+            generated_handoff["bridge_exit_gate"]["production_soak_gate_status"],
+            "external_live_soak_and_caller_evidence_not_claimed_by_mag_repo",
+        )
         self.assertEqual(
             generated_handoff["generated_surface_ids"],
             [
@@ -341,9 +361,21 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(generated_handoff["mag_long_term_owner_surface_ids"], [])
         for surface in generated_handoff["generated_or_bridge_surfaces"]:
             with self.subTest(generated_surface=surface["surface_id"]):
-                self.assertEqual(surface["surface_status"], "migration_bridge_until_opl_generated_surface")
+                self.assertEqual(
+                    surface["surface_status"],
+                    "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
+                )
+                self.assertEqual(surface["active_caller_owner"], "med-autogrant")
                 self.assertEqual(surface["current_owner"], "med-autogrant")
                 self.assertEqual(surface["target_owner"], "one-person-lab")
+                self.assertEqual(surface["domain_handler_target"], "med-autogrant")
+                self.assertEqual(surface["domain_handler_owner"], "med-autogrant")
+                self.assertEqual(
+                    surface["bridge_exit_gate"]["gate_status"],
+                    "mag_handler_boundary_ready_external_caller_evidence_required",
+                )
+                self.assertFalse(surface["bridge_exit_gate"]["claims_exit_complete"])
+                self.assertFalse(surface["bridge_exit_gate"]["claims_production_long_run_soak_complete"])
                 self.assertTrue(surface["generated_by_opl_in_target"])
                 self.assertFalse(surface["current_mag_long_term_owner"])
                 self.assertFalse(surface["keeps_mag_authority_functions"])
