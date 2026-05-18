@@ -142,7 +142,7 @@ grant 域在这层共享 envelope 之上继续补充：
 
 - 轻量结构化 `product entry` shell 已 landed
 - `direct` 与 `opl-handoff` 现在共享同一套 envelope
-- `opl-handoff` 继续保留为 internal compatibility / bridge entry mode
+- `opl-handoff` 只作为 internal handoff/reference entry mode 阅读，不是兼容入口
 - 这层 shell 明确建立在 `MedAutoGrantDomainEntry` 与默认 `codex_cli` runtime contract 之上；Hermes 只作为显式 proof lane
 - external caller 现在还可以直接从 `return_surface_contract.domain_entry_contract` 读取 `supported_commands` / `command_contracts`
 - 这层 shell 会显式告诉 caller：当前 author-side route catalog 已经全部 landed，并且都收口到同一份 service-safe command surface
@@ -151,6 +151,6 @@ grant 域在这层共享 envelope 之上继续补充：
 它不意味着：
 
 - 最终用户产品前台已经成熟
-- 当时语境下的 `OPL Gateway` 完整消费链已全部落地；当前应按 `OPL Runtime Manager -> configured family runtime provider -> MAG-owned product sidecar / domain entry` 重新解读，不代表生产级 Temporal stage execution 已完成
+- 当时语境下的 `OPL Gateway` 完整消费链已全部落地；当前应按 `OPL stage-led family runtime provider -> MAG-owned product sidecar / domain entry` 重新解读，不代表生产级 Temporal stage execution 已完成
 - actual hosted runtime 已完成
 - submission-grade autopilot 已完成

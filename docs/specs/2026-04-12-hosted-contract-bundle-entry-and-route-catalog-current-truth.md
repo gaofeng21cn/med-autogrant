@@ -12,9 +12,10 @@ Date: `2026-04-12`
 
 ## Goal
 
+当前只保留本文件中 schema-backed hosted contract bundle、route catalog 与 `MedAutoGrantDomainEntry` 的支撑读法。早期 “real upstream Hermes-Agent runtime substrate” 激活口径已退役，只作为 provenance；当前托管路线是 OPL stage-led framework + Temporal-backed provider，`hermes_agent` 只可作为显式非默认 executor/proof lane。
+
 在已经 landed 的：
 
-- `CLI-first + real upstream Hermes-Agent runtime substrate`
 - `MedAutoGrantDomainEntry`
 - schema-backed `product_entry`
 - schema-backed `executor_routing_contract`

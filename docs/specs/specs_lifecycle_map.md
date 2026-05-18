@@ -8,15 +8,15 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 
 ## 为什么保留这份地图
 
-`docs/specs/` 同时包含 current truth records、support records、activation packages、fail-closed hardening notes 和 historical tranche documents。一次性物理迁移会破坏旧审计路径，也会让 `current-program.json` 中的历史指针更难解释。
+`docs/specs/` 只保留 current truth records、support current-truth records 和 integration references。纯历史 activation package、R/P/post-R5A tranche、fail-closed hardening note、future P5 记录和 superseded provider proof 已物理归档到 `docs/history/specs/`。
 
 当前规则是 index-first 生命周期治理：
 
-- 当 path-stable specs 仍被 current-program、history 或旧审计证据引用时，可以继续留在 `docs/specs/`。
+- 当 support specs 仍被 current-program、history 或旧审计证据引用时，可以继续留在 `docs/specs/`，但必须有明确 current subsection。
 - 生命周期状态统一在本文和 `docs/specs/README.md` 标清。
-- dated support/history specs 第一屏必须保留生命周期注记，避免 direct-file reader 把旧 `Current Truth` 标题误读成当前 owner line。
+- dated support specs 第一屏必须保留生命周期注记，避免 direct-file reader 把旧 `Current Truth` 标题误读成当前 owner line。
 - 不再默认新增 dated root specs；只有明确被接纳为 current owner surface 的文件才进入 active specs。
-- 物理迁移只在 inbound path references 清理后小批量执行。
+- 纯历史 spec 一律进入 `docs/history/specs/`；不得为了旧审计路径稳定性在 current specs 层保留兼容入口。
 
 ## Active Current Specs
 
@@ -31,7 +31,7 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 
 ## 文件级生命周期表
 
-这张表是 dense specs set 的 direct-reader guard。active owner 或高风险单文件使用精确文件名；生命周期、owner 和下一跳一致的批次使用精确 filename family。文件可以为了 path stability 留在 `docs/specs/`，同时把当前内容 owner 指向别处；明确退役的 provider-proof 文件在不再承担 active owner 后进入 `docs/history/specs/`。
+这张表是 dense specs set 的 direct-reader guard。active owner 或高风险单文件使用精确文件名；生命周期、owner 和下一跳一致的批次使用精确 filename family。纯历史文件位于 `docs/history/specs/`；current specs 层不再用 path stability 保留旧 activation package 或 fail-closed tranche。
 
 | 文件或精确 family | 生命周期 | 当前 owner / replacement | 阅读动作 |
 | --- | --- | --- | --- |
@@ -50,13 +50,13 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 | `2026-04-12-author-side-executor-routing-contract-current-truth.md` | `support_current_truth` | executor routing schema/source | 作为 route-selected executor contract 支撑阅读。 |
 | `2026-04-12-hosted-caller-consumption-proof-current-truth.md`, `2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md` | `integration_reference` | hosted contract bundle + references | 作为 hosted caller consumption proof 阅读；不表示 public hosted runtime 成熟。 |
 | `2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md` | `integration_reference` | product-entry manifest + OPL handoff refs | 作为 OPL handoff shape 阅读；旧 Gateway wording 是 provenance。 |
-| `2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md` | `superseded_reference` | OPL stage-led framework roadmap + MAG status | 必须套用当前 OPL/MAG owner split 后阅读。 |
-| `2026-04-06-*` | `historical_provenance` | core five + history/specs index | 只作为 early foundation design 阅读。 |
-| `2026-04-08-p5a-*`, `2026-04-08-p5b-*` | `future_activation_history` | domain admission/future planning owners | 不作为 active P5 backlog。 |
-| `2026-04-08-r1a-*`, `2026-04-08-r1b-*`, `2026-04-08-r2a-*`, `2026-04-08-r3a-*`, `2026-04-09-r3a-*`, `2026-04-09-r4a-*`, `2026-04-09-r5a-*` | `historical_activation_package` | current pass/package/runtime docs + history/specs index | 作为 activation provenance 阅读；当前行为在 source/contracts。 |
-| `2026-04-08-runtime-first-productization-program.md`, `2026-04-08-runtime-first-r1-to-r5-boundary-map.md` | `historical_program_record` | core docs + history/specs index | 作为 R1-R5 形成历史阅读，不作为当前执行顺序。 |
-| `2026-04-09-post-r5a-local-runtime-hardening-brief.md`, `2026-04-10-post-r5a-local-runtime-*`, `2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md` | `support_or_history_by_subsection` | core docs + route/runtime owner docs | 只读 fail-closed 与 honest-stop lessons；不得恢复旧 local runtime owner。 |
-| `2026-04-10-post-r5a-final-package-*`, `2026-04-10-post-r5a-hosted-contract-bundle-*`, `2026-04-10-post-r5a-stage-route-*`, `2026-04-10-post-r5a-worktree-aware-*`, `2026-04-10-post-r5a-revised-*` | `historical_fail_closed_record` | package/export schemas + history/specs index | 作为 fail-closed provenance 与 path-stable audit 阅读。 |
+| `../history/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md` | `historical_opl_alignment_snapshot` | OPL stage-led framework roadmap + MAG status | 只作为 2026-04-12 对齐快照阅读；不得作为 active phase map 或 hosted target。 |
+| `../history/specs/2026-04-06-*` | `historical_provenance` | core five + history/specs index | 只作为 early foundation design 阅读。 |
+| `../history/specs/2026-04-08-p5a-*`, `../history/specs/2026-04-08-p5b-*` | `future_activation_history` | domain admission/future planning owners | 不作为 active P5 backlog。 |
+| `../history/specs/2026-04-08-r1a-*`, `../history/specs/2026-04-08-r1b-*`, `../history/specs/2026-04-08-r2a-*`, `../history/specs/2026-04-08-r3a-*`, `../history/specs/2026-04-09-r3a-*`, `../history/specs/2026-04-09-r4a-*`, `../history/specs/2026-04-09-r5a-*` | `historical_activation_package` | current pass/package/runtime docs + history/specs index | 作为 activation provenance 阅读；当前行为在 source/contracts。 |
+| `../history/specs/2026-04-08-runtime-first-productization-program.md`, `../history/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md` | `historical_program_record` | core docs + history/specs index | 作为 R1-R5 形成历史阅读，不作为当前执行顺序。 |
+| `../history/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`, `../history/specs/2026-04-10-post-r5a-local-runtime-validation-*`, `2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`, `2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md` | `support_or_history_by_subsection` | core docs + route/runtime owner docs | current specs 中只保留 walkthrough / honest-stop 支撑记录；其余 local-runtime activation 只从 history 阅读。 |
+| `../history/specs/2026-04-10-post-r5a-final-package-*`, `../history/specs/2026-04-10-post-r5a-hosted-contract-bundle-*`, `../history/specs/2026-04-10-post-r5a-stage-route-*`, `../history/specs/2026-04-10-post-r5a-worktree-aware-*`, `../history/specs/2026-04-10-post-r5a-revised-*` | `historical_fail_closed_record` | package/export schemas + history/specs index | 作为 fail-closed provenance 阅读；不得恢复旧 local runtime、hosted bundle 或 Gateway owner。 |
 | `../history/specs/2026-04-11-hermes-backed-*`, `../history/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`, `../history/specs/2026-04-12-upstream-hermes-agent-fast-cutover-*` | `retired_provider_proof` | current core docs + explicit hosted/proof refs | 只能从 history 阅读；不得恢复 Hermes-backed owner、Gateway/local-manager、compatibility alias 或 default-runtime wording。 |
 
 ## Support Current-Truth Records
@@ -70,7 +70,7 @@ Support records 只在仍 current 的 subsection 内有效。若其中包含旧 
 | Formal entry / durability | `2026-04-07-formal-entry-matrix-current-truth.md`, `2026-04-07-durability-model-clarification.md` |
 | P2-P4 absorbed grant flow | `2026-04-07-p2a-*`, `2026-04-07-p2b-*`, `2026-04-07-p2c-*`, `2026-04-07-p3a-*`, `2026-04-08-p3b-*`, `2026-04-08-p3c-*`, `2026-04-08-p4a-*`, `2026-04-08-p4b-*` |
 | Local runtime closeout / output consistency | `2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`, `2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`；只读 fail-closed 与 honest-stop lessons；当前 runtime owner wording 在核心文档和 active specs。 |
-| Hosted / OPL handoff support | `2026-04-12-hosted-*`, `2026-04-12-opl-aligned-*`, `2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`；只读 contract consumption 与 route/export handoff；旧 `OPL Gateway` 或 hosted-product completion language 仍是 provenance。 |
+| Hosted / OPL handoff support | `2026-04-12-hosted-*`, `2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`；只读 contract consumption 与 route/export handoff；旧 `OPL Gateway` 或 hosted-product completion language 仍是 provenance。 |
 | Product entry and package surfaces | `2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md`, `2026-04-12-p4a-*`, `2026-04-12-p4b-*`, `2026-04-12-p4c-*`, `2026-04-13-full-grant-authoring-executor-current-truth.md`, `2026-04-13-p4e-*`, `2026-04-13-p4f-*` |
 
 ## Provider 与 Hosted 旧词处置
@@ -87,7 +87,7 @@ Support records 只在仍 current 的 subsection 内有效。若其中包含旧 
 
 ## Historical Provenance Records
 
-这些记录为审计性和 path stability 保留。除非另一个 active surface 明确指向仍有效的 subsection，否则它们不定义 current truth。
+这些记录已物理归档到 `docs/history/specs/`。除非另一个 active surface 明确指向仍有效的 subsection，否则它们不定义 current truth。
 
 | 分组 | Records |
 | --- | --- |
@@ -98,6 +98,7 @@ Support records 只在仍 current 的 subsection 内有效。若其中包含旧 
 | Post-R5A fail-closed artifact-bundle notes | `2026-04-10-post-r5a-final-package-*`, `2026-04-10-post-r5a-hosted-contract-bundle-*`, malformed/fail-closed variants |
 | Other post-R5A activation notes | `2026-04-10-post-r5a-local-runtime-validation-*`, `2026-04-10-post-r5a-revised-*`, `2026-04-10-post-r5a-stage-route-*`, `2026-04-10-post-r5a-worktree-aware-*` |
 | Retired Hermes/provider records | `../history/specs/2026-04-11-hermes-backed-*`, `../history/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`, `../history/specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md`, `../history/specs/2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md` |
+| OPL alignment snapshot | `../history/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md` |
 
 这些分组的归档阅读入口是 [历史 specs](../history/specs/README.md)。
 

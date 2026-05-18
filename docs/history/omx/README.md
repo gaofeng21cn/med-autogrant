@@ -19,4 +19,4 @@
 - [历史 domain-harness-os positioning](../domain-harness-os-positioning.md)
 - [Formal entry matrix historical/support spec](../../specs/2026-04-07-formal-entry-matrix-current-truth.md)
 - [Durability model historical/support spec](../../specs/2026-04-07-durability-model-clarification.md)
-- [主线与 OMX Bridge](../../specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
+- [主线与 OMX Bridge](../specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md)

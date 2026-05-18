@@ -1,8 +1,6 @@
 # 历史 Specs
 
-本索引是旧技术 specs 与 tranche 记录的历史入口。部分 path-stable
-源文件仍保留在 `docs/specs/`，这样旧审计链接、current-program 指针和历史绝对路径说明仍可读；明确退役的 provider proof、tombstone 和 superseded
-handoff 文件可以物理归档到本目录。
+本索引是旧技术 specs 与 tranche 记录的历史入口。纯历史 activation package、future P5、runtime-first R/P tranche、post-R5A fail-closed hardening、退役 provider proof、tombstone 和 superseded handoff 文件都归档在本目录。`docs/specs/` 只保留 active current spec、support current-truth record 和 integration reference。
 
 阅读旧 program 背景时从这里进入。当前真相请回到 [Specs 索引](../../specs/README.md)、核心五件套与 `current-program.json`。
 
@@ -15,20 +13,27 @@ handoff 文件可以物理归档到本目录。
 
 由本归档入口承接的历史分组：
 
-- 2026-04-06 foundation design 与 OMX bridge 记录：`../../specs/2026-04-06-*.md`
-- 2026-04-07 P1/P2/P3 entry、durability 与 mainline tranche 记录：`../../specs/2026-04-07-*.md`
-- 2026-04-08 verification、P5 future activation 与 R1/R3 runtime-productization packages：`../../specs/2026-04-08-*.md`
-- 2026-04-09 R3/R5 与 post-R5A hardening briefs：`../../specs/2026-04-09-*.md`
-- 2026-04-10 post-R5A fail-closed hardening activation packages：`../../specs/2026-04-10-*.md`
+- 2026-04-06 foundation design 与 OMX bridge 记录：`./2026-04-06-*.md`
+- 2026-04-07 P1/P2/P3 entry、durability 与 mainline tranche 记录：仍留在 `../../specs/2026-04-07-*.md`，只按 support/provenance subsection 阅读。
+- 2026-04-08 verification support 记录：仍留在 `../../specs/2026-04-08-p3*.md` 与 `../../specs/2026-04-08-p4*.md`；P5 future activation 与 R1/R3 runtime-productization packages 位于本目录的 `./2026-04-08-p5*.md`、`./2026-04-08-r*.md` 和 `./2026-04-08-runtime-first-*.md`。
+- 2026-04-09 R3/R5 与 post-R5A hardening briefs：`./2026-04-09-*.md`
+- 2026-04-10 post-R5A fail-closed hardening activation packages：`./2026-04-10-post-r5a-final-package-*.md`、`./2026-04-10-post-r5a-hosted-contract-bundle-*.md`、`./2026-04-10-post-r5a-local-runtime-validation-*.md`、`./2026-04-10-post-r5a-revised-*.md`、`./2026-04-10-post-r5a-stage-route-*.md` 和 `./2026-04-10-post-r5a-worktree-aware-*.md`
 - 2026-04-11 Hermes/reset 与 local-runtime closeout 记录：已退役 provider proof 位于本目录的 `2026-04-11-hermes-backed-*.md` 与 `2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`；仍留在 `../../specs/` 的 2026-04-11 local-runtime honest-stop 记录只作为 fail-closed / honest-stop provenance 阅读。
-- 2026-04-12 hosted-caller、OPL alignment、product-entry 与 handoff 记录：已退役 upstream Hermes fast-cutover board/current-truth 位于本目录；仍留在 `../../specs/` 的 hosted contract、caller consumption、OPL alignment 和 product-entry 细节只作为 support/provenance 阅读，旧 gateway/federation/provider 说法按历史处理。
+- 2026-04-12 hosted-caller、OPL alignment、product-entry 与 handoff 记录：已退役 upstream Hermes fast-cutover board/current-truth 与 OPL alignment historical snapshot 位于本目录；仍留在 `../../specs/` 的 hosted contract、caller consumption 和 product-entry 细节只作为 support/provenance 阅读，旧 gateway/federation/provider 说法按历史处理。
 - 2026-04-13 authoring route landing、默认 executor vocabulary 与 submission-ready 记录：`../../specs/2026-04-13-*.md`；已退役 Hermes-native proof tombstone：`./2026-04-13-hermes-native-critique-proof-tombstone.md`
 
 Active specs 继续列在 [Specs 索引](../../specs/README.md)。
 若 dated spec 与核心文档或 `current-program.json` 冲突，除非它被明确列为 active boundary record，否则按 provenance 处理。
 
-已物理归档的 provider-proof specs：
+已物理归档的历史 specs 包括：
 
+- [Med Auto Grant top-level design](./2026-04-06-med-auto-grant-top-level-design.md)
+- [Med Auto Grant mainline and OMX bridge](./2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
+- [NSFC main flow and critique loop](./2026-04-06-nsfc-main-flow-and-critique-loop.md)
+- [Object model schema v1](./2026-04-06-object-model-schema-v1.md)
+- [Runtime-first productization program](./2026-04-08-runtime-first-productization-program.md)
+- [Runtime-first R1 to R5 boundary map](./2026-04-08-runtime-first-r1-to-r5-boundary-map.md)
+- [OPL aligned ideal target and phase map historical snapshot](./2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md)
 - [Hermes-backed runtime capability migration map](./2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md)
 - [Hermes-backed runtime substrate program](./2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md)
 - [Upstream Hermes-Agent truth reset](./2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)

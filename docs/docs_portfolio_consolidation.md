@@ -34,7 +34,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 | `docs/delivery/` | submission-ready package、export、delivery、manual portal boundary | 当前较薄；grant artifact/export authority 仍 MAG-owned。 |
 | `docs/source/` | funder/task/source intake、workspace canonical document、source truth consumption | 当前较薄；后续承接 workspace/source intake 和 funder-source 边界。 |
 | `docs/policies/` | 稳定治理规则、文档规则、repo-local operating discipline | 当前较薄；长期规则可从 invariants/decisions/governance checklist 抽取。 |
-| `docs/specs/` | path-stable 技术记录和 active specs | 真实承载但混合；`specs_lifecycle_map.md` 负责 active/support/history 分流。明确退役的 Hermes/upstream-provider proof 已物理归档到 `docs/history/specs/`。 |
+| `docs/specs/` | active specs、support current-truth records、integration references | 只保留当前或仍支撑当前 subsection 的技术记录；纯历史 R/P/post-R5A/future-P5/provider-proof 记录已归档到 `docs/history/specs/`。 |
 | `docs/references/` | north-star、OPL adoption、memory policy、governance checklist | 真实承载；不承担 active owner。 |
 | `docs/history/` | 完成计划、旧 specs、旧 provider/runtime/OMX/provenance | 真实承载；不承担 current truth。 |
 
@@ -42,7 +42,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 旧 `docs/plans/` 已物理退役，不再作为 active owner。完成计划留在 `docs/history/plans/`。如果历史计划仍含 current truth，先抽取内容进入 `active/product/runtime/delivery/source/policies/specs` 的当前 owner，再保留原文件作为 provenance。
 
-`docs/specs/` 是 path-stable 混合层，不是旧接口兼容层。只有 README 和 `specs_lifecycle_map.md` 明确列为 active 的 specs 才能作为 current owner；其余 dated specs 按 support/history/provenance 阅读。已经移动到 `docs/history/specs/` 的 provider-proof docs 只能作为历史证明或 tombstone，不得再被恢复为 active spec、default runtime owner、Gateway/local-manager 路线、flat CLI alias 或 compatibility test 的依据。
+`docs/specs/` 是 current/support 技术记录层，不是旧接口兼容层。只有 README 和 `specs_lifecycle_map.md` 明确列为 active 的 specs 才能作为 current owner；其余留在本目录的 dated specs 只按 support/provenance subsection 阅读。纯历史 activation package、future P5、runtime-first R/P tranche、post-R5A fail-closed hardening、provider proof 和 tombstone 已经移动到 `docs/history/specs/`，不得再被恢复为 active spec、default runtime owner、Gateway/local-manager 路线、flat CLI alias 或 compatibility test 的依据。
 
 ## 内容级整合规则
 
@@ -62,8 +62,8 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 ## 当前生命周期决策
 
-- `docs/specs/2026-04-11-hermes-backed-*`、`docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md` 与 `docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-*` 已无 active owner 角色，物理移动到 `docs/history/specs/`。
-- product-entry、package/export、formal-entry、authoring completion、AI-first quality、quality/autonomy/family grammar 相关 support specs 仍留在 `docs/specs/`，但只按 lifecycle map 标注的具体 subsection 阅读；它们不承担 public identity、runtime owner 或 production soak 结论。
+- 原 `docs/specs/2026-04-06-*`、`2026-04-08-p5*`、`2026-04-08-r*`、`2026-04-08-runtime-first-*`、`2026-04-09-*`、大部分 `2026-04-10-post-r5a-*`、`2026-04-11-hermes-backed-*`、`2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`、`2026-04-12-upstream-hermes-agent-fast-cutover-*` 与 `2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md` 已无 active owner 角色，物理移动到 `docs/history/specs/`。
+- product-entry、package/export、formal-entry、authoring completion、AI-first quality、quality/autonomy/family grammar、hosted handoff support 和 local runtime honest-stop 相关 support specs 仍留在 `docs/specs/`，但只按 lifecycle map 标注的具体 subsection 阅读；它们不承担 public identity、runtime owner 或 production soak 结论。
 - `docs/product/`、`docs/runtime/`、`docs/delivery/`、`docs/source/`、`docs/policies/` 当前保持薄索引职责；不要为了填目录把核心五件套内容拆散成第二真相源。
 - 旧 `tests/test_product_entry.py` 聚合入口、`domain_runtime_parts.patch_targets` patch bridge、Gateway/local-manager default path 与 legacy flat CLI shell alias 继续按 direct retirement posture 处理；文档层只保留 history/provenance，不新增兼容入口。
 

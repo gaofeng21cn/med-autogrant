@@ -10,35 +10,36 @@ Date: `2026-04-07`
 
 ## 当前指针
 
-- Current phase: `Runtime Productization Program`
-- Active tranche: `R5 / Hostedization Prep`
-- Latest absorbed runtime slice: `R5.A / Hosted-Friendly Session Boundary`
-- Current owner line: `post-R5A local runtime closeout / honest stop`
-- Current truthful closeout: `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`
+- Current owner docs: `docs/status.md`、`docs/architecture.md`、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`
+- Current machine truth: `contracts/runtime-program/current-program.json`、schemas、source、CLI/API behavior
+- Historical archive: `docs/history/specs/`
+- Current reading rule: 本文只保留 durability vocabulary 和 handoff/resume 边界；早期 runtime productization、R tranche、post-R5A hardening 和 OMX bridge 已归档为 provenance。
 
 ## repo-tracked review surfaces
 
-当前 reviewer 应能仅凭以下 repo-tracked review surfaces 理解 runtime baseline 的正式合同：
+当前 reviewer 必须先通过以下 current surfaces 理解 MAG 运行/持久化边界：
 
 - `README.md`
 - `docs/README.md`
-- `docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`
-- `docs/specs/2026-04-06-object-model-schema-v1.md`
+- `docs/status.md`
+- `docs/architecture.md`
+- `docs/invariants.md`
+- `docs/decisions.md`
+- `docs/specs/README.md`
+- `docs/specs/specs_lifecycle_map.md`
 - `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
 - `docs/specs/2026-04-07-durability-model-clarification.md`
 - `docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
 - `docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
 - `docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
 - `docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
-- `docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
-- `docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
-- `docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
-- `docs/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`
-- `docs/specs/2026-04-10-post-r5a-revised-workspace-validator-and-operator-alignment.md`
 - `docs/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
+- `docs/history/specs/README.md`
 - `schemas/v1/nsfc-workspace.schema.json`
 - current canonical examples under `examples/**`
 - runtime / verification tests under `tests/**`
+
+Early foundation design、R-tranche runtime productization、post-R5A hardening、OMX bridge、Hermes/Gateway/provider proof 或 future P5 文档只从 `docs/history/specs/` 阅读。它们不得恢复为 runtime owner、public CLI alias、compatibility test、Gateway/local-manager route 或 current review baseline。
 
 这些 surfaces 承担的是 review truth 职责：
 

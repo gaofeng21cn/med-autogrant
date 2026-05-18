@@ -6,7 +6,7 @@
 
 `operator / Codex / OPL / generic agent caller -> single Med Auto Grant app skill -> CLI or MedAutoGrantDomainEntry -> route-selected executor -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
 
-在 OPL stage-led agent runtime framework 中，这条链路可以被 OPL 托管为 stage attempt；Agent executor 是 stage 内最小执行单位，`Codex CLI` 是当前第一公民 executor，除非活跃合同显式选择其他 provider。OPL 可以提供 stage lifecycle、queue/wakeup、handoff、receipt、approval/retry、trace/projection、shared contracts/indexes 与外部 provider 编排，但不会改变 MAG 的 owner 边界：MAG 持有 grant route truth、fundability / authoring quality判断、workspace truth、artifact assembly 和 submission-ready export gate。
+在 OPL stage-led agent runtime framework 中，这条链路可以被 OPL 托管为 stage attempt；Agent executor 是 stage 内最小执行单位，`Codex CLI` 是当前第一公民 executor，除非活跃合同显式选择非默认 executor/backend。OPL 可以提供 stage lifecycle、queue/wakeup、handoff、receipt、approval/retry、trace/projection、shared contracts/indexes 与外部 provider 编排，但不会改变 MAG 的 owner 边界：MAG 持有 grant route truth、fundability / authoring quality判断、workspace truth、artifact assembly 和 submission-ready export gate。
 
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 

@@ -110,7 +110,7 @@
 
 ## 2026-05-11：MAG 对齐 OPL 完整 stage-led runtime framework
 
-- 决策：MAG 的 OPL 关系更新为 `OPL stage-led runtime framework -> MAG-owned descriptor/projection -> Med Auto Grant app skill / CLI / MedAutoGrantDomainEntry`。OPL 是可作为外部依赖使用的完整智能体运行框架，不再只写成薄 Runtime Manager；Agent executor 是 stage attempt 的最小执行单位，`Codex CLI` 是当前第一公民 executor，除非活跃合同显式选择其他 provider。
+- 决策：MAG 的 OPL 关系更新为 `OPL stage-led runtime framework -> MAG-owned descriptor/projection -> Med Auto Grant app skill / CLI / MedAutoGrantDomainEntry`。OPL 是可作为外部依赖使用的完整智能体运行框架，不再只写成薄 Runtime Manager；Agent executor 是 stage attempt 的最小执行单位，`Codex CLI` 是当前第一公民 executor，除非活跃合同显式选择非默认 executor/backend。
 - 理由：OPL 当前定位已经上移为完整 agent runtime framework，负责 stage lifecycle、queue/wakeup、handoff、receipt、retry/dead-letter、operator projection、shared contracts/indexes 与 provider 编排。MAG 仍必须持有 grant stage pack、prompt/skill、fundability judgment、authoring quality gate、workspace truth 和 submission-ready export authority。
 - 影响：旧 `OPL Runtime Manager`、Hermes-first、gateway 和 local host runtime 说法降为历史追溯或 provider-specific 实现记录；后续公开/核心文档默认使用 OPL stage-led framework 口径，并把 Temporal 写成 OPL-hosted production path 的必需 substrate。MAG 的 skill/direct CLI 路径继续是一等入口。
 
@@ -125,7 +125,7 @@
 
 - 状态：已被 `2026-05-11` OPL 完整 stage-led runtime framework 口径吸收，并被 OPL 的 Temporal-required production substrate 口径校准。保留本段用于解释 provider-backed / Temporal 迁移背景。
 
-- 决策：MAG 的 OPL 长期托管口径更新为 `OPL Product Entry -> OPL stage-led family runtime provider -> MAG product sidecar export/dispatch -> MAG domain entry/projection`。Temporal 是 OPL production online runtime 的必需 substrate；Hermes-Agent 作为可选 Agent executor adapter、显式 hosted/proof backend 或 executor proof lane。
+- 决策：MAG 的 OPL 长期托管口径更新为 `OPL Product Entry -> OPL stage-led family runtime provider -> MAG product sidecar export/dispatch -> MAG domain entry/projection`。Temporal 是 OPL production online runtime 的必需 substrate；`Hermes-Agent` / `hermes_agent` 只作为显式非默认 Agent executor/proof backend、hosted proof lane 或历史 provenance 保留。
 - 理由：MAG 需要长期 authoring stage attempt、human gate、retry/dead-letter、TODO wakeup 和 operator projection，但 grant truth、fundability judgment、authoring quality gate、workspace truth 和 submission-ready export authority 必须仍由 MAG 持有。
 - 影响：`product sidecar export|dispatch` 继续是 OPL provider 到 MAG owner surface 的受控桥接。OPL/Temporal/Hermes/local provider 只能 enqueue、dispatch、signal、query、投影 attempt/receipt，不得写 grant truth、fundability verdict、authoring quality gate、workspace canonical document 或 submission-ready export gate。下方 Hermes-first sidecar adapter 决策保留为迁移背景，后续新投入按 Temporal-backed production runtime 解释。
 
@@ -153,7 +153,7 @@
 
 - 状态：已被 `2026-05-11` OPL 完整 stage-led runtime framework 口径 supersede。保留本段用于追溯薄管理层阶段。
 
-- 决策：MAG 与 OPL 的长期托管对齐曾采用 `OPL Product Entry -> OPL Runtime Manager -> configured family runtime provider -> MAG product-entry/runtime-control projection -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`；该薄管理层 route 已被当前 `OPL Product Entry -> OPL stage-led family runtime provider -> MAG product sidecar export/dispatch -> MAG domain entry/projection` 口径 supersede。外部 `Hermes-Agent` 只作为显式 hosted/proof carrier 或 legacy provider 接入。MAG 只提供 domain entry contract、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue；旧 `OPL Runtime Manager` 只作为历史薄管理层名词保留。
+- 决策：MAG 与 OPL 的长期托管对齐曾采用 `OPL Product Entry -> OPL Runtime Manager -> configured family runtime provider -> MAG product-entry/runtime-control projection -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`；该薄管理层 route 已被当前 `OPL Product Entry -> OPL stage-led family runtime provider -> MAG product sidecar export/dispatch -> MAG domain entry/projection` 口径 supersede。外部 `Hermes-Agent` / `hermes_agent` 只作为显式 hosted/proof carrier、非默认 executor/proof lane 或历史 provenance 接入。MAG 只提供 domain entry contract、runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue；旧 `OPL Runtime Manager` 只作为历史薄管理层名词保留。
 - 理由：MAG 的核心价值在 author-side grant truth、route/export contract、quality gate 和 submission-ready export gate。把长期在线管理先放在 OPL Runtime Manager 这一薄层，可以保持默认 `Codex CLI` / `codex_cli` runtime owner 清晰，并为显式 hosted/proof carrier 与未来自有 sidecar 预留 promotion 边界，同时不制造第二套 grant truth。
 - 影响：`current-program.json` 增加 runtime manager boundary；后续 docs/contracts 若提到 OPL 长期托管，必须明确 Runtime Manager 不是 MAG 的 scheduler kernel、session store、memory store、grant truth owner、authoring executor 或 private Hermes fork。
 
@@ -195,7 +195,7 @@
 
 ## 2026-04-17：冻结托管运行时三层 owner contract
 
-- 决策：把当前主线统一明确成三层 owner：默认 runtime owner 是 `Codex CLI` / `codex_cli`，显式 hosted/proof carrier 可以由外部 `Hermes-Agent` 或 OPL provider 承担，`Med Auto Grant` 只持有 grant-domain governance / progress / review / package gate truth，而 route-selected executor 只持有具体 authoring execution。
+- 决策：把当前主线统一明确成三层 owner：默认 concrete executor 是 `Codex CLI` / `codex_cli`，显式 hosted/proof carrier 只能作为非默认 executor/proof backend 接入，OPL provider 承担 stage attempt substrate；`Med Auto Grant` 只持有 grant-domain governance / progress / review / package gate truth，而 route-selected executor 只持有具体 authoring execution。
 - 理由：如果只写成“上游 runtime substrate + repo-side domain logic”，仍然容易把 domain supervision、默认 runtime owner 和具体 executor 混成一层，后续跨仓对齐时也会反复漂移。
 - 影响：文档、spec 与入口 wording 都必须显式区分 runtime owner、domain owner 与 executor owner；这轮只冻结 contract / 文档 / 入口同构，不宣称跨仓共享代码模块已抽离完成。
 
