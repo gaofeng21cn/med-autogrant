@@ -186,7 +186,7 @@ class ProductEntryDomainMemoryDescriptorTest(unittest.TestCase):
 
         layout_audit = proof["repo_source_layout_audit"]
         self.assertEqual(layout_audit["surface_kind"], "mag_repo_source_layout_audit")
-        self.assertEqual(layout_audit["layout_state"], "physical_skeleton_follow_through_landed_minimum_anchors")
+        self.assertEqual(layout_audit["layout_state"], "declarative_grant_pack_follow_through_landed")
         self.assertEqual(layout_audit["boundary_keys"], ["agent", "contracts", "runtime", "docs"])
         self.assertEqual(layout_audit["retired_active_path_policy"], "physically_removed_or_history_tombstone_only")
         self.assertEqual(layout_audit["forbidden_active_path_residue"], [])

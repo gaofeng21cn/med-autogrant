@@ -110,6 +110,7 @@
       "standard_domain_agent_skeleton": {
         "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
         "manifest_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
+        "canonical_repo_source_semantic_pack": "agent/",
         "repo_source_boundary": [
           "agent",
           "contracts",

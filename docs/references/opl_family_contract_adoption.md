@@ -45,16 +45,22 @@ MAG 的 OPL family stage pack 是 descriptor/projection，不是新的 controlle
 
 这层只让 OPL 读取 MAG 的 stage descriptor、operator projection 和下一步定位。`product-entry-manifest` 中的 `family_stage_control_plane` 为 OPL discovery smoke 固定 stage goal、owner、skills、allowed action refs、handoff、source refs、freshness 与 authority boundary；`allowed_action_refs` 必须对齐同一 manifest 内的 `family_action_catalog`。MAG 继续持有 author-side grant truth、fundability judgment、route truth、quality closure 与 submission-ready export gate；外部 portal submission 继续由人工监督。
 
-## Standard Domain-Agent Skeleton
+## Declarative Grant Pack
 
-MAG 现在通过 `product-entry-manifest` 导出 `standard_domain_agent_skeleton`。这是一层标准 skeleton adapter/manifest，不是物理目录重组，也不把 runtime 写成新的 grant executor。
+MAG 现在把真实 Declarative Grant Pack 放在 `agent/` 下，并通过 `product-entry-manifest` 导出 `standard_domain_agent_skeleton`。`agent/` 是 repo-source canonical semantic pack，不再只是 skeleton anchor，也不把 runtime 写成新的 grant executor。
 
 - repo-source 边界固定为 `agent`、`contracts`、`runtime`、`docs`。
+- `agent/prompts/` 持有六个 stage prompt：`call_and_candidate_intake`、`fundability_strategy`、`specific_aims_and_structure`、`proposal_authoring`、`review_and_rebuttal`、`package_and_submit_ready`。
+- `agent/stages/` 持有对应 stage policy。
+- `agent/skills/` 持有 MAG grant authoring skill declaration。
+- `agent/quality_gates/` 持有 fundability、quality、export/package、memory/receipt 和 authority boundary。
+- `agent/knowledge/` 持有 grant strategy memory、package authority 和 owner receipt 知识边界。
 - `runtime` 边界只声明 `sidecar`、`projection_builder`、`lifecycle_adapter`。
 - `artifact_locator_contract` 只给 OPL 读取 locator/ref；真实申请书、receipt 实例、中间产物和 submission-ready export 都属于 workspace 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/artifacts/<grant_run_id>/`。
 - `controlled_stage_attempt_projection` 只暴露 attempt descriptor、source refs、runtime status projection、receipt refs 和 OPL-hosted controlled stage attempt proof refs。
 - `controlled_domain_memory_apply_proof.repo_source_layout_audit` 暴露 `agent`、`contracts`、`runtime`、`docs` source refs，并把 legacy active-path residue 标记为 tombstone-only 或 active source 已物理移除，用于证明当前 physical skeleton repo-source layout 已可审计。
 - OPL 只消费 descriptor/refs，不持有 fundability verdict、authoring quality verdict、submission-ready export verdict 或 canonical grant artifact content。
+- `contracts/stage_control_plane.json` 的 `prompt_refs` 必须解析到 `agent/prompts/*.md`；`contracts/pack_compiler_input.json` 的 `required_domain_pack_paths` 必须列出完整 `agent/` pack 文件。
 
 ## OPL Substrate Adapter Export
 

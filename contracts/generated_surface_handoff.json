@@ -1,51 +1,82 @@
 {
+  "consumes_domain_pack_refs": true,
+  "consumption_boundary": {
+    "opl_generated_surfaces_consume": [
+      "agent/prompts",
+      "agent/stages",
+      "agent/skills",
+      "agent/quality_gates",
+      "agent/knowledge",
+      "contracts"
+    ],
+    "opl_generated_surfaces_do_not_write": [
+      "grant_truth",
+      "grant_body",
+      "fundability_verdict",
+      "authoring_quality_verdict",
+      "submission_ready_export_verdict",
+      "package_body",
+      "memory_body",
+      "owner_receipt_instance"
+    ],
+    "src_role": "domain_handler_minimal_authority_and_native_helper_only"
+  },
   "domain_id": "med-autogrant",
+  "domain_pack_ref": "agent/",
   "domain_repo_can_own_generated_surface": false,
   "generated_surface_owner": "one-person-lab",
   "generated_surfaces": [
     {
+      "consumes_domain_pack_refs": true,
       "domain_repo_can_own_generated_surface": false,
       "owner": "one-person-lab",
       "status": "descriptor_source_available",
       "surface_id": "cli"
     },
     {
+      "consumes_domain_pack_refs": true,
       "domain_repo_can_own_generated_surface": false,
       "owner": "one-person-lab",
       "status": "descriptor_source_available",
       "surface_id": "mcp"
     },
     {
+      "consumes_domain_pack_refs": true,
       "domain_repo_can_own_generated_surface": false,
       "owner": "one-person-lab",
       "status": "descriptor_source_available",
       "surface_id": "skill"
     },
     {
+      "consumes_domain_pack_refs": true,
       "domain_repo_can_own_generated_surface": false,
       "owner": "one-person-lab",
       "status": "descriptor_source_available",
       "surface_id": "product_entry_manifest"
     },
     {
+      "consumes_domain_pack_refs": true,
       "domain_repo_can_own_generated_surface": false,
       "owner": "one-person-lab",
       "status": "descriptor_source_available",
       "surface_id": "sidecar_export_dispatch"
     },
     {
+      "consumes_domain_pack_refs": true,
       "domain_repo_can_own_generated_surface": false,
       "owner": "one-person-lab",
       "status": "descriptor_source_available",
       "surface_id": "status_read_model"
     },
     {
+      "consumes_domain_pack_refs": true,
       "domain_repo_can_own_generated_surface": false,
       "owner": "one-person-lab",
       "status": "descriptor_source_available",
       "surface_id": "workbench_drilldown"
     },
     {
+      "consumes_domain_pack_refs": true,
       "domain_repo_can_own_generated_surface": false,
       "owner": "one-person-lab",
       "status": "descriptor_source_available",

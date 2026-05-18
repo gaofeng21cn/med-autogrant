@@ -169,9 +169,9 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "agent/prompts/call_and_candidate_intake.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
@@ -347,9 +347,9 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "agent/prompts/fundability_strategy.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
@@ -524,9 +524,9 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "agent/prompts/specific_aims_and_structure.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
@@ -701,9 +701,9 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "agent/prompts/proposal_authoring.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
@@ -879,9 +879,9 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "agent/prompts/review_and_rebuttal.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
@@ -1053,9 +1053,9 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "agent/prompts/package_and_submit_ready.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [

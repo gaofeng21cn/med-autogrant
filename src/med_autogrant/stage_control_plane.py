@@ -258,7 +258,11 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             {"ref_kind": "skill_id", "ref": "officecli-docx", "role": "optional_document_helper"},
         ],
         "prompt_refs": [
-            {"ref_kind": "repo_path", "ref": "docs/references/opl_family_contract_adoption.md", "role": "stage_pack_reference"}
+            {
+                "ref_kind": "repo_path",
+                "ref": f"agent/prompts/{stage['stage_id']}.md",
+                "role": "stage_prompt",
+            }
         ],
         "outputs": [
             {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "stage_status"},

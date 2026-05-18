@@ -290,8 +290,31 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
         "agent": {
             "owner": TARGET_DOMAIN_ID,
             "anchor_ref": "agent/README.md",
-            "state": "physical_root_present",
-            "role": "domain skill and stage ownership boundary anchor",
+            "state": "declarative_grant_pack_present",
+            "role": "canonical declarative grant pack for prompts, stages, skills, quality gates, and knowledge",
+            "required_pack_refs": [
+                "agent/prompts/call_and_candidate_intake.md",
+                "agent/prompts/fundability_strategy.md",
+                "agent/prompts/specific_aims_and_structure.md",
+                "agent/prompts/proposal_authoring.md",
+                "agent/prompts/review_and_rebuttal.md",
+                "agent/prompts/package_and_submit_ready.md",
+                "agent/stages/call_and_candidate_intake.md",
+                "agent/stages/fundability_strategy.md",
+                "agent/stages/specific_aims_and_structure.md",
+                "agent/stages/proposal_authoring.md",
+                "agent/stages/review_and_rebuttal.md",
+                "agent/stages/package_and_submit_ready.md",
+                "agent/skills/grant_authoring.md",
+                "agent/quality_gates/fundability.md",
+                "agent/quality_gates/quality.md",
+                "agent/quality_gates/export_and_package.md",
+                "agent/quality_gates/memory_and_receipts.md",
+                "agent/quality_gates/authority_boundaries.md",
+                "agent/knowledge/grant_strategy_memory.md",
+                "agent/knowledge/package_authority.md",
+                "agent/knowledge/owner_receipt_boundary.md",
+            ],
         },
         "contracts": {
             "owner": TARGET_DOMAIN_ID,
@@ -319,7 +342,7 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
         "version": "v1",
         "follow_through_id": "mag.physical_skeleton.follow_through.v1",
         "target_domain_id": TARGET_DOMAIN_ID,
-        "state": "minimum_repo_source_anchors_landed",
+        "state": "declarative_grant_pack_landed",
         "roots": roots,
         "root_status": [
             {
@@ -327,6 +350,10 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
                 "anchor_ref": root["anchor_ref"],
                 "exists": (repo_root / root["anchor_ref"]).exists(),
                 "owner": root["owner"],
+                "required_pack_refs_exist": all(
+                    (repo_root / required_ref).exists()
+                    for required_ref in root.get("required_pack_refs", [])
+                ),
             }
             for root_key, root in roots.items()
         ],
@@ -339,7 +366,7 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
         ),
         "active_path_scan_no_legacy_default_caller": active_path_scan,
         "first_follow_through_scope": [
-            "manifest exposes root anchors",
+            "manifest exposes root anchors and declarative agent pack refs",
             "repo-source layout audit requires root anchors to exist",
             "workspace artifacts and runtime receipts stay outside repo source",
             "active-path scan proves retired default callers are not used by machine surfaces",

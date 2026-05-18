@@ -59,6 +59,51 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     ]["mag_repo_functional_structure_gaps_zero"] is True
 
 
+def test_opl_standard_pack_declares_real_agent_domain_pack_paths() -> None:
+    generated = build_standard_pack()
+    compiler_input = generated["pack_compiler_input"]
+    pack_paths = compiler_input["required_domain_pack_paths"]
+
+    assert compiler_input["canonical_repo_source_semantic_pack"] == {
+        "path": "agent/",
+        "owner": "med-autogrant",
+        "state": "active_declarative_grant_pack",
+        "src_role": "domain_handler_minimal_authority_and_native_helper_only",
+    }
+    assert len(pack_paths) >= 20
+    assert "agent/README.md" in pack_paths
+    assert any(path.startswith("agent/prompts/") for path in pack_paths)
+    assert any(path.startswith("agent/stages/") for path in pack_paths)
+    assert any(path.startswith("agent/skills/") for path in pack_paths)
+    assert any(path.startswith("agent/quality_gates/") for path in pack_paths)
+    assert any(path.startswith("agent/knowledge/") for path in pack_paths)
+
+    forbidden_markers = ("TODO", "TBD")
+    for relative_path in pack_paths:
+        path = REPO_ROOT / relative_path
+        assert path.exists(), relative_path
+        text = path.read_text(encoding="utf-8").strip()
+        assert text, relative_path
+        assert not any(marker in text for marker in forbidden_markers), relative_path
+
+
+def test_stage_prompt_refs_resolve_to_agent_prompt_files() -> None:
+    stage_plane = build_standard_pack()["stage_control_plane"]
+
+    for stage in stage_plane["stages"]:
+        prompt_refs = stage["prompt_refs"]
+        assert prompt_refs == [
+            {
+                "ref_kind": "repo_path",
+                "ref": f"agent/prompts/{stage['stage_id']}.md",
+                "role": "stage_prompt",
+            }
+        ]
+        prompt_path = REPO_ROOT / prompt_refs[0]["ref"]
+        assert prompt_path.exists()
+        assert prompt_path.read_text(encoding="utf-8").strip()
+
+
 def test_product_entry_package_keeps_lazy_public_export() -> None:
     from med_autogrant.product_entry_parts import MedAutoGrantProductEntry
 

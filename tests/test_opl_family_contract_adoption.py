@@ -533,7 +533,7 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
         "/product_entry_manifest/controlled_domain_memory_apply_proof/"
         "repo_source_layout_audit"
     )
-    assert audit["layout_state"] == "physical_skeleton_follow_through_landed_minimum_anchors"
+    assert audit["layout_state"] == "declarative_grant_pack_follow_through_landed"
     assert audit["boundary_keys"] == ["agent", "contracts", "runtime", "docs"]
     assert audit["physical_move_required"] == (
         "low_risk_source_moves_only_after_direct_hosted_parity_restore_provenance_and_no_active_caller_proof"
@@ -552,6 +552,9 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
         assert audit["source_refs_by_boundary"][boundary]
     for anchor_ref in (
         "agent/README.md",
+        "agent/prompts/call_and_candidate_intake.md",
+        "agent/quality_gates/fundability.md",
+        "agent/knowledge/grant_strategy_memory.md",
         "contracts/README.md",
         "runtime/README.md",
         "src/med_autogrant/product_entry_parts/functional_closure.py",
@@ -570,7 +573,8 @@ def test_mag_adoption_contract_declares_owner_receipt_lifecycle_and_skeleton_fol
     lifecycle = contract["lifecycle_guarded_apply_proof"]
     follow_through = contract["physical_skeleton_follow_through"]
 
-    assert skeleton["mapping_state"] == "minimum_physical_skeleton_follow_through_landed"
+    assert skeleton["mapping_state"] == "declarative_grant_pack_follow_through_landed"
+    assert skeleton["canonical_repo_source_semantic_pack"] == "agent/"
     assert skeleton["controlled_domain_memory_apply_proof_ref"] == (
         "/product_entry_manifest/controlled_domain_memory_apply_proof"
     )
@@ -615,7 +619,7 @@ def test_mag_adoption_contract_declares_owner_receipt_lifecycle_and_skeleton_fol
 
     assert follow_through["surface_kind"] == "mag_physical_skeleton_follow_through"
     assert follow_through["manifest_surface_ref"] == "/product_entry_manifest/physical_skeleton_follow_through"
-    assert follow_through["state"] == "minimum_repo_source_anchors_landed"
+    assert follow_through["state"] == "declarative_grant_pack_landed"
     assert follow_through["repo_source_boundary"] == ["agent", "contracts", "runtime", "docs"]
     assert follow_through["anchor_refs"] == [
         "agent/README.md",

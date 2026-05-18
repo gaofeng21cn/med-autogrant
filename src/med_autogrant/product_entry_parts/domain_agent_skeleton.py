@@ -42,11 +42,30 @@ def build_standard_domain_agent_skeleton(
         "repo_source_boundary": {
             "agent": {
                 "owner": TARGET_DOMAIN_ID,
-                "role": "domain entry, prompt/skill references, stage descriptors, and MAG-owned quality gates",
+                "role": "canonical declarative grant pack with prompts, stages, skills, quality gates, and knowledge boundaries",
                 "source_refs": [
-                    "src/med_autogrant/domain_entry.py",
-                    "src/med_autogrant/domain_entry_contract.py",
-                    "src/med_autogrant/stage_control_plane.py",
+                    "agent/README.md",
+                    "agent/prompts/call_and_candidate_intake.md",
+                    "agent/prompts/fundability_strategy.md",
+                    "agent/prompts/specific_aims_and_structure.md",
+                    "agent/prompts/proposal_authoring.md",
+                    "agent/prompts/review_and_rebuttal.md",
+                    "agent/prompts/package_and_submit_ready.md",
+                    "agent/stages/call_and_candidate_intake.md",
+                    "agent/stages/fundability_strategy.md",
+                    "agent/stages/specific_aims_and_structure.md",
+                    "agent/stages/proposal_authoring.md",
+                    "agent/stages/review_and_rebuttal.md",
+                    "agent/stages/package_and_submit_ready.md",
+                    "agent/skills/grant_authoring.md",
+                    "agent/quality_gates/fundability.md",
+                    "agent/quality_gates/quality.md",
+                    "agent/quality_gates/export_and_package.md",
+                    "agent/quality_gates/memory_and_receipts.md",
+                    "agent/quality_gates/authority_boundaries.md",
+                    "agent/knowledge/grant_strategy_memory.md",
+                    "agent/knowledge/package_authority.md",
+                    "agent/knowledge/owner_receipt_boundary.md",
                 ],
             },
             "contracts": {
@@ -104,6 +123,7 @@ def build_standard_domain_agent_skeleton(
         },
         "stage_mapping": {
             "stage_control_plane_ref": "/product_entry_manifest/family_stage_control_plane",
+            "canonical_prompt_ref_root": "agent/prompts",
             "stage_ids": [
                 str(stage["stage_id"])
                 for stage in family_stage_control_plane.get("stages", [])

@@ -176,8 +176,16 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         audit = manifest["controlled_domain_memory_apply_proof"]["repo_source_layout_audit"]
 
         self.assertEqual(follow_through["surface_kind"], "mag_physical_skeleton_follow_through")
-        self.assertEqual(follow_through["state"], "minimum_repo_source_anchors_landed")
-        self.assertEqual(audit["layout_state"], "physical_skeleton_follow_through_landed_minimum_anchors")
+        self.assertEqual(follow_through["state"], "declarative_grant_pack_landed")
+        self.assertEqual(audit["layout_state"], "declarative_grant_pack_follow_through_landed")
+        agent_root = follow_through["roots"]["agent"]
+        self.assertEqual(agent_root["state"], "declarative_grant_pack_present")
+        self.assertIn("agent/prompts/fundability_strategy.md", agent_root["required_pack_refs"])
+        self.assertTrue(
+            next(entry for entry in follow_through["root_status"] if entry["root"] == "agent")[
+                "required_pack_refs_exist"
+            ]
+        )
         self.assertFalse(follow_through["moves_workspace_artifacts"])
         self.assertFalse(follow_through["moves_runtime_receipt_instances"])
         self.assertEqual(follow_through["legacy_active_path_policy"], "physically_removed_or_history_tombstone_only")
