@@ -21,6 +21,7 @@ Machine boundary: 本文是人读过程归档，不是 current truth、active pl
 - `privatized_functional_module_audit` 将非知识功能面拆成 declarative pack surface、refs-only adapter、minimal authority function 和 legacy proof tombstone。
 - retained private authority functions 后续补齐了 AI-first guard、allowed return shapes 和 forbidden output boundary，用机器面固定 fundability、quality、export、package、memory、owner receipt 与 grant helper 不能由 provider completion、package existence、schema completeness 或 scorecard 分数机械生成 ready verdict。
 - `grant_transition_oracle`、receipt reconciliation proof、lifecycle receipt bundle、memory receipt projection、package lifecycle handoff 和 continuous receipt reconciliation 成为 MAG-to-OPL handoff 输入，而不是 production soak success。
+- `external_evidence_request_pack` 后续把 OPL generated/hosted caller、Codex App workbench、production/default caller、owner receipt / typed blocker roundtrip、no-forbidden-write、direct/hosted parity 和 Temporal long-soak receipt reconciliation 统一收成 request surface，仍不声明外部证据已收到。
 - local runtime journal、attempt ledger、upstream Hermes probe、flat shell alias、facade patch bridge 和 compatibility aggregate test 被降为 cleanup / tombstone / provenance 对象。
 
 ## 主文档已迁出的内容类型

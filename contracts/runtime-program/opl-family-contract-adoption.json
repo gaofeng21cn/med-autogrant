@@ -611,8 +611,8 @@
     "state": "mag_handler_boundary_ready_external_caller_evidence_gated",
     "consumes_opl_family_primitive": "family_scheduler_replacement",
     "adapter_role": "domain_authority_pack_with_thin_program_surface",
-    "active_caller_owner": "one-person-lab",
-    "active_caller_surface": "opl_generated_or_hosted_surface",
+    "active_caller_owner": "med-autogrant",
+    "active_caller_surface": "mag_direct_domain_entry_until_opl_caller_evidence",
     "domain_handler_target": "med-autogrant",
     "domain_handler_owner": "med-autogrant",
     "mag_owned_outputs": [
@@ -627,6 +627,7 @@
     "opl_family_conflict_blocker_projection_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_family_conflict_blocker_projection",
     "opl_runtime_observability_consumption_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
     "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
+    "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
     "consumed_opl_projection_surfaces": [
       "family_conflict_envelope",
       "stage_attempt_usage_projection",
@@ -1437,6 +1438,7 @@
         "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
         "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
         "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
+        "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
         "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate"
       },
       "fail_closed_rules": {
@@ -1506,6 +1508,45 @@
     "claims_opl_replacement_exists": false,
     "claims_production_long_run_soak_complete": false,
     "mag_rebuilds_opl_runtime": false,
+    "external_evidence_request_pack": {
+      "surface_kind": "mag_external_evidence_request_pack",
+      "request_pack_id": "mag.external_evidence_request_pack.v1",
+      "state": "request_pack_declared_external_evidence_not_claimed",
+      "requested_from": [
+        "one-person-lab",
+        "codex_app",
+        "production_caller"
+      ],
+      "required_request_ids": [
+        "opl_generated_hosted_caller_pack_consumption",
+        "app_workbench_package_ref_consumption",
+        "production_default_caller_release_dist_consumption",
+        "owner_receipt_typed_blocker_ref_roundtrip",
+        "continuous_no_forbidden_write_guard",
+        "direct_hosted_parity_no_regression",
+        "temporal_provider_long_soak_receipt_reconciliation"
+      ],
+      "request_policy": "refs_receipts_and_shape_metadata_only_no_runtime_implementation",
+      "forbidden_completion_claims": {
+        "provider_completion_is_fundability_ready": false,
+        "provider_completion_is_quality_ready": false,
+        "provider_completion_is_export_ready": false,
+        "claims_opl_replacement_exists": false,
+        "claims_all_bridge_exits_complete": false,
+        "claims_production_long_run_soak_complete": false
+      },
+      "authority_boundary": {
+        "mag_request_pack_only": true,
+        "mag_implements_opl_runtime": false,
+        "mag_implements_app_workbench": false,
+        "mag_claims_external_evidence_exists": false,
+        "mag_claims_direct_hosted_parity_passed": false,
+        "mag_claims_long_soak_complete": false,
+        "opl_can_declare_fundability_verdict": false,
+        "opl_can_declare_quality_verdict": false,
+        "opl_can_declare_export_verdict": false
+      }
+    },
     "functional_followthrough_gap_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_followthrough_gap_classification",
     "functional_followthrough_gap_classification": {
       "authority_boundary": {

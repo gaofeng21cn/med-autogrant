@@ -204,6 +204,13 @@ def build_sidecar_export(
                 context="sidecar_export.mag_consumer_thinning_contract",
             )
         ),
+        "external_evidence_request_pack": dict(
+            _require_mapping(
+                mag_consumer_thinning_contract,
+                "external_evidence_request_pack",
+                context="sidecar_export.mag_consumer_thinning_contract",
+            )
+        ),
         "consumed_opl_standard_surfaces": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
