@@ -86,7 +86,7 @@
 
 ## 这个仓库应该怎么读
 
-1. 潜在用户先读当前首页，再继续看 [文档索引](./docs/README.md)、[领域定位](./docs/domain-positioning.md) 和 [最小可用范围](./docs/mvp-scope.md)。
+1. 潜在用户先读当前首页，再继续看 [文档索引](./docs/README.md)、[领域定位](./docs/public/domain-positioning.md) 和 [最小可用范围](./docs/public/mvp-scope.md)。
 2. 技术规划、架构判断和方向同步，继续读 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 以及 [合同说明](./contracts/README.md)。
 3. 开发者和维护者再进入 `docs/active/`、`docs/specs/`、`docs/references/` 与 [历史归档索引](./docs/history/README.md)。
 
@@ -119,8 +119,8 @@
 ## 延伸阅读
 
 - [文档索引](./docs/README.md)
-- [领域定位](./docs/domain-positioning.md)
-- [最小可用范围](./docs/mvp-scope.md)
+- [领域定位](./docs/public/domain-positioning.md)
+- [最小可用范围](./docs/public/mvp-scope.md)
 - [项目概览](./docs/project.md)
 - [当前状态](./docs/status.md)
 - [架构](./docs/architecture.md)

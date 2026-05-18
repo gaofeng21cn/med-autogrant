@@ -23,9 +23,9 @@
 当前归档路线：
 
 - [Plan 完成度审计 2026-05-01](./plan-completion-audit-2026-05-01.md)
-- [Domain Harness OS 定位历史说明](./domain-harness-os-positioning.md)
-- [OPL 托管运行时三层合同](./opl_managed_runtime_three_layer_contract.md)
-- [轻量产品入口与 OPL Handoff 历史说明](./lightweight_product_entry_and_opl_handoff.md)
+- [Domain Harness OS 定位历史说明](./positioning/domain-harness-os-positioning.md)
+- [OPL 托管运行时三层合同](./runtime/opl-managed-runtime-three-layer-contract.md)
+- [轻量产品入口与 OPL Handoff 历史说明](./product/lightweight-product-entry-and-opl-handoff.md)
 - [历史 plans](./plans/README.md)
 - [历史 specs 索引](./specs/README.md)
 - [OMX 历史资料](./omx/README.md)

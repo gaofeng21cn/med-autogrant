@@ -86,7 +86,7 @@ You can start with prompts like:
 
 ## How To Read This Repository
 
-1. Potential users should start here, then continue to the [Docs Guide](./docs/README.md), [Domain Positioning](./docs/domain-positioning.md), and [MVP Scope](./docs/mvp-scope.md).
+1. Potential users should start here, then continue to the [Docs Guide](./docs/README.md), [Domain Positioning](./docs/public/domain-positioning.md), and [MVP Scope](./docs/public/mvp-scope.md).
 2. Technical readers and planners should read [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), [Decisions](./docs/decisions.md), and [Contracts Overview](./contracts/README.md).
 3. Developers and maintainers should continue into `docs/active/`, `docs/specs/`, `docs/references/`, and [History Archive](./docs/history/README.md).
 
@@ -119,8 +119,8 @@ You can start with prompts like:
 ## Further Reading
 
 - [Docs Guide](./docs/README.md)
-- [Domain Positioning](./docs/domain-positioning.md)
-- [MVP Scope](./docs/mvp-scope.md)
+- [Domain Positioning](./docs/public/domain-positioning.md)
+- [MVP Scope](./docs/public/mvp-scope.md)
 - [Project](./docs/project.md)
 - [Status](./docs/status.md)
 - [Architecture](./docs/architecture.md)

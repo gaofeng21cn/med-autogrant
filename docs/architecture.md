@@ -216,7 +216,7 @@ provider 选择由 OPL 框架显式声明；生产在线路径要求 Temporal-ba
 
 ## 文档层次
 
-- Public surface：`README*`、`docs/README*`、`docs/domain-positioning*`、`docs/mvp-scope*`。
+- Public surface：`README*`、`docs/README*`、`docs/public/domain-positioning.md`、`docs/public/mvp-scope.md`。
 - 核心骨架：`docs/project.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`、`docs/status.md`。
 - Repo-tracked current truth：核心五件套、`contracts/runtime-program/current-program.json`，以及 `docs/specs/README*` 中列出的 active specs。
 - 活跃规划：`docs/active/**`；历史计划与 dated specs 入口：`docs/history/**`。

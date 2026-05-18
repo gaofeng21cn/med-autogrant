@@ -41,10 +41,10 @@
 - `docs/**` 默认只维护中文 canonical 内容；稳定路径优先使用无语言后缀 `.md`。
 - 根层 `README*` 是否保留公开双语入口，由产品分发和 public 需求单独决定。
 - MAG 采用 OPL-family canonical docs taxonomy：`active/public/product/runtime/delivery/source/policies/specs/references/history`。目录按长期生命周期职责保留，不按当前文件数量判断。
-- `docs/domain-positioning.md` 与 `docs/mvp-scope.md` 当前仍是 root public allowlist，因为它们承载 public subject、domain owner、MVP boundary 与 non-goals；新增 root-level docs 必须先更新 portfolio note，后续若迁入 `docs/public/`，需先处理 path stability。
+- `docs/public/domain-positioning.md` 与 `docs/public/mvp-scope.md` 是 docs 层公开补充入口，承载 public subject、domain owner、MVP boundary 与 non-goals；新增 root-level docs 必须先更新 portfolio note。
 - 核心骨架文档、activation package、active plan 与 current truth 严格分层。
 - `docs/active/`：当前执行、当前计划、当前差距、active baton 与 closeout evidence；旧 `docs/plans/` 活跃计划层已退役，新增 recurring active material 不再进入旧目录。
-- `docs/public/`：public narrative index；当前 root public allowlist 暂保持路径稳定。
+- `docs/public/`：public narrative index 与公开补充说明。
 - `docs/product/`：app skill、product status、user-loop、direct entry 与 operator guidance。
 - `docs/runtime/`：runtime/control/projection、OPL-hosted boundary、receipt/projection 支撑；机器真相仍归 contracts/source/runtime evidence。
 - `docs/delivery/`：submission-ready package、export、delivery 和 manual portal boundary 支撑。

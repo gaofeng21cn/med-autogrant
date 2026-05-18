@@ -169,7 +169,7 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
@@ -347,7 +347,7 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
@@ -524,7 +524,7 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
@@ -701,7 +701,7 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
@@ -879,7 +879,7 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
@@ -1053,7 +1053,7 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/opl_family_contract_adoption.md",
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }

@@ -439,7 +439,7 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
             "docs/project.md",
             "docs/invariants.md",
             "docs/references/grant_strategy_memory_policy.md",
-            "docs/references/opl_family_contract_adoption.md",
+            "docs/references/integration/opl-family-contract-adoption.md",
         ],
     }
     repo_root = Path(__file__).resolve().parents[3]

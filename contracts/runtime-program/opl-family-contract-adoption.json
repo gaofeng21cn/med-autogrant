@@ -1744,7 +1744,7 @@
         "docs/project.md",
         "docs/invariants.md",
         "docs/references/grant_strategy_memory_policy.md",
-        "docs/references/opl_family_contract_adoption.md"
+        "docs/references/integration/opl-family-contract-adoption.md"
       ]
     },
     "legacy_active_path_residue": [

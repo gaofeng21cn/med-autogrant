@@ -26,9 +26,9 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 | 目录 | 长期职责 | 当前 MAG 承载 |
 | --- | --- | --- |
-| `docs/` root | docs 入口、核心五件套、docs governance、root public allowlist | `README.md`、核心五件套、`domain-positioning.md`、`mvp-scope.md`、本文件。 |
+| `docs/` root | docs 入口、核心五件套、docs governance | `README.md`、核心五件套、本文件。 |
 | `docs/active/` | 当前计划、当前 gap、active baton、当前完成门槛 | `mag-ideal-state-cross-repo-gap-plan.md`。 |
-| `docs/public/` | public narrative index | 当前较薄；未来可吸收 `domain-positioning.md`、`mvp-scope.md`，但需先处理 path stability。 |
+| `docs/public/` | public narrative index 与 MAG 默认公开补充说明 | `domain-positioning.md`、`mvp-scope.md`。新增公开正文前先确认 public/product 需求。 |
 | `docs/product/` | app skill、product status、user-loop、direct entry、operator guidance | 当前较薄；后续从 core docs/specs/contracts 抽取仍 current 的 product-entry 内容。 |
 | `docs/runtime/` | runtime/control/projection、OPL-hosted boundary、receipt/projection 支撑 | 当前较薄；runtime truth 仍在 contracts/source/status/specs。 |
 | `docs/delivery/` | submission-ready package、export、delivery、manual portal boundary | 当前较薄；grant artifact/export authority 仍 MAG-owned。 |
@@ -46,7 +46,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 ## 内容级整合规则
 
-1. 当前 public identity 和 product boundary 回到根层 allowlist、核心五件套和 current-program。
+1. 当前 public identity 和 product boundary 回到 `docs/public/`、核心五件套和 current-program。
 2. 当前 gap、计划和 evidence ledger 留在 `docs/active/`。
 3. Product-entry、user-loop、operator guidance 进入 `docs/product/`；grant truth 不迁出 MAG。
 4. Runtime/control/projection 支撑进入 `docs/runtime/`；machine truth 仍归 contracts/source/runtime evidence。

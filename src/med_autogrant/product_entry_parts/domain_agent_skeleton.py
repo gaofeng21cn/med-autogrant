@@ -79,7 +79,7 @@ def build_standard_domain_agent_skeleton(
                     "docs/status.md",
                     "docs/project.md",
                     "docs/invariants.md",
-                    "docs/references/opl_family_contract_adoption.md",
+                    "docs/references/integration/opl-family-contract-adoption.md",
                 ],
             },
         },
