@@ -272,6 +272,20 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         )
         action_ids = {action["action_id"] for action in action_catalog["actions"]}
         required_stage_fields = set(stage_plane["discovery_smoke"]["required_stage_fields"])
+        expected_next_stage_refs = {
+            "call_and_candidate_intake": ["fundability_strategy"],
+            "fundability_strategy": ["specific_aims_and_structure"],
+            "specific_aims_and_structure": ["proposal_authoring"],
+            "proposal_authoring": ["review_and_rebuttal"],
+            "review_and_rebuttal": ["package_and_submit_ready"],
+            "package_and_submit_ready": [],
+        }
+        independent_gate_stage_ids = {
+            "fundability_strategy",
+            "specific_aims_and_structure",
+            "review_and_rebuttal",
+            "package_and_submit_ready",
+        }
         for stage in stage_plane["stages"]:
             with self.subTest(stage=stage["stage_id"]):
                 self.assertLessEqual(required_stage_fields, set(stage))
@@ -279,6 +293,24 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
                 self.assertEqual(stage["stage_goal"], stage["goal"])
                 self.assertTrue(set(stage["allowed_action_refs"]) <= action_ids)
                 self.assertEqual(stage["handoff"]["shared_handoff_ref"], "/shared_handoff")
+                self.assertEqual(stage["handoff"]["next_stage_refs"], expected_next_stage_refs[stage["stage_id"]])
+                self.assertEqual(stage["handoff"]["provides"], stage["stage_contract"]["ensures"])
+                self.assertTrue(stage["stage_contract"]["requires"])
+                self.assertTrue(stage["stage_contract"]["ensures"])
+                self.assertTrue(any(ref["role"] == "owner_receipt_gate" for ref in stage["evaluation"]))
+                self.assertTrue(stage["trust_boundary"]["owner_receipt_required"])
+                self.assertTrue(stage["trust_boundary"]["runtime_guard_required"])
+                self.assertEqual(
+                    stage["authority_boundary"]["independent_gate_receipt_required"],
+                    stage["stage_id"] in independent_gate_stage_ids,
+                )
+                if stage["stage_id"] in {
+                    "fundability_strategy",
+                    "specific_aims_and_structure",
+                    "review_and_rebuttal",
+                }:
+                    self.assertEqual(stage["trust_boundary"]["lane"], "ai_decision")
+                    self.assertTrue(stage["trust_boundary"]["effect_boundary"])
                 self.assertGreaterEqual(len(stage["source_refs"]), 5)
                 self.assertEqual(
                     stage["freshness"]["refresh_policy"],

@@ -21,7 +21,9 @@
       "handoff",
       "source_refs",
       "freshness",
-      "authority_boundary"
+      "authority_boundary",
+      "stage_contract",
+      "trust_boundary"
     ],
     "status": "ready",
     "surface_kind": "family_stage_control_plane_discovery_smoke"
@@ -82,6 +84,7 @@
         "can_write_grant_truth": false,
         "domain_truth_owner": "med-autogrant",
         "fundability_judgment_owner": "med-autogrant",
+        "independent_gate_receipt_required": false,
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
@@ -91,6 +94,9 @@
         "select-project-profile",
         "initialize-intake-workspace",
         "input_intake"
+      ],
+      "ensures": [
+        "call_candidate_intake_ready"
       ],
       "evaluation": [
         {
@@ -102,6 +108,11 @@
           "ref": "/runtime_control",
           "ref_kind": "json_pointer",
           "role": "runtime_control"
+        },
+        {
+          "ref": "/owner_receipt_contract",
+          "ref_kind": "json_pointer",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -113,7 +124,13 @@
       "goal": "Read call guidance, applicant/team context, candidate directions, and eligibility constraints.",
       "handoff": {
         "next_owner": "med-autogrant",
+        "next_stage_refs": [
+          "fundability_strategy"
+        ],
         "progress_surface_ref": "/progress_projection",
+        "provides": [
+          "call_candidate_intake_ready"
+        ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
       },
@@ -134,6 +151,9 @@
           "role": "runtime_control_projection"
         }
       ],
+      "next_stage_refs": [
+        "fundability_strategy"
+      ],
       "outputs": [
         {
           "ref": "/progress_projection",
@@ -153,6 +173,9 @@
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
+      ],
+      "requires": [
+        "grant_request_received"
       ],
       "skills": [
         {
@@ -193,11 +216,33 @@
           "role": "authoring_gate"
         }
       ],
+      "stage_contract": {
+        "boundary_assumptions": [
+          "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
+          "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
+        ],
+        "ensures": [
+          "call_candidate_intake_ready"
+        ],
+        "requires": [
+          "grant_request_received"
+        ]
+      },
       "stage_goal": "Read call guidance, applicant/team context, candidate directions, and eligibility constraints.",
       "stage_id": "call_and_candidate_intake",
       "stage_kind": "intake",
       "summary": "Call and candidate intake projected from MAG-owned grant authoring surfaces for OPL discovery.",
-      "title": "Call and candidate intake"
+      "title": "Call and candidate intake",
+      "trust_boundary": {
+        "effect_boundary": false,
+        "human_gate_required": false,
+        "lane": "domain_agent",
+        "owner_receipt_required": true,
+        "records_runtime_events": true,
+        "runtime_guard_required": true,
+        "static_check_eligible": false
+      },
+      "trust_lane": "domain_agent"
     },
     {
       "allowed_action_refs": [
@@ -210,6 +255,7 @@
         "can_write_grant_truth": false,
         "domain_truth_owner": "med-autogrant",
         "fundability_judgment_owner": "med-autogrant",
+        "independent_gate_receipt_required": true,
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
@@ -219,6 +265,9 @@
         "fit_alignment",
         "grant_quality_scorecard",
         "fundability gate"
+      ],
+      "ensures": [
+        "fundability_strategy_gate_recorded"
       ],
       "evaluation": [
         {
@@ -230,6 +279,11 @@
           "ref": "/runtime_control",
           "ref_kind": "json_pointer",
           "role": "runtime_control"
+        },
+        {
+          "ref": "/owner_receipt_contract",
+          "ref_kind": "json_pointer",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -241,10 +295,17 @@
       "goal": "Evaluate topic competitiveness, innovation, risk, fit, and funder-specific strategy.",
       "handoff": {
         "next_owner": "med-autogrant",
+        "next_stage_refs": [
+          "specific_aims_and_structure"
+        ],
         "progress_surface_ref": "/progress_projection",
+        "provides": [
+          "fundability_strategy_gate_recorded"
+        ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
       },
+      "independent_gate_receipt_required": true,
       "inputs": [
         {
           "ref": "/family_action_catalog",
@@ -261,6 +322,9 @@
           "ref_kind": "json_pointer",
           "role": "runtime_control_projection"
         }
+      ],
+      "next_stage_refs": [
+        "specific_aims_and_structure"
       ],
       "outputs": [
         {
@@ -281,6 +345,9 @@
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
+      ],
+      "requires": [
+        "call_candidate_intake_ready"
       ],
       "skills": [
         {
@@ -321,11 +388,33 @@
           "role": "authoring_gate"
         }
       ],
+      "stage_contract": {
+        "boundary_assumptions": [
+          "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
+          "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
+        ],
+        "ensures": [
+          "fundability_strategy_gate_recorded"
+        ],
+        "requires": [
+          "call_candidate_intake_ready"
+        ]
+      },
       "stage_goal": "Evaluate topic competitiveness, innovation, risk, fit, and funder-specific strategy.",
       "stage_id": "fundability_strategy",
       "stage_kind": "planning",
       "summary": "Fundability strategy projected from MAG-owned grant authoring surfaces for OPL discovery.",
-      "title": "Fundability strategy"
+      "title": "Fundability strategy",
+      "trust_boundary": {
+        "effect_boundary": true,
+        "human_gate_required": false,
+        "lane": "ai_decision",
+        "owner_receipt_required": true,
+        "records_runtime_events": true,
+        "runtime_guard_required": true,
+        "static_check_eligible": false
+      },
+      "trust_lane": "ai_decision"
     },
     {
       "allowed_action_refs": [
@@ -338,6 +427,7 @@
         "can_write_grant_truth": false,
         "domain_truth_owner": "med-autogrant",
         "fundability_judgment_owner": "med-autogrant",
+        "independent_gate_receipt_required": true,
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
@@ -346,6 +436,9 @@
         "question_refinement",
         "argument_building",
         "outline"
+      ],
+      "ensures": [
+        "specific_aims_structure_accepted"
       ],
       "evaluation": [
         {
@@ -357,6 +450,11 @@
           "ref": "/runtime_control",
           "ref_kind": "json_pointer",
           "role": "runtime_control"
+        },
+        {
+          "ref": "/owner_receipt_contract",
+          "ref_kind": "json_pointer",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -368,10 +466,17 @@
       "goal": "Shape research question, aims, technical route, innovation, and argument structure.",
       "handoff": {
         "next_owner": "med-autogrant",
+        "next_stage_refs": [
+          "proposal_authoring"
+        ],
         "progress_surface_ref": "/progress_projection",
+        "provides": [
+          "specific_aims_structure_accepted"
+        ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
       },
+      "independent_gate_receipt_required": true,
       "inputs": [
         {
           "ref": "/family_action_catalog",
@@ -388,6 +493,9 @@
           "ref_kind": "json_pointer",
           "role": "runtime_control_projection"
         }
+      ],
+      "next_stage_refs": [
+        "proposal_authoring"
       ],
       "outputs": [
         {
@@ -408,6 +516,9 @@
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
+      ],
+      "requires": [
+        "fundability_strategy_gate_recorded"
       ],
       "skills": [
         {
@@ -448,11 +559,33 @@
           "role": "authoring_gate"
         }
       ],
+      "stage_contract": {
+        "boundary_assumptions": [
+          "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
+          "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
+        ],
+        "ensures": [
+          "specific_aims_structure_accepted"
+        ],
+        "requires": [
+          "fundability_strategy_gate_recorded"
+        ]
+      },
       "stage_goal": "Shape research question, aims, technical route, innovation, and argument structure.",
       "stage_id": "specific_aims_and_structure",
       "stage_kind": "planning",
       "summary": "Specific aims and structure projected from MAG-owned grant authoring surfaces for OPL discovery.",
-      "title": "Specific aims and structure"
+      "title": "Specific aims and structure",
+      "trust_boundary": {
+        "effect_boundary": true,
+        "human_gate_required": false,
+        "lane": "ai_decision",
+        "owner_receipt_required": true,
+        "records_runtime_events": true,
+        "runtime_guard_required": true,
+        "static_check_eligible": false
+      },
+      "trust_lane": "ai_decision"
     },
     {
       "allowed_action_refs": [
@@ -465,6 +598,7 @@
         "can_write_grant_truth": false,
         "domain_truth_owner": "med-autogrant",
         "fundability_judgment_owner": "med-autogrant",
+        "independent_gate_receipt_required": false,
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
@@ -474,6 +608,9 @@
         "revision",
         "grant-progress",
         "grant-user-loop"
+      ],
+      "ensures": [
+        "proposal_draft_reviewable"
       ],
       "evaluation": [
         {
@@ -485,6 +622,11 @@
           "ref": "/runtime_control",
           "ref_kind": "json_pointer",
           "role": "runtime_control"
+        },
+        {
+          "ref": "/owner_receipt_contract",
+          "ref_kind": "json_pointer",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -496,7 +638,13 @@
       "goal": "Draft and revise the proposal body within the locked funding-call context.",
       "handoff": {
         "next_owner": "med-autogrant",
+        "next_stage_refs": [
+          "review_and_rebuttal"
+        ],
         "progress_surface_ref": "/progress_projection",
+        "provides": [
+          "proposal_draft_reviewable"
+        ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
       },
@@ -517,6 +665,9 @@
           "role": "runtime_control_projection"
         }
       ],
+      "next_stage_refs": [
+        "review_and_rebuttal"
+      ],
       "outputs": [
         {
           "ref": "/progress_projection",
@@ -536,6 +687,9 @@
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
+      ],
+      "requires": [
+        "specific_aims_structure_accepted"
       ],
       "skills": [
         {
@@ -576,11 +730,33 @@
           "role": "authoring_gate"
         }
       ],
+      "stage_contract": {
+        "boundary_assumptions": [
+          "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
+          "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
+        ],
+        "ensures": [
+          "proposal_draft_reviewable"
+        ],
+        "requires": [
+          "specific_aims_structure_accepted"
+        ]
+      },
       "stage_goal": "Draft and revise the proposal body within the locked funding-call context.",
       "stage_id": "proposal_authoring",
       "stage_kind": "creation",
       "summary": "Proposal authoring projected from MAG-owned grant authoring surfaces for OPL discovery.",
-      "title": "Proposal authoring"
+      "title": "Proposal authoring",
+      "trust_boundary": {
+        "effect_boundary": false,
+        "human_gate_required": false,
+        "lane": "codex_executor",
+        "owner_receipt_required": true,
+        "records_runtime_events": true,
+        "runtime_guard_required": true,
+        "static_check_eligible": false
+      },
+      "trust_lane": "codex_executor"
     },
     {
       "allowed_action_refs": [
@@ -593,6 +769,7 @@
         "can_write_grant_truth": false,
         "domain_truth_owner": "med-autogrant",
         "fundability_judgment_owner": "med-autogrant",
+        "independent_gate_receipt_required": true,
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
@@ -602,6 +779,9 @@
         "review",
         "grant_quality_closure_dossier",
         "quality-diff"
+      ],
+      "ensures": [
+        "grant_review_gate_receipt_recorded"
       ],
       "evaluation": [
         {
@@ -613,6 +793,11 @@
           "ref": "/runtime_control",
           "ref_kind": "json_pointer",
           "role": "runtime_control"
+        },
+        {
+          "ref": "/owner_receipt_contract",
+          "ref_kind": "json_pointer",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -624,10 +809,17 @@
       "goal": "Run reviewer-style critique, issue closure, rebuttal planning, and quality-diff checks.",
       "handoff": {
         "next_owner": "med-autogrant",
+        "next_stage_refs": [
+          "package_and_submit_ready"
+        ],
         "progress_surface_ref": "/progress_projection",
+        "provides": [
+          "grant_review_gate_receipt_recorded"
+        ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
       },
+      "independent_gate_receipt_required": true,
       "inputs": [
         {
           "ref": "/family_action_catalog",
@@ -644,6 +836,9 @@
           "ref_kind": "json_pointer",
           "role": "runtime_control_projection"
         }
+      ],
+      "next_stage_refs": [
+        "package_and_submit_ready"
       ],
       "outputs": [
         {
@@ -664,6 +859,9 @@
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
+      ],
+      "requires": [
+        "proposal_draft_reviewable"
       ],
       "skills": [
         {
@@ -704,11 +902,33 @@
           "role": "authoring_gate"
         }
       ],
+      "stage_contract": {
+        "boundary_assumptions": [
+          "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
+          "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
+        ],
+        "ensures": [
+          "grant_review_gate_receipt_recorded"
+        ],
+        "requires": [
+          "proposal_draft_reviewable"
+        ]
+      },
       "stage_goal": "Run reviewer-style critique, issue closure, rebuttal planning, and quality-diff checks.",
       "stage_id": "review_and_rebuttal",
       "stage_kind": "review",
       "summary": "Review and rebuttal projected from MAG-owned grant authoring surfaces for OPL discovery.",
-      "title": "Review and rebuttal"
+      "title": "Review and rebuttal",
+      "trust_boundary": {
+        "effect_boundary": true,
+        "human_gate_required": false,
+        "lane": "ai_decision",
+        "owner_receipt_required": true,
+        "records_runtime_events": true,
+        "runtime_guard_required": true,
+        "static_check_eligible": false
+      },
+      "trust_lane": "ai_decision"
     },
     {
       "allowed_action_refs": [
@@ -721,6 +941,7 @@
         "can_write_grant_truth": false,
         "domain_truth_owner": "med-autogrant",
         "fundability_judgment_owner": "med-autogrant",
+        "independent_gate_receipt_required": true,
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
@@ -730,6 +951,9 @@
         "frozen",
         "package submission-ready",
         "submission-ready export gate"
+      ],
+      "ensures": [
+        "submission_ready_package_receipt_recorded"
       ],
       "evaluation": [
         {
@@ -741,6 +965,11 @@
           "ref": "/runtime_control",
           "ref_kind": "json_pointer",
           "role": "runtime_control"
+        },
+        {
+          "ref": "/owner_receipt_contract",
+          "ref_kind": "json_pointer",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -752,10 +981,15 @@
       "goal": "Freeze final local delivery package and run submission-ready export checks.",
       "handoff": {
         "next_owner": "med-autogrant",
+        "next_stage_refs": [],
         "progress_surface_ref": "/progress_projection",
+        "provides": [
+          "submission_ready_package_receipt_recorded"
+        ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
       },
+      "independent_gate_receipt_required": true,
       "inputs": [
         {
           "ref": "/family_action_catalog",
@@ -773,6 +1007,7 @@
           "role": "runtime_control_projection"
         }
       ],
+      "next_stage_refs": [],
       "outputs": [
         {
           "ref": "/progress_projection",
@@ -792,6 +1027,9 @@
           "ref_kind": "repo_path",
           "role": "stage_pack_reference"
         }
+      ],
+      "requires": [
+        "grant_review_gate_receipt_recorded"
       ],
       "skills": [
         {
@@ -832,11 +1070,33 @@
           "role": "authoring_gate"
         }
       ],
+      "stage_contract": {
+        "boundary_assumptions": [
+          "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
+          "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
+        ],
+        "ensures": [
+          "submission_ready_package_receipt_recorded"
+        ],
+        "requires": [
+          "grant_review_gate_receipt_recorded"
+        ]
+      },
       "stage_goal": "Freeze final local delivery package and run submission-ready export checks.",
       "stage_id": "package_and_submit_ready",
       "stage_kind": "packaging",
       "summary": "Package and submit-ready projected from MAG-owned grant authoring surfaces for OPL discovery.",
-      "title": "Package and submit-ready"
+      "title": "Package and submit-ready",
+      "trust_boundary": {
+        "effect_boundary": false,
+        "human_gate_required": false,
+        "lane": "domain_agent",
+        "owner_receipt_required": true,
+        "records_runtime_events": true,
+        "runtime_guard_required": true,
+        "static_check_eligible": false
+      },
+      "trust_lane": "domain_agent"
     }
   ],
   "surface_kind": "family_stage_control_plane",
