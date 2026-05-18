@@ -226,6 +226,9 @@
         ],
         "requires": [
           "grant_request_received"
+        ],
+        "runtime_event_refs": [
+          "runtime_event:call_and_candidate_intake.owner_receipt_recorded"
         ]
       },
       "stage_goal": "Read call guidance, applicant/team context, candidate directions, and eligibility constraints.",
@@ -239,6 +242,9 @@
         "lane": "domain_agent",
         "owner_receipt_required": true,
         "records_runtime_events": true,
+        "runtime_event_refs": [
+          "runtime_event:call_and_candidate_intake.owner_receipt_recorded"
+        ],
         "runtime_guard_required": true,
         "static_check_eligible": false
       },
@@ -398,6 +404,9 @@
         ],
         "requires": [
           "call_candidate_intake_ready"
+        ],
+        "runtime_event_refs": [
+          "runtime_event:fundability_strategy.ai_decision_gate_recorded"
         ]
       },
       "stage_goal": "Evaluate topic competitiveness, innovation, risk, fit, and funder-specific strategy.",
@@ -411,6 +420,9 @@
         "lane": "ai_decision",
         "owner_receipt_required": true,
         "records_runtime_events": true,
+        "runtime_event_refs": [
+          "runtime_event:fundability_strategy.ai_decision_gate_recorded"
+        ],
         "runtime_guard_required": true,
         "static_check_eligible": false
       },
@@ -569,6 +581,9 @@
         ],
         "requires": [
           "fundability_strategy_gate_recorded"
+        ],
+        "runtime_event_refs": [
+          "runtime_event:specific_aims_and_structure.ai_decision_gate_recorded"
         ]
       },
       "stage_goal": "Shape research question, aims, technical route, innovation, and argument structure.",
@@ -582,6 +597,9 @@
         "lane": "ai_decision",
         "owner_receipt_required": true,
         "records_runtime_events": true,
+        "runtime_event_refs": [
+          "runtime_event:specific_aims_and_structure.ai_decision_gate_recorded"
+        ],
         "runtime_guard_required": true,
         "static_check_eligible": false
       },
@@ -740,6 +758,9 @@
         ],
         "requires": [
           "specific_aims_structure_accepted"
+        ],
+        "runtime_event_refs": [
+          "runtime_event:proposal_authoring.owner_receipt_recorded"
         ]
       },
       "stage_goal": "Draft and revise the proposal body within the locked funding-call context.",
@@ -753,6 +774,9 @@
         "lane": "codex_executor",
         "owner_receipt_required": true,
         "records_runtime_events": true,
+        "runtime_event_refs": [
+          "runtime_event:proposal_authoring.owner_receipt_recorded"
+        ],
         "runtime_guard_required": true,
         "static_check_eligible": false
       },
@@ -912,6 +936,9 @@
         ],
         "requires": [
           "proposal_draft_reviewable"
+        ],
+        "runtime_event_refs": [
+          "runtime_event:review_and_rebuttal.ai_decision_gate_recorded"
         ]
       },
       "stage_goal": "Run reviewer-style critique, issue closure, rebuttal planning, and quality-diff checks.",
@@ -925,6 +952,9 @@
         "lane": "ai_decision",
         "owner_receipt_required": true,
         "records_runtime_events": true,
+        "runtime_event_refs": [
+          "runtime_event:review_and_rebuttal.ai_decision_gate_recorded"
+        ],
         "runtime_guard_required": true,
         "static_check_eligible": false
       },
@@ -1080,6 +1110,9 @@
         ],
         "requires": [
           "grant_review_gate_receipt_recorded"
+        ],
+        "runtime_event_refs": [
+          "runtime_event:package_and_submit_ready.owner_receipt_recorded"
         ]
       },
       "stage_goal": "Freeze final local delivery package and run submission-ready export checks.",
@@ -1093,6 +1126,9 @@
         "lane": "domain_agent",
         "owner_receipt_required": true,
         "records_runtime_events": true,
+        "runtime_event_refs": [
+          "runtime_event:package_and_submit_ready.owner_receipt_recorded"
+        ],
         "runtime_guard_required": true,
         "static_check_eligible": false
       },

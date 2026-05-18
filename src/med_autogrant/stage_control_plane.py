@@ -242,6 +242,7 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
 
 
 def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
+    runtime_event_refs = _runtime_event_refs(stage)
     return {
         **stage,
         "owner": TARGET_DOMAIN_ID,
@@ -279,6 +280,7 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
         "stage_contract": {
             "requires": list(stage.get("requires", [])),
             "ensures": list(stage.get("ensures", [])),
+            "runtime_event_refs": runtime_event_refs,
             "boundary_assumptions": [
                 "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
                 "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states.",
@@ -289,6 +291,7 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "static_check_eligible": False,
             "effect_boundary": stage.get("trust_lane") == "ai_decision",
             "records_runtime_events": True,
+            "runtime_event_refs": runtime_event_refs,
             "owner_receipt_required": True,
             "human_gate_required": False,
             "runtime_guard_required": True,
@@ -318,6 +321,13 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "can_bypass_submission_ready_gate": False,
         },
     }
+
+
+def _runtime_event_refs(stage: Mapping[str, Any]) -> list[str]:
+    stage_id = str(stage["stage_id"])
+    if stage.get("trust_lane") == "ai_decision":
+        return [f"runtime_event:{stage_id}.ai_decision_gate_recorded"]
+    return [f"runtime_event:{stage_id}.owner_receipt_recorded"]
 
 
 def build_mag_family_stage_control_plane(
