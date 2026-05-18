@@ -17,6 +17,8 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.domain_runtime import MagDomainRuntime  # noqa: E402
+from med_autogrant.domain_runtime_parts.shared import LocalRuntimeStateError  # noqa: E402
 from med_autogrant.public_cli import public_cli_argv  # noqa: E402
 
 
@@ -27,7 +29,7 @@ PRESUBMISSION_FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c
 RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3b_re_review_major_revision.json"
 
 
-class RuntimeCliTest(unittest.TestCase):
+class RuntimeRegressionOracleTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
         stdout = StringIO()
         stderr = StringIO()
@@ -37,6 +39,20 @@ class RuntimeCliTest(unittest.TestCase):
             except SystemExit as exc:
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
+
+    def run_runtime_oracle(
+        self,
+        *,
+        input_path: Path,
+        journal_path: Path | None = None,
+    ) -> dict[str, object]:
+        return MagDomainRuntime().run_local(
+            input_path=str(input_path),
+            journal_path=str(journal_path) if journal_path is not None else None,
+        )
+
+    def resume_runtime_oracle(self, *, journal_path: Path) -> dict[str, object]:
+        return MagDomainRuntime().resume_local(journal_path=str(journal_path))
 
     def test_removed_run_local_alias_exits_with_parser_error(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
@@ -71,18 +87,7 @@ class RuntimeCliTest(unittest.TestCase):
                 },
                 clear=False,
             ):
-                exit_code, stdout, stderr = self.run_cli(
-                    "runtime",
-                "run",
-                "--input",
-                    str(REVISION_EXAMPLE_PATH),
-                    "--format",
-                    "json",
-                )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
+                payload = self.run_runtime_oracle(input_path=REVISION_EXAMPLE_PATH)
             self.assertEqual(payload["journal_path"], str(expected_journal_path.resolve()))
             self.assertTrue(expected_journal_path.exists())
 
@@ -90,20 +95,10 @@ class RuntimeCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "revision-journal.json"
 
-            exit_code, stdout, stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(REVISION_EXAMPLE_PATH),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            payload = self.run_runtime_oracle(
+                input_path=REVISION_EXAMPLE_PATH,
+                journal_path=journal_path,
             )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
             self.assertTrue(payload["ok"])
             self.assertEqual(payload["command"], "runtime-run")
             self.assertEqual(payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
@@ -133,20 +128,10 @@ class RuntimeCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "revision-envelope-journal.json"
 
-            exit_code, stdout, stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(REVISION_EXAMPLE_PATH),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            payload = self.run_runtime_oracle(
+                input_path=REVISION_EXAMPLE_PATH,
+                journal_path=journal_path,
             )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
             envelope = payload["stage_action_envelope"]
             self.assertIsInstance(envelope, dict)
             self.assertEqual(envelope["envelope_version"], 1)
@@ -200,20 +185,10 @@ class RuntimeCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "major-revision-envelope-journal.json"
 
-            exit_code, stdout, stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            payload = self.run_runtime_oracle(
+                input_path=RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH,
+                journal_path=journal_path,
             )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
             envelope = payload["stage_action_envelope"]
             self.assertIsInstance(envelope, dict)
             self.assertEqual(envelope["current_stage"], "critique")
@@ -253,20 +228,10 @@ class RuntimeCliTest(unittest.TestCase):
             self.assertEqual(execute_stderr, "")
             self.assertTrue(json.loads(execute_stdout)["ok"])
 
-            exit_code, stdout, stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(revised_output),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            payload = self.run_runtime_oracle(
+                input_path=revised_output,
+                journal_path=journal_path,
             )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
             self.assertTrue(payload["ok"])
             self.assertEqual(payload["lifecycle_stage"], "critique")
             self.assertEqual(payload["stop_reason"]["code"], "stage_action_required")
@@ -296,20 +261,10 @@ class RuntimeCliTest(unittest.TestCase):
             for input_path, journal_name in cases:
                 with self.subTest(input_path=input_path.name):
                     journal_path = Path(tmp_dir) / journal_name
-                    exit_code, stdout, stderr = self.run_cli(
-                        "runtime",
-                "run",
-                "--input",
-                        str(input_path),
-                        "--journal",
-                        str(journal_path),
-                        "--format",
-                        "json",
+                    payload = self.run_runtime_oracle(
+                        input_path=input_path,
+                        journal_path=journal_path,
                     )
-
-                    self.assertEqual(exit_code, 0)
-                    self.assertEqual(stderr, "")
-                    payload = json.loads(stdout)
                     self.assertIsNone(payload["stage_action_envelope"])
 
                     journal = json.loads(journal_path.read_text(encoding="utf-8"))
@@ -320,20 +275,10 @@ class RuntimeCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "rollback-journal.json"
 
-            exit_code, stdout, stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(FORCED_ROLLBACK_EXAMPLE_PATH),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            payload = self.run_runtime_oracle(
+                input_path=FORCED_ROLLBACK_EXAMPLE_PATH,
+                journal_path=journal_path,
             )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
             self.assertTrue(payload["ok"])
             self.assertEqual(payload["stop_reason"]["code"], "rollback_required")
             self.assertEqual(payload["stop_reason"]["checkpoint_status"], "rollback_required")
@@ -344,20 +289,10 @@ class RuntimeCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "freeze-ready-journal.json"
 
-            exit_code, stdout, stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            payload = self.run_runtime_oracle(
+                input_path=READY_FOR_SUBMISSION_EXAMPLE_PATH,
+                journal_path=journal_path,
             )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
             self.assertTrue(payload["ok"])
             self.assertEqual(payload["stop_reason"]["code"], "freeze_ready")
             self.assertEqual(payload["stop_reason"]["checkpoint_status"], "freeze_ready")
@@ -368,20 +303,10 @@ class RuntimeCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "frozen-journal.json"
 
-            exit_code, stdout, stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(PRESUBMISSION_FROZEN_EXAMPLE_PATH),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            payload = self.run_runtime_oracle(
+                input_path=PRESUBMISSION_FROZEN_EXAMPLE_PATH,
+                journal_path=journal_path,
             )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
             self.assertTrue(payload["ok"])
             self.assertEqual(payload["stop_reason"]["code"], "presubmission_frozen")
             self.assertEqual(payload["stop_reason"]["checkpoint_status"], "submission_frozen")
@@ -395,20 +320,10 @@ class RuntimeCliTest(unittest.TestCase):
             document.pop("grant_run_id")
             invalid_workspace.write_text(json.dumps(document, ensure_ascii=False, indent=2), encoding="utf-8")
 
-            exit_code, stdout, stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(invalid_workspace),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            payload = self.run_runtime_oracle(
+                input_path=invalid_workspace,
+                journal_path=journal_path,
             )
-
-            self.assertEqual(exit_code, 0)
-            self.assertEqual(stderr, "")
-            payload = json.loads(stdout)
             self.assertFalse(payload["ok"])
             self.assertEqual(payload["command"], "runtime-run")
             self.assertEqual(payload["attempt_index"], 1)
@@ -454,32 +369,13 @@ class RuntimeCliTest(unittest.TestCase):
             document.pop("grant_run_id")
             invalid_workspace.write_text(json.dumps(document, ensure_ascii=False, indent=2), encoding="utf-8")
 
-            first_exit, first_stdout, first_stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(invalid_workspace),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            first_payload = self.run_runtime_oracle(
+                input_path=invalid_workspace,
+                journal_path=journal_path,
             )
-            self.assertEqual(first_exit, 0)
-            self.assertEqual(first_stderr, "")
-            self.assertFalse(json.loads(first_stdout)["ok"])
+            self.assertFalse(first_payload["ok"])
 
-            second_exit, second_stdout, second_stderr = self.run_cli(
-                "runtime",
-                "resume",
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(second_exit, 0)
-            self.assertEqual(second_stderr, "")
-            payload = json.loads(second_stdout)
+            payload = self.resume_runtime_oracle(journal_path=journal_path)
             self.assertFalse(payload["ok"])
             self.assertEqual(payload["command"], "runtime-resume")
             self.assertEqual(payload["attempt_index"], 2)
@@ -503,33 +399,13 @@ class RuntimeCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "resume-journal.json"
 
-            first_exit, first_stdout, first_stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(REVISION_EXAMPLE_PATH),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            first_payload = self.run_runtime_oracle(
+                input_path=REVISION_EXAMPLE_PATH,
+                journal_path=journal_path,
             )
-            self.assertEqual(first_exit, 0)
-            self.assertEqual(first_stderr, "")
-            first_payload = json.loads(first_stdout)
             self.assertEqual(first_payload["attempt_index"], 1)
 
-            second_exit, second_stdout, second_stderr = self.run_cli(
-                "runtime",
-                "resume",
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
-            )
-
-            self.assertEqual(second_exit, 0)
-            self.assertEqual(second_stderr, "")
-            second_payload = json.loads(second_stdout)
+            second_payload = self.resume_runtime_oracle(journal_path=journal_path)
             self.assertTrue(second_payload["ok"])
             self.assertEqual(second_payload["command"], "runtime-resume")
             self.assertEqual(second_payload["grant_run_id"], first_payload["grant_run_id"])
@@ -557,36 +433,16 @@ class RuntimeCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             journal_path = Path(tmp_dir) / "shared-journal.json"
 
-            first_exit, _, first_stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(REVISION_EXAMPLE_PATH),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
-            )
-            self.assertEqual(first_exit, 0)
-            self.assertEqual(first_stderr, "")
-
-            second_exit, second_stdout, second_stderr = self.run_cli(
-                "runtime",
-                "run",
-                "--input",
-                str(READY_FOR_SUBMISSION_EXAMPLE_PATH),
-                "--journal",
-                str(journal_path),
-                "--format",
-                "json",
+            self.run_runtime_oracle(
+                input_path=REVISION_EXAMPLE_PATH,
+                journal_path=journal_path,
             )
 
-            self.assertEqual(second_exit, 1)
-            self.assertEqual(second_stderr, "")
-            payload = json.loads(second_stdout)
-            self.assertFalse(payload["ok"])
-            self.assertEqual(payload["command"], "runtime-run")
-            self.assertIn("input_path", payload["error"])
+            with self.assertRaisesRegex(LocalRuntimeStateError, "input_path"):
+                self.run_runtime_oracle(
+                    input_path=READY_FOR_SUBMISSION_EXAMPLE_PATH,
+                    journal_path=journal_path,
+                )
 
 
 if __name__ == "__main__":

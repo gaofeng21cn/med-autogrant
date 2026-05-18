@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import os
 import sys
 import tempfile
@@ -23,7 +22,7 @@ from med_autogrant.public_cli import public_cli_argv  # noqa: E402
 REVISION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_revision.json"
 
 
-class OptionalHermesProofCliProbeTest(unittest.TestCase):
+class OptionalHermesProofProbeTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
         stdout = StringIO()
         stderr = StringIO()
@@ -34,32 +33,39 @@ class OptionalHermesProofCliProbeTest(unittest.TestCase):
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
 
-    def test_probe_upstream_hermes_dispatches_and_returns_probe_payload(self) -> None:
-        expected_payload = {
-            "ok": True,
-            "command": "probe-upstream-hermes",
-            "package_version": "0.8.0",
-            "hermes_command": "/tmp/hermes",
-            "runtime_root": "/tmp/.hermes",
-            "state_db_path": "/tmp/.hermes/state.db",
-            "entrypoints": {
-                "cli": "hermes",
-                "acp": "hermes acp",
-                "agent": "run_agent.AIAgent",
-                "session_db": "hermes_state.SessionDB",
-                "session_manager": "acp_adapter.session.SessionManager",
-            },
-        }
+    def test_probe_upstream_hermes_is_direct_legacy_proof_not_public_cli(self) -> None:
+        from med_autogrant.upstream_hermes import probe_upstream_hermes
+
+        hermes_cli = type("HermesCli", (), {"__version__": "0.8.0"})
+
+        def fake_import(module_name: str) -> object:
+            if module_name == "hermes_cli":
+                return hermes_cli
+            return object()
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            runtime_root = Path(tmp_dir) / ".hermes"
+            with (
+                patch("med_autogrant.upstream_hermes._import_upstream_module", side_effect=fake_import),
+                patch("med_autogrant.upstream_hermes._resolve_hermes_command", return_value=Path("/tmp/hermes")),
+                patch("med_autogrant.upstream_hermes.resolve_upstream_hermes_runtime_root", return_value=runtime_root),
+            ):
+                payload = probe_upstream_hermes()
+
+        self.assertEqual(payload["surface_kind"], "legacy_upstream_hermes_probe")
+        self.assertEqual(payload["command"], "probe-upstream-hermes")
+        self.assertFalse(payload["public_cli"])
+        self.assertEqual(payload["package_version"], "0.8.0")
+        self.assertEqual(payload["hermes_command"], "/tmp/hermes")
+        self.assertEqual(payload["runtime_root"], str(runtime_root))
 
         with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
-            entry = entry_class.return_value
-            entry.dispatch.return_value = expected_payload
             exit_code, stdout, stderr = self.run_cli("runtime", "probe-hermes", "--format", "json")
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertEqual(json.loads(stdout), expected_payload)
-        entry.dispatch.assert_called_once_with({"command": "probe-upstream-hermes"})
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(stdout, "")
+        self.assertIn("invalid choice", stderr)
+        entry_class.assert_not_called()
 
 
 class MagRuntimeLedgerTest(unittest.TestCase):

@@ -23,18 +23,21 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             input_path=str(CRITIQUE_EXAMPLE_PATH),
         )["product_entry_manifest"]
 
-        self.assertEqual(manifest["managed_runtime_contract"]["runtime_owner"], "codex_cli")
-        self.assertEqual(manifest["managed_runtime_contract"]["executor_owner"], "codex_cli")
-        self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "codex_cli")
+        self.assertEqual(
+            manifest["opl_provider_runtime_contract"]["runtime_owner"],
+            "configured_family_runtime_provider",
+        )
+        self.assertEqual(manifest["opl_provider_runtime_contract"]["executor_owner"], "codex_cli")
+        self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "configured_family_runtime_provider")
         self.assertEqual(manifest["runtime_inventory"]["executor_owner"], "codex_cli")
-        self.assertEqual(manifest["runtime_inventory"]["substrate"], "codex_cli_default_runtime")
+        self.assertEqual(manifest["runtime_inventory"]["substrate"], "opl_provider_runtime")
         self.assertEqual(manifest["runtime_control"]["runtime_owner"], "one-person-lab")
         self.assertEqual(manifest["runtime_control"]["executor_owner"], "codex_cli")
         self.assertEqual(
             manifest["skill_catalog"]["skills"][0]["domain_projection"]["opl_stage_runtime_registration"][
                 "family_lifecycle_adapter"
             ]["owner_route_discovery"]["owner_split"]["runtime_kernel_owner"],
-            "codex_cli",
+            "configured_family_runtime_provider",
         )
         self.assertIn("hermes_agent", manifest["runtime_inventory"]["domain_projection"]["runtime"]["optional_carriers"])
         self.assertIn("claude_code", manifest["runtime_inventory"]["domain_projection"]["runtime"]["optional_carriers"])
@@ -49,7 +52,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             runtime_summary={"runtime_owner": "codex-cli"},
             runtime_continuity={
                 "session_locator_field": "grant_run_id",
-                "recommended_resume_command": "medautogrant runtime-resume --journal journal.json --format json",
+                "recommended_resume_command": "opl://generated-surfaces/mag/product-entry-session#resume",
                 "recommended_progress_command": "medautogrant grant-progress --input workspace.json --format json",
             },
             shell_commands={
@@ -94,7 +97,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             registration["resume_contract"],
             {
                 "session_locator_field": "grant_run_id",
-                "recommended_resume_command": "medautogrant runtime-resume --journal journal.json --format json",
+                "recommended_resume_command": "opl://generated-surfaces/mag/product-entry-session#resume",
                 "recommended_progress_command": "medautogrant grant-progress --input workspace.json --format json",
             },
         )
@@ -153,6 +156,10 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
         self.assertIn(
             "medautogrant grant-user-loop",
             family_adapter["owner_route_discovery"]["route_surface_refs"]["operator_loop"]["command"],
+        )
+        self.assertEqual(
+            family_adapter["owner_route_discovery"]["route_surface_refs"]["resume"]["surface_kind"],
+            "opl_generated_session_resume",
         )
         self.assertEqual(
             family_adapter["adoption_projection"]["maps_to_opl_contract"],

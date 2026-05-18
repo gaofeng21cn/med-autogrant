@@ -518,31 +518,6 @@ def _render_product_start(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _render_probe_upstream_hermes(payload: dict[str, Any]) -> str:
-    lines = [
-        f"package_version: {payload['package_version']}",
-        f"hermes_command: {payload['hermes_command']}",
-        f"runtime_root: {payload['runtime_root']}",
-        f"state_db_path: {payload['state_db_path']}",
-    ]
-    for name, target in payload["entrypoints"].items():
-        lines.append(f"- {name}: {target}")
-    return "\n".join(lines)
-
-
-def _render_runtime_run(payload: dict[str, Any]) -> str:
-    lines = [
-        f"grant_run_id: {payload['grant_run_id']}",
-        f"workspace_id: {payload['workspace_id']}",
-        f"lifecycle_stage: {payload['lifecycle_stage']}",
-        f"stop_reason: {payload['stop_reason']['code']}",
-        f"checkpoint_status: {payload['stop_reason']['checkpoint_status']}",
-        f"recommended_next_stage: {payload['stop_reason']['recommended_next_stage']}",
-        f"journal_path: {payload['journal_path']}",
-    ]
-    return "\n".join(lines)
-
-
 def _render_build_artifact_bundle(payload: dict[str, Any]) -> str:
     bundle = payload["bundle"]
     lines = [
@@ -729,9 +704,6 @@ _TEXT_RENDERERS: dict[str, Callable[[dict[str, Any]], str]] = {
     'product-status': _render_product_status,
     'product-preflight': _render_product_preflight,
     'product-start': _render_product_start,
-    'probe-upstream-hermes': _render_probe_upstream_hermes,
-    'runtime-run': _render_runtime_run,
-    'runtime-resume': _render_runtime_run,
     'build-artifact-bundle': _render_build_artifact_bundle,
     'execute-direction-screening-pass': _render_execute_direction_screening_pass,
     'execute-question-refinement-pass': _render_execute_direction_screening_pass,

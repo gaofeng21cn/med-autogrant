@@ -4,9 +4,9 @@ import os
 from typing import Any
 
 
-DEFAULT_RUNTIME_OWNER = "codex_cli"
+DEFAULT_RUNTIME_OWNER = "configured_family_runtime_provider"
 DEFAULT_EXECUTOR_OWNER = "codex_cli"
-DEFAULT_RUNTIME_SUBSTRATE = "codex_cli_default_runtime"
+DEFAULT_RUNTIME_SUBSTRATE = "opl_provider_runtime"
 OPTIONAL_HOSTED_CARRIER = "hermes_agent"
 OPTIONAL_HOSTED_CARRIERS = ("hermes_agent", "claude_code")
 OPL_EXECUTOR_ADAPTER_OWNER = "one-person-lab"

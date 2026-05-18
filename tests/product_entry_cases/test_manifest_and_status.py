@@ -53,10 +53,10 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(manifest["product_entry_surface"]["surface_kind"], "product_status")
         self.assertIn("OPL generated/hosted status caller", manifest["product_entry_surface"]["summary"])
         self.assertEqual(
-            manifest["managed_runtime_contract"],
+            manifest["opl_provider_runtime_contract"],
             {
                 "shared_contract_ref": "contracts/opl-framework/managed-runtime-three-layer-contract.json",
-                "runtime_owner": "codex_cli",
+                "runtime_owner": "configured_family_runtime_provider",
                 "domain_owner": "med-autogrant",
                 "executor_owner": "codex_cli",
                 "supervision_status_surface": {
@@ -79,10 +79,10 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             },
         )
         self.assertEqual(manifest["runtime_inventory"]["surface_kind"], "runtime_inventory")
-        self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "codex_cli")
+        self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "configured_family_runtime_provider")
         self.assertEqual(
             manifest["runtime_inventory"]["domain_owner"],
-            manifest["managed_runtime_contract"]["domain_owner"],
+            manifest["opl_provider_runtime_contract"]["domain_owner"],
         )
         self.assertEqual(manifest["task_lifecycle"]["surface_kind"], "task_lifecycle")
         self.assertEqual(

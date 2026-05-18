@@ -86,17 +86,20 @@ _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 
 class MagDomainRuntime(DomainRuntimeAuthoringSurfaceMixin, DomainRuntimeHandoffSurfaceMixin):
-    """MAG-owned domain runtime surface for grant authoring, quality, and export."""
+    """Repo-side domain adapter and regression oracle for grant authoring, quality, and export."""
 
-    runtime_owner = "Med Auto Grant"
+    runtime_owner = "one-person-lab"
 
     def describe_topology(self) -> dict[str, Any]:
         return {
             "runtime_owner": self.runtime_owner,
+            "runtime_surface_role": "repo_side_domain_adapter_and_regression_oracle",
             "domain_agent": "Med Auto Grant",
+            "domain_surface_owner": "Med Auto Grant",
             "authoring_truth_owner": "Med Auto Grant",
             "quality_gate_owner": "Med Auto Grant",
             "export_authority": "Med Auto Grant",
+            "can_claim_generic_runtime_owner": False,
             "default_formal_entry": "CLI",
             "default_stage_attempt_executor": "Codex CLI",
             "supported_protocol_layer": "MCP",

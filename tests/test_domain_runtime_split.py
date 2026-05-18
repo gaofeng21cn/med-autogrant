@@ -28,12 +28,15 @@ class RuntimeSplitStructureTest(unittest.TestCase):
 
         self.assertEqual([], offenders)
 
-    def test_mag_domain_runtime_is_the_default_runtime_surface(self) -> None:
+    def test_mag_domain_runtime_is_domain_adapter_not_generic_runtime_owner(self) -> None:
         from med_autogrant.domain_runtime import MagDomainRuntime
 
         topology = MagDomainRuntime().describe_topology()
 
-        self.assertEqual(topology["runtime_owner"], "Med Auto Grant")
+        self.assertEqual(topology["runtime_owner"], "one-person-lab")
+        self.assertEqual(topology["runtime_surface_role"], "repo_side_domain_adapter_and_regression_oracle")
+        self.assertEqual(topology["domain_surface_owner"], "Med Auto Grant")
+        self.assertFalse(topology["can_claim_generic_runtime_owner"])
         self.assertEqual(topology["authoring_truth_owner"], "Med Auto Grant")
         self.assertEqual(topology["quality_gate_owner"], "Med Auto Grant")
         self.assertEqual(topology["export_authority"], "Med Auto Grant")

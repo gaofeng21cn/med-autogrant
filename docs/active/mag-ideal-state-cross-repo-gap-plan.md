@@ -19,6 +19,8 @@ MAG 是医学基金申请 domain agent，也是 OPL-compatible Foundry Agent pac
 
 OPL Framework / shared family layer 持有通用 provider runtime、typed queue、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、operator projection、observability/SLO、generated wrapper 和 App/workbench shell。MAG 不把这些通用能力继续写成长期私有平台。
 
+当前 product-entry manifest / schema / tests 的 runtime contract 字段为 `opl_provider_runtime_contract`。该字段指向 OPL/configured family provider runtime owner；`codex_cli` 只保留为默认 executor owner / default executor，不再作为 active runtime owner。
+
 ## 当前边界
 
 MAG 必须持有：
@@ -42,6 +44,8 @@ OPL 必须持有：
 `mag_functional_structure_gap_count=0`
 
 `classification_gap_count=0`、`followthrough_gaps_open=false`、`claims_opl_replacement_exists=false` 和 `claims_all_bridge_exits_complete=false` 表示 MAG repo 侧已经把当前 surface 收到 handler/ref-only/authority 边界，但外部 OPL generated/hosted caller、真实 App/workbench 消费、全部 bridge exit 和 production long-run soak 仍是证据门。凡仍由 MAG CLI/product-status/sidecar 作为 handler target 或 direct domain entry 的 product/status/user-loop/sidecar/grouped CLI/projection/lifecycle surface，都必须写成 OPL generated/hosted caller 的 domain handler、ref-only adapter 或 minimal authority function。MAG 仍不是纯 knowledge pack；它保留 grant authority functions、domain handler、receipt schema/writer、transition oracle、quality/export verdict、package authority、memory accept/reject 和 focused contract tests。
+
+`opl_provider_runtime_contract` 的落地只关闭 manifest/schema/test 的 owner 语义漂移；它不声明 OPL production/default caller、Temporal long soak、App/workbench consumption 或 live receipt reconciliation 已完成。
 
 1. `generated_surface_bridge_exit`
    `mag_consumer_thinning_contract.generated_surface_handoff.bridge_exit_gate` 固定 OPL generated/hosted wrapper owner，MAG 当前路径只作为 domain handler target 和 grant authority refs。退出证据包括 OPL generated interface compile/scaffold、direct MAG domain handler no-regression、owner receipt / typed blocker refs roundtrip、thin output guard、no-forbidden-write 与 no-active-wrapper scan。
@@ -111,5 +115,5 @@ AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof
 - 不能写成 MAG 已经是纯知识文件仓；MAG 仍持有 grant authority functions、domain entry、receipt schema/writer、transition oracle、quality/export verdict、package authority、memory accept/reject 和 focused contract tests。
 - 不能把 `mag_functional_structure_gap_count=0` 写成 external production/default caller、真实 App/workbench consumption 或 production long-run soak 已完成。
 - 不能把 quality scorecard、schema completeness、controller route、package existence 或 mechanical projection 写成 AI-first grant quality / fundability / export verdict。
-- 不能把 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias 或 compatibility aggregate test 写回默认 runtime owner。
+- 不能把 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、compatibility aggregate test 或 `codex_cli` executor 写回默认 runtime owner。
 - 不能为了兼容保留旧模块、旧接口、旧测试、旧 CLI alias、facade 或 wrapper；active caller 迁走后直接删除或进入 history/tombstone。

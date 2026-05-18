@@ -31,7 +31,9 @@ def probe_upstream_hermes() -> dict[str, Any]:
 
     return {
         "ok": True,
+        "surface_kind": "legacy_upstream_hermes_probe",
         "command": "probe-upstream-hermes",
+        "public_cli": False,
         "package_version": getattr(hermes_cli, "__version__", "unknown"),
         "hermes_command": str(hermes_command),
         "runtime_root": str(runtime_root),
@@ -47,7 +49,7 @@ def probe_upstream_hermes() -> dict[str, Any]:
 
 
 class MagGrantRunLedger:
-    """Record MAG runtime attempts without requiring an optional external executor."""
+    """Legacy local attempt ledger used only by direct regression/provenance paths."""
 
     def __init__(self) -> None:
         self._ledger_root = (resolve_runtime_state_root() / "sessions").resolve()
@@ -91,7 +93,7 @@ class MagGrantRunLedger:
         )
         ledger.update(
             {
-                "surface_kind": "mag_runtime_attempt_ledger",
+                "surface_kind": "mag_legacy_runtime_attempt_ledger",
                 "session_id": session_id,
                 "session_handle_kind": session_handle_kind,
                 "grant_run_id": grant_run_id,
@@ -103,7 +105,7 @@ class MagGrantRunLedger:
 
     def _read_ledger(self, ledger_path: Path) -> dict[str, Any]:
         if not ledger_path.exists():
-            return {"surface_kind": "mag_runtime_attempt_ledger", "attempts": []}
+            return {"surface_kind": "mag_legacy_runtime_attempt_ledger", "attempts": []}
         try:
             payload = json.loads(ledger_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
@@ -259,7 +261,9 @@ def _count_matching_attempts(attempts: list[Any], *, journal_path: Path) -> int:
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp_path = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    tmp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp_path.replace(path)
 
 
 def resolve_upstream_hermes_runtime_root() -> Path:

@@ -185,7 +185,7 @@
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
         "runtime_owner": {
-          "const": "codex_cli"
+          "const": "configured_family_runtime_provider"
         },
         "optional_carriers": {
           "type": "array",
@@ -368,7 +368,7 @@
         }
       }
     },
-    "managedRuntimeContractSurface": {
+    "oplProviderRuntimeContractSurface": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -386,7 +386,7 @@
           "const": "contracts/opl-framework/managed-runtime-three-layer-contract.json"
         },
         "runtime_owner": {
-          "const": "codex_cli"
+          "const": "configured_family_runtime_provider"
         },
         "domain_owner": {
           "const": "med-autogrant"
@@ -1340,7 +1340,7 @@
               "const": "one-person-lab"
             },
             "runtime_kernel_owner": {
-              "const": "codex_cli"
+              "const": "configured_family_runtime_provider"
             },
             "domain_truth_owner": {
               "const": "med-autogrant"
@@ -6885,7 +6885,7 @@
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "managed_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "artifact_locator_contract", "opl_substrate_adapter_export", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "mag_consumer_thinning_contract", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "opl_provider_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "artifact_locator_contract", "opl_substrate_adapter_export", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "mag_consumer_thinning_contract", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -6927,8 +6927,8 @@
         "runtime": {
           "$ref": "#/$defs/runtimeSummary"
         },
-        "managed_runtime_contract": {
-          "$ref": "#/$defs/managedRuntimeContractSurface"
+        "opl_provider_runtime_contract": {
+          "$ref": "#/$defs/oplProviderRuntimeContractSurface"
         },
         "runtime_inventory": {
           "$ref": "#/$defs/runtimeInventory"

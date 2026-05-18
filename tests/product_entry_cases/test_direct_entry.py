@@ -182,7 +182,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                         "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
                         "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
                         "runtime_substrate_contract": {
-                            "runtime_owner": "codex_cli",
+                            "runtime_owner": "configured_family_runtime_provider",
                             "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                             "active_phase": "P4 mature direct grant product entry",
                             "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
@@ -240,7 +240,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                         "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
                         "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
                         "runtime_substrate_contract": {
-                            "runtime_owner": "codex_cli",
+                            "runtime_owner": "configured_family_runtime_provider",
                             "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
                             "active_phase": "P4 mature direct grant product entry",
                             "active_tranche": "P4.G authoring-quality-first completion semantics alignment",

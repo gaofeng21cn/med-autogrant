@@ -306,7 +306,7 @@ class SchemaRegistryTest(unittest.TestCase):
     def test_product_entry_surface_schemas_require_quickstart_companion(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         manifest_required = manifest_schema["$defs"]["productEntryManifest"]["required"]
-        self.assertIn("managed_runtime_contract", manifest_required)
+        self.assertIn("opl_provider_runtime_contract", manifest_required)
         self.assertIn("runtime_inventory", manifest_required)
         self.assertIn("task_lifecycle", manifest_required)
         self.assertIn("session_continuity", manifest_required)
@@ -338,11 +338,11 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("grant_authoring_readiness", status_required)
         self.assertIn("product_entry_quickstart", status_required)
 
-    def test_product_entry_surface_schemas_pin_managed_runtime_contract_shape(self) -> None:
+    def test_product_entry_surface_schemas_pin_opl_provider_runtime_contract_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
-        managed_runtime = manifest_schema["$defs"]["managedRuntimeContractSurface"]
+        provider_runtime = manifest_schema["$defs"]["oplProviderRuntimeContractSurface"]
         self.assertEqual(
-            managed_runtime["required"],
+            provider_runtime["required"],
             [
                 "shared_contract_ref",
                 "runtime_owner",
@@ -355,12 +355,12 @@ class SchemaRegistryTest(unittest.TestCase):
             ],
         )
         self.assertEqual(
-            managed_runtime["properties"]["shared_contract_ref"]["const"],
+            provider_runtime["properties"]["shared_contract_ref"]["const"],
             "contracts/opl-framework/managed-runtime-three-layer-contract.json",
         )
-        self.assertEqual(managed_runtime["properties"]["runtime_owner"]["const"], "codex_cli")
-        self.assertEqual(managed_runtime["properties"]["domain_owner"]["const"], "med-autogrant")
-        self.assertEqual(managed_runtime["properties"]["executor_owner"]["const"], "codex_cli")
+        self.assertEqual(provider_runtime["properties"]["runtime_owner"]["const"], "configured_family_runtime_provider")
+        self.assertEqual(provider_runtime["properties"]["domain_owner"]["const"], "med-autogrant")
+        self.assertEqual(provider_runtime["properties"]["executor_owner"]["const"], "codex_cli")
 
     def test_product_entry_surface_schemas_pin_runtime_control_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
@@ -718,6 +718,10 @@ class SchemaRegistryTest(unittest.TestCase):
             manifest_schema["$defs"]["oplFamilyOwnerRouteDiscovery"]["properties"]["owner_split"],
         )
         self.assertEqual(owner_split[0], "#/$defs/oplFamilyOwnerRouteDiscovery")
+        self.assertEqual(
+            owner_split[1]["properties"]["runtime_kernel_owner"]["const"],
+            "configured_family_runtime_provider",
+        )
         self.assertEqual(owner_split[1]["properties"]["executor_owner"]["const"], "codex_cli")
         self.assertEqual(owner_split[1]["properties"]["executor_adapter_owner"]["const"], "one-person-lab")
 

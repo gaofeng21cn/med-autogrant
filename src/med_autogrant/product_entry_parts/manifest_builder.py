@@ -510,7 +510,7 @@ class ProductEntryManifestBuilderMixin:
                 context="mainline_status.current_line",
             )
         )
-        managed_runtime_contract = _build_managed_runtime_contract()
+        opl_provider_runtime_contract = _build_managed_runtime_contract()
         product_entry_shell = _build_shared_product_entry_shell_catalog({
             "product_status": {
                 "command": product_status_command,
@@ -558,7 +558,7 @@ class ProductEntryManifestBuilderMixin:
         product_entry_readiness = readiness_surfaces["product_entry_readiness"]
         runtime_control = _build_runtime_control_surface(
             runtime_summary=runtime_summary,
-            managed_runtime_contract=managed_runtime_contract,
+            managed_runtime_contract=opl_provider_runtime_contract,
             grant_run_id=_require_nonempty_string_from_mapping(
                 progress_payload,
                 "grant_run_id",
@@ -583,7 +583,7 @@ class ProductEntryManifestBuilderMixin:
         human_gate_ids = _collect_family_human_gate_ids(family_orchestration)
         runtime_inventory = _build_shared_runtime_inventory(
             summary=(
-                "当前 runtime inventory 由 mainline runtime owner、managed runtime contract 与 grant projection "
+                "当前 runtime inventory 由 mainline runtime owner、OPL provider runtime contract 与 grant projection "
                 "surface 共同构成。"
             ),
             runtime_owner=_require_nonempty_string_from_mapping(
@@ -592,14 +592,14 @@ class ProductEntryManifestBuilderMixin:
                 context="product_entry_manifest.runtime",
             ),
             domain_owner=_require_nonempty_string_from_mapping(
-                managed_runtime_contract,
+                opl_provider_runtime_contract,
                 "domain_owner",
-                context="product_entry_manifest.managed_runtime_contract",
+                context="product_entry_manifest.opl_provider_runtime_contract",
             ),
             executor_owner=_require_nonempty_string_from_mapping(
-                managed_runtime_contract,
+                opl_provider_runtime_contract,
                 "executor_owner",
-                context="product_entry_manifest.managed_runtime_contract",
+                context="product_entry_manifest.opl_provider_runtime_contract",
             ),
             substrate=DEFAULT_RUNTIME_SUBSTRATE,
             availability="ready_to_try_now" if bool(product_entry_preflight.get("ready_to_try_now")) else "preflight_blocked",
@@ -632,7 +632,7 @@ class ProductEntryManifestBuilderMixin:
             },
             domain_projection={
                 "runtime": dict(runtime_summary),
-                "managed_runtime_contract": dict(managed_runtime_contract),
+                "opl_provider_runtime_contract": dict(opl_provider_runtime_contract),
                 "checkpoint_status": checkpoint_status,
                 "repo_mainline": dict(repo_mainline),
             },
@@ -902,7 +902,7 @@ class ProductEntryManifestBuilderMixin:
             operator_loop_actions=operator_loop_actions,
             repo_mainline=repo_mainline,
             runtime=runtime_summary,
-            managed_runtime_contract=managed_runtime_contract,
+            managed_runtime_contract=None,
             runtime_inventory=runtime_inventory,
             task_lifecycle=task_lifecycle,
             persistence_policy=runtime_companions["persistence_policy"],
@@ -943,6 +943,7 @@ class ProductEntryManifestBuilderMixin:
             domain_entry_contract=domain_entry_contract,
             user_interaction_contract=user_interaction_contract,
             extra_payload={
+                "opl_provider_runtime_contract": opl_provider_runtime_contract,
                 "family_action_catalog": family_action_catalog,
                 "family_stage_control_plane": family_stage_control_plane,
                 "grant_transition_oracle": grant_transition_oracle,

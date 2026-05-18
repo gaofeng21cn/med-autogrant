@@ -363,14 +363,14 @@
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 状态：已被 2026-05-11 OPL stage-led framework + 2026-05-12 executor adapter boundary supersede。保留本段仅为解释当时从 Hermes 命名误读回到 repo-local truth 的校准过程；不得把“上游 Hermes-Agent 目标”恢复为 current mainline。
-- 当前可执行 runtime owner 仍是 repo-local code。
+- 当时可执行 runtime owner 是 repo-local code；2026-05-17 后 generic runtime/session owner 由 OPL generated/hosted surface 表达，MAG repo-local runtime 只保留为 direct regression oracle / provenance。
 - 旧 `CLI-first + host-agent runtime` 线只保留为归档参考材料。
-- 当前 `domain_runtime.py` 路径只保留为本地迁移 scaffold。
+- `domain_runtime.py` 路径只保留为 MAG domain adapter、direct regression oracle 与历史迁移 scaffold。
 - `CLI / MCP / controller / upstream Hermes-Agent target / MedAutoGrant domain logic` 的边界必须显式保留，不得偷换 formal entry 或 authoring semantics。
 
 ## 2026-04-11：旧 Hermes 命名材料降级为历史本地迁移工件
 
-- `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report / runtime-run / runtime-resume` 当前仍运行在 repo-local runtime path 上。
+- `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report` 继续作为 grant domain path / thin projection；`runtime-run / runtime-resume` 已从 active public caller 退役，只能作为 direct regression oracle / provenance 读取。
 - 旧的 Hermes 命名 program/spec 文档继续保留为历史迁移材料，但不再作为“上游 Hermes-Agent 已落地”的 current truth。
 
 ## 2026-04-11：final package / hosted contract 继续保持本地 owner，等待真实上游集成

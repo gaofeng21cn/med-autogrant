@@ -226,7 +226,7 @@ def _build_opl_family_lifecycle_adapter(
                     "ref": "/product_entry_manifest/progress_projection",
                 },
                 "resume": {
-                    "surface_kind": "runtime_resume",
+                    "surface_kind": "opl_generated_session_resume",
                     "command": recommended_resume_command,
                     "ref": "/product_entry_manifest/runtime_control/restore_point",
                 },

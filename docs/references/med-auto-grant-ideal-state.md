@@ -41,6 +41,8 @@ MAG 不应长期维护独立 agent runtime platform，也不长期维护 generic
 3. `OPL Framework Hosted Path`
    family-level runtime，提供 stage attempt ledger、typed queue、provider-backed runtime、resume/human gate、receipt、retry/dead-letter、workspace/artifact lifecycle、operator projection 和 App 投影协议。
 
+   MAG manifest 对这层的长期机器字段是 `opl_provider_runtime_contract`；它描述 OPL/configured family provider runtime owner。`Codex CLI` 在该分层中只作为默认 Agent executor / executor owner，不再承担 runtime owner 语义。
+
 4. `Grant Workspace`
    真实任务与文件生命周期承载点，保存用户材料、workspace truth、草稿、审稿意见、修订记录、质量报告、receipt、memory writeback、artifact deltas 和本地提交包。
 
@@ -108,6 +110,7 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 ## 理想完成门槛
 
 - Direct MAG app skill path 与 OPL-hosted path 使用同一 MAG owner surfaces。
+- Product-entry manifest、schema 和 tests 使用 `opl_provider_runtime_contract` 表达 OPL provider runtime owner；`codex_cli` 仅保留为默认 executor owner / default executor。
 - OPL generated / hosted surfaces 是 MAG generic wrapper/caller 的长期 owner；MAG 手写 shell 只保留 domain handler、authority function、refs-only adapter、diagnostic cleanup 或 provenance fixture。MAG repo 侧 bridge 退出必须经过 generated-surface bridge exit gate 或 legacy exit gate；外部 production/default caller 和 live soak 另走证据门。
 - `mag_functional_structure_gap_count=0` 只表示 MAG repo 侧 active bridge exit 已闭合，不表示 external production/default caller、真实 App/workbench consumption 或 production long-run soak 已完成。
 - MAG retained private authority surfaces 完成逐项 AI-first 审计：fundability、authoring quality/export 和 grant strategy memory accept/reject 是 AI-first judgment surface，必须回到 grant stage output 或 AI critique artifact；package authority、owner receipt 和 grant helper 是 programmatic guard surface，只能依 owner receipt、typed blocker、refs 和 action metadata 工作。程序只做 schema validator、materializer、receipt signer、guard 和 refs projection，不能机械生成 ready verdict。
