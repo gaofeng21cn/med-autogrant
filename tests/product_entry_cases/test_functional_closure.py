@@ -593,11 +593,11 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(retire_modules["repo_owned_scheduler_daemon"]["active_caller_allowed"])
         self.assertEqual(
             retire_modules["repo_owned_scheduler_daemon"]["active_caller_status"],
-            "legacy_scheduler_daemon_exit_complete_domain_diagnostic_only",
+            "legacy_scheduler_daemon_physically_removed_refs_only_runtime_control",
         )
         self.assertEqual(
             retire_modules["local_runtime_journal_attempt_ledger"]["active_caller_status"],
-            "legacy_local_journal_attempt_ledger_exit_complete",
+            "legacy_local_journal_attempt_ledger_physically_removed",
         )
         self.assertIn(
             "src/med_autogrant/runtime_defaults.py",

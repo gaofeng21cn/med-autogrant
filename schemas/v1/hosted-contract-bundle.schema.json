@@ -91,8 +91,8 @@
       "additionalProperties": false,
       "required": [
         "workspace_surface_kind",
-        "run_journal_kind",
-        "stage_action_envelope_kind",
+        "session_surface_kind",
+        "domain_authority_surface_kind",
         "artifact_bundle_kind",
         "final_package_kind"
       ],
@@ -100,11 +100,11 @@
         "workspace_surface_kind": {
           "const": "nsfc_workspace"
         },
-        "run_journal_kind": {
-          "const": "local_run_journal"
+        "session_surface_kind": {
+          "const": "opl_generated_session_surface"
         },
-        "stage_action_envelope_kind": {
-          "const": "stage_action_envelope"
+        "domain_authority_surface_kind": {
+          "const": "owner_receipt_contract"
         },
         "artifact_bundle_kind": {
           "const": "artifact_bundle"

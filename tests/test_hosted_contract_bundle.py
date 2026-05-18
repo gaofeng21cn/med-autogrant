@@ -105,7 +105,9 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 contract_bundle["runtime_state_contract"],
                 {
                     "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
-                    "session_journal_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
+                    "session_state_owner": "one-person-lab",
+                    "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
+                    "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
                     "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
                     "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
                     "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
@@ -153,8 +155,8 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 contract_bundle["state_contract"],
                 {
                     "workspace_surface_kind": "nsfc_workspace",
-                    "run_journal_kind": "local_run_journal",
-                    "stage_action_envelope_kind": "stage_action_envelope",
+                    "session_surface_kind": "opl_generated_session_surface",
+                    "domain_authority_surface_kind": "owner_receipt_contract",
                     "artifact_bundle_kind": "artifact_bundle",
                     "final_package_kind": "final_package",
                 },

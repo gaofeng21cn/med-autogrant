@@ -32,7 +32,6 @@ from med_autogrant.hosted_contract_bundle import (
 )
 from med_autogrant.submission_ready import build_submission_ready_package_document
 from med_autogrant.schema_loader import SchemaStore
-from med_autogrant.upstream_hermes import MagGrantRunLedger
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.funding_landscape_discovery import discover_funding_landscape
 from med_autogrant.funding_landscape_discovery import build_funding_landscape_cache
@@ -74,7 +73,6 @@ from med_autogrant.domain_runtime_parts.shared import (
     GRANT_QUALITY_CLOSURE_DOSSIER_SCHEMA_FILE,
     GRANT_QUALITY_DIFF_SCHEMA_FILE,
     GRANT_QUALITY_SCORECARD_SCHEMA_FILE,
-    LocalRuntimeStateError,
     PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE,
     PROJECT_PROFILE_SELECTION_SCHEMA_FILE,
 )
@@ -459,106 +457,6 @@ class MagDomainRuntime(DomainRuntimeAuthoringSurfaceMixin, DomainRuntimeHandoffS
         document = self._load_workspace(input_path)
         return build_stage_route_report(document)
 
-    def run_local(
-        self,
-        *,
-        input_path: str | Path,
-        journal_path: str | Path | None = None,
-        trigger: str = "runtime-run",
-    ) -> dict[str, Any]:
-        resolved_input_path = Path(input_path).expanduser().resolve()
-        document = self._load_workspace(resolved_input_path)
-        validation = validate_workspace_document(document)
-        resolved_journal_path = _resolve_journal_path(document=document, journal_path=journal_path)
-        journal = _load_or_initialize_journal(
-            journal_path=resolved_journal_path,
-            document=document,
-            input_path=resolved_input_path,
-        )
-
-        if validation.ok:
-            route_report = build_stage_route_report(document)
-            stop_reason = derive_stop_reason(route_report)
-            stage_action_envelope = derive_stage_action_envelope(
-                route_report=route_report,
-                stop_reason=stop_reason,
-                journal_path=resolved_journal_path,
-            )
-            draft_id = route_report["verification_checkpoint"]["identity"]["draft_id"]
-            lifecycle_stage = route_report["lifecycle_stage"]
-        else:
-            route_report = build_validation_failed_route_report(document=document, validation=validation)
-            next_step = route_report["route"]["next_step"]
-            stop_reason = {
-                "code": "validation_failed",
-                "reason": next_step["reason"],
-                "current_stage": next_step["current_stage"],
-                "recommended_next_stage": next_step["recommended_stage"],
-                "checkpoint_status": route_report["checkpoint_status"],
-                "requires_human_confirmation": False,
-                "forced_rollback_stage": None,
-                "forced_rollback_reason": None,
-            }
-            stage_action_envelope = None
-            draft_id = None
-            lifecycle_stage = document.get("lifecycle_stage")
-
-        attempt_index = MagGrantRunLedger().record_attempt(
-            grant_run_id=document.get("grant_run_id"),
-            workspace_id=document.get("workspace_id"),
-            trigger=trigger,
-            journal_path=resolved_journal_path,
-            lifecycle_stage=lifecycle_stage,
-            stop_reason=stop_reason,
-            stage_action_envelope=stage_action_envelope,
-            route_report=route_report,
-        )
-        journal = _append_attempt(
-            journal=journal,
-            attempt_index=attempt_index,
-            trigger=trigger,
-            lifecycle_stage=lifecycle_stage,
-            route_report=route_report,
-            stop_reason=stop_reason,
-            stage_action_envelope=stage_action_envelope,
-        )
-        _write_journal(resolved_journal_path, journal)
-
-        payload = {
-            "ok": validation.ok,
-            "command": trigger,
-            "grant_run_id": document.get("grant_run_id"),
-            "workspace_id": document.get("workspace_id"),
-            "draft_id": draft_id,
-            "lifecycle_stage": lifecycle_stage,
-            "input_path": str(resolved_input_path),
-            "journal_path": str(resolved_journal_path),
-            "attempt_index": journal["attempts"][-1]["attempt_index"],
-            "stop_reason": stop_reason,
-            "stage_action_envelope": stage_action_envelope,
-            "route_report": route_report,
-            "resume": {
-                "command": "runtime-resume",
-                "journal_path": str(resolved_journal_path),
-            },
-        }
-        if not validation.ok:
-            payload["error"] = f"validation_failed: {validation.errors[0].path}: {validation.errors[0].message}"
-            payload["errors"] = validation.to_dict(document)["errors"]
-        return payload
-
-    def resume_local(self, *, journal_path: str | Path) -> dict[str, Any]:
-        resolved_journal_path = Path(journal_path).expanduser().resolve()
-        journal = _read_journal(resolved_journal_path)
-        input_path = journal.get("input_path")
-        if not isinstance(input_path, str) or not input_path:
-            raise LocalRuntimeStateError(f"journal 缺少 input_path: {resolved_journal_path}")
-        return self.run_local(
-            input_path=input_path,
-            journal_path=resolved_journal_path,
-            trigger="runtime-resume",
-        )
-
     def _load_workspace(self, input_path: str | Path) -> dict[str, Any]:
         return load_workspace_document(Path(input_path).expanduser().resolve())
 
@@ -587,7 +485,6 @@ from med_autogrant.domain_runtime_parts.contracts import (
     validate_schema_payload as _validate_schema_payload,
 )
 from med_autogrant.domain_runtime_parts.io import (
-    _append_attempt,
     _build_selection_input_from_discovery,
     _default_funding_landscape_cache_path,
     _derive_funding_landscape_diff_report_path,
@@ -601,16 +498,13 @@ from med_autogrant.domain_runtime_parts.io import (
     _load_existing_cache_snapshot,
     _load_funding_landscape_cache_if_needed,
     _load_json_object,
-    _load_or_initialize_journal,
     _read_active_draft_id,
     _read_artifact_bundle,
     _read_final_package,
-    _read_journal,
     _write_artifact_bundle_output,
     _write_final_package_output,
     _write_hosted_contract_bundle_output,
     _write_json_output,
-    _write_journal,
     _write_revised_workspace_output,
     _write_submission_ready_package_output,
 )
@@ -618,10 +512,6 @@ from med_autogrant.domain_runtime_parts.runtime_ops import (
     _apply_quality_gate_to_route,
     _build_autonomy_quality_evaluator_output,
     _looks_like_workspace,
-    _resolve_journal_path,
-    build_validation_failed_route_report,
-    derive_stage_action_envelope,
-    derive_stop_reason,
 )
 
 __all__ = [name for name in globals() if not name.startswith("__")]

@@ -191,7 +191,9 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                         },
                         "runtime_state_contract": {
                             "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
-                            "session_journal_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
+                            "session_state_owner": "one-person-lab",
+                            "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
+                            "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
                             "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
                             "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
                             "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
@@ -249,7 +251,9 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                         },
                         "runtime_state_contract": {
                             "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
-                            "session_journal_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/",
+                            "session_state_owner": "one-person-lab",
+                            "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
+                            "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
                             "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
                             "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
                             "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",

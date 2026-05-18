@@ -110,8 +110,8 @@ def build_hosted_contract_bundle_document(
         "operator_contract": operator_contract,
         "state_contract": {
             "workspace_surface_kind": "nsfc_workspace",
-            "run_journal_kind": "local_run_journal",
-            "stage_action_envelope_kind": "stage_action_envelope",
+            "session_surface_kind": "opl_generated_session_surface",
+            "domain_authority_surface_kind": "owner_receipt_contract",
             "artifact_bundle_kind": "artifact_bundle",
             "final_package_kind": "final_package",
         },

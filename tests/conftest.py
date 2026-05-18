@@ -25,15 +25,11 @@ REGRESSION_FILES = {
     "tests/test_hosted_contract_bundle.py",
     "tests/test_hosted_contract_bundle_checkpoint_cases.py",
     "tests/test_hosted_contract_bundle_control_plane.py",
-    "tests/test_local_runtime.py",
     "tests/test_submission_ready_package.py",
-    "tests/test_upstream_hermes.py",
     "tests/test_workspace_summary.py",
 }
 
-PROOF_FILES = {
-    "tests/test_upstream_hermes.py",
-}
+PROOF_FILES: set[str] = set()
 
 STRUCTURE_FILES = {
     "tests/test_line_budget.py",

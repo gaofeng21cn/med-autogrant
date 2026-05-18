@@ -73,7 +73,9 @@
       "additionalProperties": false,
       "required": [
         "root",
-        "session_journal_root",
+        "session_state_owner",
+        "generated_session_surface_ref",
+        "generated_resume_surface_ref",
         "logs_root",
         "reports_root",
         "prompts_root",
@@ -84,8 +86,14 @@
         "root": {
           "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/"
         },
-        "session_journal_root": {
-          "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/"
+        "session_state_owner": {
+          "const": "one-person-lab"
+        },
+        "generated_session_surface_ref": {
+          "const": "opl://generated-surfaces/mag/product-entry-session"
+        },
+        "generated_resume_surface_ref": {
+          "const": "opl://generated-surfaces/mag/product-entry-session#resume"
         },
         "logs_root": {
           "const": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/"

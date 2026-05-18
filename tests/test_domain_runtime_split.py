@@ -100,7 +100,7 @@ class RuntimeSplitStructureTest(unittest.TestCase):
             if OLD_RUNTIME_TOKEN in path.read_text(encoding="utf-8")
         ]
 
-        self.assertEqual(["src/med_autogrant/upstream_hermes.py"], offenders)
+        self.assertEqual([], offenders)
 
     def test_runtime_patch_target_bridge_is_retired(self) -> None:
         self.assertFalse((SRC_ROOT / "med_autogrant" / "domain_runtime_parts" / "patch_targets.py").exists())

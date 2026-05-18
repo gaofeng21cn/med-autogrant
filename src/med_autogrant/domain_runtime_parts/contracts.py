@@ -22,6 +22,8 @@ from med_autogrant.workspace_types import WorkspaceStateError
 from .shared import (
     AUTHOR_SIDE_ROUTE_IDS,
     CURRENT_PROGRAM_RELATIVE_PATH,
+    GENERATED_SESSION_RESUME_SURFACE_REF,
+    GENERATED_SESSION_SURFACE_REF,
     EXECUTOR_ROUTE_OWNER,
     EXECUTOR_ROUTING_CONTRACT_SCHEMA_FILE,
     EXECUTOR_ROUTING_CONTRACT_VERSION,
@@ -294,7 +296,9 @@ def build_runtime_substrate_contract(*, current_program_contract: dict[str, Any]
 def build_runtime_state_contract() -> dict[str, Any]:
     return {
         "root": runtime_state_display_path(),
-        "session_journal_root": directory_display_path("sessions"),
+        "session_state_owner": "one-person-lab",
+        "generated_session_surface_ref": GENERATED_SESSION_SURFACE_REF,
+        "generated_resume_surface_ref": GENERATED_SESSION_RESUME_SURFACE_REF,
         "logs_root": directory_display_path("logs"),
         "reports_root": directory_display_path("reports", "<program_id>"),
         "prompts_root": directory_display_path("prompts"),

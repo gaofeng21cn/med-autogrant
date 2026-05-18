@@ -42,8 +42,8 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "runtime-run / runtime-resume / probe-upstream-hermes 不再进入 MAG public CLI、domain-entry catalog、product-entry schema 或 hosted bundle。",
             ],
             "phase_docs": [
-                "human_doc:2026_04_11_upstream_hermes_agent_truth_reset_current_truth",
-                "human_doc:2026_04_12_upstream_hermes_agent_fast_cutover_current_truth",
+                "human_doc:mag_legacy_runtime_probe_retirement_history",
+                "human_doc:mag_opl_generated_session_surface_current_truth",
             ],
         },
         "P2": {

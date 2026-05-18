@@ -17,17 +17,17 @@ from med_autogrant.product_entry_parts.primitives import (
 from med_autogrant.product_entry_parts.runtime_contracts import (
     _build_runtime_state_contract,
 )
+from med_autogrant.domain_runtime_parts.shared import (
+    DOMAIN_AUTHORITY_SURFACE_REF,
+    GENERATED_SESSION_RESUME_SURFACE_REF,
+    GENERATED_SESSION_SURFACE_REF,
+)
 from med_autogrant.product_entry_parts.runtime_registration import (
     _build_opl_native_helper_indexing_proof,
     _build_opl_stage_runtime_registration,
 )
 from med_autogrant.public_cli import public_cli_command
 from med_autogrant.workspace_types import WorkspaceStateError
-
-
-GENERATED_SESSION_SURFACE_REF = "opl://generated-surfaces/mag/product-entry-session"
-GENERATED_SESSION_RESUME_SURFACE_REF = "opl://generated-surfaces/mag/product-entry-session#resume"
-DOMAIN_AUTHORITY_SURFACE_REF = "/product_entry_manifest/owner_receipt_contract"
 
 
 def _build_runtime_continuity_surfaces(

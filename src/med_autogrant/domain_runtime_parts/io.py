@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -14,97 +13,12 @@ from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateErro
 from .contracts import validate_schema_payload as _validate_schema_payload
 from .shared import (
     FUNDING_LANDSCAPE_CACHE_SCHEMA_FILE,
-    JOURNAL_VERSION,
-    LocalRuntimeStateError,
 )
-def _read_journal(journal_path: Path) -> dict[str, Any]:
-    try:
-        payload = json.loads(journal_path.read_text(encoding="utf-8"))
-    except FileNotFoundError as exc:
-        raise WorkspaceFileError(f"未找到 journal 文件: {journal_path}") from exc
-    except json.JSONDecodeError as exc:
-        raise WorkspaceFileError(f"journal JSON 解析失败: {journal_path}") from exc
-    if not isinstance(payload, dict):
-        raise WorkspaceFileError(f"journal 顶层必须是 JSON object: {journal_path}")
-    return payload
-
 
 def _read_active_draft_id(document: dict[str, Any]) -> str | None:
     selection = document.get("current_selection") or {}
     draft_id = selection.get("active_draft_id")
     return draft_id if isinstance(draft_id, str) and draft_id.strip() else None
-
-
-def _load_or_initialize_journal(
-    *,
-    journal_path: Path,
-    document: dict[str, Any],
-    input_path: Path,
-) -> dict[str, Any]:
-    if not journal_path.exists():
-        return {
-            "journal_version": JOURNAL_VERSION,
-            "grant_run_id": document.get("grant_run_id"),
-            "workspace_id": document.get("workspace_id"),
-            "input_path": str(input_path),
-            "latest_stop_reason": None,
-            "latest_stage_action_envelope": None,
-            "latest_route_report": None,
-            "attempts": [],
-        }
-
-    journal = _read_journal(journal_path)
-    if journal.get("grant_run_id") != document.get("grant_run_id"):
-        raise LocalRuntimeStateError(
-            f"journal grant_run_id 不匹配: {journal_path} -> {journal.get('grant_run_id')} != {document.get('grant_run_id')}"
-        )
-    if journal.get("workspace_id") != document.get("workspace_id"):
-        raise LocalRuntimeStateError(
-            f"journal workspace_id 不匹配: {journal_path} -> {journal.get('workspace_id')} != {document.get('workspace_id')}"
-        )
-    if journal.get("input_path") != str(input_path):
-        raise LocalRuntimeStateError(
-            f"journal input_path 不匹配: {journal_path} -> {journal.get('input_path')} != {input_path}"
-        )
-    attempts = journal.get("attempts")
-    if not isinstance(attempts, list):
-        raise LocalRuntimeStateError(f"journal attempts 不是 list: {journal_path}")
-    return journal
-
-
-def _append_attempt(
-    *,
-    journal: dict[str, Any],
-    attempt_index: int,
-    trigger: str,
-    lifecycle_stage: str | None,
-    route_report: dict[str, Any],
-    stop_reason: dict[str, Any],
-    stage_action_envelope: dict[str, Any] | None,
-) -> dict[str, Any]:
-    attempts = journal.setdefault("attempts", [])
-    checkpoint_status = stop_reason.get("checkpoint_status")
-    attempts.append(
-        {
-            "attempt_index": attempt_index,
-            "trigger": trigger,
-            "timestamp": datetime.now(UTC).isoformat(),
-            "lifecycle_stage": lifecycle_stage,
-            "checkpoint_status": checkpoint_status,
-            "stop_reason": stop_reason,
-            "stage_action_envelope": stage_action_envelope,
-        }
-    )
-    journal["latest_stop_reason"] = stop_reason
-    journal["latest_stage_action_envelope"] = stage_action_envelope
-    journal["latest_route_report"] = route_report
-    return journal
-
-
-def _write_journal(journal_path: Path, journal: dict[str, Any]) -> None:
-    journal_path.parent.mkdir(parents=True, exist_ok=True)
-    journal_path.write_text(json.dumps(journal, ensure_ascii=False, indent=2), encoding="utf-8")
-
 
 def _guard_artifact_bundle_output_identity(
     output_path: Path,

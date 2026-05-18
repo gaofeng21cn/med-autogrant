@@ -226,7 +226,7 @@ def build_domain_memory_descriptor_locator(
             "maps_to_opl_contract": "opl_family_domain_memory_migration_plan.v1",
             "source_roots": [
                 "$CODEX_HOME/projects/med-autogrant/runtime-state/domain-memory/",
-                "$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json",
+                "opl://generated-surfaces/mag/product-entry-session",
                 "workspace_root/.mag-domain-memory/writeback-proposals/",
             ],
             "target_store": {

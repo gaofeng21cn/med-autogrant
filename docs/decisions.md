@@ -16,7 +16,7 @@
 
 - 决策：`runtime-run`、`runtime-resume` 与 `probe-upstream-hermes` 从 MAG public CLI、`MedAutoGrantDomainEntry` service-safe catalog、product-entry session continuity、hosted bundle schema 和默认 smoke 断言中移除；session/resume 入口改由 OPL generated surface refs 表达。
 - 理由：本地 journal runtime、attempt ledger 和 upstream Hermes probe 属于通用 session/runtime/proof 外围。标准 OPL Agent 目标态要求这类 shell 由 OPL generated/hosted surface 持有，MAG 只提交 declarative grant pack、refs 和最小 authority function。
-- 影响：MAG 继续保留 grant route truth、fundability/quality/export verdict、package authority、grant transition oracle、memory accept/reject、owner receipt 和 grant-native helper；旧 runtime/probe 面只能作为 history/proof/provenance 或 fixture 读取，不能作为 compatibility alias、active contract、标准模板或默认入口恢复。
+- 影响：MAG 继续保留 grant route truth、fundability/quality/export verdict、package authority、grant transition oracle、memory accept/reject、owner receipt 和 grant-native helper；旧 runtime/probe 面从 active source、active contract 与默认测试中物理删除，只能在 `docs/history` / provenance 语境中解释来源，不能作为 compatibility alias、标准模板或默认入口恢复。
 
 ## 2026-05-16：收紧 MAG thin surface 输出层的私有功能状态 guard
 
@@ -313,9 +313,9 @@
 
 ## 2026-04-12：冻结 schema-backed product entry / routing contract
 
-- 决策：把已 landed 的 `service-safe domain surface`、`executor_routing_contract` 与 `product_entry` 从“文档冻结 + 运行时 dict”进一步收口成 schema-backed contract，并在 `runtime-run` / `build-product-entry` 生成时 fail-closed。
+- 决策：把已 landed 的 `service-safe domain surface`、`executor_routing_contract` 与 `product_entry` 从“文档冻结 + 运行时 dict”进一步收口成 schema-backed contract，并在 `build-product-entry` / hosted bundle 生成时 fail-closed。
 - 理由：future OPL / domain caller 最终消费的是 machine-readable contract，而不是 repo 内部约定。如果这些 surface 只有 current truth 没有 schema，后续最容易在 pending route、route catalog、draft-bearing/nullability 边界上悄悄漂移。
-- 影响：`schemas/v1/schema-index.json` 现在会显式索引当前主线正在公开承诺的 contract schema；`product_entry` 与 `stage_action_envelope.executor_routing_contract` 必须同时满足 schema 校验和冻结 truth 比对；后续任何 contract 变更都必须同步更新 schema、tests、docs 与 current-program pointer。
+- 影响：`schemas/v1/schema-index.json` 现在会显式索引当前主线正在公开承诺的 contract schema；`product_entry` 与 `executor_routing_contract` 必须同时满足 schema 校验和冻结 truth 比对；后续任何 contract 变更都必须同步更新 schema、tests、docs 与 current-program pointer。
 
 ## 2026-04-12：冻结 hosted contract bundle entry and route catalog
 
@@ -363,14 +363,14 @@
 ## 2026-04-11：当前主线回到“本地 runtime 诚实 + 上游 Hermes-Agent 目标”
 
 - 状态：已被 2026-05-11 OPL stage-led framework + 2026-05-12 executor adapter boundary supersede。保留本段仅为解释当时从 Hermes 命名误读回到 repo-local truth 的校准过程；不得把“上游 Hermes-Agent 目标”恢复为 current mainline。
-- 当时可执行 runtime owner 是 repo-local code；2026-05-17 后 generic runtime/session owner 由 OPL generated/hosted surface 表达，MAG repo-local runtime 只保留为 direct regression oracle / provenance。
+- 当时可执行 runtime owner 仍是 repo-local code；当前已被 OPL generated/hosted session refs 与 MAG domain authority refs 替代。
 - 旧 `CLI-first + host-agent runtime` 线只保留为归档参考材料。
-- `domain_runtime.py` 路径只保留为 MAG domain adapter、direct regression oracle 与历史迁移 scaffold。
+- `domain_runtime.py` 路径当前只保留 grant-native domain handler / authoring-export authority，不再承担本地 runtime substrate。
 - `CLI / MCP / controller / upstream Hermes-Agent target / MedAutoGrant domain logic` 的边界必须显式保留，不得偷换 formal entry 或 authoring semantics。
 
 ## 2026-04-11：旧 Hermes 命名材料降级为历史本地迁移工件
 
-- `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report` 继续作为 grant domain path / thin projection；`runtime-run / runtime-resume` 已从 active public caller 退役，只能作为 direct regression oracle / provenance 读取。
+- 当时 `validate-workspace / summarize-workspace / next-step / critique-summary / stage-route-report / runtime-run / runtime-resume` 仍运行在 repo-local runtime path 上；当前 `runtime-run / runtime-resume` 已退役，其他命令保留为 grant-native domain surfaces。
 - 旧的 Hermes 命名 program/spec 文档继续保留为历史迁移材料，但不再作为“上游 Hermes-Agent 已落地”的 current truth。
 
 ## 2026-04-11：final package / hosted contract 继续保持本地 owner，等待真实上游集成

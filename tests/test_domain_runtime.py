@@ -279,24 +279,20 @@ class MagRuntimeCliDispatchTest(unittest.TestCase):
         )
 
     def test_runtime_run_public_cli_is_retired(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            journal_path = Path(tmp_dir) / "journal.json"
-            with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
-                exit_code, stdout, stderr = self.run_cli(
-                    "runtime",
-                    "run",
-                    "--input",
-                    str(CRITIQUE_EXAMPLE_PATH),
-                    "--journal",
-                    str(journal_path),
-                    "--format",
-                    "json",
-                )
+        with patch("med_autogrant.domain_entry.MedAutoGrantDomainEntry") as entry_class:
+            exit_code, stdout, stderr = self.run_cli(
+                "runtime",
+                "run",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
 
-            self.assertEqual(exit_code, 2)
-            self.assertEqual(stdout, "")
-            self.assertIn("invalid choice", stderr)
-            entry_class.assert_not_called()
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(stdout, "")
+        self.assertIn("invalid choice", stderr)
+        entry_class.assert_not_called()
 
 
 class MagDomainRuntimeFlowTest(unittest.TestCase):
@@ -307,10 +303,8 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
-            critique_journal_path = tmp_root / "critique-journal.json"
             revised_workspace_path = tmp_root / "revised.json"
             revised_bundle_path = tmp_root / "revised-bundle.json"
-            revised_journal_path = tmp_root / "revised-journal.json"
             frozen_bundle_path = tmp_root / "frozen-bundle.json"
             final_package_path = tmp_root / "final-package.json"
             hosted_contract_path = tmp_root / "hosted-contract.json"
@@ -318,35 +312,9 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             critique_report = runtime.stage_route_report(input_path=str(CRITIQUE_EXAMPLE_PATH))
             self.assertTrue(critique_report["ok"])
             self.assertEqual(critique_report["verification_checkpoint"]["identity"]["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-
-            critique_run = runtime.run_local(
-                input_path=str(CRITIQUE_EXAMPLE_PATH),
-                journal_path=str(critique_journal_path),
-            )
-            self.assertTrue(critique_run["ok"])
-            self.assertEqual(critique_run["stop_reason"]["recommended_next_stage"], "revision")
             self.assertEqual(
-                critique_run["stage_action_envelope"]["executor_routing_contract"],
-                {
-                    "contract_version": 1,
-                    "current_stage_route": _expected_route("critique", source_stage="critique"),
-                    "recommended_executor_route": _expected_route("revision", source_stage="critique"),
-                },
-            )
-
-            revision_return_run = runtime.run_local(
-                input_path=str(REVISION_EXAMPLE_PATH),
-                journal_path=str(tmp_root / "revision-return-journal.json"),
-            )
-            self.assertTrue(revision_return_run["ok"])
-            self.assertEqual(revision_return_run["stop_reason"]["recommended_next_stage"], "critique")
-            self.assertEqual(
-                revision_return_run["stage_action_envelope"]["executor_routing_contract"],
-                {
-                    "contract_version": 1,
-                    "current_stage_route": _expected_route("revision", source_stage="revision"),
-                    "recommended_executor_route": _expected_route("critique", source_stage="revision"),
-                },
+                critique_report["route"]["next_step"]["recommended_stage"],
+                "revision",
             )
 
             revised_payload = runtime.execute_revision_pass(
@@ -371,12 +339,9 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             self.assertTrue(revised_bundle["ok"])
             self.assertEqual(revised_bundle["bundle"]["draft_id"], "draft-v1")
 
-            revised_run = runtime.run_local(
-                input_path=str(revised_workspace_path),
-                journal_path=str(revised_journal_path),
-            )
-            self.assertTrue(revised_run["ok"])
-            self.assertEqual(revised_run["stop_reason"]["recommended_next_stage"], "revision")
+            revised_route_report = runtime.stage_route_report(input_path=str(revised_workspace_path))
+            self.assertTrue(revised_route_report["ok"])
+            self.assertEqual(revised_route_report["route"]["next_step"]["recommended_stage"], "revision")
 
             frozen_bundle = runtime.build_artifact_bundle(
                 input_path=str(FROZEN_EXAMPLE_PATH),
@@ -442,30 +407,6 @@ class MagDomainRuntimeFlowTest(unittest.TestCase):
             ],
             list(AUTHOR_SIDE_ROUTE_IDS),
         )
-
-    def test_run_local_fails_closed_on_invalid_executor_routing_contract_shape(self) -> None:
-        from med_autogrant.domain_runtime import MagDomainRuntime
-        from med_autogrant.workspace import WorkspaceStateError
-
-        runtime = MagDomainRuntime()
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            journal_path = Path(tmp_dir) / "critique-journal.json"
-            with patch(
-                "med_autogrant.domain_runtime_parts.runtime_ops._build_executor_routing_contract",
-                return_value={
-                    "contract_version": 1,
-                    "current_stage_route": {
-                        "route_id": "critique",
-                        "route_status": "pending",
-                    },
-                },
-            ):
-                with self.assertRaises(WorkspaceStateError):
-                    runtime.run_local(
-                        input_path=str(CRITIQUE_EXAMPLE_PATH),
-                        journal_path=str(journal_path),
-                    )
-
 
 class HostedContractBundleBridgeTest(unittest.TestCase):
     def test_hosted_contract_bundle_payload_uses_split_runtime_helpers(self) -> None:

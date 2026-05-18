@@ -328,11 +328,11 @@ class ProductSidecarTest(unittest.TestCase):
         retire_modules = {item["module_id"]: item for item in audit["retire_or_tombstone_surfaces"]}
         self.assertEqual(
             retire_modules["default_hermes_gateway_local_manager_runtime_owner"]["active_caller_status"],
-            "legacy_proof_tombstone_no_active_default_caller",
+            "legacy_runtime_owner_physically_removed",
         )
-        self.assertIn(
-            "src/med_autogrant/upstream_hermes.py",
+        self.assertEqual(
             retire_modules["default_hermes_gateway_local_manager_runtime_owner"]["code_paths"],
+            ["src/med_autogrant/product_entry_parts/executor_defaults.py"],
         )
         self.assertFalse(audit["fail_closed_rules"]["provider_completion_is_grant_ready"])
         self.assertFalse(audit["fail_closed_rules"]["mag_can_rebuild_generic_runtime"])

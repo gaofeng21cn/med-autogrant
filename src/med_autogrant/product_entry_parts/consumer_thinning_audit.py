@@ -336,7 +336,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 active_callers=[
                     "product user-loop and status refs projections",
                     "product sidecar export/dispatch",
-                    "runtime defaults for local diagnostic commands",
+                    "executor default metadata for OPL adapter refs",
                 ],
                 active_caller_status="active_refs_only_no_repo_daemon_owner",
                 migration_action=(
@@ -574,24 +574,21 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             _build_retired_functional_module_audit_item(
                 "default_hermes_gateway_local_manager_runtime_owner",
                 code_paths=[
-                    "src/med_autogrant/upstream_hermes.py",
-                    "src/med_autogrant/hermes_native_executor.py",
-                    "src/med_autogrant/opl_hermes_executor_helper.py",
                     "src/med_autogrant/product_entry_parts/executor_defaults.py",
                 ],
                 active_callers=[],
-                active_caller_status="legacy_proof_tombstone_no_active_default_caller",
+                active_caller_status="legacy_runtime_owner_physically_removed",
                 migration_action=(
-                    "Keep old Hermes/Gateway/local-manager wording as legacy proof provenance only; "
-                    "current active callers must use explicit executor adapter refs."
+                    "Delete old Hermes/Gateway/local-manager runtime owner code; current non-default "
+                    "executor use must go through explicit OPL executor adapter refs."
                 ),
                 retention_reason=(
-                    "Historical proof files help audit non-default executor receipt behavior, but they are not "
-                    "an active runtime owner or default caller."
+                    "Only executor-default guard metadata remains in active source; old runtime owner and "
+                    "probe code is not retained as a compatibility surface."
                 ),
                 cannot_absorb_reason=(
-                    "Default runtime ownership must not stay in MAG; optional proof helpers remain only "
-                    "because they bind MAG closeout packets to external executor receipts."
+                    "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution is "
+                    "modeled separately as an executor adapter receipt path, not a runtime owner."
                 ),
                 evidence_refs=[
                     "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
@@ -608,14 +605,14 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "src/med_autogrant/domain_runtime_parts/runtime_ops.py",
                 ],
                 active_callers=[],
-                active_caller_status="legacy_local_journal_attempt_ledger_exit_complete",
+                active_caller_status="legacy_local_journal_attempt_ledger_physically_removed",
                 migration_action=(
-                    "Treat old local journal and attempt ledger state as tombstone/proof history; "
-                    "OPL owns session ledger, typed attention queue, wakeup scheduler, and stage-attempt ledger."
+                    "Old local journal and attempt ledger code has been deleted; OPL owns session ledger, "
+                    "typed attention queue, wakeup scheduler, and stage-attempt ledger."
                 ),
                 retention_reason=(
-                    "Historical local journal proof remains useful as a regression oracle for refs-only "
-                    "closeout behavior, not as a live MAG ledger owner."
+                    "Active MAG source retains only refs-only session/runtime locator surfaces; local journal "
+                    "implementation and tests are not retained."
                 ),
                 cannot_absorb_reason=(
                     "The legacy local ledger itself should not be absorbed as MAG-owned code; OPL should "
@@ -690,18 +687,16 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
                 ],
                 active_callers=[
-                    "domain-native regression oracle only",
                     "product-entry runtime_control refs projection",
                 ],
-                active_caller_status="legacy_scheduler_daemon_exit_complete_domain_diagnostic_only",
+                active_caller_status="legacy_scheduler_daemon_physically_removed_refs_only_runtime_control",
                 migration_action=(
-                    "OPL should own provider scheduler/daemon; MAG keeps local diagnostic run/resume "
-                    "and refs-only runtime_control projection."
+                    "OPL owns provider scheduler/daemon; MAG keeps refs-only runtime_control projection "
+                    "without local run/resume diagnostics."
                 ),
-                retention_reason="Local diagnostic commands help direct callers, but are not production daemon ownership.",
+                retention_reason="Runtime-control metadata remains a refs-only projection, not a daemon or scheduler.",
                 cannot_absorb_reason=(
-                    "OPL can absorb production scheduler/daemon; MAG local diagnostics remain scoped to "
-                    "workspace validation and grant route checks."
+                    "OPL owns production scheduler/daemon; MAG only exposes grant route and authority refs."
                 ),
                 evidence_refs=[
                     "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
@@ -752,9 +747,9 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
         "representative_private_functional_surfaces": {
             "local_runtime_journal_attempt_ledger": {
                 "module_ref": "local_runtime_journal_attempt_ledger",
-                "active_caller_status": "legacy_local_journal_attempt_ledger_exit_complete",
+                "active_caller_status": "legacy_local_journal_attempt_ledger_physically_removed",
                 "migration_action": (
-                    "OPL_owns_session_attempt_ledger_MAG_keeps_safe_action_refs"
+                    "OPL_owns_session_attempt_ledger_MAG_deleted_local_journal_code"
                 ),
             },
             "sidecar_dispatch_product_shell": {
@@ -766,9 +761,9 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             },
             "optional_hermes_state_db": {
                 "module_ref": "default_hermes_gateway_local_manager_runtime_owner",
-                "active_caller_status": "legacy_proof_tombstone_no_active_default_caller",
+                "active_caller_status": "legacy_runtime_owner_physically_removed",
                 "migration_action": (
-                    "OPL_owns_generic_executor_adapter_MAG_keeps_legacy_proof_refs_only"
+                    "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe"
                 ),
             },
         },

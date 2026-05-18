@@ -90,18 +90,6 @@ def _add_phase_command(
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
-def _add_runtime_entry_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--input", required=True)
-    command.add_argument("--journal")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
 def _add_direct_entry_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
@@ -124,17 +112,6 @@ def _add_manifest_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--input", required=True)
     command.add_argument("--funding-call")
-    command.add_argument("--format", choices=("json", "text"), default="json")
-    command.set_defaults(handler=handler)
-
-def _add_resume_runtime_command(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-    name: str,
-    handler: Any,
-    help_text: str,
-) -> None:
-    command = subparsers.add_parser(name, help=help_text)
-    command.add_argument("--journal", required=True)
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 

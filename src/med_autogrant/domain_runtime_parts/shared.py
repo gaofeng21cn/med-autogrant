@@ -2,10 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from med_autogrant.workspace_types import WorkspaceError
 
-
-JOURNAL_VERSION = 1
 CURRENT_PROGRAM_RELATIVE_PATH = Path("contracts/runtime-program/current-program.json")
 EXECUTOR_ROUTING_CONTRACT_VERSION = 1
 EXECUTOR_ROUTING_CONTRACT_SCHEMA_FILE = "executor-routing-contract.schema.json"
@@ -35,6 +32,9 @@ FUNDING_LANDSCAPE_DIFF_REPORT_SCHEMA_FILE = "funding-landscape-diff-report.schem
 AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE = "authoring-mainline-loop-report.schema.json"
 SCHEMA_INDEX_RELATIVE_PATH = "schemas/v1/schema-index.json"
 PRODUCT_ENTRY_KIND = "med_auto_grant_product_entry"
+GENERATED_SESSION_SURFACE_REF = "opl://generated-surfaces/mag/product-entry-session"
+GENERATED_SESSION_RESUME_SURFACE_REF = "opl://generated-surfaces/mag/product-entry-session#resume"
+DOMAIN_AUTHORITY_SURFACE_REF = "/product_entry_manifest/owner_receipt_contract"
 HOSTED_CONTRACT_SCHEMA_FILES = (
     "service-safe-domain-surface.schema.json",
     "executor-routing-contract.schema.json",
@@ -72,7 +72,3 @@ AUTHOR_SIDE_ROUTE_IDS = (
     "hosted_contract_bundle",
 )
 EXECUTOR_ROUTE_OWNER = "med-autogrant"
-
-
-class LocalRuntimeStateError(WorkspaceError):
-    """Local runtime journal/state mismatch。"""

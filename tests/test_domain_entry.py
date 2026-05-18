@@ -49,12 +49,11 @@ class DomainEntryDispatchTest(unittest.TestCase):
                 {
                     "command": "runtime-run",
                     "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                    "journal_path": "/tmp/test-journal.json",
                 }
             )
 
         with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-resume"):
-            entry.dispatch({"command": "runtime-resume", "journal_path": "/tmp/test-journal.json"})
+            entry.dispatch({"command": "runtime-resume"})
 
         with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: probe-upstream-hermes"):
             entry.dispatch({"command": "probe-upstream-hermes"})
@@ -449,9 +448,7 @@ class DomainEntryFreshProofTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
             hermes_home = tmp_root / "hermes-home"
-            reroute_journal_path = tmp_root / "reroute-journal.json"
             revised_workspace_path = tmp_root / "revised.json"
-            revised_journal_path = tmp_root / "revised-journal.json"
             frozen_bundle_path = tmp_root / "frozen-bundle.json"
             final_package_path = tmp_root / "final-package.json"
             hosted_contract_path = tmp_root / "hosted-contract.json"
@@ -480,7 +477,6 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                         {
                             "command": "runtime-run",
                             "input_path": str(REVISION_EXAMPLE_PATH),
-                            "journal_path": str(reroute_journal_path),
                         }
                     )
 
@@ -499,7 +495,6 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                         {
                             "command": "runtime-run",
                             "input_path": str(revised_workspace_path),
-                            "journal_path": str(revised_journal_path),
                         }
                     )
 
@@ -507,7 +502,6 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                     entry.dispatch(
                         {
                             "command": "runtime-resume",
-                            "journal_path": str(revised_journal_path),
                         }
                     )
 

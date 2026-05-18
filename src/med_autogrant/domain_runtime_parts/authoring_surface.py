@@ -32,7 +32,6 @@ from med_autogrant.grant_quality import (
     build_grant_quality_scorecard,
 )
 from med_autogrant.schema_loader import SchemaStore
-from med_autogrant.upstream_hermes import MagGrantRunLedger
 from med_autogrant.revision_executor import build_revision_execution_document
 from med_autogrant.route_report import build_stage_route_report
 from med_autogrant.funding_landscape_discovery import discover_funding_landscape
