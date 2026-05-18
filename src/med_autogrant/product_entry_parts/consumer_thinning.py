@@ -12,6 +12,7 @@ from med_autogrant.product_entry_parts.consumer_thinning_pack import (
     build_external_evidence_request_pack,
     build_generated_surface_handoff,
     build_mag_minimal_authority_functions,
+    build_mag_minimal_authority_surface_taxonomy,
 )
 
 MAG_THIN_SURFACE_OUTPUT_CLASSES = (
@@ -106,6 +107,7 @@ def build_mag_consumer_thinning_contract(
         "generated_surface_handoff": build_generated_surface_handoff(),
         "external_evidence_request_pack": build_external_evidence_request_pack(),
         "minimal_authority_functions": build_mag_minimal_authority_functions(),
+        "minimal_authority_surface_taxonomy": build_mag_minimal_authority_surface_taxonomy(),
         "minimal_authority_function_ids": list(MAG_MINIMAL_AUTHORITY_FUNCTION_IDS),
         "functional_followthrough_gap_classification": (
             _build_functional_followthrough_gap_classification()

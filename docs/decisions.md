@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-18：把 MAG retained functions 硬化为 AI-first authority surfaces
+
+- 决策：`mag_consumer_thinning_contract.minimal_authority_functions` 继续保留既有 `function_id` 兼容字段，但新增 `authority_surface_id`、`work_mode`、`judgment_owner`、`programmatic_role`、`ai_stage_artifact_required`、`mechanical_decision_forbidden` 和 `programmatic_verdict_generation_allowed=false`。pack compiler input 同步投影 minimal authority surface taxonomy 与逐项 surface contract。
+- 理由：fundability、quality、export 和 strategy memory accept/reject 是 AI-first grant judgment，不应被表达成 MAG 私有函数直接计算 ready verdict。程序面只允许验证 AI/domain stage artifact、materialize refs、签 receipt、返回 typed blocker 或 safe action metadata；package、owner receipt 和 grant helper 是 programmatic guard，也不能生成 verdict。
+- 影响：MAG 仍持有 grant truth、verdict refs、package authority、memory accept/reject、owner receipt 和 grant helper authority，但这些保留面现在按 AI-first judgment surface / programmatic authority guard 分层。该决策不实现 OPL generic runtime、scheduler、workbench、memory transport 或 package lifecycle shell，也不声明 OPL production caller、App workbench 消费或 long-run soak 完成。
+
 ## 2026-05-18：落地 MAG external evidence request pack
 
 - 决策：`mag_consumer_thinning_contract` 新增 `external_evidence_request_pack`，并由 product-entry manifest、sidecar export、schema、`functional_privatization_audit`、`current-program` 与 `opl-family-contract-adoption` 共同投影。该 pack 只请求 OPL/App/production caller 返回 refs、receipt shapes、typed blocker、no-regression evidence 和 parity evidence。

@@ -2,7 +2,7 @@
   "allowed_private_surface_classes": [
     "minimal_authority_function",
     "grant_native_helper_implementation",
-    "fundability_or_export_verdict_authorizer"
+    "ai_first_verdict_ref_materializer"
   ],
   "default_posture": "forbidden_until_classified_and_receipted",
   "domain_id": "med-autogrant",

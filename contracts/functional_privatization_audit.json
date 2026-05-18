@@ -327,6 +327,7 @@
       ],
       "input_policy": "declarative_refs_and_authority_manifest_only",
       "minimal_authority_functions_ref": "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions",
+      "minimal_authority_surface_taxonomy_ref": "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_surface_taxonomy",
       "owner": "med-autogrant",
       "pack_owner": "med-autogrant",
       "pack_sections": [
@@ -1721,16 +1722,36 @@
       {
         "ai_first_guard": "fundability must be backed by a grant-review or fundability stage artifact; schema completeness or OPL provider completion cannot set this verdict",
         "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "ai_stage_artifact_required": true,
         "allowed_return_shapes": [
           "verdict_refs",
           "typed_blocker",
           "domain_owner_receipt"
         ],
         "authority_output_class": "verdict_refs",
+        "authority_surface_id": "fundability_verdict",
         "cannot_absorb_reason": "Fundability is a grant-review judgment over call fit and applicant evidence.",
         "cannot_generate_reason": "Fundability is a grant-review judgment over call fit and applicant evidence.",
+        "decision_boundary": {
+          "ai_first_judgment_required": true,
+          "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
+          "programmatic_role_may_compute_ready_verdict": false,
+          "programmatic_role_may_materialize_refs_only": true
+        },
+        "forbidden_decision_sources": [
+          "schema_completeness",
+          "opl_provider_completion",
+          "generic_lifecycle_completion",
+          "package_file_presence",
+          "numeric_scorecard_alone",
+          "controller_route_state",
+          "runtime_queue_state"
+        ],
         "function_id": "fundability_verdict",
         "generated_by_opl": false,
+        "judgment_owner": "ai_first_grant_review_or_fundability_stage_artifact",
+        "legacy_function_id_compatibility": true,
+        "mechanical_decision_forbidden": true,
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -1743,29 +1764,58 @@
             "memory_body_write",
             "artifact_body_write_without_owner_receipt",
             "opl_owned_runtime_state",
-            "mechanical_ready_verdict"
+            "mechanical_ready_verdict",
+            "programmatic_ready_verdict",
+            "ai_free_quality_verdict",
+            "schema_completeness_ready_verdict",
+            "generic_lifecycle_completion_verdict"
           ]
         },
         "owner": "med-autogrant",
+        "programmatic_role": "validator_and_verdict_ref_materializer",
+        "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
           "/product_entry_manifest/family_stage_control_plane/stages",
           "/product_entry_manifest/grant_transition_oracle"
-        ]
+        ],
+        "stage_or_owner_receipt_evidence_required": true,
+        "surface_kind": "mag_minimal_authority_surface",
+        "work_mode": "ai_first_domain_judgment_surface"
       },
       {
         "ai_first_guard": "quality must be backed by an AI-authored critique, quality closure dossier, or reviewer artifact; numeric scorecards cannot independently declare ready",
         "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "ai_stage_artifact_required": true,
         "allowed_return_shapes": [
           "verdict_refs",
           "typed_blocker",
           "domain_owner_receipt"
         ],
         "authority_output_class": "verdict_refs",
+        "authority_surface_id": "quality_verdict",
         "cannot_absorb_reason": "Authoring quality requires MAG-owned AI critique and issue closure semantics.",
         "cannot_generate_reason": "Authoring quality requires MAG-owned AI critique and issue closure semantics.",
+        "decision_boundary": {
+          "ai_first_judgment_required": true,
+          "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
+          "programmatic_role_may_compute_ready_verdict": false,
+          "programmatic_role_may_materialize_refs_only": true
+        },
+        "forbidden_decision_sources": [
+          "schema_completeness",
+          "opl_provider_completion",
+          "generic_lifecycle_completion",
+          "package_file_presence",
+          "numeric_scorecard_alone",
+          "controller_route_state",
+          "runtime_queue_state"
+        ],
         "function_id": "quality_verdict",
         "generated_by_opl": false,
+        "judgment_owner": "ai_authored_critique_or_quality_closure_artifact",
+        "legacy_function_id_compatibility": true,
+        "mechanical_decision_forbidden": true,
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -1778,29 +1828,58 @@
             "memory_body_write",
             "artifact_body_write_without_owner_receipt",
             "opl_owned_runtime_state",
-            "mechanical_ready_verdict"
+            "mechanical_ready_verdict",
+            "programmatic_ready_verdict",
+            "ai_free_quality_verdict",
+            "schema_completeness_ready_verdict",
+            "generic_lifecycle_completion_verdict"
           ]
         },
         "owner": "med-autogrant",
+        "programmatic_role": "critique_artifact_aggregator_and_guard",
+        "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
           "/product_entry_manifest/grant_authoring_readiness",
           "/product_entry_manifest/controlled_stage_attempt_projection"
-        ]
+        ],
+        "stage_or_owner_receipt_evidence_required": true,
+        "surface_kind": "mag_minimal_authority_surface",
+        "work_mode": "ai_first_domain_judgment_surface"
       },
       {
         "ai_first_guard": "export readiness must trace to MAG package/export stage authority; artifact presence or generic lifecycle completion cannot declare submission-ready",
         "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "ai_stage_artifact_required": true,
         "allowed_return_shapes": [
           "verdict_refs",
           "typed_blocker",
           "domain_owner_receipt"
         ],
         "authority_output_class": "verdict_refs",
+        "authority_surface_id": "export_verdict",
         "cannot_absorb_reason": "Submission/export readiness is a grant package gate, not package existence.",
         "cannot_generate_reason": "Submission/export readiness is a grant package gate, not package existence.",
+        "decision_boundary": {
+          "ai_first_judgment_required": true,
+          "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
+          "programmatic_role_may_compute_ready_verdict": false,
+          "programmatic_role_may_materialize_refs_only": true
+        },
+        "forbidden_decision_sources": [
+          "schema_completeness",
+          "opl_provider_completion",
+          "generic_lifecycle_completion",
+          "package_file_presence",
+          "numeric_scorecard_alone",
+          "controller_route_state",
+          "runtime_queue_state"
+        ],
         "function_id": "export_verdict",
         "generated_by_opl": false,
+        "judgment_owner": "ai_or_owner_backed_package_export_stage_artifact",
+        "legacy_function_id_compatibility": true,
+        "mechanical_decision_forbidden": true,
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -1813,29 +1892,58 @@
             "memory_body_write",
             "artifact_body_write_without_owner_receipt",
             "opl_owned_runtime_state",
-            "mechanical_ready_verdict"
+            "mechanical_ready_verdict",
+            "programmatic_ready_verdict",
+            "ai_free_quality_verdict",
+            "schema_completeness_ready_verdict",
+            "generic_lifecycle_completion_verdict"
           ]
         },
         "owner": "med-autogrant",
+        "programmatic_role": "export_stage_ref_validator_and_blocker",
+        "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
           "package submission-ready",
           "/product_entry_manifest/artifact_locator_contract"
-        ]
+        ],
+        "stage_or_owner_receipt_evidence_required": true,
+        "surface_kind": "mag_minimal_authority_surface",
+        "work_mode": "ai_first_domain_judgment_surface"
       },
       {
         "ai_first_guard": "package mutation requires MAG owner receipt tied to the grant package stage; OPL artifact lifecycle may only carry refs and receipts",
         "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "ai_stage_artifact_required": false,
         "allowed_return_shapes": [
           "domain_owner_receipt",
           "typed_blocker",
           "grant_owned_refs"
         ],
         "authority_output_class": "grant_owned_refs",
+        "authority_surface_id": "package_authority",
         "cannot_absorb_reason": "Grant package mutation and release require MAG package authority.",
         "cannot_generate_reason": "Grant package mutation and release require MAG package authority.",
+        "decision_boundary": {
+          "ai_first_judgment_required": false,
+          "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
+          "programmatic_role_may_compute_ready_verdict": false,
+          "programmatic_role_may_materialize_refs_only": true
+        },
+        "forbidden_decision_sources": [
+          "schema_completeness",
+          "opl_provider_completion",
+          "generic_lifecycle_completion",
+          "package_file_presence",
+          "numeric_scorecard_alone",
+          "controller_route_state",
+          "runtime_queue_state"
+        ],
         "function_id": "package_authority",
         "generated_by_opl": false,
+        "judgment_owner": "mag_owner_receipt_or_package_stage_authority",
+        "legacy_function_id_compatibility": true,
+        "mechanical_decision_forbidden": true,
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -1848,29 +1956,58 @@
             "memory_body_write",
             "artifact_body_write_without_owner_receipt",
             "opl_owned_runtime_state",
-            "mechanical_ready_verdict"
+            "mechanical_ready_verdict",
+            "programmatic_ready_verdict",
+            "ai_free_quality_verdict",
+            "schema_completeness_ready_verdict",
+            "generic_lifecycle_completion_verdict"
           ]
         },
         "owner": "med-autogrant",
+        "programmatic_role": "package_materializer_and_owner_receipt_guard",
+        "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
           "/product_entry_manifest/artifact_locator_contract",
           "/product_entry_manifest/lifecycle_guarded_apply_proof"
-        ]
+        ],
+        "stage_or_owner_receipt_evidence_required": true,
+        "surface_kind": "mag_minimal_authority_surface",
+        "work_mode": "programmatic_authority_guard_surface"
       },
       {
         "ai_first_guard": "memory accept/reject must be a grant-strategy decision over domain memory meaning; OPL memory transport can only carry body-free refs and writeback proposals",
         "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "ai_stage_artifact_required": true,
         "allowed_return_shapes": [
           "domain_owner_receipt",
           "typed_blocker",
           "ref"
         ],
         "authority_output_class": "owner_receipt",
+        "authority_surface_id": "memory_accept_reject",
         "cannot_absorb_reason": "Grant strategy memory body and accept/reject decisions are MAG authority.",
         "cannot_generate_reason": "Grant strategy memory body and accept/reject decisions are MAG authority.",
+        "decision_boundary": {
+          "ai_first_judgment_required": true,
+          "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
+          "programmatic_role_may_compute_ready_verdict": false,
+          "programmatic_role_may_materialize_refs_only": true
+        },
+        "forbidden_decision_sources": [
+          "schema_completeness",
+          "opl_provider_completion",
+          "generic_lifecycle_completion",
+          "package_file_presence",
+          "numeric_scorecard_alone",
+          "controller_route_state",
+          "runtime_queue_state"
+        ],
         "function_id": "memory_accept_reject",
         "generated_by_opl": false,
+        "judgment_owner": "ai_first_grant_strategy_memory_stage_artifact",
+        "legacy_function_id_compatibility": true,
+        "mechanical_decision_forbidden": true,
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -1883,29 +2020,58 @@
             "memory_body_write",
             "artifact_body_write_without_owner_receipt",
             "opl_owned_runtime_state",
-            "mechanical_ready_verdict"
+            "mechanical_ready_verdict",
+            "programmatic_ready_verdict",
+            "ai_free_quality_verdict",
+            "schema_completeness_ready_verdict",
+            "generic_lifecycle_completion_verdict"
           ]
         },
         "owner": "med-autogrant",
+        "programmatic_role": "memory_receipt_writer_and_refs_projection",
+        "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
           "/product_entry_manifest/domain_memory_descriptor_locator",
           "/product_entry_manifest/controlled_domain_memory_apply_proof"
-        ]
+        ],
+        "stage_or_owner_receipt_evidence_required": true,
+        "surface_kind": "mag_minimal_authority_surface",
+        "work_mode": "ai_first_domain_judgment_surface"
       },
       {
         "ai_first_guard": "owner receipts can sign only MAG domain receipts, typed blockers, safe action refs, or no-regression evidence; they cannot create grant verdicts from runtime state",
         "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "ai_stage_artifact_required": false,
         "allowed_return_shapes": [
           "domain_owner_receipt",
           "typed_blocker",
           "no_regression_evidence"
         ],
         "authority_output_class": "owner_receipt",
+        "authority_surface_id": "owner_receipt_signer",
         "cannot_absorb_reason": "Only MAG can sign domain owner receipts or no-regression evidence.",
         "cannot_generate_reason": "Only MAG can sign domain owner receipts or no-regression evidence.",
+        "decision_boundary": {
+          "ai_first_judgment_required": false,
+          "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
+          "programmatic_role_may_compute_ready_verdict": false,
+          "programmatic_role_may_materialize_refs_only": true
+        },
+        "forbidden_decision_sources": [
+          "schema_completeness",
+          "opl_provider_completion",
+          "generic_lifecycle_completion",
+          "package_file_presence",
+          "numeric_scorecard_alone",
+          "controller_route_state",
+          "runtime_queue_state"
+        ],
         "function_id": "owner_receipt_signer",
         "generated_by_opl": false,
+        "judgment_owner": "mag_owner_receipt_schema_and_domain_provenance",
+        "legacy_function_id_compatibility": true,
+        "mechanical_decision_forbidden": true,
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -1918,29 +2084,58 @@
             "memory_body_write",
             "artifact_body_write_without_owner_receipt",
             "opl_owned_runtime_state",
-            "mechanical_ready_verdict"
+            "mechanical_ready_verdict",
+            "programmatic_ready_verdict",
+            "ai_free_quality_verdict",
+            "schema_completeness_ready_verdict",
+            "generic_lifecycle_completion_verdict"
           ]
         },
         "owner": "med-autogrant",
+        "programmatic_role": "receipt_schema_signer_and_blocker_guard",
+        "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
           "/product_entry_manifest/owner_receipt_contract",
           "/product_entry_manifest/controlled_soak_no_regression_attempt"
-        ]
+        ],
+        "stage_or_owner_receipt_evidence_required": true,
+        "surface_kind": "mag_minimal_authority_surface",
+        "work_mode": "programmatic_authority_guard_surface"
       },
       {
         "ai_first_guard": "grant helpers may validate funder, route, blocker, and action metadata only; they cannot bypass grant-stage AI review or owner receipt authority",
         "ai_first_guard_policy": "stage_artifact_or_owner_receipt_required",
+        "ai_stage_artifact_required": false,
         "allowed_return_shapes": [
           "domain_action_metadata",
           "typed_blocker",
           "ref"
         ],
         "authority_output_class": "domain_action_metadata",
+        "authority_surface_id": "grant_helper",
         "cannot_absorb_reason": "Grant-native helpers encode funder, route, and blocker semantics.",
         "cannot_generate_reason": "Grant-native helpers encode funder, route, and blocker semantics.",
+        "decision_boundary": {
+          "ai_first_judgment_required": false,
+          "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
+          "programmatic_role_may_compute_ready_verdict": false,
+          "programmatic_role_may_materialize_refs_only": true
+        },
+        "forbidden_decision_sources": [
+          "schema_completeness",
+          "opl_provider_completion",
+          "generic_lifecycle_completion",
+          "package_file_presence",
+          "numeric_scorecard_alone",
+          "controller_route_state",
+          "runtime_queue_state"
+        ],
         "function_id": "grant_helper",
         "generated_by_opl": false,
+        "judgment_owner": "deterministic_grant_metadata_route_and_blocker_policy",
+        "legacy_function_id_compatibility": true,
+        "mechanical_decision_forbidden": true,
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -1953,17 +2148,55 @@
             "memory_body_write",
             "artifact_body_write_without_owner_receipt",
             "opl_owned_runtime_state",
-            "mechanical_ready_verdict"
+            "mechanical_ready_verdict",
+            "programmatic_ready_verdict",
+            "ai_free_quality_verdict",
+            "schema_completeness_ready_verdict",
+            "generic_lifecycle_completion_verdict"
           ]
         },
         "owner": "med-autogrant",
+        "programmatic_role": "grant_metadata_route_blocker_helper",
+        "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
         "source_refs": [
           "/product_entry_manifest/family_action_catalog",
           "/product_entry_manifest/grant_transition_oracle"
-        ]
+        ],
+        "stage_or_owner_receipt_evidence_required": false,
+        "surface_kind": "mag_minimal_authority_surface",
+        "work_mode": "programmatic_authority_guard_surface"
       }
     ],
+    "minimal_authority_surface_taxonomy": {
+      "ai_first_judgment_surface_ids": [
+        "fundability_verdict",
+        "quality_verdict",
+        "export_verdict",
+        "memory_accept_reject"
+      ],
+      "all_surface_ids": [
+        "fundability_verdict",
+        "quality_verdict",
+        "export_verdict",
+        "package_authority",
+        "memory_accept_reject",
+        "owner_receipt_signer",
+        "grant_helper"
+      ],
+      "legacy_function_id_compatibility": true,
+      "mechanical_decision_forbidden_for_all_surfaces": true,
+      "policy": "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; programmatic_surfaces_sign_receipts_or_validate_refs_only",
+      "programmatic_authority_surface_ids": [
+        "package_authority",
+        "owner_receipt_signer",
+        "grant_helper"
+      ],
+      "programmatic_verdict_generation_allowed": false,
+      "surface_kind": "mag_minimal_authority_surface_taxonomy",
+      "target_domain_id": "med-autogrant",
+      "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"
+    },
     "opl_family_conflict_blocker_projection": {
       "allowed_classifications": [
         "authority_conflict",

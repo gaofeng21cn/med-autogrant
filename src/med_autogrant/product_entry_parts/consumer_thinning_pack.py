@@ -17,6 +17,19 @@ MAG_MINIMAL_AUTHORITY_FUNCTION_IDS = (
     "grant_helper",
 )
 
+AI_FIRST_AUTHORITY_SURFACE_IDS = (
+    "fundability_verdict",
+    "quality_verdict",
+    "export_verdict",
+    "memory_accept_reject",
+)
+
+PROGRAMMATIC_AUTHORITY_SURFACE_IDS = (
+    "package_authority",
+    "owner_receipt_signer",
+    "grant_helper",
+)
+
 GENERATED_OR_BRIDGE_SURFACE_IDS = (
     "product_status",
     "product_user_loop",
@@ -269,6 +282,10 @@ def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
         _authority_function(
             "fundability_verdict",
             authority_output_class="verdict_refs",
+            work_mode="ai_first_domain_judgment_surface",
+            judgment_owner="ai_first_grant_review_or_fundability_stage_artifact",
+            programmatic_role="validator_and_verdict_ref_materializer",
+            ai_stage_artifact_required=True,
             allowed_return_shapes=["verdict_refs", "typed_blocker", "domain_owner_receipt"],
             source_refs=[
                 "/product_entry_manifest/family_stage_control_plane/stages",
@@ -283,6 +300,10 @@ def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
         _authority_function(
             "quality_verdict",
             authority_output_class="verdict_refs",
+            work_mode="ai_first_domain_judgment_surface",
+            judgment_owner="ai_authored_critique_or_quality_closure_artifact",
+            programmatic_role="critique_artifact_aggregator_and_guard",
+            ai_stage_artifact_required=True,
             allowed_return_shapes=["verdict_refs", "typed_blocker", "domain_owner_receipt"],
             source_refs=[
                 "/product_entry_manifest/grant_authoring_readiness",
@@ -297,6 +318,10 @@ def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
         _authority_function(
             "export_verdict",
             authority_output_class="verdict_refs",
+            work_mode="ai_first_domain_judgment_surface",
+            judgment_owner="ai_or_owner_backed_package_export_stage_artifact",
+            programmatic_role="export_stage_ref_validator_and_blocker",
+            ai_stage_artifact_required=True,
             allowed_return_shapes=["verdict_refs", "typed_blocker", "domain_owner_receipt"],
             source_refs=[
                 "package submission-ready",
@@ -311,6 +336,10 @@ def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
         _authority_function(
             "package_authority",
             authority_output_class="grant_owned_refs",
+            work_mode="programmatic_authority_guard_surface",
+            judgment_owner="mag_owner_receipt_or_package_stage_authority",
+            programmatic_role="package_materializer_and_owner_receipt_guard",
+            ai_stage_artifact_required=False,
             allowed_return_shapes=["domain_owner_receipt", "typed_blocker", "grant_owned_refs"],
             source_refs=[
                 "/product_entry_manifest/artifact_locator_contract",
@@ -325,6 +354,10 @@ def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
         _authority_function(
             "memory_accept_reject",
             authority_output_class="owner_receipt",
+            work_mode="ai_first_domain_judgment_surface",
+            judgment_owner="ai_first_grant_strategy_memory_stage_artifact",
+            programmatic_role="memory_receipt_writer_and_refs_projection",
+            ai_stage_artifact_required=True,
             allowed_return_shapes=["domain_owner_receipt", "typed_blocker", "ref"],
             source_refs=[
                 "/product_entry_manifest/domain_memory_descriptor_locator",
@@ -339,6 +372,10 @@ def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
         _authority_function(
             "owner_receipt_signer",
             authority_output_class="owner_receipt",
+            work_mode="programmatic_authority_guard_surface",
+            judgment_owner="mag_owner_receipt_schema_and_domain_provenance",
+            programmatic_role="receipt_schema_signer_and_blocker_guard",
+            ai_stage_artifact_required=False,
             allowed_return_shapes=["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
             source_refs=[
                 "/product_entry_manifest/owner_receipt_contract",
@@ -353,6 +390,10 @@ def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
         _authority_function(
             "grant_helper",
             authority_output_class="domain_action_metadata",
+            work_mode="programmatic_authority_guard_surface",
+            judgment_owner="deterministic_grant_metadata_route_and_blocker_policy",
+            programmatic_role="grant_metadata_route_blocker_helper",
+            ai_stage_artifact_required=False,
             allowed_return_shapes=["domain_action_metadata", "typed_blocker", "ref"],
             source_refs=[
                 "/product_entry_manifest/family_action_catalog",
@@ -365,6 +406,24 @@ def build_mag_minimal_authority_functions() -> list[dict[str, Any]]:
             ),
         ),
     ]
+
+
+def build_mag_minimal_authority_surface_taxonomy() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_minimal_authority_surface_taxonomy",
+        "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "legacy_function_id_compatibility": True,
+        "ai_first_judgment_surface_ids": list(AI_FIRST_AUTHORITY_SURFACE_IDS),
+        "programmatic_authority_surface_ids": list(PROGRAMMATIC_AUTHORITY_SURFACE_IDS),
+        "all_surface_ids": list(MAG_MINIMAL_AUTHORITY_FUNCTION_IDS),
+        "policy": (
+            "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; "
+            "programmatic_surfaces_sign_receipts_or_validate_refs_only"
+        ),
+        "mechanical_decision_forbidden_for_all_surfaces": True,
+        "programmatic_verdict_generation_allowed": False,
+    }
 
 
 def build_declarative_grant_pack_compiler_input() -> dict[str, Any]:
@@ -382,6 +441,9 @@ def build_declarative_grant_pack_compiler_input() -> dict[str, Any]:
         ),
         "minimal_authority_functions_ref": (
             "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions"
+        ),
+        "minimal_authority_surface_taxonomy_ref": (
+            "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_surface_taxonomy"
         ),
         "source_refs": {
             "stage_graph_ref": "/product_entry_manifest/family_stage_control_plane",
@@ -552,17 +614,35 @@ def _authority_function(
     function_id: str,
     *,
     authority_output_class: str,
+    work_mode: str,
+    judgment_owner: str,
+    programmatic_role: str,
+    ai_stage_artifact_required: bool,
     allowed_return_shapes: list[str],
     source_refs: list[str],
     cannot_generate_reason: str,
     ai_first_guard: str,
 ) -> dict[str, Any]:
+    stage_or_owner_receipt_required = ai_stage_artifact_required or function_id in {
+        "package_authority",
+        "owner_receipt_signer",
+    }
     return {
+        "surface_kind": "mag_minimal_authority_surface",
+        "authority_surface_id": function_id,
         "function_id": function_id,
+        "legacy_function_id_compatibility": True,
         "owner": TARGET_DOMAIN_ID,
         "retention_class": "mag_minimal_authority_function",
         "generated_by_opl": False,
         "opl_generated_wrapper_allowed": True,
+        "work_mode": work_mode,
+        "judgment_owner": judgment_owner,
+        "programmatic_role": programmatic_role,
+        "ai_stage_artifact_required": ai_stage_artifact_required,
+        "stage_or_owner_receipt_evidence_required": stage_or_owner_receipt_required,
+        "mechanical_decision_forbidden": True,
+        "programmatic_verdict_generation_allowed": False,
         "authority_output_class": authority_output_class,
         "allowed_return_shapes": allowed_return_shapes,
         "output_boundary": {
@@ -573,7 +653,26 @@ def _authority_function(
                 "artifact_body_write_without_owner_receipt",
                 "opl_owned_runtime_state",
                 "mechanical_ready_verdict",
+                "programmatic_ready_verdict",
+                "ai_free_quality_verdict",
+                "schema_completeness_ready_verdict",
+                "generic_lifecycle_completion_verdict",
             ],
+        },
+        "forbidden_decision_sources": [
+            "schema_completeness",
+            "opl_provider_completion",
+            "generic_lifecycle_completion",
+            "package_file_presence",
+            "numeric_scorecard_alone",
+            "controller_route_state",
+            "runtime_queue_state",
+        ],
+        "decision_boundary": {
+            "ai_first_judgment_required": ai_stage_artifact_required,
+            "programmatic_role_may_materialize_refs_only": True,
+            "programmatic_role_may_compute_ready_verdict": False,
+            "owner_receipt_or_typed_blocker_required_when_evidence_missing": True,
         },
         "source_refs": source_refs,
         "cannot_generate_reason": cannot_generate_reason,

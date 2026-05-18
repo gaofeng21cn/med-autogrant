@@ -7,6 +7,9 @@ from typing import Any, Mapping
 
 from med_autogrant.action_catalog import build_mag_family_action_catalog
 from med_autogrant.product_entry_parts.consumer_thinning import build_mag_consumer_thinning_contract
+from med_autogrant.product_entry_parts.consumer_thinning_pack import (
+    build_mag_minimal_authority_surface_taxonomy,
+)
 from med_autogrant.product_entry_parts.primitives import (
     GRANT_COCKPIT_KIND,
     GRANT_DIRECT_ENTRY_KIND,
@@ -97,7 +100,9 @@ def build_standard_pack() -> dict[str, Any]:
 
     return {
         "domain_descriptor": _domain_descriptor(),
-        "pack_compiler_input": _pack_compiler_input(),
+        "pack_compiler_input": _pack_compiler_input(
+            consumer_thinning_contract["minimal_authority_functions"]
+        ),
         "generated_surface_handoff": _generated_surface_handoff(),
         "action_catalog": _with_forbidden_roles(action_catalog),
         "stage_control_plane": stage_control_plane,
@@ -244,7 +249,7 @@ def _domain_descriptor() -> dict[str, Any]:
     }
 
 
-def _pack_compiler_input() -> dict[str, Any]:
+def _pack_compiler_input(minimal_authority_surfaces: list[dict[str, Any]]) -> dict[str, Any]:
     return {
         "surface_kind": "opl_domain_pack_compiler_input",
         "schema_version": 1,
@@ -253,6 +258,8 @@ def _pack_compiler_input() -> dict[str, Any]:
         "generated_surface_owner": GENERATED_SURFACE_OWNER,
         "declarative_domain_pack": DECLARATIVE_DOMAIN_PACK,
         "minimal_authority_functions": MINIMAL_AUTHORITY_FUNCTIONS,
+        "minimal_authority_surface_taxonomy": build_mag_minimal_authority_surface_taxonomy(),
+        "minimal_authority_surface_contracts": _json_ready(minimal_authority_surfaces),
         "generated_surfaces_requested": GENERATED_SURFACES,
         "domain_repo_can_own_generated_surface": False,
         "source_refs": {
@@ -394,7 +401,7 @@ def _private_functional_surface_policy() -> dict[str, Any]:
         "allowed_private_surface_classes": [
             "minimal_authority_function",
             "grant_native_helper_implementation",
-            "fundability_or_export_verdict_authorizer",
+            "ai_first_verdict_ref_materializer",
         ],
         "forbidden_generic_owner_roles": FORBIDDEN_GENERIC_OWNER_ROLES,
     }

@@ -36,7 +36,7 @@ local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream 
 
 MAG retained private surface 限定为 grant domain truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject、owner receipt、transition oracle、grant-native helper 和 focused contract tests。
 
-Retained private authority functions 现在在 `functional_privatization_audit`、product-entry manifest 与 sidecar export 中携带 AI-first guard、allowed return shapes 和 forbidden output boundary：fundability、quality、export、package、memory、owner receipt 和 grant helper 只能返回 verdict refs、owner receipt、typed blocker、no-regression evidence、grant-owned refs 或 domain action metadata，不能从 schema completeness、provider completion、package existence、quality scorecard 分数或 generic lifecycle completion 机械生成 ready verdict。
+Retained private authority surfaces 现在在 `functional_privatization_audit`、product-entry manifest、sidecar export 与 pack compiler input 中携带 AI-first taxonomy、judgment owner、programmatic role、allowed return shapes 和 forbidden output boundary。`fundability_verdict`、`quality_verdict`、`export_verdict` 与 `memory_accept_reject` 是 AI-first judgment surface，程序只 materialize refs / guard / typed blocker；`package_authority`、`owner_receipt_signer` 与 `grant_helper` 是 programmatic authority/helper surface，只能签 receipt、验证 refs 或返回 action metadata。所有 surface 都禁止从 schema completeness、provider completion、package existence、quality scorecard 分数或 generic lifecycle completion 机械生成 ready verdict。
 
 ## 当前测试/证据差距
 

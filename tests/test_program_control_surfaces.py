@@ -172,6 +172,24 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertFalse(external_pack["authority_boundary"]["mag_implements_opl_runtime"])
         self.assertFalse(external_pack["authority_boundary"]["mag_implements_app_workbench"])
         self.assertFalse(external_pack["authority_boundary"]["mag_claims_external_evidence_exists"])
+        taxonomy = consumer_thinning["minimal_authority_surface_taxonomy"]
+        self.assertEqual(
+            taxonomy["ai_first_judgment_surface_ids"],
+            [
+                "fundability_verdict",
+                "quality_verdict",
+                "export_verdict",
+                "memory_accept_reject",
+            ],
+        )
+        self.assertEqual(
+            taxonomy["programmatic_authority_surface_ids"],
+            ["package_authority", "owner_receipt_signer", "grant_helper"],
+        )
+        self.assertFalse(consumer_thinning["programmatic_verdict_generation_allowed"])
+        self.assertTrue(
+            consumer_thinning["mechanical_decision_forbidden_for_all_authority_surfaces"]
+        )
         self.assertEqual(contract["executor_defaults"]["default_executor_name"], "codex_cli")
         self.assertEqual(contract["executor_defaults"]["default_executor_mode"], "autonomous")
         self.assertEqual(contract["executor_defaults"]["default_model"], "inherit_local_codex_default")

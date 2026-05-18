@@ -239,7 +239,38 @@
               "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_legacy_proof_refs_only"
             }
           },
-          "claims_opl_replacement_exists": false
+          "claims_opl_replacement_exists": false,
+          "minimal_authority_surface_taxonomy": {
+            "ai_first_judgment_surface_ids": [
+              "fundability_verdict",
+              "quality_verdict",
+              "export_verdict",
+              "memory_accept_reject"
+            ],
+            "all_surface_ids": [
+              "fundability_verdict",
+              "quality_verdict",
+              "export_verdict",
+              "package_authority",
+              "memory_accept_reject",
+              "owner_receipt_signer",
+              "grant_helper"
+            ],
+            "legacy_function_id_compatibility": true,
+            "mechanical_decision_forbidden_for_all_surfaces": true,
+            "policy": "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; programmatic_surfaces_sign_receipts_or_validate_refs_only",
+            "programmatic_authority_surface_ids": [
+              "package_authority",
+              "owner_receipt_signer",
+              "grant_helper"
+            ],
+            "programmatic_verdict_generation_allowed": false,
+            "surface_kind": "mag_minimal_authority_surface_taxonomy",
+            "target_domain_id": "med-autogrant",
+            "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"
+          },
+          "programmatic_verdict_generation_allowed": false,
+          "mechanical_decision_forbidden_for_all_authority_surfaces": true
         },
         "forbidden_mag_generic_owner_roles": [
           "generic_scheduler_owner",
@@ -494,7 +525,52 @@
         "active_caller_owner": "med-autogrant",
         "active_caller_surface": "mag_direct_domain_entry_until_opl_caller_evidence",
         "domain_handler_target": "med-autogrant",
-        "domain_handler_owner": "med-autogrant"
+        "domain_handler_owner": "med-autogrant",
+        "minimal_authority_surface_taxonomy_ref": "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_surface_taxonomy",
+        "minimal_authority_surface_taxonomy": {
+          "ai_first_judgment_surface_ids": [
+            "fundability_verdict",
+            "quality_verdict",
+            "export_verdict",
+            "memory_accept_reject"
+          ],
+          "all_surface_ids": [
+            "fundability_verdict",
+            "quality_verdict",
+            "export_verdict",
+            "package_authority",
+            "memory_accept_reject",
+            "owner_receipt_signer",
+            "grant_helper"
+          ],
+          "legacy_function_id_compatibility": true,
+          "mechanical_decision_forbidden_for_all_surfaces": true,
+          "policy": "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; programmatic_surfaces_sign_receipts_or_validate_refs_only",
+          "programmatic_authority_surface_ids": [
+            "package_authority",
+            "owner_receipt_signer",
+            "grant_helper"
+          ],
+          "programmatic_verdict_generation_allowed": false,
+          "surface_kind": "mag_minimal_authority_surface_taxonomy",
+          "target_domain_id": "med-autogrant",
+          "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"
+        },
+        "minimal_authority_surface_contracts_ref": "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions",
+        "minimal_authority_surface_contract_count": 7,
+        "ai_first_judgment_surface_ids": [
+          "fundability_verdict",
+          "quality_verdict",
+          "export_verdict",
+          "memory_accept_reject"
+        ],
+        "programmatic_authority_surface_ids": [
+          "package_authority",
+          "owner_receipt_signer",
+          "grant_helper"
+        ],
+        "programmatic_verdict_generation_allowed": false,
+        "mechanical_decision_forbidden_for_all_authority_surfaces": true
       },
       "future_sidecar_promotion_gate": "self-hosted sidecar daemon promotion remains out of scope; the landed product sidecar adapter is a CLI/product-entry projection and guarded dispatch surface"
     }

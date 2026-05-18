@@ -53,8 +53,8 @@ OPL 必须持有：
    memory receipt projection、package lifecycle handoff、lifecycle receipt bundle、continuous receipt reconciliation 和 sidecar export 只输出 body-free refs、owner receipt、verdict refs、typed blocker 和 safe action metadata；不输出 memory body、grant artifact/private evidence 或 OPL ledger state。
 
 4. `private_authority_ai_first_guard`
-   fundability、quality、export、package、memory、transition oracle、owner receipt 和 grant helper 是 MAG 可保留的 minimal authority functions，但不能用函数调用跳过 OPL stage。fundability / authoring quality / critique / export readiness 必须来自 AI-first grant stage artifact；代码只做 schema validator、materializer、receipt signer、guard 和 refs projection。
-   当前机器面已把 `fundability_verdict`、`quality_verdict`、`export_verdict`、`package_authority`、`memory_accept_reject`、`owner_receipt_signer` 和 `grant_helper` 的 `ai_first_guard`、`allowed_return_shapes` 与 `output_boundary` 投影到 `functional_privatization_audit`、product-entry manifest 和 sidecar export；这只证明 retained authority function 的 MAG 边界可验，不证明外部 OPL generated caller、真实 App 消费或 production soak 已完成。
+   fundability、quality、export、package、memory、transition oracle、owner receipt 和 grant helper 是 MAG 可保留的 minimal authority surfaces，但不能用函数调用跳过 OPL stage。`function_id` 只保留兼容含义；机器面以 `authority_surface_id`、`work_mode`、`judgment_owner`、`programmatic_role` 和 `mechanical_decision_forbidden` 表达真实边界。fundability / authoring quality / critique / export readiness / memory accept-reject 必须来自 AI-first grant stage artifact；代码只做 schema validator、materializer、receipt signer、guard 和 refs projection。
+   当前机器面已把 `fundability_verdict`、`quality_verdict`、`export_verdict`、`package_authority`、`memory_accept_reject`、`owner_receipt_signer` 和 `grant_helper` 的 AI-first taxonomy、`ai_first_guard`、`allowed_return_shapes` 与 `output_boundary` 投影到 `functional_privatization_audit`、product-entry manifest、sidecar export 和 pack compiler input；这只证明 retained authority surface 的 MAG 边界可验，不证明外部 OPL generated caller、真实 App 消费或 production soak 已完成。
 
 5. `contract_source_ref_refresh`
    privatized audit、generated-surface handoff 和 consumer/thinning contract 中的 code path / source_ref 已作为当前 bridge-exit 证据读取；后续若路径漂移，只能进入 source-ref refresh、history/provenance 或 tombstone，不能用漂移路径证明当前状态。
@@ -63,19 +63,19 @@ OPL 必须持有：
 6. `external_evidence_request_pack`
    `mag_consumer_thinning_contract.external_evidence_request_pack` 已把剩余外部证据门收成 machine-readable request pack：OPL generated/hosted caller consumption、Codex App workbench refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 的状态是 `request_pack_declared_external_evidence_not_claimed`，每个 request 仍是 `requested_not_received`；它只固定 required refs、receipt shapes 和 forbidden payload classes，不实现 OPL runtime / App workbench，也不声明外部证据已完成。
 
-## Retained Private Authority Functions
+## Retained Private Authority Surfaces
 
-MAG 只允许保留 grant domain 的 minimal authority functions：
+MAG 只允许保留 grant domain 的 minimal authority surfaces；旧 `function_id` 是兼容字段，不代表由 Python 函数直接裁决：
 
-| 函数 | 长期 owner | AI-first 边界 | 程序角色 |
+| Authority surface | Work mode | Judgment owner | 程序角色 |
 | --- | --- | --- | --- |
-| `fundability_verdict` | MAG grant strategy owner | 必须由 grant-review / fundability stage 判断 call fit、applicant evidence 和 reviewer risk。 | validator / verdict ref materializer |
-| `quality_verdict` | MAG AI critique / authoring quality owner | 必须来自 AI-authored critique、quality closure dossier 或 reviewer artifact；scorecard 不能单独给出 ready。 | aggregator / guard |
-| `export_verdict` | MAG package/export owner | export readiness 是 submission-facing gate，不等于 package 文件存在。 | package gate validator |
-| `package_authority` | MAG artifact/package owner | artifact assembly 与 mutation 必须由 MAG owner receipt 授权。 | materializer / receipt signer |
-| `memory_accept_reject` | MAG grant strategy memory owner | grant strategy memory accept/reject 必须由 domain stage 判断其对 fundability / quality 的意义。 | receipt writer / refs projection |
-| `owner_receipt_signer` | MAG owner surface | 只签 domain receipt、typed blocker、safe action refs 和 provenance currentness。 | receipt signer |
-| `grant_helper` | MAG native/domain helper | 只能实现 grant-native helper，不给 fundability-ready、quality-ready 或 export-ready verdict。 | helper implementation / guard |
+| `fundability_verdict` | AI-first judgment | grant-review / fundability stage artifact 判断 call fit、applicant evidence 和 reviewer risk。 | validator / verdict ref materializer |
+| `quality_verdict` | AI-first judgment | AI-authored critique、quality closure dossier 或 reviewer artifact；scorecard 不能单独给出 ready。 | aggregator / guard |
+| `export_verdict` | AI-first judgment | package/export stage artifact；artifact existence 或 generic lifecycle completion 不能声明 submission-ready。 | package gate ref validator |
+| `memory_accept_reject` | AI-first judgment | grant strategy memory stage 判断 memory 对 fundability / quality 的意义。 | receipt writer / refs projection |
+| `package_authority` | Programmatic guard | MAG owner receipt 或 package stage authority。 | materializer / receipt signer |
+| `owner_receipt_signer` | Programmatic guard | MAG receipt schema 与 domain provenance。 | receipt signer |
+| `grant_helper` | Programmatic guard | deterministic grant metadata、route 和 blocker policy。 | helper implementation / guard |
 
 AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof critique executor 可以产出 AI-authored review artifact；程序只能验证和投影这些 artifact，不用机械 quality score、schema completeness、controller route 或 fixed branch 替代 grant reviewer 判断。
 
@@ -103,7 +103,7 @@ AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof
    推进真实 grant-stage attempt、memory/package/lifecycle receipt、continuous receipt reconciliation、cleanup/restore/retention 和 provider SLO long soak。
 
 4. `private_authority_ai_first_guard`
-   审计 retained authority functions，确保 fundability / quality / export / package / memory 的判断都来自 AI-first stage output 或 owner receipt，代码只做 validator、materializer、receipt signer、guard 和 refs projection。
+   审计 retained authority surfaces，确保 fundability / quality / export / memory accept-reject 的判断都来自 AI-first stage output，package / receipt / helper 只做 programmatic guard，代码只做 validator、materializer、receipt signer、guard 和 refs projection。
 
 ## 当前不能写成
 

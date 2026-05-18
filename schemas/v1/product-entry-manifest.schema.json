@@ -3724,11 +3724,23 @@
             "type": "object",
             "additionalProperties": true,
             "required": [
-              "function_id", "owner", "retention_class", "generated_by_opl",
-              "opl_generated_wrapper_allowed", "authority_output_class", "source_refs",
+              "surface_kind", "authority_surface_id", "function_id", "owner",
+              "retention_class", "generated_by_opl", "opl_generated_wrapper_allowed",
+              "work_mode", "judgment_owner", "programmatic_role",
+              "ai_stage_artifact_required", "mechanical_decision_forbidden",
+              "programmatic_verdict_generation_allowed", "authority_output_class",
+              "source_refs", "forbidden_decision_sources", "decision_boundary",
               "cannot_generate_reason"
             ],
             "properties": {
+              "surface_kind": {"const": "mag_minimal_authority_surface"},
+              "authority_surface_id": {
+                "enum": [
+                  "fundability_verdict", "quality_verdict", "export_verdict",
+                  "package_authority", "memory_accept_reject", "owner_receipt_signer",
+                  "grant_helper"
+                ]
+              },
               "function_id": {
                 "enum": [
                   "fundability_verdict", "quality_verdict", "export_verdict",
@@ -3739,8 +3751,49 @@
               "owner": {"const": "med-autogrant"},
               "retention_class": {"const": "mag_minimal_authority_function"},
               "generated_by_opl": {"const": false},
-              "opl_generated_wrapper_allowed": {"const": true}
+              "opl_generated_wrapper_allowed": {"const": true},
+              "work_mode": {
+                "enum": [
+                  "ai_first_domain_judgment_surface",
+                  "programmatic_authority_guard_surface"
+                ]
+              },
+              "judgment_owner": {"type": "string", "minLength": 1},
+              "programmatic_role": {"type": "string", "minLength": 1},
+              "ai_stage_artifact_required": {"type": "boolean"},
+              "mechanical_decision_forbidden": {"const": true},
+              "programmatic_verdict_generation_allowed": {"const": false},
+              "forbidden_decision_sources": {
+                "type": "array",
+                "contains": {"const": "schema_completeness"}
+              },
+              "decision_boundary": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": [
+                  "programmatic_role_may_compute_ready_verdict",
+                  "programmatic_role_may_materialize_refs_only"
+                ],
+                "properties": {
+                  "programmatic_role_may_compute_ready_verdict": {"const": false},
+                  "programmatic_role_may_materialize_refs_only": {"const": true}
+                }
+              }
             }
+          }
+        },
+        "minimal_authority_surface_taxonomy": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ai_first_judgment_surface_ids",
+            "programmatic_authority_surface_ids",
+            "mechanical_decision_forbidden_for_all_surfaces",
+            "programmatic_verdict_generation_allowed"
+          ],
+          "properties": {
+            "mechanical_decision_forbidden_for_all_surfaces": {"const": true},
+            "programmatic_verdict_generation_allowed": {"const": false}
           }
         },
         "minimal_authority_function_ids": {
@@ -4306,6 +4359,7 @@
         "generated_surface_handoff",
         "external_evidence_request_pack",
         "minimal_authority_functions",
+        "minimal_authority_surface_taxonomy",
         "minimal_authority_function_ids",
         "functional_followthrough_gap_classification",
         "bridge_exit_gate_refs",
@@ -5492,6 +5546,12 @@
               }
             }
           }
+        },
+        "minimal_authority_functions": {
+          "$ref": "#/$defs/ownerReceiptContract/properties/minimal_authority_functions"
+        },
+        "minimal_authority_surface_taxonomy": {
+          "$ref": "#/$defs/ownerReceiptContract/properties/minimal_authority_surface_taxonomy"
         },
         "opl_replacement_expectations": {
           "type": "array",

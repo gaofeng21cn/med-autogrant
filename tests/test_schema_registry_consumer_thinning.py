@@ -136,3 +136,62 @@ class ConsumerThinningSchemaRegistryTest(unittest.TestCase):
         self.assertFalse(evidence_authority["opl_can_declare_fundability_verdict"]["const"])
         self.assertFalse(evidence_authority["opl_can_declare_quality_verdict"]["const"])
         self.assertFalse(evidence_authority["opl_can_declare_export_verdict"]["const"])
+
+    def test_minimal_authority_surface_schema_requires_ai_first_boundary_fields(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        thinning = manifest_schema["$defs"]["magConsumerThinningContract"]
+        self.assertEqual(
+            thinning["properties"]["minimal_authority_functions"]["$ref"],
+            "#/$defs/ownerReceiptContract/properties/minimal_authority_functions",
+        )
+        self.assertEqual(
+            thinning["properties"]["minimal_authority_surface_taxonomy"]["$ref"],
+            "#/$defs/ownerReceiptContract/properties/minimal_authority_surface_taxonomy",
+        )
+        authority_item = manifest_schema["$defs"]["ownerReceiptContract"]["properties"][
+            "minimal_authority_functions"
+        ]["items"]
+        required = set(authority_item["required"])
+
+        for field in {
+            "surface_kind",
+            "authority_surface_id",
+            "work_mode",
+            "judgment_owner",
+            "programmatic_role",
+            "ai_stage_artifact_required",
+            "mechanical_decision_forbidden",
+            "programmatic_verdict_generation_allowed",
+            "forbidden_decision_sources",
+            "decision_boundary",
+        }:
+            self.assertIn(field, required)
+        self.assertEqual(
+            authority_item["properties"]["surface_kind"]["const"],
+            "mag_minimal_authority_surface",
+        )
+        self.assertEqual(
+            authority_item["properties"]["mechanical_decision_forbidden"]["const"],
+            True,
+        )
+        self.assertEqual(
+            authority_item["properties"]["programmatic_verdict_generation_allowed"]["const"],
+            False,
+        )
+        self.assertEqual(
+            authority_item["properties"]["decision_boundary"]["properties"][
+                "programmatic_role_may_compute_ready_verdict"
+            ]["const"],
+            False,
+        )
+        taxonomy = manifest_schema["$defs"]["ownerReceiptContract"]["properties"][
+            "minimal_authority_surface_taxonomy"
+        ]
+        self.assertEqual(
+            taxonomy["properties"]["mechanical_decision_forbidden_for_all_surfaces"]["const"],
+            True,
+        )
+        self.assertEqual(
+            taxonomy["properties"]["programmatic_verdict_generation_allowed"]["const"],
+            False,
+        )
