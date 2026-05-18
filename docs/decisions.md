@@ -1,5 +1,11 @@
 # 决策记录
 
+## 2026-05-19：清理 stale generic runtime retirement lane
+
+- 决策：`.worktrees/retire-generic-runtime-surfaces` / `codex/retire-mag-generic-runtime-surfaces` 只作为已吸收过的历史 lane 处理，不再向当前 `main` 重放。该 worktree 的有效删除目标已由 `7d877b8 Retire MAG local runtime surfaces` 覆盖；保留下来的差异只是不应重放的旧树状态与非语义格式差异。
+- 理由：该分支基点 `fd48dc6` 已是当前 `main` 的祖先。直接合入会重新引入 `upstream_hermes.py`、`test_local_runtime.py`、`test_upstream_hermes.py` 等旧 local runtime / Hermes proof surface，并会反向删除当前 `contracts/stage_control_plane.json` 与 `src/med_autogrant/stage_control_plane.py` 的 stage runtime event refs。
+- 影响：MAG 当前 generic runtime cleanup 继续以 active source、`functional_privatization_audit`、product-entry manifest、sidecar export、current-program 和 OPL family adoption contract 为准；剩余 gap 是 OPL/App/production caller 外部证据，不在 MAG 仓内恢复 local journal、attempt ledger、scheduler/daemon、Hermes probe 或 compatibility alias。
+
 ## 2026-05-18：把 MAG retained functions 硬化为 AI-first authority surfaces
 
 - 决策：`mag_consumer_thinning_contract.minimal_authority_functions` 继续保留既有 `function_id` 兼容字段，但新增 `authority_surface_id`、`work_mode`、`judgment_owner`、`programmatic_role`、`ai_stage_artifact_required`、`mechanical_decision_forbidden` 和 `programmatic_verdict_generation_allowed=false`。pack compiler input 同步投影 minimal authority surface taxonomy 与逐项 surface contract。

@@ -1,6 +1,6 @@
 # 当前状态
 
-Date: `2026-05-18`
+Date: `2026-05-19`
 
 ## 当前角色
 
@@ -40,6 +40,8 @@ local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream 
 MAG retained private surface 限定为 grant domain truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject、owner receipt、transition oracle、grant-native helper 和 focused contract tests。
 
 Retained private authority surfaces 现在在 `functional_privatization_audit`、product-entry manifest、sidecar export 与 pack compiler input 中携带 AI-first taxonomy、judgment owner、programmatic role、allowed return shapes 和 forbidden output boundary。`fundability_verdict`、`quality_verdict`、`export_verdict` 与 `memory_accept_reject` 是 AI-first judgment surface，程序只 materialize refs / guard / typed blocker；`package_authority`、`owner_receipt_signer` 与 `grant_helper` 是 programmatic authority/helper surface，只能签 receipt、验证 refs 或返回 action metadata。所有 surface 都禁止从 schema completeness、provider completion、package existence、quality scorecard 分数或 generic lifecycle completion 机械生成 ready verdict。
+
+2026-05-19 fresh cleanup audit 结论：`.worktrees/retire-generic-runtime-surfaces` / `codex/retire-mag-generic-runtime-surfaces` 是 stale lane，分支提交已在当前 `main` 祖先链上，旧 dirty 删除已被当前 `main` 覆盖。该 lane 不再提供可重放代码 cleanup；重新合入会反向带回旧 Hermes/local-runtime 文件并损坏当前 stage runtime event refs 口径。当前应清理 stale worktree / branch，并把剩余 gap 继续限定为外部 OPL/App/production caller evidence gate。
 
 ## 当前测试/证据差距
 

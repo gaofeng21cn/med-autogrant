@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `north_star_reference`
 State: `active_support`
 Machine boundary: 本文是人读目标态参考。机器真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、workspace/runtime artifact root、receipt、质量报告、导出包和 `contracts/runtime-program/current-program.json`。
-Date: `2026-05-18`
+Date: `2026-05-19`
 
 ## 文档读法
 
@@ -117,6 +117,17 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 - privatized audit 与 generated-surface handoff 中的 code path / source_ref 与当前 physical source tree 对齐；漂移路径只能进入 history/tombstone/source-ref refresh，不作为完成证明。
 - 真实 grant workspace 产生 owner receipt、quality movement、package/export receipt、memory receipt、lifecycle receipt、typed blocker 或 no-regression evidence。
 - Legacy Hermes/Gateway/local-manager/journal/probe/compat residue 完成 no-active-caller scan、replacement proof、history/provenance 分类和 physical retirement。
+
+## 2026-05-19 fresh residue audit
+
+`codex/retire-mag-generic-runtime-surfaces` worktree 停在 `fd48dc6`，该提交已是当前 `main` 的祖先。旧 worktree 的未提交删除项会移除 `src/med_autogrant/upstream_hermes.py`、`tests/test_local_runtime.py`、`tests/test_upstream_hermes.py` 以及 local journal / attempt ledger 辅助代码；这些删除已被当前 `main` 的 `7d877b8 Retire MAG local runtime surfaces` 覆盖。旧分支若重新合入会反向带回旧 Hermes/local-runtime 文件，并会丢失当前 `stage_control_plane` event refs，因此只可清理，不可重放。
+
+本轮 fresh scan 后，MAG active source 的标准 agent residue 分类如下：
+
+- 已物理退役 / history-only：`upstream_hermes.py`、`test_local_runtime.py`、`test_upstream_hermes.py`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes`、local journal / attempt ledger owner。
+- OPL-owned generated/hosted target，MAG 仅保留 refs-only adapter：product-entry、sidecar、status/user-loop、runtime registration、lifecycle receipt bundle、memory receipt projection、package lifecycle handoff、continuous reconciliation、observability refs、safe action metadata。
+- MAG retained private authority：grant truth、fundability / quality / export verdict refs、submission-ready package authority、grant strategy memory body 与 accept/reject、grant transition oracle、owner receipt signer、typed blocker 和 grant-native helper。
+- 仍未关闭的不是 MAG repo 侧功能差距，而是外部证据门：OPL generated/hosted caller、App/workbench consumption、production/default caller、direct/hosted parity、Temporal long soak 与 live receipt reconciliation。
 
 ## 当前差距入口
 

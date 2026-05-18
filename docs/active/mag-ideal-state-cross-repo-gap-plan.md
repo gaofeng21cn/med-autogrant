@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `ideal_state_gap_plan`
 State: `active_plan`
 Machine boundary: 本文是人读 gap / completion plan。机器真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、product-entry manifest、workspace/runtime artifact root、receipt、质量报告和导出包。
-Date: `2026-05-18`
+Date: `2026-05-19`
 
 ## 文档读法
 
@@ -66,6 +66,12 @@ OPL 必须持有：
 
 6. `external_evidence_request_pack`
    `mag_consumer_thinning_contract.external_evidence_request_pack` 已把剩余外部证据门收成 machine-readable request pack：OPL generated/hosted caller consumption、Codex App workbench refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 的状态是 `request_pack_declared_external_evidence_not_claimed`，每个 request 仍是 `requested_not_received`；它只固定 required refs、receipt shapes 和 forbidden payload classes，不实现 OPL runtime / App workbench，也不声明外部证据已完成。
+
+7. `stale_retire_generic_runtime_worktree_closeout`
+   2026-05-19 fresh audit 读取了 `main`、`.worktrees/retire-generic-runtime-surfaces` 和 `codex/retire-mag-generic-runtime-surfaces`。该分支 `fd48dc6` 已是当前 `main` 的祖先；旧 worktree 的 dirty cleanup 与当前 `main` 的 `7d877b8 Retire MAG local runtime surfaces` 重叠，最终树相对 `main` 只剩 `io.py` 空行和 `tests/conftest.py` 类型标注差异。重放旧分支会重新引入 `upstream_hermes.py`、`test_local_runtime.py`、`test_upstream_hermes.py`，并反向破坏当前 `stage_control_plane` refs 口径，因此该 lane 的正确动作是清理 stale worktree / branch，而不是合并。
+
+8. `current_private_surface_classification`
+   当前 MAG 私有功能面分类按 active source 与 machine audit 读取：runtime registration、task lifecycle、source intake 是 declarative grant pack input；lifecycle adapter、observability、sidecar/product status、package lifecycle、human workbench / scheduler metadata 是 refs-only adapter；fundability / quality / export verdict、package authority、transition oracle、owner receipt、memory accept/reject 和 grant helper 是 MAG minimal authority；旧 Hermes/Gateway/local-manager、local journal / attempt ledger、flat shell alias、compat aggregate test 和 repo-owned scheduler / daemon 是 legacy proof tombstone。该分类不允许把 refs-only adapter 再扩写成 MAG-owned generic runtime。
 
 ## Retained Private Authority Surfaces
 
