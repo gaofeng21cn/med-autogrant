@@ -433,6 +433,32 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(bridge_refs["properties"]["legacy_exit_gate_policy"]["const"], "delete_or_history_tombstone_after_replacement_proof")
         self.assertFalse(bridge_refs["properties"]["claims_all_bridge_exits_complete"]["const"])
         self.assertTrue(bridge_refs["properties"]["mag_handler_boundary_ready"]["const"])
+        generated_handoff = manifest_schema["$defs"]["ownerReceiptContract"]["properties"][
+            "generated_surface_handoff"
+        ]
+        currentness = generated_handoff["properties"]["current_mag_path_status"]["properties"]
+        self.assertEqual(
+            currentness["surface_kind"]["const"],
+            "mag_generated_surface_handoff_currentness_proof",
+        )
+        self.assertEqual(currentness["status"]["const"], "current")
+        self.assertEqual(currentness["checked_surface_count"]["const"], 6)
+        self.assertEqual(currentness["missing_current_mag_path_count"]["const"], 0)
+        self.assertEqual(
+            currentness["stale_path_policy"]["const"],
+            "history_or_source_ref_refresh_only",
+        )
+        self.assertFalse(currentness["claims_opl_replacement_exists"]["const"])
+        self.assertFalse(currentness["claims_all_bridge_exits_complete"]["const"])
+        self.assertFalse(currentness["claims_production_long_run_soak_complete"]["const"])
+        generated_surface = generated_handoff["properties"]["generated_or_bridge_surfaces"]["items"]
+        self.assertIn("current_mag_path_status", generated_surface["required"])
+        path_status = generated_surface["properties"]["current_mag_path_status"]["properties"]
+        self.assertEqual(path_status["surface_kind"]["const"], "mag_current_path_status")
+        self.assertEqual(path_status["status"]["const"], "current")
+        self.assertEqual(path_status["missing_count"]["const"], 0)
+        self.assertEqual(path_status["stale_path_policy"]["const"], "history_or_source_ref_refresh_only")
+        self.assertTrue(path_status["paths"]["items"]["properties"]["exists"]["const"])
         coverage = thinning["properties"]["functional_harness_consumer_coverage"]
         self.assertEqual(
             coverage["properties"]["surface_kind"]["const"],

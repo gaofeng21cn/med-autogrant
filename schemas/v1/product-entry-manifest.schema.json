@@ -3552,6 +3552,38 @@
                 "grouped_cli_api", "projection_builder", "lifecycle_wrapper"
               ]
             },
+            "current_mag_path_status": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "surface_kind",
+                "status",
+                "checked_surface_count",
+                "checked_path_count",
+                "missing_current_mag_path_count",
+                "missing_current_mag_paths",
+                "stale_path_policy",
+                "proof_policy",
+                "claims_opl_replacement_exists",
+                "claims_all_bridge_exits_complete",
+                "claims_production_long_run_soak_complete"
+              ],
+              "properties": {
+                "surface_kind": {"const": "mag_generated_surface_handoff_currentness_proof"},
+                "status": {"const": "current"},
+                "checked_surface_count": {"const": 6},
+                "checked_path_count": {"type": "integer", "minimum": 1},
+                "missing_current_mag_path_count": {"const": 0},
+                "missing_current_mag_paths": {"type": "array", "maxItems": 0},
+                "stale_path_policy": {"const": "history_or_source_ref_refresh_only"},
+                "proof_policy": {"type": "string", "minLength": 1},
+                "claims_opl_replacement_exists": {"const": false},
+                "claims_all_bridge_exits_complete": {"const": false},
+                "claims_production_long_run_soak_complete": {"const": false}
+              }
+            },
+            "missing_current_mag_path_count": {"const": 0},
+            "stale_path_policy": {"const": "history_or_source_ref_refresh_only"},
             "generated_or_bridge_surfaces": {
               "type": "array",
               "minItems": 6,
@@ -3562,6 +3594,8 @@
                   "surface_id", "surface_status", "active_caller_owner", "current_owner", "target_owner",
                   "domain_handler_target", "domain_handler_owner", "current_mag_path_role",
                   "bridge_exit_gate",
+                  "current_mag_paths", "current_mag_path_status", "missing_current_mag_path_count",
+                  "stale_path_policy",
                   "compiler_input_refs", "generated_by_opl_in_target",
                   "current_mag_long_term_owner", "keeps_mag_authority_functions"
                 ],
@@ -3605,6 +3639,49 @@
                       }
                     }
                   },
+                  "current_mag_paths": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {"type": "string", "minLength": 1}
+                  },
+                  "current_mag_path_status": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "required": [
+                      "surface_kind",
+                      "status",
+                      "checked_path_count",
+                      "missing_count",
+                      "missing_paths",
+                      "stale_path_policy",
+                      "paths"
+                    ],
+                    "properties": {
+                      "surface_kind": {"const": "mag_current_path_status"},
+                      "status": {"const": "current"},
+                      "checked_path_count": {"type": "integer", "minimum": 1},
+                      "missing_count": {"const": 0},
+                      "missing_paths": {"type": "array", "maxItems": 0},
+                      "stale_path_policy": {"const": "history_or_source_ref_refresh_only"},
+                      "paths": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": true,
+                          "required": ["path", "exists", "proof_kind", "role"],
+                          "properties": {
+                            "path": {"type": "string", "minLength": 1},
+                            "exists": {"const": true},
+                            "proof_kind": {"const": "repo_file_exists_at_manifest_build_time"},
+                            "role": {"const": "current_mag_domain_handler_or_refs_only_adapter_path"}
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "missing_current_mag_path_count": {"const": 0},
+                  "stale_path_policy": {"const": "history_or_source_ref_refresh_only"},
                   "generated_by_opl_in_target": {"const": true},
                   "current_mag_long_term_owner": {"const": false},
                   "keeps_mag_authority_functions": {"const": false}

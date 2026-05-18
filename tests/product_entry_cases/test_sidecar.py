@@ -376,6 +376,19 @@ class ProductSidecarTest(unittest.TestCase):
                 "generated_surface_can_declare_verdict"
             ]
         )
+        handoff_currentness = export["generated_surface_handoff"]["current_mag_path_status"]
+        self.assertEqual(handoff_currentness["surface_kind"], "mag_generated_surface_handoff_currentness_proof")
+        self.assertEqual(handoff_currentness["status"], "current")
+        self.assertEqual(export["generated_surface_handoff"]["missing_current_mag_path_count"], 0)
+        self.assertEqual(handoff_currentness["missing_current_mag_path_count"], 0)
+        self.assertEqual(handoff_currentness["missing_current_mag_paths"], [])
+        self.assertEqual(
+            export["generated_surface_handoff"]["stale_path_policy"],
+            "history_or_source_ref_refresh_only",
+        )
+        self.assertFalse(handoff_currentness["claims_opl_replacement_exists"])
+        self.assertFalse(handoff_currentness["claims_all_bridge_exits_complete"])
+        self.assertFalse(handoff_currentness["claims_production_long_run_soak_complete"])
         for surface in export["generated_surface_handoff"]["generated_or_bridge_surfaces"]:
             with self.subTest(bridge_surface=surface["surface_id"]):
                 self.assertEqual(surface["bridge_exit_gate"]["surface_kind"], "mag_bridge_exit_gate")
@@ -386,6 +399,12 @@ class ProductSidecarTest(unittest.TestCase):
                     surface["bridge_exit_gate"]["exit_action"],
                     "delete_or_history_tombstone_this_mag_wrapper_keep_domain_handler",
                 )
+                self.assertEqual(surface["current_mag_path_status"]["status"], "current")
+                self.assertEqual(surface["missing_current_mag_path_count"], 0)
+                self.assertEqual(surface["current_mag_path_status"]["missing_count"], 0)
+                for path_status in surface["current_mag_path_status"]["paths"]:
+                    self.assertTrue(path_status["exists"])
+                    self.assertTrue((REPO_ROOT / path_status["path"]).is_file())
         self.assertEqual(
             {
                 item["function_id"]

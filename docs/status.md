@@ -28,6 +28,8 @@ MAG repo 侧 handler/ref-only 边界已收薄：product/status/user-loop/sidecar
 
 机器面同步到 `mag_handler_boundary_ready_external_caller_evidence_gated` / `mag_handler_boundary_ready_external_evidence_gated`：`functional_privatization_audit`、`product-entry manifest`、`sidecar export`、`current-program` 和 `opl-family-contract-adoption` 均声明 `claims_opl_replacement_exists=false`、`claims_all_bridge_exits_complete=false`、`claims_production_long_run_soak_complete=false`。这表示 MAG repo 侧已把自身 surface 收到 handler/ref-only/authority 边界，不表示外部 production/default caller、真实 App/workbench 消费、全部 bridge exit 或长时 soak 已完成。
 
+`mag_consumer_thinning_contract.generated_surface_handoff.current_mag_path_status` 现在为 generated/bridge surface 的每个 `current_mag_paths` 输出 machine-readable currentness proof；`missing_current_mag_path_count=0`，`stale_path_policy=history_or_source_ref_refresh_only`。该 proof 只证明 MAG 当前 handler/ref-only/authority source refs 存在，不能写成 OPL replacement exists、bridge exit complete 或 production soak complete。
+
 local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream Hermes probe、flat shell alias、facade patch bridge 和 compat aggregate test 现在只允许作为 legacy proof / tombstone / regression oracle 存在；无 active caller 后直接删除或归档，不保留 compatibility alias。
 
 MAG retained private surface 限定为 grant domain truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject、owner receipt、transition oracle、grant-native helper 和 focused contract tests。

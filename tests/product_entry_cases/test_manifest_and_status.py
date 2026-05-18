@@ -358,6 +358,25 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
                 "lifecycle_wrapper",
             ],
         )
+        self.assertEqual(
+            generated_handoff["current_mag_path_status"]["surface_kind"],
+            "mag_generated_surface_handoff_currentness_proof",
+        )
+        self.assertEqual(generated_handoff["current_mag_path_status"]["status"], "current")
+        self.assertEqual(generated_handoff["missing_current_mag_path_count"], 0)
+        self.assertEqual(
+            generated_handoff["current_mag_path_status"]["missing_current_mag_path_count"],
+            0,
+        )
+        self.assertEqual(
+            generated_handoff["stale_path_policy"],
+            "history_or_source_ref_refresh_only",
+        )
+        self.assertFalse(generated_handoff["current_mag_path_status"]["claims_opl_replacement_exists"])
+        self.assertFalse(generated_handoff["current_mag_path_status"]["claims_all_bridge_exits_complete"])
+        self.assertFalse(
+            generated_handoff["current_mag_path_status"]["claims_production_long_run_soak_complete"]
+        )
         self.assertEqual(generated_handoff["mag_long_term_owner_surface_ids"], [])
         for surface in generated_handoff["generated_or_bridge_surfaces"]:
             with self.subTest(generated_surface=surface["surface_id"]):
@@ -379,6 +398,16 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
                 self.assertTrue(surface["generated_by_opl_in_target"])
                 self.assertFalse(surface["current_mag_long_term_owner"])
                 self.assertFalse(surface["keeps_mag_authority_functions"])
+                self.assertEqual(surface["current_mag_path_status"]["status"], "current")
+                self.assertEqual(surface["missing_current_mag_path_count"], 0)
+                self.assertEqual(surface["current_mag_path_status"]["missing_count"], 0)
+                self.assertEqual(
+                    surface["stale_path_policy"],
+                    "history_or_source_ref_refresh_only",
+                )
+                for path_status in surface["current_mag_path_status"]["paths"]:
+                    self.assertTrue(path_status["exists"])
+                    self.assertTrue((REPO_ROOT / path_status["path"]).is_file())
         self.assertFalse(generated_handoff["authority_boundary"]["mag_long_term_owner"])
         self.assertFalse(generated_handoff["authority_boundary"]["generated_surface_can_sign_owner_receipt"])
         self.assertFalse(generated_handoff["authority_boundary"]["generated_surface_can_declare_verdict"])
