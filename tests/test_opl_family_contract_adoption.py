@@ -671,21 +671,27 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert thinning["privatized_functional_module_audit_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
     )
-    assert thinning["functional_structure_gap_zero_classification_ref"] == (
+    assert thinning["functional_followthrough_gap_classification_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/"
-        "functional_structure_gap_zero_classification"
+        "functional_followthrough_gap_classification"
     )
-    gap_zero = thinning["functional_structure_gap_zero_classification"]
-    assert gap_zero["state"] == "mag_functional_structure_gaps_zero_external_evidence_gated"
-    assert gap_zero["mag_functional_structure_gap_count"] == 0
-    assert gap_zero["remaining_mag_functional_structure_gaps"] == []
-    assert gap_zero["closed_mag_functional_structure_gap_ids"] == [
+    followthrough = thinning["functional_followthrough_gap_classification"]
+    assert followthrough["state"] == "classification_closed_followthrough_gaps_open"
+    assert followthrough["mag_functional_structure_gap_count"] == 4
+    assert followthrough["remaining_mag_functional_structure_gap_ids"] == [
+        "opl_generated_surface_production_consumption",
+        "active_caller_cutover_and_wrapper_retirement",
+        "opl_app_package_memory_lifecycle_shell_consumption",
+        "legacy_runtime_session_physical_cleanup",
+    ]
+    assert len(followthrough["remaining_mag_functional_structure_gaps"]) == 4
+    assert followthrough["closed_classification_surface_ids"] == [
         "P1_adapter_thinning_and_pack_input",
         "P2_package_export_artifact_lifecycle_handoff",
         "P3_grant_strategy_memory_locator_writeback_handoff",
         "P4_skeleton_generated_surface_and_legacy_retirement",
     ]
-    assert gap_zero["reclassified_testing_evidence_gap_ids"] == [
+    assert followthrough["reclassified_testing_evidence_gap_ids"] == [
         "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
         "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
         "opl_generated_surface_production_consumption_no_regression",
@@ -693,9 +699,11 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "continuous_live_receipt_reconciliation",
         "long_run_live_soak_and_no_forbidden_write_proof",
     ]
-    assert gap_zero["authority_boundary"]["mag_repo_functional_structure_gaps_zero"] is True
-    assert gap_zero["authority_boundary"]["claims_opl_replacement_exists"] is False
-    assert gap_zero["authority_boundary"]["claims_production_long_run_soak_complete"] is False
+    assert followthrough["authority_boundary"]["mag_repo_functional_structure_gaps_zero"] is False
+    assert followthrough["authority_boundary"]["classification_closed"] is True
+    assert followthrough["authority_boundary"]["followthrough_gaps_open"] is True
+    assert followthrough["authority_boundary"]["claims_opl_replacement_exists"] is False
+    assert followthrough["authority_boundary"]["claims_production_long_run_soak_complete"] is False
     assert thinning["consumed_opl_projection_surfaces"] == [
         "family_conflict_envelope",
         "stage_attempt_usage_projection",

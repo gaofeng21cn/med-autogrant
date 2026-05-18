@@ -31,9 +31,12 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     assert generated["stage_control_plane"]["target_domain_id"] == "med-autogrant"
     assert generated["pack_compiler_input"]["generated_surface_owner"] == "one-person-lab"
     assert generated["generated_surface_handoff"]["domain_repo_can_own_generated_surface"] is False
-    assert generated["functional_privatization_audit"]["functional_structure_gap_zero_classification"][
+    assert generated["functional_privatization_audit"]["functional_followthrough_gap_classification"][
         "mag_functional_structure_gap_count"
-    ] == 0
+    ] == 4
+    assert generated["functional_privatization_audit"]["functional_followthrough_gap_classification"][
+        "authority_boundary"
+    ]["mag_repo_functional_structure_gaps_zero"] is False
 
 
 def test_product_entry_package_keeps_lazy_public_export() -> None:

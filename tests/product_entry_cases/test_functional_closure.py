@@ -624,16 +624,25 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(audit["fail_closed_rules"]["delete_grant_lifecycle_stage_as_generic_lifecycle"])
         self.assertFalse(audit["fail_closed_rules"]["delete_package_readiness_as_generic_package_lifecycle"])
         self.assertFalse(audit["fail_closed_rules"]["delete_fundability_or_quality_verdict_as_generic_readiness"])
-        gap_zero = thinning["functional_structure_gap_zero_classification"]
+        followthrough = thinning["functional_followthrough_gap_classification"]
         self.assertEqual(
-            gap_zero["surface_kind"],
-            "mag_functional_structure_gap_zero_classification",
+            followthrough["surface_kind"],
+            "mag_functional_followthrough_gap_classification",
         )
-        self.assertEqual(gap_zero["state"], "mag_functional_structure_gaps_zero_external_evidence_gated")
-        self.assertEqual(gap_zero["mag_functional_structure_gap_count"], 0)
-        self.assertEqual(gap_zero["remaining_mag_functional_structure_gaps"], [])
+        self.assertEqual(followthrough["state"], "classification_closed_followthrough_gaps_open")
+        self.assertEqual(followthrough["mag_functional_structure_gap_count"], 4)
         self.assertEqual(
-            gap_zero["closed_mag_functional_structure_gap_ids"],
+            followthrough["remaining_mag_functional_structure_gap_ids"],
+            [
+                "opl_generated_surface_production_consumption",
+                "active_caller_cutover_and_wrapper_retirement",
+                "opl_app_package_memory_lifecycle_shell_consumption",
+                "legacy_runtime_session_physical_cleanup",
+            ],
+        )
+        self.assertEqual(len(followthrough["remaining_mag_functional_structure_gaps"]), 4)
+        self.assertEqual(
+            followthrough["closed_classification_surface_ids"],
             [
                 "P1_adapter_thinning_and_pack_input",
                 "P2_package_export_artifact_lifecycle_handoff",
@@ -642,7 +651,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             ],
         )
         self.assertEqual(
-            gap_zero["reclassified_testing_evidence_gap_ids"],
+            followthrough["reclassified_testing_evidence_gap_ids"],
             [
                 "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
                 "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
@@ -652,31 +661,29 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "long_run_live_soak_and_no_forbidden_write_proof",
             ],
         )
-        for closed_gap in gap_zero["closed_mag_functional_structure_gaps"]:
+        for closed_gap in followthrough["closed_classification_surfaces"]:
             with self.subTest(closed_gap=closed_gap["gap_id"]):
                 self.assertEqual(closed_gap["previous_bucket"], "functional_structure_gap")
                 self.assertEqual(
                     closed_gap["current_bucket"],
-                    "closed_mag_functional_structure_surface",
+                    "classification_surface_closed_followthrough_open",
                 )
                 self.assertEqual(closed_gap["owner"], "med-autogrant")
                 self.assertTrue(closed_gap["closed_by_refs"])
-        for external_gate in gap_zero["external_owner_gates"]:
-            with self.subTest(external_gate=external_gate["gate_id"]):
-                self.assertEqual(external_gate["current_bucket"], "external_owner_gate")
-                self.assertEqual(external_gate["required_surface_owner"], "one-person-lab")
-                self.assertTrue(external_gate["mag_must_not_implement"])
-        for evidence_gap in gap_zero["reclassified_as_testing_evidence_gaps"]:
+        self.assertEqual(followthrough["external_owner_gates"], [])
+        for evidence_gap in followthrough["reclassified_as_testing_evidence_gaps"]:
             with self.subTest(evidence_gap=evidence_gap["gap_id"]):
                 self.assertEqual(evidence_gap["current_bucket"], "testing_evidence_gap")
                 self.assertEqual(evidence_gap["owner"], "evidence_gate")
                 self.assertTrue(evidence_gap["mag_surface_refs"])
-        self.assertTrue(gap_zero["authority_boundary"]["mag_repo_functional_structure_gaps_zero"])
-        self.assertFalse(gap_zero["authority_boundary"]["claims_opl_replacement_exists"])
+        self.assertFalse(followthrough["authority_boundary"]["mag_repo_functional_structure_gaps_zero"])
+        self.assertTrue(followthrough["authority_boundary"]["classification_closed"])
+        self.assertTrue(followthrough["authority_boundary"]["followthrough_gaps_open"])
+        self.assertFalse(followthrough["authority_boundary"]["claims_opl_replacement_exists"])
         self.assertFalse(
-            gap_zero["authority_boundary"]["claims_opl_generated_surface_production_consumed"]
+            followthrough["authority_boundary"]["claims_opl_generated_surface_production_consumed"]
         )
-        self.assertFalse(gap_zero["authority_boundary"]["claims_production_long_run_soak_complete"])
+        self.assertFalse(followthrough["authority_boundary"]["claims_production_long_run_soak_complete"])
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(

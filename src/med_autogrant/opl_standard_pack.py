@@ -364,8 +364,8 @@ def _functional_privatization_audit(consumer_thinning_contract: Mapping[str, Any
         "target_domain_id": TARGET_DOMAIN_ID,
         "mag_consumer_thinning_contract": dict(consumer_thinning_contract),
         "privatized_functional_module_audit": dict(consumer_thinning_contract["privatized_functional_module_audit"]),
-        "functional_structure_gap_zero_classification": dict(
-            consumer_thinning_contract["functional_structure_gap_zero_classification"]
+        "functional_followthrough_gap_classification": dict(
+            consumer_thinning_contract["functional_followthrough_gap_classification"]
         ),
         "authority_boundary": {
             "opl_can_write_domain_truth": False,

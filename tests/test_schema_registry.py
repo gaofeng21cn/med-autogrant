@@ -511,23 +511,26 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertFalse(authority["opl_harness_pass_can_declare_grant_ready"]["const"])
         self.assertFalse(authority["opl_harness_pass_can_declare_export_ready"]["const"])
 
-        gap_zero = thinning["properties"]["functional_structure_gap_zero_classification"]
-        self.assertIn("functional_structure_gap_zero_classification", thinning["required"])
+        followthrough = thinning["properties"]["functional_followthrough_gap_classification"]
+        self.assertIn("functional_followthrough_gap_classification", thinning["required"])
         self.assertEqual(
-            gap_zero["properties"]["surface_kind"]["const"],
-            "mag_functional_structure_gap_zero_classification",
+            followthrough["properties"]["surface_kind"]["const"],
+            "mag_functional_followthrough_gap_classification",
         )
         self.assertEqual(
-            gap_zero["properties"]["state"]["const"],
-            "mag_functional_structure_gaps_zero_external_evidence_gated",
-        )
-        self.assertEqual(gap_zero["properties"]["mag_functional_structure_gap_count"]["const"], 0)
-        self.assertEqual(
-            gap_zero["properties"]["remaining_mag_functional_structure_gaps"]["maxItems"],
-            0,
+            followthrough["properties"]["state"]["const"],
+            "classification_closed_followthrough_gaps_open",
         )
         self.assertEqual(
-            gap_zero["properties"]["closed_mag_functional_structure_gap_ids"]["const"],
+            followthrough["properties"]["mag_functional_structure_gap_count"]["const"],
+            4,
+        )
+        self.assertEqual(
+            followthrough["properties"]["remaining_mag_functional_structure_gaps"]["minItems"],
+            4,
+        )
+        self.assertEqual(
+            followthrough["properties"]["closed_classification_surface_ids"]["const"],
             [
                 "P1_adapter_thinning_and_pack_input",
                 "P2_package_export_artifact_lifecycle_handoff",
@@ -536,7 +539,7 @@ class SchemaRegistryTest(unittest.TestCase):
             ],
         )
         self.assertEqual(
-            gap_zero["properties"]["reclassified_testing_evidence_gap_ids"]["const"],
+            followthrough["properties"]["reclassified_testing_evidence_gap_ids"]["const"],
             [
                 "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
                 "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
@@ -546,13 +549,15 @@ class SchemaRegistryTest(unittest.TestCase):
                 "long_run_live_soak_and_no_forbidden_write_proof",
             ],
         )
-        gap_zero_authority = gap_zero["properties"]["authority_boundary"]["properties"]
-        self.assertTrue(gap_zero_authority["mag_repo_functional_structure_gaps_zero"]["const"])
-        self.assertFalse(gap_zero_authority["claims_opl_replacement_exists"]["const"])
+        followthrough_authority = followthrough["properties"]["authority_boundary"]["properties"]
+        self.assertFalse(followthrough_authority["mag_repo_functional_structure_gaps_zero"]["const"])
+        self.assertTrue(followthrough_authority["classification_closed"]["const"])
+        self.assertTrue(followthrough_authority["followthrough_gaps_open"]["const"])
+        self.assertFalse(followthrough_authority["claims_opl_replacement_exists"]["const"])
         self.assertFalse(
-            gap_zero_authority["claims_opl_generated_surface_production_consumed"]["const"]
+            followthrough_authority["claims_opl_generated_surface_production_consumed"]["const"]
         )
-        self.assertFalse(gap_zero_authority["claims_production_long_run_soak_complete"]["const"])
+        self.assertFalse(followthrough_authority["claims_production_long_run_soak_complete"]["const"])
 
     def test_product_entry_surface_schemas_pin_skill_runtime_continuity_shape(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))

@@ -76,7 +76,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("lifecycle_receipt_runtime_evidence", framework_boundary["framework_consumed_projection"])
         self.assertIn("physical_skeleton_follow_through", framework_boundary["framework_consumed_projection"])
         self.assertIn(
-            "functional_structure_gap_zero_classification",
+            "functional_followthrough_gap_classification",
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn("ideal_state_closure_status", framework_boundary["framework_consumed_projection"])

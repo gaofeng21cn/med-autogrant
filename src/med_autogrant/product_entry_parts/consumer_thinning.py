@@ -101,8 +101,8 @@ def build_mag_consumer_thinning_contract(
         "generated_surface_handoff": build_generated_surface_handoff(),
         "minimal_authority_functions": build_mag_minimal_authority_functions(),
         "minimal_authority_function_ids": list(MAG_MINIMAL_AUTHORITY_FUNCTION_IDS),
-        "functional_structure_gap_zero_classification": (
-            _build_functional_structure_gap_zero_classification()
+        "functional_followthrough_gap_classification": (
+            _build_functional_followthrough_gap_classification()
         ),
         "allowed_return_shapes": [
             "domain_owner_receipt",
@@ -138,9 +138,9 @@ def build_mag_consumer_thinning_contract(
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "generated_surface_handoff"
             ),
-            "functional_structure_gap_zero_classification_ref": (
+            "functional_followthrough_gap_classification_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
-                "functional_structure_gap_zero_classification"
+                "functional_followthrough_gap_classification"
             ),
         },
         "verdict_authority_refs": {
@@ -204,19 +204,66 @@ def build_mag_consumer_thinning_contract(
 }
 
 
-def _build_functional_structure_gap_zero_classification() -> dict[str, Any]:
+def _build_functional_followthrough_gap_classification() -> dict[str, Any]:
     return {
-        "surface_kind": "mag_functional_structure_gap_zero_classification",
-        "classification_id": "mag.functional_structure_gap_zero.v1",
+        "surface_kind": "mag_functional_followthrough_gap_classification",
+        "classification_id": "mag.functional_followthrough_gap.v1",
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
-        "state": "mag_functional_structure_gaps_zero_external_evidence_gated",
+        "state": "classification_closed_followthrough_gaps_open",
         "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
-        "mag_functional_structure_gap_count": 0,
-        "remaining_mag_functional_structure_gaps": [],
-        "closed_mag_functional_structure_gap_ids": list(MAG_FUNCTIONAL_STRUCTURE_GAP_IDS),
-        "reclassified_testing_evidence_gap_ids": list(MAG_RECLASSIFIED_EVIDENCE_GAP_IDS),
-        "closed_mag_functional_structure_gaps": [
+        "classification_gap_count": 0,
+        "mag_functional_structure_gap_count": 4,
+        "remaining_mag_functional_structure_gap_ids": [
+            "opl_generated_surface_production_consumption",
+            "active_caller_cutover_and_wrapper_retirement",
+            "opl_app_package_memory_lifecycle_shell_consumption",
+            "legacy_runtime_session_physical_cleanup",
+        ],
+        "remaining_mag_functional_structure_gaps": [
+            _followthrough_gap(
+                "opl_generated_surface_production_consumption",
+                owner="one-person-lab",
+                evidence_required=(
+                    "OPL generated product/status/sidecar/grouped CLI/projection/lifecycle "
+                    "surface consumes MAG declarative pack input as the production caller."
+                ),
+                mag_role=(
+                    "provide declarative grant pack input, grant authority functions, owner "
+                    "receipt refs, typed blockers, and no-forbidden-write guard"
+                ),
+            ),
+            _followthrough_gap(
+                "active_caller_cutover_and_wrapper_retirement",
+                owner="one-person-lab",
+                evidence_required=(
+                    "active callers move from MAG hand-written product/status/user-loop/"
+                    "sidecar/grouped wrappers to OPL generated surfaces with direct path "
+                    "no-regression proof"
+                ),
+                mag_role="keep direct domain handlers and grant authority functions only",
+            ),
+            _followthrough_gap(
+                "opl_app_package_memory_lifecycle_shell_consumption",
+                owner="one-person-lab",
+                evidence_required=(
+                    "OPL/App shell consumes MAG package, memory, lifecycle, quality, "
+                    "observability, and workbench refs without writing grant truth"
+                ),
+                mag_role="export body-free refs, owner receipts, verdict refs, and typed blockers",
+            ),
+            _followthrough_gap(
+                "legacy_runtime_session_physical_cleanup",
+                owner=TARGET_DOMAIN_ID,
+                evidence_required=(
+                    "no-active-caller scan, explicit proof/provenance retention, and focused "
+                    "tests allow local runtime/session/probe residue to be deleted or tombstoned"
+                ),
+                mag_role="remove or tombstone non-authority legacy runtime/session surfaces",
+            ),
+        ],
+        "closed_classification_surface_ids": list(MAG_FUNCTIONAL_STRUCTURE_GAP_IDS),
+        "closed_classification_surfaces": [
             _closed_mag_functional_gap(
                 "P1_adapter_thinning_and_pack_input",
                 closed_by_refs=[
@@ -260,24 +307,7 @@ def _build_functional_structure_gap_zero_classification() -> dict[str, Any]:
                 ],
             ),
         ],
-        "external_owner_gates": [
-            _external_owner_gate(
-                "opl_generated_surface_production_consumption",
-                required_surface_owner="one-person-lab",
-                evidence_gate=(
-                    "OPL generated product/status/sidecar/grouped CLI/projection/lifecycle "
-                    "surface consumes MAG declarative pack input in production."
-                ),
-            ),
-            _external_owner_gate(
-                "opl_app_package_memory_lifecycle_shell_consumption",
-                required_surface_owner="one-person-lab",
-                evidence_gate=(
-                    "OPL/App shell consumes MAG package, memory, lifecycle, quality, "
-                    "observability, and workbench refs without writing grant truth."
-                ),
-            ),
-        ],
+        "external_owner_gates": [],
         "reclassified_as_testing_evidence_gaps": [
             _testing_evidence_gap(
                 "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
@@ -350,8 +380,11 @@ def _build_functional_structure_gap_zero_classification() -> dict[str, Any]:
                 ],
             ),
         ],
+        "reclassified_testing_evidence_gap_ids": list(MAG_RECLASSIFIED_EVIDENCE_GAP_IDS),
         "authority_boundary": {
-            "mag_repo_functional_structure_gaps_zero": True,
+            "mag_repo_functional_structure_gaps_zero": False,
+            "classification_closed": True,
+            "followthrough_gaps_open": True,
             "claims_opl_replacement_exists": False,
             "claims_opl_generated_surface_production_consumed": False,
             "claims_real_workspace_memory_migration_complete": False,
@@ -370,9 +403,26 @@ def _closed_mag_functional_gap(gap_id: str, *, closed_by_refs: list[str]) -> dic
     return {
         "gap_id": gap_id,
         "previous_bucket": "functional_structure_gap",
-        "current_bucket": "closed_mag_functional_structure_surface",
+        "current_bucket": "classification_surface_closed_followthrough_open",
         "owner": TARGET_DOMAIN_ID,
         "closed_by_refs": closed_by_refs,
+    }
+
+
+def _followthrough_gap(
+    gap_id: str,
+    *,
+    owner: str,
+    evidence_required: str,
+    mag_role: str,
+) -> dict[str, Any]:
+    return {
+        "gap_id": gap_id,
+        "current_bucket": "functional_structure_followthrough_gap",
+        "owner": owner,
+        "evidence_required": evidence_required,
+        "mag_role": mag_role,
+        "production_soak_gate": False,
     }
 
 
@@ -773,9 +823,9 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "generated_surface_handoff"
             ),
-            "functional_structure_gap_zero_classification_ref": (
+            "functional_followthrough_gap_classification_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
-                "functional_structure_gap_zero_classification"
+                "functional_followthrough_gap_classification"
             ),
         },
         "forbidden_output_classes": [

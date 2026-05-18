@@ -1431,18 +1431,152 @@
     "claims_opl_replacement_exists": false,
     "claims_production_long_run_soak_complete": false,
     "mag_rebuilds_opl_runtime": false,
-    "functional_structure_gap_zero_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_structure_gap_zero_classification",
-    "functional_structure_gap_zero_classification": {
-      "surface_kind": "mag_functional_structure_gap_zero_classification",
-      "classification_id": "mag.functional_structure_gap_zero.v1",
-      "state": "mag_functional_structure_gaps_zero_external_evidence_gated",
-      "mag_functional_structure_gap_count": 0,
-      "remaining_mag_functional_structure_gaps": [],
-      "closed_mag_functional_structure_gap_ids": [
+    "functional_followthrough_gap_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_followthrough_gap_classification",
+    "functional_followthrough_gap_classification": {
+      "authority_boundary": {
+        "claims_continuous_live_receipt_reconciliation_complete": false,
+        "claims_focused_hosted_receipt_verification_complete": false,
+        "claims_opl_generated_surface_production_consumed": false,
+        "claims_opl_replacement_exists": false,
+        "claims_production_long_run_soak_complete": false,
+        "claims_real_workspace_memory_migration_complete": false,
+        "claims_real_workspace_package_lifecycle_complete": false,
+        "classification_closed": true,
+        "followthrough_gaps_open": true,
+        "mag_repo_functional_structure_gaps_zero": false,
+        "opl_can_declare_export_ready": false,
+        "opl_can_write_domain_truth": false,
+        "opl_can_write_memory_body": false
+      },
+      "classification_gap_count": 0,
+      "classification_id": "mag.functional_followthrough_gap.v1",
+      "closed_classification_surface_ids": [
         "P1_adapter_thinning_and_pack_input",
         "P2_package_export_artifact_lifecycle_handoff",
         "P3_grant_strategy_memory_locator_writeback_handoff",
         "P4_skeleton_generated_surface_and_legacy_retirement"
+      ],
+      "closed_classification_surfaces": [
+        {
+          "closed_by_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract",
+            "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+            "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+            "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions"
+          ],
+          "current_bucket": "classification_surface_closed_followthrough_open",
+          "gap_id": "P1_adapter_thinning_and_pack_input",
+          "owner": "med-autogrant",
+          "previous_bucket": "functional_structure_gap"
+        },
+        {
+          "closed_by_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations",
+            "/product_entry_manifest/lifecycle_guarded_apply_proof",
+            "product package-lifecycle-handoff",
+            "product lifecycle-receipt-bundle"
+          ],
+          "current_bucket": "classification_surface_closed_followthrough_open",
+          "gap_id": "P2_package_export_artifact_lifecycle_handoff",
+          "owner": "med-autogrant",
+          "previous_bucket": "functional_structure_gap"
+        },
+        {
+          "closed_by_refs": [
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+            "/product_entry_manifest/controlled_domain_memory_apply_proof",
+            "product memory-receipt-projection"
+          ],
+          "current_bucket": "classification_surface_closed_followthrough_open",
+          "gap_id": "P3_grant_strategy_memory_locator_writeback_handoff",
+          "owner": "med-autogrant",
+          "previous_bucket": "functional_structure_gap"
+        },
+        {
+          "closed_by_refs": [
+            "/product_entry_manifest/standard_domain_agent_skeleton",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+            "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+          ],
+          "current_bucket": "classification_surface_closed_followthrough_open",
+          "gap_id": "P4_skeleton_generated_surface_and_legacy_retirement",
+          "owner": "med-autogrant",
+          "previous_bucket": "functional_structure_gap"
+        }
+      ],
+      "external_owner_gates": [],
+      "mag_functional_structure_gap_count": 4,
+      "owner": "med-autogrant",
+      "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
+      "reclassified_as_testing_evidence_gaps": [
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
+          "mag_surface_refs": [
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+            "product memory-receipt-projection"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "accepted and rejected real workspace memory receipts plus body-free retrieval/writeback projection"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
+          "mag_surface_refs": [
+            "/product_entry_manifest/lifecycle_guarded_apply_proof",
+            "product package-lifecycle-handoff",
+            "product lifecycle-receipt-bundle"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "real workspace package handoff plus cleanup, restore, and retention receipt bundle"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "opl_generated_surface_production_consumption_no_regression",
+          "mag_surface_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
+            "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "external OPL generated/replacement caller consumes MAG pack input without regressing direct MAG surfaces"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "focused_opl_hosted_receipt_verification",
+          "mag_surface_refs": [
+            "product hosted-receipt-verification",
+            "/product_entry_manifest/owner_receipt_contract"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "OPL-hosted attempt evidence reconciles with MAG owner receipt, typed blocker, or no-regression refs"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "continuous_live_receipt_reconciliation",
+          "mag_surface_refs": [
+            "product continuous-receipt-reconciliation",
+            "product controlled-soak-receipt-reconciliation-inventory"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "continuous reconciliation snapshot observes repeated receipt refs without creating a second truth source"
+        },
+        {
+          "current_bucket": "testing_evidence_gap",
+          "gap_id": "long_run_live_soak_and_no_forbidden_write_proof",
+          "mag_surface_refs": [
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+          ],
+          "owner": "evidence_gate",
+          "previous_bucket": "functional_structure_gap",
+          "required_evidence": "long-run live soak includes OPL provider receipt, MAG owner receipt or typed blocker, and no-forbidden-write proof"
+        }
       ],
       "reclassified_testing_evidence_gap_ids": [
         "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
@@ -1452,23 +1586,49 @@
         "continuous_live_receipt_reconciliation",
         "long_run_live_soak_and_no_forbidden_write_proof"
       ],
-      "external_owner_gates": [
+      "remaining_mag_functional_structure_gap_ids": [
         "opl_generated_surface_production_consumption",
-        "opl_app_package_memory_lifecycle_shell_consumption"
+        "active_caller_cutover_and_wrapper_retirement",
+        "opl_app_package_memory_lifecycle_shell_consumption",
+        "legacy_runtime_session_physical_cleanup"
       ],
-      "authority_boundary": {
-        "mag_repo_functional_structure_gaps_zero": true,
-        "claims_opl_replacement_exists": false,
-        "claims_opl_generated_surface_production_consumed": false,
-        "claims_real_workspace_memory_migration_complete": false,
-        "claims_real_workspace_package_lifecycle_complete": false,
-        "claims_focused_hosted_receipt_verification_complete": false,
-        "claims_continuous_live_receipt_reconciliation_complete": false,
-        "claims_production_long_run_soak_complete": false,
-        "opl_can_write_domain_truth": false,
-        "opl_can_write_memory_body": false,
-        "opl_can_declare_export_ready": false
-      }
+      "remaining_mag_functional_structure_gaps": [
+        {
+          "current_bucket": "functional_structure_followthrough_gap",
+          "evidence_required": "OPL generated product/status/sidecar/grouped CLI/projection/lifecycle surface consumes MAG declarative pack input as the production caller.",
+          "gap_id": "opl_generated_surface_production_consumption",
+          "mag_role": "provide declarative grant pack input, grant authority functions, owner receipt refs, typed blockers, and no-forbidden-write guard",
+          "owner": "one-person-lab",
+          "production_soak_gate": false
+        },
+        {
+          "current_bucket": "functional_structure_followthrough_gap",
+          "evidence_required": "active callers move from MAG hand-written product/status/user-loop/sidecar/grouped wrappers to OPL generated surfaces with direct path no-regression proof",
+          "gap_id": "active_caller_cutover_and_wrapper_retirement",
+          "mag_role": "keep direct domain handlers and grant authority functions only",
+          "owner": "one-person-lab",
+          "production_soak_gate": false
+        },
+        {
+          "current_bucket": "functional_structure_followthrough_gap",
+          "evidence_required": "OPL/App shell consumes MAG package, memory, lifecycle, quality, observability, and workbench refs without writing grant truth",
+          "gap_id": "opl_app_package_memory_lifecycle_shell_consumption",
+          "mag_role": "export body-free refs, owner receipts, verdict refs, and typed blockers",
+          "owner": "one-person-lab",
+          "production_soak_gate": false
+        },
+        {
+          "current_bucket": "functional_structure_followthrough_gap",
+          "evidence_required": "no-active-caller scan, explicit proof/provenance retention, and focused tests allow local runtime/session/probe residue to be deleted or tombstoned",
+          "gap_id": "legacy_runtime_session_physical_cleanup",
+          "mag_role": "remove or tombstone non-authority legacy runtime/session surfaces",
+          "owner": "med-autogrant",
+          "production_soak_gate": false
+        }
+      ],
+      "state": "classification_closed_followthrough_gaps_open",
+      "surface_kind": "mag_functional_followthrough_gap_classification",
+      "target_domain_id": "med-autogrant"
     }
   },
   "repo_source_layout_audit": {

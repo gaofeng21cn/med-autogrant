@@ -185,10 +185,10 @@ def build_sidecar_export(
         "minimal_authority_functions": list(
             mag_consumer_thinning_contract.get("minimal_authority_functions") or []
         ),
-        "functional_structure_gap_zero_classification": dict(
+        "functional_followthrough_gap_classification": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
-                "functional_structure_gap_zero_classification",
+                "functional_followthrough_gap_classification",
                 context="sidecar_export.mag_consumer_thinning_contract",
             )
         ),

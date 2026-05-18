@@ -150,24 +150,24 @@ class ProductSidecarTest(unittest.TestCase):
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "generated_surface_handoff"
                 ),
-                "functional_structure_gap_zero_classification_ref": (
+                "functional_followthrough_gap_classification_ref": (
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
-                    "functional_structure_gap_zero_classification"
+                    "functional_followthrough_gap_classification"
                 ),
             },
         )
         self.assertEqual(
-            export["functional_structure_gap_zero_classification"],
-            thinning["functional_structure_gap_zero_classification"],
+            export["functional_followthrough_gap_classification"],
+            thinning["functional_followthrough_gap_classification"],
         )
         self.assertEqual(
-            export["functional_structure_gap_zero_classification"][
+            export["functional_followthrough_gap_classification"][
                 "mag_functional_structure_gap_count"
             ],
-            0,
+            4,
         )
         self.assertFalse(
-            export["functional_structure_gap_zero_classification"]["authority_boundary"][
+            export["functional_followthrough_gap_classification"]["authority_boundary"][
                 "claims_production_long_run_soak_complete"
             ]
         )
