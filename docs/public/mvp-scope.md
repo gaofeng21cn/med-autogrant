@@ -1,5 +1,10 @@
 # Med Auto Grant MVP Scope
 
+Owner: `Med Auto Grant`
+Purpose: `public_mvp_scope`
+State: `current_public_support`
+Machine boundary: 本文是人读 MVP 范围补充。产品和机器真相继续归核心文档、contracts、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 grant workspace artifacts。
+
 ## MVP 目标
 
 第一阶段 MVP 聚焦医学场景下的 `NSFC` 通用申请骨架，而不是先绑定某一个高度特化的项目类型。
@@ -53,4 +58,3 @@
 - 变成 reviewer-owned 的基金评审平台
 - 一开始就优化所有项目类型的模板差异
 - 取代医学 `Research Ops`
-

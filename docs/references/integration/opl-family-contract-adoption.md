@@ -1,5 +1,10 @@
 # MAG Adoption of OPL Family Contracts
 
+Owner: `Med Auto Grant`
+Purpose: `opl_family_contract_adoption_reference`
+State: `reference`
+Machine boundary: 本文是人读集成参考。机器真相继续归 `contracts/runtime-program/current-program.json`、`contracts/runtime-program/opl-family-contract-adoption.json`、product-entry manifest、schemas、source、CLI/API 行为、runtime receipts 与 workspace/artifact outputs。
+
 ## Purpose
 
 这份薄适配声明说明 `Med Auto Grant` 如何满足 `OPL` stage-led、以 Agent executor 为最小执行单位 runtime framework 的 family runtime / quality / incident / operator projection 合同。OPL 可以把 MAG 作为外部领域依赖托管、唤醒和投影；它不把 `OPL` 变成 grant authoring owner，也不把医学论文质量门或视觉交付 proof 引入 MAG。
@@ -81,7 +86,7 @@ MAG 通过顶层 `domain_memory_descriptor` 暴露 OPL 可解析的 `family_doma
 
 实际 memory content、accepted/rejected writeback、fundability strategy、authoring quality verdict 和 submission-ready export verdict 继续由 MAG 持有。OPL 可以索引 locator/ref、展示 consumed-memory provenance、路由 writeback receipt；它不能保存 MAG memory content，不能接受或拒绝 MAG memory writeback，也不能用 memory 产生 fundability、authoring quality 或 export verdict。
 
-2026-05-13 状态：MAG 本仓的 migration/proposal/receipt surface、controlled consumed-memory proof、writeback receipt proof、runtime receipt evidence writer、operator receipt projection、OPL-hosted controlled grant stage attempt proof descriptor、标准 `family_domain_memory_ref.v1` adapter、`controlled_domain_memory_apply_proof` 和 repo-source layout audit 已落地。`domain_memory_descriptor` 是给 OPL family memory index 的薄引用面；`domain_memory_descriptor_locator` 仍是 MAG 侧 memory locator、migration plan、proposal、accept/reject、receipt 与 operator projection 的详细合同面。OPL fresh `domain-memory list --json` 已把 MAG 解析为 resolved descriptor；当前已具备 MAG-owned accepted/rejected receipt evidence 写入路径，但仍不是 production provider-hosted grant soak completed。真实 memory body 仍由 workspace/runtime artifact root 产生，不进入 repo source；后续 OPL-hosted controlled grant stage soak 必须返回 MAG owner receipt、typed blocker 或 no-regression evidence。
+2026-05-19 状态：MAG 本仓的 migration/proposal/receipt surface、controlled consumed-memory proof、writeback receipt proof、runtime receipt evidence writer、operator receipt projection、OPL-hosted controlled grant stage attempt proof descriptor、标准 `family_domain_memory_ref.v1` adapter、`controlled_domain_memory_apply_proof` 和 repo-source layout audit 已落地。`domain_memory_descriptor` 是给 OPL family memory index 的薄引用面；`domain_memory_descriptor_locator` 仍是 MAG 侧 memory locator、migration plan、proposal、accept/reject、receipt 与 operator projection 的详细合同面。OPL 可把 MAG 解析为 resolved descriptor，MAG 也具备 accepted/rejected receipt evidence 写入路径；但 external OPL/App/production caller consumption、owner receipt scaleout、direct/hosted parity 与 Temporal long soak 仍是 evidence gate。真实 memory body 仍由 workspace/runtime artifact root 产生，不进入 repo source；后续 OPL-hosted controlled grant stage soak 必须返回 MAG owner receipt、typed blocker 或 no-regression evidence。
 
 ## Lifecycle Adapter
 

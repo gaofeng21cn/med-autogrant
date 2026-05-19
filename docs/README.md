@@ -1,5 +1,10 @@
 # 文档索引
 
+Owner: `Med Auto Grant`
+Purpose: `docs_index_and_reader_routing`
+State: `current`
+Machine boundary: 本文是人读索引。机器真相继续归 contracts、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 grant workspace artifacts；文档关系需要机器引用时使用语义化 `human_doc:*` id。
+
 这个目录是 `Med Auto Grant` 的第二层技术阅读面。
 仓库首页应优先写给申请人、领域专家和非技术读者。
 而这里负责承接其后的技术记录、追溯记录、参考说明和实现历史。

@@ -6,6 +6,13 @@
   <a href="./README.md">English</a> | <a href="./README.zh-CN.md"><strong>中文</strong></a>
 </p>
 
+<!--
+Owner: Med Auto Grant
+Purpose: public repository entry
+State: current_public
+Machine boundary: Human-readable entry only. Machine truth remains in contracts, schemas, source, CLI/API behavior, product-entry manifest, runtime receipts, and grant workspace artifacts.
+-->
+
 # Med Auto Grant
 
 **面向医学基金写作的 Foundry Agent，也是基于 OPL Framework 构建的 OPL-compatible package**

@@ -62,6 +62,9 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 ## 当前生命周期决策
 
+- 核心五件套 `docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md` 与 `docs/decisions.md` 现在显式标注 `owner/purpose/state/machine boundary`，继续承担 current 人读 truth set。它们解释当前边界，但不成为机器接口。
+- `docs/public/domain-positioning.md` 与 `docs/public/mvp-scope.md` 是 current public support；它们只补充公开定位和 MVP 范围。hosted / OPL consumption 旧证明只作历史上下文，外部 OPL/App/production caller 消费、direct/hosted parity 和 long-soak 仍归 active evidence gate。
+- `docs/references/integration/opl-family-contract-adoption.md` 是 OPL family contract adoption reference；它说明 MAG 如何暴露 descriptor/projection/receipt refs，不声明 production provider-hosted grant soak、App/workbench consumption 或 bridge exit 全部完成。
 - 原 `docs/specs/2026-04-06-*`、`2026-04-08-p5*`、`2026-04-08-r*`、`2026-04-08-runtime-first-*`、`2026-04-09-*`、大部分 `2026-04-10-post-r5a-*`、`2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`、`2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`、`2026-04-11-hermes-backed-*`、`2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`、`2026-04-12-upstream-hermes-agent-fast-cutover-*` 与 `2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md` 已无 active owner 角色，物理移动到 `docs/history/specs/`。
 - product-entry、package/export、formal-entry、authoring completion、AI-first quality、quality/autonomy/family grammar 和 hosted handoff support 相关 support specs 仍留在 `docs/specs/`，但只按 lifecycle map 标注的具体 subsection 阅读；它们不承担 public identity、runtime owner 或 production soak 结论。local runtime honest-stop 相关文件只从 `docs/history/specs/` 阅读。
 - `docs/product/`、`docs/runtime/`、`docs/delivery/`、`docs/source/`、`docs/policies/` 当前保持薄索引职责；不要为了填目录把核心五件套内容拆散成第二真相源。
