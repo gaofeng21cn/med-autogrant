@@ -70,6 +70,10 @@ OPL 必须持有：
 
 2026-05-19 的 physical source morphology 调研把 MAG 的源码目标进一步固定：`agent/` 承载 grant semantic pack，`contracts/` 承载 machine contracts / handoff / external evidence request，`src/med_autogrant/**` 长期只保留 grant domain handler、minimal authority function、refs-only adapter、native helper、fixture 或 diagnostic。`product_entry_parts`、`domain_runtime_parts`、sidecar/status/user-loop、runtime registration、lifecycle receipt bundle、memory receipt projection、package lifecycle handoff、observability refs 和 human workbench / scheduler metadata 不能被读成 MAG-owned runtime platform；它们必须继续写成 OPL generated/hosted caller 的 domain target、refs-only adapter、grant authority refs 或 history/tombstone。当前 `mag_functional_structure_gap_count=0` 表示 repo-side handler/ref-only/authority 边界已闭合，不表示物理命名已经完全像新 agent 模板，也不授权恢复 local journal、attempt ledger、scheduler daemon、Hermes/Gateway/local-manager probe 或 compatibility alias。
 
+这条目标吸收的是成熟 agent/runtime 项目对职责分层的经验，不引入它们作为依赖。2026-05-19 live check 中，OpenAI Agents SDK 把 Agent 的 instructions/tools/handoffs/guardrails/sessions 与 Runner orchestration 分开；LangGraph 把 graph state 的 checkpoint、thread、store、replay 分开；AutoGen 把 agents、tools/workbench、teams、state/termination 分开；CrewAI 用声明式 agent role/goal/tools 和 crew/process 承载协作。MAG 对应落点是：grant pack、authority function、runtime orchestration、session/checkpoint、workbench/evidence gate 分离；OPL 持有通用 orchestration，MAG 持有 grant judgment。
+
+当前 MAG 的物理源码形态仍有 cleanup tail：`domain_runtime_parts/substrate.py` 聚合 workspace、route、quality、export 与 controller 方法；`domain_entry.py` 维护 service-safe command catalog；`cli.py` 暴露 mainline/status/cockpit/direct-entry/user-loop/product/sidecar/status wrapper；`product_entry_parts/manifest_builder.py`、`manifest.py`、`sidecar.py` 和 `runtime_registration.py` 仍构造 product-entry、status、sidecar、runtime registration、resume/wakeup/lifecycle adapter；`control_plane.py` 与 `owner_receipts.py` 仍处理 runtime-state refs；`grant_autonomy_controller.py` 仍表达 loop/budget/reselection/rollback/quality scheduling。它们当前是 direct domain handler、refs-only adapter、authority refs、regression oracle 或 migration input；不是最终标准 Agent 模板。后续应按 generated caller parity 和 external evidence request pack 逐项收薄、改名、迁出或 tombstone。
+
 6. `external_evidence_request_pack`
    `mag_consumer_thinning_contract.external_evidence_request_pack` 已把剩余外部证据门收成 machine-readable request pack：OPL generated/hosted caller consumption、Codex App workbench refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 的状态是 `request_pack_declared_external_evidence_not_claimed`，每个 request 仍是 `requested_not_received`；它只固定 required refs、receipt shapes 和 forbidden payload classes，不实现 OPL runtime / App workbench，也不声明外部证据已完成。
 
@@ -101,6 +105,17 @@ AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof
 
 ## 当前测试/证据差距
 
+## 当前物理源码形态差距
+
+这部分是 physical morphology hygiene tail，不能被 `mag_functional_structure_gap_count=0` 或 OPL cleanup ledger apply/verify 写成已经完成。
+
+- `product_entry_parts/*`、product status、grant progress / cockpit / direct-entry / user-loop 与 sidecar export 仍是 repo-local wrapper 形态；目标是 OPL generated product/status/workbench/sidecar shell 成为 production/default caller，MAG 只保留 grant handler target、receipt signer、typed blocker、verdict refs 与 safe action metadata。
+- `domain_runtime_parts/substrate.py`、`domain_entry.py` 和 grouped CLI command catalog 仍容易被读成 MAG runtime substrate；目标是把 domain runtime 口径降为 route/authority adapter 和 regression oracle，不持有 generic runner、queue、attempt ledger 或 session shell。
+- `runtime_registration.py`、`control_plane.py`、lifecycle receipt bundle、memory/package projection 和 owner receipt helper 只允许输出 body-free refs、receipt、typed blocker 或 action metadata；目标是 OPL lifecycle/session/workbench caller 稳定后迁出 generic envelope。
+- `grant_autonomy_controller.py` 只能作为 grant route / budget / blocker policy 的 domain controller，不得变成 MAG-owned long-running runtime loop；质量/fundability/export 判断必须来自 AI-first grant stage artifact。
+
+关闭门槛是：external evidence request pack 被 OPL/App/production caller 消费，direct/hosted parity 与 no-forbidden-write 持续成立，MAG owner receipt / typed blocker roundtrip 可重复，active caller 迁移后不保留 compatibility alias。
+
 以下是结构边界正确后的证据门，不能反向重开 MAG repo 侧 active bridge exit：
 
 - 真实 OPL-hosted grant-stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence。
@@ -128,7 +143,7 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
    审计 retained authority surfaces，确保 fundability / quality / export / memory accept-reject 的判断都来自 AI-first stage output，package / receipt / helper 只做 programmatic guard，代码只做 validator、materializer、receipt signer、guard 和 refs projection。
 
 5. `physical_source_morphology_hygiene`
-   继续把 active source 中带 runtime / product-entry / sidecar / lifecycle / workbench / scheduler 语义的模块保持在 domain handler、refs-only adapter、minimal authority function 或 history/tombstone 角色；新增代码默认进入 `agent/` pack、`contracts/`、authority function 或 domain handler，不重建本地 runtime/journal/attempt ledger，不新增 compatibility facade。
+   继续把 active source 中带 runtime / product-entry / sidecar / lifecycle / workbench / scheduler 语义的模块保持在 domain handler、refs-only adapter、minimal authority function 或 history/tombstone 角色；优先治理 `domain_runtime_parts/substrate.py`、`product_entry_parts/*`、`runtime_registration.py`、`control_plane.py`、owner receipt helper、grouped CLI wrapper 和 autonomy controller 的平台化命名。新增代码默认进入 `agent/` pack、`contracts/`、authority function 或 domain handler，不重建本地 runtime/journal/attempt ledger，不新增 compatibility facade。
 
 ## 当前不能写成
 
