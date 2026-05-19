@@ -67,10 +67,13 @@ OPL 必须持有：
 6. `external_evidence_request_pack`
    `mag_consumer_thinning_contract.external_evidence_request_pack` 已把剩余外部证据门收成 machine-readable request pack：OPL generated/hosted caller consumption、Codex App workbench refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 的状态是 `request_pack_declared_external_evidence_not_claimed`，每个 request 仍是 `requested_not_received`；它只固定 required refs、receipt shapes 和 forbidden payload classes，不实现 OPL runtime / App workbench，也不声明外部证据已完成。
 
-7. `stale_retire_generic_runtime_worktree_closeout`
+7. `legacy_cleanup_dry_run_ready`
+   `physical_skeleton_follow_through` 已补齐 replacement parity refs、no-regression evidence refs、tombstone/history refs 和 physically removed active path 的 domain owner handoff receipt refs。2026-05-19 OPL dry-run 读取当前 MAG manifest 后，`opl agents legacy-cleanup apply --domain mag --mode dry-run` 返回 `plan_status=ready`、`lifecycle_apply.status=dry_run_ready`、`safe_action_count=3`、`unsafe_action_count=0`。这关闭的是 OPL cleanup gate blocker；它不声明外部 OPL/App production caller evidence、grant-stage live soak 或 owner receipt scaleout 已完成。
+
+8. `stale_retire_generic_runtime_worktree_closeout`
    2026-05-19 fresh audit 读取了 `main`、`.worktrees/retire-generic-runtime-surfaces` 和 `codex/retire-mag-generic-runtime-surfaces`。该分支 `fd48dc6` 已是当前 `main` 的祖先；旧 worktree 的 dirty cleanup 与当前 `main` 的 `7d877b8 Retire MAG local runtime surfaces` 重叠，最终树相对 `main` 只剩 `io.py` 空行和 `tests/conftest.py` 类型标注差异。重放旧分支会重新引入 `upstream_hermes.py`、`test_local_runtime.py`、`test_upstream_hermes.py`，并反向破坏当前 `stage_control_plane` refs 口径，因此该 lane 的正确动作是清理 stale worktree / branch，而不是合并。
 
-8. `current_private_surface_classification`
+9. `current_private_surface_classification`
    当前 MAG 私有功能面分类按 active source 与 machine audit 读取：runtime registration、task lifecycle、source intake 是 declarative grant pack input；lifecycle adapter、observability、sidecar/product status、package lifecycle、human workbench / scheduler metadata 是 refs-only adapter；fundability / quality / export verdict、package authority、transition oracle、owner receipt、memory accept/reject 和 grant helper 是 MAG minimal authority；旧 Hermes/Gateway/local-manager、local journal / attempt ledger、flat shell alias、compat aggregate test 和 repo-owned scheduler / daemon 是 legacy proof tombstone。该分类不允许把 refs-only adapter 再扩写成 MAG-owned generic runtime。
 
 ## Retained Private Authority Surfaces
@@ -101,6 +104,8 @@ AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof
 
 这些 evidence gate 的 repo-local request surface 已落地为 `mag.external_evidence_request_pack.v1`；后续关闭证据门必须来自 OPL/App/production caller 的真实 receipt 或 no-regression evidence，不在 MAG 仓内生成替代 runtime proof。
 
+Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run apply。后续若涉及物理删除，只能由 MAG owner receipt 证明；OPL 只能消费 refs-only cleanup ledger，不能替 MAG 删除 grant repo 文件或宣布 grant readiness。
+
 ## 完善顺序
 
 1. `consume_external_evidence_request_pack`
@@ -122,4 +127,5 @@ AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof
 - 不能把 `mag_functional_structure_gap_count=0` 写成 external production/default caller、真实 App/workbench consumption 或 production long-run soak 已完成。
 - 不能把 quality scorecard、schema completeness、controller route、package existence 或 mechanical projection 写成 AI-first grant quality / fundability / export verdict。
 - 不能把 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、compatibility aggregate test 或 `codex_cli` executor 写回默认 runtime owner。
+- 不能把 MAG legacy cleanup dry-run ready 写成 external production/default caller、真实 App/workbench consumption、grant readiness 或 production long-run soak 已完成。
 - 不能为了兼容保留旧模块、旧接口、旧测试、旧 CLI alias、facade 或 wrapper；active caller 迁走后直接删除或进入 history/tombstone。

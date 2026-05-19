@@ -365,6 +365,24 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
             "active_path_scan_no_legacy_default_caller"
         ),
         "active_path_scan_no_legacy_default_caller": active_path_scan,
+        "replacement_parity_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract",
+            "/product_entry_manifest/owner_receipt_contract",
+            "/product_entry_manifest/grant_transition_oracle",
+            "/product_entry_manifest/controlled_soak_no_regression_attempt",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        ],
+        "no_regression_evidence_refs": [
+            "tests/product_entry_cases/test_hosted_receipt_verification.py::ProductEntryHostedReceiptVerificationTest::test_hosted_receipt_verification_matches_opl_attempt_to_mag_receipt_refs",
+            "tests/product_entry_cases/test_grant_transition_oracle.py::ProductEntryGrantTransitionOracleTest::test_oracle_sidecar_closeout_writes_no_regression_owner_receipt_refs",
+        ],
+        "tombstone_refs": [
+            "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
+        ],
+        "history_refs": [
+            "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
+            "docs/status.md#旧面退役校准",
+        ],
         "first_follow_through_scope": [
             "manifest exposes root anchors and declarative agent pack refs",
             "repo-source layout audit requires root anchors to exist",
@@ -383,11 +401,17 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
                 "path_family": "default Gateway active path",
                 "state": "physically_removed_from_active_source",
                 "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
+                "domain_owner_handoff_receipt_refs": [
+                    "mag://owner-handoff/default-gateway-active-path-retired"
+                ],
             },
             {
                 "path_family": "default local-manager active path",
                 "state": "physically_removed_from_active_source",
                 "evidence_ref": "docs/status.md#旧面退役校准",
+                "domain_owner_handoff_receipt_refs": [
+                    "mag://owner-handoff/default-local-manager-active-path-retired"
+                ],
             },
         ],
         "next_physical_moves": [

@@ -538,7 +538,48 @@ class ProductSidecarTest(unittest.TestCase):
             export["physical_skeleton_follow_through"]["surface_kind"],
             "mag_physical_skeleton_follow_through",
         )
-        self.assertFalse(export["physical_skeleton_follow_through"]["moves_workspace_artifacts"])
+        physical_follow_through = export["physical_skeleton_follow_through"]
+        self.assertFalse(physical_follow_through["moves_workspace_artifacts"])
+        self.assertEqual(
+            physical_follow_through["replacement_parity_refs"],
+            [
+                "/product_entry_manifest/mag_consumer_thinning_contract",
+                "/product_entry_manifest/owner_receipt_contract",
+                "/product_entry_manifest/grant_transition_oracle",
+                "/product_entry_manifest/controlled_soak_no_regression_attempt",
+                "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            ],
+        )
+        self.assertEqual(
+            physical_follow_through["no_regression_evidence_refs"],
+            [
+                "tests/product_entry_cases/test_hosted_receipt_verification.py::ProductEntryHostedReceiptVerificationTest::test_hosted_receipt_verification_matches_opl_attempt_to_mag_receipt_refs",
+                "tests/product_entry_cases/test_grant_transition_oracle.py::ProductEntryGrantTransitionOracleTest::test_oracle_sidecar_closeout_writes_no_regression_owner_receipt_refs",
+            ],
+        )
+        self.assertEqual(
+            physical_follow_through["tombstone_refs"],
+            ["docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md"],
+        )
+        self.assertEqual(
+            physical_follow_through["history_refs"],
+            [
+                "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
+                "docs/status.md#旧面退役校准",
+            ],
+        )
+        removed_residue = [
+            item
+            for item in physical_follow_through["legacy_active_path_residue"]
+            if item["state"] == "physically_removed_from_active_source"
+        ]
+        self.assertEqual(
+            [item["domain_owner_handoff_receipt_refs"] for item in removed_residue],
+            [
+                ["mag://owner-handoff/default-gateway-active-path-retired"],
+                ["mag://owner-handoff/default-local-manager-active-path-retired"],
+            ],
+        )
         self.assertEqual(
             export["ideal_state_closure_status"]["surface_kind"],
             "mag_ideal_state_closure_status",
