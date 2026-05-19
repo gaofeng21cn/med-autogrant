@@ -18,3 +18,5 @@ Machine boundary: 人读索引。机器真相继续归 contracts、schemas、sou
 当前 active plan 采用 direct retirement posture：旧模块、旧接口、旧 CLI alias、facade patch bridge、兼容聚合测试或旧 runtime owner wording 若已被当前 owner surface 替代，应先迁移 active caller，再删除或归入 history/tombstone，不新增 compatibility shell。该 posture 也被 `product-entry-manifest` 的 `ideal_state_closure_status.direct_retirement_posture` 投影。
 
 MAG-owned transition/oracle 后续工作以 [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md) 为唯一 active plan 入口：MAG 负责 grant transition table、guard、typed blocker、owner action 和 oracle fixture；generic state-machine runner、queue、retry/dead-letter 与 provider lifecycle 归 OPL Framework。当前仓内 transition table / oracle fixture 已落地，并有 oracle -> sidecar `stage-attempt/closeout` -> owner/no-regression receipt refs 的 focused proof；这仍不等于 OPL-hosted production long-run soak 已完成。
+
+新增 active 文档必须先证明不能由 `mag-ideal-state-cross-repo-gap-plan.md`、核心五件套、`docs/specs/specs_lifecycle_map.md`、当前 contract/source surface 或 `docs/history/**` 承接。历史 spec、closeout、provider proof、旧 runtime/local-manager/Gateway/Hermes 记录和 dated evidence 不进入本目录；若仍有 current 规则，先抽取到对应 owner，再把原文保留为 provenance。

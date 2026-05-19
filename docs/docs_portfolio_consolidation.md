@@ -70,6 +70,16 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 - `docs/product/`、`docs/runtime/`、`docs/delivery/`、`docs/source/`、`docs/policies/` 当前保持薄索引职责；不要为了填目录把核心五件套内容拆散成第二真相源。
 - 旧 `tests/test_product_entry.py` 聚合入口、`domain_runtime_parts.patch_targets` patch bridge、Gateway/local-manager default path 与 legacy flat CLI shell alias 继续按 direct retirement posture 处理；文档层只保留 history/provenance，不新增兼容入口。
 
+## 长清单治理
+
+MAG 的 dense dated specs 和历史 specs 只能通过 `docs/specs/specs_lifecycle_map.md` 分层读取，不再把每个历史 tranche 当成 active checklist。
+
+- `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 是唯一当前 gap / 完善计划；它只保留当前结构状态、证据门、完善顺序和禁止误写口径。
+- `docs/specs/specs_lifecycle_map.md` 是 specs direct-reader guard；它负责告诉读者某个 dated spec 的当前有效 subsection、replacement owner 和历史状态，不新增 implementation backlog。
+- `docs/history/specs/` 保存 activation package、provider proof、post-R5A hardening 和 retired proof 记录；这些文件中的 `Current Truth` 标题只能按当时语境读取。
+- 如果 support spec 中的某个规则仍 current，应抽取到核心五件套、active gap plan、policy/spec owner、contract 或 source surface；不要继续在同一 dated spec 里追加 2026-05 之后的状态。
+- 历史长表若只提供 provenance，保持 history；若仍影响当前行动，合并为 `owner / current state / evidence gate / next action` 四列后进入 active owner。
+
 ## Transition / Oracle Gap
 
 MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 管理。MAG 只定义 grant transition table、fundability / aims / review / package guards、typed blocker、owner action 和 oracle fixtures；generic state-machine runner、matrix runner、queue、retry/dead-letter、provider lifecycle 与 operator workbench 归 OPL Framework。
