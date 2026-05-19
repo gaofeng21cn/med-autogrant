@@ -112,11 +112,13 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 ## 理想完成门槛
 
 - Direct MAG app skill path 与 OPL-hosted path 使用同一 MAG owner surfaces。
+- Pack compiler input 只能用 `canonical_semantic_pack_root="agent/"` 与 `canonical_semantic_pack_role="repo_source_declarative_grant_pack"` 表达 canonical grant semantic pack；旧 `canonical_repo_source_semantic_pack`、`domain_pack_root` 或 README-based root signal 不再作为机器接口。`required_domain_pack_paths` 只列真实 prompt / stage / skill / quality gate / knowledge 文件，不能包含 `agent/README.md`。
 - Product-entry manifest、schema 和 tests 使用 `opl_provider_runtime_contract` 表达 OPL provider runtime owner；`codex_cli` 仅保留为默认 executor owner / default executor。
 - OPL generated / hosted surfaces 是 MAG generic wrapper/caller 的长期 owner；MAG 手写 shell 只保留 domain handler、authority function、refs-only adapter、diagnostic cleanup 或 provenance fixture。MAG repo 侧 bridge 退出必须经过 generated-surface bridge exit gate 或 legacy exit gate；外部 production/default caller 和 live soak 另走证据门。
 - `mag_functional_structure_gap_count=0` 只表示 MAG repo 侧 active bridge exit 已闭合，不表示 external production/default caller、真实 App/workbench consumption 或 production long-run soak 已完成。
 - MAG retained private authority surfaces 完成逐项 AI-first 审计：fundability、authoring quality/export 和 grant strategy memory accept/reject 是 AI-first judgment surface，必须回到 grant stage output 或 AI critique artifact；package authority、owner receipt 和 grant helper 是 programmatic guard surface，只能依 owner receipt、typed blocker、refs 和 action metadata 工作。程序只做 schema validator、materializer、receipt signer、guard 和 refs projection，不能机械生成 ready verdict。
 - privatized audit 与 generated-surface handoff 中的 code path / source_ref 与当前 physical source tree 对齐；漂移路径只能进入 history/tombstone/source-ref refresh，不作为完成证明。
+- 根层 `functional_privatization_audit.mag_consumer_thinning_contract.active_path_scan_state` 必须来自真实 `physical_skeleton_follow_through.active_path_scan_no_legacy_default_caller`，不能停留在 `not_available`。active source scan 只证明 legacy default caller / retired path 在 repo source 中没有复活；它不证明外部 production caller、App/workbench 消费或 Temporal long soak。
 - 真实 grant workspace 产生 owner receipt、quality movement、package/export receipt、memory receipt、lifecycle receipt、typed blocker 或 no-regression evidence。
 - Legacy Hermes/Gateway/local-manager/journal/probe/compat residue 完成 no-active-caller scan、replacement proof、history/provenance 分类和 physical retirement。
 

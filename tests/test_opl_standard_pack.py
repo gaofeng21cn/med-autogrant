@@ -57,6 +57,12 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     assert generated["functional_privatization_audit"]["functional_followthrough_gap_classification"][
         "authority_boundary"
     ]["mag_repo_functional_structure_gaps_zero"] is True
+    thinning_contract = generated["functional_privatization_audit"]["mag_consumer_thinning_contract"]
+    assert thinning_contract["active_path_scan_state"] == "passed"
+    assert thinning_contract["guarded_by_active_path_scan_ref"] == (
+        "/product_entry_manifest/physical_skeleton_follow_through/"
+        "active_path_scan_no_legacy_default_caller"
+    )
 
 
 def test_opl_standard_pack_declares_real_agent_domain_pack_paths() -> None:
@@ -64,14 +70,10 @@ def test_opl_standard_pack_declares_real_agent_domain_pack_paths() -> None:
     compiler_input = generated["pack_compiler_input"]
     pack_paths = compiler_input["required_domain_pack_paths"]
 
-    assert compiler_input["canonical_repo_source_semantic_pack"] == {
-        "path": "agent/",
-        "owner": "med-autogrant",
-        "state": "active_declarative_grant_pack",
-        "src_role": "domain_handler_minimal_authority_and_native_helper_only",
-    }
+    assert compiler_input["canonical_semantic_pack_root"] == "agent/"
+    assert compiler_input["canonical_semantic_pack_role"] == "repo_source_declarative_grant_pack"
     assert len(pack_paths) >= 20
-    assert "agent/README.md" in pack_paths
+    assert not any(path.endswith("/README.md") for path in pack_paths)
     assert any(path.startswith("agent/prompts/") for path in pack_paths)
     assert any(path.startswith("agent/stages/") for path in pack_paths)
     assert any(path.startswith("agent/skills/") for path in pack_paths)

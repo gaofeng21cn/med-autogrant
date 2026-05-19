@@ -10,6 +10,7 @@ from med_autogrant.product_entry_parts.consumer_thinning import build_mag_consum
 from med_autogrant.product_entry_parts.consumer_thinning_pack import (
     build_mag_minimal_authority_surface_taxonomy,
 )
+from med_autogrant.product_entry_parts.functional_closure import build_physical_skeleton_follow_through
 from med_autogrant.product_entry_parts.primitives import (
     GRANT_COCKPIT_KIND,
     GRANT_DIRECT_ENTRY_KIND,
@@ -75,7 +76,6 @@ DECLARATIVE_DOMAIN_PACK = [
 ]
 
 REQUIRED_DOMAIN_PACK_PATHS = [
-    "agent/README.md",
     "agent/prompts/call_and_candidate_intake.md",
     "agent/prompts/fundability_strategy.md",
     "agent/prompts/specific_aims_and_structure.md",
@@ -121,7 +121,10 @@ def build_standard_pack() -> dict[str, Any]:
     stage_control_plane = build_mag_family_stage_control_plane(
         family_action_catalog=action_catalog,
     )
-    consumer_thinning_contract = build_mag_consumer_thinning_contract()
+    physical_skeleton_follow_through = build_physical_skeleton_follow_through()
+    consumer_thinning_contract = build_mag_consumer_thinning_contract(
+        physical_skeleton_follow_through=physical_skeleton_follow_through,
+    )
 
     return {
         "domain_descriptor": _domain_descriptor(),
@@ -281,12 +284,8 @@ def _pack_compiler_input(minimal_authority_surfaces: list[dict[str, Any]]) -> di
         "domain_id": TARGET_DOMAIN_ID,
         "domain_pack_owner": TARGET_DOMAIN_ID,
         "generated_surface_owner": GENERATED_SURFACE_OWNER,
-        "canonical_repo_source_semantic_pack": {
-            "path": "agent/",
-            "owner": TARGET_DOMAIN_ID,
-            "state": "active_declarative_grant_pack",
-            "src_role": "domain_handler_minimal_authority_and_native_helper_only",
-        },
+        "canonical_semantic_pack_root": "agent/",
+        "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
         "required_domain_pack_paths": REQUIRED_DOMAIN_PACK_PATHS,
         "declarative_domain_pack": DECLARATIVE_DOMAIN_PACK,
         "minimal_authority_functions": MINIMAL_AUTHORITY_FUNCTIONS,

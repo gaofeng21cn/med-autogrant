@@ -170,7 +170,7 @@
   "mag_consumer_thinning_contract": {
     "active_caller_owner": "med-autogrant",
     "active_caller_surface": "mag_direct_domain_entry_until_opl_caller_evidence",
-    "active_path_scan_state": "not_available",
+    "active_path_scan_state": "passed",
     "adapter_role": "domain_authority_pack_with_thin_program_surface",
     "allowed_return_shapes": [
       "domain_owner_receipt",

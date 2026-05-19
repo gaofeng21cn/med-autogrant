@@ -5,12 +5,8 @@
     "opl_can_write_domain_truth": false,
     "opl_can_write_memory_body": false
   },
-  "canonical_repo_source_semantic_pack": {
-    "owner": "med-autogrant",
-    "path": "agent/",
-    "src_role": "domain_handler_minimal_authority_and_native_helper_only",
-    "state": "active_declarative_grant_pack"
-  },
+  "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
+  "canonical_semantic_pack_root": "agent/",
   "declarative_domain_pack": [
     "stage_descriptors",
     "action_catalog",
@@ -523,7 +519,6 @@
     "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"
   },
   "required_domain_pack_paths": [
-    "agent/README.md",
     "agent/prompts/call_and_candidate_intake.md",
     "agent/prompts/fundability_strategy.md",
     "agent/prompts/specific_aims_and_structure.md",
