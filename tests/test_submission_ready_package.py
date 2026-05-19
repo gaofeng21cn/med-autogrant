@@ -65,10 +65,29 @@ class SubmissionReadyPackageCliTest(unittest.TestCase):
             submission_package = payload["submission_ready_package"]
             self.assertEqual(submission_package["package_kind"], "submission_ready_package")
             self.assertEqual(submission_package["readiness_verdict"], "submission_ready")
-            self.assertTrue(submission_package["fully_automatic"])
+            self.assertFalse(submission_package["fully_automatic"])
             self.assertTrue(submission_package["submission_ready"])
             self.assertFalse(submission_package["external_submission_performed"])
             self.assertEqual(submission_package["automation_scope"], "local_submission_package")
+            self.assertEqual(
+                submission_package["mechanical_package_completeness"],
+                {
+                    "status": "passed",
+                    "passed": True,
+                    "blocking_issue_count": 0,
+                    "blocking_issue_ids": [],
+                },
+            )
+            self.assertEqual(
+                submission_package["submission_ready_export_verdict"],
+                {
+                    "export_verdict_ref": "mag-verdict://submission-ready-export/nsfc-demo-001/draft-v1",
+                    "verdict_state": "submission_ready",
+                    "owner": "med-autogrant",
+                    "source_kind": "mag_owner_receipt",
+                    "provenance_ref": "runtime://mag/receipts/export/nsfc-demo-001/draft-v1.json",
+                },
+            )
             self.assertEqual(submission_package["audit_summary"]["blocking_issue_count"], 0)
             self.assertEqual(submission_package["audit_summary"]["missing_mandatory_sections"], [])
             self.assertEqual(submission_package["audit_summary"]["unresolved_evidence_gap_count"], 0)
@@ -102,7 +121,39 @@ class SubmissionReadyPackageCliTest(unittest.TestCase):
             self.assertIn("missing_mandatory_sections", payload["error"])
             self.assertFalse(output_dir.exists())
 
-    def _write_complete_submission_workspace(self, tmp_root: Path) -> Path:
+    def test_build_submission_ready_package_requires_owner_export_verdict(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            workspace_path = self._write_complete_submission_workspace(
+                Path(tmp_dir),
+                include_export_verdict=False,
+            )
+            output_dir = Path(tmp_dir) / "submission-ready"
+
+            exit_code, stdout, stderr = self.run_cli(
+                "package",
+                "submission-ready",
+                "--input",
+                str(workspace_path),
+                "--output-dir",
+                str(output_dir),
+                "--format",
+                "json",
+            )
+
+            self.assertEqual(exit_code, 1)
+            self.assertEqual(stderr, "")
+            payload = json.loads(stdout)
+            self.assertFalse(payload["ok"])
+            self.assertIn("submission ready package blocked", payload["error"])
+            self.assertIn("missing_submission_ready_export_verdict", payload["error"])
+            self.assertFalse(output_dir.exists())
+
+    def _write_complete_submission_workspace(
+        self,
+        tmp_root: Path,
+        *,
+        include_export_verdict: bool = True,
+    ) -> Path:
         workspace = json.loads(FROZEN_EXAMPLE_PATH.read_text(encoding="utf-8"))
         workspace = deepcopy(workspace)
         active_draft = workspace["application_drafts"][-1]
@@ -158,6 +209,14 @@ class SubmissionReadyPackageCliTest(unittest.TestCase):
         )
         for evidence_item in workspace["preliminary_evidence_pack"]["evidence_items"]:
             evidence_item["gaps"] = []
+        if include_export_verdict:
+            workspace["submission_ready_export_verdict"] = {
+                "export_verdict_ref": "mag-verdict://submission-ready-export/nsfc-demo-001/draft-v1",
+                "verdict_state": "submission_ready",
+                "owner": "med-autogrant",
+                "source_kind": "mag_owner_receipt",
+                "provenance_ref": "runtime://mag/receipts/export/nsfc-demo-001/draft-v1.json",
+            }
 
         workspace_path = tmp_root / "submission-ready-workspace.json"
         workspace_path.write_text(json.dumps(workspace, ensure_ascii=False, indent=2), encoding="utf-8")

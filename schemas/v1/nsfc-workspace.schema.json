@@ -123,6 +123,9 @@
         "$ref": "revision-plan.schema.json"
       }
     },
+    "submission_ready_export_verdict": {
+      "$ref": "submission-ready-package.schema.json#/$defs/submissionReadyExportVerdict"
+    },
     "current_selection": {
       "type": "object",
       "additionalProperties": false,

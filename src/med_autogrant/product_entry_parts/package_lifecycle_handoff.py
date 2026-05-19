@@ -3,6 +3,10 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID, _require_nonempty_string
+from med_autogrant.submission_ready import (
+    SubmissionReadyExportVerdictError,
+    normalize_submission_ready_export_verdict,
+)
 from med_autogrant.workspace_types import WorkspaceStateError
 
 
@@ -148,21 +152,10 @@ def _project_gap_summary(gap_report: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _project_export_verdict_refs(export_verdict: Mapping[str, Any]) -> dict[str, str]:
-    refs = {
-        "export_verdict_ref": _require_nonempty_string(
-            export_verdict.get("export_verdict_ref"),
-            field_name="export_verdict_ref",
-            context="export_verdict",
-        )
-    }
-    verdict_state = export_verdict.get("verdict_state")
-    if verdict_state is not None:
-        refs["verdict_state"] = _require_nonempty_string(
-            verdict_state,
-            field_name="verdict_state",
-            context="export_verdict",
-        )
-    return refs
+    try:
+        return normalize_submission_ready_export_verdict(export_verdict, context="export_verdict")
+    except SubmissionReadyExportVerdictError as exc:
+        raise WorkspaceStateError(str(exc)) from exc
 
 
 def _project_manual_portal_boundary(manual_portal_boundary: Mapping[str, Any]) -> dict[str, str]:

@@ -34,6 +34,26 @@ def test_scorecard_and_dossier_schemas_require_ai_reviewer_provenance() -> None:
     assert "review_artifact_ref" in summary_required
 
 
+def test_submission_ready_schema_requires_owner_export_verdict_gate() -> None:
+    submission_ready_schema = json.loads(_read("schemas/v1/submission-ready-package.schema.json"))
+
+    required = submission_ready_schema["required"]
+    assert "mechanical_package_completeness" in required
+    assert "submission_ready_export_verdict" in required
+
+    verdict = submission_ready_schema["$defs"]["submissionReadyExportVerdict"]
+    assert verdict["required"] == [
+        "export_verdict_ref",
+        "verdict_state",
+        "owner",
+        "source_kind",
+        "provenance_ref",
+    ]
+    assert "med-autogrant" in verdict["properties"]["owner"]["enum"]
+    assert "Codex CLI critique executor" in verdict["properties"]["owner"]["enum"]
+    assert "mag_owner_receipt" in verdict["properties"]["source_kind"]["enum"]
+
+
 def test_quality_candidate_statuses_are_gated_by_ai_reviewer_backed_critique() -> None:
     from med_autogrant.ai_first_boundaries import AI_REVIEWER_BACKED_OWNERS
     from med_autogrant.domain_runtime_parts import runtime_ops

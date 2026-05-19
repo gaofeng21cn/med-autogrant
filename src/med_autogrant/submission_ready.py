@@ -3,10 +3,30 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any
 
+from med_autogrant.ai_first_boundaries import AI_REVIEWER_BACKED_OWNERS
+
 
 SUBMISSION_READY_PACKAGE_VERSION = 1
 SUBMISSION_READY_PACKAGE_KIND = "submission_ready_package"
 AUTOMATION_SCOPE = "local_submission_package"
+MAG_EXPORT_VERDICT_OWNER = "med-autogrant"
+SUBMISSION_READY_EXPORT_VERDICT_STATES = frozenset({"submission_ready", "blocked"})
+SUBMISSION_READY_EXPORT_VERDICT_SOURCE_KINDS = frozenset(
+    {
+        "mag_owner_receipt",
+        "mag_owner_export_artifact",
+        "ai_backed_reviewer_artifact",
+        "ai_backed_export_artifact",
+        "ai_backed_export_receipt",
+    }
+)
+SUBMISSION_READY_EXPORT_VERDICT_OWNERS = frozenset(
+    {MAG_EXPORT_VERDICT_OWNER, *AI_REVIEWER_BACKED_OWNERS}
+)
+
+
+class SubmissionReadyExportVerdictError(ValueError):
+    pass
 
 
 def build_submission_ready_package_document(
@@ -44,7 +64,7 @@ def build_submission_ready_package_document(
 
     freeze_manifest = _optional_mapping(final_package.get("freeze_manifest")) or {}
     checkpoint_summary = _optional_mapping(final_package.get("checkpoint_summary")) or {}
-    blocking_issues = _build_blocking_issues(
+    mechanical_blocking_issues = _build_blocking_issues(
         final_package=final_package,
         hosted_contract_bundle=hosted_contract_bundle,
         freeze_manifest=freeze_manifest,
@@ -55,7 +75,26 @@ def build_submission_ready_package_document(
         representative_outputs=representative_outputs,
         active_projects=active_projects,
     )
-    submission_ready = not blocking_issues
+    mechanical_package_completeness = _build_mechanical_package_completeness(mechanical_blocking_issues)
+    submission_ready_export_verdict, export_verdict_issue = _resolve_submission_ready_export_verdict(
+        document.get("submission_ready_export_verdict")
+    )
+    blocking_issues = list(mechanical_blocking_issues)
+    if export_verdict_issue is not None:
+        blocking_issues.append(export_verdict_issue)
+    elif submission_ready_export_verdict is not None and submission_ready_export_verdict["verdict_state"] != "submission_ready":
+        blocking_issues.append(
+            _issue(
+                "submission_ready_export_verdict_blocked",
+                "submission_ready_export_verdict 未授权 submission_ready。",
+            )
+        )
+    submission_ready = (
+        mechanical_package_completeness["passed"]
+        and submission_ready_export_verdict is not None
+        and submission_ready_export_verdict["verdict_state"] == "submission_ready"
+        and not blocking_issues
+    )
 
     return {
         "package_version": SUBMISSION_READY_PACKAGE_VERSION,
@@ -67,9 +106,11 @@ def build_submission_ready_package_document(
         "lifecycle_stage": final_package["lifecycle_stage"],
         "automation_scope": AUTOMATION_SCOPE,
         "readiness_verdict": "submission_ready" if submission_ready else "blocked",
-        "fully_automatic": submission_ready,
+        "fully_automatic": False,
         "submission_ready": submission_ready,
         "external_submission_performed": False,
+        "mechanical_package_completeness": mechanical_package_completeness,
+        "submission_ready_export_verdict": submission_ready_export_verdict,
         "audit_summary": {
             "checkpoint_status": checkpoint_summary.get("checkpoint_status"),
             "draft_status": freeze_manifest.get("draft_status"),
@@ -107,6 +148,94 @@ def build_submission_ready_package_document(
             ),
         },
         "blocking_issues": blocking_issues,
+    }
+
+
+def normalize_submission_ready_export_verdict(
+    value: Any,
+    *,
+    context: str = "submission_ready_export_verdict",
+) -> dict[str, str]:
+    if not isinstance(value, dict):
+        raise SubmissionReadyExportVerdictError(
+            f"{context} requires a MAG owner or AI-backed export verdict with provenance."
+        )
+    export_verdict_ref = _require_nonempty_string(
+        value.get("export_verdict_ref"),
+        field_name="export_verdict_ref",
+        context=context,
+    )
+    verdict_state = _require_nonempty_string(
+        value.get("verdict_state"),
+        field_name="verdict_state",
+        context=context,
+    )
+    owner = _require_nonempty_string(value.get("owner"), field_name="owner", context=context)
+    source_kind = _require_nonempty_string(
+        value.get("source_kind"),
+        field_name="source_kind",
+        context=context,
+    )
+    provenance_ref = _require_nonempty_string(
+        value.get("provenance_ref"),
+        field_name="provenance_ref",
+        context=context,
+    )
+    if verdict_state not in SUBMISSION_READY_EXPORT_VERDICT_STATES:
+        raise SubmissionReadyExportVerdictError(
+            f"{context}.verdict_state must be submission_ready or blocked."
+        )
+    if owner not in SUBMISSION_READY_EXPORT_VERDICT_OWNERS:
+        raise SubmissionReadyExportVerdictError(
+            f"{context}.owner must be med-autogrant or an AI-backed reviewer/export owner."
+        )
+    if source_kind not in SUBMISSION_READY_EXPORT_VERDICT_SOURCE_KINDS:
+        raise SubmissionReadyExportVerdictError(f"{context}.source_kind is not an allowed export verdict source.")
+    if owner == MAG_EXPORT_VERDICT_OWNER and not source_kind.startswith("mag_owner_"):
+        raise SubmissionReadyExportVerdictError(
+            f"{context}.source_kind must be MAG-owned when owner is med-autogrant."
+        )
+    if owner != MAG_EXPORT_VERDICT_OWNER and not source_kind.startswith("ai_backed_"):
+        raise SubmissionReadyExportVerdictError(
+            f"{context}.source_kind must be AI-backed when owner is an AI reviewer/export artifact."
+        )
+    return {
+        "export_verdict_ref": export_verdict_ref,
+        "verdict_state": verdict_state,
+        "owner": owner,
+        "source_kind": source_kind,
+        "provenance_ref": provenance_ref,
+    }
+
+
+def _resolve_submission_ready_export_verdict(
+    value: Any,
+) -> tuple[dict[str, str] | None, dict[str, str] | None]:
+    try:
+        return normalize_submission_ready_export_verdict(value), None
+    except SubmissionReadyExportVerdictError as exc:
+        issue_id = (
+            "missing_submission_ready_export_verdict"
+            if value is None
+            else "invalid_submission_ready_export_verdict"
+        )
+        return None, _issue(issue_id, str(exc))
+
+
+def _build_mechanical_package_completeness(
+    mechanical_blocking_issues: list[dict[str, str]]
+) -> dict[str, Any]:
+    issue_ids = [
+        issue["issue_id"]
+        for issue in mechanical_blocking_issues
+        if isinstance(issue.get("issue_id"), str) and issue["issue_id"].strip()
+    ]
+    passed = not issue_ids
+    return {
+        "status": "passed" if passed else "blocked",
+        "passed": passed,
+        "blocking_issue_count": len(issue_ids),
+        "blocking_issue_ids": issue_ids,
     }
 
 
@@ -258,3 +387,9 @@ def _nonempty_or_unknown(value: Any) -> str:
     if isinstance(value, str) and value.strip():
         return value.strip()
     return "unknown"
+
+
+def _require_nonempty_string(value: Any, *, field_name: str, context: str) -> str:
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    raise SubmissionReadyExportVerdictError(f"{context}.{field_name} is required.")

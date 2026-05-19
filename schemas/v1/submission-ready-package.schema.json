@@ -24,6 +24,80 @@
         }
       }
     },
+    "mechanicalPackageCompleteness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "passed",
+        "blocking_issue_count",
+        "blocking_issue_ids"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "blocked"
+          ]
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "blocking_issue_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocking_issue_ids": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "submissionReadyExportVerdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "export_verdict_ref",
+        "verdict_state",
+        "owner",
+        "source_kind",
+        "provenance_ref"
+      ],
+      "properties": {
+        "export_verdict_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "verdict_state": {
+          "type": "string",
+          "enum": [
+            "submission_ready",
+            "blocked"
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "enum": [
+            "med-autogrant",
+            "Codex CLI critique executor",
+            "Hermes-Agent critique executor",
+            "OPL Hermes-Agent critique executor"
+          ]
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "mag_owner_receipt",
+            "mag_owner_export_artifact",
+            "ai_backed_reviewer_artifact",
+            "ai_backed_export_artifact",
+            "ai_backed_export_receipt"
+          ]
+        },
+        "provenance_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
     "auditSummary": {
       "type": "object",
       "additionalProperties": false,
@@ -214,6 +288,8 @@
     "fully_automatic",
     "submission_ready",
     "external_submission_performed",
+    "mechanical_package_completeness",
+    "submission_ready_export_verdict",
     "audit_summary",
     "artifact_manifest",
     "submission_dossier",
@@ -260,6 +336,12 @@
     },
     "external_submission_performed": {
       "const": false
+    },
+    "mechanical_package_completeness": {
+      "$ref": "#/$defs/mechanicalPackageCompleteness"
+    },
+    "submission_ready_export_verdict": {
+      "$ref": "#/$defs/submissionReadyExportVerdict"
     },
     "audit_summary": {
       "$ref": "#/$defs/auditSummary"

@@ -4,7 +4,7 @@
 
 当前处置：
 
-- Keep：`build-submission-ready-package`、`submission-ready-package.schema.json`、fail-closed local export gate，以及 authoring completion 和 package readiness 之间的诚实边界。
+- Keep：`build-submission-ready-package`、`submission-ready-package.schema.json`、fail-closed local export gate、AI-first MAG owner export verdict gate，以及 authoring completion 和 package readiness 之间的诚实边界。
 - Superseded：旧 `OPL Gateway` / hosted runtime implication。OPL 通过当前 stage-led framework 消费 MAG descriptor/projection；MAG 保留 package/export authority。
 - Direct retirement posture：只为保留 superseded Gateway reading 的旧 wrappers、tests 或 docs，应迁到最新 package/export owner surface 后删除或归档，不新增 compatibility aliases。
 
@@ -18,13 +18,14 @@ Date: `2026-04-13`
 
 ## Goal
 
-把“本地 submission-ready 交付”从零散的 `artifact_bundle -> final_package -> hosted_contract_bundle` 导出链，收口成一个面向用户、可一键执行、可 fail-closed 拒绝不完整材料的正式命令 `build-submission-ready-package`，同时保持下面这些边界不变：
+把“本地 submission-ready 交付”从零散的 `artifact_bundle -> final_package -> hosted_contract_bundle` 导出链，收口成一个面向用户、可一键执行、可 fail-closed 拒绝不完整材料或缺少 owner export verdict 的正式命令 `build-submission-ready-package`，同时保持下面这些边界不变：
 
 - `Codex CLI` 继续是默认 concrete executor
 - `Hermes-Agent` 只作为显式 OPL receipt/proof lane，不持有默认 runtime、authoring executor、grant truth 或 quality verdict
 - `Med Auto Grant` 继续持有 grant domain truth、author-side route 与导出物 owner
 - 当前 landed 的只是“本地 submission-ready 交付包导出”，不是外部官网自动提交、不是成熟 Web UI，也不是 Word/PDF 全自动定稿系统
 - 这条命令面也不重写 MAG 的正文 authoring 完成语义；它只定义更严格的本地交付 gate
+- 机械材料完整性只能形成 `mechanical_package_completeness`；submission-ready 授权必须来自 MAG owner 或 AI-backed reviewer/export artifact/receipt 的 `submission_ready_export_verdict`
 
 ## Landed Facts
 
@@ -59,16 +60,18 @@ Date: `2026-04-13`
 - `fully_automatic`
 - `submission_ready`
 - `external_submission_performed`
+- `mechanical_package_completeness`
+- `submission_ready_export_verdict`
 - `audit_summary`
 - `artifact_manifest`
 - `submission_dossier`
 - `blocking_issues`
 
-这里的 `fully_automatic = true` 只表示“当前本地交付目录已经可一键全自动导出”，不表示外部官网提交已经发生。
+这里保留的 `fully_automatic` 不再表示 AI-first submission readiness；本地 materialization 可以自动执行，但 `submission_ready=true` 只能由 owner-backed `submission_ready_export_verdict` 授权。
 
 ### 3. 导出逻辑保持 fail-closed，而不是凑合导出
 
-当前命令不会对不完整的 frozen workspace 勉强写出交付目录。
+当前命令不会对不完整的 frozen workspace，也不会对缺少 MAG/AI-backed owner export verdict 的 workspace 勉强写出交付目录。
 
 只要出现下面任一问题，就会直接报错并拒绝写出输出目录：
 
@@ -82,8 +85,12 @@ Date: `2026-04-13`
 - evidence item 仍有未关闭 `gaps`
 - 缺少 representative outputs
 - 缺少 active projects / reusable research assets
+- 缺少带 `owner`、`export_verdict_ref`、`source_kind` 与 `provenance_ref` 的 `submission_ready_export_verdict`
+- `submission_ready_export_verdict.verdict_state != submission_ready`
 
 这意味着当前口径不是“能导出一个差不多的包”，而是“只有达到 submission-ready gate 才允许导出本地交付目录”。
+
+机械 gate 现在只写入 `mechanical_package_completeness.status=passed|blocked`。它可以说明必备章节、证据、代表作、在研项目和 frozen package chain 是否完整，但不能签署或替代 submission-ready export verdict。
 
 ### 3.5 这条严格 gate 不等于正文 authoring 的唯一完成条件
 
@@ -126,7 +133,7 @@ Date: `2026-04-13`
 
 因此当前最诚实的说法是：
 
-- `Med Auto Grant` 已经可以把“通过 gate 的本地 submission-ready 交付目录”一键导出
+- `Med Auto Grant` 已经可以把“机械完整且通过 MAG/AI-backed owner export verdict gate 的本地 submission-ready 交付目录”一键导出
 - 它也允许在正文科学性已收口但客观补件尚未齐备时，先把任务停在申请人审查 / TODO / 显式唤醒边界
 - 但它仍不是“从零材料到官网提交”的全自动成熟产品
 
@@ -145,7 +152,8 @@ Date: `2026-04-13`
 - `build-submission-ready-package` 已进入 CLI / domain entry / hosted bundle / product entry command catalog
 - `submission-ready-package.schema.json` 已进入 schema index 与相关 bundle/export truth
 - incomplete frozen workspace 会 fail-closed 拒绝导出
-- complete frozen workspace 会稳定导出四份本地交付物
+- 缺少 owner-backed `submission_ready_export_verdict` 的 mechanically complete workspace 会 fail-closed 拒绝导出
+- complete frozen workspace 只有在 MAG/AI-backed owner export verdict 存在时才会稳定导出四份本地交付物
 - docs / current-program / mainline-status / product product entry 对 `P4.F` 口径保持同步
 
 ## Honest Boundary
@@ -153,7 +161,7 @@ Date: `2026-04-13`
 这条 current truth 只说明：
 
 - 本地 submission-ready 交付包已经 landed 为正式 command surface
-- 当前系统已经能对满足 gate 的 workspace 一键导出本地交付目录
+- 当前系统已经能对满足 mechanical completeness 与 owner export verdict gate 的 workspace 一键导出本地交付目录
 - 当前导出逻辑保持 fail-closed，不会为缺材料的 workspace 生成伪完成包
 
 它不意味着：

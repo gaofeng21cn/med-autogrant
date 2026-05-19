@@ -27,6 +27,8 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
                 "export_verdict_ref": "mag-verdict://submission-ready-export/p3c",
                 "verdict_state": "submission_ready",
                 "owner": "med-autogrant",
+                "source_kind": "mag_owner_receipt",
+                "provenance_ref": "runtime://mag/receipts/export/p3c.json",
             },
             manual_portal_boundary={
                 "manual_portal_boundary_ref": "mag-boundary://manual-portal/p3c",
@@ -53,6 +55,9 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
             {
                 "export_verdict_ref": "mag-verdict://submission-ready-export/p3c",
                 "verdict_state": "submission_ready",
+                "owner": "med-autogrant",
+                "source_kind": "mag_owner_receipt",
+                "provenance_ref": "runtime://mag/receipts/export/p3c.json",
             },
         )
         self.assertEqual(
@@ -95,7 +100,35 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
                 },
                 export_verdict={
                     "export_verdict_ref": "mag-verdict://submission-ready-export/p3c",
+                    "verdict_state": "submission_ready",
+                    "owner": "med-autogrant",
+                    "source_kind": "mag_owner_receipt",
+                    "provenance_ref": "runtime://mag/receipts/export/p3c.json",
                     "opl_can_declare_export_ready": True,
+                },
+                manual_portal_boundary={
+                    "manual_portal_boundary_ref": "mag-boundary://manual-portal/p3c",
+                },
+                lifecycle_receipt_refs={
+                    "lifecycle_receipt_ref": "runtime://mag/receipts/lifecycle/p3c.json",
+                },
+            )
+
+    def test_package_lifecycle_handoff_rejects_export_verdict_without_owner_provenance(self) -> None:
+        from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
+            build_package_lifecycle_handoff_projection,
+        )
+
+        with self.assertRaisesRegex(WorkspaceStateError, "export_verdict.*owner|provenance"):
+            build_package_lifecycle_handoff_projection(
+                package_refs={"final_package_ref": "mag-package://final/p3c"},
+                gap_report={
+                    "gap_report_ref": "mag-gap://package-export/p3c",
+                    "summary": "missing verdict provenance must fail closed",
+                },
+                export_verdict={
+                    "export_verdict_ref": "mag-verdict://submission-ready-export/p3c",
+                    "verdict_state": "submission_ready",
                 },
                 manual_portal_boundary={
                     "manual_portal_boundary_ref": "mag-boundary://manual-portal/p3c",
@@ -122,6 +155,10 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
                 },
                 export_verdict={
                     "export_verdict_ref": "mag-verdict://submission-ready-export/p3c",
+                    "verdict_state": "submission_ready",
+                    "owner": "med-autogrant",
+                    "source_kind": "mag_owner_receipt",
+                    "provenance_ref": "runtime://mag/receipts/export/p3c.json",
                 },
                 manual_portal_boundary={
                     "manual_portal_boundary_ref": "mag-boundary://manual-portal/p3c",
@@ -139,6 +176,10 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
             },
             export_verdict={
                 "export_verdict_ref": "mag-verdict://submission-ready-export/p3c",
+                "verdict_state": "submission_ready",
+                "owner": "med-autogrant",
+                "source_kind": "mag_owner_receipt",
+                "provenance_ref": "runtime://mag/receipts/export/p3c.json",
             },
             manual_portal_boundary={
                 "manual_portal_boundary_ref": "mag-boundary://manual-portal/p3c",

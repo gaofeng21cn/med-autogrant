@@ -2,7 +2,7 @@
 
 Date: `2026-04-27`
 
-本文冻结 `Med Auto Grant` 的 AI-first 质量边界：schema-backed pack、scorecard、dossier、gate 和 controller report 可以保存结构、证据引用和机械 readiness，但不持有基金写作质量判断。写作质量、评审判断和 revision intent 必须来自 AI-authored author / reviewer artifact。
+本文冻结 `Med Auto Grant` 的 AI-first 质量边界：schema-backed pack、scorecard、dossier、gate 和 controller report 可以保存结构、证据引用和机械 readiness，但不持有基金写作质量判断或 submission-ready export verdict。写作质量、评审判断、revision intent 和 export readiness verdict 必须来自 AI-authored author / reviewer artifact、MAG owner receipt 或等价 owner-backed export artifact。
 
 ## 边界
 
@@ -10,6 +10,7 @@ Date: `2026-04-27`
 - `grant_quality_scorecard` 与 `grant_quality_closure_dossier` 是 AI-critique-backed aggregator；它们可以汇总完整度、结构评分、证据链接、lineage、queue 和 blocker。
 - scorecard 字段、schema 完整度、证据链接存在性和数字分数只是结构信号，不能独立把 workspace 提升为 `near_submission_candidate` 或 `submission_grade_candidate`。
 - 缺少 active AI-backed critique 或等价 AI-authored quality assessment 时，scorecard 必须保持 `assessment_owner=projection_only` 和 `ai_reviewer_required=true`。
+- submission-ready package 的机械完整性只能写入 `mechanical_package_completeness`；缺少带 provenance/ref 的 MAG owner 或 AI-backed `submission_ready_export_verdict` 时，export gate 必须 fail closed。
 
 ## 候选状态规则
 
@@ -44,6 +45,7 @@ Date: `2026-04-27`
 
 - 新增 quality-ready state 前，先识别持有判断的 AI artifact。
 - 将 scorecard 映射到 autonomy status 前，检查 `assessment_owner` 和 `ai_reviewer_required`。
+- 将 package completeness 映射到 submission-ready 输出前，检查 `submission_ready_export_verdict.owner`、`export_verdict_ref` 和 `provenance_ref`。
 - 新增 revision execution 行为前，确认每个 prose mutation 都来自 `mutation_payload`。
 - schema/gate/controller code 只能作为 aggregation 和 routing layer，不能变成 hidden author 或 hidden reviewer。
 - 修改 scorecard、dossier、critique、revision 或 autonomy quality mapping 时，同步新增或更新 AI-first boundary tests。
