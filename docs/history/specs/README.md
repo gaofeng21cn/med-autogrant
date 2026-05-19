@@ -17,9 +17,9 @@
 - 2026-04-07 P1/P2/P3 entry、durability 与 mainline tranche 记录：仍留在 `../../specs/2026-04-07-*.md`，只按 support/provenance subsection 阅读。
 - 2026-04-08 verification support 记录：仍留在 `../../specs/2026-04-08-p3*.md` 与 `../../specs/2026-04-08-p4*.md`；P5 future activation 与 R1/R3 runtime-productization packages 位于本目录的 `./2026-04-08-p5*.md`、`./2026-04-08-r*.md` 和 `./2026-04-08-runtime-first-*.md`。
 - 2026-04-09 R3/R5 与 post-R5A hardening briefs：`./2026-04-09-*.md`
-- 2026-04-10 post-R5A fail-closed hardening activation packages：`./2026-04-10-post-r5a-final-package-*.md`、`./2026-04-10-post-r5a-hosted-contract-bundle-*.md`、`./2026-04-10-post-r5a-local-runtime-validation-*.md`、`./2026-04-10-post-r5a-revised-*.md`、`./2026-04-10-post-r5a-stage-route-*.md` 和 `./2026-04-10-post-r5a-worktree-aware-*.md`
-- 2026-04-11 Hermes/reset 与 local-runtime closeout 记录：已退役 provider proof 位于本目录的 `2026-04-11-hermes-backed-*.md` 与 `2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`；仍留在 `../../specs/` 的 2026-04-11 local-runtime honest-stop 记录只作为 fail-closed / honest-stop provenance 阅读。
-- 2026-04-12 hosted-caller、OPL alignment、product-entry 与 handoff 记录：已退役 upstream Hermes fast-cutover board/current-truth 与 OPL alignment historical snapshot 位于本目录；仍留在 `../../specs/` 的 hosted contract、caller consumption 和 product-entry 细节只作为 support/provenance 阅读，旧 gateway/federation/provider 说法按历史处理。
+- 2026-04-10 post-R5A fail-closed hardening activation packages 与 local-runtime walkthrough：`./2026-04-10-post-r5a-final-package-*.md`、`./2026-04-10-post-r5a-hosted-contract-bundle-*.md`、`./2026-04-10-post-r5a-local-runtime-validation-*.md`、`./2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`、`./2026-04-10-post-r5a-revised-*.md`、`./2026-04-10-post-r5a-stage-route-*.md` 和 `./2026-04-10-post-r5a-worktree-aware-*.md`
+- 2026-04-11 Hermes/reset 与 local-runtime closeout 记录：已退役 provider proof 位于本目录的 `2026-04-11-hermes-backed-*.md` 与 `2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`；local-runtime honest-stop 记录位于 `./2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`，只作为 fail-closed / honest-stop provenance 阅读。
+- 2026-04-12 hosted-caller、OPL alignment、product-entry、route snapshot 与 handoff 记录：已退役 upstream Hermes fast-cutover board/current-truth、author-side executor routing snapshot 与 OPL alignment historical snapshot 位于本目录；仍留在 `../../specs/` 的 hosted contract、caller consumption 和 product-entry 细节只作为 support/provenance 阅读，旧 gateway/federation/provider 说法按历史处理。
 - 2026-04-13 authoring route landing、默认 executor vocabulary 与 submission-ready 记录：`../../specs/2026-04-13-*.md`；已退役 Hermes-native proof tombstone：`./2026-04-13-hermes-native-critique-proof-tombstone.md`
 
 Active specs 继续列在 [Specs 索引](../../specs/README.md)。
@@ -33,6 +33,8 @@ Active specs 继续列在 [Specs 索引](../../specs/README.md)。
 - [Object model schema v1](./2026-04-06-object-model-schema-v1.md)
 - [Runtime-first productization program](./2026-04-08-runtime-first-productization-program.md)
 - [Runtime-first R1 to R5 boundary map](./2026-04-08-runtime-first-r1-to-r5-boundary-map.md)
+- [Post-R5A local runtime walkthrough and output consistency](./2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)
+- [Post-R5A local runtime upper-bound honest stop](./2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md)
 - [OPL aligned ideal target and phase map historical snapshot](./2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md)
 - [Hermes-backed runtime capability migration map](./2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md)
 - [Hermes-backed runtime substrate program](./2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md)

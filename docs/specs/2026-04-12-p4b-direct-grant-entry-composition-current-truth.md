@@ -133,5 +133,5 @@ Date: `2026-04-12`
 - `P4 mature direct grant product entry` 整体已完成
 - mature Web UI 已落地
 - hosted runtime 已完成
-- `OPL Gateway` 已在本仓落地
+- 旧 `OPL Gateway` landed wording 只保留为 provenance，不是 current owner line
 - pending authoring route 已拥有新的 landed executor

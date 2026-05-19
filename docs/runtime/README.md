@@ -5,7 +5,7 @@ Purpose: `grant_runtime_support`
 State: `active_support`
 Machine boundary: 人读索引。Runtime truth 继续归 contracts、schemas、source、current-program records、runtime evidence 与 owner receipts。
 
-本目录承接 MAG runtime/control/projection 支撑和 direct/hosted 边界说明。可跨 MAS/MAG/RCA 复用的通用 runtime primitive 应记录为 MAG-to-OPL 上收候选。
+本目录承接 MAG runtime/control/projection 支撑和 direct/hosted 边界说明。通用 runtime primitive 的 owner 是 OPL Framework / shared family layer；MAG 只保留 grant-domain handler、refs-only projection、owner receipt、typed blocker 和 authority refs。
 
 当前入口先看：
 
@@ -13,9 +13,12 @@ Machine boundary: 人读索引。Runtime truth 继续归 contracts、schemas、s
 - [当前状态](../status.md)
 - [Current program](../../contracts/runtime-program/current-program.json)
 
-当前 OPL substrate adapter/export 入口：
+当前 OPL provider / substrate refs-only export 入口：
 
+- `product-entry-manifest.opl_provider_runtime_contract`
 - `product-entry-manifest.opl_substrate_adapter_export`
 - `product sidecar export` 输出内的 `sidecar_export.opl_substrate_adapter_export`
 
-该导出面只给 OPL 消费 opaque workspace refs、source JSON pointer refs、artifact locator/index refs、memory locator/receipt refs、lifecycle receipt refs 与 projection refs。grant truth、fundability verdict、authoring quality verdict、submission-ready export verdict、package body、memory body 和 owner receipt authority 继续由 MAG 持有。
+这些导出面只给 OPL 消费 opaque workspace refs、source JSON pointer refs、artifact locator/index refs、memory locator/receipt refs、lifecycle receipt refs、runtime_control refs 与 projection refs。grant truth、fundability verdict、authoring quality verdict、submission-ready export verdict、package body、memory body 和 owner receipt authority 继续由 MAG 持有。
+
+已退役的 local journal、attempt ledger、`runtime-run` / `runtime-resume`、Hermes/Gateway/local-manager probe 和 compatibility alias 只从 `docs/history/**` 或 tombstone/provenance 语境阅读；不得写回 current runtime owner。

@@ -159,7 +159,7 @@ Date: `2026-04-13`
 它不意味着：
 
 - mature direct grant Web UI / hosted runtime 已完成
-- 旧 `OPL Gateway` 已在本仓落地
+- 旧 `OPL Gateway` landed wording 只保留为 provenance，不是 current owner line
 - 图件、Word/PDF、官网提交流程已经全自动产品化
 - 系统可以在缺少真实材料时凭空生成可信、可提交的国自然标书
 - Gateway / hosted runtime compatibility surface 不是当前目标

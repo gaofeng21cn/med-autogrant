@@ -59,9 +59,9 @@ Date: `2026-04-12`
 - early-stage `product_entry.domain_payload.draft_id = null`
 - 非空 route catalog
 
-### 3. `runtime-run` 的 routing surface 现在会 schema-backed fail-closed
+### 3. route contract surfaces 现在会 schema-backed fail-closed
 
-当前 `runtime-run.stage_action_envelope.executor_routing_contract` 在返回前会同时通过：
+当前 product-entry / route contract 在返回前会同时通过：
 
 - `executor-routing-contract.schema.json`
 - 冻结 truth 比对
@@ -70,6 +70,7 @@ Date: `2026-04-12`
 
 - `current_stage_route`
 - `recommended_executor_route`
+- `author_side_route_catalog`
 
 不仅要结构合法，还必须与当前冻结的 author-side route truth 完全一致。
 
@@ -125,7 +126,7 @@ Date: `2026-04-12`
 
 - schema registry 会追踪四份新 contract schema
 - `product_entry` 遇到非法 `executor_routing_contract` 会 fail-closed
-- `runtime-run` 遇到非法 `executor_routing_contract` 会 fail-closed
+- product-entry / route contract 遇到非法 `executor_routing_contract` 会 fail-closed
 - `author_side_route_catalog` 必须继续等于当前冻结 route matrix
 - current `product_entry` / route handoff 仍保持 direct + `OPL` envelope truth 不漂移
 
@@ -141,5 +142,5 @@ Date: `2026-04-12`
 - mature product UX 已完成
 - critique executor 已 landed
 - hosted runtime 已完成
-- 旧 `OPL Gateway` 全链路已在本仓落地
+- 旧 `OPL Gateway` landed wording 只保留为 provenance，不是 current owner line
 - Hermes-backed runtime owner、Gateway/federation caller 或 compatibility bridge 不是当前目标

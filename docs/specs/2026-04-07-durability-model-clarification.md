@@ -1,223 +1,53 @@
-# Durability Model Clarification
+# Durability Model Support Record
 
-> 生命周期注记（`2026-05-17`）：这份 dated spec 是 path-stable 的历史/支撑记录；只有 `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/status.md` 或 `contracts/runtime-program/current-program.json` 明确指定的仍 current subsection 才可作为当前边界阅读。请先读取 `docs/status.md`、核心五件套与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
+Owner: `Med Auto Grant`
+Purpose: `durability_boundary_support_record`
+State: `support_current_truth`
+Machine boundary: 本文是人读支撑记录。当前机器真相继续归 `contracts/runtime-program/current-program.json`、schemas、source、CLI/API behavior、workspace/runtime artifact root、owner receipts 和语义化 `human_doc:*` id。
+Date: `2026-05-19`
 
-Date: `2026-04-07`
+## 当前读法
 
-## 目标
+本文件保留早期 durability vocabulary 的 path-stable 支撑位置，但不再承载 local runtime / journal / attempt ledger 的 current truth。MAG 当前 durability 分为四层：
 
-把 repo-tracked review truth、local durable handoff surfaces、以及当前已 landed 的 local runtime durable surfaces 写清楚，避免 review、恢复、runtime identity、artifact output、final package output、hosted-contract output 继续混写。
+| 层 | 当前 owner | 持久化边界 |
+| --- | --- | --- |
+| Repo current truth | MAG repo | `contracts/runtime-program/current-program.json`、schemas、contracts、source、核心五件套、active specs。 |
+| Grant workspace truth | MAG workspace | `workspace.json`、draft、critique、revision、quality report、package/export artifacts、memory receipt、owner receipt。 |
+| User-level runtime state | 用户级 runtime-state | `$CODEX_HOME/projects/med-autogrant/runtime-state/` 下的 log、report、prompt、handoff state、runtime receipt evidence。 |
+| OPL generated/hosted runtime | OPL Framework | stage attempt ledger、typed queue、attempt lifecycle、wakeup/resume、retry/dead-letter、operator projection、Temporal-backed production substrate。 |
 
-## 当前指针
+MAG repo source 不保存真实 memory body、grant artifact private evidence、fundability verdict body、authoring quality verdict body、submission-ready export verdict body 或 runtime receipt instance。
 
-- Current owner docs: `docs/status.md`、`docs/architecture.md`、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`
-- Current machine truth: `contracts/runtime-program/current-program.json`、schemas、source、CLI/API behavior
-- Historical archive: `docs/history/specs/`
-- Current reading rule: 本文只保留 durability vocabulary 和 handoff/resume 边界；早期 runtime productization、R tranche、post-R5A hardening 和 OMX bridge 已归档为 provenance。
+## 当前 durable surfaces
 
-## repo-tracked review surfaces
+- `contracts/runtime-program/current-program.json` 是 repo-tracked current-program pointer。
+- Product-entry manifest、sidecar export、`runtime_control`、`runtime_continuity`、artifact locator、domain memory descriptor、owner receipt contract 和 lifecycle guarded apply proof 只输出 refs、receipt shape、typed blocker、verdict refs 与 safe action metadata。
+- `workspace quality-scorecard`、`workspace quality-diff`、`grant-quality-closure-dossier` 和 autonomy controller report 是结构化治理面；它们不能机械生成 fundability-ready、quality-ready、export-ready 或 production-soak verdict。
+- User-level runtime-state 可保存本机运行输出和 receipt evidence，但不是 repo-tracked product runtime，也不能单独发明 formal entry。
 
-当前 reviewer 必须先通过以下 current surfaces 理解 MAG 运行/持久化边界：
+## 已退役 durability wording
 
-- `README.md`
-- `docs/README.md`
-- `docs/status.md`
-- `docs/architecture.md`
-- `docs/invariants.md`
-- `docs/decisions.md`
-- `docs/specs/README.md`
-- `docs/specs/specs_lifecycle_map.md`
-- `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
-- `docs/specs/2026-04-07-durability-model-clarification.md`
-- `docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
-- `docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
-- `docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
-- `docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
-- `docs/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
-- `docs/history/specs/README.md`
-- `schemas/v1/nsfc-workspace.schema.json`
-- current canonical examples under `examples/**`
-- runtime / verification tests under `tests/**`
+以下旧 durable surfaces 只作为 history/provenance 阅读，不能恢复为 current owner：
 
-Early foundation design、R-tranche runtime productization、post-R5A hardening、OMX bridge、Hermes/Gateway/provider proof 或 future P5 文档只从 `docs/history/specs/` 阅读。它们不得恢复为 runtime owner、public CLI alias、compatibility test、Gateway/local-manager route 或 current review baseline。
+- local run journal
+- local attempt ledger
+- repo-owned scheduler daemon
+- `runtime-run --journal`
+- `runtime-resume --journal`
+- Hermes/Gateway/local-manager default path
+- `.runtime-program/**` repo-local state
 
-这些 surfaces 承担的是 review truth 职责：
+需要解释旧线索时，从 [历史 specs](../history/specs/README.md) 或 `docs/history/**` 进入；需要判断当前 runtime owner 时，以 `docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/active/mag-ideal-state-cross-repo-gap-plan.md` 和 machine-readable contracts 为准。
 
-- formal entry 是什么
-- 哪些能力当前正式支持
-- 哪些语义是 future scope
-- `grant_run_id / workspace_id / draft_id / program_id` 的边界
-- `forced_rollback_stage / forced_rollback_reason / presubmission_frozen` 的 rollback / gate 语义
-- 当前 repo-native hard gate 命令是什么
-- revised workspace / checkpoint / operator walkthrough 是否与 landed runtime ladder 一致
+## Review order
 
-## local durable handoff surfaces
+当前 reviewer 应按下面顺序读取 durability 边界：
 
-当前恢复与连续执行依赖以下 local durable handoff surfaces：
+1. [当前状态](../status.md)
+2. [架构](../architecture.md)
+3. [不变量](../invariants.md)
+4. [Specs 生命周期地图](./specs_lifecycle_map.md)
+5. [`current-program.json`](../../contracts/runtime-program/current-program.json)
 
-- `contracts/runtime-program/current-program.json`
-- 历史 OMX prompt（如果本机仍保留）只能作为本地迁移背景，不再构成当前活跃入口
-- `$CODEX_HOME/projects/med-autogrant/runtime-state/reports/med-autogrant-mainline/LATEST_STATUS.md`
-- `$CODEX_HOME/projects/med-autogrant/runtime-state/reports/med-autogrant-mainline/ITERATION_LOG.md`
-- `$CODEX_HOME/projects/med-autogrant/runtime-state/reports/med-autogrant-mainline/OPEN_ISSUES.md`
-
-这些 surfaces 承担的是 handoff / resume truth 职责：
-
-- 当前 phase / tranche pointer
-- 当前 hard gate 与 closeout criteria
-- 当前 bounded delta 是否已冻结
-- 当前 verification snapshot
-- 当前 open risks / blockers
-- 恢复执行的读取顺序
-
-用户级 runtime-state 不能单独发明新的 formal entry、hard gate、identity semantics，或把 control-plane maturity 误写成 actual hosted runtime。
-
-## local runtime durable surface
-
-除用户级 runtime-state 的 control-plane durable handoff 之外，当前产品 runtime 已 landed 的 local runtime durable surface 至少包括：
-
-### 1. local run journal
-
-- `runtime-run --journal ...`
-- `runtime-resume --journal ...`
-- local run journal JSON
-- 默认 durable root：`$CODEX_HOME/projects/med-autogrant/runtime-state/sessions/<grant_run_id>.json`
-
-这层负责：
-
-- 为同一 `grant_run_id` durable 回写 `latest_stop_reason`
-- 为 `stage_action_required` 类 stop reason durable 回写 `latest_stage_action_envelope`
-- durable 回写 `latest_route_report`
-- 通过 `attempts` 记录 `runtime-run / runtime-resume` 的本地 runtime 进入历史
-
-这层不负责：
-
-- 充当 repo-tracked review truth
-- 替代 `.runtime-program/reports/**`
-- 发明新的 `program_id` 或 controller pointer
-
-### 2. local revised workspace output
-
-- `execute-revision-pass --output ...`
-- revised workspace JSON
-
-这层负责：
-
-- 为同一 `grant_run_id / workspace_id / draft_id` durable 写出当前 deterministic revision pass 的 revised workspace candidate
-- 保持 `active_revision_plan_id / reviewed_revision_plan_id / reviewed_revision_evidence / source_critique_id / pre_revision_version_label / post_revision_version_label / comparison_summary`
-- 在 re-review 分支上保留“上一棒 reviewed revision evidence”与“当前这一棒 completed revision plan”的版本链
-
-这层不负责：
-
-- 替代 `.runtime-program/reports/**`
-- 重写 `verification_checkpoint / checkpoint_status`
-- 发明新的 critique synthesis / hosted runtime semantics
-
-### 3. local artifact durable surface
-
-- `build-artifact-bundle --output ...`
-- local artifact bundle JSON
-
-这层负责：
-
-- 为同一 `grant_run_id / workspace_id / draft_id` durable 写出当前 active draft lineage 对应的 bundle
-- durable 写出 `manifest / lineage / bundle_summary / artifacts`
-- 让 selected direction / question / argument chain / fit mapping / outline / draft sections 形成可复用 bundle
-
-这层不负责：
-
-- 改写 workspace
-- 替代 `.runtime-program/reports/**`
-- 替代 `verification_checkpoint / checkpoint_status`
-- 伪装 final export / freeze manifest 已完成
-
-### 4. local final package durable surface
-
-- `build-final-package --output ...`
-- local `final_package` JSON
-
-这层负责：
-
-- durable 写出 machine-readable local `final_package`
-- 保持 `freeze_manifest / checkpoint_summary / export_summary / deliverables`
-- 对齐 `verification_checkpoint / checkpoint_status` 与 `freeze_ready / submission_frozen`
-
-这层不负责：
-
-- 替代 validator / route / revision surfaces
-- 写 `.runtime-program/**`
-- 伪装 actual hosted runtime 已完成
-
-### 5. local hosted-contract durable surface
-
-- `build-hosted-contract-bundle --output ...`
-- local `hosted_contract_bundle` JSON
-
-这层负责：
-
-- durable 导出 hosted-friendly session / state / artifact / audit contract bundle
-- 保持 `execution_identity.grant_run_id / workspace_id / draft_id / program_id`
-- 保持 `formal_entry_matrix.default_formal_entry=CLI`
-
-这层不负责：
-
-- 实现 actual hosted runtime
-- 实现 remote execution / multi-tenant / billing / federation
-- 把 `.runtime-program/reports/**` 伪装成 hosted audit store
-
-## 哪些结论必须 repo-native
-
-以下结论如果要成为正式 review truth，必须进入 repo-tracked review surfaces，而不能只留在用户级 runtime-state 或 machine-local outputs：
-
-- formal entry matrix
-- durability model clarification
-- hard gate 命令集合
-- `grant_run_id / workspace_id / draft_id / program_id` 的正式语义边界
-- revised workspace validator truth
-- `verification_checkpoint / checkpoint_status` 的 canonical aggregation 语义
-- 哪些 outputs 已 landed 为 current local runtime ladder
-- operator walkthrough / command matrix 对当前已 landed runtime ladder 的公开表述
-
-## 哪些状态允许只留在 local handoff surfaces
-
-以下信息可以继续只由用户级 runtime-state 承担：
-
-- 当前 active program / phase / tranche pointer
-- 当前最新 verification snapshot
-- 当前 open risks / blockers
-- 当前 resume 顺序与执行提示
-- 当前一次 closeout 的 leader notes / iteration log
-
-## Identity Boundary Contract
-
-- `grant_run_id`
-  - 语义：单次 grant run 的稳定执行句柄
-  - 落点：runtime output、CLI output、reports、recovery context 回显、local runtime artifacts
-- `workspace_id`
-  - 语义：`NSFCWorkspace` 聚合根身份
-  - 落点：workspace object identity
-- `draft_id`
-  - 语义：`ApplicationDraft` 身份
-  - 落点：draft / critique / revision / artifact / final package 链接身份
-  - 约束：revision 完成后仍沿用同一 `draft_id`
-- `program_id`
-  - 语义：control-plane / report-routing 身份
-  - 落点：`$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/` 与 `contracts/runtime-program/current-program.json`；hosted-contract export 中只作为 routing identity 保留
-
-这四类 ID 不得互相替代。
-
-## Verification Boundary Contract
-
-- 当前 tranche hard gate：只看 repo-native commands 与 repo-native tests
-- external verifier
-  - 当前仅为 `advisory external check`
-  - 失败必须在 reports 中被记录
-  - 但在没有显式改写 active truth surfaces 前，不得重新写成 current hard gate
-
-## 当前 freeze 结论
-
-- formal entry 真相已进入 repo-durable current truth
-- durability model 真相已进入 repo-durable current truth
-- `grant_run_id / workspace_id / draft_id / program_id` 边界已在 docs / examples / CLI / tests / local outputs 中持续收紧
-- `runtime-run / runtime-resume / build-artifact-bundle / execute-revision-pass / build-final-package / build-hosted-contract-bundle` 已构成当前 landed local runtime ladder
-- post-`R5.A` local runtime hardening 已在当前 truth 下收口为 `NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP`；任何 further productization 都必须先冻结新的 repo-tracked tranche truth，而不是默认继续当前 ladder
+历史文件若与这些 owner surface 冲突，按 provenance 处理。

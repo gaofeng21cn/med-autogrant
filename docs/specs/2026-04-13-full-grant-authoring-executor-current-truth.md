@@ -130,5 +130,5 @@ Date: `2026-04-13`
 它不意味着：
 
 - mature direct grant Web UI / hosted runtime 已完成
-- `OPL Gateway` 已在本仓落地
+- 旧 `OPL Gateway` landed wording 只保留为 provenance，不是 current owner line
 - 所有 landed route 都已经自动变成 Hermes-native full agent loop

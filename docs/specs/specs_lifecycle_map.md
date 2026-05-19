@@ -8,7 +8,7 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 
 ## 为什么保留这份地图
 
-`docs/specs/` 只保留 current truth records、support current-truth records 和 integration references。纯历史 activation package、R/P/post-R5A tranche、fail-closed hardening note、future P5 记录和 superseded provider proof 已物理归档到 `docs/history/specs/`。
+`docs/specs/` 只保留 current truth records、support current-truth records 和 integration references。纯历史 activation package、R/P/post-R5A tranche、local-runtime closeout、fail-closed hardening note、future P5 记录和 superseded provider proof 已物理归档到 `docs/history/specs/`。
 
 当前规则是 index-first 生命周期治理：
 
@@ -39,15 +39,15 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 | `2026-04-27-ai-first-quality-boundary-current-truth.md` | `active_current_spec` | active spec + quality owner docs | 只读 AI-first quality boundary。 |
 | `2026-04-23-authoring-completion-semantics-current-truth.md` | `active_current_spec` | active spec + authoring completion owner docs | 只读 completion semantics。 |
 | `2026-04-22-quality-autonomy-family-grammar-current-truth.md` | `active_current_spec` | active spec + current quality/autonomy docs | 只读 quality governance、autonomy controller 和 family grammar。 |
-| `2026-04-07-formal-entry-matrix-current-truth.md` | `support_current_truth` | core five + `current-program.json` | 作为 formal-entry 支撑阅读；不能当作完整产品真相。 |
-| `2026-04-07-durability-model-clarification.md` | `support_reference` | architecture/status + runtime-state docs | 只读 durability vocabulary。 |
+| `2026-04-07-formal-entry-matrix-current-truth.md` | `support_current_truth` | core five + `current-program.json` | 作为 formal-entry 支撑 guard 阅读；旧 runtime-run/resume、journal 和 attempt ledger 只能按 history/provenance 读。 |
+| `2026-04-07-durability-model-clarification.md` | `support_current_truth` | architecture/status + runtime-state docs | 只读 durability boundary guard；不恢复 local journal、attempt ledger 或 MAG-owned generic runtime。 |
 | `2026-04-07-p2a-*`, `2026-04-07-p2b-*`, `2026-04-07-p2c-*` | `absorbed_support` | current authoring pass docs、route catalog、core docs | 作为 authoring-flow provenance 阅读；当前 route truth 在 source/contracts。 |
 | `2026-04-07-p3a-*`, `2026-04-08-p3b-*`, `2026-04-08-p3c-*` | `absorbed_support` | current critique/revision and quality docs | 作为 mentor/review/rollback provenance 阅读；不要恢复 phase backlog。 |
 | `2026-04-08-p4a-*`, `2026-04-08-p4b-*` | `absorbed_support` | product projection、verification、checkpoint owners | 只读 direct cockpit/progress 与 verification lessons。 |
 | `2026-04-12-p4a-*`, `2026-04-12-p4b-*`, `2026-04-12-p4c-*`, `2026-04-13-p4e-*`, `2026-04-13-p4f-*` | `support_current_truth` | product-entry/product-status/user-loop/package owners | 作为 product-entry internals 阅读；public identity 仍是单一 MAG app skill。 |
 | `2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md` | `support_current_truth` | schemas/source + product-entry manifest | 作为 schema-backed route/product-entry contract 支撑阅读。 |
 | `2026-04-13-full-grant-authoring-executor-current-truth.md` | `support_current_truth` | route-selected executor docs + default Codex CLI owner | 作为 landed authoring executor scope 阅读；不提升 hosted proof lanes。 |
-| `2026-04-12-author-side-executor-routing-contract-current-truth.md` | `support_current_truth` | executor routing schema/source | 作为 route-selected executor contract 支撑阅读。 |
+| `../history/specs/2026-04-12-author-side-executor-routing-contract-current-truth.md` | `historical_route_snapshot` | full grant authoring executor spec + executor routing schema/source | 只作为 2026-04-12 route snapshot 阅读；当前 route catalog 已由 2026-04-13 full route landing 接管。 |
 | `2026-04-12-hosted-caller-consumption-proof-current-truth.md`, `2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md` | `integration_reference` | hosted contract bundle + references | 作为 hosted caller consumption proof 阅读；不表示 public hosted runtime 成熟。 |
 | `2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md` | `integration_reference` | product-entry manifest + OPL handoff refs | 作为 OPL handoff shape 阅读；旧 Gateway wording 是 provenance。 |
 | `../history/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md` | `historical_opl_alignment_snapshot` | OPL stage-led framework roadmap + MAG status | 只作为 2026-04-12 对齐快照阅读；不得作为 active phase map 或 hosted target。 |
@@ -55,7 +55,7 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 | `../history/specs/2026-04-08-p5a-*`, `../history/specs/2026-04-08-p5b-*` | `future_activation_history` | domain admission/future planning owners | 不作为 active P5 backlog。 |
 | `../history/specs/2026-04-08-r1a-*`, `../history/specs/2026-04-08-r1b-*`, `../history/specs/2026-04-08-r2a-*`, `../history/specs/2026-04-08-r3a-*`, `../history/specs/2026-04-09-r3a-*`, `../history/specs/2026-04-09-r4a-*`, `../history/specs/2026-04-09-r5a-*` | `historical_activation_package` | current pass/package/runtime docs + history/specs index | 作为 activation provenance 阅读；当前行为在 source/contracts。 |
 | `../history/specs/2026-04-08-runtime-first-productization-program.md`, `../history/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md` | `historical_program_record` | core docs + history/specs index | 作为 R1-R5 形成历史阅读，不作为当前执行顺序。 |
-| `../history/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`, `../history/specs/2026-04-10-post-r5a-local-runtime-validation-*`, `2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`, `2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md` | `support_or_history_by_subsection` | core docs + route/runtime owner docs | current specs 中只保留 walkthrough / honest-stop 支撑记录；其余 local-runtime activation 只从 history 阅读。 |
+| `../history/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`, `../history/specs/2026-04-10-post-r5a-local-runtime-validation-*`, `../history/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`, `../history/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md` | `historical_local_runtime_closeout` | core docs + route/runtime owner docs | 只从 history 阅读 fail-closed / honest-stop lessons；当前 runtime owner wording 在核心文档和 active/support guards。 |
 | `../history/specs/2026-04-10-post-r5a-final-package-*`, `../history/specs/2026-04-10-post-r5a-hosted-contract-bundle-*`, `../history/specs/2026-04-10-post-r5a-stage-route-*`, `../history/specs/2026-04-10-post-r5a-worktree-aware-*`, `../history/specs/2026-04-10-post-r5a-revised-*` | `historical_fail_closed_record` | package/export schemas + history/specs index | 作为 fail-closed provenance 阅读；不得恢复旧 local runtime、hosted bundle 或 Gateway owner。 |
 | `../history/specs/2026-04-11-hermes-backed-*`, `../history/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`, `../history/specs/2026-04-12-upstream-hermes-agent-fast-cutover-*` | `retired_provider_proof` | current core docs + explicit hosted/proof refs | 只能从 history 阅读；不得恢复 Hermes-backed owner、Gateway/local-manager、compatibility alias 或 default-runtime wording。 |
 
@@ -67,11 +67,12 @@ Support records 只在仍 current 的 subsection 内有效。若其中包含旧 
 
 | 分组 | Records |
 | --- | --- |
-| Formal entry / durability | `2026-04-07-formal-entry-matrix-current-truth.md`, `2026-04-07-durability-model-clarification.md` |
+| Formal entry / durability | `2026-04-07-formal-entry-matrix-current-truth.md`, `2026-04-07-durability-model-clarification.md`；只读 current support guard，不恢复旧 local runtime。 |
 | P2-P4 absorbed grant flow | `2026-04-07-p2a-*`, `2026-04-07-p2b-*`, `2026-04-07-p2c-*`, `2026-04-07-p3a-*`, `2026-04-08-p3b-*`, `2026-04-08-p3c-*`, `2026-04-08-p4a-*`, `2026-04-08-p4b-*` |
-| Local runtime closeout / output consistency | `2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`, `2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`；只读 fail-closed 与 honest-stop lessons；当前 runtime owner wording 在核心文档和 active specs。 |
+| Local runtime closeout / output consistency | `../history/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`, `../history/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`；只读 fail-closed 与 honest-stop provenance；当前 runtime owner wording 在核心文档和 active/support guards。 |
 | Hosted / OPL handoff support | `2026-04-12-hosted-*`, `2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`；只读 contract consumption 与 route/export handoff；旧 `OPL Gateway` 或 hosted-product completion language 仍是 provenance。 |
 | Product entry and package surfaces | `2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md`, `2026-04-12-p4a-*`, `2026-04-12-p4b-*`, `2026-04-12-p4c-*`, `2026-04-13-full-grant-authoring-executor-current-truth.md`, `2026-04-13-p4e-*`, `2026-04-13-p4f-*` |
+| Historical route snapshot | `../history/specs/2026-04-12-author-side-executor-routing-contract-current-truth.md` |
 
 ## Provider 与 Hosted 旧词处置
 
@@ -82,7 +83,7 @@ Support records 只在仍 current 的 subsection 内有效。若其中包含旧 
 | historical `2026-04-11-hermes-backed-*` specs 中的 `Hermes-backed runtime substrate owner` | 已退役 provider proof / provenance，位于 `docs/history/specs/`。`hermes_agent` 只表示显式非默认 executor/proof/provenance lane，不是 active provider owner、compatibility target 或 default runtime path。 |
 | `upstream Hermes-Agent fast cutover` board 与 proof records | 历史 / proof context，已物理归档到 `docs/history/specs/`。它们只支撑 proof-lane vocabulary 和 fail-closed evidence；默认 execution、runtime ownership 和 OPL handoff boundary 在当前 owner docs。 |
 | `OPL Gateway`、`gateway/federation`、`future P5` language | 历史或 future activation context。当前没有需要保留的 active Gateway/federation/compat surface；新 caller 使用 OPL stage-led framework + MAG descriptor/projection path。 |
-| `OPL Runtime Manager`、Temporal target、provider-backed runtime、active-adapter、compatibility-bridge wording | 历史 / provider-specific migration context。当前 MAG 口径是 OPL 作为 stage-led framework，以 Agent executor 为最小执行单位，消费 MAG-owned descriptor/projection；MAG 保留 grant truth、quality、route 和 export authority。 |
+| `OPL Runtime Manager`、Temporal target、provider-backed runtime、active-adapter、compatibility-bridge、local journal、attempt ledger wording | 历史 / provider-specific migration context。当前 MAG 口径是 OPL 作为 stage-led framework，以 Agent executor 为最小执行单位，消费 MAG-owned descriptor/projection；MAG 保留 grant truth、quality、route 和 export authority。 |
 | `hosted contract bundle` | 当前 integration/reference export surface。Hosted runtime、Web UI 和 external portal submission 需要单独 current owner evidence。 |
 
 ## Historical Provenance Records

@@ -16,7 +16,7 @@ Date: `2026-04-12`
 
 它只解决一件事：
 
-- 在已经 landed 的真实 `Hermes-Agent` substrate、`MedAutoGrantDomainEntry`、`build-product-entry` 之上，
+- 在已经 landed 的 `MedAutoGrantDomainEntry`、`build-product-entry`、OPL generated surface refs 和显式 proof/provenance executor lane 之上，
 - 先落一个 controller-owned、read-only 的 direct grant product projection，
 - 让 direct user / operator / future caller 能用人话看见当前 grant 主线推进状态，
 - 同时不改写 runtime owner、domain entry owner、author-side route owner。
@@ -175,5 +175,5 @@ Date: `2026-04-12`
 - `P4 mature direct grant product entry` 整体已完成
 - grant-facing Web UI 已落地
 - actual hosted runtime 已完成
-- `OPL Gateway` 已在本仓落地
+- 旧 `OPL Gateway` landed wording 只保留为 provenance，不是 current owner line
 - pending authoring route 已改写成 landed executor

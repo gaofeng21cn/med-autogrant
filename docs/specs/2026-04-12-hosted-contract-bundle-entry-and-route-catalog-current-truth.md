@@ -170,6 +170,6 @@ Date: `2026-04-12`
 它不意味着：
 
 - actual hosted runtime 已完成
-- `OPL Gateway` 已在本仓落地
+- 旧 `OPL Gateway` landed wording 只保留为 provenance，不是 current owner line
 - landed route 已经自动升级成 Hermes-native full agent loop
 - pending authoring route 已经拥有新的执行器
