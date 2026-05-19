@@ -125,6 +125,7 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 - privatized audit 与 generated-surface handoff 中的 code path / source_ref 与当前 physical source tree 对齐；漂移路径只能进入 history/tombstone/source-ref refresh，不作为完成证明。
 - physical source tree 中的 product-entry、sidecar、domain_runtime、runtime/lifecycle/workbench 命名必须持续被合同约束为 domain handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone；不能让命名重新表达 MAG-owned generic runtime。
 - 根层 `functional_privatization_audit.mag_consumer_thinning_contract.active_path_scan_state` 必须来自真实 `physical_skeleton_follow_through.active_path_scan_no_legacy_default_caller`，不能停留在 `not_available`。active source scan 只证明 legacy default caller / retired path 在 repo source 中没有复活；它不证明外部 production caller、App/workbench 消费或 Temporal long soak。
+- `contracts/production_acceptance/mag-production-acceptance.json` 必须持有 MAG-owned production acceptance evidence tail。该 surface 可以记录 structural / physical conformance passed 和 production-like grant receipt chain refs present；它必须继续声明 OPL/provider/conformance 不可授权 grant/domain/fundability/submission readiness。若缺少真实 MAG owner receipt scaleout，状态必须是 typed blocker 并携带下一跳 verification refs。
 - 真实 grant workspace 产生 owner receipt、quality movement、package/export receipt、memory receipt、lifecycle receipt、typed blocker 或 no-regression evidence。
 - Legacy Hermes/Gateway/local-manager/journal/probe/compat residue 完成 no-active-caller scan、replacement proof、history/provenance 分类和 physical retirement。
 
@@ -137,7 +138,7 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 - 已物理退役 / history-only：`upstream_hermes.py`、`test_local_runtime.py`、`test_upstream_hermes.py`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes`、local journal / attempt ledger owner。
 - OPL-owned generated/hosted target，MAG 仅保留 refs-only adapter：product-entry、sidecar、status/user-loop、runtime registration、lifecycle receipt bundle、memory receipt projection、package lifecycle handoff、continuous reconciliation、observability refs、safe action metadata。
 - MAG retained private authority：grant truth、fundability / quality / export verdict refs、submission-ready package authority、grant strategy memory body 与 accept/reject、grant transition oracle、owner receipt signer、typed blocker 和 grant-native helper。
-- 仍未关闭的不是 MAG repo 侧功能差距，而是外部证据门：OPL generated/hosted caller、App/workbench consumption、production/default caller、direct/hosted parity、Temporal long soak 与 live receipt reconciliation。
+- production acceptance evidence tail 已由 `contracts/production_acceptance/mag-production-acceptance.json` 记录为 MAG-owned typed blocker。仍需真实 owner receipt scaleout、OPL generated/hosted caller、App/workbench consumption、production/default caller、direct/hosted parity、Temporal long soak 与 live receipt reconciliation 继续给出 refs；这些不是 MAG repo 侧功能/结构差距。
 
 ## 当前差距入口
 

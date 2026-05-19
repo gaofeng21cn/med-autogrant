@@ -27,6 +27,8 @@ Product-entry manifest 当前暴露 `opl_provider_runtime_contract`；runtime ow
 
 `mag_functional_structure_gap_count=0`
 
+2026-05-19 MAG production acceptance lane 已新增 repo-tracked machine surface：`contracts/production_acceptance/mag-production-acceptance.json`。该 surface 把 `production_live_soak_not_claimed_by_conformance` / `domain_ready_not_claimed_by_conformance` 从结构标准化缺口中移出，收为 MAG-owned production acceptance evidence tail：structural / physical conformance 已通过，production-like grant receipt chain refs 存在；domain readiness、fundability readiness、review gate 和 package/proposal lifecycle 仍由 MAG owner receipt 或 typed blocker 裁决。当前 tail 状态是 `domain_owned_typed_blocker_with_next_verification_ref`，下一跳验证 refs 写在该 contract 中；这不声明 OPL provider completion、conformance pass、package existence 或 quality scorecard 等于 grant-ready / fundability-ready。
+
 MAG repo 侧 handler/ref-only 边界已收薄：product/status/user-loop/sidecar/grouped CLI/projection/lifecycle wrapper 的目标长期 owner 固定为 OPL generated/hosted surface；当前仍由 MAG CLI/product-status/sidecar 触达的 surface 只允许写成 direct domain handler、domain handler target、refs-only adapter、owner receipt、typed blocker、verdict refs、safe action metadata 或 minimal authority function。
 
 2026-05-19 语义包归位：`agent/README.md` 已从 skeleton anchor 升级为 Declarative Grant Pack 入口；`agent/prompts/` 为六个 MAG stage 提供真实 stage prompt；`agent/stages/` 固定 stage policy；`agent/skills/` 固定 domain skill 声明；`agent/quality_gates/` 固定 fundability、quality、export/package、memory/receipt 与 authority 边界；`agent/knowledge/` 固定 grant strategy memory、package authority 与 owner receipt 知识边界。`contracts/stage_control_plane.json` 的 `prompt_refs` 解析到 `agent/prompts/*.md`，`contracts/pack_compiler_input.json` 的 `required_domain_pack_paths` 强制列出完整 pack 文件。
@@ -63,7 +65,7 @@ Physical source morphology 当前按同一边界读取：`agent/` 是 Declarativ
 - external production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 证据。
 - Temporal provider long SLO、repair cadence 和 live receipt reconciliation。
 
-这些证据门已由 `external_evidence_request_pack` 给出 request id、required refs 和 required receipt shapes；当前状态仍是 `requested_not_received`。
+这些证据门已由 `external_evidence_request_pack` 给出 request id、required refs 和 required receipt shapes；production acceptance lane 现在由 `contracts/production_acceptance/mag-production-acceptance.json` 持有 MAG-owned tail 状态。当前不是结构缺口，而是 domain-owned typed blocker，关闭条件是下一次真实 MAG owner receipt scaleout 或 typed blocker/no-regression evidence 继续通过 contract refs 与 focused test 验证。
 
 ## 当前物理源码形态差距
 

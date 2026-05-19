@@ -1,0 +1,114 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pytest
+
+
+pytestmark = pytest.mark.meta
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ACCEPTANCE_PATH = REPO_ROOT / "contracts" / "production_acceptance" / "mag-production-acceptance.json"
+
+
+def _acceptance() -> dict[str, object]:
+    return json.loads(ACCEPTANCE_PATH.read_text(encoding="utf-8"))
+
+
+def _assert_ref_list(values: object) -> None:
+    assert isinstance(values, list)
+    assert values
+    for value in values:
+        assert isinstance(value, str)
+        assert value
+        assert (
+            value.startswith("/")
+            or value.startswith("contracts/")
+            or value.startswith("docs/")
+            or value.startswith("tests/")
+            or value.startswith("agent/")
+            or value.startswith("rtk ")
+            or "::" in value
+        ), value
+
+
+def test_mag_production_acceptance_surface_exists_with_domain_owned_tail_state() -> None:
+    assert ACCEPTANCE_PATH.exists()
+    surface = _acceptance()
+
+    assert surface["surface_kind"] == "mag_production_acceptance_evidence.v1"
+    assert surface["domain_id"] == "med-autogrant"
+    assert surface["acceptance_owner"] == "med-autogrant"
+    assert surface["evidence_tail_status"] in {
+        "closed_by_domain_owned_acceptance_receipt",
+        "domain_owned_typed_blocker_with_next_verification_ref",
+    }
+    assert surface["conformance_status"] == {
+        "structural_conformance": "passed",
+        "physical_conformance": "passed",
+        "conformance_can_claim_domain_ready": False,
+        "conformance_can_claim_fundability_ready": False,
+    }
+    assert surface["grant_receipt_chain"]["production_like_grant_receipt_chain_present"] is True
+    assert surface["domain_readiness_policy"]["domain_readiness_owner"] == "med-autogrant"
+    assert surface["domain_readiness_policy"]["fundability_readiness_owner"] == "med-autogrant"
+
+
+def test_mag_production_acceptance_is_refs_only_and_contains_required_refs() -> None:
+    surface = _acceptance()
+
+    refs = surface["refs"]
+    for key in (
+        "grant_owner_receipt_refs",
+        "fundability_review_gate_refs",
+        "package_proposal_lifecycle_refs",
+        "typed_blocker_refs",
+        "next_verification_command_refs",
+    ):
+        _assert_ref_list(refs[key])
+
+    forbidden_payloads = surface["refs_only_policy"]["forbidden_payload_classes"]
+    for forbidden in (
+        "grant_artifact_body",
+        "memory_body",
+        "opl_runtime_state_body",
+        "fundability_verdict_body",
+        "proposal_text_body",
+    ):
+        assert forbidden in forbidden_payloads
+
+    assert surface["refs_only_policy"]["repo_tracks_receipt_instance_body"] is False
+    assert surface["refs_only_policy"]["repo_tracks_grant_artifact_body"] is False
+
+
+def test_opl_provider_completion_cannot_authorize_mag_grant_readiness() -> None:
+    surface = _acceptance()
+    authority = surface["authority_boundary"]
+
+    assert authority["opl_can_authorize_grant_domain_ready"] is False
+    assert authority["opl_can_authorize_fundability_ready"] is False
+    assert authority["provider_completion_equals_fundability_ready"] is False
+    assert authority["provider_completion_equals_domain_ready"] is False
+    assert authority["provider_completion_equals_submission_ready"] is False
+    assert authority["structural_conformance_equals_domain_ready"] is False
+
+
+def test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker() -> None:
+    surface = _acceptance()
+    closure = surface["closure_evidence"]
+    refs = surface["refs"]
+
+    assert closure["required_return_shapes"] == [
+        "domain_owner_receipt_ref",
+        "typed_blocker_ref",
+        "no_regression_evidence_ref",
+    ]
+    assert closure["accepted_return_shape"] in closure["required_return_shapes"]
+    if surface["evidence_tail_status"] == "closed_by_domain_owned_acceptance_receipt":
+        assert closure["accepted_return_shape"] == "domain_owner_receipt_ref"
+        _assert_ref_list(refs["grant_owner_receipt_refs"])
+    else:
+        assert closure["accepted_return_shape"] == "typed_blocker_ref"
+        _assert_ref_list(refs["typed_blocker_refs"])
+        assert closure["next_verification_ref"] in refs["next_verification_command_refs"]

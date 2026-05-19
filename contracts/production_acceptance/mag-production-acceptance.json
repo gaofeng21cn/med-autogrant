@@ -1,0 +1,118 @@
+{
+  "surface_kind": "mag_production_acceptance_evidence.v1",
+  "surface_id": "mag.production_acceptance.2026-05-19",
+  "domain_id": "med-autogrant",
+  "acceptance_owner": "med-autogrant",
+  "state": "domain_owned_production_acceptance_recorded",
+  "evidence_tail_status": "domain_owned_typed_blocker_with_next_verification_ref",
+  "conformance_status": {
+    "structural_conformance": "passed",
+    "physical_conformance": "passed",
+    "conformance_can_claim_domain_ready": false,
+    "conformance_can_claim_fundability_ready": false
+  },
+  "grant_receipt_chain": {
+    "production_like_grant_receipt_chain_present": true,
+    "chain_status": "domain_acceptance_blocked_pending_live_owner_receipt_scaleout",
+    "accepted_shapes": [
+      "domain_owner_receipt_ref",
+      "typed_blocker_ref",
+      "no_regression_evidence_ref"
+    ],
+    "authority": "MAG owner receipt or typed blocker is required for grant production acceptance."
+  },
+  "domain_readiness_policy": {
+    "domain_readiness_owner": "med-autogrant",
+    "fundability_readiness_owner": "med-autogrant",
+    "review_gate_owner": "med-autogrant",
+    "package_proposal_lifecycle_owner": "med-autogrant",
+    "provider_completion_role": "runtime_completion_signal_only"
+  },
+  "authority_boundary": {
+    "opl_can_authorize_grant_domain_ready": false,
+    "opl_can_authorize_fundability_ready": false,
+    "opl_can_authorize_review_ready": false,
+    "opl_can_authorize_submission_ready": false,
+    "provider_completion_equals_fundability_ready": false,
+    "provider_completion_equals_domain_ready": false,
+    "provider_completion_equals_submission_ready": false,
+    "structural_conformance_equals_domain_ready": false,
+    "structural_conformance_equals_fundability_ready": false
+  },
+  "closure_evidence": {
+    "closure_kind": "domain_owned_acceptance_tail",
+    "required_return_shapes": [
+      "domain_owner_receipt_ref",
+      "typed_blocker_ref",
+      "no_regression_evidence_ref"
+    ],
+    "accepted_return_shape": "typed_blocker_ref",
+    "typed_blocker_kind": "domain_owner_live_acceptance_receipt_scaleout_required",
+    "typed_blocker_reason": "MAG structural and physical conformance have passed, and production-like refs-only receipt chain surfaces exist, but live grant-domain readiness and fundability-ready still require MAG-owned owner receipt scaleout or an explicit typed blocker after the next verification run.",
+    "next_verification_ref": "tests/test_production_acceptance.py::test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker"
+  },
+  "refs_only_policy": {
+    "repo_tracks_receipt_instance_body": false,
+    "repo_tracks_grant_artifact_body": false,
+    "repo_tracks_proposal_text_body": false,
+    "accepted_payload_policy": "refs_receipts_typed_blockers_and_command_refs_only",
+    "forbidden_payload_classes": [
+      "grant_artifact_body",
+      "memory_body",
+      "opl_runtime_state_body",
+      "fundability_verdict_body",
+      "proposal_text_body",
+      "review_artifact_body",
+      "package_archive_body"
+    ]
+  },
+  "refs": {
+    "conformance_refs": [
+      "contracts/domain_descriptor.json",
+      "contracts/pack_compiler_input.json",
+      "contracts/stage_control_plane.json",
+      "contracts/functional_privatization_audit.json",
+      "tests/test_opl_standard_pack.py::test_opl_standard_pack_root_contracts_match_mag_canonical_metadata"
+    ],
+    "grant_owner_receipt_refs": [
+      "contracts/owner_receipt_contract.json",
+      "/product_entry_manifest/owner_receipt_contract",
+      "/product_entry_manifest/controlled_soak_no_regression_attempt",
+      "tests/product_entry_cases/test_controlled_soak.py::ProductEntryControlledSoakTest::test_controlled_soak_receipt_reconciliation_probe_links_mag_receipt_and_opl_ledger_ref"
+    ],
+    "fundability_review_gate_refs": [
+      "agent/quality_gates/fundability.md",
+      "agent/quality_gates/review_and_rebuttal.md",
+      "contracts/pack_compiler_input.json",
+      "contracts/stage_control_plane.json",
+      "tests/test_opl_standard_pack.py::test_stage_semantic_refs_resolve_to_agent_pack_files"
+    ],
+    "package_proposal_lifecycle_refs": [
+      "agent/stages/package_and_submit_ready.json",
+      "agent/quality_gates/package_and_submit_ready.md",
+      "contracts/artifact_locator_contract.json",
+      "/product_entry_manifest/package_lifecycle_handoff",
+      "/product_entry_manifest/lifecycle_guarded_apply_proof",
+      "tests/product_entry_cases/test_package_lifecycle_handoff.py"
+    ],
+    "typed_blocker_refs": [
+      "/product_entry_manifest/controlled_soak_no_regression_attempt/deferred_blocker",
+      "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/owner_receipt_typed_blocker_ref_roundtrip",
+      "tests/product_entry_cases/test_controlled_soak.py::ProductEntryControlledSoakTest::test_controlled_soak_receipt_reconciliation_probe_keeps_typed_blocker_as_blocker"
+    ],
+    "next_verification_command_refs": [
+      "tests/test_production_acceptance.py::test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker",
+      "tests/test_production_acceptance.py::test_opl_provider_completion_cannot_authorize_mag_grant_readiness",
+      "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py -q",
+      "rtk ./scripts/verify.sh",
+      "rtk git diff --check"
+    ]
+  },
+  "forbidden_claims": {
+    "claims_opl_provider_completion_is_grant_ready": false,
+    "claims_opl_provider_completion_is_fundability_ready": false,
+    "claims_conformance_is_domain_ready": false,
+    "claims_package_existence_is_submission_ready": false,
+    "claims_quality_scorecard_is_fundability_ready": false
+  }
+}

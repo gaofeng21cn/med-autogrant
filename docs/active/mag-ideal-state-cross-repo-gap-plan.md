@@ -46,6 +46,8 @@ OPL 必须持有：
 
 `classification_gap_count=0`、`followthrough_gaps_open=false`、`claims_opl_replacement_exists=false` 和 `claims_all_bridge_exits_complete=false` 表示 MAG repo 侧已经把当前 surface 收到 handler/ref-only/authority 边界，但外部 OPL generated/hosted caller、真实 App/workbench 消费、全部 bridge exit 和 production long-run soak 仍是证据门。凡仍由 MAG CLI/product-status/sidecar 作为 handler target 或 direct domain entry 的 product/status/user-loop/sidecar/grouped CLI/projection/lifecycle surface，都必须写成 OPL generated/hosted caller 的 domain handler、ref-only adapter 或 minimal authority function。MAG 仍不是纯 knowledge pack；它保留 grant authority functions、domain handler、receipt schema/writer、transition oracle、quality/export verdict、package authority、memory accept/reject 和 focused contract tests。
 
+2026-05-19 production acceptance lane 已把 `production_live_soak_not_claimed_by_conformance` / `domain_ready_not_claimed_by_conformance` 收为 MAG-owned evidence tail，而不是新的结构标准化缺口。稳定机器面为 `contracts/production_acceptance/mag-production-acceptance.json`：structural / physical conformance 记录为 passed，production-like grant receipt chain refs 记录为 present；grant/domain/fundability readiness 仍必须由 MAG owner receipt、typed blocker 或 no-regression evidence refs 裁决。当前 `evidence_tail_status=domain_owned_typed_blocker_with_next_verification_ref`，表示下一步是按 contract 内 command refs 继续验证 owner receipt scaleout，而不是由 OPL/provider/conformance 替 MAG 宣布 grant-ready。
+
 2026-05-19 的 stage cohort-loop refs 已作为结构闭环落地。MAG 当前六个 stage 都声明 `source_scope_refs`、`cohort_query_refs`、OPL queue `trigger_refs`、`monitor_refs` 和 `dashboard_metric_refs`；OPL isolated verification 对当前 MAG main 返回 `stage_count=6`、`closed_loop_ready_count=6`、`blocker_count=0`。这关闭的是 declarative launch/readiness loop gap；外部 OPL generated/hosted caller、真实 App/workbench consumption、grant-stage owner receipt scaleout、direct/hosted parity 和 Temporal soak 仍归 evidence gate。
 
 `opl_provider_runtime_contract` 的落地只关闭 manifest/schema/test 的 owner 语义漂移；它不声明 OPL production/default caller、Temporal long soak、App/workbench consumption 或 live receipt reconciliation 已完成。
@@ -127,7 +129,7 @@ AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof
 - external production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 证据。
 - Temporal provider long SLO、repair cadence 和 live receipt reconciliation。
 
-这些 evidence gate 的 repo-local request surface 已落地为 `mag.external_evidence_request_pack.v1`；后续关闭证据门必须来自 OPL/App/production caller 的真实 receipt 或 no-regression evidence，不在 MAG 仓内生成替代 runtime proof。
+这些 evidence gate 的 repo-local request surface 已落地为 `mag.external_evidence_request_pack.v1`；生产可用 acceptance tail 的 MAG-owned 记录已落地为 `contracts/production_acceptance/mag-production-acceptance.json`。后续关闭或继续阻塞必须来自真实 owner receipt、typed blocker 或 no-regression evidence refs；MAG 仓不生成替代 runtime proof，OPL/provider completion 也不授权 fundability-ready。
 
 Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply / verify 消费，并已写入 OPL refs-only cleanup ledger。后续若涉及物理删除，只能由 MAG owner receipt 证明；OPL 不能替 MAG 删除 grant repo 文件或宣布 grant readiness。
 
@@ -141,6 +143,8 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 
 3. `real_workspace_receipt_scaleout`
    推进真实 grant-stage attempt、memory/package/lifecycle receipt、continuous receipt reconciliation、cleanup/restore/retention 和 provider SLO long soak。
+
+   当前 production acceptance surface 已把该项收为 `domain_owned_typed_blocker_with_next_verification_ref`。下一步按 `contracts/production_acceptance/mag-production-acceptance.json` 中的 `next_verification_command_refs` 继续验证 owner receipt / typed blocker / no-regression evidence，而不是把它计为结构差距。
 
 4. `private_authority_ai_first_guard`
    审计 retained authority surfaces，确保 fundability / quality / export / memory accept-reject 的判断都来自 AI-first stage output，package / receipt / helper 只做 programmatic guard，代码只做 validator、materializer、receipt signer、guard 和 refs projection。
