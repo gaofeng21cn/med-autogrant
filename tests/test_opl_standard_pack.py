@@ -26,6 +26,10 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     assert _read_contract("action_catalog") == generated["action_catalog"]
     assert _read_contract("stage_control_plane") == generated["stage_control_plane"]
     assert _read_contract("functional_privatization_audit") == generated["functional_privatization_audit"]
+    assert (
+        _read_contract("private_functional_surface_policy")
+        == generated["private_functional_surface_policy"]
+    )
 
     assert generated["action_catalog"]["target_domain_id"] == "med-autogrant"
     assert generated["stage_control_plane"]["target_domain_id"] == "med-autogrant"
@@ -63,6 +67,96 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         "/product_entry_manifest/physical_skeleton_follow_through/"
         "active_path_scan_no_legacy_default_caller"
     )
+
+
+def test_private_functional_policy_classifies_physical_source_morphology() -> None:
+    generated = build_standard_pack()
+    policy = generated["private_functional_surface_policy"]
+    morphology = policy["physical_source_morphology_policy"]
+
+    assert morphology["state"] == "classified_no_generic_runtime_reflow"
+    assert morphology["classification_buckets"] == [
+        "declarative_grant_handler",
+        "refs_only_adapter",
+        "minimal_authority_function",
+        "legacy_proof_tombstone",
+    ]
+    assert morphology["required_surface_ids"] == [
+        "domain_runtime",
+        "product_entry",
+        "status",
+        "user_loop",
+        "sidecar",
+        "runtime_registration",
+        "control_plane",
+        "lifecycle",
+        "memory",
+        "package",
+        "autonomy_controller",
+        "legacy_runtime_residue",
+    ]
+
+    classifications = {
+        surface["surface_id"]: surface
+        for surface in morphology["surface_classifications"]
+    }
+    assert set(classifications) == set(morphology["required_surface_ids"])
+    assert classifications["domain_runtime"]["classification"] == "declarative_grant_handler"
+    assert classifications["runtime_registration"]["classification"] == "declarative_grant_handler"
+    assert classifications["product_entry"]["classification"] == "refs_only_adapter"
+    assert classifications["status"]["classification"] == "refs_only_adapter"
+    assert classifications["user_loop"]["classification"] == "refs_only_adapter"
+    assert classifications["sidecar"]["classification"] == "refs_only_adapter"
+    assert classifications["control_plane"]["classification"] == "refs_only_adapter"
+    assert classifications["lifecycle"]["classification"] == "refs_only_adapter"
+    assert classifications["memory"]["classification"] == "minimal_authority_function"
+    assert classifications["package"]["classification"] == "minimal_authority_function"
+    assert classifications["autonomy_controller"]["classification"] == "minimal_authority_function"
+    assert classifications["legacy_runtime_residue"]["classification"] == "legacy_proof_tombstone"
+
+    for forbidden in (
+        "local_journal",
+        "attempt_ledger",
+        "repo_owned_scheduler",
+        "hermes_gateway_local_manager_probe",
+        "compat_facade_active_alias",
+    ):
+        assert forbidden in morphology["forbidden_residue_classes"]
+        assert forbidden in classifications["legacy_runtime_residue"]["forbidden_roles"]
+
+    assert (
+        classifications["autonomy_controller"]["allowed_role"]
+        == "grant_route_budget_blocker_policy"
+    )
+    assert "repo_scheduler_daemon" in classifications["autonomy_controller"]["forbidden_roles"]
+    assert "generic_status_workbench_owner" in classifications["status"]["forbidden_roles"]
+    assert "generic_scheduler_owner" in classifications["user_loop"]["forbidden_roles"]
+    assert "generic_sidecar_owner" in classifications["sidecar"]["forbidden_roles"]
+    assert "provider_runtime_owner" in classifications["runtime_registration"]["forbidden_roles"]
+    assert "generic_lifecycle_owner" in classifications["lifecycle"]["forbidden_roles"]
+    assert "generic_memory_transport_owner" in classifications["memory"]["forbidden_roles"]
+    assert "generic_artifact_lifecycle_owner" in classifications["package"]["forbidden_roles"]
+    assert (
+        morphology["forbidden_reflow_policy"]
+        == "do_not_restore_local_journal_attempt_ledger_repo_scheduler_"
+        "hermes_gateway_local_manager_probe_or_compat_facade_active_alias"
+    )
+    assert morphology["authority_boundary"] == {
+        "mag_can_own_generic_runtime": False,
+        "mag_can_own_generated_wrapper": False,
+        "mag_can_restore_compat_facade_active_alias": False,
+        "mag_can_emit_local_journal_or_attempt_ledger": False,
+        "opl_can_write_grant_truth": False,
+        "opl_can_write_memory_body": False,
+        "opl_can_declare_export_ready": False,
+    }
+    assert classifications["legacy_runtime_residue"]["source_refs"] == [
+        "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md"
+    ]
+    assert classifications["legacy_runtime_residue"]["evidence_refs"] == [
+        "/product_entry_manifest/physical_skeleton_follow_through/"
+        "active_path_scan_no_legacy_default_caller"
+    ]
 
 
 def test_opl_standard_pack_declares_real_agent_domain_pack_paths() -> None:

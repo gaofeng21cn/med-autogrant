@@ -109,6 +109,198 @@ MINIMAL_AUTHORITY_FUNCTIONS = [
     "grant_helper",
 ]
 
+PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS = [
+    "declarative_grant_handler",
+    "refs_only_adapter",
+    "minimal_authority_function",
+    "legacy_proof_tombstone",
+]
+
+FORBIDDEN_PHYSICAL_RESIDUE_CLASSES = [
+    "local_journal",
+    "attempt_ledger",
+    "repo_owned_scheduler",
+    "hermes_gateway_local_manager_probe",
+    "compat_facade_active_alias",
+]
+
+PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
+    {
+        "surface_id": "domain_runtime",
+        "classification": "declarative_grant_handler",
+        "source_refs": [
+            "src/med_autogrant/domain_runtime.py",
+            "src/med_autogrant/domain_runtime_parts/substrate.py",
+            "src/med_autogrant/domain_entry.py",
+        ],
+        "allowed_role": "route_authority_adapter_and_regression_oracle",
+        "forbidden_roles": [
+            "generic_runner",
+            "generic_queue",
+            "attempt_ledger",
+            "session_shell",
+        ],
+    },
+    {
+        "surface_id": "product_entry",
+        "classification": "refs_only_adapter",
+        "source_refs": [
+            "src/med_autogrant/product_entry.py",
+            "src/med_autogrant/product_entry_parts/manifest.py",
+            "src/med_autogrant/product_entry_parts/manifest_builder.py",
+            "src/med_autogrant/product_entry_parts/entry.py",
+        ],
+        "allowed_role": "grant_handler_target_receipt_refs_and_typed_blockers",
+        "forbidden_roles": [
+            "generated_product_shell_owner",
+            "app_workbench_owner",
+            "generic_status_owner",
+        ],
+    },
+    {
+        "surface_id": "status",
+        "classification": "refs_only_adapter",
+        "source_refs": [
+            "src/med_autogrant/product_entry_parts/preflight.py",
+            "src/med_autogrant/product_entry_parts/progress.py",
+            "src/med_autogrant/product_entry_parts/progress_projection_helpers.py",
+            "src/med_autogrant/mainline_status.py",
+        ],
+        "allowed_role": "grant_status_refs_and_typed_blocker_projection",
+        "forbidden_roles": [
+            "generic_status_workbench_owner",
+            "operator_workbench_owner",
+            "generic_observability_runtime",
+        ],
+    },
+    {
+        "surface_id": "user_loop",
+        "classification": "refs_only_adapter",
+        "source_refs": [
+            "src/med_autogrant/action_catalog.py",
+            "src/med_autogrant/product_entry_parts/loop_contracts.py",
+            "src/med_autogrant/product_entry_parts/primitives.py",
+            "src/med_autogrant/stage_control_plane.py",
+        ],
+        "allowed_role": "grant_user_loop_domain_action_target_and_receipt_refs",
+        "forbidden_roles": [
+            "generic_daemon_owner",
+            "generic_scheduler_owner",
+            "app_workbench_owner",
+        ],
+    },
+    {
+        "surface_id": "sidecar",
+        "classification": "refs_only_adapter",
+        "source_refs": [
+            "src/med_autogrant/product_entry_parts/sidecar.py",
+        ],
+        "allowed_role": "guarded_domain_dispatch_and_refs_projection",
+        "forbidden_roles": [
+            "generic_sidecar_owner",
+            "operator_workbench_owner",
+            "action_routing_shell_owner",
+        ],
+    },
+    {
+        "surface_id": "runtime_registration",
+        "classification": "declarative_grant_handler",
+        "source_refs": [
+            "src/med_autogrant/product_entry_parts/runtime_registration.py",
+            "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py",
+        ],
+        "allowed_role": "domain_descriptor_and_stage_pack_registration_refs",
+        "forbidden_roles": [
+            "provider_runtime_owner",
+            "repo_daemon_owner",
+            "local_manager_owner",
+        ],
+    },
+    {
+        "surface_id": "control_plane",
+        "classification": "refs_only_adapter",
+        "source_refs": [
+            "src/med_autogrant/control_plane.py",
+            "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
+        ],
+        "allowed_role": "body_free_runtime_control_refs_projection",
+        "forbidden_roles": [
+            "generic_transition_runner",
+            "provider_repair_executor",
+            "attempt_ledger_owner",
+        ],
+    },
+    {
+        "surface_id": "lifecycle",
+        "classification": "refs_only_adapter",
+        "source_refs": [
+            "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
+            "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
+        ],
+        "allowed_role": "cleanup_restore_retention_receipt_refs_adapter",
+        "forbidden_roles": [
+            "generic_lifecycle_owner",
+            "artifact_lifecycle_shell_owner",
+            "lifecycle_ledger_owner",
+        ],
+    },
+    {
+        "surface_id": "memory",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+            "src/med_autogrant/product_entry_parts/domain_memory.py",
+            "src/med_autogrant/product_entry_parts/memory_receipt_projection.py",
+        ],
+        "allowed_role": "grant_strategy_memory_accept_reject_receipt_refs",
+        "forbidden_roles": [
+            "generic_memory_transport_owner",
+            "memory_body_transport_owner",
+            "mechanical_memory_acceptance",
+        ],
+    },
+    {
+        "surface_id": "package",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+            "src/med_autogrant/final_package.py",
+            "src/med_autogrant/final_package_validation.py",
+            "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py",
+        ],
+        "allowed_role": "submission_ready_package_authority_and_gap_refs",
+        "forbidden_roles": [
+            "generic_artifact_lifecycle_owner",
+            "artifact_gallery_owner",
+            "provider_completion_export_verdict",
+        ],
+    },
+    {
+        "surface_id": "autonomy_controller",
+        "classification": "minimal_authority_function",
+        "source_refs": [
+            "src/med_autogrant/grant_autonomy_controller.py",
+            "src/med_autogrant/grant_autonomy_start.py",
+        ],
+        "allowed_role": "grant_route_budget_blocker_policy",
+        "forbidden_roles": [
+            "long_running_runtime_loop",
+            "repo_scheduler_daemon",
+            "mechanical_quality_or_export_verdict",
+        ],
+    },
+    {
+        "surface_id": "legacy_runtime_residue",
+        "classification": "legacy_proof_tombstone",
+        "source_refs": [
+            "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
+        ],
+        "evidence_refs": [
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        ],
+        "allowed_role": "history_or_tombstone_only",
+        "forbidden_roles": FORBIDDEN_PHYSICAL_RESIDUE_CLASSES,
+    },
+]
+
 
 def _json_ready(value: Any) -> Any:
     return json.loads(json.dumps(value, ensure_ascii=False))
@@ -460,6 +652,42 @@ def _private_functional_surface_policy() -> dict[str, Any]:
             "ai_first_verdict_ref_materializer",
         ],
         "forbidden_generic_owner_roles": FORBIDDEN_GENERIC_OWNER_ROLES,
+        "physical_source_morphology_policy": {
+            "surface_kind": "mag_physical_source_morphology_policy",
+            "policy_id": "mag.physical_source_morphology.v1",
+            "target_domain_id": TARGET_DOMAIN_ID,
+            "state": "classified_no_generic_runtime_reflow",
+            "classification_buckets": PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS,
+            "required_surface_ids": [
+                "domain_runtime",
+                "product_entry",
+                "status",
+                "user_loop",
+                "sidecar",
+                "runtime_registration",
+                "control_plane",
+                "lifecycle",
+                "memory",
+                "package",
+                "autonomy_controller",
+                "legacy_runtime_residue",
+            ],
+            "surface_classifications": PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS,
+            "forbidden_residue_classes": FORBIDDEN_PHYSICAL_RESIDUE_CLASSES,
+            "forbidden_reflow_policy": (
+                "do_not_restore_local_journal_attempt_ledger_repo_scheduler_"
+                "hermes_gateway_local_manager_probe_or_compat_facade_active_alias"
+            ),
+            "authority_boundary": {
+                "mag_can_own_generic_runtime": False,
+                "mag_can_own_generated_wrapper": False,
+                "mag_can_restore_compat_facade_active_alias": False,
+                "mag_can_emit_local_journal_or_attempt_ledger": False,
+                "opl_can_write_grant_truth": False,
+                "opl_can_write_memory_body": False,
+                "opl_can_declare_export_ready": False,
+            },
+        },
     }
 
 
