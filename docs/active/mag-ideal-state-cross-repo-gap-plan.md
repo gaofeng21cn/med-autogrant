@@ -12,6 +12,7 @@ Date: `2026-05-19`
 - MAG 的 north-star 目标态回到 [Med Auto Grant 理想目标态](../references/med-auto-grant-ideal-state.md)。
 - dated 过程校准、follow-through、receipt proof 和 closeout 记录归档到 [MAG standard agent 文档过程归档 2026-05](../history/plans/mag-standard-agent-doc-process-history-2026-05.md)。
 - 差距按目标态判断，不按当前 MAG 代码是否仍可运行判断。通用 runtime、runner、queue、session、journal、workspace/source intake、memory/package transport、workbench、observability、CLI/product-entry/sidecar/status wrapper 必须进入 OPL 上收、generated surface 替换、refs-only 收薄或退役分类。
+- 过时模块、接口、测试、fixture、CLI alias、facade、wrapper 和 docs 入口不保留兼容面。local runtime journal、attempt ledger、repo scheduler、Hermes/Gateway/local-manager probe、flat alias、compat aggregate test 等旧面在 active caller 迁出后直接删除、archive 或 tombstone；测试只保留 no-resurrection / negative guard，不维护旧调用路径。
 
 ## 当前定位
 

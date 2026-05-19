@@ -11,6 +11,7 @@ Date: `2026-05-19`
 - 本文只写 MAG 的 north-star 目标态和长期 owner boundary；当前差距、执行顺序和证据缺口回到 [MAG 理想目标态差距与完善计划](../active/mag-ideal-state-cross-repo-gap-plan.md)。
 - 过程性校准、follow-through、receipt proof 和 closeout 流水归档到 [MAG standard agent 文档过程归档 2026-05](../history/plans/mag-standard-agent-doc-process-history-2026-05.md)。
 - 目标态优先于当前实现。当前 MAG 内已经存在的 product-entry、sidecar、grouped CLI/API、projection builder、lifecycle adapter、local journal、attempt ledger、workspace/source intake 或 package/memory helper 只能作为迁移输入，不是长期架构约束。
+- 目标态不承诺旧 runtime / journal / probe / alias 兼容。旧模块、旧接口、旧测试和旧 docs 入口在 replacement、owner receipt parity 与 no-active-caller proof 成立后直接移除或进入 history/tombstone；MAG 不再新增 compatibility facade 来照顾过时调用方。
 
 ## 目标结论
 
