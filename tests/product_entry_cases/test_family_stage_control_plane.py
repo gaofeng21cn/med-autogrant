@@ -74,6 +74,16 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                 self.assertLessEqual(required_stage_fields, set(stage))
                 self.assertEqual(stage["owner"], "med-autogrant")
                 self.assertEqual(stage["stage_goal"], stage["goal"])
+                self.assertEqual(
+                    stage["prompt_refs"],
+                    [
+                        {
+                            "ref_kind": "repo_path",
+                            "ref": f"agent/prompts/{stage['stage_id']}.md",
+                            "role": "stage_prompt",
+                        }
+                    ],
+                )
                 self.assertTrue(set(stage["allowed_action_refs"]) <= action_ids)
                 self.assertEqual(stage["handoff"]["shared_handoff_ref"], "/shared_handoff")
                 self.assertEqual(

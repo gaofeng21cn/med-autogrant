@@ -55,7 +55,8 @@
   "standard_domain_agent_skeleton": {
     "surface_kind": "standard_domain_agent_skeleton",
     "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
-    "mapping_state": "minimum_physical_skeleton_follow_through_landed",
+    "mapping_state": "declarative_grant_pack_follow_through_landed",
+    "canonical_repo_source_semantic_pack": "agent/",
     "repo_source_boundary": [
       "agent",
       "contracts",
@@ -586,7 +587,7 @@
     "surface_kind": "mag_physical_skeleton_follow_through",
     "manifest_surface_ref": "/product_entry_manifest/physical_skeleton_follow_through",
     "follow_through_id": "mag.physical_skeleton.follow_through.v1",
-    "state": "minimum_repo_source_anchors_landed",
+    "state": "declarative_grant_pack_landed",
     "repo_source_boundary": [
       "agent",
       "contracts",
@@ -1708,7 +1709,7 @@
   "repo_source_layout_audit": {
     "surface_kind": "mag_repo_source_layout_audit",
     "manifest_surface_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
-    "layout_state": "physical_skeleton_follow_through_landed_minimum_anchors",
+    "layout_state": "declarative_grant_pack_follow_through_landed",
     "boundary_keys": [
       "agent",
       "contracts",
@@ -1721,9 +1722,27 @@
     "source_refs_by_boundary": {
       "agent": [
         "agent/README.md",
-        "src/med_autogrant/domain_entry.py",
-        "src/med_autogrant/domain_entry_contract.py",
-        "src/med_autogrant/stage_control_plane.py"
+        "agent/prompts/call_and_candidate_intake.md",
+        "agent/prompts/fundability_strategy.md",
+        "agent/prompts/specific_aims_and_structure.md",
+        "agent/prompts/proposal_authoring.md",
+        "agent/prompts/review_and_rebuttal.md",
+        "agent/prompts/package_and_submit_ready.md",
+        "agent/stages/call_and_candidate_intake.md",
+        "agent/stages/fundability_strategy.md",
+        "agent/stages/specific_aims_and_structure.md",
+        "agent/stages/proposal_authoring.md",
+        "agent/stages/review_and_rebuttal.md",
+        "agent/stages/package_and_submit_ready.md",
+        "agent/skills/grant_authoring.md",
+        "agent/quality_gates/fundability.md",
+        "agent/quality_gates/quality.md",
+        "agent/quality_gates/export_and_package.md",
+        "agent/quality_gates/memory_and_receipts.md",
+        "agent/quality_gates/authority_boundaries.md",
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/package_authority.md",
+        "agent/knowledge/owner_receipt_boundary.md"
       ],
       "contracts": [
         "contracts/README.md",

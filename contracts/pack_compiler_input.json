@@ -5,6 +5,12 @@
     "opl_can_write_domain_truth": false,
     "opl_can_write_memory_body": false
   },
+  "canonical_repo_source_semantic_pack": {
+    "owner": "med-autogrant",
+    "path": "agent/",
+    "src_role": "domain_handler_minimal_authority_and_native_helper_only",
+    "state": "active_declarative_grant_pack"
+  },
   "declarative_domain_pack": [
     "stage_descriptors",
     "action_catalog",
@@ -516,9 +522,34 @@
     "target_domain_id": "med-autogrant",
     "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"
   },
+  "required_domain_pack_paths": [
+    "agent/README.md",
+    "agent/prompts/call_and_candidate_intake.md",
+    "agent/prompts/fundability_strategy.md",
+    "agent/prompts/specific_aims_and_structure.md",
+    "agent/prompts/proposal_authoring.md",
+    "agent/prompts/review_and_rebuttal.md",
+    "agent/prompts/package_and_submit_ready.md",
+    "agent/stages/call_and_candidate_intake.md",
+    "agent/stages/fundability_strategy.md",
+    "agent/stages/specific_aims_and_structure.md",
+    "agent/stages/proposal_authoring.md",
+    "agent/stages/review_and_rebuttal.md",
+    "agent/stages/package_and_submit_ready.md",
+    "agent/skills/grant_authoring.md",
+    "agent/quality_gates/fundability.md",
+    "agent/quality_gates/quality.md",
+    "agent/quality_gates/export_and_package.md",
+    "agent/quality_gates/memory_and_receipts.md",
+    "agent/quality_gates/authority_boundaries.md",
+    "agent/knowledge/grant_strategy_memory.md",
+    "agent/knowledge/package_authority.md",
+    "agent/knowledge/owner_receipt_boundary.md"
+  ],
   "schema_version": 1,
   "source_refs": {
     "action_catalog": "src/med_autogrant/action_catalog.py::build_mag_family_action_catalog",
+    "canonical_domain_pack": "agent/",
     "functional_audit": "src/med_autogrant/product_entry_parts/consumer_thinning.py::build_mag_consumer_thinning_contract",
     "stage_control_plane": "src/med_autogrant/stage_control_plane.py::build_mag_family_stage_control_plane"
   },

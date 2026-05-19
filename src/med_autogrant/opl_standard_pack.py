@@ -74,6 +74,31 @@ DECLARATIVE_DOMAIN_PACK = [
     "owner_receipt_schema",
 ]
 
+REQUIRED_DOMAIN_PACK_PATHS = [
+    "agent/README.md",
+    "agent/prompts/call_and_candidate_intake.md",
+    "agent/prompts/fundability_strategy.md",
+    "agent/prompts/specific_aims_and_structure.md",
+    "agent/prompts/proposal_authoring.md",
+    "agent/prompts/review_and_rebuttal.md",
+    "agent/prompts/package_and_submit_ready.md",
+    "agent/stages/call_and_candidate_intake.md",
+    "agent/stages/fundability_strategy.md",
+    "agent/stages/specific_aims_and_structure.md",
+    "agent/stages/proposal_authoring.md",
+    "agent/stages/review_and_rebuttal.md",
+    "agent/stages/package_and_submit_ready.md",
+    "agent/skills/grant_authoring.md",
+    "agent/quality_gates/fundability.md",
+    "agent/quality_gates/quality.md",
+    "agent/quality_gates/export_and_package.md",
+    "agent/quality_gates/memory_and_receipts.md",
+    "agent/quality_gates/authority_boundaries.md",
+    "agent/knowledge/grant_strategy_memory.md",
+    "agent/knowledge/package_authority.md",
+    "agent/knowledge/owner_receipt_boundary.md",
+]
+
 MINIMAL_AUTHORITY_FUNCTIONS = [
     "fundability_verdict",
     "quality_verdict",
@@ -256,6 +281,13 @@ def _pack_compiler_input(minimal_authority_surfaces: list[dict[str, Any]]) -> di
         "domain_id": TARGET_DOMAIN_ID,
         "domain_pack_owner": TARGET_DOMAIN_ID,
         "generated_surface_owner": GENERATED_SURFACE_OWNER,
+        "canonical_repo_source_semantic_pack": {
+            "path": "agent/",
+            "owner": TARGET_DOMAIN_ID,
+            "state": "active_declarative_grant_pack",
+            "src_role": "domain_handler_minimal_authority_and_native_helper_only",
+        },
+        "required_domain_pack_paths": REQUIRED_DOMAIN_PACK_PATHS,
         "declarative_domain_pack": DECLARATIVE_DOMAIN_PACK,
         "minimal_authority_functions": MINIMAL_AUTHORITY_FUNCTIONS,
         "minimal_authority_surface_taxonomy": build_mag_minimal_authority_surface_taxonomy(),
@@ -263,6 +295,7 @@ def _pack_compiler_input(minimal_authority_surfaces: list[dict[str, Any]]) -> di
         "generated_surfaces_requested": GENERATED_SURFACES,
         "domain_repo_can_own_generated_surface": False,
         "source_refs": {
+            "canonical_domain_pack": "agent/",
             "action_catalog": "src/med_autogrant/action_catalog.py::build_mag_family_action_catalog",
             "stage_control_plane": "src/med_autogrant/stage_control_plane.py::build_mag_family_stage_control_plane",
             "functional_audit": (
@@ -287,15 +320,39 @@ def _generated_surface_handoff() -> dict[str, Any]:
         "generated_surface_owner": GENERATED_SURFACE_OWNER,
         "domain_repo_can_own_generated_surface": False,
         "source_contract_ref": "contracts/pack_compiler_input.json",
+        "consumes_domain_pack_refs": True,
+        "domain_pack_ref": "agent/",
         "generated_surfaces": [
             {
                 "surface_id": surface_id,
                 "owner": GENERATED_SURFACE_OWNER,
                 "domain_repo_can_own_generated_surface": False,
+                "consumes_domain_pack_refs": True,
                 "status": "descriptor_source_available",
             }
             for surface_id in GENERATED_SURFACES
         ],
+        "consumption_boundary": {
+            "opl_generated_surfaces_consume": [
+                "agent/prompts",
+                "agent/stages",
+                "agent/skills",
+                "agent/quality_gates",
+                "agent/knowledge",
+                "contracts",
+            ],
+            "opl_generated_surfaces_do_not_write": [
+                "grant_truth",
+                "grant_body",
+                "fundability_verdict",
+                "authoring_quality_verdict",
+                "submission_ready_export_verdict",
+                "package_body",
+                "memory_body",
+                "owner_receipt_instance",
+            ],
+            "src_role": "domain_handler_minimal_authority_and_native_helper_only",
+        },
         "required_domain_handoff": [
             "owner_receipt_schema",
             "typed_blocker_schema",

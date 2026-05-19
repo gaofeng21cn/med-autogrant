@@ -3077,7 +3077,7 @@
               "const": "mag_repo_source_layout_audit"
             },
             "layout_state": {
-              "const": "physical_skeleton_follow_through_landed_minimum_anchors"
+              "const": "declarative_grant_pack_follow_through_landed"
             },
             "boundary_keys": {
               "type": "array",
@@ -3919,7 +3919,7 @@
           "const": "mag_physical_skeleton_follow_through"
         },
         "state": {
-          "const": "minimum_repo_source_anchors_landed"
+          "const": "declarative_grant_pack_landed"
         },
         "moves_workspace_artifacts": {"const": false},
         "moves_runtime_receipt_instances": {"const": false},

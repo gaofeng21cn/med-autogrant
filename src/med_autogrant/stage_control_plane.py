@@ -240,9 +240,71 @@ GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
     },
 )
 
+STAGE_KNOWLEDGE_REFS: dict[str, tuple[str, ...]] = {
+    "call_and_candidate_intake": (
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/owner_receipt_boundary.md",
+    ),
+    "fundability_strategy": (
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/owner_receipt_boundary.md",
+    ),
+    "specific_aims_and_structure": (
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/owner_receipt_boundary.md",
+    ),
+    "proposal_authoring": (
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/package_authority.md",
+        "agent/knowledge/owner_receipt_boundary.md",
+    ),
+    "review_and_rebuttal": (
+        "agent/knowledge/grant_strategy_memory.md",
+        "agent/knowledge/owner_receipt_boundary.md",
+    ),
+    "package_and_submit_ready": (
+        "agent/knowledge/package_authority.md",
+        "agent/knowledge/owner_receipt_boundary.md",
+    ),
+}
+
+STAGE_QUALITY_GATE_REFS: dict[str, tuple[str, ...]] = {
+    "call_and_candidate_intake": (
+        "agent/quality_gates/memory_and_receipts.md",
+        "agent/quality_gates/authority_boundaries.md",
+    ),
+    "fundability_strategy": (
+        "agent/quality_gates/fundability.md",
+        "agent/quality_gates/memory_and_receipts.md",
+        "agent/quality_gates/authority_boundaries.md",
+    ),
+    "specific_aims_and_structure": (
+        "agent/quality_gates/fundability.md",
+        "agent/quality_gates/quality.md",
+        "agent/quality_gates/memory_and_receipts.md",
+        "agent/quality_gates/authority_boundaries.md",
+    ),
+    "proposal_authoring": (
+        "agent/quality_gates/quality.md",
+        "agent/quality_gates/memory_and_receipts.md",
+        "agent/quality_gates/authority_boundaries.md",
+    ),
+    "review_and_rebuttal": (
+        "agent/quality_gates/quality.md",
+        "agent/quality_gates/memory_and_receipts.md",
+        "agent/quality_gates/authority_boundaries.md",
+    ),
+    "package_and_submit_ready": (
+        "agent/quality_gates/export_and_package.md",
+        "agent/quality_gates/memory_and_receipts.md",
+        "agent/quality_gates/authority_boundaries.md",
+    ),
+}
+
 
 def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
     runtime_event_refs = _runtime_event_refs(stage)
+    stage_id = str(stage["stage_id"])
     return {
         **stage,
         "owner": TARGET_DOMAIN_ID,
@@ -254,20 +316,28 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             {"ref_kind": "json_pointer", "ref": "/runtime_control", "role": "runtime_control_projection"},
         ],
         "skills": [
+            {"ref_kind": "repo_path", "ref": "agent/skills/grant_authoring.md", "role": "domain_skill_declaration"},
             {"ref_kind": "skill_id", "ref": "med-autogrant", "role": "domain_skill"},
             {"ref_kind": "skill_id", "ref": "officecli-docx", "role": "optional_document_helper"},
         ],
         "prompt_refs": [
-            {"ref_kind": "repo_path", "ref": "docs/references/integration/opl-family-contract-adoption.md", "role": "stage_pack_reference"}
+            {
+                "ref_kind": "repo_path",
+                "ref": f"agent/prompts/{stage['stage_id']}.md",
+                "role": "stage_prompt",
+            }
+        ],
+        "knowledge_refs": [
+            {"ref_kind": "repo_path", "ref": ref, "role": "stage_knowledge"}
+            for ref in STAGE_KNOWLEDGE_REFS[stage_id]
         ],
         "outputs": [
             {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "stage_status"},
             {"ref_kind": "json_pointer", "ref": "/artifact_inventory", "role": "artifact_inventory"},
         ],
         "evaluation": [
-            {"ref_kind": "json_pointer", "ref": "/grant_authoring_readiness", "role": "authoring_readiness"},
-            {"ref_kind": "json_pointer", "ref": "/runtime_control", "role": "runtime_control"},
-            {"ref_kind": "json_pointer", "ref": "/owner_receipt_contract", "role": "owner_receipt_gate"},
+            {"ref_kind": "repo_path", "ref": ref, "role": "stage_quality_gate"}
+            for ref in STAGE_QUALITY_GATE_REFS[stage_id]
         ],
         "handoff": {
             "next_owner": TARGET_DOMAIN_ID,
@@ -302,6 +372,11 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             {"ref_kind": "json_pointer", "ref": "/task_lifecycle", "role": "checkpoint_status"},
             {"ref_kind": "json_pointer", "ref": "/runtime_control", "role": "runtime_boundary"},
             {"ref_kind": "json_pointer", "ref": "/grant_authoring_readiness", "role": "authoring_gate"},
+            {
+                "ref_kind": "repo_path",
+                "ref": "docs/references/integration/opl-family-contract-adoption.md",
+                "role": "stage_pack_reference",
+            },
         ],
         "freshness": {
             "freshness_kind": "product_entry_manifest_projection",
@@ -366,6 +441,9 @@ def build_mag_family_stage_control_plane(
                 "stage_goal",
                 "owner",
                 "skills",
+                "prompt_refs",
+                "knowledge_refs",
+                "evaluation",
                 "allowed_action_refs",
                 "handoff",
                 "source_refs",

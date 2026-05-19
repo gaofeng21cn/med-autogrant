@@ -17,6 +17,9 @@
       "stage_goal",
       "owner",
       "skills",
+      "prompt_refs",
+      "knowledge_refs",
+      "evaluation",
       "allowed_action_refs",
       "handoff",
       "source_refs",
@@ -100,19 +103,14 @@
       ],
       "evaluation": [
         {
-          "ref": "/grant_authoring_readiness",
-          "ref_kind": "json_pointer",
-          "role": "authoring_readiness"
+          "ref": "agent/quality_gates/memory_and_receipts.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/runtime_control",
-          "ref_kind": "json_pointer",
-          "role": "runtime_control"
-        },
-        {
-          "ref": "/owner_receipt_contract",
-          "ref_kind": "json_pointer",
-          "role": "owner_receipt_gate"
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         }
       ],
       "freshness": {
@@ -151,6 +149,18 @@
           "role": "runtime_control_projection"
         }
       ],
+      "knowledge_refs": [
+        {
+          "ref": "agent/knowledge/grant_strategy_memory.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        },
+        {
+          "ref": "agent/knowledge/owner_receipt_boundary.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        }
+      ],
       "next_stage_refs": [
         "fundability_strategy"
       ],
@@ -169,15 +179,20 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref": "agent/prompts/call_and_candidate_intake.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
         "grant_request_received"
       ],
       "skills": [
+        {
+          "ref": "agent/skills/grant_authoring.md",
+          "ref_kind": "repo_path",
+          "role": "domain_skill_declaration"
+        },
         {
           "ref": "med-autogrant",
           "ref_kind": "skill_id",
@@ -214,6 +229,11 @@
           "ref": "/grant_authoring_readiness",
           "ref_kind": "json_pointer",
           "role": "authoring_gate"
+        },
+        {
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
         }
       ],
       "stage_contract": {
@@ -277,19 +297,19 @@
       ],
       "evaluation": [
         {
-          "ref": "/grant_authoring_readiness",
-          "ref_kind": "json_pointer",
-          "role": "authoring_readiness"
+          "ref": "agent/quality_gates/fundability.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/runtime_control",
-          "ref_kind": "json_pointer",
-          "role": "runtime_control"
+          "ref": "agent/quality_gates/memory_and_receipts.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/owner_receipt_contract",
-          "ref_kind": "json_pointer",
-          "role": "owner_receipt_gate"
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         }
       ],
       "freshness": {
@@ -329,6 +349,18 @@
           "role": "runtime_control_projection"
         }
       ],
+      "knowledge_refs": [
+        {
+          "ref": "agent/knowledge/grant_strategy_memory.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        },
+        {
+          "ref": "agent/knowledge/owner_receipt_boundary.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        }
+      ],
       "next_stage_refs": [
         "specific_aims_and_structure"
       ],
@@ -347,15 +379,20 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref": "agent/prompts/fundability_strategy.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
         "call_candidate_intake_ready"
       ],
       "skills": [
+        {
+          "ref": "agent/skills/grant_authoring.md",
+          "ref_kind": "repo_path",
+          "role": "domain_skill_declaration"
+        },
         {
           "ref": "med-autogrant",
           "ref_kind": "skill_id",
@@ -392,6 +429,11 @@
           "ref": "/grant_authoring_readiness",
           "ref_kind": "json_pointer",
           "role": "authoring_gate"
+        },
+        {
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
         }
       ],
       "stage_contract": {
@@ -454,19 +496,24 @@
       ],
       "evaluation": [
         {
-          "ref": "/grant_authoring_readiness",
-          "ref_kind": "json_pointer",
-          "role": "authoring_readiness"
+          "ref": "agent/quality_gates/fundability.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/runtime_control",
-          "ref_kind": "json_pointer",
-          "role": "runtime_control"
+          "ref": "agent/quality_gates/quality.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/owner_receipt_contract",
-          "ref_kind": "json_pointer",
-          "role": "owner_receipt_gate"
+          "ref": "agent/quality_gates/memory_and_receipts.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
+        },
+        {
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         }
       ],
       "freshness": {
@@ -506,6 +553,18 @@
           "role": "runtime_control_projection"
         }
       ],
+      "knowledge_refs": [
+        {
+          "ref": "agent/knowledge/grant_strategy_memory.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        },
+        {
+          "ref": "agent/knowledge/owner_receipt_boundary.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        }
+      ],
       "next_stage_refs": [
         "proposal_authoring"
       ],
@@ -524,15 +583,20 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref": "agent/prompts/specific_aims_and_structure.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
         "fundability_strategy_gate_recorded"
       ],
       "skills": [
+        {
+          "ref": "agent/skills/grant_authoring.md",
+          "ref_kind": "repo_path",
+          "role": "domain_skill_declaration"
+        },
         {
           "ref": "med-autogrant",
           "ref_kind": "skill_id",
@@ -569,6 +633,11 @@
           "ref": "/grant_authoring_readiness",
           "ref_kind": "json_pointer",
           "role": "authoring_gate"
+        },
+        {
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
         }
       ],
       "stage_contract": {
@@ -632,19 +701,19 @@
       ],
       "evaluation": [
         {
-          "ref": "/grant_authoring_readiness",
-          "ref_kind": "json_pointer",
-          "role": "authoring_readiness"
+          "ref": "agent/quality_gates/quality.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/runtime_control",
-          "ref_kind": "json_pointer",
-          "role": "runtime_control"
+          "ref": "agent/quality_gates/memory_and_receipts.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/owner_receipt_contract",
-          "ref_kind": "json_pointer",
-          "role": "owner_receipt_gate"
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         }
       ],
       "freshness": {
@@ -683,6 +752,23 @@
           "role": "runtime_control_projection"
         }
       ],
+      "knowledge_refs": [
+        {
+          "ref": "agent/knowledge/grant_strategy_memory.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        },
+        {
+          "ref": "agent/knowledge/package_authority.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        },
+        {
+          "ref": "agent/knowledge/owner_receipt_boundary.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        }
+      ],
       "next_stage_refs": [
         "review_and_rebuttal"
       ],
@@ -701,15 +787,20 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref": "agent/prompts/proposal_authoring.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
         "specific_aims_structure_accepted"
       ],
       "skills": [
+        {
+          "ref": "agent/skills/grant_authoring.md",
+          "ref_kind": "repo_path",
+          "role": "domain_skill_declaration"
+        },
         {
           "ref": "med-autogrant",
           "ref_kind": "skill_id",
@@ -746,6 +837,11 @@
           "ref": "/grant_authoring_readiness",
           "ref_kind": "json_pointer",
           "role": "authoring_gate"
+        },
+        {
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
         }
       ],
       "stage_contract": {
@@ -809,19 +905,19 @@
       ],
       "evaluation": [
         {
-          "ref": "/grant_authoring_readiness",
-          "ref_kind": "json_pointer",
-          "role": "authoring_readiness"
+          "ref": "agent/quality_gates/quality.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/runtime_control",
-          "ref_kind": "json_pointer",
-          "role": "runtime_control"
+          "ref": "agent/quality_gates/memory_and_receipts.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/owner_receipt_contract",
-          "ref_kind": "json_pointer",
-          "role": "owner_receipt_gate"
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         }
       ],
       "freshness": {
@@ -861,6 +957,18 @@
           "role": "runtime_control_projection"
         }
       ],
+      "knowledge_refs": [
+        {
+          "ref": "agent/knowledge/grant_strategy_memory.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        },
+        {
+          "ref": "agent/knowledge/owner_receipt_boundary.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        }
+      ],
       "next_stage_refs": [
         "package_and_submit_ready"
       ],
@@ -879,15 +987,20 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref": "agent/prompts/review_and_rebuttal.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
         "proposal_draft_reviewable"
       ],
       "skills": [
+        {
+          "ref": "agent/skills/grant_authoring.md",
+          "ref_kind": "repo_path",
+          "role": "domain_skill_declaration"
+        },
         {
           "ref": "med-autogrant",
           "ref_kind": "skill_id",
@@ -924,6 +1037,11 @@
           "ref": "/grant_authoring_readiness",
           "ref_kind": "json_pointer",
           "role": "authoring_gate"
+        },
+        {
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
         }
       ],
       "stage_contract": {
@@ -987,19 +1105,19 @@
       ],
       "evaluation": [
         {
-          "ref": "/grant_authoring_readiness",
-          "ref_kind": "json_pointer",
-          "role": "authoring_readiness"
+          "ref": "agent/quality_gates/export_and_package.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/runtime_control",
-          "ref_kind": "json_pointer",
-          "role": "runtime_control"
+          "ref": "agent/quality_gates/memory_and_receipts.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         },
         {
-          "ref": "/owner_receipt_contract",
-          "ref_kind": "json_pointer",
-          "role": "owner_receipt_gate"
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "stage_quality_gate"
         }
       ],
       "freshness": {
@@ -1037,6 +1155,18 @@
           "role": "runtime_control_projection"
         }
       ],
+      "knowledge_refs": [
+        {
+          "ref": "agent/knowledge/package_authority.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        },
+        {
+          "ref": "agent/knowledge/owner_receipt_boundary.md",
+          "ref_kind": "repo_path",
+          "role": "stage_knowledge"
+        }
+      ],
       "next_stage_refs": [],
       "outputs": [
         {
@@ -1053,15 +1183,20 @@
       "owner": "med-autogrant",
       "prompt_refs": [
         {
-          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref": "agent/prompts/package_and_submit_ready.md",
           "ref_kind": "repo_path",
-          "role": "stage_pack_reference"
+          "role": "stage_prompt"
         }
       ],
       "requires": [
         "grant_review_gate_receipt_recorded"
       ],
       "skills": [
+        {
+          "ref": "agent/skills/grant_authoring.md",
+          "ref_kind": "repo_path",
+          "role": "domain_skill_declaration"
+        },
         {
           "ref": "med-autogrant",
           "ref_kind": "skill_id",
@@ -1098,6 +1233,11 @@
           "ref": "/grant_authoring_readiness",
           "ref_kind": "json_pointer",
           "role": "authoring_gate"
+        },
+        {
+          "ref": "docs/references/integration/opl-family-contract-adoption.md",
+          "ref_kind": "repo_path",
+          "role": "stage_pack_reference"
         }
       ],
       "stage_contract": {
