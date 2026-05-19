@@ -636,7 +636,6 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             _build_retired_functional_module_audit_item(
                 "domain_runtime_patch_bridge",
                 code_paths=[
-                    "src/med_autogrant/domain_runtime_parts/patch_targets.py",
                     "src/med_autogrant/domain_runtime.py",
                 ],
                 active_callers=[],
@@ -646,7 +645,8 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 cannot_absorb_reason="This is retired compatibility glue, not an OPL primitive to absorb.",
                 evidence_refs=[
                     "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
-                    "src/med_autogrant/domain_runtime_parts/patch_targets.py",
+                    "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
+                    "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge",
                 ],
             ),
             _build_retired_functional_module_audit_item(
