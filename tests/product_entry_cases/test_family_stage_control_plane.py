@@ -96,6 +96,17 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                 self.assertTrue(any(ref["role"] == "owner_receipt_gate" for ref in stage["evaluation"]))
                 self.assertTrue(stage["trust_boundary"]["owner_receipt_required"])
                 self.assertTrue(stage["trust_boundary"]["runtime_guard_required"])
+                self.assertTrue(stage["stage_contract"]["source_scope_refs"])
+                self.assertTrue(stage["stage_contract"]["cohort_query_refs"])
+                self.assertTrue(stage["stage_contract"]["trigger_refs"])
+                self.assertTrue(stage["stage_contract"]["monitor_refs"])
+                self.assertTrue(stage["stage_contract"]["dashboard_metric_refs"])
+                self.assertTrue(
+                    any(
+                        ref["role"] == "opl_provider_stage_launch_trigger"
+                        for ref in stage["stage_contract"]["trigger_refs"]
+                    )
+                )
                 self.assertEqual(
                     stage["authority_boundary"]["independent_gate_receipt_required"],
                     stage["stage_id"] in independent_gate_stage_ids,

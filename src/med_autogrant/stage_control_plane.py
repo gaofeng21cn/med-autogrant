@@ -304,6 +304,7 @@ STAGE_QUALITY_GATE_REFS: dict[str, tuple[str, ...]] = {
 
 def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
     runtime_event_refs = _runtime_event_refs(stage)
+    cohort_loop_refs = _stage_cohort_loop_refs(stage)
     stage_id = str(stage["stage_id"])
     return {
         **stage,
@@ -338,6 +339,12 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
         "evaluation": [
             {"ref_kind": "repo_path", "ref": ref, "role": "stage_quality_gate"}
             for ref in STAGE_QUALITY_GATE_REFS[stage_id]
+        ] + [
+            {
+                "ref_kind": "repo_path",
+                "ref": "agent/quality_gates/authority_boundaries.md",
+                "role": "owner_receipt_gate",
+            }
         ],
         "handoff": {
             "next_owner": TARGET_DOMAIN_ID,
@@ -351,6 +358,7 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "requires": list(stage.get("requires", [])),
             "ensures": list(stage.get("ensures", [])),
             "runtime_event_refs": runtime_event_refs,
+            **cohort_loop_refs,
             "boundary_assumptions": [
                 "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
                 "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states.",
@@ -395,6 +403,54 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "can_override_fundability_judgment": False,
             "can_bypass_submission_ready_gate": False,
         },
+    }
+
+
+def _stage_cohort_loop_refs(stage: Mapping[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    stage_id = str(stage["stage_id"])
+    return {
+        "source_scope_refs": [
+            {
+                "ref_kind": "route_stage_refs",
+                "ref": list(stage["domain_stage_refs"]),
+                "role": "mag_grant_stage_source_scope",
+            },
+            {
+                "ref_kind": "json_pointer",
+                "ref": f"/product_entry_manifest/family_stage_control_plane/stages/{stage_id}/source_refs",
+                "role": "stage_source_ref_projection",
+            },
+        ],
+        "cohort_query_refs": [
+            {
+                "ref_kind": "json_pointer",
+                "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+                "role": "auditable_grant_stage_cohort_query",
+            },
+        ],
+        "trigger_refs": [
+            {
+                "ref_kind": "queue_ref",
+                "ref": f"opl://family-stage-queue/med-autogrant/{stage_id}",
+                "role": "opl_provider_stage_launch_trigger",
+            },
+            {
+                "ref_kind": "action_ref",
+                "ref": list(stage["allowed_action_refs"]),
+                "role": "mag_guarded_action_trigger_candidates",
+            },
+        ],
+        "monitor_refs": [
+            {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "grant_progress_monitor"},
+            {"ref_kind": "json_pointer", "ref": "/task_lifecycle", "role": "checkpoint_monitor"},
+        ],
+        "dashboard_metric_refs": [
+            {
+                "ref_kind": "json_pointer",
+                "ref": f"/product_entry_manifest/family_stage_control_plane/stages/{stage_id}/freshness",
+                "role": "operator_stage_freshness_metric",
+            },
+        ],
     }
 
 

@@ -111,6 +111,11 @@
           "ref": "agent/quality_gates/authority_boundaries.md",
           "ref_kind": "repo_path",
           "role": "stage_quality_gate"
+        },
+        {
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -241,14 +246,72 @@
           "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
           "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
         ],
+        "cohort_query_refs": [
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "auditable_grant_stage_cohort_query"
+          }
+        ],
+        "dashboard_metric_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/call_and_candidate_intake/freshness",
+            "ref_kind": "json_pointer",
+            "role": "operator_stage_freshness_metric"
+          }
+        ],
         "ensures": [
           "call_candidate_intake_ready"
+        ],
+        "monitor_refs": [
+          {
+            "ref": "/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor"
+          },
+          {
+            "ref": "/task_lifecycle",
+            "ref_kind": "json_pointer",
+            "role": "checkpoint_monitor"
+          }
         ],
         "requires": [
           "grant_request_received"
         ],
         "runtime_event_refs": [
           "runtime_event:call_and_candidate_intake.owner_receipt_recorded"
+        ],
+        "source_scope_refs": [
+          {
+            "ref": [
+              "discover-funding-opportunities",
+              "select-project-profile",
+              "initialize-intake-workspace",
+              "input_intake"
+            ],
+            "ref_kind": "route_stage_refs",
+            "role": "mag_grant_stage_source_scope"
+          },
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/call_and_candidate_intake/source_refs",
+            "ref_kind": "json_pointer",
+            "role": "stage_source_ref_projection"
+          }
+        ],
+        "trigger_refs": [
+          {
+            "ref": "opl://family-stage-queue/med-autogrant/call_and_candidate_intake",
+            "ref_kind": "queue_ref",
+            "role": "opl_provider_stage_launch_trigger"
+          },
+          {
+            "ref": [
+              "inspect_progress",
+              "inspect_cockpit"
+            ],
+            "ref_kind": "action_ref",
+            "role": "mag_guarded_action_trigger_candidates"
+          }
         ]
       },
       "stage_goal": "Read call guidance, applicant/team context, candidate directions, and eligibility constraints.",
@@ -310,6 +373,11 @@
           "ref": "agent/quality_gates/authority_boundaries.md",
           "ref_kind": "repo_path",
           "role": "stage_quality_gate"
+        },
+        {
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -441,14 +509,72 @@
           "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
           "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
         ],
+        "cohort_query_refs": [
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "auditable_grant_stage_cohort_query"
+          }
+        ],
+        "dashboard_metric_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/fundability_strategy/freshness",
+            "ref_kind": "json_pointer",
+            "role": "operator_stage_freshness_metric"
+          }
+        ],
         "ensures": [
           "fundability_strategy_gate_recorded"
+        ],
+        "monitor_refs": [
+          {
+            "ref": "/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor"
+          },
+          {
+            "ref": "/task_lifecycle",
+            "ref_kind": "json_pointer",
+            "role": "checkpoint_monitor"
+          }
         ],
         "requires": [
           "call_candidate_intake_ready"
         ],
         "runtime_event_refs": [
           "runtime_event:fundability_strategy.ai_decision_gate_recorded"
+        ],
+        "source_scope_refs": [
+          {
+            "ref": [
+              "direction_screening",
+              "fit_alignment",
+              "grant_quality_scorecard",
+              "fundability gate"
+            ],
+            "ref_kind": "route_stage_refs",
+            "role": "mag_grant_stage_source_scope"
+          },
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/fundability_strategy/source_refs",
+            "ref_kind": "json_pointer",
+            "role": "stage_source_ref_projection"
+          }
+        ],
+        "trigger_refs": [
+          {
+            "ref": "opl://family-stage-queue/med-autogrant/fundability_strategy",
+            "ref_kind": "queue_ref",
+            "role": "opl_provider_stage_launch_trigger"
+          },
+          {
+            "ref": [
+              "open_grant_user_loop",
+              "inspect_progress"
+            ],
+            "ref_kind": "action_ref",
+            "role": "mag_guarded_action_trigger_candidates"
+          }
         ]
       },
       "stage_goal": "Evaluate topic competitiveness, innovation, risk, fit, and funder-specific strategy.",
@@ -514,6 +640,11 @@
           "ref": "agent/quality_gates/authority_boundaries.md",
           "ref_kind": "repo_path",
           "role": "stage_quality_gate"
+        },
+        {
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -645,14 +776,71 @@
           "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
           "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
         ],
+        "cohort_query_refs": [
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "auditable_grant_stage_cohort_query"
+          }
+        ],
+        "dashboard_metric_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/specific_aims_and_structure/freshness",
+            "ref_kind": "json_pointer",
+            "role": "operator_stage_freshness_metric"
+          }
+        ],
         "ensures": [
           "specific_aims_structure_accepted"
+        ],
+        "monitor_refs": [
+          {
+            "ref": "/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor"
+          },
+          {
+            "ref": "/task_lifecycle",
+            "ref_kind": "json_pointer",
+            "role": "checkpoint_monitor"
+          }
         ],
         "requires": [
           "fundability_strategy_gate_recorded"
         ],
         "runtime_event_refs": [
           "runtime_event:specific_aims_and_structure.ai_decision_gate_recorded"
+        ],
+        "source_scope_refs": [
+          {
+            "ref": [
+              "question_refinement",
+              "argument_building",
+              "outline"
+            ],
+            "ref_kind": "route_stage_refs",
+            "role": "mag_grant_stage_source_scope"
+          },
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/specific_aims_and_structure/source_refs",
+            "ref_kind": "json_pointer",
+            "role": "stage_source_ref_projection"
+          }
+        ],
+        "trigger_refs": [
+          {
+            "ref": "opl://family-stage-queue/med-autogrant/specific_aims_and_structure",
+            "ref_kind": "queue_ref",
+            "role": "opl_provider_stage_launch_trigger"
+          },
+          {
+            "ref": [
+              "open_grant_user_loop",
+              "inspect_progress"
+            ],
+            "ref_kind": "action_ref",
+            "role": "mag_guarded_action_trigger_candidates"
+          }
         ]
       },
       "stage_goal": "Shape research question, aims, technical route, innovation, and argument structure.",
@@ -714,6 +902,11 @@
           "ref": "agent/quality_gates/authority_boundaries.md",
           "ref_kind": "repo_path",
           "role": "stage_quality_gate"
+        },
+        {
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -849,14 +1042,72 @@
           "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
           "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
         ],
+        "cohort_query_refs": [
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "auditable_grant_stage_cohort_query"
+          }
+        ],
+        "dashboard_metric_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/proposal_authoring/freshness",
+            "ref_kind": "json_pointer",
+            "role": "operator_stage_freshness_metric"
+          }
+        ],
         "ensures": [
           "proposal_draft_reviewable"
+        ],
+        "monitor_refs": [
+          {
+            "ref": "/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor"
+          },
+          {
+            "ref": "/task_lifecycle",
+            "ref_kind": "json_pointer",
+            "role": "checkpoint_monitor"
+          }
         ],
         "requires": [
           "specific_aims_structure_accepted"
         ],
         "runtime_event_refs": [
           "runtime_event:proposal_authoring.owner_receipt_recorded"
+        ],
+        "source_scope_refs": [
+          {
+            "ref": [
+              "drafting",
+              "revision",
+              "grant-progress",
+              "grant-user-loop"
+            ],
+            "ref_kind": "route_stage_refs",
+            "role": "mag_grant_stage_source_scope"
+          },
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/proposal_authoring/source_refs",
+            "ref_kind": "json_pointer",
+            "role": "stage_source_ref_projection"
+          }
+        ],
+        "trigger_refs": [
+          {
+            "ref": "opl://family-stage-queue/med-autogrant/proposal_authoring",
+            "ref_kind": "queue_ref",
+            "role": "opl_provider_stage_launch_trigger"
+          },
+          {
+            "ref": [
+              "open_grant_user_loop",
+              "build_direct_entry"
+            ],
+            "ref_kind": "action_ref",
+            "role": "mag_guarded_action_trigger_candidates"
+          }
         ]
       },
       "stage_goal": "Draft and revise the proposal body within the locked funding-call context.",
@@ -918,6 +1169,11 @@
           "ref": "agent/quality_gates/authority_boundaries.md",
           "ref_kind": "repo_path",
           "role": "stage_quality_gate"
+        },
+        {
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -1049,14 +1305,72 @@
           "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
           "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
         ],
+        "cohort_query_refs": [
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "auditable_grant_stage_cohort_query"
+          }
+        ],
+        "dashboard_metric_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/review_and_rebuttal/freshness",
+            "ref_kind": "json_pointer",
+            "role": "operator_stage_freshness_metric"
+          }
+        ],
         "ensures": [
           "grant_review_gate_receipt_recorded"
+        ],
+        "monitor_refs": [
+          {
+            "ref": "/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor"
+          },
+          {
+            "ref": "/task_lifecycle",
+            "ref_kind": "json_pointer",
+            "role": "checkpoint_monitor"
+          }
         ],
         "requires": [
           "proposal_draft_reviewable"
         ],
         "runtime_event_refs": [
           "runtime_event:review_and_rebuttal.ai_decision_gate_recorded"
+        ],
+        "source_scope_refs": [
+          {
+            "ref": [
+              "critique",
+              "review",
+              "grant_quality_closure_dossier",
+              "quality-diff"
+            ],
+            "ref_kind": "route_stage_refs",
+            "role": "mag_grant_stage_source_scope"
+          },
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/review_and_rebuttal/source_refs",
+            "ref_kind": "json_pointer",
+            "role": "stage_source_ref_projection"
+          }
+        ],
+        "trigger_refs": [
+          {
+            "ref": "opl://family-stage-queue/med-autogrant/review_and_rebuttal",
+            "ref_kind": "queue_ref",
+            "role": "opl_provider_stage_launch_trigger"
+          },
+          {
+            "ref": [
+              "open_grant_user_loop",
+              "inspect_progress"
+            ],
+            "ref_kind": "action_ref",
+            "role": "mag_guarded_action_trigger_candidates"
+          }
         ]
       },
       "stage_goal": "Run reviewer-style critique, issue closure, rebuttal planning, and quality-diff checks.",
@@ -1118,6 +1432,11 @@
           "ref": "agent/quality_gates/authority_boundaries.md",
           "ref_kind": "repo_path",
           "role": "stage_quality_gate"
+        },
+        {
+          "ref": "agent/quality_gates/authority_boundaries.md",
+          "ref_kind": "repo_path",
+          "role": "owner_receipt_gate"
         }
       ],
       "freshness": {
@@ -1245,14 +1564,72 @@
           "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
           "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states."
         ],
+        "cohort_query_refs": [
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "auditable_grant_stage_cohort_query"
+          }
+        ],
+        "dashboard_metric_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/package_and_submit_ready/freshness",
+            "ref_kind": "json_pointer",
+            "role": "operator_stage_freshness_metric"
+          }
+        ],
         "ensures": [
           "submission_ready_package_receipt_recorded"
+        ],
+        "monitor_refs": [
+          {
+            "ref": "/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor"
+          },
+          {
+            "ref": "/task_lifecycle",
+            "ref_kind": "json_pointer",
+            "role": "checkpoint_monitor"
+          }
         ],
         "requires": [
           "grant_review_gate_receipt_recorded"
         ],
         "runtime_event_refs": [
           "runtime_event:package_and_submit_ready.owner_receipt_recorded"
+        ],
+        "source_scope_refs": [
+          {
+            "ref": [
+              "freeze",
+              "frozen",
+              "package submission-ready",
+              "submission-ready export gate"
+            ],
+            "ref_kind": "route_stage_refs",
+            "role": "mag_grant_stage_source_scope"
+          },
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/package_and_submit_ready/source_refs",
+            "ref_kind": "json_pointer",
+            "role": "stage_source_ref_projection"
+          }
+        ],
+        "trigger_refs": [
+          {
+            "ref": "opl://family-stage-queue/med-autogrant/package_and_submit_ready",
+            "ref_kind": "queue_ref",
+            "role": "opl_provider_stage_launch_trigger"
+          },
+          {
+            "ref": [
+              "build_submission_ready_package",
+              "inspect_progress"
+            ],
+            "ref_kind": "action_ref",
+            "role": "mag_guarded_action_trigger_candidates"
+          }
         ]
       },
       "stage_goal": "Freeze final local delivery package and run submission-ready export checks.",

@@ -113,6 +113,7 @@ def test_stage_semantic_refs_resolve_to_agent_pack_files() -> None:
         skill_refs = stage["skills"]
         knowledge_refs = stage["knowledge_refs"]
         evaluation_refs = stage["evaluation"]
+        stage_contract = stage["stage_contract"]
 
         assert skill_refs
         assert any(ref["ref_kind"] == "skill_id" and ref["ref"] == "med-autogrant" for ref in skill_refs)
@@ -140,6 +141,12 @@ def test_stage_semantic_refs_resolve_to_agent_pack_files() -> None:
             text = path.read_text(encoding="utf-8").strip()
             assert text, ref["ref"]
             assert not any(marker in text for marker in forbidden_markers), ref["ref"]
+        assert stage_contract["source_scope_refs"]
+        assert stage_contract["cohort_query_refs"]
+        assert stage_contract["trigger_refs"]
+        assert stage_contract["monitor_refs"]
+        assert stage_contract["dashboard_metric_refs"]
+        assert any(ref["role"] == "opl_provider_stage_launch_trigger" for ref in stage_contract["trigger_refs"])
 
 
 def test_product_entry_package_keeps_lazy_public_export() -> None:
