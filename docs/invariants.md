@@ -1,5 +1,10 @@
 # 不变量
 
+Owner: `Med Auto Grant`
+Purpose: `stable_invariants`
+State: `current`
+Machine boundary: 本文是人读约束集。可执行约束继续归 contracts、schemas、source、CLI/API behavior、验证脚本、runtime receipts 与 workspace/artifact outputs。
+
 ## 身份、入口与运行真相
 
 - `Med Auto Grant` 对外第一身份固定为独立 medical grant domain agent，不写成 `OPL` 内部 workspace 模块。

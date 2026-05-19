@@ -1,5 +1,10 @@
 # 项目概览
 
+Owner: `Med Auto Grant`
+Purpose: `project_role_and_boundary`
+State: `current`
+Machine boundary: 本文是人读项目概览。机器真相继续归 `contracts/runtime-program/current-program.json`、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs。
+
 ## 项目定位
 
 `Med Auto Grant` 是独立的医学 `Grant Ops` domain agent，面向 author-side、proposal-facing 的申请人侧写作主线。

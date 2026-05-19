@@ -1,5 +1,9 @@
 # 当前状态
 
+Owner: `Med Auto Grant`
+Purpose: `current_status_and_evidence_boundary`
+State: `current`
+Machine boundary: 本文是人读状态面。机器真相继续归 `contracts/runtime-program/current-program.json`、production acceptance contract、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs。
 Date: `2026-05-19`
 
 ## 当前角色

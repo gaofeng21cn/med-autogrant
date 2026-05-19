@@ -1,5 +1,10 @@
 # 架构概览
 
+Owner: `Med Auto Grant`
+Purpose: `architecture_and_owner_boundary`
+State: `current`
+Machine boundary: 本文是人读架构说明。机器接口与当前 truth surface 继续归 `contracts/`、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts、workspace/artifact roots 与 `contracts/runtime-program/current-program.json`。
+
 ## 主链路
 
 当前主链路是“单一 app skill 优先，稳定 capability surface 仍由 CLI / domain entry 承载，OPL 托管或 hosted backend 显式可选”：

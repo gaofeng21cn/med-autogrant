@@ -1,5 +1,10 @@
 # 决策记录
 
+Owner: `Med Auto Grant`
+Purpose: `current_decision_log`
+State: `current`
+Machine boundary: 本文是人读决策记录。机器真相继续归 contracts、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs；历史决策若与当前 status/current-program 冲突，以当前 owner surfaces 为准。
+
 ## 2026-05-19：清理 stale generic runtime retirement lane
 
 - 决策：`.worktrees/retire-generic-runtime-surfaces` / `codex/retire-mag-generic-runtime-surfaces` 只作为已吸收过的历史 lane 处理，不再向当前 `main` 重放。该 worktree 的有效删除目标已由 `7d877b8 Retire MAG local runtime surfaces` 覆盖；保留下来的差异只是不应重放的旧树状态与非语义格式差异。
