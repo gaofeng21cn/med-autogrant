@@ -87,8 +87,17 @@ def test_opl_standard_pack_declares_real_agent_domain_pack_paths() -> None:
         assert not any(marker in text for marker in forbidden_markers), relative_path
 
 
-def test_stage_prompt_refs_resolve_to_agent_prompt_files() -> None:
+def test_stage_semantic_refs_resolve_to_agent_pack_files() -> None:
     stage_plane = build_standard_pack()["stage_control_plane"]
+    forbidden_markers = ("TODO", "TBD")
+
+    required_stage_fields = set(stage_plane["discovery_smoke"]["required_stage_fields"])
+    assert {
+        "prompt_refs",
+        "skills",
+        "knowledge_refs",
+        "evaluation",
+    }.issubset(required_stage_fields)
 
     for stage in stage_plane["stages"]:
         prompt_refs = stage["prompt_refs"]
@@ -99,9 +108,36 @@ def test_stage_prompt_refs_resolve_to_agent_prompt_files() -> None:
                 "role": "stage_prompt",
             }
         ]
-        prompt_path = REPO_ROOT / prompt_refs[0]["ref"]
-        assert prompt_path.exists()
-        assert prompt_path.read_text(encoding="utf-8").strip()
+        skill_refs = stage["skills"]
+        knowledge_refs = stage["knowledge_refs"]
+        evaluation_refs = stage["evaluation"]
+
+        assert skill_refs
+        assert any(ref["ref_kind"] == "skill_id" and ref["ref"] == "med-autogrant" for ref in skill_refs)
+        assert any(
+            ref["ref_kind"] == "repo_path" and str(ref["ref"]).startswith("agent/skills/")
+            for ref in skill_refs
+        )
+        assert knowledge_refs
+        assert all(
+            ref["ref_kind"] == "repo_path" and str(ref["ref"]).startswith("agent/knowledge/")
+            for ref in knowledge_refs
+        )
+        assert evaluation_refs
+        assert all(
+            ref["ref_kind"] == "repo_path" and str(ref["ref"]).startswith("agent/quality_gates/")
+            for ref in evaluation_refs
+        )
+
+        semantic_refs = prompt_refs + skill_refs + knowledge_refs + evaluation_refs
+        for ref in semantic_refs:
+            if ref["ref_kind"] != "repo_path":
+                continue
+            path = REPO_ROOT / ref["ref"]
+            assert path.exists(), ref["ref"]
+            text = path.read_text(encoding="utf-8").strip()
+            assert text, ref["ref"]
+            assert not any(marker in text for marker in forbidden_markers), ref["ref"]
 
 
 def test_product_entry_package_keeps_lazy_public_export() -> None:
