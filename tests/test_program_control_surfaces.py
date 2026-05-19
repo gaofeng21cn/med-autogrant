@@ -83,6 +83,15 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertIn("ideal_state_closure_status", framework_boundary["framework_consumed_projection"])
         skeleton = framework_boundary["standard_domain_agent_skeleton"]
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
+        self.assertEqual(skeleton["canonical_semantic_pack_root"], "agent/")
+        self.assertEqual(
+            skeleton["canonical_semantic_pack_role"],
+            "repo_source_declarative_grant_pack",
+        )
+        self.assertEqual(
+            skeleton["canonical_repo_source_semantic_pack_role"],
+            "historical_runtime_program_snapshot_only_not_pack_compiler_input",
+        )
         self.assertEqual(skeleton["repo_source_boundary"], ["agent", "contracts", "runtime", "docs"])
         self.assertEqual(
             skeleton["runtime_declares_only"],

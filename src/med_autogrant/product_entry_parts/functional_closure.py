@@ -289,9 +289,11 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
     roots = {
         "agent": {
             "owner": TARGET_DOMAIN_ID,
-            "anchor_ref": "agent/README.md",
+            "anchor_ref": "agent/prompts/call_and_candidate_intake.md",
             "state": "declarative_grant_pack_present",
             "role": "canonical declarative grant pack for prompts, stages, skills, quality gates, and knowledge",
+            "canonical_semantic_pack_root": "agent/",
+            "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
             "required_pack_refs": [
                 "agent/prompts/call_and_candidate_intake.md",
                 "agent/prompts/fundability_strategy.md",
@@ -315,18 +317,27 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
                 "agent/knowledge/package_authority.md",
                 "agent/knowledge/owner_receipt_boundary.md",
             ],
+            "human_readable_provenance_refs": [
+                "agent/README.md",
+            ],
         },
         "contracts": {
             "owner": TARGET_DOMAIN_ID,
-            "anchor_ref": "contracts/README.md",
+            "anchor_ref": "contracts/runtime-program/current-program.json",
             "state": "physical_root_present",
             "role": "machine-readable contract and schema boundary anchor",
+            "human_readable_provenance_refs": [
+                "contracts/README.md",
+            ],
         },
         "runtime": {
             "owner": TARGET_DOMAIN_ID,
-            "anchor_ref": "runtime/README.md",
+            "anchor_ref": "src/med_autogrant/product_entry_parts/sidecar.py",
             "state": "physical_root_present",
             "role": "runtime descriptor and sidecar boundary anchor",
+            "human_readable_provenance_refs": [
+                "runtime/README.md",
+            ],
         },
         "docs": {
             "owner": TARGET_DOMAIN_ID,
@@ -360,6 +371,15 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
         "moves_workspace_artifacts": False,
         "moves_runtime_receipt_instances": False,
         "moves_memory_body": False,
+        "human_readable_provenance_refs": [
+            "agent/README.md",
+            "contracts/README.md",
+            "runtime/README.md",
+        ],
+        "human_readable_provenance_policy": (
+            "README refs are retained for human orientation/provenance only and are not required "
+            "semantic pack compiler inputs or current machine anchors."
+        ),
         "active_path_scan_no_legacy_default_caller_ref": (
             "/product_entry_manifest/physical_skeleton_follow_through/"
             "active_path_scan_no_legacy_default_caller"

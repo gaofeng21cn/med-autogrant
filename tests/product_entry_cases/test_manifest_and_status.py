@@ -434,7 +434,17 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         skeleton = manifest["standard_domain_agent_skeleton"]
         self.assertEqual(skeleton["surface_kind"], "standard_domain_agent_skeleton")
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
+        self.assertEqual(skeleton["canonical_semantic_pack_root"], "agent/")
+        self.assertEqual(
+            skeleton["canonical_semantic_pack_role"],
+            "repo_source_declarative_grant_pack",
+        )
         self.assertEqual(set(skeleton["repo_source_boundary"]), {"agent", "contracts", "runtime", "docs"})
+        self.assertNotIn("agent/README.md", skeleton["repo_source_boundary"]["agent"]["source_refs"])
+        self.assertIn(
+            "agent/README.md",
+            skeleton["repo_source_boundary"]["agent"]["human_readable_provenance_refs"],
+        )
         self.assertEqual(
             skeleton["runtime_declaration"]["runtime_only_declares"],
             ["sidecar", "projection_builder", "lifecycle_adapter"],

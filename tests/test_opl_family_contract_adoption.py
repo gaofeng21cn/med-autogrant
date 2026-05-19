@@ -550,14 +550,23 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
         assert (REPO_ROOT / boundary).is_dir()
         assert boundary in audit["source_refs_by_boundary"]
         assert audit["source_refs_by_boundary"][boundary]
+    assert audit["canonical_semantic_pack_root"] == "agent/"
+    assert audit["canonical_semantic_pack_role"] == "repo_source_declarative_grant_pack"
+    assert "agent/README.md" not in audit["source_refs_by_boundary"]["agent"]
+    assert "contracts/README.md" not in audit["source_refs_by_boundary"]["contracts"]
+    assert "runtime/README.md" not in audit["source_refs_by_boundary"]["runtime"]
+    assert "agent/README.md" in audit["human_readable_provenance_refs"]
+    assert "contracts/README.md" in audit["human_readable_provenance_refs"]
+    assert "runtime/README.md" in audit["human_readable_provenance_refs"]
+    assert "not required semantic pack compiler inputs" in audit["human_readable_provenance_policy"]
+
     for anchor_ref in (
-        "agent/README.md",
         "agent/prompts/call_and_candidate_intake.md",
         "agent/quality_gates/fundability.md",
         "agent/knowledge/grant_strategy_memory.md",
-        "contracts/README.md",
-        "runtime/README.md",
+        "contracts/runtime-program/current-program.json",
         "src/med_autogrant/product_entry_parts/functional_closure.py",
+        "src/med_autogrant/product_entry_parts/sidecar.py",
     ):
         assert any(
             anchor_ref in refs
@@ -574,7 +583,13 @@ def test_mag_adoption_contract_declares_owner_receipt_lifecycle_and_skeleton_fol
     follow_through = contract["physical_skeleton_follow_through"]
 
     assert skeleton["mapping_state"] == "declarative_grant_pack_follow_through_landed"
+    assert skeleton["canonical_semantic_pack_root"] == "agent/"
+    assert skeleton["canonical_semantic_pack_role"] == "repo_source_declarative_grant_pack"
     assert skeleton["canonical_repo_source_semantic_pack"] == "agent/"
+    assert (
+        skeleton["canonical_repo_source_semantic_pack_role"]
+        == "historical_runtime_program_snapshot_only_not_pack_compiler_input"
+    )
     assert skeleton["controlled_domain_memory_apply_proof_ref"] == (
         "/product_entry_manifest/controlled_domain_memory_apply_proof"
     )
@@ -622,11 +637,13 @@ def test_mag_adoption_contract_declares_owner_receipt_lifecycle_and_skeleton_fol
     assert follow_through["state"] == "declarative_grant_pack_landed"
     assert follow_through["repo_source_boundary"] == ["agent", "contracts", "runtime", "docs"]
     assert follow_through["anchor_refs"] == [
-        "agent/README.md",
-        "contracts/README.md",
-        "runtime/README.md",
+        "agent/prompts/call_and_candidate_intake.md",
+        "contracts/runtime-program/current-program.json",
+        "src/med_autogrant/product_entry_parts/sidecar.py",
         "docs/status.md",
     ]
+    assert "agent/README.md" in follow_through["human_readable_provenance_refs"]
+    assert "current machine anchors" in follow_through["human_readable_provenance_policy"]
     assert follow_through["moves_workspace_artifacts"] is False
     assert follow_through["moves_runtime_receipt_instances"] is False
     assert follow_through["moves_memory_body"] is False

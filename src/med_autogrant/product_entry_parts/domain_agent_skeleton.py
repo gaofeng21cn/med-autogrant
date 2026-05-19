@@ -39,12 +39,13 @@ def build_standard_domain_agent_skeleton(
         "skeleton_id": SKELETON_ID,
         "target_domain_id": TARGET_DOMAIN_ID,
         "mapping_state": "descriptor_manifest_adapter_landed",
+        "canonical_semantic_pack_root": "agent/",
+        "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
         "repo_source_boundary": {
             "agent": {
                 "owner": TARGET_DOMAIN_ID,
                 "role": "canonical declarative grant pack with prompts, stages, skills, quality gates, and knowledge boundaries",
                 "source_refs": [
-                    "agent/README.md",
                     "agent/prompts/call_and_candidate_intake.md",
                     "agent/prompts/fundability_strategy.md",
                     "agent/prompts/specific_aims_and_structure.md",
@@ -66,6 +67,9 @@ def build_standard_domain_agent_skeleton(
                     "agent/knowledge/grant_strategy_memory.md",
                     "agent/knowledge/package_authority.md",
                     "agent/knowledge/owner_receipt_boundary.md",
+                ],
+                "human_readable_provenance_refs": [
+                    "agent/README.md",
                 ],
             },
             "contracts": {

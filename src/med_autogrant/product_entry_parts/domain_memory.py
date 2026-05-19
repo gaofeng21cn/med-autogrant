@@ -415,7 +415,6 @@ def _build_memory_receipt_fixture(
 def _build_repo_source_layout_audit() -> dict[str, Any]:
     boundary_refs = {
         "agent": [
-            "agent/README.md",
             "agent/prompts/call_and_candidate_intake.md",
             "agent/prompts/fundability_strategy.md",
             "agent/prompts/specific_aims_and_structure.md",
@@ -439,14 +438,12 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
             "agent/knowledge/owner_receipt_boundary.md",
         ],
         "contracts": [
-            "contracts/README.md",
             "contracts/runtime-program/current-program.json",
             "contracts/runtime-program/domain-memory-seed-fixture.json",
             "contracts/runtime-program/opl-family-contract-adoption.json",
             "schemas/v1/product-entry-manifest.schema.json",
         ],
         "runtime": [
-            "runtime/README.md",
             "src/med_autogrant/product_entry_parts/domain_memory.py",
             "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
             "src/med_autogrant/product_entry_parts/functional_closure.py",
@@ -465,11 +462,22 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
         "surface_kind": "mag_repo_source_layout_audit",
         "audit_id": "mag.standard_domain_agent_skeleton.repo_source_layout.audit.v1",
         "layout_state": "declarative_grant_pack_follow_through_landed",
+        "canonical_semantic_pack_root": "agent/",
+        "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
         "boundary_keys": list(boundary_refs),
         "physical_move_required": (
             "low_risk_source_moves_only_after_direct_hosted_parity_restore_provenance_and_no_active_caller_proof"
         ),
         "repo_source_policy": "existing_repo_source_mapped_to_standard_agent_contracts_runtime_docs_boundaries",
+        "human_readable_provenance_refs": [
+            "agent/README.md",
+            "contracts/README.md",
+            "runtime/README.md",
+        ],
+        "human_readable_provenance_policy": (
+            "README refs are retained for human orientation/provenance only and are not required "
+            "semantic pack compiler inputs or current machine source refs."
+        ),
         "retired_active_path_policy": "physically_removed_or_history_tombstone_only",
         "legacy_active_path_residue": [
             {

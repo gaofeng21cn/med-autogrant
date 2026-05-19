@@ -180,12 +180,18 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertEqual(audit["layout_state"], "declarative_grant_pack_follow_through_landed")
         agent_root = follow_through["roots"]["agent"]
         self.assertEqual(agent_root["state"], "declarative_grant_pack_present")
+        self.assertEqual(agent_root["anchor_ref"], "agent/prompts/call_and_candidate_intake.md")
+        self.assertEqual(agent_root["canonical_semantic_pack_root"], "agent/")
+        self.assertEqual(agent_root["canonical_semantic_pack_role"], "repo_source_declarative_grant_pack")
         self.assertIn("agent/prompts/fundability_strategy.md", agent_root["required_pack_refs"])
+        self.assertIn("agent/README.md", agent_root["human_readable_provenance_refs"])
         self.assertTrue(
             next(entry for entry in follow_through["root_status"] if entry["root"] == "agent")[
                 "required_pack_refs_exist"
             ]
         )
+        self.assertIn("agent/README.md", follow_through["human_readable_provenance_refs"])
+        self.assertIn("current machine anchors", follow_through["human_readable_provenance_policy"])
         self.assertFalse(follow_through["moves_workspace_artifacts"])
         self.assertFalse(follow_through["moves_runtime_receipt_instances"])
         self.assertEqual(follow_through["legacy_active_path_policy"], "physically_removed_or_history_tombstone_only")
@@ -228,6 +234,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 self.assertEqual(root["owner"], "med-autogrant")
         for ref_status in audit["source_ref_status"]:
             with self.subTest(source_ref=ref_status["path"]):
+                self.assertFalse(ref_status["path"].endswith("/README.md"))
                 self.assertTrue(ref_status["exists"])
                 self.assertTrue((REPO_ROOT / ref_status["path"]).exists())
 

@@ -56,7 +56,10 @@
     "surface_kind": "standard_domain_agent_skeleton",
     "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
     "mapping_state": "declarative_grant_pack_follow_through_landed",
+    "canonical_semantic_pack_root": "agent/",
+    "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
     "canonical_repo_source_semantic_pack": "agent/",
+    "canonical_repo_source_semantic_pack_role": "historical_runtime_program_snapshot_only_not_pack_compiler_input",
     "repo_source_boundary": [
       "agent",
       "contracts",
@@ -595,11 +598,17 @@
       "docs"
     ],
     "anchor_refs": [
-      "agent/README.md",
-      "contracts/README.md",
-      "runtime/README.md",
+      "agent/prompts/call_and_candidate_intake.md",
+      "contracts/runtime-program/current-program.json",
+      "src/med_autogrant/product_entry_parts/sidecar.py",
       "docs/status.md"
     ],
+    "human_readable_provenance_refs": [
+      "agent/README.md",
+      "contracts/README.md",
+      "runtime/README.md"
+    ],
+    "human_readable_provenance_policy": "README refs are retained for human orientation/provenance only and are not required semantic pack compiler inputs or current machine anchors.",
     "moves_workspace_artifacts": false,
     "moves_runtime_receipt_instances": false,
     "moves_memory_body": false,
@@ -1710,6 +1719,8 @@
     "surface_kind": "mag_repo_source_layout_audit",
     "manifest_surface_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
     "layout_state": "declarative_grant_pack_follow_through_landed",
+    "canonical_semantic_pack_root": "agent/",
+    "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
     "boundary_keys": [
       "agent",
       "contracts",
@@ -1717,11 +1728,16 @@
       "docs"
     ],
     "physical_move_required": "low_risk_source_moves_only_after_direct_hosted_parity_restore_provenance_and_no_active_caller_proof",
+    "human_readable_provenance_refs": [
+      "agent/README.md",
+      "contracts/README.md",
+      "runtime/README.md"
+    ],
+    "human_readable_provenance_policy": "README refs are retained for human orientation/provenance only and are not required semantic pack compiler inputs or current machine source refs.",
     "retired_active_path_policy": "physically_removed_or_history_tombstone_only",
     "forbidden_active_path_residue": [],
     "source_refs_by_boundary": {
       "agent": [
-        "agent/README.md",
         "agent/prompts/call_and_candidate_intake.md",
         "agent/prompts/fundability_strategy.md",
         "agent/prompts/specific_aims_and_structure.md",
@@ -1745,14 +1761,12 @@
         "agent/knowledge/owner_receipt_boundary.md"
       ],
       "contracts": [
-        "contracts/README.md",
         "contracts/runtime-program/current-program.json",
         "contracts/runtime-program/domain-memory-seed-fixture.json",
         "contracts/runtime-program/opl-family-contract-adoption.json",
         "schemas/v1/product-entry-manifest.schema.json"
       ],
       "runtime": [
-        "runtime/README.md",
         "src/med_autogrant/product_entry_parts/domain_memory.py",
         "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
         "src/med_autogrant/product_entry_parts/functional_closure.py",
