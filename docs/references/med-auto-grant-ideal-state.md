@@ -30,6 +30,8 @@ MAG 不应长期维护独立 agent runtime platform，也不长期维护 generic
 
 只有 fundability verdict、authoring quality/export verdict、package readiness、grant memory accept/reject、owner receipt signer、grant transition oracle 和 grant-native helper 这类无法声明化的 authority function 可以留在 MAG。
 
+理想物理源码形态应直接体现这条分层：`agent/` 是 Declarative Grant Pack；`contracts/` 是 pack compiler、stage/action/memory/artifact/receipt、handoff 和 evidence request 的机器面；`src/med_autogrant/**` 只保留 grant domain handler、minimal authority function、refs-only adapter、native helper、fixture 或 diagnostic。`product-entry`、`sidecar`、`status/user-loop`、`domain_runtime_parts`、`runtime_registration`、`lifecycle`、`memory receipt projection`、`package lifecycle`、`observability` 或 `human workbench / scheduler` 这类路径即使仍在 active source 中，也必须让读者看到它们只是 OPL generated/hosted surface target 或 grant authority refs，不是 MAG 私有 runtime platform。local journal、attempt ledger、repo-owned scheduler daemon、Hermes/Gateway/local-manager probe、flat alias 和 compatibility facade 不属于理想源码形态。
+
 ## 产品分层
 
 1. `Med Auto Grant App Skill`
@@ -87,7 +89,7 @@ MAG 的 stage pack 应贴近真实基金申请专家工作：
 | `review_and_rebuttal` | AI-first critique、issue lineage、revision plan | critique report、closure dossier、revision packet |
 | `package_and_submit_ready` | freeze、artifact assembly、本地 submission-ready gate | final package、gap report、export receipt |
 
-每个 stage 至少声明 goal、inputs、entry conditions、executor requirements、prompt refs、skill refs、knowledge refs、quality gates、outputs 和 handoff。OPL 负责发现、排队、恢复、唤醒和投影；MAG 负责 stage 内专家判断、正文生成、quality verdict、route truth 和最终交付 authority。
+每个 stage 至少声明 goal、inputs、entry conditions、executor requirements、prompt refs、skill refs、knowledge refs、quality gates、outputs、handoff、source scope、cohort query、OPL queue trigger、monitor 和 dashboard freshness metric refs。OPL 负责发现、排队、恢复、唤醒和投影；MAG 负责 stage 内专家判断、正文生成、quality verdict、route truth 和最终交付 authority。
 
 ## Memory 与 Workspace 边界
 
@@ -116,8 +118,10 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 - Product-entry manifest、schema 和 tests 使用 `opl_provider_runtime_contract` 表达 OPL provider runtime owner；`codex_cli` 仅保留为默认 executor owner / default executor。
 - OPL generated / hosted surfaces 是 MAG generic wrapper/caller 的长期 owner；MAG 手写 shell 只保留 domain handler、authority function、refs-only adapter、diagnostic cleanup 或 provenance fixture。MAG repo 侧 bridge 退出必须经过 generated-surface bridge exit gate 或 legacy exit gate；外部 production/default caller 和 live soak 另走证据门。
 - `mag_functional_structure_gap_count=0` 只表示 MAG repo 侧 active bridge exit 已闭合，不表示 external production/default caller、真实 App/workbench consumption 或 production long-run soak 已完成。
+- OPL `stages cohort-loop --domain mag` 能把六个 MAG stage 都读成 closed-loop ready；该门槛只证明声明式 launch/readiness loop 可被 OPL 消费，不替代 grant-stage owner receipt、App consumption、direct/hosted parity 或 Temporal long soak。
 - MAG retained private authority surfaces 完成逐项 AI-first 审计：fundability、authoring quality/export 和 grant strategy memory accept/reject 是 AI-first judgment surface，必须回到 grant stage output 或 AI critique artifact；package authority、owner receipt 和 grant helper 是 programmatic guard surface，只能依 owner receipt、typed blocker、refs 和 action metadata 工作。程序只做 schema validator、materializer、receipt signer、guard 和 refs projection，不能机械生成 ready verdict。
 - privatized audit 与 generated-surface handoff 中的 code path / source_ref 与当前 physical source tree 对齐；漂移路径只能进入 history/tombstone/source-ref refresh，不作为完成证明。
+- physical source tree 中的 product-entry、sidecar、domain_runtime、runtime/lifecycle/workbench 命名必须持续被合同约束为 domain handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone；不能让命名重新表达 MAG-owned generic runtime。
 - 根层 `functional_privatization_audit.mag_consumer_thinning_contract.active_path_scan_state` 必须来自真实 `physical_skeleton_follow_through.active_path_scan_no_legacy_default_caller`，不能停留在 `not_available`。active source scan 只证明 legacy default caller / retired path 在 repo source 中没有复活；它不证明外部 production caller、App/workbench 消费或 Temporal long soak。
 - 真实 grant workspace 产生 owner receipt、quality movement、package/export receipt、memory receipt、lifecycle receipt、typed blocker 或 no-regression evidence。
 - Legacy Hermes/Gateway/local-manager/journal/probe/compat residue 完成 no-active-caller scan、replacement proof、history/provenance 分类和 physical retirement。

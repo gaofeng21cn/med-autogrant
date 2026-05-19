@@ -45,6 +45,8 @@ OPL 必须持有：
 
 `classification_gap_count=0`、`followthrough_gaps_open=false`、`claims_opl_replacement_exists=false` 和 `claims_all_bridge_exits_complete=false` 表示 MAG repo 侧已经把当前 surface 收到 handler/ref-only/authority 边界，但外部 OPL generated/hosted caller、真实 App/workbench 消费、全部 bridge exit 和 production long-run soak 仍是证据门。凡仍由 MAG CLI/product-status/sidecar 作为 handler target 或 direct domain entry 的 product/status/user-loop/sidecar/grouped CLI/projection/lifecycle surface，都必须写成 OPL generated/hosted caller 的 domain handler、ref-only adapter 或 minimal authority function。MAG 仍不是纯 knowledge pack；它保留 grant authority functions、domain handler、receipt schema/writer、transition oracle、quality/export verdict、package authority、memory accept/reject 和 focused contract tests。
 
+2026-05-19 的 stage cohort-loop refs 已作为结构闭环落地。MAG 当前六个 stage 都声明 `source_scope_refs`、`cohort_query_refs`、OPL queue `trigger_refs`、`monitor_refs` 和 `dashboard_metric_refs`；OPL isolated verification 对当前 MAG main 返回 `stage_count=6`、`closed_loop_ready_count=6`、`blocker_count=0`。这关闭的是 declarative launch/readiness loop gap；外部 OPL generated/hosted caller、真实 App/workbench consumption、grant-stage owner receipt scaleout、direct/hosted parity 和 Temporal soak 仍归 evidence gate。
+
 `opl_provider_runtime_contract` 的落地只关闭 manifest/schema/test 的 owner 语义漂移；它不声明 OPL production/default caller、Temporal long soak、App/workbench consumption 或 live receipt reconciliation 已完成。
 
 1. `generated_surface_bridge_exit`
@@ -65,6 +67,8 @@ OPL 必须持有：
 当前 machine-readable handoff 已为每个 generated/bridge surface 的 `current_mag_paths` 投影 `current_mag_path_status`；aggregate `missing_current_mag_path_count=0`、`stale_path_policy=history_or_source_ref_refresh_only`。这只证明 MAG 当前 source refs 存在并可刷新，不声明 OPL replacement exists、bridge exit complete 或 production soak complete。
 
 2026-05-19 的 standard pack 合同校准把根层 `pack_compiler_input` 和 runtime-program/adoption surface 收为 OPL scaffold canonical 形状：`canonical_semantic_pack_root="agent/"`、`canonical_semantic_pack_role="repo_source_declarative_grant_pack"`，并从 active machine required / anchor / source-ref lists 移除 `agent/README.md`。README 仍可作为人读入口与 provenance ref 存在，但不能作为机器 required semantic pack path；OPL scaffold validation 只接受真实 prompt / stage / skill / quality gate / knowledge 文件作为 pack compiler 输入。`contracts/runtime-program/current-program.json` 与 `contracts/runtime-program/opl-family-contract-adoption.json` 若保留 `standard_domain_agent_skeleton.canonical_repo_source_semantic_pack`，必须同时声明它只是 `historical_runtime_program_snapshot_only_not_pack_compiler_input`，不能反向定义 root pack compiler shape。
+
+2026-05-19 的 physical source morphology 调研把 MAG 的源码目标进一步固定：`agent/` 承载 grant semantic pack，`contracts/` 承载 machine contracts / handoff / external evidence request，`src/med_autogrant/**` 长期只保留 grant domain handler、minimal authority function、refs-only adapter、native helper、fixture 或 diagnostic。`product_entry_parts`、`domain_runtime_parts`、sidecar/status/user-loop、runtime registration、lifecycle receipt bundle、memory receipt projection、package lifecycle handoff、observability refs 和 human workbench / scheduler metadata 不能被读成 MAG-owned runtime platform；它们必须继续写成 OPL generated/hosted caller 的 domain target、refs-only adapter、grant authority refs 或 history/tombstone。当前 `mag_functional_structure_gap_count=0` 表示 repo-side handler/ref-only/authority 边界已闭合，不表示物理命名已经完全像新 agent 模板，也不授权恢复 local journal、attempt ledger、scheduler daemon、Hermes/Gateway/local-manager probe 或 compatibility alias。
 
 6. `external_evidence_request_pack`
    `mag_consumer_thinning_contract.external_evidence_request_pack` 已把剩余外部证据门收成 machine-readable request pack：OPL generated/hosted caller consumption、Codex App workbench refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 的状态是 `request_pack_declared_external_evidence_not_claimed`，每个 request 仍是 `requested_not_received`；它只固定 required refs、receipt shapes 和 forbidden payload classes，不实现 OPL runtime / App workbench，也不声明外部证据已完成。
@@ -122,6 +126,9 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 
 4. `private_authority_ai_first_guard`
    审计 retained authority surfaces，确保 fundability / quality / export / memory accept-reject 的判断都来自 AI-first stage output，package / receipt / helper 只做 programmatic guard，代码只做 validator、materializer、receipt signer、guard 和 refs projection。
+
+5. `physical_source_morphology_hygiene`
+   继续把 active source 中带 runtime / product-entry / sidecar / lifecycle / workbench / scheduler 语义的模块保持在 domain handler、refs-only adapter、minimal authority function 或 history/tombstone 角色；新增代码默认进入 `agent/` pack、`contracts/`、authority function 或 domain handler，不重建本地 runtime/journal/attempt ledger，不新增 compatibility facade。
 
 ## 当前不能写成
 
