@@ -115,11 +115,11 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert classifications["legacy_runtime_residue"]["classification"] == "legacy_proof_tombstone"
 
     for forbidden in (
-        "local_journal",
-        "attempt_ledger",
-        "repo_owned_scheduler",
-        "hermes_gateway_local_manager_probe",
-        "compat_facade_active_alias",
+        "legacy_local_persistence_surface",
+        "legacy_attempt_record_surface",
+        "legacy_repo_cadence_owner",
+        "legacy_executor_runtime_probe",
+        "legacy_compat_alias_surface",
     ):
         assert forbidden in morphology["forbidden_residue_classes"]
         assert forbidden in classifications["legacy_runtime_residue"]["forbidden_roles"]
@@ -138,14 +138,14 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert "generic_artifact_lifecycle_owner" in classifications["package"]["forbidden_roles"]
     assert (
         morphology["forbidden_reflow_policy"]
-        == "do_not_restore_local_journal_attempt_ledger_repo_scheduler_"
-        "hermes_gateway_local_manager_probe_or_compat_facade_active_alias"
+        == "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_"
+        "executor_probe_or_compat_alias"
     )
     assert morphology["authority_boundary"] == {
         "mag_can_own_generic_runtime": False,
         "mag_can_own_generated_wrapper": False,
-        "mag_can_restore_compat_facade_active_alias": False,
-        "mag_can_emit_local_journal_or_attempt_ledger": False,
+        "mag_can_restore_legacy_compat_alias": False,
+        "mag_can_emit_local_persistence_or_attempt_records": False,
         "opl_can_write_grant_truth": False,
         "opl_can_write_memory_body": False,
         "opl_can_declare_export_ready": False,
