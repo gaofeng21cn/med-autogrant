@@ -64,7 +64,10 @@ def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
         "product user-loop",
         "product direct-entry",
     ):
-        assert f"medautogrant {command_surface}" in skill_text
+        assert (
+            f"<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli {command_surface}"
+            in skill_text
+        )
     assert "descriptor_only=true" in skill_text
     assert "public_runtime=false" in skill_text
     assert 'display_name: "Med Auto Grant"' in metadata_text

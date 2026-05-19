@@ -2,7 +2,6 @@
 set -euo pipefail
 
 readonly DEFAULT_REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-readonly UV_INSTALL_SCRIPT_URL="https://astral.sh/uv/install.sh"
 
 REPO_ROOT="${DEFAULT_REPO_ROOT}"
 INSTALL_HOME="${HOME}"
@@ -56,26 +55,23 @@ check_dependencies() {
   done
 }
 
-ensure_uv() {
-  mkdir -p "${INSTALL_HOME}/.local/bin"
-  if ! command -v uv >/dev/null 2>&1; then
-    printf "uv not found; installing to %s\n" "${INSTALL_HOME}/.local/bin" >&2
-    curl -fsSL "${UV_INSTALL_SCRIPT_URL}" | env UV_INSTALL_DIR="${INSTALL_HOME}/.local/bin" sh
-    export PATH="${INSTALL_HOME}/.local/bin:${PATH}"
-  fi
-  if ! command -v uv >/dev/null 2>&1; then
-    fail "uv installation failed or uv is not on PATH"
-  fi
-}
-
 install_python_tools() {
   mkdir -p "${INSTALL_HOME}/.local/bin"
-  HOME="${INSTALL_HOME}" UV_TOOL_BIN_DIR="${INSTALL_HOME}/.local/bin" uv tool install \
-    --managed-python \
-    --python 3.12 \
-    --force \
-    --editable \
-    "${REPO_ROOT}"
+  write_clean_runner_entrypoint medautogrant med_autogrant.cli
+}
+
+write_clean_runner_entrypoint() {
+  local name="$1"
+  local module="$2"
+  local script_path="${INSTALL_HOME}/.local/bin/${name}"
+  rm -f "${script_path}.uv-entrypoint"
+  cat >"${script_path}" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+# med-autogrant clean runner wrapper: avoid repo-local virtualenv, bytecode, and editable metadata.
+exec "${REPO_ROOT}/scripts/run-python-clean.sh" -m "${module}" "\$@"
+EOF
+  chmod +x "${script_path}"
 }
 
 install_codex_paths() {
@@ -89,7 +85,6 @@ main() {
   check_dependencies
 
   if [[ "${SKIP_TOOLS}" -eq 0 ]]; then
-    ensure_uv
     install_python_tools
   fi
 

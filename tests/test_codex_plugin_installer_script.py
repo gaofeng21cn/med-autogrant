@@ -44,6 +44,40 @@ def test_codex_plugin_installer_script_keeps_codex_paths_repo_local(tmp_path: Pa
     assert (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").exists()
 
 
+def test_codex_plugin_installer_writes_clean_runner_tool_wrappers_without_editable_install(tmp_path: Path) -> None:
+    home_dir = tmp_path / "home"
+    fake_bin = tmp_path / "bin"
+    home_dir.mkdir()
+    fake_bin.mkdir()
+    (fake_bin / "uv").write_text(
+        "#!/usr/bin/env bash\n"
+        "echo 'uv must not be invoked by wrapper-only install' >&2\n"
+        "exit 99\n",
+        encoding="utf-8",
+    )
+    (fake_bin / "uv").chmod(0o755)
+
+    env = os.environ.copy()
+    env["HOME"] = str(home_dir)
+    env["PATH"] = f"{fake_bin}:{env['PATH']}"
+
+    result = subprocess.run(
+        ["bash", str(INSTALLER_PATH), "--home", str(home_dir), "--repo-root", str(REPO_ROOT)],
+        cwd=REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    wrapper = home_dir / ".local" / "bin" / "medautogrant"
+    wrapper_text = wrapper.read_text(encoding="utf-8")
+    assert wrapper.is_file()
+    assert 'exec "' + str(REPO_ROOT) + '/scripts/run-python-clean.sh" -m "med_autogrant.cli" "$@"' in wrapper_text
+    assert "uv tool install" not in INSTALLER_PATH.read_text(encoding="utf-8")
+    assert "--editable" not in INSTALLER_PATH.read_text(encoding="utf-8")
+
+
 def test_codex_plugin_installer_script_skip_tools_does_not_require_shared_runtime_dependency(
     tmp_path: Path,
 ) -> None:

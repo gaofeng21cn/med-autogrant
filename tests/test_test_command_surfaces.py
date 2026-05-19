@@ -116,4 +116,5 @@ def test_mag_skill_registers_repo_local_product_entry_commands() -> None:
         "product user-loop",
         "product direct-entry",
     ):
-        assert f"uv run --directory <med-autogrant-repo> medautogrant {command_surface}" in skill
+        assert f"<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli {command_surface}" in skill
+    assert "uv run --directory <med-autogrant-repo>" not in skill

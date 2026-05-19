@@ -15,12 +15,12 @@ description: Use when Codex should operate Med Auto Grant through its grant-auth
 
 ## 核心入口
 
-自动调用时使用 repo-local launcher：`uv run --directory <med-autogrant-repo> medautogrant ...`。不要用 shell PATH lookup 或用户 PATH 上的裸 `medautogrant` 判断当前模块可用性。
+自动调用时使用 repo-local clean runner：`<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli ...`。不要用 shell PATH lookup、用户 PATH 上的裸 `medautogrant`，或直接 `uv run --directory` 判断当前模块可用性。
 
-- `uv run --directory <med-autogrant-repo> medautogrant product skill-catalog --input <input_path> --format json`
-- `uv run --directory <med-autogrant-repo> medautogrant product status --input <input_path>`
-- `uv run --directory <med-autogrant-repo> medautogrant product user-loop --input <input_path> --task-intent "<task_intent>"`
-- `uv run --directory <med-autogrant-repo> medautogrant product direct-entry --input <input_path> --task-intent "<task_intent>"`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli product skill-catalog --input <input_path> --format json`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli product status --input <input_path>`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli product user-loop --input <input_path> --task-intent "<task_intent>"`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli product direct-entry --input <input_path> --task-intent "<task_intent>"`
 
 `product manifest` 暴露 MAG-owned `family_action_catalog`；CLI、product-entry、skill metadata 与 MCP-compatible descriptor 从同一份 action definition 派生。当前 MCP projection 是 descriptor-only：`descriptor_only=true`、`public_runtime=false`，不能写成 public MCP runtime 已落地。
 
