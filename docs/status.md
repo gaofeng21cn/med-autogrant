@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `current_status_and_evidence_boundary`
 State: `current`
 Machine boundary: 本文是人读状态面。机器真相继续归 `contracts/runtime-program/current-program.json`、production acceptance contract、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs。
-Date: `2026-05-19`
+Date: `2026-05-20`
 
 ## 当前角色
 
@@ -43,7 +43,7 @@ MAG repo 侧 handler/ref-only 边界已收薄：product/status/user-loop/sidecar
 
 `mag_consumer_thinning_contract.generated_surface_handoff.current_mag_path_status` 现在为 generated/bridge surface 的每个 `current_mag_paths` 输出 machine-readable currentness proof；`missing_current_mag_path_count=0`，`stale_path_policy=history_or_source_ref_refresh_only`。该 proof 只证明 MAG 当前 handler/ref-only/authority source refs 存在，不能写成 OPL replacement exists、bridge exit complete 或 production soak complete。
 
-`mag_consumer_thinning_contract.external_evidence_request_pack` 现在把剩余外部证据门机器化为 `mag.external_evidence_request_pack.v1`：OPL generated/hosted caller pack consumption、Codex App workbench package refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 只请求 refs、receipt shapes 与 parity evidence，明确 `mag_implements_opl_runtime=false`、`mag_implements_app_workbench=false`、`mag_claims_external_evidence_exists=false`，不能作为外部证据已收到的证明。
+`mag_consumer_thinning_contract.external_evidence_request_pack` 现在把剩余外部证据门机器化为 `mag.external_evidence_request_pack.v1`：OPL generated/hosted caller pack consumption、Codex App workbench package refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。2026-05-20 OPL refs-only external evidence ledger 已验证 `owner_receipt_typed_blocker_ref_roundtrip` 的 1 条 MAG runtime typed-blocker receipt；另外 6 条 request 仍为 missing / open。该 pack 只请求 refs、receipt shapes 与 parity evidence，明确 `mag_implements_opl_runtime=false`、`mag_implements_app_workbench=false`、`mag_claims_external_evidence_exists=false`；verified typed-blocker roundtrip 不能写成外部 default caller、App workbench、direct/hosted parity、continuous guard 或 Temporal long-soak 证据已收到。
 
 local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream Hermes probe、flat shell alias、facade patch bridge 和 compat aggregate test 现在只允许作为 legacy proof / tombstone / regression oracle 存在；无 active caller 后直接删除或归档，不保留 compatibility alias。
 
@@ -69,7 +69,7 @@ Physical source morphology 当前按同一边界读取：`agent/` 是 Declarativ
 - external production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 证据。
 - Temporal provider long SLO、repair cadence 和 live receipt reconciliation。
 
-这些证据门已由 `external_evidence_request_pack` 给出 request id、required refs 和 required receipt shapes；production acceptance lane 现在由 `contracts/production_acceptance/mag-production-acceptance.json` 持有 MAG-owned tail 状态。当前不是结构缺口，而是 domain-owned typed blocker，关闭条件是下一次真实 MAG owner receipt scaleout 或 typed blocker/no-regression evidence 继续通过 contract refs 与 focused test 验证。
+这些证据门已由 `external_evidence_request_pack` 给出 request id、required refs 和 required receipt shapes；production acceptance lane 现在由 `contracts/production_acceptance/mag-production-acceptance.json` 持有 MAG-owned tail 状态。当前不是结构缺口，而是 domain-owned typed blocker；`owner_receipt_typed_blocker_ref_roundtrip` 已有 1 条 verified refs-only typed-blocker receipt，关闭条件仍是后续真实 MAG owner receipt scaleout 或 typed blocker/no-regression evidence 继续通过 contract refs 与 focused test 验证。
 
 ## 当前物理源码形态差距
 

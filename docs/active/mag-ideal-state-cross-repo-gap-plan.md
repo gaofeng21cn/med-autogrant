@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `ideal_state_gap_plan`
 State: `active_plan`
 Machine boundary: 本文是人读 gap / completion plan。机器真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、product-entry manifest、workspace/runtime artifact root、receipt、质量报告和导出包。
-Date: `2026-05-19`
+Date: `2026-05-20`
 
 ## 文档读法
 
@@ -80,7 +80,7 @@ OPL 必须持有：
 当前 MAG 的物理源码形态仍有 cleanup tail：`domain_runtime_parts/substrate.py` 聚合 workspace、route、quality、export 与 controller 方法；`domain_entry.py` 维护 service-safe command catalog；`cli.py` 暴露 mainline/status/cockpit/direct-entry/user-loop/product/sidecar/status wrapper；`product_entry_parts/manifest_builder.py`、`manifest.py`、`sidecar.py` 和 `runtime_registration.py` 仍构造 product-entry、status、sidecar、runtime registration、resume/wakeup/lifecycle adapter；`control_plane.py` 与 `owner_receipts.py` 仍处理 runtime-state refs；`grant_autonomy_controller.py` 仍表达 loop/budget/reselection/rollback/quality scheduling。它们当前是 direct domain handler、refs-only adapter、authority refs、regression oracle 或 migration input；不是最终标准 Agent 模板。后续应按 generated caller parity 和 external evidence request pack 逐项收薄、改名、迁出或 tombstone。
 
 6. `external_evidence_request_pack`
-   `mag_consumer_thinning_contract.external_evidence_request_pack` 已把剩余外部证据门收成 machine-readable request pack：OPL generated/hosted caller consumption、Codex App workbench refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 的状态是 `request_pack_declared_external_evidence_not_claimed`，每个 request 仍是 `requested_not_received`；它只固定 required refs、receipt shapes 和 forbidden payload classes，不实现 OPL runtime / App workbench，也不声明外部证据已完成。
+   `mag_consumer_thinning_contract.external_evidence_request_pack` 已把剩余外部证据门收成 machine-readable request pack：OPL generated/hosted caller consumption、Codex App workbench refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 的状态仍是 `request_pack_declared_external_evidence_not_claimed`，但 OPL refs-only external evidence ledger 已验证 `owner_receipt_typed_blocker_ref_roundtrip` 的 1 条 MAG runtime typed-blocker receipt；另外 6 个 request 仍是 missing / open。这个 verified receipt 只证明 owner receipt / typed blocker ref roundtrip 可被 OPL 消费，不实现 OPL runtime / App workbench，也不声明外部 default caller、App 消费、direct/hosted parity、continuous guard 或 Temporal long-soak 已完成。
 
 7. `legacy_cleanup_opl_ledger_apply_verified`
    `physical_skeleton_follow_through` 已补齐 replacement parity refs、no-regression evidence refs、tombstone/history refs 和 physically removed active path 的 domain owner handoff receipt refs。2026-05-19 OPL dry-run 读取当前 MAG manifest 后，`opl agents legacy-cleanup apply --domain mag --mode dry-run` 返回 `plan_status=ready`、`lifecycle_apply.status=dry_run_ready`、`safe_action_count=3`、`unsafe_action_count=0`；随后 `--mode apply` 已把 1 条 batch receipt 与 3 条 action receipts 写入 OPL refs-only lifecycle ledger，`--mode verify` 可读回 batch / tombstone / handoff action receipts 和 2 条 domain owner handoff receipt refs。这关闭的是 OPL cleanup ledger blocker；它不声明外部 OPL/App production caller evidence、grant-stage live soak 或 owner receipt scaleout 已完成。
@@ -129,14 +129,14 @@ AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof
 - external production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 证据。
 - Temporal provider long SLO、repair cadence 和 live receipt reconciliation。
 
-这些 evidence gate 的 repo-local request surface 已落地为 `mag.external_evidence_request_pack.v1`；生产可用 acceptance tail 的 MAG-owned 记录已落地为 `contracts/production_acceptance/mag-production-acceptance.json`。后续关闭或继续阻塞必须来自真实 owner receipt、typed blocker 或 no-regression evidence refs；MAG 仓不生成替代 runtime proof，OPL/provider completion 也不授权 fundability-ready。
+这些 evidence gate 的 repo-local request surface 已落地为 `mag.external_evidence_request_pack.v1`；生产可用 acceptance tail 的 MAG-owned 记录已落地为 `contracts/production_acceptance/mag-production-acceptance.json`。2026-05-20 fresh OPL evidence ledger 已把 `owner_receipt_typed_blocker_ref_roundtrip` 验证为 refs-only typed-blocker receipt；它关闭的是 receipt-ref roundtrip 这一个请求的可消费证据，不关闭 grant readiness 或 production consumption。后续关闭或继续阻塞必须来自真实 owner receipt、typed blocker 或 no-regression evidence refs；MAG 仓不生成替代 runtime proof，OPL/provider completion 也不授权 fundability-ready。
 
 Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply / verify 消费，并已写入 OPL refs-only cleanup ledger。后续若涉及物理删除，只能由 MAG owner receipt 证明；OPL 不能替 MAG 删除 grant repo 文件或宣布 grant readiness。
 
 ## 完善顺序
 
 1. `consume_external_evidence_request_pack`
-   OPL/App/production caller 从 `/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack` 读取 request ids、required refs 和 required receipt shapes，并返回 body-free receipts / typed blockers / no-regression evidence。
+   OPL/App/production caller 从 `/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack` 读取 request ids、required refs 和 required receipt shapes，并返回 body-free receipts / typed blockers / no-regression evidence。当前已有 1 条 `owner_receipt_typed_blocker_ref_roundtrip` verified refs-only typed-blocker receipt，剩余 6 条 request 仍需 external receipt。
 
 2. `external_production_consumption_evidence`
    从 OPL/App/production caller 侧拿到真实消费 MAG declarative pack、domain handler target、owner receipt / typed blocker refs、no-forbidden-write 和 direct/hosted parity 的持续证据。
@@ -144,7 +144,7 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 3. `real_workspace_receipt_scaleout`
    推进真实 grant-stage attempt、memory/package/lifecycle receipt、continuous receipt reconciliation、cleanup/restore/retention 和 provider SLO long soak。
 
-   当前 production acceptance surface 已把该项收为 `domain_owned_typed_blocker_with_next_verification_ref`。下一步按 `contracts/production_acceptance/mag-production-acceptance.json` 中的 `next_verification_command_refs` 继续验证 owner receipt / typed blocker / no-regression evidence，而不是把它计为结构差距。
+   当前 production acceptance surface 已把该项收为 `domain_owned_typed_blocker_with_next_verification_ref`。`owner_receipt_typed_blocker_ref_roundtrip` 已有 1 条 verified typed-blocker receipt，下一步按 `contracts/production_acceptance/mag-production-acceptance.json` 中的 `next_verification_command_refs` 继续扩大真实 owner receipt / typed blocker / no-regression evidence，而不是把它计为结构差距。
 
 4. `private_authority_ai_first_guard`
    审计 retained authority surfaces，确保 fundability / quality / export / memory accept-reject 的判断都来自 AI-first stage output，package / receipt / helper 只做 programmatic guard，代码只做 validator、materializer、receipt signer、guard 和 refs projection。
