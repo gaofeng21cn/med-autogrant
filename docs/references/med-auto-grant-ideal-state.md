@@ -72,6 +72,8 @@ OPL 负责通用运行外围和工作台：
 
 OPL 不能写 grant truth、memory body、fundability verdict、authoring quality verdict、submission-ready verdict、package authority 或 owner receipt。
 
+OPL 可以持有 MAG legacy cleanup 的 refs-only lifecycle ledger，并消费 MAG 提供的 replacement parity、no-regression、history/tombstone 和 owner handoff receipt refs；该 ledger 不授权 OPL 删除 MAG repo 文件，也不能替代真实 grant-stage owner receipt、App/workbench 消费或 production long-soak。
+
 ## 理想 Stage Pack
 
 MAG 的 stage pack 应贴近真实基金申请专家工作：
