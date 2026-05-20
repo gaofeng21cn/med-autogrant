@@ -1,6 +1,6 @@
 # P2.C Draft-Critique-Revision Skeleton Mainline Current Truth
 
-> 生命周期注记（`2026-05-17`）：这份 dated spec 是 path-stable 的历史/支撑记录；只有 `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/status.md` 或 `contracts/runtime-program/current-program.json` 明确指定的仍 current subsection 才可作为当前边界阅读。请先读取 `docs/status.md`、核心五件套与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
+> 生命周期注记（`2026-05-20`）：这份 dated spec 已归档为 `historical_authoring_flow_provenance`。当前 draft / critique / revision route truth 由核心五件套、`docs/specs/README.md` 列出的 active specs、contracts/schema/source 与 `contracts/runtime-program/current-program.json` 持有；本文只保留 2026-04-07 P2.C 形成过程，不再作为 current owner 或兼容接口依据。
 
 Date: `2026-04-07`
 

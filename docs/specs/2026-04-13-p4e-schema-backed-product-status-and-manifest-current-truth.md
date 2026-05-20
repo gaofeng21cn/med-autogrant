@@ -1,12 +1,14 @@
 # P4.E Schema-Backed Product status And Manifest Current Truth
 
+> 生命周期注记（`2026-05-20`）：这份 dated spec 留在 `docs/specs/` 仅作为 `support_current_truth`，只在 product-entry manifest / product-status schema-backed contract 仍由当前 source/schema/product-entry manifest 支撑的 subsection 内有效。当前 public identity、runtime owner、App/workbench、production evidence 和 grant readiness 结论回到核心五件套、active plan 与 `contracts/runtime-program/current-program.json`。
+
 Date: `2026-04-13`
 
 ## Activation Status
 
 - Phase: `P4 mature direct grant product entry`
 - Active tranche: `P4.E schema-backed product status and manifest contract landing`
-- Status: `landed / current truth`
+- Status: `support_current_truth_by_subsection`
 
 ## Goal
 

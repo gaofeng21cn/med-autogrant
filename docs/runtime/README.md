@@ -7,6 +7,8 @@ Machine boundary: 人读索引。Runtime truth 继续归 contracts、schemas、s
 
 本目录承接 MAG runtime/control/projection 支撑和 direct/hosted 边界说明。通用 runtime primitive 的 owner 是 OPL Framework / shared family layer；MAG 只保留 grant-domain handler、refs-only projection、owner receipt、typed blocker 和 authority refs。
 
+当前本目录只做 runtime/control/projection 支撑索引；不复制核心五件套、active plan 或 contract 中的 runtime 状态。新增内容只能解释 MAG 如何把 descriptor、projection、sidecar receipt、owner receipt、typed blocker 和 refs-only evidence 交给 OPL；不能把 product-entry、sidecar、domain_runtime、runtime registration、lifecycle adapter、workbench/scheduler metadata 写成 MAG-owned generic runtime。
+
 当前入口先看：
 
 - [架构](../architecture.md)

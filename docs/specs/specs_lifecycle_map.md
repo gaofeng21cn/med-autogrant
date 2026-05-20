@@ -8,7 +8,7 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 
 ## 为什么保留这份地图
 
-`docs/specs/` 只保留 current truth records、support current-truth records 和 integration references。纯历史 activation package、R/P/post-R5A tranche、local-runtime closeout、fail-closed hardening note、future P5 记录和 superseded provider proof 已物理归档到 `docs/history/specs/`。
+`docs/specs/` 只保留 current truth records、support current-truth records 和 integration references。纯历史 activation package、早期 P2/P3/P4 flow/verification tranche、R/P/post-R5A tranche、local-runtime closeout、fail-closed hardening note、future P5 记录和 superseded provider proof 已物理归档到 `docs/history/specs/`。
 
 当前规则是 index-first 生命周期治理：
 
@@ -41,9 +41,9 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 | `2026-04-22-quality-autonomy-family-grammar-current-truth.md` | `active_current_spec` | active spec + current quality/autonomy docs | 只读 quality governance、autonomy controller 和 family grammar。 |
 | `2026-04-07-formal-entry-matrix-current-truth.md` | `support_current_truth` | core five + `current-program.json` | 作为 formal-entry 支撑 guard 阅读；旧 runtime-run/resume、journal 和 attempt ledger 只能按 history/provenance 读。 |
 | `2026-04-07-durability-model-clarification.md` | `support_current_truth` | architecture/status + runtime-state docs | 只读 durability boundary guard；不恢复 local journal、attempt ledger 或 MAG-owned generic runtime。 |
-| `2026-04-07-p2a-*`, `2026-04-07-p2b-*`, `2026-04-07-p2c-*` | `absorbed_support` | current authoring pass docs、route catalog、core docs | 作为 authoring-flow provenance 阅读；当前 route truth 在 source/contracts。 |
-| `2026-04-07-p3a-*`, `2026-04-08-p3b-*`, `2026-04-08-p3c-*` | `absorbed_support` | current critique/revision and quality docs | 作为 mentor/review/rollback provenance 阅读；不要恢复 phase backlog。 |
-| `2026-04-08-p4a-*`, `2026-04-08-p4b-*` | `absorbed_support` | product projection、verification、checkpoint owners | 只读 direct cockpit/progress 与 verification lessons。 |
+| `../history/specs/2026-04-07-p2a-*`, `../history/specs/2026-04-07-p2b-*`, `../history/specs/2026-04-07-p2c-*` | `historical_authoring_flow_provenance` | current authoring pass docs、route catalog、core docs | 只作为 P2 authoring-flow 形成历史阅读；当前 route truth 在 source/contracts。 |
+| `../history/specs/2026-04-07-p3a-*`, `../history/specs/2026-04-08-p3b-*`, `../history/specs/2026-04-08-p3c-*` | `historical_review_gate_provenance` | current critique/revision and quality docs | 只作为 mentor/review/rollback 历史阅读；不要恢复 phase backlog。 |
+| `../history/specs/2026-04-08-p4a-*`, `../history/specs/2026-04-08-p4b-*` | `historical_verification_gate_provenance` | current verification scripts、route checkpoint source、core docs | 只读 verification gate / checkpoint 形成历史；当前验证口径在 scripts/source/contracts。 |
 | `2026-04-12-p4a-*`, `2026-04-12-p4b-*`, `2026-04-12-p4c-*`, `2026-04-13-p4e-*`, `2026-04-13-p4f-*` | `support_current_truth` | product-entry/product-status/user-loop/package owners | 作为 product-entry internals 阅读；public identity 仍是单一 MAG app skill。 |
 | `2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md` | `support_current_truth` | schemas/source + product-entry manifest | 作为 schema-backed route/product-entry contract 支撑阅读。 |
 | `2026-04-13-full-grant-authoring-executor-current-truth.md` | `support_current_truth` | route-selected executor docs + default Codex CLI owner | 作为 landed authoring executor scope 阅读；不提升 hosted proof lanes。 |
@@ -68,7 +68,7 @@ Support records 只在仍 current 的 subsection 内有效。若其中包含旧 
 | 分组 | Records |
 | --- | --- |
 | Formal entry / durability | `2026-04-07-formal-entry-matrix-current-truth.md`, `2026-04-07-durability-model-clarification.md`；只读 current support guard，不恢复旧 local runtime。 |
-| P2-P4 absorbed grant flow | `2026-04-07-p2a-*`, `2026-04-07-p2b-*`, `2026-04-07-p2c-*`, `2026-04-07-p3a-*`, `2026-04-08-p3b-*`, `2026-04-08-p3c-*`, `2026-04-08-p4a-*`, `2026-04-08-p4b-*` |
+| Historical P2-P4 grant flow / verification provenance | `../history/specs/2026-04-07-p2a-*`, `../history/specs/2026-04-07-p2b-*`, `../history/specs/2026-04-07-p2c-*`, `../history/specs/2026-04-07-p3a-*`, `../history/specs/2026-04-08-p3b-*`, `../history/specs/2026-04-08-p3c-*`, `../history/specs/2026-04-08-p4a-*`, `../history/specs/2026-04-08-p4b-*`；只读 provenance，不作为 support current-truth。 |
 | Local runtime closeout / output consistency | `../history/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`, `../history/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`；只读 fail-closed 与 honest-stop provenance；当前 runtime owner wording 在核心文档和 active/support guards。 |
 | Hosted / OPL handoff support | `2026-04-12-hosted-*`, `2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`；只读 contract consumption 与 route/export handoff；旧 `OPL Gateway` 或 hosted-product completion language 仍是 provenance。 |
 | Product entry and package surfaces | `2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md`, `2026-04-12-p4a-*`, `2026-04-12-p4b-*`, `2026-04-12-p4c-*`, `2026-04-13-full-grant-authoring-executor-current-truth.md`, `2026-04-13-p4e-*`, `2026-04-13-p4f-*` |
@@ -94,6 +94,7 @@ Support records 只在仍 current 的 subsection 内有效。若其中包含旧 
 | --- | --- |
 | Foundation design | `2026-04-06-*` |
 | Future activation packages | `2026-04-08-p5a-*`, `2026-04-08-p5b-*` |
+| Historical P2-P4 authoring / review / verification tranche | `2026-04-07-p2a-*`, `2026-04-07-p2b-*`, `2026-04-07-p2c-*`, `2026-04-07-p3a-*`, `2026-04-08-p3b-*`, `2026-04-08-p3c-*`, `2026-04-08-p4a-*`, `2026-04-08-p4b-*` |
 | Runtime-first R packages | `2026-04-08-r1a-*`, `2026-04-08-r1b-*`, `2026-04-08-r2a-*`, `2026-04-08-r3a-*`, `2026-04-08-runtime-first-*` |
 | R3/R4/R5 activation packages | `2026-04-09-*` |
 | Post-R5A fail-closed artifact-bundle notes | `2026-04-10-post-r5a-final-package-*`, `2026-04-10-post-r5a-hosted-contract-bundle-*`, malformed/fail-closed variants |

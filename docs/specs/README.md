@@ -23,17 +23,21 @@ proof、activation package、local-runtime closeout 和 tombstone 进入
 
 密集 specs 组合的生命周期分类见 [Specs Lifecycle Map](./specs_lifecycle_map.md)。编辑或移动任何 dated spec 前，先用这份 map 的 file-level lifecycle table 区分 active record、support current-truth record、integration reference、historical activation package、historical route snapshot 与 superseded provider proof。
 
-本轮 `docs/**/*.md` 审计覆盖到全部 `docs/specs/*.md` 与 `docs/history/specs/*.md`。保留在本目录的 dated specs 按三类处理：
+本轮 `docs/**/*.md` 审计覆盖到全部 `docs/specs/*.md` 与 `docs/history/specs/*.md`。保留在本目录的 dated specs 按两类处理：
 
 - `active_current_spec`：仅四份，承担明确命名的当前边界。
 - `support_current_truth` / `integration_reference`：只在仍 current 的 subsection 内支撑 schema、product-entry、package/export、executor routing 或 handoff 读法。
-- `absorbed_support`：只在仍支撑当前 schema、product-entry、package/export、executor routing 或 handoff 的 subsection 内阅读；旧 provider、Gateway、federation、local runtime、journal、attempt ledger、flat shell alias、compatibility facade 或 patch bridge 语义不得恢复为当前 owner。
 
 `2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`
 与
 `2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
 已经移动到 `../history/specs/`。它们只记录 post-R5A local-runtime
 closeout / honest-stop provenance，不再位于 current specs 层。
+`2026-04-07-p2*`、`2026-04-07-p3a*`、`2026-04-08-p3*` 与
+`2026-04-08-p4*` 也已经移动到 `../history/specs/`。它们只记录
+早期 authoring-flow、review/rollback 与 verification gate 形成过程；当前 route、quality、
+checkpoint 和验证边界由核心五件套、active specs、contracts/schema/source 与
+`current-program.json` 持有。
 
 因此，本目录不再保留纯历史 activation package、R/P/post-R5A tranche 或 fail-closed hardening notes。直接打开任何 dated support spec 时，第一屏 lifecycle note 优先于标题里的 `Current Truth`、`Activation Package` 或 tranche label。
 `2026-04-12-author-side-executor-routing-contract-current-truth.md` 已移动到 `../history/specs/`，因为当前 route catalog 已由 `2026-04-13-full-grant-authoring-executor-current-truth.md`、contracts、schema 和 source 接管。

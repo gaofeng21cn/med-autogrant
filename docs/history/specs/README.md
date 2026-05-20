@@ -14,8 +14,8 @@
 由本归档入口承接的历史分组：
 
 - 2026-04-06 foundation design 与 OMX bridge 记录：`./2026-04-06-*.md`
-- 2026-04-07 P1/P2/P3 entry、durability 与 mainline tranche 记录：仍留在 `../../specs/2026-04-07-*.md`，只按 support/provenance subsection 阅读。
-- 2026-04-08 verification support 记录：仍留在 `../../specs/2026-04-08-p3*.md` 与 `../../specs/2026-04-08-p4*.md`；P5 future activation 与 R1/R3 runtime-productization packages 位于本目录的 `./2026-04-08-p5*.md`、`./2026-04-08-r*.md` 和 `./2026-04-08-runtime-first-*.md`。
+- 2026-04-07 P2/P3 mainline 与 review-gate tranche 记录：已归档到本目录的 `./2026-04-07-p2*.md` 与 `./2026-04-07-p3a*.md`；formal-entry 与 durability support guard 仍留在 `../../specs/`。
+- 2026-04-08 P3/P4 rollback、verification gate 与 checkpoint tranche 记录：已归档到本目录的 `./2026-04-08-p3*.md` 与 `./2026-04-08-p4*.md`；P5 future activation 与 R1/R3 runtime-productization packages 位于本目录的 `./2026-04-08-p5*.md`、`./2026-04-08-r*.md` 和 `./2026-04-08-runtime-first-*.md`。
 - 2026-04-09 R3/R5 与 post-R5A hardening briefs：`./2026-04-09-*.md`
 - 2026-04-10 post-R5A fail-closed hardening activation packages 与 local-runtime walkthrough：`./2026-04-10-post-r5a-final-package-*.md`、`./2026-04-10-post-r5a-hosted-contract-bundle-*.md`、`./2026-04-10-post-r5a-local-runtime-validation-*.md`、`./2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`、`./2026-04-10-post-r5a-revised-*.md`、`./2026-04-10-post-r5a-stage-route-*.md` 和 `./2026-04-10-post-r5a-worktree-aware-*.md`
 - 2026-04-11 Hermes/reset 与 local-runtime closeout 记录：已退役 provider proof 位于本目录的 `2026-04-11-hermes-backed-*.md` 与 `2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`；local-runtime honest-stop 记录位于 `./2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`，只作为 fail-closed / honest-stop provenance 阅读。
@@ -31,6 +31,14 @@ Active specs 继续列在 [Specs 索引](../../specs/README.md)。
 - [Med Auto Grant mainline and OMX bridge](./2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
 - [NSFC main flow and critique loop](./2026-04-06-nsfc-main-flow-and-critique-loop.md)
 - [Object model schema v1](./2026-04-06-object-model-schema-v1.md)
+- [P2.A intake-direction-question mainline provenance](./2026-04-07-p2a-intake-direction-question-mainline-current-truth.md)
+- [P2.B argument-fit-outline mainline provenance](./2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md)
+- [P2.C draft-critique-revision skeleton provenance](./2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md)
+- [P3.A mentor verdict contract freeze provenance](./2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md)
+- [P3.B revision transition and re-review hardening provenance](./2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md)
+- [P3.C forced rollback and presubmission gate provenance](./2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md)
+- [P4.A verification gate surface provenance](./2026-04-08-p4a-verification-gate-surface-current-truth.md)
+- [P4.B verification OS and checkpoint surface provenance](./2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md)
 - [Runtime-first productization program](./2026-04-08-runtime-first-productization-program.md)
 - [Runtime-first R1 to R5 boundary map](./2026-04-08-runtime-first-r1-to-r5-boundary-map.md)
 - [Post-R5A local runtime walkthrough and output consistency](./2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)

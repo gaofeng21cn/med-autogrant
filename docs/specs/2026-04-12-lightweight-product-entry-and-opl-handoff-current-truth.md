@@ -1,13 +1,13 @@
 # Lightweight Product Entry And OPL Handoff Current Truth
 
-> 生命周期注记（`2026-05-17`）：这份 dated spec 是 path-stable 的历史/支撑记录；只有 `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/status.md` 或 `contracts/runtime-program/current-program.json` 明确指定的仍 current subsection 才可作为当前边界阅读。请先读取 `docs/status.md`、核心五件套与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
+> 生命周期注记（`2026-05-20`）：这份 dated spec 留在 `docs/specs/` 仅作为 `integration_reference`，只支撑 lightweight product-entry envelope 与 OPL handoff shape 的读法。当前 product owner、generated/hosted caller、App/workbench、production evidence 与 grant readiness 结论回到核心五件套、active plan、contracts/schema/source 与 `contracts/runtime-program/current-program.json`；旧 `Current Truth` 标题、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance。
 
 Date: `2026-04-12`
 
 ## Activation Status
 
 - Phase: `Lightweight Product Entry / OPL Handoff Shell`
-- Status: `landed / current truth`
+- Status: `integration_reference`
 
 ## Goal
 
