@@ -80,6 +80,9 @@ from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
 from med_autogrant.product_entry_parts.receipt_readiness import (
     build_receipt_readiness_projection,
 )
+from med_autogrant.product_entry_parts.codex_stage_receipts import (
+    build_codex_stage_execution_receipt_bundle,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -559,6 +562,19 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             memory_receipt_items=memory_receipt_items,
             package_lifecycle_items=package_lifecycle_items,
             lifecycle_receipt_items=lifecycle_receipt_items,
+        )
+
+    def build_codex_stage_execution_receipt_bundle(
+        self,
+        *,
+        stage_id: str,
+        execution_attempts: list[Mapping[str, Any]],
+        review_attempts: list[Mapping[str, Any]],
+    ) -> dict[str, Any]:
+        return build_codex_stage_execution_receipt_bundle(
+            stage_id=stage_id,
+            execution_attempts=execution_attempts,
+            review_attempts=review_attempts,
         )
 
     def build_continuous_receipt_reconciliation_snapshot(
