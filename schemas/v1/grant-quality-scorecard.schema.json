@@ -10,6 +10,16 @@
         "null"
       ]
     },
+    "nullableIndependentReviewEvidence": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/independentReviewEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "closureAction": {
       "type": "object",
       "additionalProperties": false,
@@ -376,6 +386,8 @@
         "assessment_owner",
         "ai_reviewer_required",
         "review_artifact_ref",
+        "independent_review_evidence",
+        "ai_reviewer_blocker_reason",
         "overall_status",
         "overall_score",
         "summary",
@@ -419,6 +431,12 @@
           "type": "boolean"
         },
         "review_artifact_ref": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "independent_review_evidence": {
+          "$ref": "#/$defs/nullableIndependentReviewEvidence"
+        },
+        "ai_reviewer_blocker_reason": {
           "$ref": "#/$defs/nullableString"
         },
         "overall_status": {

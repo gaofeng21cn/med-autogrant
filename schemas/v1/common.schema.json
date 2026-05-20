@@ -52,10 +52,56 @@
         "owner": {
           "$ref": "#/$defs/nonEmptyString"
         },
+        "independent_review_evidence": {
+          "$ref": "#/$defs/independentReviewEvidence"
+        },
         "notes": {
           "$ref": "#/$defs/stringList"
         }
       }
+    },
+    "independentReviewEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_attempt_ref",
+        "review_attempt_ref",
+        "review_receipt_ref",
+        "no_shared_context_verified"
+      ],
+      "properties": {
+        "execution_attempt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "review_attempt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "review_receipt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "no_shared_context_verified": {
+          "type": "boolean",
+          "const": true
+        },
+        "reviewer_owner": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "reviewer_agent_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "reviewer_owner"
+          ]
+        },
+        {
+          "required": [
+            "reviewer_agent_ref"
+          ]
+        }
+      ]
     },
     "evidencePointer": {
       "type": "object",

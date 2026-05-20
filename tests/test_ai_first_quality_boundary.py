@@ -23,15 +23,21 @@ def test_scorecard_and_dossier_schemas_require_ai_reviewer_provenance() -> None:
     assert "assessment_owner" in scorecard_required
     assert "ai_reviewer_required" in scorecard_required
     assert "review_artifact_ref" in scorecard_required
+    assert "independent_review_evidence" in scorecard_required
+    assert "ai_reviewer_blocker_reason" in scorecard_required
     assert scorecard_schema["$defs"]["grantQualityScorecard"]["properties"]["assessment_owner"]["enum"] == [
         "ai_reviewer_backed",
         "projection_only",
     ]
+    evidence_required = scorecard_schema["$defs"]["nullableIndependentReviewEvidence"]["anyOf"][0]["$ref"]
+    assert evidence_required == "common.schema.json#/$defs/independentReviewEvidence"
 
     summary_required = dossier_schema["$defs"]["qualitySummary"]["required"]
     assert "assessment_owner" in summary_required
     assert "ai_reviewer_required" in summary_required
     assert "review_artifact_ref" in summary_required
+    assert "independent_review_evidence" in summary_required
+    assert "ai_reviewer_blocker_reason" in summary_required
 
 
 def test_submission_ready_schema_requires_owner_export_verdict_gate() -> None:
@@ -104,6 +110,53 @@ def test_revision_executor_only_applies_ai_authored_mutation_payload() -> None:
         )
 
 
+def test_active_critique_requires_independent_review_evidence_for_ai_backed_status() -> None:
+    from med_autogrant.ai_first_boundaries import active_critique_ai_review_provenance
+
+    document = {
+        "current_selection": {"active_revision_plan_id": "revision-plan-1"},
+        "revision_plans": [{"revision_plan_id": "revision-plan-1", "critique_id": "critique-1"}],
+        "mentor_critiques": [
+            {
+                "critique_id": "critique-1",
+                "metadata": {"owner": "Codex CLI critique executor"},
+            }
+        ],
+    }
+
+    missing_evidence = active_critique_ai_review_provenance(document)
+    assert missing_evidence["assessment_owner"] == "projection_only"
+    assert missing_evidence["ai_reviewer_required"] is True
+    assert missing_evidence["independent_review_evidence"] is None
+    assert "independent execution/review receipt refs" in missing_evidence["ai_reviewer_blocker_reason"]
+
+    document["mentor_critiques"][0]["metadata"]["independent_review_evidence"] = {
+        "execution_attempt_ref": "draft_artifact::grant-run::draft-1",
+        "review_attempt_ref": "mentor_critiques::critique-1",
+        "review_receipt_ref": "mentor_critiques::critique-1::metadata.independent_review_evidence",
+        "no_shared_context_verified": True,
+        "reviewer_owner": "Codex CLI critique executor",
+    }
+    complete_evidence = active_critique_ai_review_provenance(document)
+    assert complete_evidence["assessment_owner"] == "ai_reviewer_backed"
+    assert complete_evidence["ai_reviewer_required"] is False
+    assert complete_evidence["review_artifact_ref"] == "mentor_critiques::critique-1"
+    assert complete_evidence["independent_review_evidence"]["review_receipt_ref"].endswith(
+        "independent_review_evidence"
+    )
+
+    document["mentor_critiques"][0]["metadata"]["independent_review_evidence"] = {
+        "execution_attempt_ref": "mentor_critiques::critique-1",
+        "review_attempt_ref": "mentor_critiques::critique-1",
+        "review_receipt_ref": "mentor_critiques::critique-1::metadata.independent_review_evidence",
+        "no_shared_context_verified": True,
+        "reviewer_owner": "Codex CLI critique executor",
+    }
+    same_attempt = active_critique_ai_review_provenance(document)
+    assert same_attempt["assessment_owner"] == "projection_only"
+    assert same_attempt["ai_reviewer_required"] is True
+
+
 def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: pytest.MonkeyPatch) -> None:
     from med_autogrant.critique_executor import (
         _build_codex_executor_payload,
@@ -141,6 +194,14 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         payload=payload,
     )
     assert codex_critique["metadata"]["owner"] == "Codex CLI critique executor"
+    assert codex_critique["metadata"]["independent_review_evidence"] == {
+        "execution_attempt_ref": "draft_artifact::grant-run-1::draft-1",
+        "review_attempt_ref": "mentor_critiques::critique-1",
+        "review_receipt_ref": "mentor_critiques::critique-1::metadata.independent_review_evidence",
+        "no_shared_context_verified": True,
+        "reviewer_owner": "Codex CLI critique executor",
+        "reviewer_agent_ref": "codex_cli::critique_executor",
+    }
 
     hermes_proof = {
         "full_agent_loop_proved": True,
@@ -184,3 +245,12 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         payload=payload,
     )
     assert hermes_critique["metadata"]["owner"] == "OPL Hermes-Agent critique executor"
+    assert hermes_critique["metadata"]["independent_review_evidence"]["execution_attempt_ref"] == (
+        "draft_artifact::grant-run-1::draft-1"
+    )
+    assert hermes_critique["metadata"]["independent_review_evidence"]["review_receipt_ref"] == (
+        "opl_agent_execution_receipt::session-1"
+    )
+    assert hermes_critique["metadata"]["independent_review_evidence"]["reviewer_owner"] == (
+        "OPL Hermes-Agent critique executor"
+    )
