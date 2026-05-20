@@ -33,7 +33,17 @@ def _mark_active_critique_ai_backed(document: dict[str, object]) -> None:
         for item in document["mentor_critiques"]  # type: ignore[index]
         if item["critique_id"] == active_revision_plan["critique_id"]
     )
-    critique.setdefault("metadata", {})["owner"] = "Codex CLI critique executor"
+    metadata = critique.setdefault("metadata", {})
+    metadata["owner"] = "Codex CLI critique executor"
+    critique_id = critique["critique_id"]
+    metadata["independent_review_evidence"] = {
+        "execution_attempt_ref": f"codex_cli::grant-run::{critique_id}",
+        "review_attempt_ref": f"mentor_critiques::{critique_id}",
+        "review_receipt_ref": f"mentor_critiques::{critique_id}::metadata.independent_review_evidence",
+        "no_shared_context_verified": True,
+        "reviewer_owner": "Codex CLI critique executor",
+        "reviewer_agent_ref": "codex_cli::critique_executor",
+    }
 
 
 def _remove_active_critique_ai_owner(document: dict[str, object]) -> None:
@@ -71,6 +81,7 @@ class GrantQualityScorecardTest(unittest.TestCase):
         from med_autogrant.grant_quality import build_grant_quality_scorecard
 
         critique_workspace = _load_json(CRITIQUE_EXAMPLE_PATH)
+        _mark_active_critique_ai_backed(critique_workspace)
         scorecard = build_grant_quality_scorecard(critique_workspace)
 
         self.assertEqual(scorecard["surface_kind"], "grant_quality_scorecard")
@@ -110,6 +121,21 @@ class GrantQualityScorecardTest(unittest.TestCase):
         self.assertEqual(scorecard["overall_status"], "blocked")
         self.assertEqual(scorecard["loop_gate"]["action"], "continue")
         self.assertEqual(scorecard["loop_gate"]["recommended_stage"], "critique")
+        self.assertIsNone(scorecard["independent_review_evidence"])
+        self.assertIn("independent execution/review receipt refs", scorecard["ai_reviewer_blocker_reason"])
+
+    def test_scorecard_rejects_known_ai_owner_without_independent_review_evidence(self) -> None:
+        from med_autogrant.grant_quality import build_grant_quality_scorecard
+
+        frozen_workspace = _load_json(FROZEN_EXAMPLE_PATH)
+        _set_active_critique_owner(frozen_workspace, "Codex CLI critique executor")
+        scorecard = build_grant_quality_scorecard(frozen_workspace)
+
+        self.assertEqual(scorecard["assessment_owner"], "projection_only")
+        self.assertTrue(scorecard["ai_reviewer_required"])
+        self.assertIsNone(scorecard["review_artifact_ref"])
+        self.assertIsNone(scorecard["independent_review_evidence"])
+        self.assertEqual(scorecard["overall_status"], "blocked")
 
     def test_scorecard_marks_ai_backed_frozen_workspace_as_submission_grade_candidate(self) -> None:
         from med_autogrant.grant_quality import build_grant_quality_scorecard
@@ -121,6 +147,11 @@ class GrantQualityScorecardTest(unittest.TestCase):
         self.assertEqual(scorecard["assessment_owner"], "ai_reviewer_backed")
         self.assertFalse(scorecard["ai_reviewer_required"])
         self.assertEqual(scorecard["review_artifact_ref"], "mentor_critiques::critique-v1")
+        self.assertEqual(
+            scorecard["independent_review_evidence"]["review_attempt_ref"],
+            "mentor_critiques::critique-v1",
+        )
+        self.assertIsNone(scorecard["ai_reviewer_blocker_reason"])
         self.assertEqual(scorecard["overall_status"], "submission_grade_candidate")
         self.assertEqual(scorecard["loop_gate"]["action"], "ready_for_submission")
         self.assertIsNone(scorecard["loop_gate"]["recommended_stage"])

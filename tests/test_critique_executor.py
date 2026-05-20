@@ -205,6 +205,17 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(critique_workspace["mentor_critiques"][-1]["necessity_scientific_value"]["weight"], 60)
         self.assertEqual(critique_workspace["mentor_critiques"][-1]["applicant_fit"]["weight"], 30)
         self.assertEqual(critique_workspace["mentor_critiques"][-1]["feasibility"]["weight"], 10)
+        self.assertEqual(
+            critique_workspace["mentor_critiques"][-1]["metadata"]["independent_review_evidence"][
+                "review_attempt_ref"
+            ],
+            "mentor_critiques::critique-v1",
+        )
+        self.assertTrue(
+            critique_workspace["mentor_critiques"][-1]["metadata"]["independent_review_evidence"][
+                "no_shared_context_verified"
+            ]
+        )
         self.assertEqual(critique_workspace["revision_plans"][-1]["draft_id"], "draft-v1")
         self.assertEqual(critique_workspace["revision_plans"][-1]["critique_id"], "critique-v1")
         self.assertEqual(critique_workspace["revision_plans"][-1]["pre_revision_version_label"], "v0.1")
@@ -306,6 +317,18 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         self.assertEqual(critique_workspace["current_selection"]["active_revision_plan_id"], "revision-v2")
         self.assertEqual(critique_workspace["mentor_critiques"][-1]["critique_id"], "critique-v2")
         self.assertEqual(critique_workspace["mentor_critiques"][-1]["reviewed_revision_plan_id"], "revision-v1")
+        self.assertEqual(
+            critique_workspace["mentor_critiques"][-1]["metadata"]["independent_review_evidence"][
+                "execution_attempt_ref"
+            ],
+            "draft_artifact::grant-run-nsfc-demo-001-baseline-001::draft-v1",
+        )
+        self.assertEqual(
+            critique_workspace["mentor_critiques"][-1]["metadata"]["independent_review_evidence"][
+                "review_receipt_ref"
+            ],
+            "mentor_critiques::critique-v2::metadata.independent_review_evidence",
+        )
         self.assertEqual(critique_workspace["revision_plans"][-1]["revision_plan_id"], "revision-v2")
         self.assertEqual(critique_workspace["revision_plans"][-1]["critique_id"], "critique-v2")
         self.assertEqual(critique_workspace["revision_plans"][-1]["pre_revision_version_label"], "v0.4")
@@ -505,6 +528,12 @@ class CritiqueExecutionDocumentTest(unittest.TestCase):
         )
         self.assertEqual(critique_workspace["lifecycle_stage"], "critique")
         self.assertEqual(critique_workspace["current_selection"]["active_revision_plan_id"], "revision-v1")
+        self.assertEqual(
+            critique_workspace["mentor_critiques"][-1]["metadata"]["independent_review_evidence"][
+                "review_receipt_ref"
+            ],
+            "opl_agent_execution_receipt::hermes-session-proof-001",
+        )
         self.assertEqual(validate_workspace_document(critique_workspace).ok, True)
 
     def test_hermes_agent_executor_requires_opl_receipt_shape(self) -> None:
