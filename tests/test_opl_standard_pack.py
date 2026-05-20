@@ -55,6 +55,14 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         for surface in generated["pack_compiler_input"]["minimal_authority_surface_contracts"]
     )
     assert generated["generated_surface_handoff"]["domain_repo_can_own_generated_surface"] is False
+    assert _read_contract("agent_lab_handoff") == generated["agent_lab_handoff"]
+    assert generated["domain_descriptor"]["standard_contract_refs"]["agent_lab_handoff"] == (
+        "contracts/agent_lab_handoff.json"
+    )
+    assert _read_contract("oma_handoff_refs") == generated["oma_handoff_refs"]
+    assert generated["domain_descriptor"]["standard_contract_refs"]["oma_handoff_refs"] == (
+        "contracts/oma_handoff_refs.json"
+    )
     assert generated["functional_privatization_audit"]["functional_followthrough_gap_classification"][
         "mag_functional_structure_gap_count"
     ] == 0
@@ -157,6 +165,91 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "/product_entry_manifest/physical_skeleton_follow_through/"
         "active_path_scan_no_legacy_default_caller"
     ]
+
+
+def test_agent_lab_handoff_is_standard_body_free_consumer_refs_only() -> None:
+    generated = build_standard_pack()
+    handoff = generated["agent_lab_handoff"]
+
+    assert handoff["surface_kind"] == "agent_lab_handoff.v1"
+    assert handoff["consumer"] == "opl-meta-agent"
+    assert handoff["consumer_contract"] == "agent:evidence"
+    assert handoff["payload_policy"] == "refs_only_no_body_material"
+    assert handoff["authority_boundary"] == {
+        "oma_can_write_grant_truth": False,
+        "oma_can_write_memory_body": False,
+        "oma_can_write_artifact_body": False,
+        "oma_can_issue_owner_receipt": False,
+        "oma_can_declare_fundability_ready": False,
+        "oma_can_declare_quality_ready": False,
+        "oma_can_declare_export_ready": False,
+        "oma_consumes_mag_refs_only": True,
+        "owner_receipt_authority_owner": "med-autogrant",
+        "quality_verdict_owner": "med-autogrant",
+        "artifact_authority_owner": "med-autogrant",
+        "memory_authority_owner": "med-autogrant",
+    }
+
+    for forbidden in (
+        "grant_truth_body",
+        "grant_artifact_body",
+        "memory_body",
+        "proposal_text_body",
+        "fundability_verdict_body",
+        "authoring_quality_verdict_body",
+        "submission_ready_export_verdict_body",
+    ):
+        assert forbidden in handoff["forbidden_payload_classes"]
+
+    refs = handoff["handoff_refs"]
+    assert set(refs) == {
+        "production_acceptance",
+        "agent_lab_handoff",
+        "owner_route",
+        "owner_receipt",
+        "typed_blocker",
+        "generated_surface_handoff",
+        "editable_surface_hints",
+        "no_forbidden_write_proof",
+    }
+    assert refs["production_acceptance"]["state_ref"] == (
+        "contracts/production_acceptance/mag-production-acceptance.json"
+    )
+    assert refs["production_acceptance"]["external_evidence_ledger_ref"] == (
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+    )
+    assert refs["agent_lab_handoff"]["suite_result_shape"] == "opl_agent_lab_suite_result"
+    assert refs["owner_route"]["manifest_ref"] == "/product_entry_manifest/owner_route"
+    assert refs["owner_route"]["route_truth_owner"] == "med-autogrant"
+    assert refs["owner_receipt"]["contract_ref"] == "contracts/owner_receipt_contract.json"
+    assert refs["owner_receipt"]["authority"] == "mag_issues_owner_receipts_oma_consumes_refs_only"
+    assert refs["typed_blocker"]["ledger_ref"] == "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+    assert "typed_blocker_ref" in refs["typed_blocker"]["accepted_return_shapes"]
+    assert refs["generated_surface_handoff"]["contract_ref"] == "contracts/generated_surface_handoff.json"
+    assert refs["generated_surface_handoff"]["generator_owner"] == "one-person-lab"
+    assert refs["editable_surface_hints"]["editable_shared_bootstrap_ref"] == (
+        "src/med_autogrant/editable_shared_bootstrap.py"
+    )
+    assert refs["editable_surface_hints"]["boundary"] == (
+        "editable_hints_are_dependency_path_hints_not_runtime_or_artifact_authority"
+    )
+    assert refs["no_forbidden_write_proof"]["external_evidence_ledger_ref"] == (
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4"
+    )
+    assert refs["no_forbidden_write_proof"]["boundary"] == "proof_refs_do_not_grant_oma_write_authority"
+
+
+def test_oma_handoff_refs_points_to_standard_agent_lab_handoff() -> None:
+    generated = build_standard_pack()
+    wrapper = generated["oma_handoff_refs"]
+
+    assert wrapper["surface_kind"] == "mag_oma_handoff_refs.v1"
+    assert wrapper["consumer_contract"] == "agent:evidence"
+    assert wrapper["standard_contract_ref"] == "contracts/agent_lab_handoff.json"
+    assert wrapper["handoff_refs"] == {
+        "standard_agent_lab_handoff": "contracts/agent_lab_handoff.json",
+    }
+    assert wrapper["authority_boundary"] == generated["agent_lab_handoff"]["authority_boundary"]
 
 
 def test_opl_standard_pack_declares_real_agent_domain_pack_paths() -> None:

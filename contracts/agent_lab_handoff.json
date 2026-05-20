@@ -1,0 +1,126 @@
+{
+  "accepted_payload_classes": [
+    "contract_ref",
+    "json_pointer_ref",
+    "command_ref",
+    "receipt_ref",
+    "receipt_projection_ref",
+    "typed_blocker_ref",
+    "test_ref",
+    "human_doc_ref"
+  ],
+  "authority_boundary": {
+    "artifact_authority_owner": "med-autogrant",
+    "memory_authority_owner": "med-autogrant",
+    "oma_can_declare_export_ready": false,
+    "oma_can_declare_fundability_ready": false,
+    "oma_can_declare_quality_ready": false,
+    "oma_can_issue_owner_receipt": false,
+    "oma_can_write_artifact_body": false,
+    "oma_can_write_grant_truth": false,
+    "oma_can_write_memory_body": false,
+    "oma_consumes_mag_refs_only": true,
+    "owner_receipt_authority_owner": "med-autogrant",
+    "quality_verdict_owner": "med-autogrant"
+  },
+  "consumer": "opl-meta-agent",
+  "consumer_contract": "agent:evidence",
+  "domain_id": "med-autogrant",
+  "forbidden_payload_classes": [
+    "grant_truth_body",
+    "grant_artifact_body",
+    "memory_body",
+    "proposal_text_body",
+    "review_artifact_body",
+    "package_archive_body",
+    "fundability_verdict_body",
+    "authoring_quality_verdict_body",
+    "submission_ready_export_verdict_body",
+    "opl_runtime_state_body",
+    "app_workbench_state_body"
+  ],
+  "handoff_refs": {
+    "agent_lab_handoff": {
+      "boundary": "agent_lab_result_is_refs_only_input_not_mag_owner_receipt_authority",
+      "consumption_ref": "/product_entry_manifest/production_live_acceptance_receipt",
+      "coordination_ref": "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence",
+      "suite_result_shape": "opl_agent_lab_suite_result"
+    },
+    "editable_surface_hints": {
+      "boundary": "editable_hints_are_dependency_path_hints_not_runtime_or_artifact_authority",
+      "clean_runner_refs": [
+        "scripts/run-python-clean.sh",
+        "scripts/run-pytest-clean.sh"
+      ],
+      "editable_shared_bootstrap_ref": "src/med_autogrant/editable_shared_bootstrap.py",
+      "environment_hint_refs": [
+        "MED_AUTOGRANT_EDITABLE_SHARED_ENV_ROOT",
+        "PYTHONPYCACHEPREFIX",
+        "PYTEST_ADDOPTS"
+      ],
+      "verification_refs": [
+        "tests/test_editable_shared_bootstrap.py",
+        "tests/test_test_command_surfaces.py"
+      ]
+    },
+    "generated_surface_handoff": {
+      "bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
+      "contract_ref": "contracts/generated_surface_handoff.json",
+      "generator_owner": "one-person-lab",
+      "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
+    },
+    "no_forbidden_write_proof": {
+      "boundary": "proof_refs_do_not_grant_oma_write_authority",
+      "external_evidence_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+      "functional_privatization_ref": "contracts/functional_privatization_audit.json#/mag_consumer_thinning_contract/external_evidence_request_pack/requests/continuous_no_forbidden_write_guard",
+      "generated_surface_required_ref": "contracts/generated_surface_handoff.json#/required_domain_handoff/3",
+      "verification_refs": [
+        "tests/product_entry_cases/test_external_evidence_request_pack.py",
+        "tests/product_entry_cases/test_grant_transition_oracle.py",
+        "tests/product_entry_cases/test_functional_closure.py"
+      ]
+    },
+    "owner_receipt": {
+      "authority": "mag_issues_owner_receipts_oma_consumes_refs_only",
+      "contract_ref": "contracts/owner_receipt_contract.json",
+      "manifest_ref": "/product_entry_manifest/owner_receipt_contract",
+      "production_owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
+      "production_receipt_projection_ref": "receipt-projection:mag/production-live-acceptance-owner-receipt"
+    },
+    "owner_route": {
+      "manifest_ref": "/product_entry_manifest/owner_route",
+      "next_owner": "med-autogrant",
+      "route_id": "mag_product_entry_owner_route",
+      "route_truth_owner": "med-autogrant",
+      "verification_refs": [
+        "tests/product_entry_cases/test_manifest_and_status.py::ManifestAndStatusTest::test_manifest_contains_runtime_companions",
+        "tests/test_opl_family_contract_adoption.py::test_family_adapter_preserves_mag_owner_route_discovery"
+      ]
+    },
+    "production_acceptance": {
+      "closure_ref": "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence",
+      "external_evidence_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+      "receipt_chain_ref": "contracts/production_acceptance/mag-production-acceptance.json#/grant_receipt_chain",
+      "state_ref": "contracts/production_acceptance/mag-production-acceptance.json",
+      "verification_refs": [
+        "tests/test_production_acceptance.py",
+        "tests/product_entry_cases/test_production_live_acceptance.py"
+      ]
+    },
+    "typed_blocker": {
+      "accepted_return_shapes": [
+        "domain_owner_receipt_ref",
+        "typed_blocker_ref",
+        "no_regression_evidence_ref"
+      ],
+      "continuous_no_forbidden_write_blocker_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+      "domain_owned_typed_blocker_ids_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/domain_owned_typed_blocker_request_ids",
+      "ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+    }
+  },
+  "owner": "med-autogrant",
+  "payload_policy": "refs_only_no_body_material",
+  "schema_version": 1,
+  "state": "domain_owned_refs_ready",
+  "surface_kind": "agent_lab_handoff.v1"
+}

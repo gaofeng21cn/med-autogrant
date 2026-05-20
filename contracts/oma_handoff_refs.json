@@ -1,0 +1,28 @@
+{
+  "authority_boundary": {
+    "artifact_authority_owner": "med-autogrant",
+    "memory_authority_owner": "med-autogrant",
+    "oma_can_declare_export_ready": false,
+    "oma_can_declare_fundability_ready": false,
+    "oma_can_declare_quality_ready": false,
+    "oma_can_issue_owner_receipt": false,
+    "oma_can_write_artifact_body": false,
+    "oma_can_write_grant_truth": false,
+    "oma_can_write_memory_body": false,
+    "oma_consumes_mag_refs_only": true,
+    "owner_receipt_authority_owner": "med-autogrant",
+    "quality_verdict_owner": "med-autogrant"
+  },
+  "consumer": "opl-meta-agent",
+  "consumer_contract": "agent:evidence",
+  "domain_id": "med-autogrant",
+  "handoff_refs": {
+    "standard_agent_lab_handoff": "contracts/agent_lab_handoff.json"
+  },
+  "owner": "med-autogrant",
+  "payload_policy": "refs_only_no_body_material",
+  "schema_version": 1,
+  "standard_contract_ref": "contracts/agent_lab_handoff.json",
+  "state": "standard_agent_lab_handoff_available",
+  "surface_kind": "mag_oma_handoff_refs.v1"
+}
