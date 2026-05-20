@@ -51,6 +51,10 @@ EXPECTED_SCHEMAS = {
     "product-status.schema.json",
     "hosted-contract-bundle.schema.json",
     "submission-ready-package.schema.json",
+    "codex-stage-execution-receipt-bundle.schema.json",
+    "operator-closeout-readiness-projection.schema.json",
+    "physical-morphology-guard-projection.schema.json",
+    "executor-first-closeout-bundle.schema.json",
     "schema-index.json",
 }
 
@@ -104,6 +108,15 @@ class SchemaRegistryTest(unittest.TestCase):
                         continue
                     target = (SCHEMA_ROOT / path_part).resolve()
                     self.assertTrue(target.exists(), f"{name} 引用了不存在的 schema: {ref}")
+
+    def test_schema_index_names_and_files_are_unique(self) -> None:
+        payload = json.loads((SCHEMA_ROOT / "schema-index.json").read_text(encoding="utf-8"))
+        schemas = payload["schemas"]
+        names = [item["name"] for item in schemas]
+        files = [item["file"] for item in schemas]
+
+        self.assertEqual(len(names), len(set(names)))
+        self.assertEqual(len(files), len(set(files)))
 
     def test_workspace_schema_references_all_core_objects(self) -> None:
         payload = json.loads((SCHEMA_ROOT / "nsfc-workspace.schema.json").read_text(encoding="utf-8"))
@@ -162,6 +175,96 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertEqual(names["product_status_surface"], "product-status.schema.json")
         self.assertEqual(names["hosted_contract_bundle"], "hosted-contract-bundle.schema.json")
         self.assertEqual(names["submission_ready_package"], "submission-ready-package.schema.json")
+        self.assertEqual(
+            names["codex_stage_execution_receipt_bundle"],
+            "codex-stage-execution-receipt-bundle.schema.json",
+        )
+        self.assertEqual(
+            names["operator_closeout_readiness_projection"],
+            "operator-closeout-readiness-projection.schema.json",
+        )
+        self.assertEqual(
+            names["physical_morphology_guard_projection"],
+            "physical-morphology-guard-projection.schema.json",
+        )
+        self.assertEqual(
+            names["executor_first_closeout_bundle"],
+            "executor-first-closeout-bundle.schema.json",
+        )
+
+    def test_closeout_surface_schemas_pin_authority_boundaries(self) -> None:
+        codex_schema = json.loads(
+            (SCHEMA_ROOT / "codex-stage-execution-receipt-bundle.schema.json").read_text(encoding="utf-8")
+        )
+        codex_boundary = codex_schema["$defs"]["authorityBoundary"]["properties"]
+        self.assertEqual(codex_boundary["projection_scope"]["const"], "codex_stage_execution_and_review_receipt_refs_only")
+        self.assertFalse(codex_boundary["mag_implements_opl_runtime"]["const"])
+        self.assertFalse(codex_boundary["mag_implements_app_workbench"]["const"])
+        self.assertFalse(codex_boundary["execution_receipt_refs_equal_quality_ready"]["const"])
+        self.assertFalse(codex_boundary["review_receipt_refs_equal_quality_ready"]["const"])
+        self.assertFalse(codex_boundary["can_declare_fundability_ready"]["const"])
+        self.assertFalse(codex_boundary["can_declare_quality_ready"]["const"])
+        self.assertFalse(codex_boundary["can_declare_export_ready"]["const"])
+        self.assertFalse(codex_boundary["can_declare_submission_ready"]["const"])
+
+        operator_schema = json.loads(
+            (SCHEMA_ROOT / "operator-closeout-readiness-projection.schema.json").read_text(encoding="utf-8")
+        )
+        operator_boundary = operator_schema["$defs"]["authorityBoundary"]["properties"]
+        self.assertEqual(operator_boundary["projection_scope"]["const"], "operator_closeout_readiness_only")
+        self.assertFalse(operator_boundary["request_accounting_closure_equals_real_evidence"]["const"])
+        self.assertFalse(operator_boundary["receipt_refs_ready_equals_quality_ready"]["const"])
+        self.assertFalse(operator_boundary["production_tail_closure_equals_grant_ready"]["const"])
+        self.assertFalse(operator_boundary["can_declare_fundability_ready"]["const"])
+        self.assertFalse(operator_boundary["can_declare_quality_ready"]["const"])
+        self.assertFalse(operator_boundary["can_declare_export_ready"]["const"])
+        self.assertFalse(operator_boundary["can_declare_submission_ready"]["const"])
+
+        physical_schema = json.loads(
+            (SCHEMA_ROOT / "physical-morphology-guard-projection.schema.json").read_text(encoding="utf-8")
+        )
+        physical_boundary = physical_schema["$defs"]["authorityBoundary"]["properties"]
+        self.assertEqual(physical_boundary["projection_scope"]["const"], "source_path_module_role_evidence_refs_only")
+        self.assertEqual(physical_boundary["mag_role"]["const"], "physical_morphology_read_guard_projection")
+        self.assertFalse(physical_boundary["mag_implements_opl_runtime"]["const"])
+        self.assertFalse(physical_boundary["mag_implements_scheduler_daemon"]["const"])
+        self.assertFalse(physical_boundary["mag_implements_attempt_ledger"]["const"])
+        self.assertFalse(physical_boundary["mag_implements_local_journal"]["const"])
+        self.assertFalse(physical_boundary["mag_implements_app_workbench"]["const"])
+        self.assertFalse(physical_boundary["mag_restores_compatibility_alias"]["const"])
+
+        closeout_schema = json.loads(
+            (SCHEMA_ROOT / "executor-first-closeout-bundle.schema.json").read_text(encoding="utf-8")
+        )
+        closeout_boundary = closeout_schema["$defs"]["authorityBoundary"]["properties"]
+        self.assertFalse(closeout_boundary["bundle_can_declare_fundability_ready"]["const"])
+        self.assertFalse(closeout_boundary["bundle_can_declare_quality_ready"]["const"])
+        self.assertFalse(closeout_boundary["bundle_can_declare_export_ready"]["const"])
+        self.assertFalse(closeout_boundary["bundle_can_declare_submission_ready"]["const"])
+        self.assertFalse(closeout_boundary["receipt_refs_equal_ready_verdict"]["const"])
+        self.assertFalse(closeout_boundary["physical_guard_pass_equals_runtime_cleanup_complete"]["const"])
+
+    def test_closeout_surface_schemas_require_expected_surface_shapes(self) -> None:
+        expected_defs = {
+            "codex-stage-execution-receipt-bundle.schema.json": "codexStageExecutionReceiptBundle",
+            "operator-closeout-readiness-projection.schema.json": "operatorCloseoutReadinessProjection",
+            "physical-morphology-guard-projection.schema.json": "physicalMorphologyGuardProjection",
+            "executor-first-closeout-bundle.schema.json": "executorFirstCloseoutBundle",
+        }
+
+        for schema_file, def_name in expected_defs.items():
+            with self.subTest(schema=schema_file):
+                payload = json.loads((SCHEMA_ROOT / schema_file).read_text(encoding="utf-8"))
+                surface = payload["$defs"][def_name]
+                required = surface["required"]
+                self.assertIn("surface_kind", required)
+                self.assertIn("version", required)
+                self.assertIn("target_domain_id", required)
+                self.assertIn("owner", required)
+                self.assertIn("authority_boundary", required)
+                self.assertEqual(surface["properties"]["version"]["const"], "v1")
+                self.assertEqual(surface["properties"]["target_domain_id"]["const"], "med-autogrant")
+                self.assertEqual(surface["properties"]["owner"]["const"], "med-autogrant")
 
     def test_loop_report_schemas_require_quality_surfaces(self) -> None:
         critique_schema = json.loads((SCHEMA_ROOT / "critique-loop-report.schema.json").read_text(encoding="utf-8"))

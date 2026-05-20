@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/executor-first-closeout-bundle.schema.json",
+  "title": "Med Auto Grant Executor-First Closeout Bundle",
+  "type": "object",
+  "$defs": {
+    "closeoutPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_executor",
+        "runtime_model",
+        "bundle_scope",
+        "ready_verdict_policy"
+      ],
+      "properties": {
+        "default_executor": {
+          "const": "codex_cli"
+        },
+        "runtime_model": {
+          "const": "contract_light"
+        },
+        "bundle_scope": {
+          "const": "read_guard_receipt_refs_and_authority_boundaries_only"
+        },
+        "ready_verdict_policy": {
+          "const": "domain_verdict_surface_required"
+        }
+      }
+    },
+    "sourceSurfaceRefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codex_stage_execution_receipt_bundle_ref",
+        "operator_closeout_readiness_projection_ref",
+        "physical_morphology_guard_projection_ref"
+      ],
+      "properties": {
+        "codex_stage_execution_receipt_bundle_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "operator_closeout_readiness_projection_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "physical_morphology_guard_projection_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "receipt_readiness_projection_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "external_evidence_consumption_ledger_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "bundleComponentRefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_receipt_refs",
+        "review_receipt_refs",
+        "owner_receipt_refs",
+        "typed_blocker_refs",
+        "external_evidence_refs",
+        "physical_morphology_evidence_refs"
+      ],
+      "properties": {
+        "execution_receipt_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "review_receipt_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "owner_receipt_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "typed_blocker_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "external_evidence_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "physical_morphology_evidence_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "remainingGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id",
+        "owner",
+        "required_ref_kind"
+      ],
+      "properties": {
+        "gate_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "owner": {
+          "type": "string",
+          "enum": [
+            "med-autogrant",
+            "one-person-lab"
+          ]
+        },
+        "required_ref_kind": {
+          "type": "string",
+          "enum": [
+            "domain_owner_receipt",
+            "typed_blocker",
+            "no_regression_evidence",
+            "external_evidence_receipt",
+            "domain_verdict_surface"
+          ]
+        }
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mag_owns_grant_truth",
+        "mag_owns_quality_verdict",
+        "mag_owns_export_verdict",
+        "mag_owns_package_authority",
+        "mag_owns_owner_receipt_authority",
+        "opl_owns_generic_runtime",
+        "opl_owns_operator_workbench",
+        "bundle_can_declare_fundability_ready",
+        "bundle_can_declare_quality_ready",
+        "bundle_can_declare_export_ready",
+        "bundle_can_declare_submission_ready",
+        "receipt_refs_equal_ready_verdict",
+        "physical_guard_pass_equals_runtime_cleanup_complete"
+      ],
+      "properties": {
+        "mag_owns_grant_truth": {
+          "const": true
+        },
+        "mag_owns_quality_verdict": {
+          "const": true
+        },
+        "mag_owns_export_verdict": {
+          "const": true
+        },
+        "mag_owns_package_authority": {
+          "const": true
+        },
+        "mag_owns_owner_receipt_authority": {
+          "const": true
+        },
+        "opl_owns_generic_runtime": {
+          "const": true
+        },
+        "opl_owns_operator_workbench": {
+          "const": true
+        },
+        "bundle_can_declare_fundability_ready": {
+          "const": false
+        },
+        "bundle_can_declare_quality_ready": {
+          "const": false
+        },
+        "bundle_can_declare_export_ready": {
+          "const": false
+        },
+        "bundle_can_declare_submission_ready": {
+          "const": false
+        },
+        "receipt_refs_equal_ready_verdict": {
+          "const": false
+        },
+        "physical_guard_pass_equals_runtime_cleanup_complete": {
+          "const": false
+        }
+      }
+    },
+    "executorFirstCloseoutBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "target_domain_id",
+        "owner",
+        "bundle_id",
+        "bundle_state",
+        "closeout_policy",
+        "source_surface_refs",
+        "bundle_component_refs",
+        "remaining_gates",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_executor_first_closeout_bundle"
+        },
+        "version": {
+          "const": "v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "owner": {
+          "const": "med-autogrant"
+        },
+        "bundle_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "bundle_state": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "closeout_policy": {
+          "$ref": "#/$defs/closeoutPolicy"
+        },
+        "source_surface_refs": {
+          "$ref": "#/$defs/sourceSurfaceRefs"
+        },
+        "bundle_component_refs": {
+          "$ref": "#/$defs/bundleComponentRefs"
+        },
+        "remaining_gates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/remainingGate"
+          }
+        },
+        "authority_boundary": {
+          "$ref": "#/$defs/authorityBoundary"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/$defs/executorFirstCloseoutBundle"
+    }
+  ]
+}
