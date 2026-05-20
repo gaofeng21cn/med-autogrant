@@ -67,20 +67,20 @@
   },
   "patch_loop_refs": {
     "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
-    "developer_patch_work_order_ref": "developer-work-order:oma/mag/ahe-real-target-patch-smoke",
-    "patch_traceability_matrix_ref": "patch-traceability:oma/mag/ahe-real-target-patch-smoke",
+    "developer_patch_work_order_ref": "developer-work-order:oma/mag/ahe-real-target-scaleout-smoke",
+    "patch_traceability_matrix_ref": "patch-traceability:oma/mag/ahe-real-target-scaleout-smoke",
     "target_repo_verification_refs": [
-      "rtk ./scripts/run-pytest-clean.sh tests/product_entry_cases/test_production_live_acceptance.py tests/test_production_acceptance.py -q",
+      "rtk ./scripts/run-pytest-clean.sh tests/product_entry_cases/test_production_live_acceptance.py tests/test_production_acceptance.py tests/test_opl_standard_pack.py -q",
       "rtk ./scripts/verify.sh",
       "rtk git diff --check"
     ],
     "target_runtime_read_model_consumption_ref": "/product_entry_manifest/production_live_acceptance_receipt",
-    "workspace_environment_proof_ref": "workspace-proof:med-autogrant/.worktrees/codex/ahe-real-target-patch-smoke",
+    "workspace_environment_proof_ref": "workspace-proof:med-autogrant/.worktrees/codex/ahe-real-target-scaleout-smoke",
     "no_forbidden_write_proof_ref": "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only",
-    "target_owner_receipt_or_typed_blocker_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/domain_owned_typed_blocker_request_ids",
-    "patch_absorption_ref": "git-commit:pending/codex-ahe-real-target-patch-smoke",
-    "worktree_cleanup_ref": "worktree-cleanup:pending/ahe-real-target-patch-smoke",
-    "agent_lab_re_evaluation_ref": "agent-lab-run:oma/mag/ahe-real-target-patch-smoke/re-evaluation"
+    "target_owner_receipt_or_typed_blocker_ref": "receipt:mag/production-live-acceptance/2026-05-20",
+    "patch_absorption_ref": "git-commit:pending/codex-ahe-real-target-scaleout-smoke",
+    "worktree_cleanup_ref": "worktree-cleanup:pending/ahe-real-target-scaleout-smoke",
+    "agent_lab_re_evaluation_ref": "agent-lab-run:oma/mag/ahe-real-target-scaleout-smoke/re-evaluation"
   },
   "refs_only_policy": {
     "repo_tracks_receipt_instance_body": false,

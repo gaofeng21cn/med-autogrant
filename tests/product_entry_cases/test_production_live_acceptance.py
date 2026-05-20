@@ -62,26 +62,26 @@ def _meta_agent_patch_work_order_result() -> dict[str, object]:
         "status": "patch_smoke_closed",
         "source_agent_lab_result_ref": "oals_mag_live_acceptance",
         "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
-        "developer_patch_work_order_ref": "developer-work-order:oma/mag/ahe-real-target-patch-smoke",
-        "patch_traceability_matrix_ref": "patch-traceability:oma/mag/ahe-real-target-patch-smoke",
+        "developer_patch_work_order_ref": "developer-work-order:oma/mag/ahe-real-target-scaleout-smoke",
+        "patch_traceability_matrix_ref": "patch-traceability:oma/mag/ahe-real-target-scaleout-smoke",
         "target_repo_verification_refs": [
             "rtk ./scripts/run-pytest-clean.sh tests/product_entry_cases/test_production_live_acceptance.py tests/test_production_acceptance.py -q",
             "rtk ./scripts/verify.sh",
             "rtk git diff --check",
         ],
         "target_runtime_read_model_consumption_ref": (
-            "read-model:mag/product-entry/production-live-acceptance-receipt"
+            "/product_entry_manifest/production_live_acceptance_receipt"
         ),
         "workspace_environment_proof_ref": (
-            "workspace-proof:med-autogrant/.worktrees/codex/ahe-real-target-patch-smoke"
+            "workspace-proof:med-autogrant/.worktrees/codex/ahe-real-target-scaleout-smoke"
         ),
         "no_forbidden_write_proof_ref": (
             "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only"
         ),
-        "target_owner_receipt_or_typed_blocker_ref": "typed-blocker:mag/ahe-real-target-patch-smoke",
-        "patch_absorption_ref": "git-commit:pending/codex-ahe-real-target-patch-smoke",
-        "worktree_cleanup_ref": "worktree-cleanup:pending/ahe-real-target-patch-smoke",
-        "agent_lab_re_evaluation_ref": "agent-lab-run:oma/mag/ahe-real-target-patch-smoke/re-evaluation",
+        "target_owner_receipt_or_typed_blocker_ref": "typed-blocker:mag/ahe-real-target-scaleout-smoke",
+        "patch_absorption_ref": "git-commit:pending/codex-ahe-real-target-scaleout-smoke",
+        "worktree_cleanup_ref": "worktree-cleanup:pending/ahe-real-target-scaleout-smoke",
+        "agent_lab_re_evaluation_ref": "agent-lab-run:oma/mag/ahe-real-target-scaleout-smoke/re-evaluation",
     }
     return result
 
@@ -239,7 +239,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
         )
         self.assertEqual(
             patch_loop_refs["target_owner_receipt_or_typed_blocker_ref"],
-            "typed-blocker:mag/ahe-real-target-patch-smoke",
+            "typed-blocker:mag/ahe-real-target-scaleout-smoke",
         )
 
     def test_live_acceptance_receipt_projection_requires_complete_patch_loop_refs(self) -> None:
