@@ -75,6 +75,8 @@ OPL 负责通用运行外围和工作台：
 
 OPL 不能写 grant truth、memory body、fundability verdict、authoring quality verdict、submission-ready verdict、package authority 或 owner receipt。
 
+OPL 也可以把 MAG stage 的 expected receipt / monitor freshness 缺口转成 refs-only `record` / `verify` evidence route；该 route 只记录或验证 MAG/App/live refs、typed blocker refs、no-regression refs 或 owner-chain refs，不替 MAG 签 owner receipt、不声明 grant stage complete、不授权 fundability/quality/export/submission readiness。
+
 OPL 可以持有 MAG legacy cleanup 的 refs-only lifecycle ledger，并消费 MAG 提供的 replacement parity、no-regression、history/tombstone 和 owner handoff receipt refs；该 ledger 不授权 OPL 删除 MAG repo 文件，也不能替代真实 grant-stage owner receipt、App/workbench 消费或 production long-soak。
 
 ## 理想 Stage Pack

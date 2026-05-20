@@ -50,6 +50,8 @@ OPL 必须持有：
 
 2026-05-19 的 stage cohort-loop refs 已作为结构闭环落地。MAG 当前六个 stage 都声明 `source_scope_refs`、`cohort_query_refs`、OPL queue `trigger_refs`、`monitor_refs` 和 `dashboard_metric_refs`；OPL isolated verification 对当前 MAG main 返回 `stage_count=6`、`closed_loop_ready_count=6`、`blocker_count=0`。这关闭的是 declarative launch/readiness loop gap；外部 OPL generated/hosted caller、真实 App/workbench consumption、grant-stage owner receipt scaleout、direct/hosted parity 和 Temporal soak 仍归 evidence gate。
 
+2026-05-20 OPL 已把 stage production expected receipt / monitor freshness 的 unobserved 缺口变成 `stage_production_evidence_receipt_record|verify` safe action route。该能力属于 OPL App/operator evidence transport 和 refs-only ledger，不属于 MAG 私有功能面；MAG 的关闭责任是提供真实 grant-stage owner receipt、typed blocker、no-regression evidence、package/memory/lifecycle receipt、direct/hosted parity 或 Temporal long-soak refs。OPL 验证 stage evidence receipt 只能证明 refs-only roundtrip 可用，不能声明 grant-ready、fundability-ready、quality/export-ready、submission-ready、App/workbench consumption 或 external production/default caller 成功。
+
 2026-05-20 executor-first landing program 已作为 repo-tracked machine surface 落地：`contracts/production_acceptance/mag-executor-first-landing.json` 固定 `mag_executor_first_landing_program.v1`，把本轮一步到位计划拆成五条可并行 lane，并把当前状态固定为 `structural_ready_evidence_gated`。该 surface 只声明 MAG repo-local structural readiness、Codex-first executor boundary、contract-light runtime model、AI-first gate requirement 和 external evidence gates；它不声明 external evidence 已收到，也不声明 direct/hosted parity、App/workbench consumption、owner receipt scaleout、physical cleanup 或 production long soak 完成。
 
 同日该 program 已与 production acceptance tail 的最新 owner receipt closure 对齐：`owner_receipt_scaleout_state=production_acceptance_tail_closed_by_domain_owner_receipt_external_scaleout_gated`，引用 `receipt:mag/production-live-acceptance/2026-05-20` 与 `/product_entry_manifest/production_live_acceptance_receipt`。这关闭的是 MAG-owned production acceptance tail；external caller、App/workbench、direct/hosted parity、continuous guard、Temporal long-soak 和 morphology cleanup 仍按对应 external evidence request 关闭。
@@ -138,7 +140,7 @@ AI-first 边界统一写法：Codex CLI critique executor 或显式 hosted/proof
 - 真实 grant workspace 产生 accepted/rejected grant strategy memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout。
 - OPL/App shell 真实消费 MAG package refs、gap report、manual portal boundary、quality refs、transition oracle refs 和 safe action refs。
 - external production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 证据。
-- Temporal provider long SLO、repair cadence 和 live receipt reconciliation。
+- Temporal provider long SLO、repair cadence、expected receipt instance、monitor freshness 和 live receipt reconciliation。
 
 这些 evidence gate 的 repo-local request surface 已落地为 `mag.external_evidence_request_pack.v1`；生产可用 acceptance tail 的 MAG-owned 记录已落地为 `contracts/production_acceptance/mag-production-acceptance.json`。2026-05-20 `domain_owner_live_acceptance_receipt_scaleout_required` 已由 MAG-owned `domain_owner_receipt` projection 关闭，验证面包括 `tests/test_production_acceptance.py` 与 `tests/product_entry_cases/test_production_live_acceptance.py`。同日 `contracts/external_evidence/mag-evidence-receipt-ledger.json` 已把 7 条 external evidence request accounting 闭合为 1 条 verified refs-only typed-blocker receipt 和 6 条 MAG-owned typed blocker refs。前者关闭的是 production acceptance tail，后者关闭的是 request-level receipt/blocker accounting；二者都不关闭外部 default caller、App/workbench consumption、direct/hosted parity、continuous guard 或 Temporal long-soak，这些仍必须来自对应 request 的真实 owner receipt、typed blocker 或 no-regression evidence refs。MAG 仓不生成替代 runtime proof，OPL/provider completion 也不授权 fundability-ready。
 
@@ -173,4 +175,5 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 - 不能把 quality scorecard、schema completeness、controller route、package existence 或 mechanical projection 写成 AI-first grant quality / fundability / export verdict。
 - 不能把 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、compatibility aggregate test 或 `codex_cli` executor 写回默认 runtime owner。
 - 不能把 MAG legacy cleanup dry-run / apply / verify ready 写成 external production/default caller、真实 App/workbench consumption、grant readiness 或 production long-run soak 已完成。
+- 不能把 OPL `stage_production_evidence_receipt_record|verify` 写成 MAG production/default caller 或 App/workbench consumption 已完成；它只证明 expected receipt / monitor freshness 的 refs-only route 可用，真实关闭仍需要 MAG owner receipt、typed blocker、direct/hosted parity、package/memory/lifecycle 或 long-soak evidence。
 - 不能为了兼容保留旧模块、旧接口、旧测试、旧 CLI alias、facade 或 wrapper；active caller 迁走后直接删除或进入 history/tombstone。
