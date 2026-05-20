@@ -86,6 +86,9 @@ from med_autogrant.product_entry_parts.codex_stage_receipts import (
 from med_autogrant.product_entry_parts.operator_closeout import (
     build_operator_closeout_readiness_projection,
 )
+from med_autogrant.product_entry_parts.physical_morphology_guard import (
+    build_physical_morphology_guard_projection,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -591,6 +594,17 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             production_acceptance=production_acceptance,
             external_evidence_receipt_ledger=external_evidence_receipt_ledger,
             receipt_readiness_projection=receipt_readiness_projection,
+        )
+
+    def build_physical_morphology_guard_projection(
+        self,
+        *,
+        source_items: list[Mapping[str, Any]],
+        external_evidence_refs: list[str] | None = None,
+    ) -> dict[str, Any]:
+        return build_physical_morphology_guard_projection(
+            source_items=source_items,
+            external_evidence_refs=external_evidence_refs,
         )
 
     def build_continuous_receipt_reconciliation_snapshot(
