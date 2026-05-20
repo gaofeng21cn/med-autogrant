@@ -52,6 +52,17 @@
     "typed_blocker_reason": "Closed by MAG-owned domain_owner_receipt refs after OPL Agent Lab suite result and opl-meta-agent coordination result were consumed as refs-only evidence. The closed blocker kind records what was closed; it does not authorize OPL/provider/meta-agent to claim fundability-ready, grant-ready, or submission-ready.",
     "next_verification_ref": "tests/test_production_acceptance.py::test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker"
   },
+  "external_evidence_receipt_ledger": {
+    "ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+    "surface_kind": "mag_external_evidence_receipt_ledger.v1",
+    "state": "request_pack_closed_by_receipt_or_domain_owned_typed_blockers",
+    "closed_request_count": 7,
+    "domain_owned_typed_blocker_count": 6,
+    "remaining_open_request_count": 0,
+    "claims_direct_hosted_parity_passed": false,
+    "claims_temporal_provider_long_soak_complete": false,
+    "claims_grant_or_fundability_ready": false
+  },
   "refs_only_policy": {
     "repo_tracks_receipt_instance_body": false,
     "repo_tracks_grant_artifact_body": false,
@@ -100,6 +111,8 @@
       "tests/product_entry_cases/test_package_lifecycle_handoff.py"
     ],
     "typed_blocker_refs": [
+      "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+      "contracts/external_evidence/mag-evidence-receipt-ledger.json#/domain_owned_typed_blocker_request_ids",
       "/product_entry_manifest/controlled_soak_no_regression_attempt/deferred_blocker",
       "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/owner_receipt_typed_blocker_ref_roundtrip",
       "tests/product_entry_cases/test_controlled_soak.py::ProductEntryControlledSoakTest::test_controlled_soak_receipt_reconciliation_probe_keeps_typed_blocker_as_blocker"
@@ -118,6 +131,7 @@
       "tests/test_production_acceptance.py::test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker",
       "tests/test_production_acceptance.py::test_opl_provider_completion_cannot_authorize_mag_grant_readiness",
       "tests/product_entry_cases/test_production_live_acceptance.py",
+      "rtk jq empty contracts/external_evidence/mag-evidence-receipt-ledger.json",
       "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py -q",
       "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py tests/product_entry_cases/test_production_live_acceptance.py -q",
       "rtk ./scripts/verify.sh",

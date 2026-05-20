@@ -77,6 +77,7 @@
         "mag_consumer_thinning_contract",
         "functional_followthrough_gap_classification",
         "external_evidence_request_pack",
+        "external_evidence_receipt_ledger",
         "ideal_state_closure_status",
         "repo_source_layout_audit",
         "OPL Rust native helper indexed workspace/session/artifact/TODO/runtime-health projections"
@@ -160,6 +161,7 @@
         "opl_runtime_observability_consumption_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
         "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
         "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
+        "external_evidence_receipt_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
         "opl_replacement_expectations": [
           "workspace_source_intake_shell",
           "memory_locator_writeback_transport",
@@ -364,6 +366,25 @@
             "opl_can_declare_quality_verdict": false,
             "opl_can_declare_export_verdict": false
           }
+        },
+        "external_evidence_receipt_ledger": {
+          "surface_kind": "mag_external_evidence_receipt_ledger.v1",
+          "ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+          "state": "request_pack_closed_by_receipt_or_domain_owned_typed_blockers",
+          "closed_request_count": 7,
+          "domain_owned_typed_blocker_count": 6,
+          "remaining_open_request_count": 0,
+          "claims_direct_hosted_parity_passed": false,
+          "claims_temporal_provider_long_soak_complete": false,
+          "claims_grant_or_fundability_ready": false,
+          "remaining_real_evidence_gap_ids": [
+            "external_opl_generated_or_hosted_caller_consumption_receipt",
+            "codex_app_workbench_package_ref_consumption_receipt",
+            "production_default_caller_release_or_dist_consumption_receipt",
+            "continuous_no_forbidden_write_live_monitor_receipt",
+            "direct_hosted_parity_no_regression_receipt",
+            "temporal_provider_long_soak_receipt_reconciliation"
+          ]
         },
         "functional_followthrough_gap_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_followthrough_gap_classification",
         "functional_followthrough_gap_classification": {
