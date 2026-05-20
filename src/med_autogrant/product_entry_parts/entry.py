@@ -71,6 +71,9 @@ from med_autogrant.product_entry_parts.lifecycle_receipt_bundle import (
 from med_autogrant.product_entry_parts.memory_receipt_projection import (
     build_memory_receipt_read_projection,
 )
+from med_autogrant.product_entry_parts.external_evidence_ledger import (
+    build_external_evidence_consumption_ledger,
+)
 from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
     build_package_lifecycle_handoff_projection,
 )
@@ -511,6 +514,17 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
         receipt_items: list[Mapping[str, Any]],
     ) -> dict[str, Any]:
         return build_memory_receipt_read_projection(receipt_items)
+
+    def build_external_evidence_consumption_ledger(
+        self,
+        *,
+        external_evidence_request_pack: Mapping[str, Any],
+        evidence_receipts: list[Mapping[str, Any]],
+    ) -> dict[str, Any]:
+        return build_external_evidence_consumption_ledger(
+            external_evidence_request_pack=external_evidence_request_pack,
+            evidence_receipts=evidence_receipts,
+        )
 
     def build_package_lifecycle_handoff_projection(
         self,
