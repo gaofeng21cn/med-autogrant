@@ -29,6 +29,8 @@ def _assert_ref_list(values: object) -> None:
             or value.startswith("tests/")
             or value.startswith("agent/")
             or value.startswith("rtk ")
+            or value.startswith("receipt:")
+            or value.startswith("receipt-projection:")
             or "::" in value
         ), value
 
@@ -107,7 +109,10 @@ def test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker() -> 
     assert closure["accepted_return_shape"] in closure["required_return_shapes"]
     if surface["evidence_tail_status"] == "closed_by_domain_owned_acceptance_receipt":
         assert closure["accepted_return_shape"] == "domain_owner_receipt_ref"
+        assert closure["owner_receipt_ref"] in refs["owner_receipt_refs"]
         _assert_ref_list(refs["grant_owner_receipt_refs"])
+        _assert_ref_list(refs["acceptance_receipt_refs"])
+        assert "tests/product_entry_cases/test_production_live_acceptance.py" in refs["next_verification_command_refs"]
     else:
         assert closure["accepted_return_shape"] == "typed_blocker_ref"
         _assert_ref_list(refs["typed_blocker_refs"])

@@ -48,6 +48,7 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
 from med_autogrant.product_entry_parts.owner_receipts import (
     build_controlled_soak_receipt_reconciliation_inventory,
     build_controlled_soak_receipt_reconciliation_proof,
+    build_production_live_acceptance_receipt_projection,
     write_lifecycle_receipt_evidence,
     write_owner_receipt_evidence,
 )
@@ -416,6 +417,19 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             owner_receipt_evidence_items=owner_receipt_evidence_items,
             opl_ledger_ref=opl_ledger_ref,
             sidecar_closeout_results=sidecar_closeout_results,
+        )
+
+    def build_production_live_acceptance_receipt_projection(
+        self,
+        *,
+        owner_receipt_evidence: Mapping[str, Any],
+        agent_lab_suite_result: Mapping[str, Any],
+        meta_agent_coordination_result: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        return build_production_live_acceptance_receipt_projection(
+            owner_receipt_evidence=owner_receipt_evidence,
+            agent_lab_suite_result=agent_lab_suite_result,
+            meta_agent_coordination_result=meta_agent_coordination_result,
         )
 
     def build_controlled_soak_receipt_observability_summary(

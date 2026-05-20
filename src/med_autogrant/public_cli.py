@@ -63,6 +63,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "memory-receipt-projection": ("product", "memory-receipt-projection"),
     "package-lifecycle-handoff": ("product", "package-lifecycle-handoff"),
     "continuous-receipt-reconciliation": ("product", "continuous-receipt-reconciliation"),
+    "production-live-acceptance-receipt": ("product", "production-live-acceptance-receipt"),
     "execute-direction-screening-pass": ("pass", "direction-screening"),
     "execute-question-refinement-pass": ("pass", "question-refinement"),
     "execute-argument-building-pass": ("pass", "argument-building"),

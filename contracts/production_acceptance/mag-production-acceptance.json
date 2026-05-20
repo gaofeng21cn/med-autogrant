@@ -4,7 +4,7 @@
   "domain_id": "med-autogrant",
   "acceptance_owner": "med-autogrant",
   "state": "domain_owned_production_acceptance_recorded",
-  "evidence_tail_status": "domain_owned_typed_blocker_with_next_verification_ref",
+  "evidence_tail_status": "closed_by_domain_owned_acceptance_receipt",
   "conformance_status": {
     "structural_conformance": "passed",
     "physical_conformance": "passed",
@@ -13,7 +13,7 @@
   },
   "grant_receipt_chain": {
     "production_like_grant_receipt_chain_present": true,
-    "chain_status": "domain_acceptance_blocked_pending_live_owner_receipt_scaleout",
+    "chain_status": "closed_by_mag_domain_owner_live_acceptance_receipt_scaleout",
     "accepted_shapes": [
       "domain_owner_receipt_ref",
       "typed_blocker_ref",
@@ -46,9 +46,10 @@
       "typed_blocker_ref",
       "no_regression_evidence_ref"
     ],
-    "accepted_return_shape": "typed_blocker_ref",
+    "accepted_return_shape": "domain_owner_receipt_ref",
+    "owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
     "typed_blocker_kind": "domain_owner_live_acceptance_receipt_scaleout_required",
-    "typed_blocker_reason": "MAG structural and physical conformance have passed, and production-like refs-only receipt chain surfaces exist, but live grant-domain readiness and fundability-ready still require MAG-owned owner receipt scaleout or an explicit typed blocker after the next verification run.",
+    "typed_blocker_reason": "Closed by MAG-owned domain_owner_receipt refs after OPL Agent Lab suite result and opl-meta-agent coordination result were consumed as refs-only evidence. The closed blocker kind records what was closed; it does not authorize OPL/provider/meta-agent to claim fundability-ready, grant-ready, or submission-ready.",
     "next_verification_ref": "tests/test_production_acceptance.py::test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker"
   },
   "refs_only_policy": {
@@ -78,6 +79,9 @@
       "contracts/owner_receipt_contract.json",
       "/product_entry_manifest/owner_receipt_contract",
       "/product_entry_manifest/controlled_soak_no_regression_attempt",
+      "/product_entry_manifest/production_live_acceptance_receipt",
+      "receipt:mag/production-live-acceptance/2026-05-20",
+      "tests/product_entry_cases/test_production_live_acceptance.py::ProductEntryProductionLiveAcceptanceTest::test_live_acceptance_receipt_projection_closes_domain_owner_blocker_refs_only",
       "tests/product_entry_cases/test_controlled_soak.py::ProductEntryControlledSoakTest::test_controlled_soak_receipt_reconciliation_probe_links_mag_receipt_and_opl_ledger_ref"
     ],
     "fundability_review_gate_refs": [
@@ -100,10 +104,22 @@
       "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/owner_receipt_typed_blocker_ref_roundtrip",
       "tests/product_entry_cases/test_controlled_soak.py::ProductEntryControlledSoakTest::test_controlled_soak_receipt_reconciliation_probe_keeps_typed_blocker_as_blocker"
     ],
+    "owner_receipt_refs": [
+      "receipt:mag/production-live-acceptance/2026-05-20",
+      "/product_entry_manifest/production_live_acceptance_receipt"
+    ],
+    "acceptance_receipt_refs": [
+      "receipt-projection:mag/production-live-acceptance-owner-receipt"
+    ],
+    "doc_refs": [
+      "docs/status.md#production-acceptance"
+    ],
     "next_verification_command_refs": [
       "tests/test_production_acceptance.py::test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker",
       "tests/test_production_acceptance.py::test_opl_provider_completion_cannot_authorize_mag_grant_readiness",
+      "tests/product_entry_cases/test_production_live_acceptance.py",
       "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py -q",
+      "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py tests/product_entry_cases/test_production_live_acceptance.py -q",
       "rtk ./scripts/verify.sh",
       "rtk git diff --check"
     ]

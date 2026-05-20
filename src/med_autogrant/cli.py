@@ -65,6 +65,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_focused_hosted_receipt_verification,
     handle_product_lifecycle_receipt_bundle,
     handle_product_lifecycle_receipt_evidence,
+    handle_product_live_acceptance_receipt,
     handle_product_memory_receipt_projection,
     handle_product_owner_receipt_evidence,
     handle_product_package_lifecycle_handoff,
@@ -101,6 +102,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_focused_hosted_receipt_verification_command,
     _add_product_lifecycle_receipt_bundle_command,
     _add_product_lifecycle_receipt_evidence_command,
+    _add_product_live_acceptance_receipt_command,
     _add_product_memory_receipt_projection_command,
     _add_product_owner_receipt_evidence_command,
     _add_product_package_lifecycle_handoff_command,
@@ -460,6 +462,12 @@ def build_parser() -> argparse.ArgumentParser:
         "continuous-receipt-reconciliation",
         handle_product_continuous_receipt_reconciliation,
         "把 focused hosted verification 与 receipt inventory 聚合成持续 reconciliation read snapshot。",
+    )
+    _add_product_live_acceptance_receipt_command(
+        subparsers,
+        "production-live-acceptance-receipt",
+        handle_product_live_acceptance_receipt,
+        "把 MAG owner receipt、OPL Agent Lab suite result 与 opl-meta-agent coordination 对账成 production live acceptance receipt projection。",
     )
     return parser
 

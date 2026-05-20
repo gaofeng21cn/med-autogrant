@@ -16,6 +16,9 @@ OWNER_RECEIPT_EVIDENCE_KIND = "mag_owner_receipt_evidence"
 LIFECYCLE_RECEIPT_EVIDENCE_KIND = "mag_lifecycle_receipt_evidence"
 RECEIPT_RECONCILIATION_PROOF_KIND = "mag_controlled_soak_receipt_reconciliation_proof"
 RECEIPT_RECONCILIATION_INVENTORY_KIND = "mag_controlled_soak_receipt_reconciliation_inventory"
+PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND = (
+    "mag_production_live_acceptance_receipt_projection"
+)
 
 _RECEIPT_SHAPES = ("domain_owner_receipt", "typed_blocker", "no_regression_evidence")
 _STAGE_IDS = (
@@ -314,6 +317,96 @@ def build_controlled_soak_receipt_reconciliation_inventory(
     }
 
 
+def build_production_live_acceptance_receipt_projection(
+    *,
+    owner_receipt_evidence: Mapping[str, Any],
+    agent_lab_suite_result: Mapping[str, Any],
+    meta_agent_coordination_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    receipt = _require_owner_receipt_evidence(owner_receipt_evidence)
+    receipt_shape = _require_nonempty_string_from_receipt(receipt, "receipt_shape")
+    if receipt_shape != "domain_owner_receipt":
+        raise WorkspaceStateError(
+            "production live acceptance 必须使用 domain_owner_receipt，不能用 typed_blocker 或 no_regression_evidence 关闭。"
+        )
+    suite_result = _extract_agent_lab_suite_result(agent_lab_suite_result)
+    meta_result = _extract_meta_agent_coordination_result(meta_agent_coordination_result)
+    suite_result_id = _require_nonempty_string(suite_result.get("result_id"), field_name="suite_result.result_id")
+    meta_agent_lab_result_ref = _meta_agent_lab_result_ref(meta_result)
+    if meta_agent_lab_result_ref != suite_result_id:
+        raise WorkspaceStateError("opl-meta-agent coordination result 必须绑定同一个 Agent Lab result_id。")
+    receipt_ref = _require_nonempty_string_from_receipt(receipt, "receipt_instance_ref")
+    payload = {
+        "surface_kind": PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND,
+        "version": "v1",
+        "state": "closed_by_mag_domain_owner_live_acceptance_receipt",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "receipt": {
+            "receipt_ref": receipt_ref,
+            "receipt_id": _require_nonempty_string_from_receipt(receipt, "receipt_id"),
+            "receipt_shape": receipt_shape,
+            "stage_id": _require_nonempty_string_from_receipt(receipt, "stage_id"),
+            "source_ref": _require_nonempty_string_from_receipt(receipt, "source_ref"),
+            "owner_receipt_contract_ref": _require_nonempty_string_from_receipt(
+                receipt,
+                "owner_receipt_contract_ref",
+            ),
+            "repo_tracked_receipt_instance_body": False,
+        },
+        "agent_lab_coordination": {
+            "surface_kind": suite_result["surface_kind"],
+            "suite_id": _require_nonempty_string(suite_result.get("suite_id"), field_name="suite_id"),
+            "suite_kind": _require_nonempty_string(suite_result.get("suite_kind"), field_name="suite_kind"),
+            "result_id": _require_nonempty_string(suite_result.get("result_id"), field_name="result_id"),
+            "status": suite_result["status"],
+            "owner_or_human_gate_required_count": _suite_summary_int(
+                suite_result,
+                "owner_or_human_gate_required_count",
+            ),
+            "promotable_candidate_count": _suite_summary_int(suite_result, "promotable_candidate_count"),
+            "agent_lab_can_issue_mag_owner_receipt": False,
+        },
+        "meta_agent_coordination": {
+            "surface_kind": meta_result["surface_kind"],
+            "status": meta_result["status"],
+            "target_agent_id": _meta_target_domain_id(meta_result),
+            "source_agent_lab_result_ref": meta_agent_lab_result_ref,
+            "developer_work_order_status": _meta_developer_work_order_status(meta_result),
+            "meta_agent_can_write_mag_truth": False,
+            "meta_agent_can_authorize_fundability_ready": False,
+        },
+        "production_acceptance": {
+            "accepted_return_shape": "domain_owner_receipt_ref",
+            "closed_typed_blocker_kind": "domain_owner_live_acceptance_receipt_scaleout_required",
+            "evidence_ref": "receipt:mag/production-live-acceptance/2026-05-20",
+            "contract_ref": "contracts/production_acceptance/mag-production-acceptance.json",
+            "doc_ref": "docs/status.md#production-acceptance",
+            "next_verification_command": (
+                "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py "
+                "tests/product_entry_cases/test_production_live_acceptance.py -q"
+            ),
+        },
+        "authority_boundary": {
+            "mag_owner_receipt_authority": True,
+            "opl_agent_lab_ref_consumer_only": True,
+            "meta_agent_work_order_consumer_only": True,
+            "can_declare_fundability_ready": False,
+            "can_declare_authoring_quality_ready": False,
+            "can_declare_submission_ready_export": False,
+            "provider_completion_equals_fundability_ready": False,
+            "agent_lab_pass_equals_fundability_ready": False,
+            "meta_agent_pass_equals_fundability_ready": False,
+        },
+        "forbidden_write_proof": dict(receipt["forbidden_write_proof"]),
+    }
+    return {
+        "ok": True,
+        "command": "production-live-acceptance-receipt",
+        "production_live_acceptance_receipt": payload,
+    }
+
+
 def _resolve_runtime_root(runtime_root: str | Path | None) -> Path:
     if runtime_root is not None:
         return Path(runtime_root).expanduser().resolve()
@@ -382,6 +475,8 @@ def _count_by(items: Sequence[Mapping[str, Any]], key: str) -> dict[str, int]:
 def _require_owner_receipt_evidence(payload: Mapping[str, Any]) -> Mapping[str, Any]:
     if payload.get("surface_kind") != OWNER_RECEIPT_EVIDENCE_KIND:
         raise WorkspaceStateError("owner_receipt_evidence.surface_kind 必须是 mag_owner_receipt_evidence。")
+    if payload.get("owner") != TARGET_DOMAIN_ID or payload.get("target_domain_id") != TARGET_DOMAIN_ID:
+        raise WorkspaceStateError("owner_receipt_evidence.owner 和 target_domain_id 必须都是 med-autogrant。")
     forbidden = payload.get("forbidden_write_proof")
     if not isinstance(forbidden, Mapping):
         raise WorkspaceStateError("owner_receipt_evidence 缺少 forbidden_write_proof。")
@@ -396,6 +491,137 @@ def _require_owner_receipt_evidence(payload: Mapping[str, Any]) -> Mapping[str, 
     )):
         raise WorkspaceStateError("owner_receipt_evidence 不能包含 MAG/OPL forbidden write。")
     return payload
+
+
+def _require_mapping_payload(payload: Mapping[str, Any], *, context: str) -> Mapping[str, Any]:
+    if not isinstance(payload, Mapping):
+        raise WorkspaceStateError(f"{context} 必须是 JSON object。")
+    return payload
+
+
+def _extract_agent_lab_suite_result(payload: Mapping[str, Any]) -> Mapping[str, Any]:
+    record = _require_mapping_payload(payload, context="agent_lab_suite_result")
+    if record.get("surface_kind") == "opl_agent_lab_suite_result":
+        suite_result = record
+    elif isinstance(record.get("suite_result"), Mapping):
+        suite_result = record["suite_result"]
+    elif isinstance(record.get("agent_lab_run"), Mapping):
+        suite_result = _require_mapping_payload(record["agent_lab_run"], context="agent_lab_run").get("suite_result")
+    elif isinstance(record.get("agent_lab_mag_live_acceptance"), Mapping):
+        suite_result = _require_mapping_payload(
+            record["agent_lab_mag_live_acceptance"],
+            context="agent_lab_mag_live_acceptance",
+        ).get("suite_result")
+    else:
+        raise WorkspaceStateError("agent_lab_suite_result 缺少 OPL Agent Lab suite_result。")
+    suite_result = _require_mapping_payload(suite_result, context="agent_lab_suite_result.suite_result")
+    if suite_result.get("surface_kind") != "opl_agent_lab_suite_result":
+        raise WorkspaceStateError("agent_lab_suite_result.surface_kind 必须是 opl_agent_lab_suite_result。")
+    if suite_result.get("suite_id") != "mag-agent-lab-suite:production-live-acceptance-owner-receipt-scaleout":
+        raise WorkspaceStateError("Agent Lab suite result 必须来自 MAG production live acceptance suite。")
+    if suite_result.get("suite_kind") not in (
+        "agent_lab_external_suite",
+        "agent_lab_mag_live_acceptance_suite",
+    ):
+        raise WorkspaceStateError("Agent Lab suite result.suite_kind 不是允许的 live acceptance suite kind。")
+    if suite_result.get("status") != "passed":
+        raise WorkspaceStateError("MAG production live acceptance 需要 passed Agent Lab suite result。")
+    if "med-autogrant" not in _suite_domain_ids(suite_result):
+        raise WorkspaceStateError("Agent Lab suite result 必须指向 med-autogrant。")
+    summary = _require_mapping_payload(suite_result.get("summary"), context="agent_lab_suite_result.summary")
+    forbidden_flag_count = _suite_summary_int(suite_result, "forbidden_authority_flag_count")
+    if forbidden_flag_count != 0:
+        raise WorkspaceStateError("Agent Lab suite result 存在 forbidden authority flag。")
+    refs = _require_mapping_payload(suite_result.get("refs"), context="agent_lab_suite_result.refs")
+    receipt_refs = refs.get("receipt_refs")
+    if not isinstance(receipt_refs, Sequence) or isinstance(receipt_refs, (str, bytes)):
+        raise WorkspaceStateError("Agent Lab suite result 必须提供 receipt_refs。")
+    if "receipt:mag/production-live-acceptance/2026-05-20" not in receipt_refs:
+        raise WorkspaceStateError("Agent Lab suite result 缺少 MAG production live acceptance receipt ref。")
+    authority = _require_mapping_payload(
+        suite_result.get("authority_boundary"),
+        context="agent_lab_suite_result.authority_boundary",
+    )
+    if any(bool(authority.get(key)) for key in (
+        "can_write_domain_truth",
+        "can_write_memory_body",
+        "can_authorize_quality_verdict",
+        "can_write_owner_receipt",
+    )):
+        raise WorkspaceStateError("Agent Lab suite result 不能持有 MAG truth 或 quality authority。")
+    return suite_result
+
+
+def _suite_domain_ids(suite_result: Mapping[str, Any]) -> list[str]:
+    domain_summary = suite_result.get("domain_summary")
+    if not isinstance(domain_summary, Sequence) or isinstance(domain_summary, (str, bytes)):
+        return []
+    ids: list[str] = []
+    for item in domain_summary:
+        if isinstance(item, Mapping) and isinstance(item.get("domain_id"), str):
+            ids.append(item["domain_id"])
+    return ids
+
+
+def _suite_summary_int(suite_result: Mapping[str, Any], key: str) -> int:
+    summary = _require_mapping_payload(suite_result.get("summary"), context="agent_lab_suite_result.summary")
+    value = summary.get(key)
+    if not isinstance(value, int):
+        raise WorkspaceStateError(f"agent_lab_suite_result.summary.{key} 必须是整数。")
+    return value
+
+
+def _extract_meta_agent_coordination_result(payload: Mapping[str, Any]) -> Mapping[str, Any]:
+    record = _require_mapping_payload(payload, context="meta_agent_coordination_result")
+    if record.get("surface_kind") != "opl_meta_agent_external_suite_self_evolution_result":
+        raise WorkspaceStateError(
+            "meta_agent_coordination_result.surface_kind 必须是 opl_meta_agent_external_suite_self_evolution_result。"
+        )
+    if record.get("status") != "passed":
+        raise WorkspaceStateError("MAG production live acceptance 需要 passed opl-meta-agent coordination result。")
+    if _meta_target_domain_id(record) != TARGET_DOMAIN_ID:
+        raise WorkspaceStateError("opl-meta-agent coordination result 必须指向 med-autogrant。")
+    authority = record.get("authority_boundary")
+    if isinstance(authority, Mapping) and any(bool(authority.get(key)) for key in (
+        "can_write_target_domain_truth",
+        "can_write_target_domain_memory_body",
+        "can_mutate_target_domain_artifact_body",
+        "can_authorize_target_domain_quality_or_export",
+    )):
+        raise WorkspaceStateError("opl-meta-agent coordination result 不能持有 MAG truth、artifact 或 verdict authority。")
+    if _meta_developer_work_order_status(record) != "no_patch_required":
+        raise WorkspaceStateError("MAG production live acceptance 需要 opl-meta-agent no_patch_required work order。")
+    return record
+
+
+def _meta_target_domain_id(meta_result: Mapping[str, Any]) -> str:
+    target = meta_result.get("target_agent")
+    if not isinstance(target, Mapping):
+        raise WorkspaceStateError("meta_agent_coordination_result 缺少 target_agent。")
+    return _require_nonempty_string(target.get("domain_id"), field_name="target_agent.domain_id")
+
+
+def _meta_developer_work_order_status(meta_result: Mapping[str, Any]) -> str:
+    learning_loop = meta_result.get("learning_loop")
+    if not isinstance(learning_loop, Mapping):
+        raise WorkspaceStateError("meta_agent_coordination_result 缺少 learning_loop。")
+    work_order = learning_loop.get("developer_patch_work_order")
+    if not isinstance(work_order, Mapping):
+        raise WorkspaceStateError("meta_agent_coordination_result 缺少 developer_patch_work_order。")
+    return _require_nonempty_string(work_order.get("status"), field_name="developer_patch_work_order.status")
+
+
+def _meta_agent_lab_result_ref(meta_result: Mapping[str, Any]) -> str:
+    learning_loop = meta_result.get("learning_loop")
+    if not isinstance(learning_loop, Mapping):
+        raise WorkspaceStateError("meta_agent_coordination_result 缺少 learning_loop。")
+    work_order = learning_loop.get("developer_patch_work_order")
+    if not isinstance(work_order, Mapping):
+        raise WorkspaceStateError("meta_agent_coordination_result 缺少 developer_patch_work_order。")
+    return _require_nonempty_string(
+        work_order.get("source_agent_lab_result_ref"),
+        field_name="developer_patch_work_order.source_agent_lab_result_ref",
+    )
 
 
 def _require_nonempty_string_from_receipt(receipt: Mapping[str, Any], key: str) -> str:

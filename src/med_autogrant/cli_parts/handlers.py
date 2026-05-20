@@ -244,6 +244,14 @@ def handle_product_focused_hosted_receipt_verification(args: argparse.Namespace)
     )
 
 
+def handle_product_live_acceptance_receipt(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_production_live_acceptance_receipt_projection(
+        owner_receipt_evidence=_read_json_object(args.owner_receipt_evidence),
+        agent_lab_suite_result=_read_json_object(args.agent_lab_suite_result),
+        meta_agent_coordination_result=_read_json_object(args.meta_agent_coordination_result),
+    )
+
+
 def handle_product_lifecycle_receipt_bundle(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_lifecycle_receipt_bundle(
         lifecycle_receipt_evidence_items=[

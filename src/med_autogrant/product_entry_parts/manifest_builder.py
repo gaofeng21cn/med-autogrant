@@ -45,6 +45,9 @@ from med_autogrant.product_entry_parts.loop_contracts import (
     _validate_product_entry_manifest_contract,
 )
 from med_autogrant.product_entry_parts.manifest_readiness import build_manifest_readiness_surfaces
+from med_autogrant.product_entry_parts.manifest_owner_receipt_surfaces import (
+    build_production_live_acceptance_receipt_surface,
+)
 from med_autogrant.product_entry_parts.manifest_runtime_companions import build_manifest_runtime_companions
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
 from med_autogrant.product_entry_parts import domain_agent_skeleton
@@ -881,7 +884,6 @@ class ProductEntryManifestBuilderMixin:
             runtime_control=runtime_control,
             remaining_gaps=list(mainline_payload.get("remaining_gaps") or []),
         )
-
         product_entry_manifest = _build_shared_family_product_entry_manifest(
             manifest_kind=PRODUCT_ENTRY_MANIFEST_KIND,
             target_domain_id=TARGET_DOMAIN_ID,
@@ -956,6 +958,9 @@ class ProductEntryManifestBuilderMixin:
                 "opl_substrate_adapter_export": opl_substrate_adapter_export,
                 "controlled_stage_attempt_projection": controlled_stage_attempt_projection,
                 "controlled_soak_no_regression_attempt": domain_agent_skeleton.build_controlled_soak_no_regression_attempt(),
+                "production_live_acceptance_receipt": (
+                    build_production_live_acceptance_receipt_surface()
+                ),
                 **domain_memory_surfaces,
                 **functional_closure_surfaces,
             },

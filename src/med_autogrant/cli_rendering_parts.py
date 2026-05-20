@@ -679,6 +679,25 @@ def _render_build_product_entry(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _render_production_live_acceptance_receipt(payload: dict[str, Any]) -> str:
+    projection = payload["production_live_acceptance_receipt"]
+    receipt = projection["receipt"]
+    agent_lab = projection["agent_lab_coordination"]
+    meta_agent = projection["meta_agent_coordination"]
+    production_acceptance = projection["production_acceptance"]
+    lines = [
+        _render_field("command", payload["command"]),
+        _render_field("state", projection["state"]),
+        _render_field("target_domain_id", projection["target_domain_id"]),
+        _render_field("receipt_ref", receipt["receipt_ref"]),
+        _render_field("receipt_shape", receipt["receipt_shape"]),
+        _render_field("agent_lab_status", agent_lab["status"]),
+        _render_field("meta_agent_work_order_status", meta_agent["developer_work_order_status"]),
+        _render_field("accepted_return_shape", production_acceptance["accepted_return_shape"]),
+    ]
+    return "\n".join(lines)
+
+
 _TEXT_RENDERERS: dict[str, Callable[[dict[str, Any]], str]] = {
     'validate-workspace': _render_validate_workspace,
     'summarize-workspace': _render_summarize_workspace,
@@ -701,6 +720,7 @@ _TEXT_RENDERERS: dict[str, Callable[[dict[str, Any]], str]] = {
     'grant-direct-entry': _render_grant_direct_entry,
     'grant-user-loop': _render_grant_user_loop,
     'product-entry-manifest': _render_product_entry_manifest,
+    'production-live-acceptance-receipt': _render_production_live_acceptance_receipt,
     'product-status': _render_product_status,
     'product-preflight': _render_product_preflight,
     'product-start': _render_product_start,
