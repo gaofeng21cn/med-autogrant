@@ -306,6 +306,13 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
     runtime_event_refs = _runtime_event_refs(stage)
     cohort_loop_refs = _stage_cohort_loop_refs(stage)
     stage_id = str(stage["stage_id"])
+    expected_receipt_refs = _stage_expected_receipt_refs(stage_id, runtime_event_refs)
+    monitor_freshness_refs = _stage_monitor_freshness_refs(stage_id)
+    production_evidence_closeout = _stage_production_evidence_closeout(
+        stage_id=stage_id,
+        expected_receipt_refs=expected_receipt_refs,
+        monitor_freshness_refs=monitor_freshness_refs,
+    )
     return {
         **stage,
         "owner": TARGET_DOMAIN_ID,
@@ -359,11 +366,15 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "ensures": list(stage.get("ensures", [])),
             "runtime_event_refs": runtime_event_refs,
             **cohort_loop_refs,
+            "expected_receipt_refs": expected_receipt_refs,
+            "monitor_freshness_refs": monitor_freshness_refs,
+            "stage_production_evidence_refs": production_evidence_closeout["evidence_refs"],
             "boundary_assumptions": [
                 "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
                 "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states.",
             ],
         },
+        "stage_production_evidence_closeout": production_evidence_closeout,
         "trust_boundary": {
             "lane": stage.get("trust_lane", "domain_agent"),
             "static_check_eligible": False,
@@ -402,6 +413,84 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "can_write_grant_truth": False,
             "can_override_fundability_judgment": False,
             "can_bypass_submission_ready_gate": False,
+        },
+    }
+
+
+def _stage_expected_receipt_refs(stage_id: str, runtime_event_refs: list[str]) -> list[dict[str, Any]]:
+    return [
+        {
+            "ref_kind": "receipt_ref_template",
+            "ref": f"receipt:mag/grant-stage-controlled-attempt/{stage_id}/owner-receipt-or-typed-blocker",
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "required_return_shapes": [
+                "domain_owner_receipt_ref",
+                "typed_blocker_ref",
+                "no_regression_evidence_ref",
+            ],
+            "owner": TARGET_DOMAIN_ID,
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "runtime_event_refs": list(runtime_event_refs),
+            "body_free_payload_required": True,
+        }
+    ]
+
+
+def _stage_monitor_freshness_refs(stage_id: str) -> list[dict[str, str]]:
+    return [
+        {
+            "ref_kind": "json_pointer",
+            "ref": f"/product_entry_manifest/family_stage_control_plane/stages/{stage_id}/freshness",
+            "role": "stage_descriptor_freshness_metric",
+        },
+        {
+            "ref_kind": "json_pointer",
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "role": "task_lifecycle_monitor_freshness",
+        },
+        {
+            "ref_kind": "json_pointer",
+            "ref": "/product_entry_manifest/progress_projection",
+            "role": "grant_progress_monitor_freshness",
+        },
+    ]
+
+
+def _stage_production_evidence_closeout(
+    *,
+    stage_id: str,
+    expected_receipt_refs: list[dict[str, Any]],
+    monitor_freshness_refs: list[dict[str, str]],
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_stage_production_evidence_closeout_refs",
+        "state": "body_free_refs_ready_for_opl_record_preflight",
+        "stage_id": stage_id,
+        "payload_policy": "refs_only_no_grant_truth_memory_artifact_or_runtime_body",
+        "opl_record_route_ref": f"opl://stage-production-evidence/med-autogrant/{stage_id}/record",
+        "opl_verify_route_ref": f"opl://stage-production-evidence/med-autogrant/{stage_id}/verify",
+        "expected_receipt_refs": expected_receipt_refs,
+        "monitor_freshness_refs": monitor_freshness_refs,
+        "evidence_refs": [
+            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5",
+        ],
+        "preflight_refs": [
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+            "/product_entry_manifest/owner_receipt_contract",
+            f"/product_entry_manifest/family_stage_control_plane/stages/{stage_id}/stage_contract",
+        ],
+        "authority_boundary": {
+            "domain_truth_owner": TARGET_DOMAIN_ID,
+            "fundability_judgment_owner": TARGET_DOMAIN_ID,
+            "submission_ready_export_gate_owner": TARGET_DOMAIN_ID,
+            "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+            "opl_can_sign_owner_receipt": False,
+            "opl_can_write_grant_truth": False,
+            "opl_can_write_memory_body": False,
+            "opl_can_declare_export_ready": False,
         },
     }
 
@@ -507,6 +596,7 @@ def build_mag_family_stage_control_plane(
                 "authority_boundary",
                 "stage_contract",
                 "trust_boundary",
+                "stage_production_evidence_closeout",
             ],
             "allowed_action_catalog_ref": "/product_entry_manifest/family_action_catalog",
         },

@@ -701,6 +701,13 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert thinning["external_evidence_request_pack_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
     )
+    assert thinning["external_evidence_receipt_ledger"]["ledger_ref"] == (
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+    )
+    assert thinning["external_evidence_receipt_ledger"]["grant_stage_controlled_attempt_closeout_ref"] == (
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+        "grant_stage_controlled_attempt_closeout"
+    )
     assert thinning["functional_followthrough_gap_classification_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/"
         "functional_followthrough_gap_classification"
@@ -788,6 +795,10 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     }
     assert audit["audit_refs"]["external_evidence_request_pack_ref"] == (
         "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
+    )
+    assert audit["audit_refs"]["grant_stage_controlled_attempt_closeout_ref"] == (
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+        "grant_stage_controlled_attempt_closeout"
     )
     evidence_pack = thinning["external_evidence_request_pack"]
     assert evidence_pack["surface_kind"] == "mag_external_evidence_request_pack"

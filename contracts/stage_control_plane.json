@@ -26,7 +26,8 @@
       "freshness",
       "authority_boundary",
       "stage_contract",
-      "trust_boundary"
+      "trust_boundary",
+      "stage_production_evidence_closeout"
     ],
     "status": "ready",
     "surface_kind": "family_stage_control_plane_discovery_smoke"
@@ -263,6 +264,41 @@
         "ensures": [
           "call_candidate_intake_ready"
         ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/call_and_candidate_intake/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:call_and_candidate_intake.owner_receipt_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/call_and_candidate_intake/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
         "monitor_refs": [
           {
             "ref": "/progress_projection",
@@ -298,6 +334,12 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_production_evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
         "trigger_refs": [
           {
             "ref": "opl://family-stage-queue/med-autogrant/call_and_candidate_intake",
@@ -317,6 +359,70 @@
       "stage_goal": "Read call guidance, applicant/team context, candidate directions, and eligibility constraints.",
       "stage_id": "call_and_candidate_intake",
       "stage_kind": "intake",
+      "stage_production_evidence_closeout": {
+        "authority_boundary": {
+          "domain_truth_owner": "med-autogrant",
+          "fundability_judgment_owner": "med-autogrant",
+          "opl_can_declare_export_ready": false,
+          "opl_can_sign_owner_receipt": false,
+          "opl_can_write_grant_truth": false,
+          "opl_can_write_memory_body": false,
+          "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "submission_ready_export_gate_owner": "med-autogrant"
+        },
+        "evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/call_and_candidate_intake/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:call_and_candidate_intake.owner_receipt_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/call_and_candidate_intake/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
+        "opl_record_route_ref": "opl://stage-production-evidence/med-autogrant/call_and_candidate_intake/record",
+        "opl_verify_route_ref": "opl://stage-production-evidence/med-autogrant/call_and_candidate_intake/verify",
+        "payload_policy": "refs_only_no_grant_truth_memory_artifact_or_runtime_body",
+        "preflight_refs": [
+          "/product_entry_manifest/controlled_stage_attempt_projection",
+          "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/family_stage_control_plane/stages/call_and_candidate_intake/stage_contract"
+        ],
+        "stage_id": "call_and_candidate_intake",
+        "state": "body_free_refs_ready_for_opl_record_preflight",
+        "surface_kind": "mag_stage_production_evidence_closeout_refs"
+      },
       "summary": "Call and candidate intake projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Call and candidate intake",
       "trust_boundary": {
@@ -526,6 +632,41 @@
         "ensures": [
           "fundability_strategy_gate_recorded"
         ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/fundability_strategy/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:fundability_strategy.ai_decision_gate_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/fundability_strategy/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
         "monitor_refs": [
           {
             "ref": "/progress_projection",
@@ -561,6 +702,12 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_production_evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
         "trigger_refs": [
           {
             "ref": "opl://family-stage-queue/med-autogrant/fundability_strategy",
@@ -580,6 +727,70 @@
       "stage_goal": "Evaluate topic competitiveness, innovation, risk, fit, and funder-specific strategy.",
       "stage_id": "fundability_strategy",
       "stage_kind": "planning",
+      "stage_production_evidence_closeout": {
+        "authority_boundary": {
+          "domain_truth_owner": "med-autogrant",
+          "fundability_judgment_owner": "med-autogrant",
+          "opl_can_declare_export_ready": false,
+          "opl_can_sign_owner_receipt": false,
+          "opl_can_write_grant_truth": false,
+          "opl_can_write_memory_body": false,
+          "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "submission_ready_export_gate_owner": "med-autogrant"
+        },
+        "evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/fundability_strategy/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:fundability_strategy.ai_decision_gate_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/fundability_strategy/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
+        "opl_record_route_ref": "opl://stage-production-evidence/med-autogrant/fundability_strategy/record",
+        "opl_verify_route_ref": "opl://stage-production-evidence/med-autogrant/fundability_strategy/verify",
+        "payload_policy": "refs_only_no_grant_truth_memory_artifact_or_runtime_body",
+        "preflight_refs": [
+          "/product_entry_manifest/controlled_stage_attempt_projection",
+          "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/family_stage_control_plane/stages/fundability_strategy/stage_contract"
+        ],
+        "stage_id": "fundability_strategy",
+        "state": "body_free_refs_ready_for_opl_record_preflight",
+        "surface_kind": "mag_stage_production_evidence_closeout_refs"
+      },
       "summary": "Fundability strategy projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Fundability strategy",
       "trust_boundary": {
@@ -793,6 +1004,41 @@
         "ensures": [
           "specific_aims_structure_accepted"
         ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/specific_aims_and_structure/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:specific_aims_and_structure.ai_decision_gate_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/specific_aims_and_structure/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
         "monitor_refs": [
           {
             "ref": "/progress_projection",
@@ -827,6 +1073,12 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_production_evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
         "trigger_refs": [
           {
             "ref": "opl://family-stage-queue/med-autogrant/specific_aims_and_structure",
@@ -846,6 +1098,70 @@
       "stage_goal": "Shape research question, aims, technical route, innovation, and argument structure.",
       "stage_id": "specific_aims_and_structure",
       "stage_kind": "planning",
+      "stage_production_evidence_closeout": {
+        "authority_boundary": {
+          "domain_truth_owner": "med-autogrant",
+          "fundability_judgment_owner": "med-autogrant",
+          "opl_can_declare_export_ready": false,
+          "opl_can_sign_owner_receipt": false,
+          "opl_can_write_grant_truth": false,
+          "opl_can_write_memory_body": false,
+          "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "submission_ready_export_gate_owner": "med-autogrant"
+        },
+        "evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/specific_aims_and_structure/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:specific_aims_and_structure.ai_decision_gate_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/specific_aims_and_structure/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
+        "opl_record_route_ref": "opl://stage-production-evidence/med-autogrant/specific_aims_and_structure/record",
+        "opl_verify_route_ref": "opl://stage-production-evidence/med-autogrant/specific_aims_and_structure/verify",
+        "payload_policy": "refs_only_no_grant_truth_memory_artifact_or_runtime_body",
+        "preflight_refs": [
+          "/product_entry_manifest/controlled_stage_attempt_projection",
+          "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/family_stage_control_plane/stages/specific_aims_and_structure/stage_contract"
+        ],
+        "stage_id": "specific_aims_and_structure",
+        "state": "body_free_refs_ready_for_opl_record_preflight",
+        "surface_kind": "mag_stage_production_evidence_closeout_refs"
+      },
       "summary": "Specific aims and structure projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Specific aims and structure",
       "trust_boundary": {
@@ -1059,6 +1375,41 @@
         "ensures": [
           "proposal_draft_reviewable"
         ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/proposal_authoring/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:proposal_authoring.owner_receipt_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/proposal_authoring/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
         "monitor_refs": [
           {
             "ref": "/progress_projection",
@@ -1094,6 +1445,12 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_production_evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
         "trigger_refs": [
           {
             "ref": "opl://family-stage-queue/med-autogrant/proposal_authoring",
@@ -1113,6 +1470,70 @@
       "stage_goal": "Draft and revise the proposal body within the locked funding-call context.",
       "stage_id": "proposal_authoring",
       "stage_kind": "creation",
+      "stage_production_evidence_closeout": {
+        "authority_boundary": {
+          "domain_truth_owner": "med-autogrant",
+          "fundability_judgment_owner": "med-autogrant",
+          "opl_can_declare_export_ready": false,
+          "opl_can_sign_owner_receipt": false,
+          "opl_can_write_grant_truth": false,
+          "opl_can_write_memory_body": false,
+          "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "submission_ready_export_gate_owner": "med-autogrant"
+        },
+        "evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/proposal_authoring/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:proposal_authoring.owner_receipt_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/proposal_authoring/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
+        "opl_record_route_ref": "opl://stage-production-evidence/med-autogrant/proposal_authoring/record",
+        "opl_verify_route_ref": "opl://stage-production-evidence/med-autogrant/proposal_authoring/verify",
+        "payload_policy": "refs_only_no_grant_truth_memory_artifact_or_runtime_body",
+        "preflight_refs": [
+          "/product_entry_manifest/controlled_stage_attempt_projection",
+          "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/family_stage_control_plane/stages/proposal_authoring/stage_contract"
+        ],
+        "stage_id": "proposal_authoring",
+        "state": "body_free_refs_ready_for_opl_record_preflight",
+        "surface_kind": "mag_stage_production_evidence_closeout_refs"
+      },
       "summary": "Proposal authoring projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Proposal authoring",
       "trust_boundary": {
@@ -1322,6 +1743,41 @@
         "ensures": [
           "grant_review_gate_receipt_recorded"
         ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/review_and_rebuttal/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:review_and_rebuttal.ai_decision_gate_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/review_and_rebuttal/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
         "monitor_refs": [
           {
             "ref": "/progress_projection",
@@ -1357,6 +1813,12 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_production_evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
         "trigger_refs": [
           {
             "ref": "opl://family-stage-queue/med-autogrant/review_and_rebuttal",
@@ -1376,6 +1838,70 @@
       "stage_goal": "Run reviewer-style critique, issue closure, rebuttal planning, and quality-diff checks.",
       "stage_id": "review_and_rebuttal",
       "stage_kind": "review",
+      "stage_production_evidence_closeout": {
+        "authority_boundary": {
+          "domain_truth_owner": "med-autogrant",
+          "fundability_judgment_owner": "med-autogrant",
+          "opl_can_declare_export_ready": false,
+          "opl_can_sign_owner_receipt": false,
+          "opl_can_write_grant_truth": false,
+          "opl_can_write_memory_body": false,
+          "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "submission_ready_export_gate_owner": "med-autogrant"
+        },
+        "evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/review_and_rebuttal/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:review_and_rebuttal.ai_decision_gate_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/review_and_rebuttal/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
+        "opl_record_route_ref": "opl://stage-production-evidence/med-autogrant/review_and_rebuttal/record",
+        "opl_verify_route_ref": "opl://stage-production-evidence/med-autogrant/review_and_rebuttal/verify",
+        "payload_policy": "refs_only_no_grant_truth_memory_artifact_or_runtime_body",
+        "preflight_refs": [
+          "/product_entry_manifest/controlled_stage_attempt_projection",
+          "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/family_stage_control_plane/stages/review_and_rebuttal/stage_contract"
+        ],
+        "stage_id": "review_and_rebuttal",
+        "state": "body_free_refs_ready_for_opl_record_preflight",
+        "surface_kind": "mag_stage_production_evidence_closeout_refs"
+      },
       "summary": "Review and rebuttal projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Review and rebuttal",
       "trust_boundary": {
@@ -1581,6 +2107,41 @@
         "ensures": [
           "submission_ready_package_receipt_recorded"
         ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:package_and_submit_ready.owner_receipt_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/package_and_submit_ready/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
         "monitor_refs": [
           {
             "ref": "/progress_projection",
@@ -1616,6 +2177,12 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_production_evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
         "trigger_refs": [
           {
             "ref": "opl://family-stage-queue/med-autogrant/package_and_submit_ready",
@@ -1635,6 +2202,70 @@
       "stage_goal": "Freeze final local delivery package and run submission-ready export checks.",
       "stage_id": "package_and_submit_ready",
       "stage_kind": "packaging",
+      "stage_production_evidence_closeout": {
+        "authority_boundary": {
+          "domain_truth_owner": "med-autogrant",
+          "fundability_judgment_owner": "med-autogrant",
+          "opl_can_declare_export_ready": false,
+          "opl_can_sign_owner_receipt": false,
+          "opl_can_write_grant_truth": false,
+          "opl_can_write_memory_body": false,
+          "opl_role": "stage_evidence_ref_recorder_and_monitor_only",
+          "submission_ready_export_gate_owner": "med-autogrant"
+        },
+        "evidence_refs": [
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+          "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5"
+        ],
+        "expected_receipt_refs": [
+          {
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker",
+            "ref_kind": "receipt_ref_template",
+            "required_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "role": "mag_owner_receipt_or_typed_blocker_expected",
+            "runtime_event_refs": [
+              "runtime_event:package_and_submit_ready.owner_receipt_recorded"
+            ]
+          }
+        ],
+        "monitor_freshness_refs": [
+          {
+            "ref": "/product_entry_manifest/family_stage_control_plane/stages/package_and_submit_ready/freshness",
+            "ref_kind": "json_pointer",
+            "role": "stage_descriptor_freshness_metric"
+          },
+          {
+            "ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
+            "ref_kind": "json_pointer",
+            "role": "task_lifecycle_monitor_freshness"
+          },
+          {
+            "ref": "/product_entry_manifest/progress_projection",
+            "ref_kind": "json_pointer",
+            "role": "grant_progress_monitor_freshness"
+          }
+        ],
+        "opl_record_route_ref": "opl://stage-production-evidence/med-autogrant/package_and_submit_ready/record",
+        "opl_verify_route_ref": "opl://stage-production-evidence/med-autogrant/package_and_submit_ready/verify",
+        "payload_policy": "refs_only_no_grant_truth_memory_artifact_or_runtime_body",
+        "preflight_refs": [
+          "/product_entry_manifest/controlled_stage_attempt_projection",
+          "/product_entry_manifest/owner_receipt_contract",
+          "/product_entry_manifest/family_stage_control_plane/stages/package_and_submit_ready/stage_contract"
+        ],
+        "stage_id": "package_and_submit_ready",
+        "state": "body_free_refs_ready_for_opl_record_preflight",
+        "surface_kind": "mag_stage_production_evidence_closeout_refs"
+      },
       "summary": "Package and submit-ready projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Package and submit-ready",
       "trust_boundary": {

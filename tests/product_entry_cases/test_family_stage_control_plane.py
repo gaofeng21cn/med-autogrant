@@ -101,12 +101,43 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                 self.assertTrue(stage["stage_contract"]["trigger_refs"])
                 self.assertTrue(stage["stage_contract"]["monitor_refs"])
                 self.assertTrue(stage["stage_contract"]["dashboard_metric_refs"])
+                self.assertTrue(stage["stage_contract"]["expected_receipt_refs"])
+                self.assertTrue(stage["stage_contract"]["monitor_freshness_refs"])
+                self.assertTrue(stage["stage_contract"]["stage_production_evidence_refs"])
                 self.assertTrue(
                     any(
                         ref["role"] == "opl_provider_stage_launch_trigger"
                         for ref in stage["stage_contract"]["trigger_refs"]
                     )
                 )
+                expected_receipt = stage["stage_contract"]["expected_receipt_refs"][0]
+                self.assertEqual(expected_receipt["owner"], "med-autogrant")
+                self.assertEqual(
+                    expected_receipt["required_return_shapes"],
+                    [
+                        "domain_owner_receipt_ref",
+                        "typed_blocker_ref",
+                        "no_regression_evidence_ref",
+                    ],
+                )
+                self.assertTrue(expected_receipt["body_free_payload_required"])
+                closeout = stage["stage_production_evidence_closeout"]
+                self.assertEqual(
+                    closeout["surface_kind"],
+                    "mag_stage_production_evidence_closeout_refs",
+                )
+                self.assertEqual(closeout["stage_id"], stage["stage_id"])
+                self.assertEqual(
+                    closeout["expected_receipt_refs"],
+                    stage["stage_contract"]["expected_receipt_refs"],
+                )
+                self.assertEqual(
+                    closeout["monitor_freshness_refs"],
+                    stage["stage_contract"]["monitor_freshness_refs"],
+                )
+                self.assertFalse(closeout["authority_boundary"]["opl_can_sign_owner_receipt"])
+                self.assertFalse(closeout["authority_boundary"]["opl_can_write_grant_truth"])
+                self.assertFalse(closeout["authority_boundary"]["opl_can_declare_export_ready"])
                 self.assertEqual(
                     stage["authority_boundary"]["independent_gate_receipt_required"],
                     stage["stage_id"] in independent_gate_stage_ids,

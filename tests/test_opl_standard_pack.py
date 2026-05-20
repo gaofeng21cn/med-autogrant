@@ -333,7 +333,26 @@ def test_stage_semantic_refs_resolve_to_agent_pack_files() -> None:
         assert stage_contract["trigger_refs"]
         assert stage_contract["monitor_refs"]
         assert stage_contract["dashboard_metric_refs"]
+        assert stage_contract["expected_receipt_refs"]
+        assert stage_contract["monitor_freshness_refs"]
+        assert stage_contract["stage_production_evidence_refs"]
         assert any(ref["role"] == "opl_provider_stage_launch_trigger" for ref in stage_contract["trigger_refs"])
+        expected_receipt = stage_contract["expected_receipt_refs"][0]
+        assert expected_receipt["owner"] == "med-autogrant"
+        assert expected_receipt["required_return_shapes"] == [
+            "domain_owner_receipt_ref",
+            "typed_blocker_ref",
+            "no_regression_evidence_ref",
+        ]
+        assert expected_receipt["body_free_payload_required"] is True
+        closeout = stage["stage_production_evidence_closeout"]
+        assert closeout["surface_kind"] == "mag_stage_production_evidence_closeout_refs"
+        assert closeout["state"] == "body_free_refs_ready_for_opl_record_preflight"
+        assert closeout["expected_receipt_refs"] == stage_contract["expected_receipt_refs"]
+        assert closeout["monitor_freshness_refs"] == stage_contract["monitor_freshness_refs"]
+        assert closeout["authority_boundary"]["opl_can_sign_owner_receipt"] is False
+        assert closeout["authority_boundary"]["opl_can_write_grant_truth"] is False
+        assert closeout["authority_boundary"]["opl_can_declare_export_ready"] is False
 
 
 def test_product_entry_package_keeps_lazy_public_export() -> None:

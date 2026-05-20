@@ -71,7 +71,10 @@ def _assert_repo_paths_exist(values: object) -> None:
         if value.startswith(("/", "cmd:", "human_doc:", "mag://")):
             continue
         if value.startswith(("contracts/", "schemas/", "src/", "tests/", "agent/", "docs/")):
-            assert (REPO_ROOT / value).exists(), value
+            path_value = value.split("#", 1)[0]
+            if "*" in path_value:
+                continue
+            assert (REPO_ROOT / path_value).exists(), value
 
 
 def test_executor_first_landing_program_exists_and_is_evidence_gated() -> None:
@@ -94,9 +97,9 @@ def test_executor_first_landing_program_exists_and_is_evidence_gated() -> None:
 
     current = program["current_available_state"]
     assert current["structural_state"] == "structural_ready"
-    assert current["evidence_state"] == "first_live_production_evidence_consumed_refs_only"
+    assert current["evidence_state"] == "first_live_production_evidence_consumed_refs_only_long_soak_open"
     assert current["direct_hosted_parity_state"] == "first_live_no_regression_receipt_consumed"
-    assert current["external_evidence_pack_state"] == "consumed_complete_refs_only"
+    assert current["external_evidence_pack_state"] == "consumed_with_long_soak_window_evidence_open"
     assert current["owner_receipt_scaleout_state"] == (
         "production_acceptance_tail_closed_by_domain_owner_receipt_external_scaleout_gated"
     )
@@ -182,8 +185,9 @@ def test_global_forbidden_claims_keep_missing_evidence_open() -> None:
         assert forbidden[claim] is False
 
     authority = program["authority_boundary"]
-    assert authority["mag_can_claim_external_evidence_complete"] is True
+    assert authority["mag_can_claim_external_evidence_complete"] is False
     assert authority["mag_can_claim_direct_hosted_parity_complete"] is True
+    assert authority["mag_can_record_temporal_reconciliation_refs"] is True
     for claim in (
         "opl_provider_completion_can_claim_domain_ready",
         "opl_provider_completion_can_claim_fundability_ready",
@@ -199,6 +203,16 @@ def test_global_forbidden_claims_keep_missing_evidence_open() -> None:
     refs = program["refs"]
     assert refs["external_evidence_receipt_ledger_ref"] == (
         "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+    )
+    assert refs["grant_stage_controlled_attempt_closeout_ref"] == (
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+        "grant_stage_controlled_attempt_closeout"
+    )
+    assert refs["stage_control_plane_expected_receipt_refs"] == (
+        "contracts/stage_control_plane.json#/stages/*/stage_contract/expected_receipt_refs"
+    )
+    assert refs["stage_control_plane_monitor_freshness_refs"] == (
+        "contracts/stage_control_plane.json#/stages/*/stage_contract/monitor_freshness_refs"
     )
 
 
@@ -242,10 +256,26 @@ def test_real_workspace_scaleout_stays_typed_blocker_until_receipts_exist() -> N
     for deliverable in (
         "real_workspace_owner_receipt_refs",
         "typed_blocker_refs",
+        "expected_receipt_refs",
+        "monitor_freshness_refs",
         "memory_accept_reject_receipt_refs",
         "package_export_lifecycle_receipt_refs",
     ):
         assert deliverable in lane["deliverables"]
+    assert (
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+        "grant_stage_controlled_attempt_closeout"
+    ) in lane["refs"]
+    assert "contracts/stage_control_plane.json#/stages/*/stage_contract/expected_receipt_refs" in lane[
+        "refs"
+    ]
+    assert "contracts/stage_control_plane.json#/stages/*/stage_contract/monitor_freshness_refs" in lane[
+        "refs"
+    ]
+    assert (
+        "tests/test_production_acceptance.py::"
+        "test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_monitor_freshness"
+    ) in lane["verification_refs"]
     assert "typed_blocker_roundtrip_equals_scaleout_complete" in lane["forbidden_claims"]
 
 

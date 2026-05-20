@@ -15,9 +15,9 @@
   },
   "current_available_state": {
     "structural_state": "structural_ready",
-    "evidence_state": "first_live_production_evidence_consumed_refs_only",
+    "evidence_state": "first_live_production_evidence_consumed_refs_only_long_soak_open",
     "direct_hosted_parity_state": "first_live_no_regression_receipt_consumed",
-    "external_evidence_pack_state": "consumed_complete_refs_only",
+    "external_evidence_pack_state": "consumed_with_long_soak_window_evidence_open",
     "owner_receipt_scaleout_state": "production_acceptance_tail_closed_by_domain_owner_receipt_external_scaleout_gated",
     "physical_morphology_state": "cleanup_lane_defined_external_evidence_gated"
   },
@@ -27,6 +27,9 @@
     "production_live_acceptance_receipt_projection_ref": "/product_entry_manifest/production_live_acceptance_receipt",
     "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
     "external_evidence_receipt_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+    "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+    "stage_control_plane_expected_receipt_refs": "contracts/stage_control_plane.json#/stages/*/stage_contract/expected_receipt_refs",
+    "stage_control_plane_monitor_freshness_refs": "contracts/stage_control_plane.json#/stages/*/stage_contract/monitor_freshness_refs",
     "functional_privatization_audit_ref": "contracts/functional_privatization_audit.json",
     "generated_surface_handoff_ref": "contracts/generated_surface_handoff.json",
     "active_gap_plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
@@ -40,8 +43,9 @@
     "conformance_can_claim_domain_ready": false,
     "scorecard_can_claim_fundability_ready": false,
     "package_existence_can_claim_submission_ready": false,
-    "mag_can_claim_external_evidence_complete": true,
+    "mag_can_claim_external_evidence_complete": false,
     "mag_can_claim_direct_hosted_parity_complete": true,
+    "mag_can_record_temporal_reconciliation_refs": true,
     "mag_can_claim_owner_receipt_scaleout_complete": false,
     "mag_can_claim_physical_morphology_cleanup_complete": false
   },
@@ -203,6 +207,9 @@
         "/product_entry_manifest/controlled_soak_no_regression_attempt",
         "/product_entry_manifest/production_live_acceptance_receipt",
         "receipt:mag/production-live-acceptance/2026-05-20",
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+        "contracts/stage_control_plane.json#/stages/*/stage_contract/expected_receipt_refs",
+        "contracts/stage_control_plane.json#/stages/*/stage_contract/monitor_freshness_refs",
         "/product_entry_manifest/lifecycle_guarded_apply_proof",
         "/product_entry_manifest/package_lifecycle_handoff",
         "/product_entry_manifest/domain_memory_descriptor"
@@ -210,6 +217,8 @@
       "deliverables": [
         "real_workspace_owner_receipt_refs",
         "typed_blocker_refs",
+        "expected_receipt_refs",
+        "monitor_freshness_refs",
         "memory_accept_reject_receipt_refs",
         "package_export_lifecycle_receipt_refs",
         "cleanup_restore_retention_receipt_refs"
@@ -217,11 +226,13 @@
       "verification_refs": [
         "tests/product_entry_cases/test_controlled_soak.py::ProductEntryControlledSoakTest::test_controlled_soak_receipt_observability_is_refs_only",
         "tests/product_entry_cases/test_lifecycle_receipt_bundle.py::ProductEntryLifecycleReceiptBundleTest::test_lifecycle_receipt_bundle_is_refs_only",
-        "tests/test_executor_first_landing_program.py::test_real_workspace_scaleout_records_owner_receipt_tail_without_closing_external_gates"
+        "tests/test_executor_first_landing_program.py::test_real_workspace_scaleout_records_owner_receipt_tail_without_closing_external_gates",
+        "tests/test_production_acceptance.py::test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_monitor_freshness"
       ],
       "done_criteria": [
         "MAG-owned production acceptance tail records domain_owner_receipt_ref receipt:mag/production-live-acceptance/2026-05-20.",
-        "External caller, App/workbench, direct/hosted parity, and long-soak no-regression evidence remain evidence-gated until external refs exist.",
+        "Each MAG stage exposes an expected owner receipt / typed blocker ref and monitor freshness refs for OPL record preflight.",
+        "External caller, App/workbench, direct/hosted parity, and Temporal reconciliation refs are recorded body-free; long-soak window evidence remains open until a fresh provider window proof exists.",
         "Receipts remain refs-only and do not include grant artifact bodies, memory bodies, OPL runtime state bodies, or app workbench state bodies.",
         "The production acceptance tail closes only with MAG-owned receipt evidence."
       ],

@@ -166,6 +166,7 @@
         "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
         "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
         "external_evidence_receipt_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+        "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
         "opl_replacement_expectations": [
           "workspace_source_intake_shell",
           "memory_locator_writeback_transport",
@@ -374,15 +375,19 @@
         "external_evidence_receipt_ledger": {
           "surface_kind": "mag_external_evidence_receipt_ledger.v1",
           "ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
-          "state": "first_live_production_evidence_consumed_refs_only",
+          "state": "first_live_production_evidence_consumed_refs_only_long_soak_window_open",
           "closed_request_count": 7,
           "domain_owned_typed_blocker_count": 0,
           "remaining_open_request_count": 0,
           "claims_direct_hosted_parity_passed": true,
-          "claims_temporal_provider_long_soak_complete": true,
+          "claims_temporal_provider_long_soak_complete": false,
+          "temporal_provider_reconciliation_ref_recorded": true,
           "claims_grant_or_fundability_ready": false,
-          "remaining_real_evidence_gap_ids": [],
-          "first_live_production_evidence_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/first_live_production_evidence"
+          "remaining_real_evidence_gap_ids": [
+            "temporal_provider_long_soak_window_evidence"
+          ],
+          "first_live_production_evidence_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/first_live_production_evidence",
+          "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout"
         },
         "functional_followthrough_gap_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_followthrough_gap_classification",
         "functional_followthrough_gap_classification": {

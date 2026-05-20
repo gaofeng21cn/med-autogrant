@@ -19,7 +19,8 @@
     "remaining_open_request_count": 0,
     "claims_external_runtime_evidence_received": true,
     "claims_direct_hosted_parity_passed": true,
-    "claims_temporal_provider_long_soak_complete": true,
+    "claims_temporal_provider_long_soak_complete": false,
+    "temporal_provider_reconciliation_ref_recorded": true,
     "claims_grant_or_fundability_ready": false
   },
   "authority_boundary": {
@@ -28,7 +29,8 @@
     "mag_implements_app_workbench": false,
     "mag_implements_production_default_caller": false,
     "mag_can_claim_direct_hosted_parity_passed": true,
-    "mag_can_claim_long_soak_complete": true,
+    "mag_can_claim_long_soak_complete": false,
+    "mag_can_record_temporal_reconciliation_refs": true,
     "opl_can_declare_fundability_verdict": false,
     "opl_can_declare_quality_verdict": false,
     "opl_can_declare_export_verdict": false
@@ -118,7 +120,9 @@
   ],
   "domain_owned_typed_blocker_request_ids": [],
   "remaining_open_request_ids": [],
-  "remaining_real_evidence_gap_ids": [],
+  "remaining_real_evidence_gap_ids": [
+    "temporal_provider_long_soak_window_evidence"
+  ],
   "first_live_production_evidence": {
     "evidence_kind": "mag_first_live_production_evidence_refs.v1",
     "state": "consumed_complete_refs_only",
@@ -127,7 +131,8 @@
     "owner_receipt_typed_blocker_roundtrip_verified": true,
     "continuous_no_forbidden_write_guard_verified": true,
     "direct_hosted_parity_no_regression_verified": true,
-    "temporal_soak_reconciliation_verified": true,
+    "temporal_soak_reconciliation_verified": false,
+    "temporal_provider_reconciliation_ref_recorded": true,
     "production_acceptance_refs": [
       "contracts/production_acceptance/mag-production-acceptance.json",
       "contracts/production_acceptance/mag-executor-first-landing.json",
@@ -142,6 +147,118 @@
       "mag_declares_submission_ready_export": false,
       "mag_implements_opl_runtime": false,
       "mag_implements_app_workbench": false
+    }
+  },
+  "grant_stage_controlled_attempt_closeout": {
+    "surface_kind": "mag_grant_stage_controlled_attempt_body_free_closeout.v1",
+    "state": "closed_by_mag_owner_receipt_ref_body_free",
+    "attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+    "stage_control_plane_ref": "contracts/stage_control_plane.json",
+    "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
+    "required_return_shapes": [
+      "domain_owner_receipt_ref",
+      "typed_blocker_ref",
+      "no_regression_evidence_ref"
+    ],
+    "accepted_return_shape": "domain_owner_receipt_ref",
+    "owner_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/body-free-closeout/2026-05-20",
+    "stage_closeout_refs": [
+      {
+        "stage_id": "call_and_candidate_intake",
+        "expected_receipt_ref": "contracts/stage_control_plane.json#/stages/0/stage_contract/expected_receipt_refs/0",
+        "monitor_freshness_refs": [
+          "contracts/stage_control_plane.json#/stages/0/stage_contract/monitor_freshness_refs/0",
+          "contracts/stage_control_plane.json#/stages/0/stage_contract/monitor_freshness_refs/1",
+          "contracts/stage_control_plane.json#/stages/0/stage_contract/monitor_freshness_refs/2"
+        ],
+        "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/call_and_candidate_intake/owner-receipt-or-typed-blocker"
+      },
+      {
+        "stage_id": "fundability_strategy",
+        "expected_receipt_ref": "contracts/stage_control_plane.json#/stages/1/stage_contract/expected_receipt_refs/0",
+        "monitor_freshness_refs": [
+          "contracts/stage_control_plane.json#/stages/1/stage_contract/monitor_freshness_refs/0",
+          "contracts/stage_control_plane.json#/stages/1/stage_contract/monitor_freshness_refs/1",
+          "contracts/stage_control_plane.json#/stages/1/stage_contract/monitor_freshness_refs/2"
+        ],
+        "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/fundability_strategy/owner-receipt-or-typed-blocker"
+      },
+      {
+        "stage_id": "specific_aims_and_structure",
+        "expected_receipt_ref": "contracts/stage_control_plane.json#/stages/2/stage_contract/expected_receipt_refs/0",
+        "monitor_freshness_refs": [
+          "contracts/stage_control_plane.json#/stages/2/stage_contract/monitor_freshness_refs/0",
+          "contracts/stage_control_plane.json#/stages/2/stage_contract/monitor_freshness_refs/1",
+          "contracts/stage_control_plane.json#/stages/2/stage_contract/monitor_freshness_refs/2"
+        ],
+        "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/specific_aims_and_structure/owner-receipt-or-typed-blocker"
+      },
+      {
+        "stage_id": "proposal_authoring",
+        "expected_receipt_ref": "contracts/stage_control_plane.json#/stages/3/stage_contract/expected_receipt_refs/0",
+        "monitor_freshness_refs": [
+          "contracts/stage_control_plane.json#/stages/3/stage_contract/monitor_freshness_refs/0",
+          "contracts/stage_control_plane.json#/stages/3/stage_contract/monitor_freshness_refs/1",
+          "contracts/stage_control_plane.json#/stages/3/stage_contract/monitor_freshness_refs/2"
+        ],
+        "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/proposal_authoring/owner-receipt-or-typed-blocker"
+      },
+      {
+        "stage_id": "review_and_rebuttal",
+        "expected_receipt_ref": "contracts/stage_control_plane.json#/stages/4/stage_contract/expected_receipt_refs/0",
+        "monitor_freshness_refs": [
+          "contracts/stage_control_plane.json#/stages/4/stage_contract/monitor_freshness_refs/0",
+          "contracts/stage_control_plane.json#/stages/4/stage_contract/monitor_freshness_refs/1",
+          "contracts/stage_control_plane.json#/stages/4/stage_contract/monitor_freshness_refs/2"
+        ],
+        "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/review_and_rebuttal/owner-receipt-or-typed-blocker"
+      },
+      {
+        "stage_id": "package_and_submit_ready",
+        "expected_receipt_ref": "contracts/stage_control_plane.json#/stages/5/stage_contract/expected_receipt_refs/0",
+        "monitor_freshness_refs": [
+          "contracts/stage_control_plane.json#/stages/5/stage_contract/monitor_freshness_refs/0",
+          "contracts/stage_control_plane.json#/stages/5/stage_contract/monitor_freshness_refs/1",
+          "contracts/stage_control_plane.json#/stages/5/stage_contract/monitor_freshness_refs/2"
+        ],
+        "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker"
+      }
+    ],
+    "external_evidence_refs": {
+      "release_dist_consumption_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+      "no_forbidden_write_guard_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+      "direct_hosted_parity_no_regression_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5",
+      "temporal_reconciliation_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/6"
+    },
+    "forbidden_write_proof": {
+      "repo_receipt_instance_written": false,
+      "grant_truth_written": false,
+      "grant_artifact_written": false,
+      "memory_body_written": false,
+      "fundability_verdict_written": false,
+      "authoring_quality_verdict_written": false,
+      "submission_ready_export_verdict_written": false,
+      "opl_runtime_state_written": false,
+      "app_workbench_state_written": false
+    },
+    "claims": {
+      "claims_grant_ready": false,
+      "claims_fundability_ready": false,
+      "claims_authoring_quality_ready": false,
+      "claims_export_ready": false,
+      "claims_submission_ready_export": false,
+      "claims_opl_provider_domain_ready": false
+    },
+    "authority_boundary": {
+      "mag_owner_receipt_authority": true,
+      "mag_fundability_export_submission_verdict_authority": true,
+      "opl_consumes_refs_only": true,
+      "opl_can_write_grant_truth": false,
+      "opl_can_write_memory_body": false,
+      "opl_can_sign_owner_receipt": false,
+      "opl_can_declare_fundability_verdict": false,
+      "opl_can_declare_export_verdict": false,
+      "opl_can_declare_submission_ready": false
     }
   },
   "verification_refs": [
