@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import tomllib
 import unittest
@@ -80,6 +81,37 @@ def _is_forbidden_tracked_path(path: str) -> bool:
 
 
 class RepositoryHygieneTest(unittest.TestCase):
+    def test_repo_hygiene_script_removes_only_ignored_generated_artifacts(self) -> None:
+        ignored_cache = REPO_ROOT / "src" / "med_autogrant" / "__pycache__"
+        unignored_cache = REPO_ROOT / "local_unignored_cache" / "__pycache__"
+        ignored_cache.mkdir(parents=True, exist_ok=True)
+        unignored_cache.mkdir(parents=True, exist_ok=True)
+        (ignored_cache / "module.pyc").write_bytes(b"cache")
+        (unignored_cache / "module.pyc").write_bytes(b"cache")
+
+        try:
+            script = (REPO_ROOT / "scripts" / "repo-hygiene.sh").read_text(encoding="utf-8")
+            self.assertIn("scripts/repo-hygiene.sh [--fix]", script)
+            self.assertIn("git check-ignore -q", script)
+            self.assertIn("git ls-files --others --exclude-standard", script)
+
+            result = subprocess.run(
+                ["bash", "scripts/repo-hygiene.sh", "--fix"],
+                cwd=REPO_ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertFalse(ignored_cache.exists())
+            self.assertFalse(unignored_cache.exists())
+        finally:
+            if ignored_cache.exists():
+                shutil.rmtree(ignored_cache)
+            if unignored_cache.parent.exists():
+                shutil.rmtree(unignored_cache.parent)
+
     def test_gitignore_fully_ignores_local_tooling_state(self) -> None:
         text = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
 

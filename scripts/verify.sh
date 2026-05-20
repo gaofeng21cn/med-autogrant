@@ -3,6 +3,9 @@ set -euo pipefail
 
 lane="${1:-fast}"
 
+scripts/repo-hygiene.sh --fix
+scripts/repo-hygiene.sh
+
 case "$lane" in
   fast)
     make test-fast

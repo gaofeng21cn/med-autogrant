@@ -43,6 +43,8 @@ def test_clean_python_runners_route_caches_outside_checkout() -> None:
 
     assert "PYTHONDONTWRITEBYTECODE=1" in python_runner
     assert "PYTHONPYCACHEPREFIX" in python_runner
+    assert 'path_is_inside_checkout "${UV_PROJECT_ENVIRONMENT:-}"' in python_runner
+    assert 'path_is_inside_checkout "${PYTHONPYCACHEPREFIX:-}"' in python_runner
     assert 'export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-${tmp_root}/venv}"' in python_runner
     assert "MED_AUTOGRANT_EDITABLE_SHARED_ENV_ROOT" in _read("src/med_autogrant/editable_shared_bootstrap.py")
     assert "-p no:cacheprovider -o cache_dir=${tmp_root}/pytest-cache" in python_runner
@@ -83,6 +85,8 @@ def test_verify_script_wraps_canonical_make_lanes() -> None:
     assert "make test-regression" in verify_script
     assert "make test-proof" in verify_script
     assert "make test-full" in verify_script
+    assert "scripts/repo-hygiene.sh --fix" in verify_script
+    assert "scripts/repo-hygiene.sh" in verify_script
     assert "python scripts/line_budget.py" not in verify_script
     assert "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|proof|structure|full]" in verify_script
 
