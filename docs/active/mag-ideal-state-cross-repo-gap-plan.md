@@ -149,7 +149,7 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 当前按 `contracts/production_acceptance/mag-executor-first-landing.json` 做一步到位并行推进，而不是拆成线性阶段：repo-local `stage_pack_enrichment` 与 `independent_review_receipt_gate` 已落地；剩余 work 只接受真实 external receipt、typed blocker 或 no-regression evidence 关闭。
 
 1. `consume_external_evidence_request_pack`
-   OPL/App/production caller 从 `/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack` 读取 request ids、required refs 和 required receipt shapes，并返回 body-free receipts / typed blockers / no-regression evidence。MAG 侧已有 `external_evidence_consumption_ledger` 可消费并校验这些 refs；当前 `contracts/external_evidence/mag-evidence-receipt-ledger.json` 已把全部 7 条 request 闭合为 receipt 或 typed blocker，`remaining_open_request_count=0`；其中 6 条仍是 MAG-owned typed blocker，表示真实外部 receipt 尚未收到。
+   OPL/App/production caller 从 `/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack` 读取 request ids、required refs 和 required receipt shapes，并返回 body-free receipts / typed blockers / no-regression evidence。MAG 侧已有 `external_evidence_consumption_ledger` 可消费并校验这些 refs；当前 `contracts/external_evidence/mag-evidence-receipt-ledger.json` 已把全部 7 条 request 闭合为 receipt 或 typed blocker，`remaining_open_request_count=0`；其中 6 条仍是 MAG-owned typed blocker，表示真实外部 receipt 尚未收到。OPL refs-only ledger 已 record+verify 这 6 条 typed blocker refs，`family-runtime production-closeout` 会把它们读成 `closed_by_domain_owned_typed_blocker` 而非 open safe-action。
 
 2. `external_production_consumption_evidence`
    从 OPL/App/production caller 侧拿到真实消费 MAG declarative pack、domain handler target、owner receipt / typed blocker refs、no-forbidden-write 和 direct/hosted parity 的持续证据。
