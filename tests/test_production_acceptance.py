@@ -10,10 +10,15 @@ pytestmark = pytest.mark.meta
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ACCEPTANCE_PATH = REPO_ROOT / "contracts" / "production_acceptance" / "mag-production-acceptance.json"
+LEDGER_PATH = REPO_ROOT / "contracts" / "external_evidence" / "mag-evidence-receipt-ledger.json"
 
 
 def _acceptance() -> dict[str, object]:
     return json.loads(ACCEPTANCE_PATH.read_text(encoding="utf-8"))
+
+
+def _ledger() -> dict[str, object]:
+    return json.loads(LEDGER_PATH.read_text(encoding="utf-8"))
 
 
 def _assert_ref_list(values: object) -> None:
@@ -94,6 +99,47 @@ def test_opl_provider_completion_cannot_authorize_mag_grant_readiness() -> None:
     assert authority["provider_completion_equals_domain_ready"] is False
     assert authority["provider_completion_equals_submission_ready"] is False
     assert authority["structural_conformance_equals_domain_ready"] is False
+
+
+def test_external_evidence_ledger_records_first_live_production_refs_without_ready_authority() -> None:
+    ledger = _ledger()
+    summary = ledger["summary"]
+    first_live = ledger["first_live_production_evidence"]
+
+    assert ledger["state"] == "first_live_production_evidence_consumed_refs_only"
+    assert summary["closed_request_count"] == 7
+    assert summary["receipt_ref_count"] == 7
+    assert summary["domain_owned_typed_blocker_count"] == 0
+    assert summary["claims_external_runtime_evidence_received"] is True
+    assert summary["claims_direct_hosted_parity_passed"] is True
+    assert summary["claims_temporal_provider_long_soak_complete"] is True
+    assert summary["claims_grant_or_fundability_ready"] is False
+    assert ledger["domain_owned_typed_blocker_request_ids"] == []
+    assert ledger["remaining_real_evidence_gap_ids"] == []
+
+    assert first_live["state"] == "consumed_complete_refs_only"
+    for key in (
+        "external_default_caller_release_dist_consumed",
+        "app_workbench_package_refs_consumed",
+        "owner_receipt_typed_blocker_roundtrip_verified",
+        "continuous_no_forbidden_write_guard_verified",
+        "direct_hosted_parity_no_regression_verified",
+        "temporal_soak_reconciliation_verified",
+    ):
+        assert first_live[key] is True
+
+    boundary = first_live["authority_boundary"]
+    assert boundary["mag_records_domain_owned_owner_receipt"] is True
+    assert boundary["mag_records_external_receipt_refs"] is True
+    for claim in (
+        "mag_declares_opl_provider_domain_ready",
+        "mag_declares_grant_ready",
+        "mag_declares_fundability_ready",
+        "mag_declares_submission_ready_export",
+        "mag_implements_opl_runtime",
+        "mag_implements_app_workbench",
+    ):
+        assert boundary[claim] is False
 
 
 def test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker() -> None:

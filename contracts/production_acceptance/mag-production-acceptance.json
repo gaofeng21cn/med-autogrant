@@ -55,12 +55,12 @@
   "external_evidence_receipt_ledger": {
     "ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
     "surface_kind": "mag_external_evidence_receipt_ledger.v1",
-    "state": "request_pack_closed_by_receipt_or_domain_owned_typed_blockers",
+    "state": "first_live_production_evidence_consumed_refs_only",
     "closed_request_count": 7,
-    "domain_owned_typed_blocker_count": 6,
+    "domain_owned_typed_blocker_count": 0,
     "remaining_open_request_count": 0,
-    "claims_direct_hosted_parity_passed": false,
-    "claims_temporal_provider_long_soak_complete": false,
+    "claims_direct_hosted_parity_passed": true,
+    "claims_temporal_provider_long_soak_complete": true,
     "claims_grant_or_fundability_ready": false
   },
   "refs_only_policy": {

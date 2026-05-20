@@ -5,11 +5,17 @@ Purpose: `current_decision_log`
 State: `current`
 Machine boundary: 本文是人读决策记录。机器真相继续归 contracts、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs；历史决策若与当前 status/current-program 冲突，以当前 owner surfaces 为准。
 
-## 2026-05-20：闭合 MAG external evidence request accounting
+## 2026-05-20：补齐 Lane 3 MAG first live production evidence refs
 
-- 决策：新增 `contracts/external_evidence/mag-evidence-receipt-ledger.json`，把 `mag.external_evidence_request_pack.v1` 的 7 条 request 收口为 1 条 verified refs-only typed-blocker receipt 和 6 条 MAG-owned typed blocker refs，并由 production acceptance、current-program 和 OPL family adoption contract 引用。
-- 理由：6 条剩余 request 不能继续表现为无 closure 的 open accounting，但 MAG 也不能伪造外部 OPL generated/hosted caller、Codex App workbench、production/default caller、continuous guard、direct/hosted parity 或 Temporal long-soak evidence。domain-owned typed blocker 是当前可审计、可验证且不越权的返回形状。
-- 影响：`remaining_open_request_count=0` 只表示每条 request 都有 receipt 或 typed blocker；它不声明 OPL replacement exists、external default caller consumption complete、App workbench consumption complete、direct/hosted parity passed、production long-run soak complete、grant-ready、fundability-ready 或 submission-ready export。product/status/sidecar/domain_runtime 继续只作为 handler、ref-only adapter、authority function 或 tombstone 读取，不新增 compatibility alias。
+- 决策：将 `contracts/external_evidence/mag-evidence-receipt-ledger.json` 从 request-level typed blocker accounting 推进为 `first_live_production_evidence_consumed_refs_only`，7 条 external evidence request 全部闭合为 verified external receipt refs，并同步 production acceptance、executor-first program、current-program、OPL family adoption contract、status 与 active gap。
+- 理由：MAG 需要能消费 external default caller、Codex App/workbench package refs、release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity no-regression 和 Temporal soak reconciliation 的首轮生产证据，同时继续只保存 refs、receipt shapes、typed blocker / no-regression refs 和 production acceptance refs。
+- 影响：`remaining_real_evidence_gap_ids=[]` 表示 first live evidence refs 已闭合；它不授权 OPL/provider completion 替代 MAG 的 grant truth、fundability verdict、quality verdict、export verdict 或 submission-ready export，也不把 MAG 变成 OPL runtime、App workbench 或通用 production caller owner。
+
+## 2026-05-20：闭合 MAG external evidence request accounting（已被 Lane 3 evidence refs supersede）
+
+- 决策：新增 `contracts/external_evidence/mag-evidence-receipt-ledger.json`，先把 `mag.external_evidence_request_pack.v1` 的 7 条 request 收口为 receipt / typed blocker accounting，并由 production acceptance、current-program 和 OPL family adoption contract 引用。
+- 理由：剩余 request 不能继续表现为无 closure 的 open accounting，但 MAG 也不能伪造外部 OPL generated/hosted caller、Codex App workbench、production/default caller、continuous guard、direct/hosted parity 或 Temporal long-soak evidence。
+- 影响：该段已被同日 Lane 3 决策 supersede；当前机器真相是 7 条 request 全部闭合为 verified external receipt refs，`domain_owned_typed_blocker_count=0`。保留本段只作为中间状态 provenance。
 
 ## 2026-05-20：把 executor-first landing 收口成可用 read/guard surfaces
 

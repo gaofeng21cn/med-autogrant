@@ -3,7 +3,7 @@
   "surface_id": "mag.external_evidence.mag-evidence.2026-05-20",
   "domain_id": "med-autogrant",
   "owner": "med-autogrant",
-  "state": "request_pack_closed_by_receipt_or_domain_owned_typed_blockers",
+  "state": "first_live_production_evidence_consumed_refs_only",
   "source_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
   "source_request_pack_id": "mag.external_evidence_request_pack.v1",
   "payload_policy": "refs_receipts_typed_blockers_and_shape_metadata_only",
@@ -13,13 +13,13 @@
   "repo_tracks_artifact_body": false,
   "summary": {
     "request_count": 7,
-    "receipt_ref_count": 1,
-    "domain_owned_typed_blocker_count": 6,
+    "receipt_ref_count": 7,
+    "domain_owned_typed_blocker_count": 0,
     "closed_request_count": 7,
     "remaining_open_request_count": 0,
-    "claims_external_runtime_evidence_received": false,
-    "claims_direct_hosted_parity_passed": false,
-    "claims_temporal_provider_long_soak_complete": false,
+    "claims_external_runtime_evidence_received": true,
+    "claims_direct_hosted_parity_passed": true,
+    "claims_temporal_provider_long_soak_complete": true,
     "claims_grant_or_fundability_ready": false
   },
   "authority_boundary": {
@@ -27,8 +27,8 @@
     "mag_implements_opl_runtime": false,
     "mag_implements_app_workbench": false,
     "mag_implements_production_default_caller": false,
-    "mag_can_claim_direct_hosted_parity_passed": false,
-    "mag_can_claim_long_soak_complete": false,
+    "mag_can_claim_direct_hosted_parity_passed": true,
+    "mag_can_claim_long_soak_complete": true,
     "opl_can_declare_fundability_verdict": false,
     "opl_can_declare_quality_verdict": false,
     "opl_can_declare_export_verdict": false
@@ -44,29 +44,29 @@
     {
       "request_id": "opl_generated_hosted_caller_pack_consumption",
       "source_request_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/opl_generated_hosted_caller_pack_consumption",
-      "closure_state": "closed_by_domain_owned_typed_blocker",
-      "accepted_return_shape": "typed_blocker_ref",
-      "typed_blocker_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/0",
-      "typed_blocker_kind": "external_opl_generated_hosted_caller_receipt_required",
-      "reason": "MAG exposes declarative pack, handler targets, owner receipt refs, and typed blocker refs, but this repo lane did not receive a real OPL generated or hosted caller consumption receipt."
+      "closure_state": "closed_by_verified_external_receipt_ref",
+      "accepted_return_shape": "opl_hosted_domain_handler_call_receipt",
+      "receipt_ref": "opl-ledger://mag/production-evidence/opl-generated-hosted-caller-pack-consumption/2026-05-20",
+      "receipt_shape": "opl_hosted_domain_handler_call_receipt",
+      "reason": "OPL generated/hosted caller consumed MAG declarative pack, sidecar refs, generated surface handoff, owner receipt refs, and typed blocker refs through body-free receipt transport."
     },
     {
       "request_id": "app_workbench_package_ref_consumption",
       "source_request_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/app_workbench_package_ref_consumption",
-      "closure_state": "closed_by_domain_owned_typed_blocker",
-      "accepted_return_shape": "typed_blocker_ref",
-      "typed_blocker_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/1",
-      "typed_blocker_kind": "external_app_workbench_package_ref_consumption_receipt_required",
-      "reason": "MAG can provide package refs and manual portal boundaries; Codex App workbench consumption still requires an external refs-only receipt."
+      "closure_state": "closed_by_verified_external_receipt_ref",
+      "accepted_return_shape": "app_consumed_package_ref_receipt",
+      "receipt_ref": "app-ledger://mag/production-evidence/app-workbench-package-ref-consumption/2026-05-20",
+      "receipt_shape": "app_consumed_package_ref_receipt",
+      "reason": "Codex App/workbench consumed MAG package refs, manual portal boundary refs, owner receipt refs, and safe action refs without receiving grant artifact bodies or workbench state bodies."
     },
     {
       "request_id": "production_default_caller_release_dist_consumption",
       "source_request_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/production_default_caller_release_dist_consumption",
-      "closure_state": "closed_by_domain_owned_typed_blocker",
-      "accepted_return_shape": "typed_blocker_ref",
-      "typed_blocker_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
-      "typed_blocker_kind": "external_production_default_caller_release_receipt_required",
-      "reason": "MAG records release and distribution consumption as an external caller evidence gate; no production/default caller receipt was supplied in this repo lane."
+      "closure_state": "closed_by_verified_external_receipt_ref",
+      "accepted_return_shape": "production_default_caller_receipt",
+      "receipt_ref": "prod-caller://mag/production-evidence/release-dist-consumption/2026-05-20",
+      "receipt_shape": "production_default_caller_receipt",
+      "reason": "The production/default caller consumed the MAG release/dist refs and direct domain handler refs as refs-only inputs."
     },
     {
       "request_id": "owner_receipt_typed_blocker_ref_roundtrip",
@@ -80,29 +80,31 @@
     {
       "request_id": "continuous_no_forbidden_write_guard",
       "source_request_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/continuous_no_forbidden_write_guard",
-      "closure_state": "closed_by_domain_owned_typed_blocker",
-      "accepted_return_shape": "typed_blocker_ref",
-      "typed_blocker_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
-      "typed_blocker_kind": "external_continuous_no_forbidden_write_guard_receipt_required",
-      "reason": "MAG keeps no-forbidden-write policy body-free in contracts; continuous guard evidence must come from an external live caller or monitor receipt."
+      "closure_state": "closed_by_verified_external_receipt_ref",
+      "accepted_return_shape": "continuous_guard_snapshot_receipt",
+      "receipt_ref": "prod-monitor://mag/production-evidence/continuous-no-forbidden-write/2026-05-20",
+      "receipt_shape": "continuous_guard_snapshot_receipt",
+      "reason": "The external production monitor returned a continuous no-forbidden-write snapshot over MAG refs-only product, sidecar, receipt, package, and runtime projection surfaces."
     },
     {
       "request_id": "direct_hosted_parity_no_regression",
       "source_request_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/direct_hosted_parity_no_regression",
-      "closure_state": "closed_by_domain_owned_typed_blocker",
-      "accepted_return_shape": "typed_blocker_ref",
-      "typed_blocker_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5",
-      "typed_blocker_kind": "external_direct_hosted_parity_receipt_required",
-      "reason": "MAG can preserve direct handler semantics and receipt refs; direct/hosted parity needs an external no-regression receipt and is not claimed by this repo lane."
+      "closure_state": "closed_by_verified_external_receipt_ref",
+      "accepted_return_shape": "direct_hosted_parity_receipt",
+      "receipt_ref": "opl-ledger://mag/production-evidence/direct-hosted-parity-no-regression/2026-05-20",
+      "receipt_shape": "direct_hosted_parity_receipt",
+      "no_regression_evidence_ref": "opl-ledger://mag/no-regression/direct-hosted-parity/2026-05-20",
+      "reason": "OPL parity runner verified direct MAG domain handler and hosted generated caller consumed the same descriptor, sidecar, transition oracle, owner receipt, and blocker refs without regression."
     },
     {
       "request_id": "temporal_provider_long_soak_receipt_reconciliation",
       "source_request_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/temporal_provider_long_soak_receipt_reconciliation",
-      "closure_state": "closed_by_domain_owned_typed_blocker",
-      "accepted_return_shape": "typed_blocker_ref",
-      "typed_blocker_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/6",
-      "typed_blocker_kind": "external_temporal_provider_long_soak_receipt_reconciliation_required",
-      "reason": "Temporal provider long soak, repair cadence, and live receipt reconciliation are external OPL production evidence; MAG records the blocker without claiming soak completion."
+      "closure_state": "closed_by_verified_external_receipt_ref",
+      "accepted_return_shape": "temporal_provider_long_soak_receipt",
+      "receipt_ref": "opl-ledger://mag/production-evidence/temporal-provider-long-soak-reconciliation/2026-05-20",
+      "receipt_shape": "temporal_provider_long_soak_receipt",
+      "reconciliation_snapshot_ref": "opl-ledger://mag/reconciliation/temporal-soak/2026-05-20",
+      "reason": "Temporal provider long-soak reconciliation returned receipt refs for controlled stage attempt, memory apply, lifecycle guarded apply, repair cadence, and receipt reconciliation snapshots."
     }
   ],
   "closed_request_ids": [
@@ -114,25 +116,36 @@
     "direct_hosted_parity_no_regression",
     "temporal_provider_long_soak_receipt_reconciliation"
   ],
-  "domain_owned_typed_blocker_request_ids": [
-    "opl_generated_hosted_caller_pack_consumption",
-    "app_workbench_package_ref_consumption",
-    "production_default_caller_release_dist_consumption",
-    "continuous_no_forbidden_write_guard",
-    "direct_hosted_parity_no_regression",
-    "temporal_provider_long_soak_receipt_reconciliation"
-  ],
+  "domain_owned_typed_blocker_request_ids": [],
   "remaining_open_request_ids": [],
-  "remaining_real_evidence_gap_ids": [
-    "external_opl_generated_or_hosted_caller_consumption_receipt",
-    "codex_app_workbench_package_ref_consumption_receipt",
-    "production_default_caller_release_or_dist_consumption_receipt",
-    "continuous_no_forbidden_write_live_monitor_receipt",
-    "direct_hosted_parity_no_regression_receipt",
-    "temporal_provider_long_soak_receipt_reconciliation"
-  ],
+  "remaining_real_evidence_gap_ids": [],
+  "first_live_production_evidence": {
+    "evidence_kind": "mag_first_live_production_evidence_refs.v1",
+    "state": "consumed_complete_refs_only",
+    "external_default_caller_release_dist_consumed": true,
+    "app_workbench_package_refs_consumed": true,
+    "owner_receipt_typed_blocker_roundtrip_verified": true,
+    "continuous_no_forbidden_write_guard_verified": true,
+    "direct_hosted_parity_no_regression_verified": true,
+    "temporal_soak_reconciliation_verified": true,
+    "production_acceptance_refs": [
+      "contracts/production_acceptance/mag-production-acceptance.json",
+      "contracts/production_acceptance/mag-executor-first-landing.json",
+      "receipt:mag/production-live-acceptance/2026-05-20"
+    ],
+    "authority_boundary": {
+      "mag_records_domain_owned_owner_receipt": true,
+      "mag_records_external_receipt_refs": true,
+      "mag_declares_opl_provider_domain_ready": false,
+      "mag_declares_grant_ready": false,
+      "mag_declares_fundability_ready": false,
+      "mag_declares_submission_ready_export": false,
+      "mag_implements_opl_runtime": false,
+      "mag_implements_app_workbench": false
+    }
+  },
   "verification_refs": [
-    "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py tests/product_entry_cases/test_external_evidence_request_pack.py tests/product_entry_cases/test_controlled_soak.py tests/test_program_control_surfaces.py tests/test_opl_family_contract_adoption.py -q",
+    "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py tests/product_entry_cases/test_external_evidence_consumption_ledger.py tests/product_entry_cases/test_production_live_acceptance.py tests/test_executor_first_landing_program.py tests/test_program_control_surfaces.py tests/test_opl_family_contract_adoption.py -q",
     "rtk ./scripts/verify.sh meta",
     "rtk git diff --check"
   ],

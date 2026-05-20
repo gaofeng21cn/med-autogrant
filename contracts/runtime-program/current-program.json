@@ -370,21 +370,15 @@
         "external_evidence_receipt_ledger": {
           "surface_kind": "mag_external_evidence_receipt_ledger.v1",
           "ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
-          "state": "request_pack_closed_by_receipt_or_domain_owned_typed_blockers",
+          "state": "first_live_production_evidence_consumed_refs_only",
           "closed_request_count": 7,
-          "domain_owned_typed_blocker_count": 6,
+          "domain_owned_typed_blocker_count": 0,
           "remaining_open_request_count": 0,
-          "claims_direct_hosted_parity_passed": false,
-          "claims_temporal_provider_long_soak_complete": false,
+          "claims_direct_hosted_parity_passed": true,
+          "claims_temporal_provider_long_soak_complete": true,
           "claims_grant_or_fundability_ready": false,
-          "remaining_real_evidence_gap_ids": [
-            "external_opl_generated_or_hosted_caller_consumption_receipt",
-            "codex_app_workbench_package_ref_consumption_receipt",
-            "production_default_caller_release_or_dist_consumption_receipt",
-            "continuous_no_forbidden_write_live_monitor_receipt",
-            "direct_hosted_parity_no_regression_receipt",
-            "temporal_provider_long_soak_receipt_reconciliation"
-          ]
+          "remaining_real_evidence_gap_ids": [],
+          "first_live_production_evidence_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/first_live_production_evidence"
         },
         "functional_followthrough_gap_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_followthrough_gap_classification",
         "functional_followthrough_gap_classification": {

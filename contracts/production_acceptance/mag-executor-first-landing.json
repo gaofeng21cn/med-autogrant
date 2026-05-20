@@ -15,9 +15,9 @@
   },
   "current_available_state": {
     "structural_state": "structural_ready",
-    "evidence_state": "evidence_gated",
-    "direct_hosted_parity_state": "requested_not_proven",
-    "external_evidence_pack_state": "request_pack_declared_external_evidence_not_claimed",
+    "evidence_state": "first_live_production_evidence_consumed_refs_only",
+    "direct_hosted_parity_state": "first_live_no_regression_receipt_consumed",
+    "external_evidence_pack_state": "consumed_complete_refs_only",
     "owner_receipt_scaleout_state": "production_acceptance_tail_closed_by_domain_owner_receipt_external_scaleout_gated",
     "physical_morphology_state": "cleanup_lane_defined_external_evidence_gated"
   },
@@ -26,6 +26,7 @@
     "production_acceptance_owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
     "production_live_acceptance_receipt_projection_ref": "/product_entry_manifest/production_live_acceptance_receipt",
     "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
+    "external_evidence_receipt_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
     "functional_privatization_audit_ref": "contracts/functional_privatization_audit.json",
     "generated_surface_handoff_ref": "contracts/generated_surface_handoff.json",
     "active_gap_plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
@@ -39,8 +40,8 @@
     "conformance_can_claim_domain_ready": false,
     "scorecard_can_claim_fundability_ready": false,
     "package_existence_can_claim_submission_ready": false,
-    "mag_can_claim_external_evidence_complete": false,
-    "mag_can_claim_direct_hosted_parity_complete": false,
+    "mag_can_claim_external_evidence_complete": true,
+    "mag_can_claim_direct_hosted_parity_complete": true,
     "mag_can_claim_owner_receipt_scaleout_complete": false,
     "mag_can_claim_physical_morphology_cleanup_complete": false
   },

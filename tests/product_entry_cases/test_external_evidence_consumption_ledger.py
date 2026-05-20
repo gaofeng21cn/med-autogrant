@@ -36,6 +36,42 @@ def _receipts_for_request_ids(request_pack: dict[str, object], request_ids: list
     return [_receipt_for(request_by_id[request_id]) for request_id in request_ids]
 
 
+def _first_live_receipts(request_pack: dict[str, object]) -> list[dict[str, object]]:
+    requests = request_pack["requests"]
+    assert isinstance(requests, list)
+    by_id = {str(item["request_id"]): item for item in requests}
+    return [
+        _receipt_for(
+            by_id["opl_generated_hosted_caller_pack_consumption"],
+            receipt_shape="opl_hosted_domain_handler_call_receipt",
+        ),
+        _receipt_for(
+            by_id["app_workbench_package_ref_consumption"],
+            receipt_shape="app_consumed_package_ref_receipt",
+        ),
+        _receipt_for(
+            by_id["production_default_caller_release_dist_consumption"],
+            receipt_shape="production_default_caller_receipt",
+        ),
+        _receipt_for(
+            by_id["owner_receipt_typed_blocker_ref_roundtrip"],
+            receipt_shape="domain_owner_receipt",
+        ),
+        _receipt_for(
+            by_id["continuous_no_forbidden_write_guard"],
+            receipt_shape="continuous_guard_snapshot_receipt",
+        ),
+        _receipt_for(
+            by_id["direct_hosted_parity_no_regression"],
+            receipt_shape="direct_hosted_parity_receipt",
+        ),
+        _receipt_for(
+            by_id["temporal_provider_long_soak_receipt_reconciliation"],
+            receipt_shape="temporal_provider_long_soak_receipt",
+        ),
+    ]
+
+
 class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
     def test_empty_receipts_keep_request_pack_declared_without_claiming_evidence(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -111,6 +147,32 @@ class ProductEntryExternalEvidenceConsumptionLedgerTest(unittest.TestCase):
                 {"request_id", "receipt_shape", "producer_owner", "receipt_id", "refs"},
             )
             self.assertIn("receipt_ref", receipt["refs"])
+
+    def test_first_live_production_receipts_cover_all_requested_evidence_without_ready_authority(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        request_pack = _request_pack()
+        ledger = MedAutoGrantProductEntry().build_external_evidence_consumption_ledger(
+            external_evidence_request_pack=request_pack,
+            evidence_receipts=_first_live_receipts(request_pack),
+        )
+
+        self.assertEqual(ledger["state"], "consumed_complete")
+        self.assertEqual(ledger["summary"]["required_request_count"], 7)
+        self.assertEqual(ledger["summary"]["satisfied_request_count"], 7)
+        self.assertEqual(ledger["summary"]["missing_request_count"], 0)
+        self.assertEqual(ledger["missing_request_ids"], [])
+        self.assertTrue(ledger["claims"]["mag_claims_external_evidence_exists"])
+        self.assertFalse(ledger["claims"]["mag_authorizes_fundability_ready"])
+        self.assertFalse(ledger["claims"]["mag_authorizes_quality_ready"])
+        self.assertFalse(ledger["claims"]["mag_authorizes_export_ready"])
+        self.assertFalse(ledger["claims"]["mag_authorizes_submission_ready"])
+        self.assertFalse(ledger["authority_boundary"]["mag_implements_opl_runtime"])
+        self.assertFalse(ledger["authority_boundary"]["mag_implements_app_workbench"])
+        self.assertEqual(
+            {receipt["request_id"] for receipt in ledger["accepted_receipts"]},
+            set(request_pack["required_request_ids"]),
+        )
 
     def test_illegal_request_id_fails_closed(self) -> None:
         from med_autogrant.product_entry_parts.external_evidence_ledger import (
