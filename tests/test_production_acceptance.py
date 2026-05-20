@@ -11,6 +11,7 @@ pytestmark = pytest.mark.meta
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ACCEPTANCE_PATH = REPO_ROOT / "contracts" / "production_acceptance" / "mag-production-acceptance.json"
 LEDGER_PATH = REPO_ROOT / "contracts" / "external_evidence" / "mag-evidence-receipt-ledger.json"
+STAGE_CONTROL_PLANE_PATH = REPO_ROOT / "contracts" / "stage_control_plane.json"
 
 
 def _acceptance() -> dict[str, object]:
@@ -19,6 +20,10 @@ def _acceptance() -> dict[str, object]:
 
 def _ledger() -> dict[str, object]:
     return json.loads(LEDGER_PATH.read_text(encoding="utf-8"))
+
+
+def _stage_control_plane() -> dict[str, object]:
+    return json.loads(STAGE_CONTROL_PLANE_PATH.read_text(encoding="utf-8"))
 
 
 def _assert_ref_list(values: object) -> None:
@@ -112,10 +117,13 @@ def test_external_evidence_ledger_records_first_live_production_refs_without_rea
     assert summary["domain_owned_typed_blocker_count"] == 0
     assert summary["claims_external_runtime_evidence_received"] is True
     assert summary["claims_direct_hosted_parity_passed"] is True
-    assert summary["claims_temporal_provider_long_soak_complete"] is True
+    assert summary["claims_temporal_provider_long_soak_complete"] is False
+    assert summary["temporal_provider_reconciliation_ref_recorded"] is True
     assert summary["claims_grant_or_fundability_ready"] is False
     assert ledger["domain_owned_typed_blocker_request_ids"] == []
-    assert ledger["remaining_real_evidence_gap_ids"] == []
+    assert ledger["remaining_real_evidence_gap_ids"] == [
+        "temporal_provider_long_soak_window_evidence"
+    ]
 
     assert first_live["state"] == "consumed_complete_refs_only"
     for key in (
@@ -124,9 +132,10 @@ def test_external_evidence_ledger_records_first_live_production_refs_without_rea
         "owner_receipt_typed_blocker_roundtrip_verified",
         "continuous_no_forbidden_write_guard_verified",
         "direct_hosted_parity_no_regression_verified",
-        "temporal_soak_reconciliation_verified",
     ):
         assert first_live[key] is True
+    assert first_live["temporal_soak_reconciliation_verified"] is False
+    assert first_live["temporal_provider_reconciliation_ref_recorded"] is True
 
     boundary = first_live["authority_boundary"]
     assert boundary["mag_records_domain_owned_owner_receipt"] is True
@@ -163,3 +172,70 @@ def test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker() -> 
         assert closure["accepted_return_shape"] == "typed_blocker_ref"
         _assert_ref_list(refs["typed_blocker_refs"])
         assert closure["next_verification_ref"] in refs["next_verification_command_refs"]
+
+
+def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_monitor_freshness() -> None:
+    ledger = _ledger()
+    stage_plane = _stage_control_plane()
+    closeout = ledger["grant_stage_controlled_attempt_closeout"]
+    stage_closeouts = closeout["stage_closeout_refs"]
+
+    assert closeout["surface_kind"] == "mag_grant_stage_controlled_attempt_body_free_closeout.v1"
+    assert closeout["state"] == "closed_by_mag_owner_receipt_ref_body_free"
+    assert closeout["accepted_return_shape"] == "domain_owner_receipt_ref"
+    assert closeout["required_return_shapes"] == [
+        "domain_owner_receipt_ref",
+        "typed_blocker_ref",
+        "no_regression_evidence_ref",
+    ]
+    assert len(stage_closeouts) == len(stage_plane["stages"]) == 6
+    assert closeout["external_evidence_refs"]["release_dist_consumption_ref"].endswith(
+        "/request_closures/2"
+    )
+    assert closeout["external_evidence_refs"]["no_forbidden_write_guard_ref"].endswith(
+        "/request_closures/4"
+    )
+    assert closeout["external_evidence_refs"]["direct_hosted_parity_no_regression_ref"].endswith(
+        "/request_closures/5"
+    )
+    assert closeout["external_evidence_refs"]["temporal_reconciliation_ref"].endswith(
+        "/request_closures/6"
+    )
+
+    for index, stage in enumerate(stage_plane["stages"]):
+        stage_contract = stage["stage_contract"]
+        stage_closeout = stage_closeouts[index]
+
+        assert stage_closeout["stage_id"] == stage["stage_id"], stage["stage_id"]
+        assert stage_closeout["expected_receipt_ref"] == (
+            f"contracts/stage_control_plane.json#/stages/{index}/"
+            "stage_contract/expected_receipt_refs/0"
+        )
+        assert len(stage_closeout["monitor_freshness_refs"]) == 3, stage["stage_id"]
+        assert stage_contract["expected_receipt_refs"][0]["required_return_shapes"] == (
+            closeout["required_return_shapes"]
+        )
+        assert stage_contract["expected_receipt_refs"][0]["body_free_payload_required"] is True
+        assert stage_contract["monitor_freshness_refs"]
+        assert stage["stage_production_evidence_closeout"]["evidence_refs"][0] == (
+            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+            "grant_stage_controlled_attempt_closeout"
+        )
+
+    for forbidden, value in closeout["forbidden_write_proof"].items():
+        assert value is False, forbidden
+    for claim, value in closeout["claims"].items():
+        assert value is False, claim
+    boundary = closeout["authority_boundary"]
+    assert boundary["mag_owner_receipt_authority"] is True
+    assert boundary["mag_fundability_export_submission_verdict_authority"] is True
+    assert boundary["opl_consumes_refs_only"] is True
+    for forbidden in (
+        "opl_can_write_grant_truth",
+        "opl_can_write_memory_body",
+        "opl_can_sign_owner_receipt",
+        "opl_can_declare_fundability_verdict",
+        "opl_can_declare_export_verdict",
+        "opl_can_declare_submission_ready",
+    ):
+        assert boundary[forbidden] is False

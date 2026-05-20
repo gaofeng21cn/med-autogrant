@@ -80,6 +80,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn("external_evidence_request_pack", framework_boundary["framework_consumed_projection"])
+        self.assertIn("external_evidence_receipt_ledger", framework_boundary["framework_consumed_projection"])
         self.assertIn("ideal_state_closure_status", framework_boundary["framework_consumed_projection"])
         skeleton = framework_boundary["standard_domain_agent_skeleton"]
         self.assertEqual(skeleton["skeleton_id"], "mag.standard_domain_agent_skeleton.v1")
@@ -152,6 +153,15 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(
             consumer_thinning["external_evidence_request_pack_ref"],
             "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
+        )
+        self.assertEqual(
+            consumer_thinning["external_evidence_receipt_ledger_ref"],
+            "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+        )
+        self.assertEqual(
+            consumer_thinning["grant_stage_controlled_attempt_closeout_ref"],
+            "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+            "grant_stage_controlled_attempt_closeout",
         )
         external_pack = consumer_thinning["external_evidence_request_pack"]
         self.assertEqual(external_pack["surface_kind"], "mag_external_evidence_request_pack")
