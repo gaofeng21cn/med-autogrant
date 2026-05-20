@@ -114,6 +114,20 @@ Codex App direct skill 调用与 OPL 托管调用必须在 `MedAutoGrantDomainEn
 
 该 audit item 现在同时列出代码路径、活跃调用者、调用状态、迁移动作、保留理由和不能上收原因。架构读法是：旧 local journal / attempt ledger 与 Hermes/Gateway/local-manager runtime owner 已从 active source 删除；MAG 当前只保留 controller/loop、workspace/source validation、memory/package/status/sidecar/CLI wrapper、refs-only runtime_control 与显式 executor adapter receipt 相关代码。OPL 应生成或托管通用 ledger、queue、lifecycle、source intake、artifact/package lifecycle、observability、workbench、scheduler/daemon 和 generic runner；MAG 不能外包 grant truth、memory body、fundability/quality/export verdict、submission-ready package authority、grant transition oracle 或 owner receipt。
 
+## Workspace / file lifecycle 结构
+
+MAG repo-source 目录按标准 domain agent 职责分层：
+
+- `agent/`：grant declarative pack，包含 stage prompts、stage policies、skill/knowledge refs 与 quality gate refs。
+- `contracts/`：机器合同、schema、descriptor、locator/index contract、receipt ref contract 与 restore/retention policy。
+- `runtime/authority_functions/`：最小 grant authority function 的 runtime-facing anchor；只暴露 action metadata、owner receipt refs、typed blocker refs、no-regression refs 或 guarded apply refs，不承载 runtime artifact root。
+- `src/`：MAG domain handler、AI-first authority adapter、receipt signer、typed blocker materializer 与 native helper implementation；不能扩展成 generic runner、queue、session store 或 workbench。
+- `docs/`：人读治理、当前状态、边界说明和 provenance，不作为机器接口。
+
+真实 workspace/file lifecycle 由 OPL generic lifecycle primitive 与 MAG owner authority 分层完成。OPL 持有通用 locator/index、scheduler/runner/session/workbench shell、retention/restore orchestration 与 projection；MAG repo source 只持有 refs、policy、schema 和 proof。真实 grant workspace、submission/export package、runtime artifact、receipt instance、cache、venv、pycache、pytest cache 和 install sync 副产物必须落在 workspace/runtime artifact root 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/`，不能写回开发 checkout。
+
+MAG 的 authority 边界不因 refs-only lifecycle 上收而外移：grant truth、fundability/quality/export verdict、package authority、grant strategy memory body accept/reject 和 owner receipt 继续由 MAG owner surface 决定；OPL 只能消费 locator、receipt ref、typed blocker 或 no-regression evidence。
+
 这轮对齐不引入 `CrewAI` 依赖，也不把 OPL runtime framework 写成 MAG runtime owner，更不宣称已完成跨仓 runtime core ingest。当前真实状态是 MAG 作为独立 domain agent 维持 family-level contract-first 对齐与 domain-owned truth；OPL 统一 Agent Executor Adapter 的 MAG 边界已经落地，若启用 `Hermes-Agent` 或 `Claude Code`，它也只是显式 opt-in executor backend，要求 receipt/audit/fail-closed，不是默认公开入口。MAG-owned memory、owner/no-regression 与 lifecycle receipt evidence path 已可写 runtime receipt instance；剩余缺口是 OPL-hosted controlled grant stage attempt 在 OPL ledger 与 MAG runtime receipt instance 之间完成真实对账和 live soak。
 
 ## OPL Provider、Med Auto Grant 与 concrete executor 的分工

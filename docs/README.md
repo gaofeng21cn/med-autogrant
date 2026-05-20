@@ -23,6 +23,12 @@ OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/d
 
 MAG 本仓只维护 grant domain agent 的目标、当前差距、grant truth、fundability/quality/export authority、direct app skill path、OPL-hosted sidecar/projection/receipt 边界，以及哪些通用 workspace/source intake、memory locator、artifact/package lifecycle、quality/readiness projection 和 observability primitive 应上收到 OPL。MAS、RCA、MDS 或 OPL-owned App/workbench 的并行 backlog 不写入 MAG 活跃计划。
 
+## Workspace / file lifecycle 边界
+
+MAG 的 repo-source layout 按标准 domain agent 职责读取：`agent/` 持有 grant declarative pack，`contracts/` 持有机器合同和 schema/index，`runtime/authority_functions/` 只作为最小 grant authority function 的 runtime-facing descriptor/receipt-ref 边界，`src/` 持有 domain handler、authority adapter 与 native helper，`docs/` 持有人读治理说明。真实 grant workspace state、runtime artifact、receipt instance、submission/export package、临时 build/cache/venv/pycache/pytest cache/install sync 副产物不进入开发 checkout；它们必须落到 workspace/runtime artifact root 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
+
+MAG repo source 只保存 locator、index、schema、receipt ref、restore/retention policy 和 no-forbidden-write 证据。grant truth、fundability/quality/export verdict、package authority、grant strategy memory body accept/reject 与 owner receipt 仍归 MAG owner chain；OPL 只上收通用 workspace/file lifecycle primitive、scheduler/runner/session/workbench shell 和 projection。
+
 ## 当前技术图景
 
 - `Med Auto Grant` 是独立的医学基金 domain agent，对外第一主语是单一 `Med Auto Grant` app skill；其下稳定 capability surface 由 `CLI`、`MedAutoGrantDomainEntry`、本地脚本与 schema-backed contract 组成。
