@@ -18,11 +18,13 @@
     "evidence_state": "evidence_gated",
     "direct_hosted_parity_state": "requested_not_proven",
     "external_evidence_pack_state": "request_pack_declared_external_evidence_not_claimed",
-    "owner_receipt_scaleout_state": "typed_blocker_with_next_verification_ref",
+    "owner_receipt_scaleout_state": "production_acceptance_tail_closed_by_domain_owner_receipt_external_scaleout_gated",
     "physical_morphology_state": "cleanup_lane_defined_external_evidence_gated"
   },
   "refs": {
     "production_acceptance_ref": "contracts/production_acceptance/mag-production-acceptance.json",
+    "production_acceptance_owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
+    "production_live_acceptance_receipt_projection_ref": "/product_entry_manifest/production_live_acceptance_receipt",
     "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
     "functional_privatization_audit_ref": "contracts/functional_privatization_audit.json",
     "generated_surface_handoff_ref": "contracts/generated_surface_handoff.json",
@@ -53,7 +55,9 @@
     "claims_conformance_is_domain_ready": false,
     "claims_scorecard_is_fundability_ready": false,
     "claims_package_existence_is_submission_ready": false,
-    "claims_missing_evidence_complete": false
+    "claims_missing_evidence_complete": false,
+    "claims_mag_owned_production_acceptance_tail_closed": true,
+    "mag_owned_production_acceptance_tail_closure_scope": "production_acceptance_tail_only"
   },
   "parallel_lanes": [
     {
@@ -196,6 +200,8 @@
       ],
       "refs": [
         "/product_entry_manifest/controlled_soak_no_regression_attempt",
+        "/product_entry_manifest/production_live_acceptance_receipt",
+        "receipt:mag/production-live-acceptance/2026-05-20",
         "/product_entry_manifest/lifecycle_guarded_apply_proof",
         "/product_entry_manifest/package_lifecycle_handoff",
         "/product_entry_manifest/domain_memory_descriptor"
@@ -210,15 +216,20 @@
       "verification_refs": [
         "tests/product_entry_cases/test_controlled_soak.py::ProductEntryControlledSoakTest::test_controlled_soak_receipt_observability_is_refs_only",
         "tests/product_entry_cases/test_lifecycle_receipt_bundle.py::ProductEntryLifecycleReceiptBundleTest::test_lifecycle_receipt_bundle_is_refs_only",
-        "tests/test_executor_first_landing_program.py::test_real_workspace_scaleout_stays_typed_blocker_until_receipts_exist"
+        "tests/test_executor_first_landing_program.py::test_real_workspace_scaleout_records_owner_receipt_tail_without_closing_external_gates"
       ],
       "done_criteria": [
-        "Live owner receipt scaleout returns domain_owner_receipt_ref, typed_blocker_ref, or no_regression_evidence_ref.",
+        "MAG-owned production acceptance tail records domain_owner_receipt_ref receipt:mag/production-live-acceptance/2026-05-20.",
+        "External caller, App/workbench, direct/hosted parity, and long-soak no-regression evidence remain evidence-gated until external refs exist.",
         "Receipts remain refs-only and do not include grant artifact bodies, memory bodies, OPL runtime state bodies, or app workbench state bodies.",
         "The production acceptance tail closes only with MAG-owned receipt evidence."
       ],
       "forbidden_claims": [
         "typed_blocker_roundtrip_equals_scaleout_complete",
+        "owner_receipt_ref_equals_external_caller_complete",
+        "owner_receipt_ref_equals_app_workbench_complete",
+        "owner_receipt_ref_equals_direct_hosted_parity_complete",
+        "owner_receipt_ref_equals_long_soak_complete",
         "package_lifecycle_ref_equals_submission_ready",
         "memory_ref_equals_strategy_accepted",
         "provider_soak_equals_grant_ready"
