@@ -141,6 +141,7 @@ def _physical_guard(*, blocked: bool = False, evidence_gated: bool = False) -> d
         else [
             "opl://receipts/mag/physical-morphology/active-caller-migration.json",
             "opl://receipts/mag/physical-morphology/direct-hosted-parity.json",
+            "receipt:mag/physical-morphology/owner-receipt-roundtrip.json",
             "opl://receipts/mag/physical-morphology/no-forbidden-write.json",
         ],
     )

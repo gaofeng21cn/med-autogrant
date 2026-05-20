@@ -267,13 +267,16 @@
       "refs": [
         "/product_entry_manifest/physical_skeleton_follow_through",
         "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
-        "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
+        "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
+        "physical_morphology://no_active_compat_alias_or_facade_scan"
       ],
       "deliverables": [
         "no_resurrection_guards",
         "history_or_tombstone_refs",
         "active_caller_migration_receipts",
-        "direct_hosted_parity_no_regression_refs"
+        "direct_hosted_parity_no_regression_refs",
+        "owner_receipt_or_typed_blocker_roundtrip_refs",
+        "no_active_compat_alias_or_facade_scan"
       ],
       "verification_refs": [
         "tests/test_domain_runtime_split.py::test_runtime_split_has_no_forbidden_runtime_imports",
@@ -283,13 +286,16 @@
       "done_criteria": [
         "No active caller depends on retired compatibility aliases or MAG-owned generic runtime surfaces.",
         "Direct/hosted parity and continuous no-forbidden-write evidence exist.",
+        "owner receipt / typed blocker roundtrip evidence exists.",
         "Physical cleanup receipts are MAG-owned and refs-only."
       ],
       "forbidden_claims": [
         "cleanup_plan_equals_cleanup_complete",
         "opl_cleanup_ledger_equals_production_caller_migrated",
         "physical_conformance_equals_no_active_caller",
-        "morphology_hygiene_equals_grant_ready"
+        "morphology_hygiene_equals_grant_ready",
+        "owner_receipt_roundtrip_missing_equals_safe_delete",
+        "no_active_compat_alias_scan_missing_equals_safe_delete"
       ],
       "parallelizable": false,
       "blocks": [],

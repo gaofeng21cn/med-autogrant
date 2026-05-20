@@ -59,10 +59,35 @@
       "legacy_executor_runtime_probe",
       "legacy_compat_alias_surface"
     ],
+    "no_resurrection_policy": {
+      "applies_to_surface_ids": [
+        "grouped_cli_wrapper",
+        "product_entry",
+        "sidecar",
+        "runtime_registration",
+        "control_plane",
+        "legacy_runtime_residue"
+      ],
+      "compatibility_alias_allowed": false,
+      "facade_reexport_allowed": false,
+      "forbidden_after_retirement": [
+        "compatibility_alias",
+        "facade_reexport",
+        "repo_owned_scheduler_or_daemon",
+        "local_journal_or_attempt_ledger",
+        "generic_runtime_or_workbench_owner_claim"
+      ],
+      "generated_surface_owner_in_mag_allowed": false,
+      "generic_runtime_owner_allowed": false,
+      "local_journal_or_attempt_ledger_allowed": false,
+      "policy": "do_not_restore_retired_runtime_wrapper_or_compatibility_surfaces",
+      "repo_owned_scheduler_or_daemon_allowed": false
+    },
     "policy_id": "mag.physical_source_morphology.v1",
     "required_surface_ids": [
       "domain_runtime",
       "product_entry",
+      "grouped_cli_wrapper",
       "status",
       "user_loop",
       "sidecar",
@@ -72,11 +97,27 @@
       "memory",
       "package",
       "autonomy_controller",
+      "owner_receipt_helper",
       "legacy_runtime_residue"
     ],
+    "retirement_gate": {
+      "claims_physical_cleanup_complete": false,
+      "compatibility_alias_allowed": false,
+      "delete_or_tombstone_only_after_gate": true,
+      "gate_id": "mag.physical_morphology.retirement_gate.v1",
+      "required_evidence_refs": [
+        "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+        "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+        "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+        "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+        "physical_morphology://no_active_compat_alias_or_facade_scan"
+      ],
+      "state": "active_caller_migration_evidence_required"
+    },
     "state": "classified_no_generic_runtime_reflow",
     "surface_classifications": [
       {
+        "active_caller_status": "active_domain_pack_or_handler_target",
         "allowed_role": "route_authority_adapter_and_regression_oracle",
         "classification": "declarative_grant_handler",
         "forbidden_roles": [
@@ -85,14 +126,34 @@
           "legacy_attempt_record_surface",
           "session_shell"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "delete",
+            "rename_to_domain_handler_target",
+            "history_tombstone"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "required_before_delete_or_rename": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan"
+          ],
+          "state": "active_caller_migration_required_before_retirement",
+          "target_owner_after_migration": "med-autogrant"
+        },
         "source_refs": [
           "src/med_autogrant/domain_runtime.py",
           "src/med_autogrant/domain_runtime_parts/substrate.py",
           "src/med_autogrant/domain_entry.py"
         ],
-        "surface_id": "domain_runtime"
+        "surface_id": "domain_runtime",
+        "target_owner_after_migration": "med-autogrant"
       },
       {
+        "active_caller_status": "active_refs_only_adapter_until_opl_generated_caller_migration",
         "allowed_role": "grant_handler_target_receipt_refs_and_typed_blockers",
         "classification": "refs_only_adapter",
         "forbidden_roles": [
@@ -100,15 +161,70 @@
           "app_workbench_owner",
           "generic_status_owner"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "delete",
+            "rename_to_domain_handler_target",
+            "history_tombstone"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "required_before_delete_or_rename": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan"
+          ],
+          "state": "active_caller_migration_required_before_retirement",
+          "target_owner_after_migration": "one-person-lab"
+        },
         "source_refs": [
           "src/med_autogrant/product_entry.py",
           "src/med_autogrant/product_entry_parts/manifest.py",
           "src/med_autogrant/product_entry_parts/manifest_builder.py",
           "src/med_autogrant/product_entry_parts/entry.py"
         ],
-        "surface_id": "product_entry"
+        "surface_id": "product_entry",
+        "target_owner_after_migration": "one-person-lab"
       },
       {
+        "active_caller_status": "active_refs_only_adapter_until_opl_generated_caller_migration",
+        "allowed_role": "direct_cli_domain_handler_target_until_generated_caller_migration",
+        "classification": "refs_only_adapter",
+        "forbidden_roles": [
+          "generic_cli_mcp_product_wrapper_owner",
+          "legacy_flat_alias_surface",
+          "generated_surface_owner_in_domain_repo"
+        ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "delete",
+            "rename_to_domain_handler_target",
+            "history_tombstone"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "required_before_delete_or_rename": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan"
+          ],
+          "state": "active_caller_migration_required_before_retirement",
+          "target_owner_after_migration": "one-person-lab"
+        },
+        "source_refs": [
+          "src/med_autogrant/cli.py",
+          "src/med_autogrant/cli_parts/handlers.py",
+          "src/med_autogrant/cli_parts/parser_adders.py"
+        ],
+        "surface_id": "grouped_cli_wrapper",
+        "target_owner_after_migration": "one-person-lab"
+      },
+      {
+        "active_caller_status": "active_refs_only_adapter_until_opl_generated_caller_migration",
         "allowed_role": "grant_status_refs_and_typed_blocker_projection",
         "classification": "refs_only_adapter",
         "forbidden_roles": [
@@ -116,15 +232,35 @@
           "operator_workbench_owner",
           "generic_observability_runtime"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "delete",
+            "rename_to_domain_handler_target",
+            "history_tombstone"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "required_before_delete_or_rename": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan"
+          ],
+          "state": "active_caller_migration_required_before_retirement",
+          "target_owner_after_migration": "one-person-lab"
+        },
         "source_refs": [
           "src/med_autogrant/product_entry_parts/preflight.py",
           "src/med_autogrant/product_entry_parts/progress.py",
           "src/med_autogrant/product_entry_parts/progress_projection_helpers.py",
           "src/med_autogrant/mainline_status.py"
         ],
-        "surface_id": "status"
+        "surface_id": "status",
+        "target_owner_after_migration": "one-person-lab"
       },
       {
+        "active_caller_status": "active_refs_only_adapter_until_opl_generated_caller_migration",
         "allowed_role": "grant_user_loop_domain_action_target_and_receipt_refs",
         "classification": "refs_only_adapter",
         "forbidden_roles": [
@@ -132,15 +268,35 @@
           "generic_scheduler_owner",
           "app_workbench_owner"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "delete",
+            "rename_to_domain_handler_target",
+            "history_tombstone"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "required_before_delete_or_rename": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan"
+          ],
+          "state": "active_caller_migration_required_before_retirement",
+          "target_owner_after_migration": "one-person-lab"
+        },
         "source_refs": [
           "src/med_autogrant/action_catalog.py",
           "src/med_autogrant/product_entry_parts/loop_contracts.py",
           "src/med_autogrant/product_entry_parts/primitives.py",
           "src/med_autogrant/stage_control_plane.py"
         ],
-        "surface_id": "user_loop"
+        "surface_id": "user_loop",
+        "target_owner_after_migration": "one-person-lab"
       },
       {
+        "active_caller_status": "active_refs_only_adapter_until_opl_generated_caller_migration",
         "allowed_role": "guarded_domain_dispatch_and_refs_projection",
         "classification": "refs_only_adapter",
         "forbidden_roles": [
@@ -148,12 +304,32 @@
           "operator_workbench_owner",
           "action_routing_shell_owner"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "delete",
+            "rename_to_domain_handler_target",
+            "history_tombstone"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "required_before_delete_or_rename": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan"
+          ],
+          "state": "active_caller_migration_required_before_retirement",
+          "target_owner_after_migration": "one-person-lab"
+        },
         "source_refs": [
           "src/med_autogrant/product_entry_parts/sidecar.py"
         ],
-        "surface_id": "sidecar"
+        "surface_id": "sidecar",
+        "target_owner_after_migration": "one-person-lab"
       },
       {
+        "active_caller_status": "active_domain_pack_or_handler_target",
         "allowed_role": "domain_descriptor_and_stage_pack_registration_refs",
         "classification": "declarative_grant_handler",
         "forbidden_roles": [
@@ -161,13 +337,33 @@
           "repo_daemon_owner",
           "local_manager_owner"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "delete",
+            "rename_to_domain_handler_target",
+            "history_tombstone"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "required_before_delete_or_rename": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan"
+          ],
+          "state": "active_caller_migration_required_before_retirement",
+          "target_owner_after_migration": "med-autogrant"
+        },
         "source_refs": [
           "src/med_autogrant/product_entry_parts/runtime_registration.py",
           "src/med_autogrant/product_entry_parts/opl_substrate_adapter.py"
         ],
-        "surface_id": "runtime_registration"
+        "surface_id": "runtime_registration",
+        "target_owner_after_migration": "med-autogrant"
       },
       {
+        "active_caller_status": "active_refs_only_adapter_until_opl_generated_caller_migration",
         "allowed_role": "body_free_runtime_control_refs_projection",
         "classification": "refs_only_adapter",
         "forbidden_roles": [
@@ -175,13 +371,33 @@
           "provider_repair_executor",
           "attempt_ledger_owner"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "delete",
+            "rename_to_domain_handler_target",
+            "history_tombstone"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "required_before_delete_or_rename": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan"
+          ],
+          "state": "active_caller_migration_required_before_retirement",
+          "target_owner_after_migration": "one-person-lab"
+        },
         "source_refs": [
           "src/med_autogrant/control_plane.py",
           "src/med_autogrant/product_entry_parts/runtime_surfaces.py"
         ],
-        "surface_id": "control_plane"
+        "surface_id": "control_plane",
+        "target_owner_after_migration": "one-person-lab"
       },
       {
+        "active_caller_status": "active_refs_only_adapter_until_opl_generated_caller_migration",
         "allowed_role": "cleanup_restore_retention_receipt_refs_adapter",
         "classification": "refs_only_adapter",
         "forbidden_roles": [
@@ -189,13 +405,33 @@
           "artifact_lifecycle_shell_owner",
           "lifecycle_ledger_owner"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "delete",
+            "rename_to_domain_handler_target",
+            "history_tombstone"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_compat_alias_facade_or_generated_surface_owner_in_mag",
+          "required_before_delete_or_rename": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan"
+          ],
+          "state": "active_caller_migration_required_before_retirement",
+          "target_owner_after_migration": "one-person-lab"
+        },
         "source_refs": [
           "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
           "src/med_autogrant/product_entry_parts/continuous_reconciliation.py"
         ],
-        "surface_id": "lifecycle"
+        "surface_id": "lifecycle",
+        "target_owner_after_migration": "one-person-lab"
       },
       {
+        "active_caller_status": "retained_mag_authority_function",
         "allowed_role": "grant_strategy_memory_accept_reject_receipt_refs",
         "classification": "minimal_authority_function",
         "forbidden_roles": [
@@ -203,13 +439,30 @@
           "memory_body_transport_owner",
           "mechanical_memory_acceptance"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "retain_as_minimal_authority_function",
+            "rename_only_with_owner_receipt_and_no_regression"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+          "required_before_delete_or_rename": [
+            "owner_receipt://mag/memory/authority_replacement_or_retirement_decision",
+            "direct_hosted_parity_no_regression",
+            "no_forbidden_write_proof"
+          ],
+          "state": "retained_mag_authority_do_not_delete_without_replacement_receipt",
+          "target_owner_after_migration": "med-autogrant"
+        },
         "source_refs": [
           "src/med_autogrant/product_entry_parts/domain_memory.py",
           "src/med_autogrant/product_entry_parts/memory_receipt_projection.py"
         ],
-        "surface_id": "memory"
+        "surface_id": "memory",
+        "target_owner_after_migration": "med-autogrant"
       },
       {
+        "active_caller_status": "retained_mag_authority_function",
         "allowed_role": "submission_ready_package_authority_and_gap_refs",
         "classification": "minimal_authority_function",
         "forbidden_roles": [
@@ -217,14 +470,31 @@
           "artifact_gallery_owner",
           "provider_completion_export_verdict"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "retain_as_minimal_authority_function",
+            "rename_only_with_owner_receipt_and_no_regression"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+          "required_before_delete_or_rename": [
+            "owner_receipt://mag/package/authority_replacement_or_retirement_decision",
+            "direct_hosted_parity_no_regression",
+            "no_forbidden_write_proof"
+          ],
+          "state": "retained_mag_authority_do_not_delete_without_replacement_receipt",
+          "target_owner_after_migration": "med-autogrant"
+        },
         "source_refs": [
           "src/med_autogrant/final_package.py",
           "src/med_autogrant/final_package_validation.py",
           "src/med_autogrant/product_entry_parts/package_lifecycle_handoff.py"
         ],
-        "surface_id": "package"
+        "surface_id": "package",
+        "target_owner_after_migration": "med-autogrant"
       },
       {
+        "active_caller_status": "retained_mag_authority_function",
         "allowed_role": "grant_route_budget_blocker_policy",
         "classification": "minimal_authority_function",
         "forbidden_roles": [
@@ -232,13 +502,61 @@
           "repo_scheduler_daemon",
           "mechanical_quality_or_export_verdict"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "retain_as_minimal_authority_function",
+            "rename_only_with_owner_receipt_and_no_regression"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+          "required_before_delete_or_rename": [
+            "owner_receipt://mag/autonomy_controller/authority_replacement_or_retirement_decision",
+            "direct_hosted_parity_no_regression",
+            "no_forbidden_write_proof"
+          ],
+          "state": "retained_mag_authority_do_not_delete_without_replacement_receipt",
+          "target_owner_after_migration": "med-autogrant"
+        },
         "source_refs": [
           "src/med_autogrant/grant_autonomy_controller.py",
           "src/med_autogrant/grant_autonomy_start.py"
         ],
-        "surface_id": "autonomy_controller"
+        "surface_id": "autonomy_controller",
+        "target_owner_after_migration": "med-autogrant"
       },
       {
+        "active_caller_status": "retained_mag_authority_function",
+        "allowed_role": "domain_owner_receipt_signer_and_body_free_refs_projection",
+        "classification": "minimal_authority_function",
+        "forbidden_roles": [
+          "generic_attempt_ledger_owner",
+          "generic_persistence_engine_owner",
+          "mechanical_quality_or_export_verdict"
+        ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "retain_as_minimal_authority_function",
+            "rename_only_with_owner_receipt_and_no_regression"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+          "required_before_delete_or_rename": [
+            "owner_receipt://mag/owner_receipt_helper/authority_replacement_or_retirement_decision",
+            "direct_hosted_parity_no_regression",
+            "no_forbidden_write_proof"
+          ],
+          "state": "retained_mag_authority_do_not_delete_without_replacement_receipt",
+          "target_owner_after_migration": "med-autogrant"
+        },
+        "source_refs": [
+          "src/med_autogrant/product_entry_parts/owner_receipts.py",
+          "contracts/owner_receipt_contract.json"
+        ],
+        "surface_id": "owner_receipt_helper",
+        "target_owner_after_migration": "med-autogrant"
+      },
+      {
+        "active_caller_status": "no_active_caller_history_or_tombstone_only",
         "allowed_role": "history_or_tombstone_only",
         "classification": "legacy_proof_tombstone",
         "evidence_refs": [
@@ -251,10 +569,21 @@
           "legacy_executor_runtime_probe",
           "legacy_compat_alias_surface"
         ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "keep_history_tombstone",
+            "delete_if_no_source_ref_required"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_runtime_compat_alias_or_facade_reexport",
+          "required_before_delete_or_rename": [],
+          "state": "already_tombstone_no_active_caller"
+        },
         "source_refs": [
           "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md"
         ],
-        "surface_id": "legacy_runtime_residue"
+        "surface_id": "legacy_runtime_residue",
+        "target_owner_after_migration": "history_tombstone"
       }
     ],
     "surface_kind": "mag_physical_source_morphology_policy",

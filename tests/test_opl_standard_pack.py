@@ -92,6 +92,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert morphology["required_surface_ids"] == [
         "domain_runtime",
         "product_entry",
+        "grouped_cli_wrapper",
         "status",
         "user_loop",
         "sidecar",
@@ -101,6 +102,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "memory",
         "package",
         "autonomy_controller",
+        "owner_receipt_helper",
         "legacy_runtime_residue",
     ]
 
@@ -112,6 +114,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert classifications["domain_runtime"]["classification"] == "declarative_grant_handler"
     assert classifications["runtime_registration"]["classification"] == "declarative_grant_handler"
     assert classifications["product_entry"]["classification"] == "refs_only_adapter"
+    assert classifications["grouped_cli_wrapper"]["classification"] == "refs_only_adapter"
     assert classifications["status"]["classification"] == "refs_only_adapter"
     assert classifications["user_loop"]["classification"] == "refs_only_adapter"
     assert classifications["sidecar"]["classification"] == "refs_only_adapter"
@@ -120,6 +123,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert classifications["memory"]["classification"] == "minimal_authority_function"
     assert classifications["package"]["classification"] == "minimal_authority_function"
     assert classifications["autonomy_controller"]["classification"] == "minimal_authority_function"
+    assert classifications["owner_receipt_helper"]["classification"] == "minimal_authority_function"
     assert classifications["legacy_runtime_residue"]["classification"] == "legacy_proof_tombstone"
 
     for forbidden in (
@@ -138,12 +142,50 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     )
     assert "repo_scheduler_daemon" in classifications["autonomy_controller"]["forbidden_roles"]
     assert "generic_status_workbench_owner" in classifications["status"]["forbidden_roles"]
+    assert "generic_cli_mcp_product_wrapper_owner" in classifications["grouped_cli_wrapper"]["forbidden_roles"]
     assert "generic_scheduler_owner" in classifications["user_loop"]["forbidden_roles"]
     assert "generic_sidecar_owner" in classifications["sidecar"]["forbidden_roles"]
     assert "provider_runtime_owner" in classifications["runtime_registration"]["forbidden_roles"]
     assert "generic_lifecycle_owner" in classifications["lifecycle"]["forbidden_roles"]
     assert "generic_memory_transport_owner" in classifications["memory"]["forbidden_roles"]
     assert "generic_artifact_lifecycle_owner" in classifications["package"]["forbidden_roles"]
+    assert "generic_attempt_ledger_owner" in classifications["owner_receipt_helper"]["forbidden_roles"]
+    assert classifications["grouped_cli_wrapper"]["active_caller_status"] == (
+        "active_refs_only_adapter_until_opl_generated_caller_migration"
+    )
+    assert classifications["grouped_cli_wrapper"]["target_owner_after_migration"] == "one-person-lab"
+    assert classifications["grouped_cli_wrapper"]["retirement_gate"]["state"] == (
+        "active_caller_migration_required_before_retirement"
+    )
+    assert classifications["grouped_cli_wrapper"]["retirement_gate"][
+        "compatibility_alias_allowed"
+    ] is False
+    assert classifications["owner_receipt_helper"]["active_caller_status"] == (
+        "retained_mag_authority_function"
+    )
+    assert classifications["owner_receipt_helper"]["target_owner_after_migration"] == "med-autogrant"
+    assert classifications["owner_receipt_helper"]["retirement_gate"]["state"] == (
+        "retained_mag_authority_do_not_delete_without_replacement_receipt"
+    )
+    assert classifications["legacy_runtime_residue"]["retirement_gate"]["state"] == (
+        "already_tombstone_no_active_caller"
+    )
+    assert morphology["retirement_gate"] == {
+        "gate_id": "mag.physical_morphology.retirement_gate.v1",
+        "state": "active_caller_migration_evidence_required",
+        "required_evidence_refs": [
+            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
+            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            "physical_morphology://no_active_compat_alias_or_facade_scan",
+        ],
+        "delete_or_tombstone_only_after_gate": True,
+        "compatibility_alias_allowed": False,
+        "claims_physical_cleanup_complete": False,
+    }
+    assert morphology["no_resurrection_policy"]["compatibility_alias_allowed"] is False
+    assert "grouped_cli_wrapper" in morphology["no_resurrection_policy"]["applies_to_surface_ids"]
     assert (
         morphology["forbidden_reflow_policy"]
         == "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_"

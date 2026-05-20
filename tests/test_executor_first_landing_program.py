@@ -294,5 +294,11 @@ def test_physical_morphology_cleanup_is_blocked_by_external_evidence() -> None:
         "opl_cleanup_ledger_equals_production_caller_migrated",
         "physical_conformance_equals_no_active_caller",
         "morphology_hygiene_equals_grant_ready",
+        "owner_receipt_roundtrip_missing_equals_safe_delete",
+        "no_active_compat_alias_scan_missing_equals_safe_delete",
     ):
         assert forbidden in lane["forbidden_claims"]
+    assert "owner_receipt_or_typed_blocker_roundtrip_refs" in lane["deliverables"]
+    assert "no_active_compat_alias_or_facade_scan" in lane["deliverables"]
+    assert "physical_morphology://no_active_compat_alias_or_facade_scan" in lane["refs"]
+    assert "owner receipt / typed blocker roundtrip evidence exists." in lane["done_criteria"]

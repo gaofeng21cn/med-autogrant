@@ -71,6 +71,24 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
             projection["required_next_evidence_refs"],
         )
+        self.assertIn(
+            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
+            projection["required_next_evidence_refs"],
+        )
+        self.assertEqual(
+            projection["retirement_gate"]["state"],
+            "active_caller_migration_evidence_required",
+        )
+        self.assertFalse(projection["retirement_gate"]["compatibility_alias_allowed"])
+        self.assertTrue(
+            projection["retirement_gate"]["owner_receipt_or_typed_blocker_roundtrip_required"]
+        )
+        self.assertFalse(
+            projection["no_resurrection_policy"]["generic_runtime_owner_allowed"]
+        )
+        self.assertFalse(
+            projection["no_resurrection_policy"]["facade_reexport_allowed"]
+        )
         self.assertFalse(
             projection["claims"]["claims_physical_morphology_cleanup_complete"]
         )
@@ -175,6 +193,7 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             external_evidence_refs=[
                 "opl://receipts/mag/physical-morphology/active-caller-migration.json",
                 "opl://receipts/mag/physical-morphology/direct-hosted-parity.json",
+                "receipt:mag/physical-morphology/owner-receipt-roundtrip.json",
                 "opl://receipts/mag/physical-morphology/no-forbidden-write.json",
             ],
         )
@@ -182,6 +201,10 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertEqual(projection["state"], "allowed_external_evidence_present")
         self.assertEqual(projection["blocked_items"], [])
         self.assertEqual(projection["required_next_evidence_refs"], [])
+        self.assertEqual(
+            projection["retirement_gate"]["state"],
+            "eligible_for_owner_receipted_cleanup",
+        )
         self.assertTrue(
             projection["claims"]["claims_physical_morphology_cleanup_complete"]
         )

@@ -24,12 +24,14 @@ ALLOWED_PHYSICAL_MORPHOLOGY_ROLES = (
 _MISSING_EXTERNAL_EVIDENCE_REFS = (
     "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
     "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
+    "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
     "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
 )
 
 _REQUIRED_EXTERNAL_EVIDENCE_REF_MARKERS = (
     ("active_caller_migration", ("active-caller-migration", "active_caller_migration")),
     ("direct_hosted_parity", ("direct-hosted-parity", "direct_hosted_parity")),
+    ("owner_receipt_roundtrip", ("owner-receipt", "owner_receipt", "typed-blocker", "typed_blocker")),
     ("continuous_no_forbidden_write", ("no-forbidden-write", "no_forbidden_write")),
 )
 
@@ -113,6 +115,30 @@ def build_physical_morphology_guard_projection(
             "mag_implements_local_journal": False,
             "mag_restores_compatibility_alias": False,
             "can_declare_physical_cleanup_complete": claims_physical_cleanup_complete,
+        },
+        "retirement_gate": {
+            "gate_id": "mag.physical_morphology.retirement_gate.v1",
+            "state": _retirement_gate_state(
+                blocked_count=len(blocked_items),
+                evidence_gated_count=len(item_evidence_gated),
+                missing_external_evidence_refs=missing_external_evidence_refs,
+            ),
+            "required_evidence_refs": required_next_evidence_refs,
+            "delete_or_tombstone_only_after_gate": True,
+            "compatibility_alias_allowed": False,
+            "owner_receipt_or_typed_blocker_roundtrip_required": True,
+            "no_resurrection_policy": (
+                "no_compat_alias_facade_local_journal_attempt_ledger_scheduler_"
+                "or_generated_surface_owner_in_mag"
+            ),
+        },
+        "no_resurrection_policy": {
+            "compatibility_alias_allowed": False,
+            "facade_reexport_allowed": False,
+            "local_journal_or_attempt_ledger_allowed": False,
+            "repo_owned_scheduler_or_daemon_allowed": False,
+            "generic_runtime_owner_allowed": False,
+            "generated_surface_owner_in_mag_allowed": False,
         },
         "projection_policy": (
             "refs_and_role_projection_only_no_runtime_no_workbench_no_scheduler_"
@@ -237,6 +263,21 @@ def _projection_state(
     if evidence_gated_count or not external_evidence_refs_complete:
         return "allowed_evidence_gated"
     return "allowed_external_evidence_present"
+
+
+def _retirement_gate_state(
+    *,
+    blocked_count: int,
+    evidence_gated_count: int,
+    missing_external_evidence_refs: list[str],
+) -> str:
+    if blocked_count:
+        return "blocked_by_forbidden_role_flags"
+    if evidence_gated_count:
+        return "blocked_by_missing_role_evidence_refs"
+    if missing_external_evidence_refs:
+        return "active_caller_migration_evidence_required"
+    return "eligible_for_owner_receipted_cleanup"
 
 
 def _missing_external_evidence_refs(external_evidence_refs: list[str]) -> list[str]:
