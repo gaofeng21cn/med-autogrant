@@ -1,9 +1,46 @@
 # Fundability Gate
 
-Owner: Med Auto Grant.
+## Gate Purpose
 
-Fundability is an AI-first grant judgment over the funding call, applicant evidence, review risk, novelty, feasibility, and funder fit.
+This gate decides whether the locked grant task is competitively fundable enough to proceed into aims and authoring.
 
-Allowed returns: verdict refs, typed blockers, or MAG owner receipt refs.
+## Evidence To Review
 
-Forbidden decision sources: schema completeness, OPL provider completion, generic lifecycle completion, package file presence, numeric scorecard values alone, controller route state, and runtime queue state.
+- Funding-call fit, eligibility, mechanism scope, review criteria, deadline, budget, and required materials.
+- Applicant/team credibility, preliminary evidence, resources, collaborators, feasibility, and institutional support.
+- Scientific novelty, impact, patient/cohort/data access, methods maturity, and funder-specific relevance.
+- Reviewer risks, mitigation plan, and any prior strategy memory refs.
+
+## AI-First Judgment Standard
+
+- Fundability requires an AI-authored grant-review artifact, fundability stage artifact, or MAG owner receipt.
+- The judgment must explain proceed/repair/retarget/stop and name the top reviewer risks.
+- Weak but repairable proposals may pass only with explicit mitigation requirements and handoff conditions.
+
+## Forbidden Decision Sources
+
+- Schema completeness.
+- OPL provider completion.
+- Generic lifecycle completion.
+- Package file presence.
+- Numeric scorecard values alone.
+- Controller route state.
+- Runtime queue state.
+
+## Required Output
+
+- `fundability_verdict_ref` with owner, source refs, evidence summary, risk ranking, and proceed/repair/stop state; or
+- Typed blocker with exact missing evidence or fatal fit issue; or
+- MAG owner receipt ref accepting the state.
+
+## Blocker Shapes
+
+- `fundability_evidence_insufficient`.
+- `call_fit_rejected`.
+- `fatal_review_risk`.
+- `strategy_memory_conflict`.
+- `mechanical_ready_attempted`.
+
+## Pass Condition
+
+The output would survive a skeptical grant reviewer asking: why this applicant, why this call, why now, why fundable, and what risk remains.
