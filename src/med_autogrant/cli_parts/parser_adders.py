@@ -448,3 +448,44 @@ def _add_product_continuous_receipt_reconciliation_command(
     command.add_argument("--stage-attempt-observability-projection")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
+
+
+def _add_product_codex_stage_receipts_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--stage-id", required=True)
+    command.add_argument("--execution-attempt", required=True, action="append")
+    command.add_argument("--review-attempt", action="append", default=[])
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_product_operator_closeout_readiness_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--production-acceptance", required=True)
+    command.add_argument("--external-evidence-receipt-ledger", required=True)
+    command.add_argument("--receipt-readiness-projection", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
+def _add_product_physical_morphology_guard_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--source-item", required=True, action="append")
+    command.add_argument("--external-evidence-ref", action="append", default=[])
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)

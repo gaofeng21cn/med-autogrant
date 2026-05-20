@@ -29,6 +29,9 @@ _ALLOWED_ACTIONS = {
     "domain-memory/decide",
     "stage-attempt/closeout",
     "lifecycle/receipt",
+    "closeout/codex-stage-receipts",
+    "closeout/operator-readiness",
+    "closeout/physical-morphology-guard",
 }
 
 
@@ -332,6 +335,17 @@ def dispatch_sidecar_task(
         return _dispatch_stage_attempt_closeout(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "lifecycle/receipt":
         return _dispatch_lifecycle_receipt(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+    if action == "closeout/codex-stage-receipts":
+        return _dispatch_codex_stage_receipts(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+    if action == "closeout/operator-readiness":
+        return _dispatch_operator_readiness(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
+    if action == "closeout/physical-morphology-guard":
+        return _dispatch_physical_morphology_guard(
+            product_entry,
+            task=task,
+            input_path=input_path,
+            task_path=resolved_task_path,
+        )
     return _dispatch_notification_receipt(task=task, input_path=input_path, task_path=resolved_task_path)
 
 
@@ -572,6 +586,98 @@ def _dispatch_lifecycle_receipt(
     )
 
 
+def _dispatch_codex_stage_receipts(
+    product_entry: Any,
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    receipt_bundle = product_entry.build_codex_stage_execution_receipt_bundle(
+        stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="sidecar_task"),
+        execution_attempts=_required_mapping_list(task, "execution_attempts"),
+        review_attempts=_optional_mapping_list(task.get("review_attempts")),
+    )
+    return _dispatch_payload(
+        action="closeout/codex-stage-receipts",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "sidecar_codex_stage_receipts_result",
+            "receipt_bundle": receipt_bundle,
+            "write_policy": "read_projection_only_no_domain_truth_mutation",
+        },
+        executed_command=None,
+    )
+
+
+def _dispatch_operator_readiness(
+    product_entry: Any,
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    closeout_readiness = product_entry.build_operator_closeout_readiness_projection(
+        production_acceptance=_require_mapping(
+            task,
+            "production_acceptance",
+            context="sidecar_task",
+        ),
+        external_evidence_receipt_ledger=_require_mapping(
+            task,
+            "external_evidence_receipt_ledger",
+            context="sidecar_task",
+        ),
+        receipt_readiness_projection=_require_mapping(
+            task,
+            "receipt_readiness_projection",
+            context="sidecar_task",
+        ),
+    )
+    return _dispatch_payload(
+        action="closeout/operator-readiness",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "sidecar_operator_closeout_readiness_result",
+            "operator_closeout_readiness": closeout_readiness,
+            "write_policy": "read_projection_only_no_domain_truth_mutation",
+        },
+        executed_command=None,
+    )
+
+
+def _dispatch_physical_morphology_guard(
+    product_entry: Any,
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    morphology_guard = product_entry.build_physical_morphology_guard_projection(
+        source_items=_required_mapping_list(task, "source_items"),
+        external_evidence_refs=_optional_string_list(task.get("external_evidence_refs")),
+    )
+    return _dispatch_payload(
+        action="closeout/physical-morphology-guard",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "sidecar_physical_morphology_guard_result",
+            "physical_morphology_guard": morphology_guard,
+            "write_policy": "read_projection_only_no_domain_truth_mutation",
+        },
+        executed_command=None,
+    )
+
+
 def _dispatch_notification_receipt(
     *,
     task: Mapping[str, Any],
@@ -646,6 +752,9 @@ def _dispatch_payload(
                 "domain-memory/decide",
                 "stage-attempt/closeout",
                 "lifecycle/receipt",
+                "closeout/codex-stage-receipts",
+                "closeout/operator-readiness",
+                "closeout/physical-morphology-guard",
             },
             "executed_command": executed_command,
             "result": dict(result),
@@ -831,6 +940,26 @@ def _optional_string_list(value: Any) -> list[str]:
     for item in value:
         refs.append(_require_nonempty_string(item, field_name="ref", context="sidecar_task"))
     return refs
+
+
+def _optional_mapping_list(value: Any) -> list[Mapping[str, Any]]:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise WorkspaceStateError("sidecar_task refs 必须是 object list。")
+    items: list[Mapping[str, Any]] = []
+    for item in value:
+        if not isinstance(item, Mapping):
+            raise WorkspaceStateError("sidecar_task refs 必须是 object list。")
+        items.append(item)
+    return items
+
+
+def _required_mapping_list(task: Mapping[str, Any], field_name: str) -> list[Mapping[str, Any]]:
+    items = _optional_mapping_list(task.get(field_name))
+    if not items:
+        raise WorkspaceStateError(f"sidecar_task.{field_name} 必须是非空 object list。")
+    return items
 
 
 def _receipt_refs_for_task(

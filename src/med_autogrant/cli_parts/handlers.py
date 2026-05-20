@@ -302,6 +302,38 @@ def handle_product_continuous_receipt_reconciliation(args: argparse.Namespace) -
     )
 
 
+def handle_product_codex_stage_receipts(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_codex_stage_execution_receipt_bundle(
+        stage_id=args.stage_id,
+        execution_attempts=[
+            _read_json_object(attempt_path)
+            for attempt_path in args.execution_attempt
+        ],
+        review_attempts=[
+            _read_json_object(attempt_path)
+            for attempt_path in args.review_attempt
+        ],
+    )
+
+
+def handle_product_operator_closeout_readiness(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_operator_closeout_readiness_projection(
+        production_acceptance=_read_json_object(args.production_acceptance),
+        external_evidence_receipt_ledger=_read_json_object(args.external_evidence_receipt_ledger),
+        receipt_readiness_projection=_read_json_object(args.receipt_readiness_projection),
+    )
+
+
+def handle_product_physical_morphology_guard(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_physical_morphology_guard_projection(
+        source_items=[
+            _read_json_object(source_item_path)
+            for source_item_path in args.source_item
+        ],
+        external_evidence_refs=args.external_evidence_ref or [],
+    )
+
+
 def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(
         {
