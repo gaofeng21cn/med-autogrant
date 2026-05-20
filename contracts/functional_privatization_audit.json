@@ -367,6 +367,7 @@
       "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
       "functional_followthrough_gap_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_followthrough_gap_classification",
       "functional_harness_consumer_coverage_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_harness_consumer_coverage",
+      "generated_hosted_default_caller_proof_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_hosted_default_caller_proof",
       "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
       "generated_surface_handoff_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
       "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
@@ -948,6 +949,96 @@
       "surface_kind": "mag_functional_harness_consumer_coverage",
       "target_domain_id": "med-autogrant",
       "version": "v1"
+    },
+    "generated_hosted_default_caller_proof": {
+      "active_default_caller": "mag_domain_handler_until_opl_generated_hosted_default_caller_evidence",
+      "authority_boundary": {
+        "mag_claims_default_caller_cutover_complete": false,
+        "mag_claims_direct_hosted_parity_passed": false,
+        "mag_claims_no_forbidden_write_passed": false,
+        "mag_domain_handler_owner": "med-autogrant",
+        "mag_owns_app_workbench": false,
+        "mag_owns_generic_runtime": false,
+        "opl_generated_caller_can_declare_export_verdict": false,
+        "opl_generated_caller_can_declare_fundability_verdict": false,
+        "opl_generated_caller_can_declare_quality_verdict": false,
+        "opl_generated_caller_can_mutate_grant_artifacts": false,
+        "opl_generated_caller_can_sign_owner_receipt": false,
+        "opl_generated_caller_can_write_grant_truth": false,
+        "opl_generated_caller_can_write_memory_body": false,
+        "target_generated_caller_owner": "one-person-lab"
+      },
+      "current_mag_role": "domain_handler_ref_only_adapter_and_migration_input",
+      "default_caller_cutover_state": "mag_handler_boundary_ready_external_default_caller_evidence_gated",
+      "direct_hosted_parity_workorder": {
+        "claims_parity_passed": false,
+        "direct_surface_refs": [
+          "/product_entry_manifest/product_entry_surface",
+          "/product_entry_manifest/operator_loop_surface",
+          "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
+        ],
+        "hosted_surface_refs": [
+          "opl://generated-surfaces/mag/product-entry-manifest",
+          "opl://generated-surfaces/mag/product-sidecar",
+          "opl://generated-surfaces/mag/product-entry-session#resume"
+        ],
+        "mag_role": "domain_handler_target_and_refs_only_oracle",
+        "parity_owner": "one-person-lab",
+        "required_receipt_shapes": [
+          "direct_hosted_parity_receipt",
+          "direct_mag_domain_handler_no_regression_receipt"
+        ],
+        "required_request_id": "direct_hosted_parity_no_regression",
+        "workorder_id": "mag.direct_hosted_parity.workorder.v1"
+      },
+      "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
+      "generated_surface_handoff_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+      "no_forbidden_write_boundary": {
+        "boundary_id": "mag.generated_hosted_default_caller.no_forbidden_write.v1",
+        "claims_no_forbidden_write_passed": false,
+        "forbidden_payload_classes": [
+          "grant_artifact_content",
+          "memory_body",
+          "workspace_private_evidence_body",
+          "opl_runtime_state_body",
+          "app_workbench_state_body"
+        ],
+        "forbidden_write_targets": [
+          "grant_truth",
+          "memory_body",
+          "grant_artifact_body",
+          "fundability_verdict_body",
+          "quality_verdict_body",
+          "export_verdict_body",
+          "owner_receipt_instance_repo_source"
+        ],
+        "mag_repo_source_write_allowed": [
+          "contracts",
+          "schemas",
+          "domain_handler_code",
+          "refs_only_read_models",
+          "tests",
+          "docs"
+        ],
+        "required_request_id": "continuous_no_forbidden_write_guard",
+        "runtime_receipt_write_policy": "runtime_store_only_no_repo_source_receipt_instances",
+        "thin_surface_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+      },
+      "owner": "med-autogrant",
+      "proof_id": "mag.generated_hosted_default_caller.proof.v1",
+      "repo_local_product_shell_classification": {
+        "generic_runtime_owner": false,
+        "grouped_cli_api": "domain_handler_command_adapter",
+        "lifecycle_wrapper": "owner_receipt_refs_only_adapter",
+        "migration_input": true,
+        "product_sidecar": "guarded_domain_handler_target",
+        "product_status": "domain_handler_ref_only_adapter",
+        "product_user_loop": "domain_handler_ref_only_adapter",
+        "projection_builder": "refs_only_read_model_adapter"
+      },
+      "surface_kind": "mag_generated_hosted_default_caller_proof",
+      "target_default_caller": "opl_generated_or_hosted_product_shell",
+      "target_domain_id": "med-autogrant"
     },
     "generated_surface_handoff": {
       "active_caller_owner": "med-autogrant",
@@ -3434,6 +3525,7 @@
         "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
         "functional_followthrough_gap_classification_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_followthrough_gap_classification",
         "functional_harness_consumer_coverage_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_harness_consumer_coverage",
+        "generated_hosted_default_caller_proof_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_hosted_default_caller_proof",
         "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
         "generated_surface_handoff_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
         "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",

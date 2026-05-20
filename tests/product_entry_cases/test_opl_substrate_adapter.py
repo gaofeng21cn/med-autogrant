@@ -19,6 +19,17 @@ class ProductEntryOplSubstrateAdapterTest(unittest.TestCase):
         self.assertEqual(adapter["workspace_ref_index"]["body_policy"], "locator_only_no_workspace_body")
         self.assertEqual(adapter["source_ref_index"]["index_policy"], "source_refs_only_no_source_body")
         self.assertEqual(
+            [ref["role"] for ref in adapter["source_ref_index"]["source_refs"]],
+            [
+                "domain_entry_contract",
+                "family_action_catalog",
+                "stage_control_plane",
+                "task_lifecycle",
+                "runtime_control",
+                "progress_projection",
+            ],
+        )
+        self.assertEqual(
             adapter["artifact_ref_index"]["artifact_locator_contract_ref"],
             "/product_entry_manifest/artifact_locator_contract",
         )

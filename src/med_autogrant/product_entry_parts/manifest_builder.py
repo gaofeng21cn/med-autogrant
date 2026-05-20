@@ -54,6 +54,7 @@ from med_autogrant.product_entry_parts import domain_agent_skeleton
 from med_autogrant.product_entry_parts.domain_memory import build_manifest_domain_memory_surfaces
 from med_autogrant.product_entry_parts.functional_closure import build_manifest_functional_closure_surfaces
 from med_autogrant.product_entry_parts.opl_substrate_adapter import build_manifest_opl_substrate_adapter_export
+from med_autogrant.product_entry_parts.source_provenance import build_source_provenance_surface
 from med_autogrant.product_entry_parts.executor_defaults import build_executor_defaults_surface
 from med_autogrant.product_entry_parts.runtime_surfaces import (
     _build_artifact_inventory_surface,
@@ -714,6 +715,7 @@ class ProductEntryManifestBuilderMixin:
             artifact_inventory=artifact_inventory,
             runtime_control=runtime_control,
         )
+        source_provenance = build_source_provenance_surface()
         shell_commands = {
             "product_status": _require_nonempty_string_from_mapping(
                 product_entry_shell["product_status"],
@@ -950,6 +952,7 @@ class ProductEntryManifestBuilderMixin:
                 "family_stage_control_plane": family_stage_control_plane,
                 "grant_transition_oracle": grant_transition_oracle,
                 "action_catalog_projections": action_catalog_projections,
+                "source_provenance": source_provenance,
                 "executor_defaults": build_executor_defaults_surface(),
                 "runtime_control": runtime_control,
                 "grant_authoring_readiness": grant_authoring_readiness,

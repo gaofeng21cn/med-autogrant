@@ -14,3 +14,12 @@ Machine boundary: 人读索引。Source truth 继续归 grant workspaces、funde
 - [架构](../architecture.md)
 - [当前状态](../status.md)
 - [References](../references/README.md)
+
+当前 OPL 可索引 source refs 入口是 `product-entry-manifest.source_provenance` 与 `product sidecar export` 输出内的 `sidecar_export.source_provenance`。该 surface 只包含 body-free refs：
+
+- `source_provenance_ref`：`docs/source/README.md`
+- `historical_fixture_ref`：`examples/nsfc_workspace_p2c_critique.json`
+- `explicit_archive_import_ref`：`workspace-initialize-intake` command ref
+- `parity_oracle_ref`：`program:mag_declared_grant_pack_source_refs`
+
+这些 refs 只服务 OPL locator/index/projection。MAG 继续持有 grant source truth、workspace truth、fundability / quality / export verdict 和 receipt authority；通用 workspace/source intake shell、runtime、workbench、ledger 与 scheduler 仍归 OPL Framework / shared family layer。

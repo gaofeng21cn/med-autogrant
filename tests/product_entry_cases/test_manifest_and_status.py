@@ -252,6 +252,30 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             user_loop_action["source_command"]["command"],
         )
         stage_plane = manifest["family_stage_control_plane"]
+        source_provenance = manifest["source_provenance"]
+        self.assertEqual(source_provenance["surface_kind"], "source_provenance")
+        self.assertEqual(source_provenance["capability_classification"], "source_provenance_only")
+        self.assertEqual(source_provenance["source_provenance_ref"]["ref"], "docs/source/README.md")
+        self.assertEqual(
+            source_provenance["historical_fixture_ref"]["ref"],
+            "examples/nsfc_workspace_p2c_critique.json",
+        )
+        self.assertIn(
+            "workspace-initialize-intake",
+            source_provenance["explicit_archive_import_ref"]["command"],
+        )
+        self.assertEqual(
+            source_provenance["parity_oracle_ref"]["ref"],
+            "program:mag_declared_grant_pack_source_refs",
+        )
+        self.assertIn(
+            "source_refs_do_not_contain_source_body",
+            source_provenance["authority_boundary"],
+        )
+        self.assertIn(
+            "no_runtime_workbench_ledger_or_scheduler_authority_transferred",
+            source_provenance["authority_boundary"],
+        )
         thinning = manifest["mag_consumer_thinning_contract"]
         compiler_input = thinning["declarative_grant_pack_compiler_input"]
         self.assertEqual(

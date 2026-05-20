@@ -18,9 +18,11 @@ Machine boundary: 人读索引。Runtime truth 继续归 contracts、schemas、s
 当前 OPL provider / substrate refs-only export 入口：
 
 - `product-entry-manifest.opl_provider_runtime_contract`
+- `product-entry-manifest.source_provenance`
 - `product-entry-manifest.opl_substrate_adapter_export`
+- `product sidecar export` 输出内的 `sidecar_export.source_provenance`
 - `product sidecar export` 输出内的 `sidecar_export.opl_substrate_adapter_export`
 
-这些导出面只给 OPL 消费 opaque workspace refs、source JSON pointer refs、artifact locator/index refs、memory locator/receipt refs、lifecycle receipt refs、runtime_control refs 与 projection refs。grant truth、fundability verdict、authoring quality verdict、submission-ready export verdict、package body、memory body 和 owner receipt authority 继续由 MAG 持有。
+这些导出面只给 OPL 消费 opaque workspace refs、body-free source provenance refs、source JSON pointer refs、artifact locator/index refs、memory locator/receipt refs、lifecycle receipt refs、runtime_control refs 与 projection refs。grant truth、fundability verdict、authoring quality verdict、submission-ready export verdict、package body、memory body 和 owner receipt authority 继续由 MAG 持有。`source_provenance` 是 OPL `substrate projections` 可直接解析的顶层 source refs surface；它不让 MAG 持有通用 workspace/source intake shell、runtime、workbench、ledger 或 scheduler。
 
 已退役的 local journal、attempt ledger、`runtime-run` / `runtime-resume`、Hermes/Gateway/local-manager probe 和 compatibility alias 只从 `docs/history/**` 或 tombstone/provenance 语境阅读；不得写回 current runtime owner。

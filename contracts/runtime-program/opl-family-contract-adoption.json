@@ -198,6 +198,37 @@
     "repo_source_policy": "repo_source_contains_descriptors_only",
     "opl_consumption": "index_locator_refs_only_no_fundability_or_export_verdict"
   },
+  "source_provenance": {
+    "surface_kind": "source_provenance",
+    "manifest_surface_ref": "/product_entry_manifest/source_provenance",
+    "sidecar_surface_ref": "/sidecar_export/source_provenance",
+    "source_provenance_ref": {
+      "surface_kind": "mag_source_provenance",
+      "ref": "docs/source/README.md"
+    },
+    "historical_fixture_ref": {
+      "surface_kind": "mag_historical_fixture_ref",
+      "ref": "examples/nsfc_workspace_p2c_critique.json"
+    },
+    "explicit_archive_import_ref": {
+      "surface_kind": "mag_explicit_archive_import_ref",
+      "command": "uv run python -m med_autogrant workspace-initialize-intake --input <selection_input> --workspace-root <workspace_dir> --format json"
+    },
+    "parity_oracle_ref": {
+      "surface_kind": "mag_parity_oracle_ref",
+      "ref": "program:mag_declared_grant_pack_source_refs"
+    },
+    "authority_boundary": [
+      "source_refs_do_not_contain_source_body",
+      "opl_projection_reads_refs_only",
+      "workspace_source_intake_shell_owner_is_one_person_lab",
+      "grant_source_truth_owner_is_med_autogrant",
+      "fundability_quality_export_verdict_owner_is_med_autogrant",
+      "no_runtime_workbench_ledger_or_scheduler_authority_transferred"
+    ],
+    "capability_classification": "source_provenance_only",
+    "opl_consumption": "body_free_source_refs_only_no_workspace_source_intake_or_runtime_authority"
+  },
   "opl_substrate_adapter_export": {
     "surface_kind": "mag_opl_substrate_adapter_export",
     "adapter_id": "mag.opl_substrate_adapter.export.v1",

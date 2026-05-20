@@ -46,6 +46,15 @@ class ProductSidecarTest(unittest.TestCase):
             export["artifact_locator_contract"]["surface_kind"],
             "domain_artifact_locator_contract",
         )
+        self.assertEqual(export["source_provenance"]["surface_kind"], "source_provenance")
+        self.assertEqual(
+            export["source_provenance"]["source_provenance_ref"]["ref"],
+            "docs/source/README.md",
+        )
+        self.assertIn(
+            "no_runtime_workbench_ledger_or_scheduler_authority_transferred",
+            export["source_provenance"]["authority_boundary"],
+        )
         substrate_adapter = export["opl_substrate_adapter_export"]
         self.assertEqual(substrate_adapter["surface_kind"], "mag_opl_substrate_adapter_export")
         self.assertEqual(substrate_adapter["adapter_id"], "mag.opl_substrate_adapter.export.v1")

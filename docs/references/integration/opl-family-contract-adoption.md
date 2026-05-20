@@ -72,6 +72,7 @@ MAG 现在把真实 Declarative Grant Pack 放在 `agent/` 下，并通过 `prod
 
 MAG 现在在 `product-entry-manifest` 与 `product sidecar export` 中导出 `opl_substrate_adapter_export`。这层是 MAG-owned 薄导出面，专门给 OPL 建 workspace/source/artifact/memory/lifecycle/projection 索引：
 
+- 顶层 `source_provenance` 同步暴露 OPL `substrate projections` 可直接解析的 body-free source refs：source policy/support doc ref、historical fixture ref、explicit archive/import command ref 与 parity oracle ref。
 - workspace 只给 opaque ref、workspace locator、session/ref 与 restore/progress ref。
 - source 只给 JSON pointer refs，不给 source body。
 - artifact 只给 artifact locator、inventory ref 与 runtime artifact root ref，不给 package body 或 canonical grant artifact content。

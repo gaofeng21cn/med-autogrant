@@ -113,6 +113,11 @@ def build_sidecar_export(
         "opl_substrate_adapter_export",
         context="sidecar_export.product_entry_manifest",
     )
+    source_provenance = _require_mapping(
+        manifest,
+        "source_provenance",
+        context="sidecar_export.product_entry_manifest",
+    )
     automation = _require_mapping(manifest, "automation", context="sidecar_export.product_entry_manifest")
     autonomy_observability = _require_mapping(
         manifest,
@@ -170,6 +175,7 @@ def build_sidecar_export(
         "artifact_locator_contract": dict(
             _require_mapping(manifest, "artifact_locator_contract", context="sidecar_export.product_entry_manifest")
         ),
+        "source_provenance": dict(source_provenance),
         "opl_substrate_adapter_export": dict(opl_substrate_adapter_export),
         "controlled_stage_attempt_projection": dict(controlled_stage_attempt),
         "controlled_domain_memory_apply_proof": dict(controlled_domain_memory_apply_proof),

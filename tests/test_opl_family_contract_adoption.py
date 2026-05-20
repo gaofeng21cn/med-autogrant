@@ -402,6 +402,23 @@ def test_mag_adoption_contract_declares_opl_substrate_adapter_as_index_only_expo
     assert authority["opl_can_issue_owner_receipt"] is False
 
 
+def test_mag_adoption_contract_declares_body_free_source_provenance_refs() -> None:
+    contract = _contract()
+    source = contract["source_provenance"]
+
+    assert source["surface_kind"] == "source_provenance"
+    assert source["manifest_surface_ref"] == "/product_entry_manifest/source_provenance"
+    assert source["sidecar_surface_ref"] == "/sidecar_export/source_provenance"
+    assert source["source_provenance_ref"]["ref"] == "docs/source/README.md"
+    assert source["historical_fixture_ref"]["ref"] == "examples/nsfc_workspace_p2c_critique.json"
+    assert "workspace-initialize-intake" in source["explicit_archive_import_ref"]["command"]
+    assert source["parity_oracle_ref"]["ref"] == "program:mag_declared_grant_pack_source_refs"
+    assert source["capability_classification"] == "source_provenance_only"
+    assert "source_refs_do_not_contain_source_body" in source["authority_boundary"]
+    assert "workspace_source_intake_shell_owner_is_one_person_lab" in source["authority_boundary"]
+    assert "no_runtime_workbench_ledger_or_scheduler_authority_transferred" in source["authority_boundary"]
+
+
 def test_domain_memory_seed_fixture_is_template_only_and_points_to_landed_surfaces() -> None:
     fixture = _domain_memory_seed_fixture()
     contract = _contract()
