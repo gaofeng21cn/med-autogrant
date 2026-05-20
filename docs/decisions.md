@@ -5,6 +5,12 @@ Purpose: `current_decision_log`
 State: `current`
 Machine boundary: 本文是人读决策记录。机器真相继续归 contracts、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs；历史决策若与当前 status/current-program 冲突，以当前 owner surfaces 为准。
 
+## 2026-05-20：补齐 executor-first evidence consumption 与 receipt readiness read projections
+
+- 决策：同步 `contracts/production_acceptance/mag-executor-first-landing.json` 的 owner receipt scaleout 状态到已关闭的 MAG-owned production acceptance tail，并新增 `external_evidence_consumption_ledger` 与 `receipt_readiness_projection` 两个 product-entry read projection。
+- 理由：executor-first / AI-first 路线需要让 Codex 和外部 caller 能直接吃到清晰 refs、receipt shape、typed blocker 与 coverage surface，而不是让 MAG 在仓内复制 OPL runtime、App workbench 或 production caller。MAG 负责校验 request pack、receipt shape、producer owner、refs-only payload 和 receipt coverage；ready verdict 继续由 AI-first grant stage artifact 与 MAG authority refs 裁决。
+- 影响：MAG 现在可以把 external evidence request pack 的 incoming receipts 投影成 missing / partial / consumed complete ledger，也可以把 owner、memory、package/export、cleanup/restore/retention receipts 投影成 readiness coverage。该决策不声明 external caller/App/workbench 已全部完成，不声明 direct/hosted parity、continuous guard、Temporal long-soak 或 physical cleanup 已关闭，也不授权 fundability-ready / quality-ready / export-ready / submission-ready。
+
 ## 2026-05-20：落地 MAG executor-first 并行 landing program
 
 - 决策：新增 `contracts/production_acceptance/mag-executor-first-landing.json` 作为 MAG executor-first / Codex-first / contract-light 的一步到位并行落地机器计划面；并同步把 `agent/**` 扩写成可驱动 Codex stage 的 richer Declarative Grant Pack，把 `independent_review_evidence` 写入 quality / closure scorecard schema、source 和 focused tests。

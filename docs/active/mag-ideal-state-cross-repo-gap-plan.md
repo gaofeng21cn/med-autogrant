@@ -52,6 +52,8 @@ OPL 必须持有：
 
 2026-05-20 executor-first landing program 已作为 repo-tracked machine surface 落地：`contracts/production_acceptance/mag-executor-first-landing.json` 固定 `mag_executor_first_landing_program.v1`，把本轮一步到位计划拆成五条可并行 lane，并把当前状态固定为 `structural_ready_evidence_gated`。该 surface 只声明 MAG repo-local structural readiness、Codex-first executor boundary、contract-light runtime model、AI-first gate requirement 和 external evidence gates；它不声明 external evidence 已收到，也不声明 direct/hosted parity、App/workbench consumption、owner receipt scaleout、physical cleanup 或 production long soak 完成。
 
+同日该 program 已与 production acceptance tail 的最新 owner receipt closure 对齐：`owner_receipt_scaleout_state=production_acceptance_tail_closed_by_domain_owner_receipt_external_scaleout_gated`，引用 `receipt:mag/production-live-acceptance/2026-05-20` 与 `/product_entry_manifest/production_live_acceptance_receipt`。这关闭的是 MAG-owned production acceptance tail；external caller、App/workbench、direct/hosted parity、continuous guard、Temporal long-soak 和 morphology cleanup 仍按对应 external evidence request 关闭。
+
 其中 `stage_pack_enrichment` 与 `independent_review_receipt_gate` 已完成 repo-local landing：`agent/**` 已补齐 stage prompt / policy / quality gate / knowledge boundary 中的 executor behavior、expected refs、typed blockers、forbidden shortcuts 和 handoff receipt 语义；quality / closure scorecard 已要求 `independent_review_evidence`，缺 execution artifact ref、独立 review artifact ref、review receipt ref、reviewer identity 或 no-shared-context verification 时保持 fail-closed。该完成只表示 gate requirement 和 pack source 可验证，不表示某个真实 grant draft 已通过独立 review。
 
 `opl_provider_runtime_contract` 的落地只关闭 manifest/schema/test 的 owner 语义漂移；它不声明 OPL production/default caller、Temporal long soak、App/workbench consumption 或 live receipt reconciliation 已完成。
@@ -86,6 +88,8 @@ OPL 必须持有：
 6. `external_evidence_request_pack`
    `mag_consumer_thinning_contract.external_evidence_request_pack` 已把剩余外部证据门收成 machine-readable request pack：OPL generated/hosted caller consumption、Codex App workbench refs consumption、production/default caller release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity 和 Temporal provider long-soak receipt reconciliation。该 pack 的状态仍是 `request_pack_declared_external_evidence_not_claimed`，但 OPL refs-only external evidence ledger 已验证 `owner_receipt_typed_blocker_ref_roundtrip` 的 1 条 MAG runtime typed-blocker receipt；另外 6 个 request 仍是 missing / open。这个 verified receipt 只证明 owner receipt / typed blocker ref roundtrip 可被 OPL 消费，不实现 OPL runtime / App workbench，也不声明外部 default caller、App 消费、direct/hosted parity、continuous guard 或 Temporal long-soak 已完成。
 
+   MAG 现在提供 repo-local `external_evidence_consumption_ledger` read projection，按 request pack 校验 incoming external receipt 的 `request_id`、`receipt_shape`、`producer_owner` 和 refs-only payload，并投影 missing / partial / consumed complete coverage。该 ledger 是 consumer/read projection；它不实现 OPL runtime、Codex App workbench、production caller，也不把 full consumption coverage 写成 fundability / quality / export / submission ready。
+
 7. `legacy_cleanup_opl_ledger_apply_verified`
    `physical_skeleton_follow_through` 已补齐 replacement parity refs、no-regression evidence refs、tombstone/history refs 和 physically removed active path 的 domain owner handoff receipt refs。2026-05-19 OPL dry-run 读取当前 MAG manifest 后，`opl agents legacy-cleanup apply --domain mag --mode dry-run` 返回 `plan_status=ready`、`lifecycle_apply.status=dry_run_ready`、`safe_action_count=3`、`unsafe_action_count=0`；随后 `--mode apply` 已把 1 条 batch receipt 与 3 条 action receipts 写入 OPL refs-only lifecycle ledger，`--mode verify` 可读回 batch / tombstone / handoff action receipts 和 2 条 domain owner handoff receipt refs。这关闭的是 OPL cleanup ledger blocker；它不声明外部 OPL/App production caller evidence、grant-stage live soak 或 owner receipt scaleout 已完成。
    当前根层 `functional_privatization_audit.mag_consumer_thinning_contract.active_path_scan_state` 已由同一个 `physical_skeleton_follow_through.active_path_scan_no_legacy_default_caller` 注入并返回 `passed`，不再是 `not_available`。这说明 MAG consumer thinning contract 与真实 active-path scan 语义归位；它仍只证明 repo-local legacy default caller 未复活，不替代 production/default caller 或 Temporal soak 证据。
@@ -95,6 +99,9 @@ OPL 必须持有：
 
 9. `current_private_surface_classification`
    当前 MAG 私有功能面分类按 active source 与 machine audit 读取：runtime registration、task lifecycle、source intake 是 declarative grant pack input；lifecycle adapter、observability、sidecar/product status、package lifecycle、human workbench / scheduler metadata 是 refs-only adapter；fundability / quality / export verdict、package authority、transition oracle、owner receipt、memory accept/reject 和 grant helper 是 MAG minimal authority；旧 Hermes/Gateway/local-manager、local journal / attempt ledger、flat shell alias、compat aggregate test 和 repo-owned scheduler / daemon 是 legacy proof tombstone。该分类不允许把 refs-only adapter 再扩写成 MAG-owned generic runtime。
+
+10. `receipt_readiness_projection`
+   MAG 现在提供 `receipt_readiness_projection`，只聚合 owner receipt、memory accept/reject receipt、package/export lifecycle receipt 与 cleanup/restore/retention lifecycle receipt 的 coverage、shape 和 refs。状态只允许 `receipts_missing`、`partial_receipt_coverage` 或 `receipt_refs_ready_not_quality_ready`；它不能生成 fundability-ready、quality-ready、export-ready 或 submission-ready verdict，也不能包含 memory body、grant artifact body、proposal text、package archive 或 OPL runtime state。
 
 ## Retained Private Authority Surfaces
 
@@ -142,7 +149,7 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 当前按 `contracts/production_acceptance/mag-executor-first-landing.json` 做一步到位并行推进，而不是拆成线性阶段：repo-local `stage_pack_enrichment` 与 `independent_review_receipt_gate` 已落地；剩余 work 只接受真实 external receipt、typed blocker 或 no-regression evidence 关闭。
 
 1. `consume_external_evidence_request_pack`
-   OPL/App/production caller 从 `/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack` 读取 request ids、required refs 和 required receipt shapes，并返回 body-free receipts / typed blockers / no-regression evidence。当前已有 1 条 `owner_receipt_typed_blocker_ref_roundtrip` verified refs-only typed-blocker receipt，剩余 6 条 request 仍需 external receipt。
+   OPL/App/production caller 从 `/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack` 读取 request ids、required refs 和 required receipt shapes，并返回 body-free receipts / typed blockers / no-regression evidence。MAG 侧已有 `external_evidence_consumption_ledger` 可消费并校验这些 refs；当前已有 1 条 `owner_receipt_typed_blocker_ref_roundtrip` verified refs-only typed-blocker receipt，剩余 6 条 request 仍需 external receipt。
 
 2. `external_production_consumption_evidence`
    从 OPL/App/production caller 侧拿到真实消费 MAG declarative pack、domain handler target、owner receipt / typed blocker refs、no-forbidden-write 和 direct/hosted parity 的持续证据。
@@ -150,7 +157,7 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 3. `real_workspace_receipt_scaleout`
    推进真实 grant-stage attempt、memory/package/lifecycle receipt、continuous receipt reconciliation、cleanup/restore/retention 和 provider SLO long soak。
 
-   当前 production acceptance surface 已把该项收为 `closed_by_domain_owned_acceptance_receipt`。下一步按 `external_evidence_request_pack` 继续扩大外部 caller / App / parity / long-soak 的真实 owner receipt、typed blocker 或 no-regression evidence，而不是把 production acceptance tail 重新计为结构差距。
+   当前 production acceptance surface 已把 MAG-owned tail 收为 `closed_by_domain_owned_acceptance_receipt`，并新增 `receipt_readiness_projection` 聚合 owner/memory/package/lifecycle coverage。下一步按 `external_evidence_request_pack` 继续扩大外部 caller / App / parity / long-soak 的真实 owner receipt、typed blocker 或 no-regression evidence，而不是把 production acceptance tail 或 receipt coverage 重新写成 grant-ready。
 
 4. `private_authority_ai_first_guard`
    retained authority surfaces 的 AI-first taxonomy 已落到 pack / audit / manifest；本轮新增的 `independent_review_evidence` 继续把 quality / closure gate 收紧到 independent AI review artifact + receipt refs。后续工作是让真实 grant workspace 持续产出这些 refs，并保持 fundability / quality / export / memory accept-reject 判断都来自 AI-first stage output，package / receipt / helper 只做 programmatic guard。
