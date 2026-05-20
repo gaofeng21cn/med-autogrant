@@ -74,6 +74,9 @@ from med_autogrant.product_entry_parts.memory_receipt_projection import (
 from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
     build_package_lifecycle_handoff_projection,
 )
+from med_autogrant.product_entry_parts.receipt_readiness import (
+    build_receipt_readiness_projection,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -527,6 +530,21 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             export_verdict=export_verdict,
             manual_portal_boundary=manual_portal_boundary,
             lifecycle_receipt_refs=lifecycle_receipt_refs,
+        )
+
+    def build_receipt_readiness_projection(
+        self,
+        *,
+        owner_receipt_evidence_items: list[Mapping[str, Any]],
+        memory_receipt_items: list[Mapping[str, Any]],
+        package_lifecycle_items: list[Mapping[str, Any]],
+        lifecycle_receipt_items: list[Mapping[str, Any]],
+    ) -> dict[str, Any]:
+        return build_receipt_readiness_projection(
+            owner_receipt_evidence_items=owner_receipt_evidence_items,
+            memory_receipt_items=memory_receipt_items,
+            package_lifecycle_items=package_lifecycle_items,
+            lifecycle_receipt_items=lifecycle_receipt_items,
         )
 
     def build_continuous_receipt_reconciliation_snapshot(
