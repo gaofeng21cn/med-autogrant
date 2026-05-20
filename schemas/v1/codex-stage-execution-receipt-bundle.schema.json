@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/codex-stage-execution-receipt-bundle.schema.json",
+  "title": "Med Auto Grant Codex Stage Execution Receipt Bundle",
+  "type": "object",
+  "$defs": {
+    "refBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-z][a-z0-9_]*_ref$": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "executionAttempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempt_id",
+        "executor",
+        "refs"
+      ],
+      "properties": {
+        "attempt_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "executor": {
+          "const": "codex_cli"
+        },
+        "refs": {
+          "$ref": "#/$defs/refBundle"
+        }
+      }
+    },
+    "reviewAttempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_attempt_id",
+        "reviewer_executor",
+        "refs",
+        "review_target_attempt_id",
+        "independent_context",
+        "shared_context_with_execution"
+      ],
+      "properties": {
+        "review_attempt_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "reviewer_executor": {
+          "const": "codex_cli"
+        },
+        "refs": {
+          "$ref": "#/$defs/refBundle"
+        },
+        "review_target_attempt_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "independent_context": {
+          "const": true
+        },
+        "shared_context_with_execution": {
+          "const": false
+        }
+      }
+    },
+    "executorPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_executor",
+        "executor_first",
+        "contract_light",
+        "review_must_be_independent_attempt",
+        "review_must_have_separate_invocation",
+        "review_must_have_separate_task_record"
+      ],
+      "properties": {
+        "default_executor": {
+          "const": "codex_cli"
+        },
+        "executor_first": {
+          "const": true
+        },
+        "contract_light": {
+          "const": true
+        },
+        "review_must_be_independent_attempt": {
+          "const": true
+        },
+        "review_must_have_separate_invocation": {
+          "const": true
+        },
+        "review_must_have_separate_task_record": {
+          "const": true
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_attempt_count",
+        "independent_review_attempt_count",
+        "reviewed_execution_attempt_count"
+      ],
+      "properties": {
+        "execution_attempt_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "independent_review_attempt_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reviewed_execution_attempt_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "qualityGateEffect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "domain_verdict_required",
+        "ready_verdict_authorized",
+        "typed_blocker_required",
+        "gated_claims"
+      ],
+      "properties": {
+        "state": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "domain_verdict_required": {
+          "const": true
+        },
+        "ready_verdict_authorized": {
+          "const": false
+        },
+        "typed_blocker_required": {
+          "type": "boolean"
+        },
+        "blocker_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "gated_claims": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projection_scope",
+        "codex_cli_is_default_executor",
+        "mag_implements_opl_runtime",
+        "mag_implements_app_workbench",
+        "can_write_grant_truth_body",
+        "can_write_memory_body",
+        "execution_receipt_refs_equal_quality_ready",
+        "review_receipt_refs_equal_quality_ready",
+        "can_declare_fundability_ready",
+        "can_declare_quality_ready",
+        "can_declare_export_ready",
+        "can_declare_submission_ready"
+      ],
+      "properties": {
+        "projection_scope": {
+          "const": "codex_stage_execution_and_review_receipt_refs_only"
+        },
+        "codex_cli_is_default_executor": {
+          "const": true
+        },
+        "mag_implements_opl_runtime": {
+          "const": false
+        },
+        "mag_implements_app_workbench": {
+          "const": false
+        },
+        "can_write_grant_truth_body": {
+          "const": false
+        },
+        "can_write_memory_body": {
+          "const": false
+        },
+        "execution_receipt_refs_equal_quality_ready": {
+          "const": false
+        },
+        "review_receipt_refs_equal_quality_ready": {
+          "const": false
+        },
+        "can_declare_fundability_ready": {
+          "const": false
+        },
+        "can_declare_quality_ready": {
+          "const": false
+        },
+        "can_declare_export_ready": {
+          "const": false
+        },
+        "can_declare_submission_ready": {
+          "const": false
+        }
+      }
+    },
+    "codexStageExecutionReceiptBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "target_domain_id",
+        "owner",
+        "stage_id",
+        "state",
+        "projection_policy",
+        "executor_policy",
+        "summary",
+        "execution_attempts",
+        "review_attempts",
+        "quality_gate_effect",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_codex_stage_execution_receipt_bundle"
+        },
+        "version": {
+          "const": "v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "owner": {
+          "const": "med-autogrant"
+        },
+        "stage_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "state": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "projection_policy": {
+          "const": "refs_only_execution_and_independent_review_receipts_no_artifact_body_no_memory_body_no_proposal_text_no_runtime_state"
+        },
+        "executor_policy": {
+          "$ref": "#/$defs/executorPolicy"
+        },
+        "summary": {
+          "$ref": "#/$defs/summary"
+        },
+        "execution_attempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/executionAttempt"
+          }
+        },
+        "review_attempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reviewAttempt"
+          }
+        },
+        "quality_gate_effect": {
+          "$ref": "#/$defs/qualityGateEffect"
+        },
+        "authority_boundary": {
+          "$ref": "#/$defs/authorityBoundary"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/$defs/codexStageExecutionReceiptBundle"
+    }
+  ]
+}

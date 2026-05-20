@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.med-autogrant.local/v1/physical-morphology-guard-projection.schema.json",
+  "title": "Med Auto Grant Physical Morphology Guard Projection",
+  "type": "object",
+  "$defs": {
+    "forbiddenRoleFlags": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scheduler_daemon_owner": {
+          "type": "boolean"
+        },
+        "attempt_ledger_owner": {
+          "type": "boolean"
+        },
+        "local_journal_owner": {
+          "type": "boolean"
+        },
+        "generic_runtime_owner": {
+          "type": "boolean"
+        },
+        "app_workbench_owner": {
+          "type": "boolean"
+        },
+        "compatibility_alias_owner": {
+          "type": "boolean"
+        }
+      }
+    },
+    "blockerReason": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "reason"
+      ],
+      "properties": {
+        "reason": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "sourceItemProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "module_id",
+        "declared_role",
+        "evidence_refs",
+        "forbidden_role_flags",
+        "true_forbidden_flags",
+        "blocker_reasons",
+        "required_next_evidence_refs",
+        "allowed"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "module_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "declared_role": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "evidence_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "forbidden_role_flags": {
+          "$ref": "#/$defs/forbiddenRoleFlags"
+        },
+        "true_forbidden_flags": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "blocker_reasons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/blockerReason"
+          }
+        },
+        "required_next_evidence_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "allowed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_item_count",
+        "allowed_count",
+        "blocked_count",
+        "evidence_gated_item_count",
+        "external_evidence_ref_count"
+      ],
+      "properties": {
+        "source_item_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allowed_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocked_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evidence_gated_item_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "external_evidence_ref_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claims_scheduler_daemon_owner",
+        "claims_attempt_ledger_owner",
+        "claims_local_journal_owner",
+        "claims_generic_runtime_owner",
+        "claims_app_workbench_owner",
+        "claims_compatibility_alias_owner",
+        "claims_physical_morphology_cleanup_complete"
+      ],
+      "properties": {
+        "claims_scheduler_daemon_owner": {
+          "const": false
+        },
+        "claims_attempt_ledger_owner": {
+          "const": false
+        },
+        "claims_local_journal_owner": {
+          "const": false
+        },
+        "claims_generic_runtime_owner": {
+          "const": false
+        },
+        "claims_app_workbench_owner": {
+          "const": false
+        },
+        "claims_compatibility_alias_owner": {
+          "const": false
+        },
+        "claims_physical_morphology_cleanup_complete": {
+          "type": "boolean"
+        }
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projection_scope",
+        "mag_role",
+        "mag_implements_opl_runtime",
+        "mag_implements_scheduler_daemon",
+        "mag_implements_attempt_ledger",
+        "mag_implements_local_journal",
+        "mag_implements_app_workbench",
+        "mag_restores_compatibility_alias",
+        "can_declare_physical_cleanup_complete"
+      ],
+      "properties": {
+        "projection_scope": {
+          "const": "source_path_module_role_evidence_refs_only"
+        },
+        "mag_role": {
+          "const": "physical_morphology_read_guard_projection"
+        },
+        "mag_implements_opl_runtime": {
+          "const": false
+        },
+        "mag_implements_scheduler_daemon": {
+          "const": false
+        },
+        "mag_implements_attempt_ledger": {
+          "const": false
+        },
+        "mag_implements_local_journal": {
+          "const": false
+        },
+        "mag_implements_app_workbench": {
+          "const": false
+        },
+        "mag_restores_compatibility_alias": {
+          "const": false
+        },
+        "can_declare_physical_cleanup_complete": {
+          "type": "boolean"
+        }
+      }
+    },
+    "physicalMorphologyGuardProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "version",
+        "target_domain_id",
+        "owner",
+        "projection_role",
+        "state",
+        "projection_policy",
+        "allowed_roles",
+        "external_evidence_refs",
+        "missing_external_evidence_refs",
+        "required_next_evidence_refs",
+        "allowed_count",
+        "blocked_count",
+        "allowed_items",
+        "blocked_items",
+        "summary",
+        "claims",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_physical_morphology_guard_projection"
+        },
+        "version": {
+          "const": "v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "owner": {
+          "const": "med-autogrant"
+        },
+        "projection_role": {
+          "const": "repo_local_physical_morphology_refs_role_guard"
+        },
+        "state": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "projection_policy": {
+          "const": "refs_and_role_projection_only_no_runtime_no_workbench_no_scheduler_no_lifecycle_owner_no_compat_alias"
+        },
+        "allowed_roles": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "external_evidence_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "missing_external_evidence_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "required_next_evidence_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "allowed_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocked_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allowed_items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceItemProjection"
+          }
+        },
+        "blocked_items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceItemProjection"
+          }
+        },
+        "summary": {
+          "$ref": "#/$defs/summary"
+        },
+        "claims": {
+          "$ref": "#/$defs/claims"
+        },
+        "authority_boundary": {
+          "$ref": "#/$defs/authorityBoundary"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/$defs/physicalMorphologyGuardProjection"
+    }
+  ]
+}
