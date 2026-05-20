@@ -37,6 +37,10 @@ MAG repo 侧 handler/ref-only 边界已收薄：product/status/user-loop/sidecar
 
 2026-05-19 语义包归位：`agent/README.md` 已从 skeleton anchor 升级为 Declarative Grant Pack 入口；`agent/prompts/` 为六个 MAG stage 提供真实 stage prompt；`agent/stages/` 固定 stage policy；`agent/skills/` 固定 domain skill 声明；`agent/quality_gates/` 固定 fundability、quality、export/package、memory/receipt 与 authority 边界；`agent/knowledge/` 固定 grant strategy memory、package authority 与 owner receipt 知识边界。`contracts/stage_control_plane.json` 的 `prompt_refs` 解析到 `agent/prompts/*.md`，`contracts/pack_compiler_input.json` 的 `required_domain_pack_paths` 强制列出完整 pack 文件。
 
+2026-05-20 executor-first 并行落地已完成 repo-local machine surfaces：`contracts/production_acceptance/mag-executor-first-landing.json` 固定 `surface_kind=mag_executor_first_landing_program.v1`、`state=structural_ready_evidence_gated`，并把 `stage_pack_enrichment`、`independent_review_receipt_gate`、`external_evidence_pack_consumption`、`real_workspace_receipt_scaleout` 和 `physical_morphology_hygiene` 五条 lane 机器化。该 program 的策略是 `executor_first` / `default_executor=codex_cli` / `runtime_model=contract_light`，并显式声明 `mag_implements_opl_runtime=false`、`mag_implements_app_workbench=false`、`missing_evidence_claimed_complete=false`。
+
+同日 `agent/**` 已从薄 descriptor 扩写为可直接支撑 Codex stage execution 的 richer Declarative Grant Pack：六个 stage prompt、stage policy、quality gate 与 knowledge boundary 都补齐 role、inputs、executor behavior、expected refs、typed blockers、forbidden shortcuts 和 handoff receipt 语义。quality / closure scorecard 已新增 `independent_review_evidence` 合同，要求 execution artifact ref、独立 review artifact ref、review receipt ref、reviewer identity 与 no-shared-context verification；缺少这些 refs 时保持 `projection_only` / `ai_reviewer_required`，不能给出 AI reviewer-backed ready claim。
+
 2026-05-19 stage cohort-loop refs 已补齐：六个 MAG stage 的 `stage_contract` 均声明 source scope、auditable grant cohort query、OPL queue trigger、grant progress / task lifecycle monitor 和 operator freshness metric refs。OPL `stages cohort-loop --domain mag` 读取当前 MAG main 后返回 6/6 `closed_loop_ready`、`blocker_count=0`。该状态只证明 OPL 可消费 MAG declarative launch/readiness 闭环，不表示外部 default caller、真实 App/workbench 消费、grant-stage owner receipt scaleout 或 Temporal long soak 已完成。
 
 机器面同步到 `mag_handler_boundary_ready_external_caller_evidence_gated` / `mag_handler_boundary_ready_external_evidence_gated`：`functional_privatization_audit`、`product-entry manifest`、`sidecar export`、`current-program` 和 `opl-family-contract-adoption` 均声明 `claims_opl_replacement_exists=false`、`claims_all_bridge_exits_complete=false`、`claims_production_long_run_soak_complete=false`。这表示 MAG repo 侧已把自身 surface 收到 handler/ref-only/authority 边界，不表示外部 production/default caller、真实 App/workbench 消费、全部 bridge exit 或长时 soak 已完成。
@@ -70,6 +74,8 @@ Physical source morphology 当前按同一边界读取：`agent/` 是 Declarativ
 - Temporal provider long SLO、repair cadence 和 live receipt reconciliation。
 
 这些证据门已由 `external_evidence_request_pack` 给出 request id、required refs 和 required receipt shapes；production acceptance lane 现在由 `contracts/production_acceptance/mag-production-acceptance.json` 持有 MAG-owned tail 状态。当前不是结构缺口，而是 domain-owned typed blocker；`owner_receipt_typed_blocker_ref_roundtrip` 已有 1 条 verified refs-only typed-blocker receipt，关闭条件仍是后续真实 MAG owner receipt scaleout 或 typed blocker/no-regression evidence 继续通过 contract refs 与 focused test 验证。
+
+Executor-first landing program 进一步把这些差距收束为可并行推进的 evidence gates：stage pack enrichment 与 independent review requirement 已由 MAG repo-local code/schema/tests 落地；external evidence pack consumption、real workspace receipt scaleout、direct/hosted parity、continuous no-forbidden-write、Temporal long soak 和 physical morphology cleanup 仍需真实外部 receipt 或 typed blocker，不能由 MAG 内部结构通过来替代。
 
 ## 当前物理源码形态差距
 

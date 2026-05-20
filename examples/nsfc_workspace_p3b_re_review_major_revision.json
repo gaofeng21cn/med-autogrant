@@ -350,7 +350,15 @@
         "created_at": "2026-04-06T10:00:00Z",
         "updated_at": "2026-04-06T10:00:00Z",
         "source_mode": "auto",
-        "owner": "Codex CLI critique executor"
+        "owner": "Codex CLI critique executor",
+        "independent_review_evidence": {
+          "execution_attempt_ref": "draft_artifact::grant-run-nsfc-demo-001-baseline-001::draft-v1",
+          "review_attempt_ref": "mentor_critiques::critique-v1",
+          "review_receipt_ref": "opl_agent_execution_receipt::critique-v1",
+          "no_shared_context_verified": true,
+          "reviewer_owner": "Codex CLI critique executor",
+          "reviewer_agent_ref": "codex_cli::critique_executor"
+        }
       },
       "critique_id": "critique-v1",
       "draft_id": "draft-v1",
@@ -397,7 +405,15 @@
         "created_at": "2026-04-08T09:00:00Z",
         "updated_at": "2026-04-08T09:00:00Z",
         "source_mode": "auto",
-        "owner": "Codex CLI critique executor"
+        "owner": "Codex CLI critique executor",
+        "independent_review_evidence": {
+          "execution_attempt_ref": "draft_artifact::grant-run-nsfc-demo-001-baseline-001::draft-v1",
+          "review_attempt_ref": "mentor_critiques::critique-v2",
+          "review_receipt_ref": "opl_agent_execution_receipt::critique-v2",
+          "no_shared_context_verified": true,
+          "reviewer_owner": "Codex CLI critique executor",
+          "reviewer_agent_ref": "codex_cli::critique_executor"
+        }
       },
       "critique_id": "critique-v2",
       "draft_id": "draft-v1",

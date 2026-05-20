@@ -50,6 +50,10 @@ OPL 必须持有：
 
 2026-05-19 的 stage cohort-loop refs 已作为结构闭环落地。MAG 当前六个 stage 都声明 `source_scope_refs`、`cohort_query_refs`、OPL queue `trigger_refs`、`monitor_refs` 和 `dashboard_metric_refs`；OPL isolated verification 对当前 MAG main 返回 `stage_count=6`、`closed_loop_ready_count=6`、`blocker_count=0`。这关闭的是 declarative launch/readiness loop gap；外部 OPL generated/hosted caller、真实 App/workbench consumption、grant-stage owner receipt scaleout、direct/hosted parity 和 Temporal soak 仍归 evidence gate。
 
+2026-05-20 executor-first landing program 已作为 repo-tracked machine surface 落地：`contracts/production_acceptance/mag-executor-first-landing.json` 固定 `mag_executor_first_landing_program.v1`，把本轮一步到位计划拆成五条可并行 lane，并把当前状态固定为 `structural_ready_evidence_gated`。该 surface 只声明 MAG repo-local structural readiness、Codex-first executor boundary、contract-light runtime model、AI-first gate requirement 和 external evidence gates；它不声明 external evidence 已收到，也不声明 direct/hosted parity、App/workbench consumption、owner receipt scaleout、physical cleanup 或 production long soak 完成。
+
+其中 `stage_pack_enrichment` 与 `independent_review_receipt_gate` 已完成 repo-local landing：`agent/**` 已补齐 stage prompt / policy / quality gate / knowledge boundary 中的 executor behavior、expected refs、typed blockers、forbidden shortcuts 和 handoff receipt 语义；quality / closure scorecard 已要求 `independent_review_evidence`，缺 execution artifact ref、独立 review artifact ref、review receipt ref、reviewer identity 或 no-shared-context verification 时保持 fail-closed。该完成只表示 gate requirement 和 pack source 可验证，不表示某个真实 grant draft 已通过独立 review。
+
 `opl_provider_runtime_contract` 的落地只关闭 manifest/schema/test 的 owner 语义漂移；它不声明 OPL production/default caller、Temporal long soak、App/workbench consumption 或 live receipt reconciliation 已完成。
 
 1. `generated_surface_bridge_exit`
@@ -135,6 +139,8 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 
 ## 完善顺序
 
+当前按 `contracts/production_acceptance/mag-executor-first-landing.json` 做一步到位并行推进，而不是拆成线性阶段：repo-local `stage_pack_enrichment` 与 `independent_review_receipt_gate` 已落地；剩余 work 只接受真实 external receipt、typed blocker 或 no-regression evidence 关闭。
+
 1. `consume_external_evidence_request_pack`
    OPL/App/production caller 从 `/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack` 读取 request ids、required refs 和 required receipt shapes，并返回 body-free receipts / typed blockers / no-regression evidence。当前已有 1 条 `owner_receipt_typed_blocker_ref_roundtrip` verified refs-only typed-blocker receipt，剩余 6 条 request 仍需 external receipt。
 
@@ -147,7 +153,7 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
    当前 production acceptance surface 已把该项收为 `domain_owned_typed_blocker_with_next_verification_ref`。`owner_receipt_typed_blocker_ref_roundtrip` 已有 1 条 verified typed-blocker receipt，下一步按 `contracts/production_acceptance/mag-production-acceptance.json` 中的 `next_verification_command_refs` 继续扩大真实 owner receipt / typed blocker / no-regression evidence，而不是把它计为结构差距。
 
 4. `private_authority_ai_first_guard`
-   审计 retained authority surfaces，确保 fundability / quality / export / memory accept-reject 的判断都来自 AI-first stage output，package / receipt / helper 只做 programmatic guard，代码只做 validator、materializer、receipt signer、guard 和 refs projection。
+   retained authority surfaces 的 AI-first taxonomy 已落到 pack / audit / manifest；本轮新增的 `independent_review_evidence` 继续把 quality / closure gate 收紧到 independent AI review artifact + receipt refs。后续工作是让真实 grant workspace 持续产出这些 refs，并保持 fundability / quality / export / memory accept-reject 判断都来自 AI-first stage output，package / receipt / helper 只做 programmatic guard。
 
 5. `physical_source_morphology_hygiene`
    继续把 active source 中带 runtime / product-entry / sidecar / lifecycle / workbench / scheduler 语义的模块保持在 domain handler、refs-only adapter、minimal authority function 或 history/tombstone 角色；优先治理 `domain_runtime_parts/substrate.py`、`product_entry_parts/*`、`runtime_registration.py`、`control_plane.py`、owner receipt helper、grouped CLI wrapper 和 autonomy controller 的平台化命名。新增代码默认进入 `agent/` pack、`contracts/`、authority function 或 domain handler，不重建本地 runtime/journal/attempt ledger，不新增 compatibility facade。

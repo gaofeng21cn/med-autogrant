@@ -5,6 +5,12 @@ Purpose: `current_decision_log`
 State: `current`
 Machine boundary: 本文是人读决策记录。机器真相继续归 contracts、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs；历史决策若与当前 status/current-program 冲突，以当前 owner surfaces 为准。
 
+## 2026-05-20：落地 MAG executor-first 并行 landing program
+
+- 决策：新增 `contracts/production_acceptance/mag-executor-first-landing.json` 作为 MAG executor-first / Codex-first / contract-light 的一步到位并行落地机器计划面；并同步把 `agent/**` 扩写成可驱动 Codex stage 的 richer Declarative Grant Pack，把 `independent_review_evidence` 写入 quality / closure scorecard schema、source 和 focused tests。
+- 理由：MAG 的 OPL 对齐目标不是在仓内重建通用 runtime，而是让最强 AI executor 在清晰 stage pack、typed blocker、owner receipt、quality gate 和 refs-only evidence surface 上工作。repo-local 可完成的是 stage prompt/policy/knowledge/gate 语义变厚、AI-first independent review requirement fail-closed、以及并行 lane 的机器化；外部 OPL/App/production caller、direct/hosted parity、owner receipt scaleout 和 long soak 只能由真实 receipt evidence 关闭。
+- 影响：`stage_pack_enrichment` 与 `independent_review_receipt_gate` 已作为 repo-local landing 完成；`external_evidence_pack_consumption`、`real_workspace_receipt_scaleout` 和 `physical_morphology_hygiene` 继续受外部 evidence gate 约束。该决策不实现 OPL runtime，不声明 App/workbench 或 production/default caller 已消费 MAG，也不把 conformance、scorecard、package existence 或 provider completion 写成 grant-ready / fundability-ready / submission-ready。
+
 ## 2026-05-19：清理 stale generic runtime retirement lane
 
 - 决策：`.worktrees/retire-generic-runtime-surfaces` / `codex/retire-mag-generic-runtime-surfaces` 只作为已吸收过的历史 lane 处理，不再向当前 `main` 重放。该 worktree 的有效删除目标已由 `7d877b8 Retire MAG local runtime surfaces` 覆盖；保留下来的差异只是不应重放的旧树状态与非语义格式差异。
