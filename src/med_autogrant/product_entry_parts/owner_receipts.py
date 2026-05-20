@@ -30,6 +30,21 @@ _STAGE_IDS = (
     "package_and_submit_ready",
 )
 _LIFECYCLE_OPERATIONS = ("cleanup", "restore", "retention")
+_PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_SHAPES = ("domain_owner_receipt", "typed_blocker")
+_PATCH_LOOP_REF_KEYS = (
+    "blocked_suite_result_ref",
+    "developer_patch_work_order_ref",
+    "patch_traceability_matrix_ref",
+    "target_repo_verification_refs",
+    "target_runtime_read_model_consumption_ref",
+    "workspace_environment_proof_ref",
+    "no_forbidden_write_proof_ref",
+    "target_owner_receipt_or_typed_blocker_ref",
+    "patch_absorption_ref",
+    "worktree_cleanup_ref",
+    "agent_lab_re_evaluation_ref",
+)
+_PATCH_LOOP_REF_LIST_KEYS = ("target_repo_verification_refs",)
 
 
 def write_owner_receipt_evidence(
@@ -324,10 +339,14 @@ def build_production_live_acceptance_receipt_projection(
     meta_agent_coordination_result: Mapping[str, Any],
 ) -> dict[str, Any]:
     receipt = _require_owner_receipt_evidence(owner_receipt_evidence)
-    receipt_shape = _require_nonempty_string_from_receipt(receipt, "receipt_shape")
-    if receipt_shape != "domain_owner_receipt":
+    receipt_shape = _require_choice(
+        _require_nonempty_string_from_receipt(receipt, "receipt_shape"),
+        choices=_PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_SHAPES,
+        field_name="receipt_shape",
+    )
+    if receipt_shape not in _PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_SHAPES:
         raise WorkspaceStateError(
-            "production live acceptance 必须使用 domain_owner_receipt，不能用 typed_blocker 或 no_regression_evidence 关闭。"
+            "production live acceptance 只能使用 domain_owner_receipt 或 typed_blocker closeout。"
         )
     suite_result = _extract_agent_lab_suite_result(agent_lab_suite_result)
     meta_result = _extract_meta_agent_coordination_result(meta_agent_coordination_result)
@@ -335,11 +354,28 @@ def build_production_live_acceptance_receipt_projection(
     meta_agent_lab_result_ref = _meta_agent_lab_result_ref(meta_result)
     if meta_agent_lab_result_ref != suite_result_id:
         raise WorkspaceStateError("opl-meta-agent coordination result 必须绑定同一个 Agent Lab result_id。")
+    patch_loop_refs = _meta_patch_loop_refs(meta_result)
+    if receipt_shape == "typed_blocker" and patch_loop_refs is None:
+        raise WorkspaceStateError("typed_blocker closeout 必须提供完整 OMA developer patch-loop refs。")
     receipt_ref = _require_nonempty_string_from_receipt(receipt, "receipt_instance_ref")
+    accepted_return_shape = (
+        "domain_owner_receipt_ref"
+        if receipt_shape == "domain_owner_receipt"
+        else "typed_blocker_ref"
+    )
+    evidence_ref = (
+        patch_loop_refs["target_owner_receipt_or_typed_blocker_ref"]
+        if patch_loop_refs is not None
+        else "receipt:mag/production-live-acceptance/2026-05-20"
+    )
     payload = {
         "surface_kind": PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND,
         "version": "v1",
-        "state": "closed_by_mag_domain_owner_live_acceptance_receipt",
+        "state": (
+            "closed_by_mag_domain_owner_live_acceptance_receipt"
+            if receipt_shape == "domain_owner_receipt"
+            else "typed_blocker_closeout_refs_ready"
+        ),
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
         "receipt": {
@@ -377,9 +413,9 @@ def build_production_live_acceptance_receipt_projection(
             "meta_agent_can_authorize_fundability_ready": False,
         },
         "production_acceptance": {
-            "accepted_return_shape": "domain_owner_receipt_ref",
+            "accepted_return_shape": accepted_return_shape,
             "closed_typed_blocker_kind": "domain_owner_live_acceptance_receipt_scaleout_required",
-            "evidence_ref": "receipt:mag/production-live-acceptance/2026-05-20",
+            "evidence_ref": evidence_ref,
             "contract_ref": "contracts/production_acceptance/mag-production-acceptance.json",
             "doc_ref": "docs/status.md#production-acceptance",
             "next_verification_command": (
@@ -400,6 +436,8 @@ def build_production_live_acceptance_receipt_projection(
         },
         "forbidden_write_proof": dict(receipt["forbidden_write_proof"]),
     }
+    if patch_loop_refs is not None:
+        payload["patch_loop_refs"] = patch_loop_refs
     return {
         "ok": True,
         "command": "production-live-acceptance-receipt",
@@ -583,8 +621,10 @@ def _extract_meta_agent_coordination_result(payload: Mapping[str, Any]) -> Mappi
         "can_authorize_target_domain_quality_or_export",
     )):
         raise WorkspaceStateError("opl-meta-agent coordination result 不能持有 MAG truth、artifact 或 verdict authority。")
-    if _meta_developer_work_order_status(record) != "no_patch_required":
-        raise WorkspaceStateError("MAG production live acceptance 需要 opl-meta-agent no_patch_required work order。")
+    if _meta_developer_work_order_status(record) not in ("no_patch_required", "patch_smoke_closed"):
+        raise WorkspaceStateError(
+            "MAG production live acceptance 需要 opl-meta-agent no_patch_required 或 patch_smoke_closed work order。"
+        )
     return record
 
 
@@ -616,6 +656,35 @@ def _meta_agent_lab_result_ref(meta_result: Mapping[str, Any]) -> str:
         work_order.get("source_agent_lab_result_ref"),
         field_name="developer_patch_work_order.source_agent_lab_result_ref",
     )
+
+
+def _meta_patch_loop_refs(meta_result: Mapping[str, Any]) -> dict[str, Any] | None:
+    learning_loop = meta_result.get("learning_loop")
+    if not isinstance(learning_loop, Mapping):
+        raise WorkspaceStateError("meta_agent_coordination_result 缺少 learning_loop。")
+    work_order = learning_loop.get("developer_patch_work_order")
+    if not isinstance(work_order, Mapping):
+        raise WorkspaceStateError("meta_agent_coordination_result 缺少 developer_patch_work_order。")
+    if _meta_developer_work_order_status(meta_result) == "no_patch_required":
+        return None
+    refs: dict[str, Any] = {}
+    for key in _PATCH_LOOP_REF_KEYS:
+        if key in _PATCH_LOOP_REF_LIST_KEYS:
+            value = work_order.get(key)
+            if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
+                raise WorkspaceStateError(f"developer_patch_work_order.{key} 必须是 ref 字符串列表。")
+            refs[key] = [
+                _require_nonempty_string(item, field_name=f"developer_patch_work_order.{key}[]")
+                for item in value
+            ]
+            if not refs[key]:
+                raise WorkspaceStateError(f"developer_patch_work_order.{key} 至少需要一个 ref。")
+        else:
+            refs[key] = _require_nonempty_string(
+                work_order.get(key),
+                field_name=f"developer_patch_work_order.{key}",
+            )
+    return refs
 
 
 def _require_nonempty_string_from_receipt(receipt: Mapping[str, Any], key: str) -> str:

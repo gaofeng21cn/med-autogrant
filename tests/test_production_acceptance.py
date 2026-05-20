@@ -163,3 +163,37 @@ def test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker() -> 
         assert closure["accepted_return_shape"] == "typed_blocker_ref"
         _assert_ref_list(refs["typed_blocker_refs"])
         assert closure["next_verification_ref"] in refs["next_verification_command_refs"]
+
+
+def test_mag_production_acceptance_exposes_real_target_patch_loop_refs() -> None:
+    surface = _acceptance()
+    patch_loop_refs = surface["patch_loop_refs"]
+
+    assert set(patch_loop_refs) == {
+        "blocked_suite_result_ref",
+        "developer_patch_work_order_ref",
+        "patch_traceability_matrix_ref",
+        "target_repo_verification_refs",
+        "target_runtime_read_model_consumption_ref",
+        "workspace_environment_proof_ref",
+        "no_forbidden_write_proof_ref",
+        "target_owner_receipt_or_typed_blocker_ref",
+        "patch_absorption_ref",
+        "worktree_cleanup_ref",
+        "agent_lab_re_evaluation_ref",
+    }
+    assert patch_loop_refs["target_runtime_read_model_consumption_ref"] == (
+        "/product_entry_manifest/production_live_acceptance_receipt"
+    )
+    assert patch_loop_refs["no_forbidden_write_proof_ref"] == (
+        "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only"
+    )
+    assert patch_loop_refs["target_owner_receipt_or_typed_blocker_ref"] in (
+        surface["refs"]["owner_receipt_refs"] + surface["refs"]["typed_blocker_refs"]
+    )
+    _assert_ref_list(patch_loop_refs["target_repo_verification_refs"])
+    for key, value in patch_loop_refs.items():
+        if key == "target_repo_verification_refs":
+            continue
+        assert isinstance(value, str)
+        assert value

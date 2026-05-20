@@ -24,9 +24,26 @@ def build_production_live_acceptance_receipt_surface() -> dict[str, Any]:
             "json",
         ),
         "accepted_owner_receipt_shape": "domain_owner_receipt",
+        "accepted_closeout_shapes": [
+            "domain_owner_receipt",
+            "typed_blocker",
+        ],
         "required_coordination_refs": [
             "opl_agent_lab_suite_result",
             "opl_meta_agent_external_suite_self_evolution_result",
+        ],
+        "required_patch_loop_refs": [
+            "blocked_suite_result_ref",
+            "developer_patch_work_order_ref",
+            "patch_traceability_matrix_ref",
+            "target_repo_verification_refs",
+            "target_runtime_read_model_consumption_ref",
+            "workspace_environment_proof_ref",
+            "no_forbidden_write_proof_ref",
+            "target_owner_receipt_or_typed_blocker_ref",
+            "patch_absorption_ref",
+            "worktree_cleanup_ref",
+            "agent_lab_re_evaluation_ref",
         ],
         "authority_boundary": {
             "mag_owner_receipt_authority": True,

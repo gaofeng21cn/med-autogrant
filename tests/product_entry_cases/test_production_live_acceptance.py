@@ -56,6 +56,36 @@ def _meta_agent_coordination_result() -> dict[str, object]:
     }
 
 
+def _meta_agent_patch_work_order_result() -> dict[str, object]:
+    result = deepcopy(_meta_agent_coordination_result())
+    result["learning_loop"]["developer_patch_work_order"] = {
+        "status": "patch_smoke_closed",
+        "source_agent_lab_result_ref": "oals_mag_live_acceptance",
+        "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
+        "developer_patch_work_order_ref": "developer-work-order:oma/mag/ahe-real-target-patch-smoke",
+        "patch_traceability_matrix_ref": "patch-traceability:oma/mag/ahe-real-target-patch-smoke",
+        "target_repo_verification_refs": [
+            "rtk ./scripts/run-pytest-clean.sh tests/product_entry_cases/test_production_live_acceptance.py tests/test_production_acceptance.py -q",
+            "rtk ./scripts/verify.sh",
+            "rtk git diff --check",
+        ],
+        "target_runtime_read_model_consumption_ref": (
+            "read-model:mag/product-entry/production-live-acceptance-receipt"
+        ),
+        "workspace_environment_proof_ref": (
+            "workspace-proof:med-autogrant/.worktrees/codex/ahe-real-target-patch-smoke"
+        ),
+        "no_forbidden_write_proof_ref": (
+            "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only"
+        ),
+        "target_owner_receipt_or_typed_blocker_ref": "typed-blocker:mag/ahe-real-target-patch-smoke",
+        "patch_absorption_ref": "git-commit:pending/codex-ahe-real-target-patch-smoke",
+        "worktree_cleanup_ref": "worktree-cleanup:pending/ahe-real-target-patch-smoke",
+        "agent_lab_re_evaluation_ref": "agent-lab-run:oma/mag/ahe-real-target-patch-smoke/re-evaluation",
+    }
+    return result
+
+
 class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
     def test_manifest_exposes_mag_live_acceptance_receipt_surface(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -67,7 +97,27 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
         surface = payload["product_entry_manifest"]["production_live_acceptance_receipt"]
         self.assertEqual(surface["surface_kind"], "mag_production_live_acceptance_receipt_surface")
         self.assertEqual(surface["accepted_owner_receipt_shape"], "domain_owner_receipt")
+        self.assertEqual(
+            surface["accepted_closeout_shapes"],
+            ["domain_owner_receipt", "typed_blocker"],
+        )
         self.assertIn("production-live-acceptance-receipt", surface["command"])
+        self.assertEqual(
+            set(surface["required_patch_loop_refs"]),
+            {
+                "blocked_suite_result_ref",
+                "developer_patch_work_order_ref",
+                "patch_traceability_matrix_ref",
+                "target_repo_verification_refs",
+                "target_runtime_read_model_consumption_ref",
+                "workspace_environment_proof_ref",
+                "no_forbidden_write_proof_ref",
+                "target_owner_receipt_or_typed_blocker_ref",
+                "patch_absorption_ref",
+                "worktree_cleanup_ref",
+                "agent_lab_re_evaluation_ref",
+            },
+        )
         self.assertTrue(surface["authority_boundary"]["opl_agent_lab_ref_consumer_only"])
         self.assertTrue(surface["authority_boundary"]["meta_agent_work_order_consumer_only"])
         self.assertFalse(surface["authority_boundary"]["can_declare_fundability_ready"])
@@ -130,9 +180,8 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
         self.assertFalse(projection["forbidden_write_proof"]["grant_truth_written"])
         self.assertFalse(projection["forbidden_write_proof"]["fundability_verdict_written"])
 
-    def test_live_acceptance_receipt_projection_rejects_typed_blocker_closeout(self) -> None:
+    def test_live_acceptance_receipt_projection_accepts_typed_blocker_patch_smoke_refs(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
-        from med_autogrant.workspace_types import WorkspaceStateError
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             entry = MedAutoGrantProductEntry()
@@ -145,11 +194,79 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
                 runtime_root=Path(tmp_dir) / "runtime-state",
                 receipt_id="production-live-acceptance-blocked",
             )["owner_receipt_evidence"]
+            payload = entry.build_production_live_acceptance_receipt_projection(
+                owner_receipt_evidence=receipt,
+                agent_lab_suite_result=_agent_lab_suite_result(),
+                meta_agent_coordination_result=_meta_agent_patch_work_order_result(),
+            )
+
+        projection = payload["production_live_acceptance_receipt"]
+        self.assertEqual(projection["state"], "typed_blocker_closeout_refs_ready")
+        self.assertEqual(projection["receipt"]["receipt_shape"], "typed_blocker")
+        self.assertEqual(
+            projection["production_acceptance"]["accepted_return_shape"],
+            "typed_blocker_ref",
+        )
+        self.assertEqual(
+            projection["production_acceptance"]["closed_typed_blocker_kind"],
+            "domain_owner_live_acceptance_receipt_scaleout_required",
+        )
+        self.assertFalse(projection["authority_boundary"]["can_declare_fundability_ready"])
+        self.assertFalse(projection["authority_boundary"]["can_declare_submission_ready_export"])
+        self.assertFalse(projection["forbidden_write_proof"]["grant_truth_written"])
+        self.assertFalse(projection["forbidden_write_proof"]["memory_body_written"])
+
+        patch_loop_refs = projection["patch_loop_refs"]
+        self.assertEqual(
+            set(patch_loop_refs),
+            {
+                "blocked_suite_result_ref",
+                "developer_patch_work_order_ref",
+                "patch_traceability_matrix_ref",
+                "target_repo_verification_refs",
+                "target_runtime_read_model_consumption_ref",
+                "workspace_environment_proof_ref",
+                "no_forbidden_write_proof_ref",
+                "target_owner_receipt_or_typed_blocker_ref",
+                "patch_absorption_ref",
+                "worktree_cleanup_ref",
+                "agent_lab_re_evaluation_ref",
+            },
+        )
+        self.assertIn(
+            "tests/product_entry_cases/test_production_live_acceptance.py",
+            " ".join(patch_loop_refs["target_repo_verification_refs"]),
+        )
+        self.assertEqual(
+            patch_loop_refs["target_owner_receipt_or_typed_blocker_ref"],
+            "typed-blocker:mag/ahe-real-target-patch-smoke",
+        )
+
+    def test_live_acceptance_receipt_projection_requires_complete_patch_loop_refs(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.workspace_types import WorkspaceStateError
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            entry = MedAutoGrantProductEntry()
+            receipt = entry.write_owner_receipt_evidence(
+                input_path=CRITIQUE_EXAMPLE_PATH,
+                receipt_shape="typed_blocker",
+                stage_id="package_and_submit_ready",
+                source_ref="opl-agent-lab://mag/live-acceptance-blocked",
+                closeout_summary="MAG owner still blocked.",
+                runtime_root=Path(tmp_dir) / "runtime-state",
+                receipt_id="production-live-acceptance-incomplete-patch-loop",
+            )["owner_receipt_evidence"]
+            meta_result = _meta_agent_patch_work_order_result()
+            del meta_result["learning_loop"]["developer_patch_work_order"][
+                "agent_lab_re_evaluation_ref"
+            ]
+
             with self.assertRaises(WorkspaceStateError):
                 entry.build_production_live_acceptance_receipt_projection(
                     owner_receipt_evidence=receipt,
                     agent_lab_suite_result=_agent_lab_suite_result(),
-                    meta_agent_coordination_result=_meta_agent_coordination_result(),
+                    meta_agent_coordination_result=meta_result,
                 )
 
     def test_live_acceptance_receipt_projection_rejects_non_mag_owner_receipt(self) -> None:

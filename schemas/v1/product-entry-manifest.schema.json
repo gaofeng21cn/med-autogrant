@@ -3292,7 +3292,9 @@
         "target_domain_id",
         "command",
         "accepted_owner_receipt_shape",
+        "accepted_closeout_shapes",
         "required_coordination_refs",
+        "required_patch_loop_refs",
         "authority_boundary"
       ],
       "properties": {
@@ -3314,6 +3316,18 @@
         "accepted_owner_receipt_shape": {
           "const": "domain_owner_receipt"
         },
+        "accepted_closeout_shapes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "domain_owner_receipt",
+              "typed_blocker"
+            ]
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
         "required_coordination_refs": {
           "type": "array",
           "items": {
@@ -3324,6 +3338,27 @@
           },
           "minItems": 2,
           "maxItems": 2,
+          "uniqueItems": true
+        },
+        "required_patch_loop_refs": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "blocked_suite_result_ref",
+              "developer_patch_work_order_ref",
+              "patch_traceability_matrix_ref",
+              "target_repo_verification_refs",
+              "target_runtime_read_model_consumption_ref",
+              "workspace_environment_proof_ref",
+              "no_forbidden_write_proof_ref",
+              "target_owner_receipt_or_typed_blocker_ref",
+              "patch_absorption_ref",
+              "worktree_cleanup_ref",
+              "agent_lab_re_evaluation_ref"
+            ]
+          },
+          "minItems": 11,
+          "maxItems": 11,
           "uniqueItems": true
         },
         "authority_boundary": {
