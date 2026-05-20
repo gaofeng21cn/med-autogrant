@@ -105,6 +105,15 @@ OPL 必须持有：
 10. `receipt_readiness_projection`
    MAG 现在提供 `receipt_readiness_projection`，只聚合 owner receipt、memory accept/reject receipt、package/export lifecycle receipt 与 cleanup/restore/retention lifecycle receipt 的 coverage、shape 和 refs。状态只允许 `receipts_missing`、`partial_receipt_coverage` 或 `receipt_refs_ready_not_quality_ready`；它不能生成 fundability-ready、quality-ready、export-ready 或 submission-ready verdict，也不能包含 memory body、grant artifact body、proposal text、package archive 或 OPL runtime state。
 
+11. `codex_stage_execution_receipt_bundle`
+   MAG 现在提供 Codex-first stage execution receipt ABI，把 execution attempt 与 independent review attempt 都收成 refs-only projection。execution attempt 必须有 `codex_cli` executor、invocation ref、task record ref 和 receipt ref；review attempt 必须有独立 invocation、独立 task record、独立 context、review artifact ref 和 review receipt ref。缺 review receipt 时状态 fail-closed，需要 typed blocker；即使 execution/review refs 完整，也只到 `codex_stage_receipts_ready_not_quality_ready`，不能授权 fundability / quality / export / submission-ready。
+
+12. `operator_closeout_readiness_projection`
+   MAG 现在提供 operator closeout read model，把 production acceptance tail、external evidence receipt ledger 与 receipt readiness projection 聚合成单一 closeout view。该 surface 明确 `request_accounting_closure_equals_real_evidence=false`、`receipt_refs_ready_equals_quality_ready=false`、`production_tail_closure_equals_grant_ready=false`，避免把 request-level blocker accounting、receipt coverage 或 production acceptance tail closure 误读成真实 external evidence、quality readiness 或 grant readiness。
+
+13. `physical_morphology_guard_projection`
+   MAG 现在提供 physical morphology guard projection，只读取 source path、module id、declared role、evidence refs 与 forbidden role flags。允许角色限定为 declarative pack surface、domain handler target、refs-only adapter、minimal authority function、native helper、diagnostic 和 legacy proof tombstone；scheduler daemon、attempt ledger、local journal、generic runtime、App workbench 或 compatibility alias ownership 一旦为 true 即 fail-closed。该 guard 默认 evidence-gated，不把 role classification、OPL cleanup ledger 或 source scan 写成 physical cleanup complete。
+
 ## Retained Private Authority Surfaces
 
 MAG 只允许保留 grant domain 的 minimal authority surfaces；旧 `function_id` 是兼容字段，不代表由 Python 函数直接裁决：
@@ -148,7 +157,7 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 
 ## 完善顺序
 
-当前按 `contracts/production_acceptance/mag-executor-first-landing.json` 做一步到位并行推进，而不是拆成线性阶段：repo-local `stage_pack_enrichment` 与 `independent_review_receipt_gate` 已落地；剩余 work 只接受真实 external receipt、typed blocker 或 no-regression evidence 关闭。
+当前按 `contracts/production_acceptance/mag-executor-first-landing.json` 做一步到位并行推进，而不是拆成线性阶段：repo-local `stage_pack_enrichment`、`independent_review_receipt_gate`、Codex stage receipt ABI、operator closeout read model 与 physical morphology guard 已落地；剩余 work 只接受真实 external receipt、typed blocker 或 no-regression evidence 关闭。
 
 1. `consume_external_evidence_request_pack`
    OPL/App/production caller 从 `/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack` 读取 request ids、required refs 和 required receipt shapes，并返回 body-free receipts / typed blockers / no-regression evidence。MAG 侧已有 `external_evidence_consumption_ledger` 可消费并校验这些 refs；当前 `contracts/external_evidence/mag-evidence-receipt-ledger.json` 已把全部 7 条 request 闭合为 receipt 或 typed blocker，`remaining_open_request_count=0`；其中 6 条仍是 MAG-owned typed blocker，表示真实外部 receipt 尚未收到。OPL refs-only ledger 已 record+verify 这 6 条 typed blocker refs，`family-runtime production-closeout` 会把它们读成 `closed_by_domain_owned_typed_blocker` 而非 open safe-action。
@@ -159,13 +168,13 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 3. `real_workspace_receipt_scaleout`
    推进真实 grant-stage attempt、memory/package/lifecycle receipt、continuous receipt reconciliation、cleanup/restore/retention 和 provider SLO long soak。
 
-   当前 production acceptance surface 已把 MAG-owned tail 收为 `closed_by_domain_owned_acceptance_receipt`，并新增 `receipt_readiness_projection` 聚合 owner/memory/package/lifecycle coverage；`contracts/external_evidence/mag-evidence-receipt-ledger.json` 同时作为 external request closure ledger。下一步按 `external_evidence_request_pack` 继续扩大外部 caller / App / parity / long-soak 的真实 owner receipt、typed blocker 或 no-regression evidence，而不是把 production acceptance tail、request accounting closure 或 receipt coverage 重新写成 grant-ready。
+   当前 production acceptance surface 已把 MAG-owned tail 收为 `closed_by_domain_owned_acceptance_receipt`，并新增 `receipt_readiness_projection` 聚合 owner/memory/package/lifecycle coverage；`codex_stage_execution_receipt_bundle` 固定 Codex-first execution/review receipt ABI；`operator_closeout_readiness_projection` 把 request accounting、real evidence gap 和 receipt coverage 分开读；`contracts/external_evidence/mag-evidence-receipt-ledger.json` 同时作为 external request closure ledger。下一步按 `external_evidence_request_pack` 继续扩大外部 caller / App / parity / long-soak 的真实 owner receipt、typed blocker 或 no-regression evidence，而不是把 production acceptance tail、request accounting closure、Codex/review receipt refs 或 receipt coverage 重新写成 grant-ready。
 
 4. `private_authority_ai_first_guard`
    retained authority surfaces 的 AI-first taxonomy 已落到 pack / audit / manifest；本轮新增的 `independent_review_evidence` 继续把 quality / closure gate 收紧到 independent AI review artifact + receipt refs。后续工作是让真实 grant workspace 持续产出这些 refs，并保持 fundability / quality / export / memory accept-reject 判断都来自 AI-first stage output，package / receipt / helper 只做 programmatic guard。
 
 5. `physical_source_morphology_hygiene`
-   继续把 active source 中带 runtime / product-entry / sidecar / lifecycle / workbench / scheduler 语义的模块保持在 domain handler、refs-only adapter、minimal authority function 或 history/tombstone 角色；优先治理 `domain_runtime_parts/substrate.py`、`product_entry_parts/*`、`runtime_registration.py`、`control_plane.py`、owner receipt helper、grouped CLI wrapper 和 autonomy controller 的平台化命名。新增代码默认进入 `agent/` pack、`contracts/`、authority function 或 domain handler，不重建本地 runtime/journal/attempt ledger，不新增 compatibility facade。
+   继续把 active source 中带 runtime / product-entry / sidecar / lifecycle / workbench / scheduler 语义的模块保持在 domain handler、refs-only adapter、minimal authority function 或 history/tombstone 角色；`physical_morphology_guard_projection` 已把 source role、evidence refs 与 forbidden role flags 做成 fail-closed read projection。后续优先治理 `domain_runtime_parts/substrate.py`、`product_entry_parts/*`、`runtime_registration.py`、`control_plane.py`、owner receipt helper、grouped CLI wrapper 和 autonomy controller 的平台化命名。新增代码默认进入 `agent/` pack、`contracts/`、authority function 或 domain handler，不重建本地 runtime/journal/attempt ledger，不新增 compatibility facade。
 
 ## 当前不能写成
 
