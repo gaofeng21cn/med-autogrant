@@ -272,6 +272,165 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
 
+    def test_codex_stage_receipts_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "surface_kind": "mag_codex_stage_execution_receipt_bundle",
+            "state": "codex_stage_receipts_ready_not_quality_ready",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            execution_attempt_path = Path(tmp_dir) / "execution.json"
+            review_attempt_path = Path(tmp_dir) / "review.json"
+            execution_attempt = {
+                "attempt_id": "attempt-critique-001",
+                "executor": "codex_cli",
+                "invocation_ref": "codex://invocations/critique-001",
+                "task_record_ref": "runtime://opl/stage-attempts/critique-001.json",
+                "receipt_ref": "runtime://mag/receipts/stage/critique-001.json",
+                "stage_pack_ref": "agent/prompts/review_and_rebuttal.md",
+                "output_artifact_ref": "runtime://mag/artifacts/critique-001.json",
+            }
+            review_attempt = {
+                "review_attempt_id": "review-critique-001",
+                "reviewer_executor": "codex_cli",
+                "review_invocation_ref": "codex://invocations/review-critique-001",
+                "review_task_record_ref": "runtime://opl/stage-attempts/review-critique-001.json",
+                "review_receipt_ref": "runtime://mag/receipts/review/review-critique-001.json",
+                "review_artifact_ref": "runtime://mag/artifacts/review-critique-001.json",
+                "review_target_attempt_id": "attempt-critique-001",
+                "independent_context": True,
+                "shared_context_with_execution": False,
+            }
+            execution_attempt_path.write_text(json.dumps(execution_attempt), encoding="utf-8")
+            review_attempt_path.write_text(json.dumps(review_attempt), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_codex_stage_execution_receipt_bundle.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "codex-stage-receipts",
+                    "--stage-id",
+                    "review_and_rebuttal",
+                    "--execution-attempt",
+                    str(execution_attempt_path),
+                    "--review-attempt",
+                    str(review_attempt_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_codex_stage_execution_receipt_bundle.assert_called_once_with(
+            stage_id="review_and_rebuttal",
+            execution_attempts=[execution_attempt],
+            review_attempts=[review_attempt],
+        )
+
+    def test_operator_closeout_readiness_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "surface_kind": "mag_operator_closeout_readiness_projection",
+            "state": "operator_closeout_refs_ready_not_quality_ready",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            production_acceptance_path = Path(tmp_dir) / "acceptance.json"
+            ledger_path = Path(tmp_dir) / "ledger.json"
+            receipt_readiness_path = Path(tmp_dir) / "readiness.json"
+            production_acceptance = {
+                "surface_kind": "mag_production_acceptance_evidence.v1",
+                "evidence_tail_status": "closed_by_domain_owned_acceptance_receipt",
+            }
+            ledger = {
+                "surface_kind": "mag_external_evidence_receipt_ledger.v1",
+                "remaining_real_evidence_gap_ids": [],
+                "summary": {"claims_grant_or_fundability_ready": False},
+            }
+            receipt_readiness = {
+                "surface_kind": "mag_receipt_readiness_projection",
+                "state": "receipt_refs_ready_not_quality_ready",
+                "missing_categories": [],
+            }
+            production_acceptance_path.write_text(json.dumps(production_acceptance), encoding="utf-8")
+            ledger_path.write_text(json.dumps(ledger), encoding="utf-8")
+            receipt_readiness_path.write_text(json.dumps(receipt_readiness), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_operator_closeout_readiness_projection.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "operator-closeout-readiness",
+                    "--production-acceptance",
+                    str(production_acceptance_path),
+                    "--external-evidence-receipt-ledger",
+                    str(ledger_path),
+                    "--receipt-readiness-projection",
+                    str(receipt_readiness_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_operator_closeout_readiness_projection.assert_called_once_with(
+            production_acceptance=production_acceptance,
+            external_evidence_receipt_ledger=ledger,
+            receipt_readiness_projection=receipt_readiness,
+        )
+
+    def test_physical_morphology_guard_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "surface_kind": "mag_physical_morphology_guard_projection",
+            "state": "allowed_evidence_gated",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            source_item_path = Path(tmp_dir) / "source-item.json"
+            source_item = {
+                "path": "src/med_autogrant/product_entry_parts/entry.py",
+                "module_id": "product_entry",
+                "declared_role": "domain_handler_target",
+                "evidence_refs": ["/product_entry_manifest/physical_morphology/product_entry"],
+                "forbidden_role_flags": {
+                    "scheduler_daemon_owner": False,
+                    "attempt_ledger_owner": False,
+                    "local_journal_owner": False,
+                    "generic_runtime_owner": False,
+                    "app_workbench_owner": False,
+                    "compatibility_alias_owner": False,
+                },
+            }
+            source_item_path.write_text(json.dumps(source_item), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_physical_morphology_guard_projection.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "physical-morphology-guard",
+                    "--source-item",
+                    str(source_item_path),
+                    "--external-evidence-ref",
+                    "opl://receipts/mag/physical-morphology/parity.json",
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_physical_morphology_guard_projection.assert_called_once_with(
+            source_items=[source_item],
+            external_evidence_refs=["opl://receipts/mag/physical-morphology/parity.json"],
+        )
+
     def test_flat_product_status_alias_is_rejected(self) -> None:
         with self.assertRaisesRegex(
             SystemExit,

@@ -57,6 +57,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_mainline_phase,
     handle_mainline_status,
     handle_next_step,
+    handle_product_codex_stage_receipts,
     handle_product_entry_manifest,
     handle_product_continuous_receipt_reconciliation,
     handle_product_domain_memory_decision,
@@ -67,8 +68,10 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_lifecycle_receipt_evidence,
     handle_product_live_acceptance_receipt,
     handle_product_memory_receipt_projection,
+    handle_product_operator_closeout_readiness,
     handle_product_owner_receipt_evidence,
     handle_product_package_lifecycle_handoff,
+    handle_product_physical_morphology_guard,
     handle_product_receipt_reconciliation_inventory,
     handle_product_receipt_reconciliation_proof,
     handle_product_sidecar_dispatch,
@@ -95,6 +98,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_manifest_command,
     _add_output_workspace_command,
     _add_phase_command,
+    _add_product_codex_stage_receipts_command,
     _add_product_domain_memory_decision_command,
     _add_product_domain_memory_proposal_command,
     _add_product_domain_memory_receipt_evidence_command,
@@ -104,8 +108,10 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_lifecycle_receipt_evidence_command,
     _add_product_live_acceptance_receipt_command,
     _add_product_memory_receipt_projection_command,
+    _add_product_operator_closeout_readiness_command,
     _add_product_owner_receipt_evidence_command,
     _add_product_package_lifecycle_handoff_command,
+    _add_product_physical_morphology_guard_command,
     _add_product_receipt_reconciliation_inventory_command,
     _add_product_receipt_reconciliation_proof_command,
     _add_product_entry_command,
@@ -468,6 +474,24 @@ def build_parser() -> argparse.ArgumentParser:
         "production-live-acceptance-receipt",
         handle_product_live_acceptance_receipt,
         "把 MAG owner receipt、OPL Agent Lab suite result 与 opl-meta-agent coordination 对账成 production live acceptance receipt projection。",
+    )
+    _add_product_codex_stage_receipts_command(
+        subparsers,
+        "codex-stage-receipts",
+        handle_product_codex_stage_receipts,
+        "把 Codex executor attempt 与独立 review attempt refs 聚合成 stage receipt bundle。",
+    )
+    _add_product_operator_closeout_readiness_command(
+        subparsers,
+        "operator-closeout-readiness",
+        handle_product_operator_closeout_readiness,
+        "把 production acceptance、external evidence ledger 与 receipt readiness 聚合成 operator closeout readiness projection。",
+    )
+    _add_product_physical_morphology_guard_command(
+        subparsers,
+        "physical-morphology-guard",
+        handle_product_physical_morphology_guard,
+        "把 MAG source morphology 分类 refs 聚合成 physical morphology guard projection。",
     )
     return parser
 
