@@ -255,6 +255,34 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
             "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
             "grant_stage_controlled_attempt_closeout"
         )
+    handoff = closeout["opl_stage_evidence_receipt_handoff"]
+    assert handoff["surface_kind"] == "mag_opl_stage_evidence_receipt_handoff.v1"
+    assert handoff["status"] == "ready_for_opl_stage_evidence_record_verify"
+    assert handoff["mode"] == "refs_only_domain_owner_receipt_refs"
+    assert len(handoff["stage_owner_receipt_refs"]) == 6
+    assert {
+        item["stage_id"] for item in handoff["stage_owner_receipt_refs"]
+    } == {stage["stage_id"] for stage in stage_plane["stages"]}
+    assert all(
+        item["domain_receipt_ref"].startswith("receipt:mag/grant-stage-controlled-attempt/")
+        for item in handoff["stage_owner_receipt_refs"]
+    )
+    assert handoff["monitor_evidence_refs"] == [
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/first_live_production_evidence",
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5",
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/6",
+    ]
+    assert handoff["authority_boundary"] == {
+        "mag_owns_domain_receipt_refs": True,
+        "opl_records_refs_only": True,
+        "opl_can_write_grant_truth": False,
+        "opl_can_write_memory_body": False,
+        "opl_can_sign_owner_receipt": False,
+        "opl_can_authorize_fundability_or_export": False,
+        "claims_grant_ready": False,
+        "claims_submission_ready_export": False,
+    }
 
     for forbidden, value in closeout["forbidden_write_proof"].items():
         assert value is False, forbidden

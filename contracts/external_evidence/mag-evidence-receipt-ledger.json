@@ -224,6 +224,54 @@
         "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker"
       }
     ],
+    "opl_stage_evidence_receipt_handoff": {
+      "surface_kind": "mag_opl_stage_evidence_receipt_handoff.v1",
+      "mode": "refs_only_domain_owner_receipt_refs",
+      "status": "ready_for_opl_stage_evidence_record_verify",
+      "recording_policy": "OPL may record these body-free MAG owner receipt refs and monitor evidence refs in its refs-only stage evidence ledger; MAG remains the grant/fundability/export authority.",
+      "stage_owner_receipt_refs": [
+        {
+          "stage_id": "call_and_candidate_intake",
+          "domain_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/call_and_candidate_intake/owner-receipt-or-typed-blocker"
+        },
+        {
+          "stage_id": "fundability_strategy",
+          "domain_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/fundability_strategy/owner-receipt-or-typed-blocker"
+        },
+        {
+          "stage_id": "specific_aims_and_structure",
+          "domain_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/specific_aims_and_structure/owner-receipt-or-typed-blocker"
+        },
+        {
+          "stage_id": "proposal_authoring",
+          "domain_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/proposal_authoring/owner-receipt-or-typed-blocker"
+        },
+        {
+          "stage_id": "review_and_rebuttal",
+          "domain_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/review_and_rebuttal/owner-receipt-or-typed-blocker"
+        },
+        {
+          "stage_id": "package_and_submit_ready",
+          "domain_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker"
+        }
+      ],
+      "monitor_evidence_refs": [
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/first_live_production_evidence",
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5",
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/6"
+      ],
+      "authority_boundary": {
+        "mag_owns_domain_receipt_refs": true,
+        "opl_records_refs_only": true,
+        "opl_can_write_grant_truth": false,
+        "opl_can_write_memory_body": false,
+        "opl_can_sign_owner_receipt": false,
+        "opl_can_authorize_fundability_or_export": false,
+        "claims_grant_ready": false,
+        "claims_submission_ready_export": false
+      }
+    },
     "external_evidence_refs": {
       "release_dist_consumption_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
       "no_forbidden_write_guard_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
