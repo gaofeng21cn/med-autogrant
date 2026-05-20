@@ -8,8 +8,8 @@ from product_entry_cases.support import *  # noqa: F401,F403
 def _agent_lab_suite_result() -> dict[str, object]:
     return {
         "surface_kind": "opl_agent_lab_suite_result",
-        "suite_id": "mag-agent-lab-suite:production-live-acceptance-owner-receipt-scaleout",
-        "suite_kind": "agent_lab_external_suite",
+        "suite_id": "target-agent-handoff:med-autogrant:production-live-acceptance-owner-receipt-scaleout",
+        "suite_kind": "agent_production_evidence_suite",
         "result_id": "oals_mag_live_acceptance",
         "status": "passed",
         "summary": {
@@ -223,6 +223,42 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             suite_result = deepcopy(_agent_lab_suite_result())
             suite_result["summary"].pop("forbidden_authority_flag_count")
 
+            with self.assertRaises(WorkspaceStateError):
+                entry.build_production_live_acceptance_receipt_projection(
+                    owner_receipt_evidence=receipt,
+                    agent_lab_suite_result=suite_result,
+                    meta_agent_coordination_result=_meta_agent_coordination_result(),
+                )
+
+    def test_live_acceptance_receipt_projection_rejects_mag_specific_agent_lab_wrapper(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.workspace_types import WorkspaceStateError
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            entry = MedAutoGrantProductEntry()
+            receipt = entry.write_owner_receipt_evidence(
+                input_path=CRITIQUE_EXAMPLE_PATH,
+                receipt_shape="domain_owner_receipt",
+                stage_id="package_and_submit_ready",
+                source_ref="opl-agent-lab://standard/live-acceptance-owner-receipt",
+                closeout_summary="MAG owner accepted standard Agent Lab result refs.",
+                runtime_root=Path(tmp_dir) / "runtime-state",
+                receipt_id="production-live-acceptance-mag-wrapper",
+            )["owner_receipt_evidence"]
+            suite_result = deepcopy(_agent_lab_suite_result())
+
+            with self.assertRaises(WorkspaceStateError):
+                entry.build_production_live_acceptance_receipt_projection(
+                    owner_receipt_evidence=receipt,
+                    agent_lab_suite_result={
+                        "agent_lab_mag_live_acceptance": {
+                            "suite_result": suite_result,
+                        },
+                    },
+                    meta_agent_coordination_result=_meta_agent_coordination_result(),
+                )
+
+            suite_result["suite_kind"] = "agent_lab_mag_live_acceptance_suite"
             with self.assertRaises(WorkspaceStateError):
                 entry.build_production_live_acceptance_receipt_projection(
                     owner_receipt_evidence=receipt,

@@ -49,7 +49,7 @@
     "accepted_return_shape": "domain_owner_receipt_ref",
     "owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
     "typed_blocker_kind": "domain_owner_live_acceptance_receipt_scaleout_required",
-    "typed_blocker_reason": "Closed by MAG-owned domain_owner_receipt refs after OPL Agent Lab suite result and opl-meta-agent coordination result were consumed as refs-only evidence. The closed blocker kind records what was closed; it does not authorize OPL/provider/meta-agent to claim fundability-ready, grant-ready, or submission-ready.",
+    "typed_blocker_reason": "Closed by MAG-owned domain_owner_receipt refs after standard OPL Agent Lab target-agent production evidence suite result and opl-meta-agent coordination result were consumed as refs-only evidence. MAG provides standard refs/receipt/handoff interfaces and retains owner receipt, quality/export, and package authority; Agent Lab/OMA do not provide a MAG-specific suite or command. The closed blocker kind records what was closed; it does not authorize OPL/provider/meta-agent to claim fundability-ready, grant-ready, or submission-ready.",
     "next_verification_ref": "tests/test_production_acceptance.py::test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker"
   },
   "external_evidence_receipt_ledger": {

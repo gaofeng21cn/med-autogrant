@@ -507,23 +507,17 @@ def _extract_agent_lab_suite_result(payload: Mapping[str, Any]) -> Mapping[str, 
         suite_result = record["suite_result"]
     elif isinstance(record.get("agent_lab_run"), Mapping):
         suite_result = _require_mapping_payload(record["agent_lab_run"], context="agent_lab_run").get("suite_result")
-    elif isinstance(record.get("agent_lab_mag_live_acceptance"), Mapping):
-        suite_result = _require_mapping_payload(
-            record["agent_lab_mag_live_acceptance"],
-            context="agent_lab_mag_live_acceptance",
-        ).get("suite_result")
     else:
         raise WorkspaceStateError("agent_lab_suite_result 缺少 OPL Agent Lab suite_result。")
     suite_result = _require_mapping_payload(suite_result, context="agent_lab_suite_result.suite_result")
     if suite_result.get("surface_kind") != "opl_agent_lab_suite_result":
         raise WorkspaceStateError("agent_lab_suite_result.surface_kind 必须是 opl_agent_lab_suite_result。")
-    if suite_result.get("suite_id") != "mag-agent-lab-suite:production-live-acceptance-owner-receipt-scaleout":
-        raise WorkspaceStateError("Agent Lab suite result 必须来自 MAG production live acceptance suite。")
+    _require_nonempty_string(suite_result.get("suite_id"), field_name="suite_id")
     if suite_result.get("suite_kind") not in (
         "agent_lab_external_suite",
-        "agent_lab_mag_live_acceptance_suite",
+        "agent_production_evidence_suite",
     ):
-        raise WorkspaceStateError("Agent Lab suite result.suite_kind 不是允许的 live acceptance suite kind。")
+        raise WorkspaceStateError("Agent Lab suite result.suite_kind 必须是标准 external/evidence suite kind。")
     if suite_result.get("status") != "passed":
         raise WorkspaceStateError("MAG production live acceptance 需要 passed Agent Lab suite result。")
     if "med-autogrant" not in _suite_domain_ids(suite_result):
