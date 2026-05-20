@@ -15,6 +15,12 @@ PROGRAM_PATH = (
     / "production_acceptance"
     / "mag-executor-first-landing.json"
 )
+ACCEPTANCE_PATH = (
+    REPO_ROOT
+    / "contracts"
+    / "production_acceptance"
+    / "mag-production-acceptance.json"
+)
 
 REQUIRED_LANES = {
     "stage_pack_enrichment",
@@ -41,6 +47,10 @@ LANE_REQUIRED_KEYS = {
 
 def _program() -> dict[str, object]:
     return json.loads(PROGRAM_PATH.read_text(encoding="utf-8"))
+
+
+def _acceptance() -> dict[str, object]:
+    return json.loads(ACCEPTANCE_PATH.read_text(encoding="utf-8"))
 
 
 def _lanes_by_id() -> dict[str, dict[str, object]]:
@@ -86,7 +96,49 @@ def test_executor_first_landing_program_exists_and_is_evidence_gated() -> None:
     assert current["structural_state"] == "structural_ready"
     assert current["evidence_state"] == "evidence_gated"
     assert current["direct_hosted_parity_state"] == "requested_not_proven"
-    assert current["owner_receipt_scaleout_state"] == "typed_blocker_with_next_verification_ref"
+    assert current["external_evidence_pack_state"] == (
+        "request_pack_declared_external_evidence_not_claimed"
+    )
+    assert current["owner_receipt_scaleout_state"] == (
+        "production_acceptance_tail_closed_by_domain_owner_receipt_external_scaleout_gated"
+    )
+    assert current["physical_morphology_state"] == (
+        "cleanup_lane_defined_external_evidence_gated"
+    )
+
+
+def test_landing_program_syncs_mag_owned_production_acceptance_tail_closure() -> None:
+    program = _program()
+    acceptance = _acceptance()
+    closure = acceptance["closure_evidence"]
+
+    assert acceptance["evidence_tail_status"] == "closed_by_domain_owned_acceptance_receipt"
+    assert closure["accepted_return_shape"] == "domain_owner_receipt_ref"
+
+    refs = program["refs"]
+    assert refs["production_acceptance_ref"] == (
+        "contracts/production_acceptance/mag-production-acceptance.json"
+    )
+    assert refs["production_acceptance_owner_receipt_ref"] == closure["owner_receipt_ref"]
+    assert refs["production_live_acceptance_receipt_projection_ref"] in acceptance["refs"][
+        "owner_receipt_refs"
+    ]
+
+    forbidden = program["forbidden_global_claims"]
+    assert forbidden["claims_mag_owned_production_acceptance_tail_closed"] is True
+    assert (
+        forbidden["mag_owned_production_acceptance_tail_closure_scope"]
+        == "production_acceptance_tail_only"
+    )
+    for still_open_claim in (
+        "claims_opl_generated_hosted_production_caller_complete",
+        "claims_direct_hosted_parity_complete",
+        "claims_external_evidence_pack_consumed",
+        "claims_live_owner_receipt_scaleout_complete",
+        "claims_physical_morphology_cleanup_complete",
+        "claims_missing_evidence_complete",
+    ):
+        assert forbidden[still_open_claim] is False
 
 
 def test_parallel_lanes_have_required_contract_shape() -> None:
@@ -144,6 +196,8 @@ def test_global_forbidden_claims_keep_missing_evidence_open() -> None:
         "package_existence_can_claim_submission_ready",
         "mag_can_claim_external_evidence_complete",
         "mag_can_claim_direct_hosted_parity_complete",
+        "mag_can_claim_owner_receipt_scaleout_complete",
+        "mag_can_claim_physical_morphology_cleanup_complete",
     ):
         assert authority[claim] is False
 
