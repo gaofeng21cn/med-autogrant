@@ -404,6 +404,34 @@ class SchemaRegistryTest(unittest.TestCase):
 
         exposed_refs = thinning["properties"]["exposed_sidecar_return_refs"]
         self.assertIn("generated_surface_bridge_exit_gate_ref", exposed_refs["required"])
+        self.assertIn("generated_hosted_default_caller_proof_ref", exposed_refs["required"])
+        self.assertIn("generated_hosted_default_caller_proof", thinning["required"])
+        default_caller_proof = thinning["properties"]["generated_hosted_default_caller_proof"]
+        self.assertEqual(
+            default_caller_proof["properties"]["surface_kind"]["const"],
+            "mag_generated_hosted_default_caller_proof",
+        )
+        self.assertEqual(
+            default_caller_proof["properties"]["current_mag_role"]["const"],
+            "domain_handler_ref_only_adapter_and_migration_input",
+        )
+        parity = default_caller_proof["properties"]["direct_hosted_parity_workorder"]
+        self.assertEqual(
+            parity["properties"]["required_request_id"]["const"],
+            "direct_hosted_parity_no_regression",
+        )
+        self.assertFalse(parity["properties"]["claims_parity_passed"]["const"])
+        no_forbidden_write = default_caller_proof["properties"]["no_forbidden_write_boundary"]
+        self.assertEqual(
+            no_forbidden_write["properties"]["required_request_id"]["const"],
+            "continuous_no_forbidden_write_guard",
+        )
+        self.assertFalse(
+            no_forbidden_write["properties"]["claims_no_forbidden_write_passed"]["const"]
+        )
+        classification = default_caller_proof["properties"]["repo_local_product_shell_classification"]
+        self.assertFalse(classification["properties"]["generic_runtime_owner"]["const"])
+        self.assertTrue(classification["properties"]["migration_input"]["const"])
         bridge_ref = "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate"
         self.assertEqual(exposed_refs["properties"]["generated_surface_bridge_exit_gate_ref"]["const"], bridge_ref)
         evidence_request_ref = (

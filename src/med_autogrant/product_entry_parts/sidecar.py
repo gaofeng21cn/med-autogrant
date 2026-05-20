@@ -204,6 +204,13 @@ def build_sidecar_export(
                 context="sidecar_export.mag_consumer_thinning_contract",
             )
         ),
+        "generated_hosted_default_caller_proof": dict(
+            _require_mapping(
+                mag_consumer_thinning_contract,
+                "generated_hosted_default_caller_proof",
+                context="sidecar_export.mag_consumer_thinning_contract",
+            )
+        ),
         "minimal_authority_functions": list(
             mag_consumer_thinning_contract.get("minimal_authority_functions") or []
         ),

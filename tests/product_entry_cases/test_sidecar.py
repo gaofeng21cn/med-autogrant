@@ -170,6 +170,10 @@ class ProductSidecarTest(unittest.TestCase):
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "generated_surface_handoff"
                 ),
+                "generated_hosted_default_caller_proof_ref": (
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "generated_hosted_default_caller_proof"
+                ),
                 "generated_surface_bridge_exit_gate_ref": (
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "generated_surface_handoff/bridge_exit_gate"
@@ -379,6 +383,34 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertFalse(external_pack["authority_boundary"]["mag_claims_external_evidence_exists"])
         self.assertFalse(external_pack["authority_boundary"]["mag_claims_direct_hosted_parity_passed"])
         self.assertFalse(external_pack["authority_boundary"]["opl_can_declare_fundability_verdict"])
+        self.assertEqual(
+            export["generated_hosted_default_caller_proof"],
+            thinning["generated_hosted_default_caller_proof"],
+        )
+        default_caller_proof = export["generated_hosted_default_caller_proof"]
+        self.assertEqual(
+            default_caller_proof["default_caller_cutover_state"],
+            "mag_handler_boundary_ready_external_default_caller_evidence_gated",
+        )
+        self.assertEqual(
+            default_caller_proof["direct_hosted_parity_workorder"]["parity_owner"],
+            "one-person-lab",
+        )
+        self.assertFalse(
+            default_caller_proof["direct_hosted_parity_workorder"]["claims_parity_passed"]
+        )
+        self.assertEqual(
+            default_caller_proof["no_forbidden_write_boundary"]["runtime_receipt_write_policy"],
+            "runtime_store_only_no_repo_source_receipt_instances",
+        )
+        self.assertFalse(
+            default_caller_proof["authority_boundary"]["mag_owns_generic_runtime"]
+        )
+        self.assertFalse(
+            default_caller_proof["authority_boundary"][
+                "opl_generated_caller_can_sign_owner_receipt"
+            ]
+        )
         self.assertEqual(export["minimal_authority_functions"], thinning["minimal_authority_functions"])
         bridge_exit = export["generated_surface_handoff"]["bridge_exit_gate"]
         self.assertEqual(bridge_exit["surface_kind"], "mag_bridge_exit_gate")

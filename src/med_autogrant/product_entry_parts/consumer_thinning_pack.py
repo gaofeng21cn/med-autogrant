@@ -249,6 +249,105 @@ def build_external_evidence_request_pack() -> dict[str, Any]:
     }
 
 
+def build_generated_hosted_default_caller_proof() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_generated_hosted_default_caller_proof",
+        "proof_id": "mag.generated_hosted_default_caller.proof.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "active_default_caller": "mag_domain_handler_until_opl_generated_hosted_default_caller_evidence",
+        "target_default_caller": "opl_generated_or_hosted_product_shell",
+        "current_mag_role": "domain_handler_ref_only_adapter_and_migration_input",
+        "default_caller_cutover_state": "mag_handler_boundary_ready_external_default_caller_evidence_gated",
+        "generated_surface_handoff_ref": (
+            "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
+        ),
+        "external_evidence_request_pack_ref": (
+            "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
+        ),
+        "direct_hosted_parity_workorder": {
+            "workorder_id": "mag.direct_hosted_parity.workorder.v1",
+            "required_request_id": "direct_hosted_parity_no_regression",
+            "required_receipt_shapes": [
+                "direct_hosted_parity_receipt",
+                "direct_mag_domain_handler_no_regression_receipt",
+            ],
+            "direct_surface_refs": [
+                "/product_entry_manifest/product_entry_surface",
+                "/product_entry_manifest/operator_loop_surface",
+                "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
+            ],
+            "hosted_surface_refs": [
+                "opl://generated-surfaces/mag/product-entry-manifest",
+                "opl://generated-surfaces/mag/product-sidecar",
+                "opl://generated-surfaces/mag/product-entry-session#resume",
+            ],
+            "parity_owner": "one-person-lab",
+            "mag_role": "domain_handler_target_and_refs_only_oracle",
+            "claims_parity_passed": False,
+        },
+        "no_forbidden_write_boundary": {
+            "boundary_id": "mag.generated_hosted_default_caller.no_forbidden_write.v1",
+            "required_request_id": "continuous_no_forbidden_write_guard",
+            "thin_surface_output_guard_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+            ),
+            "forbidden_payload_classes": [
+                "grant_artifact_content",
+                "memory_body",
+                "workspace_private_evidence_body",
+                "opl_runtime_state_body",
+                "app_workbench_state_body",
+            ],
+            "forbidden_write_targets": [
+                "grant_truth",
+                "memory_body",
+                "grant_artifact_body",
+                "fundability_verdict_body",
+                "quality_verdict_body",
+                "export_verdict_body",
+                "owner_receipt_instance_repo_source",
+            ],
+            "mag_repo_source_write_allowed": [
+                "contracts",
+                "schemas",
+                "domain_handler_code",
+                "refs_only_read_models",
+                "tests",
+                "docs",
+            ],
+            "runtime_receipt_write_policy": "runtime_store_only_no_repo_source_receipt_instances",
+            "claims_no_forbidden_write_passed": False,
+        },
+        "repo_local_product_shell_classification": {
+            "product_status": "domain_handler_ref_only_adapter",
+            "product_user_loop": "domain_handler_ref_only_adapter",
+            "product_sidecar": "guarded_domain_handler_target",
+            "grouped_cli_api": "domain_handler_command_adapter",
+            "projection_builder": "refs_only_read_model_adapter",
+            "lifecycle_wrapper": "owner_receipt_refs_only_adapter",
+            "generic_runtime_owner": False,
+            "migration_input": True,
+        },
+        "authority_boundary": {
+            "mag_domain_handler_owner": TARGET_DOMAIN_ID,
+            "target_generated_caller_owner": "one-person-lab",
+            "mag_owns_generic_runtime": False,
+            "mag_owns_app_workbench": False,
+            "mag_claims_default_caller_cutover_complete": False,
+            "mag_claims_direct_hosted_parity_passed": False,
+            "mag_claims_no_forbidden_write_passed": False,
+            "opl_generated_caller_can_write_grant_truth": False,
+            "opl_generated_caller_can_write_memory_body": False,
+            "opl_generated_caller_can_mutate_grant_artifacts": False,
+            "opl_generated_caller_can_declare_fundability_verdict": False,
+            "opl_generated_caller_can_declare_quality_verdict": False,
+            "opl_generated_caller_can_declare_export_verdict": False,
+            "opl_generated_caller_can_sign_owner_receipt": False,
+        },
+    }
+
+
 def _external_evidence_request(
     request_id: str,
     *,

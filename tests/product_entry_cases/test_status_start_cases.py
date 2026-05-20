@@ -94,6 +94,29 @@ class ProductEntryStatusStartCaseTest(unittest.TestCase):
             "opl_generated_or_hosted_status_read_model",
         )
         self.assertTrue(caller_owner["external_opl_generated_or_hosted_caller_evidence_required"])
+        default_caller_proof = status["generated_hosted_default_caller_proof"]
+        self.assertEqual(
+            default_caller_proof["proof_id"],
+            "mag.generated_hosted_default_caller.proof.v1",
+        )
+        self.assertEqual(
+            default_caller_proof["current_mag_role"],
+            "domain_handler_ref_only_adapter_and_migration_input",
+        )
+        self.assertEqual(
+            default_caller_proof["direct_hosted_parity_workorder"]["required_request_id"],
+            "direct_hosted_parity_no_regression",
+        )
+        self.assertFalse(
+            default_caller_proof["no_forbidden_write_boundary"][
+                "claims_no_forbidden_write_passed"
+            ]
+        )
+        self.assertFalse(
+            default_caller_proof["authority_boundary"][
+                "opl_generated_caller_can_write_grant_truth"
+            ]
+        )
         self.assertEqual(status["product_entry_surface"]["shell_key"], "product_status")
         self.assertEqual(
             status["product_entry_surface"]["command"],

@@ -116,6 +116,17 @@ class ProductEntryManifestMixin(ProductEntryManifestBuilderMixin):
             "mag_handler_boundary_ready": True,
             "external_opl_generated_or_hosted_caller_evidence_required": True,
         }
+        product_status["generated_hosted_default_caller_proof"] = dict(
+            _require_mapping(
+                _require_mapping(
+                    manifest,
+                    "mag_consumer_thinning_contract",
+                    context="product_status.product_entry_manifest",
+                ),
+                "generated_hosted_default_caller_proof",
+                context="product_status.mag_consumer_thinning_contract",
+            )
+        )
         product_status["product_entry_surfaces"] = product_status.pop("entry_surfaces")
 
         payload = {

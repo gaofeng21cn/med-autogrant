@@ -208,6 +208,20 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(skill["domain_projection"]["skill_entry"], "med-autogrant")
         self.assertEqual(skill["domain_projection"]["recommended_shell"], "product_status")
         self.assertEqual(skill["domain_projection"]["runtime_continuity"]["surface_kind"], "skill_runtime_continuity")
+        default_caller_proof = manifest["mag_consumer_thinning_contract"][
+            "generated_hosted_default_caller_proof"
+        ]
+        self.assertEqual(
+            default_caller_proof["target_default_caller"],
+            "opl_generated_or_hosted_product_shell",
+        )
+        self.assertEqual(
+            default_caller_proof["repo_local_product_shell_classification"]["product_status"],
+            "domain_handler_ref_only_adapter",
+        )
+        self.assertFalse(
+            default_caller_proof["authority_boundary"]["mag_claims_direct_hosted_parity_passed"]
+        )
         action_catalog = manifest["family_action_catalog"]
         self.assertEqual(action_catalog["surface_kind"], "family_action_catalog")
         self.assertEqual(action_catalog["catalog_id"], "med_autogrant_action_catalog")

@@ -38,6 +38,50 @@ class ProductEntryExternalEvidenceRequestPackTest(unittest.TestCase):
         )
         request_by_id = {item["request_id"]: item for item in evidence_pack["requests"]}
         self.assertEqual(set(request_by_id), set(evidence_pack["required_request_ids"]))
+        default_caller_proof = thinning["generated_hosted_default_caller_proof"]
+        self.assertEqual(
+            default_caller_proof["surface_kind"],
+            "mag_generated_hosted_default_caller_proof",
+        )
+        self.assertEqual(
+            default_caller_proof["current_mag_role"],
+            "domain_handler_ref_only_adapter_and_migration_input",
+        )
+        self.assertEqual(
+            default_caller_proof["direct_hosted_parity_workorder"]["required_request_id"],
+            "direct_hosted_parity_no_regression",
+        )
+        self.assertIn(
+            "direct_hosted_parity_receipt",
+            default_caller_proof["direct_hosted_parity_workorder"]["required_receipt_shapes"],
+        )
+        self.assertFalse(
+            default_caller_proof["direct_hosted_parity_workorder"]["claims_parity_passed"]
+        )
+        self.assertEqual(
+            default_caller_proof["no_forbidden_write_boundary"]["required_request_id"],
+            "continuous_no_forbidden_write_guard",
+        )
+        self.assertIn(
+            "owner_receipt_instance_repo_source",
+            default_caller_proof["no_forbidden_write_boundary"]["forbidden_write_targets"],
+        )
+        self.assertFalse(
+            default_caller_proof["repo_local_product_shell_classification"]["generic_runtime_owner"]
+        )
+        self.assertTrue(
+            default_caller_proof["repo_local_product_shell_classification"]["migration_input"]
+        )
+        self.assertFalse(
+            default_caller_proof["authority_boundary"][
+                "mag_claims_default_caller_cutover_complete"
+            ]
+        )
+        self.assertFalse(
+            default_caller_proof["authority_boundary"][
+                "opl_generated_caller_can_declare_export_verdict"
+            ]
+        )
         self.assertEqual(
             request_by_id["direct_hosted_parity_no_regression"]["state"],
             "requested_not_received",

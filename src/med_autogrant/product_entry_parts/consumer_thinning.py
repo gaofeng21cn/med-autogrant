@@ -10,6 +10,7 @@ from med_autogrant.product_entry_parts.consumer_thinning_pack import (
     MAG_MINIMAL_AUTHORITY_FUNCTION_IDS,
     build_declarative_grant_pack_compiler_input,
     build_external_evidence_request_pack,
+    build_generated_hosted_default_caller_proof,
     build_generated_surface_handoff,
     build_mag_minimal_authority_functions,
     build_mag_minimal_authority_surface_taxonomy,
@@ -105,6 +106,7 @@ def build_mag_consumer_thinning_contract(
         "privatized_functional_module_audit": _build_privatized_functional_module_audit(),
         "declarative_grant_pack_compiler_input": build_declarative_grant_pack_compiler_input(),
         "generated_surface_handoff": build_generated_surface_handoff(),
+        "generated_hosted_default_caller_proof": build_generated_hosted_default_caller_proof(),
         "external_evidence_request_pack": build_external_evidence_request_pack(),
         "minimal_authority_functions": build_mag_minimal_authority_functions(),
         "minimal_authority_surface_taxonomy": build_mag_minimal_authority_surface_taxonomy(),
@@ -159,6 +161,10 @@ def build_mag_consumer_thinning_contract(
             "generated_surface_handoff_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "generated_surface_handoff"
+            ),
+            "generated_hosted_default_caller_proof_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "generated_hosted_default_caller_proof"
             ),
             "generated_surface_bridge_exit_gate_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
@@ -808,6 +814,10 @@ def _build_thin_surface_output_guard() -> dict[str, Any]:
             "generated_surface_handoff_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "generated_surface_handoff"
+            ),
+            "generated_hosted_default_caller_proof_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "generated_hosted_default_caller_proof"
             ),
             "generated_surface_bridge_exit_gate_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"

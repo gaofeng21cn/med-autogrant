@@ -4466,6 +4466,7 @@
         "privatized_functional_module_audit",
         "declarative_grant_pack_compiler_input",
         "generated_surface_handoff",
+        "generated_hosted_default_caller_proof",
         "external_evidence_request_pack",
         "minimal_authority_functions",
         "minimal_authority_surface_taxonomy",
@@ -5448,6 +5449,7 @@
             "privatized_functional_module_audit_ref",
             "declarative_grant_pack_compiler_input_ref",
             "generated_surface_handoff_ref",
+            "generated_hosted_default_caller_proof_ref",
             "generated_surface_bridge_exit_gate_ref",
             "functional_followthrough_gap_classification_ref",
             "external_evidence_request_pack_ref"
@@ -5480,6 +5482,9 @@
             "generated_surface_handoff_ref": {
               "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
             },
+            "generated_hosted_default_caller_proof_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_hosted_default_caller_proof"
+            },
             "generated_surface_bridge_exit_gate_ref": {
               "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate"
             },
@@ -5488,6 +5493,181 @@
             },
             "external_evidence_request_pack_ref": {
               "const": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
+            }
+          }
+        },
+        "generated_hosted_default_caller_proof": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "surface_kind",
+            "proof_id",
+            "target_domain_id",
+            "owner",
+            "active_default_caller",
+            "target_default_caller",
+            "current_mag_role",
+            "default_caller_cutover_state",
+            "generated_surface_handoff_ref",
+            "external_evidence_request_pack_ref",
+            "direct_hosted_parity_workorder",
+            "no_forbidden_write_boundary",
+            "repo_local_product_shell_classification",
+            "authority_boundary"
+          ],
+          "properties": {
+            "surface_kind": {"const": "mag_generated_hosted_default_caller_proof"},
+            "proof_id": {"const": "mag.generated_hosted_default_caller.proof.v1"},
+            "target_domain_id": {"const": "med-autogrant"},
+            "owner": {"const": "med-autogrant"},
+            "active_default_caller": {
+              "const": "mag_domain_handler_until_opl_generated_hosted_default_caller_evidence"
+            },
+            "target_default_caller": {"const": "opl_generated_or_hosted_product_shell"},
+            "current_mag_role": {"const": "domain_handler_ref_only_adapter_and_migration_input"},
+            "default_caller_cutover_state": {
+              "const": "mag_handler_boundary_ready_external_default_caller_evidence_gated"
+            },
+            "generated_surface_handoff_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
+            },
+            "external_evidence_request_pack_ref": {
+              "const": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
+            },
+            "direct_hosted_parity_workorder": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "workorder_id",
+                "required_request_id",
+                "required_receipt_shapes",
+                "direct_surface_refs",
+                "hosted_surface_refs",
+                "parity_owner",
+                "mag_role",
+                "claims_parity_passed"
+              ],
+              "properties": {
+                "workorder_id": {"const": "mag.direct_hosted_parity.workorder.v1"},
+                "required_request_id": {"const": "direct_hosted_parity_no_regression"},
+                "required_receipt_shapes": {
+                  "type": "array",
+                  "allOf": [
+                    {"contains": {"const": "direct_hosted_parity_receipt"}},
+                    {"contains": {"const": "direct_mag_domain_handler_no_regression_receipt"}}
+                  ]
+                },
+                "direct_surface_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+                "hosted_surface_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+                "parity_owner": {"const": "one-person-lab"},
+                "mag_role": {"const": "domain_handler_target_and_refs_only_oracle"},
+                "claims_parity_passed": {"const": false}
+              }
+            },
+            "no_forbidden_write_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "boundary_id",
+                "required_request_id",
+                "thin_surface_output_guard_ref",
+                "forbidden_payload_classes",
+                "forbidden_write_targets",
+                "runtime_receipt_write_policy",
+                "claims_no_forbidden_write_passed"
+              ],
+              "properties": {
+                "boundary_id": {"const": "mag.generated_hosted_default_caller.no_forbidden_write.v1"},
+                "required_request_id": {"const": "continuous_no_forbidden_write_guard"},
+                "thin_surface_output_guard_ref": {
+                  "const": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+                },
+                "forbidden_payload_classes": {
+                  "type": "array",
+                  "allOf": [
+                    {"contains": {"const": "grant_artifact_content"}},
+                    {"contains": {"const": "memory_body"}},
+                    {"contains": {"const": "opl_runtime_state_body"}},
+                    {"contains": {"const": "app_workbench_state_body"}}
+                  ]
+                },
+                "forbidden_write_targets": {
+                  "type": "array",
+                  "allOf": [
+                    {"contains": {"const": "grant_truth"}},
+                    {"contains": {"const": "memory_body"}},
+                    {"contains": {"const": "grant_artifact_body"}},
+                    {"contains": {"const": "fundability_verdict_body"}},
+                    {"contains": {"const": "quality_verdict_body"}},
+                    {"contains": {"const": "export_verdict_body"}},
+                    {"contains": {"const": "owner_receipt_instance_repo_source"}}
+                  ]
+                },
+                "runtime_receipt_write_policy": {
+                  "const": "runtime_store_only_no_repo_source_receipt_instances"
+                },
+                "claims_no_forbidden_write_passed": {"const": false}
+              }
+            },
+            "repo_local_product_shell_classification": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "product_status",
+                "product_user_loop",
+                "product_sidecar",
+                "grouped_cli_api",
+                "projection_builder",
+                "lifecycle_wrapper",
+                "generic_runtime_owner",
+                "migration_input"
+              ],
+              "properties": {
+                "product_status": {"const": "domain_handler_ref_only_adapter"},
+                "product_user_loop": {"const": "domain_handler_ref_only_adapter"},
+                "product_sidecar": {"const": "guarded_domain_handler_target"},
+                "grouped_cli_api": {"const": "domain_handler_command_adapter"},
+                "projection_builder": {"const": "refs_only_read_model_adapter"},
+                "lifecycle_wrapper": {"const": "owner_receipt_refs_only_adapter"},
+                "generic_runtime_owner": {"const": false},
+                "migration_input": {"const": true}
+              }
+            },
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "mag_domain_handler_owner",
+                "target_generated_caller_owner",
+                "mag_owns_generic_runtime",
+                "mag_owns_app_workbench",
+                "mag_claims_default_caller_cutover_complete",
+                "mag_claims_direct_hosted_parity_passed",
+                "mag_claims_no_forbidden_write_passed",
+                "opl_generated_caller_can_write_grant_truth",
+                "opl_generated_caller_can_write_memory_body",
+                "opl_generated_caller_can_mutate_grant_artifacts",
+                "opl_generated_caller_can_declare_fundability_verdict",
+                "opl_generated_caller_can_declare_quality_verdict",
+                "opl_generated_caller_can_declare_export_verdict",
+                "opl_generated_caller_can_sign_owner_receipt"
+              ],
+              "properties": {
+                "mag_domain_handler_owner": {"const": "med-autogrant"},
+                "target_generated_caller_owner": {"const": "one-person-lab"},
+                "mag_owns_generic_runtime": {"const": false},
+                "mag_owns_app_workbench": {"const": false},
+                "mag_claims_default_caller_cutover_complete": {"const": false},
+                "mag_claims_direct_hosted_parity_passed": {"const": false},
+                "mag_claims_no_forbidden_write_passed": {"const": false},
+                "opl_generated_caller_can_write_grant_truth": {"const": false},
+                "opl_generated_caller_can_write_memory_body": {"const": false},
+                "opl_generated_caller_can_mutate_grant_artifacts": {"const": false},
+                "opl_generated_caller_can_declare_fundability_verdict": {"const": false},
+                "opl_generated_caller_can_declare_quality_verdict": {"const": false},
+                "opl_generated_caller_can_declare_export_verdict": {"const": false},
+                "opl_generated_caller_can_sign_owner_receipt": {"const": false}
+              }
             }
           }
         },
@@ -5783,9 +5963,13 @@
               "type": "object",
               "additionalProperties": true,
               "required": [
+                "generated_hosted_default_caller_proof_ref",
                 "external_evidence_request_pack_ref"
               ],
               "properties": {
+                "generated_hosted_default_caller_proof_ref": {
+                  "const": "/product_entry_manifest/mag_consumer_thinning_contract/generated_hosted_default_caller_proof"
+                },
                 "external_evidence_request_pack_ref": {
                   "const": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack"
                 }

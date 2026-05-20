@@ -138,6 +138,7 @@
         "artifact_inventory",
         "runtime_control",
         "caller_owner_contract",
+        "generated_hosted_default_caller_proof",
         "family_orchestration",
         "product_entry_manifest",
         "product_entry_surfaces",
@@ -204,6 +205,9 @@
         },
         "caller_owner_contract": {
           "$ref": "#/$defs/callerOwnerContract"
+        },
+        "generated_hosted_default_caller_proof": {
+          "$ref": "product-entry-manifest.schema.json#/$defs/magConsumerThinningContract/properties/generated_hosted_default_caller_proof"
         },
         "family_orchestration": {
           "$ref": "common.schema.json#/$defs/familyOrchestrationCompanion"
