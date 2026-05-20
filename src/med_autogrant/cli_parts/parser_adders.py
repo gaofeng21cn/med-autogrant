@@ -489,3 +489,19 @@ def _add_product_physical_morphology_guard_command(
     command.add_argument("--external-evidence-ref", action="append", default=[])
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
+
+
+def _add_product_executor_first_closeout_bundle_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--codex-stage-execution-receipt-bundle", required=True)
+    command.add_argument("--operator-closeout-readiness-projection", required=True)
+    command.add_argument("--physical-morphology-guard-projection", required=True)
+    command.add_argument("--external-evidence-consumption-ledger")
+    command.add_argument("--receipt-readiness-projection")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)

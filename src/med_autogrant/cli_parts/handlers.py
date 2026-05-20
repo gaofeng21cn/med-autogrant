@@ -334,6 +334,30 @@ def handle_product_physical_morphology_guard(args: argparse.Namespace) -> dict[s
     )
 
 
+def handle_product_executor_first_closeout_bundle(args: argparse.Namespace) -> dict[str, Any]:
+    external_evidence_consumption_ledger = None
+    if args.external_evidence_consumption_ledger is not None:
+        external_evidence_consumption_ledger = _read_json_object(
+            args.external_evidence_consumption_ledger
+        )
+    receipt_readiness_projection = None
+    if args.receipt_readiness_projection is not None:
+        receipt_readiness_projection = _read_json_object(args.receipt_readiness_projection)
+    return _product_entry().build_executor_first_closeout_bundle(
+        codex_stage_execution_receipt_bundle=_read_json_object(
+            args.codex_stage_execution_receipt_bundle
+        ),
+        operator_closeout_readiness_projection=_read_json_object(
+            args.operator_closeout_readiness_projection
+        ),
+        physical_morphology_guard_projection=_read_json_object(
+            args.physical_morphology_guard_projection
+        ),
+        external_evidence_consumption_ledger=external_evidence_consumption_ledger,
+        receipt_readiness_projection=receipt_readiness_projection,
+    )
+
+
 def handle_build_artifact_bundle(args: argparse.Namespace) -> dict[str, Any]:
     return _domain_entry().dispatch(
         {

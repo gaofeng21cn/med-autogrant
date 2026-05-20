@@ -6,6 +6,7 @@ from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
+    _optional_mapping,
     _require_mapping,
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
@@ -32,6 +33,7 @@ _ALLOWED_ACTIONS = {
     "closeout/codex-stage-receipts",
     "closeout/operator-readiness",
     "closeout/physical-morphology-guard",
+    "closeout/executor-first-bundle",
 }
 
 
@@ -341,6 +343,13 @@ def dispatch_sidecar_task(
         return _dispatch_operator_readiness(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "closeout/physical-morphology-guard":
         return _dispatch_physical_morphology_guard(
+            product_entry,
+            task=task,
+            input_path=input_path,
+            task_path=resolved_task_path,
+        )
+    if action == "closeout/executor-first-bundle":
+        return _dispatch_executor_first_bundle(
             product_entry,
             task=task,
             input_path=input_path,
@@ -678,6 +687,53 @@ def _dispatch_physical_morphology_guard(
     )
 
 
+def _dispatch_executor_first_bundle(
+    product_entry: Any,
+    *,
+    task: Mapping[str, Any],
+    input_path: str,
+    task_path: Path,
+) -> dict[str, Any]:
+    closeout_bundle = product_entry.build_executor_first_closeout_bundle(
+        codex_stage_execution_receipt_bundle=_require_mapping(
+            task,
+            "codex_stage_execution_receipt_bundle",
+            context="sidecar_task",
+        ),
+        operator_closeout_readiness_projection=_require_mapping(
+            task,
+            "operator_closeout_readiness_projection",
+            context="sidecar_task",
+        ),
+        physical_morphology_guard_projection=_require_mapping(
+            task,
+            "physical_morphology_guard_projection",
+            context="sidecar_task",
+        ),
+        external_evidence_consumption_ledger=_optional_mapping(
+            task,
+            "external_evidence_consumption_ledger",
+        ),
+        receipt_readiness_projection=_optional_mapping(
+            task,
+            "receipt_readiness_projection",
+        ),
+    )
+    return _dispatch_payload(
+        action="closeout/executor-first-bundle",
+        task=task,
+        task_path=task_path,
+        input_path=input_path,
+        status="completed",
+        result={
+            "surface_kind": "sidecar_executor_first_closeout_bundle_result",
+            "executor_first_closeout_bundle": closeout_bundle,
+            "write_policy": "read_projection_only_no_domain_truth_mutation",
+        },
+        executed_command=None,
+    )
+
+
 def _dispatch_notification_receipt(
     *,
     task: Mapping[str, Any],
@@ -755,6 +811,7 @@ def _dispatch_payload(
                 "closeout/codex-stage-receipts",
                 "closeout/operator-readiness",
                 "closeout/physical-morphology-guard",
+                "closeout/executor-first-bundle",
             },
             "executed_command": executed_command,
             "result": dict(result),

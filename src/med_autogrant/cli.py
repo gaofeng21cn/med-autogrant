@@ -63,6 +63,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_domain_memory_decision,
     handle_product_domain_memory_proposal,
     handle_product_domain_memory_receipt_evidence,
+    handle_product_executor_first_closeout_bundle,
     handle_product_focused_hosted_receipt_verification,
     handle_product_lifecycle_receipt_bundle,
     handle_product_lifecycle_receipt_evidence,
@@ -102,6 +103,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_domain_memory_decision_command,
     _add_product_domain_memory_proposal_command,
     _add_product_domain_memory_receipt_evidence_command,
+    _add_product_executor_first_closeout_bundle_command,
     _add_product_continuous_receipt_reconciliation_command,
     _add_product_focused_hosted_receipt_verification_command,
     _add_product_lifecycle_receipt_bundle_command,
@@ -492,6 +494,12 @@ def build_parser() -> argparse.ArgumentParser:
         "physical-morphology-guard",
         handle_product_physical_morphology_guard,
         "把 MAG source morphology 分类 refs 聚合成 physical morphology guard projection。",
+    )
+    _add_product_executor_first_closeout_bundle_command(
+        subparsers,
+        "executor-first-closeout-bundle",
+        handle_product_executor_first_closeout_bundle,
+        "把 Codex receipt、operator closeout、physical guard 与可选 evidence/readiness refs 聚合成 executor-first closeout bundle。",
     )
     return parser
 

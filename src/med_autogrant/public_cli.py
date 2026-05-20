@@ -67,6 +67,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "codex-stage-receipts": ("product", "codex-stage-receipts"),
     "operator-closeout-readiness": ("product", "operator-closeout-readiness"),
     "physical-morphology-guard": ("product", "physical-morphology-guard"),
+    "executor-first-closeout-bundle": ("product", "executor-first-closeout-bundle"),
     "execute-direction-screening-pass": ("pass", "direction-screening"),
     "execute-question-refinement-pass": ("pass", "question-refinement"),
     "execute-argument-building-pass": ("pass", "argument-building"),

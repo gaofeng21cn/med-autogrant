@@ -431,6 +431,76 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             external_evidence_refs=["opl://receipts/mag/physical-morphology/parity.json"],
         )
 
+    def test_executor_first_closeout_bundle_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "surface_kind": "mag_executor_first_closeout_bundle",
+            "state": "refs_ready_not_quality_ready",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            codex_bundle_path = Path(tmp_dir) / "codex-bundle.json"
+            operator_projection_path = Path(tmp_dir) / "operator.json"
+            physical_guard_path = Path(tmp_dir) / "physical.json"
+            evidence_ledger_path = Path(tmp_dir) / "evidence-ledger.json"
+            receipt_readiness_path = Path(tmp_dir) / "receipt-readiness.json"
+            codex_bundle = {
+                "surface_kind": "mag_codex_stage_execution_receipt_bundle",
+                "state": "codex_stage_receipts_ready_not_quality_ready",
+            }
+            operator_projection = {
+                "surface_kind": "mag_operator_closeout_readiness_projection",
+                "state": "operator_closeout_refs_ready_not_quality_ready",
+            }
+            physical_guard = {
+                "surface_kind": "mag_physical_morphology_guard_projection",
+                "state": "allowed_external_evidence_present",
+            }
+            evidence_ledger = {
+                "surface_kind": "mag_external_evidence_consumption_ledger",
+                "state": "consumed_complete",
+            }
+            receipt_readiness = {
+                "surface_kind": "mag_receipt_readiness_projection",
+                "state": "receipt_refs_ready_not_quality_ready",
+            }
+            codex_bundle_path.write_text(json.dumps(codex_bundle), encoding="utf-8")
+            operator_projection_path.write_text(json.dumps(operator_projection), encoding="utf-8")
+            physical_guard_path.write_text(json.dumps(physical_guard), encoding="utf-8")
+            evidence_ledger_path.write_text(json.dumps(evidence_ledger), encoding="utf-8")
+            receipt_readiness_path.write_text(json.dumps(receipt_readiness), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_executor_first_closeout_bundle.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "executor-first-closeout-bundle",
+                    "--codex-stage-execution-receipt-bundle",
+                    str(codex_bundle_path),
+                    "--operator-closeout-readiness-projection",
+                    str(operator_projection_path),
+                    "--physical-morphology-guard-projection",
+                    str(physical_guard_path),
+                    "--external-evidence-consumption-ledger",
+                    str(evidence_ledger_path),
+                    "--receipt-readiness-projection",
+                    str(receipt_readiness_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_executor_first_closeout_bundle.assert_called_once_with(
+            codex_stage_execution_receipt_bundle=codex_bundle,
+            operator_closeout_readiness_projection=operator_projection,
+            physical_morphology_guard_projection=physical_guard,
+            external_evidence_consumption_ledger=evidence_ledger,
+            receipt_readiness_projection=receipt_readiness,
+        )
+
     def test_flat_product_status_alias_is_rejected(self) -> None:
         with self.assertRaisesRegex(
             SystemExit,
