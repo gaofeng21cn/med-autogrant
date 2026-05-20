@@ -98,6 +98,10 @@
         "allowed_dispatch_actions": [
           "autonomy-controller/dry-run",
           "autonomy-controller/guarded-run",
+          "closeout/codex-stage-receipts",
+          "closeout/executor-first-bundle",
+          "closeout/operator-readiness",
+          "closeout/physical-morphology-guard",
           "domain-memory/decide",
           "domain-memory/propose",
           "lifecycle/receipt",

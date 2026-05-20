@@ -39,6 +39,10 @@ def test_current_program_sidecar_actions_include_domain_memory_writeback_dispatc
     assert adapter["allowed_dispatch_actions"] == [
         "autonomy-controller/dry-run",
         "autonomy-controller/guarded-run",
+        "closeout/codex-stage-receipts",
+        "closeout/executor-first-bundle",
+        "closeout/operator-readiness",
+        "closeout/physical-morphology-guard",
         "domain-memory/decide",
         "domain-memory/propose",
         "lifecycle/receipt",
