@@ -80,6 +80,9 @@ from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
 from med_autogrant.product_entry_parts.receipt_readiness import (
     build_receipt_readiness_projection,
 )
+from med_autogrant.product_entry_parts.operator_closeout import (
+    build_operator_closeout_readiness_projection,
+)
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
@@ -559,6 +562,19 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             memory_receipt_items=memory_receipt_items,
             package_lifecycle_items=package_lifecycle_items,
             lifecycle_receipt_items=lifecycle_receipt_items,
+        )
+
+    def build_operator_closeout_readiness_projection(
+        self,
+        *,
+        production_acceptance: Mapping[str, Any],
+        external_evidence_receipt_ledger: Mapping[str, Any],
+        receipt_readiness_projection: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        return build_operator_closeout_readiness_projection(
+            production_acceptance=production_acceptance,
+            external_evidence_receipt_ledger=external_evidence_receipt_ledger,
+            receipt_readiness_projection=receipt_readiness_projection,
         )
 
     def build_continuous_receipt_reconciliation_snapshot(
