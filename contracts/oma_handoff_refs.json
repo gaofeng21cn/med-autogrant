@@ -17,6 +17,7 @@
   "consumer_contract": "agent:evidence",
   "domain_id": "med-autogrant",
   "handoff_refs": {
+    "real_target_patch_loop_closeout": "contracts/agent_lab_handoff.json#/handoff_refs/real_target_patch_loop_closeout",
     "standard_agent_lab_handoff": "contracts/agent_lab_handoff.json"
   },
   "owner": "med-autogrant",

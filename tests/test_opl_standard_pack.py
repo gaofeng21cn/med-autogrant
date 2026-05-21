@@ -253,6 +253,7 @@ def test_agent_lab_handoff_is_standard_body_free_consumer_refs_only() -> None:
         "generated_surface_handoff",
         "editable_surface_hints",
         "no_forbidden_write_proof",
+        "real_target_patch_loop_closeout",
     }
     assert refs["production_acceptance"]["state_ref"] == (
         "contracts/production_acceptance/mag-production-acceptance.json"
@@ -279,6 +280,38 @@ def test_agent_lab_handoff_is_standard_body_free_consumer_refs_only() -> None:
         "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4"
     )
     assert refs["no_forbidden_write_proof"]["boundary"] == "proof_refs_do_not_grant_oma_write_authority"
+    closeout = refs["real_target_patch_loop_closeout"]
+    assert closeout["state"] == "refs_only_closeout_smoke_ready"
+    assert closeout["closeout_kind"] == "ahe_real_target_scaleout_smoke"
+    assert closeout["production_acceptance_ref"] == (
+        "contracts/production_acceptance/mag-production-acceptance.json#/patch_loop_refs"
+    )
+    assert closeout["read_model_consumption_ref"] == (
+        "/product_entry_manifest/production_live_acceptance_receipt"
+    )
+    assert set(closeout["required_closeout_ref_keys"]) == {
+        "blocked_suite_result_ref",
+        "developer_patch_work_order_ref",
+        "patch_traceability_matrix_ref",
+        "target_repo_verification_refs",
+        "target_runtime_read_model_consumption_ref",
+        "workspace_environment_proof_ref",
+        "no_forbidden_write_proof_ref",
+        "target_owner_receipt_or_typed_blocker_ref",
+        "patch_absorption_ref",
+        "worktree_cleanup_ref",
+        "agent_lab_re_evaluation_ref",
+    }
+    assert set(closeout["closeout_refs"]) == set(closeout["required_closeout_ref_keys"])
+    assert closeout["closeout_refs"]["developer_patch_work_order_ref"] == (
+        "developer-work-order:oma/mag/ahe-real-target-scaleout-smoke"
+    )
+    assert closeout["closeout_refs"]["target_runtime_read_model_consumption_ref"] == (
+        "/product_entry_manifest/production_live_acceptance_receipt"
+    )
+    assert closeout["closeout_refs"]["target_owner_receipt_or_typed_blocker_ref"] == (
+        "receipt:mag/production-live-acceptance/2026-05-20"
+    )
 
 
 def test_oma_handoff_refs_points_to_standard_agent_lab_handoff() -> None:
@@ -290,6 +323,10 @@ def test_oma_handoff_refs_points_to_standard_agent_lab_handoff() -> None:
     assert wrapper["standard_contract_ref"] == "contracts/agent_lab_handoff.json"
     assert wrapper["handoff_refs"] == {
         "standard_agent_lab_handoff": "contracts/agent_lab_handoff.json",
+        "real_target_patch_loop_closeout": (
+            "contracts/agent_lab_handoff.json#/handoff_refs/"
+            "real_target_patch_loop_closeout"
+        ),
     }
     assert wrapper["authority_boundary"] == generated["agent_lab_handoff"]["authority_boundary"]
 
