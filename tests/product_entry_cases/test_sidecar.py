@@ -641,6 +641,13 @@ class ProductSidecarTest(unittest.TestCase):
             export["todo_wakeup"]["authoring_loop_continuation"]["automation_id"],
             "mag.authoring_loop_continuation",
         )
+        self.assertNotIn("hermes_wakeup_role", export["todo_wakeup"])
+        wakeup_contract = export["todo_wakeup"]["opl_wakeup_contract"]
+        self.assertEqual(wakeup_contract["owner"], "one-person-lab")
+        self.assertEqual(wakeup_contract["target_action_ref"], "user-loop/wakeup")
+        self.assertEqual(wakeup_contract["queue_write_policy"], "enqueue_wakeup_only_no_grant_truth_writes")
+        self.assertEqual(wakeup_contract["required_return_shapes"], ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"])
+        self.assertFalse(any(export["todo_wakeup"]["forbidden_private_runtime_roles"].values()))
         self.assertEqual(export["autonomy_controller"]["default_mode"], "dry_run")
         self.assertFalse(export["autonomy_controller"]["hermes_proof_executor_default"])
         self.assertEqual(export["user_loop_attention_queue"]["queue_owner"], "one-person-lab")

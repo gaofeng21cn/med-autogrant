@@ -751,7 +751,24 @@ def _build_todo_wakeup_projection(
         "remaining_gaps": list(manifest.get("remaining_gaps") or []),
         "authoring_loop_continuation": authoring_wakeup,
         "recommended_wakeup_command": user_loop_command,
-        "hermes_wakeup_role": "24h_online_substrate_only",
+        "opl_wakeup_contract": {
+            "owner": "one-person-lab",
+            "provider_role": "typed_family_queue_and_provider_wakeup_shell",
+            "mag_role": "refs_only_authoring_continuation_target",
+            "target_action_ref": "user-loop/wakeup",
+            "queue_write_policy": "enqueue_wakeup_only_no_grant_truth_writes",
+            "required_return_shapes": [
+                "domain_owner_receipt",
+                "typed_blocker",
+                "no_regression_evidence",
+            ],
+        },
+        "forbidden_private_runtime_roles": {
+            "hermes_24h_substrate_owner": False,
+            "mag_scheduler_daemon_owner": False,
+            "mag_attempt_ledger_owner": False,
+            "mag_app_workbench_owner": False,
+        },
         "opl_queue_role": "typed_family_queue_control_plane_only",
     }
 
