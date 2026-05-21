@@ -12,7 +12,7 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 本轮 scan 没有发现需要迁入 OPL 的 grant authority；风险集中在 hand-written product-entry / sidecar / CLI / autonomy controller / domain-runtime 命名和大型聚合文件，容易被误读成 MAG 私有平台。当前这些 surface 只能按 direct domain handler、refs-only adapter、minimal authority function、diagnostic、migration input 或 history/tombstone 读取。
 
-2026-05-21 本轮最小清理已把 `product_entry_parts/sidecar.py` 的 TODO/wakeup 投影从历史 Hermes 24h substrate 口径收薄为 `opl_wakeup_contract`：OPL 持有 typed family queue / provider wakeup shell，MAG 只保留 `user-loop/wakeup` 的 refs-only authoring continuation target、owner receipt / typed blocker / no-regression return shape 和 no private runtime role flags。该改动不声明 OPL generated sidecar 已 default 化，也不迁移 grant truth、quality/export verdict、package authority 或 controller decision。
+2026-05-21 本轮最小清理已把 `product_entry_parts/sidecar.py` 的 TODO/wakeup 投影从历史 Hermes 24h substrate 口径收薄为 `opl_wakeup_contract`：OPL 持有 typed family queue / provider wakeup shell，MAG 只暴露 `open_grant_user_loop` / `product user-loop` refs-only authoring continuation action target、owner receipt / typed blocker / no-regression return shape 和 no private runtime role flags；`status/read`、`user-loop/wakeup` 与 `notification/receipt` 不再是 sidecar dispatch actions。该改动不声明 OPL generated sidecar 已 default 化，也不迁移 grant truth、quality/export verdict、package authority 或 controller decision。
 
 ## 分类词表
 
@@ -54,7 +54,7 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 ## Immediate thinning items
 
 1. Split `manifest_builder.py` into manifest shell assembly vs grant authority ref builders before any migration claim.
-2. Keep `sidecar.py` dispatch as MAG domain handler target until OPL generated sidecar is default; do not add more generic dispatch actions. Current TODO/wakeup output now uses `opl_wakeup_contract` and forbids Hermes 24h substrate / MAG scheduler / MAG attempt ledger / MAG App workbench ownership.
+2. Keep `sidecar.py` dispatch as MAG domain handler target until OPL generated sidecar is default; do not add more generic dispatch actions. Current TODO/wakeup output now uses `opl_wakeup_contract`, targets `open_grant_user_loop` outside sidecar dispatch, and forbids Hermes 24h substrate / MAG scheduler / MAG attempt ledger / MAG App workbench ownership.
 3. Treat `grant_autonomy_controller.py` as grant route/budget/blocker policy only; move any generic loop/scheduler language to OPL evidence gates.
 4. Keep consumer-thinning files as refs-only audit/projection; do not add runtime owner fields.
 
@@ -62,7 +62,7 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 - generated product/status/workbench/sidecar default caller;
 - typed queue and sidecar dispatch shell with owner receipt roundtrip;
-- OPL wakeup/provider queue shell for `user-loop/wakeup`, with MAG returning only owner receipt / typed blocker / no-regression refs;
+- OPL wakeup/provider queue shell consuming `open_grant_user_loop` refs, with MAG returning only owner receipt / typed blocker / no-regression refs;
 - generic lifecycle/session/package locator shell;
 - App/operator read model consuming MAG refs without grant verdict generation;
 - production/default caller and Temporal long-soak evidence from OPL/App side.

@@ -26,11 +26,8 @@ SIDECAR_ADAPTER_ID = "mag.opl_stage_led.product_sidecar.v1"
 SIDECAR_VERSION = 1
 
 _ALLOWED_ACTIONS = {
-    "status/read",
-    "user-loop/wakeup",
     "autonomy-controller/dry-run",
     "autonomy-controller/guarded-run",
-    "notification/receipt",
     "domain-memory/propose",
     "domain-memory/decide",
     "stage-attempt/closeout",
@@ -341,10 +338,6 @@ def dispatch_sidecar_task(
     if action not in _ALLOWED_ACTIONS:
         raise WorkspaceStateError(f"sidecar task action 不允许: {action}")
     input_path = _require_nonempty_string_from_mapping(task, "input_path", context="sidecar_task")
-    if action == "status/read":
-        return _dispatch_status_read(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
-    if action == "user-loop/wakeup":
-        return _dispatch_user_loop_wakeup(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
     if action in {"autonomy-controller/dry-run", "autonomy-controller/guarded-run"}:
         return _dispatch_autonomy_controller(task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "domain-memory/propose":
@@ -387,55 +380,7 @@ def dispatch_sidecar_task(
             task_path=resolved_task_path,
             dispatch_payload=_dispatch_payload,
         )
-    return _dispatch_notification_receipt(task=task, input_path=input_path, task_path=resolved_task_path)
-
-
-def _dispatch_status_read(
-    product_entry: Any,
-    *,
-    task: Mapping[str, Any],
-    input_path: str,
-    task_path: Path,
-) -> dict[str, Any]:
-    status = product_entry.build_product_status(input_path=input_path)
-    return _dispatch_payload(
-        action="status/read",
-        task=task,
-        task_path=task_path,
-        input_path=input_path,
-        status="completed",
-        result={
-            "surface_kind": "sidecar_status_read_result",
-            "product_status": status["product_status"],
-        },
-        executed_command=None,
-    )
-
-
-def _dispatch_user_loop_wakeup(
-    product_entry: Any,
-    *,
-    task: Mapping[str, Any],
-    input_path: str,
-    task_path: Path,
-) -> dict[str, Any]:
-    task_intent = _require_nonempty_string_from_mapping(task, "task_intent", context="sidecar_task")
-    user_loop = product_entry.build_grant_user_loop(input_path=input_path, task_intent=task_intent)
-    return _dispatch_payload(
-        action="user-loop/wakeup",
-        task=task,
-        task_path=task_path,
-        input_path=input_path,
-        status="completed",
-        result={
-            "surface_kind": "sidecar_user_loop_wakeup_result",
-            "grant_user_loop": {
-                "surface_kind": "grant_user_loop",
-                "payload": user_loop["grant_user_loop"],
-            },
-        },
-        executed_command=None,
-    )
+    raise WorkspaceStateError(f"sidecar task action 不允许: {action}")
 
 
 def _dispatch_autonomy_controller(
@@ -627,36 +572,6 @@ def _dispatch_lifecycle_receipt(
     )
 
 
-def _dispatch_notification_receipt(
-    *,
-    task: Mapping[str, Any],
-    input_path: str,
-    task_path: Path,
-) -> dict[str, Any]:
-    notification = task.get("notification")
-    if notification is not None and not isinstance(notification, Mapping):
-        raise WorkspaceStateError("sidecar_task.notification 必须是 object。")
-    return _dispatch_payload(
-        action="notification/receipt",
-        task=task,
-        task_path=task_path,
-        input_path=input_path,
-        status="recorded",
-        result={
-            "surface_kind": "sidecar_notification_receipt",
-            "receipt_status": "accepted",
-            "notification": dict(notification or {}),
-            "receipt_refs": _receipt_refs_for_task(
-                task=task,
-                action="notification/receipt",
-                input_path=input_path,
-            ),
-            "write_policy": "receipt_only_no_domain_truth_mutation",
-        },
-        executed_command=None,
-    )
-
-
 def _dispatch_payload(
     *,
     action: str,
@@ -694,9 +609,6 @@ def _dispatch_payload(
             "task_path": str(task_path),
             "executed_by_sidecar": action
             in {
-                "status/read",
-                "user-loop/wakeup",
-                "notification/receipt",
                 "domain-memory/propose",
                 "domain-memory/decide",
                 "stage-attempt/closeout",
@@ -754,8 +666,11 @@ def _build_todo_wakeup_projection(
         "opl_wakeup_contract": {
             "owner": "one-person-lab",
             "provider_role": "typed_family_queue_and_provider_wakeup_shell",
-            "mag_role": "refs_only_authoring_continuation_target",
-            "target_action_ref": "user-loop/wakeup",
+            "mag_role": "refs_only_authoring_continuation_action_target",
+            "target_action_ref": "open_grant_user_loop",
+            "target_surface": "product user-loop",
+            "target_command": user_loop_command,
+            "sidecar_dispatch_action": None,
             "queue_write_policy": "enqueue_wakeup_only_no_grant_truth_writes",
             "required_return_shapes": [
                 "domain_owner_receipt",

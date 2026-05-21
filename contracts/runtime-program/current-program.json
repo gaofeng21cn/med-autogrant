@@ -105,10 +105,7 @@
           "domain-memory/decide",
           "domain-memory/propose",
           "lifecycle/receipt",
-          "notification/receipt",
-          "stage-attempt/closeout",
-          "status/read",
-          "user-loop/wakeup"
+          "stage-attempt/closeout"
         ],
         "hermes_proof_executor_default": false
       },

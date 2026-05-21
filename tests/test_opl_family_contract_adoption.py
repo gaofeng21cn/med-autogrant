@@ -46,10 +46,7 @@ def test_current_program_sidecar_actions_include_domain_memory_writeback_dispatc
         "domain-memory/decide",
         "domain-memory/propose",
         "lifecycle/receipt",
-        "notification/receipt",
         "stage-attempt/closeout",
-        "status/read",
-        "user-loop/wakeup",
     ]
 
 

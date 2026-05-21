@@ -644,7 +644,10 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertNotIn("hermes_wakeup_role", export["todo_wakeup"])
         wakeup_contract = export["todo_wakeup"]["opl_wakeup_contract"]
         self.assertEqual(wakeup_contract["owner"], "one-person-lab")
-        self.assertEqual(wakeup_contract["target_action_ref"], "user-loop/wakeup")
+        self.assertEqual(wakeup_contract["target_action_ref"], "open_grant_user_loop")
+        self.assertEqual(wakeup_contract["target_surface"], "product user-loop")
+        self.assertEqual(wakeup_contract["target_command"], export["todo_wakeup"]["recommended_wakeup_command"])
+        self.assertIsNone(wakeup_contract["sidecar_dispatch_action"])
         self.assertEqual(wakeup_contract["queue_write_policy"], "enqueue_wakeup_only_no_grant_truth_writes")
         self.assertEqual(wakeup_contract["required_return_shapes"], ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"])
         self.assertFalse(any(export["todo_wakeup"]["forbidden_private_runtime_roles"].values()))
@@ -675,10 +678,7 @@ class ProductSidecarTest(unittest.TestCase):
                 "domain-memory/decide",
                 "domain-memory/propose",
                 "lifecycle/receipt",
-                "notification/receipt",
                 "stage-attempt/closeout",
-                "status/read",
-                "user-loop/wakeup",
             ],
         )
         self.assertIn("hermes_proof_executor", export["guardrails"]["forbidden_defaults"])
@@ -687,50 +687,27 @@ class ProductSidecarTest(unittest.TestCase):
             "OPL-hosted caller may invoke only MAG domain handler guarded actions.",
         )
 
-    def test_sidecar_dispatch_status_read_and_user_loop_wakeup_are_mag_owned(self) -> None:
+    def test_sidecar_dispatch_retires_generic_status_wakeup_and_notification_actions(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         entry = MedAutoGrantProductEntry()
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            status_task = Path(tmp_dir) / "status-task.json"
-            status_task.write_text(
-                json.dumps(
-                    {
-                        "task_id": "status-1",
-                        "action": "status/read",
-                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                    }
-                ),
-                encoding="utf-8",
-            )
-            status_payload = entry.dispatch_sidecar_task(task_path=status_task)
-            wakeup_task = Path(tmp_dir) / "wakeup-task.json"
-            wakeup_task.write_text(
-                json.dumps(
-                    {
-                        "task_id": "wakeup-1",
-                        "action": "user-loop/wakeup",
-                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                        "task_intent": "continue-grant-loop",
-                    }
-                ),
-                encoding="utf-8",
-            )
-            wakeup_payload = entry.dispatch_sidecar_task(task_path=wakeup_task)
-
-        self.assertEqual(status_payload["sidecar_dispatch"]["action"], "status/read")
-        self.assertTrue(status_payload["sidecar_dispatch"]["executed_by_sidecar"])
-        self.assertEqual(
-            status_payload["sidecar_dispatch"]["result"]["product_status"]["surface_kind"],
-            "product_status",
-        )
-        self.assertEqual(wakeup_payload["sidecar_dispatch"]["action"], "user-loop/wakeup")
-        self.assertTrue(wakeup_payload["sidecar_dispatch"]["executed_by_sidecar"])
-        self.assertEqual(
-            wakeup_payload["sidecar_dispatch"]["result"]["grant_user_loop"]["surface_kind"],
-            "grant_user_loop",
-        )
-        self.assertFalse(wakeup_payload["sidecar_dispatch"]["guardrails"]["hermes_proof_executor_default"])
+        for action in ("status/read", "user-loop/wakeup", "notification/receipt"):
+            with self.subTest(action=action), tempfile.TemporaryDirectory() as tmp_dir:
+                task_path = Path(tmp_dir) / "generic-action.json"
+                task_path.write_text(
+                    json.dumps(
+                        {
+                            "task_id": "retired-generic-action",
+                            "action": action,
+                            "input_path": str(CRITIQUE_EXAMPLE_PATH),
+                            "task_intent": "continue-grant-loop",
+                            "notification": {"kind": "opl_wakeup_ack"},
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                with self.assertRaisesRegex(WorkspaceStateError, "action 不允许"):
+                    entry.dispatch_sidecar_task(task_path=task_path)
 
     def test_sidecar_dispatch_autonomy_controller_returns_guarded_command_without_execution(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -950,7 +927,7 @@ class ProductSidecarTest(unittest.TestCase):
             with self.assertRaisesRegex(WorkspaceStateError, "action 不允许"):
                 MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
 
-    def test_cli_accepts_three_token_product_sidecar_commands(self) -> None:
+    def test_cli_rejects_retired_notification_receipt_sidecar_action(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             task_path = Path(tmp_dir) / "receipt-task.json"
             task_path.write_text(
@@ -979,13 +956,9 @@ class ProductSidecarTest(unittest.TestCase):
                     ]
                 )
 
-        self.assertEqual(exit_code, 0)
+        self.assertEqual(exit_code, 1)
         self.assertEqual(stderr.getvalue(), "")
         payload = json.loads(stdout.getvalue())
-        self.assertEqual(payload["sidecar_dispatch"]["action"], "notification/receipt")
-        self.assertEqual(payload["sidecar_dispatch"]["result"]["receipt_status"], "accepted")
-        self.assertTrue(payload["sidecar_dispatch"]["receipt_refs"]["opl_consumes_receipt_ref_only"])
-        self.assertEqual(
-            payload["sidecar_dispatch"]["result"]["receipt_refs"],
-            payload["sidecar_dispatch"]["receipt_refs"],
-        )
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["command"], "product-sidecar-dispatch")
+        self.assertIn("action 不允许", payload["error"])
