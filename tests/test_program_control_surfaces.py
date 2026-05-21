@@ -443,7 +443,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertTrue(
             any(
-                "OPL Rust native helper" in item
+                "OPL-owned helper/index consumption refs" in item
                 for item in framework_boundary["framework_consumed_projection"]
             )
         )

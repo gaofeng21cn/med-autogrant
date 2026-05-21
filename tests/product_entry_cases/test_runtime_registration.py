@@ -93,6 +93,22 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             registration["native_helper_consumption"]["proof_surface"],
             _build_opl_native_helper_indexing_proof(),
         )
+        self.assertNotIn("language", registration["native_helper_consumption"])
+        self.assertEqual(
+            registration["native_helper_consumption"]["index_consumption_policy"],
+            "opl_index_only_no_domain_truth_writes",
+        )
+        self.assertFalse(
+            registration["native_helper_consumption"]["authority_boundary"][
+                "mag_declares_helper_language_or_binary"
+            ]
+        )
+        self.assertFalse(
+            registration["native_helper_consumption"]["authority_boundary"]["mag_declares_backing_helper_ids"]
+        )
+        for index_ref in registration["native_helper_consumption"]["indexes"].values():
+            self.assertNotIn("backing_helper_id", index_ref)
+            self.assertEqual(index_ref["write_policy"], "opl_index_only")
         self.assertEqual(
             registration["resume_contract"],
             {
@@ -175,7 +191,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
 
         proof = _build_opl_native_helper_indexing_proof()
 
-        self.assertEqual(proof["surface_kind"], "opl_native_helper_indexing_proof")
+        self.assertEqual(proof["surface_kind"], "opl_native_helper_ref_consumption_proof")
         self.assertEqual(
             proof["covered_index_keys"],
             [
@@ -187,6 +203,9 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             ],
         )
         self.assertEqual(proof["coverage"]["workspace_registry_index"]["write_policy"], "opl_index_only")
+        for index_proof in proof["coverage"].values():
+            self.assertNotIn("proof_role", index_proof)
+            self.assertEqual(index_proof["write_policy"], "opl_index_only")
         self.assertIn("mag_repo_tracked_truth_remains_authoritative", proof["readonly_boundaries"])
         self.assertIn("quality_gate_remains_mag_owned", proof["readonly_boundaries"])
         self.assertIn("submission_ready_gate_remains_mag_owned", proof["readonly_boundaries"])

@@ -160,19 +160,38 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         )
         native_helper_consumption = stage_runtime_registration["native_helper_consumption"]
         self.assertEqual(native_helper_consumption["protocol_ref"], "contracts/opl-framework/native-helper-contract.json")
-        self.assertEqual(native_helper_consumption["language"], "rust")
+        self.assertNotIn("language", native_helper_consumption)
+        self.assertEqual(native_helper_consumption["managed_by"], "one-person-lab")
+        self.assertEqual(native_helper_consumption["index_consumption_policy"], "opl_index_only_no_domain_truth_writes")
         self.assertEqual(
-            native_helper_consumption["indexes"]["artifact_projection_index"]["backing_helper_id"],
-            "opl-artifact-indexer",
+            native_helper_consumption["indexes"]["artifact_projection_index"],
+            {
+                "input_ref": "/artifact_inventory",
+                "source_surface_kind": "artifact_inventory",
+                "write_policy": "opl_index_only",
+            },
         )
         self.assertEqual(
-            native_helper_consumption["indexes"]["attention_queue_index"]["backing_helper_id"],
-            "opl-state-indexer",
+            native_helper_consumption["indexes"]["attention_queue_index"],
+            {
+                "input_ref": "/automation/automations/1",
+                "source_surface_kind": "automation_descriptor",
+                "write_policy": "opl_index_only",
+            },
         )
-        self.assertTrue(native_helper_consumption["source_of_truth_rule"].startswith("Rust helpers may index MAG"))
+        for index_ref in native_helper_consumption["indexes"].values():
+            self.assertNotIn("backing_helper_id", index_ref)
+            self.assertEqual(index_ref["write_policy"], "opl_index_only")
+        authority_boundary = native_helper_consumption["authority_boundary"]
+        self.assertEqual(authority_boundary["helper_implementation_owner"], "one-person-lab")
+        self.assertFalse(authority_boundary["mag_declares_helper_language_or_binary"])
+        self.assertFalse(authority_boundary["mag_declares_backing_helper_ids"])
+        self.assertFalse(authority_boundary["mag_can_write_domain_truth_from_helper"])
+        self.assertEqual(authority_boundary["mag_quality_or_export_verdict_owner"], "med-autogrant")
+        self.assertTrue(native_helper_consumption["source_of_truth_rule"].startswith("OPL-owned helpers may index MAG"))
         proof_surface = native_helper_consumption["proof_surface"]
-        self.assertEqual(proof_surface["surface_kind"], "opl_native_helper_indexing_proof")
-        self.assertEqual(proof_surface["proof_id"], "mag.opl_rust_native_helper.indexing_proof.v1")
+        self.assertEqual(proof_surface["surface_kind"], "opl_native_helper_ref_consumption_proof")
+        self.assertEqual(proof_surface["proof_id"], "mag.opl_native_helper.ref_consumption_proof.v1")
         self.assertEqual(
             proof_surface["covered_index_keys"],
             [
@@ -184,30 +203,19 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
             ],
         )
         self.assertEqual(
-            proof_surface["coverage"]["artifact_projection_index"]["proof_role"],
-            "artifact_projection_indexing",
-        )
-        self.assertEqual(
             proof_surface["coverage"]["artifact_projection_index"]["input_ref"],
             "/artifact_inventory",
-        )
-        self.assertEqual(
-            proof_surface["coverage"]["attention_queue_index"]["proof_role"],
-            "todo_wakeup_indexing",
         )
         self.assertEqual(
             proof_surface["coverage"]["attention_queue_index"]["input_ref"],
             "/automation/automations/1",
         )
         self.assertEqual(
-            proof_surface["coverage"]["runtime_health_snapshot_index"]["proof_role"],
-            "runtime_health_indexing",
-        )
-        self.assertEqual(
             proof_surface["coverage"]["runtime_health_snapshot_index"]["input_ref"],
             "/runtime_inventory",
         )
         for proof in proof_surface["coverage"].values():
+            self.assertNotIn("proof_role", proof)
             self.assertEqual(proof["write_policy"], "opl_index_only")
         self.assertIn("mag_repo_tracked_truth_remains_authoritative", proof_surface["readonly_boundaries"])
         self.assertIn("quality_gate_remains_mag_owned", proof_surface["readonly_boundaries"])

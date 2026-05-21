@@ -80,7 +80,7 @@
         "external_evidence_receipt_ledger",
         "ideal_state_closure_status",
         "repo_source_layout_audit",
-        "OPL Rust native helper indexed workspace/session/artifact/TODO/runtime-health projections"
+        "OPL-owned helper/index consumption refs for workspace/session/artifact/TODO/runtime-health projections"
       ],
       "framework_non_goals": [
         "grant-domain truth owner",

@@ -677,28 +677,23 @@ class SchemaRegistryTest(unittest.TestCase):
             ["codex_cli", "hermes_agent", "claude_code"],
         )
         self.assertFalse(executor_adapter_contract["properties"]["fallback_allowed"]["const"])
-        self.assertIn(
-            "native_helper_consumption",
-            manifest_schema["$defs"]["oplStageRuntimeRegistration"]["required"],
-        )
-        self.assertIn(
-            "family_lifecycle_adapter",
-            manifest_schema["$defs"]["oplStageRuntimeRegistration"]["required"],
-        )
-        self.assertEqual(
-            manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"]["family_lifecycle_adapter"]["$ref"],
-            "#/$defs/oplFamilyLifecycleAdapter",
-        )
-        native_helper_consumption = manifest_schema["$defs"]["oplStageRuntimeRegistration"]["properties"][
-            "native_helper_consumption"
-        ]
+        stage_registration = manifest_schema["$defs"]["oplStageRuntimeRegistration"]
+        self.assertLessEqual({"native_helper_consumption", "family_lifecycle_adapter"}, set(stage_registration["required"]))
+        self.assertEqual(stage_registration["properties"]["family_lifecycle_adapter"]["$ref"], "#/$defs/oplFamilyLifecycleAdapter")
+        native_helper_consumption = stage_registration["properties"]["native_helper_consumption"]
         self.assertEqual(native_helper_consumption["$ref"], "#/$defs/oplNativeHelperConsumption")
-        self.assertIn("proof_surface", manifest_schema["$defs"]["oplNativeHelperConsumption"]["required"])
+        native_helper_defs = manifest_schema["$defs"]["oplNativeHelperConsumption"]
+        native_helper_required = set(native_helper_defs["required"])
+        self.assertLessEqual({"proof_surface", "index_consumption_policy", "authority_boundary"}, native_helper_required)
+        self.assertNotIn("language", native_helper_required)
+        self.assertEqual(native_helper_defs["properties"]["proof_surface"]["$ref"], "#/$defs/oplNativeHelperIndexingProof")
+        self.assertEqual(native_helper_defs["properties"]["authority_boundary"]["$ref"], "#/$defs/oplNativeHelperAuthorityBoundary")
         self.assertEqual(
-            manifest_schema["$defs"]["oplNativeHelperConsumption"]["properties"]["proof_surface"]["$ref"],
-            "#/$defs/oplNativeHelperIndexingProof",
+            manifest_schema["$defs"]["oplNativeHelperIndexingProof"]["properties"]["surface_kind"]["const"],
+            "opl_native_helper_ref_consumption_proof",
         )
-        self.assertIn("todo_wakeup_indexing", manifest_schema["$defs"]["oplNativeHelperIndexProof"]["properties"]["proof_role"]["enum"])
+        self.assertNotIn("proof_role", manifest_schema["$defs"]["oplNativeHelperIndexRef"]["required"])
+        self.assertNotIn("oplNativeHelperBackedIndex", manifest_schema["$defs"])
         lifecycle_adapter = manifest_schema["$defs"]["oplFamilyLifecycleAdapter"]
         self.assertEqual(
             lifecycle_adapter["required"],

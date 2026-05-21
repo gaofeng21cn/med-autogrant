@@ -1520,18 +1520,16 @@
       "additionalProperties": false,
       "required": [
         "protocol_ref",
-        "language",
         "managed_by",
         "source_of_truth_rule",
+        "index_consumption_policy",
         "proof_surface",
+        "authority_boundary",
         "indexes"
       ],
       "properties": {
         "protocol_ref": {
           "const": "contracts/opl-framework/native-helper-contract.json"
-        },
-        "language": {
-          "const": "rust"
         },
         "managed_by": {
           "const": "one-person-lab"
@@ -1539,13 +1537,19 @@
         "source_of_truth_rule": {
           "$ref": "common.schema.json#/$defs/nonEmptyString"
         },
+        "index_consumption_policy": {
+          "const": "opl_index_only_no_domain_truth_writes"
+        },
         "proof_surface": {
           "$ref": "#/$defs/oplNativeHelperIndexingProof"
+        },
+        "authority_boundary": {
+          "$ref": "#/$defs/oplNativeHelperAuthorityBoundary"
         },
         "indexes": {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/$defs/oplNativeHelperBackedIndex"
+            "$ref": "#/$defs/oplNativeHelperIndexRef"
           },
           "required": [
             "workspace_registry_index",
@@ -1572,17 +1576,17 @@
       ],
       "properties": {
         "surface_kind": {
-          "const": "opl_native_helper_indexing_proof"
+          "const": "opl_native_helper_ref_consumption_proof"
         },
         "version": {
           "type": "integer",
           "const": 1
         },
         "proof_id": {
-          "const": "mag.opl_rust_native_helper.indexing_proof.v1"
+          "const": "mag.opl_native_helper.ref_consumption_proof.v1"
         },
         "status": {
-          "const": "proof_surface_landed"
+          "const": "refs_only_contract_landed"
         },
         "covered_index_keys": {
           "type": "array",
@@ -1611,19 +1615,19 @@
           ],
           "properties": {
             "workspace_registry_index": {
-              "$ref": "#/$defs/oplNativeHelperIndexProof"
+              "$ref": "#/$defs/oplNativeHelperIndexRef"
             },
             "managed_session_ledger_index": {
-              "$ref": "#/$defs/oplNativeHelperIndexProof"
+              "$ref": "#/$defs/oplNativeHelperIndexRef"
             },
             "artifact_projection_index": {
-              "$ref": "#/$defs/oplNativeHelperIndexProof"
+              "$ref": "#/$defs/oplNativeHelperIndexRef"
             },
             "attention_queue_index": {
-              "$ref": "#/$defs/oplNativeHelperIndexProof"
+              "$ref": "#/$defs/oplNativeHelperIndexRef"
             },
             "runtime_health_snapshot_index": {
-              "$ref": "#/$defs/oplNativeHelperIndexProof"
+              "$ref": "#/$defs/oplNativeHelperIndexRef"
             }
           }
         },
@@ -1635,13 +1639,12 @@
         }
       }
     },
-    "oplNativeHelperIndexProof": {
+    "oplNativeHelperIndexRef": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "input_ref",
         "source_surface_kind",
-        "proof_role",
         "write_policy"
       ],
       "properties": {
@@ -1657,34 +1660,36 @@
             "runtime_inventory"
           ]
         },
-        "proof_role": {
-          "enum": [
-            "workspace_registry_indexing",
-            "session_ledger_indexing",
-            "artifact_projection_indexing",
-            "todo_wakeup_indexing",
-            "runtime_health_indexing"
-          ]
-        },
         "write_policy": {
           "const": "opl_index_only"
         }
       }
     },
-    "oplNativeHelperBackedIndex": {
+    "oplNativeHelperAuthorityBoundary": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["input_ref", "backing_helper_id"],
+      "required": [
+        "helper_implementation_owner",
+        "mag_declares_helper_language_or_binary",
+        "mag_declares_backing_helper_ids",
+        "mag_can_write_domain_truth_from_helper",
+        "mag_quality_or_export_verdict_owner"
+      ],
       "properties": {
-        "input_ref": {
-          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        "helper_implementation_owner": {
+          "const": "one-person-lab"
         },
-        "backing_helper_id": {
-          "enum": [
-            "opl-artifact-indexer",
-            "opl-runtime-watch",
-            "opl-state-indexer"
-          ]
+        "mag_declares_helper_language_or_binary": {
+          "const": false
+        },
+        "mag_declares_backing_helper_ids": {
+          "const": false
+        },
+        "mag_can_write_domain_truth_from_helper": {
+          "const": false
+        },
+        "mag_quality_or_export_verdict_owner": {
+          "const": "med-autogrant"
         }
       }
     },

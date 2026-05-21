@@ -33,6 +33,7 @@ OPL Framework 持有通用 provider runtime、typed queue、attempt ledger、gen
 - Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream Hermes probe、flat shell alias、facade patch bridge 和 compat aggregate test 只允许作为 legacy proof、tombstone 或 regression oracle；无 active caller 后直接删除或归档，不保留 compatibility alias。
 - MAG retained private surface 限定为 grant domain truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject、owner receipt、transition oracle、grant-native helper 和 focused contract tests。
 - 2026-05-21 isolated legacy cleanup lane 已把三份旧 hosted / OPL handoff support specs 从 `docs/specs/` 移到 `docs/history/specs/`，并把 `compatibility_only_product_entry_aggregate_test` 的 active caller 状态改为已物理移除；`tests/product_entry_cases/` 只作为当前 focused replacement tests，不再被记为 legacy aggregate caller。
+- 2026-05-21 native helper consumption 收薄 lane 已把 `runtime_registration.native_helper_consumption` 改成 refs-only OPL helper/index consumption contract：MAG 暴露 workspace/session/artifact/TODO/runtime-health input refs、`opl_index_only` policy 与 authority boundary；helper 语言/二进制、具体 backing helper id、runtime/watch helper owner 不再由 MAG manifest 固定。
 
 ## 当前证据门
 

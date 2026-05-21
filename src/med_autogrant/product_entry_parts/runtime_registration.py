@@ -74,33 +74,45 @@ def _build_opl_stage_runtime_registration(
         },
         "native_helper_consumption": {
             "protocol_ref": "contracts/opl-framework/native-helper-contract.json",
-            "language": "rust",
             "managed_by": "one-person-lab",
             "source_of_truth_rule": (
-                "Rust helpers may index MAG workspace, session, artifact, TODO/attention, and runtime-health "
-                "surfaces, but MAG author-side grant truth remains authoritative."
+                "OPL-owned helpers may index MAG workspace, session, artifact, TODO/attention, and runtime-health "
+                "refs, but MAG author-side grant truth remains authoritative."
             ),
+            "index_consumption_policy": "opl_index_only_no_domain_truth_writes",
             "proof_surface": _build_opl_native_helper_indexing_proof(),
+            "authority_boundary": {
+                "helper_implementation_owner": "one-person-lab",
+                "mag_declares_helper_language_or_binary": False,
+                "mag_declares_backing_helper_ids": False,
+                "mag_can_write_domain_truth_from_helper": False,
+                "mag_quality_or_export_verdict_owner": TARGET_DOMAIN_ID,
+            },
             "indexes": {
                 "workspace_registry_index": {
                     "input_ref": "/workspace_locator",
-                    "backing_helper_id": "opl-state-indexer",
+                    "source_surface_kind": "workspace_locator",
+                    "write_policy": "opl_index_only",
                 },
                 "managed_session_ledger_index": {
                     "input_ref": "/session_continuity",
-                    "backing_helper_id": "opl-state-indexer",
+                    "source_surface_kind": "session_continuity",
+                    "write_policy": "opl_index_only",
                 },
                 "artifact_projection_index": {
                     "input_ref": "/artifact_inventory",
-                    "backing_helper_id": "opl-artifact-indexer",
+                    "source_surface_kind": "artifact_inventory",
+                    "write_policy": "opl_index_only",
                 },
                 "attention_queue_index": {
                     "input_ref": "/automation/automations/1",
-                    "backing_helper_id": "opl-state-indexer",
+                    "source_surface_kind": "automation_descriptor",
+                    "write_policy": "opl_index_only",
                 },
                 "runtime_health_snapshot_index": {
                     "input_ref": "/runtime_inventory",
-                    "backing_helper_id": "opl-runtime-watch",
+                    "source_surface_kind": "runtime_inventory",
+                    "write_policy": "opl_index_only",
                 },
             },
         },
@@ -266,10 +278,10 @@ def _build_opl_family_lifecycle_adapter(
 
 def _build_opl_native_helper_indexing_proof() -> dict[str, Any]:
     return {
-        "surface_kind": "opl_native_helper_indexing_proof",
+        "surface_kind": "opl_native_helper_ref_consumption_proof",
         "version": 1,
-        "proof_id": "mag.opl_rust_native_helper.indexing_proof.v1",
-        "status": "proof_surface_landed",
+        "proof_id": "mag.opl_native_helper.ref_consumption_proof.v1",
+        "status": "refs_only_contract_landed",
         "covered_index_keys": [
             "workspace_registry_index",
             "managed_session_ledger_index",
@@ -281,36 +293,31 @@ def _build_opl_native_helper_indexing_proof() -> dict[str, Any]:
             "workspace_registry_index": {
                 "input_ref": "/workspace_locator",
                 "source_surface_kind": "workspace_locator",
-                "proof_role": "workspace_registry_indexing",
                 "write_policy": "opl_index_only",
             },
             "managed_session_ledger_index": {
                 "input_ref": "/session_continuity",
                 "source_surface_kind": "session_continuity",
-                "proof_role": "session_ledger_indexing",
                 "write_policy": "opl_index_only",
             },
             "artifact_projection_index": {
                 "input_ref": "/artifact_inventory",
                 "source_surface_kind": "artifact_inventory",
-                "proof_role": "artifact_projection_indexing",
                 "write_policy": "opl_index_only",
             },
             "attention_queue_index": {
                 "input_ref": "/automation/automations/1",
                 "source_surface_kind": "automation_descriptor",
-                "proof_role": "todo_wakeup_indexing",
                 "write_policy": "opl_index_only",
             },
             "runtime_health_snapshot_index": {
                 "input_ref": "/runtime_inventory",
                 "source_surface_kind": "runtime_inventory",
-                "proof_role": "runtime_health_indexing",
                 "write_policy": "opl_index_only",
             },
         },
         "readonly_boundaries": [
-            "rust_helper_outputs_are_opl_indexes_only",
+            "opl_helper_outputs_are_opl_indexes_only",
             "mag_repo_tracked_truth_remains_authoritative",
             "quality_gate_remains_mag_owned",
             "submission_ready_gate_remains_mag_owned",
