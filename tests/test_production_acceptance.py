@@ -41,6 +41,8 @@ def _assert_ref_list(values: object) -> None:
             or value.startswith("rtk ")
             or value.startswith("receipt:")
             or value.startswith("receipt-projection:")
+            or value.startswith("typed-blocker:")
+            or value.startswith("human_gate:")
             or "::" in value
         ), value
 
@@ -282,8 +284,12 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
         )
     handoff = closeout["opl_stage_evidence_receipt_handoff"]
     assert handoff["surface_kind"] == "mag_opl_stage_evidence_receipt_handoff.v1"
-    assert handoff["status"] == "ready_for_opl_stage_evidence_record_verify"
-    assert handoff["mode"] == "refs_only_domain_owner_receipt_refs"
+    assert handoff["status"] == (
+        "ready_for_opl_stage_evidence_record_verify_with_submission_human_gate_typed_blocker"
+    )
+    assert handoff["mode"] == (
+        "refs_only_domain_owner_receipt_refs_and_domain_owned_typed_blocker_refs"
+    )
     assert len(handoff["stage_owner_receipt_refs"]) == 6
     assert {
         item["stage_id"] for item in handoff["stage_owner_receipt_refs"]
@@ -298,6 +304,18 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
         "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5",
         "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/6",
     ]
+    assert handoff["stage_typed_blocker_refs"] == [
+        {
+            "stage_id": "package_and_submit_ready",
+            "human_gate_ref": "human_gate:submission_ready_export_gate",
+            "typed_blocker_ref": (
+                "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/"
+                "human-approval-required/2026-05-22"
+            ),
+            "blocker_kind": "submission_ready_export_gate_human_approval_required",
+            "blocker_state": "human_gate_required_no_submission_ready_approval_recorded",
+        }
+    ]
     assert handoff["authority_boundary"] == {
         "mag_owns_domain_receipt_refs": True,
         "opl_records_refs_only": True,
@@ -305,8 +323,54 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
         "opl_can_write_memory_body": False,
         "opl_can_sign_owner_receipt": False,
         "opl_can_authorize_fundability_or_export": False,
+        "opl_can_record_human_gate_as_approval": False,
+        "human_gate_approval_recorded": False,
         "claims_grant_ready": False,
         "claims_submission_ready_export": False,
+    }
+    package_closeout = stage_closeouts[5]
+    assert package_closeout["stage_id"] == "package_and_submit_ready"
+    assert package_closeout["submission_ready_export_gate_ref"] == (
+        "human_gate:submission_ready_export_gate"
+    )
+    assert package_closeout["submission_ready_export_gate_typed_blocker_ref"] == (
+        "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/"
+        "human-approval-required/2026-05-22"
+    )
+
+    submission_tail = closeout["submission_ready_export_gate_tail"]
+    assert submission_tail == {
+        "surface_kind": "mag_submission_ready_export_gate_tail.v1",
+        "state": "blocked_by_domain_owned_human_gate_typed_blocker",
+        "stage_id": "package_and_submit_ready",
+        "human_gate_ref": "human_gate:submission_ready_export_gate",
+        "typed_blocker_ref": (
+            "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/"
+            "human-approval-required/2026-05-22"
+        ),
+        "blocker_reason": (
+            "The package-and-submit stage has no real human approval receipt for "
+            "submission-ready export; MAG exposes a typed blocker instead of allowing "
+            "OPL to record the gate id as approval."
+        ),
+        "opl_recording_policy": (
+            "OPL may record the typed_blocker_ref through the refs-only "
+            "stage-production-evidence route; recording this blocker is not a "
+            "submission-ready export approval."
+        ),
+        "readiness_claims": {
+            "claims_grant_ready": False,
+            "claims_export_ready": False,
+            "claims_submission_ready_export": False,
+            "claims_human_approval_obtained": False,
+        },
+        "authority_boundary": {
+            "mag_owns_submission_ready_export_gate": True,
+            "opl_records_refs_only": True,
+            "opl_can_authorize_submission_ready": False,
+            "opl_can_treat_human_gate_ref_as_receipt_instance": False,
+            "human_gate_approval_recorded": False,
+        },
     }
 
     source_runtime_handoff = closeout["opl_stage_source_runtime_evidence_typed_blocker_handoff"]

@@ -248,14 +248,16 @@
           "contracts/stage_control_plane.json#/stages/5/stage_contract/monitor_freshness_refs/1",
           "contracts/stage_control_plane.json#/stages/5/stage_contract/monitor_freshness_refs/2"
         ],
-        "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker"
+        "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker",
+        "submission_ready_export_gate_ref": "human_gate:submission_ready_export_gate",
+        "submission_ready_export_gate_typed_blocker_ref": "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
       }
     ],
     "opl_stage_evidence_receipt_handoff": {
       "surface_kind": "mag_opl_stage_evidence_receipt_handoff.v1",
-      "mode": "refs_only_domain_owner_receipt_refs",
-      "status": "ready_for_opl_stage_evidence_record_verify",
-      "recording_policy": "OPL may record these body-free MAG owner receipt refs and monitor evidence refs in its refs-only stage evidence ledger; MAG remains the grant/fundability/export authority.",
+      "mode": "refs_only_domain_owner_receipt_refs_and_domain_owned_typed_blocker_refs",
+      "status": "ready_for_opl_stage_evidence_record_verify_with_submission_human_gate_typed_blocker",
+      "recording_policy": "OPL may record these body-free MAG owner receipt refs, monitor evidence refs, and the package submission human-gate typed blocker in its refs-only stage evidence ledger; MAG remains the grant/fundability/export/submission gate authority.",
       "stage_owner_receipt_refs": [
         {
           "stage_id": "call_and_candidate_intake",
@@ -282,6 +284,15 @@
           "domain_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker"
         }
       ],
+      "stage_typed_blocker_refs": [
+        {
+          "stage_id": "package_and_submit_ready",
+          "human_gate_ref": "human_gate:submission_ready_export_gate",
+          "typed_blocker_ref": "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22",
+          "blocker_kind": "submission_ready_export_gate_human_approval_required",
+          "blocker_state": "human_gate_required_no_submission_ready_approval_recorded"
+        }
+      ],
       "monitor_evidence_refs": [
         "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
         "contracts/external_evidence/mag-evidence-receipt-ledger.json#/first_live_production_evidence",
@@ -295,8 +306,32 @@
         "opl_can_write_memory_body": false,
         "opl_can_sign_owner_receipt": false,
         "opl_can_authorize_fundability_or_export": false,
+        "opl_can_record_human_gate_as_approval": false,
+        "human_gate_approval_recorded": false,
         "claims_grant_ready": false,
         "claims_submission_ready_export": false
+      }
+    },
+    "submission_ready_export_gate_tail": {
+      "surface_kind": "mag_submission_ready_export_gate_tail.v1",
+      "state": "blocked_by_domain_owned_human_gate_typed_blocker",
+      "stage_id": "package_and_submit_ready",
+      "human_gate_ref": "human_gate:submission_ready_export_gate",
+      "typed_blocker_ref": "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22",
+      "blocker_reason": "The package-and-submit stage has no real human approval receipt for submission-ready export; MAG exposes a typed blocker instead of allowing OPL to record the gate id as approval.",
+      "opl_recording_policy": "OPL may record the typed_blocker_ref through the refs-only stage-production-evidence route; recording this blocker is not a submission-ready export approval.",
+      "readiness_claims": {
+        "claims_grant_ready": false,
+        "claims_export_ready": false,
+        "claims_submission_ready_export": false,
+        "claims_human_approval_obtained": false
+      },
+      "authority_boundary": {
+        "mag_owns_submission_ready_export_gate": true,
+        "opl_records_refs_only": true,
+        "opl_can_authorize_submission_ready": false,
+        "opl_can_treat_human_gate_ref_as_receipt_instance": false,
+        "human_gate_approval_recorded": false
       }
     },
     "opl_stage_source_runtime_evidence_typed_blocker_handoff": {
