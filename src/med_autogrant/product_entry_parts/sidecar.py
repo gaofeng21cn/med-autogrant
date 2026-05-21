@@ -10,31 +10,27 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
 )
+from med_autogrant.product_entry_parts.sidecar_contract import (
+    ALLOWED_ACTIONS,
+    SIDECAR_ADAPTER_ID,
+    SIDECAR_DISPATCH_KIND,
+    SIDECAR_EXPORT_KIND,
+    SIDECAR_VERSION,
+)
 from med_autogrant.product_entry_parts.sidecar_closeout import (
     _dispatch_codex_stage_receipts,
     _dispatch_executor_first_bundle,
     _dispatch_operator_readiness,
     _dispatch_physical_morphology_guard,
 )
-from med_autogrant.public_cli import public_cli_command
+from med_autogrant.product_entry_parts.sidecar_projection import (
+    build_attention_queue_projection,
+    build_autonomy_controller_projection,
+    build_todo_wakeup_projection,
+    default_executor_owner,
+    first_skill,
+)
 from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
-
-
-SIDECAR_EXPORT_KIND = "mag_product_sidecar_export"
-SIDECAR_DISPATCH_KIND = "mag_product_sidecar_dispatch"
-SIDECAR_ADAPTER_ID = "mag.opl_stage_led.product_sidecar.v1"
-SIDECAR_VERSION = 1
-
-_ALLOWED_ACTIONS = {
-    "domain-memory/propose",
-    "domain-memory/decide",
-    "stage-attempt/closeout",
-    "lifecycle/receipt",
-    "closeout/codex-stage-receipts",
-    "closeout/operator-readiness",
-    "closeout/physical-morphology-guard",
-    "closeout/executor-first-bundle",
-}
 
 
 def build_sidecar_export(
@@ -50,7 +46,7 @@ def build_sidecar_export(
         context="sidecar_export",
     )
     skill_catalog = _require_mapping(manifest, "skill_catalog", context="sidecar_export.product_entry_manifest")
-    skill = _first_skill(skill_catalog)
+    skill = first_skill(skill_catalog)
     domain_projection = _require_mapping(skill, "domain_projection", context="sidecar_export.skill_catalog.skill")
     runtime_control = _require_mapping(manifest, "runtime_control", context="sidecar_export.product_entry_manifest")
     runtime_continuity = _require_mapping(
@@ -147,7 +143,7 @@ def build_sidecar_export(
             "domain_truth_owner": TARGET_DOMAIN_ID,
             "quality_gate_owner": TARGET_DOMAIN_ID,
             "artifact_owner": TARGET_DOMAIN_ID,
-            "default_executor_owner": _default_executor_owner(manifest),
+            "default_executor_owner": default_executor_owner(manifest),
             "default_executor_note": (
                 "Default executor remains Codex/domain-selected; OPL may explicitly choose "
                 "a stage-led runtime provider for wakeup/control-plane carrier duties."
@@ -273,16 +269,16 @@ def build_sidecar_export(
                 context="sidecar_export.controlled_domain_memory_apply_proof",
             )
         ),
-        "todo_wakeup": _build_todo_wakeup_projection(
+        "todo_wakeup": build_todo_wakeup_projection(
             automation=automation,
             manifest=manifest,
             user_loop_command=user_loop_command,
         ),
-        "autonomy_controller": _build_autonomy_controller_projection(
+        "autonomy_controller": build_autonomy_controller_projection(
             manifest=manifest,
             autonomy_observability=autonomy_observability,
         ),
-        "user_loop_attention_queue": _build_attention_queue_projection(
+        "user_loop_attention_queue": build_attention_queue_projection(
             manifest=manifest,
             autonomy_observability=autonomy_observability,
             user_loop_command=user_loop_command,
@@ -298,7 +294,7 @@ def build_sidecar_export(
             ),
             "write_policy": "opl_index_only_no_grant_truth_writes",
             "substrate_adapter_export_ref": "/sidecar_export/opl_substrate_adapter_export",
-            "allowed_dispatch_actions": sorted(_ALLOWED_ACTIONS),
+            "allowed_dispatch_actions": sorted(ALLOWED_ACTIONS),
             "replacement_expectations_ref": (
                 "/sidecar_export/mag_consumer_thinning_contract/opl_replacement_expectations"
             ),
@@ -333,7 +329,7 @@ def dispatch_sidecar_task(
     resolved_task_path = Path(task_path).expanduser().resolve()
     task = _read_json_mapping(resolved_task_path, context="sidecar_task")
     action = _require_nonempty_string_from_mapping(task, "action", context="sidecar_task")
-    if action not in _ALLOWED_ACTIONS:
+    if action not in ALLOWED_ACTIONS:
         raise WorkspaceStateError(f"sidecar task action 不允许: {action}")
     input_path = _require_nonempty_string_from_mapping(task, "input_path", context="sidecar_task")
     if action == "domain-memory/propose":
@@ -587,7 +583,7 @@ def _dispatch_payload(
                 input_path=input_path,
             ),
             "guardrails": {
-                "allowed_actions": sorted(_ALLOWED_ACTIONS),
+                "allowed_actions": sorted(ALLOWED_ACTIONS),
                 "domain_truth_owner": TARGET_DOMAIN_ID,
                 "opl_role": "generated_hosted_caller_and_typed_family_queue_control_plane",
                 "hermes_role": "explicit_diagnostic_or_executor_proof_carrier_only",
@@ -595,123 +591,6 @@ def _dispatch_payload(
             },
         },
     }
-
-
-def _build_todo_wakeup_projection(
-    *,
-    automation: Mapping[str, Any],
-    manifest: Mapping[str, Any],
-    user_loop_command: str,
-) -> dict[str, Any]:
-    automations = automation.get("automations")
-    if not isinstance(automations, list):
-        raise WorkspaceStateError("sidecar_export.automation 缺少 automations。")
-    authoring_wakeup = None
-    for item in automations:
-        if isinstance(item, Mapping) and item.get("automation_id") == "mag.authoring_loop_continuation":
-            authoring_wakeup = dict(item)
-            break
-    if authoring_wakeup is None:
-        raise WorkspaceStateError("sidecar_export 缺少 authoring loop continuation automation。")
-    return {
-        "surface_kind": "mag_todo_wakeup_projection",
-        "explicit_wakeup_policy": "manual_or_opl_queue_triggered_authoring_loop_continuation",
-        "todo_source_refs": [
-            "/product_entry_manifest/remaining_gaps",
-            "/product_entry_manifest/automation/automations/1",
-            "/product_entry_manifest/autonomy_observability/attention_candidates",
-        ],
-        "remaining_gaps": list(manifest.get("remaining_gaps") or []),
-        "authoring_loop_continuation": authoring_wakeup,
-        "recommended_wakeup_command": user_loop_command,
-        "opl_wakeup_contract": {
-            "owner": "one-person-lab",
-            "provider_role": "typed_family_queue_and_provider_wakeup_shell",
-            "mag_role": "refs_only_authoring_continuation_action_target",
-            "target_action_ref": "open_grant_user_loop",
-            "target_surface": "product user-loop",
-            "target_command": user_loop_command,
-            "sidecar_dispatch_action": None,
-            "queue_write_policy": "enqueue_wakeup_only_no_grant_truth_writes",
-            "required_return_shapes": [
-                "domain_owner_receipt",
-                "typed_blocker",
-                "no_regression_evidence",
-            ],
-        },
-        "forbidden_private_runtime_roles": {
-            "hermes_24h_substrate_owner": False,
-            "mag_scheduler_daemon_owner": False,
-            "mag_attempt_ledger_owner": False,
-            "mag_app_workbench_owner": False,
-        },
-        "opl_queue_role": "typed_family_queue_control_plane_only",
-    }
-
-
-def _build_autonomy_controller_projection(
-    *,
-    manifest: Mapping[str, Any],
-    autonomy_observability: Mapping[str, Any],
-) -> dict[str, Any]:
-    workspace_path = _require_nonempty_string_from_mapping(
-        _require_mapping(manifest, "workspace_locator", context="sidecar_export.product_entry_manifest"),
-        "workspace_path",
-        context="sidecar_export.workspace_locator",
-    )
-    return {
-        "surface_kind": "mag_autonomy_controller_projection",
-        "owner": TARGET_DOMAIN_ID,
-        "observability": dict(autonomy_observability),
-        "allowed_modes": ["dry_run", "guarded_run"],
-        "default_mode": "dry_run",
-        "command_template": public_cli_command(
-            "execute-grant-autonomy-controller",
-            "--input",
-            workspace_path,
-            "--output-dir",
-            "<output-dir>",
-            "--format",
-            "json",
-        ),
-        "executor_override_allowed": False,
-        "hermes_proof_executor_default": False,
-    }
-
-
-def _build_attention_queue_projection(
-    *,
-    manifest: Mapping[str, Any],
-    autonomy_observability: Mapping[str, Any],
-    user_loop_command: str,
-) -> dict[str, Any]:
-    return {
-        "surface_kind": "mag_user_loop_attention_queue",
-        "owner": TARGET_DOMAIN_ID,
-        "queue_owner": "one-person-lab",
-        "queue_write_policy": "enqueue_wakeup_only_no_grant_truth_writes",
-        "attention_candidates": list(autonomy_observability.get("attention_candidates") or []),
-        "operator_loop_surface": dict(
-            _require_mapping(manifest, "operator_loop_surface", context="sidecar_export.product_entry_manifest")
-        ),
-        "recommended_wakeup_command": user_loop_command,
-    }
-
-
-def _default_executor_owner(manifest: Mapping[str, Any]) -> str:
-    runtime_control = _require_mapping(manifest, "runtime_control", context="sidecar_export.product_entry_manifest")
-    return _require_nonempty_string_from_mapping(
-        runtime_control,
-        "executor_owner",
-        context="sidecar_export.runtime_control",
-    )
-
-
-def _first_skill(skill_catalog: Mapping[str, Any]) -> Mapping[str, Any]:
-    skills = skill_catalog.get("skills")
-    if not isinstance(skills, list) or not skills or not isinstance(skills[0], Mapping):
-        raise WorkspaceStateError("sidecar_export.skill_catalog 缺少首个 skill。")
-    return skills[0]
 
 
 def _typed_blocker_for_receipt(receipt: Mapping[str, Any], *, blocker_kind: str) -> dict[str, Any] | None:
