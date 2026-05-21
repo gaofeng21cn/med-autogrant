@@ -783,7 +783,7 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert "generic_scheduler_daemon" in audit["opl_must_absorb_code_surfaces"]
     assert audit["mag_thin_adapter_code_surfaces"] == [
         "product_entry_manifest_builder",
-        "product_sidecar_adapter",
+        "product_sidecar_guarded_domain_adapter",
         "domain_entry",
         "receipt_schema_and_writer",
         "grant_transition_oracle",
@@ -799,7 +799,10 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "sidecar_dispatch_product_shell": {
             "module_ref": "sidecar_product_status_shell",
             "active_caller_status": "active_refs_only_domain_sidecar_adapter",
-            "migration_action": "OPL_generates_product_operator_shell_MAG_keeps_guarded_domain_adapter_refs",
+            "migration_action": (
+                "OPL_generates_product_operator_shell_and_generic_dispatch_actions_"
+                "MAG_keeps_guarded_domain_adapter_refs"
+            ),
         },
         "optional_hermes_state_db": {
             "module_ref": "default_hermes_gateway_local_manager_runtime_owner",

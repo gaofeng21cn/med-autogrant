@@ -642,7 +642,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             audit["mag_thin_adapter_code_surfaces"],
             [
                 "product_entry_manifest_builder",
-                "product_sidecar_adapter",
+                "product_sidecar_guarded_domain_adapter",
                 "domain_entry",
                 "receipt_schema_and_writer",
                 "grant_transition_oracle",
