@@ -544,7 +544,7 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["program_id"], "med-autogrant-mainline")
         self.assertEqual(
             payload["current_line"]["current_owner_line"],
-            "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
+            "OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor",
         )
         self.assertTrue(payload["current_focus"]["summary"])
         self.assertEqual(

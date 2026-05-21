@@ -24,8 +24,16 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(contract["formal_entry"]["internal_controller_surface"], "controller")
         self.assertEqual(
             contract["runtime_owner"]["current_owner_line"],
-            "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
+            "OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor",
         )
+        self.assertEqual(contract["runtime_owner"]["default_task_runtime_owner"], "one-person-lab")
+        self.assertEqual(contract["runtime_owner"]["default_runtime_substrate"], "temporal")
+        self.assertTrue(contract["runtime_owner"]["opl_temporal_hosted_autonomy_default"])
+        self.assertFalse(contract["runtime_owner"]["mag_implements_daemon"])
+        self.assertFalse(contract["runtime_owner"]["mag_implements_scheduler"])
+        self.assertFalse(contract["runtime_owner"]["mag_implements_attempt_loop"])
+        self.assertFalse(contract["runtime_owner"]["mag_owns_attempt_ledger"])
+        self.assertEqual(contract["runtime_owner"]["default_stage_executor"], "codex_cli")
         self.assertEqual(contract["runtime_owner"]["active_phase"], "P4 mature direct grant product entry")
         self.assertEqual(
             contract["runtime_owner"]["active_tranche"],
@@ -34,8 +42,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         framework_boundary = contract["runtime_owner"]["stage_led_framework_boundary"]
         self.assertEqual(
             framework_boundary["framework"],
-            "OPL Codex-first stage-led agent runtime framework",
+            "OPL Temporal-backed Codex-first stage-led agent runtime framework",
         )
+        self.assertEqual(framework_boundary["production_substrate"], "Temporal")
+        self.assertEqual(framework_boundary["autonomous_runtime_default"], "enabled")
+        self.assertEqual(framework_boundary["task_start_handoff_owner"], "one-person-lab")
+        self.assertEqual(framework_boundary["post_start_residency_owner"], "one-person-lab")
+        self.assertIn("persistent online scheduling", framework_boundary["layer_role"])
+        self.assertIn("resume", framework_boundary["layer_role"])
         self.assertIn("queue", framework_boundary["layer_role"])
         self.assertIn("handoff", framework_boundary["layer_role"])
         self.assertIn("operator projection", framework_boundary["layer_role"])
@@ -389,15 +403,19 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         )
         self.assertEqual(
             contract["ideal_target"]["family_top_entry"],
-            "OPL Codex-first stage-led agent runtime framework",
+            "OPL Temporal-backed Codex-first stage-led agent runtime framework",
         )
-        self.assertEqual(contract["ideal_target"]["family_runtime_framework"], "OPL stage-led runtime framework")
+        self.assertEqual(
+            contract["ideal_target"]["family_runtime_framework"],
+            "OPL Temporal-backed stage-led runtime framework",
+        )
         self.assertEqual(contract["ideal_target"]["stage_attempt_minimum_execution_unit"], "Codex CLI")
         self.assertEqual(contract["ideal_target"]["domain_direct_entry"], "Med Auto Grant Product Entry")
         self.assertEqual(
             contract["ideal_target"]["runtime_substrate_owner"],
-            "OPL stage-led runtime framework may explicitly select external providers for wakeup/control-plane "
-            "consumption; route-selected authoring executor remains Codex/domain-selected by default",
+            "OPL owns the default Temporal-backed hosted autonomous task runtime, including persistent scheduling, "
+            "wakeup, retry, resume and attempt ledger; MAG does not implement daemon, scheduler, attempt loop or "
+            "generic runtime owner surfaces",
         )
         self.assertEqual(contract["ideal_target"]["authoring_truth_owner"], "Med Auto Grant")
         stage_led_framework = contract["ideal_target"]["opl_stage_led_framework"]

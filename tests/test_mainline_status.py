@@ -14,11 +14,11 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     assert payload["program_id"] == "med-autogrant-mainline"
     assert (
         payload["current_line"]["current_owner_line"]
-        == "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers"
+        == "OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor"
     )
     assert payload["current_focus"]["summary"]
     assert payload["current_focus"]["focus_items"]
-    assert payload["ideal_target"]["family_top_entry"] == "OPL Codex-first stage-led agent runtime framework"
+    assert payload["ideal_target"]["family_top_entry"] == "OPL Temporal-backed Codex-first stage-led agent runtime framework"
     assert payload["ideal_target"]["stage_attempt_minimum_execution_unit"] == "Codex CLI"
     assert payload["ideal_target"]["domain_direct_entry"] == "Med Auto Grant Product Entry"
     assert any(item["record_id"] == "P4.B" for item in payload["completed_records"])

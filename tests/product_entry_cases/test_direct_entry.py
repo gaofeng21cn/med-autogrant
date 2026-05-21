@@ -44,6 +44,13 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
             "--task-intent tighten-grant-mainline",
             runtime_control["direct_entry"]["command"],
         )
+        runtime_substrate_contract = payload["grant_direct_entry"]["direct_entry"]["runtime_session_contract"][
+            "runtime_substrate_contract"
+        ]
+        self.assertEqual(runtime_substrate_contract["runtime_owner"], "configured_family_runtime_provider")
+        self.assertEqual(runtime_substrate_contract["task_runtime_owner"], "one-person-lab")
+        self.assertEqual(runtime_substrate_contract["runtime_substrate"], "temporal")
+        self.assertEqual(runtime_substrate_contract["stage_executor_owner"], "codex_cli")
         expected_return_surface_contract = {
             "entry_adapter": "MedAutoGrantDomainEntry",
             "default_formal_entry": "CLI",
@@ -181,14 +188,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                         "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
                         "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
                         "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
-                        "runtime_substrate_contract": {
-                            "runtime_owner": "configured_family_runtime_provider",
-                            "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
-                            "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
-                            "provenance_oracle": "post-R5A local runtime closeout / stage-led provenance oracle",
-                            "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
-                        },
+                        "runtime_substrate_contract": runtime_substrate_contract,
                         "runtime_state_contract": {
                             "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
                             "session_state_owner": "one-person-lab",
@@ -241,14 +241,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                         "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
                         "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
                         "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
-                        "runtime_substrate_contract": {
-                            "runtime_owner": "configured_family_runtime_provider",
-                            "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
-                            "active_phase": "P4 mature direct grant product entry",
-                            "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
-                            "provenance_oracle": "post-R5A local runtime closeout / stage-led provenance oracle",
-                            "repo_tracked_current_program_contract": "contracts/runtime-program/current-program.json",
-                        },
+                        "runtime_substrate_contract": runtime_substrate_contract,
                         "runtime_state_contract": {
                             "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
                             "session_state_owner": "one-person-lab",

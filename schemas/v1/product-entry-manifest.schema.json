@@ -178,6 +178,14 @@
       "required": [
         "current_owner_line",
         "runtime_owner",
+        "default_task_runtime_owner",
+        "default_runtime_substrate",
+        "opl_temporal_hosted_autonomy_default",
+        "default_stage_executor",
+        "mag_implements_daemon",
+        "mag_implements_scheduler",
+        "mag_implements_attempt_loop",
+        "mag_owns_attempt_ledger",
         "optional_carriers"
       ],
       "properties": {
@@ -186,6 +194,30 @@
         },
         "runtime_owner": {
           "const": "configured_family_runtime_provider"
+        },
+        "default_task_runtime_owner": {
+          "const": "one-person-lab"
+        },
+        "default_runtime_substrate": {
+          "const": "temporal"
+        },
+        "opl_temporal_hosted_autonomy_default": {
+          "const": true
+        },
+        "default_stage_executor": {
+          "const": "codex_cli"
+        },
+        "mag_implements_daemon": {
+          "const": false
+        },
+        "mag_implements_scheduler": {
+          "const": false
+        },
+        "mag_implements_attempt_loop": {
+          "const": false
+        },
+        "mag_owns_attempt_ledger": {
+          "const": false
         },
         "optional_carriers": {
           "type": "array",

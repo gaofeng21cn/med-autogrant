@@ -7,17 +7,17 @@ Machine boundary: 本文是人读架构说明。机器接口与当前 truth surf
 
 ## 主链路
 
-当前主链路是“单一 app skill 优先，稳定 capability surface 仍由 CLI / domain entry 承载，OPL 托管或 hosted backend 显式可选”：
+当前主链路是“单一 app skill 优先，稳定 capability surface 仍由 CLI / domain entry 承载，任务启动后的默认运行驻留交给 OPL/Temporal hosted autonomous runtime”：
 
 `operator / Codex / OPL / generic agent caller -> single Med Auto Grant app skill -> CLI or MedAutoGrantDomainEntry -> route-selected executor -> MedAutoGrant domain logic -> critique / export / stage surfaces -> durable artifacts`
 
-在 OPL stage-led agent runtime framework 中，这条链路可以被 OPL 托管为 stage attempt；Agent executor 是 stage 内最小执行单位，`Codex CLI` 是当前第一公民 executor，除非活跃合同显式选择非默认 executor/backend。OPL 可以提供 stage lifecycle、queue/wakeup、handoff、receipt、approval/retry、trace/projection、shared contracts/indexes 与外部 provider 编排，但不会改变 MAG 的 owner 边界：MAG 持有 grant route truth、fundability / authoring quality判断、workspace truth、artifact assembly 和 submission-ready export gate。
+在 OPL Temporal-backed stage-led agent runtime framework 中，这条链路默认被 OPL 托管为 stage attempt；OPL 持有任务启动后的持久在线调度、queue/wakeup、handoff、receipt、approval/retry/dead-letter、resume、attempt ledger、trace/projection、shared contracts/indexes 与 provider 编排。Agent executor 是 stage 内最小执行单位，`Codex CLI` 是当前第一公民 executor，除非活跃合同显式选择非默认 executor/backend。该默认托管运行口径不会改变 MAG 的 owner 边界：MAG 持有 grant route truth、fundability / authoring quality判断、workspace truth、artifact assembly 和 submission-ready export gate。
 
 formal-entry matrix 继续固定为：`CLI` 是 formal entry，`MCP` 是 supported protocol layer，`controller` 是 internal surface。
 
 当前任务语义固定为“指定基金任务正文 authoring”。架构层显式区分两类完成态：科学完成可待审包，以及形式/客观补件完成。
 
-如果显式启用 hosted runtime carrier，它也只能挂在同一套 `CLI / MedAutoGrantDomainEntry / route contract / export contract` 下面；`Hermes-Agent` 和 `Claude Code` 相关路径当前属于 OPL generic Agent Executor Adapter 的显式 opt-in backend，而不是默认公开 capability contract 或公开第一入口。
+`Hermes-Agent` 和 `Claude Code` 相关路径当前属于 OPL generic Agent Executor Adapter 的显式 opt-in backend，而不是默认公开 capability contract、公开第一入口或 MAG runtime owner。非默认 executor 也只能挂在同一套 `CLI / MedAutoGrantDomainEntry / route contract / export contract` 下面。
 
 ## 入口 taxonomy 与 OPL handoff
 
@@ -132,7 +132,7 @@ MAG 的 authority 边界不因 refs-only lifecycle 上收而外移：grant truth
 
 ## OPL Provider、Med Auto Grant 与 concrete executor 的分工
 
-在当前架构里，OPL stage-led runtime framework 和它选定的 provider 可以承担：
+在当前架构里，OPL Temporal-backed stage-led runtime framework 是默认任务运行 owner，并承担：
 
 - session substrate
 - runtime state / attempt ledger durability
@@ -140,7 +140,7 @@ MAG 的 authority 边界不因 refs-only lifecycle 上收而外移：grant truth
 - sidecar dispatch 的在线唤醒 carrier
 - stage-led queue、handoff、receipt、retry/dead-letter 与 operator projection
 
-provider 选择由 OPL 框架显式声明；生产在线路径要求 Temporal-backed provider ready。Hermes-first 口径只作为 provider-specific 或迁移记录保留。
+生产在线路径默认要求 Temporal-backed provider ready。Hermes-first 口径只作为 provider-specific 或迁移记录保留。
 
 `Med Auto Grant` 自己继续承担：
 

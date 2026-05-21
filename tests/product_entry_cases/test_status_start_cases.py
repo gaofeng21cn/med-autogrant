@@ -312,7 +312,7 @@ class ProductEntryStatusStartCaseTest(unittest.TestCase):
         with patch(
             "med_autogrant.product_entry_parts.manifest_builder._build_mainline_snapshot",
             return_value={
-                "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
+                "current_owner_line": "OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor",
                 "active_phase": "P4 mature direct grant product entry",
                 "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                 "phase_map": [{"phase_id": "P4", "phase_name": "mature direct grant product entry", "status": "next"}],

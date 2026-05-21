@@ -107,7 +107,7 @@ class ProductEntryFailureModeTest(unittest.TestCase):
                             "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
                             "runtime_substrate_contract": {
                                 "runtime_owner": "configured_family_runtime_provider",
-                                "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
+                                "current_owner_line": "OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor",
                                 "active_phase": "P4 mature direct grant product entry",
                                 "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                                 "provenance_oracle": "post-R5A local runtime closeout / stage-led provenance oracle",
@@ -205,7 +205,7 @@ class ProductEntryFailureModeTest(unittest.TestCase):
                             "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
                             "runtime_substrate_contract": {
                                 "runtime_owner": "configured_family_runtime_provider",
-                                "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
+                                "current_owner_line": "OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor",
                                 "active_phase": "P4 mature direct grant product entry",
                                 "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
                                 "provenance_oracle": "post-R5A local runtime closeout / stage-led provenance oracle",
