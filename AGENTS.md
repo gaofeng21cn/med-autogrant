@@ -7,6 +7,7 @@
 ## 定位
 
 - AGENTS 只管工作方式、少量稳定身份边界和文档生命周期纪律，不承载项目真相、规格或阶段判断。
+- 根层 `TASTE.md` 记录 OPL family 共享维护开发偏好；进行架构、代码、文档、测试、review、cleanup 和 closeout 判断时，先按 `TASTE.md` 校准 taste，再读取 MAG 事实、contracts、docs 与源码。
 - 项目知识默认从 `README*`、`docs/README*`、`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md` 读取。
 - repo-tracked current-program pointer 固定为 `contracts/runtime-program/current-program.json`。
 - `Med Auto Grant` 是独立 grant domain agent，也可以作为 `OPL` stage-led 智能体运行框架中的 admitted domain agent 被托管。`Stage` 表示大型基金写作/评审步骤，Agent executor 是 stage 内最小执行单位；`Codex CLI` 是当前第一公民 executor，其他 executor adapter 只能显式接入且不承诺行为效果等价。MAG 持有 grant truth、fundability/quality/export verdict、route owner、package authority、grant strategy memory accept/reject authority 和 owner receipt；通用 runtime、queue、attempt ledger、state-machine runner、workspace/source intake shell、memory locator、package/artifact lifecycle、quality/readiness projection 与 App/workbench shell 归 OPL Framework / shared family layer。
