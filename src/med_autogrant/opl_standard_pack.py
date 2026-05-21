@@ -308,6 +308,7 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
         "classification": "minimal_authority_function",
         "source_refs": [
             "src/med_autogrant/grant_autonomy_controller.py",
+            "src/med_autogrant/grant_autonomy_loop_shell.py",
             "src/med_autogrant/grant_autonomy_start.py",
         ],
         "allowed_role": "grant_route_budget_blocker_policy",
