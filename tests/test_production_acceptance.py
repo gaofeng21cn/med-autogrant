@@ -235,6 +235,31 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
     assert closeout["external_evidence_refs"]["temporal_reconciliation_ref"].endswith(
         "/request_closures/6"
     )
+    live_attempt = closeout["live_grant_stage_attempt_ref_packet"]
+    assert live_attempt["surface_kind"] == "mag_live_grant_stage_attempt_ref_packet.v1"
+    assert live_attempt["stage_id"] == "specific_aims_and_structure"
+    assert live_attempt["attempt_kind"] == "real_grant_stage_attempt_body_free_owner_chain"
+    assert live_attempt["payload_body_included"] is False
+    assert live_attempt["owner_receipt_or_typed_blocker_refs"]["accepted_return_shape"] in (
+        "domain_owner_receipt_ref",
+        "typed_blocker_ref",
+    )
+    assert live_attempt["release_dist_consumption_ref"] == closeout["external_evidence_refs"][
+        "release_dist_consumption_ref"
+    ]
+    assert live_attempt["direct_hosted_parity_no_regression_ref"] == closeout[
+        "external_evidence_refs"
+    ]["direct_hosted_parity_no_regression_ref"]
+    assert live_attempt["no_forbidden_write_guard_ref"] == closeout["external_evidence_refs"][
+        "no_forbidden_write_guard_ref"
+    ]
+    assert live_attempt["monitor_freshness_refs"] == stage_closeouts[2]["monitor_freshness_refs"]
+    assert live_attempt["readiness_claims"] == {
+        "claims_grant_ready": False,
+        "claims_fundability_ready": False,
+        "claims_quality_ready": False,
+        "claims_submission_ready_export": False,
+    }
 
     for index, stage in enumerate(stage_plane["stages"]):
         stage_contract = stage["stage_contract"]

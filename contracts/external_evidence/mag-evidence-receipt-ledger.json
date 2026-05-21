@@ -162,6 +162,33 @@
     ],
     "accepted_return_shape": "domain_owner_receipt_ref",
     "owner_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/body-free-closeout/2026-05-20",
+    "live_grant_stage_attempt_ref_packet": {
+      "surface_kind": "mag_live_grant_stage_attempt_ref_packet.v1",
+      "stage_id": "specific_aims_and_structure",
+      "attempt_kind": "real_grant_stage_attempt_body_free_owner_chain",
+      "attempt_ref": "workspace-runtime-ref:mag/grant-stage/specific-aims-and-structure/live-attempt/2026-05-21",
+      "owner": "med-autogrant",
+      "payload_body_included": false,
+      "owner_receipt_or_typed_blocker_refs": {
+        "accepted_return_shape": "domain_owner_receipt_ref",
+        "owner_receipt_ref": "receipt:mag/grant-stage-controlled-attempt/specific_aims_and_structure/owner-receipt-or-typed-blocker",
+        "typed_blocker_ref": null
+      },
+      "release_dist_consumption_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
+      "direct_hosted_parity_no_regression_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/5",
+      "no_forbidden_write_guard_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",
+      "monitor_freshness_refs": [
+        "contracts/stage_control_plane.json#/stages/2/stage_contract/monitor_freshness_refs/0",
+        "contracts/stage_control_plane.json#/stages/2/stage_contract/monitor_freshness_refs/1",
+        "contracts/stage_control_plane.json#/stages/2/stage_contract/monitor_freshness_refs/2"
+      ],
+      "readiness_claims": {
+        "claims_grant_ready": false,
+        "claims_fundability_ready": false,
+        "claims_quality_ready": false,
+        "claims_submission_ready_export": false
+      }
+    },
     "stage_closeout_refs": [
       {
         "stage_id": "call_and_candidate_intake",
