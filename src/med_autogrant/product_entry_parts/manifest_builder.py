@@ -38,7 +38,11 @@ from med_autogrant.product_entry_parts.manifest_owner_receipt_surfaces import (
 from med_autogrant.product_entry_parts.manifest_runtime_companions import build_manifest_runtime_companions
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
 from med_autogrant.product_entry_parts.manifest_builder_parts.shell_assembly import build_manifest_shell_assembly
-from med_autogrant.product_entry_parts import domain_agent_skeleton
+from med_autogrant.product_entry_parts.domain_agent_projection_surfaces import (
+    build_artifact_locator_contract,
+    build_controlled_soak_no_regression_attempt,
+    build_controlled_stage_attempt_projection,
+)
 from med_autogrant.product_entry_parts.domain_memory import build_manifest_domain_memory_surfaces
 from med_autogrant.product_entry_parts.functional_closure import build_manifest_functional_closure_surfaces
 from med_autogrant.product_entry_parts.opl_substrate_adapter import build_manifest_opl_substrate_adapter_export
@@ -484,7 +488,7 @@ class ProductEntryManifestBuilderMixin:
             runtime_control=runtime_control,
         )
         source_provenance = build_source_provenance_surface()
-        artifact_locator_contract = domain_agent_skeleton.build_artifact_locator_contract(
+        artifact_locator_contract = build_artifact_locator_contract(
             input_path=resolved_input_path,
             grant_run_id=_require_nonempty_string_from_mapping(
                 progress_payload,
@@ -504,7 +508,7 @@ class ProductEntryManifestBuilderMixin:
             ),
             artifact_inventory=artifact_inventory,
         )
-        controlled_stage_attempt_projection = domain_agent_skeleton.build_controlled_stage_attempt_projection(
+        controlled_stage_attempt_projection = build_controlled_stage_attempt_projection(
             grant_run_id=_require_nonempty_string_from_mapping(
                 progress_payload,
                 "grant_run_id",
@@ -698,7 +702,7 @@ class ProductEntryManifestBuilderMixin:
                 "artifact_locator_contract": artifact_locator_contract,
                 "opl_substrate_adapter_export": opl_substrate_adapter_export,
                 "controlled_stage_attempt_projection": controlled_stage_attempt_projection,
-                "controlled_soak_no_regression_attempt": domain_agent_skeleton.build_controlled_soak_no_regression_attempt(),
+                "controlled_soak_no_regression_attempt": build_controlled_soak_no_regression_attempt(),
                 "production_live_acceptance_receipt": (
                     build_production_live_acceptance_receipt_surface()
                 ),

@@ -4,7 +4,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from med_autogrant.stage_control_plane import build_mag_grant_transition_oracle
-from med_autogrant.product_entry_parts import domain_agent_skeleton
+from med_autogrant.product_entry_parts.domain_agent_skeleton import (
+    build_standard_domain_agent_skeleton,
+)
 from med_autogrant.product_entry_parts.consumer_thinning import build_mag_consumer_thinning_contract
 from med_autogrant.product_entry_parts.functional_closure_skeleton import (
     build_physical_skeleton_follow_through,
@@ -37,7 +39,7 @@ def build_manifest_functional_closure_surfaces(
         "domain_memory_descriptor_locator",
         context="domain_memory_surfaces",
     )
-    standard_domain_agent_skeleton = domain_agent_skeleton.build_standard_domain_agent_skeleton(
+    standard_domain_agent_skeleton = build_standard_domain_agent_skeleton(
         input_path=input_path,
         family_stage_control_plane=family_stage_control_plane,
         runtime_control=runtime_control,

@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-from med_autogrant.product_entry_parts.domain_agent_skeleton import (
+from med_autogrant.product_entry_parts.domain_agent_projection_surfaces import (
     build_domain_memory_descriptor_locator,
 )
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
