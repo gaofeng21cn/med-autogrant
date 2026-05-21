@@ -1124,7 +1124,7 @@
       },
       "bridge_policy": "MAG handwritten product/status/sidecar/projection wrappers are migration bridges, not long-term MAG owner surfaces.",
       "current_mag_path_status": {
-        "checked_path_count": 12,
+        "checked_path_count": 13,
         "checked_surface_count": 6,
         "claims_all_bridge_exits_complete": false,
         "claims_opl_replacement_exists": false,
@@ -1623,7 +1623,7 @@
           "current_mag_long_term_owner": false,
           "current_mag_path_role": "domain_handler_ref_only_adapter_not_generic_wrapper_owner",
           "current_mag_path_status": {
-            "checked_path_count": 3,
+            "checked_path_count": 4,
             "missing_count": 0,
             "missing_paths": [],
             "paths": [
@@ -1641,6 +1641,12 @@
               },
               {
                 "exists": true,
+                "path": "src/med_autogrant/product_entry_parts/manifest_builder_parts/shell_assembly.py",
+                "proof_kind": "repo_file_exists_at_manifest_build_time",
+                "role": "current_mag_domain_handler_or_refs_only_adapter_path"
+              },
+              {
+                "exists": true,
                 "path": "src/med_autogrant/product_entry_parts/receipt_observability.py",
                 "proof_kind": "repo_file_exists_at_manifest_build_time",
                 "role": "current_mag_domain_handler_or_refs_only_adapter_path"
@@ -1653,6 +1659,7 @@
           "current_mag_paths": [
             "src/med_autogrant/product_entry_parts/progress.py",
             "src/med_autogrant/product_entry_parts/manifest_builder.py",
+            "src/med_autogrant/product_entry_parts/manifest_builder_parts/shell_assembly.py",
             "src/med_autogrant/product_entry_parts/receipt_observability.py"
           ],
           "current_owner": "med-autogrant",
