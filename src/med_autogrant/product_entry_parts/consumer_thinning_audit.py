@@ -651,15 +651,15 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             ),
             _build_retired_functional_module_audit_item(
                 "compatibility_only_product_entry_aggregate_test",
-                code_paths=["tests/test_product_entry.py", "tests/product_entry_cases/"],
-                active_callers=["focused product_entry_cases tests"],
-                active_caller_status="aggregate_removed_focused_cases_active",
-                migration_action="Keep focused tests and remove aggregate compatibility assertions.",
-                retention_reason="Focused tests protect machine-readable contracts without preserving old facade shape.",
+                code_paths=["tests/test_product_entry.py"],
+                active_callers=[],
+                active_caller_status="legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
+                migration_action="Keep focused replacement tests; do not classify them as legacy aggregate callers.",
+                retention_reason="The aggregate compatibility test entry is gone; focused tests protect current machine-readable contracts.",
                 cannot_absorb_reason="Testing layout is repo-local hygiene, not a generic OPL runtime primitive.",
                 evidence_refs=[
-                    "tests/test_product_entry.py",
-                    "tests/product_entry_cases/",
+                    "tests/test_product_entry.py:absent",
+                    "tests/product_entry_cases/:focused_replacement_tests",
                 ],
             ),
             _build_retired_functional_module_audit_item(

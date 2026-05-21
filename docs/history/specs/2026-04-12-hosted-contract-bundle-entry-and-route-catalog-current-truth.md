@@ -1,6 +1,6 @@
 # Hosted Contract Bundle Entry And Route Catalog Current Truth
 
-> 生命周期注记（`2026-05-20`）：这份 dated spec 留在 `docs/specs/` 仅作为 `integration_reference`，只支撑 hosted contract bundle、route catalog 与 `MedAutoGrantDomainEntry` 的 contract-export 读法。当前 runtime owner、OPL provider、App/workbench、production/default caller 和 grant readiness 结论回到核心五件套、active plan、contracts/schema/source 与 `contracts/runtime-program/current-program.json`；旧 `Current Truth` 标题、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance。
+> 生命周期注记（`2026-05-21`）：这份 dated spec 已从 `docs/specs/` 退到 `docs/history/specs/`，只保留为 hosted contract bundle、route catalog 与 `MedAutoGrantDomainEntry` contract-export 的历史 provenance。当前 runtime owner、OPL provider、App/workbench、production/default caller 和 grant readiness 结论回到核心五件套、active plan、contracts/schema/source 与 `contracts/runtime-program/current-program.json`；旧 `Current Truth` 标题、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance。
 
 Date: `2026-04-12`
 
@@ -8,7 +8,7 @@ Date: `2026-04-12`
 
 - Phase: `Upstream Hermes-Agent Fast Cutover`
 - Active tranche: `Hosted contract bundle entry and route catalog`
-- Status: `integration_reference`
+- Status: `history_provenance`
 
 ## Goal
 

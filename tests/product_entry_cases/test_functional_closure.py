@@ -623,6 +623,22 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             "retired_no_active_caller_expected",
         )
         self.assertEqual(
+            retire_modules["compatibility_only_product_entry_aggregate_test"]["active_caller_status"],
+            "legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
+        )
+        self.assertEqual(
+            retire_modules["compatibility_only_product_entry_aggregate_test"]["code_paths"],
+            ["tests/test_product_entry.py"],
+        )
+        self.assertEqual(
+            retire_modules["compatibility_only_product_entry_aggregate_test"]["active_callers"],
+            [],
+        )
+        self.assertIn(
+            "tests/product_entry_cases/:focused_replacement_tests",
+            retire_modules["compatibility_only_product_entry_aggregate_test"]["evidence_refs"],
+        )
+        self.assertEqual(
             audit["mag_thin_adapter_code_surfaces"],
             [
                 "product_entry_manifest_builder",

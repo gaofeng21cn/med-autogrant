@@ -71,6 +71,7 @@ Fresh OPL App/operator drilldown 读取当前 family state 后，MAG 相关 exte
 
 2. `legacy_runtime_session_lifecycle_exit`
    local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream Hermes probe、flat shell alias、facade patch bridge 和 compat aggregate test 都进入 legacy proof / tombstone / regression-oracle 语境；无 active caller 后直接删除或归档，不保留 compatibility alias。
+   2026-05-21 isolated cleanup lane 已把三份旧 hosted / OPL handoff support specs 物理移动到 `docs/history/specs/`，并把 `compatibility_only_product_entry_aggregate_test` 从 active caller 清单中移除；旧聚合入口 `tests/test_product_entry.py` 只作为 absent proof，`tests/product_entry_cases/` 只作为当前 focused replacement tests。
 
 3. `package_memory_lifecycle_refs_only_boundary`
    memory receipt projection、package lifecycle handoff、lifecycle receipt bundle、continuous receipt reconciliation 和 sidecar export 只输出 body-free refs、owner receipt、verdict refs、typed blocker 和 safe action metadata；不输出 memory body、grant artifact/private evidence 或 OPL ledger state。
@@ -185,6 +186,7 @@ Legacy cleanup gate 的 repo-local proof surface 已可被 OPL dry-run / apply /
 
 5. `physical_source_morphology_hygiene`
    继续把 active source 中带 runtime / product-entry / sidecar / lifecycle / workbench / scheduler 语义的模块保持在 domain handler、refs-only adapter、minimal authority function 或 history/tombstone 角色；`physical_morphology_guard_projection` 已把 source role、evidence refs 与 forbidden role flags 做成 fail-closed read projection。后续优先治理 `domain_runtime_parts/substrate.py`、`product_entry_parts/*`、`runtime_registration.py`、`control_plane.py`、owner receipt helper、grouped CLI wrapper 和 autonomy controller 的平台化命名。新增代码默认进入 `agent/` pack、`contracts/`、authority function 或 domain handler，不重建本地 runtime/journal/attempt ledger，不新增 compatibility facade。
+   本轮未删除这些 active source surface：它们仍有 direct caller、refs-only adapter 或 MAG authority role。删除、改名或迁出仍需要 generated caller parity、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted no-regression 和 no-active compatibility alias scan 同时成立。
 
 ## 当前不能写成
 
