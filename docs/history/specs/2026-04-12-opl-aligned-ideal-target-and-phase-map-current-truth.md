@@ -95,7 +95,7 @@ Date: `2026-04-12`
 
 相关 proof 现已冻结在：
 
-- `docs/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md`
+- `docs/history/specs/2026-04-12-hosted-caller-consumption-proof-current-truth.md`
 
 ## 更远阶段
 

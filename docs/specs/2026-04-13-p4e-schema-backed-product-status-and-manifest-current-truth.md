@@ -137,7 +137,7 @@ Date: `2026-04-13`
 
 本 tranche 至少覆盖：
 
-- `uv run pytest tests/test_schema_registry.py tests/test_product_entry.py -q`
+- `uv run pytest tests/test_schema_registry.py tests/product_entry_cases -q`
 - `uv run pytest tests/test_mainline_status.py tests/test_program_control_surfaces.py tests/test_cli_validate_workspace.py -q`
 - `scripts/verify.sh`
 

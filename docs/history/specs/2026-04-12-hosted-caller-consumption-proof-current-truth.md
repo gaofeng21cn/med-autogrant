@@ -1,13 +1,13 @@
 # Hosted Caller Consumption Proof Current Truth
 
-> 生命周期注记（`2026-05-20`）：这份 dated spec 留在 `docs/specs/` 仅作为 `integration_reference`，只支撑 hosted caller 如何消费冻结 contract catalog 的读法。当前 runtime owner、OPL provider、App/workbench、production/default caller 和 grant readiness 结论回到核心五件套、active plan、contracts/schema/source 与 `contracts/runtime-program/current-program.json`；旧 `Current Truth` 标题、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance。
+> 生命周期注记（`2026-05-21`）：这份 dated spec 已从 `docs/specs/` 退到 `docs/history/specs/`，只保留为 hosted caller 消费冻结 contract catalog 的历史 provenance。当前 runtime owner、OPL provider、App/workbench、production/default caller 和 grant readiness 结论回到核心五件套、active plan、contracts/schema/source 与 `contracts/runtime-program/current-program.json`；旧 `Current Truth` 标题、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance。
 
 Date: `2026-04-12`
 
 ## Activation Status
 
 - Phase: `P3 hosted caller / OPL consumption proof`
-- Status: `integration_reference`
+- Status: `history_provenance`
 
 ## Goal
 

@@ -19,7 +19,7 @@
 - 2026-04-09 R3/R5 与 post-R5A hardening briefs：`./2026-04-09-*.md`
 - 2026-04-10 post-R5A fail-closed hardening activation packages 与 local-runtime walkthrough：`./2026-04-10-post-r5a-final-package-*.md`、`./2026-04-10-post-r5a-hosted-contract-bundle-*.md`、`./2026-04-10-post-r5a-local-runtime-validation-*.md`、`./2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`、`./2026-04-10-post-r5a-revised-*.md`、`./2026-04-10-post-r5a-stage-route-*.md` 和 `./2026-04-10-post-r5a-worktree-aware-*.md`
 - 2026-04-11 Hermes/reset 与 local-runtime closeout 记录：已退役 provider proof 位于本目录的 `2026-04-11-hermes-backed-*.md` 与 `2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`；local-runtime honest-stop 记录位于 `./2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`，只作为 fail-closed / honest-stop provenance 阅读。
-- 2026-04-12 hosted-caller、OPL alignment、product-entry、route snapshot 与 handoff 记录：已退役 upstream Hermes fast-cutover board/current-truth、author-side executor routing snapshot 与 OPL alignment historical snapshot 位于本目录；仍留在 `../../specs/` 的 hosted contract、caller consumption 和 product-entry 细节只作为 support/provenance 阅读，旧 gateway/federation/provider 说法按历史处理。
+- 2026-04-12 hosted-caller、OPL alignment、product-entry、route snapshot 与 handoff 记录：已退役 upstream Hermes fast-cutover board/current-truth、author-side executor routing snapshot、OPL alignment historical snapshot、hosted caller consumption、hosted contract bundle export 与 lightweight product-entry handoff 记录均位于本目录，只作为 provenance 阅读；当前 contract export、product-entry、OPL generated/hosted caller 和 App/workbench 边界回到核心文档、active gap plan、contracts/schema/source 与 `current-program.json`。
 - 2026-04-13 authoring route landing、默认 executor vocabulary 与 submission-ready 记录：`../../specs/2026-04-13-*.md`；已退役 Hermes-native proof tombstone：`./2026-04-13-hermes-native-critique-proof-tombstone.md`
 
 Active specs 继续列在 [Specs 索引](../../specs/README.md)。
@@ -49,3 +49,6 @@ Active specs 继续列在 [Specs 索引](../../specs/README.md)。
 - [Upstream Hermes-Agent truth reset](./2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
 - [Upstream Hermes-Agent fast cutover board](./2026-04-12-upstream-hermes-agent-fast-cutover-board.md)
 - [Upstream Hermes-Agent fast cutover current truth](./2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md)
+- [Hosted caller consumption proof provenance](./2026-04-12-hosted-caller-consumption-proof-current-truth.md)
+- [Hosted contract bundle entry and route catalog provenance](./2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md)
+- [Lightweight product-entry and OPL handoff provenance](./2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md)

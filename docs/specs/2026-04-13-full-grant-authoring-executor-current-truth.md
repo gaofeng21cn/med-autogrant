@@ -111,7 +111,7 @@ Date: `2026-04-13`
 本 tranche 至少覆盖：
 
 - `uv run pytest tests/test_authoring_executor.py -q`
-- `uv run pytest tests/test_domain_entry.py tests/test_product_entry.py tests/test_domain_runtime.py tests/test_hosted_contract_bundle.py -q`
+- `uv run pytest tests/test_domain_entry.py tests/product_entry_cases tests/test_domain_runtime.py tests/test_hosted_contract_bundle.py -q`
 - `scripts/verify.sh`
 
 重点验证：

@@ -142,7 +142,7 @@ Date: `2026-04-13`
 本 tranche 至少覆盖：
 
 - `uv run pytest tests/test_submission_ready_package.py -q`
-- `uv run pytest tests/test_domain_entry.py tests/test_hosted_contract_bundle.py tests/test_schema_registry.py tests/test_product_entry.py -q`
+- `uv run pytest tests/test_domain_entry.py tests/test_hosted_contract_bundle.py tests/test_schema_registry.py tests/product_entry_cases -q`
 - `uv run pytest tests/test_domain_runtime.py tests/test_mainline_status.py tests/test_program_control_surfaces.py -q`
 - `scripts/verify.sh`
 - `scripts/verify.sh full`
