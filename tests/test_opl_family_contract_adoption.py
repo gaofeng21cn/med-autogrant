@@ -37,8 +37,6 @@ def test_current_program_sidecar_actions_include_domain_memory_writeback_dispatc
     adapter = current_program["runtime_owner"]["stage_led_framework_boundary"]["product_sidecar_adapter"]
 
     assert adapter["allowed_dispatch_actions"] == [
-        "autonomy-controller/dry-run",
-        "autonomy-controller/guarded-run",
         "closeout/codex-stage-receipts",
         "closeout/executor-first-bundle",
         "closeout/operator-readiness",

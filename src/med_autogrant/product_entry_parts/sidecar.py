@@ -26,8 +26,6 @@ SIDECAR_ADAPTER_ID = "mag.opl_stage_led.product_sidecar.v1"
 SIDECAR_VERSION = 1
 
 _ALLOWED_ACTIONS = {
-    "autonomy-controller/dry-run",
-    "autonomy-controller/guarded-run",
     "domain-memory/propose",
     "domain-memory/decide",
     "stage-attempt/closeout",
@@ -338,8 +336,6 @@ def dispatch_sidecar_task(
     if action not in _ALLOWED_ACTIONS:
         raise WorkspaceStateError(f"sidecar task action 不允许: {action}")
     input_path = _require_nonempty_string_from_mapping(task, "input_path", context="sidecar_task")
-    if action in {"autonomy-controller/dry-run", "autonomy-controller/guarded-run"}:
-        return _dispatch_autonomy_controller(task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "domain-memory/propose":
         return _dispatch_domain_memory_proposal(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "domain-memory/decide":
@@ -381,41 +377,6 @@ def dispatch_sidecar_task(
             dispatch_payload=_dispatch_payload,
         )
     raise WorkspaceStateError(f"sidecar task action 不允许: {action}")
-
-
-def _dispatch_autonomy_controller(
-    *,
-    task: Mapping[str, Any],
-    input_path: str,
-    task_path: Path,
-) -> dict[str, Any]:
-    output_dir = _require_nonempty_string_from_mapping(task, "output_dir", context="sidecar_task")
-    mode = "dry_run" if task["action"] == "autonomy-controller/dry-run" else "guarded_run"
-    command = public_cli_command(
-        "execute-grant-autonomy-controller",
-        "--input",
-        input_path,
-        "--output-dir",
-        output_dir,
-        "--format",
-        "json",
-    )
-    return _dispatch_payload(
-        action=str(task["action"]),
-        task=task,
-        task_path=task_path,
-        input_path=input_path,
-        status="accepted",
-        result={
-            "surface_kind": "sidecar_autonomy_controller_guarded_action",
-            "mode": mode,
-            "command": command,
-            "execution_policy": "caller_must_execute_mag_guarded_command",
-            "executor_override": None,
-            "hermes_proof_executor_default": False,
-        },
-        executed_command=command,
-    )
 
 
 def _dispatch_domain_memory_proposal(

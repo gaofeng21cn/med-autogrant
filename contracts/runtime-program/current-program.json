@@ -96,8 +96,6 @@
         "dispatch_command": "product sidecar dispatch",
         "role": "MAG-owned product sidecar projection and guarded dispatch adapter for OPL stage-led typed queue and explicit provider consumption",
         "allowed_dispatch_actions": [
-          "autonomy-controller/dry-run",
-          "autonomy-controller/guarded-run",
           "closeout/codex-stage-receipts",
           "closeout/executor-first-bundle",
           "closeout/operator-readiness",

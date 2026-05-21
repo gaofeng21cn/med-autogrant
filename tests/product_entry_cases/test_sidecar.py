@@ -669,8 +669,6 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(
             export["opl_control_plane"]["allowed_dispatch_actions"],
             [
-                "autonomy-controller/dry-run",
-                "autonomy-controller/guarded-run",
                 "closeout/codex-stage-receipts",
                 "closeout/executor-first-bundle",
                 "closeout/operator-readiness",
@@ -687,11 +685,17 @@ class ProductSidecarTest(unittest.TestCase):
             "OPL-hosted caller may invoke only MAG domain handler guarded actions.",
         )
 
-    def test_sidecar_dispatch_retires_generic_status_wakeup_and_notification_actions(self) -> None:
+    def test_sidecar_dispatch_retires_generic_wrapper_actions(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         entry = MedAutoGrantProductEntry()
-        for action in ("status/read", "user-loop/wakeup", "notification/receipt"):
+        for action in (
+            "status/read",
+            "user-loop/wakeup",
+            "notification/receipt",
+            "autonomy-controller/dry-run",
+            "autonomy-controller/guarded-run",
+        ):
             with self.subTest(action=action), tempfile.TemporaryDirectory() as tmp_dir:
                 task_path = Path(tmp_dir) / "generic-action.json"
                 task_path.write_text(
@@ -708,32 +712,6 @@ class ProductSidecarTest(unittest.TestCase):
                 )
                 with self.assertRaisesRegex(WorkspaceStateError, "action 不允许"):
                     entry.dispatch_sidecar_task(task_path=task_path)
-
-    def test_sidecar_dispatch_autonomy_controller_returns_guarded_command_without_execution(self) -> None:
-        from med_autogrant.product_entry import MedAutoGrantProductEntry
-
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            task_path = Path(tmp_dir) / "autonomy-task.json"
-            output_dir = Path(tmp_dir) / "out"
-            task_path.write_text(
-                json.dumps(
-                    {
-                        "task_id": "autonomy-1",
-                        "action": "autonomy-controller/dry-run",
-                        "input_path": str(CRITIQUE_EXAMPLE_PATH),
-                        "output_dir": str(output_dir),
-                    }
-                ),
-                encoding="utf-8",
-            )
-            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
-
-        dispatch = payload["sidecar_dispatch"]
-        self.assertEqual(dispatch["status"], "accepted")
-        self.assertFalse(dispatch["executed_by_sidecar"])
-        self.assertEqual(dispatch["result"]["mode"], "dry_run")
-        self.assertIn("autonomy-controller", dispatch["result"]["command"])
-        self.assertFalse(dispatch["result"]["hermes_proof_executor_default"])
 
     def test_sidecar_dispatch_domain_memory_apply_flow_projects_refs_without_repo_artifacts(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
