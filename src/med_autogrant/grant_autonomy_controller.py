@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Callable
 
 from med_autogrant.grant_autonomy_loop_shell import run_grant_autonomy_loop
-from med_autogrant.grant_autonomy_parts import _normalize_controller_plan
+from med_autogrant.grant_autonomy_controller_plan import _normalize_controller_plan
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
 from med_autogrant.grant_autonomy_start import _resolve_grant_autonomy_start
 from med_autogrant.grant_governance_adapter import apply_family_governance_to_controller_plan

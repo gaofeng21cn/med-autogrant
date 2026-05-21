@@ -311,6 +311,10 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
             "src/med_autogrant/grant_autonomy_loop_shell.py",
             "src/med_autogrant/grant_autonomy_loop_parts.py",
             "src/med_autogrant/grant_autonomy_start.py",
+            "src/med_autogrant/grant_autonomy_common.py",
+            "src/med_autogrant/grant_autonomy_controller_plan.py",
+            "src/med_autogrant/grant_autonomy_quality_payload.py",
+            "src/med_autogrant/grant_autonomy_report_resume.py",
         ],
         "allowed_role": "grant_route_budget_blocker_policy",
         "forbidden_roles": [

@@ -3,19 +3,21 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Callable
 
-from med_autogrant.grant_autonomy_parts import (
+from med_autogrant.grant_autonomy_common import (
+    _dedupe,
+    _extract_mapping,
+)
+from med_autogrant.grant_autonomy_controller_plan import (
     _decision_action,
     _decision_reason,
-    _dedupe,
     _default_progress_reason,
-    _extract_mapping,
     _goal_satisfied,
     _hydrate_controller_plan_quality_state,
-    _normalize_quality_output,
     _resolve_inline_controller_action,
     _resolve_inline_controller_reason,
     _resolve_terminal_reason,
 )
+from med_autogrant.grant_autonomy_quality_payload import _normalize_quality_output
 from med_autogrant.grant_autonomy_loop_parts import (
     GrantAutonomyLoopContext,
     append_tranche_history,

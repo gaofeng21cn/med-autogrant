@@ -3,7 +3,8 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any
 
-from med_autogrant.grant_autonomy_parts import _fail_closed_report, _normalized_string, _string_list
+from med_autogrant.grant_autonomy_common import _normalized_string, _string_list
+from med_autogrant.grant_autonomy_report_resume import _fail_closed_report
 
 
 def validate_grant_autonomy_request(request: Any) -> dict[str, Any]:

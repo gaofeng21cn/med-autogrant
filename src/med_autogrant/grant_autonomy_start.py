@@ -3,8 +3,8 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Callable
 
-from med_autogrant.grant_autonomy_parts import (
-    _extract_mapping,
+from med_autogrant.grant_autonomy_common import _extract_mapping
+from med_autogrant.grant_autonomy_report_resume import (
     _fail_closed_report,
     _normalize_resume_seed_from_report,
 )

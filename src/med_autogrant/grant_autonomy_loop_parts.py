@@ -4,9 +4,9 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any
 
-from med_autogrant.grant_autonomy_parts import (
+from med_autogrant.grant_autonomy_controller_plan import _build_tranche_history_entry
+from med_autogrant.grant_autonomy_report_resume import (
     _build_report,
-    _build_tranche_history_entry,
     _fail_closed_report,
 )
 

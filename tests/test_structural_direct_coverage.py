@@ -7,7 +7,8 @@ import med_autogrant.artifact_bundle_validation as artifact_bundle_validation
 import med_autogrant.authoring_executor_parts as authoring_executor_parts
 import med_autogrant.final_package as final_package
 import med_autogrant.final_package_validation as final_package_validation
-import med_autogrant.grant_autonomy_parts as grant_autonomy_parts
+import med_autogrant.grant_autonomy_controller_plan as grant_autonomy_controller_plan
+import med_autogrant.grant_autonomy_report_resume as grant_autonomy_report_resume
 import med_autogrant.grant_autonomy_start as grant_autonomy_start
 import med_autogrant.grant_quality_assessment as grant_quality_assessment
 import med_autogrant.grant_quality_closure as grant_quality_closure
@@ -50,7 +51,8 @@ def test_structural_leaf_modules_expose_expected_contract_surfaces() -> None:
     assert authoring_executor_parts._fresh_metadata
     assert final_package.build_final_package_document
     assert final_package_validation.SUPPORTED_FINAL_PACKAGE_VERSION == 1
-    assert grant_autonomy_parts._build_report
+    assert grant_autonomy_report_resume._build_report
+    assert grant_autonomy_controller_plan._normalize_controller_plan
     assert grant_autonomy_start._resolve_grant_autonomy_start
     assert grant_quality_assessment._resolve_dimension_status
     assert grant_quality_closure._build_quality_closure_packages

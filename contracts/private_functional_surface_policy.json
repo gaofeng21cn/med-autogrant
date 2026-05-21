@@ -521,7 +521,11 @@
           "src/med_autogrant/grant_autonomy_controller.py",
           "src/med_autogrant/grant_autonomy_loop_shell.py",
           "src/med_autogrant/grant_autonomy_loop_parts.py",
-          "src/med_autogrant/grant_autonomy_start.py"
+          "src/med_autogrant/grant_autonomy_start.py",
+          "src/med_autogrant/grant_autonomy_common.py",
+          "src/med_autogrant/grant_autonomy_controller_plan.py",
+          "src/med_autogrant/grant_autonomy_quality_payload.py",
+          "src/med_autogrant/grant_autonomy_report_resume.py"
         ],
         "surface_id": "autonomy_controller",
         "target_owner_after_migration": "med-autogrant"
