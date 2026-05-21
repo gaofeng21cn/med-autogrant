@@ -36,18 +36,30 @@
     ]
   },
   "runtime_owner": {
-    "current_owner_line": "CLI/domain-entry stable capability surface with Codex-default execution and optional hosted runtime carriers",
+    "current_owner_line": "OPL/Temporal hosted autonomous runtime is the default task runtime; MAG stays a grant-domain authority surface with Codex CLI as the default stage executor",
     "active_phase": "P4 mature direct grant product entry",
     "active_tranche": "P4.G authoring-quality-first completion semantics alignment",
     "historical_baseline": "NO_NEW_POST_R5A_LOCAL_RUNTIME_DELTA_HONEST_STOP",
     "provenance_oracle": "post-R5A local runtime closeout / stage-led provenance oracle",
-    "default_runtime_owner": "codex_cli",
+    "default_task_runtime_owner": "one-person-lab",
+    "default_runtime_owner": "configured_family_runtime_provider",
+    "default_runtime_substrate": "temporal",
+    "opl_temporal_hosted_autonomy_default": true,
+    "mag_implements_daemon": false,
+    "mag_implements_scheduler": false,
+    "mag_implements_attempt_loop": false,
+    "mag_owns_attempt_ledger": false,
+    "default_stage_executor": "codex_cli",
     "optional_hosted_carriers": [
       "hermes_agent"
     ],
     "stage_led_framework_boundary": {
-      "framework": "OPL Codex-first stage-led agent runtime framework",
-      "layer_role": "family-level stage lifecycle, queue, wakeup, handoff, receipt, retry/dead-letter, operator projection, shared contracts/indexes, and external provider orchestration over MAG-owned descriptor/projection surfaces",
+      "framework": "OPL Temporal-backed Codex-first stage-led agent runtime framework",
+      "layer_role": "family-level Temporal-backed stage lifecycle, persistent online scheduling, queue, wakeup, handoff, receipt, retry/dead-letter, resume, operator projection, shared contracts/indexes, and external provider orchestration over MAG-owned descriptor/projection surfaces",
+      "production_substrate": "Temporal",
+      "autonomous_runtime_default": "enabled",
+      "task_start_handoff_owner": "one-person-lab",
+      "post_start_residency_owner": "one-person-lab",
       "mag_owned_truth": [
         "grant_run_id/workspace_id/draft_id/program_id identity boundary",
         "author-side route truth",
@@ -712,16 +724,16 @@
     ]
   },
   "ideal_target": {
-    "family_top_entry": "OPL Codex-first stage-led agent runtime framework",
-    "family_runtime_framework": "OPL stage-led runtime framework",
+    "family_top_entry": "OPL Temporal-backed Codex-first stage-led agent runtime framework",
+    "family_runtime_framework": "OPL Temporal-backed stage-led runtime framework",
     "domain_direct_entry": "Med Auto Grant Product Entry",
     "stage_attempt_minimum_execution_unit": "Codex CLI",
-    "runtime_substrate_owner": "OPL stage-led runtime framework may explicitly select external providers for wakeup/control-plane consumption; route-selected authoring executor remains Codex/domain-selected by default",
+    "runtime_substrate_owner": "OPL owns the default Temporal-backed hosted autonomous task runtime, including persistent scheduling, wakeup, retry, resume and attempt ledger; MAG does not implement daemon, scheduler, attempt loop or generic runtime owner surfaces",
     "authoring_truth_owner": "Med Auto Grant",
-    "direct_user_route": "User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> route-selected executor or optional hosted runtime carrier -> Med Auto Grant domain logic",
-    "opl_stage_led_route": "User or agent caller -> OPL stage-led runtime framework -> MAG descriptor/projection surfaces -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry; explicit hosted carriers are opt-in",
+    "direct_user_route": "User or agent caller -> Med Auto Grant Product Entry -> MedAutoGrantDomainEntry -> route-selected Codex CLI stage executor -> Med Auto Grant domain logic",
+    "opl_stage_led_route": "User or agent caller -> OPL Temporal-backed stage-led runtime framework -> MAG descriptor/projection surfaces -> Domain Handoff -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry; task start defaults to OPL/Temporal hosted autonomous scheduling and post-start residency",
     "opl_stage_led_framework": {
-      "role": "family-level stage lifecycle, queue/wakeup, handoff, receipt, approval/retry/dead-letter, operator projection, shared contracts/indexes, and external provider orchestration",
+      "role": "family-level Temporal-backed hosted autonomous lifecycle, queue/wakeup, handoff, receipt, approval/retry/dead-letter, resume, operator projection, shared contracts/indexes, and external provider orchestration",
       "consumes_mag_surfaces": [
         "domain_entry_contract",
         "runtime_control",

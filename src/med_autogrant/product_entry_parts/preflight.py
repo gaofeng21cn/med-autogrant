@@ -12,7 +12,11 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_optional_string,
 )
 from med_autogrant.public_cli import public_cli_command
-from med_autogrant.runtime_defaults import DEFAULT_RUNTIME_OWNER
+from med_autogrant.runtime_defaults import (
+    DEFAULT_EXECUTOR_OWNER,
+    DEFAULT_RUNTIME_OWNER,
+    DEFAULT_RUNTIME_SUBSTRATE,
+)
 from med_autogrant.workspace import load_workspace_document
 from med_autogrant.workspace_validation import validate_workspace_document
 
@@ -69,7 +73,10 @@ class ProductEntryPreflightMixin:
                 "title": "Default Runtime Owner Line",
                 "status": "pass",
                 "blocking": True,
-                "summary": f"默认 product-entry runtime owner 固定为 {DEFAULT_RUNTIME_OWNER}；Hermes 仅作为显式 proof lane。",
+                "summary": (
+                    f"默认 product-entry runtime owner 固定为 {DEFAULT_RUNTIME_OWNER}/{DEFAULT_RUNTIME_SUBSTRATE}；"
+                    f"{DEFAULT_EXECUTOR_OWNER} 是默认 stage executor，Hermes 仅作为显式 proof lane。"
+                ),
                 "command": mainline_command,
             },
             {

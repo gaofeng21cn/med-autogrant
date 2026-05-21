@@ -8,11 +8,11 @@ Date: `2026-05-21`
 
 ## 当前角色
 
-`Med Auto Grant` 是医学基金申请 domain agent，也是 OPL-compatible Foundry Agent package。Direct app skill / CLI / `MedAutoGrantDomainEntry` 仍是一等入口；OPL-hosted path 可以发现、托管、唤醒和投影 MAG，但必须回到同一套 MAG-owned grant truth、fundability / quality / export verdict、package authority、grant strategy memory accept/reject、owner receipt 和 typed blocker。
+`Med Auto Grant` 是医学基金申请 domain agent，也是 OPL-compatible Foundry Agent package。Direct app skill / CLI / `MedAutoGrantDomainEntry` 仍是一等入口；任务启动后的默认运行驻留是 OPL/Temporal hosted autonomous runtime，由 OPL 持久在线调度、唤醒、retry、resume 和记录 attempt ledger。无论从 direct path 还是 OPL 托管 path 进入，执行都必须回到同一套 MAG-owned grant truth、fundability / quality / export verdict、package authority、grant strategy memory accept/reject、owner receipt 和 typed blocker。
 
-OPL Framework 持有通用 provider runtime、typed queue、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、operator projection、observability/SLO、generated wrapper 和 App/workbench shell。MAG 仓内 product-entry、sidecar、grouped CLI/API、projection builder、lifecycle adapter、workspace/source intake、package/memory helper 等 surface 只能写成 direct domain handler、refs-only adapter、minimal authority function、diagnostic、migration input 或 history/tombstone，不能写成长期私有平台。
+OPL Framework 持有 Temporal-backed provider runtime、typed queue、scheduler / daemon、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、operator projection、observability/SLO、generated wrapper 和 App/workbench shell。MAG 仓内 product-entry、sidecar、grouped CLI/API、projection builder、lifecycle adapter、workspace/source intake、package/memory helper 等 surface 只能写成 direct domain handler、refs-only adapter、minimal authority function、diagnostic、migration input 或 history/tombstone，不能写成长期私有平台。
 
-`Codex CLI` 是当前第一公民 executor。`Hermes-Agent`、Claude Code 等只允许作为显式 opt-in executor adapter / proof lane，通过 OPL receipt/audit/fail-closed 边界接入；不承诺行为、质量或 resume 语义等价。
+`Codex CLI` 是当前第一公民 stage executor，不是默认 runtime owner。`Hermes-Agent`、Claude Code 等只允许作为显式 opt-in executor adapter / proof lane，通过 OPL receipt/audit/fail-closed 边界接入；不承诺行为、质量或 resume 语义等价。
 
 ## 当前运行与文档事实
 
@@ -27,6 +27,7 @@ OPL Framework 持有通用 provider runtime、typed queue、attempt ledger、gen
 当前功能/结构收口、物理源码形态和下一步顺序由 [MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md) 维护。当前状态摘要：
 
 - `mag_functional_structure_gap_count=0`，但这只表示当前结构差距按目标态被关闭或移入证据门，不表示 production long-run soak、真实 App/workbench 消费或 grant-stage scaleout 完成。
+- `contracts/runtime-program/current-program.json` 已把 `current_owner_line` 收敛为 `OPL/Temporal hosted autonomous runtime is the default task runtime`，并显式声明 `default_task_runtime_owner=one-person-lab`、`default_runtime_substrate=temporal`、`default_stage_executor=codex_cli`、`mag_implements_daemon=false`、`mag_implements_scheduler=false`、`mag_implements_attempt_loop=false`、`mag_owns_attempt_ledger=false`。
 - Production acceptance tail 已由 MAG-owned `domain_owner_receipt` projection 关闭；对应机器状态以 `contracts/production_acceptance/mag-production-acceptance.json`、product-entry manifest 和 production live acceptance receipt 为准。
 - Real target patch-smoke refs 已纳入 production acceptance / product-entry owner receipt projection；这只证明 target owner 对 patch-loop refs 的消费和 closeout shape，不写 grant truth、artifact body、memory body，也不生成 fundability、quality 或 export verdict；OMA 仍只是 work order / typed blocker 生产者，Agent Lab 仍只是 evidence/gate/read-model control plane。
 - Executor-first landing program、stage pack enrichment、independent review receipt gate、external evidence consumption ledger、receipt readiness projection、Codex stage receipt ABI、operator closeout projection 和 physical morphology guard 已有 repo-local machine surfaces；这些 surface 只保存 refs、typed blocker、receipt shape、no-regression refs 和 owner boundary，不保存 grant truth、memory body、artifact body、OPL runtime state 或 App workbench state。

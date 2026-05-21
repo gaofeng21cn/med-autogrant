@@ -5,8 +5,9 @@ from typing import Any
 
 
 DEFAULT_RUNTIME_OWNER = "configured_family_runtime_provider"
+DEFAULT_TASK_RUNTIME_OWNER = "one-person-lab"
 DEFAULT_EXECUTOR_OWNER = "codex_cli"
-DEFAULT_RUNTIME_SUBSTRATE = "opl_provider_runtime"
+DEFAULT_RUNTIME_SUBSTRATE = "temporal"
 OPTIONAL_HOSTED_CARRIER = "hermes_agent"
 OPTIONAL_HOSTED_CARRIERS = ("hermes_agent", "claude_code")
 OPL_EXECUTOR_ADAPTER_OWNER = "one-person-lab"
@@ -22,6 +23,14 @@ def build_default_runtime_summary(*, current_owner_line: str) -> dict[str, Any]:
     return {
         "current_owner_line": current_owner_line,
         "runtime_owner": DEFAULT_RUNTIME_OWNER,
+        "default_task_runtime_owner": DEFAULT_TASK_RUNTIME_OWNER,
+        "default_runtime_substrate": DEFAULT_RUNTIME_SUBSTRATE,
+        "opl_temporal_hosted_autonomy_default": True,
+        "default_stage_executor": DEFAULT_EXECUTOR_OWNER,
+        "mag_implements_daemon": False,
+        "mag_implements_scheduler": False,
+        "mag_implements_attempt_loop": False,
+        "mag_owns_attempt_ledger": False,
         "optional_carriers": list(OPTIONAL_HOSTED_CARRIERS),
     }
 

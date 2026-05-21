@@ -104,8 +104,9 @@ class ProductEntryLoopReadinessTest(unittest.TestCase):
         )
         self.assertEqual(
             payload["grant_user_loop"]["runtime_control"]["runtime_owner"],
-            "codex_cli",
+            "one-person-lab",
         )
+        self.assertEqual(payload["grant_user_loop"]["runtime_control"]["executor_owner"], "codex_cli")
         self.assertEqual(
             payload["grant_user_loop"]["runtime_control"]["approval_control_surface"]["command"],
             public_cli_command(

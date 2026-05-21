@@ -94,6 +94,9 @@ class HostedContractBundleCliTest(unittest.TestCase):
                 contract_bundle["runtime_substrate_contract"],
                 {
                     "runtime_owner": "configured_family_runtime_provider",
+                    "task_runtime_owner": "one-person-lab",
+                    "runtime_substrate": "temporal",
+                    "stage_executor_owner": "codex_cli",
                     "current_owner_line": self._current_runtime_owner()["current_owner_line"],
                     "active_phase": self._current_runtime_owner()["active_phase"],
                     "active_tranche": self._current_runtime_owner()["active_tranche"],

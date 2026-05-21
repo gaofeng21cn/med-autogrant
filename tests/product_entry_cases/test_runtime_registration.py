@@ -30,7 +30,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
         self.assertEqual(manifest["opl_provider_runtime_contract"]["executor_owner"], "codex_cli")
         self.assertEqual(manifest["runtime_inventory"]["runtime_owner"], "configured_family_runtime_provider")
         self.assertEqual(manifest["runtime_inventory"]["executor_owner"], "codex_cli")
-        self.assertEqual(manifest["runtime_inventory"]["substrate"], "opl_provider_runtime")
+        self.assertEqual(manifest["runtime_inventory"]["substrate"], "temporal")
         self.assertEqual(manifest["runtime_control"]["runtime_owner"], "one-person-lab")
         self.assertEqual(manifest["runtime_control"]["executor_owner"], "codex_cli")
         self.assertEqual(
