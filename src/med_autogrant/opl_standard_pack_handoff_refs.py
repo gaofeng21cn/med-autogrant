@@ -22,10 +22,10 @@ AHE_PATCH_LOOP_REF_KEYS = [
 AHE_PATCH_LOOP_CLOSEOUT_REFS = {
     "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
     "developer_patch_work_order_ref": (
-        "developer-work-order:oma/mag/ahe-real-target-scaleout-smoke"
+        "developer-work-order:oma/mag/ai-first-mag-patch-smoke"
     ),
     "patch_traceability_matrix_ref": (
-        "patch-traceability:oma/mag/ahe-real-target-scaleout-smoke"
+        "patch-traceability:oma/mag/ai-first-mag-patch-smoke"
     ),
     "target_repo_verification_refs": [
         (
@@ -41,7 +41,7 @@ AHE_PATCH_LOOP_CLOSEOUT_REFS = {
         "/product_entry_manifest/production_live_acceptance_receipt"
     ),
     "workspace_environment_proof_ref": (
-        "workspace-proof:med-autogrant/.worktrees/codex/ahe-real-target-scaleout-smoke"
+        "workspace-proof:med-autogrant/.worktrees/ai-first-mag-patch-smoke"
     ),
     "no_forbidden_write_proof_ref": (
         "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only"
@@ -49,10 +49,10 @@ AHE_PATCH_LOOP_CLOSEOUT_REFS = {
     "target_owner_receipt_or_typed_blocker_ref": (
         "receipt:mag/production-live-acceptance/2026-05-20"
     ),
-    "patch_absorption_ref": "git-commit:pending/codex-ahe-real-target-scaleout-smoke",
-    "worktree_cleanup_ref": "worktree-cleanup:pending/ahe-real-target-scaleout-smoke",
+    "patch_absorption_ref": "git-commit:pending/codex/ai-first-mag-patch-smoke",
+    "worktree_cleanup_ref": "worktree-cleanup:pending/ai-first-mag-patch-smoke",
     "agent_lab_re_evaluation_ref": (
-        "agent-lab-run:oma/mag/ahe-real-target-scaleout-smoke/re-evaluation"
+        "agent-lab-run:oma/mag/ai-first-mag-patch-smoke/re-evaluation"
     ),
 }
 

@@ -186,6 +186,9 @@ def build_executor_first_closeout_bundle(
             "submission_ready": False,
             "bundle_ready_equals_grant_ready": False,
         },
+        "target_smoke_patch_loop_closeout": _target_smoke_patch_loop_closeout(
+            operator_projection=operator_projection,
+        ),
         "blockers": blockers,
         "operator_next_attention": _operator_next_attention(state, blockers),
         "can_declare_fundability_ready": False,
@@ -381,6 +384,140 @@ def _input_surface_summaries(
             _surface_summary(receipt_projection) if receipt_projection is not None else None
         ),
     }
+
+
+def _target_smoke_patch_loop_closeout(
+    *,
+    operator_projection: Mapping[str, Any],
+) -> dict[str, Any]:
+    production_tail = _mapping_from_path(
+        operator_projection,
+        ("production_acceptance_tail",),
+        context="operator_closeout_readiness_projection.production_acceptance_tail",
+    )
+    raw_patch_refs = production_tail.get("patch_loop_refs")
+    if raw_patch_refs is None:
+        return _blocked_target_smoke_patch_loop_closeout(
+            blocker_ref="typed-blocker:mag/target-smoke-patch-loop/patch-loop-refs-missing",
+        )
+    if not isinstance(raw_patch_refs, Mapping):
+        raise WorkspaceStateError(
+            "operator_closeout_readiness_projection.production_acceptance_tail.patch_loop_refs "
+            "必须是 object。"
+        )
+    _assert_refs_body_free(raw_patch_refs, path="patch_loop_refs")
+
+    owner_ref = _require_nonempty_string(
+        raw_patch_refs.get("target_owner_receipt_or_typed_blocker_ref"),
+        field_name="target_owner_receipt_or_typed_blocker_ref",
+        context="patch_loop_refs",
+    )
+    no_forbidden_write_ref = _require_nonempty_string(
+        raw_patch_refs.get("no_forbidden_write_proof_ref"),
+        field_name="no_forbidden_write_proof_ref",
+        context="patch_loop_refs",
+    )
+    return {
+        "closeout_type": "refs_only_target_smoke_patch_loop",
+        "suite_result": "blocked_suite",
+        "blocked_suite_result_ref": _require_nonempty_string(
+            raw_patch_refs.get("blocked_suite_result_ref"),
+            field_name="blocked_suite_result_ref",
+            context="patch_loop_refs",
+        ),
+        "developer_work_order_ref": _require_nonempty_string(
+            raw_patch_refs.get("developer_patch_work_order_ref"),
+            field_name="developer_patch_work_order_ref",
+            context="patch_loop_refs",
+        ),
+        "patch_traceability_ref": _require_nonempty_string(
+            raw_patch_refs.get("patch_traceability_matrix_ref"),
+            field_name="patch_traceability_matrix_ref",
+            context="patch_loop_refs",
+        ),
+        "target_verification_refs": _string_list_from_path(
+            raw_patch_refs,
+            ("target_repo_verification_refs",),
+            context="patch_loop_refs.target_repo_verification_refs",
+        ),
+        "runtime_read_model_consumption_ref": _require_nonempty_string(
+            raw_patch_refs.get("target_runtime_read_model_consumption_ref"),
+            field_name="target_runtime_read_model_consumption_ref",
+            context="patch_loop_refs",
+        ),
+        "workspace_proof_ref": _require_nonempty_string(
+            raw_patch_refs.get("workspace_environment_proof_ref"),
+            field_name="workspace_environment_proof_ref",
+            context="patch_loop_refs",
+        ),
+        "no_forbidden_write": {
+            "proven": True,
+            "proof_ref": no_forbidden_write_ref,
+            "grant_truth_written": False,
+            "artifact_body_written": False,
+            "memory_body_written": False,
+            "fundability_verdict_written": False,
+            "quality_verdict_written": False,
+            "export_verdict_written": False,
+            "owner_receipt_authority_overwritten": False,
+        },
+        "owner_receipt_or_typed_blocker": {
+            "required": True,
+            "return_shape": _owner_receipt_or_blocker_shape(owner_ref),
+            "ref": owner_ref,
+        },
+        "patch_absorption_ref": _require_nonempty_string(
+            raw_patch_refs.get("patch_absorption_ref"),
+            field_name="patch_absorption_ref",
+            context="patch_loop_refs",
+        ),
+        "worktree_cleanup_ref": _require_nonempty_string(
+            raw_patch_refs.get("worktree_cleanup_ref"),
+            field_name="worktree_cleanup_ref",
+            context="patch_loop_refs",
+        ),
+        "agent_lab_re_evaluation_ref": _require_nonempty_string(
+            raw_patch_refs.get("agent_lab_re_evaluation_ref"),
+            field_name="agent_lab_re_evaluation_ref",
+            context="patch_loop_refs",
+        ),
+        "suite_pass_equals_closeout": False,
+        "can_declare_fundability_ready": False,
+        "can_declare_quality_ready": False,
+        "can_declare_export_ready": False,
+        "can_declare_submission_ready": False,
+        "projection_policy": (
+            "target_smoke_closeout_consumes_refs_only_blocked_suite_requires_owner_receipt_"
+            "or_typed_blocker_no_forbidden_write_cleanup_and_agent_lab_re_evaluation_refs"
+        ),
+    }
+
+
+def _blocked_target_smoke_patch_loop_closeout(*, blocker_ref: str) -> dict[str, Any]:
+    return {
+        "closeout_type": "refs_only_target_smoke_patch_loop",
+        "suite_result": "blocked_suite",
+        "typed_blocker_ref": blocker_ref,
+        "owner_receipt_or_typed_blocker": {
+            "required": True,
+            "return_shape": "typed_blocker_ref",
+            "ref": blocker_ref,
+        },
+        "suite_pass_equals_closeout": False,
+        "can_declare_fundability_ready": False,
+        "can_declare_quality_ready": False,
+        "can_declare_export_ready": False,
+        "can_declare_submission_ready": False,
+    }
+
+
+def _owner_receipt_or_blocker_shape(ref: str) -> str:
+    normalized = ref.strip().lower()
+    if "typed-blocker" in normalized or "typed_blocker" in normalized:
+        return "typed_blocker_ref"
+    if "no-regression" in normalized or "no_regression" in normalized:
+        return "no_regression_evidence_ref"
+    return "owner_receipt_ref"
 
 
 def _surface_summary(surface: Mapping[str, Any]) -> dict[str, Any]:

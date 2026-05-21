@@ -304,7 +304,7 @@ def test_agent_lab_handoff_is_standard_body_free_consumer_refs_only() -> None:
     }
     assert set(closeout["closeout_refs"]) == set(closeout["required_closeout_ref_keys"])
     assert closeout["closeout_refs"]["developer_patch_work_order_ref"] == (
-        "developer-work-order:oma/mag/ahe-real-target-scaleout-smoke"
+        "developer-work-order:oma/mag/ai-first-mag-patch-smoke"
     )
     assert closeout["closeout_refs"]["target_runtime_read_model_consumption_ref"] == (
         "/product_entry_manifest/production_live_acceptance_receipt"

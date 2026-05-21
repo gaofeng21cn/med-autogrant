@@ -48,6 +48,31 @@ def _production_acceptance() -> dict[str, object]:
             "accepted_return_shape": "domain_owner_receipt_ref",
             "owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
         },
+        "patch_loop_refs": {
+            "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
+            "developer_patch_work_order_ref": "developer-work-order:oma/mag/ai-first-mag-patch-smoke",
+            "patch_traceability_matrix_ref": "patch-traceability:oma/mag/ai-first-mag-patch-smoke",
+            "target_repo_verification_refs": [
+                "rtk ./scripts/run-pytest-clean.sh tests/product_entry_cases/test_executor_first_closeout_bundle.py -q",
+                "rtk ./scripts/verify.sh",
+                "rtk git diff --check",
+            ],
+            "target_runtime_read_model_consumption_ref": "/product_entry_manifest/production_live_acceptance_receipt",
+            "workspace_environment_proof_ref": (
+                "workspace-proof:med-autogrant/.worktrees/ai-first-mag-patch-smoke"
+            ),
+            "no_forbidden_write_proof_ref": (
+                "contracts/agent_lab_handoff.json#/authority_boundary/oma_consumes_mag_refs_only"
+            ),
+            "target_owner_receipt_or_typed_blocker_ref": (
+                "receipt:mag/production-live-acceptance/2026-05-20"
+            ),
+            "patch_absorption_ref": "git-commit:pending/codex/ai-first-mag-patch-smoke",
+            "worktree_cleanup_ref": "worktree-cleanup:pending/ai-first-mag-patch-smoke",
+            "agent_lab_re_evaluation_ref": (
+                "agent-lab-run:oma/mag/ai-first-mag-patch-smoke/re-evaluation"
+            ),
+        },
     }
 
 
@@ -191,6 +216,58 @@ class ProductEntryExecutorFirstCloseoutBundleTest(unittest.TestCase):
         self.assertFalse(bundle["bundle_ready_equals_grant_ready"])
         self.assertFalse(bundle["authority_boundary"]["can_declare_fundability_ready"])
         self.assertFalse(bundle["authority_boundary"]["bundle_ready_equals_grant_ready"])
+
+    def test_refs_ready_bundle_projects_target_smoke_patch_loop_closeout_refs(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        bundle = MedAutoGrantProductEntry().build_executor_first_closeout_bundle(
+            codex_stage_execution_receipt_bundle=_codex_receipt_bundle(),
+            operator_closeout_readiness_projection=_operator_closeout(),
+            physical_morphology_guard_projection=_physical_guard(),
+            external_evidence_consumption_ledger=_external_consumption_ledger(),
+            receipt_readiness_projection=_receipt_readiness(),
+        )
+
+        closeout = bundle["target_smoke_patch_loop_closeout"]
+
+        self.assertEqual(closeout["closeout_type"], "refs_only_target_smoke_patch_loop")
+        self.assertEqual(closeout["suite_result"], "blocked_suite")
+        self.assertEqual(
+            closeout["developer_work_order_ref"],
+            "developer-work-order:oma/mag/ai-first-mag-patch-smoke",
+        )
+        self.assertEqual(
+            closeout["patch_traceability_ref"],
+            "patch-traceability:oma/mag/ai-first-mag-patch-smoke",
+        )
+        self.assertIn("rtk ./scripts/verify.sh", closeout["target_verification_refs"])
+        self.assertEqual(
+            closeout["runtime_read_model_consumption_ref"],
+            "/product_entry_manifest/production_live_acceptance_receipt",
+        )
+        self.assertEqual(
+            closeout["workspace_proof_ref"],
+            "workspace-proof:med-autogrant/.worktrees/ai-first-mag-patch-smoke",
+        )
+        self.assertTrue(closeout["no_forbidden_write"]["proven"])
+        self.assertEqual(closeout["owner_receipt_or_typed_blocker"]["return_shape"], "owner_receipt_ref")
+        self.assertEqual(
+            closeout["patch_absorption_ref"],
+            "git-commit:pending/codex/ai-first-mag-patch-smoke",
+        )
+        self.assertEqual(
+            closeout["worktree_cleanup_ref"],
+            "worktree-cleanup:pending/ai-first-mag-patch-smoke",
+        )
+        self.assertEqual(
+            closeout["agent_lab_re_evaluation_ref"],
+            "agent-lab-run:oma/mag/ai-first-mag-patch-smoke/re-evaluation",
+        )
+        self.assertFalse(closeout["suite_pass_equals_closeout"])
+        self.assertFalse(closeout["can_declare_quality_ready"])
+        self.assertFalse(bundle["authority_boundary"]["mag_writes_grant_body"])
+        self.assertFalse(bundle["authority_boundary"]["mag_writes_memory_body"])
+        self.assertFalse(bundle["authority_boundary"]["mag_writes_package_body"])
 
     def test_missing_codex_review_receipt_blocks_executor_first_bundle(self) -> None:
         from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (

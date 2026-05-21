@@ -141,7 +141,7 @@ def _production_tail_summary(production_acceptance: Mapping[str, Any]) -> dict[s
         field_name="accepted_return_shape",
         context="production_acceptance.closure_evidence",
     )
-    return {
+    summary: dict[str, Any] = {
         "state": evidence_tail_status,
         "closed": evidence_tail_status == "closed_by_domain_owned_acceptance_receipt",
         "accepted_return_shape": accepted_return_shape,
@@ -149,6 +149,12 @@ def _production_tail_summary(production_acceptance: Mapping[str, Any]) -> dict[s
         "scope": "production_acceptance_tail_only",
         "can_declare_grant_ready": False,
     }
+    patch_loop_refs = production_acceptance.get("patch_loop_refs")
+    if patch_loop_refs is not None:
+        if not isinstance(patch_loop_refs, Mapping):
+            raise WorkspaceStateError("production_acceptance.patch_loop_refs 必须是 object。")
+        summary["patch_loop_refs"] = dict(patch_loop_refs)
+    return summary
 
 
 def _external_evidence_summary(ledger: Mapping[str, Any]) -> dict[str, Any]:
