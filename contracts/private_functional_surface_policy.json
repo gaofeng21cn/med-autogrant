@@ -520,6 +520,7 @@
         "source_refs": [
           "src/med_autogrant/grant_autonomy_controller.py",
           "src/med_autogrant/grant_autonomy_loop_shell.py",
+          "src/med_autogrant/grant_autonomy_loop_parts.py",
           "src/med_autogrant/grant_autonomy_start.py"
         ],
         "surface_id": "autonomy_controller",

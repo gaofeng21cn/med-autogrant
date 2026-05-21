@@ -4,20 +4,21 @@ from copy import deepcopy
 from typing import Any, Callable
 
 from med_autogrant.grant_autonomy_parts import (
-    _build_report,
-    _build_tranche_history_entry,
     _decision_action,
     _decision_reason,
     _dedupe,
     _default_progress_reason,
     _extract_mapping,
-    _fail_closed_report,
     _goal_satisfied,
     _hydrate_controller_plan_quality_state,
     _normalize_quality_output,
     _resolve_inline_controller_action,
     _resolve_inline_controller_reason,
     _resolve_terminal_reason,
+)
+from med_autogrant.grant_autonomy_loop_parts import (
+    GrantAutonomyLoopContext,
+    append_tranche_history,
 )
 from med_autogrant.grant_autonomy_trace import spend_budget_step
 from med_autogrant.grant_governance_adapter import (
@@ -68,6 +69,19 @@ def run_grant_autonomy_loop(
     mainline_runner: MainlineRunner,
     quality_evaluator: QualityEvaluator,
 ) -> dict[str, Any]:
+    loop_context = GrantAutonomyLoopContext(
+        request_id=request_id,
+        start_mode=start_mode,
+        goal=goal,
+        max_rounds_or_cycles=max_rounds_or_cycles,
+        budget_max=budget_max,
+        initial_blockers=initial_blockers,
+        initial_evidence_gaps=initial_evidence_gaps,
+        action_trace=action_trace,
+        reselection_decisions=reselection_decisions,
+        rollback_decisions=rollback_decisions,
+    )
+
     def spend_budget(*, step_action: str, cycle: int | None) -> bool:
         nonlocal spent_steps
         ok, spent_steps = spend_budget_step(
@@ -79,73 +93,70 @@ def run_grant_autonomy_loop(
         )
         return ok
 
+    def fail_closed(
+        *,
+        termination_reason: str,
+        include_controller_state: bool = False,
+        include_quality_state: bool = False,
+    ) -> dict[str, Any]:
+        return loop_context.fail_closed_report(
+            spent_steps=spent_steps,
+            termination_reason=termination_reason,
+            completed_cycles=completed_cycles,
+            workspace=workspace,
+            latest_blocker_report=latest_blocker_report,
+            unresolved_blockers=unresolved_blockers,
+            evidence_gaps=evidence_gaps,
+            controller_plan=controller_plan if include_controller_state else None,
+            tranche_history=tranche_history if include_controller_state else None,
+            latest_quality_closure_dossier=(
+                latest_quality_closure_dossier if include_quality_state else None
+            ),
+            closure_package_queue=closure_package_queue if include_quality_state else None,
+            active_closure_package=active_closure_package if include_quality_state else None,
+        )
+
+    def record_history(
+        *,
+        cycle: int,
+        quality_status: str,
+        next_controller_action: str,
+        gate_status: str,
+        decision_reason: str,
+        termination_reason: str,
+        include_quality_state: bool = False,
+    ) -> None:
+        append_tranche_history(
+            tranche_history,
+            cycle=cycle,
+            controller_plan=controller_plan,
+            quality_status=quality_status,
+            unresolved_blockers=unresolved_blockers,
+            evidence_gaps=evidence_gaps,
+            next_controller_action=next_controller_action,
+            gate_status=gate_status,
+            decision_reason=decision_reason,
+            termination_reason=termination_reason,
+            latest_quality_closure_dossier=(
+                latest_quality_closure_dossier if include_quality_state else None
+            ),
+            closure_package_queue=closure_package_queue if include_quality_state else None,
+            active_closure_package=active_closure_package if include_quality_state else None,
+        )
+
     cycle_start = completed_cycles + 1
     for cycle in range(cycle_start, max_rounds_or_cycles + 1):
         completed_cycles = cycle
 
         if not spend_budget(step_action="quality_evaluator", cycle=cycle):
-            return _fail_closed_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
-                spent_steps=spent_steps,
-                termination_reason="budget_exhausted",
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
-                blocker_report=latest_blocker_report,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
-            )
+            return fail_closed(termination_reason="budget_exhausted")
         try:
             quality_output = quality_evaluator(workspace)
         except Exception:
-            return _fail_closed_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
-                spent_steps=spent_steps,
-                termination_reason="quality_evaluator_callback_error",
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
-                blocker_report=latest_blocker_report,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
-            )
+            return fail_closed(termination_reason="quality_evaluator_callback_error")
         normalized_quality = _normalize_quality_output(quality_output)
         if normalized_quality is None:
-            return _fail_closed_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
-                spent_steps=spent_steps,
-                termination_reason="quality_evaluator_unstructured_result",
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
-                blocker_report=latest_blocker_report,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
-            )
+            return fail_closed(termination_reason="quality_evaluator_unstructured_result")
 
         latest_blocker_report = normalized_quality["blocker_report"]
         latest_quality_closure_dossier = normalized_quality["quality_closure_dossier"]
@@ -179,45 +190,19 @@ def run_grant_autonomy_loop(
                 unresolved_blockers=unresolved_blockers,
                 evidence_gaps=evidence_gaps,
             )
-            tranche_history.append(
-                _build_tranche_history_entry(
-                    cycle=cycle,
-                    controller_plan=controller_plan,
-                    quality_status=quality_status,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    next_controller_action="fail_closed",
-                    gate_status="failed_closed",
-                    decision_reason=failure_reason,
-                    termination_reason="quality_fail_closed",
-                    quality_closure_dossier=latest_quality_closure_dossier,
-                    closure_package_queue=closure_package_queue,
-                    active_closure_package=active_closure_package,
-                )
-            )
-            return _fail_closed_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
-                spent_steps=spent_steps,
+            record_history(
+                cycle=cycle,
+                quality_status=quality_status,
+                next_controller_action="fail_closed",
+                gate_status="failed_closed",
+                decision_reason=failure_reason,
                 termination_reason="quality_fail_closed",
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
-                blocker_report=latest_blocker_report,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
-                controller_plan=controller_plan,
-                tranche_history=tranche_history,
-                latest_quality_closure_dossier=latest_quality_closure_dossier,
-                closure_package_queue=closure_package_queue,
-                active_closure_package=active_closure_package,
+                include_quality_state=True,
+            )
+            return fail_closed(
+                termination_reason="quality_fail_closed",
+                include_controller_state=True,
+                include_quality_state=True,
             )
         if inline_controller_action == "reselect_project_profile":
             mainline_output = {
@@ -236,115 +221,52 @@ def run_grant_autonomy_loop(
 
         if _goal_satisfied(goal_target=goal_target, quality_status=quality_status) and mainline_output is None:
             if effective_require_zero_blockers and unresolved_blockers:
-                tranche_history.append(
-                    _build_tranche_history_entry(
-                        cycle=cycle,
-                        controller_plan=controller_plan,
-                        quality_status=quality_status,
-                        unresolved_blockers=unresolved_blockers,
-                        evidence_gaps=evidence_gaps,
-                        next_controller_action="fail_closed",
-                        gate_status="failed_closed",
-                        decision_reason="blockers_not_cleared",
-                        termination_reason="blockers_not_cleared",
-                    )
-                )
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
+                record_history(
+                    cycle=cycle,
+                    quality_status=quality_status,
+                    next_controller_action="fail_closed",
+                    gate_status="failed_closed",
+                    decision_reason="blockers_not_cleared",
                     termination_reason="blockers_not_cleared",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    controller_plan=controller_plan,
-                    tranche_history=tranche_history,
-                    latest_quality_closure_dossier=latest_quality_closure_dossier,
-                    closure_package_queue=closure_package_queue,
-                    active_closure_package=active_closure_package,
+                )
+                return fail_closed(
+                    termination_reason="blockers_not_cleared",
+                    include_controller_state=True,
+                    include_quality_state=True,
                 )
             if effective_require_zero_evidence_gaps and evidence_gaps:
-                tranche_history.append(
-                    _build_tranche_history_entry(
-                        cycle=cycle,
-                        controller_plan=controller_plan,
-                        quality_status=quality_status,
-                        unresolved_blockers=unresolved_blockers,
-                        evidence_gaps=evidence_gaps,
-                        next_controller_action="fail_closed",
-                        gate_status="failed_closed",
-                        decision_reason="evidence_gaps_not_cleared",
-                        termination_reason="evidence_gaps_not_cleared",
-                    )
-                )
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="evidence_gaps_not_cleared",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    controller_plan=controller_plan,
-                    tranche_history=tranche_history,
-                    latest_quality_closure_dossier=latest_quality_closure_dossier,
-                    closure_package_queue=closure_package_queue,
-                    active_closure_package=active_closure_package,
-                )
-            tranche_history.append(
-                _build_tranche_history_entry(
+                record_history(
                     cycle=cycle,
-                    controller_plan=controller_plan,
                     quality_status=quality_status,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    next_controller_action="stop_success",
-                    gate_status="passed",
-                    decision_reason="tranche_success_gate_satisfied",
-                    termination_reason="goal_reached",
+                    next_controller_action="fail_closed",
+                    gate_status="failed_closed",
+                    decision_reason="evidence_gaps_not_cleared",
+                    termination_reason="evidence_gaps_not_cleared",
                 )
+                return fail_closed(
+                    termination_reason="evidence_gaps_not_cleared",
+                    include_controller_state=True,
+                    include_quality_state=True,
+                )
+            record_history(
+                cycle=cycle,
+                quality_status=quality_status,
+                next_controller_action="stop_success",
+                gate_status="passed",
+                decision_reason="tranche_success_gate_satisfied",
+                termination_reason="goal_reached",
             )
-            return _build_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
+            return loop_context.success_report(
                 spent_steps=spent_steps,
                 controller_status=quality_status,
                 termination_reason="goal_reached",
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                blocker_report=latest_blocker_report,
+                completed_cycles=completed_cycles,
+                workspace=workspace,
+                latest_blocker_report=latest_blocker_report,
                 unresolved_blockers=unresolved_blockers,
                 evidence_gaps=evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
                 controller_plan=controller_plan,
                 tranche_history=tranche_history,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
                 latest_quality_closure_dossier=latest_quality_closure_dossier,
                 closure_package_queue=closure_package_queue,
                 active_closure_package=active_closure_package,
@@ -352,65 +274,23 @@ def run_grant_autonomy_loop(
 
         if cycle == max_rounds_or_cycles:
             terminal_reason = _resolve_terminal_reason(unresolved_blockers, evidence_gaps)
-            tranche_history.append(
-                _build_tranche_history_entry(
-                    cycle=cycle,
-                    controller_plan=controller_plan,
-                    quality_status=quality_status,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    next_controller_action="fail_closed",
-                    gate_status="blocked" if terminal_reason != "max_rounds_or_cycles_exhausted" else "failed_closed",
-                    decision_reason=terminal_reason,
-                    termination_reason=terminal_reason,
-                )
-            )
-            return _fail_closed_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
-                spent_steps=spent_steps,
+            record_history(
+                cycle=cycle,
+                quality_status=quality_status,
+                next_controller_action="fail_closed",
+                gate_status="blocked" if terminal_reason != "max_rounds_or_cycles_exhausted" else "failed_closed",
+                decision_reason=terminal_reason,
                 termination_reason=terminal_reason,
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
-                blocker_report=latest_blocker_report,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
-                controller_plan=controller_plan,
-                tranche_history=tranche_history,
-                latest_quality_closure_dossier=latest_quality_closure_dossier,
-                closure_package_queue=closure_package_queue,
-                active_closure_package=active_closure_package,
+            )
+            return fail_closed(
+                termination_reason=terminal_reason,
+                include_controller_state=True,
+                include_quality_state=True,
             )
 
         if mainline_output is None:
             if not spend_budget(step_action="mainline_runner", cycle=cycle):
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="budget_exhausted",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                )
+                return fail_closed(termination_reason="budget_exhausted")
             try:
                 mainline_output = mainline_runner(
                     {
@@ -423,45 +303,9 @@ def run_grant_autonomy_loop(
                     }
                 )
             except Exception:
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="mainline_runner_callback_error",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                )
+                return fail_closed(termination_reason="mainline_runner_callback_error")
             if not isinstance(mainline_output, dict):
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="mainline_runner_unstructured_result",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    )
+                return fail_closed(termination_reason="mainline_runner_unstructured_result")
 
         rollback_reason = ""
         rollback_action = _decision_action(mainline_output.get("rollback_decision"))
@@ -477,74 +321,30 @@ def run_grant_autonomy_loop(
                 }
             )
             if not rollback_enabled:
-                tranche_history.append(
-                    _build_tranche_history_entry(
-                        cycle=cycle,
-                        controller_plan=controller_plan,
-                        quality_status=quality_status,
-                        unresolved_blockers=unresolved_blockers,
-                        evidence_gaps=evidence_gaps,
-                        next_controller_action="rollback_upstream",
-                        gate_status="failed_closed",
-                        decision_reason=rollback_reason,
-                        termination_reason="rollback_policy_disallowed",
-                    )
-                )
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
+                record_history(
+                    cycle=cycle,
+                    quality_status=quality_status,
+                    next_controller_action="rollback_upstream",
+                    gate_status="failed_closed",
+                    decision_reason=rollback_reason,
                     termination_reason="rollback_policy_disallowed",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    controller_plan=controller_plan,
-                    tranche_history=tranche_history,
+                )
+                return fail_closed(
+                    termination_reason="rollback_policy_disallowed",
+                    include_controller_state=True,
                 )
             if rollback_count >= max_rollbacks:
-                tranche_history.append(
-                    _build_tranche_history_entry(
-                        cycle=cycle,
-                        controller_plan=controller_plan,
-                        quality_status=quality_status,
-                        unresolved_blockers=unresolved_blockers,
-                        evidence_gaps=evidence_gaps,
-                        next_controller_action="rollback_upstream",
-                        gate_status="failed_closed",
-                        decision_reason=rollback_reason,
-                        termination_reason="rollback_budget_exhausted",
-                    )
-                )
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
+                record_history(
+                    cycle=cycle,
+                    quality_status=quality_status,
+                    next_controller_action="rollback_upstream",
+                    gate_status="failed_closed",
+                    decision_reason=rollback_reason,
                     termination_reason="rollback_budget_exhausted",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    controller_plan=controller_plan,
-                    tranche_history=tranche_history,
+                )
+                return fail_closed(
+                    termination_reason="rollback_budget_exhausted",
+                    include_controller_state=True,
                 )
             rollback_count += 1
 
@@ -561,252 +361,73 @@ def run_grant_autonomy_loop(
                 }
             )
             if not reselection_enabled:
-                tranche_history.append(
-                    _build_tranche_history_entry(
-                        cycle=cycle,
-                        controller_plan=controller_plan,
-                        quality_status=quality_status,
-                        unresolved_blockers=unresolved_blockers,
-                        evidence_gaps=evidence_gaps,
-                        next_controller_action="reselect_project_profile",
-                        gate_status="failed_closed",
-                        decision_reason=decision_reason,
-                        termination_reason="reselection_policy_disallowed",
-                    )
-                )
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
+                record_history(
+                    cycle=cycle,
+                    quality_status=quality_status,
+                    next_controller_action="reselect_project_profile",
+                    gate_status="failed_closed",
+                    decision_reason=decision_reason,
                     termination_reason="reselection_policy_disallowed",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    controller_plan=controller_plan,
-                    tranche_history=tranche_history,
+                )
+                return fail_closed(
+                    termination_reason="reselection_policy_disallowed",
+                    include_controller_state=True,
                 )
             if selection_input is None:
-                tranche_history.append(
-                    _build_tranche_history_entry(
-                        cycle=cycle,
-                        controller_plan=controller_plan,
-                        quality_status=quality_status,
-                        unresolved_blockers=unresolved_blockers,
-                        evidence_gaps=evidence_gaps,
-                        next_controller_action="reselect_project_profile",
-                        gate_status="failed_closed",
-                        decision_reason=decision_reason,
-                        termination_reason="reselection_requires_selection_input",
-                    )
-                )
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
+                record_history(
+                    cycle=cycle,
+                    quality_status=quality_status,
+                    next_controller_action="reselect_project_profile",
+                    gate_status="failed_closed",
+                    decision_reason=decision_reason,
                     termination_reason="reselection_requires_selection_input",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    controller_plan=controller_plan,
-                    tranche_history=tranche_history,
+                )
+                return fail_closed(
+                    termination_reason="reselection_requires_selection_input",
+                    include_controller_state=True,
                 )
             if reselection_count >= max_reselections:
-                tranche_history.append(
-                    _build_tranche_history_entry(
-                        cycle=cycle,
-                        controller_plan=controller_plan,
-                        quality_status=quality_status,
-                        unresolved_blockers=unresolved_blockers,
-                        evidence_gaps=evidence_gaps,
-                        next_controller_action="reselect_project_profile",
-                        gate_status="failed_closed",
-                        decision_reason=decision_reason,
-                        termination_reason="reselection_budget_exhausted",
-                    )
-                )
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
+                record_history(
+                    cycle=cycle,
+                    quality_status=quality_status,
+                    next_controller_action="reselect_project_profile",
+                    gate_status="failed_closed",
+                    decision_reason=decision_reason,
                     termination_reason="reselection_budget_exhausted",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    controller_plan=controller_plan,
-                    tranche_history=tranche_history,
+                )
+                return fail_closed(
+                    termination_reason="reselection_budget_exhausted",
+                    include_controller_state=True,
                 )
 
             if not spend_budget(step_action="selector", cycle=cycle):
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="budget_exhausted",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                )
+                return fail_closed(termination_reason="budget_exhausted")
             try:
                 reselection_output = selector(selection_input)
             except Exception:
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="selector_callback_error",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                )
+                return fail_closed(termination_reason="selector_callback_error")
             if not isinstance(reselection_output, dict):
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="selector_unstructured_result",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                )
+                return fail_closed(termination_reason="selector_unstructured_result")
 
             if not spend_budget(step_action="initializer", cycle=cycle):
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="budget_exhausted",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                )
+                return fail_closed(termination_reason="budget_exhausted")
             try:
                 reinit_output = initializer(selection_input, reselection_output)
             except Exception:
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="initializer_callback_error",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                )
+                return fail_closed(termination_reason="initializer_callback_error")
             reselected_workspace = _extract_mapping(
                 reinit_output,
                 preferred_keys=("workspace", "initialized_workspace"),
             )
             if reselected_workspace is None:
-                return _fail_closed_report(
-                    request_id=request_id,
-                    started_from_mode=start_mode,
-                    goal=deepcopy(goal),
-                    max_rounds_or_cycles=max_rounds_or_cycles,
-                    budget_max=budget_max,
-                    spent_steps=spent_steps,
-                    termination_reason="initializer_unstructured_result",
-                    blocker_queue=initial_blockers,
-                    evidence_gap_queue=initial_evidence_gaps,
-                    action_trace=action_trace,
-                    reselection_decisions=reselection_decisions,
-                    rollback_decisions=rollback_decisions,
-                    completed_cycles=completed_cycles,
-                    final_workspace=workspace,
-                    blocker_report=latest_blocker_report,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                )
-            tranche_history.append(
-                _build_tranche_history_entry(
-                    cycle=cycle,
-                    controller_plan=controller_plan,
-                    quality_status=quality_status,
-                    unresolved_blockers=unresolved_blockers,
-                    evidence_gaps=evidence_gaps,
-                    next_controller_action="reselect_project_profile",
-                    gate_status="open",
-                    decision_reason=decision_reason,
-                    termination_reason="in_progress",
-                )
+                return fail_closed(termination_reason="initializer_unstructured_result")
+            record_history(
+                cycle=cycle,
+                quality_status=quality_status,
+                next_controller_action="reselect_project_profile",
+                gate_status="open",
+                decision_reason=decision_reason,
+                termination_reason="in_progress",
             )
             workspace = reselected_workspace
             controller_plan = apply_family_governance_to_controller_plan(
@@ -819,58 +440,18 @@ def run_grant_autonomy_loop(
 
         next_workspace = _extract_mapping(mainline_output, preferred_keys=("workspace", "final_workspace"))
         if next_workspace is None:
-            return _fail_closed_report(
-                request_id=request_id,
-                started_from_mode=start_mode,
-                goal=deepcopy(goal),
-                max_rounds_or_cycles=max_rounds_or_cycles,
-                budget_max=budget_max,
-                spent_steps=spent_steps,
-                termination_reason="mainline_runner_missing_workspace",
-                blocker_queue=initial_blockers,
-                evidence_gap_queue=initial_evidence_gaps,
-                action_trace=action_trace,
-                reselection_decisions=reselection_decisions,
-                rollback_decisions=rollback_decisions,
-                completed_cycles=completed_cycles,
-                final_workspace=workspace,
-                blocker_report=latest_blocker_report,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
-            )
-        tranche_history.append(
-            _build_tranche_history_entry(
-                cycle=cycle,
-                controller_plan=controller_plan,
-                quality_status=quality_status,
-                unresolved_blockers=unresolved_blockers,
-                evidence_gaps=evidence_gaps,
-                next_controller_action="rollback_upstream" if rollback_reason else "continue_mainline",
-                gate_status="open",
-                decision_reason=rollback_reason or _default_progress_reason(quality_status, unresolved_blockers, evidence_gaps),
-                termination_reason="in_progress",
-            )
+            return fail_closed(termination_reason="mainline_runner_missing_workspace")
+        record_history(
+            cycle=cycle,
+            quality_status=quality_status,
+            next_controller_action="rollback_upstream" if rollback_reason else "continue_mainline",
+            gate_status="open",
+            decision_reason=rollback_reason or _default_progress_reason(quality_status, unresolved_blockers, evidence_gaps),
+            termination_reason="in_progress",
         )
         workspace = next_workspace
 
-    return _fail_closed_report(
-        request_id=request_id,
-        started_from_mode=start_mode,
-        goal=deepcopy(goal),
-        max_rounds_or_cycles=max_rounds_or_cycles,
-        budget_max=budget_max,
-        spent_steps=spent_steps,
+    return fail_closed(
         termination_reason=_resolve_terminal_reason(unresolved_blockers, evidence_gaps),
-        blocker_queue=initial_blockers,
-        evidence_gap_queue=initial_evidence_gaps,
-        action_trace=action_trace,
-        reselection_decisions=reselection_decisions,
-        rollback_decisions=rollback_decisions,
-        completed_cycles=completed_cycles,
-        final_workspace=workspace,
-        blocker_report=latest_blocker_report,
-        unresolved_blockers=unresolved_blockers,
-        evidence_gaps=evidence_gaps,
-        controller_plan=controller_plan,
-        tranche_history=tranche_history,
+        include_controller_state=True,
     )
