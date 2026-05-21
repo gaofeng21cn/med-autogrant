@@ -80,6 +80,33 @@
         "tests/product_entry_cases/test_functional_closure.py"
       ]
     },
+    "owner_receipt": {
+      "authority": "mag_issues_owner_receipts_oma_consumes_refs_only",
+      "contract_ref": "contracts/owner_receipt_contract.json",
+      "manifest_ref": "/product_entry_manifest/owner_receipt_contract",
+      "production_owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
+      "production_receipt_projection_ref": "receipt-projection:mag/production-live-acceptance-owner-receipt"
+    },
+    "owner_route": {
+      "manifest_ref": "/product_entry_manifest/owner_route",
+      "next_owner": "med-autogrant",
+      "route_id": "mag_product_entry_owner_route",
+      "route_truth_owner": "med-autogrant",
+      "verification_refs": [
+        "tests/product_entry_cases/test_manifest_and_status.py::ManifestAndStatusTest::test_manifest_contains_runtime_companions",
+        "tests/test_opl_family_contract_adoption.py::test_family_adapter_preserves_mag_owner_route_discovery"
+      ]
+    },
+    "production_acceptance": {
+      "closure_ref": "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence",
+      "external_evidence_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+      "receipt_chain_ref": "contracts/production_acceptance/mag-production-acceptance.json#/grant_receipt_chain",
+      "state_ref": "contracts/production_acceptance/mag-production-acceptance.json",
+      "verification_refs": [
+        "tests/test_production_acceptance.py",
+        "tests/product_entry_cases/test_production_live_acceptance.py"
+      ]
+    },
     "real_target_patch_loop_closeout": {
       "boundary": "patch_loop_refs_are_body_free_closeout_evidence_not_mag_truth_or_verdict",
       "closeout_kind": "ahe_real_target_scaleout_smoke",
@@ -116,33 +143,6 @@
         "agent_lab_re_evaluation_ref"
       ],
       "state": "refs_only_closeout_smoke_ready"
-    },
-    "owner_receipt": {
-      "authority": "mag_issues_owner_receipts_oma_consumes_refs_only",
-      "contract_ref": "contracts/owner_receipt_contract.json",
-      "manifest_ref": "/product_entry_manifest/owner_receipt_contract",
-      "production_owner_receipt_ref": "receipt:mag/production-live-acceptance/2026-05-20",
-      "production_receipt_projection_ref": "receipt-projection:mag/production-live-acceptance-owner-receipt"
-    },
-    "owner_route": {
-      "manifest_ref": "/product_entry_manifest/owner_route",
-      "next_owner": "med-autogrant",
-      "route_id": "mag_product_entry_owner_route",
-      "route_truth_owner": "med-autogrant",
-      "verification_refs": [
-        "tests/product_entry_cases/test_manifest_and_status.py::ManifestAndStatusTest::test_manifest_contains_runtime_companions",
-        "tests/test_opl_family_contract_adoption.py::test_family_adapter_preserves_mag_owner_route_discovery"
-      ]
-    },
-    "production_acceptance": {
-      "closure_ref": "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence",
-      "external_evidence_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
-      "receipt_chain_ref": "contracts/production_acceptance/mag-production-acceptance.json#/grant_receipt_chain",
-      "state_ref": "contracts/production_acceptance/mag-production-acceptance.json",
-      "verification_refs": [
-        "tests/test_production_acceptance.py",
-        "tests/product_entry_cases/test_production_live_acceptance.py"
-      ]
     },
     "typed_blocker": {
       "accepted_return_shapes": [
