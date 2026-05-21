@@ -299,6 +299,130 @@
         "claims_submission_ready_export": false
       }
     },
+    "opl_stage_source_runtime_evidence_typed_blocker_handoff": {
+      "surface_kind": "mag_opl_stage_source_runtime_evidence_typed_blocker_handoff.v1",
+      "mode": "refs_only_domain_owned_typed_blocker_refs",
+      "status": "ready_for_opl_stage_source_runtime_typed_blocker_record",
+      "recording_policy": "OPL may record these MAG-owned typed blocker refs in its refs-only stage evidence ledger when source-scope or runtime-event live evidence is not yet proven. These refs close the workorder as blocked, not as successful source/runtime evidence.",
+      "summary": {
+        "stage_count": 6,
+        "typed_blocker_ref_count": 6,
+        "blocked_source_scope_ref_count": 29,
+        "blocked_runtime_event_ref_count": 6,
+        "claims_source_scope_live_evidence_complete": false,
+        "claims_runtime_event_live_evidence_complete": false,
+        "claims_grant_ready": false,
+        "claims_submission_ready_export": false
+      },
+      "stage_typed_blocker_refs": [
+        {
+          "stage_id": "call_and_candidate_intake",
+          "typed_blocker_ref": "typed-blocker:mag/stage-source-runtime-live-evidence/call_and_candidate_intake/pending",
+          "blocked_source_scope_refs": [
+            "discover-funding-opportunities",
+            "select-project-profile",
+            "initialize-intake-workspace",
+            "input_intake",
+            "/product_entry_manifest/family_stage_control_plane/stages/call_and_candidate_intake/source_refs"
+          ],
+          "blocked_runtime_event_refs": [
+            "runtime_event:call_and_candidate_intake.owner_receipt_recorded"
+          ],
+          "blocker_reason": "MAG has not yet produced domain/App/live refs proving every declared source scope and runtime event for this stage. OPL may record the typed blocker ref instead of treating declared refs as success evidence.",
+          "next_owner": "med-autogrant_or_app_live_operator"
+        },
+        {
+          "stage_id": "fundability_strategy",
+          "typed_blocker_ref": "typed-blocker:mag/stage-source-runtime-live-evidence/fundability_strategy/pending",
+          "blocked_source_scope_refs": [
+            "direction_screening",
+            "fit_alignment",
+            "grant_quality_scorecard",
+            "fundability gate",
+            "/product_entry_manifest/family_stage_control_plane/stages/fundability_strategy/source_refs"
+          ],
+          "blocked_runtime_event_refs": [
+            "runtime_event:fundability_strategy.ai_decision_gate_recorded"
+          ],
+          "blocker_reason": "MAG has not yet produced domain/App/live refs proving every declared source scope and runtime event for this stage. OPL may record the typed blocker ref instead of treating declared refs as success evidence.",
+          "next_owner": "med-autogrant_or_app_live_operator"
+        },
+        {
+          "stage_id": "specific_aims_and_structure",
+          "typed_blocker_ref": "typed-blocker:mag/stage-source-runtime-live-evidence/specific_aims_and_structure/pending",
+          "blocked_source_scope_refs": [
+            "question_refinement",
+            "argument_building",
+            "outline",
+            "/product_entry_manifest/family_stage_control_plane/stages/specific_aims_and_structure/source_refs"
+          ],
+          "blocked_runtime_event_refs": [
+            "runtime_event:specific_aims_and_structure.ai_decision_gate_recorded"
+          ],
+          "blocker_reason": "MAG has not yet produced domain/App/live refs proving every declared source scope and runtime event for this stage. OPL may record the typed blocker ref instead of treating declared refs as success evidence.",
+          "next_owner": "med-autogrant_or_app_live_operator"
+        },
+        {
+          "stage_id": "proposal_authoring",
+          "typed_blocker_ref": "typed-blocker:mag/stage-source-runtime-live-evidence/proposal_authoring/pending",
+          "blocked_source_scope_refs": [
+            "drafting",
+            "revision",
+            "grant-progress",
+            "grant-user-loop",
+            "/product_entry_manifest/family_stage_control_plane/stages/proposal_authoring/source_refs"
+          ],
+          "blocked_runtime_event_refs": [
+            "runtime_event:proposal_authoring.owner_receipt_recorded"
+          ],
+          "blocker_reason": "MAG has not yet produced domain/App/live refs proving every declared source scope and runtime event for this stage. OPL may record the typed blocker ref instead of treating declared refs as success evidence.",
+          "next_owner": "med-autogrant_or_app_live_operator"
+        },
+        {
+          "stage_id": "review_and_rebuttal",
+          "typed_blocker_ref": "typed-blocker:mag/stage-source-runtime-live-evidence/review_and_rebuttal/pending",
+          "blocked_source_scope_refs": [
+            "critique",
+            "review",
+            "grant_quality_closure_dossier",
+            "quality-diff",
+            "/product_entry_manifest/family_stage_control_plane/stages/review_and_rebuttal/source_refs"
+          ],
+          "blocked_runtime_event_refs": [
+            "runtime_event:review_and_rebuttal.ai_decision_gate_recorded"
+          ],
+          "blocker_reason": "MAG has not yet produced domain/App/live refs proving every declared source scope and runtime event for this stage. OPL may record the typed blocker ref instead of treating declared refs as success evidence.",
+          "next_owner": "med-autogrant_or_app_live_operator"
+        },
+        {
+          "stage_id": "package_and_submit_ready",
+          "typed_blocker_ref": "typed-blocker:mag/stage-source-runtime-live-evidence/package_and_submit_ready/pending",
+          "blocked_source_scope_refs": [
+            "freeze",
+            "frozen",
+            "package submission-ready",
+            "submission-ready export gate",
+            "/product_entry_manifest/family_stage_control_plane/stages/package_and_submit_ready/source_refs"
+          ],
+          "blocked_runtime_event_refs": [
+            "runtime_event:package_and_submit_ready.owner_receipt_recorded"
+          ],
+          "blocker_reason": "MAG has not yet produced domain/App/live refs proving every declared source scope and runtime event for this stage. OPL may record the typed blocker ref instead of treating declared refs as success evidence.",
+          "next_owner": "med-autogrant_or_app_live_operator"
+        }
+      ],
+      "authority_boundary": {
+        "mag_owns_typed_blocker_refs": true,
+        "opl_records_refs_only": true,
+        "opl_can_write_grant_truth": false,
+        "opl_can_write_memory_body": false,
+        "opl_can_record_source_runtime_success_without_live_refs": false,
+        "opl_can_authorize_fundability_or_export": false,
+        "typed_blocker_equals_source_runtime_success": false,
+        "claims_grant_ready": false,
+        "claims_submission_ready_export": false
+      }
+    },
     "external_evidence_refs": {
       "release_dist_consumption_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
       "no_forbidden_write_guard_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/4",

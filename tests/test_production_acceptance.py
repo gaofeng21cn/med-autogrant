@@ -309,6 +309,58 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
         "claims_submission_ready_export": False,
     }
 
+    source_runtime_handoff = closeout["opl_stage_source_runtime_evidence_typed_blocker_handoff"]
+    assert source_runtime_handoff["surface_kind"] == (
+        "mag_opl_stage_source_runtime_evidence_typed_blocker_handoff.v1"
+    )
+    assert source_runtime_handoff["status"] == (
+        "ready_for_opl_stage_source_runtime_typed_blocker_record"
+    )
+    assert source_runtime_handoff["mode"] == "refs_only_domain_owned_typed_blocker_refs"
+    assert source_runtime_handoff["summary"] == {
+        "stage_count": 6,
+        "typed_blocker_ref_count": 6,
+        "blocked_source_scope_ref_count": 29,
+        "blocked_runtime_event_ref_count": 6,
+        "claims_source_scope_live_evidence_complete": False,
+        "claims_runtime_event_live_evidence_complete": False,
+        "claims_grant_ready": False,
+        "claims_submission_ready_export": False,
+    }
+    blocker_by_stage = {
+        item["stage_id"]: item
+        for item in source_runtime_handoff["stage_typed_blocker_refs"]
+    }
+    assert set(blocker_by_stage) == {stage["stage_id"] for stage in stage_plane["stages"]}
+    for stage in stage_plane["stages"]:
+        stage_id = stage["stage_id"]
+        stage_contract = stage["stage_contract"]
+        blocker = blocker_by_stage[stage_id]
+        expected_source_scope_refs = []
+        for source_ref in stage_contract["source_scope_refs"]:
+            value = source_ref["ref"]
+            if isinstance(value, list):
+                expected_source_scope_refs.extend(value)
+            else:
+                expected_source_scope_refs.append(value)
+        assert blocker["blocked_source_scope_refs"] == expected_source_scope_refs
+        assert blocker["blocked_runtime_event_refs"] == stage_contract["runtime_event_refs"]
+        assert blocker["typed_blocker_ref"] == (
+            f"typed-blocker:mag/stage-source-runtime-live-evidence/{stage_id}/pending"
+        )
+        assert blocker["next_owner"] == "med-autogrant_or_app_live_operator"
+    assert source_runtime_handoff["authority_boundary"] == {
+        "mag_owns_typed_blocker_refs": True,
+        "opl_records_refs_only": True,
+        "opl_can_write_grant_truth": False,
+        "opl_can_write_memory_body": False,
+        "opl_can_record_source_runtime_success_without_live_refs": False,
+        "opl_can_authorize_fundability_or_export": False,
+        "typed_blocker_equals_source_runtime_success": False,
+        "claims_grant_ready": False,
+        "claims_submission_ready_export": False,
+    }
+
     for forbidden, value in closeout["forbidden_write_proof"].items():
         assert value is False, forbidden
     for claim, value in closeout["claims"].items():
