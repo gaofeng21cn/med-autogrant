@@ -694,13 +694,17 @@ def _oma_handoff_refs(*, agent_lab_handoff: dict[str, Any]) -> dict[str, Any]:
 
 
 def _functional_privatization_audit(consumer_thinning_contract: Mapping[str, Any]) -> dict[str, Any]:
+    privatized_functional_module_audit = dict(
+        consumer_thinning_contract["privatized_functional_module_audit"]
+    )
     return {
         "surface_kind": "functional_privatization_audit",
         "schema_version": 1,
         "domain_id": TARGET_DOMAIN_ID,
         "target_domain_id": TARGET_DOMAIN_ID,
+        **privatized_functional_module_audit,
         "mag_consumer_thinning_contract": dict(consumer_thinning_contract),
-        "privatized_functional_module_audit": dict(consumer_thinning_contract["privatized_functional_module_audit"]),
+        "privatized_functional_module_audit": privatized_functional_module_audit,
         "functional_followthrough_gap_classification": dict(
             consumer_thinning_contract["functional_followthrough_gap_classification"]
         ),
