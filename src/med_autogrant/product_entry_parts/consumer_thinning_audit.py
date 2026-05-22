@@ -356,6 +356,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "and typed blocker meaning cannot."
                 ),
                 current_surface_refs=[
+                    "cli",
+                    "mcp",
+                    "skill",
+                    "product_entry",
                     "/product_entry_manifest/mag_consumer_thinning_contract/consumed_opl_standard_surfaces",
                     "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
                 ],
@@ -677,6 +681,12 @@ def _build_functional_module_audit_item(
     opl_expected_primitives: list[str],
     mag_retained_authority: list[str],
 ) -> dict[str, Any]:
+    bridge_exit_gate = _build_default_caller_deletion_bridge_exit_gate(
+        module_id=module_id,
+        classification=classification,
+        current_surface_refs=current_surface_refs,
+        mag_retained_authority=mag_retained_authority,
+    )
     return {
         "module_id": module_id,
         "classification": classification,
@@ -691,9 +701,61 @@ def _build_functional_module_audit_item(
         "current_surface_refs": current_surface_refs,
         "opl_expected_primitives": opl_expected_primitives,
         "mag_retained_authority": mag_retained_authority,
+        "bridge_exit_gate": bridge_exit_gate,
         "implemented_as_generic_runtime_in_mag": False,
         "opl_can_write_grant_truth": False,
         "opl_can_declare_verdict": False,
+    }
+
+
+def _build_default_caller_deletion_bridge_exit_gate(
+    *,
+    module_id: str,
+    classification: str,
+    current_surface_refs: list[str],
+    mag_retained_authority: list[str],
+) -> dict[str, Any]:
+    is_authority = classification == "minimal_authority_function"
+    return {
+        "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+        "gate_id": f"mag.default_caller_deletion.{module_id}.bridge_exit.v1",
+        "bridge_owner": "med-autogrant",
+        "replacement_owner": "one-person-lab",
+        "current_status": (
+            "retained_mag_authority"
+            if is_authority
+            else "bridge_until_explicit_owner_receipt_authorizes_physical_delete"
+        ),
+        "required_before_retire": [] if is_authority else [
+            "domain_authority_refs_preserved",
+            "no_forbidden_write_proof_recorded",
+            "explicit_owner_receipt_authorizes_physical_delete",
+        ],
+        "current_surface_refs": list(current_surface_refs),
+        "retained_mag_authority": list(mag_retained_authority),
+        "default_caller_deletion_evidence_scope": (
+            "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization"
+        ),
+        "typed_blocker_refs": [
+            (
+                "typed-blocker:mag/default-caller-deletion/"
+                f"{module_id}/physical-delete-requires-explicit-owner-receipt"
+            )
+        ],
+        "no_forbidden_write_refs": [
+            f"no-forbidden-write:mag/default-caller-deletion/{module_id}/refs-only-boundary"
+        ],
+        "no_forbidden_write_evidence_refs": [
+            f"no-forbidden-write:mag/default-caller-deletion/{module_id}/refs-only-boundary"
+        ],
+        "provenance_refs": list(current_surface_refs),
+        "domain_repo_physical_delete_authorized": False,
+        "physical_delete_authorized_by_refs": False,
+        "mag_can_write_generic_runtime": False,
+        "mag_can_own_generated_default_caller": False,
+        "opl_can_write_grant_truth": False,
+        "opl_can_declare_fundability_or_export_verdict": False,
+        "opl_can_issue_mag_owner_receipt": False,
     }
 
 

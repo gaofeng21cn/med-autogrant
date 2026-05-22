@@ -77,6 +77,49 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     )
 
 
+def test_opl_default_callers_see_mag_deletion_evidence_without_delete_authority() -> None:
+    opl_bin = Path("/Users/gaofeng/workspace/one-person-lab/bin/opl")
+    if not opl_bin.exists():
+        pytest.skip(f"OPL bin not found: {opl_bin}")
+
+    result = subprocess.run(
+        [
+            str(opl_bin),
+            "agents",
+            "default-callers",
+            "--agent",
+            f"mag={REPO_ROOT}",
+            "--json",
+        ],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr or result.stdout
+    readiness = json.loads(result.stdout)["agent_default_caller_readiness"]
+    assert readiness["status"] == "ready_domain_evidence_required"
+    assert readiness["summary"]["generated_default_caller_surface_count"] == 8
+    assert readiness["summary"]["missing_domain_owner_receipt_or_typed_blocker_count"] == 0
+    assert readiness["summary"]["missing_no_forbidden_write_proof_count"] == 0
+    assert readiness["summary"]["missing_tombstone_or_provenance_ref_count"] == 0
+    assert readiness["migration_gate_policy"]["physical_delete_authorized_by_this_report"] is False
+    assert readiness["authority_boundary"]["report_can_authorize_domain_repo_physical_delete"] is False
+
+    report = readiness["reports"][0]
+    assert report["deletion_gate"]["physical_delete_authorized"] is False
+    by_surface = {gate["surface_id"]: gate for gate in report["surface_gates"]}
+    assert by_surface["mcp"]["active_caller_module_id"] == "human_workbench_scheduler_daemon"
+    assert by_surface["product_status"]["active_caller_module_id"] == "sidecar_product_status_shell"
+    for gate in report["surface_gates"]:
+        worklist = gate["deletion_evidence_worklist"]
+        assert worklist["domain_owner_receipt_or_typed_blocker"]["status"] == "observed"
+        assert worklist["no_forbidden_write_proof"]["status"] == "observed"
+        assert worklist["tombstone_or_provenance_ref"]["status"] == "observed"
+        assert worklist["physical_delete_authorized"] is False
+
+
 def test_private_functional_policy_classifies_physical_source_morphology() -> None:
     generated = build_standard_pack()
     policy = generated["private_functional_surface_policy"]
