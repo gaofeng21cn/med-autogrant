@@ -45,7 +45,7 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
                 ),
                 _source_item(
                     module_id="owner_receipt",
-                    path="src/med_autogrant/product_entry_parts/owner_receipts.py",
+                    path="src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
                     declared_role="minimal_authority_function",
                 ),
                 _source_item(

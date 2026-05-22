@@ -1,0 +1,248 @@
+from __future__ import annotations
+
+from typing import Any, Mapping, Sequence
+
+from med_autogrant.product_entry_parts.owner_receipt_common import (
+    RECEIPT_RECONCILIATION_INVENTORY_KIND,
+    RECEIPT_RECONCILIATION_PROOF_KIND,
+    RECEIPT_SHAPES,
+    forbidden_write_proof,
+    require_choice,
+    require_nonempty_string_from_receipt,
+    require_owner_receipt_evidence,
+)
+from med_autogrant.product_entry_parts.primitives import (
+    TARGET_DOMAIN_ID,
+    _require_nonempty_string,
+)
+from med_autogrant.workspace_types import WorkspaceStateError
+
+
+def build_controlled_soak_receipt_reconciliation_proof(
+    *,
+    owner_receipt_evidence: Mapping[str, Any],
+    opl_ledger_ref: str,
+    sidecar_closeout_result: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    receipt = require_owner_receipt_evidence(owner_receipt_evidence)
+    resolved_ledger_ref = _require_nonempty_string(opl_ledger_ref, field_name="opl_ledger_ref")
+    closeout_result = dict(sidecar_closeout_result or {})
+    receipt_ref = require_nonempty_string_from_receipt(receipt, "receipt_instance_ref")
+    receipt_shape = require_choice(
+        require_nonempty_string_from_receipt(receipt, "receipt_shape"),
+        choices=RECEIPT_SHAPES,
+        field_name="receipt_shape",
+    )
+    typed_blocker = _reconciled_typed_blocker(receipt, closeout_result)
+    evidence_refs = _reconciled_no_regression_evidence_refs(receipt, closeout_result)
+    payload = {
+        "surface_kind": RECEIPT_RECONCILIATION_PROOF_KIND,
+        "version": "v1",
+        "state": "probe_reconciled_not_live_soak_complete",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "probe_scope": "controlled_soak_deferred_blocker_receipt_reconciliation",
+        "claims_production_long_run_soak_complete": False,
+        "rebuilds_opl_runtime": False,
+        "source_refs": [
+            "/product_entry_manifest/controlled_soak_no_regression_attempt",
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+            "/product_entry_manifest/owner_receipt_contract",
+            "product sidecar-dispatch stage-attempt/closeout",
+            "product owner-receipt-evidence",
+        ],
+        "opl_ledger": {
+            "ledger_ref": resolved_ledger_ref,
+            "role": "external_ref_for_reconciliation_only",
+            "mag_writes_opl_ledger": False,
+            "opl_holds_grant_truth": False,
+        },
+        "mag_owner_receipt": {
+            "receipt_ref": receipt_ref,
+            "receipt_id": require_nonempty_string_from_receipt(receipt, "receipt_id"),
+            "receipt_shape": receipt_shape,
+            "stage_id": require_nonempty_string_from_receipt(receipt, "stage_id"),
+            "source_ref": require_nonempty_string_from_receipt(receipt, "source_ref"),
+            "owner_receipt_contract_ref": require_nonempty_string_from_receipt(
+                receipt,
+                "owner_receipt_contract_ref",
+            ),
+        },
+        "typed_blocker": typed_blocker,
+        "no_regression_evidence": {
+            "evidence_refs": evidence_refs,
+            "present": bool(evidence_refs),
+            "repo_tracked_projection_only": True,
+        },
+        "reconciliation": {
+            "status": _reconciliation_status(receipt_shape, typed_blocker, evidence_refs),
+            "receipt_ref_matches_sidecar": _receipt_ref_matches_sidecar(receipt_ref, closeout_result),
+            "opl_ledger_ref_matches_receipt_source": (
+                resolved_ledger_ref == require_nonempty_string_from_receipt(receipt, "source_ref")
+            ),
+            "closeout_payload_consumed": bool(closeout_result),
+        },
+        "authority_boundary": {
+            "mag_owner_receipt_authority": True,
+            "opl_ref_consumer_only": True,
+            "can_declare_fundability_ready": False,
+            "can_declare_authoring_quality_ready": False,
+            "can_declare_submission_ready_export": False,
+        },
+        "forbidden_write_proof": dict(receipt["forbidden_write_proof"]),
+    }
+    return {
+        "ok": True,
+        "command": "controlled-soak-receipt-reconciliation-proof",
+        "receipt_reconciliation_proof": payload,
+    }
+
+
+def build_controlled_soak_receipt_reconciliation_inventory(
+    *,
+    owner_receipt_evidence_items: Sequence[Mapping[str, Any]],
+    opl_ledger_ref: str,
+    sidecar_closeout_results: Sequence[Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    resolved_ledger_ref = _require_nonempty_string(opl_ledger_ref, field_name="opl_ledger_ref")
+    if not owner_receipt_evidence_items:
+        raise WorkspaceStateError("owner_receipt_evidence_items 至少需要一条 receipt evidence。")
+    closeout_by_receipt_ref = _index_closeout_results_by_receipt_ref(sidecar_closeout_results or [])
+    items: list[dict[str, Any]] = []
+    for receipt_payload in owner_receipt_evidence_items:
+        receipt = require_owner_receipt_evidence(receipt_payload)
+        receipt_ref = require_nonempty_string_from_receipt(receipt, "receipt_instance_ref")
+        proof = build_controlled_soak_receipt_reconciliation_proof(
+            owner_receipt_evidence=receipt,
+            opl_ledger_ref=resolved_ledger_ref,
+            sidecar_closeout_result=closeout_by_receipt_ref.get(receipt_ref),
+        )["receipt_reconciliation_proof"]
+        items.append(
+            {
+                "receipt_ref": receipt_ref,
+                "receipt_shape": proof["mag_owner_receipt"]["receipt_shape"],
+                "stage_id": proof["mag_owner_receipt"]["stage_id"],
+                "source_ref": proof["mag_owner_receipt"]["source_ref"],
+                "reconciliation_status": proof["reconciliation"]["status"],
+                "receipt_ref_matches_sidecar": proof["reconciliation"]["receipt_ref_matches_sidecar"],
+                "opl_ledger_ref_matches_receipt_source": proof["reconciliation"][
+                    "opl_ledger_ref_matches_receipt_source"
+                ],
+                "typed_blocker_present": proof["typed_blocker"] is not None,
+                "no_regression_evidence_refs": list(proof["no_regression_evidence"]["evidence_refs"]),
+                "authority_boundary": dict(proof["authority_boundary"]),
+            }
+        )
+    payload = {
+        "surface_kind": RECEIPT_RECONCILIATION_INVENTORY_KIND,
+        "version": "v1",
+        "state": "read_projection_only_not_live_soak_complete",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "owner": TARGET_DOMAIN_ID,
+        "opl_ledger": {
+            "ledger_ref": resolved_ledger_ref,
+            "role": "external_ref_for_inventory_reconciliation_only",
+            "mag_writes_opl_ledger": False,
+            "opl_holds_grant_truth": False,
+        },
+        "summary": {
+            "item_count": len(items),
+            "sidecar_closeout_result_count": len(closeout_by_receipt_ref),
+            "by_receipt_shape": _count_by(items, "receipt_shape"),
+            "by_reconciliation_status": _count_by(items, "reconciliation_status"),
+            "typed_blocker_count": sum(1 for item in items if item["typed_blocker_present"]),
+            "no_regression_evidence_ref_count": sum(
+                len(item["no_regression_evidence_refs"]) for item in items
+            ),
+        },
+        "items": items,
+        "claims_production_long_run_soak_complete": False,
+        "authority_boundary": {
+            "mag_owner_receipt_authority": True,
+            "opl_ref_consumer_only": True,
+            "can_declare_fundability_ready": False,
+            "can_declare_authoring_quality_ready": False,
+            "can_declare_submission_ready_export": False,
+        },
+        "forbidden_write_proof": forbidden_write_proof(),
+    }
+    return {
+        "ok": True,
+        "command": "controlled-soak-receipt-reconciliation-inventory",
+        "receipt_reconciliation_inventory": payload,
+    }
+
+
+def _index_closeout_results_by_receipt_ref(
+    closeout_results: Sequence[Mapping[str, Any]],
+) -> dict[str, Mapping[str, Any]]:
+    indexed: dict[str, Mapping[str, Any]] = {}
+    for closeout in closeout_results:
+        receipt_ref = closeout.get("receipt_ref")
+        if not isinstance(receipt_ref, str) or not receipt_ref.strip():
+            raise WorkspaceStateError("sidecar_closeout_result.receipt_ref 必须是非空字符串。")
+        if receipt_ref in indexed:
+            raise WorkspaceStateError(f"sidecar_closeout_result.receipt_ref 重复: {receipt_ref}")
+        indexed[receipt_ref] = closeout
+    return indexed
+
+
+def _count_by(items: Sequence[Mapping[str, Any]], key: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for item in items:
+        value = _require_nonempty_string(item.get(key), field_name=key)
+        counts[value] = counts.get(value, 0) + 1
+    return counts
+
+
+def _receipt_ref_matches_sidecar(receipt_ref: str, closeout_result: Mapping[str, Any]) -> bool | None:
+    if not closeout_result:
+        return None
+    return closeout_result.get("receipt_ref") == receipt_ref
+
+
+def _reconciled_typed_blocker(
+    receipt: Mapping[str, Any],
+    closeout_result: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    sidecar_blocker = closeout_result.get("typed_blocker")
+    if isinstance(sidecar_blocker, Mapping):
+        return dict(sidecar_blocker)
+    if receipt.get("receipt_shape") != "typed_blocker":
+        return None
+    return {
+        "blocker_kind": "mag_stage_attempt_owner_receipt_required",
+        "owner": TARGET_DOMAIN_ID,
+        "receipt_ref": receipt["receipt_instance_ref"],
+        "source_ref": receipt["source_ref"],
+        "next_action": "Route the blocker back to MAG owner surface before mutating grant truth, memory body, or artifact content.",
+    }
+
+
+def _reconciled_no_regression_evidence_refs(
+    receipt: Mapping[str, Any],
+    closeout_result: Mapping[str, Any],
+) -> list[str]:
+    refs: list[str] = []
+    receipt_refs = closeout_result.get("receipt_refs")
+    if isinstance(receipt_refs, Mapping):
+        no_regression_ref = receipt_refs.get("no_regression_evidence_ref")
+        if isinstance(no_regression_ref, str) and no_regression_ref:
+            refs.append(no_regression_ref)
+    if receipt.get("receipt_shape") == "no_regression_evidence":
+        receipt_ref = require_nonempty_string_from_receipt(receipt, "receipt_instance_ref")
+        if receipt_ref not in refs:
+            refs.append(receipt_ref)
+    return refs
+
+
+def _reconciliation_status(
+    receipt_shape: str,
+    typed_blocker: Mapping[str, Any] | None,
+    evidence_refs: list[str],
+) -> str:
+    if receipt_shape == "typed_blocker" and typed_blocker is not None:
+        return "typed_blocker_reconciled"
+    if receipt_shape == "no_regression_evidence" and evidence_refs:
+        return "no_regression_evidence_reconciled"
+    return "domain_owner_receipt_reconciled"

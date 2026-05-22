@@ -161,7 +161,8 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 mag_role="guarded_receipt_refs_adapter",
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
-                    "src/med_autogrant/product_entry_parts/owner_receipts.py",
+                    "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
+                    "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
                     "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
                     "src/med_autogrant/product_entry_parts/runtime_registration.py",
                 ],
@@ -376,7 +377,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/runtime_contracts.py",
                     "src/med_autogrant/product_entry_parts/progress.py",
-                    "src/med_autogrant/product_entry_parts/owner_receipts.py",
+                    "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
                 ],
                 active_callers=[
                     "owner receipt contract identity lifecycle_stage",
@@ -505,7 +506,9 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 owner=TARGET_DOMAIN_ID,
                 mag_role="receipt_authority_owner",
                 code_paths=[
-                    "src/med_autogrant/product_entry_parts/owner_receipts.py",
+                    "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
+                    "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
+                    "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
                     "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
                     "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
                     "src/med_autogrant/product_entry_parts/sidecar.py",

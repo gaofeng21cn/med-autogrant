@@ -5,7 +5,7 @@ from typing import Any, Mapping, Sequence
 from med_autogrant.product_entry_parts.hosted_receipt_verification import (
     HOSTED_RECEIPT_VERIFICATION_KIND,
 )
-from med_autogrant.product_entry_parts.owner_receipts import (
+from med_autogrant.product_entry_parts.owner_receipt_common import (
     RECEIPT_RECONCILIATION_INVENTORY_KIND,
 )
 from med_autogrant.product_entry_parts.primitives import (
