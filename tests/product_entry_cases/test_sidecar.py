@@ -195,6 +195,10 @@ class ProductSidecarTest(unittest.TestCase):
                     "/product_entry_manifest/mag_consumer_thinning_contract/"
                     "external_evidence_request_pack"
                 ),
+                "route_stage_handoff_boundary_ref": (
+                    "/product_entry_manifest/mag_consumer_thinning_contract/"
+                    "route_stage_handoff_boundary"
+                ),
             },
         )
         bridge_refs = thinning["bridge_exit_gate_refs"]
