@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from med_autogrant.product_entry_parts.owner_receipts import (
+from med_autogrant.product_entry_parts.owner_receipt_common import (
     RECEIPT_RECONCILIATION_INVENTORY_KIND,
 )
 from med_autogrant.product_entry_parts.primitives import (

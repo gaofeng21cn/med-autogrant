@@ -327,7 +327,9 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
         "surface_id": "owner_receipt_helper",
         "classification": "minimal_authority_function",
         "source_refs": [
-            "src/med_autogrant/product_entry_parts/owner_receipts.py",
+            "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
+            "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
+            "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
             "contracts/owner_receipt_contract.json",
         ],
         "allowed_role": "domain_owner_receipt_signer_and_body_free_refs_projection",

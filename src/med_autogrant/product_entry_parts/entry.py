@@ -45,12 +45,16 @@ from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_writeback_proposal,
     write_domain_memory_receipt_evidence,
 )
-from med_autogrant.product_entry_parts.owner_receipts import (
+from med_autogrant.product_entry_parts.owner_receipt_reconciliation import (
     build_controlled_soak_receipt_reconciliation_inventory,
     build_controlled_soak_receipt_reconciliation_proof,
-    build_production_live_acceptance_receipt_projection,
+)
+from med_autogrant.product_entry_parts.owner_receipt_writers import (
     write_lifecycle_receipt_evidence,
     write_owner_receipt_evidence,
+)
+from med_autogrant.product_entry_parts.production_live_acceptance import (
+    build_production_live_acceptance_receipt_projection,
 )
 from med_autogrant.product_entry_parts.conflict_envelopes import build_opl_conflict_or_blocker_envelope
 from med_autogrant.product_entry_parts.receipt_observability import (

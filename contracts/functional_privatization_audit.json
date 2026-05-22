@@ -2750,7 +2750,7 @@
           "code_paths": [
             "src/med_autogrant/product_entry_parts/runtime_contracts.py",
             "src/med_autogrant/product_entry_parts/progress.py",
-            "src/med_autogrant/product_entry_parts/owner_receipts.py"
+            "src/med_autogrant/product_entry_parts/owner_receipt_writers.py"
           ],
           "current_surface_refs": [
             "/product_entry_manifest/owner_receipt_contract/identity/lifecycle_stage",
@@ -2888,7 +2888,9 @@
           "cannot_absorb_reason": "OPL ledger can store refs, but cannot sign or reinterpret MAG owner receipt.",
           "classification": "minimal_authority_function",
           "code_paths": [
-            "src/med_autogrant/product_entry_parts/owner_receipts.py",
+            "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
+            "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
+            "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
             "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
             "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
             "src/med_autogrant/product_entry_parts/sidecar.py"
@@ -2986,7 +2988,8 @@
           "classification": "refs_only_adapter",
           "code_paths": [
             "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
-            "src/med_autogrant/product_entry_parts/owner_receipts.py",
+            "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
+            "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
             "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
             "src/med_autogrant/product_entry_parts/runtime_registration.py"
           ],
@@ -3773,7 +3776,7 @@
         "code_paths": [
           "src/med_autogrant/product_entry_parts/runtime_contracts.py",
           "src/med_autogrant/product_entry_parts/progress.py",
-          "src/med_autogrant/product_entry_parts/owner_receipts.py"
+          "src/med_autogrant/product_entry_parts/owner_receipt_writers.py"
         ],
         "current_surface_refs": [
           "/product_entry_manifest/owner_receipt_contract/identity/lifecycle_stage",
@@ -3911,7 +3914,9 @@
         "cannot_absorb_reason": "OPL ledger can store refs, but cannot sign or reinterpret MAG owner receipt.",
         "classification": "minimal_authority_function",
         "code_paths": [
-          "src/med_autogrant/product_entry_parts/owner_receipts.py",
+          "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
+          "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
+          "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
           "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
           "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
           "src/med_autogrant/product_entry_parts/sidecar.py"
@@ -4009,7 +4014,8 @@
         "classification": "refs_only_adapter",
         "code_paths": [
           "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
-          "src/med_autogrant/product_entry_parts/owner_receipts.py",
+          "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
+          "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
           "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
           "src/med_autogrant/product_entry_parts/runtime_registration.py"
         ],
