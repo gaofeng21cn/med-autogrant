@@ -373,7 +373,8 @@
       "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
       "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
       "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
-      "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+      "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
+      "route_stage_handoff_boundary_ref": "/product_entry_manifest/mag_consumer_thinning_contract/route_stage_handoff_boundary"
     },
     "external_evidence_request_pack": {
       "authority_boundary": {
@@ -3391,6 +3392,64 @@
       "surface_kind": "mag_privatized_functional_module_audit",
       "target_domain_id": "med-autogrant"
     },
+    "route_stage_handoff_boundary": {
+      "allowed_handoff_refs": [
+        "grant_run_id",
+        "route_id",
+        "current_stage_ref",
+        "recommended_stage_ref",
+        "grant_transition_oracle_ref",
+        "owner_receipt_ref",
+        "typed_blocker_refs",
+        "human_gate_schema_ref",
+        "no_forbidden_write_ref"
+      ],
+      "authority_boundary": {
+        "mag_implements_generic_route_scheduler": false,
+        "mag_implements_generic_stage_attempt_graph": false,
+        "mag_owner_receipt_required": true,
+        "opl_can_declare_export_verdict": false,
+        "opl_can_declare_fundability_verdict": false,
+        "opl_can_declare_quality_verdict": false,
+        "opl_can_mutate_grant_artifacts": false,
+        "opl_can_write_grant_truth": false,
+        "opl_can_write_memory_body": false
+      },
+      "domain_truth_owner": "med-autogrant",
+      "forbidden_claims": [
+        "route_is_stage",
+        "mag_owned_generic_route_scheduler",
+        "mag_owned_generic_stage_attempt_graph",
+        "opl_provider_completion_is_grant_ready",
+        "opl_stage_attempt_completion_is_export_ready"
+      ],
+      "forbidden_payload_classes": [
+        "grant_truth_body",
+        "grant_artifact_body",
+        "memory_body",
+        "fundability_verdict_body",
+        "quality_verdict_body",
+        "export_verdict_body",
+        "generic_runtime_state",
+        "generic_attempt_ledger_record",
+        "generic_runner_decision"
+      ],
+      "mag_owns_inter_route_scheduler": false,
+      "opl_hydrates_route_refs_to_queue_and_stage_attempts": true,
+      "queue_attempt_owner": "one-person-lab",
+      "route_is_stage": false,
+      "route_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
+      "route_projection_surface": "stage-route-report",
+      "route_semantics": "MAG routes express grant-domain next-owner or route-back recommendations; OPL transports them as refs into stage attempts.",
+      "route_semantics_owner": "med-autogrant",
+      "runtime_transition_owner": "one-person-lab",
+      "stage_graph_owner": "one-person-lab",
+      "stage_graph_ref": "/product_entry_manifest/family_stage_control_plane",
+      "stage_lifecycle_owner": "one-person-lab",
+      "surface_kind": "mag_route_stage_handoff_boundary",
+      "target_domain_id": "med-autogrant",
+      "version": "mag-route-stage-handoff-boundary.v1"
+    },
     "sidecar_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
     "standard_agent_scaffold_alignment": {
       "authority_boundary": {
@@ -3535,7 +3594,8 @@
         "grant_transition_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
         "lifecycle_guarded_apply_proof_ref": "/product_entry_manifest/lifecycle_guarded_apply_proof",
         "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
-        "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
+        "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
+        "route_stage_handoff_boundary_ref": "/product_entry_manifest/mag_consumer_thinning_contract/route_stage_handoff_boundary"
       },
       "surface_kind": "mag_thin_surface_output_guard",
       "target_domain_id": "med-autogrant"
