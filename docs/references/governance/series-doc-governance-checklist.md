@@ -1,5 +1,10 @@
 # 系列项目文档治理清单
 
+Owner: `Med Auto Grant`
+Purpose: `series_docs_governance_checklist`
+State: `reference`
+Machine boundary: 本文是人读治理 checklist。机器真相继续归核心五件套、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与语义化 `human_doc:*` id。
+
 ## 目标
 
 本清单用于把 `Med Auto Grant` 放进 `One Person Lab`、`Med Auto Science`、`Med Auto Grant`、`RedCube AI` 这组系列项目的统一文档管理口径里做巡检。

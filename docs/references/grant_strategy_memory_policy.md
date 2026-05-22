@@ -1,103 +1,89 @@
 # Grant Strategy Memory Policy
 
-Status: `active reference`
-Date: `2026-05-11`
 Owner: `Med Auto Grant`
-Purpose: define how reusable grant-writing strategy experience should be captured without turning MAG into a rigid recipe engine.
+Purpose: `grant_strategy_memory_policy`
 State: `reference`
-Machine boundary: this is a human-readable policy. Machine truth remains in MAG contracts, schemas, source code, workspace records, quality scorecards, closure dossiers, controller reports, stage route reports, and submission-ready package surfaces. The repo-tracked migration/apply/locator surfaces are `contracts/runtime-program/opl-family-contract-adoption.json`, `contracts/runtime-program/domain-memory-seed-fixture.json`, `/product_entry_manifest/domain_memory_descriptor`, and `/product_entry_manifest/domain_memory_descriptor_locator`.
+Machine boundary: 本文是人读 memory policy。机器真相继续归 MAG contracts、schemas、source、workspace records、quality scorecards、closure dossiers、controller reports、stage route reports、submission-ready package surfaces、`contracts/runtime-program/opl-family-contract-adoption.json`、`contracts/runtime-program/domain-memory-seed-fixture.json`、`/product_entry_manifest/domain_memory_descriptor` 与 `/product_entry_manifest/domain_memory_descriptor_locator`。
+Date: `2026-05-22`
 
-## Conclusion
+## 结论
 
-MAG has several surfaces that look like reusable recipes: fundability strategy, specific aims structure, funder family grammar, reviewer-style critique patterns, template strategy, and closure-package experience.
+MAG 可以沉淀可复用的基金写作经验，例如 fundability strategy、specific aims structure、funder family grammar、reviewer-style critique patterns、template strategy 和 closure-package experience。它们应以自然语言策略 memory 为主，帮助 Codex 在对应 MAG stage 内推理，而不是在读取 workspace context 前机械决定基金策略。
 
-They should be managed primarily as natural-language strategy memory while they remain exploratory. The memory should help Codex reason inside the relevant MAG stage, not mechanically decide grant strategy before the workspace context is read.
+正确形态：
 
-The correct shape is:
+- prose-first strategy memory cards；
+- 最小 searchable metadata；
+- stage-specific retrieval；
+- closeout / critique rounds 产生 writeback proposal；
+- 与 quality、fundability 和 export authority 严格分离。
 
-- prose-first strategy memory cards;
-- minimal searchable metadata;
-- stage-specific retrieval;
-- writeback proposals from closeout / critique rounds;
-- strict separation from quality and export authority.
+错误形态：
 
-The incorrect shape is:
+- universal grant recipe engine；
+- 把所有 funder strategy 塞入单个 prompt；
+- 由 rigid schema 自动决定 aims、innovation 或 fundability；
+- 绕过 MAG quality gates 的 scorecard replacement。
 
-- a universal grant recipe engine;
-- a prompt stuffed with every funder strategy;
-- a rigid schema that decides aims, innovation, or fundability without stage work;
-- a scorecard replacement that bypasses MAG quality gates.
+## 适合进入 Memory 的内容
 
-## Suitable Memory Content
+适合沉淀：
 
-Good grant strategy memories include:
+- 跨 workspace 反复出现的 funder/call fit 经验；
+- 让 biomedical proposal 更容易答辩的 specific aims pattern；
+- 反复需要前置 evidence、feasibility、applicant fit 或 risk mitigation 的 reviewer objection；
+- 在同一 funding-call task 内提升 fundability 的 route pivot；
+- NSFC、NIH R21、Wellcome Discovery 或未来 admitted profile 的 family-specific strategy caveat；
+- 说明哪类 evidence 通常能关闭 hard issue 的 closure-package pattern。
 
-- funder/call fit lessons that recur across workspaces;
-- specific aims patterns that made a biomedical proposal easier to defend;
-- reviewer objections that repeatedly require earlier evidence, feasibility, applicant-fit, or risk-mitigation work;
-- route pivots that improved fundability within the same funding-call task;
-- family-specific strategy caveats for NSFC, NIH R21, Wellcome Discovery, or future admitted profiles;
-- closure-package patterns that explain what kind of evidence usually resolves a hard issue.
+不适合沉淀：
 
-Bad memory writebacks include:
+- 当前申请书的 claim support；
+- 属于 authoring record 的私有 workspace evidence；
+- 属于 `grant-quality-scorecard` 或 `grant-quality-closure-dossier` 的 quality verdict；
+- submission/export readiness assertion；
+- portal checklist state 或 administrative supplement completion。
 
-- the current proposal's claim support;
-- private workspace evidence that belongs in the authoring record;
-- quality verdicts that belong in `grant-quality-scorecard` or `grant-quality-closure-dossier`;
-- submission/export readiness assertions;
-- portal checklist state or administrative supplement completion.
+## 当前 Surface 分类
 
-## Current Candidates
-
-| surface | memory treatment |
+| Surface | Memory treatment |
 | --- | --- |
-| `fundability_strategy` stage lessons | Natural-language memory candidate. |
-| `specific_aims_and_structure` stage lessons | Natural-language memory candidate. |
-| `grant_family_registry.py` common grant grammar and funder-specific profile split | Keep source as the active structured profile layer; reusable prose around why a profile works can become memory. |
-| reviewer-style critique and rebuttal patterns | Natural-language memory candidate, with current-workspace issues staying in quality ledgers. |
-| template strategy and proposal structure examples | Natural-language memory unless they become audited export/package templates. |
-| `grant-quality-scorecard`, `grant-quality-diff`, `grant-quality-closure-dossier` | Strong schema-backed governance surfaces; not memory. |
-| `execute-grant-autonomy-controller` report and blocker queues | Strong controller / runtime surfaces; memory may only reference reusable lessons from closeout. |
-| `package submission-ready` | Strong local export surface; not memory authority. |
+| `fundability_strategy` stage lessons | 自然语言 memory candidate。 |
+| `specific_aims_and_structure` stage lessons | 自然语言 memory candidate。 |
+| `grant_family_registry.py` common grant grammar and funder-specific profile split | source 仍是 active structured profile layer；可复用的 profile reasoning 可以进入 memory。 |
+| reviewer-style critique and rebuttal patterns | 自然语言 memory candidate；当前 workspace issue 留在 quality ledger。 |
+| template strategy and proposal structure examples | 默认是自然语言 memory；只有成为 audited export/package template 时才进入结构化 authority。 |
+| `grant-quality-scorecard`、`grant-quality-diff`、`grant-quality-closure-dossier` | schema-backed governance surface；不是 memory。 |
+| `execute-grant-autonomy-controller` report and blocker queues | controller / runtime surface；memory 只能引用 closeout 后的可复用经验。 |
+| `package submission-ready` | local export authority；不是 memory authority。 |
 
-## Stage Use
+## Stage 使用边界
 
-Memory should be retrieved in small, relevant sets:
+Memory 应小批量、按 stage 检索：
 
-- `call_and_candidate_intake`: retrieve memories about call fit, topic scope, and early red flags.
-- `fundability_strategy`: retrieve funder-specific strategy memories and prior fundability failure modes.
-- `specific_aims_and_structure`: retrieve aims patterns, innovation framing, and claim-evidence structure lessons.
-- `proposal_authoring`: retrieve prose strategy, section-structure caveats, and applicant-fit handling.
-- `review_and_rebuttal`: retrieve recurring reviewer objections and closure-package patterns.
-- `package_and_submit_ready`: retrieve only export-process lessons that do not override submission-ready gates.
+- `call_and_candidate_intake`：call fit、topic scope、early red flags。
+- `fundability_strategy`：funder-specific strategy、prior fundability failure modes。
+- `specific_aims_and_structure`：aims patterns、innovation framing、claim-evidence structure lessons。
+- `proposal_authoring`：prose strategy、section-structure caveats、applicant-fit handling。
+- `review_and_rebuttal`：recurring reviewer objections、closure-package patterns。
+- `package_and_submit_ready`：只检索不覆盖 submission-ready gates 的 export-process lessons。
 
-The retrieved memory can influence reasoning and drafting strategy. It cannot issue fundability, quality, or export verdicts.
+检索到的 memory 可以影响 reasoning 和 drafting strategy；它不能发出 fundability、quality 或 export verdict。
 
-## OPL Boundary
+## OPL 边界
 
-OPL may index memory refs, carry stage knowledge refs, display consumed-memory provenance, and route writeback receipts. OPL must not own MAG grant strategy content, fundability judgment, authoring quality verdict, or submission-ready export authority.
+OPL 可以索引 memory refs、携带 stage knowledge refs、展示 consumed-memory provenance、路由 writeback receipts。OPL 不持有 MAG grant strategy content、fundability judgment、authoring quality verdict 或 submission-ready export authority。
 
-Family-level governance for this boundary is tracked in `/Users/gaofeng/workspace/one-person-lab/docs/references/operating-governance/family-domain-memory-governance.md`.
+MAG 保留 memory body、accept/reject decision、writeback receipt、fundability/quality 影响判断和 owner receipt。真实 memory writeback 只在 MAG accept/reject 后写入 workspace/runtime artifact root；repo source 只保存 descriptor、schema、locator、fixture 模板和 proof surface。
 
-## Now / Next / Defer
+Family-level governance 参考：`/Users/gaofeng/workspace/one-person-lab/docs/references/operating-governance/family-domain-memory-governance.md`。
 
-Now:
+## 非目标
 
-- keep this policy as the MAG memory owner reference;
-- continue using existing structured quality/controller/export surfaces as authority;
-- expose a repo-source migration plan, seed fixture, writeback proposal generator, accept/reject command, runtime receipt evidence writer, receipt locator, controlled consumed-memory proof, writeback receipt proof, operator receipt projection, and aggregated `controlled_domain_memory_apply_proof` for domain memory migration without storing real memory entries in repo source.
-- expose the top-level `domain_memory_descriptor` as the standard `family_domain_memory_ref.v1` adapter, while keeping `domain_memory_descriptor_locator` as the MAG-owned detailed locator/apply contract.
+- cross-funder recipe engine；
+- schema 自动选择 aims；
+- OPL-owned grant strategy content；
+- 仅由 memory 生成 quality 或 fundability score；
+- 用 memory writeback 绕过 MAG owner receipt、quality gate 或 submission-ready export gate。
 
-Next:
-
-- keep OPL family index at `resolved_memory_descriptor_count=3` / `missing_memory_descriptor_count=0` while preserving MAG-owned memory bodies and decisions;
-- after the current OPL+MAS production paper priority closes, run an OPL-hosted controlled grant stage attempt that consumes grant-strategy memory refs and returns MAG-owned owner receipt or no-regression evidence through the already landed workspace/runtime receipt evidence path;
-- apply real runtime memory writebacks only in workspace/runtime artifact roots after MAG accept/reject decisions;
-- extend operator UI consumption of accepted/rejected receipt refs without copying memory body into OPL.
-
-Defer:
-
-- a cross-funder recipe engine;
-- automatic aims selection by schema;
-- OPL-owned grant strategy content;
-- quality or fundability scores generated from memory alone.
+当前执行计划、证据门和 next action 不在本文维护，统一回到 [MAG 理想目标态差距与完善计划](../active/mag-ideal-state-cross-repo-gap-plan.md)。

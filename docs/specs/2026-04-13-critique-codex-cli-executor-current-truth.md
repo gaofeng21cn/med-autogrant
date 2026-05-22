@@ -1,5 +1,9 @@
 # Critique Codex CLI Executor Current Truth
 
+Owner: `Med Auto Grant`
+Purpose: `critique_executor_vocabulary_active_spec`
+State: `active_current_spec`
+Machine boundary: 本文是人读 active spec，只冻结 critique executor vocabulary 与 Codex CLI route。当前产品状态、runtime owner、App/workbench 和 evidence gate 继续归核心五件套、active gap plan、contracts/schema/source 与 `contracts/runtime-program/current-program.json`。
 Date: `2026-04-13`
 
 ## Activation Status

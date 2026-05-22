@@ -1,5 +1,10 @@
 # Schema-Backed Product Entry And Routing Contract Current Truth
 
+Owner: `Med Auto Grant`
+Purpose: `schema_backed_product_entry_routing_support_record`
+State: `support_current_truth`
+Machine boundary: 本文是人读支撑记录，只在 schema-backed product-entry / route contract subsection 内有效。机器真相继续归 source、schemas、product-entry manifest、contracts 和 `contracts/runtime-program/current-program.json`。
+
 > 生命周期注记（`2026-05-17`）：这份 dated spec 只在仍被当前 owner surfaces 引用的 schema-backed product-entry / route contract subsection 内是 `support_current_truth`。当前 owner 是 MAG schema/source/product-entry manifest 与 `contracts/runtime-program/current-program.json`；OPL 只通过当前 stage-led framework path 消费 MAG descriptor/projection。下方旧 `Current Truth`、Upstream Hermes fast-cutover、`future OPL Gateway`、host-agent 或 federation wording 是 provenance，不是当前 owner line 或 compatibility target。
 
 当前处置：
