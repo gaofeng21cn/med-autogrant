@@ -1,5 +1,10 @@
 # P4.F Local Submission-Ready Package Current Truth
 
+Owner: `Med Auto Grant`
+Purpose: `local_submission_ready_package_support_record`
+State: `support_current_truth`
+Machine boundary: 本文是人读支撑记录，只在本地 submission-ready package export gate subsection 内有效。机器真相继续归 source、schemas、product-entry manifest、contracts、workspace artifacts 和 `contracts/runtime-program/current-program.json`。
+
 > 生命周期注记（`2026-05-17`）：这份 dated spec 只在 MAG package/export authority、schema/source 与 product-entry manifest 仍持有的本地 `submission-ready package` export gate 范围内是 `support_current_truth`。请先读取 `docs/status.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md` 与 `contracts/runtime-program/current-program.json`。下方旧 Gateway/hosted runtime language 是 provenance，不得读成当前 OPL target 或 compatibility surface。
 
 当前处置：

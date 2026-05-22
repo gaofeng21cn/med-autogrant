@@ -1,5 +1,10 @@
 # Full Grant Authoring Executor Current Truth
 
+Owner: `Med Auto Grant`
+Purpose: `full_authoring_route_executor_support_record`
+State: `support_current_truth`
+Machine boundary: 本文是人读支撑记录，只在 landed authoring route catalog 与默认 Codex CLI executor vocabulary subsection 内有效。机器真相继续归 source、schemas、product-entry manifest、contracts 和 `contracts/runtime-program/current-program.json`。
+
 > 生命周期注记（`2026-05-20`）：这份 dated spec 留在 `docs/specs/` 仅作为 `support_current_truth`，只在 landed authoring route catalog 与默认 `Codex CLI` executor vocabulary 仍由当前 contracts/schema/source 支撑的 subsection 内有效。当前 public identity、runtime owner、App/workbench、production evidence 和 grant readiness 结论回到核心五件套、active plan 与 `contracts/runtime-program/current-program.json`。
 
 Date: `2026-04-13`

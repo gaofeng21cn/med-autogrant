@@ -1,5 +1,9 @@
 # AI-first 质量边界当前真相
 
+Owner: `Med Auto Grant`
+Purpose: `ai_first_quality_boundary_active_spec`
+State: `active_current_spec`
+Machine boundary: 本文是人读 active spec，只冻结 AI-first quality ownership 与 projection boundary。当前产品状态、runtime owner、App/workbench 和 evidence gate 继续归核心五件套、active gap plan、contracts/schema/source 与 `contracts/runtime-program/current-program.json`。
 Date: `2026-04-27`
 
 本文冻结 `Med Auto Grant` 的 AI-first 质量边界：schema-backed pack、scorecard、dossier、gate 和 controller report 可以保存结构、证据引用和机械 readiness，但不持有基金写作质量判断或 submission-ready export verdict。写作质量、评审判断、revision intent 和 export readiness verdict 必须来自 AI-authored author / reviewer artifact、MAG owner receipt 或等价 owner-backed export artifact。

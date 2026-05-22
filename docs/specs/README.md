@@ -1,5 +1,10 @@
 # Specs 索引
 
+Owner: `Med Auto Grant`
+Purpose: `specs_index`
+State: `current_index`
+Machine boundary: 本文是人读 specs 索引。机器消费者必须使用 `contracts/runtime-program/current-program.json`、schemas、source files、CLI/API behavior 或语义化 `human_doc:*` id。
+
 本目录保留 `Med Auto Grant` 的当前技术记录层。它不是旧
 Hermes/Gateway/local-runtime 文档的兼容保留区；明确 superseded 的 provider
 proof、activation package、local-runtime closeout 和 tombstone 进入
