@@ -12,6 +12,8 @@ Date: `2026-05-22`
 
 差距按目标态判断，不按当前 MAG 代码是否仍可运行判断。通用 runtime、runner、queue、session、journal、workspace/source intake、memory/package transport、workbench、observability、CLI/product-entry/sidecar/status wrapper 必须进入 OPL 上收、generated surface 替换、refs-only 收薄或退役分类。过时模块、接口、测试、fixture、CLI alias、facade、wrapper 和 docs 入口不保留兼容面。
 
+本轮最新 source scan 确认：`product_entry*`、`product_entry_parts/*`、`domain_runtime*`、runtime registration、sidecar、lifecycle、memory/package projection、status/user-loop shell 仍是 active source；它们只能作为 direct handler、refs-only adapter、minimal grant authority function、diagnostic、migration input 或 tombstone/provenance 支撑读取。旧 local journal、attempt ledger、scheduler daemon、Hermes/Gateway/local-manager probe、flat alias、patch bridge、compat aggregate test 和旧 hosted/provider specs，一旦 active caller 迁出且 direct/hosted parity、owner receipt roundtrip、no-resurrection guard 成立，直接删除、archive 或 tombstone，不保留 compatibility shim。
+
 ## 当前定位
 
 MAG 是医学基金申请 domain agent，也是 OPL-compatible Foundry Agent package。Direct app skill / CLI / `MedAutoGrantDomainEntry` 是一等入口；任务启动后的默认运行驻留是 OPL/Temporal hosted autonomous runtime。OPL-hosted path 与 direct path 必须回到同一套 MAG-owned grant truth、fundability / quality / export verdict、package authority、grant strategy memory accept/reject、owner receipt 和 typed blocker。
@@ -71,6 +73,16 @@ MAG 必须持有：
 6. `physical_morphology_tail`
    product-entry、sidecar、domain_runtime、runtime/lifecycle/workbench 命名必须持续被合同约束为 domain handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone；不能让命名重新表达 MAG-owned generic runtime。
 
+当前直接退役优先级：
+
+| surface | 当前实际状态 | 下一步动作 |
+| --- | --- | --- |
+| `product_entry*` / product status / user-loop / sidecar export | active direct path 与 OPL handoff 输入仍存在。 | OPL generated product/status/workbench/sidecar shell 成为 default caller 后，只保留 grant handler target、owner receipt、typed blocker、quality/export refs；删除旧 wrapper 与只保护旧输出的测试。 |
+| `domain_runtime*` / runtime registration / control-plane projection | 仍是 route / authority adapter 与 regression oracle 形态。 | 不再扩写 generic runtime substrate；replacement parity 成立后删除或 tombstone runtime/session/journal/probe envelope。 |
+| lifecycle / memory / package projection helpers | 当前输出 body-free refs、receipt、typed blocker 或 action metadata。 | OPL lifecycle/session/workbench caller 稳定后迁出 generic envelope，只保留 MAG package / memory / owner authority function。 |
+| autonomy loop / report-resume shell | 当前只能作为 grant route / budget / blocker policy thin handler 或 OPL attempt lifecycle 迁移输入。 | OPL generated operator loop / attempt lifecycle 接管后删除 generic loop/scheduler-like envelope。 |
+| legacy alias / facade / patch bridge / compat aggregate tests | 只允许 history、tombstone、explicit proof history 或 regression oracle。 | active caller 清零后删除；测试改为 current contract、no-resurrection 或 tombstone guard。 |
+
 ## 测试/证据差距
 
 以下证据门单独统计，不能反向重开 MAG repo 侧 active bridge exit：
@@ -113,7 +125,7 @@ MAG 必须持有：
 2. 继续把 hand-written product/status/user-loop/sidecar/CLI shell 降为 refs-only adapter 或 direct handler target；新增能力优先服务 OPL generated/default caller parity。
 3. 继续维护 AI-first authority guard：任何 fundability / quality / export / submission-ready claim 必须回到 MAG owner surface 或 AI-backed artifact。
 4. 在 OPL/App/production caller 提供真实 external receipt 后，逐项关闭 generated caller、direct/hosted parity、owner receipt roundtrip、continuous no-forbidden-write 和 Temporal long-soak evidence gate。
-5. 在 active caller 迁出且 no-resurrection guard 成立后，删除或 tombstone 旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue。
+5. 在 active caller 迁出且 no-resurrection guard 成立后，删除或 tombstone 旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；测试同步改成 current machine contract、schema、CLI/API、manifest、owner receipt、typed blocker、fail-closed 或 tombstone semantics，不维护旧调用路径。
 
 ## 禁止误写
 

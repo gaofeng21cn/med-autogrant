@@ -27,6 +27,7 @@ Date: `2026-05-22`
 - `src/med_autogrant/**` 只作为 domain handler、refs-only adapter、minimal authority function、native helper、diagnostic、migration input 或 tombstone/provenance 支撑读取；不得写成 MAG 私有 runtime platform。
 - MAG retained private authority surface 限定为 grant domain truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject、owner receipt、transition oracle、grant-native helper 和 focused contract tests。
 - Product-entry、sidecar、grouped CLI/API、projection、lifecycle、memory/package projection 和 status/user-loop 仍可作为 direct domain handler 或 refs-only adapter 暂时存在；长期 owner 是 OPL generated/hosted surface，active 迁移顺序回到 active gap plan。
+- 当前 active source 中仍可见的 product-entry、domain_runtime、runtime registration、sidecar、lifecycle、memory/package projection 和 status/user-loop shell 不是兼容承诺；它们只是迁移输入、refs-only adapter、diagnostic 或 retained authority wrapper。满足 active caller migration、direct/hosted parity、owner receipt roundtrip 和 no-resurrection guard 后，旧 wrapper、alias、facade、patch bridge、compat aggregate test 与 legacy runtime/probe residue 直接删除或 tombstone。
 
 ## 已退役面
 
