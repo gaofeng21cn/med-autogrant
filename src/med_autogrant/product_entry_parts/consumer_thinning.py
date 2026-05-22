@@ -78,6 +78,7 @@ def build_mag_consumer_thinning_contract(
         "generated_surface_handoff": build_generated_surface_handoff(),
         "generated_hosted_default_caller_proof": build_generated_hosted_default_caller_proof(),
         "external_evidence_request_pack": build_external_evidence_request_pack(),
+        "route_stage_handoff_boundary": _build_route_stage_handoff_boundary(),
         "minimal_authority_functions": build_mag_minimal_authority_functions(),
         "minimal_authority_surface_taxonomy": build_mag_minimal_authority_surface_taxonomy(),
         "minimal_authority_function_ids": list(MAG_MINIMAL_AUTHORITY_FUNCTION_IDS),
@@ -148,6 +149,10 @@ def build_mag_consumer_thinning_contract(
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "external_evidence_request_pack"
             ),
+            "route_stage_handoff_boundary_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "route_stage_handoff_boundary"
+            ),
         },
         "verdict_authority_refs": {
             "fundability_verdict_owner": TARGET_DOMAIN_ID,
@@ -210,6 +215,70 @@ def build_mag_consumer_thinning_contract(
             "opl_harness_pass_can_declare_export_ready": False,
         },
 }
+
+
+def _build_route_stage_handoff_boundary() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_route_stage_handoff_boundary",
+        "version": "mag-route-stage-handoff-boundary.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "route_is_stage": False,
+        "route_semantics_owner": TARGET_DOMAIN_ID,
+        "domain_truth_owner": TARGET_DOMAIN_ID,
+        "stage_graph_owner": "one-person-lab",
+        "stage_lifecycle_owner": "one-person-lab",
+        "runtime_transition_owner": "one-person-lab",
+        "queue_attempt_owner": "one-person-lab",
+        "opl_hydrates_route_refs_to_queue_and_stage_attempts": True,
+        "mag_owns_inter_route_scheduler": False,
+        "stage_graph_ref": "/product_entry_manifest/family_stage_control_plane",
+        "route_oracle_ref": "/product_entry_manifest/grant_transition_oracle",
+        "route_projection_surface": "stage-route-report",
+        "route_semantics": (
+            "MAG routes express grant-domain next-owner or route-back recommendations; "
+            "OPL transports them as refs into stage attempts."
+        ),
+        "allowed_handoff_refs": [
+            "grant_run_id",
+            "route_id",
+            "current_stage_ref",
+            "recommended_stage_ref",
+            "grant_transition_oracle_ref",
+            "owner_receipt_ref",
+            "typed_blocker_refs",
+            "human_gate_schema_ref",
+            "no_forbidden_write_ref",
+        ],
+        "forbidden_payload_classes": [
+            "grant_truth_body",
+            "grant_artifact_body",
+            "memory_body",
+            "fundability_verdict_body",
+            "quality_verdict_body",
+            "export_verdict_body",
+            "generic_runtime_state",
+            "generic_attempt_ledger_record",
+            "generic_runner_decision",
+        ],
+        "authority_boundary": {
+            "mag_owner_receipt_required": True,
+            "opl_can_write_grant_truth": False,
+            "opl_can_write_memory_body": False,
+            "opl_can_declare_fundability_verdict": False,
+            "opl_can_declare_quality_verdict": False,
+            "opl_can_declare_export_verdict": False,
+            "opl_can_mutate_grant_artifacts": False,
+            "mag_implements_generic_route_scheduler": False,
+            "mag_implements_generic_stage_attempt_graph": False,
+        },
+        "forbidden_claims": [
+            "route_is_stage",
+            "mag_owned_generic_route_scheduler",
+            "mag_owned_generic_stage_attempt_graph",
+            "opl_provider_completion_is_grant_ready",
+            "opl_stage_attempt_completion_is_export_ready",
+        ],
+    }
 
 
 def _build_functional_followthrough_gap_classification() -> dict[str, Any]:

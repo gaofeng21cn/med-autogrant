@@ -506,8 +506,47 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 self.assertFalse(chain["fail_closed_boundary"]["harness_pass_can_set_grant_ready"])
                 self.assertFalse(chain["fail_closed_boundary"]["harness_pass_can_set_export_ready"])
                 self.assertFalse(chain["fail_closed_boundary"]["opl_can_write_grant_truth"])
-                self.assertFalse(chain["fail_closed_boundary"]["opl_can_write_memory_body"])
-                self.assertTrue(chain["fail_closed_boundary"]["mag_owner_receipt_required"])
+            self.assertFalse(chain["fail_closed_boundary"]["opl_can_write_memory_body"])
+            self.assertTrue(chain["fail_closed_boundary"]["mag_owner_receipt_required"])
+        route_stage_boundary = thinning["route_stage_handoff_boundary"]
+        self.assertEqual(
+            route_stage_boundary["surface_kind"],
+            "mag_route_stage_handoff_boundary",
+        )
+        self.assertFalse(route_stage_boundary["route_is_stage"])
+        self.assertEqual(route_stage_boundary["route_semantics_owner"], "med-autogrant")
+        self.assertEqual(route_stage_boundary["domain_truth_owner"], "med-autogrant")
+        self.assertEqual(route_stage_boundary["stage_graph_owner"], "one-person-lab")
+        self.assertEqual(route_stage_boundary["stage_lifecycle_owner"], "one-person-lab")
+        self.assertEqual(route_stage_boundary["runtime_transition_owner"], "one-person-lab")
+        self.assertEqual(route_stage_boundary["queue_attempt_owner"], "one-person-lab")
+        self.assertTrue(route_stage_boundary["opl_hydrates_route_refs_to_queue_and_stage_attempts"])
+        self.assertFalse(route_stage_boundary["mag_owns_inter_route_scheduler"])
+        self.assertEqual(
+            route_stage_boundary["stage_graph_ref"],
+            "/product_entry_manifest/family_stage_control_plane",
+        )
+        self.assertEqual(
+            route_stage_boundary["route_oracle_ref"],
+            "/product_entry_manifest/grant_transition_oracle",
+        )
+        self.assertIn("owner_receipt_ref", route_stage_boundary["allowed_handoff_refs"])
+        self.assertIn("generic_runtime_state", route_stage_boundary["forbidden_payload_classes"])
+        self.assertFalse(route_stage_boundary["authority_boundary"]["opl_can_write_grant_truth"])
+        self.assertFalse(
+            route_stage_boundary["authority_boundary"]["opl_can_declare_export_verdict"]
+        )
+        self.assertFalse(
+            route_stage_boundary["authority_boundary"][
+                "mag_implements_generic_route_scheduler"
+            ]
+        )
+        self.assertIn("route_is_stage", route_stage_boundary["forbidden_claims"])
+        self.assertEqual(
+            thinning["exposed_sidecar_return_refs"]["route_stage_handoff_boundary_ref"],
+            "/product_entry_manifest/mag_consumer_thinning_contract/"
+            "route_stage_handoff_boundary",
+        )
         audit = thinning["privatized_functional_module_audit"]
         self.assertEqual(audit["surface_kind"], "mag_privatized_functional_module_audit")
         self.assertEqual(audit["state"], "manifest_projected_for_opl_unified_audit")
