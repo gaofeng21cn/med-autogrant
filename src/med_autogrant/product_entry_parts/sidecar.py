@@ -9,19 +9,15 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_nonempty_string_from_mapping,
 )
 from med_autogrant.product_entry_parts.sidecar_contract import (
-    ALLOWED_ACTIONS,
     SIDECAR_ADAPTER_ID,
     SIDECAR_EXPORT_KIND,
     SIDECAR_VERSION,
 )
 from med_autogrant.product_entry_parts.sidecar_dispatch import dispatch_sidecar_task
 from med_autogrant.product_entry_parts.sidecar_projection import (
-    build_attention_queue_projection,
-    build_autonomy_controller_projection,
-    build_todo_wakeup_projection,
-    default_executor_owner,
     first_skill,
 )
+from med_autogrant.product_entry_parts.sidecar_shell_projection import build_sidecar_shell_payload
 
 
 def build_sidecar_export(
@@ -116,31 +112,13 @@ def build_sidecar_export(
         "schema_version": SIDECAR_VERSION,
         "adapter_id": SIDECAR_ADAPTER_ID,
         "target_domain_id": TARGET_DOMAIN_ID,
-        "caller_owner_contract": {
-            "active_caller_owner": TARGET_DOMAIN_ID,
-            "active_caller_surface": "mag_product_sidecar_handler_until_opl_caller_evidence",
-            "target_caller_owner": "one-person-lab",
-            "target_caller_surface": "opl_generated_or_hosted_sidecar",
-            "domain_handler_target": TARGET_DOMAIN_ID,
-            "domain_handler_owner": TARGET_DOMAIN_ID,
-            "mag_role": "guarded_domain_handler_target_and_authority_refs_only",
-            "claims_fully_cleaned": False,
-            "mag_handler_boundary_ready": True,
-            "external_opl_generated_or_hosted_caller_evidence_required": True,
-        },
-        "substrate_boundary": {
-            "online_substrate_owner": "explicit_opl_provider",
-            "control_plane_owner": "one-person-lab",
-            "domain_truth_owner": TARGET_DOMAIN_ID,
-            "quality_gate_owner": TARGET_DOMAIN_ID,
-            "artifact_owner": TARGET_DOMAIN_ID,
-            "default_executor_owner": default_executor_owner(manifest),
-            "default_executor_note": (
-                "Default executor remains Codex/domain-selected; OPL may explicitly choose "
-                "a stage-led runtime provider for wakeup/control-plane carrier duties."
-            ),
-            "hermes_proof_executor_default": False,
-        },
+        **build_sidecar_shell_payload(
+            manifest=manifest,
+            runtime_registration=runtime_registration,
+            automation=automation,
+            autonomy_observability=autonomy_observability,
+            user_loop_command=user_loop_command,
+        ),
         "workspace_locator": dict(
             _require_mapping(manifest, "workspace_locator", context="sidecar_export.product_entry_manifest")
         ),
@@ -260,45 +238,6 @@ def build_sidecar_export(
                 context="sidecar_export.controlled_domain_memory_apply_proof",
             )
         ),
-        "todo_wakeup": build_todo_wakeup_projection(
-            automation=automation,
-            manifest=manifest,
-            user_loop_command=user_loop_command,
-        ),
-        "autonomy_controller": build_autonomy_controller_projection(
-            manifest=manifest,
-            autonomy_observability=autonomy_observability,
-        ),
-        "user_loop_attention_queue": build_attention_queue_projection(
-            manifest=manifest,
-            autonomy_observability=autonomy_observability,
-            user_loop_command=user_loop_command,
-        ),
-        "opl_control_plane": {
-            "registration": dict(runtime_registration),
-            "family_lifecycle_adapter": dict(
-                _require_mapping(
-                    runtime_registration,
-                    "family_lifecycle_adapter",
-                    context="sidecar_export.runtime_registration",
-                )
-            ),
-            "write_policy": "opl_index_only_no_grant_truth_writes",
-            "substrate_adapter_export_ref": "/sidecar_export/opl_substrate_adapter_export",
-            "allowed_dispatch_actions": sorted(ALLOWED_ACTIONS),
-            "replacement_expectations_ref": (
-                "/sidecar_export/mag_consumer_thinning_contract/opl_replacement_expectations"
-            ),
-        },
-        "guardrails": {
-            "dispatch_boundary": "OPL-hosted caller may invoke only MAG domain handler guarded actions.",
-            "forbidden_defaults": [
-                "hermes_proof_executor",
-                "grant_truth_mutation_by_opl",
-                "quality_gate_override_by_opl",
-                "submission_ready_gate_bypass",
-            ],
-        },
     }
     return {
         "ok": True,
