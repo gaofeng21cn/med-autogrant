@@ -163,6 +163,8 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
             "src/med_autogrant/product_entry.py",
             "src/med_autogrant/product_entry_parts/manifest.py",
             "src/med_autogrant/product_entry_parts/manifest_builder.py",
+            "src/med_autogrant/product_entry_parts/manifest_builder_parts/runtime_task_shell.py",
+            "src/med_autogrant/product_entry_parts/manifest_builder_parts/shell_assembly.py",
             "src/med_autogrant/product_entry_parts/entry.py",
         ],
         "allowed_role": "grant_handler_target_receipt_refs_and_typed_blockers",
