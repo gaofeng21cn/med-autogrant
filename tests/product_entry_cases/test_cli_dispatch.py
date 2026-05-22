@@ -908,3 +908,74 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             receipt_observability_summary=observability_summary,
             stage_attempt_observability_projection=stage_attempt_projection,
         )
+
+    def test_receipt_readiness_dispatches_product_surface(self) -> None:
+        expected_payload = {
+            "surface_kind": "mag_receipt_readiness_projection",
+            "state": "receipt_refs_ready_not_quality_ready",
+            "authority_boundary": {
+                "can_declare_quality_ready": False,
+                "can_declare_submission_ready": False,
+            },
+        }
+        owner_receipt = {
+            "surface_kind": "mag_owner_receipt_evidence",
+            "receipt_id": "owner-receipt-1",
+            "receipt_shape": "owner_receipt",
+            "receipt_ref": "runtime://mag/receipts/owner/receipt-1.json",
+        }
+        memory_receipt = {
+            "surface_kind": "mag_domain_memory_runtime_receipt_evidence",
+            "decision": "accepted",
+            "receipt_ref": "runtime://mag/receipts/memory/accepted-1.json",
+        }
+        package_lifecycle = {
+            "surface_kind": "mag_package_lifecycle_handoff_projection",
+            "receipt_refs": [
+                "runtime://mag/receipts/package/export-1.json",
+            ],
+        }
+        lifecycle_receipt = {
+            "surface_kind": "mag_lifecycle_receipt_evidence",
+            "operation": "cleanup",
+            "receipt_instance_ref": "runtime://mag/receipts/lifecycle/cleanup-1.json",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            owner_receipt_path = Path(tmp_dir) / "owner-receipt.json"
+            memory_receipt_path = Path(tmp_dir) / "memory-receipt.json"
+            package_lifecycle_path = Path(tmp_dir) / "package-lifecycle.json"
+            lifecycle_receipt_path = Path(tmp_dir) / "lifecycle-receipt.json"
+            owner_receipt_path.write_text(json.dumps(owner_receipt), encoding="utf-8")
+            memory_receipt_path.write_text(json.dumps(memory_receipt), encoding="utf-8")
+            package_lifecycle_path.write_text(json.dumps(package_lifecycle), encoding="utf-8")
+            lifecycle_receipt_path.write_text(json.dumps(lifecycle_receipt), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_receipt_readiness_projection.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "product",
+                    "receipt-readiness",
+                    "--owner-receipt-evidence",
+                    str(owner_receipt_path),
+                    "--memory-receipt",
+                    str(memory_receipt_path),
+                    "--package-lifecycle",
+                    str(package_lifecycle_path),
+                    "--lifecycle-receipt",
+                    str(lifecycle_receipt_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_receipt_readiness_projection.assert_called_once_with(
+            owner_receipt_evidence_items=[owner_receipt],
+            memory_receipt_items=[memory_receipt],
+            package_lifecycle_items=[package_lifecycle],
+            lifecycle_receipt_items=[lifecycle_receipt],
+        )

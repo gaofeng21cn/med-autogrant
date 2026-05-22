@@ -280,6 +280,27 @@ def handle_product_package_lifecycle_handoff(args: argparse.Namespace) -> dict[s
     )
 
 
+def handle_product_receipt_readiness(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_receipt_readiness_projection(
+        owner_receipt_evidence_items=[
+            _read_json_object(receipt_path)
+            for receipt_path in args.owner_receipt_evidence
+        ],
+        memory_receipt_items=[
+            _read_json_object(receipt_path)
+            for receipt_path in args.memory_receipt
+        ],
+        package_lifecycle_items=[
+            _read_json_object(lifecycle_path)
+            for lifecycle_path in args.package_lifecycle
+        ],
+        lifecycle_receipt_items=[
+            _read_json_object(receipt_path)
+            for receipt_path in args.lifecycle_receipt
+        ],
+    )
+
+
 def handle_product_continuous_receipt_reconciliation(args: argparse.Namespace) -> dict[str, Any]:
     receipt_observability_summary = None
     if args.receipt_observability_summary is not None:

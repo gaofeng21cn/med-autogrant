@@ -62,6 +62,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "lifecycle-receipt-bundle": ("product", "lifecycle-receipt-bundle"),
     "memory-receipt-projection": ("product", "memory-receipt-projection"),
     "package-lifecycle-handoff": ("product", "package-lifecycle-handoff"),
+    "receipt-readiness": ("product", "receipt-readiness"),
     "continuous-receipt-reconciliation": ("product", "continuous-receipt-reconciliation"),
     "production-live-acceptance-receipt": ("product", "production-live-acceptance-receipt"),
     "codex-stage-receipts": ("product", "codex-stage-receipts"),

@@ -19,6 +19,7 @@ Date: `2026-05-22`
 - `claims_opl_replacement_exists=false`、`claims_all_bridge_exits_complete=false`、`claims_production_long_run_soak_complete=false` 仍是当前机器面必须保留的限制。
 - `contracts/external_evidence/mag-evidence-receipt-ledger.json` 已记录 first live production evidence refs；当前仍只保存 refs、receipt shapes、typed blocker / no-regression refs 和 production acceptance refs。Temporal long-soak window evidence 仍是后续证据门。
 - Production acceptance tail 已由 MAG-owned owner receipt projection 关闭；这只证明 MAG owner receipt / typed blocker / no-regression evidence 的 refs-only closeout shape，不授权 OPL、Provider、Agent Lab 或 OMA 替 MAG 生成 grant-ready、fundability-ready、quality/export-ready 或 submission-ready verdict。
+- `product receipt-readiness` 是当前 MAG product grouped CLI 的 body-free receipt refs readiness 入口，聚合 owner receipt、memory accept/reject receipt、package/export lifecycle handoff 和 cleanup/restore/retention lifecycle receipt refs；它只给 OPL/App/operator closeout 或 executor-first bundle 消费 refs，不声明 grant ready、quality ready、export ready、submission ready、provider long-soak complete 或 production ready。
 
 ## 当前保留面
 
@@ -39,6 +40,7 @@ Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream 
 
 - 真实 OPL-hosted grant-stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence。
 - 真实 grant workspace 产生 accepted/rejected memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout。
+- OPL/App/operator closeout 与 executor-first bundle 持续消费 `product receipt-readiness` 输出，并在真实 workspace 中回连 owner receipt、typed blocker、no-regression evidence 与 lifecycle evidence。
 - OPL/App shell 持续消费 MAG package refs、gap report、manual portal boundary、quality refs、transition oracle refs 和 safe action refs。
 - External production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 产生连续证据。
 - Temporal provider long SLO、repair cadence 和 live receipt reconciliation 产生连续证据。

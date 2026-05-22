@@ -435,6 +435,21 @@ def _add_product_package_lifecycle_handoff_command(
     command.set_defaults(handler=handler)
 
 
+def _add_product_receipt_readiness_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--owner-receipt-evidence", required=True, action="append")
+    command.add_argument("--memory-receipt", required=True, action="append")
+    command.add_argument("--package-lifecycle", required=True, action="append")
+    command.add_argument("--lifecycle-receipt", required=True, action="append")
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
 def _add_product_continuous_receipt_reconciliation_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,

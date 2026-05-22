@@ -89,6 +89,7 @@ MAG 必须持有：
 
 - 真实 OPL-hosted grant-stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence。
 - 真实 grant workspace 产生 accepted/rejected memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout。
+- `product receipt-readiness` grouped CLI 已可把 owner receipt、memory accept/reject receipt、package/export lifecycle handoff 和 cleanup/restore/retention lifecycle receipt refs 聚合成 body-free readiness projection；后续证据门是 OPL/App/operator closeout 与 executor-first bundle 在真实 workspace 中持续消费该 projection 并回连 owner-chain / typed blocker / no-regression refs，不能把该入口本身写成 grant ready、quality ready、export ready、submission ready 或 production ready。
 - OPL/App shell 持续消费 MAG package refs、gap report、manual portal boundary、quality refs、transition oracle refs 和 safe action refs。
 - External production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 的后续连续证据。
 - Temporal provider long SLO、repair cadence 和 live receipt reconciliation 的后续连续证据。

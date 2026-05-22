@@ -73,6 +73,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_owner_receipt_evidence,
     handle_product_package_lifecycle_handoff,
     handle_product_physical_morphology_guard,
+    handle_product_receipt_readiness,
     handle_product_receipt_reconciliation_inventory,
     handle_product_receipt_reconciliation_proof,
     handle_product_sidecar_dispatch,
@@ -114,6 +115,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_owner_receipt_evidence_command,
     _add_product_package_lifecycle_handoff_command,
     _add_product_physical_morphology_guard_command,
+    _add_product_receipt_readiness_command,
     _add_product_receipt_reconciliation_inventory_command,
     _add_product_receipt_reconciliation_proof_command,
     _add_product_entry_command,
@@ -464,6 +466,12 @@ def build_parser() -> argparse.ArgumentParser:
         "package-lifecycle-handoff",
         handle_product_package_lifecycle_handoff,
         "把 MAG package refs、gap、export verdict refs 和 lifecycle receipt refs 投影给 OPL package shell。",
+    )
+    _add_product_receipt_readiness_command(
+        subparsers,
+        "receipt-readiness",
+        handle_product_receipt_readiness,
+        "把 MAG owner、memory、package lifecycle 与 cleanup/restore/retention receipt refs 聚合成 body-free readiness projection。",
     )
     _add_product_continuous_receipt_reconciliation_command(
         subparsers,
