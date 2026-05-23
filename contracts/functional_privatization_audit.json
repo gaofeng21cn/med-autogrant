@@ -2114,6 +2114,7 @@
         "authority_surface_id": "fundability_verdict",
         "cannot_absorb_reason": "Fundability is a grant-review judgment over call fit and applicant evidence.",
         "cannot_generate_reason": "Fundability is a grant-review judgment over call fit and applicant evidence.",
+        "compatibility_alias_allowed": false,
         "decision_boundary": {
           "ai_first_judgment_required": true,
           "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
@@ -2130,10 +2131,11 @@
           "runtime_queue_state"
         ],
         "function_id": "fundability_verdict",
+        "function_id_policy": "canonical_authority_surface_id_only",
         "generated_by_opl": false,
         "judgment_owner": "ai_first_grant_review_or_fundability_stage_artifact",
-        "legacy_function_id_compatibility": true,
         "mechanical_decision_forbidden": true,
+        "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -2157,6 +2159,7 @@
         "programmatic_role": "validator_and_verdict_ref_materializer",
         "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
+        "retired_legacy_function_id_compatibility": false,
         "source_refs": [
           "/product_entry_manifest/family_stage_control_plane/stages",
           "/product_entry_manifest/grant_transition_oracle"
@@ -2178,6 +2181,7 @@
         "authority_surface_id": "quality_verdict",
         "cannot_absorb_reason": "Authoring quality requires MAG-owned AI critique and issue closure semantics.",
         "cannot_generate_reason": "Authoring quality requires MAG-owned AI critique and issue closure semantics.",
+        "compatibility_alias_allowed": false,
         "decision_boundary": {
           "ai_first_judgment_required": true,
           "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
@@ -2194,10 +2198,11 @@
           "runtime_queue_state"
         ],
         "function_id": "quality_verdict",
+        "function_id_policy": "canonical_authority_surface_id_only",
         "generated_by_opl": false,
         "judgment_owner": "ai_authored_critique_or_quality_closure_artifact",
-        "legacy_function_id_compatibility": true,
         "mechanical_decision_forbidden": true,
+        "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -2221,6 +2226,7 @@
         "programmatic_role": "critique_artifact_aggregator_and_guard",
         "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
+        "retired_legacy_function_id_compatibility": false,
         "source_refs": [
           "/product_entry_manifest/grant_authoring_readiness",
           "/product_entry_manifest/controlled_stage_attempt_projection"
@@ -2242,6 +2248,7 @@
         "authority_surface_id": "export_verdict",
         "cannot_absorb_reason": "Submission/export readiness is a grant package gate, not package existence.",
         "cannot_generate_reason": "Submission/export readiness is a grant package gate, not package existence.",
+        "compatibility_alias_allowed": false,
         "decision_boundary": {
           "ai_first_judgment_required": true,
           "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
@@ -2258,10 +2265,11 @@
           "runtime_queue_state"
         ],
         "function_id": "export_verdict",
+        "function_id_policy": "canonical_authority_surface_id_only",
         "generated_by_opl": false,
         "judgment_owner": "ai_or_owner_backed_package_export_stage_artifact",
-        "legacy_function_id_compatibility": true,
         "mechanical_decision_forbidden": true,
+        "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -2285,6 +2293,7 @@
         "programmatic_role": "export_stage_ref_validator_and_blocker",
         "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
+        "retired_legacy_function_id_compatibility": false,
         "source_refs": [
           "package submission-ready",
           "/product_entry_manifest/artifact_locator_contract"
@@ -2306,6 +2315,7 @@
         "authority_surface_id": "package_authority",
         "cannot_absorb_reason": "Grant package mutation and release require MAG package authority.",
         "cannot_generate_reason": "Grant package mutation and release require MAG package authority.",
+        "compatibility_alias_allowed": false,
         "decision_boundary": {
           "ai_first_judgment_required": false,
           "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
@@ -2322,10 +2332,11 @@
           "runtime_queue_state"
         ],
         "function_id": "package_authority",
+        "function_id_policy": "canonical_authority_surface_id_only",
         "generated_by_opl": false,
         "judgment_owner": "mag_owner_receipt_or_package_stage_authority",
-        "legacy_function_id_compatibility": true,
         "mechanical_decision_forbidden": true,
+        "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -2349,6 +2360,7 @@
         "programmatic_role": "package_materializer_and_owner_receipt_guard",
         "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
+        "retired_legacy_function_id_compatibility": false,
         "source_refs": [
           "/product_entry_manifest/artifact_locator_contract",
           "/product_entry_manifest/lifecycle_guarded_apply_proof"
@@ -2370,6 +2382,7 @@
         "authority_surface_id": "memory_accept_reject",
         "cannot_absorb_reason": "Grant strategy memory body and accept/reject decisions are MAG authority.",
         "cannot_generate_reason": "Grant strategy memory body and accept/reject decisions are MAG authority.",
+        "compatibility_alias_allowed": false,
         "decision_boundary": {
           "ai_first_judgment_required": true,
           "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
@@ -2386,10 +2399,11 @@
           "runtime_queue_state"
         ],
         "function_id": "memory_accept_reject",
+        "function_id_policy": "canonical_authority_surface_id_only",
         "generated_by_opl": false,
         "judgment_owner": "ai_first_grant_strategy_memory_stage_artifact",
-        "legacy_function_id_compatibility": true,
         "mechanical_decision_forbidden": true,
+        "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -2413,6 +2427,7 @@
         "programmatic_role": "memory_receipt_writer_and_refs_projection",
         "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
+        "retired_legacy_function_id_compatibility": false,
         "source_refs": [
           "/product_entry_manifest/domain_memory_descriptor_locator",
           "/product_entry_manifest/controlled_domain_memory_apply_proof"
@@ -2434,6 +2449,7 @@
         "authority_surface_id": "owner_receipt_signer",
         "cannot_absorb_reason": "Only MAG can sign domain owner receipts or no-regression evidence.",
         "cannot_generate_reason": "Only MAG can sign domain owner receipts or no-regression evidence.",
+        "compatibility_alias_allowed": false,
         "decision_boundary": {
           "ai_first_judgment_required": false,
           "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
@@ -2450,10 +2466,11 @@
           "runtime_queue_state"
         ],
         "function_id": "owner_receipt_signer",
+        "function_id_policy": "canonical_authority_surface_id_only",
         "generated_by_opl": false,
         "judgment_owner": "mag_owner_receipt_schema_and_domain_provenance",
-        "legacy_function_id_compatibility": true,
         "mechanical_decision_forbidden": true,
+        "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -2477,6 +2494,7 @@
         "programmatic_role": "receipt_schema_signer_and_blocker_guard",
         "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
+        "retired_legacy_function_id_compatibility": false,
         "source_refs": [
           "/product_entry_manifest/owner_receipt_contract",
           "/product_entry_manifest/controlled_soak_no_regression_attempt"
@@ -2498,6 +2516,7 @@
         "authority_surface_id": "grant_helper",
         "cannot_absorb_reason": "Grant-native helpers encode funder, route, and blocker semantics.",
         "cannot_generate_reason": "Grant-native helpers encode funder, route, and blocker semantics.",
+        "compatibility_alias_allowed": false,
         "decision_boundary": {
           "ai_first_judgment_required": false,
           "owner_receipt_or_typed_blocker_required_when_evidence_missing": true,
@@ -2514,10 +2533,11 @@
           "runtime_queue_state"
         ],
         "function_id": "grant_helper",
+        "function_id_policy": "canonical_authority_surface_id_only",
         "generated_by_opl": false,
         "judgment_owner": "deterministic_grant_metadata_route_and_blocker_policy",
-        "legacy_function_id_compatibility": true,
         "mechanical_decision_forbidden": true,
+        "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
         "opl_generated_wrapper_allowed": true,
         "output_boundary": {
           "allowed_return_shapes": [
@@ -2541,6 +2561,7 @@
         "programmatic_role": "grant_metadata_route_blocker_helper",
         "programmatic_verdict_generation_allowed": false,
         "retention_class": "mag_minimal_authority_function",
+        "retired_legacy_function_id_compatibility": false,
         "source_refs": [
           "/product_entry_manifest/family_action_catalog",
           "/product_entry_manifest/grant_transition_oracle"
@@ -2566,8 +2587,10 @@
         "owner_receipt_signer",
         "grant_helper"
       ],
-      "legacy_function_id_compatibility": true,
+      "compatibility_alias_allowed": false,
+      "function_id_policy": "canonical_authority_surface_ids_only",
       "mechanical_decision_forbidden_for_all_surfaces": true,
+      "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
       "policy": "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; programmatic_surfaces_sign_receipts_or_validate_refs_only",
       "programmatic_authority_surface_ids": [
         "package_authority",
@@ -2575,6 +2598,7 @@
         "grant_helper"
       ],
       "programmatic_verdict_generation_allowed": false,
+      "retired_legacy_function_id_compatibility": false,
       "surface_kind": "mag_minimal_authority_surface_taxonomy",
       "target_domain_id": "med-autogrant",
       "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"

@@ -35,6 +35,9 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     assert generated["stage_control_plane"]["target_domain_id"] == "med-autogrant"
     assert generated["pack_compiler_input"]["generated_surface_owner"] == "one-person-lab"
     pack_taxonomy = generated["pack_compiler_input"]["minimal_authority_surface_taxonomy"]
+    assert pack_taxonomy["retired_legacy_function_id_compatibility"] is False
+    assert pack_taxonomy["compatibility_alias_allowed"] is False
+    assert "legacy_function_id_compatibility" not in pack_taxonomy
     assert pack_taxonomy["ai_first_judgment_surface_ids"] == [
         "fundability_verdict",
         "quality_verdict",
@@ -52,6 +55,12 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     ] == "fundability_verdict"
     assert all(
         surface["programmatic_verdict_generation_allowed"] is False
+        for surface in generated["pack_compiler_input"]["minimal_authority_surface_contracts"]
+    )
+    assert all(
+        surface["retired_legacy_function_id_compatibility"] is False
+        and surface["compatibility_alias_allowed"] is False
+        and "legacy_function_id_compatibility" not in surface
         for surface in generated["pack_compiler_input"]["minimal_authority_surface_contracts"]
     )
     assert generated["generated_surface_handoff"]["domain_repo_can_own_generated_surface"] is False
