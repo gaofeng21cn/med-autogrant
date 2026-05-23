@@ -3807,6 +3807,10 @@
             "bridge_owner": "med-autogrant",
             "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
             "current_surface_refs": [
+              "product_status",
+              "status_read_model",
+              "sidecar_export_dispatch",
+              "workbench_drilldown",
               "/product_entry_manifest/product_entry_status",
               "/sidecar_export"
             ],
@@ -3826,6 +3830,10 @@
             "opl_can_write_grant_truth": false,
             "physical_delete_authorized_by_refs": false,
             "provenance_refs": [
+              "product_status",
+              "status_read_model",
+              "sidecar_export_dispatch",
+              "workbench_drilldown",
               "/product_entry_manifest/product_entry_status",
               "/sidecar_export"
             ],
@@ -3854,6 +3862,10 @@
             "src/med_autogrant/product_entry.py"
           ],
           "current_surface_refs": [
+            "product_status",
+            "status_read_model",
+            "sidecar_export_dispatch",
+            "workbench_drilldown",
             "/product_entry_manifest/product_entry_status",
             "/sidecar_export"
           ],
@@ -5873,6 +5885,10 @@
           "bridge_owner": "med-autogrant",
           "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
           "current_surface_refs": [
+            "product_status",
+            "status_read_model",
+            "sidecar_export_dispatch",
+            "workbench_drilldown",
             "/product_entry_manifest/product_entry_status",
             "/sidecar_export"
           ],
@@ -5892,6 +5908,10 @@
           "opl_can_write_grant_truth": false,
           "physical_delete_authorized_by_refs": false,
           "provenance_refs": [
+            "product_status",
+            "status_read_model",
+            "sidecar_export_dispatch",
+            "workbench_drilldown",
             "/product_entry_manifest/product_entry_status",
             "/sidecar_export"
           ],
@@ -5920,6 +5940,10 @@
           "src/med_autogrant/product_entry.py"
         ],
         "current_surface_refs": [
+          "product_status",
+          "status_read_model",
+          "sidecar_export_dispatch",
+          "workbench_drilldown",
           "/product_entry_manifest/product_entry_status",
           "/sidecar_export"
         ],
@@ -6512,6 +6536,10 @@
         "bridge_owner": "med-autogrant",
         "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
         "current_surface_refs": [
+          "product_status",
+          "status_read_model",
+          "sidecar_export_dispatch",
+          "workbench_drilldown",
           "/product_entry_manifest/product_entry_status",
           "/sidecar_export"
         ],
@@ -6531,6 +6559,10 @@
         "opl_can_write_grant_truth": false,
         "physical_delete_authorized_by_refs": false,
         "provenance_refs": [
+          "product_status",
+          "status_read_model",
+          "sidecar_export_dispatch",
+          "workbench_drilldown",
           "/product_entry_manifest/product_entry_status",
           "/sidecar_export"
         ],
@@ -6559,6 +6591,10 @@
         "src/med_autogrant/product_entry.py"
       ],
       "current_surface_refs": [
+        "product_status",
+        "status_read_model",
+        "sidecar_export_dispatch",
+        "workbench_drilldown",
         "/product_entry_manifest/product_entry_status",
         "/sidecar_export"
       ],

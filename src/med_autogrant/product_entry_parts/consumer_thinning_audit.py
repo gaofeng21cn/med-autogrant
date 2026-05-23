@@ -268,6 +268,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "receipt refs, and safe action semantics remain domain owned."
                 ),
                 current_surface_refs=[
+                    "product_status",
+                    "status_read_model",
+                    "sidecar_export_dispatch",
+                    "workbench_drilldown",
                     "/product_entry_manifest/product_entry_status",
                     "/sidecar_export",
                 ],
