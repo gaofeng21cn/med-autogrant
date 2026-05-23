@@ -245,6 +245,116 @@
         }
       }
     },
+    "controllerExecutionBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "execution_scope",
+        "mag_role",
+        "post_start_residency_owner",
+        "attempt_ledger_owner",
+        "max_domain_cycles_per_invocation",
+        "mag_long_running_driver",
+        "mag_scheduler_daemon_owner",
+        "mag_owns_attempt_ledger"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_autonomy_controller_execution_boundary"
+        },
+        "execution_scope": {
+          "const": "bounded_single_opl_provider_attempt"
+        },
+        "mag_role": {
+          "const": "refs_only_domain_authority_action_target"
+        },
+        "post_start_residency_owner": {
+          "const": "one-person-lab"
+        },
+        "attempt_ledger_owner": {
+          "const": "one-person-lab"
+        },
+        "max_domain_cycles_per_invocation": {
+          "type": "integer",
+          "const": 1
+        },
+        "mag_long_running_driver": {
+          "const": false
+        },
+        "mag_scheduler_daemon_owner": {
+          "const": false
+        },
+        "mag_owns_attempt_ledger": {
+          "const": false
+        }
+      }
+    },
+    "authorityReturn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_kind",
+        "allowed_return_shapes",
+        "result_shape",
+        "body_policy",
+        "refs",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_autonomy_controller_authority_return"
+        },
+        "allowed_return_shapes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "domain_owner_receipt",
+              "typed_blocker",
+              "no_regression_evidence"
+            ]
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "result_shape": {
+          "enum": [
+            "typed_blocker",
+            "no_regression_evidence"
+          ]
+        },
+        "body_policy": {
+          "const": "refs_only_no_runtime_or_grant_body"
+        },
+        "refs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "minProperties": 1
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mag_writes_opl_attempt_ledger",
+            "mag_runs_scheduler_daemon",
+            "mag_returns_runtime_or_grant_body"
+          ],
+          "properties": {
+            "mag_writes_opl_attempt_ledger": {
+              "const": false
+            },
+            "mag_runs_scheduler_daemon": {
+              "const": false
+            },
+            "mag_returns_runtime_or_grant_body": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
     "gateStatus": {
       "type": "string",
       "enum": [
@@ -487,7 +597,9 @@
     "active_closure_package",
     "controller_plan",
     "tranche_history",
-    "final_workspace"
+    "final_workspace",
+    "controller_execution_boundary",
+    "authority_return"
   ],
   "properties": {
     "surface_kind": {
@@ -595,6 +707,12 @@
     },
     "final_workspace": {
       "type": "object"
+    },
+    "controller_execution_boundary": {
+      "$ref": "#/$defs/controllerExecutionBoundary"
+    },
+    "authority_return": {
+      "$ref": "#/$defs/authorityReturn"
     }
   }
 }

@@ -118,6 +118,13 @@ def run_grant_autonomy_loop(
             active_closure_package=active_closure_package if include_quality_state else None,
         )
 
+    def yield_to_opl_provider_attempt() -> dict[str, Any]:
+        return fail_closed(
+            termination_reason="opl_provider_attempt_required",
+            include_controller_state=True,
+            include_quality_state=True,
+        )
+
     def record_history(
         *,
         cycle: int,
@@ -438,7 +445,7 @@ def run_grant_autonomy_loop(
                 explicit_controller_plan=explicit_controller_plan,
             )
             reselection_count += 1
-            continue
+            return yield_to_opl_provider_attempt()
 
         next_workspace = _extract_mapping(mainline_output, preferred_keys=("workspace", "final_workspace"))
         if next_workspace is None:
@@ -452,6 +459,7 @@ def run_grant_autonomy_loop(
             termination_reason="in_progress",
         )
         workspace = next_workspace
+        return yield_to_opl_provider_attempt()
 
     return fail_closed(
         termination_reason=_resolve_terminal_reason(unresolved_blockers, evidence_gaps),

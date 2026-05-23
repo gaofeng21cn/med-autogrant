@@ -19,6 +19,57 @@ from med_autogrant.grant_autonomy_quality_payload import (
     _normalize_quality_closure_dossier,
 )
 
+_AUTHORITY_RETURN_SHAPES = [
+    "domain_owner_receipt",
+    "typed_blocker",
+    "no_regression_evidence",
+]
+
+
+def _build_controller_execution_boundary() -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_autonomy_controller_execution_boundary",
+        "execution_scope": "bounded_single_opl_provider_attempt",
+        "mag_role": "refs_only_domain_authority_action_target",
+        "post_start_residency_owner": "one-person-lab",
+        "attempt_ledger_owner": "one-person-lab",
+        "max_domain_cycles_per_invocation": 1,
+        "mag_long_running_driver": False,
+        "mag_scheduler_daemon_owner": False,
+        "mag_owns_attempt_ledger": False,
+    }
+
+
+def _build_authority_return(*, termination_reason: str) -> dict[str, Any]:
+    if termination_reason == "goal_reached":
+        result_shape = "no_regression_evidence"
+        refs = {
+            "no_regression_evidence_ref": (
+                "no-regression:mag/autonomy-controller/bounded-attempt-goal-reached"
+            )
+        }
+    else:
+        result_shape = "typed_blocker"
+        refs = {
+            "typed_blocker_ref": (
+                "typed-blocker:mag/autonomy-controller/opl-provider-attempt-required"
+                if termination_reason == "opl_provider_attempt_required"
+                else f"typed-blocker:mag/autonomy-controller/{termination_reason}"
+            )
+        }
+    return {
+        "surface_kind": "mag_autonomy_controller_authority_return",
+        "allowed_return_shapes": list(_AUTHORITY_RETURN_SHAPES),
+        "result_shape": result_shape,
+        "body_policy": "refs_only_no_runtime_or_grant_body",
+        "refs": refs,
+        "authority_boundary": {
+            "mag_writes_opl_attempt_ledger": False,
+            "mag_runs_scheduler_daemon": False,
+            "mag_returns_runtime_or_grant_body": False,
+        },
+    }
+
 
 def _build_controller_checkpoint(
     *,
@@ -138,6 +189,10 @@ def _build_report(
         "controller_plan": tranche_plan_payload,
         "tranche_history": deepcopy(tranche_history or []),
         "final_workspace": final_workspace_payload,
+        "controller_execution_boundary": _build_controller_execution_boundary(),
+        "authority_return": _build_authority_return(
+            termination_reason=termination_reason,
+        ),
     }
 
 

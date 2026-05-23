@@ -281,7 +281,11 @@ def _finalize_controller_plan(
         or "controller_not_started",
         "termination_reason": termination_reason or "controller_not_started",
     }
-    next_action = "stop_success" if controller_status != "failed_closed" else "fail_closed"
+    if termination_reason == "opl_provider_attempt_required":
+        latest_action = _normalized_string(latest_history.get("next_controller_action"))
+        next_action = latest_action if latest_action in _CONTROLLER_ACTIONS else "continue_mainline"
+    else:
+        next_action = "stop_success" if controller_status != "failed_closed" else "fail_closed"
     base_plan["next_controller_action"] = next_action
     base_plan["decision_basis"] = decision_basis
     return base_plan
