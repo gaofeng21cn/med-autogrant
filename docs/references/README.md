@@ -1,5 +1,10 @@
 # References 索引
 
+Owner: `Med Auto Grant`
+Purpose: `reference_index`
+State: `reference`
+Machine boundary: 本文是人读参考索引。机器可读面必须使用 contracts、schemas、source path 或语义化 `human_doc:*` 标识。
+
 本目录承载 `Med Auto Grant` 的参考材料。
 
 生命周期信号：

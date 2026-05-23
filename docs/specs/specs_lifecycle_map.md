@@ -16,7 +16,7 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 - 生命周期状态统一在本文和 `docs/specs/README.md` 标清。
 - dated support specs 第一屏必须保留生命周期注记，避免 direct-file reader 把旧 `Current Truth` 标题误读成当前 owner line。
 - 不再默认新增 dated root specs；只有明确被接纳为 current owner surface 的文件才进入 active specs。
-- 纯历史 spec 一律进入 `docs/history/specs/`；不得为了旧审计路径稳定性在 current specs 层保留兼容入口。
+- 纯历史 spec 一律进入 `docs/history/specs/`；不得为了旧审计路径稳定性在 current specs 层保留旧调用入口。
 
 ## Active Current Specs
 
@@ -57,7 +57,7 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 | `../history/specs/2026-04-08-runtime-first-productization-program.md`, `../history/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md` | `historical_program_record` | core docs + history/specs index | 作为 R1-R5 形成历史阅读，不作为当前执行顺序。 |
 | `../history/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`, `../history/specs/2026-04-10-post-r5a-local-runtime-validation-*`, `../history/specs/2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`, `../history/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md` | `historical_local_runtime_closeout` | core docs + route/runtime owner docs | 只从 history 阅读 fail-closed / honest-stop lessons；当前 runtime owner wording 在核心文档和 active/support guards。 |
 | `../history/specs/2026-04-10-post-r5a-final-package-*`, `../history/specs/2026-04-10-post-r5a-hosted-contract-bundle-*`, `../history/specs/2026-04-10-post-r5a-stage-route-*`, `../history/specs/2026-04-10-post-r5a-worktree-aware-*`, `../history/specs/2026-04-10-post-r5a-revised-*` | `historical_fail_closed_record` | package/export schemas + history/specs index | 作为 fail-closed provenance 阅读；不得恢复旧 local runtime、hosted bundle 或 Gateway owner。 |
-| `../history/specs/2026-04-11-hermes-backed-*`, `../history/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`, `../history/specs/2026-04-12-upstream-hermes-agent-fast-cutover-*` | `retired_provider_proof` | current core docs + explicit hosted/proof refs | 只能从 history 阅读；不得恢复 Hermes-backed owner、Gateway/local-manager、compatibility alias 或 default-runtime wording。 |
+| `../history/specs/2026-04-11-hermes-backed-*`, `../history/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`, `../history/specs/2026-04-12-upstream-hermes-agent-fast-cutover-*` | `retired_provider_proof` | current core docs + explicit hosted/proof refs | 只能从 history 阅读；不得恢复 Hermes-backed owner、Gateway/local-manager、旧兼容别名或 default-runtime wording。 |
 
 ## Support Current-Truth Records
 

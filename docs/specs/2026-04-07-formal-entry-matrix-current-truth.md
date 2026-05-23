@@ -44,7 +44,7 @@ OPL-hosted path 可以读取 MAG descriptor、stage/control plane、sidecar/proj
 - `Codex CLI` 是当前第一公民 concrete executor；`hermes_agent` / Claude Code 只能作为显式 opt-in executor adapter / proof lane。
 - `build-hosted-contract-bundle` 是 integration/reference export surface，不表示 actual hosted runtime、production/default caller 或 Temporal long soak 已完成。
 - `package submission-ready` 是本地严格导出 gate，不等于外部基金官网提交完成。
-- 任何新 public runtime entry、controller public entry、compatibility alias 或 local runtime recovery entry 都必须先更新核心五件套、contracts/schema/source 和验证入口。
+- 任何新 public runtime entry、controller public entry、旧兼容别名或 local runtime recovery entry 都必须先更新核心五件套、contracts/schema/source 和验证入口。
 
 ## 历史入口
 

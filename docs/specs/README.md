@@ -56,7 +56,7 @@ App/workbench 边界由核心五件套、active gap plan、contracts/schema/sour
 
 `contracts/runtime-program/current-program.json` 仍是完整 repo-tracked truth-surface 清单的 canonical pointer。它可能引用少量 support `human_doc:*` 或 specs，但这种引用不提升整份 dated spec 为当前 owner。Hermes-backed、Hermes reset、Gateway、future P5、runtime-first activation、post-R5A hardening 和旧 provider specs 只保留 history / provenance / audit path；只有 lifecycle map 明确列为 active 的 subsection 才能作为当前边界阅读。已经归档到 `../history/specs/` 的文件不再是 `docs/specs/` support surface。
 
-当前 OPL 口径集中在核心文档：OPL 是 stage-led、以 Agent executor 为最小执行单位的完整运行框架，可以消费 MAG-owned descriptor/projection。旧 spec 中出现的 `OPL Runtime Manager`、Temporal target、Hermes-first、active adapter、gateway、compatibility bridge、local journal 或 attempt ledger 说法，除非被当前 owner 文档显式提升，否则都按 provider-specific 迁移背景或历史 proof 阅读；不得据此恢复旧接口、旧 CLI alias、旧测试聚合入口或旧 provider owner。
+当前 OPL 口径集中在核心文档：OPL 是 stage-led、以 Agent executor 为最小执行单位的完整运行框架，可以消费 MAG-owned descriptor/projection。旧 spec 中出现的 `OPL Runtime Manager`、Temporal target、上游 Hermes 作为默认 provider 的旧口径、active adapter、gateway、compatibility bridge、local journal 或 attempt ledger 说法，除非被当前 owner 文档显式提升，否则都按 provider-specific 迁移背景或历史 proof 阅读；不得据此恢复旧接口、旧 CLI alias、旧测试聚合入口或旧 provider owner。
 
 `hosted contract bundle` 继续是 integration/reference export surface。Hosted runtime、Web UI、public MCP runtime 与外部官网提交各自需要当前 owner evidence；旧 gateway/federation wording 只作为 history/provenance 阅读，不再作为目标产品面。
 

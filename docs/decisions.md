@@ -52,14 +52,14 @@ Date: `2026-05-22`
 
 - 决策：核心五件套承载 current 人读 truth；`docs/active/` 承载当前 gap / 完善计划；`docs/specs/` 只保留 active specs、support current-truth records 和 integration references；纯历史 activation package、provider proof、local-runtime closeout、future-P5 和 superseded hosted/handoff specs 进入 `docs/history/`。
 - 理由：dated spec 标题里的 `Current Truth` 容易被 direct-file reader 误读为当前完整产品状态；生命周期必须由 owner/purpose/state/machine boundary 和 specs lifecycle map 约束。
-- 影响：旧 OPL Runtime Manager、Hermes-first、Gateway/federation、local journal、attempt ledger、patch bridge、compatibility alias 或 legacy hosted wording 只能作为 provenance 读，不再定义当前目标、默认 runtime owner 或兼容保留理由。
+- 影响：旧 OPL Runtime Manager、上游 Hermes 作为默认 provider 的旧口径、Gateway/federation、local journal、attempt ledger、patch bridge、旧兼容别名或 legacy hosted wording 只能作为 provenance 读，不再定义当前目标、默认 runtime owner 或兼容保留理由。
 
 ## Superseded 决策入口
 
 以下旧决策只作为历史背景，不再承担 current owner：
 
 - 旧 OPL Runtime Manager 薄管理层口径：已被 OPL stage-led framework + Temporal default runtime owner 取代。
-- Hermes-first sidecar adapter：已被 Temporal-backed OPL hosted autonomy 和显式 executor adapter/proof lane 口径取代。
+- 上游 Hermes 作为默认 provider 的 sidecar adapter 口径：已被 Temporal-backed OPL hosted autonomy 和显式 executor adapter/proof lane 口径取代。
 - local runtime / journal / attempt ledger closeout：已归入 history/provenance；当前测试明确拒绝 `runtime-run`、`runtime-resume` 和 `probe-upstream-hermes`。
 - 旧 domain runtime facade patch bridge、flat alias、compat aggregate test：active caller 迁出后直接退役，当前不保留 compatibility surface。
 - 2026-05 的 step-by-step receipt/proof/lane closeout：统一从 history 归档读取，不作为当前状态页或决策页的增量 ledger。

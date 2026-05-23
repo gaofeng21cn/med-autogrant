@@ -14,6 +14,19 @@ Date: `2026-05-23`
 
 当前 source scan 确认：`product_entry*`、`product_entry_parts/*`、`domain_runtime*`、runtime registration、sidecar、lifecycle、memory/package projection、status/user-loop shell 仍是 active source；它们只能作为 direct handler、refs-only adapter、minimal grant authority function、diagnostic、migration input 或 tombstone/provenance 支撑读取。旧 local journal、attempt ledger、scheduler daemon、Hermes/Gateway/local-manager probe、flat alias、patch bridge、compat aggregate test 和旧 hosted/provider specs，一旦 active caller 迁出且 direct/hosted parity、owner receipt roundtrip、no-resurrection guard 成立，直接删除、archive 或 tombstone，不保留 compatibility shim。
 
+本文是 MAG 的 single Active Truth plan。`docs/active/README.md` 只做索引，`opl-private-implementation-migration-inventory.md` 只做 physical morphology 明细台账；二者不另建进度、差距或下一轮 prompt。若未来新增 active packet，完成后必须折回本文、核心五件套或 `docs/history/**`，不能在 active path 保留执行流水。
+
+模板映射：
+
+| Active Truth section | 本文落点 |
+| --- | --- |
+| Ideal-state reference | `读法`、`当前定位` 与 [Med Auto Grant 理想目标态](../references/med-auto-grant-ideal-state.md) |
+| Current completion progress | `当前完成进度`、`当前结构收口状态` |
+| Functional / structural gaps | `功能/结构差距`、`当前物理源码形态差距`、`Retained Private Authority Surfaces` |
+| Test / evidence gaps | `测试/证据差距` |
+| Next-round agent prompt | `下一轮 /goal prompt` |
+| History / tombstone foldback | `历史 / tombstone 折返`、[MAG standard agent 文档过程归档 2026-05](../history/plans/mag-standard-agent-doc-process-history-2026-05.md) |
+
 ## 当前定位
 
 MAG 是医学基金申请 domain agent，也是 OPL-compatible Foundry Agent package。Direct app skill / CLI / `MedAutoGrantDomainEntry` 是一等入口；任务启动后的默认运行驻留是 OPL/Temporal hosted autonomous runtime。OPL-hosted path 与 direct path 必须回到同一套 MAG-owned grant truth、fundability / quality / export verdict、package authority、grant strategy memory accept/reject、owner receipt 和 typed blocker。
@@ -21,6 +34,17 @@ MAG 是医学基金申请 domain agent，也是 OPL-compatible Foundry Agent pac
 OPL Framework / shared family layer 持有通用 provider runtime、typed queue、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、operator projection、observability/SLO、generated wrapper 和 App/workbench shell。MAG 不把这些通用能力继续写成长期私有平台。
 
 当前 product-entry manifest / schema / tests 的 runtime contract 字段为 `opl_provider_runtime_contract`。该字段指向 OPL/configured family provider runtime owner；`codex_cli` 只保留为默认 executor owner / default executor，不再作为 active runtime owner。
+
+## 当前完成进度
+
+| Area | 当前状态 | 当前证据 | 说明 |
+| --- | --- | --- | --- |
+| Identity / owner boundary | `done` | 核心五件套、`contracts/runtime-program/current-program.json` | MAG 是 grant domain agent；OPL/Temporal 是默认 task runtime owner；MAG 保留 grant authority。 |
+| Declarative Grant Pack | `done_with_evidence_tail` | `agent/`、contracts、stage control plane、quality gates | repo-source semantic pack 已作为 OPL pack compiler / generated surface 输入；后续证据看真实 generated/default caller 消费。 |
+| MAG retained authority | `done_with_guard_tail` | `runtime/authority_functions/`、owner receipt / typed blocker / quality/export refs | grant truth、fundability / quality / export verdict、package authority、memory accept/reject 和 owner receipt 留在 MAG；程序面只做 guard、materialize、receipt、refs projection。 |
+| Product/status/user-loop/sidecar shell | `partial_migration_input` | `product_entry*`、`product_entry_parts/*`、sidecar、status/user-loop shell、product-entry manifest | 当前仍可作为 direct handler 或 refs-only adapter；长期 default shell 归 OPL generated/hosted surface。 |
+| Runtime/session/lifecycle residue | `retirement_tail` | `domain_runtime*`、runtime registration、lifecycle / memory / package projection | 只能按 route/authority adapter、diagnostic、migration input 或 tombstone 阅读；不能重建 MAG-owned generic runtime。 |
+| External evidence / production soak | `evidence_gap` | external evidence ledger、production acceptance refs、`product receipt-readiness` | refs-only consumption 已成立；真实 workspace scaleout、App/workbench consumption、Temporal long-soak 和 release/default caller 仍需连续证据。 |
 
 ## 当前结构收口状态
 
@@ -59,7 +83,7 @@ MAG 必须持有：
    Product/status/user-loop/sidecar/grouped CLI/projection/lifecycle surface 当前仍可作为 MAG direct handler 或 refs-only adapter 存在。目标是 OPL generated/hosted caller 成为 default product/status/workbench/sidecar shell；MAG 只保留 grant handler target、owner receipt、typed blocker、verdict refs 与 action metadata。
 
 2. `legacy_runtime_session_lifecycle_exit`
-   Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream Hermes probe、flat shell alias、facade patch bridge 和 compat aggregate test 只允许作为 legacy proof / tombstone / regression oracle。无 active caller 后删除或归档，不新增 compatibility alias。
+   Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream Hermes probe、flat shell alias、facade patch bridge 和 compat aggregate test 只允许作为 legacy proof / tombstone / regression oracle。无 active caller 后删除或归档，不新增旧兼容别名。
 
 3. `package_memory_lifecycle_refs_only_boundary`
    Memory receipt projection、package lifecycle handoff、lifecycle receipt bundle、continuous receipt reconciliation 和 sidecar export 只输出 body-free refs、owner receipt、verdict refs、typed blocker 和 safe action metadata；不输出 memory body、grant artifact/private evidence 或 OPL ledger state。
@@ -128,6 +152,61 @@ MAG 必须持有：
 3. 继续维护 AI-first authority guard：任何 fundability / quality / export / submission-ready claim 必须回到 MAG owner surface 或 AI-backed artifact。
 4. 在 OPL/App/production caller 提供真实 external receipt 后，逐项关闭 generated caller、direct/hosted parity、owner receipt roundtrip、continuous no-forbidden-write 和 Temporal long-soak evidence gate。
 5. 在 active caller 迁出且 no-resurrection guard 成立后，删除或 tombstone 旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；测试同步改成 current machine contract、schema、CLI/API、manifest、owner receipt、typed blocker、fail-closed 或 tombstone semantics，不维护旧调用路径。
+
+## 下一轮 /goal prompt
+
+Objective:
+
+使用 OPL Doc Governance 继续推进 MAG standard OPL Agent 收敛。以 `/Users/gaofeng/workspace/med-autogrant` 为唯一写入范围，重读 `AGENTS.md`、`TASTE.md`、`README*`、`docs/README.md`、核心五件套、`docs/references/med-auto-grant-ideal-state.md`、本文、`docs/active/opl-private-implementation-migration-inventory.md`、`contracts/runtime-program/current-program.json`、product-entry manifest / external evidence / production acceptance contracts、相关 source/tests；根据 live repo truth 更新本文的当前完成进度、功能/结构差距、测试/证据差距，并把 completed process fold back 到核心文档或 `docs/history/**`。
+
+Write scope:
+
+- MAG 本仓文档、contracts、schemas、source、tests 中与 generated/default caller parity、refs-only adapter thinning、AI-first authority guard、evidence gate 或 stale active wording 直接相关的文件。
+- 首选更新 `docs/active/mag-ideal-state-cross-repo-gap-plan.md`，必要时同步核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/history/**` 和相关 machine-readable contracts/tests。
+
+Non-goals:
+
+- 不修改 `/Users/gaofeng/workspace/one-person-lab`、MAS、RCA 或其他 repo。
+- 不把 OPL generic scheduler、runner、queue、attempt ledger、session store、workbench、observability/SLO 或 App shell 实现在 MAG。
+- 不新增旧兼容别名、re-export facade、flat CLI alias、compat aggregate test 或旧 runtime/probe wrapper。
+- 不把 refs-only ledger verification、schema completeness、scorecard 分数、provider completion 或 package existence 写成 fundability-ready、quality-ready、export-ready、submission-ready、production-ready 或 Temporal long-soak complete。
+
+Live truth inputs:
+
+- `contracts/runtime-program/current-program.json`
+- `contracts/external_evidence/mag-evidence-receipt-ledger.json`
+- `contracts/production_acceptance/mag-production-acceptance.json`
+- `agent/` Declarative Grant Pack、`runtime/authority_functions/`、`src/med_autogrant/**`、`tests/**`
+- `docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`、本文与 private implementation inventory
+- fresh doctor output: `python3 /Users/gaofeng/workspace/opl-doc-governance/scripts/opl_doc_doctor.py doctor . --format json`
+
+Required actions:
+
+- 先确认 current active caller、direct/hosted parity、owner receipt roundtrip、no-resurrection guard 与 evidence ledger 状态，再决定是否删除、tombstone 或继续收薄旧 wrapper / alias / facade / runtime residue。
+- 若有真实 OPL/App/production caller 证据，关闭对应测试/证据 gap；若只有 refs-only accounting 或 process closeout，保留为 evidence tail，不重开 MAG repo 侧结构缺口。
+- 若修改公开边界、machine-readable contract、command surface 或 default runtime/executor wording，同步更新核心五件套、contracts/schema/source/tests 和 specs lifecycle guard。
+- 每轮完成后重写本文：closed gap 删除或改写为当前进度，过程证据进入 `docs/history/**` 或外部 ledger，下一轮 prompt 只保留剩余 work。
+
+Verification commands:
+
+```bash
+python3 /Users/gaofeng/workspace/opl-doc-governance/scripts/opl_doc_doctor.py doctor . --format json
+./scripts/verify.sh
+```
+
+Completion / foldback gate:
+
+- doctor 不再报告本轮应处理的 stale active wording；若只剩 reference header 信息项，明确说明为何不机械补齐。
+- `scripts/verify.sh` 通过，且开发 checkout 不产生 `.venv`、`__pycache__`、`.pytest_cache` 或 `*.egg-info` 副产物。
+- 本文保留唯一 active truth owner 地位；active path 不保存完成流水或重复计划。
+- 所有旧 Hermes/Gateway/local-manager/旧前门/兼容词汇都被改写为 current owner truth、history/provenance 或 tombstone 读法。
+- 最终在当前 `main` 上提交，提交信息按任务要求使用 `docs: refresh active truth governance`。
+
+## 历史 / tombstone 折返
+
+- 过程性校准、receipt proof、closeout 流水和一次性 worklist 归 [MAG standard agent 文档过程归档 2026-05](../history/plans/mag-standard-agent-doc-process-history-2026-05.md)、external evidence ledger 或提交历史。
+- 旧 local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream Hermes probe、Gateway/local-manager path、flat shell alias、facade patch bridge、compat aggregate test 和旧 hosted/provider specs 只作为 history、tombstone、explicit proof history 或 regression oracle 阅读。
+- No-resurrection guard：active docs、contracts、tests 和 command catalog 不新增旧 alias/facade/wrapper；若历史文件仍含旧词，必须有 lifecycle note 或 history path，不能作为 current owner surface。
 
 ## 禁止误写
 

@@ -140,7 +140,7 @@ MAG 的 authority 边界不因 refs-only lifecycle 上收而外移：grant truth
 - sidecar dispatch 的在线唤醒 carrier
 - stage-led queue、handoff、receipt、retry/dead-letter 与 operator projection
 
-生产在线路径默认要求 Temporal-backed provider ready。Hermes-first 口径只作为 provider-specific 或迁移记录保留。
+生产在线路径默认要求 Temporal-backed provider ready。上游 Hermes 作为默认 provider 的旧口径只作为 provider-specific 或迁移记录保留。
 
 `Med Auto Grant` 自己继续承担：
 
