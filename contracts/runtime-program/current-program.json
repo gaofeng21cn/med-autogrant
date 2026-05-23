@@ -274,8 +274,10 @@
               "owner_receipt_signer",
               "grant_helper"
             ],
-            "legacy_function_id_compatibility": true,
+            "compatibility_alias_allowed": false,
+            "function_id_policy": "canonical_authority_surface_ids_only",
             "mechanical_decision_forbidden_for_all_surfaces": true,
+            "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
             "policy": "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; programmatic_surfaces_sign_receipts_or_validate_refs_only",
             "programmatic_authority_surface_ids": [
               "package_authority",
@@ -283,6 +285,7 @@
               "grant_helper"
             ],
             "programmatic_verdict_generation_allowed": false,
+            "retired_legacy_function_id_compatibility": false,
             "surface_kind": "mag_minimal_authority_surface_taxonomy",
             "target_domain_id": "med-autogrant",
             "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"
@@ -578,8 +581,10 @@
             "owner_receipt_signer",
             "grant_helper"
           ],
-          "legacy_function_id_compatibility": true,
+          "compatibility_alias_allowed": false,
+          "function_id_policy": "canonical_authority_surface_ids_only",
           "mechanical_decision_forbidden_for_all_surfaces": true,
+          "no_resurrection_policy": "do_not_restore_legacy_function_id_compatibility",
           "policy": "verdict_and_memory_surfaces_materialize_refs_from_ai_first_stage_artifacts; programmatic_surfaces_sign_receipts_or_validate_refs_only",
           "programmatic_authority_surface_ids": [
             "package_authority",
@@ -587,6 +592,7 @@
             "grant_helper"
           ],
           "programmatic_verdict_generation_allowed": false,
+          "retired_legacy_function_id_compatibility": false,
           "surface_kind": "mag_minimal_authority_surface_taxonomy",
           "target_domain_id": "med-autogrant",
           "taxonomy_id": "mag.minimal_authority_surface_taxonomy.v1"

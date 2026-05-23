@@ -3911,6 +3911,8 @@
             "additionalProperties": true,
             "required": [
               "surface_kind", "authority_surface_id", "function_id", "owner",
+              "retired_legacy_function_id_compatibility", "compatibility_alias_allowed",
+              "function_id_policy", "no_resurrection_policy",
               "retention_class", "generated_by_opl", "opl_generated_wrapper_allowed",
               "work_mode", "judgment_owner", "programmatic_role",
               "ai_stage_artifact_required", "mechanical_decision_forbidden",
@@ -3935,6 +3937,10 @@
                 ]
               },
               "owner": {"const": "med-autogrant"},
+              "retired_legacy_function_id_compatibility": {"const": false},
+              "compatibility_alias_allowed": {"const": false},
+              "function_id_policy": {"const": "canonical_authority_surface_id_only"},
+              "no_resurrection_policy": {"const": "do_not_restore_legacy_function_id_compatibility"},
               "retention_class": {"const": "mag_minimal_authority_function"},
               "generated_by_opl": {"const": false},
               "opl_generated_wrapper_allowed": {"const": true},
@@ -3974,10 +3980,16 @@
           "required": [
             "ai_first_judgment_surface_ids",
             "programmatic_authority_surface_ids",
+            "retired_legacy_function_id_compatibility", "compatibility_alias_allowed",
+            "function_id_policy", "no_resurrection_policy",
             "mechanical_decision_forbidden_for_all_surfaces",
             "programmatic_verdict_generation_allowed"
           ],
           "properties": {
+            "retired_legacy_function_id_compatibility": {"const": false},
+            "compatibility_alias_allowed": {"const": false},
+            "function_id_policy": {"const": "canonical_authority_surface_ids_only"},
+            "no_resurrection_policy": {"const": "do_not_restore_legacy_function_id_compatibility"},
             "mechanical_decision_forbidden_for_all_surfaces": {"const": true},
             "programmatic_verdict_generation_allowed": {"const": false}
           }

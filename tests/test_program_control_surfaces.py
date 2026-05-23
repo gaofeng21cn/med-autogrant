@@ -206,6 +206,14 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertFalse(external_pack["authority_boundary"]["mag_implements_app_workbench"])
         self.assertFalse(external_pack["authority_boundary"]["mag_claims_external_evidence_exists"])
         taxonomy = consumer_thinning["minimal_authority_surface_taxonomy"]
+        self.assertFalse(taxonomy["retired_legacy_function_id_compatibility"])
+        self.assertFalse(taxonomy["compatibility_alias_allowed"])
+        self.assertEqual(taxonomy["function_id_policy"], "canonical_authority_surface_ids_only")
+        self.assertEqual(
+            taxonomy["no_resurrection_policy"],
+            "do_not_restore_legacy_function_id_compatibility",
+        )
+        self.assertNotIn("legacy_function_id_compatibility", taxonomy)
         self.assertEqual(
             taxonomy["ai_first_judgment_surface_ids"],
             [
