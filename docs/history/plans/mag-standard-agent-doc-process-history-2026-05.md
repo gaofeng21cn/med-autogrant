@@ -41,6 +41,17 @@ Machine boundary: 本文是人读过程归档，不是 current truth、active pl
 - `docs/active/mag-ideal-state-cross-repo-gap-plan.md`：当前功能/结构差距、测试/证据差距和完善顺序。
 - `docs/docs_portfolio_consolidation.md`：文档生命周期治理。
 
+## 2026-05-22 refs-only ledger 过程记录
+
+MAG grant-stage dispatch tranche 新增 9 条经 OPL safe-action shell 记录并验证的 refs-only receipt：
+
+- `specific_aims_and_structure` attempt `sat_4d81d410694b72fd97413a5b`、`review_and_rebuttal` attempt `sat_4e8877fe031fc912ff53c7a6`、`proposal_authoring` attempt `sat_b0cac25e42955a654147ec00`、`fundability_strategy` attempt `sat_3bc99d526fb23328fdc0377d` 和 `call_and_candidate_intake` attempt `sat_e5d434a883472362dcef5ac3` 消费 MAG owner receipt / owner-chain refs。
+- `package_and_submit_ready` lifecycle retention attempt `sat_1e31d809637014a83f8e907c`、restore attempt `sat_dbe416fbd54233172404013c` 与 cleanup attempt `sat_d4d4b1750726a95fae5c77a7` 消费 MAG-owned typed blocker。
+- 遗留 `review_and_rebuttal` guarded-run attempt `sat_3c210fbc86393af8d3a0e90c` 消费 MAG-owned runtime-only typed blocker receipt `/Users/gaofeng/.codex/projects/med-autogrant/runtime-state/receipts/owner-receipts/sat_3c210fbc86393af8d3a0e90c-legacy-guarded-run-retired.json`，明确旧 `autonomy-controller/guarded-run` sidecar dispatch 已退役并 route back 到当前 MAG-owned direct / OPL-hosted stage owner surface。
+- fresh OPL worklist 中 MAG domain-dispatch group 当前为空。
+
+该 tranche 只把真实 MAG refs / typed blocker 接入 OPL external evidence ledger，不授权 OPL 写 grant truth、memory body、artifact body、quality/export verdict，也不声明 submission-ready、production-ready 或 Temporal long-soak complete。
+
 ## 历史不能构成的东西
 
 本文不构成：

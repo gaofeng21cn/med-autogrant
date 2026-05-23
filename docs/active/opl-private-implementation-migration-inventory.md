@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `opl_private_implementation_migration_inventory`
 State: `active_inventory`
 Machine boundary: 本文是 human-readable 迁移治理台账。机器真相继续归 `contracts/`、schemas、CLI/API 行为、product-entry manifest、sidecar export/dispatch、runtime receipts、workspace artifact 与 MAG owner receipt。
-Date: `2026-05-22`
+Date: `2026-05-23`
 
 ## 读法
 

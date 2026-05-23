@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `ideal_state_gap_plan`
 State: `active_plan`
 Machine boundary: 本文是人读 gap / completion plan。机器真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、product-entry manifest、workspace/runtime artifact root、receipt、质量报告和导出包。
-Date: `2026-05-22`
+Date: `2026-05-23`
 
 ## 读法
 
@@ -12,7 +12,7 @@ Date: `2026-05-22`
 
 差距按目标态判断，不按当前 MAG 代码是否仍可运行判断。通用 runtime、runner、queue、session、journal、workspace/source intake、memory/package transport、workbench、observability、CLI/product-entry/sidecar/status wrapper 必须进入 OPL 上收、generated surface 替换、refs-only 收薄或退役分类。过时模块、接口、测试、fixture、CLI alias、facade、wrapper 和 docs 入口不保留兼容面。
 
-本轮最新 source scan 确认：`product_entry*`、`product_entry_parts/*`、`domain_runtime*`、runtime registration、sidecar、lifecycle、memory/package projection、status/user-loop shell 仍是 active source；它们只能作为 direct handler、refs-only adapter、minimal grant authority function、diagnostic、migration input 或 tombstone/provenance 支撑读取。旧 local journal、attempt ledger、scheduler daemon、Hermes/Gateway/local-manager probe、flat alias、patch bridge、compat aggregate test 和旧 hosted/provider specs，一旦 active caller 迁出且 direct/hosted parity、owner receipt roundtrip、no-resurrection guard 成立，直接删除、archive 或 tombstone，不保留 compatibility shim。
+当前 source scan 确认：`product_entry*`、`product_entry_parts/*`、`domain_runtime*`、runtime registration、sidecar、lifecycle、memory/package projection、status/user-loop shell 仍是 active source；它们只能作为 direct handler、refs-only adapter、minimal grant authority function、diagnostic、migration input 或 tombstone/provenance 支撑读取。旧 local journal、attempt ledger、scheduler daemon、Hermes/Gateway/local-manager probe、flat alias、patch bridge、compat aggregate test 和旧 hosted/provider specs，一旦 active caller 迁出且 direct/hosted parity、owner receipt roundtrip、no-resurrection guard 成立，直接删除、archive 或 tombstone，不保留 compatibility shim。
 
 ## 当前定位
 
@@ -81,7 +81,7 @@ MAG 必须持有：
 | `domain_runtime*` / runtime registration / control-plane projection | 仍是 route / authority adapter 与 regression oracle 形态。 | 不再扩写 generic runtime substrate；replacement parity 成立后删除或 tombstone runtime/session/journal/probe envelope。 |
 | lifecycle / memory / package projection helpers | 当前输出 body-free refs、receipt、typed blocker 或 action metadata。 | OPL lifecycle/session/workbench caller 稳定后迁出 generic envelope，只保留 MAG package / memory / owner authority function。 |
 | autonomy loop / report-resume shell | 当前只能作为 grant route / budget / blocker policy thin handler 或 OPL attempt lifecycle 迁移输入。 | OPL generated operator loop / attempt lifecycle 接管后删除 generic loop/scheduler-like envelope。 |
-| legacy alias / facade / patch bridge / compat aggregate tests | 只允许 history、tombstone、explicit proof history 或 regression oracle。 | active caller 清零后删除；测试改为 current contract、no-resurrection 或 tombstone guard。 |
+| legacy alias / facade / patch bridge / compat aggregate tests | 只允许 history、tombstone、explicit proof history 或 regression oracle。 | active caller 清零后删除源码、CLI/API 入口和旧 aggregate test；保留测试只断言 current contract、no-resurrection、fail-closed 或 tombstone guard。 |
 
 ## 测试/证据差距
 
@@ -90,10 +90,11 @@ MAG 必须持有：
 - 真实 OPL-hosted grant-stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence。
 - 真实 grant workspace 产生 accepted/rejected memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout。
 - `product receipt-readiness` grouped CLI 已可把 owner receipt、memory accept/reject receipt、package/export lifecycle handoff 和 cleanup/restore/retention lifecycle receipt refs 聚合成 body-free readiness projection；后续证据门是 OPL/App/operator closeout 与 executor-first bundle 在真实 workspace 中持续消费该 projection 并回连 owner-chain / typed blocker / no-regression refs，不能把该入口本身写成 grant ready、quality ready、export ready、submission ready 或 production ready。
+- MAG grant-stage / lifecycle / legacy route-back payload 已可被 OPL refs-only external evidence ledger 记录并验证：coverage 包括 grant stage owner receipt / owner-chain refs、`package_and_submit_ready` lifecycle typed blocker refs，以及旧 `autonomy-controller/guarded-run` route-back typed blocker。当前 active plan 不保存具体 attempt、receipt path 或 worklist 数字；这些过程证据归 OPL ledger、提交历史和 [MAG standard agent 文档过程归档 2026-05](../history/plans/mag-standard-agent-doc-process-history-2026-05.md)。该进展只收窄 dispatch accounting、旧 route-back 和 lifecycle blocker consumption，不关闭真实 grant workspace memory/package/lifecycle receipt scaleout、App user path、Temporal long-soak、fundability / quality / export verdict 或 submission-ready gate。
 - OPL/App shell 持续消费 MAG package refs、gap report、manual portal boundary、quality refs、transition oracle refs 和 safe action refs。
 - External production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 的后续连续证据。
 - Temporal provider long SLO、repair cadence 和 live receipt reconciliation 的后续连续证据。
-- Physical morphology cleanup 在 active caller migration、direct/hosted parity、owner receipt roundtrip、continuous evidence 和 no-active compatibility alias scan 稳定后继续推进。
+- Physical morphology cleanup 在 active caller migration、direct/hosted parity、owner receipt roundtrip、continuous evidence 和 no-active legacy caller / no-resurrection scan 稳定后继续推进；满足门槛即删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests，不保留 compatibility shim。
 
 这些 gap 只能通过真实 external receipt、typed blocker 或 no-regression evidence 关闭。Request accounting closure、refs-only ledger verification、OPL workorder closeout 或 source ref declaration 不能替代真实 workspace / App / provider evidence。
 
