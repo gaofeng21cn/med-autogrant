@@ -20,8 +20,8 @@ from med_autogrant.workspace_types import WorkspaceError, WorkspaceStateError
 from med_autogrant.cli_rendering import (
     _extract_error_details,
     _extract_workspace_context_for_error,
-    _render_text,
 )
+from med_autogrant.cli_rendering_parts import _render_text
 from med_autogrant.cli_parts.handlers import (
     handle_build_artifact_bundle,
     handle_build_final_package,
