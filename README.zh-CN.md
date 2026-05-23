@@ -69,7 +69,7 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 - `Med Auto Grant` 是独立的医学基金领域智能体，不是 `OPL` 仓库里的内部模块。
 - 公开发布定位：`Foundry Agent / OPL-compatible package built on OPL Framework`。
 - 对外第一入口是单一 `Med Auto Grant` 技能；`Codex`、`OPL` 和其他通用智能体可以通过这个入口，或直接通过 `CLI` / `MedAutoGrantDomainEntry` 访问稳定能力面。
-- 这个技能背后的稳定可调用面是本地 CLI、`MedAutoGrantDomainEntry`、本地脚本、产品入口/投影命令与 schema-backed 合同。
+- 仓库根层 OPL standard pack 是 OPL generated-interface 的来源；OPL 将该 pack 编译为 generated CLI / MCP / Skill / product-entry / tool descriptors，本地 CLI、`MedAutoGrantDomainEntry`、产品入口/投影命令与 schema-backed 本地脚本/合同仍是这些 descriptor 背后的 MAG-owned action target 和 authority function。
 - OPL/Temporal hosted autonomous runtime 是标准 OPL Agent 任务启动后的默认运行驻留；MAG 不实现自己的 daemon、scheduler、attempt loop 或 attempt ledger，`Codex CLI` 继续是默认具体 stage executor。
 - `product entry/product status/direct-entry/user-loop` 保持为技能下的内部命令合同与直接产品投影，不写成对外第一主语。
 - 统一发布形态由 app skill catalog、MAG-owned stage control plane、hosted-contract-bundle 交接导出和本地 `submission-ready` 交付导出共同组成。

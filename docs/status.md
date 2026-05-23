@@ -17,7 +17,7 @@ Date: `2026-05-23`
 - `contracts/runtime-program/current-program.json` 声明 `default_task_runtime_owner=one-person-lab`、`default_runtime_substrate=temporal`、`default_stage_executor=codex_cli`、`mag_implements_daemon=false`、`mag_implements_scheduler=false`、`mag_implements_attempt_loop=false`、`mag_owns_attempt_ledger=false`。
 - `mag_functional_structure_gap_count=0` 表示 MAG repo 侧当前 surface 已收到 handler / refs-only / authority 边界；它不表示 OPL generated caller、真实 App/workbench 消费、全部 bridge exit 或 production long-run soak 已完成。
 - `claims_opl_replacement_exists=false`、`claims_all_bridge_exits_complete=false`、`claims_production_long_run_soak_complete=false` 仍是当前机器面必须保留的限制。
-- `contracts/external_evidence/mag-evidence-receipt-ledger.json` 已记录 first live production evidence refs；当前仍只保存 refs、receipt shapes、typed blocker / no-regression refs 和 production acceptance refs。Temporal long-soak window evidence 仍是后续证据门。
+- `contracts/external_evidence/mag-evidence-receipt-ledger.json` 已记录 first live production evidence refs；7 个 external evidence request 已全部 refs-only close，包括 generated/hosted caller pack consumption、App/workbench package refs consumption、release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity no-regression 和 Temporal receipt reconciliation ref。该 ledger 仍只保存 refs、receipt shapes、typed blocker / no-regression refs 和 production acceptance refs；`temporal_provider_long_soak_window_evidence` 仍是后续真实证据门。
 - Production acceptance tail 已由 MAG-owned owner receipt projection 关闭；这只证明 MAG owner receipt / typed blocker / no-regression evidence 的 refs-only closeout shape，不授权 OPL、Provider、Agent Lab 或 OMA 替 MAG 生成 grant-ready、fundability-ready、quality/export-ready 或 submission-ready verdict。
 - `product receipt-readiness` 是当前 MAG product grouped CLI 的 body-free receipt refs readiness 入口，聚合 owner receipt、memory accept/reject receipt、package/export lifecycle handoff 和 cleanup/restore/retention lifecycle receipt refs；它只给 OPL/App/operator closeout 或 executor-first bundle 消费 refs，不声明 grant ready、quality ready、export ready、submission ready、provider long-soak complete 或 production ready。
 - MAG grant-stage / lifecycle / legacy route-back payload 已可被 OPL refs-only external evidence ledger 记录并验证。该进展只证明 MAG-owned refs、owner-chain refs 与 typed blocker 可被外部 ledger 消费，不授权 OPL 写 grant truth、memory body、artifact body、quality/export verdict，也不声明 submission-ready、production-ready 或 Temporal long-soak complete；具体 attempt、receipt path 和 worklist 过程记录归 [MAG standard agent 文档过程归档 2026-05](./history/plans/mag-standard-agent-doc-process-history-2026-05.md)。
@@ -43,8 +43,8 @@ Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream 
 - 真实 grant workspace 产生 accepted/rejected memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout。
 - OPL/App/operator closeout 与 executor-first bundle 持续消费 `product receipt-readiness` 输出，并在真实 workspace 中回连 owner receipt、typed blocker、no-regression evidence 与 lifecycle evidence。
 - OPL/App shell 持续消费 MAG package refs、gap report、manual portal boundary、quality refs、transition oracle refs 和 safe action refs。
-- External production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 产生连续证据。
-- Temporal provider long SLO、repair cadence 和 live receipt reconciliation 产生连续证据。
+- External production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 已有首批 refs-only closeout；后续门槛是持续真实消费与 no-regression 证据。
+- Temporal provider 已记录 receipt reconciliation ref，但 long-soak window evidence 仍未关闭；后续门槛是 long SLO、repair cadence 和 live receipt reconciliation 的连续证据。
 - Physical morphology cleanup 在 active caller migration、direct/hosted parity、owner receipt roundtrip、continuous evidence 和 no-active legacy caller / no-resurrection scan 稳定后继续推进；满足门槛即删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests，不保留 compatibility shim。
 
 ## 当前入口
