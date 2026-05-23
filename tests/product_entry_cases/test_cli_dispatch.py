@@ -272,11 +272,8 @@ class ProductEntryCliDispatchTest(unittest.TestCase):
             input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
 
-    def test_flat_product_status_alias_is_rejected(self) -> None:
-        with self.assertRaisesRegex(
-            SystemExit,
-            "Legacy flat command `product-status` has been removed. Use `product status` instead.",
-        ):
+    def test_flat_product_status_alias_has_no_special_compatibility_branch(self) -> None:
+        with self.assertRaisesRegex(SystemExit, "invalid choice: 'product-status'"):
             main(
                 [
                     "product-status",

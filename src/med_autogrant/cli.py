@@ -9,13 +9,11 @@ from med_autogrant import editable_shared_bootstrap as _editable_shared_bootstra
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 from med_autogrant.public_cli import (
-    INTERNAL_TO_PUBLIC_COMMAND,
     PUBLIC_COMMAND_GROUP_SUMMARIES,
     PUBLIC_COMMAND_ORDER,
     PUBLIC_GROUP_COMMANDS,
     PUBLIC_THREE_TOKEN_COMMANDS,
     PUBLIC_TO_INTERNAL_COMMAND,
-    public_command_label,
 )
 from med_autogrant.workspace_types import WorkspaceError, WorkspaceStateError
 
@@ -130,7 +128,7 @@ from med_autogrant.cli_parts.parser_adders import (
 )
 
 
-LEGACY_PUBLIC_COMMANDS = set(INTERNAL_TO_PUBLIC_COMMAND)
+RETIRED_FLAT_COMMANDS = frozenset(PUBLIC_TO_INTERNAL_COMMAND.values())
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -563,10 +561,8 @@ def _maybe_handle_public_help(argv: list[str]) -> int | None:
 def _normalize_public_command_argv(argv: list[str]) -> list[str]:
     if not argv:
         return argv
-    if argv[0] in LEGACY_PUBLIC_COMMANDS:
-        raise SystemExit(
-            f"Legacy flat command `{argv[0]}` has been removed. Use `{public_command_label(argv[0])}` instead."
-        )
+    if argv[0] in RETIRED_FLAT_COMMANDS:
+        raise SystemExit(f"argument command: invalid choice: '{argv[0]}'")
     if len(argv) >= 3 and (argv[0], argv[1], argv[2]) in PUBLIC_THREE_TOKEN_COMMANDS:
         return [PUBLIC_THREE_TOKEN_COMMANDS[(argv[0], argv[1], argv[2])], *argv[3:]]
     if len(argv) >= 2 and (argv[0], argv[1]) in PUBLIC_TO_INTERNAL_COMMAND:
