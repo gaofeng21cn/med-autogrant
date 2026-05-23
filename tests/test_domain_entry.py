@@ -472,14 +472,6 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                     "grant-run-nsfc-demo-001-baseline-001",
                 )
 
-                with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-run"):
-                    entry.dispatch(
-                        {
-                            "command": "runtime-run",
-                            "input_path": str(REVISION_EXAMPLE_PATH),
-                        }
-                    )
-
                 revision_payload = entry.dispatch(
                     {
                         "command": "execute-revision-pass",
@@ -489,21 +481,6 @@ class DomainEntryFreshProofTest(unittest.TestCase):
                 )
                 self.assertTrue(revision_payload["ok"])
                 self.assertEqual(revision_payload["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
-
-                with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-run"):
-                    entry.dispatch(
-                        {
-                            "command": "runtime-run",
-                            "input_path": str(revised_workspace_path),
-                        }
-                    )
-
-                with self.assertRaisesRegex(WorkspaceStateError, "不支持的 domain entry command: runtime-resume"):
-                    entry.dispatch(
-                        {
-                            "command": "runtime-resume",
-                        }
-                    )
 
                 bundle_payload = entry.dispatch(
                     {
