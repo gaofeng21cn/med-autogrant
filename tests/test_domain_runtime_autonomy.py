@@ -91,6 +91,47 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
             "active_closure_package_target_stage": None,
         }
 
+    def _bounded_controller_fields(self, *, result_shape: str = "no_regression_evidence") -> dict[str, object]:
+        if result_shape == "no_regression_evidence":
+            refs = {
+                "no_regression_evidence_ref": (
+                    "no-regression:mag/autonomy-controller/bounded-attempt-goal-reached"
+                )
+            }
+        else:
+            refs = {
+                "typed_blocker_ref": "typed-blocker:mag/autonomy-controller/opl-provider-attempt-required"
+            }
+        return {
+            "controller_execution_boundary": {
+                "surface_kind": "mag_autonomy_controller_execution_boundary",
+                "execution_scope": "bounded_single_opl_provider_attempt",
+                "mag_role": "refs_only_domain_authority_action_target",
+                "post_start_residency_owner": "one-person-lab",
+                "attempt_ledger_owner": "one-person-lab",
+                "max_domain_cycles_per_invocation": 1,
+                "mag_long_running_driver": False,
+                "mag_scheduler_daemon_owner": False,
+                "mag_owns_attempt_ledger": False,
+            },
+            "authority_return": {
+                "surface_kind": "mag_autonomy_controller_authority_return",
+                "allowed_return_shapes": [
+                    "domain_owner_receipt",
+                    "typed_blocker",
+                    "no_regression_evidence",
+                ],
+                "result_shape": result_shape,
+                "body_policy": "refs_only_no_runtime_or_grant_body",
+                "refs": refs,
+                "authority_boundary": {
+                    "mag_writes_opl_attempt_ledger": False,
+                    "mag_runs_scheduler_daemon": False,
+                    "mag_returns_runtime_or_grant_body": False,
+                },
+            },
+        }
+
     def test_execute_grant_autonomy_controller_validates_and_writes_report(self) -> None:
         from med_autogrant.domain_runtime import MagDomainRuntime
 
@@ -224,6 +265,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
                 }
             ],
             "final_workspace": workspace,
+            **self._bounded_controller_fields(),
         }
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -373,6 +415,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
                 }
             ],
             "final_workspace": final_workspace,
+            **self._bounded_controller_fields(),
         }
 
         with tempfile.TemporaryDirectory() as tmp_dir:

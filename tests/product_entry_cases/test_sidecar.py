@@ -655,7 +655,24 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(wakeup_contract["queue_write_policy"], "enqueue_wakeup_only_no_grant_truth_writes")
         self.assertEqual(wakeup_contract["required_return_shapes"], ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"])
         self.assertFalse(any(export["todo_wakeup"]["forbidden_private_runtime_roles"].values()))
-        self.assertEqual(export["autonomy_controller"]["default_mode"], "dry_run")
+        self.assertEqual(
+            export["autonomy_controller"]["execution_scope"],
+            "bounded_single_opl_provider_attempt",
+        )
+        self.assertEqual(
+            export["autonomy_controller"]["mag_role"],
+            "refs_only_domain_authority_action_target",
+        )
+        self.assertEqual(export["autonomy_controller"]["post_start_residency_owner"], "one-person-lab")
+        self.assertEqual(export["autonomy_controller"]["attempt_ledger_owner"], "one-person-lab")
+        self.assertEqual(export["autonomy_controller"]["max_domain_cycles_per_invocation"], 1)
+        self.assertFalse(export["autonomy_controller"]["mag_long_running_driver"])
+        self.assertFalse(export["autonomy_controller"]["mag_scheduler_daemon_owner"])
+        self.assertFalse(export["autonomy_controller"]["mag_attempt_ledger_owner"])
+        self.assertEqual(
+            export["autonomy_controller"]["allowed_return_shapes"],
+            ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"],
+        )
         self.assertFalse(export["autonomy_controller"]["hermes_proof_executor_default"])
         self.assertEqual(export["user_loop_attention_queue"]["queue_owner"], "one-person-lab")
         self.assertEqual(
