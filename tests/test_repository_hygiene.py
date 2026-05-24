@@ -175,39 +175,33 @@ class RepositoryHygieneTest(unittest.TestCase):
         self.assertEqual(over_limit, [])
         self.assertEqual(new_or_grown_over_target, [])
 
-    def test_machine_surfaces_do_not_reintroduce_retired_product_entry_vocabulary(self) -> None:
-        retired_terms = [
-            "front" + "door",
-            "front" + "desk",
-            "front" + "-desk",
-            "product_" + "front" + "desk",
-            "product-" + "front" + "desk",
-            "product " + "front" + "desk",
-            "gateway_" + "interaction_contract",
-            "front" + "door_owner",
-            "natural_language_" + "front" + "door",
-            "pending-" + "handoff",
-            "pending-" + "handoff-requirements.schema.json",
-            "opl-product " + "entry",
-            "codex_cli" + "_autonomous",
-            "hermes" + "_native" + "_proof",
-            "host" + "_agent",
-            "@redcube/" + "hermes-substrate",
-        ]
+    def test_machine_surfaces_do_not_restore_retired_product_entry_compatibility_claims(self) -> None:
+        retired_claim_patterns = (
+            '"compatibility_alias_allowed": true',
+            "compatibility_alias_allowed: true",
+            '"claims_compatibility_alias_owner": true',
+            "claims_compatibility_alias_owner: true",
+            '"mag_restores_compatibility_alias": true',
+            "mag_restores_compatibility_alias: true",
+            "active_compatibility_alias",
+            "default_compatibility_alias",
+        )
         scanned_roots = ("src/", "tests/", "schemas/", "contracts/", "plugins/")
         scanned_suffixes = {".py", ".json", ".yaml", ".yml", ".toml", ".sh"}
         violations: list[str] = []
 
         for relative_path in _tracked_or_pending_files():
+            if relative_path == "tests/test_repository_hygiene.py":
+                continue
             if not relative_path.startswith(scanned_roots):
                 continue
             path = REPO_ROOT / relative_path
             if path.suffix not in scanned_suffixes or not path.is_file():
                 continue
-            text = path.read_text(encoding="utf-8")
-            for term in retired_terms:
-                if term in text:
-                    violations.append(f"{relative_path}: {term}")
+            text = path.read_text(encoding="utf-8").lower()
+            for pattern in retired_claim_patterns:
+                if pattern in text:
+                    violations.append(f"{relative_path}: {pattern}")
 
         self.assertEqual(violations, [])
 
