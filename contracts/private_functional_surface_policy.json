@@ -118,7 +118,7 @@
     "surface_classifications": [
       {
         "active_caller_status": "active_domain_pack_or_handler_target",
-        "allowed_role": "route_authority_adapter_and_regression_oracle",
+        "allowed_role": "route_authority_adapter_without_facade_reexport",
         "classification": "declarative_grant_handler",
         "forbidden_roles": [
           "generic_runner",
@@ -145,7 +145,6 @@
           "target_owner_after_migration": "med-autogrant"
         },
         "source_refs": [
-          "src/med_autogrant/domain_runtime.py",
           "src/med_autogrant/domain_runtime_parts/substrate.py",
           "src/med_autogrant/domain_entry.py"
         ],

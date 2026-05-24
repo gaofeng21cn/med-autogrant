@@ -72,7 +72,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
             build_grant_quality_closure_dossier as build_closure_dossier_impl,
         )
         from med_autogrant.grant_quality import build_grant_quality_scorecard as build_scorecard_impl
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 
         runtime = MagDomainRuntime()
         starting_workspace = _load_json(REVISION_EXAMPLE_PATH)
@@ -122,7 +122,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
             build_grant_quality_closure_dossier as build_closure_dossier_impl,
         )
         from med_autogrant.grant_quality import build_grant_quality_scorecard as build_scorecard_impl
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 
         runtime = MagDomainRuntime()
         workspace = _load_json(DRAFTING_EXAMPLE_PATH)

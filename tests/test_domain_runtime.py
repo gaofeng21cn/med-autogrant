@@ -297,7 +297,7 @@ class MagRuntimeCliDispatchTest(unittest.TestCase):
 
 class MagDomainRuntimeFlowTest(unittest.TestCase):
     def test_mag_runtime_keeps_revision_and_export_paths_identity_stable(self) -> None:
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 
         runtime = MagDomainRuntime()
 
@@ -488,7 +488,7 @@ class HostedContractBundleBridgeTest(unittest.TestCase):
 
 class RevisionExecutionHandoffTest(unittest.TestCase):
     def test_execute_critique_pass_forwards_explicit_executor_kind(self) -> None:
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 
         runtime = MagDomainRuntime()
 

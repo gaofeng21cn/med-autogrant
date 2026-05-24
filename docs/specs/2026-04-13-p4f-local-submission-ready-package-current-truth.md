@@ -44,7 +44,7 @@ Date: `2026-04-13`
 
 - `cli.py`
 - `domain_entry.py`
-- `domain_runtime.py`
+- `domain_runtime_parts/substrate.py`
 - `product_entry.py`
 - hosted contract bundle / product entry command catalog / grant cockpit command surface
 

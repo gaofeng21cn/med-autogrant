@@ -29,7 +29,7 @@ class RuntimeSplitStructureTest(unittest.TestCase):
         self.assertEqual([], offenders)
 
     def test_mag_domain_runtime_is_domain_adapter_not_generic_runtime_owner(self) -> None:
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 
         topology = MagDomainRuntime().describe_topology()
 
@@ -45,7 +45,7 @@ class RuntimeSplitStructureTest(unittest.TestCase):
         self.assertEqual(topology["optional_proof_executor_boundary"], "explicit opt-in only")
 
     def test_package_surface_owns_export_methods_under_authoring_mixin(self) -> None:
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
         from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
         from med_autogrant.domain_runtime_parts.package_surface import DomainRuntimePackageSurfaceMixin
 
@@ -87,6 +87,9 @@ class RuntimeSplitStructureTest(unittest.TestCase):
 
         self.assertNotIn("from med_autogrant.domain_runtime import", domain_entry_text)
         self.assertNotIn(OLD_RUNTIME_IMPORT, domain_entry_text)
+
+    def test_retired_runtime_facade_is_not_present_in_source(self) -> None:
+        self.assertFalse((SRC_ROOT / "med_autogrant" / "domain_runtime.py").exists())
 
     def test_control_plane_does_not_import_workspace_facade(self) -> None:
         control_plane_text = (SRC_ROOT / "med_autogrant" / "control_plane.py").read_text(encoding="utf-8")

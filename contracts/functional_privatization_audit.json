@@ -4160,23 +4160,24 @@
         },
         {
           "active_caller_allowed": false,
-          "active_caller_status": "retired_no_active_caller_expected",
+          "active_caller_status": "retired_physical_facade_removed_no_active_caller",
           "active_callers": [],
           "cannot_absorb_reason": "This is retired compatibility glue, not an OPL primitive to absorb.",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
-            "src/med_autogrant/domain_runtime.py"
+            "src/med_autogrant/domain_runtime.py:absent"
           ],
           "compatibility_alias_allowed": false,
           "evidence_refs": [
             "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
             "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
+            "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
             "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge"
           ],
-          "migration_action": "Remove or keep only tombstone/provenance; do not add compatibility aliases.",
+          "migration_action": "Keep only tombstone/provenance; do not add compatibility aliases or re-export facades.",
           "module_id": "domain_runtime_patch_bridge",
           "owner": "none_active",
-          "retention_reason": "No active runtime authority should depend on the patch bridge.",
+          "retention_reason": "The old domain_runtime facade file is absent from active source.",
           "state": "retired_or_tombstone_only"
         },
         {
@@ -6238,23 +6239,24 @@
       },
       {
         "active_caller_allowed": false,
-        "active_caller_status": "retired_no_active_caller_expected",
+        "active_caller_status": "retired_physical_facade_removed_no_active_caller",
         "active_callers": [],
         "cannot_absorb_reason": "This is retired compatibility glue, not an OPL primitive to absorb.",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
-          "src/med_autogrant/domain_runtime.py"
+          "src/med_autogrant/domain_runtime.py:absent"
         ],
         "compatibility_alias_allowed": false,
         "evidence_refs": [
           "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
           "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
+          "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
           "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge"
         ],
-        "migration_action": "Remove or keep only tombstone/provenance; do not add compatibility aliases.",
+        "migration_action": "Keep only tombstone/provenance; do not add compatibility aliases or re-export facades.",
         "module_id": "domain_runtime_patch_bridge",
         "owner": "none_active",
-        "retention_reason": "No active runtime authority should depend on the patch bridge.",
+        "retention_reason": "The old domain_runtime facade file is absent from active source.",
         "state": "retired_or_tombstone_only"
       },
       {
@@ -6889,23 +6891,24 @@
     },
     {
       "active_caller_allowed": false,
-      "active_caller_status": "retired_no_active_caller_expected",
+      "active_caller_status": "retired_physical_facade_removed_no_active_caller",
       "active_callers": [],
       "cannot_absorb_reason": "This is retired compatibility glue, not an OPL primitive to absorb.",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
-        "src/med_autogrant/domain_runtime.py"
+        "src/med_autogrant/domain_runtime.py:absent"
       ],
       "compatibility_alias_allowed": false,
       "evidence_refs": [
         "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
         "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
+        "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
         "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge"
       ],
-      "migration_action": "Remove or keep only tombstone/provenance; do not add compatibility aliases.",
+      "migration_action": "Keep only tombstone/provenance; do not add compatibility aliases or re-export facades.",
       "module_id": "domain_runtime_patch_bridge",
       "owner": "none_active",
-      "retention_reason": "No active runtime authority should depend on the patch bridge.",
+      "retention_reason": "The old domain_runtime facade file is absent from active source.",
       "state": "retired_or_tombstone_only"
     },
     {

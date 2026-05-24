@@ -244,7 +244,7 @@ class HostedContractBundleCliTest(unittest.TestCase):
             self.assertEqual(json.loads(hosted_contract_path.read_text(encoding="utf-8")), contract_bundle)
 
     def test_build_hosted_contract_bundle_fails_closed_on_invalid_hosted_contract_shape(self) -> None:
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
         from med_autogrant.workspace import WorkspaceStateError
 
         runtime = MagDomainRuntime()

@@ -659,7 +659,15 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         )
         self.assertEqual(
             retire_modules["domain_runtime_patch_bridge"]["active_caller_status"],
-            "retired_no_active_caller_expected",
+            "retired_physical_facade_removed_no_active_caller",
+        )
+        self.assertEqual(
+            retire_modules["domain_runtime_patch_bridge"]["code_paths"],
+            ["src/med_autogrant/domain_runtime.py:absent"],
+        )
+        self.assertIn(
+            "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
+            retire_modules["domain_runtime_patch_bridge"]["evidence_refs"],
         )
         self.assertEqual(
             retire_modules["compatibility_only_product_entry_aggregate_test"]["active_caller_status"],

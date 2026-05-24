@@ -144,11 +144,10 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
         "surface_id": "domain_runtime",
         "classification": "declarative_grant_handler",
         "source_refs": [
-            "src/med_autogrant/domain_runtime.py",
             "src/med_autogrant/domain_runtime_parts/substrate.py",
             "src/med_autogrant/domain_entry.py",
         ],
-        "allowed_role": "route_authority_adapter_and_regression_oracle",
+        "allowed_role": "route_authority_adapter_without_facade_reexport",
         "forbidden_roles": [
             "generic_runner",
             "generic_queue",

@@ -164,6 +164,13 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     }
     assert set(classifications) == set(morphology["required_surface_ids"])
     assert classifications["domain_runtime"]["classification"] == "declarative_grant_handler"
+    assert classifications["domain_runtime"]["source_refs"] == [
+        "src/med_autogrant/domain_runtime_parts/substrate.py",
+        "src/med_autogrant/domain_entry.py",
+    ]
+    assert classifications["domain_runtime"]["allowed_role"] == (
+        "route_authority_adapter_without_facade_reexport"
+    )
     assert classifications["runtime_registration"]["classification"] == "declarative_grant_handler"
     assert classifications["product_entry"]["classification"] == "refs_only_adapter"
     assert classifications["grouped_cli_wrapper"]["classification"] == "refs_only_adapter"

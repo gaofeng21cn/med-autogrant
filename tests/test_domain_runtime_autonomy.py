@@ -133,7 +133,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
         }
 
     def test_execute_grant_autonomy_controller_validates_and_writes_report(self) -> None:
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 
         workspace = _load_json(FROZEN_EXAMPLE_PATH)
         quality_summary = self._quality_summary(
@@ -289,7 +289,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
                 run_controller.assert_called_once()
 
     def test_execute_grant_autonomy_controller_preserves_nih_family_grammar_from_selection_start(self) -> None:
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 
         selection_input = _load_json(NIH_SELECTION_INPUT_PATH)
         final_workspace = _load_json(FROZEN_EXAMPLE_PATH)
@@ -450,7 +450,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
                 run_controller.assert_called_once()
 
     def test_execute_grant_autonomy_controller_keeps_nih_family_trace_from_selection_input(self) -> None:
-        from med_autogrant.domain_runtime import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
 
         selection_input = _load_json(NIH_SELECTION_INPUT_PATH)
         request = {
