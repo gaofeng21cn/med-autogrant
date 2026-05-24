@@ -63,6 +63,15 @@ MAG 必须保留的 authority：
 | External evidence request accounting | `refs_only_closed` | `mag-evidence-receipt-ledger.json` 已记录 7 个 request refs-only close；剩余真实证据门是 `temporal_provider_long_soak_window_evidence` 和持续 no-regression / consumption。 |
 | Process/history foldback | `landed` | dated closeout、receipt proof、provider/Gateway/local-manager 背景已回到 history/specs/provenance，不再作为 active plan 流水。 |
 
+## 当前完成进度
+
+| Area | 当前进度 | 当前读法 |
+| --- | --- | --- |
+| Standard OPL Agent source shape | `landed_with_evidence_tail` | `agent/`、stage control plane、quality gates、pack compiler input 和 MAG owner boundary 已是当前默认结构；不声明 grant-ready、submission-ready 或 production-ready。 |
+| Runtime / product shell thinning | `landed_with_external_gate` | product/status/user-loop/sidecar/domain_runtime 面只能作为 direct handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone/migration input。 |
+| Evidence accounting | `refs_only_closed_for_requests` | MAG evidence request ledger 已闭合 refs-only accounting；真实 OPL-hosted grant-stage attempt、workspace memory/package/lifecycle receipt 和 Temporal long soak 仍是证据尾项。 |
+| Docs lifecycle | `single_active_truth_owner` | 本文持有 current truth、gap、计划和下一轮 prompt；历史 proof、receipt 流水和旧路线继续留在 history/specs/provenance。 |
+
 ## 功能/结构差距
 
 当前没有未分类的大块 MAG 功能缺口；剩余结构差距是 owner shape 与 physical cleanup tail：
@@ -103,6 +112,48 @@ Refs-only ledger verification、request accounting closure、OPL workorder close
 3. 对 AI-first authority guard 做回归维护：任何 fundability / quality / export / submission-ready claim 必须回到 MAG owner surface 或 AI-backed artifact。
 4. 只用持续真实 workspace/App/operator/release evidence 与 Temporal long-soak window evidence 关闭 production evidence tail；refs-only accounting 只进入 ledger/history。
 5. 在 active caller 迁出且 no-resurrection guard 成立后，删除或 tombstone 旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；测试改为断言 current contract、schema、CLI/API、manifest、owner receipt、typed blocker、fail-closed 或 tombstone semantics。
+
+## 下一轮 Agent prompt
+
+Objective:
+
+- 继续治理 `/Users/gaofeng/workspace/med-autogrant` 的 MAG 标准 OPL Agent 收薄与证据尾项；保持 grant authority 留在 MAG，通用 runtime / generated/default caller 留在 OPL。
+
+Write scope:
+
+- `docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/status.md`、`docs/active/opl-private-implementation-migration-inventory.md`、MAG contracts/source/tests 中仍影响 owner boundary、generated/default caller 或 no-resurrection 的 surface。
+
+Live truth inputs:
+
+- `AGENTS.md`、`TASTE.md`、核心五件套、本文、MAG ideal-state reference。
+- `contracts/runtime-program/current-program.json`、functional/private surface contracts、owner receipt / memory / package / lifecycle contracts、sidecar/product-entry/action metadata。
+- Focused pytest、`scripts/verify.sh`、OPL `agents interfaces --domain mag --json`、OPL framework readiness / App drilldown 中 MAG refs-only evidence 读面。
+
+Required actions:
+
+- 核实 `generated_surface_bridge_exit`、`legacy_runtime_session_lifecycle_exit`、`package_memory_lifecycle_refs_only_boundary`、`private_authority_ai_first_guard` 和 `physical_morphology_tail` 的 live caller 与 no-resurrection 证据。
+- 若 active caller 已迁出且 replacement / receipt / no-active-caller proof 成立，直接删除、archive 或 tombstone 旧 wrapper、alias、facade、patch bridge 和 compatibility aggregate test。
+- 把已关闭项折回本文或核心五件套；把 proof 流水折回 history/provenance。
+
+Non-goals:
+
+- 不把 scorecard、schema completeness、package existence、provider completion、queue completion 或 refs-only accounting 写成 fundability-ready、grant-ready、quality-ready、export-ready、submission-ready 或 production-ready。
+- 不把 memory body、grant artifact/private evidence、owner receipt authority 或 quality verdict 上收到 OPL。
+- 不新增 compatibility shim、facade、alias 或旧 runtime/probe fallback。
+
+Verification commands:
+
+- Docs-only：`rtk git diff --check`、`rtk rg -n "<<<<<<<|>>>>>>>|=======" docs`。
+- 触及 source/contracts/tests：`rtk ./scripts/verify.sh` 或相关 focused `rtk python -m pytest ...`。
+
+Completion gate:
+
+- Current plan 只保留 still-open gap 和下一步；closed gap 已重写为完成进度或移入 history/provenance。
+- main checkout 上完成触及面验证；worktree/branch 已吸收清理，或明确因近期写入/未提交改动保留。
+
+Foldback target:
+
+- Durable current truth 折回本文、核心五件套、private inventory 或 machine-readable contracts；过程命令、receipt id、旧路线和 closeout 流水进入 `docs/history/**`、ledger 或提交历史。
 
 ## 历史索引
 
