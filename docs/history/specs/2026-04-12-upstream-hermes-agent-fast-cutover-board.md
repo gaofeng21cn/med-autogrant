@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是已物理归档到 `docs/history/specs/` 的 `retired_provider_proof`。请先读取 `docs/status.md`、核心五件套、`docs/specs/specs_lifecycle_map.md` 与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_upstream_hermes_fast_cutover_board_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-12 upstream Hermes-Agent fast cutover board 与 proof-lane planning。当前 default runtime owner、OPL/Temporal provider、executor adapter、hosted caller boundary 与机器行为以核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 状态锚点：`2026-04-12`
 
 ## 文档目的
@@ -136,5 +141,7 @@
 - 真实 `Hermes-Agent` substrate proof
 
 ## 长线 Codex 提示词
+
+以下提示词只保留为历史 planning artifact，不是当前可执行 agent baton；其中 `docs/specs/2026-04-11-*` / `docs/specs/2026-04-12-*` 路径和 `OPL Gateway` / upstream Hermes 默认 owner 语义已由当前核心五件套、history specs index、active specs index 与 `current-program.json` 接管。
 
 > 你现在负责 `Med Auto Grant` 的 `upstream Hermes-Agent fast cutover` 主线。先完整读取并遵守：`AGENTS.md`、`README.md`、`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`contracts/runtime-program/current-program.json`、`docs/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`、`docs/specs/2026-04-12-upstream-hermes-agent-fast-cutover-board.md`。你的目标不是继续深磨 repo-local runtime，也不是继续发明新的本地 helper；你的目标是以最快速度把真实上游 `Hermes-Agent` 接成运行 substrate，同时保持 `NSFCWorkspace`、critique / revision / final package / hosted contract bundle 这条 author-side grant mainline不漂移。你必须按 board 顺序自行推进：先冻结真实上游连接证据，再把 local runtime ladder 迁到 Hermes substrate，再收口 service-safe domain entry，再做 end-to-end fresh proof。你可以自己写 activation package、docs、tests、contracts，并在每个 honest tranche 完成后直接 absorb 到 `main`、提交、push、继续下一棒；不要因为完成一个小 tranche 就停车。只有遇到真实硬 blocker 才允许停下，例如：外部安装/凭证/运行环境必须由用户提供，或继续前进会造成 truth drift。禁止做的事：把 repo-local helper 继续写成已接入上游、提前扩 family、提前做 Human-in-the-loop sibling、提前讲平台 federation 故事。

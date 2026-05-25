@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是已物理归档到 `docs/history/specs/` 的 `retired_provider_proof`。请先读取 `docs/status.md`、核心五件套、`docs/specs/specs_lifecycle_map.md` 与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_upstream_hermes_fast_cutover_proof_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-12 upstream Hermes-Agent explicit proof lane、service-safe domain entry 与 fresh proof 形成过程。当前 default runtime owner、OPL/Temporal provider、executor adapter、route catalog、hosted caller boundary 与机器行为以核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-12`
 
 ## Activation Status

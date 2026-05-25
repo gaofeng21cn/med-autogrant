@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-21`）：这份 dated spec 已从 `docs/specs/` 退到 `docs/history/specs/`，只保留为 lightweight product-entry envelope 与 OPL handoff shape 的历史 provenance。当前 product owner、generated/hosted caller、App/workbench、production evidence 与 grant readiness 结论回到核心五件套、active plan、contracts/schema/source 与 `contracts/runtime-program/current-program.json`；旧 `Current Truth` 标题、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_lightweight_product_entry_opl_handoff_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 lightweight product-entry envelope 与 OPL handoff shape 的形成过程。当前 product-entry owner、generated/hosted caller、App/workbench、production evidence、grant readiness 与机器行为以核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-12`
 
 ## Activation Status

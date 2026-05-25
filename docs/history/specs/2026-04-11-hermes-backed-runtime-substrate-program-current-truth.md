@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是 `superseded_provider_proof` / historical provenance。它不定义当前 MAG runtime owner、provider owner、compatibility bridge 或 required runnable path。当前 owner line 是 `codex_cli` default executor + MAG-owned grant truth / quality / route / export authority + OPL stage-led framework consuming MAG descriptor/projection。`hermes_agent` 只表示显式非默认 executor/proof/provenance lane。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_hermes_runtime_substrate_program_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-11 Hermes-backed runtime substrate program、runtime-state provenance 与 fail-closed migration lessons。当前 MAG runtime owner、default provider、OPL/Temporal hosted execution、attempt ledger 与机器行为以核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 当前处置：
 
 - Superseded：Hermes-backed runtime substrate as mainline owner、local host-agent compatibility bridge、future Hermes host compatibility handoff。

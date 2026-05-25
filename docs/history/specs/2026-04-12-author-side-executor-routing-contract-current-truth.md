@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是 path-stable 的历史/支撑记录；只有 `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/status.md` 或 `contracts/runtime-program/current-program.json` 明确指定的仍 current subsection 才可作为当前边界阅读。请先读取 `docs/status.md`、核心五件套与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_author_side_executor_routing_snapshot`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-12 author-side executor routing contract 快照与 pending route 迁移语义。当前 route catalog、executor routing schema/source、Codex CLI default executor、OPL/Temporal runtime owner 与机器行为以核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-13`
 
 ## Activation Status
@@ -16,7 +21,7 @@ Date: `2026-04-13`
 
 自 `2026-04-13` 起，当前主线真相已经切到：
 
-- [docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md](./2026-04-13-full-grant-authoring-executor-current-truth.md)
+- [docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md](../../specs/2026-04-13-full-grant-authoring-executor-current-truth.md)
 
 也就是说，下面保留的是历史迁移语义，不再代表当前 landed route catalog。
 

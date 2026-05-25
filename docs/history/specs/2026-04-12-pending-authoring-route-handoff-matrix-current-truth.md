@@ -1,5 +1,12 @@
 # Pending Authoring Route Handoff Matrix Current Truth
 
+> 生命周期注记（`2026-05-25`）：这份 dated spec 已归档为 `historical_handoff_snapshot`，只保留 2026-04-12 pending authoring route handoff matrix。当前 `direction_screening -> frozen` authoring route 已由 2026-04-13 full authoring executor landing 接管；本文中的 Hermes/Gateway/pending wording 只作 provenance。
+
+Owner: `Med Auto Grant`
+Purpose: `historical_pending_authoring_route_handoff_snapshot`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 pending authoring route handoff matrix 与 `pending-handoff-requirements.schema.json` 的追溯背景。当前 authoring route catalog、executor routing schema/source、Codex CLI default executor 与机器行为以核心五件套、`docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-13`
 
 ## Activation Status

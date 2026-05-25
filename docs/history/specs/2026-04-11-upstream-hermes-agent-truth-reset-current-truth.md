@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是已物理归档到 `docs/history/specs/` 的 `retired_provider_proof`。请先读取 `docs/status.md`、核心五件套、`docs/specs/specs_lifecycle_map.md` 与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_hermes_truth_reset_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-11 上游 Hermes-Agent truth reset 与 repo-local runtime helper 误读纠正过程。当前 runtime owner、executor adapter、OPL/Temporal hosted path、domain_runtime 读法与机器行为以核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 ## 目的
 
 这份文档用于把 `Med Auto Grant` 当前 runtime 叙事从“仓内已切到 Hermes-backed runtime”纠正回真实状态。

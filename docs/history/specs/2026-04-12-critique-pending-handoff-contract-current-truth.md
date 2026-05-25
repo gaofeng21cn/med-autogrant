@@ -1,5 +1,12 @@
 # Critique Pending Handoff Contract Current Truth (Historical, Superseded)
 
+> 生命周期注记（`2026-05-25`）：这份 dated spec 已归档为 `historical_handoff_snapshot`，只保留 2026-04-12 critique 仍被误读为 pending / handoff-required 时的历史状态。当前 critique route truth、Codex CLI executor boundary、quality gate 与机器行为回到 active specs、contracts/schema/source、CLI/API 行为和 `contracts/runtime-program/current-program.json`。
+
+Owner: `Med Auto Grant`
+Purpose: `historical_critique_pending_handoff_snapshot`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 critique pending handoff 的 superseded snapshot。当前 critique executor truth 以 `docs/specs/2026-04-13-critique-codex-cli-executor-current-truth.md`、核心五件套、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-12`
 
 ## Historical Status

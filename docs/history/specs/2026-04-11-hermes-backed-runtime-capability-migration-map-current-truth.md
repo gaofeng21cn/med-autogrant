@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是 `superseded_provider_proof` / historical provenance。下方 capability split 记录的是过去 Hermes-backed migration proposal；它不是当前 required runtime path、active provider owner 或 compatibility bridge。当前 MAG owner line 是 `codex_cli` default executor、MAG-owned grant semantics / quality / route / export authority，以及 OPL stage-led framework consuming MAG descriptor/projection。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_hermes_capability_split_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-11 Hermes-backed runtime capability split 与 migration proposal。当前 runtime owner、provider owner、executor boundary、OPL/Temporal hosted path 与机器行为以核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 当前处置：
 
 - Superseded：把 audit dispatch、runtime orchestration、revision/export handoff 或 hosted export execution 分配给 Hermes-Agent 作为 current owner。
