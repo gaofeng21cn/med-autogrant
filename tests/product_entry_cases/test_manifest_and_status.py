@@ -351,7 +351,12 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             generated_handoff["stale_path_policy"],
             "history_or_source_ref_refresh_only",
         )
-        self.assertFalse(generated_handoff["current_mag_path_status"]["claims_opl_replacement_exists"])
+        self.assertTrue(generated_handoff["current_mag_path_status"]["claims_opl_replacement_exists"])
+        self.assertFalse(
+            generated_handoff["current_mag_path_status"][
+                "claims_domain_repo_physical_delete_authorized"
+            ]
+        )
         self.assertFalse(generated_handoff["current_mag_path_status"]["claims_all_bridge_exits_complete"])
         self.assertFalse(
             generated_handoff["current_mag_path_status"]["claims_production_long_run_soak_complete"]

@@ -342,7 +342,8 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertEqual(thinning["domain_handler_target"], "med-autogrant")
         self.assertEqual(thinning["domain_handler_owner"], "med-autogrant")
         self.assertEqual(thinning["state"], "mag_handler_boundary_ready_external_caller_evidence_gated")
-        self.assertFalse(thinning["claims_opl_replacement_exists"])
+        self.assertTrue(thinning["claims_opl_replacement_exists"])
+        self.assertFalse(thinning["claims_domain_repo_physical_delete_authorized"])
         self.assertFalse(thinning["claims_production_long_run_soak_complete"])
         self.assertEqual(
             thinning["allowed_return_shapes"],
@@ -552,7 +553,8 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertEqual(audit["state"], "manifest_projected_for_opl_unified_audit")
         self.assertTrue(audit["opl_unified_audit_read_model"])
         self.assertFalse(audit["claims_generic_runtime_removed_from_mag"])
-        self.assertFalse(audit["claims_opl_replacement_exists"])
+        self.assertTrue(audit["claims_opl_replacement_exists"])
+        self.assertFalse(audit["claims_domain_repo_physical_delete_authorized"])
         self.assertFalse(audit["claims_production_long_run_soak_complete"])
         self.assertEqual(
             audit["classification_buckets"],
@@ -772,7 +774,10 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertTrue(followthrough["authority_boundary"]["classification_closed"])
         self.assertFalse(followthrough["authority_boundary"]["followthrough_gaps_open"])
         self.assertTrue(followthrough["authority_boundary"]["claims_opl_descriptor_source_available"])
-        self.assertFalse(followthrough["authority_boundary"]["claims_opl_replacement_exists"])
+        self.assertTrue(followthrough["authority_boundary"]["claims_opl_replacement_exists"])
+        self.assertFalse(
+            followthrough["authority_boundary"]["claims_domain_repo_physical_delete_authorized"]
+        )
         self.assertFalse(
             followthrough["authority_boundary"]["claims_opl_generated_surface_production_consumed"]
         )

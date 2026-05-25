@@ -257,7 +257,8 @@
               "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe"
             }
           },
-          "claims_opl_replacement_exists": false,
+          "claims_opl_replacement_exists": true,
+          "claims_domain_repo_physical_delete_authorized": false,
           "minimal_authority_surface_taxonomy": {
             "ai_first_judgment_surface_ids": [
               "fundability_verdict",
@@ -321,7 +322,8 @@
         "substrate_adapter_export_ref": "/product_entry_manifest/opl_substrate_adapter_export",
         "knowledge_only_repository": false,
         "retains_domain_program_surfaces": true,
-        "claims_opl_replacement_exists": false,
+        "claims_opl_replacement_exists": true,
+        "claims_domain_repo_physical_delete_authorized": false,
         "claims_production_long_run_soak_complete": false,
         "mag_rebuilds_opl_runtime": false,
         "mag_implements_generic_scheduler": false,
@@ -405,7 +407,8 @@
             "claims_continuous_live_receipt_reconciliation_complete": false,
             "claims_focused_hosted_receipt_verification_complete": false,
             "claims_opl_generated_surface_production_consumed": false,
-            "claims_opl_replacement_exists": false,
+            "claims_opl_replacement_exists": true,
+            "claims_domain_repo_physical_delete_authorized": false,
             "claims_production_long_run_soak_complete": false,
             "claims_real_workspace_memory_migration_complete": false,
             "claims_real_workspace_package_lifecycle_complete": false,

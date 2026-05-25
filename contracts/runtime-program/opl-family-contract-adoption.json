@@ -685,7 +685,8 @@
       "classification_policy": "classify_private_functional_surfaces_as_pack_refs_authority_or_legacy_proof",
       "opl_unified_audit_read_model": true,
       "claims_generic_runtime_removed_from_mag": false,
-      "claims_opl_replacement_exists": false,
+      "claims_opl_replacement_exists": true,
+      "claims_domain_repo_physical_delete_authorized": false,
       "claims_production_long_run_soak_complete": false,
       "classification_buckets": [
         "declarative_pack_surface",
@@ -1547,7 +1548,8 @@
       "provider_completion_is_grant_ready": false,
       "mag_executes_opl_repair": false
     },
-    "claims_opl_replacement_exists": false,
+    "claims_opl_replacement_exists": true,
+    "claims_domain_repo_physical_delete_authorized": false,
     "claims_production_long_run_soak_complete": false,
     "mag_rebuilds_opl_runtime": false,
     "external_evidence_request_pack": {
@@ -1612,7 +1614,8 @@
         "claims_continuous_live_receipt_reconciliation_complete": false,
         "claims_focused_hosted_receipt_verification_complete": false,
         "claims_opl_generated_surface_production_consumed": false,
-        "claims_opl_replacement_exists": false,
+        "claims_opl_replacement_exists": true,
+        "claims_domain_repo_physical_delete_authorized": false,
         "claims_production_long_run_soak_complete": false,
         "claims_real_workspace_memory_migration_complete": false,
         "claims_real_workspace_package_lifecycle_complete": false,

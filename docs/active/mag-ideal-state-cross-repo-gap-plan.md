@@ -25,10 +25,10 @@ MAG 是医学基金申请 domain agent，也是 OPL-compatible Foundry Agent pac
 | 信号 | 当前值 | 读法 |
 | --- | --- | --- |
 | `mag_functional_structure_gap_count` / `standard_agent_source_shape_status` | `0` / `landed` | 这是 contracts/read-model 的结构分类信号，只说明 generic owner intent 已被分类和收薄；不表示 strict source-purity 物理完成、生产切换或 live soak 完成。 |
-| `claims_opl_descriptor_source_available` / `claims_opl_replacement_exists` | `true` / `false` | OPL generated/default caller 所需 descriptor source 已可用；production/default caller、App/workbench 和 live caller 证据仍需要真实消费。 |
+| `claims_opl_descriptor_source_available` / `claims_opl_replacement_exists` / `claims_domain_repo_physical_delete_authorized` | `true` / `true` / `false` | OPL generated/default caller replacement 与 cutover readiness 已有结构证据；该证据不授权 MAG repo 物理删除 active handler/adapter，也不关闭 App/workbench、production/live caller 或 long-soak 证据。 |
 | `claims_all_bridge_exits_complete` / `claims_production_long_run_soak_complete` | `false` | bridge physical deletion 与 Temporal long-soak 仍是 production evidence / cleanup tail。 |
 
-当前 `product_entry*`、`product_entry_parts/*`、`domain_runtime*`、runtime registration、sidecar、lifecycle、memory/package projection、autonomy loop、status/user-loop shell 与部分 CLI/rendering shell 仍可见于 active source。它们只能按 direct handler、refs-only adapter、minimal grant authority function、diagnostic 或 migration input 读取，不能重新写成 MAG 私有 runtime platform；按 strict purity，它们仍是需要 OPL default caller cutover 后删除的功能/结构差距。
+当前 `product_entry*`、`product_entry_parts/*`、`domain_runtime*`、runtime registration、sidecar、lifecycle、memory/package projection、autonomy loop、status/user-loop shell 与部分 CLI/rendering shell 仍可见于 active source。它们只能按 direct handler、refs-only adapter、minimal grant authority function、diagnostic 或 migration input 读取，不能重新写成 MAG 私有 runtime platform；按 strict purity，它们已进入 OPL replacement-ready / physical-delete-not-authorized 状态。
 
 ## 目标态
 
@@ -69,15 +69,15 @@ MAG 必须保留的 authority：
 
 | Area | 当前进度 | 当前读法 |
 | --- | --- | --- |
-| Standard OPL Agent source shape | `classified_but_strict_purity_pending` | `agent/`、stage control plane、quality gates、pack compiler input 和 MAG owner boundary 已是当前默认语义结构；product/status/user-loop/sidecar/domain_runtime/autonomy/CLI shell 仍需 cutover/delete，不声明 grant-ready、submission-ready 或 production-ready。 |
-| Runtime / product shell thinning | `strict_delete_after_cutover` | product/status/user-loop/sidecar/domain_runtime 面只能作为 direct handler、refs-only adapter、minimal authority function、diagnostic 或 migration input；不再作为长期 MAG surface 读取。 |
+| Standard OPL Agent source shape | `replacement_ready_physical_delete_not_authorized` | `agent/`、stage control plane、quality gates、pack compiler input 和 MAG owner boundary 已是当前默认语义结构；OPL default-caller replacement/cutover readiness 已观测，但 product/status/user-loop/sidecar/domain_runtime/autonomy/CLI shell 仍作为 handler/adapter target 暂留，不声明 grant-ready、submission-ready、production-ready 或 physical-delete-ready。 |
+| Runtime / product shell thinning | `refs_only_handler_target_until_owner_delete_receipt` | product/status/user-loop/sidecar/domain_runtime 面只能作为 direct handler、refs-only adapter、minimal authority function、diagnostic 或 migration input；不再作为长期 MAG surface 读取。 |
 | Evidence accounting | `refs_only_closed_for_requests_and_owner_payload_response_landed` | MAG evidence request ledger 已闭合 refs-only accounting；`product opl-owner-payload-response` 已把 MAG refs 整理成 OPL owner-payload workorder 可记录的 response；真实 OPL-hosted grant-stage attempt、workspace memory/package/lifecycle receipt 和 Temporal long soak 仍是证据尾项。 |
 | Human gate projection | `explicit_blocker_not_approval` | Submission-ready export human gate 现在作为 MAG-owned typed blocker authority boundary 暴露给 sidecar 与 receipt reconciliation；真实 human approval receipt 仍未形成。 |
 | Docs lifecycle | `single_active_truth_owner` | 本文持有 current truth、gap、计划和下一轮 prompt；历史 proof、receipt 流水和旧路线继续留在 history/specs/provenance。 |
 
 ## 功能/结构差距
 
-按 strict standard-agent purity，当前 MAG repo 侧 active source 仍有功能/结构差距。`mag_functional_structure_gap_count=0` 只表示历史合同分类闭合，不代表 active shell 已清零。`generated_surface_bridge_exit`、`legacy_runtime_session_lifecycle_exit`、`package_memory_lifecycle_refs_only_boundary`、`private_authority_ai_first_guard` 和 `physical_morphology_tail` 必须继续推进到 OPL generated/default caller 接管与 repo-local wrapper 删除。
+按 strict standard-agent purity，当前 MAG repo 侧 active source 已完成 replacement-ready 分类，但未获得 physical delete authority。`mag_functional_structure_gap_count=0` 只表示历史合同分类闭合，不代表 active shell 已清零。`generated_surface_bridge_exit`、`legacy_runtime_session_lifecycle_exit`、`package_memory_lifecycle_refs_only_boundary`、`private_authority_ai_first_guard` 和 `physical_morphology_tail` 必须继续守住 OPL generated/default caller 接管证据与 repo-local wrapper 删除门。
 
 当前必须推进或守住的结构项：
 
@@ -104,7 +104,7 @@ MAG 必须保留的 authority：
 | Submission-ready human gate receipt | `blocked_on_real_human_gate_receipt` | `submission_ready_export_gate` typed blocker 已可机读；关闭条件仍是真实 MAG owner human-gate receipt 或人工审批路径证据。 |
 | App/operator/release consumption | `needs_sustained_consumption` | OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG package refs、quality refs、manual portal boundary、transition oracle refs、safe action refs 和 `product opl-owner-payload-response` 的 success / typed-blocker payload path。 |
 | Temporal provider long soak | `open` | `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 形成连续证据。 |
-| Physical cleanup / no-resurrection | `strict_source_purity_gap` | production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence 与 no-active legacy caller scan 稳定后删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests。 |
+| Physical cleanup / no-resurrection | `replacement_ready_delete_authority_open` | production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence 与 no-active legacy caller scan 已形成结构输入；删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests 仍需要 explicit MAG owner receipt authorizing physical delete。 |
 
 Refs-only ledger verification、request accounting closure、OPL workorder closeout、source ref declaration、schema completeness、scorecard 分数、package existence 或 provider completion 都不能替代真实 workspace / App / provider evidence，也不能声明 grant-ready、fundability-ready、quality-ready、export-ready、submission-ready 或 production-ready。
 

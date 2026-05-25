@@ -462,7 +462,8 @@ class SchemaRegistryTest(unittest.TestCase):
             currentness["stale_path_policy"]["const"],
             "history_or_source_ref_refresh_only",
         )
-        self.assertFalse(currentness["claims_opl_replacement_exists"]["const"])
+        self.assertTrue(currentness["claims_opl_replacement_exists"]["const"])
+        self.assertFalse(currentness["claims_domain_repo_physical_delete_authorized"]["const"])
         self.assertFalse(currentness["claims_all_bridge_exits_complete"]["const"])
         self.assertFalse(currentness["claims_production_long_run_soak_complete"]["const"])
         generated_surface = generated_handoff["properties"]["generated_or_bridge_surfaces"]["items"]
@@ -548,7 +549,10 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertTrue(followthrough_authority["mag_repo_functional_structure_gaps_zero"]["const"])
         self.assertTrue(followthrough_authority["classification_closed"]["const"])
         self.assertFalse(followthrough_authority["followthrough_gaps_open"]["const"])
-        self.assertFalse(followthrough_authority["claims_opl_replacement_exists"]["const"])
+        self.assertTrue(followthrough_authority["claims_opl_replacement_exists"]["const"])
+        self.assertFalse(
+            followthrough_authority["claims_domain_repo_physical_delete_authorized"]["const"]
+        )
         self.assertFalse(
             followthrough_authority["claims_opl_generated_surface_production_consumed"]["const"]
         )

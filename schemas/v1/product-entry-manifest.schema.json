@@ -3770,7 +3770,8 @@
                 "stale_path_policy": {"const": "history_or_source_ref_refresh_only"},
                 "proof_policy": {"type": "string", "minLength": 1},
                 "claims_descriptor_source_available_for_opl_generation": {"const": true},
-                "claims_opl_replacement_exists": {"const": false},
+                "claims_opl_replacement_exists": {"const": true},
+                "claims_domain_repo_physical_delete_authorized": {"const": false},
                 "claims_all_bridge_exits_complete": {"const": false},
                 "claims_production_long_run_soak_complete": {"const": false}
               }
@@ -4560,6 +4561,7 @@
         "consumes_opl_family_primitive",
         "claims_opl_descriptor_source_available",
         "claims_opl_replacement_exists",
+        "claims_domain_repo_physical_delete_authorized",
         "claims_production_long_run_soak_complete",
         "sidecar_contract_ref",
         "consumed_opl_standard_surfaces",
@@ -4621,6 +4623,9 @@
           "const": true
         },
         "claims_opl_replacement_exists": {
+          "const": true
+        },
+        "claims_domain_repo_physical_delete_authorized": {
           "const": false
         },
         "claims_production_long_run_soak_complete": {
@@ -5019,6 +5024,7 @@
             "opl_unified_audit_read_model",
             "claims_generic_runtime_removed_from_mag",
             "claims_opl_replacement_exists",
+            "claims_domain_repo_physical_delete_authorized",
             "claims_production_long_run_soak_complete",
             "classification_buckets",
             "declarative_pack_surfaces",
@@ -5058,6 +5064,9 @@
               "const": false
             },
             "claims_opl_replacement_exists": {
+              "const": true
+            },
+            "claims_domain_repo_physical_delete_authorized": {
               "const": false
             },
             "claims_production_long_run_soak_complete": {
@@ -5496,6 +5505,7 @@
                 "followthrough_gaps_open",
                 "claims_opl_descriptor_source_available",
                 "claims_opl_replacement_exists",
+                "claims_domain_repo_physical_delete_authorized",
                 "claims_opl_generated_surface_production_consumed",
                 "claims_real_workspace_memory_migration_complete",
                 "claims_real_workspace_package_lifecycle_complete",
@@ -5512,7 +5522,8 @@
                   "classification_closed": {"const": true},
                   "followthrough_gaps_open": {"const": false},
                 "claims_opl_descriptor_source_available": {"const": true},
-                "claims_opl_replacement_exists": {"const": false},
+                "claims_opl_replacement_exists": {"const": true},
+                "claims_domain_repo_physical_delete_authorized": {"const": false},
                 "claims_opl_generated_surface_production_consumed": {"const": false},
                 "claims_real_workspace_memory_migration_complete": {"const": false},
                 "claims_real_workspace_package_lifecycle_complete": {"const": false},

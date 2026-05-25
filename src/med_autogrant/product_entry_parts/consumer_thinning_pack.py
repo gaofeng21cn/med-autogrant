@@ -575,7 +575,8 @@ def _handoff_currentness_proof(generated_surfaces: list[dict[str, Any]]) -> dict
             "moved to history/provenance or refreshed as source refs."
         ),
         "claims_descriptor_source_available_for_opl_generation": not missing_paths,
-        "claims_opl_replacement_exists": False,
+        "claims_opl_replacement_exists": True,
+        "claims_domain_repo_physical_delete_authorized": False,
         "claims_all_bridge_exits_complete": False,
         "claims_production_long_run_soak_complete": False,
     }

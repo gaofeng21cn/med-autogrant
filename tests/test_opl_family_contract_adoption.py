@@ -753,7 +753,8 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert followthrough["authority_boundary"]["classification_closed"] is True
     assert followthrough["authority_boundary"]["followthrough_gaps_open"] is False
     assert followthrough["authority_boundary"]["claims_opl_descriptor_source_available"] is True
-    assert followthrough["authority_boundary"]["claims_opl_replacement_exists"] is False
+    assert followthrough["authority_boundary"]["claims_opl_replacement_exists"] is True
+    assert followthrough["authority_boundary"]["claims_domain_repo_physical_delete_authorized"] is False
     assert followthrough["authority_boundary"]["claims_production_long_run_soak_complete"] is False
     assert thinning["consumed_opl_projection_surfaces"] == [
         "family_conflict_envelope",
@@ -885,7 +886,8 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "provider_completion_is_grant_ready": False,
         "mag_executes_opl_repair": False,
     }
-    assert thinning["claims_opl_replacement_exists"] is False
+    assert thinning["claims_opl_replacement_exists"] is True
+    assert thinning["claims_domain_repo_physical_delete_authorized"] is False
     assert thinning["claims_production_long_run_soak_complete"] is False
     assert thinning["mag_rebuilds_opl_runtime"] is False
 

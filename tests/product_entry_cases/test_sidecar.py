@@ -473,7 +473,8 @@ class ProductSidecarTest(unittest.TestCase):
             export["generated_surface_handoff"]["stale_path_policy"],
             "history_or_source_ref_refresh_only",
         )
-        self.assertFalse(handoff_currentness["claims_opl_replacement_exists"])
+        self.assertTrue(handoff_currentness["claims_opl_replacement_exists"])
+        self.assertFalse(handoff_currentness["claims_domain_repo_physical_delete_authorized"])
         self.assertFalse(handoff_currentness["claims_all_bridge_exits_complete"])
         self.assertFalse(handoff_currentness["claims_production_long_run_soak_complete"])
         for surface in export["generated_surface_handoff"]["generated_or_bridge_surfaces"]:

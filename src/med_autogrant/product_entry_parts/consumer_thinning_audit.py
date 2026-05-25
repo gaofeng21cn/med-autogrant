@@ -23,7 +23,8 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
         ),
         "opl_unified_audit_read_model": True,
         "claims_generic_runtime_removed_from_mag": False,
-        "claims_opl_replacement_exists": False,
+        "claims_opl_replacement_exists": True,
+        "claims_domain_repo_physical_delete_authorized": False,
         "claims_production_long_run_soak_complete": False,
         "classification_buckets": [
             "declarative_pack_surface",

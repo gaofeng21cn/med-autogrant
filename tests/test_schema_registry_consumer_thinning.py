@@ -167,7 +167,8 @@ class ConsumerThinningSchemaRegistryTest(unittest.TestCase):
         self.assertTrue(
             currentness["claims_descriptor_source_available_for_opl_generation"]["const"]
         )
-        self.assertFalse(currentness["claims_opl_replacement_exists"]["const"])
+        self.assertTrue(currentness["claims_opl_replacement_exists"]["const"])
+        self.assertFalse(currentness["claims_domain_repo_physical_delete_authorized"]["const"])
         self.assertFalse(currentness["claims_all_bridge_exits_complete"]["const"])
 
         surface = handoff["properties"]["generated_or_bridge_surfaces"]["items"]
@@ -217,7 +218,8 @@ class ConsumerThinningSchemaRegistryTest(unittest.TestCase):
         self.assertTrue(boundary["mag_repo_functional_structure_gaps_zero"]["const"])
         self.assertTrue(boundary["mag_repo_active_source_shape_landed"]["const"])
         self.assertTrue(boundary["claims_opl_descriptor_source_available"]["const"])
-        self.assertFalse(boundary["claims_opl_replacement_exists"]["const"])
+        self.assertTrue(boundary["claims_opl_replacement_exists"]["const"])
+        self.assertFalse(boundary["claims_domain_repo_physical_delete_authorized"]["const"])
 
     def test_minimal_authority_surface_schema_requires_ai_first_boundary_fields(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))

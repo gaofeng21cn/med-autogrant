@@ -16,8 +16,9 @@
     "opl_can_write_memory_body": false
   },
   "claims_descriptor_source_available_for_opl_generation": true,
+  "claims_domain_repo_physical_delete_authorized": false,
   "claims_generic_runtime_removed_from_mag": false,
-  "claims_opl_replacement_exists": false,
+  "claims_opl_replacement_exists": true,
   "claims_production_long_run_soak_complete": false,
   "classification_buckets": [
     "declarative_pack_surface",
@@ -287,10 +288,11 @@
   "functional_followthrough_gap_classification": {
     "authority_boundary": {
       "claims_continuous_live_receipt_reconciliation_complete": false,
+      "claims_domain_repo_physical_delete_authorized": false,
       "claims_focused_hosted_receipt_verification_complete": false,
       "claims_opl_descriptor_source_available": true,
       "claims_opl_generated_surface_production_consumed": false,
-      "claims_opl_replacement_exists": false,
+      "claims_opl_replacement_exists": true,
       "claims_production_long_run_soak_complete": false,
       "claims_real_workspace_memory_migration_complete": false,
       "claims_real_workspace_package_lifecycle_complete": false,
@@ -507,8 +509,9 @@
       "mag_handler_boundary_ready": true,
       "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
     },
+    "claims_domain_repo_physical_delete_authorized": false,
     "claims_opl_descriptor_source_available": true,
-    "claims_opl_replacement_exists": false,
+    "claims_opl_replacement_exists": true,
     "claims_production_long_run_soak_complete": false,
     "consumed_opl_standard_surfaces": {
       "authority_boundary": {
@@ -916,10 +919,11 @@
     "functional_followthrough_gap_classification": {
       "authority_boundary": {
         "claims_continuous_live_receipt_reconciliation_complete": false,
+        "claims_domain_repo_physical_delete_authorized": false,
         "claims_focused_hosted_receipt_verification_complete": false,
         "claims_opl_descriptor_source_available": true,
         "claims_opl_generated_surface_production_consumed": false,
-        "claims_opl_replacement_exists": false,
+        "claims_opl_replacement_exists": true,
         "claims_production_long_run_soak_complete": false,
         "claims_real_workspace_memory_migration_complete": false,
         "claims_real_workspace_package_lifecycle_complete": false,
@@ -1417,7 +1421,8 @@
         "checked_surface_count": 6,
         "claims_all_bridge_exits_complete": false,
         "claims_descriptor_source_available_for_opl_generation": true,
-        "claims_opl_replacement_exists": false,
+        "claims_domain_repo_physical_delete_authorized": false,
+        "claims_opl_replacement_exists": true,
         "claims_production_long_run_soak_complete": false,
         "missing_current_mag_path_count": 0,
         "missing_current_mag_paths": [],
@@ -2931,8 +2936,9 @@
         "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
       },
       "claims_descriptor_source_available_for_opl_generation": true,
+      "claims_domain_repo_physical_delete_authorized": false,
       "claims_generic_runtime_removed_from_mag": false,
-      "claims_opl_replacement_exists": false,
+      "claims_opl_replacement_exists": true,
       "claims_production_long_run_soak_complete": false,
       "classification_buckets": [
         "declarative_pack_surface",
@@ -5015,8 +5021,9 @@
       "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
     },
     "claims_descriptor_source_available_for_opl_generation": true,
+    "claims_domain_repo_physical_delete_authorized": false,
     "claims_generic_runtime_removed_from_mag": false,
-    "claims_opl_replacement_exists": false,
+    "claims_opl_replacement_exists": true,
     "claims_production_long_run_soak_complete": false,
     "classification_buckets": [
       "declarative_pack_surface",

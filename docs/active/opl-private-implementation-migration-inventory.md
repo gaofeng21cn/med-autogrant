@@ -8,13 +8,13 @@ Date: `2026-05-23`
 
 ## 读法
 
-本文只维护当前 private-platform residue 的分类、active caller、MAG 必须保留的 authority、可上收到 OPL 的 generic 子域和退役门槛。它不保存逐日拆文件 closeout、line-count ledger 或 receipt/proof 流水；这些过程记录进入 `docs/history/**` 或代码提交历史。`standard_agent_source_shape_status=landed` 只表示历史合同分类已收薄；按 strict purity，仍有 active caller 的 product/status/sidecar/runtime/autonomy/CLI shell 都是 default-caller cutover 后要删除的 source-purity tail。Production evidence、default caller 与 no-resurrection cleanup tail 由 [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md) 维护。
+本文只维护当前 private-platform residue 的分类、active caller、MAG 必须保留的 authority、可上收到 OPL 的 generic 子域和退役门槛。它不保存逐日拆文件 closeout、line-count ledger 或 receipt/proof 流水；这些过程记录进入 `docs/history/**` 或代码提交历史。`standard_agent_source_shape_status=landed` 只表示历史合同分类已收薄；按 strict purity，仍有 active caller 的 product/status/sidecar/runtime/autonomy/CLI shell 已进入 OPL replacement-ready / physical-delete-not-authorized 状态。Production evidence、default caller 与 no-resurrection cleanup tail 由 [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md) 维护。
 
 ## 当前 clean truth
 
 MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider runtime、queue、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、generated wrapper、observability/SLO 和 App/workbench shell。MAG 必须保留 grant truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject decision、owner receipt、transition oracle、typed blocker 和 grant-native helper。
 
-当前风险集中在 hand-written product-entry / sidecar / CLI / autonomy controller / domain-runtime 命名和聚合文件，容易被误读成 MAG 私有平台。所有这类 surface 只能按 direct domain handler、refs-only adapter、minimal authority function、diagnostic 或 migration input 读取；OPL generated/default caller parity、owner receipt roundtrip、no-active-caller 和 no-forbidden-write proof 成立后删除 active source，不以 tombstone code、compat alias 或 re-export facade 形式长期保留。
+当前风险集中在 hand-written product-entry / sidecar / CLI / autonomy controller / domain-runtime 命名和聚合文件，容易被误读成 MAG 私有平台。所有这类 surface 只能按 direct domain handler、refs-only adapter、minimal authority function、diagnostic 或 migration input 读取；OPL generated/default caller parity、owner receipt roundtrip、no-active-caller 和 no-forbidden-write proof 是 replacement/cutover 证据，物理删除还需要 explicit MAG owner receipt authorizing physical delete。不以 tombstone code、compat alias 或 re-export facade 形式长期保留。
 
 ## 分类词表
 
