@@ -90,6 +90,9 @@ from med_autogrant.product_entry_parts.codex_stage_receipts import (
 from med_autogrant.product_entry_parts.operator_closeout import (
     build_operator_closeout_readiness_projection,
 )
+from med_autogrant.product_entry_parts.opl_owner_payload_response import (
+    build_opl_owner_payload_response,
+)
 from med_autogrant.product_entry_parts.physical_morphology_guard import (
     build_physical_morphology_guard_projection,
 )
@@ -598,6 +601,19 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
         receipt_readiness_projection: Mapping[str, Any],
     ) -> dict[str, Any]:
         return build_operator_closeout_readiness_projection(
+            production_acceptance=production_acceptance,
+            external_evidence_receipt_ledger=external_evidence_receipt_ledger,
+            receipt_readiness_projection=receipt_readiness_projection,
+        )
+
+    def build_opl_owner_payload_response(
+        self,
+        *,
+        production_acceptance: Mapping[str, Any],
+        external_evidence_receipt_ledger: Mapping[str, Any],
+        receipt_readiness_projection: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        return build_opl_owner_payload_response(
             production_acceptance=production_acceptance,
             external_evidence_receipt_ledger=external_evidence_receipt_ledger,
             receipt_readiness_projection=receipt_readiness_projection,

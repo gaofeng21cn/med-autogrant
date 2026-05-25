@@ -345,6 +345,14 @@ def handle_product_operator_closeout_readiness(args: argparse.Namespace) -> dict
     )
 
 
+def handle_product_opl_owner_payload_response(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_opl_owner_payload_response(
+        production_acceptance=_read_json_object(args.production_acceptance),
+        external_evidence_receipt_ledger=_read_json_object(args.external_evidence_receipt_ledger),
+        receipt_readiness_projection=_read_json_object(args.receipt_readiness_projection),
+    )
+
+
 def handle_product_physical_morphology_guard(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_physical_morphology_guard_projection(
         source_items=[

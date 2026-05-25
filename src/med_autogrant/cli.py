@@ -67,6 +67,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_lifecycle_receipt_evidence,
     handle_product_live_acceptance_receipt,
     handle_product_memory_receipt_projection,
+    handle_product_opl_owner_payload_response,
     handle_product_operator_closeout_readiness,
     handle_product_owner_receipt_evidence,
     handle_product_package_lifecycle_handoff,
@@ -109,6 +110,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_lifecycle_receipt_evidence_command,
     _add_product_live_acceptance_receipt_command,
     _add_product_memory_receipt_projection_command,
+    _add_product_opl_owner_payload_response_command,
     _add_product_operator_closeout_readiness_command,
     _add_product_owner_receipt_evidence_command,
     _add_product_package_lifecycle_handoff_command,
@@ -494,6 +496,12 @@ def build_parser() -> argparse.ArgumentParser:
         "operator-closeout-readiness",
         handle_product_operator_closeout_readiness,
         "把 production acceptance、external evidence ledger 与 receipt readiness 聚合成 operator closeout readiness projection。",
+    )
+    _add_product_opl_owner_payload_response_command(
+        subparsers,
+        "opl-owner-payload-response",
+        handle_product_opl_owner_payload_response,
+        "把 MAG receipt/typed-blocker refs 聚合成 OPL owner-payload workorder 可消费 response。",
     )
     _add_product_physical_morphology_guard_command(
         subparsers,

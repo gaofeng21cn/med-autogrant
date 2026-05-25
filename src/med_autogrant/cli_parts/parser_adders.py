@@ -493,6 +493,20 @@ def _add_product_operator_closeout_readiness_command(
     command.set_defaults(handler=handler)
 
 
+def _add_product_opl_owner_payload_response_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--production-acceptance", required=True)
+    command.add_argument("--external-evidence-receipt-ledger", required=True)
+    command.add_argument("--receipt-readiness-projection", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
 def _add_product_physical_morphology_guard_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
