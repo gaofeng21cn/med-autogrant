@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-20`）：这份 dated spec 已归档为 `historical_verification_gate_provenance`。当前验证口径由核心五件套、`scripts/verify.sh`、contracts/schema/source、active specs 与 `contracts/runtime-program/current-program.json` 持有；本文只保留 2026-04-08 P4.A verification gate 形成过程，不再作为 current owner 或兼容接口依据。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_verification_gate_surface_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-08 verification gate surface、checkpoint vocabulary 与 CLI audit-surface hardening 形成过程。当前验证入口、route checkpoint source、OPL/Temporal runtime owner 与机器行为以核心五件套、`scripts/verify.sh`、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-08`
 
 ## Activation Status

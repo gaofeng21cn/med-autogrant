@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-20`）：这份 dated spec 已归档为 `historical_revision_re_review_provenance`。当前 revision / re-review / quality gate 边界由核心五件套、AI-first quality active spec、contracts/schema/source 与 `contracts/runtime-program/current-program.json` 持有；本文只保留 2026-04-08 P3.B hardening 过程，不再作为 current owner 或兼容接口依据。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_revision_re_review_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-08 revision transition、re-review identity、revision evidence linkage 与 audit surface hardening 形成过程。当前 revision / re-review / quality gate、route truth、executor boundary、OPL/Temporal runtime owner 与机器行为以核心五件套、AI-first quality active spec、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-08`
 
 ## 目标
