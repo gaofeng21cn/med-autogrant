@@ -76,7 +76,7 @@ Support records 只在仍 current 的 subsection 内有效。若其中包含旧 
 
 ## Provider 与 Hosted 旧词处置
 
-本轮内容审计把旧 provider-runtime 词族归为以下生命周期状态：
+当前生命周期治理把旧 provider-runtime 词族归为以下状态：
 
 | 词族 | 当前处置 |
 | --- | --- |

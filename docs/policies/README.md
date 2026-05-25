@@ -1,6 +1,6 @@
 # Policies 文档
 
-Owner: `MedAutoGrant`
+Owner: `Med Auto Grant`
 Purpose: `stable_policy_index`
 State: `active_support`
 Machine boundary: 人读索引。硬约束继续归核心文档、contracts、schemas、source 和验证行为。

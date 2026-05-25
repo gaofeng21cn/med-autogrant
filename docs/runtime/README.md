@@ -1,6 +1,6 @@
 # Runtime 文档
 
-Owner: `MedAutoGrant`
+Owner: `Med Auto Grant`
 Purpose: `grant_runtime_support`
 State: `active_support`
 Machine boundary: 人读索引。Runtime truth 继续归 contracts、schemas、source、current-program records、runtime evidence 与 owner receipts。

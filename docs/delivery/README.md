@@ -1,6 +1,6 @@
 # Delivery 文档
 
-Owner: `MedAutoGrant`
+Owner: `Med Auto Grant`
 Purpose: `grant_delivery_support`
 State: `active_support`
 Machine boundary: 人读索引。交付 authority 继续归 MAG artifact/package contracts、grant workspaces、generated submission material、source、runtime evidence 与 owner receipts。

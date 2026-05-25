@@ -28,7 +28,7 @@ proof、activation package、local-runtime closeout 和 tombstone 进入
 
 密集 specs 组合的生命周期分类见 [Specs Lifecycle Map](./specs_lifecycle_map.md)。编辑或移动任何 dated spec 前，先用这份 map 的 file-level lifecycle table 区分 active record、support current-truth record、integration reference、historical activation package、historical route snapshot 与 superseded provider proof。
 
-本轮 `docs/**/*.md` 审计覆盖到全部 `docs/specs/*.md` 与 `docs/history/specs/*.md`。保留在本目录的 dated specs 只按两类处理：
+当前 specs lifecycle map 已覆盖 `docs/specs/*.md` 与 `docs/history/specs/*.md` 的文件级归位。保留在本目录的 dated specs 只按两类处理：
 
 - `active_current_spec`：仅四份，承担明确命名的当前边界。
 - `support_current_truth`：只在仍 current 的 subsection 内支撑 schema、product-entry、package/export 或 executor routing 读法。

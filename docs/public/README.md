@@ -1,6 +1,6 @@
 # 公开文档
 
-Owner: `MedAutoGrant`
+Owner: `Med Auto Grant`
 Purpose: `public_narrative_index`
 State: `active_support`
 Machine boundary: 人读公开索引。产品真相继续归核心文档、contracts、source、runtime evidence 与 grant artifacts。

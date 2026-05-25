@@ -1,6 +1,6 @@
 # Source 文档
 
-Owner: `MedAutoGrant`
+Owner: `Med Auto Grant`
 Purpose: `grant_source_workspace_support`
 State: `active_support`
 Machine boundary: 人读索引。Source truth 继续归 grant workspaces、funder/task inputs、schemas、source contracts 与 owner receipts。

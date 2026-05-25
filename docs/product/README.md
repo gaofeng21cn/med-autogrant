@@ -1,6 +1,6 @@
 # Product 文档
 
-Owner: `MedAutoGrant`
+Owner: `Med Auto Grant`
 Purpose: `domain_product_entry_support`
 State: `active_support`
 Machine boundary: 人读索引。可调用真相继续归 MAG app skill、CLI/MCP/controller、contracts、schemas、source 与 product-entry manifests。
