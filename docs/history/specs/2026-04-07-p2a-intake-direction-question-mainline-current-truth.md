@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-20`）：这份 dated spec 已归档为 `historical_authoring_flow_provenance`。当前 route truth、authoring pass 和 executor 边界由核心五件套、`docs/specs/README.md` 列出的 active specs、contracts/schema/source 与 `contracts/runtime-program/current-program.json` 持有；本文只保留 2026-04-07 P2.A 形成过程，不再作为 current owner 或兼容接口依据。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_authoring_flow_p2a_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-07 intake、direction screening、question refinement 与 early route/object contract 形成过程。当前 route truth、authoring pass、executor boundary、OPL/Temporal runtime owner 与机器行为以核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-07`
 
 ## 目标

@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-20`）：这份 dated spec 已归档为 `historical_review_gate_provenance`。当前 verdict / review / quality 边界由核心五件套、AI-first quality active spec、contracts/schema/source 与 `contracts/runtime-program/current-program.json` 持有；本文只保留 2026-04-07 P3.A 形成过程，不再作为 current owner 或兼容接口依据。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_review_gate_p3a_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-07 mentor verdict、route recommendation、review-gate audit surface 与 canonical examples 形成过程。当前 verdict/review/quality boundary、AI-first quality gate、OPL/Temporal runtime owner 与机器行为以核心五件套、AI-first quality active spec、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-07`
 
 ## 目标
