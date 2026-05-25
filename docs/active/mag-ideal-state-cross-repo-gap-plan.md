@@ -91,7 +91,7 @@ MAG 必须保留的 authority：
    `product_entry_parts/*`、`domain_runtime_parts/*`、runtime registration、autonomy loop/report shell、lifecycle/memory/package helpers、CLI/rendering shell 等 active path 必须持续被合同约束为 handler、refs-only adapter、minimal authority function、diagnostic 或 migration input。default caller、direct/hosted parity、owner receipt roundtrip 与 no-active-caller 证据成立后删除旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；详细 path-level inventory 归 [MAG 私有实现与 OPL 迁移台账](./opl-private-implementation-migration-inventory.md)。
 
 4. `no_resurrection_cleanup_tail`
-   已退役 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、facade patch bridge 和 compatibility aggregate test 不能恢复为 compatibility shim、re-export facade 或 active caller。历史只保留在 `docs/history/**`、tombstone/provenance 或 negative guard。
+   已退役 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、facade patch bridge 和 compatibility aggregate test 不能恢复为 compatibility shim、re-export facade 或 active caller。`physical_skeleton_follow_through.retired_public_command_scan` 已把 `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 对照 `SERVICE_SAFE_DOMAIN_COMMANDS` 与 grouped public CLI catalog 做成 repo-local no-resurrection receipt，并指向 fail-closed negative tests；历史只保留在 `docs/history/**`、tombstone/provenance 或 negative guard。
 
 ## 证据差距
 
@@ -104,7 +104,7 @@ MAG 必须保留的 authority：
 | Submission-ready human gate receipt | `blocked_on_real_human_gate_receipt` | `submission_ready_export_gate` typed blocker 已可机读；关闭条件仍是真实 MAG owner human-gate receipt 或人工审批路径证据。 |
 | App/operator/release consumption | `needs_sustained_consumption` | OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG package refs、quality refs、manual portal boundary、transition oracle refs、safe action refs 和 `product opl-owner-payload-response` 的 success / typed-blocker payload path。 |
 | Temporal provider long soak | `open` | `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 形成连续证据。 |
-| Physical cleanup / no-resurrection | `replacement_ready_delete_authority_open` | production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence 与 no-active legacy caller scan 已形成结构输入；删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests 仍需要 explicit MAG owner receipt authorizing physical delete。 |
+| Physical cleanup / no-resurrection | `replacement_ready_delete_authority_open` | repo-local active path scan 与 retired public command scan 已形成 no-resurrection 结构输入；production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence、App/workbench consumption 与 no-active legacy caller scan 仍未授权删除 active handler/adapter shell。删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests 仍需要 explicit MAG owner receipt authorizing physical delete。 |
 
 Refs-only ledger verification、request accounting closure、OPL workorder closeout、source ref declaration、schema completeness、scorecard 分数、package existence 或 provider completion 都不能替代真实 workspace / App / provider evidence，也不能声明 grant-ready、fundability-ready、quality-ready、export-ready、submission-ready 或 production-ready。
 

@@ -200,6 +200,11 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             "/product_entry_manifest/physical_skeleton_follow_through/"
             "active_path_scan_no_legacy_default_caller",
         )
+        self.assertEqual(
+            follow_through["retired_public_command_scan_ref"],
+            "/product_entry_manifest/physical_skeleton_follow_through/"
+            "retired_public_command_scan",
+        )
         active_path_scan = follow_through["active_path_scan_no_legacy_default_caller"]
         self.assertEqual(active_path_scan["surface_kind"], "mag_active_path_scan_no_legacy_default_caller")
         self.assertEqual(active_path_scan["state"], "passed")
@@ -221,6 +226,70 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "src/med_autogrant/local_manager.py": "absent",
                 "src/med_autogrant/" + "host" + "_agent.py": "absent",
             },
+        )
+        retired_command_scan = follow_through["retired_public_command_scan"]
+        self.assertEqual(
+            retired_command_scan["surface_kind"],
+            "mag_retired_public_command_no_resurrection_scan",
+        )
+        self.assertEqual(retired_command_scan["state"], "passed")
+        self.assertTrue(retired_command_scan["no_retired_public_commands"])
+        self.assertEqual(retired_command_scan["retired_command_matches"], [])
+        self.assertEqual(
+            retired_command_scan["retired_exact_commands"],
+            [
+                "run-local",
+                "runtime-run",
+                "runtime-resume",
+                "probe-upstream-hermes",
+            ],
+        )
+        self.assertTrue(
+            retired_command_scan["active_catalogs"][
+                "flat_internal_command_aliases_rejected_by_cli_normalizer"
+            ]
+        )
+        self.assertGreater(retired_command_scan["active_catalogs"]["domain_entry_command_count"], 0)
+        self.assertGreater(
+            retired_command_scan["active_catalogs"]["public_grouped_cli_command_count"],
+            0,
+        )
+        self.assertFalse(retired_command_scan["claims_production_long_run_soak_complete"])
+        self.assertTrue(
+            retired_command_scan["authority_boundary"]["proves_repo_local_command_catalog_only"]
+        )
+        self.assertFalse(
+            retired_command_scan["authority_boundary"]["proves_opl_hosted_production_soak"]
+        )
+        self.assertFalse(
+            retired_command_scan["authority_boundary"]["proves_app_workbench_consumption"]
+        )
+        self.assertEqual(
+            {entry["command"]: entry["state"] for entry in retired_command_scan["command_status"]},
+            {
+                "run-local": "absent_from_active_catalogs",
+                "runtime-run": "absent_from_active_catalogs",
+                "runtime-resume": "absent_from_active_catalogs",
+                "probe-upstream-hermes": "absent_from_active_catalogs",
+            },
+        )
+        self.assertTrue(
+            all(
+                not entry["active_domain_entry_command"] and not entry["active_public_cli_command"]
+                for entry in retired_command_scan["command_status"]
+            )
+        )
+        self.assertIn(
+            "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
+            next(
+                entry
+                for entry in retired_command_scan["command_status"]
+                if entry["command"] == "runtime-run"
+            )["negative_test_refs"],
+        )
+        self.assertIn(
+            "/product_entry_manifest/physical_skeleton_follow_through/retired_public_command_scan",
+            follow_through["replacement_parity_refs"],
         )
         self.assertEqual(audit["retired_active_path_policy"], "physically_removed_or_history_tombstone_only")
         self.assertEqual(audit["forbidden_active_path_residue"], [])

@@ -15,6 +15,26 @@ _RETIRED_ACTIVE_PATHS = (
     "src/med_autogrant/local_manager.py",
     "src/med_autogrant/" + "host" + "_agent.py",
 )
+_RETIRED_PUBLIC_COMMANDS = (
+    "run-local",
+    "runtime-run",
+    "runtime-resume",
+    "probe-upstream-hermes",
+)
+_RETIRED_PUBLIC_COMMAND_TEST_REFS = {
+    "run-local": [
+        "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_legacy_runtime_alias",
+    ],
+    "runtime-run": [
+        "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
+    ],
+    "runtime-resume": [
+        "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
+    ],
+    "probe-upstream-hermes": [
+        "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
+    ],
+}
 _FORBIDDEN_DEFAULT_CALLER_PATTERNS = (
     {
         "pattern_id": "domain_runtime_patch_bridge_import",
@@ -122,6 +142,7 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
     }
     repo_root = Path(__file__).resolve().parents[3]
     active_path_scan = _build_active_path_scan_no_legacy_default_caller(repo_root)
+    retired_public_command_scan = _build_retired_public_command_scan()
     return {
         "surface_kind": "mag_physical_skeleton_follow_through",
         "version": "v1",
@@ -159,12 +180,18 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
             "active_path_scan_no_legacy_default_caller"
         ),
         "active_path_scan_no_legacy_default_caller": active_path_scan,
+        "retired_public_command_scan_ref": (
+            "/product_entry_manifest/physical_skeleton_follow_through/"
+            "retired_public_command_scan"
+        ),
+        "retired_public_command_scan": retired_public_command_scan,
         "replacement_parity_refs": [
             "/product_entry_manifest/mag_consumer_thinning_contract",
             "/product_entry_manifest/owner_receipt_contract",
             "/product_entry_manifest/grant_transition_oracle",
             "/product_entry_manifest/controlled_soak_no_regression_attempt",
             "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "/product_entry_manifest/physical_skeleton_follow_through/retired_public_command_scan",
         ],
         "no_regression_evidence_refs": [
             "tests/product_entry_cases/test_hosted_receipt_verification.py::ProductEntryHostedReceiptVerificationTest::test_hosted_receipt_verification_matches_opl_attempt_to_mag_receipt_refs",
@@ -220,6 +247,85 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
                 "condition": "direct skill and OPL-hosted parity proof",
             },
         ],
+    }
+
+
+def _build_retired_public_command_scan() -> dict[str, Any]:
+    from med_autogrant.domain_entry import SERVICE_SAFE_DOMAIN_COMMANDS
+    from med_autogrant.public_cli import (
+        PUBLIC_THREE_TOKEN_COMMANDS,
+        PUBLIC_TO_INTERNAL_COMMAND,
+    )
+
+    active_domain_entry_commands = set(SERVICE_SAFE_DOMAIN_COMMANDS)
+    active_public_cli_command_labels = {
+        " ".join(tokens) for tokens in PUBLIC_TO_INTERNAL_COMMAND
+    } | {" ".join(tokens) for tokens in PUBLIC_THREE_TOKEN_COMMANDS}
+    command_status = [
+        _retired_public_command_status(
+            command,
+            active_domain_entry_commands=active_domain_entry_commands,
+            active_public_cli_command_labels=active_public_cli_command_labels,
+        )
+        for command in _RETIRED_PUBLIC_COMMANDS
+    ]
+    matches = [
+        status
+        for status in command_status
+        if status["active_domain_entry_command"] or status["active_public_cli_command"]
+    ]
+    return {
+        "surface_kind": "mag_retired_public_command_no_resurrection_scan",
+        "version": "v1",
+        "scan_id": "mag.retired_public_command.no_resurrection.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "state": "passed" if not matches else "failed",
+        "no_retired_public_commands": not matches,
+        "retired_exact_commands": list(_RETIRED_PUBLIC_COMMANDS),
+        "command_status": command_status,
+        "retired_command_matches": matches,
+        "active_catalogs": {
+            "domain_entry_command_count": len(active_domain_entry_commands),
+            "public_grouped_cli_command_count": len(active_public_cli_command_labels),
+            "flat_internal_command_aliases_rejected_by_cli_normalizer": True,
+            "flat_internal_command_alias_count": len(PUBLIC_TO_INTERNAL_COMMAND),
+            "negative_test_refs": [
+                "tests/product_entry_cases/test_cli_dispatch.py::ProductEntryCliDispatchTest::test_flat_product_status_alias_has_no_special_compatibility_branch",
+            ],
+        },
+        "claims_production_long_run_soak_complete": False,
+        "authority_boundary": {
+            "proves_repo_local_command_catalog_only": True,
+            "proves_opl_hosted_production_soak": False,
+            "proves_app_workbench_consumption": False,
+            "proves_grant_quality_or_export_readiness": False,
+            "opl_can_write_domain_truth": False,
+            "opl_can_declare_export_ready": False,
+        },
+    }
+
+
+def _retired_public_command_status(
+    command: str,
+    *,
+    active_domain_entry_commands: set[str],
+    active_public_cli_command_labels: set[str],
+) -> dict[str, Any]:
+    active_domain_entry_command = command in active_domain_entry_commands
+    active_public_cli_command = (
+        command in active_public_cli_command_labels
+        or command.replace("-", " ") in active_public_cli_command_labels
+    )
+    return {
+        "command": command,
+        "state": (
+            "present_forbidden"
+            if active_domain_entry_command or active_public_cli_command
+            else "absent_from_active_catalogs"
+        ),
+        "active_domain_entry_command": active_domain_entry_command,
+        "active_public_cli_command": active_public_cli_command,
+        "negative_test_refs": list(_RETIRED_PUBLIC_COMMAND_TEST_REFS[command]),
     }
 
 
