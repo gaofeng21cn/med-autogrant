@@ -609,7 +609,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             "session_ledger",
             "attention_queue",
             "typed_queue",
-            "stage_attempt_ledger",
+            "stage_attempt_records",
             "generic_lifecycle_adapter",
             "artifact_package_lifecycle_shell",
             "runtime_observability_export",
@@ -626,11 +626,13 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
             "focused_contract_tests",
         ],
         "representative_private_functional_surfaces": {
-            "local_runtime_journal_attempt_ledger": {
-                "module_ref": "local_runtime_journal_attempt_ledger",
-                "active_caller_status": "legacy_local_journal_attempt_ledger_absent_no_active_caller",
+            "legacy_local_runtime_history_attempt_record": {
+                "module_ref": "legacy_local_runtime_history_attempt_record",
+                "active_caller_status": (
+                    "legacy_local_runtime_history_attempt_record_absent_no_active_caller"
+                ),
                 "migration_action": (
-                    "OPL_owns_session_attempt_ledger_MAG_deleted_local_journal_code"
+                    "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code"
                 ),
             },
             "sidecar_dispatch_product_shell": {

@@ -97,7 +97,7 @@ class ProductEntryReceiptObservabilityTest(unittest.TestCase):
         self.assertTrue(summary["authority_boundary"]["mag_owner_receipt_authority"])
         self.assertFalse(summary["authority_boundary"]["can_execute_repair"])
         self.assertFalse(summary["authority_boundary"]["can_schedule_retry"])
-        self.assertFalse(summary["authority_boundary"]["can_write_opl_stage_attempt_ledger"])
+        self.assertFalse(summary["authority_boundary"]["can_write_opl_stage_attempt_records"])
         self.assertFalse(summary["authority_boundary"]["can_declare_grant_ready"])
         self.assertFalse(summary["authority_boundary"]["can_declare_export_ready"])
         self.assertFalse(summary["source_inventory_ref"]["mag_writes_opl_ledger"])

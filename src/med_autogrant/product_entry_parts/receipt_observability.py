@@ -228,7 +228,7 @@ def _authority_boundary() -> dict[str, bool | str]:
         "mag_owner_receipt_authority": True,
         "can_execute_repair": False,
         "can_schedule_retry": False,
-        "can_write_opl_stage_attempt_ledger": False,
+        "can_write_opl_stage_attempt_records": False,
         "can_declare_grant_ready": False,
         "can_declare_export_ready": False,
         "can_declare_fundability_ready": False,

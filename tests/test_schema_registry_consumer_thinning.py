@@ -31,9 +31,9 @@ class ConsumerThinningSchemaRegistryTest(unittest.TestCase):
             output_guard["properties"]["private_functional_state_output_classes_forbidden"]["const"],
             [
                 "local_runtime_journal_state",
-                "local_attempt_ledger_state",
+                "local_attempt_record_state",
                 "attention_queue_state",
-                "stage_attempt_ledger_state",
+                "stage_attempt_records_state",
                 "package_lifecycle_state",
                 "source_intake_state",
                 "operator_workbench_state",
@@ -46,7 +46,7 @@ class ConsumerThinningSchemaRegistryTest(unittest.TestCase):
         self.assertIn("functional_harness_runtime_state", forbidden_consts)
         self.assertIn("opl_harness_pass_grant_ready", forbidden_consts)
         self.assertIn("opl_harness_pass_export_ready", forbidden_consts)
-        self.assertIn("local_attempt_ledger_state", forbidden_consts)
+        self.assertIn("local_attempt_record_state", forbidden_consts)
         self.assertIn("package_lifecycle_state", forbidden_consts)
         self.assertIn("source_intake_state", forbidden_consts)
         self.assertIn("hermes_state_db_runtime_state", forbidden_consts)
@@ -56,7 +56,7 @@ class ConsumerThinningSchemaRegistryTest(unittest.TestCase):
             guard_authority["properties"]["mag_can_emit_private_functional_state"]["const"]
         )
         self.assertFalse(
-            guard_authority["properties"]["mag_can_emit_local_attempt_ledger_state"]["const"]
+            guard_authority["properties"]["mag_can_emit_local_attempt_record_state"]["const"]
         )
         self.assertFalse(
             guard_authority["properties"]["mag_can_emit_source_intake_state"]["const"]

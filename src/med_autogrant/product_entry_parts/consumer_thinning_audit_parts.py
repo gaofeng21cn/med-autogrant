@@ -35,25 +35,26 @@ def build_retire_or_tombstone_surfaces(
             ],
         ),
         build_retired_functional_module_audit_item(
-            "local_runtime_journal_attempt_ledger",
+            "legacy_local_runtime_history_attempt_record",
             code_paths=[
                 "src/med_autogrant/product_entry_parts/local_runtime_journal.py:absent",
-                "src/med_autogrant/product_entry_parts/attempt_ledger.py:absent",
+                "src/med_autogrant/product_entry_parts/local_attempt_record.py:absent",
                 "src/med_autogrant/runtime_journal.py:absent",
             ],
             active_callers=[],
-            active_caller_status="legacy_local_journal_attempt_ledger_absent_no_active_caller",
+            active_caller_status="legacy_local_runtime_history_attempt_record_absent_no_active_caller",
             migration_action=(
-                "Old local journal and attempt ledger code has been deleted; OPL owns session ledger, "
-                "typed attention queue, wakeup scheduler, and stage-attempt ledger."
+                "Old local runtime history and attempt-record code has been deleted; OPL owns session "
+                "records, typed attention queue, wakeup scheduler, and stage-attempt records."
             ),
             retention_reason=(
                 "Active MAG source retains refs-only session/runtime locator projections under refs-only "
-                "adapter classifications; local journal implementation and tests are not retained."
+                "adapter classifications; local runtime history implementation and tests are not retained."
             ),
             cannot_absorb_reason=(
-                "The legacy local ledger itself should not be absorbed as MAG-owned code; OPL should "
-                "provide the generic ledger while MAG keeps safe action refs and grant next-action meaning."
+                "The legacy local attempt-record store itself should not be absorbed as MAG-owned code; "
+                "OPL should provide the generic stage record surface while MAG keeps safe action refs and "
+                "grant next-action meaning."
             ),
             evidence_refs=[
                 "/product_entry_manifest/session_continuity",
@@ -61,13 +62,13 @@ def build_retire_or_tombstone_surfaces(
                 "/sidecar_export/user_loop_attention_queue",
             ],
             exit_gate=build_legacy_exit_gate(
-                gate_id="mag.legacy.local_runtime_journal_attempt_ledger.exit.v1",
+                gate_id="mag.legacy.local_runtime_history_attempt_record.exit.v1",
                 replacement_primitives=[
                     "session_ledger",
                     "typed_queue",
-                    "stage_attempt_ledger",
+                    "stage_attempt_records",
                 ],
-                exit_action="delete_or_history_tombstone_local_journal_attempt_ledger_code",
+                exit_action="delete_or_history_tombstone_local_runtime_history_attempt_record_code",
             ),
         ),
         build_retired_functional_module_audit_item(

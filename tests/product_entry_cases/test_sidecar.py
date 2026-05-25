@@ -531,9 +531,9 @@ class ProductSidecarTest(unittest.TestCase):
             output_guard["private_functional_state_output_classes_forbidden"],
             [
                 "local_runtime_journal_state",
-                "local_attempt_ledger_state",
+                "local_attempt_record_state",
                 "attention_queue_state",
-                "stage_attempt_ledger_state",
+                "stage_attempt_records_state",
                 "package_lifecycle_state",
                 "source_intake_state",
                 "operator_workbench_state",
@@ -544,7 +544,7 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertIn("generic_memory_transport_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_artifact_lifecycle_state", output_guard["forbidden_output_classes"])
         self.assertIn("generic_observability_slo_state", output_guard["forbidden_output_classes"])
-        self.assertIn("local_attempt_ledger_state", output_guard["forbidden_output_classes"])
+        self.assertIn("local_attempt_record_state", output_guard["forbidden_output_classes"])
         self.assertIn("package_lifecycle_state", output_guard["forbidden_output_classes"])
         self.assertIn("source_intake_state", output_guard["forbidden_output_classes"])
         self.assertIn("hermes_state_db_runtime_state", output_guard["forbidden_output_classes"])
@@ -556,7 +556,7 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_workbench_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_observability_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_private_functional_state"])
-        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_local_attempt_ledger_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_local_attempt_record_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_source_intake_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_package_lifecycle_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_hermes_state_db_runtime_state"])

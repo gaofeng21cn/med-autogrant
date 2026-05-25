@@ -76,7 +76,7 @@ class ProductEntryStageAttemptObservabilityTest(unittest.TestCase):
         self.assertFalse(projection["claims"]["claims_submission_ready_export"])
         self.assertFalse(projection["authority_boundary"]["mag_implements_generic_attempt_ledger"])
         self.assertFalse(projection["authority_boundary"]["mag_implements_generic_runner"])
-        self.assertFalse(projection["consumes_opl_surfaces"]["mag_writes_opl_stage_attempt_ledger"])
+        self.assertFalse(projection["consumes_opl_surfaces"]["mag_writes_opl_stage_attempt_records"])
         self.assertFalse(projection["consumes_opl_surfaces"]["mag_dispatches_opl_retries"])
         self.assertFalse(projection["forbidden_write_proof"]["grant_truth_written"])
         self.assertFalse(projection["forbidden_write_proof"]["memory_body_written"])

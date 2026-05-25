@@ -35,9 +35,9 @@ OPL_FUNCTIONAL_HARNESS_COVERAGE_CHAINS = (
 
 PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES = (
     "local_runtime_journal_state",
-    "local_attempt_ledger_state",
+    "local_attempt_record_state",
     "attention_queue_state",
-    "stage_attempt_ledger_state",
+    "stage_attempt_records_state",
     "package_lifecycle_state",
     "source_intake_state",
     "operator_workbench_state",
@@ -71,7 +71,7 @@ def build_opl_replacement_expectations() -> list[dict[str, Any]]:
         _build_opl_replacement_expectation(
             "functional_harness_queue_stage_attempt_typed_closeout",
             mag_keeps=["grant_stage_truth", "owner_receipt", "typed_blocker", "no_regression_evidence"],
-            opl_provides=["typed_queue", "stage_attempt_ledger", "attempt_dispatch", "typed_closeout_envelope"],
+            opl_provides=["typed_queue", "stage_attempt_records", "attempt_dispatch", "typed_closeout_envelope"],
         ),
         _build_opl_replacement_expectation(
             "functional_harness_restart_dead_letter_repair_human_gate",
@@ -201,7 +201,7 @@ def build_functional_harness_consumer_coverage() -> dict[str, Any]:
                 "queue_stage_attempt_typed_closeout_chain",
                 opl_owned=[
                     "typed_queue",
-                    "stage_attempt_ledger",
+                    "stage_attempt_records",
                     "attempt_dispatch",
                     "typed_closeout_envelope",
                 ],
@@ -340,7 +340,7 @@ def build_opl_runtime_observability_consumption() -> dict[str, Any]:
             "surface_kind": "mag_stage_attempt_projection_consumption",
             "consumption_policy": "OPL_may_count_and_display_MAG_refs_only",
             "mag_can_schedule_retry_dead_letter": False,
-            "mag_can_write_opl_stage_attempt_ledger": False,
+            "mag_can_write_opl_stage_attempt_records": False,
             "provider_completion_is_grant_ready": False,
         },
         "authority_boundary": {
@@ -448,7 +448,7 @@ def build_thin_surface_output_guard() -> dict[str, Any]:
             "mag_can_emit_generic_workbench_state": False,
             "mag_can_emit_generic_observability_state": False,
             "mag_can_emit_private_functional_state": False,
-            "mag_can_emit_local_attempt_ledger_state": False,
+            "mag_can_emit_local_attempt_record_state": False,
             "mag_can_emit_source_intake_state": False,
             "mag_can_emit_package_lifecycle_state": False,
             "mag_can_emit_hermes_state_db_runtime_state": False,

@@ -44,7 +44,7 @@ def build_stage_attempt_observability_projection(
             "stage_attempt_usage_projection_ref": usage_ref,
             "stage_attempt_control_loop_projection_ref": control_loop_ref,
             "role": "external_projection_refs_only",
-            "mag_writes_opl_stage_attempt_ledger": False,
+            "mag_writes_opl_stage_attempt_records": False,
             "mag_dispatches_opl_retries": False,
             "mag_owns_generic_control_loop": False,
         },

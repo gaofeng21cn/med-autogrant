@@ -456,7 +456,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertIn("safe_action_refs", observability["mag_provides_refs"])
         stage_projection = observability["stage_attempt_projection_consumption"]
         self.assertFalse(stage_projection["mag_can_schedule_retry_dead_letter"])
-        self.assertFalse(stage_projection["mag_can_write_opl_stage_attempt_ledger"])
+        self.assertFalse(stage_projection["mag_can_write_opl_stage_attempt_records"])
         self.assertFalse(stage_projection["provider_completion_is_grant_ready"])
         self.assertFalse(observability["authority_boundary"]["can_execute_repair"])
         self.assertFalse(observability["authority_boundary"]["can_authorize_artifact_export"])
@@ -652,8 +652,8 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
         )
         self.assertEqual(
-            retire_modules["local_runtime_journal_attempt_ledger"]["active_caller_status"],
-            "legacy_local_journal_attempt_ledger_absent_no_active_caller",
+            retire_modules["legacy_local_runtime_history_attempt_record"]["active_caller_status"],
+            "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
         )
         self.assertIn(
             "src/med_autogrant/scheduler_daemon.py:absent",
@@ -796,9 +796,9 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             output_guard["private_functional_state_output_classes_forbidden"],
             [
                 "local_runtime_journal_state",
-                "local_attempt_ledger_state",
+                "local_attempt_record_state",
                 "attention_queue_state",
-                "stage_attempt_ledger_state",
+                "stage_attempt_records_state",
                 "package_lifecycle_state",
                 "source_intake_state",
                 "operator_workbench_state",
@@ -826,7 +826,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_workbench_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_generic_observability_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_private_functional_state"])
-        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_local_attempt_ledger_state"])
+        self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_local_attempt_record_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_source_intake_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_package_lifecycle_state"])
         self.assertFalse(output_guard["authority_boundary"]["mag_can_emit_hermes_state_db_runtime_state"])

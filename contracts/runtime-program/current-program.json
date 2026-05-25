@@ -224,7 +224,7 @@
           ],
           "legacy_proof_tombstones": [
             "default_hermes_gateway_local_manager_runtime_owner",
-            "local_runtime_journal_attempt_ledger",
+            "legacy_local_runtime_history_attempt_record",
             "domain_runtime_patch_bridge",
             "compatibility_only_product_entry_aggregate_test",
             "legacy_flat_shell_aliases",
@@ -241,10 +241,10 @@
             "grant_strategy_memory_accept_reject"
           ],
           "representative_private_functional_surfaces": {
-            "local_runtime_journal_attempt_ledger": {
-              "module_ref": "local_runtime_journal_attempt_ledger",
-              "active_caller_status": "legacy_local_journal_attempt_ledger_absent_no_active_caller",
-              "migration_action": "OPL_owns_session_attempt_ledger_MAG_deleted_local_journal_code"
+            "legacy_local_runtime_history_attempt_record": {
+              "module_ref": "legacy_local_runtime_history_attempt_record",
+              "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
+              "migration_action": "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code"
             },
             "sidecar_dispatch_product_shell": {
               "module_ref": "sidecar_product_status_shell",
@@ -310,9 +310,9 @@
         "sidecar_output_policy": "grant_refs_and_receipts_only_no_generic_runtime_state",
         "private_functional_state_output_classes_forbidden": [
           "local_runtime_journal_state",
-          "local_attempt_ledger_state",
+          "local_attempt_record_state",
           "attention_queue_state",
-          "stage_attempt_ledger_state",
+          "stage_attempt_records_state",
           "package_lifecycle_state",
           "source_intake_state",
           "operator_workbench_state",
@@ -339,7 +339,7 @@
         "mag_implements_generic_operator_workbench": false,
         "mag_implements_generic_observability_slo": false,
         "mag_can_emit_private_functional_state": false,
-        "mag_can_emit_local_attempt_ledger_state": false,
+        "mag_can_emit_local_attempt_record_state": false,
         "mag_can_emit_source_intake_state": false,
         "mag_can_emit_package_lifecycle_state": false,
         "mag_can_emit_hermes_state_db_runtime_state": false,
