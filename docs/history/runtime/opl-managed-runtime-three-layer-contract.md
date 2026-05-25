@@ -1,5 +1,10 @@
 # OPL 托管运行时三层合同
 
+Owner: `Med Auto Grant`
+Purpose: `historical_opl_managed_runtime_three_layer_contract_provenance`
+State: `history`
+Machine boundary: 本文是人读历史参考，保留 OPL 托管运行时三层 owner 口径的迁移背景。当前 OPL/Temporal stage-led runtime framework、Agent executor boundary、MAG grant authority、attempt ledger/queue owner 与机器行为以核心五件套、active gap plan、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不作为当前 Hermes-Agent runtime owner、shared runtime module extraction plan 或 MAG-owned controller/runtime owner。
+
 这份参考文档保留 `OPL` 家族仓在托管运行时上的三层 owner 口径。2026-05-11 之后，当前主线应先按 `OPL = stage-led、以 Agent executor 为最小执行单位的完整智能体运行框架` 理解；本文件中的 `OPL Runtime Manager` / `Hermes-Agent runtime owner` 表述只作为历史分层和 provider-specific 迁移背景，不替代核心文档。
 
 目标不是完成跨仓共享代码抽取，而是保留当时不能漂移的 owner contract，并说明它如何被当前 OPL runtime framework 口径吸收。

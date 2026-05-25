@@ -1,5 +1,10 @@
 # Med Auto Grant OPL-Aligned Target Shape And Hosted Caller Plan
 
+Owner: `Med Auto Grant`
+Purpose: `historical_opl_aligned_hosted_caller_plan_provenance`
+State: `history`
+Machine boundary: 本文是人读历史计划，保留 2026-04-12 OPL-aligned target shape、hosted caller proof 和旧 Hermes/Gateway 迁移计划。当前 OPL/Temporal stage-led runtime owner、MAG grant authority、hosted caller evidence、product-entry handoff 与机器行为以核心五件套、active gap plan、history specs lifecycle map、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不声明 Hermes 默认 owner、OPL Gateway ready 或 active hosted runtime backlog。
+
 > Historical completed plan. `P3 hosted caller / OPL consumption proof` is already completed. Current mainline truth now lives in `docs/project.md`, `docs/decisions.md`, and `contracts/runtime-program/current-program.json`.
 
 **Historical goal:** Prove the then-next honest `P3` phase without inventing new repo-local hosted helpers: external hosted callers and future `OPL Gateway` must consume the already frozen `domain_entry_contract`, `schema_contract`, and `authoring_contract`.

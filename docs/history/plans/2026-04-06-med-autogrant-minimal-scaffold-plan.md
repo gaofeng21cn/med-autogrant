@@ -1,5 +1,10 @@
 # Med Auto Grant 最小 Scaffold 实施计划
 
+Owner: `Med Auto Grant`
+Purpose: `historical_minimal_scaffold_plan_provenance`
+State: `history`
+Machine boundary: 本文是人读历史计划，保留 2026-04-06 最小 scaffold 搭建过程。当前仓库入口、docs taxonomy、runtime owner、标准 OPL Agent 目标态与机器行为以核心五件套、active gap plan、docs portfolio、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不作为当前 scaffold backlog、controller/runtime plan 或兼容承诺。
+
 > 当前文档面向内部执行，只保留中文版本。
 > Historical / completed scaffold plan：该计划对应的仓库搭建阶段已完成，当前仅保留为历史 provenance，不代表当前主线目标。
 

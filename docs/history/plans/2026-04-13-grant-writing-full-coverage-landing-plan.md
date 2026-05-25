@@ -1,5 +1,10 @@
 # Grant Writing Full Coverage Landing Plan
 
+Owner: `Med Auto Grant`
+Purpose: `historical_grant_writing_full_coverage_landing_plan_provenance`
+State: `history`
+Machine boundary: 本文是人读历史计划，保留 2026-04-13 full grant authoring route landing 过程。当前 authoring route、executor boundary、quality/export authority、OPL/Temporal runtime owner 与机器行为以核心五件套、active specs index、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不作为当前 controller-first backlog、hosted runtime claim 或 full-coverage completion evidence。
+
 > Historical completed plan. The full `direction_screening -> frozen` authoring route is already landed. Current truth now lives in `docs/decisions.md`, `docs/project.md`, and `contracts/runtime-program/current-program.json`.
 
 ## 历史目标

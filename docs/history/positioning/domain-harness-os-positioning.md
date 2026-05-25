@@ -1,5 +1,10 @@
 # Med Auto Grant 在 Unified Harness Engineering Substrate 中的 Domain Harness OS 定位（历史）
 
+Owner: `Med Auto Grant`
+Purpose: `historical_domain_harness_os_positioning_provenance`
+State: `history`
+Machine boundary: 本文是人读历史定位参考，保留 Domain Harness OS / Unified Harness Engineering Substrate 旧定位和兼容边界。当前公开第一身份是独立 MAG app skill 与 OPL-compatible Foundry Agent package；当前 owner boundary、runtime substrate、capability surface 与机器行为以核心五件套、active gap plan、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不覆盖当前 public positioning、runtime owner 或 product readiness。
+
 > 历史状态说明（2026-05-06）：本文保留为内部 harness/substrate 边界参考和旧定位追溯材料。当前公开第一身份是独立 medical grant domain agent 与单一 Med Auto Grant app skill；`Domain Harness OS` 与 `Unified Harness Engineering Substrate` 词汇只用于历史上下文、内部执行、治理与兼容边界，不覆盖核心文档与 `current-program.json`。
 
 ## 1. 项目位置：Shared Substrate 上的医学 Domain Harness OS

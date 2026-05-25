@@ -1,5 +1,10 @@
 # Med Auto Grant 轻量产品入口与 OPL Handoff
 
+Owner: `Med Auto Grant`
+Purpose: `historical_lightweight_product_entry_opl_handoff_provenance`
+State: `history`
+Machine boundary: 本文是人读历史参考，保留 lightweight product entry、OPL handoff、旧 Hermes Kernel / OPL Runtime Manager / family orchestration wording 的迁移背景。当前 product-entry shell、direct entry、OPL generated/hosted surface、runtime owner 与 grant truth owner 以核心五件套、active gap plan、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不作为当前 product-entry owner、Hermes default provider、Gateway ready 或 hosted runtime claim。
+
 > 历史参考说明：当前 landed route catalog 与 direct-entry truth 已归 `docs/project.md`、`docs/decisions.md` 和 `contracts/runtime-program/current-program.json` 持有。
 >
 > 当前阅读注记：本文中的 `Hermes Kernel`、`OPL Runtime Manager` 与 `OPL family orchestration surface` 等旧表述，应按当前链路理解为 `OPL stage-led runtime framework with Agent executors as the minimum execution unit -> MAG projection/descriptor -> Med Auto Grant Product Entry / MedAutoGrantDomainEntry`。除非活跃合同显式选择其他 provider，`Codex CLI` 是默认最小执行单元。OPL 可以托管、调度、唤醒、handoff、receipt、retry 和投影 MAG stage，但不持有 MAG grant truth、authoring semantics、quality gates 或 submission-ready export truth。

@@ -1,5 +1,10 @@
 # P1 Planning Brief：Formal Entry Matrix Freeze 与 Durability Model Clarification
 
+Owner: `Med Auto Grant`
+Purpose: `historical_p1_formal_entry_durability_plan_provenance`
+State: `history`
+Machine boundary: 本文是人读历史计划，保留 2026-04-07 P1 formal-entry matrix 与 durability model clarification 的规划冻结过程。当前 formal entry、durability boundary、local runtime state、OPL/Temporal runtime owner 与机器行为以核心五件套、active specs index、specs lifecycle map、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不恢复 `.runtime-program`、`.omx`、MCP/controller public entry 或 MAG-owned runtime owner。
+
 Date: `2026-04-07`
 
 > Historical / completed planning brief：该 brief 对应的 `P1` 规划冻结已完成，现已被 `formal-entry matrix current truth` 与 `durability model clarification` 吸收，不再代表当前 active runtime productization program。
