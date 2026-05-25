@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是 path-stable 的历史/支撑记录；只有 `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/status.md` 或 `contracts/runtime-program/current-program.json` 明确指定的仍 current subsection 才可作为当前边界阅读。请先读取 `docs/status.md`、核心五件套与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_post_r5a_stage_route_checkpoint_output_consistency_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-10 stage-route-report checkpoint status output consistency activation package 的形成过程。当前 route checkpoint aggregation、output mirror semantics、runtime owner 与 verification behavior 以核心五件套、active gap plan、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不创建第二套 checkpoint source 或 runtime owner。
+
 日期锚点：`2026-04-10`
 
 ## 激活目的

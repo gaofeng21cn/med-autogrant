@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是 path-stable 的历史/支撑记录；只有 `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/status.md` 或 `contracts/runtime-program/current-program.json` 明确指定的仍 current subsection 才可作为当前边界阅读。请先读取 `docs/status.md`、核心五件套与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_r5a_hosted_friendly_session_boundary_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-09 R5.A hosted-friendly session boundary activation package 的形成过程。当前 hosted/default task runtime owner 是 OPL/Temporal，`hermes_agent` 只表示显式非默认 executor/proof/provenance lane；MAG 不声明 actual hosted runtime、Gateway owner、daemon、scheduler 或 attempt ledger。当前 runtime owner、hosted caller evidence、App/workbench readiness 与机器行为以核心五件套、active gap plan、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-09`
 
 ## Activation Status
