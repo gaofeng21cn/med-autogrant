@@ -150,12 +150,12 @@ def handle_product_start(args: argparse.Namespace) -> dict[str, Any]:
     )
 
 
-def handle_product_sidecar_export(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().build_sidecar_export(input_path=args.input)
+def handle_domain_handler_export(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_domain_handler_export(input_path=args.input)
 
 
-def handle_product_sidecar_dispatch(args: argparse.Namespace) -> dict[str, Any]:
-    return _product_entry().dispatch_sidecar_task(task_path=args.task)
+def handle_domain_handler_dispatch(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().dispatch_domain_handler_task(task_path=args.task)
 
 
 def handle_product_domain_memory_proposal(args: argparse.Namespace) -> dict[str, Any]:
@@ -209,13 +209,13 @@ def handle_product_lifecycle_receipt_evidence(args: argparse.Namespace) -> dict[
 
 
 def handle_product_receipt_reconciliation_proof(args: argparse.Namespace) -> dict[str, Any]:
-    sidecar_closeout_result = None
-    if args.sidecar_closeout_result is not None:
-        sidecar_closeout_result = _read_json_object(args.sidecar_closeout_result)
+    domain_handler_closeout_result = None
+    if args.domain_handler_closeout_result is not None:
+        domain_handler_closeout_result = _read_json_object(args.domain_handler_closeout_result)
     return _product_entry().build_controlled_soak_receipt_reconciliation_proof(
         owner_receipt_evidence=_read_json_object(args.owner_receipt_evidence),
         opl_ledger_ref=args.opl_ledger_ref,
-        sidecar_closeout_result=sidecar_closeout_result,
+        domain_handler_closeout_result=domain_handler_closeout_result,
     )
 
 
@@ -226,21 +226,21 @@ def handle_product_receipt_reconciliation_inventory(args: argparse.Namespace) ->
             for owner_receipt_path in args.owner_receipt_evidence
         ],
         opl_ledger_ref=args.opl_ledger_ref,
-        sidecar_closeout_results=[
-            _read_json_object(sidecar_closeout_path)
-            for sidecar_closeout_path in args.sidecar_closeout_result or []
+        domain_handler_closeout_results=[
+            _read_json_object(domain_handler_closeout_path)
+            for domain_handler_closeout_path in args.domain_handler_closeout_result or []
         ],
     )
 
 
 def handle_product_focused_hosted_receipt_verification(args: argparse.Namespace) -> dict[str, Any]:
-    sidecar_closeout_result = None
-    if args.sidecar_closeout_result is not None:
-        sidecar_closeout_result = _read_json_object(args.sidecar_closeout_result)
+    domain_handler_closeout_result = None
+    if args.domain_handler_closeout_result is not None:
+        domain_handler_closeout_result = _read_json_object(args.domain_handler_closeout_result)
     return _product_entry().build_focused_hosted_receipt_verification(
         owner_receipt_evidence=_read_json_object(args.owner_receipt_evidence),
         opl_attempt_evidence=_read_json_object(args.opl_attempt_evidence),
-        sidecar_closeout_result=sidecar_closeout_result,
+        domain_handler_closeout_result=domain_handler_closeout_result,
     )
 
 

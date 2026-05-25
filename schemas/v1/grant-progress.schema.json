@@ -66,7 +66,7 @@
       ],
       "properties": {
         "builder_command": {
-          "const": "product build-entry"
+          "const": "opl://generated-surfaces/mag/product-entry-session"
         },
         "target_domain_id": {
           "const": "med-autogrant"

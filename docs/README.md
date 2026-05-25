@@ -21,7 +21,7 @@ Machine boundary: 本文是人读索引。机器真相继续归 contracts、sche
 
 OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/docs/active/opl-family-development-reference.md`。它维护 OPL Framework 的全局目标、全局差距、通用能力上收边界、App/workbench 目标和跨仓开发顺序。
 
-MAG 本仓只维护 grant domain agent 的目标、当前差距、grant truth、fundability/quality/export authority、direct app skill path、OPL-hosted sidecar/projection/receipt 边界，以及哪些通用 workspace/source intake、memory locator、artifact/package lifecycle、quality/readiness projection 和 observability primitive 应上收到 OPL。MAS、RCA、MDS 或 OPL-owned App/workbench 的并行 backlog 不写入 MAG 活跃计划。
+MAG 本仓只维护 grant domain agent 的目标、当前差距、grant truth、fundability/quality/export authority、direct app skill path、OPL-hosted domain-handler/projection/receipt 边界，以及哪些通用 workspace/source intake、memory locator、artifact/package lifecycle、quality/readiness projection 和 observability primitive 应上收到 OPL。MAS、RCA、MDS 或 OPL-owned App/workbench 的并行 backlog 不写入 MAG 活跃计划。
 
 ## Workspace / file lifecycle 边界
 
@@ -38,15 +38,15 @@ MAG repo source 只保存 locator、index、schema、receipt ref、restore/reten
 - 旧 `OPL Runtime Manager`、上游 Hermes 作为默认 provider 的旧口径、gateway 与本地 host runtime 说明只作为历史追溯或 provider-specific 迁移记录保留；Temporal-backed provider 是当前 OPL production online runtime 的必需 substrate，默认 MAG/OPL 边界由核心文档和 active specs 持有。
 - [Docs portfolio consolidation boundary](./docs_portfolio_consolidation.md) 是当前文档生命周期 owner，记录逐分区当前 owner、已吸收内容和历史归位理由；旧 OPL Runtime Manager 与 Hermes/upstream-provider proof 说明已归入 history，lightweight handoff 仍作为 `docs/specs/` integration reference 阅读。
 - 历史 program 记录与迁移说明统一从 `docs/history/` 进入；较早 dated specs 可以继续留在 `docs/specs/` 作为 provenance，明确退役的 provider-proof specs 进入 `docs/history/specs/`。机器可读面通过语义化 `human_doc:*` 标识引用它们，而不是把旧路径钉成稳定接口。
-- product status、user-loop、projection 与本地 `submission-ready` package 已作为 app skill 下的内部 command contract 与 direct-product projection 落地；当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，外部基金官网 portal submission 仍是单独的人类监督步骤；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/active/`。
+- product status、user-loop、projection 与本地 `submission-ready` package 已作为 app skill 下的 refs-only command contract、OPL/App generated shell target 或 direct-product projection 落地；当前 repo-local active/default handler target 是 `domain-handler export|dispatch`。当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，外部基金官网 portal submission 仍是单独的人类监督步骤；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/active/`。
 - `OPL` family routing 与 `Codex` skill activation 继续消费同一套 MAG capability surface；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。
 - MAG 当前任务边界锁定在“指定基金任务正文 authoring”；“科学完成”与“形式/客观补件完成”是显式分层。
 - 科学层交付的是可待审包，用于同任务内作者/评审决策。
 - 形式/客观补件默认按 `TODO + 显式唤醒` 管理；除非直接破坏正文科学成立，否则不作为正文 authoring blocker。
 - 人工 gate 只作用于同一基金任务内的作者决策，不扩展成跨 funder 重选。
-- 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop`，并在作者侧主线之上保持 schema-backed 边界。
+- 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop` target，并在作者侧主线之上保持 schema-backed refs-only 边界。
 - MAG 现在通过 `controlled_domain_memory_apply_proof`、`owner_receipt_contract` 与 `lifecycle_guarded_apply_proof` 暴露 controlled grant-stage domain memory 与 owner/lifecycle receipt apply proof：consumed grant strategy memory refs、writeback proposal、MAG accept/reject decision、owner/no-regression receipt refs、lifecycle receipt refs、runtime receipt evidence、operator receipt projection 与 repo-source layout audit 都可验证，但不把 memory body、grant artifact、export verdict 或 receipt instance 存入 repo source。
-- 当前 grouped shell 也已经把 `product build-entry`、`product manifest`、`product status` 与 `package submission-ready` 暴露成 skill-backed CLI 命令面。
+- 当前 grouped shell 保留 `domain-handler export|dispatch`、authority、pass 与 package command target；`product build-entry`、`product manifest` 与 `product status` 作为 OPL/App generated refs target 或 migration input 读取，不能写回 repo-local public/default CLI。
 - 当前轻量 grant `product entry` shell 是 app skill 背后的内部产品入口 shell 与 domain/API catalog builder；未来 hosted 产品形态在活跃阶段放入 `docs/active/`，完成后归入 history。
 - 质量治理已经通过 `workspace quality-scorecard` 与 `workspace quality-diff` 收成 schema-backed surface。
 - 长时间自治已经通过 `pass autonomy-controller` 暴露为正式入口，并输出结构化 blocker 与 evidence-gap report。

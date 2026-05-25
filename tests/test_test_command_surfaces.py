@@ -111,14 +111,24 @@ def test_opl_module_healthcheck_uses_product_smoke_lane() -> None:
     assert "make test-family" not in healthcheck
 
 
-def test_mag_skill_registers_repo_local_product_entry_commands() -> None:
+def test_mag_skill_keeps_generic_shells_out_of_repo_local_public_commands() -> None:
     skill = _read("plugins/mag/skills/mag/SKILL.md")
 
     for command_surface in (
+        "workspace route-report",
+        "workspace quality-scorecard",
+        "pass revision",
+        "package submission-ready",
+        "authority memory-proposal",
+        "authority memory-decision",
+    ):
+        assert f"<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli {command_surface}" in skill
+    for retired_surface in (
         "product skill-catalog",
         "product status",
         "product user-loop",
         "product direct-entry",
+        "domain handler",
     ):
-        assert f"<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli {command_surface}" in skill
+        assert f"<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli {retired_surface}" not in skill
     assert "uv run --directory <med-autogrant-repo>" not in skill

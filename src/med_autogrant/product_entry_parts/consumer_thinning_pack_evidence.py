@@ -27,7 +27,7 @@ def build_external_evidence_request_pack() -> dict[str, Any]:
         "policy": "request_refs_receipt_shapes_and_parity_only_no_runtime_implementation",
         "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
         "consumer_thinning_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
-        "sidecar_projection_ref": "/sidecar_export/external_evidence_request_pack",
+        "domain_handler_projection_ref": "/domain_handler_export/external_evidence_request_pack",
         "required_request_ids": list(EXTERNAL_EVIDENCE_REQUEST_IDS),
         "requests": [
             _external_evidence_request(
@@ -36,7 +36,7 @@ def build_external_evidence_request_pack() -> dict[str, Any]:
                 evidence_class="generated_hosted_caller_consumption",
                 required_refs=[
                     "opl://generated-surfaces/mag/product-entry-manifest",
-                    "opl://generated-surfaces/mag/product-sidecar",
+                    "opl://generated-surfaces/mag/domain-handler",
                     "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
                     "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
                 ],
@@ -68,7 +68,7 @@ def build_external_evidence_request_pack() -> dict[str, Any]:
                 required_refs=[
                     "release://med-autogrant/direct-domain-handler",
                     "dist://med-autogrant/declarative-grant-pack",
-                    "/product_entry_manifest/mag_consumer_thinning_contract/exposed_sidecar_return_refs",
+                    "/product_entry_manifest/mag_consumer_thinning_contract/exposed_domain_handler_return_refs",
                 ],
                 required_receipt_shapes=[
                     "production_default_caller_receipt",
@@ -139,7 +139,7 @@ def build_external_evidence_request_pack() -> dict[str, Any]:
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
                 "external_evidence_request_pack"
             ),
-            "sidecar_projection_ref": "/sidecar_export/external_evidence_request_pack",
+            "domain_handler_projection_ref": "/domain_handler_export/external_evidence_request_pack",
             "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
             "thin_output_guard_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"
@@ -208,7 +208,7 @@ def build_generated_hosted_default_caller_proof() -> dict[str, Any]:
             ],
             "hosted_surface_refs": [
                 "opl://generated-surfaces/mag/product-entry-manifest",
-                "opl://generated-surfaces/mag/product-sidecar",
+                "opl://generated-surfaces/mag/domain-handler",
                 "opl://generated-surfaces/mag/product-entry-session#resume",
             ],
             "parity_owner": "one-person-lab",
@@ -251,7 +251,7 @@ def build_generated_hosted_default_caller_proof() -> dict[str, Any]:
         "repo_local_product_shell_classification": {
             "product_status": "domain_handler_ref_only_adapter",
             "product_user_loop": "domain_handler_ref_only_adapter",
-            "product_sidecar": "guarded_domain_handler_target",
+            "domain_handler": "guarded_domain_handler_target",
             "grouped_cli_api": "domain_handler_command_adapter",
             "projection_builder": "refs_only_read_model_adapter",
             "lifecycle_wrapper": "owner_receipt_refs_only_adapter",

@@ -20,8 +20,8 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
                 runtime_root=Path(tmp_dir) / "runtime-state",
                 receipt_id="hosted-review-1",
             )["owner_receipt_evidence"]
-            sidecar_closeout_result = {
-                "surface_kind": "sidecar_stage_attempt_closeout_result",
+            domain_handler_closeout_result = {
+                "surface_kind": "domain_handler_stage_attempt_closeout_result",
                 "receipt_ref": receipt["receipt_instance_ref"],
                 "receipt_refs": {
                     "owner_receipt_ref": receipt["receipt_instance_ref"],
@@ -47,7 +47,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
                     "completion_ref": "opl-provider://attempt/review-1",
                 },
             },
-            sidecar_closeout_result=sidecar_closeout_result,
+            domain_handler_closeout_result=domain_handler_closeout_result,
         )
 
         verification = payload["focused_hosted_receipt_verification"]
@@ -56,7 +56,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
         self.assertEqual(verification["stage_id"], "review_and_rebuttal")
         self.assertTrue(verification["matches"]["owner_receipt_ref_matches_opl"])
         self.assertTrue(verification["matches"]["ledger_ref_matches_receipt_source"])
-        self.assertTrue(verification["matches"]["receipt_ref_matches_sidecar"])
+        self.assertTrue(verification["matches"]["receipt_ref_matches_domain_handler"])
         self.assertEqual(
             verification["allowed_result"]["result_shape"],
             "no_regression_evidence",
@@ -171,7 +171,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
             )["owner_receipt_evidence"]
             owner_receipt_path = tmp_path / "owner-receipt.json"
             opl_attempt_path = tmp_path / "opl-attempt.json"
-            sidecar_closeout_path = tmp_path / "sidecar-closeout.json"
+            domain_handler_closeout_path = tmp_path / "domain_handler-closeout.json"
             owner_receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
             opl_attempt_path.write_text(
                 json.dumps(
@@ -190,7 +190,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            sidecar_closeout_path.write_text(
+            domain_handler_closeout_path.write_text(
                 json.dumps({"receipt_ref": receipt["receipt_instance_ref"]}),
                 encoding="utf-8",
             )
@@ -203,8 +203,8 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
                 str(owner_receipt_path),
                 "--opl-attempt-evidence",
                 str(opl_attempt_path),
-                "--sidecar-closeout-result",
-                str(sidecar_closeout_path),
+                "--domain_handler-closeout-result",
+                str(domain_handler_closeout_path),
                 "--format",
                 "json",
             )
@@ -215,7 +215,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
         verification = payload["focused_hosted_receipt_verification"]
         self.assertEqual(verification["surface_kind"], "mag_focused_hosted_receipt_verification")
         self.assertTrue(verification["matches"]["owner_receipt_ref_matches_opl"])
-        self.assertTrue(verification["matches"]["receipt_ref_matches_sidecar"])
+        self.assertTrue(verification["matches"]["receipt_ref_matches_domain_handler"])
         self.assertFalse(verification["claims"]["claims_production_long_run_soak_complete"])
 
     @staticmethod

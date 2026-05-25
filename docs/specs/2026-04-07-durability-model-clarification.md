@@ -22,7 +22,7 @@ MAG repo source 不保存真实 memory body、grant artifact private evidence、
 ## 当前 durable surfaces
 
 - `contracts/runtime-program/current-program.json` 是 repo-tracked current-program pointer。
-- Product-entry manifest、sidecar export、`runtime_control`、`runtime_continuity`、artifact locator、domain memory descriptor、owner receipt contract 和 lifecycle guarded apply proof 只输出 refs、receipt shape、typed blocker、verdict refs 与 safe action metadata。
+- Product-entry manifest、domain-handler export、`runtime_control`、`runtime_continuity`、artifact locator、domain memory descriptor、owner receipt contract 和 lifecycle guarded apply proof 只输出 refs、receipt shape、typed blocker、verdict refs 与 safe action metadata。
 - `workspace quality-scorecard`、`workspace quality-diff`、`grant-quality-closure-dossier` 和 autonomy controller report 是结构化治理面；它们不能机械生成 fundability-ready、quality-ready、export-ready 或 production-soak verdict。
 - User-level runtime-state 可保存本机运行输出和 receipt evidence，但不是 repo-tracked product runtime，也不能单独发明 formal entry。
 

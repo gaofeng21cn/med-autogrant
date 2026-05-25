@@ -15,10 +15,11 @@
     "primary_public_entry": "Med Auto Grant app skill",
     "direct_app_skill_path": "first_class",
     "release_shape": {
-      "shape_summary": "A single release shape ties the app skill catalog, MAG-owned stage control plane, hosted-contract-bundle handoff export, and local submission-ready delivery export together.",
+      "shape_summary": "A single release shape ties the OPL-generated app skill catalog, MAG-owned stage control plane, domain-handler target export, hosted-contract-bundle handoff export, and local submission-ready delivery export together.",
       "unified_surfaces": [
-        "product skill-catalog",
+        "opl_generated_skill_catalog",
         "family_stage_control_plane",
+        "domain-handler export",
         "package hosted-contract-bundle",
         "package submission-ready"
       ]
@@ -78,7 +79,7 @@
         "workspace progress / cockpit",
         "opl_substrate_adapter_export",
         "artifact inventory, artifact locator contract, and explicit wakeup/TODO queue",
-        "controlled stage attempt projection and sidecar receipt refs",
+        "controlled stage attempt projection and domain handler receipt refs",
         "controlled_domain_memory_apply_proof",
         "domain_memory_runtime_receipt_evidence",
         "owner_receipt_runtime_evidence",
@@ -102,23 +103,6 @@
         "submission-ready export authority",
         "private Hermes-Agent fork"
       ],
-      "product_sidecar_adapter": {
-        "adapter_id": "mag.opl_stage_led.product_sidecar.v1",
-        "export_command": "product sidecar export",
-        "dispatch_command": "product sidecar dispatch",
-        "role": "MAG-owned product sidecar projection and guarded dispatch adapter for OPL stage-led typed queue and explicit provider consumption",
-        "allowed_dispatch_actions": [
-          "closeout/codex-stage-receipts",
-          "closeout/executor-first-bundle",
-          "closeout/operator-readiness",
-          "closeout/physical-morphology-guard",
-          "domain-memory/decide",
-          "domain-memory/propose",
-          "lifecycle/receipt",
-          "stage-attempt/closeout"
-        ],
-        "hermes_proof_executor_default": false
-      },
       "standard_domain_agent_skeleton": {
         "skeleton_id": "mag.standard_domain_agent_skeleton.v1",
         "manifest_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
@@ -133,7 +117,7 @@
           "docs"
         ],
         "runtime_declares_only": [
-          "sidecar",
+          "domain handler",
           "projection_builder",
           "lifecycle_adapter",
           "receipt_evidence_writer"
@@ -210,7 +194,7 @@
           "refs_only_adapter_surfaces": [
             "lifecycle_adapter",
             "observability",
-            "sidecar_product_status_shell",
+            "domain_handler_product_status_shell",
             "package_lifecycle_shell",
             "human_workbench_scheduler_daemon"
           ],
@@ -246,9 +230,9 @@
               "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
               "migration_action": "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code"
             },
-            "sidecar_dispatch_product_shell": {
-              "module_ref": "sidecar_product_status_shell",
-              "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+            "domain_handler_dispatch_product_shell": {
+              "module_ref": "domain_handler_product_status_shell",
+              "active_caller_status": "active_refs_only_domain_handler_adapter",
               "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs"
             },
             "optional_hermes_state_db": {
@@ -307,7 +291,7 @@
           "generic_operator_workbench_owner",
           "generic_observability_slo_owner"
         ],
-        "sidecar_output_policy": "grant_refs_and_receipts_only_no_generic_runtime_state",
+        "domain_handler_output_policy": "grant_refs_and_receipts_only_no_generic_runtime_state",
         "private_functional_state_output_classes_forbidden": [
           "local_runtime_journal_state",
           "local_attempt_record_state",
@@ -620,7 +604,24 @@
         "programmatic_verdict_generation_allowed": false,
         "mechanical_decision_forbidden_for_all_authority_surfaces": true
       },
-      "future_sidecar_promotion_gate": "self-hosted sidecar daemon promotion remains out of scope; the landed product sidecar adapter is a CLI/product-entry projection and guarded dispatch surface"
+      "future_domain_handler_promotion_gate": "self-hosted domain handler daemon promotion remains out of scope; the landed domain handler target is a CLI/product-entry projection and guarded dispatch surface",
+      "domain_handler_adapter": {
+        "adapter_id": "mag.opl_stage_led.domain_handler.v1",
+        "export_command": "domain-handler export",
+        "dispatch_command": "domain-handler dispatch",
+        "role": "MAG-owned domain handler refs projection and guarded dispatch target for OPL stage-led typed queue and explicit provider consumption",
+        "allowed_dispatch_actions": [
+          "closeout/codex-stage-receipts",
+          "closeout/executor-first-bundle",
+          "closeout/operator-readiness",
+          "closeout/physical-morphology-guard",
+          "domain-memory/decide",
+          "domain-memory/propose",
+          "lifecycle/receipt",
+          "stage-attempt/closeout"
+        ],
+        "hermes_proof_executor_default": false
+      }
     }
   },
   "executor_defaults": {
@@ -752,8 +753,8 @@
         "runtime_control",
         "runtime_continuity",
         "standard_domain_agent_skeleton",
-        "product_sidecar_export",
-        "product_sidecar_dispatch",
+        "domain_handler_export",
+        "domain_handler_dispatch",
         "artifact_locator_contract",
         "controlled_stage_attempt_projection",
         "controlled_domain_memory_apply_proof",
@@ -764,7 +765,7 @@
         "physical_skeleton_follow_through",
         "ideal_state_closure_status",
         "repo_source_layout_audit",
-        "sidecar receipt refs",
+        "domain handler receipt refs",
         "opl_stage_runtime_registration",
         "family_lifecycle_adapter",
         "native_helper_consumption",

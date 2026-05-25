@@ -126,9 +126,9 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
         },
         "runtime": {
             "owner": TARGET_DOMAIN_ID,
-            "anchor_ref": "src/med_autogrant/product_entry_parts/sidecar.py",
+            "anchor_ref": "src/med_autogrant/product_entry_parts/domain_handler.py",
             "state": "physical_root_present",
-            "role": "runtime descriptor and sidecar boundary anchor",
+            "role": "runtime descriptor and domain_handler boundary anchor",
             "human_readable_provenance_refs": [
                 "runtime/README.md",
             ],
@@ -195,7 +195,7 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
         ],
         "no_regression_evidence_refs": [
             "tests/product_entry_cases/test_hosted_receipt_verification.py::ProductEntryHostedReceiptVerificationTest::test_hosted_receipt_verification_matches_opl_attempt_to_mag_receipt_refs",
-            "tests/product_entry_cases/test_grant_transition_oracle.py::ProductEntryGrantTransitionOracleTest::test_oracle_sidecar_closeout_writes_no_regression_owner_receipt_refs",
+            "tests/product_entry_cases/test_grant_transition_oracle.py::ProductEntryGrantTransitionOracleTest::test_oracle_domain_handler_closeout_writes_no_regression_owner_receipt_refs",
         ],
         "tombstone_refs": [
             "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
@@ -242,7 +242,7 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
                 "condition": "direct/hosted parity, restore/provenance proof, and no-active-caller proof",
             },
             {
-                "path_family": "runtime descriptors and sidecar declarations",
+                "path_family": "runtime descriptors and domain_handler declarations",
                 "source_owner": TARGET_DOMAIN_ID,
                 "condition": "direct skill and OPL-hosted parity proof",
             },

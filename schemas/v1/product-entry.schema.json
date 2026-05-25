@@ -345,7 +345,7 @@
           "const": "service-safe-domain-entry-command"
         },
         "product_entry_builder_command": {
-          "const": "product build-entry"
+          "const": "opl://generated-surfaces/mag/product-entry-session"
         },
         "product_entry_kind": {
           "const": "med_auto_grant_product_entry"

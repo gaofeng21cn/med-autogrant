@@ -20,7 +20,7 @@ Date: `2026-05-22`
 
 ### MAG 目标形态是 Declarative Grant Pack + OPL generated/hosted surfaces + minimal authority functions
 
-- 决策：MAG 以 `agent/` declarative pack、contracts、domain handler、refs-only adapter 和最小 authority function 作为长期形态；product-entry、sidecar、grouped CLI/API、projection builder、lifecycle adapter、memory/package helper、workspace/source intake 和 status/user-loop wrapper 只能作为 direct handler、refs-only adapter、migration input、diagnostic 或 tombstone 阅读。
+- 决策：MAG 以 `agent/` declarative pack、contracts、domain handler、refs-only adapter 和最小 authority function 作为长期形态；product-entry、旧 product-sidecar、grouped CLI/API、projection builder、lifecycle adapter、memory/package helper、workspace/source intake 和 status/user-loop wrapper 只能作为 direct handler、refs-only adapter、migration input、diagnostic 或 tombstone 阅读。
 - 理由：通用 runtime、queue、attempt ledger、workspace/source shell、memory locator、artifact/package lifecycle、operator workbench、observability/SLO、generated wrapper 和 App/workbench shell 归 OPL Framework / shared family layer；MAG 的核心价值在 grant-specific judgment 和交付 authority。
 - 影响：旧 module/interface/test/docs entry 若只服务 local runtime、Hermes/Gateway/local-manager、patch bridge、flat alias 或 compatibility aggregate test，active caller 迁出后直接退役或归档，不新增 compatibility shim、re-export facade 或 compatibility-only test。
 

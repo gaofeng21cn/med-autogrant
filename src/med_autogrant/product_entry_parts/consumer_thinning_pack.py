@@ -38,7 +38,7 @@ PROGRAMMATIC_AUTHORITY_SURFACE_IDS = (
 GENERATED_OR_BRIDGE_SURFACE_IDS = (
     "product_status",
     "product_user_loop",
-    "product_sidecar",
+    "domain_handler",
     "grouped_cli_api",
     "projection_builder",
     "lifecycle_wrapper",
@@ -60,7 +60,7 @@ GENERATED_SURFACE_BRIDGE_EXIT_EVIDENCE_REFS = {
     ],
     "direct_mag_domain_handler_no_regression": [
         "tests/product_entry_cases/test_manifest_and_status.py",
-        "tests/product_entry_cases/test_sidecar.py",
+        "tests/product_entry_cases/test_domain_handler.py",
         "tests/product_entry_cases/test_functional_closure.py",
     ],
     "owner_receipt_or_typed_blocker_ref_roundtrip": [
@@ -286,7 +286,7 @@ def build_declarative_grant_pack_compiler_input() -> dict[str, Any]:
             "opl_compiler_owner": "one-person-lab",
             "opl_can_generate_product_status": True,
             "opl_can_generate_user_loop": True,
-            "opl_can_generate_sidecar_wrapper": True,
+            "opl_can_generate_domain_handler_wrapper": True,
             "opl_can_generate_grouped_cli_api": True,
             "opl_can_generate_projection_wrapper": True,
             "opl_can_generate_lifecycle_wrapper": True,
@@ -322,8 +322,8 @@ def build_generated_surface_handoff() -> dict[str, Any]:
             ],
         ),
         _generated_surface(
-            "product_sidecar",
-            current_mag_paths=["src/med_autogrant/product_entry_parts/sidecar.py"],
+            "domain_handler",
+            current_mag_paths=["src/med_autogrant/product_entry_parts/domain_handler.py"],
             input_refs=[
                 "/product_entry_manifest/runtime_control",
                 "/product_entry_manifest/mag_consumer_thinning_contract",
@@ -386,7 +386,7 @@ def build_generated_surface_handoff() -> dict[str, Any]:
         "production_default_caller_gate_status": "external_evidence_tail",
         "handoff_policy": "OPL_generates_or_hosts_generic_wrappers_from_MAG_pack_input",
         "bridge_policy": (
-            "MAG handwritten product/status/sidecar/projection wrappers are migration bridges, "
+            "MAG handwritten product/status/domain_handler/projection wrappers are migration bridges, "
             "not long-term MAG owner surfaces."
         ),
         "bridge_exit_gate": _bridge_exit_gate(
@@ -409,7 +409,7 @@ def build_generated_surface_handoff() -> dict[str, Any]:
             "mag_long_term_owner": False,
             "mag_can_own_generated_product_status": False,
             "mag_can_own_generated_user_loop": False,
-            "mag_can_own_generated_sidecar": False,
+            "mag_can_own_generated_domain_handler": False,
             "mag_can_own_generated_grouped_cli_api": False,
             "mag_can_own_generated_projection": False,
             "mag_can_own_generated_lifecycle_wrapper": False,

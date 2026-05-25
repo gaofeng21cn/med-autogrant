@@ -18,14 +18,14 @@ def build_todo_wakeup_projection(
 ) -> dict[str, Any]:
     automations = automation.get("automations")
     if not isinstance(automations, list):
-        raise WorkspaceStateError("sidecar_export.automation 缺少 automations。")
+        raise WorkspaceStateError("domain_handler_export.automation 缺少 automations。")
     authoring_wakeup = None
     for item in automations:
         if isinstance(item, Mapping) and item.get("automation_id") == "mag.authoring_loop_continuation":
             authoring_wakeup = dict(item)
             break
     if authoring_wakeup is None:
-        raise WorkspaceStateError("sidecar_export 缺少 authoring loop continuation automation。")
+        raise WorkspaceStateError("domain_handler_export 缺少 authoring loop continuation automation。")
     return {
         "surface_kind": "mag_todo_wakeup_projection",
         "explicit_wakeup_policy": "manual_or_opl_queue_triggered_authoring_loop_continuation",
@@ -42,9 +42,9 @@ def build_todo_wakeup_projection(
             "provider_role": "typed_family_queue_and_provider_wakeup_shell",
             "mag_role": "refs_only_authoring_continuation_action_target",
             "target_action_ref": "open_grant_user_loop",
-            "target_surface": "product user-loop",
+            "target_surface": "opl_generated_grant_user_loop",
             "target_command": user_loop_command,
-            "sidecar_dispatch_action": None,
+            "domain_handler_dispatch_action": None,
             "queue_write_policy": "enqueue_wakeup_only_no_grant_truth_writes",
             "required_return_shapes": [
                 "domain_owner_receipt",
@@ -68,9 +68,9 @@ def build_autonomy_controller_projection(
     autonomy_observability: Mapping[str, Any],
 ) -> dict[str, Any]:
     workspace_path = _require_nonempty_string_from_mapping(
-        _require_mapping(manifest, "workspace_locator", context="sidecar_export.product_entry_manifest"),
+        _require_mapping(manifest, "workspace_locator", context="domain_handler_export.product_entry_manifest"),
         "workspace_path",
-        context="sidecar_export.workspace_locator",
+        context="domain_handler_export.workspace_locator",
     )
     return {
         "surface_kind": "mag_autonomy_controller_projection",
@@ -118,23 +118,23 @@ def build_attention_queue_projection(
         "queue_write_policy": "enqueue_wakeup_only_no_grant_truth_writes",
         "attention_candidates": list(autonomy_observability.get("attention_candidates") or []),
         "operator_loop_surface": dict(
-            _require_mapping(manifest, "operator_loop_surface", context="sidecar_export.product_entry_manifest")
+            _require_mapping(manifest, "operator_loop_surface", context="domain_handler_export.product_entry_manifest")
         ),
         "recommended_wakeup_command": user_loop_command,
     }
 
 
 def default_executor_owner(manifest: Mapping[str, Any]) -> str:
-    runtime_control = _require_mapping(manifest, "runtime_control", context="sidecar_export.product_entry_manifest")
+    runtime_control = _require_mapping(manifest, "runtime_control", context="domain_handler_export.product_entry_manifest")
     return _require_nonempty_string_from_mapping(
         runtime_control,
         "executor_owner",
-        context="sidecar_export.runtime_control",
+        context="domain_handler_export.runtime_control",
     )
 
 
 def first_skill(skill_catalog: Mapping[str, Any]) -> Mapping[str, Any]:
     skills = skill_catalog.get("skills")
     if not isinstance(skills, list) or not skills or not isinstance(skills[0], Mapping):
-        raise WorkspaceStateError("sidecar_export.skill_catalog 缺少首个 skill。")
+        raise WorkspaceStateError("domain_handler_export.skill_catalog 缺少首个 skill。")
     return skills[0]

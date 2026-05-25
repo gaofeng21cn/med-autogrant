@@ -61,12 +61,12 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
                 encoding="utf-8",
             )
             entry = MedAutoGrantProductEntry()
-            closeout = entry.dispatch_sidecar_task(task_path=task_path)["sidecar_dispatch"]["result"]
+            closeout = entry.dispatch_domain_handler_task(task_path=task_path)["domain_handler_dispatch"]["result"]
             receipt = closeout["owner_receipt_evidence"]
             payload = entry.build_controlled_soak_receipt_reconciliation_proof(
                 owner_receipt_evidence=receipt,
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/closeout/1",
-                sidecar_closeout_result=closeout,
+                domain_handler_closeout_result=closeout,
             )
 
         proof = payload["receipt_reconciliation_proof"]
@@ -81,7 +81,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
             proof["reconciliation"]["status"],
             "no_regression_evidence_reconciled",
         )
-        self.assertTrue(proof["reconciliation"]["receipt_ref_matches_sidecar"])
+        self.assertTrue(proof["reconciliation"]["receipt_ref_matches_domain_handler"])
         self.assertTrue(proof["reconciliation"]["opl_ledger_ref_matches_receipt_source"])
         self.assertEqual(
             proof["mag_owner_receipt"]["receipt_ref"],
@@ -126,7 +126,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
             proof["reconciliation"]["status"],
             "typed_blocker_reconciled",
         )
-        self.assertIsNone(proof["reconciliation"]["receipt_ref_matches_sidecar"])
+        self.assertIsNone(proof["reconciliation"]["receipt_ref_matches_domain_handler"])
         self.assertTrue(proof["reconciliation"]["opl_ledger_ref_matches_receipt_source"])
         self.assertEqual(
             proof["typed_blocker"]["blocker_kind"],
@@ -210,7 +210,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
             payload = entry.build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[no_regression, typed_blocker],
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/inventory",
-                sidecar_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],
+                domain_handler_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],
             )
 
         inventory = payload["receipt_reconciliation_inventory"]
@@ -221,7 +221,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
         self.assertEqual(inventory["state"], "read_projection_only_not_live_soak_complete")
         self.assertFalse(inventory["claims_production_long_run_soak_complete"])
         self.assertEqual(inventory["summary"]["item_count"], 2)
-        self.assertEqual(inventory["summary"]["sidecar_closeout_result_count"], 1)
+        self.assertEqual(inventory["summary"]["domain_handler_closeout_result_count"], 1)
         self.assertEqual(inventory["summary"]["by_receipt_shape"]["no_regression_evidence"], 1)
         self.assertEqual(inventory["summary"]["by_receipt_shape"]["typed_blocker"], 1)
         self.assertEqual(inventory["summary"]["typed_blocker_count"], 1)

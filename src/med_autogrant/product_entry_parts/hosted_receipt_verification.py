@@ -42,11 +42,11 @@ def build_focused_hosted_receipt_verification(
     *,
     owner_receipt_evidence: Mapping[str, Any],
     opl_attempt_evidence: Mapping[str, Any],
-    sidecar_closeout_result: Mapping[str, Any] | None = None,
+    domain_handler_closeout_result: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     receipt = _require_owner_receipt_evidence(owner_receipt_evidence)
     attempt = _require_opl_attempt_evidence(opl_attempt_evidence)
-    closeout = dict(sidecar_closeout_result or {})
+    closeout = dict(domain_handler_closeout_result or {})
     breakdown = _require_mapping(
         attempt,
         "domain_breakdown",
@@ -81,7 +81,7 @@ def build_focused_hosted_receipt_verification(
         "owner_receipt_ref_matches_opl": owner_receipt_ref == receipt_ref,
         "ledger_ref_matches_receipt_source": ledger_ref
         == _require_nonempty_string_from_mapping(receipt, "source_ref", context="owner_receipt_evidence"),
-        "receipt_ref_matches_sidecar": _receipt_ref_matches_sidecar(receipt_ref, closeout),
+        "receipt_ref_matches_domain_handler": _receipt_ref_matches_domain_handler(receipt_ref, closeout),
     }
     allowed_result = _allowed_result(
         receipt_shape=receipt_shape,
@@ -244,7 +244,7 @@ def _provider_completion_ref(attempt: Mapping[str, Any]) -> str | None:
     return _require_nonempty_string(ref, field_name="provider_completion.completion_ref")
 
 
-def _receipt_ref_matches_sidecar(receipt_ref: str, closeout: Mapping[str, Any]) -> bool | None:
+def _receipt_ref_matches_domain_handler(receipt_ref: str, closeout: Mapping[str, Any]) -> bool | None:
     if not closeout:
         return None
     return closeout.get("receipt_ref") == receipt_ref

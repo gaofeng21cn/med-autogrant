@@ -103,7 +103,7 @@ def build_consumed_opl_standard_surfaces() -> dict[str, Any]:
         "generic_primitives_contract_ref": (
             "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations"
         ),
-        "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
+        "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
         "consumption_policy": (
             "consume_opl_standard_scaffold_and_generic_primitives_no_mag_runtime_rebuild"
         ),
@@ -266,7 +266,7 @@ def build_functional_harness_consumer_coverage() -> dict[str, Any]:
             "package_authority",
             "owner_receipt",
             "typed_blocker",
-            "sidecar_projection_adapter",
+            "domain_handler_projection_adapter",
         ],
         "fail_closed_rules": {
             "opl_harness_pass_is_grant_ready": False,
@@ -275,7 +275,7 @@ def build_functional_harness_consumer_coverage() -> dict[str, Any]:
             "opl_can_write_memory_body": False,
             "opl_can_write_grant_truth": False,
         },
-        "sidecar_projection_policy": "refs_receipts_blockers_verdict_refs_action_metadata_only",
+        "domain_handler_projection_policy": "refs_receipts_blockers_verdict_refs_action_metadata_only",
         "output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
     }
 
@@ -363,7 +363,7 @@ def build_thin_surface_output_guard() -> dict[str, Any]:
         "private_functional_state_output_classes_forbidden": list(
             PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES
         ),
-        "required_sidecar_return_refs": {
+        "required_domain_handler_return_refs": {
             "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
             "controlled_stage_attempt_projection_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
             "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
@@ -430,7 +430,7 @@ def build_thin_surface_output_guard() -> dict[str, Any]:
             "memory_body",
             "generated_product_status_owner_state",
             "generated_user_loop_owner_state",
-            "generated_sidecar_owner_state",
+            "generated_domain_handler_owner_state",
             "generated_grouped_cli_api_owner_state",
             "generated_projection_owner_state",
             "generated_lifecycle_wrapper_owner_state",
@@ -476,15 +476,15 @@ def build_standard_agent_scaffold_alignment() -> dict[str, Any]:
         "retained_program_surface_refs": [
             "src/med_autogrant/domain_entry.py",
             "src/med_autogrant/product_entry.py",
-            "src/med_autogrant/product_entry_parts/sidecar.py",
+            "src/med_autogrant/product_entry_parts/domain_handler.py",
             "schemas/v1/product-entry-manifest.schema.json",
-            "tests/product_entry_cases/test_sidecar.py",
+            "tests/product_entry_cases/test_domain_handler.py",
             "tests/product_entry_cases/test_functional_closure.py",
         ],
         "retained_program_surface_kinds": [
             "domain_entry",
             "product_entry_manifest_builder",
-            "product_sidecar_adapter",
+            "domain_handler_adapter",
             "schema_contract",
             "focused_product_entry_tests",
             "declarative_grant_pack_compiler_input",
@@ -493,7 +493,7 @@ def build_standard_agent_scaffold_alignment() -> dict[str, Any]:
         "authority_boundary": {
             "domain_truth_owner": TARGET_DOMAIN_ID,
             "domain_entry_owner": TARGET_DOMAIN_ID,
-            "sidecar_owner": TARGET_DOMAIN_ID,
+            "domain_handler_owner": TARGET_DOMAIN_ID,
             "schema_owner": TARGET_DOMAIN_ID,
             "test_owner": TARGET_DOMAIN_ID,
             "opl_scaffold_owner": "one-person-lab",

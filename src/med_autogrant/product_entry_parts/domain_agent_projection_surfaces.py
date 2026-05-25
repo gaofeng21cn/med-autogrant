@@ -487,7 +487,7 @@ def build_controlled_stage_attempt_projection(
             ],
             "quality_ref_owner": TARGET_DOMAIN_ID,
             "artifact_write_policy": "runtime_or_workspace_only_no_repo_artifact_instance",
-            "direct_skill_and_opl_hosted_use_same_descriptor_sidecar_quality_refs": True,
+            "direct_skill_and_opl_hosted_use_same_descriptor_domain_handler_quality_refs": True,
             "opl_verdict_authority": {
                 "fundability": False,
                 "submission_ready_export": False,
@@ -511,7 +511,7 @@ def build_controlled_stage_attempt_projection(
             "writeback_receipt_proof_ref": (
                 "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof"
             ),
-            "sidecar_export_ref": "/product_entry_manifest/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
+            "domain_handler_export_ref": "/product_entry_manifest/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
             "stage_attempt_receipt_ref": (
                 "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
                 f"{grant_run_id}/stage-attempt/{lifecycle_stage}.json"
@@ -520,7 +520,7 @@ def build_controlled_stage_attempt_projection(
             "domain_owner": TARGET_DOMAIN_ID,
             "repo_tracked_real_receipt_instance": False,
             "repo_tracked_real_memory_body": False,
-            "direct_skill_and_opl_hosted_use_same_descriptor_sidecar_quality_refs": True,
+            "direct_skill_and_opl_hosted_use_same_descriptor_domain_handler_quality_refs": True,
             "authority_boundary": {
                 "fundability_verdict_owner": TARGET_DOMAIN_ID,
                 "authoring_quality_verdict_owner": TARGET_DOMAIN_ID,
@@ -531,9 +531,9 @@ def build_controlled_stage_attempt_projection(
             },
         },
         "receipt_refs": {
-            "sidecar_dispatch_receipt_ref": (
+            "domain_handler_dispatch_receipt_ref": (
                 "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
-                f"{grant_run_id}/sidecar-dispatch/<task_id>.json"
+                f"{grant_run_id}/domain_handler-dispatch/<task_id>.json"
             ),
             "stage_attempt_receipt_ref": (
                 "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"

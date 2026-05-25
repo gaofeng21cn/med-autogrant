@@ -45,7 +45,7 @@ class ProductEntryContinuousReconciliationTest(unittest.TestCase):
             inventory_payload = entry.build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[no_regression, typed_blocker, domain_owner],
                 opl_ledger_ref="opl-ledger://mag/continuous-reconciliation",
-                sidecar_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],
+                domain_handler_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],
             )
             no_regression_verification = entry.build_focused_hosted_receipt_verification(
                 owner_receipt_evidence=no_regression,
@@ -220,7 +220,7 @@ def _minimal_inventory(receipt_ref: str) -> dict[str, Any]:
         },
         "summary": {
             "item_count": 1,
-            "sidecar_closeout_result_count": 0,
+            "domain_handler_closeout_result_count": 0,
             "by_receipt_shape": {"no_regression_evidence": 1},
             "by_reconciliation_status": {"no_regression_evidence_reconciled": 1},
             "typed_blocker_count": 0,
@@ -233,7 +233,7 @@ def _minimal_inventory(receipt_ref: str) -> dict[str, Any]:
                 "stage_id": "review_and_rebuttal",
                 "source_ref": "opl-ledger://mag/continuous/minimal",
                 "reconciliation_status": "no_regression_evidence_reconciled",
-                "receipt_ref_matches_sidecar": None,
+                "receipt_ref_matches_domain_handler": None,
                 "opl_ledger_ref_matches_receipt_source": True,
                 "typed_blocker_present": False,
                 "no_regression_evidence_refs": [receipt_ref],
@@ -295,7 +295,7 @@ def _minimal_verification(
         "matches": {
             "owner_receipt_ref_matches_opl": True,
             "ledger_ref_matches_receipt_source": True,
-            "receipt_ref_matches_sidecar": None,
+            "receipt_ref_matches_domain_handler": None,
         },
         "allowed_result": {
             "result_shape": result_shape,

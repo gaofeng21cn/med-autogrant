@@ -15,7 +15,7 @@ Date: `2026-05-25`
 ## 当前机器事实摘要
 
 - `contracts/runtime-program/current-program.json` 声明 `default_task_runtime_owner=one-person-lab`、`default_runtime_substrate=temporal`、`default_stage_executor=codex_cli`、`mag_implements_daemon=false`、`mag_implements_scheduler=false`、`mag_implements_attempt_loop=false`、`mag_owns_attempt_ledger=false`。
-- `mag_functional_structure_gap_count=0` 与 `standard_agent_source_shape_status=landed` 是当前 contracts/read-model 的历史结构分类信号：它只表示 generic owner intent 已被分类和收薄，不表示 strict standard-agent active source 已物理纯净。当前 active caller 的 product-entry、status/user-loop、sidecar、domain_runtime、lifecycle、projection、autonomy loop 和 CLI shell 仍只能按 MAG domain handler target、refs-only adapter、minimal authority function、diagnostic 或 migration input 读取。
+- `mag_functional_structure_gap_count=0` 与 `standard_agent_source_shape_status=landed` 是当前 contracts/read-model 的历史结构分类信号：它只表示 generic owner intent 已被分类和收薄，不表示 strict standard-agent active source 已物理纯净。当前 active caller 的 product-entry、status/user-loop、domain_handler、domain_runtime、lifecycle、projection、autonomy loop 和 CLI shell 仍只能按 MAG domain handler target、refs-only adapter、minimal authority function、diagnostic 或 migration input 读取。
 - `claims_opl_descriptor_source_available=true`、`claims_opl_replacement_exists=true`、`claims_domain_repo_physical_delete_authorized=false`、`claims_all_bridge_exits_complete=false`、`claims_production_long_run_soak_complete=false` 共同表示：OPL generated/default caller replacement 与 cutover readiness 已有结构证据，但该证据不授权 MAG repo 物理删除仍被 direct path / domain handler 消费的 active shell，也不关闭 App consumption / live-soak 证据尾项。
 - `contracts/external_evidence/mag-evidence-receipt-ledger.json` 已记录 first live production evidence refs；7 个 external evidence request 已全部 refs-only close，包括 generated/hosted caller pack consumption、App/workbench package refs consumption、release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity no-regression 和 Temporal receipt reconciliation ref。该 ledger 仍只保存 refs、receipt shapes、typed blocker / no-regression refs 和 production acceptance refs；`temporal_provider_long_soak_window_evidence` 仍是后续真实证据门。
 - Production acceptance tail 已由 MAG-owned owner receipt projection 关闭；这只证明 MAG owner receipt / typed blocker / no-regression evidence 的 refs-only closeout shape，不授权 OPL、Provider、Agent Lab 或 OMA 替 MAG 生成 grant-ready、fundability-ready、quality/export-ready 或 submission-ready verdict。
@@ -31,8 +31,8 @@ Date: `2026-05-25`
 - `contracts/` 是机器合同、handoff、receipt、external evidence request、production acceptance 和 runtime-program 指针。
 - `src/med_autogrant/**` 只作为 domain handler、refs-only adapter、minimal authority function、native helper、diagnostic、migration input 或 tombstone/provenance 支撑读取；不得写成 MAG 私有 runtime platform。
 - MAG retained private authority surface 限定为 grant domain truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject、owner receipt、transition oracle、grant-native helper 和 focused contract tests。
-- Product-entry、sidecar、grouped CLI/API、projection、lifecycle、memory/package projection 和 status/user-loop 仍可作为 direct domain handler、refs-only adapter、native helper target 或 migration input 暂时存在；长期 owner 是 OPL generated/hosted surface，当前 strict purity 读法是 replacement-ready 但 physical-delete 未授权。
-- 当前 active source 中仍可见的 product-entry、domain_runtime、runtime registration、sidecar、lifecycle、memory/package projection、autonomy loop 和 status/user-loop shell 不是兼容承诺，也不是长期标准智能体组成。满足 explicit MAG owner receipt authorizing physical delete、direct/hosted parity、owner receipt roundtrip、no-active-caller 和 no-resurrection guard 后，旧 wrapper、alias、facade、patch bridge、compat aggregate test 与 legacy runtime/probe residue直接删除；历史只进 `docs/history/**`、提交历史或外部 receipt，不保留 repo-local compatibility shell。
+- Product-entry、domain_handler、grouped CLI/API、projection、lifecycle、memory/package projection 和 status/user-loop 仍可作为 direct domain handler、refs-only adapter、native helper target 或 migration input 暂时存在；长期 owner 是 OPL generated/hosted surface，当前 strict purity 读法是 replacement-ready 但 physical-delete 未授权。
+- 当前 active source 中仍可见的 product-entry、domain_runtime、runtime registration、domain_handler、lifecycle、memory/package projection、autonomy loop 和 status/user-loop shell 不是兼容承诺，也不是长期标准智能体组成。满足 explicit MAG owner receipt authorizing physical delete、direct/hosted parity、owner receipt roundtrip、no-active-caller 和 no-resurrection guard 后，旧 wrapper、alias、facade、patch bridge、compat aggregate test 与 legacy runtime/probe residue直接删除；历史只进 `docs/history/**`、提交历史或外部 receipt，不保留 repo-local compatibility shell。
 
 ## 已退役面
 
@@ -54,19 +54,19 @@ Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream 
 
 ## 当前入口
 
-- 用户路径：`Med Auto Grant app skill -> product status -> product user-loop -> workspace progress / workspace cockpit -> product direct-entry -> pass / package commands`。
+- 用户路径：`Med Auto Grant app skill -> OPL/App generated status or manifest -> MAG domain-handler export|dispatch target -> workspace progress / workspace cockpit refs -> direct-entry/user-loop action target -> pass / package commands`。
 - OPL owner-payload refs：`product receipt-readiness -> product opl-owner-payload-response -> OPL refs-only owner-payload record/verify`。
 - Pre-workspace：`discover-funding-opportunities -> select-project-profile -> initialize-intake-workspace`。
 - Grant stage plane：`call_and_candidate_intake`、`fundability_strategy`、`specific_aims_and_structure`、`proposal_authoring`、`review_and_rebuttal`、`package_and_submit_ready`。
 - Declarative Grant Pack：`agent/prompts/`、`agent/stages/`、`agent/skills/`、`agent/quality_gates/`、`agent/knowledge/`。
-- Sidecar：`product sidecar export` / `dispatch` 只返回 refs、owner receipt、typed blocker、verdict refs 与 authority action metadata；它不是常驻 daemon。
+- DomainHandler：`domain handler export` / `dispatch` 只返回 refs、owner receipt、typed blocker、verdict refs 与 authority action metadata；它不是常驻 daemon。
 
 ## 当前不能声明
 
 - 不能把 `mag_functional_structure_gap_count=0` 写成 strict source-purity 完成、external production/default caller 完成、真实 App/workbench consumption 或 production long-run soak 已完成。
 - 不能把 descriptor ready、transition oracle smoke、receipt reconciliation proof、external evidence consumption 或 no-regression evidence 写成 provider SLO / live soak 已完成。
 - 不能把 OPL provider completion、matrix runner smoke、package existence、schema completeness、quality scorecard 分数或 controller route 写成 fundability-ready、quality-ready、export-ready 或 submission-ready verdict。
-- 不能把 hand-written product-entry / sidecar / grouped CLI/API / projection / lifecycle wrapper 写成长期合理私有平台。
+- 不能把 hand-written product-entry / domain_handler / grouped CLI/API / projection / lifecycle wrapper 写成长期合理私有平台。
 - 不能把 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、compatibility aggregate test 或 `codex_cli` executor 写回默认 runtime owner。
 
 ## 下一跳

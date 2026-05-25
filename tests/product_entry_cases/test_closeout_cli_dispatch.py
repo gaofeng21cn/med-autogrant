@@ -16,7 +16,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
                 exit_code = int(exc.code)
         return exit_code, stdout.getvalue(), stderr.getvalue()
 
-    def test_codex_stage_receipts_dispatches_product_surface(self) -> None:
+    def test_codex_stage_receipts_dispatches_authority_target(self) -> None:
         expected_payload = {
             "surface_kind": "mag_codex_stage_execution_receipt_bundle",
             "state": "codex_stage_receipts_ready_not_quality_ready",
@@ -53,8 +53,8 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
                 product_entry.build_codex_stage_execution_receipt_bundle.return_value = expected_payload
 
                 exit_code, stdout, stderr = self.run_cli(
-                    "product",
-                    "codex-stage-receipts",
+                    "authority",
+                    "stage-receipts",
                     "--stage-id",
                     "review_and_rebuttal",
                     "--execution-attempt",
@@ -74,61 +74,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
             review_attempts=[review_attempt],
         )
 
-    def test_operator_closeout_readiness_dispatches_product_surface(self) -> None:
-        expected_payload = {
-            "surface_kind": "mag_operator_closeout_readiness_projection",
-            "state": "operator_closeout_refs_ready_not_quality_ready",
-        }
-
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            production_acceptance_path = Path(tmp_dir) / "acceptance.json"
-            ledger_path = Path(tmp_dir) / "ledger.json"
-            receipt_readiness_path = Path(tmp_dir) / "readiness.json"
-            production_acceptance = {
-                "surface_kind": "mag_production_acceptance_evidence.v1",
-                "evidence_tail_status": "closed_by_domain_owned_acceptance_receipt",
-            }
-            ledger = {
-                "surface_kind": "mag_external_evidence_receipt_ledger.v1",
-                "remaining_real_evidence_gap_ids": [],
-                "summary": {"claims_grant_or_fundability_ready": False},
-            }
-            receipt_readiness = {
-                "surface_kind": "mag_receipt_readiness_projection",
-                "state": "receipt_refs_ready_not_quality_ready",
-                "missing_categories": [],
-            }
-            production_acceptance_path.write_text(json.dumps(production_acceptance), encoding="utf-8")
-            ledger_path.write_text(json.dumps(ledger), encoding="utf-8")
-            receipt_readiness_path.write_text(json.dumps(receipt_readiness), encoding="utf-8")
-
-            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
-                product_entry = product_entry_class.return_value
-                product_entry.build_operator_closeout_readiness_projection.return_value = expected_payload
-
-                exit_code, stdout, stderr = self.run_cli(
-                    "product",
-                    "operator-closeout-readiness",
-                    "--production-acceptance",
-                    str(production_acceptance_path),
-                    "--external-evidence-receipt-ledger",
-                    str(ledger_path),
-                    "--receipt-readiness-projection",
-                    str(receipt_readiness_path),
-                    "--format",
-                    "json",
-                )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertEqual(json.loads(stdout), expected_payload)
-        product_entry.build_operator_closeout_readiness_projection.assert_called_once_with(
-            production_acceptance=production_acceptance,
-            external_evidence_receipt_ledger=ledger,
-            receipt_readiness_projection=receipt_readiness,
-        )
-
-    def test_physical_morphology_guard_dispatches_product_surface(self) -> None:
+    def test_physical_morphology_guard_dispatches_authority_target(self) -> None:
         expected_payload = {
             "surface_kind": "mag_physical_morphology_guard_projection",
             "state": "allowed_evidence_gated",
@@ -157,8 +103,8 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
                 product_entry.build_physical_morphology_guard_projection.return_value = expected_payload
 
                 exit_code, stdout, stderr = self.run_cli(
-                    "product",
-                    "physical-morphology-guard",
+                    "authority",
+                    "morphology-guard",
                     "--source-item",
                     str(source_item_path),
                     "--external-evidence-ref",
@@ -175,7 +121,7 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
             external_evidence_refs=["opl://receipts/mag/physical-morphology/parity.json"],
         )
 
-    def test_executor_first_closeout_bundle_dispatches_product_surface(self) -> None:
+    def test_executor_first_closeout_bundle_dispatches_authority_target(self) -> None:
         expected_payload = {
             "surface_kind": "mag_executor_first_closeout_bundle",
             "state": "refs_ready_not_quality_ready",
@@ -218,8 +164,8 @@ class ProductEntryCloseoutCliDispatchTest(unittest.TestCase):
                 product_entry.build_executor_first_closeout_bundle.return_value = expected_payload
 
                 exit_code, stdout, stderr = self.run_cli(
-                    "product",
-                    "executor-first-closeout-bundle",
+                    "authority",
+                    "executor-closeout-bundle",
                     "--codex-stage-execution-receipt-bundle",
                     str(codex_bundle_path),
                     "--operator-closeout-readiness-projection",

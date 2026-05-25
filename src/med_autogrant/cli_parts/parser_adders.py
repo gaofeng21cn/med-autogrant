@@ -233,7 +233,7 @@ def _add_product_entry_command(
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
-def _add_product_sidecar_export_command(
+def _add_domain_handler_export_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
     handler: Any,
@@ -244,7 +244,7 @@ def _add_product_sidecar_export_command(
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
-def _add_product_sidecar_dispatch_command(
+def _add_domain_handler_dispatch_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,
     handler: Any,
@@ -348,7 +348,7 @@ def _add_product_receipt_reconciliation_proof_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--owner-receipt-evidence", required=True)
     command.add_argument("--opl-ledger-ref", required=True)
-    command.add_argument("--sidecar-closeout-result")
+    command.add_argument("--domain_handler-closeout-result")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -362,7 +362,7 @@ def _add_product_receipt_reconciliation_inventory_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--owner-receipt-evidence", required=True, action="append")
     command.add_argument("--opl-ledger-ref", required=True)
-    command.add_argument("--sidecar-closeout-result", action="append")
+    command.add_argument("--domain_handler-closeout-result", action="append")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 
@@ -390,7 +390,7 @@ def _add_product_focused_hosted_receipt_verification_command(
     command = subparsers.add_parser(name, help=help_text)
     command.add_argument("--owner-receipt-evidence", required=True)
     command.add_argument("--opl-attempt-evidence", required=True)
-    command.add_argument("--sidecar-closeout-result")
+    command.add_argument("--domain_handler-closeout-result")
     command.add_argument("--format", choices=("json", "text"), default="json")
     command.set_defaults(handler=handler)
 

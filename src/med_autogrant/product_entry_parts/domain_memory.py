@@ -447,7 +447,7 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
             "src/med_autogrant/product_entry_parts/domain_memory.py",
             "src/med_autogrant/product_entry_parts/domain_memory_runtime.py",
             "src/med_autogrant/product_entry_parts/functional_closure.py",
-            "src/med_autogrant/product_entry_parts/sidecar.py",
+            "src/med_autogrant/product_entry_parts/domain_handler.py",
         ],
         "docs": [
             "docs/status.md",
@@ -519,6 +519,6 @@ def _repo_source_role(boundary: str) -> str:
     return {
         "agent": "domain_entry_stage_pack_and_quality_gate_source",
         "contracts": "machine_readable_contract_schema_and_seed_fixture_source",
-        "runtime": "sidecar_projection_and_memory_apply_contract_source",
+        "runtime": "domain_handler_projection_and_memory_apply_contract_source",
         "docs": "human_policy_status_and_opl_adoption_source",
     }[boundary]

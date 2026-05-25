@@ -124,9 +124,9 @@ def build_owner_receipt_contract(
                 "stage_attempt_receipt_ref",
                 context="controlled_stage_attempt_projection.receipt_refs",
             ),
-            "sidecar_dispatch_receipt_ref": _require_nonempty_string_from_mapping(
+            "domain_handler_dispatch_receipt_ref": _require_nonempty_string_from_mapping(
                 receipt_refs,
-                "sidecar_dispatch_receipt_ref",
+                "domain_handler_dispatch_receipt_ref",
                 context="controlled_stage_attempt_projection.receipt_refs",
             ),
             "memory_writeback_receipt_ref": _require_nonempty_string_from_mapping(
@@ -318,11 +318,11 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
                     "/product_entry_manifest/owner_receipt_contract",
                     "/product_entry_manifest/lifecycle_guarded_apply_proof",
                     "/product_entry_manifest/grant_transition_oracle",
-                    "product sidecar export",
+                    "domain handler export",
                 ],
                 required_evidence_refs=[
                     "mag_consumer_thinning_contract_ref",
-                    "sidecar_refs_only_projection_ref",
+                    "domain_handler_refs_only_projection_ref",
                     "opl_generic_primitive_replacement_contract_ref",
                 ],
             ),
@@ -335,7 +335,7 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
                     "/product_entry_manifest/artifact_locator_contract",
                     "package submission-ready",
                     "product lifecycle-receipt-evidence",
-                    "product sidecar-dispatch lifecycle/receipt",
+                    "domain handler-dispatch lifecycle/receipt",
                     "/product_entry_manifest/mag_consumer_thinning_contract",
                 ],
                 required_evidence_refs=[
@@ -395,7 +395,7 @@ def build_ideal_state_closure_status() -> dict[str, Any]:
                     "/product_entry_manifest/controlled_soak_no_regression_attempt",
                     "/product_entry_manifest/mag_consumer_thinning_contract",
                     "product owner-receipt-evidence",
-                    "product sidecar-dispatch stage-attempt/closeout",
+                    "domain handler-dispatch stage-attempt/closeout",
                 ],
                 required_evidence_refs=[
                     "opl_runtime_ledger_mag_controlled_stage_attempt_ref",

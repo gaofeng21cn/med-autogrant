@@ -7,8 +7,8 @@ from pathlib import Path
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
-class ProductCloseoutSidecarTest(unittest.TestCase):
-    def test_sidecar_dispatch_codex_stage_receipts_returns_read_projection(self) -> None:
+class ProductCloseoutDomainHandlerTest(unittest.TestCase):
+    def test_domain_handler_dispatch_codex_stage_receipts_returns_read_projection(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -50,14 +50,14 @@ class ProductCloseoutSidecarTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
+            payload = MedAutoGrantProductEntry().dispatch_domain_handler_task(task_path=task_path)
 
-        dispatch = payload["sidecar_dispatch"]
+        dispatch = payload["domain_handler_dispatch"]
         self.assertEqual(dispatch["action"], "closeout/codex-stage-receipts")
-        self.assertTrue(dispatch["executed_by_sidecar"])
+        self.assertTrue(dispatch["executed_by_domain_handler"])
         self.assertIsNone(dispatch["executed_command"])
         result = dispatch["result"]
-        self.assertEqual(result["surface_kind"], "sidecar_codex_stage_receipts_result")
+        self.assertEqual(result["surface_kind"], "domain_handler_codex_stage_receipts_result")
         self.assertEqual(result["write_policy"], "read_projection_only_no_domain_truth_mutation")
         bundle = result["receipt_bundle"]
         self.assertEqual(bundle["surface_kind"], "mag_codex_stage_execution_receipt_bundle")
@@ -65,7 +65,7 @@ class ProductCloseoutSidecarTest(unittest.TestCase):
         self.assertFalse(bundle["quality_gate_effect"]["ready_verdict_authorized"])
         self.assertFalse(bundle["authority_boundary"]["can_declare_submission_ready"])
 
-    def test_sidecar_dispatch_operator_readiness_returns_no_ready_authority(self) -> None:
+    def test_domain_handler_dispatch_operator_readiness_returns_no_ready_authority(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -112,13 +112,13 @@ class ProductCloseoutSidecarTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
+            payload = MedAutoGrantProductEntry().dispatch_domain_handler_task(task_path=task_path)
 
-        dispatch = payload["sidecar_dispatch"]
+        dispatch = payload["domain_handler_dispatch"]
         self.assertEqual(dispatch["action"], "closeout/operator-readiness")
-        self.assertTrue(dispatch["executed_by_sidecar"])
+        self.assertTrue(dispatch["executed_by_domain_handler"])
         result = dispatch["result"]
-        self.assertEqual(result["surface_kind"], "sidecar_operator_closeout_readiness_result")
+        self.assertEqual(result["surface_kind"], "domain_handler_operator_closeout_readiness_result")
         self.assertEqual(result["write_policy"], "read_projection_only_no_domain_truth_mutation")
         readiness = result["operator_closeout_readiness"]
         self.assertEqual(readiness["surface_kind"], "mag_operator_closeout_readiness_projection")
@@ -126,7 +126,7 @@ class ProductCloseoutSidecarTest(unittest.TestCase):
         self.assertFalse(readiness["authority_boundary"]["can_declare_submission_ready"])
         self.assertFalse(readiness["authority_boundary"]["can_declare_fundability_ready"])
 
-    def test_sidecar_dispatch_physical_morphology_guard_returns_guard_projection(self) -> None:
+    def test_domain_handler_dispatch_physical_morphology_guard_returns_guard_projection(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -158,13 +158,13 @@ class ProductCloseoutSidecarTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
+            payload = MedAutoGrantProductEntry().dispatch_domain_handler_task(task_path=task_path)
 
-        dispatch = payload["sidecar_dispatch"]
+        dispatch = payload["domain_handler_dispatch"]
         self.assertEqual(dispatch["action"], "closeout/physical-morphology-guard")
-        self.assertTrue(dispatch["executed_by_sidecar"])
+        self.assertTrue(dispatch["executed_by_domain_handler"])
         result = dispatch["result"]
-        self.assertEqual(result["surface_kind"], "sidecar_physical_morphology_guard_result")
+        self.assertEqual(result["surface_kind"], "domain_handler_physical_morphology_guard_result")
         self.assertEqual(result["write_policy"], "read_projection_only_no_domain_truth_mutation")
         guard = result["physical_morphology_guard"]
         self.assertEqual(guard["surface_kind"], "mag_physical_morphology_guard_projection")
@@ -172,7 +172,7 @@ class ProductCloseoutSidecarTest(unittest.TestCase):
         self.assertFalse(guard["claims"]["claims_physical_morphology_cleanup_complete"])
         self.assertFalse(guard["authority_boundary"]["can_declare_physical_cleanup_complete"])
 
-    def test_sidecar_dispatch_executor_first_bundle_returns_refs_only_bundle(self) -> None:
+    def test_domain_handler_dispatch_executor_first_bundle_returns_refs_only_bundle(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
         from med_autogrant.product_entry_parts.codex_stage_receipts import (
             build_codex_stage_execution_receipt_bundle,
@@ -302,13 +302,13 @@ class ProductCloseoutSidecarTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
+            payload = MedAutoGrantProductEntry().dispatch_domain_handler_task(task_path=task_path)
 
-        dispatch = payload["sidecar_dispatch"]
+        dispatch = payload["domain_handler_dispatch"]
         self.assertEqual(dispatch["action"], "closeout/executor-first-bundle")
-        self.assertTrue(dispatch["executed_by_sidecar"])
+        self.assertTrue(dispatch["executed_by_domain_handler"])
         result = dispatch["result"]
-        self.assertEqual(result["surface_kind"], "sidecar_executor_first_closeout_bundle_result")
+        self.assertEqual(result["surface_kind"], "domain_handler_executor_first_closeout_bundle_result")
         self.assertEqual(result["write_policy"], "read_projection_only_no_domain_truth_mutation")
         bundle = result["executor_first_closeout_bundle"]
         self.assertEqual(bundle["surface_kind"], "mag_executor_first_closeout_bundle")

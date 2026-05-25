@@ -102,7 +102,7 @@ from med_autogrant.product_entry_parts.executor_first_closeout_bundle import (
 from med_autogrant.product_entry_parts.progress import ProductEntryProgressMixin
 from med_autogrant.product_entry_parts.manifest import ProductEntryManifestMixin
 from med_autogrant.product_entry_parts.preflight import ProductEntryPreflightMixin
-from med_autogrant.product_entry_parts.sidecar import build_sidecar_export, dispatch_sidecar_task
+from med_autogrant.product_entry_parts.domain_handler import build_domain_handler_export, dispatch_domain_handler_task
 
 
 class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMixin, ProductEntryPreflightMixin):
@@ -325,11 +325,11 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             "product_entry": product_entry,
         }
 
-    def build_sidecar_export(self, *, input_path: str | Path) -> dict[str, Any]:
-        return build_sidecar_export(self, input_path=input_path)
+    def build_domain_handler_export(self, *, input_path: str | Path) -> dict[str, Any]:
+        return build_domain_handler_export(self, input_path=input_path)
 
-    def dispatch_sidecar_task(self, *, task_path: str | Path) -> dict[str, Any]:
-        return dispatch_sidecar_task(self, task_path=task_path)
+    def dispatch_domain_handler_task(self, *, task_path: str | Path) -> dict[str, Any]:
+        return dispatch_domain_handler_task(self, task_path=task_path)
 
     def build_domain_memory_writeback_proposal(
         self,
@@ -423,12 +423,12 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
         *,
         owner_receipt_evidence: Mapping[str, Any],
         opl_ledger_ref: str,
-        sidecar_closeout_result: Mapping[str, Any] | None = None,
+        domain_handler_closeout_result: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
         return build_controlled_soak_receipt_reconciliation_proof(
             owner_receipt_evidence=owner_receipt_evidence,
             opl_ledger_ref=opl_ledger_ref,
-            sidecar_closeout_result=sidecar_closeout_result,
+            domain_handler_closeout_result=domain_handler_closeout_result,
         )
 
     def build_controlled_soak_receipt_reconciliation_inventory(
@@ -436,12 +436,12 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
         *,
         owner_receipt_evidence_items: list[Mapping[str, Any]],
         opl_ledger_ref: str,
-        sidecar_closeout_results: list[Mapping[str, Any]] | None = None,
+        domain_handler_closeout_results: list[Mapping[str, Any]] | None = None,
     ) -> dict[str, Any]:
         return build_controlled_soak_receipt_reconciliation_inventory(
             owner_receipt_evidence_items=owner_receipt_evidence_items,
             opl_ledger_ref=opl_ledger_ref,
-            sidecar_closeout_results=sidecar_closeout_results,
+            domain_handler_closeout_results=domain_handler_closeout_results,
         )
 
     def build_production_live_acceptance_receipt_projection(
@@ -513,12 +513,12 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
         *,
         owner_receipt_evidence: Mapping[str, Any],
         opl_attempt_evidence: Mapping[str, Any],
-        sidecar_closeout_result: Mapping[str, Any] | None = None,
+        domain_handler_closeout_result: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
         return build_focused_hosted_receipt_verification(
             owner_receipt_evidence=owner_receipt_evidence,
             opl_attempt_evidence=opl_attempt_evidence,
-            sidecar_closeout_result=sidecar_closeout_result,
+            domain_handler_closeout_result=domain_handler_closeout_result,
         )
 
     def build_lifecycle_receipt_bundle(

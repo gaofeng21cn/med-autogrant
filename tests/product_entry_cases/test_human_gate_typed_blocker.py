@@ -9,7 +9,7 @@ from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
 
 class ProductEntryHumanGateTypedBlockerTest(unittest.TestCase):
-    def test_sidecar_dispatch_package_stage_typed_blocker_exposes_human_gate_boundary(self) -> None:
+    def test_domain_handler_dispatch_package_stage_typed_blocker_exposes_human_gate_boundary(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -30,9 +30,9 @@ class ProductEntryHumanGateTypedBlockerTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
+            payload = MedAutoGrantProductEntry().dispatch_domain_handler_task(task_path=task_path)
 
-        blocker = payload["sidecar_dispatch"]["result"]["typed_blocker"]
+        blocker = payload["domain_handler_dispatch"]["result"]["typed_blocker"]
         self.assertEqual(blocker["blocker_kind"], "mag_stage_attempt_owner_receipt_required")
         self.assertEqual(blocker["human_gate_id"], "submission_ready_export_gate")
         self.assertTrue(blocker["human_gate_required"])

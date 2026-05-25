@@ -10,7 +10,7 @@ Date: `2026-05-22`
 
 - 本文只写 MAG 的 north-star 目标态和长期 owner boundary；当前差距、执行顺序和证据缺口回到 [MAG 理想目标态差距与完善计划](../active/mag-ideal-state-cross-repo-gap-plan.md)。
 - 过程性校准、fresh audit、follow-through、receipt proof 和 closeout 流水归档到 [MAG standard agent 文档过程归档 2026-05](../history/plans/mag-standard-agent-doc-process-history-2026-05.md)。
-- 目标态优先于当前实现。当前 MAG 内已经存在的 product-entry、sidecar、grouped CLI/API、projection builder、lifecycle adapter、local journal、attempt ledger、workspace/source intake 或 package/memory helper 只能作为迁移输入，不是长期架构约束。
+- 目标态优先于当前实现。当前 MAG 内已经存在的 product-entry、旧 product-sidecar、grouped CLI/API、projection builder、lifecycle adapter、local journal、attempt ledger、workspace/source intake 或 package/memory helper 只能作为迁移输入，不是长期架构约束。
 - 目标态不承诺旧 runtime / journal / probe / alias 兼容。旧模块、旧接口、旧测试和旧 docs 入口在 replacement、owner receipt parity 与 no-active-caller proof 成立后直接移除或进入 history/tombstone；MAG 不再新增 compatibility facade 来照顾过时调用方。
 
 ## 目标结论
@@ -27,11 +27,11 @@ Declarative Grant Pack
   + minimal grant authority functions
 ```
 
-MAG 不应长期维护独立 agent runtime platform，也不长期维护 generic scheduler、daemon、lifecycle owner、queue、attempt ledger、generic state-machine runner、workspace/source intake shell、memory locator、artifact/package lifecycle、observability、App/workbench runtime，或手写 generic CLI/product-entry/sidecar/status wrapper。
+MAG 不应长期维护独立 agent runtime platform，也不长期维护 generic scheduler、daemon、lifecycle owner、queue、attempt ledger、generic state-machine runner、workspace/source intake shell、memory locator、artifact/package lifecycle、observability、App/workbench runtime，或手写 generic CLI/product-entry/product-sidecar/status wrapper。
 
 只有 fundability verdict、authoring quality/export verdict、package readiness、grant memory accept/reject、owner receipt signer、grant transition oracle 和 grant-native helper 这类无法声明化的 authority function 可以留在 MAG。
 
-理想物理源码形态应直接体现这条分层：`agent/` 是 Declarative Grant Pack；`contracts/` 是 pack compiler、stage/action/memory/artifact/receipt、handoff 和 evidence request 的机器面；`src/med_autogrant/**` 只保留 grant domain handler、minimal authority function、refs-only adapter、native helper、fixture 或 diagnostic。`product-entry`、`sidecar`、`status/user-loop`、`domain_runtime_parts`、`runtime_registration`、`lifecycle`、`memory receipt projection`、`package lifecycle`、`observability` 或 `human workbench / scheduler` 这类路径即使仍在 active source 中，也必须让读者看到它们只是 OPL generated/hosted surface target 或 grant authority refs，不是 MAG 私有 runtime platform。local journal、attempt ledger、repo-owned scheduler daemon、Hermes/Gateway/local-manager probe、flat alias 和 compatibility facade 不属于理想源码形态。
+理想物理源码形态应直接体现这条分层：`agent/` 是 Declarative Grant Pack；`contracts/` 是 pack compiler、stage/action/memory/artifact/receipt、handoff 和 evidence request 的机器面；`src/med_autogrant/**` 只保留 grant domain handler、minimal authority function、refs-only adapter、native helper、fixture 或 diagnostic。`product-entry`、`domain-handler`、`status/user-loop`、`domain_runtime_parts`、`runtime_registration`、`lifecycle`、`memory receipt projection`、`package lifecycle`、`observability` 或 `human workbench / scheduler` 这类路径即使仍在 active source 中，也必须让读者看到它们只是 OPL generated/hosted surface target 或 grant authority refs，不是 MAG 私有 runtime platform。旧 product-sidecar、local journal、attempt ledger、repo-owned scheduler daemon、Hermes/Gateway/local-manager probe、flat alias 和 compatibility facade 不属于理想源码形态。
 
 ## 产品分层
 
@@ -71,7 +71,7 @@ OPL 负责通用运行外围和工作台：
 - generic state-machine runner、transition schema、matrix runner 和 transition bridge evidence refs-only drilldown；
 - workspace/source intake shell、memory locator/index、artifact/package lifecycle shell、restore/retention ledger；
 - operator projection、observability/SLO、App attention queue 和 action routing；
-- generated CLI/product-entry/sidecar/status/workbench/harness wrapper。
+- generated CLI/product-entry/domain-action-adapter/status/workbench/harness wrapper。
 
 OPL 不能写 grant truth、memory body、fundability verdict、authoring quality verdict、submission-ready verdict、package authority 或 owner receipt。
 
@@ -125,7 +125,7 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 - OPL `stages cohort-loop --domain mag` 能把六个 MAG stage 都读成 closed-loop ready；该门槛只证明声明式 launch/readiness loop 可被 OPL 消费，不替代 grant-stage owner receipt、App consumption、direct/hosted parity 或 Temporal long soak。
 - MAG retained private authority surfaces 完成逐项 AI-first 审计：fundability、authoring quality/export 和 grant strategy memory accept/reject 是 AI-first judgment surface，必须回到 grant stage output 或 AI critique artifact；package authority、owner receipt 和 grant helper 是 programmatic guard surface，只能依 owner receipt、typed blocker、refs 和 action metadata 工作。程序只做 schema validator、materializer、receipt signer、guard 和 refs projection，不能机械生成 ready verdict。
 - privatized audit 与 generated-surface handoff 中的 code path / source_ref 与当前 physical source tree 对齐；漂移路径只能进入 history/tombstone/source-ref refresh，不作为完成证明。
-- physical source tree 中的 product-entry、sidecar、domain_runtime、runtime/lifecycle/workbench 命名必须持续被合同约束为 domain handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone；不能让命名重新表达 MAG-owned generic runtime。
+- physical source tree 中的 product-entry、domain-handler、domain_runtime、runtime/lifecycle/workbench 命名必须持续被合同约束为 domain handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone；旧 product-sidecar 命名只能作为 history/provenance 或 no-resurrection guard 出现，不能让命名重新表达 MAG-owned generic runtime。
 - 根层 `functional_privatization_audit.mag_consumer_thinning_contract.active_path_scan_state` 必须来自真实 `physical_skeleton_follow_through.active_path_scan_no_legacy_default_caller`，不能停留在 `not_available`。active source scan 只证明 legacy default caller / retired path 在 repo source 中没有复活；它不证明外部 production caller、App/workbench 消费或 Temporal long soak。
 - `contracts/production_acceptance/mag-production-acceptance.json` 必须持有 MAG-owned production acceptance evidence tail。该 surface 可以记录 structural / physical conformance passed 和 production-like grant receipt chain refs present；它必须继续声明 OPL/provider/conformance/Agent Lab/meta-agent 不可授权 grant/domain/fundability/submission readiness。若缺少真实 MAG owner receipt scaleout，状态必须是 typed blocker 并携带下一跳 verification refs；若关闭，只能指向 MAG-owned `domain_owner_receipt` refs。
 - `contracts/production_acceptance/mag-executor-first-landing.json` 必须保持 executor-first / Codex-first / contract-light 的 active landing program 口径：它可以记录 stage pack enrichment、independent review evidence gate 和并行 evidence lane，但不能把 missing external evidence、direct/hosted parity、App/workbench consumption、owner receipt scaleout、physical morphology cleanup 或 production long-soak 写成已完成。
@@ -139,7 +139,7 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 目标态只保留稳定分类，不保存某次 fresh audit 的完整 receipt 清单：
 
 - 已退役 / history-only：local runtime journal、attempt ledger、repo scheduler、upstream Hermes probe、Gateway/local-manager default path、flat alias、facade patch bridge 和 compatibility aggregate test。
-- OPL-owned generated/hosted target，MAG 仅保留 refs-only adapter：product-entry、sidecar、status/user-loop、runtime registration、lifecycle receipt bundle、memory receipt projection、package lifecycle handoff、continuous reconciliation、observability refs 和 safe action metadata。
+- OPL-owned generated/hosted target，MAG 仅保留 refs-only adapter：product-entry、domain-handler、status/user-loop、runtime registration、lifecycle receipt bundle、memory receipt projection、package lifecycle handoff、continuous reconciliation、observability refs 和 safe action metadata。
 - MAG retained private authority：grant truth、fundability / quality / export verdict refs、submission-ready package authority、grant strategy memory body 与 accept/reject、grant transition oracle、owner receipt signer、typed blocker 和 grant-native helper。
 
 具体日期的 cleanup audit、stale worktree 判断、receipt refs 和 lane closeout 进入 history/provenance；当前状态和剩余证据门回到 `docs/status.md`、active gap plan 与机器合同。

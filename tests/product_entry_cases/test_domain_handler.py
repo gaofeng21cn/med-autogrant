@@ -7,25 +7,25 @@ from pathlib import Path
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
-class ProductSidecarTest(unittest.TestCase):
-    def test_sidecar_export_maps_runtime_and_attention_surfaces_without_grant_truth_transfer(self) -> None:
+class ProductDomainHandlerTest(unittest.TestCase):
+    def test_domain_handler_export_maps_runtime_and_attention_surfaces_without_grant_truth_transfer(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
-        payload = MedAutoGrantProductEntry().build_sidecar_export(input_path=str(CRITIQUE_EXAMPLE_PATH))
+        payload = MedAutoGrantProductEntry().build_domain_handler_export(input_path=str(CRITIQUE_EXAMPLE_PATH))
 
         self.assertTrue(payload["ok"])
-        self.assertEqual(payload["command"], "product-sidecar-export")
-        export = payload["sidecar_export"]
-        self.assertEqual(export["surface_kind"], "mag_product_sidecar_export")
-        self.assertEqual(export["adapter_id"], "mag.opl_stage_led.product_sidecar.v1")
+        self.assertEqual(payload["command"], "domain-handler-export")
+        export = payload["domain_handler_export"]
+        self.assertEqual(export["surface_kind"], "mag_product_domain_handler_export")
+        self.assertEqual(export["adapter_id"], "mag.opl_stage_led.domain_handler.v1")
         caller_owner = export["caller_owner_contract"]
         self.assertEqual(caller_owner["active_caller_owner"], "med-autogrant")
         self.assertEqual(
             caller_owner["active_caller_surface"],
-            "mag_product_sidecar_handler_until_opl_caller_evidence",
+            "mag_domain_handler_handler_until_opl_caller_evidence",
         )
         self.assertEqual(caller_owner["target_caller_owner"], "one-person-lab")
-        self.assertEqual(caller_owner["target_caller_surface"], "opl_generated_or_hosted_sidecar")
+        self.assertEqual(caller_owner["target_caller_surface"], "opl_generated_or_hosted_domain_handler")
         self.assertEqual(caller_owner["domain_handler_target"], "med-autogrant")
         self.assertEqual(caller_owner["domain_handler_owner"], "med-autogrant")
         self.assertFalse(caller_owner["claims_fully_cleaned"])
@@ -80,7 +80,7 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertFalse(substrate_adapter["authority_boundary"]["opl_can_issue_owner_receipt"])
         self.assertEqual(
             export["opl_control_plane"]["substrate_adapter_export_ref"],
-            "/sidecar_export/opl_substrate_adapter_export",
+            "/domain_handler_export/opl_substrate_adapter_export",
         )
         self.assertEqual(
             export["controlled_stage_attempt_projection"]["surface_kind"],
@@ -148,11 +148,11 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(thinning["domain_handler_owner"], "med-autogrant")
         self.assertEqual(thinning["state"], "mag_handler_boundary_ready_external_caller_evidence_gated")
         self.assertEqual(
-            thinning["sidecar_contract_ref"],
+            thinning["domain_handler_contract_ref"],
             "/product_entry_manifest/mag_consumer_thinning_contract",
         )
         self.assertEqual(
-            thinning["exposed_sidecar_return_refs"],
+            thinning["exposed_domain_handler_return_refs"],
             {
                 "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
                 "controlled_stage_attempt_projection_ref": (
@@ -247,8 +247,8 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertEqual(consumed, thinning["consumed_opl_standard_surfaces"])
         self.assertEqual(consumed["surface_kind"], "mag_consumed_opl_standard_surfaces")
         self.assertEqual(
-            consumed["sidecar_projection_ref"],
-            "/sidecar_export/mag_consumer_thinning_contract",
+            consumed["domain_handler_projection_ref"],
+            "/domain_handler_export/mag_consumer_thinning_contract",
         )
         self.assertEqual(consumed["authority_boundary"]["opl_standard_scaffold_owner"], "one-person-lab")
         self.assertTrue(consumed["authority_boundary"]["mag_consumes_standard_scaffold"])
@@ -319,7 +319,7 @@ class ProductSidecarTest(unittest.TestCase):
             {
                 "lifecycle_adapter",
                 "observability",
-                "sidecar_product_status_shell",
+                "domain_handler_product_status_shell",
                 "package_lifecycle_shell",
                 "human_workbench_scheduler_daemon",
             },
@@ -373,8 +373,8 @@ class ProductSidecarTest(unittest.TestCase):
             "/product_entry_manifest/mag_consumer_thinning_contract",
         )
         self.assertEqual(
-            external_pack["required_refs_summary"]["sidecar_projection_ref"],
-            "/sidecar_export/external_evidence_request_pack",
+            external_pack["required_refs_summary"]["domain_handler_projection_ref"],
+            "/domain_handler_export/external_evidence_request_pack",
         )
         self.assertFalse(
             external_pack["forbidden_completion_claims"][
@@ -452,7 +452,7 @@ class ProductSidecarTest(unittest.TestCase):
             [
                 "product_status",
                 "product_user_loop",
-                "product_sidecar",
+                "domain_handler",
                 "grouped_cli_api",
                 "projection_builder",
                 "lifecycle_wrapper",
@@ -509,7 +509,7 @@ class ProductSidecarTest(unittest.TestCase):
             },
         )
         for authority_function in export["minimal_authority_functions"]:
-            with self.subTest(sidecar_authority_function=authority_function["function_id"]):
+            with self.subTest(domain_handler_authority_function=authority_function["function_id"]):
                 self.assertEqual(
                     authority_function["ai_first_guard_policy"],
                     "stage_artifact_or_owner_receipt_required",
@@ -526,7 +526,7 @@ class ProductSidecarTest(unittest.TestCase):
         output_guard = thinning["thin_surface_output_guard"]
         self.assertEqual(output_guard["surface_kind"], "mag_thin_surface_output_guard")
         self.assertEqual(output_guard["allowed_output_classes"], thinning["mag_owned_outputs"])
-        self.assertEqual(output_guard["required_sidecar_return_refs"], thinning["exposed_sidecar_return_refs"])
+        self.assertEqual(output_guard["required_domain_handler_return_refs"], thinning["exposed_domain_handler_return_refs"])
         self.assertEqual(
             output_guard["private_functional_state_output_classes_forbidden"],
             [
@@ -600,7 +600,7 @@ class ProductSidecarTest(unittest.TestCase):
             physical_follow_through["no_regression_evidence_refs"],
             [
                 "tests/product_entry_cases/test_hosted_receipt_verification.py::ProductEntryHostedReceiptVerificationTest::test_hosted_receipt_verification_matches_opl_attempt_to_mag_receipt_refs",
-                "tests/product_entry_cases/test_grant_transition_oracle.py::ProductEntryGrantTransitionOracleTest::test_oracle_sidecar_closeout_writes_no_regression_owner_receipt_refs",
+                "tests/product_entry_cases/test_grant_transition_oracle.py::ProductEntryGrantTransitionOracleTest::test_oracle_domain_handler_closeout_writes_no_regression_owner_receipt_refs",
             ],
         )
         self.assertEqual(
@@ -650,9 +650,10 @@ class ProductSidecarTest(unittest.TestCase):
         wakeup_contract = export["todo_wakeup"]["opl_wakeup_contract"]
         self.assertEqual(wakeup_contract["owner"], "one-person-lab")
         self.assertEqual(wakeup_contract["target_action_ref"], "open_grant_user_loop")
-        self.assertEqual(wakeup_contract["target_surface"], "product user-loop")
+        self.assertEqual(wakeup_contract["target_surface"], "opl_generated_grant_user_loop")
+        self.assertTrue(wakeup_contract["target_command"].startswith("opl://generated-surfaces/mag/"))
         self.assertEqual(wakeup_contract["target_command"], export["todo_wakeup"]["recommended_wakeup_command"])
-        self.assertIsNone(wakeup_contract["sidecar_dispatch_action"])
+        self.assertIsNone(wakeup_contract["domain_handler_dispatch_action"])
         self.assertEqual(wakeup_contract["queue_write_policy"], "enqueue_wakeup_only_no_grant_truth_writes")
         self.assertEqual(wakeup_contract["required_return_shapes"], ["domain_owner_receipt", "typed_blocker", "no_regression_evidence"])
         self.assertFalse(any(export["todo_wakeup"]["forbidden_private_runtime_roles"].values()))
@@ -686,7 +687,7 @@ class ProductSidecarTest(unittest.TestCase):
         )
         self.assertEqual(
             export["opl_control_plane"]["replacement_expectations_ref"],
-            "/sidecar_export/mag_consumer_thinning_contract/opl_replacement_expectations",
+            "/domain_handler_export/mag_consumer_thinning_contract/opl_replacement_expectations",
         )
         self.assertEqual(
             export["opl_control_plane"]["allowed_dispatch_actions"],
@@ -707,7 +708,7 @@ class ProductSidecarTest(unittest.TestCase):
             "OPL-hosted caller may invoke only MAG domain handler guarded actions.",
         )
 
-    def test_sidecar_dispatch_retires_generic_wrapper_actions(self) -> None:
+    def test_domain_handler_dispatch_retires_generic_wrapper_actions(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         entry = MedAutoGrantProductEntry()
@@ -733,9 +734,9 @@ class ProductSidecarTest(unittest.TestCase):
                     encoding="utf-8",
                 )
                 with self.assertRaisesRegex(WorkspaceStateError, "action 不允许"):
-                    entry.dispatch_sidecar_task(task_path=task_path)
+                    entry.dispatch_domain_handler_task(task_path=task_path)
 
-    def test_sidecar_dispatch_domain_memory_apply_flow_projects_refs_without_repo_artifacts(self) -> None:
+    def test_domain_handler_dispatch_domain_memory_apply_flow_projects_refs_without_repo_artifacts(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         entry = MedAutoGrantProductEntry()
@@ -755,10 +756,10 @@ class ProductSidecarTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            proposal_payload = entry.dispatch_sidecar_task(task_path=proposal_task)
+            proposal_payload = entry.dispatch_domain_handler_task(task_path=proposal_task)
             proposal_path = Path(tmp_dir) / "proposal.json"
             proposal_path.write_text(
-                json.dumps(proposal_payload["sidecar_dispatch"]["result"]["proposal"]),
+                json.dumps(proposal_payload["domain_handler_dispatch"]["result"]["proposal"]),
                 encoding="utf-8",
             )
             decision_task = Path(tmp_dir) / "decision-task.json"
@@ -778,16 +779,16 @@ class ProductSidecarTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            decision_payload = entry.dispatch_sidecar_task(task_path=decision_task)
-            receipt_evidence = decision_payload["sidecar_dispatch"]["result"]["receipt_evidence"]
+            decision_payload = entry.dispatch_domain_handler_task(task_path=decision_task)
+            receipt_evidence = decision_payload["domain_handler_dispatch"]["result"]["receipt_evidence"]
             receipt_exists = Path(receipt_evidence["receipt_instance_ref"]).exists()
 
-        proposal = proposal_payload["sidecar_dispatch"]["result"]["proposal"]
+        proposal = proposal_payload["domain_handler_dispatch"]["result"]["proposal"]
         self.assertEqual(proposal["surface_kind"], "mag_domain_memory_writeback_proposal")
         self.assertEqual(proposal["stage_id"], "review_and_rebuttal")
         self.assertEqual(proposal["write_policy"], "runtime_store_only_no_repo_write")
         self.assertFalse(proposal["forbidden_content_scan"]["contains_canonical_grant_artifact_content"])
-        decision = decision_payload["sidecar_dispatch"]["result"]["decision"]
+        decision = decision_payload["domain_handler_dispatch"]["result"]["decision"]
         self.assertEqual(decision["surface_kind"], "mag_domain_memory_writeback_decision")
         self.assertEqual(decision["decision"], "accepted")
         self.assertEqual(decision["write_policy"], "runtime_store_only_no_repo_write")
@@ -801,7 +802,7 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertFalse(receipt_evidence["contains_memory_body"])
         self.assertTrue(receipt_exists)
 
-    def test_sidecar_dispatch_controlled_stage_closeout_writes_owner_receipt_evidence(self) -> None:
+    def test_domain_handler_dispatch_controlled_stage_closeout_writes_owner_receipt_evidence(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -829,13 +830,13 @@ class ProductSidecarTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
-            receipt = payload["sidecar_dispatch"]["result"]["owner_receipt_evidence"]
+            payload = MedAutoGrantProductEntry().dispatch_domain_handler_task(task_path=task_path)
+            receipt = payload["domain_handler_dispatch"]["result"]["owner_receipt_evidence"]
             receipt_exists = Path(receipt["receipt_instance_ref"]).exists()
 
-        dispatch = payload["sidecar_dispatch"]
+        dispatch = payload["domain_handler_dispatch"]
         self.assertEqual(dispatch["action"], "stage-attempt/closeout")
-        self.assertTrue(dispatch["executed_by_sidecar"])
+        self.assertTrue(dispatch["executed_by_domain_handler"])
         self.assertEqual(dispatch["result"]["return_shape"], "no_regression_evidence")
         self.assertEqual(dispatch["result"]["receipt_ref"], receipt["receipt_instance_ref"])
         self.assertEqual(
@@ -865,7 +866,7 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertFalse(receipt["forbidden_write_proof"]["memory_body_written"])
         self.assertTrue(receipt_exists)
 
-    def test_sidecar_dispatch_lifecycle_receipt_writes_guarded_apply_receipt_evidence(self) -> None:
+    def test_domain_handler_dispatch_lifecycle_receipt_writes_guarded_apply_receipt_evidence(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -886,13 +887,13 @@ class ProductSidecarTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            payload = MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
-            receipt = payload["sidecar_dispatch"]["result"]["lifecycle_receipt_evidence"]
+            payload = MedAutoGrantProductEntry().dispatch_domain_handler_task(task_path=task_path)
+            receipt = payload["domain_handler_dispatch"]["result"]["lifecycle_receipt_evidence"]
             receipt_exists = Path(receipt["receipt_instance_ref"]).exists()
 
-        dispatch = payload["sidecar_dispatch"]
+        dispatch = payload["domain_handler_dispatch"]
         self.assertEqual(dispatch["action"], "lifecycle/receipt")
-        self.assertTrue(dispatch["executed_by_sidecar"])
+        self.assertTrue(dispatch["executed_by_domain_handler"])
         self.assertEqual(dispatch["result"]["return_shape"], "typed_blocker")
         self.assertEqual(dispatch["result"]["receipt_ref"], receipt["receipt_instance_ref"])
         self.assertEqual(
@@ -910,7 +911,7 @@ class ProductSidecarTest(unittest.TestCase):
         self.assertFalse(receipt["forbidden_write_proof"]["grant_artifact_written"])
         self.assertTrue(receipt_exists)
 
-    def test_sidecar_dispatch_fails_closed_on_unowned_action(self) -> None:
+    def test_domain_handler_dispatch_fails_closed_on_unowned_action(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -925,9 +926,9 @@ class ProductSidecarTest(unittest.TestCase):
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(WorkspaceStateError, "action 不允许"):
-                MedAutoGrantProductEntry().dispatch_sidecar_task(task_path=task_path)
+                MedAutoGrantProductEntry().dispatch_domain_handler_task(task_path=task_path)
 
-    def test_cli_rejects_retired_notification_receipt_sidecar_action(self) -> None:
+    def test_cli_rejects_retired_notification_receipt_domain_handler_action(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             task_path = Path(tmp_dir) / "receipt-task.json"
             task_path.write_text(
@@ -944,21 +945,19 @@ class ProductSidecarTest(unittest.TestCase):
             stdout = StringIO()
             stderr = StringIO()
             with redirect_stdout(stdout), redirect_stderr(stderr):
-                exit_code = main(
-                    [
-                        "product",
-                        "sidecar",
-                        "dispatch",
-                        "--task",
-                        str(task_path),
-                        "--format",
-                        "json",
-                    ]
-                )
+                with self.assertRaises(SystemExit) as raised:
+                    main(
+                        [
+                            "product",
+                            "domain_handler",
+                            "dispatch",
+                            "--task",
+                            str(task_path),
+                            "--format",
+                            "json",
+                        ]
+                    )
 
-        self.assertEqual(exit_code, 1)
-        self.assertEqual(stderr.getvalue(), "")
-        payload = json.loads(stdout.getvalue())
-        self.assertFalse(payload["ok"])
-        self.assertEqual(payload["command"], "product-sidecar-dispatch")
-        self.assertIn("action 不允许", payload["error"])
+        self.assertEqual(raised.exception.code, 2)
+        self.assertEqual(stdout.getvalue(), "")
+        self.assertIn("invalid choice: 'product'", stderr.getvalue())

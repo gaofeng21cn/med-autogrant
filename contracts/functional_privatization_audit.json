@@ -2,10 +2,10 @@
   "audit_id": "mag.privatized_functional_module_audit.v1",
   "audit_refs": {
     "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+    "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
     "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
     "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
     "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
-    "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
     "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
   },
   "authority_boundary": {
@@ -32,7 +32,7 @@
       "active_caller_status": "active_declarative_pack_projection",
       "active_callers": [
         "product-entry-manifest runtime registration projection",
-        "product sidecar export OPL control plane registration",
+        "domain handler export OPL control plane registration",
         "contracts/runtime-program/opl-family-contract-adoption.json"
       ],
       "bridge_exit_gate": {
@@ -40,7 +40,7 @@
         "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
         "current_surface_refs": [
           "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-          "/sidecar_export/opl_control_plane/registration"
+          "/domain_handler_export/opl_control_plane/registration"
         ],
         "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
         "domain_repo_physical_delete_authorized": false,
@@ -59,7 +59,7 @@
         "physical_delete_authorized_by_refs": false,
         "provenance_refs": [
           "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-          "/sidecar_export/opl_control_plane/registration"
+          "/domain_handler_export/opl_control_plane/registration"
         ],
         "replacement_owner": "one-person-lab",
         "required_before_retire": [
@@ -86,7 +86,7 @@
       ],
       "current_surface_refs": [
         "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-        "/sidecar_export/opl_control_plane/registration"
+        "/domain_handler_export/opl_control_plane/registration"
       ],
       "implemented_as_generic_runtime_in_mag": false,
       "mag_retained_authority": [
@@ -479,11 +479,11 @@
       "mag_implements_generic_runner": false,
       "mag_implements_generic_scheduler": false,
       "mag_implements_generic_workspace_source_intake": false,
+      "mag_long_term_owns_generated_domain_handler": false,
       "mag_long_term_owns_generated_grouped_cli_api": false,
       "mag_long_term_owns_generated_lifecycle_wrapper": false,
       "mag_long_term_owns_generated_product_status": false,
       "mag_long_term_owns_generated_projection": false,
-      "mag_long_term_owns_generated_sidecar": false,
       "mag_long_term_owns_generated_user_loop": false,
       "mag_rebuilds_opl_runtime": false,
       "mag_role_for_generated_wrappers": "domain_handler_ref_only_adapter_and_minimal_authority_functions",
@@ -556,6 +556,7 @@
         "family_product_operator_projection"
       ],
       "consumption_policy": "consume_opl_standard_scaffold_and_generic_primitives_no_mag_runtime_rebuild",
+      "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
       "functional_harness_consumer_coverage_ref": "/product_entry_manifest/mag_consumer_thinning_contract/functional_harness_consumer_coverage",
       "generic_primitives_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations",
       "mag_retained_authority": [
@@ -568,7 +569,6 @@
         "owner_receipt",
         "grant_helper"
       ],
-      "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
       "standard_scaffold_manifest_ref": "/product_entry_manifest/standard_domain_agent_skeleton",
       "surface_kind": "mag_consumed_opl_standard_surfaces"
     },
@@ -581,11 +581,11 @@
         "opl_can_declare_export_verdict": false,
         "opl_can_declare_fundability_verdict": false,
         "opl_can_declare_quality_verdict": false,
+        "opl_can_generate_domain_handler_wrapper": true,
         "opl_can_generate_grouped_cli_api": true,
         "opl_can_generate_lifecycle_wrapper": true,
         "opl_can_generate_product_status": true,
         "opl_can_generate_projection_wrapper": true,
-        "opl_can_generate_sidecar_wrapper": true,
         "opl_can_generate_user_loop": true,
         "opl_can_sign_owner_receipt": false,
         "opl_can_write_grant_truth": false,
@@ -606,7 +606,7 @@
       "generated_surface_targets": [
         "product_status",
         "product_user_loop",
-        "product_sidecar",
+        "domain_handler",
         "grouped_cli_api",
         "projection_builder",
         "lifecycle_wrapper"
@@ -644,9 +644,10 @@
       "/product_entry_manifest/family_stage_control_plane",
       "/product_entry_manifest/grant_transition_oracle"
     ],
+    "domain_handler_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
     "domain_handler_owner": "med-autogrant",
     "domain_handler_target": "med-autogrant",
-    "exposed_sidecar_return_refs": {
+    "exposed_domain_handler_return_refs": {
       "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
       "controlled_stage_attempt_projection_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
       "declarative_grant_pack_compiler_input_ref": "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
@@ -679,6 +680,7 @@
         "opl_can_write_memory_body": false
       },
       "consumer_thinning_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+      "domain_handler_projection_ref": "/domain_handler_export/external_evidence_request_pack",
       "forbidden_completion_claims": {
         "claims_all_bridge_exits_complete": false,
         "claims_opl_replacement_exists": false,
@@ -720,7 +722,7 @@
           ],
           "required_refs": [
             "opl://generated-surfaces/mag/product-entry-manifest",
-            "opl://generated-surfaces/mag/product-sidecar",
+            "opl://generated-surfaces/mag/domain-handler",
             "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
             "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
           ],
@@ -774,7 +776,7 @@
           "required_refs": [
             "release://med-autogrant/direct-domain-handler",
             "dist://med-autogrant/declarative-grant-pack",
-            "/product_entry_manifest/mag_consumer_thinning_contract/exposed_sidecar_return_refs"
+            "/product_entry_manifest/mag_consumer_thinning_contract/exposed_domain_handler_return_refs"
           ],
           "state": "requested_not_received"
         },
@@ -883,9 +885,9 @@
       ],
       "required_refs_summary": {
         "direct_hosted_parity_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack/requests/direct_hosted_parity_no_regression",
+        "domain_handler_projection_ref": "/domain_handler_export/external_evidence_request_pack",
         "mag_request_surface_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
         "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
-        "sidecar_projection_ref": "/sidecar_export/external_evidence_request_pack",
         "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
       },
       "required_request_ids": [
@@ -897,7 +899,6 @@
         "direct_hosted_parity_no_regression",
         "temporal_provider_long_soak_receipt_reconciliation"
       ],
-      "sidecar_projection_ref": "/sidecar_export/external_evidence_request_pack",
       "state": "request_pack_declared_external_evidence_not_claimed",
       "surface_kind": "mag_external_evidence_request_pack",
       "target_domain_id": "med-autogrant"
@@ -1215,6 +1216,7 @@
         }
       ],
       "coverage_id": "mag.functional_harness.consumer_coverage.v1",
+      "domain_handler_projection_policy": "refs_receipts_blockers_verdict_refs_action_metadata_only",
       "fail_closed_rules": {
         "opl_can_hold_generic_runtime_in_mag": false,
         "opl_can_write_grant_truth": false,
@@ -1232,11 +1234,10 @@
         "package_authority",
         "owner_receipt",
         "typed_blocker",
-        "sidecar_projection_adapter"
+        "domain_handler_projection_adapter"
       ],
       "output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
       "owner": "med-autogrant",
-      "sidecar_projection_policy": "refs_receipts_blockers_verdict_refs_action_metadata_only",
       "state": "consumer_coverage_declared_external_opl_harness_gate",
       "surface_kind": "mag_functional_harness_consumer_coverage",
       "target_domain_id": "med-autogrant",
@@ -1271,7 +1272,7 @@
         ],
         "hosted_surface_refs": [
           "opl://generated-surfaces/mag/product-entry-manifest",
-          "opl://generated-surfaces/mag/product-sidecar",
+          "opl://generated-surfaces/mag/domain-handler",
           "opl://generated-surfaces/mag/product-entry-session#resume"
         ],
         "mag_role": "domain_handler_target_and_refs_only_oracle",
@@ -1319,11 +1320,11 @@
       "owner": "med-autogrant",
       "proof_id": "mag.generated_hosted_default_caller.proof.v1",
       "repo_local_product_shell_classification": {
+        "domain_handler": "guarded_domain_handler_target",
         "generic_runtime_owner": false,
         "grouped_cli_api": "domain_handler_command_adapter",
         "lifecycle_wrapper": "owner_receipt_refs_only_adapter",
         "migration_input": true,
-        "product_sidecar": "guarded_domain_handler_target",
         "product_status": "domain_handler_ref_only_adapter",
         "product_user_loop": "domain_handler_ref_only_adapter",
         "projection_builder": "refs_only_read_model_adapter"
@@ -1341,11 +1342,11 @@
         "generated_surface_can_write_grant_truth": false,
         "generated_surface_can_write_memory_body": false,
         "long_term_generated_surface_owner": "one-person-lab",
+        "mag_can_own_generated_domain_handler": false,
         "mag_can_own_generated_grouped_cli_api": false,
         "mag_can_own_generated_lifecycle_wrapper": false,
         "mag_can_own_generated_product_status": false,
         "mag_can_own_generated_projection": false,
-        "mag_can_own_generated_sidecar": false,
         "mag_can_own_generated_user_loop": false,
         "mag_long_term_owner": false
       },
@@ -1353,7 +1354,7 @@
         "applies_to_surface_ids": [
           "product_status",
           "product_user_loop",
-          "product_sidecar",
+          "domain_handler",
           "grouped_cli_api",
           "projection_builder",
           "lifecycle_wrapper"
@@ -1388,7 +1389,7 @@
         "satisfied_evidence_refs": {
           "direct_mag_domain_handler_no_regression": [
             "tests/product_entry_cases/test_manifest_and_status.py",
-            "tests/product_entry_cases/test_sidecar.py",
+            "tests/product_entry_cases/test_domain_handler.py",
             "tests/product_entry_cases/test_functional_closure.py"
           ],
           "no_active_legacy_wrapper_caller_scan": [
@@ -1414,7 +1415,7 @@
         "surface_kind": "mag_bridge_exit_gate",
         "target_domain_id": "med-autogrant"
       },
-      "bridge_policy": "MAG handwritten product/status/sidecar/projection wrappers are migration bridges, not long-term MAG owner surfaces.",
+      "bridge_policy": "MAG handwritten product/status/domain_handler/projection wrappers are migration bridges, not long-term MAG owner surfaces.",
       "claims_descriptor_source_available_for_opl_generation": true,
       "current_mag_path_status": {
         "checked_path_count": 14,
@@ -1471,7 +1472,7 @@
             "satisfied_evidence_refs": {
               "direct_mag_domain_handler_no_regression": [
                 "tests/product_entry_cases/test_manifest_and_status.py",
-                "tests/product_entry_cases/test_sidecar.py",
+                "tests/product_entry_cases/test_domain_handler.py",
                 "tests/product_entry_cases/test_functional_closure.py"
               ],
               "no_active_legacy_wrapper_caller_scan": [
@@ -1571,7 +1572,7 @@
             "satisfied_evidence_refs": {
               "direct_mag_domain_handler_no_regression": [
                 "tests/product_entry_cases/test_manifest_and_status.py",
-                "tests/product_entry_cases/test_sidecar.py",
+                "tests/product_entry_cases/test_domain_handler.py",
                 "tests/product_entry_cases/test_functional_closure.py"
               ],
               "no_active_legacy_wrapper_caller_scan": [
@@ -1646,7 +1647,7 @@
           "active_caller_owner": "med-autogrant",
           "bridge_exit_gate": {
             "applies_to_surface_ids": [
-              "product_sidecar"
+              "domain_handler"
             ],
             "authority_boundary": {
               "mag_can_keep_generic_wrapper_after_exit": false,
@@ -1663,7 +1664,7 @@
             "domain_handler_target": "med-autogrant",
             "exit_action": "delete_or_history_tombstone_this_mag_wrapper_keep_domain_handler",
             "external_opl_generated_or_hosted_caller_evidence_required": true,
-            "gate_id": "mag.generated_surface_handoff.product_sidecar.bridge_exit.v1",
+            "gate_id": "mag.generated_surface_handoff.domain_handler.bridge_exit.v1",
             "gate_status": "mag_handler_boundary_ready_external_caller_evidence_required",
             "mag_handler_boundary_ready": true,
             "production_soak_gate_status": "external_live_soak_and_caller_evidence_not_claimed_by_mag_repo",
@@ -1678,7 +1679,7 @@
             "satisfied_evidence_refs": {
               "direct_mag_domain_handler_no_regression": [
                 "tests/product_entry_cases/test_manifest_and_status.py",
-                "tests/product_entry_cases/test_sidecar.py",
+                "tests/product_entry_cases/test_domain_handler.py",
                 "tests/product_entry_cases/test_functional_closure.py"
               ],
               "no_active_legacy_wrapper_caller_scan": [
@@ -1717,7 +1718,7 @@
             "paths": [
               {
                 "exists": true,
-                "path": "src/med_autogrant/product_entry_parts/sidecar.py",
+                "path": "src/med_autogrant/product_entry_parts/domain_handler.py",
                 "proof_kind": "repo_file_exists_at_manifest_build_time",
                 "role": "current_mag_domain_handler_or_refs_only_adapter_path"
               }
@@ -1727,7 +1728,7 @@
             "surface_kind": "mag_current_path_status"
           },
           "current_mag_paths": [
-            "src/med_autogrant/product_entry_parts/sidecar.py"
+            "src/med_autogrant/product_entry_parts/domain_handler.py"
           ],
           "current_owner": "med-autogrant",
           "domain_handler_owner": "med-autogrant",
@@ -1738,7 +1739,7 @@
           "production_default_caller_gate_status": "external_evidence_tail",
           "source_shape_status": "landed_domain_handler_ref_only_adapter",
           "stale_path_policy": "history_or_source_ref_refresh_only",
-          "surface_id": "product_sidecar",
+          "surface_id": "domain_handler",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
           "target_owner": "one-person-lab"
         },
@@ -1778,7 +1779,7 @@
             "satisfied_evidence_refs": {
               "direct_mag_domain_handler_no_regression": [
                 "tests/product_entry_cases/test_manifest_and_status.py",
-                "tests/product_entry_cases/test_sidecar.py",
+                "tests/product_entry_cases/test_domain_handler.py",
                 "tests/product_entry_cases/test_functional_closure.py"
               ],
               "no_active_legacy_wrapper_caller_scan": [
@@ -1892,7 +1893,7 @@
             "satisfied_evidence_refs": {
               "direct_mag_domain_handler_no_regression": [
                 "tests/product_entry_cases/test_manifest_and_status.py",
-                "tests/product_entry_cases/test_sidecar.py",
+                "tests/product_entry_cases/test_domain_handler.py",
                 "tests/product_entry_cases/test_functional_closure.py"
               ],
               "no_active_legacy_wrapper_caller_scan": [
@@ -2021,7 +2022,7 @@
             "satisfied_evidence_refs": {
               "direct_mag_domain_handler_no_regression": [
                 "tests/product_entry_cases/test_manifest_and_status.py",
-                "tests/product_entry_cases/test_sidecar.py",
+                "tests/product_entry_cases/test_domain_handler.py",
                 "tests/product_entry_cases/test_functional_closure.py"
               ],
               "no_active_legacy_wrapper_caller_scan": [
@@ -2096,7 +2097,7 @@
       "generated_surface_ids": [
         "product_status",
         "product_user_loop",
-        "product_sidecar",
+        "domain_handler",
         "grouped_cli_api",
         "projection_builder",
         "lifecycle_wrapper"
@@ -2929,10 +2930,10 @@
       "audit_id": "mag.privatized_functional_module_audit.v1",
       "audit_refs": {
         "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+        "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
         "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
         "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
         "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
-        "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
         "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
       },
       "claims_descriptor_source_available_for_opl_generation": true,
@@ -2952,7 +2953,7 @@
           "active_caller_status": "active_declarative_pack_projection",
           "active_callers": [
             "product-entry-manifest runtime registration projection",
-            "product sidecar export OPL control plane registration",
+            "domain handler export OPL control plane registration",
             "contracts/runtime-program/opl-family-contract-adoption.json"
           ],
           "bridge_exit_gate": {
@@ -2960,7 +2961,7 @@
             "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
             "current_surface_refs": [
               "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-              "/sidecar_export/opl_control_plane/registration"
+              "/domain_handler_export/opl_control_plane/registration"
             ],
             "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
             "domain_repo_physical_delete_authorized": false,
@@ -2979,7 +2980,7 @@
             "physical_delete_authorized_by_refs": false,
             "provenance_refs": [
               "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-              "/sidecar_export/opl_control_plane/registration"
+              "/domain_handler_export/opl_control_plane/registration"
             ],
             "replacement_owner": "one-person-lab",
             "required_before_retire": [
@@ -3006,7 +3007,7 @@
           ],
           "current_surface_refs": [
             "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-            "/sidecar_export/opl_control_plane/registration"
+            "/domain_handler_export/opl_control_plane/registration"
           ],
           "implemented_as_generic_runtime_in_mag": false,
           "mag_retained_authority": [
@@ -3502,7 +3503,7 @@
           "active_callers": [
             "product owner-receipt-evidence",
             "product hosted-receipt-verification",
-            "product sidecar dispatch stage-attempt/closeout"
+            "domain handler dispatch stage-attempt/closeout"
           ],
           "bridge_exit_gate": {
             "bridge_owner": "med-autogrant",
@@ -3550,7 +3551,7 @@
             "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
             "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
             "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
-            "src/med_autogrant/product_entry_parts/sidecar.py"
+            "src/med_autogrant/product_entry_parts/domain_handler.py"
           ],
           "current_surface_refs": [
             "/product_entry_manifest/owner_receipt_contract",
@@ -3578,7 +3579,7 @@
           "active_callers": [
             "product domain-memory-receipt-evidence",
             "product memory-receipt-projection",
-            "product sidecar dispatch domain-memory/decide"
+            "domain handler dispatch domain-memory/decide"
           ],
           "bridge_exit_gate": {
             "bridge_owner": "med-autogrant",
@@ -3651,7 +3652,7 @@
       "mag_repo_active_source_shape_landed": true,
       "mag_thin_adapter_code_surfaces": [
         "product_entry_manifest_builder",
-        "product_sidecar_guarded_domain_adapter",
+        "domain_handler_guarded_domain_adapter",
         "domain_entry",
         "receipt_schema_and_writer",
         "grant_transition_oracle",
@@ -3678,14 +3679,14 @@
           "active_callers": [
             "product lifecycle-receipt-evidence",
             "product lifecycle-receipt-bundle",
-            "product sidecar dispatch lifecycle/receipt"
+            "domain handler dispatch lifecycle/receipt"
           ],
           "bridge_exit_gate": {
             "bridge_owner": "med-autogrant",
             "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
             "current_surface_refs": [
               "/product_entry_manifest/lifecycle_guarded_apply_proof",
-              "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+              "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
             ],
             "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
             "domain_repo_physical_delete_authorized": false,
@@ -3704,7 +3705,7 @@
             "physical_delete_authorized_by_refs": false,
             "provenance_refs": [
               "/product_entry_manifest/lifecycle_guarded_apply_proof",
-              "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+              "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
             ],
             "replacement_owner": "one-person-lab",
             "required_before_retire": [
@@ -3732,7 +3733,7 @@
           ],
           "current_surface_refs": [
             "/product_entry_manifest/lifecycle_guarded_apply_proof",
-            "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+            "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
           ],
           "implemented_as_generic_runtime_in_mag": false,
           "mag_retained_authority": [
@@ -3764,7 +3765,7 @@
             "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
             "current_surface_refs": [
               "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-              "/sidecar_export/opl_runtime_observability_consumption"
+              "/domain_handler_export/opl_runtime_observability_consumption"
             ],
             "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
             "domain_repo_physical_delete_authorized": false,
@@ -3783,7 +3784,7 @@
             "physical_delete_authorized_by_refs": false,
             "provenance_refs": [
               "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-              "/sidecar_export/opl_runtime_observability_consumption"
+              "/domain_handler_export/opl_runtime_observability_consumption"
             ],
             "replacement_owner": "one-person-lab",
             "required_before_retire": [
@@ -3811,7 +3812,7 @@
           ],
           "current_surface_refs": [
             "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-            "/sidecar_export/opl_runtime_observability_consumption"
+            "/domain_handler_export/opl_runtime_observability_consumption"
           ],
           "implemented_as_generic_runtime_in_mag": false,
           "mag_retained_authority": [
@@ -3833,10 +3834,10 @@
           "retention_reason": "MAG observability projections carry grant owner receipt refs, typed blockers, and verdict refs needed by the OPL read model."
         },
         {
-          "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+          "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
           "active_callers": [
-            "product sidecar export",
-            "product sidecar dispatch",
+            "domain handler export",
+            "domain handler dispatch",
             "product manifest/status/direct-entry/user-loop"
           ],
           "bridge_exit_gate": {
@@ -3845,21 +3846,21 @@
             "current_surface_refs": [
               "product_status",
               "status_read_model",
-              "sidecar_export_dispatch",
+              "domain_handler",
               "workbench_drilldown",
               "/product_entry_manifest/product_entry_status",
-              "/sidecar_export"
+              "/domain_handler_export"
             ],
             "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
             "domain_repo_physical_delete_authorized": false,
-            "gate_id": "mag.default_caller_deletion.sidecar_product_status_shell.bridge_exit.v1",
+            "gate_id": "mag.default_caller_deletion.domain_handler_product_status_shell.bridge_exit.v1",
             "mag_can_own_generated_default_caller": false,
             "mag_can_write_generic_runtime": false,
             "no_forbidden_write_evidence_refs": [
-              "no-forbidden-write:mag/default-caller-deletion/sidecar_product_status_shell/refs-only-boundary"
+              "no-forbidden-write:mag/default-caller-deletion/domain_handler_product_status_shell/refs-only-boundary"
             ],
             "no_forbidden_write_refs": [
-              "no-forbidden-write:mag/default-caller-deletion/sidecar_product_status_shell/refs-only-boundary"
+              "no-forbidden-write:mag/default-caller-deletion/domain_handler_product_status_shell/refs-only-boundary"
             ],
             "opl_can_declare_fundability_or_export_verdict": false,
             "opl_can_issue_mag_owner_receipt": false,
@@ -3868,10 +3869,10 @@
             "provenance_refs": [
               "product_status",
               "status_read_model",
-              "sidecar_export_dispatch",
+              "domain_handler",
               "workbench_drilldown",
               "/product_entry_manifest/product_entry_status",
-              "/sidecar_export"
+              "/domain_handler_export"
             ],
             "replacement_owner": "one-person-lab",
             "required_before_retire": [
@@ -3886,13 +3887,13 @@
             ],
             "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
             "typed_blocker_refs": [
-              "typed-blocker:mag/default-caller-deletion/sidecar_product_status_shell/physical-delete-requires-explicit-owner-receipt"
+              "typed-blocker:mag/default-caller-deletion/domain_handler_product_status_shell/physical-delete-requires-explicit-owner-receipt"
             ]
           },
           "cannot_absorb_reason": "The generic shell can be absorbed, but MAG-specific dispatch validation, receipt refs, and safe action semantics remain domain owned.",
           "classification": "refs_only_adapter",
           "code_paths": [
-            "src/med_autogrant/product_entry_parts/sidecar.py",
+            "src/med_autogrant/product_entry_parts/domain_handler.py",
             "src/med_autogrant/product_entry_parts/entry.py",
             "src/med_autogrant/product_entry_parts/manifest.py",
             "src/med_autogrant/product_entry.py"
@@ -3900,10 +3901,10 @@
           "current_surface_refs": [
             "product_status",
             "status_read_model",
-            "sidecar_export_dispatch",
+            "domain_handler",
             "workbench_drilldown",
             "/product_entry_manifest/product_entry_status",
-            "/sidecar_export"
+            "/domain_handler_export"
           ],
           "implemented_as_generic_runtime_in_mag": false,
           "mag_retained_authority": [
@@ -3911,9 +3912,9 @@
             "owner_receipt_refs",
             "safe_action_refs"
           ],
-          "mag_role": "guarded_domain_sidecar_refs_adapter",
-          "migration_action": "Keep guarded domain dispatch and sidecar refs; OPL generated surfaces own product/operator/action-routing shell.",
-          "module_id": "sidecar_product_status_shell",
+          "mag_role": "guarded_domain_domain_handler_refs_adapter",
+          "migration_action": "Keep guarded domain dispatch and domain_handler refs; OPL generated surfaces own product/operator/action-routing shell.",
+          "module_id": "domain_handler_product_status_shell",
           "opl_can_declare_verdict": false,
           "opl_can_write_grant_truth": false,
           "opl_expected_primitives": [
@@ -3922,7 +3923,7 @@
             "action_routing_shell"
           ],
           "owner": "med-autogrant",
-          "retention_reason": "OPL needs a MAG-owned sidecar adapter to read receipts and invoke guarded domain actions without owning grant truth."
+          "retention_reason": "OPL needs a MAG-owned domain_handler adapter to read receipts and invoke guarded domain actions without owning grant truth."
         },
         {
           "active_caller_status": "active_refs_only_package_authority_adapter",
@@ -4008,7 +4009,7 @@
           "active_caller_status": "active_refs_only_no_repo_daemon_owner",
           "active_callers": [
             "product user-loop and status refs projections",
-            "product sidecar export/dispatch",
+            "domain handler export/dispatch",
             "executor default metadata for OPL adapter refs"
           ],
           "bridge_exit_gate": {
@@ -4065,7 +4066,7 @@
           "code_paths": [
             "src/med_autogrant/product_entry_parts/loop_contracts.py",
             "src/med_autogrant/product_entry_parts/receipt_observability.py",
-            "src/med_autogrant/product_entry_parts/sidecar.py",
+            "src/med_autogrant/product_entry_parts/domain_handler.py",
             "src/med_autogrant/runtime_defaults.py"
           ],
           "current_surface_refs": [
@@ -4093,10 +4094,15 @@
             "repair_command_projection"
           ],
           "owner": "med-autogrant",
-          "retention_reason": "MAG still needs refs-only user-loop/status projections for direct skill and OPL sidecar callers."
+          "retention_reason": "MAG still needs refs-only user-loop/status projections for direct skill and OPL domain_handler callers."
         }
       ],
       "representative_private_functional_surfaces": {
+        "domain_handler_dispatch_product_shell": {
+          "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
+          "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs",
+          "module_ref": "domain_handler_product_status_shell"
+        },
         "legacy_local_runtime_history_attempt_record": {
           "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
           "migration_action": "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code",
@@ -4106,11 +4112,6 @@
           "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
           "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
           "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
-        },
-        "sidecar_dispatch_product_shell": {
-          "active_caller_status": "active_refs_only_domain_sidecar_adapter",
-          "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs",
-          "module_ref": "sidecar_product_status_shell"
         }
       },
       "retire_or_tombstone_surfaces": [
@@ -4149,7 +4150,7 @@
           "evidence_refs": [
             "/product_entry_manifest/session_continuity",
             "/product_entry_manifest/automation",
-            "/sidecar_export/user_loop_attention_queue"
+            "/domain_handler_export/user_loop_attention_queue"
           ],
           "exit_gate": {
             "authority_boundary": {
@@ -4179,7 +4180,7 @@
               "history_or_tombstone_ref"
             ],
             "satisfied_evidence_refs": {
-              "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_sidecar.py",
+              "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_domain_handler.py",
               "history_or_tombstone_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
               "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
               "replacement_surface_consumes_mag_refs": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
@@ -4299,7 +4300,7 @@
               "history_or_tombstone_ref"
             ],
             "satisfied_evidence_refs": {
-              "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_sidecar.py",
+              "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_domain_handler.py",
               "history_or_tombstone_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
               "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
               "replacement_surface_consumes_mag_refs": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
@@ -4376,10 +4377,10 @@
       "target_domain_id": "med-autogrant",
       "version": "mag-route-stage-handoff-boundary.v1"
     },
-    "sidecar_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
     "standard_agent_scaffold_alignment": {
       "authority_boundary": {
         "domain_entry_owner": "med-autogrant",
+        "domain_handler_owner": "med-autogrant",
         "domain_truth_owner": "med-autogrant",
         "mag_is_knowledge_only_repository": false,
         "mag_owns_generated_product_surface_template": false,
@@ -4387,7 +4388,6 @@
         "mag_owns_generic_scaffold_template": false,
         "opl_scaffold_owner": "one-person-lab",
         "schema_owner": "med-autogrant",
-        "sidecar_owner": "med-autogrant",
         "test_owner": "med-autogrant"
       },
       "forbidden_owner_roles_ref": "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
@@ -4404,7 +4404,7 @@
       "retained_program_surface_kinds": [
         "domain_entry",
         "product_entry_manifest_builder",
-        "product_sidecar_adapter",
+        "domain_handler_adapter",
         "schema_contract",
         "focused_product_entry_tests",
         "declarative_grant_pack_compiler_input",
@@ -4413,9 +4413,9 @@
       "retained_program_surface_refs": [
         "src/med_autogrant/domain_entry.py",
         "src/med_autogrant/product_entry.py",
-        "src/med_autogrant/product_entry_parts/sidecar.py",
+        "src/med_autogrant/product_entry_parts/domain_handler.py",
         "schemas/v1/product-entry-manifest.schema.json",
-        "tests/product_entry_cases/test_sidecar.py",
+        "tests/product_entry_cases/test_domain_handler.py",
         "tests/product_entry_cases/test_functional_closure.py"
       ],
       "retains_domain_program_surfaces": true,
@@ -4489,7 +4489,7 @@
         "memory_body",
         "generated_product_status_owner_state",
         "generated_user_loop_owner_state",
-        "generated_sidecar_owner_state",
+        "generated_domain_handler_owner_state",
         "generated_grouped_cli_api_owner_state",
         "generated_projection_owner_state",
         "generated_lifecycle_wrapper_owner_state"
@@ -4508,7 +4508,7 @@
         "hermes_state_db_runtime_state"
       ],
       "replacement_expectations_ref": "/product_entry_manifest/mag_consumer_thinning_contract/opl_replacement_expectations",
-      "required_sidecar_return_refs": {
+      "required_domain_handler_return_refs": {
         "controlled_domain_memory_apply_proof_ref": "/product_entry_manifest/controlled_domain_memory_apply_proof",
         "controlled_stage_attempt_projection_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
         "declarative_grant_pack_compiler_input_ref": "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
@@ -4833,7 +4833,7 @@
       "active_callers": [
         "product owner-receipt-evidence",
         "product hosted-receipt-verification",
-        "product sidecar dispatch stage-attempt/closeout"
+        "domain handler dispatch stage-attempt/closeout"
       ],
       "bridge_exit_gate": {
         "bridge_owner": "med-autogrant",
@@ -4881,7 +4881,7 @@
         "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
         "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
         "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
-        "src/med_autogrant/product_entry_parts/sidecar.py"
+        "src/med_autogrant/product_entry_parts/domain_handler.py"
       ],
       "current_surface_refs": [
         "/product_entry_manifest/owner_receipt_contract",
@@ -4909,7 +4909,7 @@
       "active_callers": [
         "product domain-memory-receipt-evidence",
         "product memory-receipt-projection",
-        "product sidecar dispatch domain-memory/decide"
+        "domain handler dispatch domain-memory/decide"
       ],
       "bridge_exit_gate": {
         "bridge_owner": "med-autogrant",
@@ -4982,7 +4982,7 @@
   "mag_repo_active_source_shape_landed": true,
   "mag_thin_adapter_code_surfaces": [
     "product_entry_manifest_builder",
-    "product_sidecar_guarded_domain_adapter",
+    "domain_handler_guarded_domain_adapter",
     "domain_entry",
     "receipt_schema_and_writer",
     "grant_transition_oracle",
@@ -5007,10 +5007,10 @@
     "audit_id": "mag.privatized_functional_module_audit.v1",
     "audit_refs": {
       "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+      "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
       "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
       "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
       "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
-      "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
       "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
     },
     "claims_descriptor_source_available_for_opl_generation": true,
@@ -5030,7 +5030,7 @@
         "active_caller_status": "active_declarative_pack_projection",
         "active_callers": [
           "product-entry-manifest runtime registration projection",
-          "product sidecar export OPL control plane registration",
+          "domain handler export OPL control plane registration",
           "contracts/runtime-program/opl-family-contract-adoption.json"
         ],
         "bridge_exit_gate": {
@@ -5038,7 +5038,7 @@
           "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
           "current_surface_refs": [
             "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-            "/sidecar_export/opl_control_plane/registration"
+            "/domain_handler_export/opl_control_plane/registration"
           ],
           "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
           "domain_repo_physical_delete_authorized": false,
@@ -5057,7 +5057,7 @@
           "physical_delete_authorized_by_refs": false,
           "provenance_refs": [
             "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-            "/sidecar_export/opl_control_plane/registration"
+            "/domain_handler_export/opl_control_plane/registration"
           ],
           "replacement_owner": "one-person-lab",
           "required_before_retire": [
@@ -5084,7 +5084,7 @@
         ],
         "current_surface_refs": [
           "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-          "/sidecar_export/opl_control_plane/registration"
+          "/domain_handler_export/opl_control_plane/registration"
         ],
         "implemented_as_generic_runtime_in_mag": false,
         "mag_retained_authority": [
@@ -5580,7 +5580,7 @@
         "active_callers": [
           "product owner-receipt-evidence",
           "product hosted-receipt-verification",
-          "product sidecar dispatch stage-attempt/closeout"
+          "domain handler dispatch stage-attempt/closeout"
         ],
         "bridge_exit_gate": {
           "bridge_owner": "med-autogrant",
@@ -5628,7 +5628,7 @@
           "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
           "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
           "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
-          "src/med_autogrant/product_entry_parts/sidecar.py"
+          "src/med_autogrant/product_entry_parts/domain_handler.py"
         ],
         "current_surface_refs": [
           "/product_entry_manifest/owner_receipt_contract",
@@ -5656,7 +5656,7 @@
         "active_callers": [
           "product domain-memory-receipt-evidence",
           "product memory-receipt-projection",
-          "product sidecar dispatch domain-memory/decide"
+          "domain handler dispatch domain-memory/decide"
         ],
         "bridge_exit_gate": {
           "bridge_owner": "med-autogrant",
@@ -5729,7 +5729,7 @@
     "mag_repo_active_source_shape_landed": true,
     "mag_thin_adapter_code_surfaces": [
       "product_entry_manifest_builder",
-      "product_sidecar_guarded_domain_adapter",
+      "domain_handler_guarded_domain_adapter",
       "domain_entry",
       "receipt_schema_and_writer",
       "grant_transition_oracle",
@@ -5756,14 +5756,14 @@
         "active_callers": [
           "product lifecycle-receipt-evidence",
           "product lifecycle-receipt-bundle",
-          "product sidecar dispatch lifecycle/receipt"
+          "domain handler dispatch lifecycle/receipt"
         ],
         "bridge_exit_gate": {
           "bridge_owner": "med-autogrant",
           "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
           "current_surface_refs": [
             "/product_entry_manifest/lifecycle_guarded_apply_proof",
-            "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+            "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
           ],
           "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
           "domain_repo_physical_delete_authorized": false,
@@ -5782,7 +5782,7 @@
           "physical_delete_authorized_by_refs": false,
           "provenance_refs": [
             "/product_entry_manifest/lifecycle_guarded_apply_proof",
-            "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+            "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
           ],
           "replacement_owner": "one-person-lab",
           "required_before_retire": [
@@ -5810,7 +5810,7 @@
         ],
         "current_surface_refs": [
           "/product_entry_manifest/lifecycle_guarded_apply_proof",
-          "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+          "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
         ],
         "implemented_as_generic_runtime_in_mag": false,
         "mag_retained_authority": [
@@ -5842,7 +5842,7 @@
           "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
           "current_surface_refs": [
             "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-            "/sidecar_export/opl_runtime_observability_consumption"
+            "/domain_handler_export/opl_runtime_observability_consumption"
           ],
           "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
           "domain_repo_physical_delete_authorized": false,
@@ -5861,7 +5861,7 @@
           "physical_delete_authorized_by_refs": false,
           "provenance_refs": [
             "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-            "/sidecar_export/opl_runtime_observability_consumption"
+            "/domain_handler_export/opl_runtime_observability_consumption"
           ],
           "replacement_owner": "one-person-lab",
           "required_before_retire": [
@@ -5889,7 +5889,7 @@
         ],
         "current_surface_refs": [
           "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-          "/sidecar_export/opl_runtime_observability_consumption"
+          "/domain_handler_export/opl_runtime_observability_consumption"
         ],
         "implemented_as_generic_runtime_in_mag": false,
         "mag_retained_authority": [
@@ -5911,10 +5911,10 @@
         "retention_reason": "MAG observability projections carry grant owner receipt refs, typed blockers, and verdict refs needed by the OPL read model."
       },
       {
-        "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+        "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
         "active_callers": [
-          "product sidecar export",
-          "product sidecar dispatch",
+          "domain handler export",
+          "domain handler dispatch",
           "product manifest/status/direct-entry/user-loop"
         ],
         "bridge_exit_gate": {
@@ -5923,21 +5923,21 @@
           "current_surface_refs": [
             "product_status",
             "status_read_model",
-            "sidecar_export_dispatch",
+            "domain_handler",
             "workbench_drilldown",
             "/product_entry_manifest/product_entry_status",
-            "/sidecar_export"
+            "/domain_handler_export"
           ],
           "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
           "domain_repo_physical_delete_authorized": false,
-          "gate_id": "mag.default_caller_deletion.sidecar_product_status_shell.bridge_exit.v1",
+          "gate_id": "mag.default_caller_deletion.domain_handler_product_status_shell.bridge_exit.v1",
           "mag_can_own_generated_default_caller": false,
           "mag_can_write_generic_runtime": false,
           "no_forbidden_write_evidence_refs": [
-            "no-forbidden-write:mag/default-caller-deletion/sidecar_product_status_shell/refs-only-boundary"
+            "no-forbidden-write:mag/default-caller-deletion/domain_handler_product_status_shell/refs-only-boundary"
           ],
           "no_forbidden_write_refs": [
-            "no-forbidden-write:mag/default-caller-deletion/sidecar_product_status_shell/refs-only-boundary"
+            "no-forbidden-write:mag/default-caller-deletion/domain_handler_product_status_shell/refs-only-boundary"
           ],
           "opl_can_declare_fundability_or_export_verdict": false,
           "opl_can_issue_mag_owner_receipt": false,
@@ -5946,10 +5946,10 @@
           "provenance_refs": [
             "product_status",
             "status_read_model",
-            "sidecar_export_dispatch",
+            "domain_handler",
             "workbench_drilldown",
             "/product_entry_manifest/product_entry_status",
-            "/sidecar_export"
+            "/domain_handler_export"
           ],
           "replacement_owner": "one-person-lab",
           "required_before_retire": [
@@ -5964,13 +5964,13 @@
           ],
           "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
           "typed_blocker_refs": [
-            "typed-blocker:mag/default-caller-deletion/sidecar_product_status_shell/physical-delete-requires-explicit-owner-receipt"
+            "typed-blocker:mag/default-caller-deletion/domain_handler_product_status_shell/physical-delete-requires-explicit-owner-receipt"
           ]
         },
         "cannot_absorb_reason": "The generic shell can be absorbed, but MAG-specific dispatch validation, receipt refs, and safe action semantics remain domain owned.",
         "classification": "refs_only_adapter",
         "code_paths": [
-          "src/med_autogrant/product_entry_parts/sidecar.py",
+          "src/med_autogrant/product_entry_parts/domain_handler.py",
           "src/med_autogrant/product_entry_parts/entry.py",
           "src/med_autogrant/product_entry_parts/manifest.py",
           "src/med_autogrant/product_entry.py"
@@ -5978,10 +5978,10 @@
         "current_surface_refs": [
           "product_status",
           "status_read_model",
-          "sidecar_export_dispatch",
+          "domain_handler",
           "workbench_drilldown",
           "/product_entry_manifest/product_entry_status",
-          "/sidecar_export"
+          "/domain_handler_export"
         ],
         "implemented_as_generic_runtime_in_mag": false,
         "mag_retained_authority": [
@@ -5989,9 +5989,9 @@
           "owner_receipt_refs",
           "safe_action_refs"
         ],
-        "mag_role": "guarded_domain_sidecar_refs_adapter",
-        "migration_action": "Keep guarded domain dispatch and sidecar refs; OPL generated surfaces own product/operator/action-routing shell.",
-        "module_id": "sidecar_product_status_shell",
+        "mag_role": "guarded_domain_domain_handler_refs_adapter",
+        "migration_action": "Keep guarded domain dispatch and domain_handler refs; OPL generated surfaces own product/operator/action-routing shell.",
+        "module_id": "domain_handler_product_status_shell",
         "opl_can_declare_verdict": false,
         "opl_can_write_grant_truth": false,
         "opl_expected_primitives": [
@@ -6000,7 +6000,7 @@
           "action_routing_shell"
         ],
         "owner": "med-autogrant",
-        "retention_reason": "OPL needs a MAG-owned sidecar adapter to read receipts and invoke guarded domain actions without owning grant truth."
+        "retention_reason": "OPL needs a MAG-owned domain_handler adapter to read receipts and invoke guarded domain actions without owning grant truth."
       },
       {
         "active_caller_status": "active_refs_only_package_authority_adapter",
@@ -6086,7 +6086,7 @@
         "active_caller_status": "active_refs_only_no_repo_daemon_owner",
         "active_callers": [
           "product user-loop and status refs projections",
-          "product sidecar export/dispatch",
+          "domain handler export/dispatch",
           "executor default metadata for OPL adapter refs"
         ],
         "bridge_exit_gate": {
@@ -6143,7 +6143,7 @@
         "code_paths": [
           "src/med_autogrant/product_entry_parts/loop_contracts.py",
           "src/med_autogrant/product_entry_parts/receipt_observability.py",
-          "src/med_autogrant/product_entry_parts/sidecar.py",
+          "src/med_autogrant/product_entry_parts/domain_handler.py",
           "src/med_autogrant/runtime_defaults.py"
         ],
         "current_surface_refs": [
@@ -6171,10 +6171,15 @@
           "repair_command_projection"
         ],
         "owner": "med-autogrant",
-        "retention_reason": "MAG still needs refs-only user-loop/status projections for direct skill and OPL sidecar callers."
+        "retention_reason": "MAG still needs refs-only user-loop/status projections for direct skill and OPL domain_handler callers."
       }
     ],
     "representative_private_functional_surfaces": {
+      "domain_handler_dispatch_product_shell": {
+        "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
+        "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs",
+        "module_ref": "domain_handler_product_status_shell"
+      },
       "legacy_local_runtime_history_attempt_record": {
         "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
         "migration_action": "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code",
@@ -6184,11 +6189,6 @@
         "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
         "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
         "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
-      },
-      "sidecar_dispatch_product_shell": {
-        "active_caller_status": "active_refs_only_domain_sidecar_adapter",
-        "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs",
-        "module_ref": "sidecar_product_status_shell"
       }
     },
     "retire_or_tombstone_surfaces": [
@@ -6227,7 +6227,7 @@
         "evidence_refs": [
           "/product_entry_manifest/session_continuity",
           "/product_entry_manifest/automation",
-          "/sidecar_export/user_loop_attention_queue"
+          "/domain_handler_export/user_loop_attention_queue"
         ],
         "exit_gate": {
           "authority_boundary": {
@@ -6257,7 +6257,7 @@
             "history_or_tombstone_ref"
           ],
           "satisfied_evidence_refs": {
-            "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_sidecar.py",
+            "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_domain_handler.py",
             "history_or_tombstone_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
             "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
             "replacement_surface_consumes_mag_refs": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
@@ -6377,7 +6377,7 @@
             "history_or_tombstone_ref"
           ],
           "satisfied_evidence_refs": {
-            "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_sidecar.py",
+            "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_domain_handler.py",
             "history_or_tombstone_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
             "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
             "replacement_surface_consumes_mag_refs": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
@@ -6402,14 +6402,14 @@
       "active_callers": [
         "product lifecycle-receipt-evidence",
         "product lifecycle-receipt-bundle",
-        "product sidecar dispatch lifecycle/receipt"
+        "domain handler dispatch lifecycle/receipt"
       ],
       "bridge_exit_gate": {
         "bridge_owner": "med-autogrant",
         "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
         "current_surface_refs": [
           "/product_entry_manifest/lifecycle_guarded_apply_proof",
-          "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+          "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
         ],
         "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
         "domain_repo_physical_delete_authorized": false,
@@ -6428,7 +6428,7 @@
         "physical_delete_authorized_by_refs": false,
         "provenance_refs": [
           "/product_entry_manifest/lifecycle_guarded_apply_proof",
-          "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+          "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
         ],
         "replacement_owner": "one-person-lab",
         "required_before_retire": [
@@ -6456,7 +6456,7 @@
       ],
       "current_surface_refs": [
         "/product_entry_manifest/lifecycle_guarded_apply_proof",
-        "/sidecar_export/opl_control_plane/family_lifecycle_adapter"
+        "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
       ],
       "implemented_as_generic_runtime_in_mag": false,
       "mag_retained_authority": [
@@ -6488,7 +6488,7 @@
         "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
         "current_surface_refs": [
           "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-          "/sidecar_export/opl_runtime_observability_consumption"
+          "/domain_handler_export/opl_runtime_observability_consumption"
         ],
         "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
         "domain_repo_physical_delete_authorized": false,
@@ -6507,7 +6507,7 @@
         "physical_delete_authorized_by_refs": false,
         "provenance_refs": [
           "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-          "/sidecar_export/opl_runtime_observability_consumption"
+          "/domain_handler_export/opl_runtime_observability_consumption"
         ],
         "replacement_owner": "one-person-lab",
         "required_before_retire": [
@@ -6535,7 +6535,7 @@
       ],
       "current_surface_refs": [
         "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-        "/sidecar_export/opl_runtime_observability_consumption"
+        "/domain_handler_export/opl_runtime_observability_consumption"
       ],
       "implemented_as_generic_runtime_in_mag": false,
       "mag_retained_authority": [
@@ -6557,10 +6557,10 @@
       "retention_reason": "MAG observability projections carry grant owner receipt refs, typed blockers, and verdict refs needed by the OPL read model."
     },
     {
-      "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+      "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
       "active_callers": [
-        "product sidecar export",
-        "product sidecar dispatch",
+        "domain handler export",
+        "domain handler dispatch",
         "product manifest/status/direct-entry/user-loop"
       ],
       "bridge_exit_gate": {
@@ -6569,21 +6569,21 @@
         "current_surface_refs": [
           "product_status",
           "status_read_model",
-          "sidecar_export_dispatch",
+          "domain_handler",
           "workbench_drilldown",
           "/product_entry_manifest/product_entry_status",
-          "/sidecar_export"
+          "/domain_handler_export"
         ],
         "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
         "domain_repo_physical_delete_authorized": false,
-        "gate_id": "mag.default_caller_deletion.sidecar_product_status_shell.bridge_exit.v1",
+        "gate_id": "mag.default_caller_deletion.domain_handler_product_status_shell.bridge_exit.v1",
         "mag_can_own_generated_default_caller": false,
         "mag_can_write_generic_runtime": false,
         "no_forbidden_write_evidence_refs": [
-          "no-forbidden-write:mag/default-caller-deletion/sidecar_product_status_shell/refs-only-boundary"
+          "no-forbidden-write:mag/default-caller-deletion/domain_handler_product_status_shell/refs-only-boundary"
         ],
         "no_forbidden_write_refs": [
-          "no-forbidden-write:mag/default-caller-deletion/sidecar_product_status_shell/refs-only-boundary"
+          "no-forbidden-write:mag/default-caller-deletion/domain_handler_product_status_shell/refs-only-boundary"
         ],
         "opl_can_declare_fundability_or_export_verdict": false,
         "opl_can_issue_mag_owner_receipt": false,
@@ -6592,10 +6592,10 @@
         "provenance_refs": [
           "product_status",
           "status_read_model",
-          "sidecar_export_dispatch",
+          "domain_handler",
           "workbench_drilldown",
           "/product_entry_manifest/product_entry_status",
-          "/sidecar_export"
+          "/domain_handler_export"
         ],
         "replacement_owner": "one-person-lab",
         "required_before_retire": [
@@ -6610,13 +6610,13 @@
         ],
         "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
         "typed_blocker_refs": [
-          "typed-blocker:mag/default-caller-deletion/sidecar_product_status_shell/physical-delete-requires-explicit-owner-receipt"
+          "typed-blocker:mag/default-caller-deletion/domain_handler_product_status_shell/physical-delete-requires-explicit-owner-receipt"
         ]
       },
       "cannot_absorb_reason": "The generic shell can be absorbed, but MAG-specific dispatch validation, receipt refs, and safe action semantics remain domain owned.",
       "classification": "refs_only_adapter",
       "code_paths": [
-        "src/med_autogrant/product_entry_parts/sidecar.py",
+        "src/med_autogrant/product_entry_parts/domain_handler.py",
         "src/med_autogrant/product_entry_parts/entry.py",
         "src/med_autogrant/product_entry_parts/manifest.py",
         "src/med_autogrant/product_entry.py"
@@ -6624,10 +6624,10 @@
       "current_surface_refs": [
         "product_status",
         "status_read_model",
-        "sidecar_export_dispatch",
+        "domain_handler",
         "workbench_drilldown",
         "/product_entry_manifest/product_entry_status",
-        "/sidecar_export"
+        "/domain_handler_export"
       ],
       "implemented_as_generic_runtime_in_mag": false,
       "mag_retained_authority": [
@@ -6635,9 +6635,9 @@
         "owner_receipt_refs",
         "safe_action_refs"
       ],
-      "mag_role": "guarded_domain_sidecar_refs_adapter",
-      "migration_action": "Keep guarded domain dispatch and sidecar refs; OPL generated surfaces own product/operator/action-routing shell.",
-      "module_id": "sidecar_product_status_shell",
+      "mag_role": "guarded_domain_domain_handler_refs_adapter",
+      "migration_action": "Keep guarded domain dispatch and domain_handler refs; OPL generated surfaces own product/operator/action-routing shell.",
+      "module_id": "domain_handler_product_status_shell",
       "opl_can_declare_verdict": false,
       "opl_can_write_grant_truth": false,
       "opl_expected_primitives": [
@@ -6646,7 +6646,7 @@
         "action_routing_shell"
       ],
       "owner": "med-autogrant",
-      "retention_reason": "OPL needs a MAG-owned sidecar adapter to read receipts and invoke guarded domain actions without owning grant truth."
+      "retention_reason": "OPL needs a MAG-owned domain_handler adapter to read receipts and invoke guarded domain actions without owning grant truth."
     },
     {
       "active_caller_status": "active_refs_only_package_authority_adapter",
@@ -6732,7 +6732,7 @@
       "active_caller_status": "active_refs_only_no_repo_daemon_owner",
       "active_callers": [
         "product user-loop and status refs projections",
-        "product sidecar export/dispatch",
+        "domain handler export/dispatch",
         "executor default metadata for OPL adapter refs"
       ],
       "bridge_exit_gate": {
@@ -6789,7 +6789,7 @@
       "code_paths": [
         "src/med_autogrant/product_entry_parts/loop_contracts.py",
         "src/med_autogrant/product_entry_parts/receipt_observability.py",
-        "src/med_autogrant/product_entry_parts/sidecar.py",
+        "src/med_autogrant/product_entry_parts/domain_handler.py",
         "src/med_autogrant/runtime_defaults.py"
       ],
       "current_surface_refs": [
@@ -6817,10 +6817,15 @@
         "repair_command_projection"
       ],
       "owner": "med-autogrant",
-      "retention_reason": "MAG still needs refs-only user-loop/status projections for direct skill and OPL sidecar callers."
+      "retention_reason": "MAG still needs refs-only user-loop/status projections for direct skill and OPL domain_handler callers."
     }
   ],
   "representative_private_functional_surfaces": {
+    "domain_handler_dispatch_product_shell": {
+      "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
+      "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs",
+      "module_ref": "domain_handler_product_status_shell"
+    },
     "legacy_local_runtime_history_attempt_record": {
       "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
       "migration_action": "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code",
@@ -6830,11 +6835,6 @@
       "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
       "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
       "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
-    },
-    "sidecar_dispatch_product_shell": {
-      "active_caller_status": "active_refs_only_domain_sidecar_adapter",
-      "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs",
-      "module_ref": "sidecar_product_status_shell"
     }
   },
   "retire_or_tombstone_surfaces": [
@@ -6873,7 +6873,7 @@
       "evidence_refs": [
         "/product_entry_manifest/session_continuity",
         "/product_entry_manifest/automation",
-        "/sidecar_export/user_loop_attention_queue"
+        "/domain_handler_export/user_loop_attention_queue"
       ],
       "exit_gate": {
         "authority_boundary": {
@@ -6903,7 +6903,7 @@
           "history_or_tombstone_ref"
         ],
         "satisfied_evidence_refs": {
-          "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_sidecar.py",
+          "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_domain_handler.py",
           "history_or_tombstone_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
           "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
           "replacement_surface_consumes_mag_refs": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"
@@ -7023,7 +7023,7 @@
           "history_or_tombstone_ref"
         ],
         "satisfied_evidence_refs": {
-          "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_sidecar.py",
+          "direct_mag_domain_handler_no_regression": "tests/product_entry_cases/test_domain_handler.py",
           "history_or_tombstone_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit",
           "no_active_caller_scan": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
           "replacement_surface_consumes_mag_refs": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff"

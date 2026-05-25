@@ -45,7 +45,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 ],
                 active_callers=[
                     "product-entry-manifest runtime registration projection",
-                    "product sidecar export OPL control plane registration",
+                    "domain handler export OPL control plane registration",
                     "contracts/runtime-program/opl-family-contract-adoption.json",
                 ],
                 active_caller_status="active_declarative_pack_projection",
@@ -63,7 +63,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 ),
                 current_surface_refs=[
                     "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
-                    "/sidecar_export/opl_control_plane/registration",
+                    "/domain_handler_export/opl_control_plane/registration",
                 ],
                 opl_expected_primitives=[
                     "domain_runtime_registry",
@@ -173,7 +173,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 active_callers=[
                     "product lifecycle-receipt-evidence",
                     "product lifecycle-receipt-bundle",
-                    "product sidecar dispatch lifecycle/receipt",
+                    "domain handler dispatch lifecycle/receipt",
                 ],
                 active_caller_status="active_refs_only_adapter_no_generic_lifecycle_owner",
                 migration_action=(
@@ -190,7 +190,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 ),
                 current_surface_refs=[
                     "/product_entry_manifest/lifecycle_guarded_apply_proof",
-                    "/sidecar_export/opl_control_plane/family_lifecycle_adapter",
+                    "/domain_handler_export/opl_control_plane/family_lifecycle_adapter",
                 ],
                 opl_expected_primitives=[
                     "cleanup_restore_retention_shell",
@@ -233,7 +233,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 ),
                 current_surface_refs=[
                     "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
-                    "/sidecar_export/opl_runtime_observability_consumption",
+                    "/domain_handler_export/opl_runtime_observability_consumption",
                 ],
                 opl_expected_primitives=[
                     "runtime_observability_export",
@@ -243,28 +243,28 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 mag_retained_authority=["owner_receipt_refs", "typed_blocker_refs", "verdict_refs"],
             ),
             _build_functional_module_audit_item(
-                "sidecar_product_status_shell",
+                "domain_handler_product_status_shell",
                 classification="refs_only_adapter",
                 owner=TARGET_DOMAIN_ID,
-                mag_role="guarded_domain_sidecar_refs_adapter",
+                mag_role="guarded_domain_domain_handler_refs_adapter",
                 code_paths=[
-                    "src/med_autogrant/product_entry_parts/sidecar.py",
+                    "src/med_autogrant/product_entry_parts/domain_handler.py",
                     "src/med_autogrant/product_entry_parts/entry.py",
                     "src/med_autogrant/product_entry_parts/manifest.py",
                     "src/med_autogrant/product_entry.py",
                 ],
                 active_callers=[
-                    "product sidecar export",
-                    "product sidecar dispatch",
+                    "domain handler export",
+                    "domain handler dispatch",
                     "product manifest/status/direct-entry/user-loop",
                 ],
-                active_caller_status="active_refs_only_domain_sidecar_adapter",
+                active_caller_status="active_refs_only_domain_domain_handler_adapter",
                 migration_action=(
-                    "Keep guarded domain dispatch and sidecar refs; OPL generated surfaces own "
+                    "Keep guarded domain dispatch and domain_handler refs; OPL generated surfaces own "
                     "product/operator/action-routing shell."
                 ),
                 retention_reason=(
-                    "OPL needs a MAG-owned sidecar adapter to read receipts and invoke guarded "
+                    "OPL needs a MAG-owned domain_handler adapter to read receipts and invoke guarded "
                     "domain actions without owning grant truth."
                 ),
                 cannot_absorb_reason=(
@@ -274,10 +274,10 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 current_surface_refs=[
                     "product_status",
                     "status_read_model",
-                    "sidecar_export_dispatch",
+                    "domain_handler",
                     "workbench_drilldown",
                     "/product_entry_manifest/product_entry_status",
-                    "/sidecar_export",
+                    "/domain_handler_export",
                 ],
                 opl_expected_primitives=[
                     "product_status_shell",
@@ -342,12 +342,12 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 code_paths=[
                     "src/med_autogrant/product_entry_parts/loop_contracts.py",
                     "src/med_autogrant/product_entry_parts/receipt_observability.py",
-                    "src/med_autogrant/product_entry_parts/sidecar.py",
+                    "src/med_autogrant/product_entry_parts/domain_handler.py",
                     "src/med_autogrant/runtime_defaults.py",
                 ],
                 active_callers=[
                     "product user-loop and status refs projections",
-                    "product sidecar export/dispatch",
+                    "domain handler export/dispatch",
                     "executor default metadata for OPL adapter refs",
                 ],
                 active_caller_status="active_refs_only_no_repo_daemon_owner",
@@ -357,7 +357,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 ),
                 retention_reason=(
                     "MAG still needs refs-only user-loop/status projections for direct skill "
-                    "and OPL sidecar callers."
+                    "and OPL domain_handler callers."
                 ),
                 cannot_absorb_reason=(
                     "The workbench and scheduler can be absorbed; MAG's domain action metadata "
@@ -523,12 +523,12 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
                     "src/med_autogrant/product_entry_parts/hosted_receipt_verification.py",
                     "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
-                    "src/med_autogrant/product_entry_parts/sidecar.py",
+                    "src/med_autogrant/product_entry_parts/domain_handler.py",
                 ],
                 active_callers=[
                     "product owner-receipt-evidence",
                     "product hosted-receipt-verification",
-                    "product sidecar dispatch stage-attempt/closeout",
+                    "domain handler dispatch stage-attempt/closeout",
                 ],
                 active_caller_status="active_mag_receipt_authority_keep",
                 migration_action=(
@@ -564,7 +564,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                 active_callers=[
                     "product domain-memory-receipt-evidence",
                     "product memory-receipt-projection",
-                    "product sidecar dispatch domain-memory/decide",
+                    "domain handler dispatch domain-memory/decide",
                 ],
                 active_caller_status="active_mag_memory_body_decision_keep",
                 migration_action=(
@@ -618,7 +618,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
         ],
         "mag_thin_adapter_code_surfaces": [
             "product_entry_manifest_builder",
-            "product_sidecar_guarded_domain_adapter",
+            "domain_handler_guarded_domain_adapter",
             "domain_entry",
             "receipt_schema_and_writer",
             "grant_transition_oracle",
@@ -635,9 +635,9 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code"
                 ),
             },
-            "sidecar_dispatch_product_shell": {
-                "module_ref": "sidecar_product_status_shell",
-                "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+            "domain_handler_dispatch_product_shell": {
+                "module_ref": "domain_handler_product_status_shell",
+                "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
                 "migration_action": (
                     "OPL_generates_product_operator_shell_and_generic_dispatch_actions_"
                     "MAG_keeps_guarded_domain_adapter_refs"
@@ -655,7 +655,7 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
         },
         "audit_refs": {
             "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
-            "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
+            "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
             "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
             "thin_output_guard_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
@@ -831,7 +831,7 @@ def _build_legacy_exit_gate(
                 "generated_surface_handoff"
             ),
             "direct_mag_domain_handler_no_regression": (
-                "tests/product_entry_cases/test_sidecar.py"
+                "tests/product_entry_cases/test_domain_handler.py"
             ),
             "history_or_tombstone_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/"

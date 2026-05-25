@@ -63,7 +63,7 @@ class ProductEntryGrantTransitionOracleTest(unittest.TestCase):
         self.assertEqual(closure_oracle["transition_table_status"], "landed")
         self.assertEqual(closure_oracle["oracle_fixture_status"], "landed")
 
-    def test_oracle_sidecar_closeout_writes_no_regression_owner_receipt_refs(self) -> None:
+    def test_oracle_domain_handler_closeout_writes_no_regression_owner_receipt_refs(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
         entry = MedAutoGrantProductEntry()
@@ -102,18 +102,18 @@ class ProductEntryGrantTransitionOracleTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            closeout_payload = entry.dispatch_sidecar_task(task_path=task_path)
-            receipt = closeout_payload["sidecar_dispatch"]["result"]["owner_receipt_evidence"]
+            closeout_payload = entry.dispatch_domain_handler_task(task_path=task_path)
+            receipt = closeout_payload["domain_handler_dispatch"]["result"]["owner_receipt_evidence"]
             receipt_path = Path(receipt["receipt_instance_ref"])
             persisted_receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
 
-        dispatch = closeout_payload["sidecar_dispatch"]
+        dispatch = closeout_payload["domain_handler_dispatch"]
         result = dispatch["result"]
         receipt_refs = result["receipt_refs"]
         closeout_refs = result["closeout_refs"]
 
         self.assertEqual(dispatch["action"], "stage-attempt/closeout")
-        self.assertEqual(result["surface_kind"], "sidecar_stage_attempt_closeout_result")
+        self.assertEqual(result["surface_kind"], "domain_handler_stage_attempt_closeout_result")
         self.assertEqual(result["return_shape"], "no_regression_evidence")
         self.assertEqual(result["receipt_ref"], receipt_refs["owner_receipt_ref"])
         self.assertEqual(receipt_refs["no_regression_evidence_ref"], receipt["receipt_instance_ref"])

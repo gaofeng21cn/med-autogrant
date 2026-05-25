@@ -77,14 +77,14 @@ def build_standard_domain_agent_skeleton(
             },
             "runtime": {
                 "owner": TARGET_DOMAIN_ID,
-                "role": "sidecar/projection/lifecycle adapter declarations only",
+                "role": "domain_handler/projection/lifecycle adapter declarations only",
                 "declared_surfaces": [
-                    "product_sidecar_adapter",
+                    "domain_handler_adapter",
                     "projection_builder",
                     "family_lifecycle_adapter",
                 ],
                 "source_refs": [
-                    "src/med_autogrant/product_entry_parts/sidecar.py",
+                    "src/med_autogrant/product_entry_parts/domain_handler.py",
                     "src/med_autogrant/product_entry_parts/runtime_registration.py",
                     "src/med_autogrant/product_entry_parts/manifest_builder.py",
                     "src/med_autogrant/product_entry_parts/manifest_builder_parts/runtime_task_shell.py",
@@ -104,11 +104,11 @@ def build_standard_domain_agent_skeleton(
         },
         "runtime_declaration": {
             "runtime_only_declares": [
-                "sidecar",
+                "domain_handler",
                 "projection_builder",
                 "lifecycle_adapter",
             ],
-            "sidecar_ref": "/product_entry_manifest/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
+            "domain_handler_ref": "/product_entry_manifest/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
             "projection_builder_ref": "/product_entry_manifest/family_stage_control_plane",
             "lifecycle_adapter_ref": (
                 "/product_entry_manifest/skill_catalog/skills/0/domain_projection/"

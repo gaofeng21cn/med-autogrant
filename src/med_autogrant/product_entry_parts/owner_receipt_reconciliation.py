@@ -26,11 +26,11 @@ def build_controlled_soak_receipt_reconciliation_proof(
     *,
     owner_receipt_evidence: Mapping[str, Any],
     opl_ledger_ref: str,
-    sidecar_closeout_result: Mapping[str, Any] | None = None,
+    domain_handler_closeout_result: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     receipt = require_owner_receipt_evidence(owner_receipt_evidence)
     resolved_ledger_ref = _require_nonempty_string(opl_ledger_ref, field_name="opl_ledger_ref")
-    closeout_result = dict(sidecar_closeout_result or {})
+    closeout_result = dict(domain_handler_closeout_result or {})
     receipt_ref = require_nonempty_string_from_receipt(receipt, "receipt_instance_ref")
     receipt_shape = require_choice(
         require_nonempty_string_from_receipt(receipt, "receipt_shape"),
@@ -60,7 +60,7 @@ def build_controlled_soak_receipt_reconciliation_proof(
             "/product_entry_manifest/controlled_soak_no_regression_attempt",
             "/product_entry_manifest/controlled_stage_attempt_projection",
             "/product_entry_manifest/owner_receipt_contract",
-            "product sidecar-dispatch stage-attempt/closeout",
+            "domain handler-dispatch stage-attempt/closeout",
             "product owner-receipt-evidence",
         ],
         "opl_ledger": {
@@ -88,7 +88,7 @@ def build_controlled_soak_receipt_reconciliation_proof(
         },
         "reconciliation": {
             "status": _reconciliation_status(receipt_shape, typed_blocker, evidence_refs),
-            "receipt_ref_matches_sidecar": _receipt_ref_matches_sidecar(receipt_ref, closeout_result),
+            "receipt_ref_matches_domain_handler": _receipt_ref_matches_domain_handler(receipt_ref, closeout_result),
             "opl_ledger_ref_matches_receipt_source": (
                 resolved_ledger_ref == require_nonempty_string_from_receipt(receipt, "source_ref")
             ),
@@ -108,12 +108,12 @@ def build_controlled_soak_receipt_reconciliation_inventory(
     *,
     owner_receipt_evidence_items: Sequence[Mapping[str, Any]],
     opl_ledger_ref: str,
-    sidecar_closeout_results: Sequence[Mapping[str, Any]] | None = None,
+    domain_handler_closeout_results: Sequence[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     resolved_ledger_ref = _require_nonempty_string(opl_ledger_ref, field_name="opl_ledger_ref")
     if not owner_receipt_evidence_items:
         raise WorkspaceStateError("owner_receipt_evidence_items 至少需要一条 receipt evidence。")
-    closeout_by_receipt_ref = _index_closeout_results_by_receipt_ref(sidecar_closeout_results or [])
+    closeout_by_receipt_ref = _index_closeout_results_by_receipt_ref(domain_handler_closeout_results or [])
     items: list[dict[str, Any]] = []
     for receipt_payload in owner_receipt_evidence_items:
         receipt = require_owner_receipt_evidence(receipt_payload)
@@ -121,7 +121,7 @@ def build_controlled_soak_receipt_reconciliation_inventory(
         proof = build_controlled_soak_receipt_reconciliation_proof(
             owner_receipt_evidence=receipt,
             opl_ledger_ref=resolved_ledger_ref,
-            sidecar_closeout_result=closeout_by_receipt_ref.get(receipt_ref),
+            domain_handler_closeout_result=closeout_by_receipt_ref.get(receipt_ref),
         )["receipt_reconciliation_proof"]
         items.append(
             {
@@ -130,7 +130,7 @@ def build_controlled_soak_receipt_reconciliation_inventory(
                 "stage_id": proof["mag_owner_receipt"]["stage_id"],
                 "source_ref": proof["mag_owner_receipt"]["source_ref"],
                 "reconciliation_status": proof["reconciliation"]["status"],
-                "receipt_ref_matches_sidecar": proof["reconciliation"]["receipt_ref_matches_sidecar"],
+                "receipt_ref_matches_domain_handler": proof["reconciliation"]["receipt_ref_matches_domain_handler"],
                 "opl_ledger_ref_matches_receipt_source": proof["reconciliation"][
                     "opl_ledger_ref_matches_receipt_source"
                 ],
@@ -153,7 +153,7 @@ def build_controlled_soak_receipt_reconciliation_inventory(
         },
         "summary": {
             "item_count": len(items),
-            "sidecar_closeout_result_count": len(closeout_by_receipt_ref),
+            "domain_handler_closeout_result_count": len(closeout_by_receipt_ref),
             "by_receipt_shape": _count_by(items, "receipt_shape"),
             "by_reconciliation_status": _count_by(items, "reconciliation_status"),
             "typed_blocker_count": sum(1 for item in items if item["typed_blocker_present"]),
@@ -186,9 +186,9 @@ def _index_closeout_results_by_receipt_ref(
     for closeout in closeout_results:
         receipt_ref = closeout.get("receipt_ref")
         if not isinstance(receipt_ref, str) or not receipt_ref.strip():
-            raise WorkspaceStateError("sidecar_closeout_result.receipt_ref 必须是非空字符串。")
+            raise WorkspaceStateError("domain_handler_closeout_result.receipt_ref 必须是非空字符串。")
         if receipt_ref in indexed:
-            raise WorkspaceStateError(f"sidecar_closeout_result.receipt_ref 重复: {receipt_ref}")
+            raise WorkspaceStateError(f"domain_handler_closeout_result.receipt_ref 重复: {receipt_ref}")
         indexed[receipt_ref] = closeout
     return indexed
 
@@ -201,7 +201,7 @@ def _count_by(items: Sequence[Mapping[str, Any]], key: str) -> dict[str, int]:
     return counts
 
 
-def _receipt_ref_matches_sidecar(receipt_ref: str, closeout_result: Mapping[str, Any]) -> bool | None:
+def _receipt_ref_matches_domain_handler(receipt_ref: str, closeout_result: Mapping[str, Any]) -> bool | None:
     if not closeout_result:
         return None
     return closeout_result.get("receipt_ref") == receipt_ref
@@ -211,9 +211,9 @@ def _reconciled_typed_blocker(
     receipt: Mapping[str, Any],
     closeout_result: Mapping[str, Any],
 ) -> dict[str, Any] | None:
-    sidecar_blocker = closeout_result.get("typed_blocker")
-    if isinstance(sidecar_blocker, Mapping):
-        return dict(sidecar_blocker)
+    domain_handler_blocker = closeout_result.get("typed_blocker")
+    if isinstance(domain_handler_blocker, Mapping):
+        return dict(domain_handler_blocker)
     return build_typed_blocker_projection(
         receipt,
         blocker_kind="mag_stage_attempt_owner_receipt_required",

@@ -331,7 +331,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             [
                 "product_status",
                 "product_user_loop",
-                "product_sidecar",
+                "domain_handler",
                 "grouped_cli_api",
                 "projection_builder",
                 "lifecycle_wrapper",
@@ -459,7 +459,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(controlled_attempt["last_observed_projection"], manifest["progress_projection"])
         self.assertIn(
             "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
-            controlled_attempt["receipt_refs"]["sidecar_dispatch_receipt_ref"],
+            controlled_attempt["receipt_refs"]["domain_handler_dispatch_receipt_ref"],
         )
         self.assertFalse(controlled_attempt["opl_consumption_contract"]["can_hold_fundability_verdict"])
         self.assertFalse(controlled_attempt["opl_consumption_contract"]["can_hold_export_verdict"])
@@ -469,7 +469,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         )
         proof = controlled_attempt["proof"]
         self.assertEqual(proof["surface_kind"], "controlled_stage_attempt_fixture_proof")
-        self.assertTrue(proof["direct_skill_and_opl_hosted_use_same_descriptor_sidecar_quality_refs"])
+        self.assertTrue(proof["direct_skill_and_opl_hosted_use_same_descriptor_domain_handler_quality_refs"])
         self.assertFalse(proof["opl_verdict_authority"]["fundability"])
         self.assertFalse(proof["opl_verdict_authority"]["submission_ready_export"])
         memory_locator = manifest["domain_memory_descriptor_locator"]
@@ -490,7 +490,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         )
         self.assertEqual(
             skeleton["runtime_declaration"]["runtime_only_declares"],
-            ["sidecar", "projection_builder", "lifecycle_adapter"],
+            ["domain_handler", "projection_builder", "lifecycle_adapter"],
         )
         self.assertEqual(
             skeleton["artifact_locator_ref"],
@@ -789,7 +789,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertEqual(preflight["surface_kind"], "product_entry_preflight")
         self.assertEqual(
             preflight["summary"],
-            "当前 direct grant product entry surface 的前置检查已通过，可以先复核 workspace 与主线，再进入 product status。",
+            "当前 direct grant product entry surface 的前置检查已通过，可以先复核 workspace 与主线，再进入 OPL/App generated status target 或 domain-handler export。",
         )
         self.assertTrue(preflight["ready_to_try_now"])
         self.assertEqual(

@@ -36,7 +36,7 @@ class ProductEntryReceiptObservabilityTest(unittest.TestCase):
             inventory_payload = entry.build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[no_regression, typed_blocker],
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/observability",
-                sidecar_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],
+                domain_handler_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],
             )
 
         summary = build_controlled_soak_receipt_observability_summary(inventory_payload)
@@ -185,7 +185,7 @@ class ProductEntryReceiptObservabilityTest(unittest.TestCase):
             inventory_payload = entry.build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[receipt],
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/no-leak",
-                sidecar_closeout_results=[{"receipt_ref": receipt["receipt_instance_ref"]}],
+                domain_handler_closeout_results=[{"receipt_ref": receipt["receipt_instance_ref"]}],
             )
 
         summary = build_controlled_soak_receipt_observability_summary(

@@ -15,7 +15,7 @@ Machine boundary: 人读索引。Source truth 继续归 grant workspaces、funde
 - [当前状态](../status.md)
 - [References](../references/README.md)
 
-当前 OPL 可索引 source refs 入口是 `product-entry-manifest.source_provenance` 与 `product sidecar export` 输出内的 `sidecar_export.source_provenance`。该 surface 只包含 body-free refs：
+当前 OPL 可索引 source refs 入口是 `product-entry-manifest.source_provenance` 与 `domain handler export` 输出内的 `domain_handler_export.source_provenance`。该 surface 只包含 body-free refs：
 
 - `source_provenance_ref`：`docs/source/README.md`
 - `historical_fixture_ref`：`examples/nsfc_workspace_p2c_critique.json`

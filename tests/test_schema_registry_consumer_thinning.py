@@ -21,7 +21,7 @@ class ConsumerThinningSchemaRegistryTest(unittest.TestCase):
             "private_functional_state_output_classes_forbidden",
             output_guard["required"],
         )
-        guard_required_refs = output_guard["properties"]["required_sidecar_return_refs"]
+        guard_required_refs = output_guard["properties"]["required_domain_handler_return_refs"]
         self.assertIn("external_evidence_request_pack_ref", guard_required_refs["required"])
         self.assertEqual(
             guard_required_refs["properties"]["external_evidence_request_pack_ref"]["const"],

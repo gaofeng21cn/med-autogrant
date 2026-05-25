@@ -81,7 +81,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn(
-            "controlled stage attempt projection and sidecar receipt refs",
+            "controlled stage attempt projection and domain handler receipt refs",
             framework_boundary["framework_consumed_projection"],
         )
         self.assertIn("owner_receipt_contract", framework_boundary["framework_consumed_projection"])
@@ -110,7 +110,7 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertEqual(skeleton["repo_source_boundary"], ["agent", "contracts", "runtime", "docs"])
         self.assertEqual(
             skeleton["runtime_declares_only"],
-            ["sidecar", "projection_builder", "lifecycle_adapter", "receipt_evidence_writer"],
+            ["domain handler", "projection_builder", "lifecycle_adapter", "receipt_evidence_writer"],
         )
         self.assertEqual(skeleton["artifact_locator_ref"], "/product_entry_manifest/artifact_locator_contract")
         self.assertEqual(
@@ -148,8 +148,8 @@ class ProgramControlSurfaceTest(unittest.TestCase):
         self.assertFalse(skeleton["opl_verdict_authority"]["fundability"])
         self.assertFalse(skeleton["opl_verdict_authority"]["submission_ready_export"])
         self.assertEqual(
-            framework_boundary["product_sidecar_adapter"]["adapter_id"],
-            "mag.opl_stage_led.product_sidecar.v1",
+            framework_boundary["domain_handler_adapter"]["adapter_id"],
+            "mag.opl_stage_led.domain_handler.v1",
         )
         self.assertIn(
             "grant-domain truth owner",

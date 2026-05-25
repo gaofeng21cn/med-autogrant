@@ -4,9 +4,10 @@ from typing import Final
 
 
 PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
-    "workspace": "工作区诊断、摘要、阶段路由与 progress cockpit。",
+    "workspace": "工作区诊断、摘要、阶段路由与 grant quality refs。",
     "mainline": "当前 line/current focus 概览与维护者参考记录。",
-    "product": "OPL-hosted caller 可消费的 MAG domain handler refs 与 authority contract。",
+    "domain-handler": "OPL standard domain handler target：export refs 与 dispatch guarded actions。",
+    "authority": "MAG-owned memory、receipt、typed-blocker 与 closeout authority targets。",
     "pass": "authoring pass 执行入口。",
     "package": "artifact/final/hosted/submission package 导出入口。",
 }
@@ -14,7 +15,8 @@ PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
 PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
     "workspace",
     "mainline",
-    "product",
+    "domain-handler",
+    "authority",
     "pass",
     "package",
 )
@@ -34,42 +36,19 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "next-step": ("workspace", "next-step"),
     "critique-summary": ("workspace", "critique-summary"),
     "stage-route-report": ("workspace", "route-report"),
-    "grant-progress": ("workspace", "progress"),
-    "grant-cockpit": ("workspace", "cockpit"),
     "mainline-status": ("mainline", "status"),
     "mainline-phase": ("mainline", "phase"),
-    "grant-direct-entry": ("product", "direct-entry"),
-    "grant-user-loop": ("product", "user-loop"),
-    "skill-catalog": ("product", "skill-catalog"),
-    "product-entry-manifest": ("product", "manifest"),
-    "product-status": ("product", "status"),
-    "product-preflight": ("product", "preflight"),
-    "product-start": ("product", "start"),
-    "build-product-entry": ("product", "build-entry"),
-    "product-sidecar-export": ("product", "sidecar-export"),
-    "product-sidecar-dispatch": ("product", "sidecar-dispatch"),
-    "product-domain-memory-proposal": ("product", "domain-memory-proposal"),
-    "product-domain-memory-decision": ("product", "domain-memory-decision"),
-    "product-domain-memory-receipt-evidence": ("product", "domain-memory-receipt-evidence"),
-    "product-owner-receipt-evidence": ("product", "owner-receipt-evidence"),
-    "product-lifecycle-receipt-evidence": ("product", "lifecycle-receipt-evidence"),
-    "controlled-soak-receipt-reconciliation-proof": ("product", "receipt-reconciliation-proof"),
-    "controlled-soak-receipt-reconciliation-inventory": (
-        "product",
-        "receipt-reconciliation-inventory",
-    ),
-    "focused-hosted-receipt-verification": ("product", "hosted-receipt-verification"),
-    "lifecycle-receipt-bundle": ("product", "lifecycle-receipt-bundle"),
-    "memory-receipt-projection": ("product", "memory-receipt-projection"),
-    "package-lifecycle-handoff": ("product", "package-lifecycle-handoff"),
-    "receipt-readiness": ("product", "receipt-readiness"),
-    "continuous-receipt-reconciliation": ("product", "continuous-receipt-reconciliation"),
-    "production-live-acceptance-receipt": ("product", "production-live-acceptance-receipt"),
-    "codex-stage-receipts": ("product", "codex-stage-receipts"),
-    "operator-closeout-readiness": ("product", "operator-closeout-readiness"),
-    "opl-owner-payload-response": ("product", "opl-owner-payload-response"),
-    "physical-morphology-guard": ("product", "physical-morphology-guard"),
-    "executor-first-closeout-bundle": ("product", "executor-first-closeout-bundle"),
+    "domain-handler-export": ("domain-handler", "export"),
+    "domain-handler-dispatch": ("domain-handler", "dispatch"),
+    "product-domain-memory-proposal": ("authority", "memory-proposal"),
+    "product-domain-memory-decision": ("authority", "memory-decision"),
+    "product-domain-memory-receipt-evidence": ("authority", "memory-receipt-evidence"),
+    "product-owner-receipt-evidence": ("authority", "owner-receipt-evidence"),
+    "production-live-acceptance-receipt": ("authority", "production-acceptance"),
+    "codex-stage-receipts": ("authority", "stage-receipts"),
+    "opl-owner-payload-response": ("authority", "owner-payload-response"),
+    "physical-morphology-guard": ("authority", "morphology-guard"),
+    "executor-first-closeout-bundle": ("authority", "executor-closeout-bundle"),
     "execute-direction-screening-pass": ("pass", "direction-screening"),
     "execute-question-refinement-pass": ("pass", "question-refinement"),
     "execute-argument-building-pass": ("pass", "argument-building"),
@@ -92,9 +71,33 @@ PUBLIC_TO_INTERNAL_COMMAND: Final[dict[tuple[str, str], str]] = {
     value: key for key, value in INTERNAL_TO_PUBLIC_COMMAND.items()
 }
 
-PUBLIC_THREE_TOKEN_COMMANDS: Final[dict[tuple[str, str, str], str]] = {
-    ("product", "sidecar", "export"): "product-sidecar-export",
-    ("product", "sidecar", "dispatch"): "product-sidecar-dispatch",
+PUBLIC_THREE_TOKEN_COMMANDS: Final[dict[tuple[str, str, str], str]] = {}
+
+GENERATED_SURFACE_COMMAND_REFS: Final[dict[str, str]] = {
+    "grant-progress": "opl://generated-surfaces/mag/inspect-progress",
+    "grant-cockpit": "opl://generated-surfaces/mag/inspect-cockpit",
+    "grant-direct-entry": "opl://generated-surfaces/mag/build-direct-entry",
+    "grant-user-loop": "opl://generated-surfaces/mag/open-grant-user-loop",
+    "skill-catalog": "opl://generated-surfaces/mag/skill-catalog",
+    "product-entry-manifest": "opl://generated-surfaces/mag/product-entry-manifest",
+    "product-status": "opl://generated-surfaces/mag/product-status",
+    "product-preflight": "opl://generated-surfaces/mag/product-preflight",
+    "product-start": "opl://generated-surfaces/mag/product-start",
+    "build-product-entry": "opl://generated-surfaces/mag/product-entry-session",
+    "product-lifecycle-receipt-evidence": "opl://generated-surfaces/mag/lifecycle-receipt-evidence",
+    "controlled-soak-receipt-reconciliation-proof": (
+        "opl://generated-surfaces/mag/receipt-reconciliation-proof"
+    ),
+    "controlled-soak-receipt-reconciliation-inventory": (
+        "opl://generated-surfaces/mag/receipt-reconciliation-inventory"
+    ),
+    "focused-hosted-receipt-verification": "opl://generated-surfaces/mag/hosted-receipt-verification",
+    "lifecycle-receipt-bundle": "opl://generated-surfaces/mag/lifecycle-receipt-bundle",
+    "memory-receipt-projection": "opl://generated-surfaces/mag/memory-receipt-projection",
+    "package-lifecycle-handoff": "opl://generated-surfaces/mag/package-lifecycle-handoff",
+    "receipt-readiness": "opl://generated-surfaces/mag/receipt-readiness",
+    "continuous-receipt-reconciliation": "opl://generated-surfaces/mag/continuous-receipt-reconciliation",
+    "operator-closeout-readiness": "opl://generated-surfaces/mag/operator-closeout-readiness",
 }
 
 PUBLIC_GROUP_COMMANDS: Final[dict[str, tuple[str, ...]]] = {
@@ -112,6 +115,9 @@ def public_command_tokens(command: str) -> tuple[str, str] | None:
 
 
 def public_command_label(command: str) -> str:
+    generated_ref = GENERATED_SURFACE_COMMAND_REFS.get(command)
+    if generated_ref is not None:
+        return generated_ref
     tokens = public_command_tokens(command)
     if tokens is None:
         return command
@@ -120,6 +126,9 @@ def public_command_label(command: str) -> str:
 
 def public_cli_command(command: str, *args: str) -> str:
     tokens = public_command_tokens(command)
+    generated_ref = GENERATED_SURFACE_COMMAND_REFS.get(command)
+    if generated_ref is not None:
+        return " ".join([generated_ref, *args])
     command_words = list(tokens) if tokens is not None else [command]
     return " ".join(["uv", "run", "python", "-m", "med_autogrant", *command_words, *args])
 

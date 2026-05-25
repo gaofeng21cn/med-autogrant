@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID, _require_mapping
-from med_autogrant.product_entry_parts.sidecar_contract import ALLOWED_ACTIONS
-from med_autogrant.product_entry_parts.sidecar_projection import (
+from med_autogrant.product_entry_parts.domain_handler_contract import ALLOWED_ACTIONS
+from med_autogrant.product_entry_parts.domain_handler_projection import (
     build_attention_queue_projection,
     build_autonomy_controller_projection,
     build_todo_wakeup_projection,
@@ -12,12 +12,12 @@ from med_autogrant.product_entry_parts.sidecar_projection import (
 )
 
 
-def build_sidecar_caller_owner_contract() -> dict[str, Any]:
+def build_domain_handler_caller_owner_contract() -> dict[str, Any]:
     return {
         "active_caller_owner": TARGET_DOMAIN_ID,
-        "active_caller_surface": "mag_product_sidecar_handler_until_opl_caller_evidence",
+        "active_caller_surface": "mag_domain_handler_handler_until_opl_caller_evidence",
         "target_caller_owner": "one-person-lab",
-        "target_caller_surface": "opl_generated_or_hosted_sidecar",
+        "target_caller_surface": "opl_generated_or_hosted_domain_handler",
         "domain_handler_target": TARGET_DOMAIN_ID,
         "domain_handler_owner": TARGET_DOMAIN_ID,
         "mag_role": "guarded_domain_handler_target_and_authority_refs_only",
@@ -27,7 +27,7 @@ def build_sidecar_caller_owner_contract() -> dict[str, Any]:
     }
 
 
-def build_sidecar_substrate_boundary(manifest: Mapping[str, Any]) -> dict[str, Any]:
+def build_domain_handler_substrate_boundary(manifest: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "online_substrate_owner": "explicit_opl_provider",
         "control_plane_owner": "one-person-lab",
@@ -43,7 +43,7 @@ def build_sidecar_substrate_boundary(manifest: Mapping[str, Any]) -> dict[str, A
     }
 
 
-def build_sidecar_shell_payload(
+def build_domain_handler_shell_payload(
     *,
     manifest: Mapping[str, Any],
     runtime_registration: Mapping[str, Any],
@@ -52,8 +52,8 @@ def build_sidecar_shell_payload(
     user_loop_command: str,
 ) -> dict[str, Any]:
     return {
-        "caller_owner_contract": build_sidecar_caller_owner_contract(),
-        "substrate_boundary": build_sidecar_substrate_boundary(manifest),
+        "caller_owner_contract": build_domain_handler_caller_owner_contract(),
+        "substrate_boundary": build_domain_handler_substrate_boundary(manifest),
         "todo_wakeup": build_todo_wakeup_projection(
             automation=automation,
             manifest=manifest,
@@ -74,14 +74,14 @@ def build_sidecar_shell_payload(
                 _require_mapping(
                     runtime_registration,
                     "family_lifecycle_adapter",
-                    context="sidecar_export.runtime_registration",
+                    context="domain_handler_export.runtime_registration",
                 )
             ),
             "write_policy": "opl_index_only_no_grant_truth_writes",
-            "substrate_adapter_export_ref": "/sidecar_export/opl_substrate_adapter_export",
+            "substrate_adapter_export_ref": "/domain_handler_export/opl_substrate_adapter_export",
             "allowed_dispatch_actions": sorted(ALLOWED_ACTIONS),
             "replacement_expectations_ref": (
-                "/sidecar_export/mag_consumer_thinning_contract/opl_replacement_expectations"
+                "/domain_handler_export/mag_consumer_thinning_contract/opl_replacement_expectations"
             ),
         },
         "guardrails": {

@@ -45,7 +45,7 @@ def build_private_functional_surface_policy(
                 "grouped_cli_wrapper",
                 "status",
                 "user_loop",
-                "sidecar",
+                "domain_handler",
                 "runtime_registration",
                 "control_plane",
                 "lifecycle",
@@ -79,7 +79,7 @@ def build_private_functional_surface_policy(
                 "applies_to_surface_ids": [
                     "grouped_cli_wrapper",
                     "product_entry",
-                    "sidecar",
+                    "domain_handler",
                     "runtime_registration",
                     "control_plane",
                     "legacy_runtime_residue",

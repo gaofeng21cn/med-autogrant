@@ -75,7 +75,7 @@ def build_mag_consumer_thinning_contract(
         "claims_opl_replacement_exists": True,
         "claims_domain_repo_physical_delete_authorized": False,
         "claims_production_long_run_soak_complete": False,
-        "sidecar_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+        "domain_handler_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
         "consumed_opl_standard_surfaces": build_consumed_opl_standard_surfaces(),
         "opl_family_conflict_blocker_projection": build_opl_family_conflict_blocker_projection(),
         "opl_runtime_observability_consumption": build_opl_runtime_observability_consumption(),
@@ -114,7 +114,7 @@ def build_mag_consumer_thinning_contract(
         "mag_owned_outputs": list(MAG_THIN_SURFACE_OUTPUT_CLASSES),
         "thin_surface_output_guard": build_thin_surface_output_guard(),
         "standard_agent_scaffold_alignment": build_standard_agent_scaffold_alignment(),
-        "exposed_sidecar_return_refs": {
+        "exposed_domain_handler_return_refs": {
             "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
             "controlled_stage_attempt_projection_ref": (
                 "/product_entry_manifest/controlled_stage_attempt_projection"
@@ -214,7 +214,7 @@ def build_mag_consumer_thinning_contract(
             "mag_implements_generic_artifact_lifecycle": False,
             "mag_long_term_owns_generated_product_status": False,
             "mag_long_term_owns_generated_user_loop": False,
-            "mag_long_term_owns_generated_sidecar": False,
+            "mag_long_term_owns_generated_domain_handler": False,
             "mag_long_term_owns_generated_grouped_cli_api": False,
             "mag_long_term_owns_generated_projection": False,
             "mag_long_term_owns_generated_lifecycle_wrapper": False,

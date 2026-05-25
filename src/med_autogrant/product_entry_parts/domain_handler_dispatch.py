@@ -9,17 +9,17 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_nonempty_string,
     _require_nonempty_string_from_mapping,
 )
-from med_autogrant.product_entry_parts.sidecar_closeout import (
+from med_autogrant.product_entry_parts.domain_handler_closeout import (
     _dispatch_codex_stage_receipts,
     _dispatch_executor_first_bundle,
     _dispatch_operator_readiness,
     _dispatch_physical_morphology_guard,
 )
-from med_autogrant.product_entry_parts.sidecar_contract import (
+from med_autogrant.product_entry_parts.domain_handler_contract import (
     ALLOWED_ACTIONS,
-    SIDECAR_ADAPTER_ID,
-    SIDECAR_DISPATCH_KIND,
-    SIDECAR_VERSION,
+    DOMAIN_HANDLER_ADAPTER_ID,
+    DOMAIN_HANDLER_DISPATCH_KIND,
+    DOMAIN_HANDLER_VERSION,
 )
 from med_autogrant.product_entry_parts.typed_blocker_projection import (
     build_typed_blocker_projection,
@@ -27,17 +27,17 @@ from med_autogrant.product_entry_parts.typed_blocker_projection import (
 from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
 
 
-def dispatch_sidecar_task(
+def dispatch_domain_handler_task(
     product_entry: Any,
     *,
     task_path: str | Path,
 ) -> dict[str, Any]:
     resolved_task_path = Path(task_path).expanduser().resolve()
-    task = _read_json_mapping(resolved_task_path, context="sidecar_task")
-    action = _require_nonempty_string_from_mapping(task, "action", context="sidecar_task")
+    task = _read_json_mapping(resolved_task_path, context="domain_handler_task")
+    action = _require_nonempty_string_from_mapping(task, "action", context="domain_handler_task")
     if action not in ALLOWED_ACTIONS:
-        raise WorkspaceStateError(f"sidecar task action 不允许: {action}")
-    input_path = _require_nonempty_string_from_mapping(task, "input_path", context="sidecar_task")
+        raise WorkspaceStateError(f"domain_handler task action 不允许: {action}")
+    input_path = _require_nonempty_string_from_mapping(task, "input_path", context="domain_handler_task")
     if action == "domain-memory/propose":
         return _dispatch_domain_memory_proposal(product_entry, task=task, input_path=input_path, task_path=resolved_task_path)
     if action == "domain-memory/decide":
@@ -78,7 +78,7 @@ def dispatch_sidecar_task(
             task_path=resolved_task_path,
             dispatch_payload=_dispatch_payload,
         )
-    raise WorkspaceStateError(f"sidecar task action 不允许: {action}")
+    raise WorkspaceStateError(f"domain_handler task action 不允许: {action}")
 
 
 def _dispatch_domain_memory_proposal(
@@ -90,9 +90,9 @@ def _dispatch_domain_memory_proposal(
 ) -> dict[str, Any]:
     proposal = product_entry.build_domain_memory_writeback_proposal(
         input_path=input_path,
-        stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="sidecar_task"),
-        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="sidecar_task"),
-        lesson_summary=_require_nonempty_string_from_mapping(task, "lesson_summary", context="sidecar_task"),
+        stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="domain_handler_task"),
+        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="domain_handler_task"),
+        lesson_summary=_require_nonempty_string_from_mapping(task, "lesson_summary", context="domain_handler_task"),
         proposal_id=_optional_nonempty_string(task.get("proposal_id")),
     )
     return _dispatch_payload(
@@ -102,7 +102,7 @@ def _dispatch_domain_memory_proposal(
         input_path=input_path,
         status="completed",
         result={
-            "surface_kind": "sidecar_domain_memory_writeback_proposal_result",
+            "surface_kind": "domain_handler_domain_memory_writeback_proposal_result",
             "proposal": proposal["domain_memory_writeback_proposal"],
             "write_policy": "runtime_store_only_no_repo_write",
         },
@@ -118,9 +118,9 @@ def _dispatch_domain_memory_decision(
     task_path: Path,
 ) -> dict[str, Any]:
     decision = product_entry.build_domain_memory_writeback_decision(
-        proposal_path=_require_nonempty_string_from_mapping(task, "proposal_path", context="sidecar_task"),
-        decision=_require_nonempty_string_from_mapping(task, "decision", context="sidecar_task"),
-        decision_reason=_require_nonempty_string_from_mapping(task, "decision_reason", context="sidecar_task"),
+        proposal_path=_require_nonempty_string_from_mapping(task, "proposal_path", context="domain_handler_task"),
+        decision=_require_nonempty_string_from_mapping(task, "decision", context="domain_handler_task"),
+        decision_reason=_require_nonempty_string_from_mapping(task, "decision_reason", context="domain_handler_task"),
         memory_id=_optional_nonempty_string(task.get("memory_id")),
     )
     receipt_evidence = product_entry.write_domain_memory_receipt_evidence(
@@ -134,7 +134,7 @@ def _dispatch_domain_memory_decision(
         input_path=input_path,
         status="completed",
         result={
-            "surface_kind": "sidecar_domain_memory_writeback_decision_result",
+            "surface_kind": "domain_handler_domain_memory_writeback_decision_result",
             "decision": decision["domain_memory_writeback_decision"],
             "receipt_evidence": receipt_evidence["domain_memory_receipt_evidence"],
             "write_policy": "runtime_store_only_no_repo_write",
@@ -153,10 +153,10 @@ def _dispatch_stage_attempt_closeout(
     closeout_refs = _stage_attempt_closeout_refs(task)
     receipt_evidence = product_entry.write_owner_receipt_evidence(
         input_path=input_path,
-        receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="sidecar_task"),
-        stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="sidecar_task"),
-        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="sidecar_task"),
-        closeout_summary=_require_nonempty_string_from_mapping(task, "closeout_summary", context="sidecar_task"),
+        receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="domain_handler_task"),
+        stage_id=_require_nonempty_string_from_mapping(task, "stage_id", context="domain_handler_task"),
+        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="domain_handler_task"),
+        closeout_summary=_require_nonempty_string_from_mapping(task, "closeout_summary", context="domain_handler_task"),
         runtime_root=_optional_nonempty_string(task.get("runtime_root")),
         receipt_id=_optional_nonempty_string(task.get("receipt_id") or task.get("task_id")),
         closeout_refs=closeout_refs,
@@ -170,7 +170,7 @@ def _dispatch_stage_attempt_closeout(
         input_path=input_path,
         status="completed",
         result={
-            "surface_kind": "sidecar_stage_attempt_closeout_result",
+            "surface_kind": "domain_handler_stage_attempt_closeout_result",
             "return_shape": receipt["receipt_shape"],
             "receipt_ref": receipt["receipt_instance_ref"],
             "receipt_refs": receipt_refs,
@@ -198,10 +198,10 @@ def _dispatch_lifecycle_receipt(
 ) -> dict[str, Any]:
     receipt_evidence = product_entry.write_lifecycle_receipt_evidence(
         input_path=input_path,
-        operation=_require_nonempty_string_from_mapping(task, "operation", context="sidecar_task"),
-        receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="sidecar_task"),
-        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="sidecar_task"),
-        closeout_summary=_require_nonempty_string_from_mapping(task, "closeout_summary", context="sidecar_task"),
+        operation=_require_nonempty_string_from_mapping(task, "operation", context="domain_handler_task"),
+        receipt_shape=_require_nonempty_string_from_mapping(task, "receipt_shape", context="domain_handler_task"),
+        source_ref=_require_nonempty_string_from_mapping(task, "source_ref", context="domain_handler_task"),
+        closeout_summary=_require_nonempty_string_from_mapping(task, "closeout_summary", context="domain_handler_task"),
         runtime_root=_optional_nonempty_string(task.get("runtime_root")),
         receipt_id=_optional_nonempty_string(task.get("receipt_id") or task.get("task_id")),
     )
@@ -213,7 +213,7 @@ def _dispatch_lifecycle_receipt(
         input_path=input_path,
         status="completed",
         result={
-            "surface_kind": "sidecar_lifecycle_receipt_result",
+            "surface_kind": "domain_handler_lifecycle_receipt_result",
             "return_shape": receipt["receipt_shape"],
             "receipt_ref": receipt["receipt_instance_ref"],
             "receipt_refs": {
@@ -247,20 +247,20 @@ def _dispatch_payload(
 ) -> dict[str, Any]:
     return {
         "ok": True,
-        "command": "product-sidecar-dispatch",
-        "sidecar_dispatch": {
-            "surface_kind": SIDECAR_DISPATCH_KIND,
-            "schema_version": SIDECAR_VERSION,
-            "adapter_id": SIDECAR_ADAPTER_ID,
+        "command": "domain-handler-dispatch",
+        "domain_handler_dispatch": {
+            "surface_kind": DOMAIN_HANDLER_DISPATCH_KIND,
+            "schema_version": DOMAIN_HANDLER_VERSION,
+            "adapter_id": DOMAIN_HANDLER_ADAPTER_ID,
             "task_id": _optional_nonempty_string(task.get("task_id")) or f"{action}:{task_path.name}",
             "action": action,
             "status": status,
             "target_domain_id": TARGET_DOMAIN_ID,
             "caller_owner_contract": {
                 "active_caller_owner": TARGET_DOMAIN_ID,
-                "active_caller_surface": "mag_product_sidecar_dispatch_handler_until_opl_caller_evidence",
+                "active_caller_surface": "mag_domain_handler_dispatch_handler_until_opl_caller_evidence",
                 "target_caller_owner": "one-person-lab",
-                "target_caller_surface": "opl_generated_or_hosted_sidecar_dispatch",
+                "target_caller_surface": "opl_generated_or_hosted_domain_handler_dispatch",
                 "domain_handler_target": TARGET_DOMAIN_ID,
                 "domain_handler_owner": TARGET_DOMAIN_ID,
                 "mag_role": "guarded_domain_handler_target_only",
@@ -270,7 +270,7 @@ def _dispatch_payload(
             },
             "input_path": str(Path(input_path).expanduser().resolve()),
             "task_path": str(task_path),
-            "executed_by_sidecar": action
+            "executed_by_domain_handler": action
             in {
                 "domain-memory/propose",
                 "domain-memory/decide",
@@ -310,7 +310,7 @@ def _stage_attempt_closeout_refs(task: Mapping[str, Any]) -> dict[str, Any]:
         "controlled_soak_no_regression_attempt_ref": (
             "/product_entry_manifest/controlled_soak_no_regression_attempt"
         ),
-        "sidecar_stage_attempt_closeout_action": "stage-attempt/closeout",
+        "domain_handler_stage_attempt_closeout_action": "stage-attempt/closeout",
     }
     transition_id = _optional_nonempty_string(task.get("transition_id"))
     if transition_id is not None:
@@ -348,17 +348,17 @@ def _read_json_mapping(path: Path, *, context: str) -> Mapping[str, Any]:
 def _optional_nonempty_string(value: Any) -> str | None:
     if value is None:
         return None
-    return _require_nonempty_string(value, field_name="task_id", context="sidecar_task")
+    return _require_nonempty_string(value, field_name="task_id", context="domain_handler_task")
 
 
 def _optional_string_list(value: Any) -> list[str]:
     if value is None:
         return []
     if not isinstance(value, list):
-        raise WorkspaceStateError("sidecar_task refs 必须是 string list。")
+        raise WorkspaceStateError("domain_handler_task refs 必须是 string list。")
     refs: list[str] = []
     for item in value:
-        refs.append(_require_nonempty_string(item, field_name="ref", context="sidecar_task"))
+        refs.append(_require_nonempty_string(item, field_name="ref", context="domain_handler_task"))
     return refs
 
 
@@ -371,9 +371,9 @@ def _receipt_refs_for_task(
     task_id = _optional_nonempty_string(task.get("task_id")) or f"{action}:ad-hoc"
     return {
         "receipt_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/",
-        "sidecar_dispatch_receipt_ref": (
+        "domain_handler_dispatch_receipt_ref": (
             "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
-            f"sidecar-dispatch/{task_id}.json"
+            f"domain_handler-dispatch/{task_id}.json"
         ),
         "input_path": str(Path(input_path).expanduser().resolve()),
         "write_policy": "receipt_ref_only_no_domain_truth_mutation",

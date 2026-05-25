@@ -21,8 +21,8 @@ class ProductEntryExternalEvidenceRequestPackTest(unittest.TestCase):
             "request_refs_receipt_shapes_and_parity_only_no_runtime_implementation",
         )
         self.assertEqual(
-            evidence_pack["sidecar_projection_ref"],
-            "/sidecar_export/external_evidence_request_pack",
+            evidence_pack["domain_handler_projection_ref"],
+            "/domain_handler_export/external_evidence_request_pack",
         )
         self.assertEqual(
             evidence_pack["required_request_ids"],

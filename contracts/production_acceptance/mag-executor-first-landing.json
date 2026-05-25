@@ -160,7 +160,7 @@
       ],
       "refs": [
         "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
-        "/sidecar_export/external_evidence_request_pack"
+        "/domain_handler_export/external_evidence_request_pack"
       ],
       "deliverables": [
         "opl_generated_hosted_caller_pack_consumption_receipts",
@@ -258,7 +258,7 @@
     {
       "lane_id": "physical_morphology_hygiene",
       "owner": "med-autogrant",
-      "scope": "Clean up runtime/product-entry/sidecar/lifecycle/workbench/scheduler morphology only after active caller migration, direct/hosted parity, no-forbidden-write, and owner receipt evidence are available.",
+      "scope": "Clean up runtime/product-entry/domain-handler/lifecycle/workbench/scheduler morphology only after active caller migration, direct/hosted parity, no-forbidden-write, and owner receipt evidence are available.",
       "inputs": [
         "contracts/functional_privatization_audit.json",
         "contracts/generated_surface_handoff.json",

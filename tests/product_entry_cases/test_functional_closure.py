@@ -371,7 +371,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             p1["required_evidence_refs"],
             [
                 "mag_consumer_thinning_contract_ref",
-                "sidecar_refs_only_projection_ref",
+                "domain_handler_refs_only_projection_ref",
                 "opl_generic_primitive_replacement_contract_ref",
             ],
         )
@@ -561,7 +561,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 "package_authority",
                 "owner_receipt",
                 "typed_blocker",
-                "sidecar_projection_adapter",
+                "domain_handler_projection_adapter",
             },
         )
         self.assertFalse(coverage["fail_closed_rules"]["opl_harness_pass_is_grant_ready"])
@@ -613,7 +613,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         )
         self.assertIn("route_is_stage", route_stage_boundary["forbidden_claims"])
         self.assertEqual(
-            thinning["exposed_sidecar_return_refs"]["route_stage_handoff_boundary_ref"],
+            thinning["exposed_domain_handler_return_refs"]["route_stage_handoff_boundary_ref"],
             "/product_entry_manifest/mag_consumer_thinning_contract/"
             "route_stage_handoff_boundary",
         )
@@ -663,7 +663,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             {
                 "lifecycle_adapter",
                 "observability",
-                "sidecar_product_status_shell",
+                "domain_handler_product_status_shell",
                 "package_lifecycle_shell",
                 "human_workbench_scheduler_daemon",
             },
@@ -674,12 +674,12 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             refs_modules["package_lifecycle_shell"]["opl_expected_primitives"],
         )
         self.assertEqual(
-            refs_modules["sidecar_product_status_shell"]["active_caller_status"],
-            "active_refs_only_domain_sidecar_adapter",
+            refs_modules["domain_handler_product_status_shell"]["active_caller_status"],
+            "active_refs_only_domain_domain_handler_adapter",
         )
         self.assertIn(
-            "src/med_autogrant/product_entry_parts/sidecar.py",
-            refs_modules["sidecar_product_status_shell"]["code_paths"],
+            "src/med_autogrant/product_entry_parts/domain_handler.py",
+            refs_modules["domain_handler_product_status_shell"]["code_paths"],
         )
         mag_modules = {item["module_id"]: item for item in audit["mag_owned_grant_authority_surfaces"]}
         self.assertEqual(
@@ -760,7 +760,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             audit["mag_thin_adapter_code_surfaces"],
             [
                 "product_entry_manifest_builder",
-                "product_sidecar_guarded_domain_adapter",
+                "domain_handler_guarded_domain_adapter",
                 "domain_entry",
                 "receipt_schema_and_writer",
                 "grant_transition_oracle",
@@ -858,8 +858,8 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
             thinning["mag_owned_outputs"],
         )
         self.assertEqual(
-            output_guard["required_sidecar_return_refs"],
-            thinning["exposed_sidecar_return_refs"],
+            output_guard["required_domain_handler_return_refs"],
+            thinning["exposed_domain_handler_return_refs"],
         )
         self.assertEqual(
             output_guard["private_functional_state_output_classes_forbidden"],
@@ -911,7 +911,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertFalse(scaffold_guard["knowledge_only_repository"])
         self.assertTrue(scaffold_guard["retains_domain_program_surfaces"])
         self.assertEqual(scaffold_guard["required_repo_boundaries"], ["agent", "contracts", "runtime", "docs"])
-        self.assertIn("product_sidecar_adapter", scaffold_guard["retained_program_surface_kinds"])
+        self.assertIn("domain_handler_adapter", scaffold_guard["retained_program_surface_kinds"])
         self.assertFalse(scaffold_guard["authority_boundary"]["mag_owns_generic_runtime_framework"])
         self.assertFalse(scaffold_guard["authority_boundary"]["mag_is_knowledge_only_repository"])
         authority = thinning["authority_boundary"]
@@ -947,7 +947,7 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 self.assertEqual(item["mag_handoff_policy"], "contract_expectation_only")
                 self.assertFalse(item["implemented_in_mag"])
         self.assertEqual(
-            thinning["sidecar_contract_ref"],
+            thinning["domain_handler_contract_ref"],
             "/product_entry_manifest/mag_consumer_thinning_contract",
         )
         self.assertEqual(

@@ -53,16 +53,16 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             runtime_continuity={
                 "session_locator_field": "grant_run_id",
                 "recommended_resume_command": "opl://generated-surfaces/mag/product-entry-session#resume",
-                "recommended_progress_command": "medautogrant grant-progress --input workspace.json --format json",
+                "recommended_progress_command": "opl://generated-surfaces/mag/inspect-progress --input workspace.json --format json",
             },
             shell_commands={
-                "product_status": "medautogrant product-status --input workspace.json --format json",
-                "grant_progress": "medautogrant grant-progress --input workspace.json --format json",
-                "grant_cockpit": "medautogrant grant-cockpit --input workspace.json --format json",
-                "grant_direct_entry": "medautogrant grant-direct-entry --input workspace.json --task-intent <intent> --format json",
-                "grant_user_loop": "medautogrant grant-user-loop --input workspace.json --task-intent <intent> --format json",
+                "product_status": "opl://generated-surfaces/mag/product-status --input workspace.json --format json",
+                "grant_progress": "opl://generated-surfaces/mag/inspect-progress --input workspace.json --format json",
+                "grant_cockpit": "opl://generated-surfaces/mag/inspect-cockpit --input workspace.json --format json",
+                "grant_direct_entry": "opl://generated-surfaces/mag/build-direct-entry --input workspace.json --task-intent <intent> --format json",
+                "grant_user_loop": "opl://generated-surfaces/mag/open-grant-user-loop --input workspace.json --task-intent <intent> --format json",
             },
-            skill_catalog_command="medautogrant skill-catalog --input workspace.json --format json",
+            skill_catalog_command="opl://generated-surfaces/mag/skill-catalog --input workspace.json --format json",
         )
 
         self.assertEqual(registration["surface_kind"], "opl_stage_runtime_domain_registration")
@@ -114,7 +114,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             {
                 "session_locator_field": "grant_run_id",
                 "recommended_resume_command": "opl://generated-surfaces/mag/product-entry-session#resume",
-                "recommended_progress_command": "medautogrant grant-progress --input workspace.json --format json",
+                "recommended_progress_command": "opl://generated-surfaces/mag/inspect-progress --input workspace.json --format json",
             },
         )
         self.assertEqual(
@@ -170,7 +170,7 @@ class ProductEntryRuntimeRegistrationTest(unittest.TestCase):
             "one-person-lab",
         )
         self.assertIn(
-            "medautogrant grant-user-loop",
+            "opl://generated-surfaces/mag/open-grant-user-loop",
             family_adapter["owner_route_discovery"]["route_surface_refs"]["operator_loop"]["command"],
         )
         self.assertEqual(

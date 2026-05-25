@@ -36,7 +36,7 @@
     "opl_can_declare_export_verdict": false
   },
   "surface_boundary": {
-    "product_status_sidecar_domain_runtime_role": "handler_ref_only_authority_or_tombstone_only",
+    "product_status_domain_handler_domain_runtime_role": "handler_ref_only_authority_or_tombstone_only",
     "compatibility_alias_added": false,
     "grant_truth_body_written": false,
     "memory_body_written": false,
@@ -50,7 +50,7 @@
       "accepted_return_shape": "opl_hosted_domain_handler_call_receipt",
       "receipt_ref": "opl-ledger://mag/production-evidence/opl-generated-hosted-caller-pack-consumption/2026-05-20",
       "receipt_shape": "opl_hosted_domain_handler_call_receipt",
-      "reason": "OPL generated/hosted caller consumed MAG declarative pack, sidecar refs, generated surface handoff, owner receipt refs, and typed blocker refs through body-free receipt transport."
+      "reason": "OPL generated/hosted caller consumed MAG declarative pack, domain-handler refs, generated surface handoff, owner receipt refs, and typed blocker refs through body-free receipt transport."
     },
     {
       "request_id": "app_workbench_package_ref_consumption",
@@ -86,7 +86,7 @@
       "accepted_return_shape": "continuous_guard_snapshot_receipt",
       "receipt_ref": "prod-monitor://mag/production-evidence/continuous-no-forbidden-write/2026-05-20",
       "receipt_shape": "continuous_guard_snapshot_receipt",
-      "reason": "The external production monitor returned a continuous no-forbidden-write snapshot over MAG refs-only product, sidecar, receipt, package, and runtime projection surfaces."
+      "reason": "The external production monitor returned a continuous no-forbidden-write snapshot over MAG refs-only product, domain-handler, receipt, package, and runtime projection surfaces."
     },
     {
       "request_id": "direct_hosted_parity_no_regression",
@@ -96,7 +96,7 @@
       "receipt_ref": "opl-ledger://mag/production-evidence/direct-hosted-parity-no-regression/2026-05-20",
       "receipt_shape": "direct_hosted_parity_receipt",
       "no_regression_evidence_ref": "opl-ledger://mag/no-regression/direct-hosted-parity/2026-05-20",
-      "reason": "OPL parity runner verified direct MAG domain handler and hosted generated caller consumed the same descriptor, sidecar, transition oracle, owner receipt, and blocker refs without regression."
+      "reason": "OPL parity runner verified direct MAG domain handler and hosted generated caller consumed the same descriptor, domain-handler, transition oracle, owner receipt, and blocker refs without regression."
     },
     {
       "request_id": "temporal_provider_long_soak_receipt_reconciliation",

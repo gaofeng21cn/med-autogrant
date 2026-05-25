@@ -14,7 +14,7 @@
       "output_schema_ref": "schemas/v1/grant-user-loop.schema.json",
       "owner": "med-autogrant",
       "source_command": {
-        "command": "uv run python -m med_autogrant product user-loop --input <input_path> --task-intent <task_intent> --format json",
+        "command": "opl://generated-surfaces/mag/open-grant-user-loop --input <input_path> --task-intent <task_intent> --format json",
         "surface_kind": "grant_user_loop"
       },
       "summary": "进入当前 MAG grant user loop，并继续同一 funding call 下的 authoring loop。",
@@ -23,11 +23,11 @@
           "tool_name": "open_grant_user_loop"
         },
         "cli": {
-          "command": "uv run python -m med_autogrant product user-loop --input <input_path> --task-intent <task_intent> --format json",
+          "command": "opl://generated-surfaces/mag/open-grant-user-loop --input <input_path> --task-intent <task_intent> --format json",
           "surface_kind": "grant_user_loop"
         },
         "mcp": {
-          "command": "uv run python -m med_autogrant product user-loop --input <input_path> --task-intent <task_intent> --format json",
+          "command": "opl://generated-surfaces/mag/open-grant-user-loop --input <input_path> --task-intent <task_intent> --format json",
           "descriptor_only": true,
           "public_runtime": false,
           "surface_kind": "grant_user_loop",
@@ -38,11 +38,11 @@
         },
         "product_entry": {
           "action_key": "open_grant_user_loop",
-          "command": "uv run python -m med_autogrant product user-loop --input <input_path> --task-intent <task_intent> --format json",
+          "command": "opl://generated-surfaces/mag/open-grant-user-loop --input <input_path> --task-intent <task_intent> --format json",
           "surface_kind": "grant_user_loop"
         },
         "skill": {
-          "command": "uv run python -m med_autogrant product user-loop --input <input_path> --task-intent <task_intent> --format json",
+          "command": "opl://generated-surfaces/mag/open-grant-user-loop --input <input_path> --task-intent <task_intent> --format json",
           "command_contract_id": "open_grant_user_loop",
           "surface_kind": "grant_user_loop"
         }
@@ -67,7 +67,7 @@
       "output_schema_ref": "schemas/v1/grant-progress.schema.json",
       "owner": "med-autogrant",
       "source_command": {
-        "command": "uv run python -m med_autogrant workspace progress --input <input_path> --format json",
+        "command": "opl://generated-surfaces/mag/inspect-progress --input <input_path> --format json",
         "surface_kind": "grant_progress"
       },
       "summary": "读取当前 MAG workspace 的阶段摘要、checkpoint 与下一步。",
@@ -76,11 +76,11 @@
           "tool_name": "inspect_progress"
         },
         "cli": {
-          "command": "uv run python -m med_autogrant workspace progress --input <input_path> --format json",
+          "command": "opl://generated-surfaces/mag/inspect-progress --input <input_path> --format json",
           "surface_kind": "grant_progress"
         },
         "mcp": {
-          "command": "uv run python -m med_autogrant workspace progress --input <input_path> --format json",
+          "command": "opl://generated-surfaces/mag/inspect-progress --input <input_path> --format json",
           "descriptor_only": true,
           "public_runtime": false,
           "surface_kind": "grant_progress",
@@ -91,11 +91,11 @@
         },
         "product_entry": {
           "action_key": "inspect_progress",
-          "command": "uv run python -m med_autogrant workspace progress --input <input_path> --format json",
+          "command": "opl://generated-surfaces/mag/inspect-progress --input <input_path> --format json",
           "surface_kind": "grant_progress"
         },
         "skill": {
-          "command": "uv run python -m med_autogrant workspace progress --input <input_path> --format json",
+          "command": "opl://generated-surfaces/mag/inspect-progress --input <input_path> --format json",
           "command_contract_id": "inspect_progress",
           "surface_kind": "grant_progress"
         }
@@ -119,7 +119,7 @@
       "output_schema_ref": "schemas/v1/grant-cockpit.schema.json",
       "owner": "med-autogrant",
       "source_command": {
-        "command": "uv run python -m med_autogrant workspace cockpit --input <input_path> --format json",
+        "command": "opl://generated-surfaces/mag/inspect-cockpit --input <input_path> --format json",
         "surface_kind": "grant_cockpit"
       },
       "summary": "查看 MAG 主线 snapshot、对象面和当前 route action 汇总。",
@@ -128,11 +128,11 @@
           "tool_name": "inspect_cockpit"
         },
         "cli": {
-          "command": "uv run python -m med_autogrant workspace cockpit --input <input_path> --format json",
+          "command": "opl://generated-surfaces/mag/inspect-cockpit --input <input_path> --format json",
           "surface_kind": "grant_cockpit"
         },
         "mcp": {
-          "command": "uv run python -m med_autogrant workspace cockpit --input <input_path> --format json",
+          "command": "opl://generated-surfaces/mag/inspect-cockpit --input <input_path> --format json",
           "descriptor_only": true,
           "public_runtime": false,
           "surface_kind": "grant_cockpit",
@@ -143,11 +143,11 @@
         },
         "product_entry": {
           "action_key": "inspect_cockpit",
-          "command": "uv run python -m med_autogrant workspace cockpit --input <input_path> --format json",
+          "command": "opl://generated-surfaces/mag/inspect-cockpit --input <input_path> --format json",
           "surface_kind": "grant_cockpit"
         },
         "skill": {
-          "command": "uv run python -m med_autogrant workspace cockpit --input <input_path> --format json",
+          "command": "opl://generated-surfaces/mag/inspect-cockpit --input <input_path> --format json",
           "command_contract_id": "inspect_cockpit",
           "surface_kind": "grant_cockpit"
         }
@@ -171,7 +171,7 @@
       "output_schema_ref": "schemas/v1/grant-direct-entry.schema.json",
       "owner": "med-autogrant",
       "source_command": {
-        "command": "uv run python -m med_autogrant product direct-entry --input <input_path> --task-intent <task_intent> --format json",
+        "command": "opl://generated-surfaces/mag/build-direct-entry --input <input_path> --task-intent <task_intent> --format json",
         "surface_kind": "grant_direct_entry"
       },
       "summary": "把用户意图组合成当前 MAG grant direct-entry contract。",
@@ -180,11 +180,11 @@
           "tool_name": "build_direct_entry"
         },
         "cli": {
-          "command": "uv run python -m med_autogrant product direct-entry --input <input_path> --task-intent <task_intent> --format json",
+          "command": "opl://generated-surfaces/mag/build-direct-entry --input <input_path> --task-intent <task_intent> --format json",
           "surface_kind": "grant_direct_entry"
         },
         "mcp": {
-          "command": "uv run python -m med_autogrant product direct-entry --input <input_path> --task-intent <task_intent> --format json",
+          "command": "opl://generated-surfaces/mag/build-direct-entry --input <input_path> --task-intent <task_intent> --format json",
           "descriptor_only": true,
           "public_runtime": false,
           "surface_kind": "grant_direct_entry",
@@ -195,11 +195,11 @@
         },
         "product_entry": {
           "action_key": "build_direct_entry",
-          "command": "uv run python -m med_autogrant product direct-entry --input <input_path> --task-intent <task_intent> --format json",
+          "command": "opl://generated-surfaces/mag/build-direct-entry --input <input_path> --task-intent <task_intent> --format json",
           "surface_kind": "grant_direct_entry"
         },
         "skill": {
-          "command": "uv run python -m med_autogrant product direct-entry --input <input_path> --task-intent <task_intent> --format json",
+          "command": "opl://generated-surfaces/mag/build-direct-entry --input <input_path> --task-intent <task_intent> --format json",
           "command_contract_id": "build_direct_entry",
           "surface_kind": "grant_direct_entry"
         }
@@ -281,6 +281,7 @@
     "generic_attempt_ledger_owner",
     "generic_state_machine_runner_owner",
     "generic_cli_mcp_product_wrapper_owner",
+    "generic_domain_handler_owner",
     "generic_sidecar_owner",
     "generic_session_store_owner",
     "generic_status_workbench_owner",

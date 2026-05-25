@@ -59,7 +59,7 @@ def build_retire_or_tombstone_surfaces(
             evidence_refs=[
                 "/product_entry_manifest/session_continuity",
                 "/product_entry_manifest/automation",
-                "/sidecar_export/user_loop_attention_queue",
+                "/domain_handler_export/user_loop_attention_queue",
             ],
             exit_gate=build_legacy_exit_gate(
                 gate_id="mag.legacy.local_runtime_history_attempt_record.exit.v1",

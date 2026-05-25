@@ -26,10 +26,11 @@ from med_autogrant.cli_parts.handlers import (
     handle_build_artifact_bundle,
     handle_build_final_package,
     handle_build_hosted_contract_bundle,
-    handle_build_product_entry,
     handle_build_submission_ready_package,
     handle_critique_summary,
     handle_discover_funding_opportunities,
+    handle_domain_handler_dispatch,
+    handle_domain_handler_export,
     handle_execute_argument_building_pass,
     handle_execute_authoring_mainline_loop,
     handle_execute_critique_pass,
@@ -42,47 +43,26 @@ from med_autogrant.cli_parts.handlers import (
     handle_execute_outline_pass,
     handle_execute_question_refinement_pass,
     handle_execute_revision_pass,
-    handle_grant_cockpit,
-    handle_grant_direct_entry,
     handle_grant_evidence_grounding,
     handle_grant_intake_audit,
-    handle_grant_progress,
     handle_grant_quality_closure_dossier,
     handle_grant_quality_diff,
     handle_grant_quality_scorecard,
-    handle_grant_user_loop,
     handle_initialize_intake_workspace,
     handle_mainline_phase,
     handle_mainline_status,
     handle_next_step,
     handle_product_codex_stage_receipts,
-    handle_product_entry_manifest,
-    handle_product_continuous_receipt_reconciliation,
     handle_product_domain_memory_decision,
     handle_product_domain_memory_proposal,
     handle_product_domain_memory_receipt_evidence,
     handle_product_executor_first_closeout_bundle,
-    handle_product_focused_hosted_receipt_verification,
-    handle_product_lifecycle_receipt_bundle,
-    handle_product_lifecycle_receipt_evidence,
     handle_product_live_acceptance_receipt,
-    handle_product_memory_receipt_projection,
     handle_product_opl_owner_payload_response,
-    handle_product_operator_closeout_readiness,
     handle_product_owner_receipt_evidence,
-    handle_product_package_lifecycle_handoff,
     handle_product_physical_morphology_guard,
-    handle_product_receipt_readiness,
-    handle_product_receipt_reconciliation_inventory,
-    handle_product_receipt_reconciliation_proof,
-    handle_product_sidecar_dispatch,
-    handle_product_sidecar_export,
-    handle_product_status,
-    handle_product_preflight,
-    handle_product_start,
     handle_refresh_funding_opportunities_cache,
     handle_select_project_profile,
-    handle_skill_catalog,
     handle_stage_route_report,
     handle_summarize_workspace,
     handle_validate_workspace,
@@ -90,13 +70,13 @@ from med_autogrant.cli_parts.handlers import (
 from med_autogrant.cli_parts.parser_adders import (
     _add_artifact_bundle_command,
     _add_critique_loop_command,
-    _add_direct_entry_command,
+    _add_domain_handler_dispatch_command,
+    _add_domain_handler_export_command,
     _add_final_package_command,
     _add_grant_autonomy_controller_command,
     _add_hosted_contract_bundle_command,
     _add_initialize_intake_workspace_command,
     _add_mainline_loop_command,
-    _add_manifest_command,
     _add_output_workspace_command,
     _add_phase_command,
     _add_product_codex_stage_receipts_command,
@@ -104,23 +84,10 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_domain_memory_proposal_command,
     _add_product_domain_memory_receipt_evidence_command,
     _add_product_executor_first_closeout_bundle_command,
-    _add_product_continuous_receipt_reconciliation_command,
-    _add_product_focused_hosted_receipt_verification_command,
-    _add_product_lifecycle_receipt_bundle_command,
-    _add_product_lifecycle_receipt_evidence_command,
     _add_product_live_acceptance_receipt_command,
-    _add_product_memory_receipt_projection_command,
     _add_product_opl_owner_payload_response_command,
-    _add_product_operator_closeout_readiness_command,
     _add_product_owner_receipt_evidence_command,
-    _add_product_package_lifecycle_handoff_command,
     _add_product_physical_morphology_guard_command,
-    _add_product_receipt_readiness_command,
-    _add_product_receipt_reconciliation_inventory_command,
-    _add_product_receipt_reconciliation_proof_command,
-    _add_product_entry_command,
-    _add_product_sidecar_dispatch_command,
-    _add_product_sidecar_export_command,
     _add_quality_diff_command,
     _add_refresh_cache_command,
     _add_revision_executor_command,
@@ -221,18 +188,6 @@ def build_parser() -> argparse.ArgumentParser:
         handle_stage_route_report,
         "按固定 stage route 聚合输出当前 workspace 状态。",
     )
-    _add_workspace_command(
-        subparsers,
-        "grant-progress",
-        handle_grant_progress,
-        "输出 grant 当前阶段的人话 progress projection。",
-    )
-    _add_workspace_command(
-        subparsers,
-        "grant-cockpit",
-        handle_grant_cockpit,
-        "输出 grant 当前的只读 cockpit projection。",
-    )
     _add_simple_command(
         subparsers,
         "mainline-status",
@@ -245,47 +200,17 @@ def build_parser() -> argparse.ArgumentParser:
         handle_mainline_phase,
         "输出 maintainer reference 下某个记录卡片的入口与退出条件。",
     )
-    _add_direct_entry_command(
+    _add_domain_handler_export_command(
         subparsers,
-        "grant-direct-entry",
-        handle_grant_direct_entry,
-        "输出 direct grant product entry composition，复用 progress/cockpit 与 direct / OPL entry envelope。",
+        "domain-handler-export",
+        handle_domain_handler_export,
+        "导出 OPL standard domain handler refs surface。",
     )
-    _add_direct_entry_command(
+    _add_domain_handler_dispatch_command(
         subparsers,
-        "grant-user-loop",
-        handle_grant_user_loop,
-        "输出当前 direct grant user loop，组合 mainline snapshot、direct entry 与 next action。",
-    )
-    _add_manifest_command(
-        subparsers,
-        "skill-catalog",
-        handle_skill_catalog,
-        "输出单个 Med Auto Grant app skill 及其 machine-readable command contract。",
-    )
-    _add_manifest_command(
-        subparsers,
-        "product-entry-manifest",
-        handle_product_entry_manifest,
-        "输出 MAG domain handler manifest，供 OPL generated/hosted caller 消费。",
-    )
-    _add_manifest_command(
-        subparsers,
-        "product-status",
-        handle_product_status,
-        "输出 OPL-hosted status caller 可消费的 MAG domain status refs。",
-    )
-    _add_workspace_command(
-        subparsers,
-        "product-preflight",
-        handle_product_preflight,
-        "输出 direct grant product entry surface 的前置检查。",
-    )
-    _add_manifest_command(
-        subparsers,
-        "product-start",
-        handle_product_start,
-        "输出当前 direct grant product-entry start surface。",
+        "domain-handler-dispatch",
+        handle_domain_handler_dispatch,
+        "执行 OPL standard domain handler guarded action。",
     )
     _add_artifact_bundle_command(
         subparsers,
@@ -383,24 +308,6 @@ def build_parser() -> argparse.ArgumentParser:
         handle_build_submission_ready_package,
         "把 frozen workspace 一次性写成 submission-ready 本地交付目录。",
     )
-    _add_product_entry_command(
-        subparsers,
-        "build-product-entry",
-        handle_build_product_entry,
-        "构建可直接进入或供 OPL handoff 复用的轻量 product entry envelope。",
-    )
-    _add_product_sidecar_export_command(
-        subparsers,
-        "product-sidecar-export",
-        handle_product_sidecar_export,
-        "导出 OPL-hosted sidecar caller 的 MAG guarded domain handler target。",
-    )
-    _add_product_sidecar_dispatch_command(
-        subparsers,
-        "product-sidecar-dispatch",
-        handle_product_sidecar_dispatch,
-        "执行 OPL-hosted caller 发起的 MAG guarded domain handler action。",
-    )
     _add_product_domain_memory_proposal_command(
         subparsers,
         "product-domain-memory-proposal",
@@ -425,60 +332,6 @@ def build_parser() -> argparse.ArgumentParser:
         handle_product_owner_receipt_evidence,
         "把 OPL-hosted stage attempt closeout 写成 MAG owner receipt runtime evidence。",
     )
-    _add_product_lifecycle_receipt_evidence_command(
-        subparsers,
-        "product-lifecycle-receipt-evidence",
-        handle_product_lifecycle_receipt_evidence,
-        "把 cleanup/restore/retention guarded apply closeout 写成 MAG lifecycle receipt runtime evidence。",
-    )
-    _add_product_receipt_reconciliation_proof_command(
-        subparsers,
-        "controlled-soak-receipt-reconciliation-proof",
-        handle_product_receipt_reconciliation_proof,
-        "把 MAG owner receipt evidence 与外部 OPL ledger ref 对账成 controlled soak probe proof。",
-    )
-    _add_product_receipt_reconciliation_inventory_command(
-        subparsers,
-        "controlled-soak-receipt-reconciliation-inventory",
-        handle_product_receipt_reconciliation_inventory,
-        "把多条 MAG owner receipt evidence 对账成 controlled soak read-only inventory。",
-    )
-    _add_product_focused_hosted_receipt_verification_command(
-        subparsers,
-        "focused-hosted-receipt-verification",
-        handle_product_focused_hosted_receipt_verification,
-        "把 OPL-hosted attempt evidence 与 MAG owner receipt evidence 对账成 focused verification。",
-    )
-    _add_product_lifecycle_receipt_bundle_command(
-        subparsers,
-        "lifecycle-receipt-bundle",
-        handle_product_lifecycle_receipt_bundle,
-        "把 cleanup/restore/retention MAG lifecycle receipt refs 聚合成 OPL shell 可消费 bundle。",
-    )
-    _add_product_memory_receipt_projection_command(
-        subparsers,
-        "memory-receipt-projection",
-        handle_product_memory_receipt_projection,
-        "把 MAG domain memory accept/reject receipt 聚合成 body-free refs projection。",
-    )
-    _add_product_package_lifecycle_handoff_command(
-        subparsers,
-        "package-lifecycle-handoff",
-        handle_product_package_lifecycle_handoff,
-        "把 MAG package refs、gap、export verdict refs 和 lifecycle receipt refs 投影给 OPL package shell。",
-    )
-    _add_product_receipt_readiness_command(
-        subparsers,
-        "receipt-readiness",
-        handle_product_receipt_readiness,
-        "把 MAG owner、memory、package lifecycle 与 cleanup/restore/retention receipt refs 聚合成 body-free readiness projection。",
-    )
-    _add_product_continuous_receipt_reconciliation_command(
-        subparsers,
-        "continuous-receipt-reconciliation",
-        handle_product_continuous_receipt_reconciliation,
-        "把 focused hosted verification 与 receipt inventory 聚合成持续 reconciliation read snapshot。",
-    )
     _add_product_live_acceptance_receipt_command(
         subparsers,
         "production-live-acceptance-receipt",
@@ -490,12 +343,6 @@ def build_parser() -> argparse.ArgumentParser:
         "codex-stage-receipts",
         handle_product_codex_stage_receipts,
         "把 Codex executor attempt 与独立 review attempt refs 聚合成 stage receipt bundle。",
-    )
-    _add_product_operator_closeout_readiness_command(
-        subparsers,
-        "operator-closeout-readiness",
-        handle_product_operator_closeout_readiness,
-        "把 production acceptance、external evidence ledger 与 receipt readiness 聚合成 operator closeout readiness projection。",
     )
     _add_product_opl_owner_payload_response_command(
         subparsers,
@@ -530,7 +377,7 @@ def _print_public_help() -> None:
             "",
             "Examples:",
             "  medautogrant workspace validate --input <workspace-path> --format json",
-            "  medautogrant product build-entry --input <workspace-path> --entry-mode direct --task-intent <task-intent> --format json",
+            "  medautogrant pass revision --input <workspace-path> --output <output-path> --format json",
             "",
             "Use `medautogrant <group>` to inspect the available commands in that group.",
         ]
@@ -549,9 +396,6 @@ def _print_public_group_help(group: str) -> None:
     ]
     for subcommand in PUBLIC_GROUP_COMMANDS[group]:
         lines.append(f"  {subcommand}")
-    if group == "product":
-        lines.append("  sidecar export")
-        lines.append("  sidecar dispatch")
     print("\n".join(lines))
 
 

@@ -115,9 +115,9 @@ class ProductEntryPreflightMixin:
         ]
         ready_to_try_now = not blocking_check_ids
         summary = (
-            "当前 direct grant product entry surface 的前置检查已通过，可以先复核 workspace 与主线，再进入 product status。"
+            "当前 direct grant product entry surface 的前置检查已通过，可以先复核 workspace 与主线，再进入 OPL/App generated status target 或 domain-handler export。"
             if ready_to_try_now
-            else "当前 direct grant product entry surface 仍有 blocking preflight check；请先修复 workspace 或默认 runtime owner line 再进入 product status。"
+            else "当前 direct grant product entry surface 仍有 blocking preflight check；请先修复 workspace 或默认 runtime owner line，再进入 OPL/App generated status target 或 domain-handler export。"
         )
         product_entry_preflight = _build_shared_product_entry_preflight(
             summary=summary,

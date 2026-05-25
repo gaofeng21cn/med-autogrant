@@ -41,7 +41,8 @@ def test_public_cli_help_renders_group_index() -> None:
     assert stderr == ""
     assert "Public command groups:" in stdout
     assert "workspace" in stdout
-    assert "product" in stdout
+    assert "authority" in stdout
+    assert "product" not in stdout
     assert "runtime" not in stdout
 
 
@@ -64,8 +65,8 @@ def test_workspace_validate_accepts_canonical_critique_workspace() -> None:
 
 
 @pytest.mark.smoke
-def test_product_status_dispatches_current_product_entry_surface_contract() -> None:
-    payload = _run_json_cli(
+def test_product_group_is_not_a_public_default_shell() -> None:
+    exit_code, stdout, stderr = _run_cli(
         "product",
         "status",
         "--input",
@@ -74,48 +75,9 @@ def test_product_status_dispatches_current_product_entry_surface_contract() -> N
         "json",
     )
 
-    assert payload["command"] == "product-status"
-    status = payload["product_status"]
-    assert status["surface_kind"] == "product_status"
-    assert status["operator_loop_surface"]["shell_key"] == "grant_user_loop"
-
-
-@pytest.mark.smoke
-def test_product_direct_entry_projects_workspace_cockpit_and_entry_envelopes() -> None:
-    payload = _run_json_cli(
-        "product",
-        "direct-entry",
-        "--input",
-        str(CRITIQUE_EXAMPLE_PATH),
-        "--task-intent",
-        "smoke-entry-health",
-        "--format",
-        "json",
-    )
-
-    assert payload["command"] == "grant-direct-entry"
-    direct_entry = payload["grant_direct_entry"]
-    assert direct_entry["entry_kind"] == "grant_direct_entry"
-    assert direct_entry["task_intent"] == "smoke-entry-health"
-    assert direct_entry["progress_projection"]["projection_kind"] == "grant_progress"
-    assert direct_entry["direct_entry"]["entry_mode"] == "direct"
-
-
-@pytest.mark.smoke
-def test_product_skill_catalog_exposes_single_mag_skill() -> None:
-    payload = _run_json_cli(
-        "product",
-        "skill-catalog",
-        "--input",
-        str(CRITIQUE_EXAMPLE_PATH),
-        "--format",
-        "json",
-    )
-
-    assert payload["command"] == "skill-catalog"
-    skill = payload["skill_catalog"]["skills"][0]
-    assert skill["skill_id"] == "med-autogrant"
-    assert skill["domain_projection"]["recommended_shell"] == "product_status"
+    assert exit_code == 2
+    assert stdout == ""
+    assert "invalid choice: 'product'" in stderr
 
 
 @pytest.mark.smoke

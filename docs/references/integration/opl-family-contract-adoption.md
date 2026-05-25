@@ -60,7 +60,7 @@ MAG 现在把真实 Declarative Grant Pack 放在 `agent/` 下，并通过 `prod
 - `agent/skills/` 持有 MAG grant authoring skill declaration。
 - `agent/quality_gates/` 持有 fundability、quality、export/package、memory/receipt 和 authority boundary。
 - `agent/knowledge/` 持有 grant strategy memory、package authority 和 owner receipt 知识边界。
-- `runtime` 边界只声明 `sidecar`、`projection_builder`、`lifecycle_adapter`。
+- `runtime` 边界只声明 `domain_handler`、`projection_builder`、`lifecycle_adapter`。
 - `artifact_locator_contract` 只给 OPL 读取 locator/ref；真实申请书、receipt 实例、中间产物和 submission-ready export 都属于 workspace 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/artifacts/<grant_run_id>/`。
 - `controlled_stage_attempt_projection` 只暴露 attempt descriptor、source refs、runtime status projection、receipt refs 和 OPL-hosted controlled stage attempt proof refs。
 - `controlled_domain_memory_apply_proof.repo_source_layout_audit` 暴露 `agent`、`contracts`、`runtime`、`docs` source refs，并把 legacy active-path residue 标记为 tombstone-only 或 active source 已物理移除，用于证明当前 physical skeleton repo-source layout 已可审计。
@@ -70,7 +70,7 @@ MAG 现在把真实 Declarative Grant Pack 放在 `agent/` 下，并通过 `prod
 
 ## OPL Substrate Adapter Export
 
-MAG 现在在 `product-entry-manifest` 与 `product sidecar export` 中导出 `opl_substrate_adapter_export`。这层是 MAG-owned 薄导出面，专门给 OPL 建 workspace/source/artifact/memory/lifecycle/projection 索引：
+MAG 现在在 `product-entry-manifest` 与 `domain-handler export` 中导出 `opl_substrate_adapter_export`。这层是 MAG-owned 薄导出面，专门给 OPL 建 workspace/source/artifact/memory/lifecycle/projection 索引：
 
 - 顶层 `source_provenance` 同步暴露 OPL `substrate projections` 可直接解析的 body-free source refs：source policy/support doc ref、historical fixture ref、explicit archive/import command ref 与 parity oracle ref。
 - workspace 只给 opaque ref、workspace locator、session/ref 与 restore/progress ref。
@@ -79,7 +79,7 @@ MAG 现在在 `product-entry-manifest` 与 `product sidecar export` 中导出 `o
 - memory 只给 domain memory descriptor/locator、receipt locator 与 writeback receipt refs，不给 memory body，也不让 OPL accept/reject memory writeback。
 - lifecycle/owner receipt 只给 receipt refs、owner receipt contract ref 与 guarded lifecycle proof ref，不转移 owner receipt authority。
 
-这层不声明 OPL 替代 MAG 的 grant truth、fundability verdict、authoring quality verdict、submission-ready export verdict、package body、memory body 或 owner receipt authority。它的作用是把现有 sidecar/product-entry/export/contract surface 收成一个 OPL 可直接消费的 opaque/index-only substrate adapter。
+这层不声明 OPL 替代 MAG 的 grant truth、fundability verdict、authoring quality verdict、submission-ready export verdict、package body、memory body 或 owner receipt authority。它的作用是把现有 domain-handler/product-entry/export/contract surface 收成一个 OPL 可直接消费的 opaque/index-only substrate adapter。
 
 ## Domain Memory Descriptor / Locator
 

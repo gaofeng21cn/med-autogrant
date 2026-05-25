@@ -22,7 +22,7 @@ Date: `2026-05-19`
 
 `Med Auto Grant app skill -> CLI / MedAutoGrantDomainEntry -> product status / user-loop / direct-entry -> workspace progress / cockpit -> pass / package commands`
 
-OPL-hosted path 可以读取 MAG descriptor、stage/control plane、sidecar/projection 和 owner receipt refs，但必须回到同一套 MAG-owned grant truth、fundability / quality / export verdict、package authority、memory accept/reject、owner receipt 和 typed blocker。
+OPL-hosted path 可以读取 MAG descriptor、stage/control plane、domain-handler/projection 和 owner receipt refs，但必须回到同一套 MAG-owned grant truth、fundability / quality / export verdict、package authority、memory accept/reject、owner receipt 和 typed blocker。
 
 ## 已退役入口
 

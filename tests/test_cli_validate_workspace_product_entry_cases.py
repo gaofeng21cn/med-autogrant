@@ -4,19 +4,13 @@ from cli_validate_cases import *  # noqa: F401,F403
 
 
 class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
-    def test_product_entry_manifest_exposes_family_orchestration_v2(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "manifest",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
+    def test_product_entry_manifest_keeps_domain_handler_contract_for_generated_caller(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_product_entry_manifest(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "product-entry-manifest")
         manifest = payload["product_entry_manifest"]
@@ -46,20 +40,15 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
             "grant_autonomy_observability",
         )
         self.assertIn("sli_summary", manifest["autonomy_observability"])
+        self.assertTrue(manifest["recommended_command"].startswith("opl://generated-surfaces/mag/"))
 
     def test_skill_catalog_returns_machine_readable_app_skill_surface(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-            "skill-catalog",
-            "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_skill_catalog(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "skill-catalog")
         skill_catalog = payload["skill_catalog"]
@@ -68,14 +57,14 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         skill = skill_catalog["skills"][0]
         self.assertEqual(skill["skill_id"], "med-autogrant")
         self.assertEqual(skill["target_surface_kind"], "product_status")
-        self.assertIn("product status", skill["command"])
+        self.assertTrue(skill["command"].startswith("opl://generated-surfaces/mag/product-status"))
         domain_projection = skill["domain_projection"]
         self.assertEqual(domain_projection["plugin_name"], "med-autogrant")
         self.assertEqual(domain_projection["skill_entry"], "med-autogrant")
         self.assertEqual(domain_projection["skill_semantics"], "domain_app")
         self.assertEqual(domain_projection["entry_shell_key"], "product_status")
         self.assertEqual(domain_projection["recommended_shell"], "product_status")
-        self.assertIn("product status", domain_projection["entry_command"])
+        self.assertTrue(domain_projection["entry_command"].startswith("opl://generated-surfaces/mag/product-status"))
         self.assertEqual(
             domain_projection["supporting_shell_keys"],
             [
@@ -88,27 +77,18 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
                 "domain_memory_receipt_evidence",
             ],
         )
-        self.assertIn("product status", domain_projection["shell_commands"]["product_status"])
-        self.assertIn("product user-loop", domain_projection["shell_commands"]["grant_user_loop"])
-        self.assertIn(
-            "product domain-memory-proposal",
-            domain_projection["shell_commands"]["domain_memory_writeback_proposal"],
-        )
-        self.assertIn(
-            "product domain-memory-receipt-evidence",
-            domain_projection["shell_commands"]["domain_memory_receipt_evidence"],
-        )
-        self.assertIn(
-            "product domain-memory-decision",
-            domain_projection["shell_commands"]["domain_memory_writeback_decision"],
-        )
+        self.assertTrue(domain_projection["shell_commands"]["product_status"].startswith("opl://generated-surfaces/mag/product-status"))
+        self.assertTrue(domain_projection["shell_commands"]["grant_user_loop"].startswith("opl://generated-surfaces/mag/open-grant-user-loop"))
+        self.assertIn("authority memory-proposal", domain_projection["shell_commands"]["domain_memory_writeback_proposal"])
+        self.assertIn("authority memory-receipt-evidence", domain_projection["shell_commands"]["domain_memory_receipt_evidence"])
+        self.assertIn("authority memory-decision", domain_projection["shell_commands"]["domain_memory_writeback_decision"])
         self.assertEqual(
             domain_projection["action_catalog_ref"],
             "/product_entry_manifest/family_action_catalog",
         )
         mcp_descriptor = domain_projection["mcp_descriptor"]
         self.assertEqual(mcp_descriptor["name"], "open_grant_user_loop")
-        self.assertIn("product user-loop", mcp_descriptor["command"])
+        self.assertTrue(mcp_descriptor["command"].startswith("opl://generated-surfaces/mag/open-grant-user-loop"))
         self.assertEqual(mcp_descriptor["surface_kind"], "grant_user_loop")
         self.assertTrue(mcp_descriptor["descriptor_only"])
         self.assertFalse(mcp_descriptor["public_runtime"])
@@ -129,7 +109,7 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
             runtime_continuity["recommended_resume_command"],
             "opl://generated-surfaces/mag/product-entry-session#resume",
         )
-        self.assertIn("workspace progress", runtime_continuity["recommended_progress_command"])
+        self.assertTrue(runtime_continuity["recommended_progress_command"].startswith("opl://generated-surfaces/mag/inspect-progress"))
         self.assertIn("workspace summarize", runtime_continuity["recommended_artifact_command"])
         stage_runtime_registration = domain_projection["opl_stage_runtime_registration"]
         self.assertEqual(
@@ -145,7 +125,7 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
             stage_runtime_registration["executor_adapter_contract"]["receipt_contract"],
             "AgentExecutionReceipt",
         )
-        self.assertIn("skill-catalog", stage_runtime_registration["registration_surface"]["command"])
+        self.assertTrue(stage_runtime_registration["registration_surface"]["command"].startswith("opl://generated-surfaces/mag/skill-catalog"))
         self.assertIn(
             "/runtime_control/semantic_closure",
             stage_runtime_registration["consumable_projection_refs"],
@@ -223,104 +203,31 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         self.assertIn("supported_commands", skill_catalog)
         self.assertIn("command_contracts", skill_catalog)
 
-    def test_product_entry_manifest_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "manifest",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "text",
+    def test_product_status_projects_domain_handler_surface_for_generated_caller(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_product_status(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前 grant run:", stdout)
-        self.assertIn("当前 workspace:", stdout)
-        self.assertIn("当前草稿编号:", stdout)
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("manifest 类型:", stdout)
-        self.assertIn("维护者参考 phase:", stdout)
-        self.assertNotIn("manifest_kind:", stdout)
-        self.assertNotIn("active_phase:", stdout)
-        self.assertNotIn("current_focus:", stdout)
-
-    def test_product_preflight_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "preflight",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "text",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前 grant run:", stdout)
-        self.assertIn("当前 workspace:", stdout)
-        self.assertIn("当前草稿编号:", stdout)
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("当前可直接尝试:", stdout)
-        self.assertIn("前置检查命令:", stdout)
-        self.assertIn("推荐启动命令:", stdout)
-        self.assertNotIn("ready_to_try_now:", stdout)
-        self.assertNotIn("recommended_check_command:", stdout)
-        self.assertNotIn("recommended_start_command:", stdout)
-
-    def test_product_status_projects_product_entry_surface_and_current_loop(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "status",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "product-status")
         self.assertEqual(payload["product_status"]["surface_kind"], "product_status")
         self.assertEqual(payload["product_status"]["product_entry_surface"]["shell_key"], "product_status")
         self.assertEqual(payload["product_status"]["operator_loop_surface"]["shell_key"], "grant_user_loop")
-
-    def test_product_status_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "status",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "text",
+        self.assertTrue(
+            payload["product_status"]["product_entry_surface"]["command"].startswith(
+                "opl://generated-surfaces/mag/product-status"
+            )
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("前台入口命令:", stdout)
-        self.assertIn("推荐继续命令:", stdout)
-        self.assertIn("当前 loop 命令:", stdout)
-        self.assertIn("- 可用入口 status:", stdout)
-        self.assertNotIn("product_entry_command:", stdout)
-        self.assertNotIn("recommended_command:", stdout)
-        self.assertNotIn("operator_loop_command:", stdout)
 
     def test_product_start_projects_unified_start_surface(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "start",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().build_product_entry_start(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "product-start")
         self.assertEqual(payload["product_entry_start"]["surface_kind"], "product_entry_start")
@@ -330,56 +237,16 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
             ["open_product_entry", "continue_grant_loop", "build_direct_entry"],
         )
 
-    def test_build_product_entry_plain_text_prefers_human_facing_labels(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            output_path = Path(tmp_dir) / "product-entry.json"
-            exit_code, stdout, stderr = self.run_cli(
-                "product",
-                "build-entry",
-                "--input",
-                str(CRITIQUE_EXAMPLE_PATH),
-                "--entry-mode",
-                "direct",
-                "--task-intent",
-                "tighten-grant-mainline",
-                "--output",
-                str(output_path),
-                "--format",
-                "text",
-            )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前 grant run:", stdout)
-        self.assertIn("当前 workspace:", stdout)
-        self.assertIn("当前草稿编号:", stdout)
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("当前入口模式:", stdout)
-        self.assertIn("当前任务意图:", stdout)
-        self.assertIn("目标域:", stdout)
-        self.assertIn("当前 checkpoint:", stdout)
-        self.assertIn("输出位置:", stdout)
-        self.assertNotIn("entry_mode:", stdout)
-        self.assertNotIn("task_intent:", stdout)
-        self.assertNotIn("target_domain_id:", stdout)
-        self.assertNotIn("checkpoint_status:", stdout)
-        self.assertNotIn("output_path:", stdout)
-
-    def test_product_start_plain_text_prefers_human_facing_labels(self) -> None:
+    def test_product_group_is_retired_from_public_cli_validation_lane(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "product",
-                "start",
-                "--input",
+            "status",
+            "--input",
             str(CRITIQUE_EXAMPLE_PATH),
             "--format",
-            "text",
+            "json",
         )
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("建议入口:", stdout)
-        self.assertIn("- 可用入口", stdout)
-        self.assertNotIn("lifecycle_stage:", stdout)
-        self.assertNotIn("recommended_mode_id:", stdout)
-        self.assertNotIn("- open_product_entry:", stdout)
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(stdout, "")
+        self.assertIn("invalid choice: 'product'", stderr)

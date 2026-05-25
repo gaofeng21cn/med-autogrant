@@ -135,7 +135,7 @@ def build_opl_substrate_adapter_export(
         "consumer_owner": "one-person-lab",
         "export_policy": "opaque_index_only_refs_no_domain_truth_payloads",
         "refresh_command": public_cli_command(
-            "product-sidecar-export",
+            "domain-handler-export",
             "--input",
             str(resolved_input_path),
             "--format",
@@ -289,7 +289,7 @@ def build_opl_substrate_adapter_export(
         ],
         "freshness": {
             "status": "manifest_projection",
-            "refresh_policy": "rebuild_product_entry_manifest_or_sidecar_export_before_opl_indexing",
+            "refresh_policy": "rebuild_product_entry_manifest_or_domain_handler_export_before_opl_indexing",
             "stale_if_source_refs_missing": True,
         },
     }

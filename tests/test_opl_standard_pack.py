@@ -87,7 +87,7 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
 
 
 def test_opl_default_callers_see_mag_deletion_evidence_without_delete_authority() -> None:
-    opl_bin = Path("/Users/gaofeng/workspace/one-person-lab/bin/opl")
+    opl_bin = Path(os.environ.get("OPL_BIN", "/Users/gaofeng/workspace/one-person-lab/bin/opl"))
     if not opl_bin.exists():
         pytest.skip(f"OPL bin not found: {opl_bin}")
 
@@ -120,7 +120,8 @@ def test_opl_default_callers_see_mag_deletion_evidence_without_delete_authority(
     assert report["deletion_gate"]["physical_delete_authorized"] is False
     by_surface = {gate["surface_id"]: gate for gate in report["surface_gates"]}
     assert by_surface["mcp"]["active_caller_module_id"] == "human_workbench_scheduler_daemon"
-    assert by_surface["product_status"]["active_caller_module_id"] == "sidecar_product_status_shell"
+    assert by_surface["product_status"]["active_caller_module_id"] == "domain_handler_product_status_shell"
+    assert by_surface["domain_handler"]["active_caller_module_id"] == "runtime_registration"
     for gate in report["surface_gates"]:
         worklist = gate["deletion_evidence_worklist"]
         assert worklist["domain_owner_receipt_or_typed_blocker"]["status"] == "observed"
@@ -147,7 +148,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "grouped_cli_wrapper",
         "status",
         "user_loop",
-        "sidecar",
+        "domain_handler",
         "runtime_registration",
         "control_plane",
         "lifecycle",
@@ -176,7 +177,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert classifications["grouped_cli_wrapper"]["classification"] == "refs_only_adapter"
     assert classifications["status"]["classification"] == "refs_only_adapter"
     assert classifications["user_loop"]["classification"] == "refs_only_adapter"
-    assert classifications["sidecar"]["classification"] == "refs_only_adapter"
+    assert classifications["domain_handler"]["classification"] == "refs_only_adapter"
     assert classifications["control_plane"]["classification"] == "refs_only_adapter"
     assert classifications["lifecycle"]["classification"] == "refs_only_adapter"
     assert classifications["memory"]["classification"] == "minimal_authority_function"
@@ -203,7 +204,8 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert "generic_status_workbench_owner" in classifications["status"]["forbidden_roles"]
     assert "generic_cli_mcp_product_wrapper_owner" in classifications["grouped_cli_wrapper"]["forbidden_roles"]
     assert "generic_scheduler_owner" in classifications["user_loop"]["forbidden_roles"]
-    assert "generic_sidecar_owner" in classifications["sidecar"]["forbidden_roles"]
+    assert "generic_domain_handler_owner" in classifications["domain_handler"]["forbidden_roles"]
+    assert "generic_sidecar_owner" in classifications["domain_handler"]["forbidden_roles"]
     assert "provider_runtime_owner" in classifications["runtime_registration"]["forbidden_roles"]
     assert "generic_lifecycle_owner" in classifications["lifecycle"]["forbidden_roles"]
     assert "generic_memory_transport_owner" in classifications["memory"]["forbidden_roles"]

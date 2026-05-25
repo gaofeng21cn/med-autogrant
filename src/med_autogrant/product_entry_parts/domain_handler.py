@@ -8,19 +8,19 @@ from med_autogrant.product_entry_parts.primitives import (
     _require_mapping,
     _require_nonempty_string_from_mapping,
 )
-from med_autogrant.product_entry_parts.sidecar_contract import (
-    SIDECAR_ADAPTER_ID,
-    SIDECAR_EXPORT_KIND,
-    SIDECAR_VERSION,
+from med_autogrant.product_entry_parts.domain_handler_contract import (
+    DOMAIN_HANDLER_ADAPTER_ID,
+    DOMAIN_HANDLER_EXPORT_KIND,
+    DOMAIN_HANDLER_VERSION,
 )
-from med_autogrant.product_entry_parts.sidecar_dispatch import dispatch_sidecar_task
-from med_autogrant.product_entry_parts.sidecar_projection import (
+from med_autogrant.product_entry_parts.domain_handler_dispatch import dispatch_domain_handler_task
+from med_autogrant.product_entry_parts.domain_handler_projection import (
     first_skill,
 )
-from med_autogrant.product_entry_parts.sidecar_shell_projection import build_sidecar_shell_payload
+from med_autogrant.product_entry_parts.domain_handler_shell_projection import build_domain_handler_shell_payload
 
 
-def build_sidecar_export(
+def build_domain_handler_export(
     product_entry: Any,
     *,
     input_path: str | Path,
@@ -30,89 +30,89 @@ def build_sidecar_export(
     manifest = _require_mapping(
         manifest_payload,
         "product_entry_manifest",
-        context="sidecar_export",
+        context="domain_handler_export",
     )
-    skill_catalog = _require_mapping(manifest, "skill_catalog", context="sidecar_export.product_entry_manifest")
+    skill_catalog = _require_mapping(manifest, "skill_catalog", context="domain_handler_export.product_entry_manifest")
     skill = first_skill(skill_catalog)
-    domain_projection = _require_mapping(skill, "domain_projection", context="sidecar_export.skill_catalog.skill")
-    runtime_control = _require_mapping(manifest, "runtime_control", context="sidecar_export.product_entry_manifest")
+    domain_projection = _require_mapping(skill, "domain_projection", context="domain_handler_export.skill_catalog.skill")
+    runtime_control = _require_mapping(manifest, "runtime_control", context="domain_handler_export.product_entry_manifest")
     runtime_continuity = _require_mapping(
         domain_projection,
         "runtime_continuity",
-        context="sidecar_export.skill_catalog.domain_projection",
+        context="domain_handler_export.skill_catalog.domain_projection",
     )
     runtime_registration = _require_mapping(
         domain_projection,
         "opl_stage_runtime_registration",
-        context="sidecar_export.skill_catalog.domain_projection",
+        context="domain_handler_export.skill_catalog.domain_projection",
     )
     standard_domain_agent_skeleton = _require_mapping(
         domain_projection,
         "standard_domain_agent_skeleton",
-        context="sidecar_export.skill_catalog.domain_projection",
+        context="domain_handler_export.skill_catalog.domain_projection",
     )
     controlled_stage_attempt = _require_mapping(
         manifest,
         "controlled_stage_attempt_projection",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
     controlled_domain_memory_apply_proof = _require_mapping(
         manifest,
         "controlled_domain_memory_apply_proof",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
     owner_receipt_contract = _require_mapping(
         manifest,
         "owner_receipt_contract",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
     lifecycle_guarded_apply_proof = _require_mapping(
         manifest,
         "lifecycle_guarded_apply_proof",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
     mag_consumer_thinning_contract = _require_mapping(
         manifest,
         "mag_consumer_thinning_contract",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
     physical_skeleton_follow_through = _require_mapping(
         manifest,
         "physical_skeleton_follow_through",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
     ideal_state_closure_status = _require_mapping(
         manifest,
         "ideal_state_closure_status",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
     opl_substrate_adapter_export = _require_mapping(
         manifest,
         "opl_substrate_adapter_export",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
     source_provenance = _require_mapping(
         manifest,
         "source_provenance",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
-    automation = _require_mapping(manifest, "automation", context="sidecar_export.product_entry_manifest")
+    automation = _require_mapping(manifest, "automation", context="domain_handler_export.product_entry_manifest")
     autonomy_observability = _require_mapping(
         manifest,
         "autonomy_observability",
-        context="sidecar_export.product_entry_manifest",
+        context="domain_handler_export.product_entry_manifest",
     )
     user_loop_command = _require_nonempty_string_from_mapping(
-        _require_mapping(manifest, "operator_loop_surface", context="sidecar_export.product_entry_manifest"),
+        _require_mapping(manifest, "operator_loop_surface", context="domain_handler_export.product_entry_manifest"),
         "command",
-        context="sidecar_export.operator_loop_surface",
+        context="domain_handler_export.operator_loop_surface",
     )
     export_payload = {
-        "surface_kind": SIDECAR_EXPORT_KIND,
-        "schema_version": SIDECAR_VERSION,
-        "adapter_id": SIDECAR_ADAPTER_ID,
+        "surface_kind": DOMAIN_HANDLER_EXPORT_KIND,
+        "schema_version": DOMAIN_HANDLER_VERSION,
+        "adapter_id": DOMAIN_HANDLER_ADAPTER_ID,
         "target_domain_id": TARGET_DOMAIN_ID,
-        **build_sidecar_shell_payload(
+        **build_domain_handler_shell_payload(
             manifest=manifest,
             runtime_registration=runtime_registration,
             automation=automation,
@@ -120,7 +120,7 @@ def build_sidecar_export(
             user_loop_command=user_loop_command,
         ),
         "workspace_locator": dict(
-            _require_mapping(manifest, "workspace_locator", context="sidecar_export.product_entry_manifest")
+            _require_mapping(manifest, "workspace_locator", context="domain_handler_export.product_entry_manifest")
         ),
         "identity": {
             "grant_run_id": manifest_payload["grant_run_id"],
@@ -133,7 +133,7 @@ def build_sidecar_export(
         "runtime_continuity": dict(runtime_continuity),
         "standard_domain_agent_skeleton": dict(standard_domain_agent_skeleton),
         "artifact_locator_contract": dict(
-            _require_mapping(manifest, "artifact_locator_contract", context="sidecar_export.product_entry_manifest")
+            _require_mapping(manifest, "artifact_locator_contract", context="domain_handler_export.product_entry_manifest")
         ),
         "source_provenance": dict(source_provenance),
         "opl_substrate_adapter_export": dict(opl_substrate_adapter_export),
@@ -146,35 +146,35 @@ def build_sidecar_export(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "functional_harness_consumer_coverage",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "privatized_functional_module_audit": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "privatized_functional_module_audit",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "declarative_grant_pack_compiler_input": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "declarative_grant_pack_compiler_input",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "generated_surface_handoff": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "generated_surface_handoff",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "generated_hosted_default_caller_proof": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "generated_hosted_default_caller_proof",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "minimal_authority_functions": list(
@@ -184,35 +184,35 @@ def build_sidecar_export(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "functional_followthrough_gap_classification",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "external_evidence_request_pack": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "external_evidence_request_pack",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "consumed_opl_standard_surfaces": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "consumed_opl_standard_surfaces",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "opl_family_conflict_blocker_projection": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "opl_family_conflict_blocker_projection",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "opl_runtime_observability_consumption": dict(
             _require_mapping(
                 mag_consumer_thinning_contract,
                 "opl_runtime_observability_consumption",
-                context="sidecar_export.mag_consumer_thinning_contract",
+                context="domain_handler_export.mag_consumer_thinning_contract",
             )
         ),
         "physical_skeleton_follow_through": dict(physical_skeleton_follow_through),
@@ -221,31 +221,31 @@ def build_sidecar_export(
             _require_mapping(
                 controlled_stage_attempt,
                 "receipt_refs",
-                context="sidecar_export.controlled_stage_attempt_projection",
+                context="domain_handler_export.controlled_stage_attempt_projection",
             )
         ),
         "memory_receipt_refs": dict(
             _require_mapping(
                 controlled_domain_memory_apply_proof,
                 "writeback_receipt_refs",
-                context="sidecar_export.controlled_domain_memory_apply_proof",
+                context="domain_handler_export.controlled_domain_memory_apply_proof",
             )
         ),
         "repo_source_layout_audit": dict(
             _require_mapping(
                 controlled_domain_memory_apply_proof,
                 "repo_source_layout_audit",
-                context="sidecar_export.controlled_domain_memory_apply_proof",
+                context="domain_handler_export.controlled_domain_memory_apply_proof",
             )
         ),
     }
     return {
         "ok": True,
-        "command": "product-sidecar-export",
+        "command": "domain-handler-export",
         "grant_run_id": manifest_payload["grant_run_id"],
         "workspace_id": manifest_payload["workspace_id"],
         "draft_id": manifest_payload["draft_id"],
         "lifecycle_stage": manifest_payload["lifecycle_stage"],
         "input_path": manifest_payload["input_path"],
-        "sidecar_export": export_payload,
+        "domain_handler_export": export_payload,
     }

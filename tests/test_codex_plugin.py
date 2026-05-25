@@ -55,14 +55,16 @@ def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
     assert frontmatter_match is not None
     frontmatter = frontmatter_match.group("frontmatter")
     assert re.search(r"^name:\s*mag$", frontmatter, re.MULTILINE)
-    assert "product entry" in frontmatter
-    assert "user-loop" in frontmatter
+    assert "domain entry" in frontmatter
+    assert "authority targets" in frontmatter
     assert "schema-backed contracts" in frontmatter
     for command_surface in (
-        "product skill-catalog",
-        "product status",
-        "product user-loop",
-        "product direct-entry",
+        "workspace route-report",
+        "workspace quality-scorecard",
+        "pass revision",
+        "package submission-ready",
+        "authority memory-proposal",
+        "authority memory-decision",
     ):
         assert (
             f"<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli {command_surface}"

@@ -46,6 +46,7 @@ FORBIDDEN_GENERIC_OWNER_ROLES = [
     "generic_attempt_ledger_owner",
     "generic_state_machine_runner_owner",
     "generic_cli_mcp_product_wrapper_owner",
+    "generic_domain_handler_owner",
     "generic_sidecar_owner",
     "generic_session_store_owner",
     "generic_status_workbench_owner",
@@ -66,7 +67,7 @@ GENERATED_SURFACES = [
     "mcp",
     "skill",
     "product_entry_manifest",
-    "sidecar_export_dispatch",
+    "domain_handler",
     "status_read_model",
     "workbench_drilldown",
     "functional_harness_cases",
@@ -221,13 +222,14 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
         ],
     },
     {
-        "surface_id": "sidecar",
+        "surface_id": "domain_handler",
         "classification": "refs_only_adapter",
         "source_refs": [
-            "src/med_autogrant/product_entry_parts/sidecar.py",
+            "src/med_autogrant/product_entry_parts/domain_handler.py",
         ],
         "allowed_role": "guarded_domain_dispatch_and_refs_projection",
         "forbidden_roles": [
+            "generic_domain_handler_owner",
             "generic_sidecar_owner",
             "operator_workbench_owner",
             "action_routing_shell_owner",
@@ -496,18 +498,6 @@ def _base_operator_loop_actions() -> dict[str, Mapping[str, Any]]:
                 "surface_kind": "submission_ready_package",
                 "summary": "Run the MAG submission-ready package gate through the existing domain action target.",
                 "requires": ["input_path", "output_dir"],
-            },
-            "product_status": {
-                "command": public_cli_command(
-                    "product-status",
-                    "--input",
-                    INPUT_PLACEHOLDER,
-                    "--format",
-                    "json",
-                ),
-                "surface_kind": PRODUCT_STATUS_KIND,
-                "summary": "Read MAG product status through the existing domain action target.",
-                "requires": ["input_path"],
             },
         }
     )

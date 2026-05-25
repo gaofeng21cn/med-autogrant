@@ -77,9 +77,9 @@ def build_controlled_soak_receipt_observability_summary(
         },
         "source_inventory_summary": {
             "item_count": len(items),
-            "sidecar_closeout_result_count": _require_int(
+            "domain_handler_closeout_result_count": _require_int(
                 summary,
-                "sidecar_closeout_result_count",
+                "domain_handler_closeout_result_count",
             ),
             "by_receipt_shape": shape_counts,
             "by_reconciliation_status": reconciliation_counts,

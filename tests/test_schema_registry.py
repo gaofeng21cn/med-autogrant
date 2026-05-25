@@ -402,7 +402,7 @@ class SchemaRegistryTest(unittest.TestCase):
         self.assertIn("functional_harness_queue_stage_attempt_typed_closeout", consumed_primitives)
         self.assertIn("functional_harness_restart_dead_letter_repair_human_gate", consumed_primitives)
 
-        exposed_refs = thinning["properties"]["exposed_sidecar_return_refs"]
+        exposed_refs = thinning["properties"]["exposed_domain_handler_return_refs"]
         self.assertIn("generated_surface_bridge_exit_gate_ref", exposed_refs["required"])
         self.assertIn("generated_hosted_default_caller_proof_ref", exposed_refs["required"])
         self.assertIn("generated_hosted_default_caller_proof", thinning["required"])

@@ -14,6 +14,7 @@
     "generic_attempt_ledger_owner",
     "generic_state_machine_runner_owner",
     "generic_cli_mcp_product_wrapper_owner",
+    "generic_domain_handler_owner",
     "generic_sidecar_owner",
     "generic_session_store_owner",
     "generic_status_workbench_owner",
@@ -63,7 +64,7 @@
       "applies_to_surface_ids": [
         "grouped_cli_wrapper",
         "product_entry",
-        "sidecar",
+        "domain_handler",
         "runtime_registration",
         "control_plane",
         "legacy_runtime_residue"
@@ -90,7 +91,7 @@
       "grouped_cli_wrapper",
       "status",
       "user_loop",
-      "sidecar",
+      "domain_handler",
       "runtime_registration",
       "control_plane",
       "lifecycle",
@@ -301,6 +302,7 @@
         "allowed_role": "guarded_domain_dispatch_and_refs_projection",
         "classification": "refs_only_adapter",
         "forbidden_roles": [
+          "generic_domain_handler_owner",
           "generic_sidecar_owner",
           "operator_workbench_owner",
           "action_routing_shell_owner"
@@ -324,9 +326,9 @@
           "target_owner_after_migration": "one-person-lab"
         },
         "source_refs": [
-          "src/med_autogrant/product_entry_parts/sidecar.py"
+          "src/med_autogrant/product_entry_parts/domain_handler.py"
         ],
-        "surface_id": "sidecar",
+        "surface_id": "domain_handler",
         "target_owner_after_migration": "one-person-lab"
       },
       {

@@ -39,8 +39,8 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             source_items=[
                 _source_item(),
                 _source_item(
-                    module_id="sidecar",
-                    path="src/med_autogrant/product_entry_parts/sidecar.py",
+                    module_id="domain_handler",
+                    path="src/med_autogrant/product_entry_parts/domain_handler.py",
                     declared_role="refs_only_adapter",
                 ),
                 _source_item(

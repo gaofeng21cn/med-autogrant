@@ -32,9 +32,9 @@ def test_mag_declares_thin_opl_family_contract_adoption() -> None:
     assert contract["opl_role"] == "family-level projection consumer only"
 
 
-def test_current_program_sidecar_actions_include_domain_memory_writeback_dispatch() -> None:
+def test_current_program_domain_handler_actions_include_domain_memory_writeback_dispatch() -> None:
     current_program = json.loads(_read("contracts/runtime-program/current-program.json"))
-    adapter = current_program["runtime_owner"]["stage_led_framework_boundary"]["product_sidecar_adapter"]
+    adapter = current_program["runtime_owner"]["stage_led_framework_boundary"]["domain_handler_adapter"]
 
     assert adapter["allowed_dispatch_actions"] == [
         "closeout/codex-stage-receipts",
@@ -48,16 +48,16 @@ def test_current_program_sidecar_actions_include_domain_memory_writeback_dispatc
     ]
 
 
-def test_current_program_sidecar_actions_match_implemented_sidecar_export() -> None:
+def test_current_program_domain_handler_actions_match_implemented_domain_handler_export() -> None:
     from med_autogrant.product_entry import MedAutoGrantProductEntry
 
     current_program = json.loads(_read("contracts/runtime-program/current-program.json"))
-    adapter = current_program["runtime_owner"]["stage_led_framework_boundary"]["product_sidecar_adapter"]
-    export = MedAutoGrantProductEntry().build_sidecar_export(
+    adapter = current_program["runtime_owner"]["stage_led_framework_boundary"]["domain_handler_adapter"]
+    export = MedAutoGrantProductEntry().build_domain_handler_export(
         input_path=REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
     )
 
-    assert adapter["allowed_dispatch_actions"] == export["sidecar_export"]["opl_control_plane"][
+    assert adapter["allowed_dispatch_actions"] == export["domain_handler_export"]["opl_control_plane"][
         "allowed_dispatch_actions"
     ]
 
@@ -70,7 +70,7 @@ def test_mag_runtime_projection_maps_to_grant_runtime_truth_surfaces() -> None:
         "runtime_control",
         "runtime_continuity",
         "grant-autonomy-controller-report",
-        "workspace progress",
+        "opl_generated_grant_progress",
     ):
         assert surface in attempt["source_surfaces"]
     assert attempt["maps_to_opl_contract"] == "opl_family_runtime_attempt_contract.v1"
@@ -102,6 +102,13 @@ def test_mag_operator_and_incident_projection_require_source_refs_and_mag_closur
     assert "MAG-owned closure ref" in incident["closure_rule"]
     for field in ("source_refs", "freshness", "owner_split", "next_surface_ref", "human_gate_reason"):
         assert field in operator["required_fields"]
+    assert operator["source_surfaces"] == [
+        "opl_generated_product_status",
+        "opl_generated_grant_user_loop",
+        "opl_generated_grant_progress",
+        "opl_generated_grant_cockpit",
+        "opl_generated_grant_direct_entry",
+    ]
     for non_goal in (
         "OPL owns grant truth",
         "OPL bypasses submission-ready export gate",
@@ -370,7 +377,7 @@ def test_mag_adoption_contract_declares_opl_substrate_adapter_as_index_only_expo
     assert adapter["surface_kind"] == "mag_opl_substrate_adapter_export"
     assert adapter["adapter_id"] == "mag.opl_substrate_adapter.export.v1"
     assert adapter["manifest_surface_ref"] == "/product_entry_manifest/opl_substrate_adapter_export"
-    assert adapter["sidecar_surface_ref"] == "/sidecar_export/opl_substrate_adapter_export"
+    assert adapter["domain_handler_surface_ref"] == "/domain_handler_export/opl_substrate_adapter_export"
     assert adapter["export_policy"] == "opaque_index_only_refs_no_domain_truth_payloads"
     assert adapter["workspace_ref_index"].endswith("/workspace_ref_index")
     assert adapter["source_ref_index"].endswith("/source_ref_index")
@@ -403,7 +410,7 @@ def test_mag_adoption_contract_declares_body_free_source_provenance_refs() -> No
 
     assert source["surface_kind"] == "source_provenance"
     assert source["manifest_surface_ref"] == "/product_entry_manifest/source_provenance"
-    assert source["sidecar_surface_ref"] == "/sidecar_export/source_provenance"
+    assert source["domain_handler_surface_ref"] == "/domain_handler_export/source_provenance"
     assert source["source_provenance_ref"]["ref"] == "docs/source/README.md"
     assert source["historical_fixture_ref"]["ref"] == "examples/nsfc_workspace_p2c_critique.json"
     assert "workspace-initialize-intake" in source["explicit_archive_import_ref"]["command"]
@@ -582,7 +589,7 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
         "agent/knowledge/grant_strategy_memory.md",
         "contracts/runtime-program/current-program.json",
         "src/med_autogrant/product_entry_parts/functional_closure.py",
-        "src/med_autogrant/product_entry_parts/sidecar.py",
+        "src/med_autogrant/product_entry_parts/domain_handler.py",
     ):
         assert any(
             anchor_ref in refs
@@ -655,7 +662,7 @@ def test_mag_adoption_contract_declares_owner_receipt_lifecycle_and_skeleton_fol
     assert follow_through["anchor_refs"] == [
         "agent/prompts/call_and_candidate_intake.md",
         "contracts/runtime-program/current-program.json",
-        "src/med_autogrant/product_entry_parts/sidecar.py",
+        "src/med_autogrant/product_entry_parts/domain_handler.py",
         "docs/status.md",
     ]
     assert "agent/README.md" in follow_through["human_readable_provenance_refs"]
@@ -789,7 +796,7 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert "generic_scheduler_daemon" in audit["opl_must_absorb_code_surfaces"]
     assert audit["mag_thin_adapter_code_surfaces"] == [
         "product_entry_manifest_builder",
-        "product_sidecar_guarded_domain_adapter",
+        "domain_handler_guarded_domain_adapter",
         "domain_entry",
         "receipt_schema_and_writer",
         "grant_transition_oracle",
@@ -806,9 +813,9 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
                 "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code"
             ),
         },
-        "sidecar_dispatch_product_shell": {
-            "module_ref": "sidecar_product_status_shell",
-            "active_caller_status": "active_refs_only_domain_sidecar_adapter",
+        "domain_handler_dispatch_product_shell": {
+            "module_ref": "domain_handler_product_status_shell",
+            "active_caller_status": "active_refs_only_domain_domain_handler_adapter",
             "migration_action": (
                 "OPL_generates_product_operator_shell_and_generic_dispatch_actions_"
                 "MAG_keeps_guarded_domain_adapter_refs"
@@ -848,7 +855,7 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert evidence_pack["authority_boundary"]["mag_implements_opl_runtime"] is False
     assert evidence_pack["authority_boundary"]["mag_implements_app_workbench"] is False
     assert evidence_pack["authority_boundary"]["mag_claims_external_evidence_exists"] is False
-    assert thinning["sidecar_output_policy"] == "grant_refs_and_receipts_only_no_generic_runtime_state"
+    assert thinning["domain_handler_output_policy"] == "grant_refs_and_receipts_only_no_generic_runtime_state"
     assert thinning["private_functional_state_output_classes_forbidden"] == [
         "local_runtime_journal_state",
         "local_attempt_record_state",
