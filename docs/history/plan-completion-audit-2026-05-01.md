@@ -1,5 +1,10 @@
 # Plan Completion Audit 2026-05-01
 
+Owner: `Med Auto Grant`
+Purpose: `historical_plan_completion_audit`
+State: `history`
+Machine boundary: 本文只做人读历史审计。当前验证入口、runtime owner、patch bridge、test owner 与机器行为以核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、contracts、source 和当前测试为准。
+
 本文记录 2026-05-01 对 Med Auto Grant 相关 Plan Mode 计划的完成度核查。它是历史审计记录，不替代当前项目真相；当前 truth 仍以 `docs/status.md`、`docs/specs/README*` 中列出的 active specs 与 `contracts/runtime-program/current-program.json` 为准。
 
 生命周期信号：

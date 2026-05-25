@@ -1,5 +1,10 @@
 # 2026-04-13：Hermes-native critique experimental proof Tombstone
 
+Owner: `Med Auto Grant`
+Purpose: `hermes_native_critique_proof_tombstone`
+State: `history_tombstone`
+Machine boundary: 本文是人读历史 tombstone，只保留 2026-04-13 Hermes-native critique experimental proof lane 的 provenance。当前 critique executor、default stage executor、OPL/Temporal runtime owner、grant readiness 和机器行为以核心五件套、active gap plan、active specs、contracts、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 状态：`historical tombstone / superseded`
 
 ## 这次真正落了什么
