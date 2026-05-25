@@ -381,6 +381,9 @@ def build_generated_surface_handoff() -> dict[str, Any]:
         "domain_handler_owner": TARGET_DOMAIN_ID,
         "mag_role": "domain_handler_ref_only_adapter_and_minimal_authority_functions",
         "state": "mag_handler_boundary_ready_external_caller_evidence_gated",
+        "standard_agent_source_shape_status": "landed",
+        "claims_descriptor_source_available_for_opl_generation": True,
+        "production_default_caller_gate_status": "external_evidence_tail",
         "handoff_policy": "OPL_generates_or_hosts_generic_wrappers_from_MAG_pack_input",
         "bridge_policy": (
             "MAG handwritten product/status/sidecar/projection wrappers are migration bridges, "
@@ -503,6 +506,8 @@ def _generated_surface(
     return {
         "surface_id": surface_id,
         "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
+        "source_shape_status": "landed_domain_handler_ref_only_adapter",
+        "production_default_caller_gate_status": "external_evidence_tail",
         "active_caller_owner": TARGET_DOMAIN_ID,
         "current_owner": TARGET_DOMAIN_ID,
         "target_owner": "one-person-lab",
@@ -569,6 +574,7 @@ def _handoff_currentness_proof(generated_surfaces: list[dict[str, Any]]) -> dict
             "listed current_mag_paths must exist in the MAG repo; stale paths may only be "
             "moved to history/provenance or refreshed as source refs."
         ),
+        "claims_descriptor_source_available_for_opl_generation": not missing_paths,
         "claims_opl_replacement_exists": False,
         "claims_all_bridge_exits_complete": False,
         "claims_production_long_run_soak_complete": False,

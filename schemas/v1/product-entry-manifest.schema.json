@@ -3683,7 +3683,9 @@
           "required": [
             "surface_kind", "handoff_id", "target_domain_id", "owner", "target_generator_owner",
             "active_caller_owner", "active_caller_surface", "domain_handler_target",
-            "domain_handler_owner", "state", "handoff_policy", "bridge_exit_gate",
+            "domain_handler_owner", "state", "standard_agent_source_shape_status",
+            "claims_descriptor_source_available_for_opl_generation",
+            "production_default_caller_gate_status", "handoff_policy", "bridge_exit_gate",
             "declarative_input_ref", "generated_surface_ids",
             "generated_or_bridge_surfaces", "mag_long_term_owner_surface_ids", "authority_boundary"
           ],
@@ -3698,6 +3700,9 @@
             "domain_handler_target": {"const": "med-autogrant"},
             "domain_handler_owner": {"const": "med-autogrant"},
             "state": {"const": "mag_handler_boundary_ready_external_caller_evidence_gated"},
+            "standard_agent_source_shape_status": {"const": "landed"},
+            "claims_descriptor_source_available_for_opl_generation": {"const": true},
+            "production_default_caller_gate_status": {"const": "external_evidence_tail"},
             "handoff_policy": {"const": "OPL_generates_or_hosts_generic_wrappers_from_MAG_pack_input"},
             "bridge_exit_gate": {
               "type": "object",
@@ -3750,6 +3755,7 @@
                 "missing_current_mag_paths",
                 "stale_path_policy",
                 "proof_policy",
+                "claims_descriptor_source_available_for_opl_generation",
                 "claims_opl_replacement_exists",
                 "claims_all_bridge_exits_complete",
                 "claims_production_long_run_soak_complete"
@@ -3763,6 +3769,7 @@
                 "missing_current_mag_paths": {"type": "array", "maxItems": 0},
                 "stale_path_policy": {"const": "history_or_source_ref_refresh_only"},
                 "proof_policy": {"type": "string", "minLength": 1},
+                "claims_descriptor_source_available_for_opl_generation": {"const": true},
                 "claims_opl_replacement_exists": {"const": false},
                 "claims_all_bridge_exits_complete": {"const": false},
                 "claims_production_long_run_soak_complete": {"const": false}
@@ -3777,7 +3784,8 @@
                 "type": "object",
                 "additionalProperties": true,
                 "required": [
-                  "surface_id", "surface_status", "active_caller_owner", "current_owner", "target_owner",
+                  "surface_id", "surface_status", "source_shape_status",
+                  "production_default_caller_gate_status", "active_caller_owner", "current_owner", "target_owner",
                   "domain_handler_target", "domain_handler_owner", "current_mag_path_role",
                   "bridge_exit_gate",
                   "current_mag_paths", "current_mag_path_status", "missing_current_mag_path_count",
@@ -3795,6 +3803,8 @@
                   "surface_status": {
                     "const": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence"
                   },
+                  "source_shape_status": {"const": "landed_domain_handler_ref_only_adapter"},
+                  "production_default_caller_gate_status": {"const": "external_evidence_tail"},
                   "active_caller_owner": {"const": "med-autogrant"},
                   "current_owner": {"const": "med-autogrant"},
                   "target_owner": {"const": "one-person-lab"},
@@ -4544,7 +4554,11 @@
         "owner",
         "adapter_role",
         "state",
+        "standard_agent_source_shape_status",
+        "mag_repo_active_source_shape_landed",
+        "current_mag_source_role",
         "consumes_opl_family_primitive",
+        "claims_opl_descriptor_source_available",
         "claims_opl_replacement_exists",
         "claims_production_long_run_soak_complete",
         "sidecar_contract_ref",
@@ -4591,8 +4605,20 @@
         "state": {
           "const": "mag_handler_boundary_ready_external_caller_evidence_gated"
         },
+        "standard_agent_source_shape_status": {
+          "const": "landed"
+        },
+        "mag_repo_active_source_shape_landed": {
+          "const": true
+        },
+        "current_mag_source_role": {
+          "const": "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority"
+        },
         "consumes_opl_family_primitive": {
           "const": "family_scheduler_replacement"
+        },
+        "claims_opl_descriptor_source_available": {
+          "const": true
         },
         "claims_opl_replacement_exists": {
           "const": false
@@ -5361,6 +5387,8 @@
             "target_domain_id",
             "owner",
             "state",
+            "standard_agent_source_shape_status",
+            "current_mag_source_role",
             "plan_ref",
             "classification_gap_count",
             "mag_functional_structure_gap_count",
@@ -5379,6 +5407,10 @@
             "target_domain_id": {"const": "med-autogrant"},
             "owner": {"const": "med-autogrant"},
             "state": {"const": "mag_handler_boundary_ready_external_evidence_gated"},
+            "standard_agent_source_shape_status": {"const": "landed"},
+            "current_mag_source_role": {
+              "const": "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority"
+            },
             "plan_ref": {"const": "docs/active/mag-ideal-state-cross-repo-gap-plan.md"},
             "classification_gap_count": {"const": 0},
             "mag_functional_structure_gap_count": {"const": 0},
@@ -5415,7 +5447,7 @@
                 ],
                 "properties": {
                   "previous_bucket": {"const": "functional_structure_gap"},
-                  "current_bucket": {"const": "classification_surface_closed_active_bridge_exit_closed"},
+                  "current_bucket": {"const": "standard_agent_source_shape_landed"},
                   "owner": {"const": "med-autogrant"},
                   "closed_by_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}}
                 }
@@ -5447,7 +5479,7 @@
                 ],
                 "properties": {
                   "previous_bucket": {"const": "functional_structure_gap"},
-                  "current_bucket": {"const": "testing_evidence_gap"},
+                  "current_bucket": {"const": "production_evidence_tail"},
                   "owner": {"const": "evidence_gate"},
                   "required_evidence": {"type": "string", "minLength": 1},
                   "mag_surface_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}}
@@ -5459,8 +5491,10 @@
               "additionalProperties": true,
               "required": [
                 "mag_repo_functional_structure_gaps_zero",
+                "mag_repo_active_source_shape_landed",
                 "classification_closed",
                 "followthrough_gaps_open",
+                "claims_opl_descriptor_source_available",
                 "claims_opl_replacement_exists",
                 "claims_opl_generated_surface_production_consumed",
                 "claims_real_workspace_memory_migration_complete",
@@ -5474,8 +5508,10 @@
               ],
                 "properties": {
                   "mag_repo_functional_structure_gaps_zero": {"const": true},
+                  "mag_repo_active_source_shape_landed": {"const": true},
                   "classification_closed": {"const": true},
                   "followthrough_gaps_open": {"const": false},
+                "claims_opl_descriptor_source_available": {"const": true},
                 "claims_opl_replacement_exists": {"const": false},
                 "claims_opl_generated_surface_production_consumed": {"const": false},
                 "claims_real_workspace_memory_migration_complete": {"const": false},

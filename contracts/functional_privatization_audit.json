@@ -15,6 +15,7 @@
     "opl_can_write_domain_truth": false,
     "opl_can_write_memory_body": false
   },
+  "claims_descriptor_source_available_for_opl_generation": true,
   "claims_generic_runtime_removed_from_mag": false,
   "claims_opl_replacement_exists": false,
   "claims_production_long_run_soak_complete": false,
@@ -287,6 +288,7 @@
     "authority_boundary": {
       "claims_continuous_live_receipt_reconciliation_complete": false,
       "claims_focused_hosted_receipt_verification_complete": false,
+      "claims_opl_descriptor_source_available": true,
       "claims_opl_generated_surface_production_consumed": false,
       "claims_opl_replacement_exists": false,
       "claims_production_long_run_soak_complete": false,
@@ -294,6 +296,7 @@
       "claims_real_workspace_package_lifecycle_complete": false,
       "classification_closed": true,
       "followthrough_gaps_open": false,
+      "mag_repo_active_source_shape_landed": true,
       "mag_repo_functional_structure_gaps_zero": true,
       "opl_can_declare_export_ready": false,
       "opl_can_write_domain_truth": false,
@@ -315,7 +318,7 @@
           "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
           "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions"
         ],
-        "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
+        "current_bucket": "standard_agent_source_shape_landed",
         "gap_id": "P1_adapter_thinning_and_pack_input",
         "owner": "med-autogrant",
         "previous_bucket": "functional_structure_gap"
@@ -327,7 +330,7 @@
           "product package-lifecycle-handoff",
           "product lifecycle-receipt-bundle"
         ],
-        "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
+        "current_bucket": "standard_agent_source_shape_landed",
         "gap_id": "P2_package_export_artifact_lifecycle_handoff",
         "owner": "med-autogrant",
         "previous_bucket": "functional_structure_gap"
@@ -338,7 +341,7 @@
           "/product_entry_manifest/controlled_domain_memory_apply_proof",
           "product memory-receipt-projection"
         ],
-        "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
+        "current_bucket": "standard_agent_source_shape_landed",
         "gap_id": "P3_grant_strategy_memory_locator_writeback_handoff",
         "owner": "med-autogrant",
         "previous_bucket": "functional_structure_gap"
@@ -350,19 +353,20 @@
           "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
           "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
         ],
-        "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
+        "current_bucket": "standard_agent_source_shape_landed",
         "gap_id": "P4_skeleton_generated_surface_and_legacy_retirement",
         "owner": "med-autogrant",
         "previous_bucket": "functional_structure_gap"
       }
     ],
+    "current_mag_source_role": "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority",
     "external_owner_gates": [],
     "mag_functional_structure_gap_count": 0,
     "owner": "med-autogrant",
     "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
     "reclassified_as_testing_evidence_gaps": [
       {
-        "current_bucket": "testing_evidence_gap",
+        "current_bucket": "production_evidence_tail",
         "gap_id": "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
         "mag_surface_refs": [
           "/product_entry_manifest/domain_memory_descriptor_locator",
@@ -373,7 +377,7 @@
         "required_evidence": "accepted and rejected real workspace memory receipts plus body-free retrieval/writeback projection"
       },
       {
-        "current_bucket": "testing_evidence_gap",
+        "current_bucket": "production_evidence_tail",
         "gap_id": "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
         "mag_surface_refs": [
           "/product_entry_manifest/lifecycle_guarded_apply_proof",
@@ -385,7 +389,7 @@
         "required_evidence": "real workspace package handoff plus cleanup, restore, and retention receipt bundle"
       },
       {
-        "current_bucket": "testing_evidence_gap",
+        "current_bucket": "production_evidence_tail",
         "gap_id": "opl_generated_surface_production_consumption_no_regression",
         "mag_surface_refs": [
           "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
@@ -396,7 +400,7 @@
         "required_evidence": "external OPL generated/replacement caller consumes MAG pack input without regressing direct MAG surfaces"
       },
       {
-        "current_bucket": "testing_evidence_gap",
+        "current_bucket": "production_evidence_tail",
         "gap_id": "focused_opl_hosted_receipt_verification",
         "mag_surface_refs": [
           "product hosted-receipt-verification",
@@ -407,7 +411,7 @@
         "required_evidence": "OPL-hosted attempt evidence reconciles with MAG owner receipt, typed blocker, or no-regression refs"
       },
       {
-        "current_bucket": "testing_evidence_gap",
+        "current_bucket": "production_evidence_tail",
         "gap_id": "continuous_live_receipt_reconciliation",
         "mag_surface_refs": [
           "product continuous-receipt-reconciliation",
@@ -418,7 +422,7 @@
         "required_evidence": "continuous reconciliation snapshot observes repeated receipt refs without creating a second truth source"
       },
       {
-        "current_bucket": "testing_evidence_gap",
+        "current_bucket": "production_evidence_tail",
         "gap_id": "long_run_live_soak_and_no_forbidden_write_proof",
         "mag_surface_refs": [
           "/product_entry_manifest/controlled_stage_attempt_projection",
@@ -439,6 +443,7 @@
     ],
     "remaining_mag_functional_structure_gap_ids": [],
     "remaining_mag_functional_structure_gaps": [],
+    "standard_agent_source_shape_status": "landed",
     "state": "mag_handler_boundary_ready_external_evidence_gated",
     "surface_kind": "mag_functional_followthrough_gap_classification",
     "target_domain_id": "med-autogrant"
@@ -502,6 +507,7 @@
       "mag_handler_boundary_ready": true,
       "privatized_functional_module_audit_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
     },
+    "claims_opl_descriptor_source_available": true,
     "claims_opl_replacement_exists": false,
     "claims_production_long_run_soak_complete": false,
     "consumed_opl_standard_surfaces": {
@@ -565,6 +571,7 @@
     },
     "consumes_opl_family_primitive": "family_scheduler_replacement",
     "contract_id": "mag.consumer_thinning.contract.v1",
+    "current_mag_source_role": "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority",
     "declarative_grant_pack_compiler_input": {
       "authority_boundary": {
         "mag_pack_owner": "med-autogrant",
@@ -910,6 +917,7 @@
       "authority_boundary": {
         "claims_continuous_live_receipt_reconciliation_complete": false,
         "claims_focused_hosted_receipt_verification_complete": false,
+        "claims_opl_descriptor_source_available": true,
         "claims_opl_generated_surface_production_consumed": false,
         "claims_opl_replacement_exists": false,
         "claims_production_long_run_soak_complete": false,
@@ -917,6 +925,7 @@
         "claims_real_workspace_package_lifecycle_complete": false,
         "classification_closed": true,
         "followthrough_gaps_open": false,
+        "mag_repo_active_source_shape_landed": true,
         "mag_repo_functional_structure_gaps_zero": true,
         "opl_can_declare_export_ready": false,
         "opl_can_write_domain_truth": false,
@@ -938,7 +947,7 @@
             "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
             "/product_entry_manifest/mag_consumer_thinning_contract/minimal_authority_functions"
           ],
-          "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
+          "current_bucket": "standard_agent_source_shape_landed",
           "gap_id": "P1_adapter_thinning_and_pack_input",
           "owner": "med-autogrant",
           "previous_bucket": "functional_structure_gap"
@@ -950,7 +959,7 @@
             "product package-lifecycle-handoff",
             "product lifecycle-receipt-bundle"
           ],
-          "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
+          "current_bucket": "standard_agent_source_shape_landed",
           "gap_id": "P2_package_export_artifact_lifecycle_handoff",
           "owner": "med-autogrant",
           "previous_bucket": "functional_structure_gap"
@@ -961,7 +970,7 @@
             "/product_entry_manifest/controlled_domain_memory_apply_proof",
             "product memory-receipt-projection"
           ],
-          "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
+          "current_bucket": "standard_agent_source_shape_landed",
           "gap_id": "P3_grant_strategy_memory_locator_writeback_handoff",
           "owner": "med-autogrant",
           "previous_bucket": "functional_structure_gap"
@@ -973,19 +982,20 @@
             "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff",
             "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit"
           ],
-          "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
+          "current_bucket": "standard_agent_source_shape_landed",
           "gap_id": "P4_skeleton_generated_surface_and_legacy_retirement",
           "owner": "med-autogrant",
           "previous_bucket": "functional_structure_gap"
         }
       ],
+      "current_mag_source_role": "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority",
       "external_owner_gates": [],
       "mag_functional_structure_gap_count": 0,
       "owner": "med-autogrant",
       "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
       "reclassified_as_testing_evidence_gaps": [
         {
-          "current_bucket": "testing_evidence_gap",
+          "current_bucket": "production_evidence_tail",
           "gap_id": "real_workspace_memory_body_migration_and_retrieval_writeback_apply",
           "mag_surface_refs": [
             "/product_entry_manifest/domain_memory_descriptor_locator",
@@ -996,7 +1006,7 @@
           "required_evidence": "accepted and rejected real workspace memory receipts plus body-free retrieval/writeback projection"
         },
         {
-          "current_bucket": "testing_evidence_gap",
+          "current_bucket": "production_evidence_tail",
           "gap_id": "real_workspace_package_lifecycle_and_cleanup_restore_retention_receipts",
           "mag_surface_refs": [
             "/product_entry_manifest/lifecycle_guarded_apply_proof",
@@ -1008,7 +1018,7 @@
           "required_evidence": "real workspace package handoff plus cleanup, restore, and retention receipt bundle"
         },
         {
-          "current_bucket": "testing_evidence_gap",
+          "current_bucket": "production_evidence_tail",
           "gap_id": "opl_generated_surface_production_consumption_no_regression",
           "mag_surface_refs": [
             "/product_entry_manifest/mag_consumer_thinning_contract/declarative_grant_pack_compiler_input",
@@ -1019,7 +1029,7 @@
           "required_evidence": "external OPL generated/replacement caller consumes MAG pack input without regressing direct MAG surfaces"
         },
         {
-          "current_bucket": "testing_evidence_gap",
+          "current_bucket": "production_evidence_tail",
           "gap_id": "focused_opl_hosted_receipt_verification",
           "mag_surface_refs": [
             "product hosted-receipt-verification",
@@ -1030,7 +1040,7 @@
           "required_evidence": "OPL-hosted attempt evidence reconciles with MAG owner receipt, typed blocker, or no-regression refs"
         },
         {
-          "current_bucket": "testing_evidence_gap",
+          "current_bucket": "production_evidence_tail",
           "gap_id": "continuous_live_receipt_reconciliation",
           "mag_surface_refs": [
             "product continuous-receipt-reconciliation",
@@ -1041,7 +1051,7 @@
           "required_evidence": "continuous reconciliation snapshot observes repeated receipt refs without creating a second truth source"
         },
         {
-          "current_bucket": "testing_evidence_gap",
+          "current_bucket": "production_evidence_tail",
           "gap_id": "long_run_live_soak_and_no_forbidden_write_proof",
           "mag_surface_refs": [
             "/product_entry_manifest/controlled_stage_attempt_projection",
@@ -1062,6 +1072,7 @@
       ],
       "remaining_mag_functional_structure_gap_ids": [],
       "remaining_mag_functional_structure_gaps": [],
+      "standard_agent_source_shape_status": "landed",
       "state": "mag_handler_boundary_ready_external_evidence_gated",
       "surface_kind": "mag_functional_followthrough_gap_classification",
       "target_domain_id": "med-autogrant"
@@ -1400,10 +1411,12 @@
         "target_domain_id": "med-autogrant"
       },
       "bridge_policy": "MAG handwritten product/status/sidecar/projection wrappers are migration bridges, not long-term MAG owner surfaces.",
+      "claims_descriptor_source_available_for_opl_generation": true,
       "current_mag_path_status": {
         "checked_path_count": 14,
         "checked_surface_count": 6,
         "claims_all_bridge_exits_complete": false,
+        "claims_descriptor_source_available_for_opl_generation": true,
         "claims_opl_replacement_exists": false,
         "claims_production_long_run_soak_complete": false,
         "missing_current_mag_path_count": 0,
@@ -1510,6 +1523,8 @@
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
           "missing_current_mag_path_count": 0,
+          "production_default_caller_gate_status": "external_evidence_tail",
+          "source_shape_status": "landed_domain_handler_ref_only_adapter",
           "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "product_status",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
@@ -1615,6 +1630,8 @@
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
           "missing_current_mag_path_count": 0,
+          "production_default_caller_gate_status": "external_evidence_tail",
+          "source_shape_status": "landed_domain_handler_ref_only_adapter",
           "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "product_user_loop",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
@@ -1713,6 +1730,8 @@
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
           "missing_current_mag_path_count": 0,
+          "production_default_caller_gate_status": "external_evidence_tail",
+          "source_shape_status": "landed_domain_handler_ref_only_adapter",
           "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "product_sidecar",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
@@ -1825,6 +1844,8 @@
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
           "missing_current_mag_path_count": 0,
+          "production_default_caller_gate_status": "external_evidence_tail",
+          "source_shape_status": "landed_domain_handler_ref_only_adapter",
           "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "grouped_cli_api",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
@@ -1952,6 +1973,8 @@
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
           "missing_current_mag_path_count": 0,
+          "production_default_caller_gate_status": "external_evidence_tail",
+          "source_shape_status": "landed_domain_handler_ref_only_adapter",
           "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "projection_builder",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
@@ -2057,6 +2080,8 @@
           "generated_by_opl_in_target": true,
           "keeps_mag_authority_functions": false,
           "missing_current_mag_path_count": 0,
+          "production_default_caller_gate_status": "external_evidence_tail",
+          "source_shape_status": "landed_domain_handler_ref_only_adapter",
           "stale_path_policy": "history_or_source_ref_refresh_only",
           "surface_id": "lifecycle_wrapper",
           "surface_status": "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
@@ -2077,7 +2102,9 @@
       "mag_role": "domain_handler_ref_only_adapter_and_minimal_authority_functions",
       "missing_current_mag_path_count": 0,
       "owner": "med-autogrant",
+      "production_default_caller_gate_status": "external_evidence_tail",
       "stale_path_policy": "history_or_source_ref_refresh_only",
+      "standard_agent_source_shape_status": "landed",
       "state": "mag_handler_boundary_ready_external_caller_evidence_gated",
       "surface_kind": "mag_generated_surface_handoff",
       "target_domain_id": "med-autogrant",
@@ -2091,6 +2118,7 @@
       "verdict_refs",
       "domain_action_metadata"
     ],
+    "mag_repo_active_source_shape_landed": true,
     "minimal_authority_function_ids": [
       "fundability_verdict",
       "quality_verdict",
@@ -2902,6 +2930,7 @@
         "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
         "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
       },
+      "claims_descriptor_source_available_for_opl_generation": true,
       "claims_generic_runtime_removed_from_mag": false,
       "claims_opl_replacement_exists": false,
       "claims_production_long_run_soak_complete": false,
@@ -3613,6 +3642,7 @@
           "retention_reason": "Grant strategy memory body and accept/reject policy are domain knowledge authority."
         }
       ],
+      "mag_repo_active_source_shape_landed": true,
       "mag_thin_adapter_code_surfaces": [
         "product_entry_manifest_builder",
         "product_sidecar_guarded_domain_adapter",
@@ -4284,6 +4314,7 @@
           "state": "retired_or_tombstone_only"
         }
       ],
+      "standard_agent_source_shape_status": "landed",
       "state": "manifest_projected_for_opl_unified_audit",
       "surface_kind": "mag_privatized_functional_module_audit",
       "target_domain_id": "med-autogrant"
@@ -4393,6 +4424,7 @@
       "surface_kind": "mag_standard_agent_scaffold_thin_surface_guard",
       "target_domain_id": "med-autogrant"
     },
+    "standard_agent_source_shape_status": "landed",
     "state": "mag_handler_boundary_ready_external_caller_evidence_gated",
     "surface_kind": "mag_consumer_thinning_contract",
     "target_domain_id": "med-autogrant",
@@ -4948,6 +4980,7 @@
       "retention_reason": "Grant strategy memory body and accept/reject policy are domain knowledge authority."
     }
   ],
+  "mag_repo_active_source_shape_landed": true,
   "mag_thin_adapter_code_surfaces": [
     "product_entry_manifest_builder",
     "product_sidecar_guarded_domain_adapter",
@@ -4981,6 +5014,7 @@
       "sidecar_projection_ref": "/sidecar_export/mag_consumer_thinning_contract",
       "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
     },
+    "claims_descriptor_source_available_for_opl_generation": true,
     "claims_generic_runtime_removed_from_mag": false,
     "claims_opl_replacement_exists": false,
     "claims_production_long_run_soak_complete": false,
@@ -5692,6 +5726,7 @@
         "retention_reason": "Grant strategy memory body and accept/reject policy are domain knowledge authority."
       }
     ],
+    "mag_repo_active_source_shape_landed": true,
     "mag_thin_adapter_code_surfaces": [
       "product_entry_manifest_builder",
       "product_sidecar_guarded_domain_adapter",
@@ -6363,6 +6398,7 @@
         "state": "retired_or_tombstone_only"
       }
     ],
+    "standard_agent_source_shape_status": "landed",
     "state": "manifest_projected_for_opl_unified_audit",
     "surface_kind": "mag_privatized_functional_module_audit",
     "target_domain_id": "med-autogrant"
@@ -7016,6 +7052,7 @@
     }
   ],
   "schema_version": 1,
+  "standard_agent_source_shape_status": "landed",
   "state": "manifest_projected_for_opl_unified_audit",
   "surface_kind": "mag_privatized_functional_module_audit",
   "target_domain_id": "med-autogrant"

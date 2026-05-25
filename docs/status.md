@@ -15,8 +15,8 @@ Date: `2026-05-25`
 ## 当前机器事实摘要
 
 - `contracts/runtime-program/current-program.json` 声明 `default_task_runtime_owner=one-person-lab`、`default_runtime_substrate=temporal`、`default_stage_executor=codex_cli`、`mag_implements_daemon=false`、`mag_implements_scheduler=false`、`mag_implements_attempt_loop=false`、`mag_owns_attempt_ledger=false`。
-- `mag_functional_structure_gap_count=0` 表示 MAG repo 侧当前 surface 已收到 handler / refs-only / authority 边界；它不表示 OPL generated caller、真实 App/workbench 消费、全部 bridge exit 或 production long-run soak 已完成。
-- `claims_opl_replacement_exists=false`、`claims_all_bridge_exits_complete=false`、`claims_production_long_run_soak_complete=false` 仍是当前机器面必须保留的限制。
+- `mag_functional_structure_gap_count=0` 与 `standard_agent_source_shape_status=landed` 表示 MAG repo 侧 active source 已收口为 `Declarative Grant Pack + domain handler / refs-only adapter + minimal authority functions`；它不表示 external production/default caller、真实 App/workbench 消费或 production long-run soak 已完成。
+- `claims_opl_descriptor_source_available=true`、`claims_opl_replacement_exists=false`、`claims_all_bridge_exits_complete=false`、`claims_production_long_run_soak_complete=false` 共同表示：OPL generated/default caller 所需 descriptor source 已可用，剩余限制是 production caller / App consumption / live-soak 证据尾项。
 - `contracts/external_evidence/mag-evidence-receipt-ledger.json` 已记录 first live production evidence refs；7 个 external evidence request 已全部 refs-only close，包括 generated/hosted caller pack consumption、App/workbench package refs consumption、release/dist consumption、owner receipt / typed blocker roundtrip、continuous no-forbidden-write、direct/hosted parity no-regression 和 Temporal receipt reconciliation ref。该 ledger 仍只保存 refs、receipt shapes、typed blocker / no-regression refs 和 production acceptance refs；`temporal_provider_long_soak_window_evidence` 仍是后续真实证据门。
 - Production acceptance tail 已由 MAG-owned owner receipt projection 关闭；这只证明 MAG owner receipt / typed blocker / no-regression evidence 的 refs-only closeout shape，不授权 OPL、Provider、Agent Lab 或 OMA 替 MAG 生成 grant-ready、fundability-ready、quality/export-ready 或 submission-ready verdict。
 - `product receipt-readiness` 是当前 MAG product grouped CLI 的 body-free receipt refs readiness 入口，聚合 owner receipt、memory accept/reject receipt、package/export lifecycle handoff 和 cleanup/restore/retention lifecycle receipt refs；它只给 OPL/App/operator closeout 或 executor-first bundle 消费 refs，不声明 grant ready、quality ready、export ready、submission ready、provider long-soak complete 或 production ready。
@@ -30,8 +30,8 @@ Date: `2026-05-25`
 - `contracts/` 是机器合同、handoff、receipt、external evidence request、production acceptance 和 runtime-program 指针。
 - `src/med_autogrant/**` 只作为 domain handler、refs-only adapter、minimal authority function、native helper、diagnostic、migration input 或 tombstone/provenance 支撑读取；不得写成 MAG 私有 runtime platform。
 - MAG retained private authority surface 限定为 grant domain truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject、owner receipt、transition oracle、grant-native helper 和 focused contract tests。
-- Product-entry、sidecar、grouped CLI/API、projection、lifecycle、memory/package projection 和 status/user-loop 仍可作为 direct domain handler 或 refs-only adapter 暂时存在；长期 owner 是 OPL generated/hosted surface，active 迁移顺序回到 active gap plan。
-- 当前 active source 中仍可见的 product-entry、domain_runtime、runtime registration、sidecar、lifecycle、memory/package projection 和 status/user-loop shell 不是兼容承诺；它们只是迁移输入、refs-only adapter、diagnostic 或 retained authority wrapper。满足 active caller migration、direct/hosted parity、owner receipt roundtrip 和 no-resurrection guard 后，旧 wrapper、alias、facade、patch bridge、compat aggregate test 与 legacy runtime/probe residue 直接删除或 tombstone。
+- Product-entry、sidecar、grouped CLI/API、projection、lifecycle、memory/package projection 和 status/user-loop 仍可作为 direct domain handler 或 refs-only adapter 暂时存在；长期 owner 是 OPL generated/hosted surface，当前不再把这些写成 MAG 功能/结构差距。
+- 当前 active source 中仍可见的 product-entry、domain_runtime、runtime registration、sidecar、lifecycle、memory/package projection 和 status/user-loop shell 不是兼容承诺；它们只是已收口源码形态中的 domain handler、refs-only adapter、diagnostic 或 retained authority wrapper。满足 production default caller、direct/hosted parity、owner receipt roundtrip 和 no-resurrection guard 后，旧 wrapper、alias、facade、patch bridge、compat aggregate test 与 legacy runtime/probe residue 直接删除或 tombstone。
 
 ## 已退役面
 
@@ -49,7 +49,7 @@ Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream 
 - `submission_ready_export_gate` 仍需要真实 MAG owner human-gate receipt 或人工审批路径证据；当前 typed blocker projection 只表达阻塞原因与越权禁止。
 - External production/default caller、release/dist consumption、continuous no-forbidden-write 和 direct/hosted parity 已有首批 refs-only closeout；后续门槛是持续真实消费与 no-regression 证据。
 - Temporal provider 已记录 receipt reconciliation ref，但 long-soak window evidence 仍未关闭；后续门槛是 long SLO、repair cadence 和 live receipt reconciliation 的连续证据。
-- Physical morphology cleanup 在 active caller migration、direct/hosted parity、owner receipt roundtrip、continuous evidence 和 no-active legacy caller / no-resurrection scan 稳定后继续推进；满足门槛即删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests，不保留 compatibility shim。
+- Physical morphology cleanup 不再作为 MAG repo 侧结构缺口读取；它只是 production default caller 与 no-resurrection 证据稳定后的删除尾项。满足门槛即删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests，不保留 compatibility shim。
 
 ## 当前入口
 

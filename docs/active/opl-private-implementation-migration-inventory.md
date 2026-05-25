@@ -8,7 +8,7 @@ Date: `2026-05-23`
 
 ## 读法
 
-本文只维护当前 private-platform residue 的分类、active caller、MAG 必须保留的 authority、可上收到 OPL 的 generic 子域和退役门槛。它不保存逐日拆文件 closeout、line-count ledger 或 receipt/proof 流水；这些过程记录进入 `docs/history/**` 或代码提交历史。当前功能/结构差距、测试/证据差距和执行顺序仍由 [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md) 维护。
+本文只维护当前 private-platform residue 的分类、active caller、MAG 必须保留的 authority、可上收到 OPL 的 generic 子域和退役门槛。它不保存逐日拆文件 closeout、line-count ledger 或 receipt/proof 流水；这些过程记录进入 `docs/history/**` 或代码提交历史。当前 active source shape 已 landed；production evidence、default caller 与 no-resurrection cleanup tail 由 [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md) 维护。
 
 ## 当前 clean truth
 
@@ -85,7 +85,7 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 ## 禁止声明
 
-- `mag_functional_structure_gap_count=0` 不表示 physical source cleanup complete。
+- `mag_functional_structure_gap_count=0` 与 `standard_agent_source_shape_status=landed` 表示 active source shape 已收口；physical cleanup 只在 production default caller 与 no-resurrection 证据成立后作为删除尾项推进，不再作为 MAG 功能/结构差距读取。
 - OPL stage evidence receipt verified 不表示 grant-ready 或 submission-ready。
 - package existence、quality scorecard、schema completeness、controller route 或 queue completion 不能成为 fundability / quality / export verdict。
 - active caller still in MAG means OPL has not fully taken over that surface。

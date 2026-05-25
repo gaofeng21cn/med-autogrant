@@ -65,7 +65,13 @@ def build_mag_consumer_thinning_contract(
         "domain_handler_target": TARGET_DOMAIN_ID,
         "domain_handler_owner": TARGET_DOMAIN_ID,
         "state": "mag_handler_boundary_ready_external_caller_evidence_gated",
+        "standard_agent_source_shape_status": "landed",
+        "mag_repo_active_source_shape_landed": True,
+        "current_mag_source_role": (
+            "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority"
+        ),
         "consumes_opl_family_primitive": "family_scheduler_replacement",
+        "claims_opl_descriptor_source_available": True,
         "claims_opl_replacement_exists": False,
         "claims_production_long_run_soak_complete": False,
         "sidecar_contract_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
@@ -288,6 +294,10 @@ def _build_functional_followthrough_gap_classification() -> dict[str, Any]:
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
         "state": "mag_handler_boundary_ready_external_evidence_gated",
+        "standard_agent_source_shape_status": "landed",
+        "current_mag_source_role": (
+            "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority"
+        ),
         "plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
         "classification_gap_count": 0,
         "mag_functional_structure_gap_count": 0,
@@ -414,8 +424,10 @@ def _build_functional_followthrough_gap_classification() -> dict[str, Any]:
         "reclassified_testing_evidence_gap_ids": list(MAG_RECLASSIFIED_EVIDENCE_GAP_IDS),
         "authority_boundary": {
             "mag_repo_functional_structure_gaps_zero": True,
+            "mag_repo_active_source_shape_landed": True,
             "classification_closed": True,
             "followthrough_gaps_open": False,
+            "claims_opl_descriptor_source_available": True,
             "claims_opl_replacement_exists": False,
             "claims_opl_generated_surface_production_consumed": False,
             "claims_real_workspace_memory_migration_complete": False,
@@ -434,7 +446,7 @@ def _closed_mag_functional_gap(gap_id: str, *, closed_by_refs: list[str]) -> dic
     return {
         "gap_id": gap_id,
         "previous_bucket": "functional_structure_gap",
-        "current_bucket": "classification_surface_closed_active_bridge_exit_closed",
+        "current_bucket": "standard_agent_source_shape_landed",
         "owner": TARGET_DOMAIN_ID,
         "closed_by_refs": closed_by_refs,
     }
@@ -449,7 +461,7 @@ def _testing_evidence_gap(
     return {
         "gap_id": gap_id,
         "previous_bucket": "functional_structure_gap",
-        "current_bucket": "testing_evidence_gap",
+        "current_bucket": "production_evidence_tail",
         "owner": "evidence_gate",
         "required_evidence": required_evidence,
         "mag_surface_refs": mag_surface_refs,

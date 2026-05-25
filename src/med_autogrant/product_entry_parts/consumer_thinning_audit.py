@@ -15,6 +15,9 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
         "state": "manifest_projected_for_opl_unified_audit",
+        "standard_agent_source_shape_status": "landed",
+        "mag_repo_active_source_shape_landed": True,
+        "claims_descriptor_source_available_for_opl_generation": True,
         "classification_policy": (
             "classify_private_functional_surfaces_as_pack_refs_authority_or_legacy_proof"
         ),

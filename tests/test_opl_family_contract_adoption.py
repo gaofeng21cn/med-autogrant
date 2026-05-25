@@ -726,6 +726,11 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     )
     followthrough = thinning["functional_followthrough_gap_classification"]
     assert followthrough["state"] == "mag_handler_boundary_ready_external_evidence_gated"
+    assert followthrough["standard_agent_source_shape_status"] == "landed"
+    assert (
+        followthrough["current_mag_source_role"]
+        == "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority"
+    )
     assert followthrough["mag_functional_structure_gap_count"] == 0
     assert followthrough["remaining_mag_functional_structure_gap_ids"] == []
     assert followthrough["remaining_mag_functional_structure_gaps"] == []
@@ -744,8 +749,10 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         "long_run_live_soak_and_no_forbidden_write_proof",
     ]
     assert followthrough["authority_boundary"]["mag_repo_functional_structure_gaps_zero"] is True
+    assert followthrough["authority_boundary"]["mag_repo_active_source_shape_landed"] is True
     assert followthrough["authority_boundary"]["classification_closed"] is True
     assert followthrough["authority_boundary"]["followthrough_gaps_open"] is False
+    assert followthrough["authority_boundary"]["claims_opl_descriptor_source_available"] is True
     assert followthrough["authority_boundary"]["claims_opl_replacement_exists"] is False
     assert followthrough["authority_boundary"]["claims_production_long_run_soak_complete"] is False
     assert thinning["consumed_opl_projection_surfaces"] == [
