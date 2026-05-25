@@ -752,19 +752,26 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
                 self.assertEqual(closed_gap["previous_bucket"], "functional_structure_gap")
                 self.assertEqual(
                     closed_gap["current_bucket"],
-                    "classification_surface_closed_active_bridge_exit_closed",
+                    "standard_agent_source_shape_landed",
                 )
                 self.assertEqual(closed_gap["owner"], "med-autogrant")
                 self.assertTrue(closed_gap["closed_by_refs"])
         self.assertEqual(followthrough["external_owner_gates"], [])
         for evidence_gap in followthrough["reclassified_as_testing_evidence_gaps"]:
             with self.subTest(evidence_gap=evidence_gap["gap_id"]):
-                self.assertEqual(evidence_gap["current_bucket"], "testing_evidence_gap")
+                self.assertEqual(evidence_gap["current_bucket"], "production_evidence_tail")
                 self.assertEqual(evidence_gap["owner"], "evidence_gate")
                 self.assertTrue(evidence_gap["mag_surface_refs"])
+        self.assertEqual(followthrough["standard_agent_source_shape_status"], "landed")
+        self.assertEqual(
+            followthrough["current_mag_source_role"],
+            "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority",
+        )
         self.assertTrue(followthrough["authority_boundary"]["mag_repo_functional_structure_gaps_zero"])
+        self.assertTrue(followthrough["authority_boundary"]["mag_repo_active_source_shape_landed"])
         self.assertTrue(followthrough["authority_boundary"]["classification_closed"])
         self.assertFalse(followthrough["authority_boundary"]["followthrough_gaps_open"])
+        self.assertTrue(followthrough["authority_boundary"]["claims_opl_descriptor_source_available"])
         self.assertFalse(followthrough["authority_boundary"]["claims_opl_replacement_exists"])
         self.assertFalse(
             followthrough["authority_boundary"]["claims_opl_generated_surface_production_consumed"]

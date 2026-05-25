@@ -137,6 +137,88 @@ class ConsumerThinningSchemaRegistryTest(unittest.TestCase):
         self.assertFalse(evidence_authority["opl_can_declare_quality_verdict"]["const"])
         self.assertFalse(evidence_authority["opl_can_declare_export_verdict"]["const"])
 
+    def test_generated_surface_handoff_schema_pins_source_shape_tail(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        handoff = manifest_schema["$defs"]["ownerReceiptContract"]["properties"][
+            "generated_surface_handoff"
+        ]
+
+        self.assertIn("standard_agent_source_shape_status", handoff["required"])
+        self.assertIn("production_default_caller_gate_status", handoff["required"])
+        self.assertEqual(
+            handoff["properties"]["standard_agent_source_shape_status"]["const"],
+            "landed",
+        )
+        self.assertTrue(
+            handoff["properties"]["claims_descriptor_source_available_for_opl_generation"][
+                "const"
+            ]
+        )
+        self.assertEqual(
+            handoff["properties"]["production_default_caller_gate_status"]["const"],
+            "external_evidence_tail",
+        )
+
+        currentness = handoff["properties"]["current_mag_path_status"]["properties"]
+        self.assertIn(
+            "claims_descriptor_source_available_for_opl_generation",
+            handoff["properties"]["current_mag_path_status"]["required"],
+        )
+        self.assertTrue(
+            currentness["claims_descriptor_source_available_for_opl_generation"]["const"]
+        )
+        self.assertFalse(currentness["claims_opl_replacement_exists"]["const"])
+        self.assertFalse(currentness["claims_all_bridge_exits_complete"]["const"])
+
+        surface = handoff["properties"]["generated_or_bridge_surfaces"]["items"]
+        self.assertIn("source_shape_status", surface["required"])
+        self.assertIn("production_default_caller_gate_status", surface["required"])
+        self.assertEqual(
+            surface["properties"]["source_shape_status"]["const"],
+            "landed_domain_handler_ref_only_adapter",
+        )
+        self.assertEqual(
+            surface["properties"]["production_default_caller_gate_status"]["const"],
+            "external_evidence_tail",
+        )
+
+    def test_followthrough_schema_pins_standard_agent_source_shape_landed(self) -> None:
+        manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
+        thinning = manifest_schema["$defs"]["magConsumerThinningContract"]
+        followthrough = thinning["properties"]["functional_followthrough_gap_classification"]
+
+        self.assertIn("standard_agent_source_shape_status", followthrough["required"])
+        self.assertIn("current_mag_source_role", followthrough["required"])
+        self.assertEqual(
+            followthrough["properties"]["standard_agent_source_shape_status"]["const"],
+            "landed",
+        )
+        self.assertEqual(
+            followthrough["properties"]["current_mag_source_role"]["const"],
+            "declarative_pack_domain_handler_refs_only_adapter_or_minimal_authority",
+        )
+        self.assertEqual(
+            followthrough["properties"]["closed_classification_surfaces"]["items"][
+                "properties"
+            ]["current_bucket"]["const"],
+            "standard_agent_source_shape_landed",
+        )
+        self.assertEqual(
+            followthrough["properties"]["reclassified_as_testing_evidence_gaps"]["items"][
+                "properties"
+            ]["current_bucket"]["const"],
+            "production_evidence_tail",
+        )
+
+        authority = followthrough["properties"]["authority_boundary"]
+        self.assertIn("mag_repo_active_source_shape_landed", authority["required"])
+        self.assertIn("claims_opl_descriptor_source_available", authority["required"])
+        boundary = authority["properties"]
+        self.assertTrue(boundary["mag_repo_functional_structure_gaps_zero"]["const"])
+        self.assertTrue(boundary["mag_repo_active_source_shape_landed"]["const"])
+        self.assertTrue(boundary["claims_opl_descriptor_source_available"]["const"])
+        self.assertFalse(boundary["claims_opl_replacement_exists"]["const"])
+
     def test_minimal_authority_surface_schema_requires_ai_first_boundary_fields(self) -> None:
         manifest_schema = json.loads((SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8"))
         thinning = manifest_schema["$defs"]["magConsumerThinningContract"]
