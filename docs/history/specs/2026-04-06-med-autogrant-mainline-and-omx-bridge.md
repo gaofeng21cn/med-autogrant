@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是 path-stable 的历史/支撑记录；只有 `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/status.md` 或 `contracts/runtime-program/current-program.json` 明确指定的仍 current subsection 才可作为当前边界阅读。请先读取 `docs/status.md`、核心五件套与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_foundation_program_handoff_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-06 长线主线、旧 Codex App / OMX 交接与早期 durable handoff 形成过程。当前 active program、OPL/Temporal runtime owner、runtime-state 边界、active specs 与机器行为以核心五件套、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 > 当前文档面向内部主线规划与运行框架冻结，只保留中文版本。
 
 Date: `2026-04-06`
