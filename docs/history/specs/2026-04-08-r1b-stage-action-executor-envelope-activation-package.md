@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是 path-stable 的历史/支撑记录；只有 `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/status.md` 或 `contracts/runtime-program/current-program.json` 明确指定的仍 current subsection 才可作为当前边界阅读。请先读取 `docs/status.md`、核心五件套与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_stage_action_executor_envelope_activation_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-08 R1.B stage action executor envelope activation package 的形成过程。当前 task runtime owner 是 OPL/Temporal；MAG 不持有 generic queue、attempt loop、state-machine runner 或 attempt ledger，当前 stage executor、route continuation、runtime owner 与机器行为以核心五件套、active gap plan、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-08`
 
 ## Activation Status

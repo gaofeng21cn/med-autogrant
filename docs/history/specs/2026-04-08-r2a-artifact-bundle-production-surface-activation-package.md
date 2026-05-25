@@ -2,6 +2,11 @@
 
 > 生命周期注记（`2026-05-17`）：这份 dated spec 是 path-stable 的历史/支撑记录；只有 `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/status.md` 或 `contracts/runtime-program/current-program.json` 明确指定的仍 current subsection 才可作为当前边界阅读。请先读取 `docs/status.md`、核心五件套与 `contracts/runtime-program/current-program.json`。本文中的旧 `Current Truth`、Hermes、OPL Gateway、host-agent 或 federation wording 只作 provenance，不是当前 default owner line。
 
+Owner: `Med Auto Grant`
+Purpose: `historical_artifact_bundle_surface_activation_provenance`
+State: `history`
+Machine boundary: 本文是人读历史 spec，保留 2026-04-08 R2.A artifact bundle production surface activation package 的形成过程。当前 artifact/package lifecycle shell、operator projection 与 generic runtime owner 由 OPL/shared family layer 承担，MAG 保留 grant truth、package authority 与 export verdict；当前机器行为以核心五件套、active gap plan、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准。
+
 Date: `2026-04-08`
 
 ## Activation Status
