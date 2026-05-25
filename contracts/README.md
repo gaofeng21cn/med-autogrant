@@ -1,5 +1,10 @@
 # Contracts
 
+Owner: `Med Auto Grant`
+Purpose: `machine_contract_index`
+State: `current_index`
+Machine boundary: 本文是人读合同索引；机器真相归本目录下 JSON contracts、schemas、source、CLI/API behavior、runtime receipts 和 `contracts/runtime-program/current-program.json`。
+
 - `contracts/runtime-program/current-program.json`：当前 repo-tracked 的 Med Auto Grant 主线合同。它声明 OPL/Temporal hosted autonomous runtime 是任务启动后的默认 task runtime，MAG 不实现 daemon、scheduler、attempt loop 或 attempt ledger，`Codex CLI` 是默认 concrete stage executor。
 - `contracts/production_acceptance/mag-production-acceptance.json`：MAG-owned production acceptance evidence surface。它只记录 domain-owned refs、typed blocker、owner receipt refs 与验证命令 refs；structural / physical conformance、OPL Agent Lab suite result 或 opl-meta-agent coordination 通过都不授权 grant-ready、domain-ready、fundability-ready 或 submission-ready。
 - `contracts/agent_lab_handoff.json`：OMA / Agent Lab 通用 `agent:evidence` handoff refs surface。它只聚合 production acceptance、Agent Lab handoff、owner route、owner receipt / typed blocker、generated surface handoff、editable surface hints 与 no-forbidden-write proof refs；owner receipt、quality verdict、artifact authority 和 memory authority 仍由 MAG 签发，OMA 只消费 refs。

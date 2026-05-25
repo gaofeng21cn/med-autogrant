@@ -1,5 +1,10 @@
 # OMX 历史资料索引
 
+Owner: `Med Auto Grant`
+Purpose: `omx_history_index`
+State: `history_index`
+Machine boundary: 本文是人读 OMX 历史资料索引。当前机器真相归 contracts/schema/source、CLI/API behavior、runtime receipts 和 `contracts/runtime-program/current-program.json`。
+
 这里收录 `Med Auto Grant` 仓库内与 OMX 时代相关的历史资料入口。
 
 它不是当前活跃执行入口。

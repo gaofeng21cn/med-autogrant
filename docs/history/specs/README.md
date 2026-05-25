@@ -1,15 +1,22 @@
 # 历史 Specs
 
+Owner: `Med Auto Grant`
+Purpose: `historical_specs_index`
+State: `history_index`
+Machine boundary: 本文是人读历史 specs 索引。历史 specs 只保存形成过程、tombstone 和 provenance；机器面必须使用当前 contracts/schema/source path、CLI/API behavior、runtime receipt 或语义化 `human_doc:*` id。
+
 本索引是旧技术 specs 与 tranche 记录的历史入口。纯历史 activation package、future P5、runtime-first R/P tranche、post-R5A fail-closed hardening、退役 provider proof、tombstone 和 superseded handoff 文件都归档在本目录。`docs/specs/` 只保留 active current spec、support current-truth record 和 integration reference。
 
 阅读旧 program 背景时从这里进入。当前真相请回到 [Specs 索引](../../specs/README.md)、核心五件套与 `current-program.json`。
 
-生命周期信号：
+目录级生命周期信号：
 
-- `owner`：MAG 维护者。
-- `purpose`：保留旧 specs、activation package、provider proof、tombstone 和 path-stable provenance 的历史入口。
-- `state`：`history`。
-- `machine boundary`：本目录只做人读 provenance。机器面必须使用当前 contracts/schema/source path、CLI/API behavior 或语义化 `human_doc:*` id。
+- owner：MAG 维护者。
+- purpose：保留旧 specs、activation package、provider proof、tombstone 和 path-stable provenance 的历史入口。
+- state：`history`。
+- machine boundary：本目录只做人读 provenance。机器面必须使用当前 contracts/schema/source path、CLI/API behavior、runtime receipt 或语义化 `human_doc:*` id。
+
+本目录下没有单独 lifecycle 头的历史 spec 默认继承上面的目录级信号。旧 `Current Truth`、`Activation Status`、Hermes/Gateway/local-runtime wording 和 dated completion claim 都不能覆盖当前核心五件套、active gap plan、contracts/schema/source 与 `current-program.json`。
 
 由本归档入口承接的历史分组：
 
