@@ -8,13 +8,13 @@ Date: `2026-05-23`
 
 ## 读法
 
-本文只维护当前 private-platform residue 的分类、active caller、MAG 必须保留的 authority、可上收到 OPL 的 generic 子域和退役门槛。它不保存逐日拆文件 closeout、line-count ledger 或 receipt/proof 流水；这些过程记录进入 `docs/history/**` 或代码提交历史。当前 active source shape 已 landed；production evidence、default caller 与 no-resurrection cleanup tail 由 [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md) 维护。
+本文只维护当前 private-platform residue 的分类、active caller、MAG 必须保留的 authority、可上收到 OPL 的 generic 子域和退役门槛。它不保存逐日拆文件 closeout、line-count ledger 或 receipt/proof 流水；这些过程记录进入 `docs/history/**` 或代码提交历史。`standard_agent_source_shape_status=landed` 只表示历史合同分类已收薄；按 strict purity，仍有 active caller 的 product/status/sidecar/runtime/autonomy/CLI shell 都是 default-caller cutover 后要删除的 source-purity tail。Production evidence、default caller 与 no-resurrection cleanup tail 由 [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md) 维护。
 
 ## 当前 clean truth
 
 MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider runtime、queue、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、generated wrapper、observability/SLO 和 App/workbench shell。MAG 必须保留 grant truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject decision、owner receipt、transition oracle、typed blocker 和 grant-native helper。
 
-当前风险集中在 hand-written product-entry / sidecar / CLI / autonomy controller / domain-runtime 命名和聚合文件，容易被误读成 MAG 私有平台。所有这类 surface 只能按 direct domain handler、refs-only adapter、minimal authority function、diagnostic、migration input 或 history/tombstone 读取。
+当前风险集中在 hand-written product-entry / sidecar / CLI / autonomy controller / domain-runtime 命名和聚合文件，容易被误读成 MAG 私有平台。所有这类 surface 只能按 direct domain handler、refs-only adapter、minimal authority function、diagnostic 或 migration input 读取；OPL generated/default caller parity、owner receipt roundtrip、no-active-caller 和 no-forbidden-write proof 成立后删除 active source，不以 tombstone code、compat alias 或 re-export facade 形式长期保留。
 
 ## 分类词表
 
@@ -24,6 +24,7 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 | `opl_framework_migration_candidate` | 当前手写外壳长期应由 OPL generated/hosted surface 或 shared primitive 承担。 |
 | `already_thin_adapter` | 已收薄为 refs-only adapter/projection/diagnostic，仍因 direct path 或 evidence caller 暂留。 |
 | `legacy_proof_tombstone` | 已退役或只作 regression/provenance 的旧 runtime、probe、alias、patch bridge 或 compat surface。 |
+| `strict_delete_after_cutover` | 仍有 active caller 的 repo-local generic shell / wrapper / projection / compatibility test；当前可运行不构成完成态，必须在 OPL cutover 后删除。 |
 
 ## 当前 Inventory
 
@@ -85,7 +86,7 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 
 ## 禁止声明
 
-- `mag_functional_structure_gap_count=0` 与 `standard_agent_source_shape_status=landed` 表示 active source shape 已收口；physical cleanup 只在 production default caller 与 no-resurrection 证据成立后作为删除尾项推进，不再作为 MAG 功能/结构差距读取。
+- `mag_functional_structure_gap_count=0` 与 `standard_agent_source_shape_status=landed` 只表示历史结构分类已收薄；不能写成 strict source-purity 完成。Active caller 仍在 MAG 的 product/status/sidecar/runtime/autonomy/CLI shell 必须等 production default caller、no-active-caller 与 no-resurrection 证据成立后删除，仍按 MAG 功能/结构差距读取。
 - OPL stage evidence receipt verified 不表示 grant-ready 或 submission-ready。
 - package existence、quality scorecard、schema completeness、controller route 或 queue completion 不能成为 fundability / quality / export verdict。
 - active caller still in MAG means OPL has not fully taken over that surface。

@@ -24,11 +24,11 @@ MAG 是医学基金申请 domain agent，也是 OPL-compatible Foundry Agent pac
 
 | 信号 | 当前值 | 读法 |
 | --- | --- | --- |
-| `mag_functional_structure_gap_count` / `standard_agent_source_shape_status` | `0` / `landed` | MAG repo 侧 active source 已收口为 `Declarative Grant Pack + domain handler / refs-only adapter + minimal authority functions`；不表示生产切换或 live soak 完成。 |
+| `mag_functional_structure_gap_count` / `standard_agent_source_shape_status` | `0` / `landed` | 这是 contracts/read-model 的结构分类信号，只说明 generic owner intent 已被分类和收薄；不表示 strict source-purity 物理完成、生产切换或 live soak 完成。 |
 | `claims_opl_descriptor_source_available` / `claims_opl_replacement_exists` | `true` / `false` | OPL generated/default caller 所需 descriptor source 已可用；production/default caller、App/workbench 和 live caller 证据仍需要真实消费。 |
 | `claims_all_bridge_exits_complete` / `claims_production_long_run_soak_complete` | `false` | bridge physical deletion 与 Temporal long-soak 仍是 production evidence / cleanup tail。 |
 
-当前 `product_entry*`、`product_entry_parts/*`、`domain_runtime*`、runtime registration、sidecar、lifecycle、memory/package projection、status/user-loop shell 仍可见于 active source。它们只能按 direct handler、refs-only adapter、minimal grant authority function、diagnostic 或 tombstone/provenance 读取，不能重新写成 MAG 私有 runtime platform 或未完成结构差距。
+当前 `product_entry*`、`product_entry_parts/*`、`domain_runtime*`、runtime registration、sidecar、lifecycle、memory/package projection、autonomy loop、status/user-loop shell 与部分 CLI/rendering shell 仍可见于 active source。它们只能按 direct handler、refs-only adapter、minimal grant authority function、diagnostic 或 migration input 读取，不能重新写成 MAG 私有 runtime platform；按 strict purity，它们仍是需要 OPL default caller cutover 后删除的功能/结构差距。
 
 ## 目标态
 
@@ -69,17 +69,17 @@ MAG 必须保留的 authority：
 
 | Area | 当前进度 | 当前读法 |
 | --- | --- | --- |
-| Standard OPL Agent source shape | `landed` | `agent/`、stage control plane、quality gates、pack compiler input 和 MAG owner boundary 已是当前默认结构；不声明 grant-ready、submission-ready 或 production-ready。 |
-| Runtime / product shell thinning | `landed_with_production_caller_tail` | product/status/user-loop/sidecar/domain_runtime 面只能作为 direct handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone/provenance；不再作为 MAG 结构差距读取。 |
+| Standard OPL Agent source shape | `classified_but_strict_purity_pending` | `agent/`、stage control plane、quality gates、pack compiler input 和 MAG owner boundary 已是当前默认语义结构；product/status/user-loop/sidecar/domain_runtime/autonomy/CLI shell 仍需 cutover/delete，不声明 grant-ready、submission-ready 或 production-ready。 |
+| Runtime / product shell thinning | `strict_delete_after_cutover` | product/status/user-loop/sidecar/domain_runtime 面只能作为 direct handler、refs-only adapter、minimal authority function、diagnostic 或 migration input；不再作为长期 MAG surface 读取。 |
 | Evidence accounting | `refs_only_closed_for_requests_and_owner_payload_response_landed` | MAG evidence request ledger 已闭合 refs-only accounting；`product opl-owner-payload-response` 已把 MAG refs 整理成 OPL owner-payload workorder 可记录的 response；真实 OPL-hosted grant-stage attempt、workspace memory/package/lifecycle receipt 和 Temporal long soak 仍是证据尾项。 |
 | Human gate projection | `explicit_blocker_not_approval` | Submission-ready export human gate 现在作为 MAG-owned typed blocker authority boundary 暴露给 sidecar 与 receipt reconciliation；真实 human approval receipt 仍未形成。 |
 | Docs lifecycle | `single_active_truth_owner` | 本文持有 current truth、gap、计划和下一轮 prompt；历史 proof、receipt 流水和旧路线继续留在 history/specs/provenance。 |
 
 ## 功能/结构差距
 
-当前 MAG repo 侧 active source 的功能/结构差距为 `0`。`generated_surface_bridge_exit`、`legacy_runtime_session_lifecycle_exit`、`package_memory_lifecycle_refs_only_boundary`、`private_authority_ai_first_guard` 和 `physical_morphology_tail` 已折回当前 source-shape 合同：closed classification bucket 是 `standard_agent_source_shape_landed`，后续只作为 production evidence、default caller 和 no-resurrection cleanup tail 管理。
+按 strict standard-agent purity，当前 MAG repo 侧 active source 仍有功能/结构差距。`mag_functional_structure_gap_count=0` 只表示历史合同分类闭合，不代表 active shell 已清零。`generated_surface_bridge_exit`、`legacy_runtime_session_lifecycle_exit`、`package_memory_lifecycle_refs_only_boundary`、`private_authority_ai_first_guard` 和 `physical_morphology_tail` 必须继续推进到 OPL generated/default caller 接管与 repo-local wrapper 删除。
 
-必须长期保持的结构不变量：
+当前必须推进或守住的结构项：
 
 1. `package_memory_lifecycle_refs_only_boundary`
    Memory receipt projection、package lifecycle handoff、lifecycle receipt bundle、continuous receipt reconciliation 和 sidecar export 必须保持 body-free refs、owner receipt、verdict refs、typed blocker 和 safe action metadata，不输出 memory body、grant artifact/private evidence 或 OPL ledger state。
@@ -87,8 +87,11 @@ MAG 必须保留的 authority：
 2. `private_authority_ai_first_guard`
    Fundability、quality、export、memory accept/reject 是 AI-first judgment surface；package authority、owner receipt signer 和 grant helper 是 programmatic guard surface。程序只能 validator / materializer / receipt signer / guard / refs projection，不能机械生成 ready verdict。
 
-3. `no_resurrection_cleanup_tail`
-   `product_entry_parts/*`、`domain_runtime_parts/*`、runtime registration、autonomy loop/report shell、lifecycle/memory/package helpers 等 active path 必须持续被合同约束为 handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone。default caller 证据成立后删除或 tombstone 旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；详细 path-level inventory 归 [MAG 私有实现与 OPL 迁移台账](./opl-private-implementation-migration-inventory.md)。
+3. `generated_default_caller_cutover`
+   `product_entry_parts/*`、`domain_runtime_parts/*`、runtime registration、autonomy loop/report shell、lifecycle/memory/package helpers、CLI/rendering shell 等 active path 必须持续被合同约束为 handler、refs-only adapter、minimal authority function、diagnostic 或 migration input。default caller、direct/hosted parity、owner receipt roundtrip 与 no-active-caller 证据成立后删除旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；详细 path-level inventory 归 [MAG 私有实现与 OPL 迁移台账](./opl-private-implementation-migration-inventory.md)。
+
+4. `no_resurrection_cleanup_tail`
+   已退役 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、facade patch bridge 和 compatibility aggregate test 不能恢复为 compatibility shim、re-export facade 或 active caller。历史只保留在 `docs/history/**`、tombstone/provenance 或 negative guard。
 
 ## 证据差距
 
@@ -101,7 +104,7 @@ MAG 必须保留的 authority：
 | Submission-ready human gate receipt | `blocked_on_real_human_gate_receipt` | `submission_ready_export_gate` typed blocker 已可机读；关闭条件仍是真实 MAG owner human-gate receipt 或人工审批路径证据。 |
 | App/operator/release consumption | `needs_sustained_consumption` | OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG package refs、quality refs、manual portal boundary、transition oracle refs、safe action refs 和 `product opl-owner-payload-response` 的 success / typed-blocker payload path。 |
 | Temporal provider long soak | `open` | `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 形成连续证据。 |
-| Physical cleanup / no-resurrection | `cleanup_tail` | production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence 与 no-active legacy caller scan 稳定后删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests。 |
+| Physical cleanup / no-resurrection | `strict_source_purity_gap` | production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence 与 no-active legacy caller scan 稳定后删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests。 |
 
 Refs-only ledger verification、request accounting closure、OPL workorder closeout、source ref declaration、schema completeness、scorecard 分数、package existence 或 provider completion 都不能替代真实 workspace / App / provider evidence，也不能声明 grant-ready、fundability-ready、quality-ready、export-ready、submission-ready 或 production-ready。
 
@@ -111,7 +114,7 @@ Refs-only ledger verification、request accounting closure、OPL workorder close
 2. 保持 product/status/user-loop/sidecar/CLI shell 的 refs-only adapter 或 direct handler target 边界；新增能力优先服务 OPL generated/default caller parity，不扩写 MAG-owned shell。
 3. 对 AI-first authority guard 做回归维护：任何 fundability / quality / export / submission-ready claim 必须回到 MAG owner surface 或 AI-backed artifact。
 4. 只用持续真实 workspace/App/operator/release evidence 与 Temporal long-soak window evidence 关闭 production evidence tail；refs-only accounting 只进入 ledger/history。
-5. 在 production default caller 与 no-resurrection guard 成立后，删除或 tombstone 旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；测试改为断言 current contract、schema、CLI/API、manifest、owner receipt、typed blocker、fail-closed 或 tombstone semantics。
+5. 在 production default caller 与 no-resurrection guard 成立后，删除旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；需要追溯只留 history/provenance，测试改为断言 current contract、schema、CLI/API、manifest、owner receipt、typed blocker、fail-closed 或 tombstone semantics。
 
 ## 下一轮 Agent prompt
 
@@ -169,7 +172,7 @@ Foldback target:
 
 ## 禁止误写
 
-- 不能把 `mag_functional_structure_gap_count=0` 写成 external production/default caller、真实 App/workbench consumption、bridge exit 或 production long-run soak 已完成。
+- 不能把 `mag_functional_structure_gap_count=0` 写成 strict source-purity 完成、external production/default caller、真实 App/workbench consumption、bridge exit 或 production long-run soak 已完成。
 - 不能把 descriptor ready、transition oracle smoke、receipt reconciliation proof、external evidence consumption 或 no-regression evidence 写成 provider SLO / live soak 已完成。
 - 不能把 OPL provider completion、matrix runner smoke、package existence、schema completeness、quality scorecard 分数或 controller route 写成 fundability-ready、quality-ready、export-ready 或 submission-ready verdict。
 - 不能把 hand-written product-entry / sidecar / grouped CLI/API / projection / lifecycle wrapper 写成长期合理私有平台。
