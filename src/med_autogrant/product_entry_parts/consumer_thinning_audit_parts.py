@@ -13,10 +13,10 @@ def build_retire_or_tombstone_surfaces(
         build_retired_functional_module_audit_item(
             "default_hermes_gateway_local_manager_runtime_owner",
             code_paths=[
-                "src/med_autogrant/product_entry_parts/executor_defaults.py",
+                "src/med_autogrant/product_entry_parts/executor_defaults.py:active_executor_adapter_metadata_only",
             ],
             active_callers=[],
-            active_caller_status="legacy_runtime_owner_physically_removed",
+            active_caller_status="legacy_runtime_owner_absent_executor_adapter_metadata_only",
             migration_action=(
                 "Delete old Hermes/Gateway/local-manager runtime owner code; current non-default "
                 "executor use must go through explicit OPL executor adapter refs."
@@ -37,21 +37,19 @@ def build_retire_or_tombstone_surfaces(
         build_retired_functional_module_audit_item(
             "local_runtime_journal_attempt_ledger",
             code_paths=[
-                "src/med_autogrant/product_entry_parts/loop_contracts.py",
-                "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
-                "src/med_autogrant/hosted_contract_bundle.py",
-                "src/med_autogrant/domain_runtime_parts/io.py",
-                "src/med_autogrant/domain_runtime_parts/runtime_ops.py",
+                "src/med_autogrant/product_entry_parts/local_runtime_journal.py:absent",
+                "src/med_autogrant/product_entry_parts/attempt_ledger.py:absent",
+                "src/med_autogrant/runtime_journal.py:absent",
             ],
             active_callers=[],
-            active_caller_status="legacy_local_journal_attempt_ledger_physically_removed",
+            active_caller_status="legacy_local_journal_attempt_ledger_absent_no_active_caller",
             migration_action=(
                 "Old local journal and attempt ledger code has been deleted; OPL owns session ledger, "
                 "typed attention queue, wakeup scheduler, and stage-attempt ledger."
             ),
             retention_reason=(
-                "Active MAG source retains only refs-only session/runtime locator surfaces; local journal "
-                "implementation and tests are not retained."
+                "Active MAG source retains refs-only session/runtime locator projections under refs-only "
+                "adapter classifications; local journal implementation and tests are not retained."
             ),
             cannot_absorb_reason=(
                 "The legacy local ledger itself should not be absorbed as MAG-owned code; OPL should "
@@ -108,15 +106,18 @@ def build_retire_or_tombstone_surfaces(
         build_retired_functional_module_audit_item(
             "legacy_flat_shell_aliases",
             code_paths=[
-                "src/med_autogrant/cli_parts/parser_adders.py",
-                "src/med_autogrant/cli_parts/handlers.py",
-                "src/med_autogrant/public_cli.py",
+                "src/med_autogrant/cli_parts/legacy_flat_aliases.py:absent",
+                "src/med_autogrant/public_cli_flat_aliases.py:absent",
             ],
-            active_callers=["grouped public command tokens"],
-            active_caller_status="legacy_alias_retired_grouped_commands_active",
-            migration_action="Route callers to grouped product/workspace/pass/package commands.",
+            active_callers=[],
+            active_caller_status="legacy_alias_absent_grouped_cli_is_domain_handler_target",
+            migration_action=(
+                "Keep grouped product/workspace/pass/package commands classified as direct domain "
+                "handler targets; do not keep a legacy flat-alias compatibility surface."
+            ),
             retention_reason=(
-                "Machine command fields may stay stable, but user-facing flat aliases should not."
+                "Machine command fields may stay stable in grouped handlers, but retired flat aliases "
+                "have no active caller and must not be reintroduced as compatibility commands."
             ),
             cannot_absorb_reason="Flat aliases are retired local CLI surface, not a reusable OPL primitive.",
             evidence_refs=[
@@ -127,20 +128,19 @@ def build_retire_or_tombstone_surfaces(
         build_retired_functional_module_audit_item(
             "repo_owned_scheduler_daemon",
             code_paths=[
-                "src/med_autogrant/runtime_defaults.py",
-                "src/med_autogrant/domain_runtime_parts/substrate.py",
-                "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
+                "src/med_autogrant/scheduler_daemon.py:absent",
+                "src/med_autogrant/product_entry_parts/scheduler_daemon.py:absent",
+                "src/med_autogrant/domain_runtime_parts/scheduler_daemon.py:absent",
             ],
-            active_callers=[
-                "product-entry runtime_control refs projection",
-            ],
-            active_caller_status="legacy_scheduler_daemon_physically_removed_refs_only_runtime_control",
+            active_callers=[],
+            active_caller_status="legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
             migration_action=(
-                "OPL owns provider scheduler/daemon; MAG keeps refs-only runtime_control projection "
-                "without local run/resume diagnostics."
+                "OPL owns provider scheduler/daemon; MAG keeps any runtime_control projection under "
+                "refs-only adapter classifications without local run/resume diagnostics."
             ),
             retention_reason=(
-                "Runtime-control metadata remains a refs-only projection, not a daemon or scheduler."
+                "Runtime-control metadata remains covered by refs-only adapter entries, not by this "
+                "legacy scheduler/daemon tombstone."
             ),
             cannot_absorb_reason=(
                 "OPL owns production scheduler/daemon; MAG only exposes grant route and authority refs."

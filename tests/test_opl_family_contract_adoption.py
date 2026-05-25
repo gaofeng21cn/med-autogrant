@@ -799,7 +799,7 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert audit["representative_private_functional_surfaces"] == {
         "local_runtime_journal_attempt_ledger": {
             "module_ref": "local_runtime_journal_attempt_ledger",
-            "active_caller_status": "legacy_local_journal_attempt_ledger_physically_removed",
+            "active_caller_status": "legacy_local_journal_attempt_ledger_absent_no_active_caller",
             "migration_action": "OPL_owns_session_attempt_ledger_MAG_deleted_local_journal_code",
         },
         "sidecar_dispatch_product_shell": {
@@ -812,7 +812,7 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
         },
         "optional_hermes_state_db": {
             "module_ref": "default_hermes_gateway_local_manager_runtime_owner",
-            "active_caller_status": "legacy_runtime_owner_physically_removed",
+            "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
             "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
         },
     }

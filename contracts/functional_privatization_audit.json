@@ -4098,12 +4098,12 @@
       ],
       "representative_private_functional_surfaces": {
         "local_runtime_journal_attempt_ledger": {
-          "active_caller_status": "legacy_local_journal_attempt_ledger_physically_removed",
+          "active_caller_status": "legacy_local_journal_attempt_ledger_absent_no_active_caller",
           "migration_action": "OPL_owns_session_attempt_ledger_MAG_deleted_local_journal_code",
           "module_ref": "local_runtime_journal_attempt_ledger"
         },
         "optional_hermes_state_db": {
-          "active_caller_status": "legacy_runtime_owner_physically_removed",
+          "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
           "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
           "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
         },
@@ -4116,12 +4116,12 @@
       "retire_or_tombstone_surfaces": [
         {
           "active_caller_allowed": false,
-          "active_caller_status": "legacy_runtime_owner_physically_removed",
+          "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
           "active_callers": [],
           "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution is modeled separately as an executor adapter receipt path, not a runtime owner.",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
-            "src/med_autogrant/product_entry_parts/executor_defaults.py"
+            "src/med_autogrant/product_entry_parts/executor_defaults.py:active_executor_adapter_metadata_only"
           ],
           "compatibility_alias_allowed": false,
           "evidence_refs": [
@@ -4136,16 +4136,14 @@
         },
         {
           "active_caller_allowed": false,
-          "active_caller_status": "legacy_local_journal_attempt_ledger_physically_removed",
+          "active_caller_status": "legacy_local_journal_attempt_ledger_absent_no_active_caller",
           "active_callers": [],
           "cannot_absorb_reason": "The legacy local ledger itself should not be absorbed as MAG-owned code; OPL should provide the generic ledger while MAG keeps safe action refs and grant next-action meaning.",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
-            "src/med_autogrant/product_entry_parts/loop_contracts.py",
-            "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
-            "src/med_autogrant/hosted_contract_bundle.py",
-            "src/med_autogrant/domain_runtime_parts/io.py",
-            "src/med_autogrant/domain_runtime_parts/runtime_ops.py"
+            "src/med_autogrant/product_entry_parts/local_runtime_journal.py:absent",
+            "src/med_autogrant/product_entry_parts/attempt_ledger.py:absent",
+            "src/med_autogrant/runtime_journal.py:absent"
           ],
           "compatibility_alias_allowed": false,
           "evidence_refs": [
@@ -4191,7 +4189,7 @@
           "migration_action": "Old local journal and attempt ledger code has been deleted; OPL owns session ledger, typed attention queue, wakeup scheduler, and stage-attempt ledger.",
           "module_id": "local_runtime_journal_attempt_ledger",
           "owner": "none_active",
-          "retention_reason": "Active MAG source retains only refs-only session/runtime locator surfaces; local journal implementation and tests are not retained.",
+          "retention_reason": "Active MAG source retains refs-only session/runtime locator projections under refs-only adapter classifications; local journal implementation and tests are not retained.",
           "state": "retired_or_tombstone_only"
         },
         {
@@ -4238,40 +4236,35 @@
         },
         {
           "active_caller_allowed": false,
-          "active_caller_status": "legacy_alias_retired_grouped_commands_active",
-          "active_callers": [
-            "grouped public command tokens"
-          ],
+          "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
+          "active_callers": [],
           "cannot_absorb_reason": "Flat aliases are retired local CLI surface, not a reusable OPL primitive.",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
-            "src/med_autogrant/cli_parts/parser_adders.py",
-            "src/med_autogrant/cli_parts/handlers.py",
-            "src/med_autogrant/public_cli.py"
+            "src/med_autogrant/cli_parts/legacy_flat_aliases.py:absent",
+            "src/med_autogrant/public_cli_flat_aliases.py:absent"
           ],
           "compatibility_alias_allowed": false,
           "evidence_refs": [
             "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
             "docs/status.md#旧面退役校准"
           ],
-          "migration_action": "Route callers to grouped product/workspace/pass/package commands.",
+          "migration_action": "Keep grouped product/workspace/pass/package commands classified as direct domain handler targets; do not keep a legacy flat-alias compatibility surface.",
           "module_id": "legacy_flat_shell_aliases",
           "owner": "none_active",
-          "retention_reason": "Machine command fields may stay stable, but user-facing flat aliases should not.",
+          "retention_reason": "Machine command fields may stay stable in grouped handlers, but retired flat aliases have no active caller and must not be reintroduced as compatibility commands.",
           "state": "retired_or_tombstone_only"
         },
         {
           "active_caller_allowed": false,
-          "active_caller_status": "legacy_scheduler_daemon_physically_removed_refs_only_runtime_control",
-          "active_callers": [
-            "product-entry runtime_control refs projection"
-          ],
+          "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
+          "active_callers": [],
           "cannot_absorb_reason": "OPL owns production scheduler/daemon; MAG only exposes grant route and authority refs.",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
-            "src/med_autogrant/runtime_defaults.py",
-            "src/med_autogrant/domain_runtime_parts/substrate.py",
-            "src/med_autogrant/product_entry_parts/runtime_surfaces.py"
+            "src/med_autogrant/scheduler_daemon.py:absent",
+            "src/med_autogrant/product_entry_parts/scheduler_daemon.py:absent",
+            "src/med_autogrant/domain_runtime_parts/scheduler_daemon.py:absent"
           ],
           "compatibility_alias_allowed": false,
           "evidence_refs": [
@@ -4313,10 +4306,10 @@
             },
             "surface_kind": "mag_legacy_surface_exit_gate"
           },
-          "migration_action": "OPL owns provider scheduler/daemon; MAG keeps refs-only runtime_control projection without local run/resume diagnostics.",
+          "migration_action": "OPL owns provider scheduler/daemon; MAG keeps any runtime_control projection under refs-only adapter classifications without local run/resume diagnostics.",
           "module_id": "repo_owned_scheduler_daemon",
           "owner": "none_active",
-          "retention_reason": "Runtime-control metadata remains a refs-only projection, not a daemon or scheduler.",
+          "retention_reason": "Runtime-control metadata remains covered by refs-only adapter entries, not by this legacy scheduler/daemon tombstone.",
           "state": "retired_or_tombstone_only"
         }
       ],
@@ -6183,12 +6176,12 @@
     ],
     "representative_private_functional_surfaces": {
       "local_runtime_journal_attempt_ledger": {
-        "active_caller_status": "legacy_local_journal_attempt_ledger_physically_removed",
+        "active_caller_status": "legacy_local_journal_attempt_ledger_absent_no_active_caller",
         "migration_action": "OPL_owns_session_attempt_ledger_MAG_deleted_local_journal_code",
         "module_ref": "local_runtime_journal_attempt_ledger"
       },
       "optional_hermes_state_db": {
-        "active_caller_status": "legacy_runtime_owner_physically_removed",
+        "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
         "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
         "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
       },
@@ -6201,12 +6194,12 @@
     "retire_or_tombstone_surfaces": [
       {
         "active_caller_allowed": false,
-        "active_caller_status": "legacy_runtime_owner_physically_removed",
+        "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
         "active_callers": [],
         "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution is modeled separately as an executor adapter receipt path, not a runtime owner.",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
-          "src/med_autogrant/product_entry_parts/executor_defaults.py"
+          "src/med_autogrant/product_entry_parts/executor_defaults.py:active_executor_adapter_metadata_only"
         ],
         "compatibility_alias_allowed": false,
         "evidence_refs": [
@@ -6221,16 +6214,14 @@
       },
       {
         "active_caller_allowed": false,
-        "active_caller_status": "legacy_local_journal_attempt_ledger_physically_removed",
+        "active_caller_status": "legacy_local_journal_attempt_ledger_absent_no_active_caller",
         "active_callers": [],
         "cannot_absorb_reason": "The legacy local ledger itself should not be absorbed as MAG-owned code; OPL should provide the generic ledger while MAG keeps safe action refs and grant next-action meaning.",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
-          "src/med_autogrant/product_entry_parts/loop_contracts.py",
-          "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
-          "src/med_autogrant/hosted_contract_bundle.py",
-          "src/med_autogrant/domain_runtime_parts/io.py",
-          "src/med_autogrant/domain_runtime_parts/runtime_ops.py"
+          "src/med_autogrant/product_entry_parts/local_runtime_journal.py:absent",
+          "src/med_autogrant/product_entry_parts/attempt_ledger.py:absent",
+          "src/med_autogrant/runtime_journal.py:absent"
         ],
         "compatibility_alias_allowed": false,
         "evidence_refs": [
@@ -6276,7 +6267,7 @@
         "migration_action": "Old local journal and attempt ledger code has been deleted; OPL owns session ledger, typed attention queue, wakeup scheduler, and stage-attempt ledger.",
         "module_id": "local_runtime_journal_attempt_ledger",
         "owner": "none_active",
-        "retention_reason": "Active MAG source retains only refs-only session/runtime locator surfaces; local journal implementation and tests are not retained.",
+        "retention_reason": "Active MAG source retains refs-only session/runtime locator projections under refs-only adapter classifications; local journal implementation and tests are not retained.",
         "state": "retired_or_tombstone_only"
       },
       {
@@ -6323,40 +6314,35 @@
       },
       {
         "active_caller_allowed": false,
-        "active_caller_status": "legacy_alias_retired_grouped_commands_active",
-        "active_callers": [
-          "grouped public command tokens"
-        ],
+        "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
+        "active_callers": [],
         "cannot_absorb_reason": "Flat aliases are retired local CLI surface, not a reusable OPL primitive.",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
-          "src/med_autogrant/cli_parts/parser_adders.py",
-          "src/med_autogrant/cli_parts/handlers.py",
-          "src/med_autogrant/public_cli.py"
+          "src/med_autogrant/cli_parts/legacy_flat_aliases.py:absent",
+          "src/med_autogrant/public_cli_flat_aliases.py:absent"
         ],
         "compatibility_alias_allowed": false,
         "evidence_refs": [
           "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
           "docs/status.md#旧面退役校准"
         ],
-        "migration_action": "Route callers to grouped product/workspace/pass/package commands.",
+        "migration_action": "Keep grouped product/workspace/pass/package commands classified as direct domain handler targets; do not keep a legacy flat-alias compatibility surface.",
         "module_id": "legacy_flat_shell_aliases",
         "owner": "none_active",
-        "retention_reason": "Machine command fields may stay stable, but user-facing flat aliases should not.",
+        "retention_reason": "Machine command fields may stay stable in grouped handlers, but retired flat aliases have no active caller and must not be reintroduced as compatibility commands.",
         "state": "retired_or_tombstone_only"
       },
       {
         "active_caller_allowed": false,
-        "active_caller_status": "legacy_scheduler_daemon_physically_removed_refs_only_runtime_control",
-        "active_callers": [
-          "product-entry runtime_control refs projection"
-        ],
+        "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
+        "active_callers": [],
         "cannot_absorb_reason": "OPL owns production scheduler/daemon; MAG only exposes grant route and authority refs.",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
-          "src/med_autogrant/runtime_defaults.py",
-          "src/med_autogrant/domain_runtime_parts/substrate.py",
-          "src/med_autogrant/product_entry_parts/runtime_surfaces.py"
+          "src/med_autogrant/scheduler_daemon.py:absent",
+          "src/med_autogrant/product_entry_parts/scheduler_daemon.py:absent",
+          "src/med_autogrant/domain_runtime_parts/scheduler_daemon.py:absent"
         ],
         "compatibility_alias_allowed": false,
         "evidence_refs": [
@@ -6398,10 +6384,10 @@
           },
           "surface_kind": "mag_legacy_surface_exit_gate"
         },
-        "migration_action": "OPL owns provider scheduler/daemon; MAG keeps refs-only runtime_control projection without local run/resume diagnostics.",
+        "migration_action": "OPL owns provider scheduler/daemon; MAG keeps any runtime_control projection under refs-only adapter classifications without local run/resume diagnostics.",
         "module_id": "repo_owned_scheduler_daemon",
         "owner": "none_active",
-        "retention_reason": "Runtime-control metadata remains a refs-only projection, not a daemon or scheduler.",
+        "retention_reason": "Runtime-control metadata remains covered by refs-only adapter entries, not by this legacy scheduler/daemon tombstone.",
         "state": "retired_or_tombstone_only"
       }
     ],
@@ -6836,12 +6822,12 @@
   ],
   "representative_private_functional_surfaces": {
     "local_runtime_journal_attempt_ledger": {
-      "active_caller_status": "legacy_local_journal_attempt_ledger_physically_removed",
+      "active_caller_status": "legacy_local_journal_attempt_ledger_absent_no_active_caller",
       "migration_action": "OPL_owns_session_attempt_ledger_MAG_deleted_local_journal_code",
       "module_ref": "local_runtime_journal_attempt_ledger"
     },
     "optional_hermes_state_db": {
-      "active_caller_status": "legacy_runtime_owner_physically_removed",
+      "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
       "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
       "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
     },
@@ -6854,12 +6840,12 @@
   "retire_or_tombstone_surfaces": [
     {
       "active_caller_allowed": false,
-      "active_caller_status": "legacy_runtime_owner_physically_removed",
+      "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
       "active_callers": [],
       "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution is modeled separately as an executor adapter receipt path, not a runtime owner.",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
-        "src/med_autogrant/product_entry_parts/executor_defaults.py"
+        "src/med_autogrant/product_entry_parts/executor_defaults.py:active_executor_adapter_metadata_only"
       ],
       "compatibility_alias_allowed": false,
       "evidence_refs": [
@@ -6874,16 +6860,14 @@
     },
     {
       "active_caller_allowed": false,
-      "active_caller_status": "legacy_local_journal_attempt_ledger_physically_removed",
+      "active_caller_status": "legacy_local_journal_attempt_ledger_absent_no_active_caller",
       "active_callers": [],
       "cannot_absorb_reason": "The legacy local ledger itself should not be absorbed as MAG-owned code; OPL should provide the generic ledger while MAG keeps safe action refs and grant next-action meaning.",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
-        "src/med_autogrant/product_entry_parts/loop_contracts.py",
-        "src/med_autogrant/product_entry_parts/runtime_surfaces.py",
-        "src/med_autogrant/hosted_contract_bundle.py",
-        "src/med_autogrant/domain_runtime_parts/io.py",
-        "src/med_autogrant/domain_runtime_parts/runtime_ops.py"
+        "src/med_autogrant/product_entry_parts/local_runtime_journal.py:absent",
+        "src/med_autogrant/product_entry_parts/attempt_ledger.py:absent",
+        "src/med_autogrant/runtime_journal.py:absent"
       ],
       "compatibility_alias_allowed": false,
       "evidence_refs": [
@@ -6929,7 +6913,7 @@
       "migration_action": "Old local journal and attempt ledger code has been deleted; OPL owns session ledger, typed attention queue, wakeup scheduler, and stage-attempt ledger.",
       "module_id": "local_runtime_journal_attempt_ledger",
       "owner": "none_active",
-      "retention_reason": "Active MAG source retains only refs-only session/runtime locator surfaces; local journal implementation and tests are not retained.",
+      "retention_reason": "Active MAG source retains refs-only session/runtime locator projections under refs-only adapter classifications; local journal implementation and tests are not retained.",
       "state": "retired_or_tombstone_only"
     },
     {
@@ -6976,40 +6960,35 @@
     },
     {
       "active_caller_allowed": false,
-      "active_caller_status": "legacy_alias_retired_grouped_commands_active",
-      "active_callers": [
-        "grouped public command tokens"
-      ],
+      "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
+      "active_callers": [],
       "cannot_absorb_reason": "Flat aliases are retired local CLI surface, not a reusable OPL primitive.",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
-        "src/med_autogrant/cli_parts/parser_adders.py",
-        "src/med_autogrant/cli_parts/handlers.py",
-        "src/med_autogrant/public_cli.py"
+        "src/med_autogrant/cli_parts/legacy_flat_aliases.py:absent",
+        "src/med_autogrant/public_cli_flat_aliases.py:absent"
       ],
       "compatibility_alias_allowed": false,
       "evidence_refs": [
         "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
         "docs/status.md#旧面退役校准"
       ],
-      "migration_action": "Route callers to grouped product/workspace/pass/package commands.",
+      "migration_action": "Keep grouped product/workspace/pass/package commands classified as direct domain handler targets; do not keep a legacy flat-alias compatibility surface.",
       "module_id": "legacy_flat_shell_aliases",
       "owner": "none_active",
-      "retention_reason": "Machine command fields may stay stable, but user-facing flat aliases should not.",
+      "retention_reason": "Machine command fields may stay stable in grouped handlers, but retired flat aliases have no active caller and must not be reintroduced as compatibility commands.",
       "state": "retired_or_tombstone_only"
     },
     {
       "active_caller_allowed": false,
-      "active_caller_status": "legacy_scheduler_daemon_physically_removed_refs_only_runtime_control",
-      "active_callers": [
-        "product-entry runtime_control refs projection"
-      ],
+      "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
+      "active_callers": [],
       "cannot_absorb_reason": "OPL owns production scheduler/daemon; MAG only exposes grant route and authority refs.",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
-        "src/med_autogrant/runtime_defaults.py",
-        "src/med_autogrant/domain_runtime_parts/substrate.py",
-        "src/med_autogrant/product_entry_parts/runtime_surfaces.py"
+        "src/med_autogrant/scheduler_daemon.py:absent",
+        "src/med_autogrant/product_entry_parts/scheduler_daemon.py:absent",
+        "src/med_autogrant/domain_runtime_parts/scheduler_daemon.py:absent"
       ],
       "compatibility_alias_allowed": false,
       "evidence_refs": [
@@ -7051,10 +7030,10 @@
         },
         "surface_kind": "mag_legacy_surface_exit_gate"
       },
-      "migration_action": "OPL owns provider scheduler/daemon; MAG keeps refs-only runtime_control projection without local run/resume diagnostics.",
+      "migration_action": "OPL owns provider scheduler/daemon; MAG keeps any runtime_control projection under refs-only adapter classifications without local run/resume diagnostics.",
       "module_id": "repo_owned_scheduler_daemon",
       "owner": "none_active",
-      "retention_reason": "Runtime-control metadata remains a refs-only projection, not a daemon or scheduler.",
+      "retention_reason": "Runtime-control metadata remains covered by refs-only adapter entries, not by this legacy scheduler/daemon tombstone.",
       "state": "retired_or_tombstone_only"
     }
   ],
