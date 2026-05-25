@@ -140,6 +140,49 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
         self.assertFalse(proof["claims_production_long_run_soak_complete"])
         self.assertFalse(proof["authority_boundary"]["can_declare_fundability_ready"])
 
+    def test_package_human_gate_typed_blocker_projects_submission_authority_boundary(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            runtime_root = Path(tmp_dir) / "runtime-state"
+            entry = MedAutoGrantProductEntry()
+            receipt = entry.write_owner_receipt_evidence(
+                input_path=CRITIQUE_EXAMPLE_PATH,
+                receipt_shape="typed_blocker",
+                stage_id="package_and_submit_ready",
+                source_ref="opl-ledger://mag/stage-attempt/package-human-gate/1",
+                closeout_summary="MAG package stage is blocked on submission-ready export human gate.",
+                runtime_root=runtime_root,
+                receipt_id="package-human-gate-blocker-1",
+            )["owner_receipt_evidence"]
+            payload = entry.build_controlled_soak_receipt_reconciliation_proof(
+                owner_receipt_evidence=receipt,
+                opl_ledger_ref="opl-ledger://mag/stage-attempt/package-human-gate/1",
+            )
+
+        proof = payload["receipt_reconciliation_proof"]
+        blocker = proof["typed_blocker"]
+        self.assertEqual(blocker["human_gate_id"], "submission_ready_export_gate")
+        self.assertTrue(blocker["human_gate_required"])
+        self.assertEqual(blocker["human_gate_owner"], "med-autogrant")
+        self.assertEqual(blocker["receipt_requirement"], "human_gate_receipt")
+        self.assertFalse(blocker["opl_can_bypass_human_gate"])
+        self.assertFalse(blocker["provider_completion_is_submission_ready"])
+        self.assertFalse(blocker["can_declare_submission_ready_export"])
+        self.assertIn("submission_ready", blocker["blocked_claims"])
+        self.assertIn("export_ready", blocker["blocked_claims"])
+        self.assertEqual(
+            proof["authority_boundary"]["submission_ready_export_gate_owner"],
+            "med-autogrant",
+        )
+        self.assertTrue(proof["authority_boundary"]["human_gate_required"])
+        self.assertEqual(
+            proof["authority_boundary"]["human_gate_id"],
+            "submission_ready_export_gate",
+        )
+        self.assertFalse(proof["authority_boundary"]["provider_completion_is_submission_ready"])
+        self.assertFalse(proof["claims_production_long_run_soak_complete"])
+
     def test_controlled_soak_receipt_reconciliation_inventory_summarizes_refs_only(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 

@@ -15,6 +15,10 @@ from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _require_nonempty_string,
 )
+from med_autogrant.product_entry_parts.typed_blocker_projection import (
+    build_typed_blocker_projection,
+    package_submission_ready_human_gate_authority_boundary,
+)
 from med_autogrant.workspace_types import WorkspaceStateError
 
 
@@ -35,6 +39,14 @@ def build_controlled_soak_receipt_reconciliation_proof(
     )
     typed_blocker = _reconciled_typed_blocker(receipt, closeout_result)
     evidence_refs = _reconciled_no_regression_evidence_refs(receipt, closeout_result)
+    authority_boundary = {
+        "mag_owner_receipt_authority": True,
+        "opl_ref_consumer_only": True,
+        "can_declare_fundability_ready": False,
+        "can_declare_authoring_quality_ready": False,
+        "can_declare_submission_ready_export": False,
+    }
+    authority_boundary.update(package_submission_ready_human_gate_authority_boundary(receipt))
     payload = {
         "surface_kind": RECEIPT_RECONCILIATION_PROOF_KIND,
         "version": "v1",
@@ -82,13 +94,7 @@ def build_controlled_soak_receipt_reconciliation_proof(
             ),
             "closeout_payload_consumed": bool(closeout_result),
         },
-        "authority_boundary": {
-            "mag_owner_receipt_authority": True,
-            "opl_ref_consumer_only": True,
-            "can_declare_fundability_ready": False,
-            "can_declare_authoring_quality_ready": False,
-            "can_declare_submission_ready_export": False,
-        },
+        "authority_boundary": authority_boundary,
         "forbidden_write_proof": dict(receipt["forbidden_write_proof"]),
     }
     return {
@@ -208,15 +214,10 @@ def _reconciled_typed_blocker(
     sidecar_blocker = closeout_result.get("typed_blocker")
     if isinstance(sidecar_blocker, Mapping):
         return dict(sidecar_blocker)
-    if receipt.get("receipt_shape") != "typed_blocker":
-        return None
-    return {
-        "blocker_kind": "mag_stage_attempt_owner_receipt_required",
-        "owner": TARGET_DOMAIN_ID,
-        "receipt_ref": receipt["receipt_instance_ref"],
-        "source_ref": receipt["source_ref"],
-        "next_action": "Route the blocker back to MAG owner surface before mutating grant truth, memory body, or artifact content.",
-    }
+    return build_typed_blocker_projection(
+        receipt,
+        blocker_kind="mag_stage_attempt_owner_receipt_required",
+    )
 
 
 def _reconciled_no_regression_evidence_refs(

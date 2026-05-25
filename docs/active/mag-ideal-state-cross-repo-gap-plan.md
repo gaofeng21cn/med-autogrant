@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `ideal_state_gap_plan`
 State: `active_plan`
 Machine boundary: 本文是人读 current gap / completion plan。机器真相继续归 `contracts/runtime-program/current-program.json`、contracts、schemas、source、CLI/API 行为、product-entry manifest、workspace/runtime artifact root、runtime receipts、质量报告和导出包。
-Date: `2026-05-24`
+Date: `2026-05-25`
 
 ## 读法
 
@@ -60,6 +60,7 @@ MAG 必须保留的 authority：
 | Declarative Grant Pack | `landed_with_evidence_tail` | `agent/`、stage control plane、quality gates、pack compiler input 已作为 OPL generated surface 输入。 |
 | Retained authority taxonomy | `landed_with_guard_tail` | fundability、quality、export、package、memory、owner receipt、grant helper 已分成 AI-first judgment surface 与 programmatic guard surface。 |
 | Consumer thinning / refs-only boundary | `landed_with_external_gate` | `mag_consumer_thinning_contract`、sidecar、receipt projection、lifecycle/package/memory refs 只输出 refs、typed blocker、owner receipt 与 action metadata。 |
+| Submission-ready human gate blocker projection | `landed_as_blocker_projection` | `package_and_submit_ready` 的 typed blocker 已显式投影 `submission_ready_export_gate`、MAG human-gate owner、`human_gate_receipt` requirement 与 OPL/provider 不可绕过字段；该 projection 不关闭人工审批，不声明 submission/export/production ready。 |
 | External evidence request accounting | `refs_only_closed` | `mag-evidence-receipt-ledger.json` 已记录 7 个 request refs-only close；剩余真实证据门是 `temporal_provider_long_soak_window_evidence` 和持续 no-regression / consumption。 |
 | Process/history foldback | `landed` | dated closeout、receipt proof、provider/Gateway/local-manager 背景已回到 history/specs/provenance，不再作为 active plan 流水。 |
 
@@ -70,6 +71,7 @@ MAG 必须保留的 authority：
 | Standard OPL Agent source shape | `landed_with_evidence_tail` | `agent/`、stage control plane、quality gates、pack compiler input 和 MAG owner boundary 已是当前默认结构；不声明 grant-ready、submission-ready 或 production-ready。 |
 | Runtime / product shell thinning | `landed_with_external_gate` | product/status/user-loop/sidecar/domain_runtime 面只能作为 direct handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone/migration input。 |
 | Evidence accounting | `refs_only_closed_for_requests` | MAG evidence request ledger 已闭合 refs-only accounting；真实 OPL-hosted grant-stage attempt、workspace memory/package/lifecycle receipt 和 Temporal long soak 仍是证据尾项。 |
+| Human gate projection | `explicit_blocker_not_approval` | Submission-ready export human gate 现在作为 MAG-owned typed blocker authority boundary 暴露给 sidecar 与 receipt reconciliation；真实 human approval receipt 仍未形成。 |
 | Docs lifecycle | `single_active_truth_owner` | 本文持有 current truth、gap、计划和下一轮 prompt；历史 proof、receipt 流水和旧路线继续留在 history/specs/provenance。 |
 
 ## 功能/结构差距
@@ -99,6 +101,7 @@ MAG 必须保留的 authority：
 | --- | --- | --- |
 | OPL-hosted grant-stage attempt | `needs_continuous_real_attempts` | 真实 OPL-hosted stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence。 |
 | Real workspace memory/package/lifecycle scaleout | `needs_real_workspace_scaleout` | 真实 grant workspace 产生 accepted/rejected memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout。 |
+| Submission-ready human gate receipt | `blocked_on_real_human_gate_receipt` | `submission_ready_export_gate` typed blocker 已可机读；关闭条件仍是真实 MAG owner human-gate receipt 或人工审批路径证据。 |
 | App/operator/release consumption | `needs_sustained_consumption` | OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG package refs、quality refs、manual portal boundary、transition oracle refs 和 safe action refs。 |
 | Temporal provider long soak | `open` | `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 形成连续证据。 |
 | Physical cleanup / no-resurrection | `cleanup_tail` | active caller migration、direct/hosted parity、owner receipt roundtrip、continuous evidence 与 no-active legacy caller scan 稳定后删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests。 |

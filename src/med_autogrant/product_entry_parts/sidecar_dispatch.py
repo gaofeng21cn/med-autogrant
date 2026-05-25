@@ -21,6 +21,9 @@ from med_autogrant.product_entry_parts.sidecar_contract import (
     SIDECAR_DISPATCH_KIND,
     SIDECAR_VERSION,
 )
+from med_autogrant.product_entry_parts.typed_blocker_projection import (
+    build_typed_blocker_projection,
+)
 from med_autogrant.workspace_types import WorkspaceFileError, WorkspaceStateError
 
 
@@ -297,15 +300,7 @@ def _dispatch_payload(
 
 
 def _typed_blocker_for_receipt(receipt: Mapping[str, Any], *, blocker_kind: str) -> dict[str, Any] | None:
-    if receipt.get("receipt_shape") != "typed_blocker":
-        return None
-    return {
-        "blocker_kind": blocker_kind,
-        "owner": TARGET_DOMAIN_ID,
-        "receipt_ref": receipt.get("receipt_instance_ref"),
-        "source_ref": receipt.get("source_ref"),
-        "next_action": "Route the blocker back to MAG owner surface before mutating grant truth, memory body, or artifact content.",
-    }
+    return build_typed_blocker_projection(receipt, blocker_kind=blocker_kind)
 
 
 def _stage_attempt_closeout_refs(task: Mapping[str, Any]) -> dict[str, Any]:
