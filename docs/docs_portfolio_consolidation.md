@@ -334,3 +334,48 @@ Next tranche write scope：
 
 - Continue MAG `docs/history/specs/*.md` in date/topic batches, prioritizing 2026-04-10 fail-closed / hosted-bundle records or 2026-04-11/2026-04-12 Hermes / hosted handoff specs because stale provider/hosted wording risk is higher there.
 - Or switch to RCA uncovered reference bodies or App docs once their main checkout and active worktrees are safe.
+
+### 2026-05-26 2026-04-10 hosted-contract bundle fail-closed history specs coverage tranche
+
+本轮覆盖 MAG `docs/history/specs/` 下 2026-04-10 hosted-contract-bundle final-package fail-closed 与 worktree-aware root resolution 历史 specs。目标是确认这些 direct-file 历史入口不会把旧 hostedization prep、host-agent、Gateway、final package malformed/fail-closed validation、worktree-aware control-plane root resolution 或 `CURRENT_PROGRAM` root lookup 词汇误读成当前 actual hosted runtime、MAG-owned generic runtime、public hosted runtime、App release ready、production ready、daemon/scheduler/attempt ledger、compatibility interface 或 active implementation queue。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/history/specs/README.md`。
+- Reviewed history specs: `docs/history/specs/2026-04-10-post-r5a-hosted-contract-bundle-final-package-checkpoint-semantics-fail-closed-activation-package.md`, `docs/history/specs/2026-04-10-post-r5a-hosted-contract-bundle-final-package-freeze-manifest-value-types-fail-closed-activation-package.md`, `docs/history/specs/2026-04-10-post-r5a-hosted-contract-bundle-final-package-lineage-value-types-fail-closed-activation-package.md`, `docs/history/specs/2026-04-10-post-r5a-hosted-contract-bundle-final-package-required-nested-fields-fail-closed-activation-package.md`, `docs/history/specs/2026-04-10-post-r5a-hosted-contract-bundle-final-package-required-scalar-fields-fail-closed-activation-package.md`, `docs/history/specs/2026-04-10-post-r5a-hosted-contract-bundle-malformed-final-package-fail-closed-activation-package.md`, `docs/history/specs/2026-04-10-post-r5a-worktree-aware-hosted-contract-control-plane-root-resolution-activation-package.md`.
+- Machine/source truth surfaces: `contracts/runtime-program/current-program.json`, `src/med_autogrant/hosted_contract_bundle.py`, `src/med_autogrant/final_package_validation.py`, `src/med_autogrant/domain_runtime_parts/contracts.py`, `src/med_autogrant/public_cli.py`, `tests/test_hosted_contract_bundle.py`, `tests/test_hosted_contract_bundle_checkpoint_cases.py`, active specs listed by `docs/specs/README.md`, schemas/source/CLI/API behavior。
+- Fresh verification probes: `med_autogrant package --help`, `public_cli_command()` mapping for `build-final-package` / `build-hosted-contract-bundle`, retired public command scan, and focused pytest for hosted-contract bundle fail-closed cases.
+
+Fresh semantic result：
+
+- All seven reviewed files already carry first-screen lifecycle notes plus `Owner` / `Purpose` / `State` / `Machine boundary`.
+- The five `hosted-contract-bundle-final-package-*` specs and the malformed final-package spec are correctly scoped as historical post-R5A hosted-contract final-package fail-closed provenance. Current behavior is source/test owned by `hosted_contract_bundle.build_hosted_contract_bundle_payload()` and `final_package_validation._validate_required_final_package_fields()`, which validate supported package version, required scalar/object fields, required freeze manifest and lineage fields, allowed draft/checkpoint statuses, and checkpoint status consistency before hosted bundle export.
+- The worktree-aware root resolution spec is correctly scoped as historical control-plane root resolution provenance. It only describes deterministic `CURRENT_PROGRAM` lookup hardening; it does not change `program_id` semantics, final package identity, hosted bundle payload shape, formal entry, hosted runtime semantics, or runtime owner.
+- `contracts/runtime-program/current-program.json` still states `default_task_runtime_owner=one-person-lab`, `default_runtime_owner=configured_family_runtime_provider`, `default_runtime_substrate=temporal`, `mag_implements_daemon=false`, `mag_implements_scheduler=false`, `mag_implements_attempt_loop=false`, `mag_owns_attempt_ledger=false`, `default_stage_executor=codex_cli`, and `optional_hosted_carriers=["hermes_agent"]`.
+- Current public CLI shape is grouped: `build-final-package` maps to `package final-package`; `build-hosted-contract-bundle` maps to `package hosted-contract-bundle`. Historical bare command examples remain provenance and must not be copied into current operator docs without mapping through `public_cli`.
+- Focused hosted-contract bundle verification passed: `tests/test_hosted_contract_bundle.py` and `tests/test_hosted_contract_bundle_checkpoint_cases.py` returned 21 pytest cases plus 30 subtests passed. `med_autogrant package --help` shows `artifact-bundle`, `final-package`, `hosted-contract-bundle`, and `submission-ready` as current package commands.
+- No body rewrite was needed. This tranche records paragraph coverage and confirms the existing lifecycle guard plus specs lifecycle map are sufficient.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Full paragraph read of the seven 2026-04-10 hosted-contract bundle fail-closed / worktree-aware history specs listed above; support read of history specs index, specs lifecycle map, active gap plan, current-program runtime owner fields, hosted contract source, final package validation source, grouped public CLI mapping and focused hosted bundle tests. | this coverage ledger only |
+
+Archived / tombstoned / deleted docs：无。这七份文件仍是有用的 history provenance；不需要移动、tombstone 或正文删除。
+
+Uncovered docs：
+
+- `med-autogrant`: remaining `docs/history/specs/*.md` files outside the 2026-04-06 foundation batch、2026-04-07 P2/P3A batch、2026-04-08 P3/P4 batch、2026-04-08 P5/R1 batch、2026-04-08 R2/R3/runtime-first batch、2026-04-09 R3/R4/R5/post-R5A batch and this 2026-04-10 hosted-contract bundle fail-closed batch are not paragraph-governed in this tranche.
+- Higher-risk remaining MAG batches include 2026-04-10 local-runtime validation / stage-route / revised / walkthrough records, 2026-04-11 Hermes/reset/local-runtime records and 2026-04-12 hosted/OPL handoff records.
+- MAG non-index references such as grant strategy memory policy, OPL family contract adoption and governance checklist still need paragraph-level checks against current contracts/source unless already covered by a later OPL global ledger entry.
+- Other OPL-series repos remain under the global coverage ledger; App docs stay delayed while active release / GUI lanes are dirty.
+
+Remaining stale / retire candidates：
+
+- Any future direct-file use of these 2026-04-10 specs as current public CLI command shape, runtime owner, default runtime, actual hosted runtime, public hosted runtime, Gateway/federation readiness, daemon/scheduler/attempt ledger, controller public formal entry, submission/export-ready verdict, App release readiness, production readiness, physical-delete authority or compatibility-interface source is stale pollution.
+- Historical bare `build-final-package` and `build-hosted-contract-bundle` examples must be mapped through current grouped public CLI as `package final-package` and `package hosted-contract-bundle`; otherwise they are old local-runtime / hostedization-prep provenance, not active operator docs.
+- `final_package` malformed/fail-closed, hosted-contract bundle and worktree-aware `CURRENT_PROGRAM` lookup vocabulary must remain within grant package/export authority, hosted-contract export reference, deterministic root resolution and history/provenance boundaries. They must not be upgraded to generic OPL artifact lifecycle owner, actual hosted runtime, App/release readiness, external submission authorization, provider-hosted completion or production-ready claim.
+
+Next tranche write scope：
+
+- Continue MAG `docs/history/specs/*.md` in date/topic batches, prioritizing remaining 2026-04-10 local-runtime validation / stage-route / revised / walkthrough records or 2026-04-11/2026-04-12 Hermes / hosted handoff specs because stale local-runtime/provider/hosted wording risk is higher there.
+- Or switch to RCA uncovered reference bodies, OPL uncovered docs, or App docs once their main checkout and active worktrees are safe.
