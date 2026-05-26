@@ -9,6 +9,8 @@ Machine boundary: 本文是人读历史 spec，保留 post-R5A local runtime upp
 
 Date: `2026-04-11`
 
+2026-05 之后读法护栏：本文后文的 “Current Repo-Verified Local Runtime Surface” 是 2026-04-11 honest-stop closeout 的历史快照，不是当前 executable command catalog。旧 `runtime-run`、`runtime-resume`、local journal、host-agent ladder 和 bare command examples 只作 provenance；当前 operator path 必须映射到 grouped CLI、domain-entry catalog、retired public command no-resurrection scan 与 `contracts/runtime-program/current-program.json`。本文不重新接纳 MAG-owned daemon、scheduler、attempt loop、attempt ledger、local runtime command alias、Hermes-backed default provider 或 hosted runtime readiness。
+
 ## Goal
 
 把当前 repo-tracked truth 下最诚实的 closeout 结论冻结成公开 current truth：

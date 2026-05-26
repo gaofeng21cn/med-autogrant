@@ -13,6 +13,8 @@ Machine boundary: 本文是人读历史 spec，保留 2026-04-11 Hermes-backed r
 - Retained：proof vocabulary、fail-closed lessons、runtime-state provenance，以及解释为什么 Hermes-first 没有保留为默认路线的 audit path。
 - Direct retirement posture：任何只为保留 Hermes-backed owner 或 compatibility bridge 的旧 module/interface/test，都应迁到当前 owner surface；没有 active caller 后删除或归档。
 
+2026-05 之后读法护栏：本文后文所有 `Hermes-backed runtime substrate`、`runtime-run`、`runtime-resume`、local host-agent、compatibility bridge、future Hermes host、`domain_runtime.py` owner path 或 “切到 Hermes substrate owner path” 表述，都只描述 2026-04-11 当时的 provider-proof proposal 与误读来源。当前可执行 operator surface 是 grouped CLI / domain-entry / explicit `hermes_agent` receipt lane；默认 task runtime、attempt ledger、queue / wakeup / resume 和 production provider 归 OPL/Temporal。本文不得作为恢复 MAG-owned local runtime、Hermes-backed default provider、runtime command alias、compatibility bridge 或 hosted runtime readiness 的依据。
+
 Date: `2026-04-11`
 
 ## Goal
