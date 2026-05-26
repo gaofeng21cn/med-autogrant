@@ -109,3 +109,45 @@ Uncovered docs：本条 ledger 只关闭 `docs/product/README.md`、`docs/runtim
 Remaining stale / retire candidates：后续若在这些目录新增正文，必须继续保持 thin support role，不得把 `product-entry-manifest`、`domain_handler_export`、source provenance、delivery package 或 policies 写成第二 active truth、MAG-owned generic runtime/workbench/scheduler、旧 Gateway/frontdoor/compat alias 路线，或 production/domain readiness 结论。
 
 Next tranche write scope：继续按 OPL series coverage ledger 推进未覆盖 repo/section；MAG 侧若再进入本地写入，优先处理 specs/support current-truth map、references/history residual stale wording，或由 OPL 全局 ledger 指向的下一段 MAG 文档。
+
+### 2026-05-26 2026-04-07 authoring / review history specs coverage tranche
+
+本轮覆盖 MAG `docs/history/specs/` 下 2026-04-07 P2/P3A authoring / review 历史 specs。目标是确认这些 direct-file 历史入口不会把旧 `Current Truth` 标题、CLI-only early authoring route、mentor verdict freeze 或 early audit surface 误读成当前 route owner、runtime owner、quality/export/submission-ready verdict、compatibility interface 或 active backlog。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/history/specs/README.md`。
+- Reviewed history specs: `docs/history/specs/2026-04-07-p2a-intake-direction-question-mainline-current-truth.md`, `docs/history/specs/2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md`, `docs/history/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`, `docs/history/specs/2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md`.
+- Machine truth surfaces: `contracts/runtime-program/current-program.json`, active specs listed by `docs/specs/README.md`, schemas/source/CLI/API behavior.
+
+Fresh semantic result：
+
+- All four reviewed files already carry first-screen lifecycle notes plus `Owner` / `Purpose` / `State` / `Machine boundary`.
+- P2.A / P2.B / P2.C are correctly scoped as `historical_authoring_flow_provenance`; P3.A is correctly scoped as `historical_review_gate_provenance`.
+- The files explicitly route current route truth、authoring pass、executor boundary、review / quality boundary、OPL/Temporal runtime owner and machine behavior back to current core docs、active specs、contracts/schema/source、CLI/API behavior and `contracts/runtime-program/current-program.json`.
+- Stale-risk scan found no unguarded Hermes/Gateway/local-manager/local-runtime/attempt-ledger/default-runtime wording in this batch. The only `Current Truth` wording is in historical titles and is already guarded by file-level lifecycle notes.
+- No body rewrite was needed. This tranche records paragraph coverage and confirms the existing lifecycle guard is sufficient.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Full paragraph read of the four 2026-04-07 history specs listed above; support read of history specs index, specs lifecycle map, active gap plan, status and current-program runtime owner fields. | this coverage ledger only |
+
+Archived / tombstoned / deleted docs：无。这四份文件仍是有用的历史 provenance；不需要移动、tombstone 或正文删除。
+
+Uncovered docs：
+
+- `med-autogrant`: remaining `docs/history/specs/*.md` files outside the 2026-04-06 foundation batch and this 2026-04-07 P2/P3A batch are not paragraph-governed in this tranche.
+- Higher-risk remaining batches include 2026-04-08 P3/P4 rollback / verification gate records, 2026-04-08 P5 / R-series activation packages, 2026-04-09 R3/R4/R5 / post-R5A records, 2026-04-10 fail-closed / hosted-bundle records, 2026-04-11 Hermes/reset/local-runtime records and 2026-04-12 hosted/OPL handoff records.
+- MAG non-index references such as grant strategy memory policy, OPL family contract adoption and governance checklist still need paragraph-level checks against current contracts/source unless already covered by a later OPL global ledger entry.
+- Other OPL-series repos remain under the global coverage ledger; App docs stay delayed while active release / GUI lanes are dirty.
+
+Remaining stale / retire candidates：
+
+- Any future direct-file use of these 2026-04-07 specs as current route registry, runtime owner, default CLI/API contract, quality/export/submission-ready verdict, physical-delete authority or compatibility-interface source is stale pollution.
+- `ready_for_submission` in P3.A remains historical verdict semantics only. Current submission-ready / export / human-gate authority must come from MAG-owned active specs, contracts/source, owner receipt or typed blocker surfaces.
+- P2/P3 authoring-flow route examples remain provenance. They must not override current OPL/Temporal default runtime ownership, current active route catalog, AI-first quality boundary or product-entry / domain-handler source.
+
+Next tranche write scope：
+
+- Continue MAG `docs/history/specs/*.md` in date/topic batches, prioritizing 2026-04-08 P3/P4 rollback / verification records or 2026-04-11/2026-04-12 Hermes / hosted handoff specs because stale provider wording risk is higher there.
+- Or switch to OPL/RCA/App full README/docs coverage when their main checkout and active worktrees are safe.
