@@ -666,3 +666,44 @@ Next tranche write scope：
 
 - Continue another safe repo/doc cluster: OPL uncovered support docs, MAS remaining repo-wide docs, RCA remaining bodies after external implementation dirt is isolated, or App docs once active App dirty lanes are closed or explicitly assigned.
 - Keep the pre-existing `workspace cockpit` / `product direct-entry` / `product user-loop` CLI and runtime-state expectation drift routed to a source/test owner lane, not docs-governance closeout.
+
+### 2026-05-26 MAG non-spec history coverage tranche
+
+本轮覆盖 MAG `docs/history/**` 下非 specs 历史入口：历史 plans、product handoff、runtime owner split、positioning 和 OMX index。目标是确认这些 direct-file 历史入口不会把旧 scaffold/P1 计划、hosted caller proof、Hermes/Gateway/local-runtime/Domain Harness OS 词汇、轻量 product-entry shell 或 `.omx` / `.runtime-program` 语境误读成当前 active backlog、default runtime owner、MAG-owned generic runtime、Gateway-ready、hosted runtime readiness、product maturity、submission-ready / production-ready claim 或 compatibility interface。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`、`contracts/runtime-program/current-program.json`、`contracts/production_acceptance/mag-production-acceptance.json`。
+- Reviewed history docs：`docs/history/README.md`、`docs/history/plans/README.md`、`docs/history/plans/2026-04-06-med-autogrant-minimal-scaffold-plan.md`、`docs/history/plans/2026-04-07-p1-formal-entry-and-durability-planning-brief.md`、`docs/history/plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md`、`docs/history/plans/2026-04-13-grant-writing-full-coverage-landing-plan.md`、`docs/history/plans/mag-standard-agent-doc-process-history-2026-05.md`、`docs/history/product/lightweight-product-entry-and-opl-handoff.md`、`docs/history/runtime/opl-managed-runtime-three-layer-contract.md`、`docs/history/positioning/domain-harness-os-positioning.md`、`docs/history/omx/README.md`。
+- Source/read-model support：`src/med_autogrant/domain_runtime_parts/substrate.py::MagDomainRuntime.describe_topology` reports `runtime_owner="one-person-lab"`, `can_claim_generic_runtime_owner=False`, default stage attempt executor `Codex CLI`, and optional proof executor `Hermes-Agent` with `explicit opt-in only`; `public_cli.PUBLIC_GROUP_COMMANDS` exposes grouped workspace/mainline/domain-handler/authority/pass/package commands.
+
+Fresh semantic result：
+
+- History root, plans index, runtime history, positioning history and OMX index already carry owner / purpose / state / machine-boundary signals or directory inheritance sufficient for direct-file reading.
+- The old scaffold, P1 durability, hosted caller and full authoring landing plans are correctly scoped as completed historical plans. Their unchecked task lists, old `docs/plans` paths, `MCP/controller`, `.runtime-program` and hosted proof wording must remain provenance and cannot reopen active backlog.
+- `docs/history/product/lightweight-product-entry-and-opl-handoff.md` needed one body rewrite: the old “真实 upstream `Hermes-Agent` substrate 已经 landed” wording is now explicitly a hosted / upstream proof lane and migration-background claim. Current default runtime owner remains OPL/Temporal, and `Hermes-Agent` remains an explicit non-default proof / executor adapter lane.
+- `docs/history/runtime/opl-managed-runtime-three-layer-contract.md` already states current OPL stage-led runtime framework and `Codex CLI` executor boundary; no rewrite needed.
+- `docs/history/positioning/domain-harness-os-positioning.md` is correctly scoped as Domain Harness OS / UHS historical positioning. Its hosted/runtime maturity wording remains bounded by the first-screen historical note.
+- No archive, tombstone or deletion action was needed. These files remain useful provenance once read through the history lifecycle guard.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Full paragraph read of the history docs listed above; support read of MAG current status, active gap plan, ideal-state reference, runtime-program owner fields, production acceptance authority boundaries, domain runtime topology source and grouped public CLI shape. | this coverage ledger; `docs/history/product/lightweight-product-entry-and-opl-handoff.md` |
+
+Archived / tombstoned / deleted docs：无。这批非 specs history 文件仍是有用 provenance；本轮只修正一处可能被读成当前 Hermes default/runtime-substrate 事实的历史 product wording。
+
+Uncovered docs：
+
+- `med-autogrant`: root README、核心五件套、active plan、ideal-state reference、specs、thin indexes、non-index references、history specs focused batches和本轮 non-spec history 入口均已有记录覆盖。MAG 剩余未覆盖范围继续以 OPL 全局 coverage ledger 为准，主要是后续新增 docs、未被最终 reconcile 点名的历史正文或 later code/contract changes 重新打开的 support bodies。
+- Other OPL-series repos remain under the global coverage ledger; OMA full README/docs coverage remains covered by its earlier tranche.
+
+Remaining stale / retire candidates：
+
+- Any future MAG history wording that turns hosted / upstream Hermes proof lane into current default runtime owner, provider owner, production-ready claim or Codex-equivalent executor is stale pollution.
+- Any future history plan wording that revives `.omx`, `.runtime-program`, old `docs/plans`, Gateway/local-manager, flat CLI alias, local journal, attempt ledger, product-sidecar or compatibility aggregate tests as active surfaces is stale pollution.
+- Any future product handoff wording that turns lightweight product-entry / OPL handoff provenance into mature App/workbench readiness, final UX, grant-ready, submission-ready, export-ready or production-ready evidence is stale pollution.
+
+Next tranche write scope：
+
+- Prefer OPL uncovered support docs or MAS remaining repo-wide docs while RCA/App main checkouts still carry external dirty implementation/release lanes.
+- If returning to MAG, run a final inventory/reconcile pass against all `README*` and `docs/**/*.md` to confirm no new docs appeared after the recorded MAG coverage tranches.

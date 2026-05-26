@@ -44,9 +44,9 @@ Machine boundary: 本文是人读历史参考，保留 lightweight product entry
 
 ## 3. 为什么现在重点不再是 runtime substrate
 
-这个仓与另外两个业务仓不同：
+这个历史阶段与另外两个业务仓不同：
 
-- 真实 upstream `Hermes-Agent` substrate 已经 landed
+- 当时的 hosted / upstream `Hermes-Agent` proof lane 已被记录为迁移背景；当前默认运行驻留仍以 OPL/Temporal stage-led runtime 和 `Codex CLI` executor 口径为准
 - `MedAutoGrantDomainEntry` 已经 landed
 - repo-side adapter 与 domain logic 也已经对齐
 
@@ -99,7 +99,7 @@ Machine boundary: 本文是人读历史参考，保留 lightweight product entry
 
 ## 6. 下一步落地方向
 
-1. 继续保持真实 upstream `Hermes-Agent` substrate、service-safe domain entry 与 `product build-entry` 全绿。
+1. 继续保持显式 hosted / upstream proof lane、service-safe domain entry 与 `product build-entry` 全绿；不得把该 proof lane 写成当前默认 runtime owner。
 2. 让 `OPL -> Med Auto Grant` handoff 与 direct entry 持续共用同一套结构化 envelope，而不是再起第二套入口语义。
 3. 继续把 critique / revision / export 的 executor route truth 显式冻结到同一份 `executor_routing_contract`，不让 `pending` route 偷偷漂成“已 landed”。
 4. 在轻量结构化 shell 已 landed 的前提下，仍然克制表述成熟度，不把它写成完整最终 UX。
