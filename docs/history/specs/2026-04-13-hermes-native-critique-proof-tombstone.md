@@ -7,6 +7,12 @@ Machine boundary: 本文是人读历史 tombstone，只保留 2026-04-13 Hermes-
 
 状态：`historical tombstone / superseded`
 
+Post-2026-05 reading guard:
+
+- The historical `hermes_native_proof` name below is superseded by the current explicit `executor_kind = hermes_agent` adapter vocabulary.
+- Current default critique executor remains `codex_cli`; `hermes_agent` is explicit opt-in, requires an OPL `AgentExecutionReceipt` style proof, forbids silent Codex fallback, and is not declared equivalent to the default executor.
+- This tombstone must not be read as default runtime ownership, grant readiness, quality/export readiness, App release readiness, production readiness, or physical-delete authority.
+
 ## 这次真正落了什么
 
 本次落地的不是默认执行器替换，而是：

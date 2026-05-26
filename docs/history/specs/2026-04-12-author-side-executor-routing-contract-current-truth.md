@@ -25,6 +25,12 @@ Date: `2026-04-13`
 
 也就是说，下面保留的是历史迁移语义，不再代表当前 landed route catalog。
 
+Post-2026-05 reading guard:
+
+- `runtime-run` / `runtime-resume` are retired runtime command vocabulary, not current public CLI or domain-entry commands.
+- Historical bare commands such as `build-artifact-bundle` and `build-final-package` map through the current grouped CLI as `package artifact-bundle` and `package final-package` when used by operators.
+- Current route catalog, executor defaults and hosted authoring contract are source / contract owned by `src/med_autogrant/public_cli.py`, `src/med_autogrant/domain_entry.py`, `src/med_autogrant/domain_entry_contract.py`, `src/med_autogrant/hosted_contract_bundle.py`, active specs and `contracts/runtime-program/current-program.json`.
+
 ## Goal
 
 在已经 landed 的：

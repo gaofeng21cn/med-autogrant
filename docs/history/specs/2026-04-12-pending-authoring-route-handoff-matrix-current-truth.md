@@ -30,6 +30,12 @@ Date: `2026-04-13`
 
 为准。
 
+Post-2026-05 reading guard:
+
+- The pending matrix below is historical; current `direction_screening -> frozen` routes are landed service-safe commands.
+- Historical `summarize-workspace`, `stage-route-report` and `critique-summary` surface names map through the current grouped CLI as `workspace summarize`, `workspace route-report` and `workspace critique-summary` when used by operators.
+- Historical Hermes / Gateway / pending handoff wording must not be read as current runtime owner, default executor owner, compatibility interface, App readiness or production readiness.
+
 ## Goal
 
 在已经 landed 的：
