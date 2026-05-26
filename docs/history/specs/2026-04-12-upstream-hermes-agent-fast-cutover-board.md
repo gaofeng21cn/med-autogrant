@@ -9,6 +9,12 @@ Machine boundary: 本文是人读历史 spec，保留 2026-04-12 upstream Hermes
 
 状态锚点：`2026-04-12`
 
+## 2026-05 后读取守卫
+
+本文是 2026-04-12 fast-cutover board，不是当前可执行 baton。下文的 “real upstream Hermes-Agent runtime substrate”、`runtime-run`、`runtime-resume`、local run journal、`OPL Gateway` 和 hosted-friendly session boundary 只能作为 retired provider proof / planning provenance 阅读。当前默认 task runtime owner 是 OPL/Temporal；MAG 不实现 daemon、scheduler、attempt loop 或 attempt ledger；`hermes_agent` 只保留为显式非默认 executor / proof / provenance lane。
+
+当前 active domain-entry 和 grouped public CLI catalog 不包含 `run-local`、`runtime-run`、`runtime-resume` 或 `probe-upstream-hermes`。本文的 F1-F4 completed 与长线 Codex 提示词不再作为当前 implementation queue、compatibility target、provider owner、Gateway/federation readiness、production readiness 或 physical-delete authority。
+
 ## 文档目的
 
 这份文档把 `Med Auto Grant` 从“已可运行的本地 `CLI` runtime 基线”切到“真实上游 `Hermes-Agent` runtime substrate”的最快路径冻结下来。

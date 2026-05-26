@@ -14,6 +14,12 @@ Date: `2026-04-12`
 - Phase: `P3 hosted caller / OPL consumption proof`
 - Status: `history_provenance`
 
+## 2026-05 后读取守卫
+
+当前 `contracts/runtime-program/current-program.json` 声明默认 task runtime owner 是 OPL/Temporal，MAG 不实现 daemon、scheduler、attempt loop 或 attempt ledger；默认 stage executor 是 `codex_cli`，`hermes_agent` 只保留为显式非默认 executor / proof / provenance lane。下文的 `P3 completed` 只表示 2026-04-12 hosted caller contract-consumption proof 已形成；它不声明 public hosted runtime、production/default caller、App/workbench consumption、grant readiness、submission readiness 或 physical-delete authority。
+
+当前 live `SERVICE_SAFE_DOMAIN_COMMANDS` 与 `domain_entry_contract.supported_commands` 已扩展为当前 service-safe catalog，且 `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 不在 active domain-entry 或 grouped public CLI catalog 中。下文早期 landed / pending route 划分只作为 2026-04-12 快照；当前 route catalog、public CLI shape 与 no-resurrection 判断回到 source、contracts、tests、active specs 和 grouped public CLI。
+
 ## Goal
 
 这条 current truth 不新增 repo-local hosted helper，也不把 `OPL Gateway` 写成已落地。

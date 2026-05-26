@@ -14,11 +14,17 @@ Date: `2026-04-12`
 - Phase: `Lightweight Product Entry / OPL Handoff Shell`
 - Status: `history_provenance`
 
+## 2026-05 后读取守卫
+
+下文中的 `CLI-first + Codex CLI default runtime owner` 属于 2026-04-12 proof 语境。当前读法是：CLI 仍是 formal entry，`Codex CLI` 是默认 stage executor，默认 task runtime owner 是 OPL/Temporal，MAG 不实现 daemon、scheduler、attempt loop 或 attempt ledger；`hermes_agent` 只保留为显式非默认 executor / proof / provenance lane。
+
+`direct` / `opl-handoff` 在本文中只表示 historical product-entry envelope 与 handoff shape；它不声明 production hosted runtime、App/workbench release readiness、external default caller completion、grant readiness、submission-ready approval 或 physical-delete authority。当前 product-entry、domain-handler、route catalog、public CLI shape 与 no-resurrection 判断回到 source、contracts、tests、active specs、core docs 和 `contracts/runtime-program/current-program.json`。
+
 ## Goal
 
 在已经 landed 的：
 
-- `CLI-first + Codex CLI default runtime owner, with explicit Hermes-Agent proof lane`
+- `CLI-first + Codex CLI default stage executor, with explicit Hermes-Agent proof lane`
 - `MedAutoGrantDomainEntry`
 
 之上，落一层轻量结构化 `product entry` shell，让：

@@ -15,6 +15,12 @@ Date: `2026-04-12`
 - Active tranche: `Explicit Hermes proof lane / service-safe domain entry / fresh proof`
 - Status: `explicit proof lane / historical runtime proof`
 
+## 2026-05 后读取守卫
+
+本文下方的 Hermes proof、`probe-upstream-hermes`、`runtime-run`、`runtime-resume`、SessionDB attempt durability 和 future `OPL Gateway` 语义是 2026-04-12 proof-lane snapshot，不是当前 default runtime owner 或 active public/domain command catalog。当前机器 truth 声明 OPL/Temporal 是默认 task runtime owner，MAG 不实现 daemon、scheduler、attempt loop 或 attempt ledger，`codex_cli` 是默认 stage executor，`hermes_agent` 只保留为显式非默认 executor / proof / provenance lane。
+
+当前 live `SERVICE_SAFE_DOMAIN_COMMANDS` 与 `domain_entry_contract.supported_commands` 已扩展为当前 service-safe catalog，且 `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 不在 active domain-entry 或 grouped public CLI catalog 中。下文旧 supported-command list、fresh proof surface 与 `runtime-run.stage_action_envelope` wording 只作 historical proof evidence；当前 command catalog、route catalog、product-entry/hosted-contract behavior 与 no-resurrection 判断回到 source、contracts、schemas、tests、active specs 和 `contracts/runtime-program/current-program.json`。
+
 ## Goal
 
 把 `Med Auto Grant` 从：

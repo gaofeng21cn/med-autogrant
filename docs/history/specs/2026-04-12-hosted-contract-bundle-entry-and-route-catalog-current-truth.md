@@ -15,6 +15,12 @@ Date: `2026-04-12`
 - Active tranche: `Hosted contract bundle entry and route catalog`
 - Status: `history_provenance`
 
+## 2026-05 后读取守卫
+
+当前 default task runtime owner 是 OPL/Temporal；MAG 只保留 grant truth、author-side route truth、quality/export/package authority、owner receipt 与 typed blocker。本文下方的 hosted bundle、entry contract 和 route catalog 只能作为 2026-04-12 contract export / handoff provenance 阅读，不声明 actual hosted runtime、public hosted runtime、production/default caller、App/workbench consumption、grant readiness 或 physical-delete authority。
+
+当前 live route catalog 与 service-safe command catalog 以 source、contracts、schemas、tests、active specs 和 `contracts/runtime-program/current-program.json` 为准。`hermes_agent` 是显式非默认 executor / proof / provenance lane；`run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 仍是 retired/no-resurrection command vocabulary，不是 active public/domain command。
+
 ## Goal
 
 当前只保留本文件中 schema-backed hosted contract bundle、route catalog 与 `MedAutoGrantDomainEntry` 的支撑读法。早期 “real upstream Hermes-Agent runtime substrate” 激活口径已退役，只作为 provenance；当前托管路线是 OPL stage-led framework + Temporal-backed provider，`hermes_agent` 只可作为显式非默认 executor/proof lane。

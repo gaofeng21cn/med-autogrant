@@ -17,6 +17,12 @@ Date: `2026-04-12`
 
 当前阅读规则：本文只保留 2026-04-12 的 OPL 对齐历史快照。当前 MAG 目标态以 `docs/references/med-auto-grant-ideal-state.md`、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、核心五件套、`docs/specs/specs_lifecycle_map.md` 和 `contracts/runtime-program/current-program.json` 为准。下文旧 `Hermes Kernel`、`OPL Gateway`、`Domain Harness OS`、`runtime substrate owner` 等表述只作为 provenance 阅读，不是当前目标路线、默认 runtime owner 或 active compatibility interface。
 
+## 2026-05 后读取守卫
+
+下文 P1/P2/P3/P4 是 2026-04-12 phase-map snapshot，不是当前 active phase owner。当前机器 truth 声明 `active_phase=P4 mature direct grant product entry`、`default_task_runtime_owner=one-person-lab`、`default_runtime_substrate=temporal`、`default_stage_executor=codex_cli`、`optional_hosted_carriers=["hermes_agent"]`，且 `mag_implements_daemon=false`、`mag_implements_scheduler=false`、`mag_implements_attempt_loop=false`、`mag_owns_attempt_ledger=false`。
+
+因此，历史 `P1 Hermes substrate cutover completed`、`P3 completed` 或 `P4.A/B/C landed` 只能说明当时的 proof / contract-consumption / product-entry snapshot；它们不授权当前 Hermes default runtime owner、public hosted runtime、Gateway/federation surface、App/workbench readiness、production ready、submission-ready approval、physical-delete authority 或 compatibility interface。
+
 ## 文档目的
 
 这份文档不声明新的 landed runtime。
