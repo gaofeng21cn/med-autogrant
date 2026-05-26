@@ -707,3 +707,52 @@ Next tranche write scope：
 
 - Prefer OPL uncovered support docs or MAS remaining repo-wide docs while RCA/App main checkouts still carry external dirty implementation/release lanes.
 - If returning to MAG, run a final inventory/reconcile pass against all `README*` and `docs/**/*.md` to confirm no new docs appeared after the recorded MAG coverage tranches.
+
+### 2026-05-26 MAG final inventory reconcile tranche
+
+本轮对 MAG 当前 `README*` 与 `docs/**/*.md` 做最终 inventory reconcile。目标是把此前按 root / core / specs / references / history batches 记录的 grouped coverage 与当前文件清单对齐，避免把“文件名未逐字点名”误读成未审文档，也避免把 MAG coverage closeout 升级成 runtime、production 或 physical-delete 授权。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md` 和本文件。
+- Current inventory script over `README*` and `docs/**/*.md`: `inventory_count=120`。
+- Reconcile scan: 26 paths were not literal substrings in this local ledger before this tranche, but all map to earlier grouped coverage: root/agent/contracts/runtime README support, docs/core/active portfolio entry coverage, current specs/thin index coverage, 2026-04-06 history specs coverage, non-spec history coverage, or the later global compaction row.
+- Machine/source truth: `contracts/runtime-program/current-program.json`、`contracts/functional_privatization_audit.json`、`contracts/production_acceptance/mag-production-acceptance.json`、`contracts/external_evidence/mag-evidence-receipt-ledger.json`、`MagDomainRuntime.describe_topology()` and `public_cli.PUBLIC_GROUP_COMMANDS`。
+
+Fresh semantic result：
+
+- Current MAG inventory remains 120 markdown files in scope. No new MAG `README*` or `docs/**/*.md` appeared after the recorded MAG coverage tranches.
+- The 26 previously not-literal ledger paths are reconciled as covered by grouped entries, not reopened doc gaps:
+  - `README.zh-CN.md`、`agent/README.md`、`contracts/README.md`、`docs/README.md`、`docs/active/README.md`、`docs/active/opl-private-implementation-migration-inventory.md`、`docs/docs_portfolio_consolidation.md` and `runtime/README.md` were covered by the docs portfolio entry coverage tranche as MAG entry/support docs.
+  - `docs/public/README.md` and all current `docs/specs/*.md` records were covered by the specs / thin index coverage tranche.
+  - `docs/history/specs/2026-04-06-*.md` were covered by the 2026-04-06 foundation history specs tranche.
+  - `docs/history/plan-completion-audit-2026-05-01.md` falls under non-spec history / compacted final whole-doc reconciliation; it remains provenance and does not reopen active plan truth.
+- Current machine truth still prevents overclaiming: OPL/Temporal is the default task runtime owner, MAG does not implement daemon / scheduler / attempt loop / attempt ledger, `claims_domain_repo_physical_delete_authorized=false`, `claims_production_long_run_soak_complete=false`, provider completion is not domain/fundability/submission ready, and MAG does not implement App workbench or OPL runtime.
+- Fresh clean-runner probe of `MagDomainRuntime.describe_topology()` reports `runtime_owner="one-person-lab"`, `can_claim_generic_runtime_owner=False`, default stage attempt executor `Codex CLI`, and optional proof executor `Hermes-Agent` with `explicit opt-in only`; `PUBLIC_GROUP_COMMANDS` exposes grouped `workspace`、`mainline`、`domain-handler`、`authority`、`pass` and `package` command groups.
+- No prose body needed additional rewrite in this reconcile pass. The effective change is closing the local coverage accounting ambiguity.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Current 120-file `README*` / `docs/**/*.md` inventory reconciled against prior MAG grouped coverage entries; support read of core/active/ideal-state docs, current contract truth, domain runtime topology and grouped public CLI surface. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。本轮没有发现新的 MAG doc path 需要归档、tombstone 或删除。
+
+Uncovered docs：
+
+- `med-autogrant`: none in the current 120-file `README*` / `docs/**/*.md` inventory for the recorded MAG governance scope. Future new docs or later source/contract changes can reopen specific sections.
+- Other OPL-series repos remain governed by the global coverage ledger: OPL and MAS still have open repo-wide coverage areas, RCA/App writes remain delayed while their main checkouts carry external dirty implementation/release lanes, and OMA remains covered by its earlier full README/docs tranche unless changed later.
+
+Remaining stale / retire candidates：
+
+- MAG runtime/evidence/physical-cleanup tails remain open as implementation/evidence work, not docs uncovered scope: physical delete authorization, production long-soak, submission-ready human gate, sustained real consumption and long-soak evidence.
+- Any future MAG docs wording that turns OPL projection, Temporal provider completion, descriptor conformance, history provenance, optional Hermes proof lane or zero open worklist into grant-domain ready、fundability ready、submission/export ready、production ready、MAG-owned generic runtime or App/workbench ownership is stale pollution.
+
+Next tranche write scope：
+
+- Prefer OPL uncovered support docs or MAS remaining repo-wide docs while RCA/App main checkouts still carry external dirty implementation/release lanes.
+- Return to MAG only if new MAG docs appear, later code/contract changes reopen a section, or a source/test owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and requires doc foldback.
+
+Verification before absorb：
+
+- MAG docs verification passed in the tranche worktree: `git diff --check` exited 0, strict README/docs/contracts conflict-marker scan had no hits, and OPL Doc Governance doctor returned `finding_count=0`, active truth `pass`.
+- MAG clean-runner topology probe passed via `./scripts/run-python-clean.sh`: `MagDomainRuntime.describe_topology()` returned OPL runtime ownership, no generic MAG runtime ownership, `Codex CLI` default executor and explicit opt-in `Hermes-Agent`; `PUBLIC_GROUP_COMMANDS` returned workspace/mainline/domain-handler/authority/pass/package groups.
