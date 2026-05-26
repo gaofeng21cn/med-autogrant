@@ -241,3 +241,49 @@ Next tranche write scope：
 
 - Continue MAG `docs/history/specs/*.md` in date/topic batches, prioritizing 2026-04-08 R2/R3/runtime-first records or 2026-04-11/2026-04-12 Hermes / hosted handoff specs because stale local-runtime/provider/hosted wording risk is higher there.
 - Or switch to RCA uncovered reference bodies or App docs once their main checkout and active worktrees are safe.
+
+### 2026-05-26 2026-04-08 R2/R3 runtime-first history specs coverage tranche
+
+本轮覆盖 MAG `docs/history/specs/` 下 2026-04-08 runtime-first program、R1-to-R5 boundary map、R2 artifact-bundle 和 R3 critique/revision executor 历史 specs。目标是确认这些 direct-file 历史入口不会把旧 runtime-first ladder、local runtime、`runtime-run` / `runtime-resume`、run journal、host-agent、hostedization、R2/R3 activation package、artifact bundle、revision executor 或 R1-R5 honest-stop 词汇误读成当前执行顺序、MAG-owned generic runtime、active local runtime plan、public runtime commands、attempt ledger、OPL/App production readiness、submission/export-ready verdict、compatibility interface 或 active implementation queue。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/history/specs/README.md`。
+- Reviewed history specs: `docs/history/specs/2026-04-08-runtime-first-productization-program.md`, `docs/history/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`, `docs/history/specs/2026-04-08-r2a-artifact-bundle-production-surface-activation-package.md`, `docs/history/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`.
+- Machine/source truth surfaces: `contracts/runtime-program/current-program.json`, `src/med_autogrant/public_cli.py`, `src/med_autogrant/domain_runtime_parts/substrate.py`, `src/med_autogrant/domain_entry.py`, `src/med_autogrant/product_entry_parts/functional_closure_skeleton.py`, `tests/test_domain_entry.py`, `tests/product_entry_cases/test_functional_closure.py`, active specs listed by `docs/specs/README.md`, schemas/source/CLI/API behavior。
+- Fresh read-model probes: `MagDomainRuntime().describe_topology()`, `public_cli_command("build-artifact-bundle", ...)`, `public_cli_command("execute-revision-pass", ...)`, `PUBLIC_GROUP_COMMANDS["package"]`, `PUBLIC_GROUP_COMMANDS["pass"]`, `med_autogrant package --help`, and `med_autogrant pass --help`.
+
+Fresh semantic result：
+
+- All four reviewed files already carry first-screen lifecycle notes plus `Owner` / `Purpose` / `State` / `Machine boundary`.
+- `2026-04-08-runtime-first-productization-program.md` and `2026-04-08-runtime-first-r1-to-r5-boundary-map.md` are correctly scoped as historical runtime-first program / boundary-map provenance. They are not current execution order, current local runtime ladder, active R1-R5 backlog, default runtime owner, hosted runtime claim or P5 expansion authority.
+- R2.A and R3.A are correctly scoped as `historical_activation_package` records. Their current machine behavior must be read through grouped public CLI/source/contracts: `build-artifact-bundle` maps to `package artifact-bundle`; `execute-revision-pass` maps to `pass revision`.
+- `contracts/runtime-program/current-program.json` still states `default_task_runtime_owner=one-person-lab`, `default_runtime_substrate=temporal`, `mag_implements_daemon=false`, `mag_implements_scheduler=false`, `mag_implements_attempt_loop=false`, and `mag_owns_attempt_ledger=false`.
+- `MagDomainRuntime().describe_topology()` still reports `runtime_owner=one-person-lab`, `can_claim_generic_runtime_owner=False`, `default_formal_entry=CLI`, `supported_protocol_layer=MCP`, `internal_controller_surface=controller`, and `optional_proof_executor_boundary=explicit opt-in only`.
+- Current public CLI shape is grouped: R2 package behavior is under `package artifact-bundle`; R3 revision behavior is under `pass revision`; historical bare command examples remain provenance and must not be copied into current operator docs without mapping through `public_cli`.
+- `runtime-run`、`runtime-resume`、`run-local` and `probe-upstream-hermes` remain retired/no-resurrection terms covered by source/tests; they must not be restored as active public/domain commands from these history docs.
+- Stale-risk scan found R2/R3/runtime-first risk terms only inside lifecycle-guarded history/provenance text, explicit future-scope/precondition/stop-condition guardrails, current-source CLI mapping, or no-resurrection surfaces. No body rewrite was needed; this tranche records paragraph coverage and confirms the existing lifecycle guard plus specs lifecycle map are sufficient.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Full paragraph read of the four 2026-04-08 R2/R3/runtime-first history specs listed above; support read of history specs index, specs lifecycle map, active gap plan, status, current-program runtime owner fields, grouped public CLI mapping, domain runtime topology and retired command no-resurrection surfaces. | this coverage ledger only |
+
+Archived / tombstoned / deleted docs：无。这四份文件仍是有用的 history provenance；不需要移动、tombstone 或正文删除。
+
+Uncovered docs：
+
+- `med-autogrant`: remaining `docs/history/specs/*.md` files outside the 2026-04-06 foundation batch、2026-04-07 P2/P3A batch、2026-04-08 P3/P4 batch、2026-04-08 P5/R1 batch and this 2026-04-08 R2/R3/runtime-first batch are not paragraph-governed in this tranche.
+- Higher-risk remaining MAG batches include 2026-04-09 R3/R4/R5 / post-R5A records, 2026-04-10 fail-closed / hosted-bundle records, 2026-04-11 Hermes/reset/local-runtime records and 2026-04-12 hosted/OPL handoff records.
+- MAG non-index references such as grant strategy memory policy, OPL family contract adoption and governance checklist still need paragraph-level checks against current contracts/source unless already covered by a later OPL global ledger entry.
+- Other OPL-series repos remain under the global coverage ledger; App docs stay delayed while active release / GUI lanes are dirty.
+
+Remaining stale / retire candidates：
+
+- Any future direct-file use of these runtime-first docs as current execution order, active local runtime ladder, runtime owner, default runtime, public `runtime-run` / `runtime-resume`, local run journal, attempt ledger, hosted runtime readiness, P5 expansion, controller capability, submission/export-ready verdict, production readiness, physical-delete authority or compatibility-interface source is stale pollution.
+- Historical bare `build-artifact-bundle` and `execute-revision-pass` command examples must be mapped through current grouped public CLI as `package artifact-bundle` and `pass revision`; otherwise they are old local-runtime provenance, not active operator docs.
+- `artifact_bundle`、revision executor、final package and hosted-friendly vocabulary must remain within grant/package/export authority and grouped CLI boundaries. They must not be upgraded to generic OPL artifact lifecycle owner, App/release readiness, production-ready claim, external submission authorization or provider-hosted completion.
+
+Next tranche write scope：
+
+- Continue MAG `docs/history/specs/*.md` in date/topic batches, prioritizing 2026-04-09 R3/R4/R5 / post-R5A records or 2026-04-11/2026-04-12 Hermes / hosted handoff specs because stale local-runtime/provider/hosted wording risk is higher there.
+- Or switch to RCA uncovered reference bodies or App docs once their main checkout and active worktrees are safe.
