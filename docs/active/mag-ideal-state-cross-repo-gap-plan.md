@@ -100,6 +100,7 @@ MAG 必须保留的 authority：
 | Evidence gate | 当前状态 | 关闭条件 |
 | --- | --- | --- |
 | OPL-hosted grant-stage attempt | `needs_continuous_real_attempts` | 真实 OPL-hosted stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence。 |
+| Package stage source/runtime evidence | `blocked_by_submission_gate_typed_blocker` | `package_and_submit_ready` stage production evidence 已被 OPL external evidence ledger verified；App/operator 读到 source scope 与 runtime event observed，expected receipt / monitor freshness 仍由 `submission_ready_export_gate` typed blocker 阻塞。关闭条件仍是真实 MAG owner human-gate receipt 或可重复 no-regression / monitor freshness evidence，不是 OPL receipt 本身。 |
 | Real workspace memory/package/lifecycle scaleout | `needs_real_workspace_scaleout` | 真实 grant workspace 产生 accepted/rejected memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout。 |
 | Submission-ready human gate receipt | `blocked_on_real_human_gate_receipt` | `submission_ready_export_gate` typed blocker 已可机读；关闭条件仍是真实 MAG owner human-gate receipt 或人工审批路径证据。 |
 | App/operator/release consumption | `needs_sustained_consumption` | OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG package refs、quality refs、manual portal boundary、transition oracle refs、safe action refs 和 `product opl-owner-payload-response` 的 success / typed-blocker payload path。 |
