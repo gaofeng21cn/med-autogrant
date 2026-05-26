@@ -85,3 +85,27 @@ MAG 的 dense dated specs 和历史 specs 只能通过 `docs/specs/specs_lifecyc
 MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 管理。MAG 只定义 grant transition table、fundability / aims / review / package guards、typed blocker、owner action 和 oracle fixtures；generic state-machine runner、matrix runner、queue、retry/dead-letter、provider lifecycle 与 operator workbench 归 OPL Framework。
 
 `product-entry-manifest.ideal_state_closure_status.mag_owned_transition_oracle` 现在把该 gap 投影为 `domain_spec_landed_external_runner_gate`，并通过 focused test 固定 oracle fixture -> domain_handler `stage-attempt/closeout` -> owner/no-regression receipt refs 的 repo-local no-regression closeout case。OPL 仍不能从 provider completion 推断 `fundability_ready`、`authoring_quality_ready` 或 `submission_ready_export_ready`，该 proof 也不声明 production long-run soak 完成。
+
+## Coverage ledger
+
+### 2026-05-26 thin support index coverage tranche
+
+本轮逐段覆盖 MAG thin support index：
+
+- `docs/product/README.md`：仍是 `domain_product_entry_support`，只索引 direct product-entry、product status、user loop、operator guide 与 app-skill 支撑；不复制 grant truth、quality/export verdict 或 product-entry manifest 机器状态。
+- `docs/runtime/README.md`：仍是 `grant_runtime_support`，只索引 runtime/control/projection 和 direct/hosted 边界；`contracts/runtime-program/current-program.json`、`MagDomainRuntime.describe_topology()`、`product-entry-manifest.opl_provider_runtime_contract`、`domain_handler_export` 与 `opl_substrate_adapter_export` 共同确认 runtime owner 是 OPL/Temporal，MAG 不内置 daemon、scheduler、attempt loop 或 attempt ledger。
+- `docs/delivery/README.md`：仍是 `grant_delivery_support`，只索引 submission-ready package、export 与 delivery 支撑；MAG 持有 fundability、quality、export verdict 与 package authority，外部门户提交不写成本仓完成状态。
+- `docs/source/README.md`：仍是 `grant_source_workspace_support`，只索引 workspace/source refs；`build_source_provenance_surface()` 和 `domain_handler_export.source_provenance` 确认 OPL 只消费 `docs/source/README.md`、historical fixture、explicit archive import command 和 parity oracle 这类 body-free refs。
+- `docs/policies/README.md`：仍是 `stable_policy_index`，只索引长期治理规则；一次性计划、旧接口退役和 provider proof 继续进入 `docs/active/` 或 `docs/history/**`，不迁入 policies。
+
+Live truth inputs：`AGENTS.md`、`TASTE.md`、核心五件套、本文件、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`、`contracts/runtime-program/current-program.json`、`contracts/private_functional_surface_policy.json`、`contracts/production_acceptance/mag-production-acceptance.json`、`contracts/runtime-program/opl-family-contract-adoption.json`、`MedAutoGrantDomainEntry`、`MagDomainRuntime.describe_topology()`、`build_product_entry_manifest()`、`build_domain_handler_export()`、`build_source_provenance_surface()`、`build_opl_substrate_adapter_export()` 和 MAG CLI help。
+
+Edited docs：仅本文件记录 coverage ledger。五个 thin support index 保持原文，因为它们已经具备 owner / purpose / state / machine boundary，且未发现 runtime owner、source truth、delivery authority、policy owner 或 product-entry authority 泄漏。
+
+Archived / tombstoned / deleted docs：无。本轮没有发现这五个 thin index 下需要归档、tombstone 或删除的文档；对应目录当前只有 README 索引，薄状态符合 portfolio 职责。
+
+Uncovered docs：本条 ledger 只关闭 `docs/product/README.md`、`docs/runtime/README.md`、`docs/delivery/README.md`、`docs/source/README.md` 与 `docs/policies/README.md` 的逐段覆盖。MAG 其余 README/docs 覆盖状态继续以 OPL series 全局 coverage ledger 和后续 tranche 为准，不由本条本地 ledger 重新声明全仓完成。
+
+Remaining stale / retire candidates：后续若在这些目录新增正文，必须继续保持 thin support role，不得把 `product-entry-manifest`、`domain_handler_export`、source provenance、delivery package 或 policies 写成第二 active truth、MAG-owned generic runtime/workbench/scheduler、旧 Gateway/frontdoor/compat alias 路线，或 production/domain readiness 结论。
+
+Next tranche write scope：继续按 OPL series coverage ledger 推进未覆盖 repo/section；MAG 侧若再进入本地写入，优先处理 specs/support current-truth map、references/history residual stale wording，或由 OPL 全局 ledger 指向的下一段 MAG 文档。
