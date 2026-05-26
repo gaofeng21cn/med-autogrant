@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import tempfile
+
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
@@ -62,6 +64,16 @@ def _cleanup_restore_retention_bundle() -> dict[str, object]:
 
 
 class ProductEntryReceiptReadinessTest(unittest.TestCase):
+    def run_cli(self, *args: str) -> tuple[int, str, str]:
+        stdout = StringIO()
+        stderr = StringIO()
+        with redirect_stdout(stdout), redirect_stderr(stderr):
+            try:
+                exit_code = main(public_cli_argv(args))
+            except SystemExit as exc:
+                exit_code = int(exc.code)
+        return exit_code, stdout.getvalue(), stderr.getvalue()
+
     def test_missing_receipts_project_missing_without_quality_authority(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 
@@ -161,3 +173,52 @@ class ProductEntryReceiptReadinessTest(unittest.TestCase):
                 package_lifecycle_items=[],
                 lifecycle_receipt_items=[],
             )
+
+    def test_receipt_readiness_dispatches_authority_target(self) -> None:
+        expected_payload = {
+            "surface_kind": "mag_receipt_readiness_projection",
+            "state": "receipt_refs_ready_not_quality_ready",
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            owner_receipt_path = Path(tmp_dir) / "owner-receipt.json"
+            memory_receipt_path = Path(tmp_dir) / "memory-receipt.json"
+            package_lifecycle_path = Path(tmp_dir) / "package-lifecycle.json"
+            lifecycle_receipt_path = Path(tmp_dir) / "lifecycle-receipt.json"
+            owner_receipt = _owner_receipt()
+            memory_receipt = _memory_receipt()
+            package_lifecycle = _package_lifecycle_projection()
+            lifecycle_receipt = _cleanup_restore_retention_bundle()
+            owner_receipt_path.write_text(json.dumps(owner_receipt), encoding="utf-8")
+            memory_receipt_path.write_text(json.dumps(memory_receipt), encoding="utf-8")
+            package_lifecycle_path.write_text(json.dumps(package_lifecycle), encoding="utf-8")
+            lifecycle_receipt_path.write_text(json.dumps(lifecycle_receipt), encoding="utf-8")
+
+            with patch("med_autogrant.product_entry.MedAutoGrantProductEntry") as product_entry_class:
+                product_entry = product_entry_class.return_value
+                product_entry.build_receipt_readiness_projection.return_value = expected_payload
+
+                exit_code, stdout, stderr = self.run_cli(
+                    "authority",
+                    "receipt-readiness",
+                    "--owner-receipt-evidence",
+                    str(owner_receipt_path),
+                    "--memory-receipt",
+                    str(memory_receipt_path),
+                    "--package-lifecycle",
+                    str(package_lifecycle_path),
+                    "--lifecycle-receipt",
+                    str(lifecycle_receipt_path),
+                    "--format",
+                    "json",
+                )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        self.assertEqual(json.loads(stdout), expected_payload)
+        product_entry.build_receipt_readiness_projection.assert_called_once_with(
+            owner_receipt_evidence_items=[owner_receipt],
+            memory_receipt_items=[memory_receipt],
+            package_lifecycle_items=[package_lifecycle],
+            lifecycle_receipt_items=[lifecycle_receipt],
+        )

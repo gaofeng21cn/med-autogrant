@@ -46,6 +46,7 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
     "product-owner-receipt-evidence": ("authority", "owner-receipt-evidence"),
     "production-live-acceptance-receipt": ("authority", "production-acceptance"),
     "codex-stage-receipts": ("authority", "stage-receipts"),
+    "receipt-readiness": ("authority", "receipt-readiness"),
     "opl-owner-payload-response": ("authority", "owner-payload-response"),
     "physical-morphology-guard": ("authority", "morphology-guard"),
     "executor-first-closeout-bundle": ("authority", "executor-closeout-bundle"),
@@ -95,7 +96,6 @@ GENERATED_SURFACE_COMMAND_REFS: Final[dict[str, str]] = {
     "lifecycle-receipt-bundle": "opl://generated-surfaces/mag/lifecycle-receipt-bundle",
     "memory-receipt-projection": "opl://generated-surfaces/mag/memory-receipt-projection",
     "package-lifecycle-handoff": "opl://generated-surfaces/mag/package-lifecycle-handoff",
-    "receipt-readiness": "opl://generated-surfaces/mag/receipt-readiness",
     "continuous-receipt-reconciliation": "opl://generated-surfaces/mag/continuous-receipt-reconciliation",
     "operator-closeout-readiness": "opl://generated-surfaces/mag/operator-closeout-readiness",
 }

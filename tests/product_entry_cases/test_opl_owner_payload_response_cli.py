@@ -55,8 +55,8 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
                 product_entry.build_opl_owner_payload_response.return_value = expected_payload
 
                 exit_code, stdout, stderr = self.run_cli(
-                    "product",
-                    "opl-owner-payload-response",
+                    "authority",
+                    "owner-payload-response",
                     "--production-acceptance",
                     str(production_acceptance_path),
                     "--external-evidence-receipt-ledger",

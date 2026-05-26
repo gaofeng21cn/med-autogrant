@@ -61,6 +61,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_opl_owner_payload_response,
     handle_product_owner_receipt_evidence,
     handle_product_physical_morphology_guard,
+    handle_product_receipt_readiness,
     handle_refresh_funding_opportunities_cache,
     handle_select_project_profile,
     handle_stage_route_report,
@@ -88,6 +89,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_opl_owner_payload_response_command,
     _add_product_owner_receipt_evidence_command,
     _add_product_physical_morphology_guard_command,
+    _add_product_receipt_readiness_command,
     _add_quality_diff_command,
     _add_refresh_cache_command,
     _add_revision_executor_command,
@@ -343,6 +345,12 @@ def build_parser() -> argparse.ArgumentParser:
         "codex-stage-receipts",
         handle_product_codex_stage_receipts,
         "把 Codex executor attempt 与独立 review attempt refs 聚合成 stage receipt bundle。",
+    )
+    _add_product_receipt_readiness_command(
+        subparsers,
+        "receipt-readiness",
+        handle_product_receipt_readiness,
+        "把 MAG owner/memory/package/lifecycle receipt refs 聚合成 OPL 可消费 readiness projection。",
     )
     _add_product_opl_owner_payload_response_command(
         subparsers,
