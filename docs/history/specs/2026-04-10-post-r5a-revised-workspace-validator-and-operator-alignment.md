@@ -7,6 +7,8 @@ Purpose: `historical_post_r5a_revised_workspace_validator_operator_alignment_pro
 State: `history`
 Machine boundary: 本文是人读历史 spec，保留 2026-04-10 revised workspace validator 与 operator alignment 的形成过程。当前 workspace validation、operator projection、runtime owner 与 package/export behavior 以核心五件套、active gap plan、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不恢复 same-repo HITL、MCP/controller public formal entry、Gateway 或 hosted runtime claim。
 
+Post-2026-05 读法注记：本文正文中的 `runtime-run` / `runtime-resume`、local runtime ladder 和 bare command walkthrough 只能作为 post-R5A 本地 closeout provenance 阅读。当前 grouped public CLI 不提供这些 retired runtime commands；`run-local`、`runtime-run`、`runtime-resume` 和 `probe-upstream-hermes` 的 no-resurrection 事实由 source/tests 和 `physical_skeleton_follow_through.retired_public_command_scan` 维护。当前可执行 operator path 必须映射到 grouped CLI，如 `workspace route-report`、`pass revision`、`package artifact-bundle`、`package final-package` 和 `package hosted-contract-bundle`。
+
 Date: `2026-04-10`
 
 ## 目标
