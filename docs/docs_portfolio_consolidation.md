@@ -756,3 +756,63 @@ Verification before absorb：
 
 - MAG docs verification passed in the tranche worktree: `git diff --check` exited 0, strict README/docs/contracts conflict-marker scan had no hits, and OPL Doc Governance doctor returned `finding_count=0`, active truth `pass`.
 - MAG clean-runner topology probe passed via `./scripts/run-python-clean.sh`: `MagDomainRuntime.describe_topology()` returned OPL runtime ownership, no generic MAG runtime ownership, `Codex CLI` default executor and explicit opt-in `Hermes-Agent`; `PUBLIC_GROUP_COMMANDS` returned workspace/mainline/domain-handler/authority/pass/package groups.
+
+### 2026-05-27 MAG exact active/spec path reconcile tranche
+
+本轮对 MAG 当前 `README*` 与 `docs/**/*.md` 做 exact-path ledger 对账。目标是关闭上一轮 final inventory reconcile 之后由文件清单变化和 grouped coverage 写法留下的 17 个 exact-string gap，避免把“路径没有逐字出现在本地 ledger”误读成未审文档；本轮不重新声明 MAG runtime、production、grant ready、submission/export ready 或 physical-delete 授权。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、`docs/history/specs/README.md` 和本文件。
+- Current inventory script over `README*` and `docs/**/*.md`: `inventory_count=117`。
+- Exact-string reconcile scan before this tranche: `missing_by_exact_string=17`。
+- First-screen / role read of the 17 paths listed below, plus support read of lifecycle map and current runtime owner surfaces.
+
+Exact paths reconciled：
+
+- `docs/history/specs/2026-04-06-med-auto-grant-top-level-design.md`
+- `docs/history/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`
+- `docs/history/specs/2026-04-06-nsfc-main-flow-and-critique-loop.md`
+- `docs/history/specs/2026-04-06-object-model-schema-v1.md`
+- `docs/specs/2026-04-07-durability-model-clarification.md`
+- `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
+- `docs/specs/2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md`
+- `docs/specs/2026-04-12-p4b-direct-grant-entry-composition-current-truth.md`
+- `docs/specs/2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md`
+- `docs/specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md`
+- `docs/specs/2026-04-13-critique-codex-cli-executor-current-truth.md`
+- `docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md`
+- `docs/specs/2026-04-13-p4e-schema-backed-product-status-and-manifest-current-truth.md`
+- `docs/specs/2026-04-13-p4f-local-submission-ready-package-current-truth.md`
+- `docs/specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md`
+- `docs/specs/2026-04-23-authoring-completion-semantics-current-truth.md`
+- `docs/specs/2026-04-27-ai-first-quality-boundary-current-truth.md`
+
+Fresh semantic result：
+
+- The four `docs/history/specs/2026-04-06-*.md` files already carry first-screen lifecycle notes plus owner / purpose / state / machine-boundary signals. They remain `history` / historical foundation provenance and are governed by the `../history/specs/2026-04-06-*` row in `docs/specs/specs_lifecycle_map.md`.
+- `docs/specs/2026-04-07-durability-model-clarification.md` and `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md` remain `support_current_truth` records. They only guard durability / formal-entry vocabulary and explicitly prevent restoration of local journal, attempt ledger, old public runtime commands, Gateway/local-manager path or MAG-owned generic runtime.
+- The 2026-04-12 / 2026-04-13 P4 product-entry, route, manifest and local package specs remain support current-truth by subsection. They describe current product-entry / route / package surfaces under source, schemas, product-entry manifest and `contracts/runtime-program/current-program.json`; they do not claim mature App/workbench, hosted runtime completion, external submission, grant ready, production ready or physical-delete authorization.
+- The 2026-04-13 critique executor spec, 2026-04-22 quality/autonomy spec, 2026-04-23 authoring-completion spec and 2026-04-27 AI-first quality-boundary spec remain active current specs in the narrow boundaries listed by `docs/specs/specs_lifecycle_map.md`.
+- No body rewrite was needed. This tranche records exact coverage only and leaves current machine truth unchanged: OPL/Temporal owns hosted task runtime, `Codex CLI` is the default stage executor, `Hermes-Agent` is explicit opt-in proof / executor adapter provenance, and MAG owns grant truth, quality/export verdicts, package authority, memory decision and owner receipts.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | First-screen / role read of the 17 exact paths listed above; support read of specs lifecycle map, history specs index, core docs, active gap plan and current runtime owner surfaces. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。这 17 个 paths 已有合法长期角色；本轮只补 exact-path ledger，不做移动、tombstone、删除或正文重写。
+
+Uncovered docs：
+
+- `med-autogrant`: exact-string inventory now has no uncovered `README*` / `docs/**/*.md` path in the current 117-file scope once this entry is counted. Future new docs or later source/contract changes can reopen specific sections.
+- Other OPL-series repos remain governed by the global coverage ledger. OMA and MAS have prior full/exact reconcile coverage recorded; OPL, RCA and App still depend on their own ledger state and active worktree safety before global goal closure.
+
+Remaining stale / retire candidates：
+
+- Any future MAG docs wording that promotes historical foundation specs, support current-truth records, active current specs, lifecycle-map rows, OPL projection, Temporal provider completion, optional Hermes proof lane or zero open worklist into grant-domain ready、fundability ready、submission/export ready、production ready、MAG-owned generic runtime or App/workbench ownership is stale pollution.
+- MAG implementation/evidence tails remain separate from docs coverage: physical delete authorization, production long-soak, submission-ready human gate, sustained real consumption and long-soak evidence still require their own source/test/receipt closeout.
+
+Next tranche write scope：
+
+- Continue OPL series whole-docs coverage outside MAG, prioritizing a repo whose main checkout and worktrees are safe for this automation.
+- Return to MAG only if new MAG docs appear, later code/contract changes reopen a section, or an implementation/evidence owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and requires doc foldback.
