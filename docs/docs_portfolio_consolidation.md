@@ -617,3 +617,52 @@ Next tranche write scope：
 
 - Continue MAG non-index references such as grant strategy memory policy, OPL family contract adoption and governance checklist; or switch to RCA uncovered reference bodies, OPL uncovered docs, or App docs once their main checkout and active worktrees are safe.
 - Keep the pre-existing `workspace cockpit` / `product direct-entry` CLI test drift routed to a source/test owner lane, not docs-governance closeout.
+
+### 2026-05-26 MAG non-index references coverage tranche
+
+本轮覆盖 MAG `docs/references/**` 下剩余非索引支撑文档：grant strategy memory policy、OPL family contract adoption 和 series doc governance checklist，并复核 references index。目标是确认这些 support references 不把 memory body、fundability/quality/export verdict、submission-ready authority、OPL runtime ownership、App/workbench scope、OMA role 或旧四仓治理范围误读成当前 MAG owner truth。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`、本文件和 `docs/references/README.md`。
+- Reviewed references：`docs/references/grant_strategy_memory_policy.md`、`docs/references/integration/opl-family-contract-adoption.md`、`docs/references/governance/series-doc-governance-checklist.md`、`docs/references/README.md`。
+- Machine/source truth surfaces：`contracts/runtime-program/current-program.json`、`contracts/runtime-program/opl-family-contract-adoption.json`、`contracts/memory_descriptor.json`、`contracts/pack_compiler_input.json`、`contracts/stage_control_plane.json`、`src/med_autogrant/product_entry_parts/*memory*`、`src/med_autogrant/product_entry_parts/opl_substrate_adapter.py`、`src/med_autogrant/product_entry_parts/manifest_builder.py`、`tests/test_opl_family_contract_adoption.py` 与 product-entry memory / receipt focused tests。
+- Cross-repo support truth：`/Users/gaofeng/workspace/one-person-lab/docs/references/operating-governance/family-domain-memory-governance.md` 存在，继续作为 family-level memory governance reference。
+
+Fresh semantic result：
+
+- `grant_strategy_memory_policy.md` 已按 single-role reference 读取：它只说明 prose-first grant strategy memory、stage-specific retrieval、MAG accept/reject 和 OPL refs / receipt projection 边界。`contracts/memory_descriptor.json` 确认 `memory_body_owner=med-autogrant`、OPL policy 是 `locator_and_receipt_refs_only`，且 OPL 不能写 memory body 或 accept/reject writeback。无需正文改写。
+- `integration/opl-family-contract-adoption.md` 已按 OPL adoption support reference 读取：`contracts/runtime-program/opl-family-contract-adoption.json` 确认 OPL 只是 family-level projection consumer，attempt / quality / incident / product operator projection 都不转移 MAG grant truth、fundability judgment、quality/export verdict 或 submission-ready export gate。无需正文改写。
+- `contracts/pack_compiler_input.json` 确认 canonical semantic pack root 是 `agent/`，并列出完整 prompts、stages、skills、quality gates 和 knowledge refs；`contracts/stage_control_plane.json` 确认六个 family stage 与 allowed action refs。当前 Declarative Grant Pack / Stage Control Plane 文档读法仍是 descriptor/projection，不是新的 MAG private runtime。
+- `series-doc-governance-checklist.md` 原先仍写“四仓”治理范围；本轮改为当前六仓 scope，并补充 `one-person-lab-app` 是 App/workbench 与 operator projection consumer、`opl-meta-agent` 是 Agent Foundry / new-agent builder-test managed module，不是 domain truth / artifact / owner receipt authority。
+- `docs/references/README.md` 已补入治理清单入口，保持 references index 与实际 support reference 集合一致。
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Full paragraph read of the four references listed above; support read of MAG core docs, ideal-state reference, active gap plan, runtime-program owner fields, OPL family adoption contract, memory descriptor, pack compiler input, stage control plane and relevant memory/adoption tests. | this coverage ledger; `docs/references/README.md`; `docs/references/governance/series-doc-governance-checklist.md` |
+
+Archived / tombstoned / deleted docs：无。这些 references 仍是有用的 support material；本轮问题是 stale family scope wording 与 index omission，不是路径退役。
+
+Uncovered docs：
+
+- `med-autogrant`: root README、核心五件套、active plan、ideal-state reference、specs、thin indexes、大部分 history specs 和本轮 non-index references 均已由已记录 tranche 覆盖；剩余未覆盖范围继续以 OPL 全局 coverage ledger 为准，主要是 `docs/history/**` 中未被 focused later ledger 点名的过程/历史正文、新增文档，以及后续变更打开的 support bodies。
+- OPL、MAS、RCA 和 App repo-wide coverage remains open outside recorded chunks. OMA is covered by its earlier full README/docs tranche.
+
+Remaining stale / retire candidates：
+
+- Any future reference wording that turns MAG memory into OPL-owned grant strategy content, fundability / quality / export verdict, submission-ready authority, repo-source memory body store or automatic recipe engine is stale pollution.
+- Any future adoption wording that turns OPL projection consumption, descriptor index, `agent/` pack, stage control plane or substrate adapter export into MAG private runtime, OPL grant truth owner, quality/export authority, App/workbench readiness, production ready or long-soak completion is stale pollution.
+- Any future MAG governance checklist wording that reverts to four-repo scope, omits One Person Lab App, or promotes OPL Meta Agent into domain truth / artifact / owner receipt authority is stale pollution.
+
+Verification before absorb：
+
+- `git diff --check` passed.
+- Strict README/docs/contracts conflict-marker scan passed.
+- OPL Doc Governance doctor passed with `finding_count=0` and active truth `pass`.
+- MAG focused memory/adoption/stage-control tests passed: `tests/test_opl_family_contract_adoption.py`, `tests/product_entry_cases/test_domain_memory_descriptor.py`, `tests/product_entry_cases/test_memory_receipt_projection.py`, `tests/product_entry_cases/test_domain_memory_receipt_evidence.py`, `tests/product_entry_cases/test_family_stage_control_plane.py`, and `tests/product_entry_cases/test_opl_substrate_adapter.py` returned 26 pytest cases plus 45 subtests.
+- A broader product family orchestration focused run still exposes a pre-existing product user-loop runtime-state root expectation drift; keep that source/test issue outside this docs-governance tranche.
+
+Next tranche write scope：
+
+- Continue another safe repo/doc cluster: OPL uncovered support docs, MAS remaining repo-wide docs, RCA remaining bodies after external implementation dirt is isolated, or App docs once active App dirty lanes are closed or explicitly assigned.
+- Keep the pre-existing `workspace cockpit` / `product direct-entry` / `product user-loop` CLI and runtime-state expectation drift routed to a source/test owner lane, not docs-governance closeout.
