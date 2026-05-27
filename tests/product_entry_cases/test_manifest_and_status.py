@@ -624,6 +624,57 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertFalse(owner_payload["body_included"])
         self.assertFalse(owner_payload["operator_payload_submitted"])
         self.assertFalse(owner_payload["workspace_receipt_scaleout_count_snapshot_is_receipt_refs"])
+        manifest_consumer = owner_payload["manifest_consumer_evidence"]
+        self.assertEqual(
+            manifest_consumer["surface_kind"],
+            "mag_manifest_owner_payload_consumer_evidence",
+        )
+        self.assertEqual(
+            manifest_consumer["state"],
+            "manifest_owner_payload_response_consumed_refs_only",
+        )
+        self.assertEqual(manifest_consumer["consumer"], "one_person_lab_app_operator_manifest")
+        self.assertEqual(
+            manifest_consumer["consumed_surface_refs"]["owner_payload_response_ref"],
+            "/product_entry_manifest/owner_payload_response",
+        )
+        self.assertEqual(
+            manifest_consumer["consumed_surface_refs"][
+                "stage_expected_receipt_payload_summary_ref"
+            ],
+            "/product_entry_manifest/owner_payload_response/stage_expected_receipt_payload_summary",
+        )
+        self.assertEqual(
+            manifest_consumer["observed_counts"]["workspace_count"],
+            4,
+        )
+        self.assertEqual(
+            manifest_consumer["observed_counts"][
+                "count_only_scaleout_total_receipt_ref_count"
+            ],
+            36,
+        )
+        self.assertEqual(
+            manifest_consumer["observed_counts"]["stage_expected_receipt_payload_stage_count"],
+            6,
+        )
+        self.assertIn(
+            "typed-blocker:mag/package_and_submit_ready/"
+            "submission_ready_export_gate/human-approval-required/2026-05-22",
+            manifest_consumer["human_gate_blocker_refs"],
+        )
+        self.assertFalse(manifest_consumer["operator_payload_submitted"])
+        self.assertFalse(manifest_consumer["count_only_scaleout_snapshot_is_receipt_refs"])
+        self.assertFalse(manifest_consumer["claims_sustained_app_consumption_complete"])
+        self.assertFalse(manifest_consumer["claims_submission_ready"])
+        self.assertFalse(manifest_consumer["claims_provider_long_soak_complete"])
+        self.assertFalse(manifest_consumer["authority_boundary"]["can_create_owner_receipt"])
+        self.assertFalse(manifest_consumer["authority_boundary"]["can_submit_operator_payload"])
+        self.assertFalse(
+            manifest_consumer["authority_boundary"][
+                "can_declare_app_sustained_consumption_complete"
+            ]
+        )
         self.assertFalse(owner_payload["grant_ready_claimed"])
         self.assertFalse(owner_payload["quality_ready_claimed"])
         self.assertFalse(owner_payload["export_ready_claimed"])

@@ -52,6 +52,39 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
         self.assertFalse(stage_summary["properties"]["export_ready_claimed"]["const"])
         self.assertFalse(stage_summary["properties"]["submission_ready_claimed"]["const"])
 
+        manifest_consumer = manifest_schema["$defs"]["magManifestOwnerPayloadConsumerEvidence"]
+        self.assertEqual(
+            manifest_consumer["properties"]["surface_kind"]["const"],
+            "mag_manifest_owner_payload_consumer_evidence",
+        )
+        self.assertEqual(
+            manifest_consumer["properties"]["consumer"]["const"],
+            "one_person_lab_app_operator_manifest",
+        )
+        self.assertEqual(
+            manifest_consumer["properties"]["projection_policy"]["const"],
+            "default_manifest_consumer_reads_owner_payload_refs_and_count_only_scaleout_without_submitting_operator_payload_or_claiming_ready",
+        )
+        self.assertFalse(manifest_consumer["properties"]["operator_payload_submitted"]["const"])
+        self.assertFalse(
+            manifest_consumer["properties"]["count_only_scaleout_snapshot_is_receipt_refs"][
+                "const"
+            ]
+        )
+        self.assertFalse(
+            manifest_consumer["properties"]["claims_sustained_app_consumption_complete"][
+                "const"
+            ]
+        )
+        self.assertFalse(manifest_consumer["properties"]["claims_submission_ready"]["const"])
+        consumer_authority = manifest_consumer["properties"]["authority_boundary"]["properties"]
+        self.assertFalse(consumer_authority["can_create_owner_receipt"]["const"])
+        self.assertFalse(consumer_authority["can_submit_operator_payload"]["const"])
+        self.assertFalse(
+            consumer_authority["can_declare_app_sustained_consumption_complete"]["const"]
+        )
+        self.assertFalse(consumer_authority["can_declare_submission_ready"]["const"])
+
         scaleout = manifest_schema["$defs"]["magWorkspaceReceiptScaleoutEvidence"]
         claims = scaleout["properties"]["claims"]["properties"]
         self.assertFalse(claims["claims_grant_ready"]["const"])

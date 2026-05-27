@@ -42,9 +42,36 @@
     "stage_success_refs_visible_is_completion": false,
     "payload_path_policy": "operator_must_choose_success_refs_path_or_domain_owned_typed_blocker_path_empty_template_blocks"
   },
+  "manifest_consumer_evidence": {
+    "surface_kind": "mag_manifest_owner_payload_consumer_evidence",
+    "state": "manifest_owner_payload_response_consumed_refs_only",
+    "consumer": "one_person_lab_app_operator_manifest",
+    "consumed_surface_refs": [
+      "/product_entry_manifest/owner_payload_response",
+      "/product_entry_manifest/workspace_receipt_scaleout_evidence",
+      "/product_entry_manifest/owner_payload_response/stage_expected_receipt_payload_summary"
+    ],
+    "observed_counts": {
+      "domain_owner_receipt_ref_count": 12,
+      "owner_chain_ref_count": 62,
+      "typed_blocker_ref_count": 1,
+      "stage_expected_receipt_payload_stage_count": 6,
+      "workspace_count": 4,
+      "count_only_scaleout_total_receipt_ref_count": 36
+    },
+    "human_gate_blocker_refs": [
+      "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
+    ],
+    "operator_payload_submitted": false,
+    "claims_sustained_app_consumption_complete": false,
+    "claims_submission_ready": false,
+    "claims_provider_long_soak_complete": false
+  },
   "evidence_refs": [
     "tests/product_entry_cases/test_receipt_scaleout_evidence.py::ProductEntryReceiptScaleoutEvidenceTest::test_real_workspace_receipt_scaleout_reaches_owner_payload_without_body_or_ready_claim",
     "tests/product_entry_cases/test_receipt_scaleout_evidence.py::ProductEntryReceiptScaleoutEvidenceTest::test_contract_snapshot_records_scaleout_closeout_without_grant_ready_claim",
+    "tests/product_entry_cases/test_manifest_and_status.py::ProductEntryManifestStatusTest::test_build_product_entry_manifest_returns_current_surface_contract",
+    "tests/test_schema_registry_owner_payload_manifest.py::OwnerPayloadManifestSchemaTest::test_product_entry_manifest_schema_pins_owner_payload_response_boundary",
     "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
     "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence"
   ],

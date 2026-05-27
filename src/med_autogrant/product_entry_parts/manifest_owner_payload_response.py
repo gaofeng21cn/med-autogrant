@@ -64,6 +64,10 @@ def build_manifest_owner_payload_surfaces() -> dict[str, Any]:
     )
     owner_payload_response["operator_payload_submitted"] = False
     owner_payload_response["workspace_receipt_scaleout_count_snapshot_is_receipt_refs"] = False
+    owner_payload_response["manifest_consumer_evidence"] = _manifest_consumer_evidence(
+        owner_payload_response,
+        workspace_scaleout_evidence,
+    )
 
     return {
         "owner_payload_response": owner_payload_response,
@@ -112,6 +116,99 @@ def _manifest_receipt_readiness_projection(
             "can_declare_submission_ready": False,
         },
     }
+
+
+def _manifest_consumer_evidence(
+    owner_payload_response: Mapping[str, Any],
+    workspace_scaleout_evidence: Mapping[str, Any],
+) -> dict[str, Any]:
+    scaleout_summary = _require_mapping(
+        workspace_scaleout_evidence,
+        "workspace_receipt_scaleout",
+        context="workspace_receipt_scaleout_evidence",
+    )
+    stage_payload = _require_mapping(
+        owner_payload_response,
+        "stage_expected_receipt_payload_summary",
+        context="owner_payload_response",
+    )
+    return {
+        "surface_kind": "mag_manifest_owner_payload_consumer_evidence",
+        "version": "v1",
+        "state": "manifest_owner_payload_response_consumed_refs_only",
+        "consumer": "one_person_lab_app_operator_manifest",
+        "owner": TARGET_DOMAIN_ID,
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "consumed_surface_refs": {
+            "owner_payload_response_ref": "/product_entry_manifest/owner_payload_response",
+            "workspace_receipt_scaleout_evidence_ref": (
+                "/product_entry_manifest/workspace_receipt_scaleout_evidence"
+            ),
+            "stage_expected_receipt_payload_summary_ref": (
+                "/product_entry_manifest/owner_payload_response/"
+                "stage_expected_receipt_payload_summary"
+            ),
+        },
+        "consumed_fields": [
+            "domain_owner_receipt_refs",
+            "owner_chain_refs",
+            "typed_blocker_refs",
+            "no_regression_evidence_refs",
+            "stage_expected_receipt_payload_summary",
+            "workspace_receipt_scaleout_summary",
+        ],
+        "observed_counts": {
+            "domain_owner_receipt_ref_count": len(
+                _string_list(owner_payload_response.get("domain_owner_receipt_refs"))
+            ),
+            "owner_chain_ref_count": len(
+                _string_list(owner_payload_response.get("owner_chain_refs"))
+            ),
+            "typed_blocker_ref_count": len(
+                _string_list(owner_payload_response.get("typed_blocker_refs"))
+            ),
+            "no_regression_evidence_ref_count": len(
+                _string_list(owner_payload_response.get("no_regression_evidence_refs"))
+            ),
+            "stage_expected_receipt_payload_stage_count": stage_payload.get("stage_count"),
+            "workspace_count": scaleout_summary.get("workspace_count"),
+            "count_only_scaleout_total_receipt_ref_count": scaleout_summary.get(
+                "total_receipt_ref_count"
+            ),
+        },
+        "human_gate_blocker_refs": list(_string_list(owner_payload_response.get("typed_blocker_refs"))),
+        "projection_policy": (
+            "default_manifest_consumer_reads_owner_payload_refs_and_count_only_scaleout_"
+            "without_submitting_operator_payload_or_claiming_ready"
+        ),
+        "operator_payload_submitted": False,
+        "count_only_scaleout_snapshot_is_receipt_refs": False,
+        "claims_sustained_app_consumption_complete": False,
+        "claims_grant_ready": False,
+        "claims_quality_ready": False,
+        "claims_export_ready": False,
+        "claims_submission_ready": False,
+        "claims_provider_long_soak_complete": False,
+        "authority_boundary": {
+            "owner": TARGET_DOMAIN_ID,
+            "refs_only": True,
+            "app_operator_consumes_manifest_refs_only": True,
+            "can_write_grant_truth": False,
+            "can_read_memory_body": False,
+            "can_read_artifact_body": False,
+            "can_create_owner_receipt": False,
+            "can_submit_operator_payload": False,
+            "can_declare_app_sustained_consumption_complete": False,
+            "can_declare_submission_ready": False,
+            "typed_blocker_is_submission_ready": False,
+        },
+    }
+
+
+def _string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, str) and item.strip()]
 
 
 def _read_json_object(relative_path: str) -> dict[str, Any]:
