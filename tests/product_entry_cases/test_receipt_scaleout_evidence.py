@@ -261,6 +261,40 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
         self.assertFalse(owner_payload["submission_ready_claimed"])
         self.assertFalse(owner_payload["authority_boundary"]["can_declare_submission_ready"])
         self.assertFalse(owner_payload["authority_boundary"]["typed_blocker_is_submission_ready"])
+        stage_summary = owner_payload["stage_expected_receipt_payload_summary"]
+        self.assertEqual(stage_summary["stage_count"], 6)
+        self.assertEqual(
+            stage_summary["status"],
+            "per_stage_expected_receipt_payload_refs_ready_with_live_evidence_typed_blockers",
+        )
+        self.assertFalse(stage_summary["payload_body_allowed"])
+        self.assertFalse(stage_summary["operator_payload_submitted"])
+        self.assertFalse(stage_summary["success_refs_visible_is_completion"])
+        self.assertFalse(stage_summary["grant_ready_claimed"])
+        self.assertFalse(stage_summary["quality_ready_claimed"])
+        self.assertFalse(stage_summary["export_ready_claimed"])
+        self.assertFalse(stage_summary["submission_ready_claimed"])
+        self.assertFalse(stage_summary["production_soak_complete_claimed"])
+        self.assertFalse(stage_summary["authority_boundary"]["can_create_owner_receipt"])
+        self.assertFalse(stage_summary["authority_boundary"]["can_declare_submission_ready"])
+        self.assertEqual(
+            len(stage_summary["typed_blocker_path_payload"]["typed_blocker_refs"]),
+            6,
+        )
+        self.assertTrue(
+            all(not stage["success_refs_visible_is_completion"] for stage in stage_summary["stages"])
+        )
+        self.assertTrue(all(not stage["grant_ready_claimed"] for stage in stage_summary["stages"]))
+        self.assertTrue(
+            all(
+                not stage["authority_boundary"]["can_declare_submission_ready"]
+                for stage in stage_summary["stages"]
+            )
+        )
+        self.assertEqual(
+            stage_summary["stages"][0]["success_refs_path_payload"]["runtime_event_refs"],
+            ["runtime_event:call_and_candidate_intake.owner_receipt_recorded"],
+        )
 
         for sample_id, *_ in _workspace_samples():
             with self.subTest(sample_id=sample_id):
@@ -306,6 +340,12 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
             snapshot["owner_payload_response"]["typed_blocker_refs"],
             [SUBMISSION_GATE_BLOCKER_REF],
         )
+        self.assertEqual(
+            snapshot["owner_payload_response"]["stage_expected_receipt_payload_stage_count"],
+            6,
+        )
+        self.assertFalse(snapshot["owner_payload_response"]["stage_payload_body_allowed"])
+        self.assertFalse(snapshot["owner_payload_response"]["stage_success_refs_visible_is_completion"])
         self.assertFalse(snapshot["claims"]["claims_grant_ready"])
         self.assertFalse(snapshot["claims"]["claims_submission_ready_export"])
         self.assertFalse(snapshot["authority_boundary"]["can_write_memory_body"])

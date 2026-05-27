@@ -36,6 +36,9 @@
     "typed_blocker_refs": [
       "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
     ],
+    "stage_expected_receipt_payload_stage_count": 6,
+    "stage_payload_body_allowed": false,
+    "stage_success_refs_visible_is_completion": false,
     "payload_path_policy": "operator_must_choose_success_refs_path_or_domain_owned_typed_blocker_path_empty_template_blocks"
   },
   "evidence_refs": [

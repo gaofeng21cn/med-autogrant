@@ -41,6 +41,10 @@ def _external_evidence_ledger() -> dict[str, object]:
             "stage_closeout_refs": [
                 {
                     "stage_id": "specific_aims_and_structure",
+                    "expected_receipt_ref": (
+                        "contracts/stage_control_plane.json#/stages/2/"
+                        "stage_contract/expected_receipt_refs/0"
+                    ),
                     "owner_receipt_or_typed_blocker_ref": (
                         "receipt:mag/grant-stage-controlled-attempt/"
                         "specific_aims_and_structure/owner-receipt-or-typed-blocker"
@@ -50,6 +54,20 @@ def _external_evidence_ledger() -> dict[str, object]:
                     ],
                 }
             ],
+            "opl_stage_source_runtime_evidence_typed_blocker_handoff": {
+                "stage_typed_blocker_refs": [
+                    {
+                        "stage_id": "specific_aims_and_structure",
+                        "typed_blocker_ref": (
+                            "typed-blocker:mag/stage-source-runtime-live-evidence/"
+                            "specific_aims_and_structure/pending"
+                        ),
+                        "blocked_runtime_event_refs": [
+                            "runtime_event:specific_aims_and_structure.ai_decision_gate_recorded"
+                        ],
+                    }
+                ]
+            },
             "submission_ready_export_gate_tail": {
                 "state": "blocked_by_domain_owned_human_gate_typed_blocker",
                 "typed_blocker_ref": (
@@ -144,6 +162,68 @@ class ProductEntryOplOwnerPayloadResponseTest(unittest.TestCase):
             response["opl_runtime_action_execute_payload"]["typed_blocker_refs"],
             response["typed_blocker_refs"],
         )
+        self.assertNotIn("stage_expected_receipt_payload_summary", response["record_payload"])
+        self.assertNotIn(
+            "stage_expected_receipt_payload_summary",
+            response["opl_runtime_action_execute_payload"],
+        )
+        stage_summary = response["stage_expected_receipt_payload_summary"]
+        self.assertEqual(stage_summary["surface_kind"], "mag_stage_expected_receipt_payload_summary")
+        self.assertEqual(
+            stage_summary["status"],
+            "per_stage_expected_receipt_payload_refs_ready_with_live_evidence_typed_blockers",
+        )
+        self.assertEqual(stage_summary["payload_kind"], "stage_expected_receipt_or_monitor_freshness_refs")
+        self.assertEqual(stage_summary["stage_count"], 1)
+        self.assertEqual(stage_summary["stage_ids"], ["specific_aims_and_structure"])
+        self.assertEqual(
+            stage_summary["stage_payload_template"],
+            {
+                "domain_receipt_refs": [],
+                "monitor_freshness_refs": [],
+                "runtime_event_refs": [],
+                "typed_blocker_refs": [],
+            },
+        )
+        self.assertFalse(stage_summary["payload_body_allowed"])
+        self.assertFalse(stage_summary["empty_payload_template_is_success_evidence"])
+        self.assertFalse(stage_summary["operator_payload_submitted"])
+        self.assertFalse(stage_summary["success_refs_visible_is_completion"])
+        self.assertFalse(stage_summary["grant_ready_claimed"])
+        self.assertFalse(stage_summary["quality_ready_claimed"])
+        self.assertFalse(stage_summary["export_ready_claimed"])
+        self.assertFalse(stage_summary["submission_ready_claimed"])
+        self.assertFalse(stage_summary["authority_boundary"]["can_declare_submission_ready"])
+        self.assertFalse(stage_summary["authority_boundary"]["typed_blocker_is_submission_ready"])
+        stage_payload = stage_summary["stages"][0]
+        self.assertEqual(stage_payload["stage_id"], "specific_aims_and_structure")
+        self.assertEqual(
+            stage_payload["success_refs_path_payload"]["domain_receipt_refs"],
+            [
+                "receipt:mag/grant-stage-controlled-attempt/"
+                "specific_aims_and_structure/owner-receipt-or-typed-blocker",
+                "contracts/stage_control_plane.json#/stages/2/"
+                "stage_contract/expected_receipt_refs/0",
+            ],
+        )
+        self.assertEqual(
+            stage_payload["success_refs_path_payload"]["monitor_freshness_refs"],
+            ["contracts/stage_control_plane.json#/stages/2/stage_contract/monitor_freshness_refs/0"],
+        )
+        self.assertEqual(
+            stage_payload["success_refs_path_payload"]["runtime_event_refs"],
+            ["runtime_event:specific_aims_and_structure.ai_decision_gate_recorded"],
+        )
+        self.assertEqual(
+            stage_payload["typed_blocker_path_payload"]["typed_blocker_refs"],
+            [
+                "typed-blocker:mag/stage-source-runtime-live-evidence/"
+                "specific_aims_and_structure/pending"
+            ],
+        )
+        self.assertFalse(stage_payload["success_refs_visible_is_completion"])
+        self.assertFalse(stage_payload["grant_ready_claimed"])
+        self.assertFalse(stage_payload["authority_boundary"]["can_create_owner_receipt"])
         self.assertFalse(response["accepted_payload_paths"]["typed_blocker_path"]["success_claimed"])
         self.assertFalse(response["authority_boundary"]["can_declare_submission_ready"])
         self.assertFalse(response["authority_boundary"]["typed_blocker_is_submission_ready"])

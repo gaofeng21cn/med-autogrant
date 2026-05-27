@@ -20,6 +20,18 @@ _REQUIRED_RETURN_SHAPES = (
     "owner_chain_ref",
     "typed_blocker_ref",
 )
+_STAGE_REQUIRED_RETURN_SHAPES = (
+    "domain_receipt_ref",
+    "monitor_freshness_ref",
+    "runtime_event_ref",
+    "typed_blocker_ref",
+)
+_STAGE_PAYLOAD_TEMPLATE = {
+    "domain_receipt_refs": [],
+    "monitor_freshness_refs": [],
+    "runtime_event_refs": [],
+    "typed_blocker_refs": [],
+}
 _FORBIDDEN_BODY_KEYS = frozenset(
     {
         "artifact_body",
@@ -88,6 +100,9 @@ def build_opl_owner_payload_response(
     receipt_readiness_refs = _receipt_readiness_refs(receipt_readiness_projection)
     typed_blocker_refs = _submission_ready_typed_blocker_refs(external_evidence_receipt_ledger)
     no_regression_refs = _no_regression_evidence_refs(external_evidence_receipt_ledger)
+    stage_expected_receipt_payload_summary = _stage_expected_receipt_payload_summary(
+        external_evidence_receipt_ledger
+    )
     domain_owner_receipt_refs = _dedupe(
         [*production_receipt_refs, *ledger_owner_refs, *receipt_readiness_refs["owner_receipt"]]
     )
@@ -124,6 +139,7 @@ def build_opl_owner_payload_response(
         "typed_blocker_refs": typed_blocker_refs,
         "owner_chain_refs": owner_chain_refs,
         "no_regression_evidence_refs": no_regression_refs,
+        "stage_expected_receipt_payload_summary": stage_expected_receipt_payload_summary,
         "domain_receipt_refs": domain_owner_receipt_refs,
         "no_regression_refs": no_regression_refs,
         "required_return_shapes": list(_REQUIRED_RETURN_SHAPES),
@@ -291,6 +307,244 @@ def _submission_ready_typed_blocker_refs(ledger: Mapping[str, Any]) -> list[str]
                 )
             )
     return _dedupe(refs)
+
+
+def _stage_expected_receipt_payload_summary(ledger: Mapping[str, Any]) -> dict[str, Any]:
+    closeout = _optional_mapping(ledger, "grant_stage_controlled_attempt_closeout")
+    if closeout is None:
+        stage_closeout_refs: list[Mapping[str, Any]] = []
+    else:
+        raw_stage_closeout_refs = closeout.get("stage_closeout_refs", [])
+        if raw_stage_closeout_refs is None:
+            raw_stage_closeout_refs = []
+        if not isinstance(raw_stage_closeout_refs, list):
+            raise WorkspaceStateError("grant_stage_controlled_attempt_closeout.stage_closeout_refs 必须是 list。")
+        stage_closeout_refs = []
+        for index, item in enumerate(raw_stage_closeout_refs):
+            if not isinstance(item, Mapping):
+                raise WorkspaceStateError(f"stage_closeout_refs[{index}] 必须是 object。")
+            stage_closeout_refs.append(item)
+
+    stage_blocker_refs_by_id = _stage_source_runtime_typed_blocker_refs_by_id(closeout)
+    stages = [
+        _stage_expected_receipt_payload_item(
+            item,
+            sequence=index + 1,
+            stage_blocker=stage_blocker_refs_by_id.get(
+                _require_nonempty_string(
+                    item.get("stage_id"),
+                    field_name="stage_id",
+                    context=f"stage_closeout_refs[{index}]",
+                )
+            ),
+        )
+        for index, item in enumerate(stage_closeout_refs)
+    ]
+    stage_ids = [stage["stage_id"] for stage in stages]
+    typed_blocker_refs = _dedupe(
+        [
+            ref
+            for stage in stages
+            for ref in stage["typed_blocker_path_payload"]["typed_blocker_refs"]
+        ]
+    )
+    return {
+        "surface_kind": "mag_stage_expected_receipt_payload_summary",
+        "owner": TARGET_DOMAIN_ID,
+        "consumer": "one_person_lab",
+        "status": _stage_expected_receipt_payload_status(typed_blocker_refs),
+        "payload_kind": "stage_expected_receipt_or_monitor_freshness_refs",
+        "payload_path_policy": _PAYLOAD_PATH_POLICY,
+        "payload_body_allowed": False,
+        "empty_payload_template_is_success_evidence": False,
+        "required_operator_payload_refs": [
+            "domain_receipt_refs",
+            "monitor_freshness_refs",
+            "runtime_event_refs",
+            "typed_blocker_refs",
+        ],
+        "required_return_shapes": list(_STAGE_REQUIRED_RETURN_SHAPES),
+        "accepted_payload_paths": _stage_accepted_payload_paths(),
+        "accepted_payload_paths_ref": "mag owner payload response#/stage_expected_receipt_payload_summary/accepted_payload_paths",
+        "stage_count": len(stages),
+        "stage_ids": stage_ids,
+        "stage_payload_template": dict(_STAGE_PAYLOAD_TEMPLATE),
+        "typed_blocker_path_payload": {
+            "typed_blocker_refs": typed_blocker_refs,
+        },
+        "success_ref_models": {
+            "expected_receipt_ref_model": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/stage_closeout_refs/*/expected_receipt_ref",
+            "monitor_freshness_ref_model": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/stage_closeout_refs/*/monitor_freshness_refs",
+            "runtime_event_ref_model": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/opl_stage_source_runtime_evidence_typed_blocker_handoff/stage_typed_blocker_refs/*/blocked_runtime_event_refs",
+            "source_runtime_event_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/opl_stage_source_runtime_evidence_typed_blocker_handoff/stage_typed_blocker_refs/<stage-id>/blocked_runtime_event_refs",
+        },
+        "stages": stages,
+        "operator_payload_submitted": False,
+        "success_refs_visible_is_completion": False,
+        "domain_readiness_claimed": False,
+        "grant_ready_claimed": False,
+        "quality_ready_claimed": False,
+        "export_ready_claimed": False,
+        "submission_ready_claimed": False,
+        "production_soak_complete_claimed": False,
+        "authority_boundary": _stage_payload_authority_boundary(),
+    }
+
+
+def _stage_expected_receipt_payload_item(
+    item: Mapping[str, Any],
+    *,
+    sequence: int,
+    stage_blocker: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    stage_id = _require_nonempty_string(item.get("stage_id"), field_name="stage_id")
+    owner_receipt_or_typed_blocker_ref = item.get("owner_receipt_or_typed_blocker_ref")
+    domain_receipt_refs: list[str] = []
+    typed_blocker_refs: list[str] = []
+    if owner_receipt_or_typed_blocker_ref is not None:
+        ref = _require_nonempty_string(
+            owner_receipt_or_typed_blocker_ref,
+            field_name="owner_receipt_or_typed_blocker_ref",
+            context=f"stage_closeout_refs[{sequence - 1}]",
+        )
+        if ref.startswith("receipt:") or ref.startswith("runtime://") or ref.startswith("workspace-runtime-ref:"):
+            domain_receipt_refs.append(ref)
+        else:
+            typed_blocker_refs.append(ref)
+
+    expected_receipt_ref = item.get("expected_receipt_ref")
+    if expected_receipt_ref is not None:
+        domain_receipt_refs.append(
+            _require_nonempty_string(
+                expected_receipt_ref,
+                field_name="expected_receipt_ref",
+                context=f"stage_closeout_refs[{sequence - 1}]",
+            )
+        )
+    if stage_blocker is not None:
+        blocker_ref = stage_blocker.get("typed_blocker_ref")
+        if blocker_ref is not None:
+            typed_blocker_refs.append(
+                _require_nonempty_string(
+                    blocker_ref,
+                    field_name="typed_blocker_ref",
+                    context=f"stage_source_runtime_typed_blocker_refs[{stage_id}]",
+                )
+            )
+    return {
+        "stage_id": stage_id,
+        "sequence": sequence,
+        "payload_kind": "stage_expected_receipt_or_monitor_freshness_refs",
+        "current_payload_template": dict(_STAGE_PAYLOAD_TEMPLATE),
+        "success_refs_path_payload": {
+            "domain_receipt_refs": _dedupe(domain_receipt_refs),
+            "monitor_freshness_refs": _read_ref_list(item, "monitor_freshness_refs"),
+            "runtime_event_refs": _read_ref_list(stage_blocker, "blocked_runtime_event_refs"),
+        },
+        "typed_blocker_path_payload": {
+            "typed_blocker_refs": _dedupe(typed_blocker_refs),
+        },
+        "operator_payload_submitted": False,
+        "recommended_current_payload_path": (
+            "typed_blocker_path" if typed_blocker_refs else "success_refs_path"
+        ),
+        "success_refs_visible_is_completion": False,
+        "domain_readiness_claimed": False,
+        "grant_ready_claimed": False,
+        "quality_ready_claimed": False,
+        "export_ready_claimed": False,
+        "submission_ready_claimed": False,
+        "production_soak_complete_claimed": False,
+        "authority_boundary": _stage_payload_authority_boundary(),
+    }
+
+
+def _stage_source_runtime_typed_blocker_refs_by_id(
+    closeout: Mapping[str, Any] | None,
+) -> dict[str, Mapping[str, Any]]:
+    if closeout is None:
+        return {}
+    handoff = _optional_mapping(closeout, "opl_stage_source_runtime_evidence_typed_blocker_handoff")
+    if handoff is None:
+        return {}
+    raw_items = handoff.get("stage_typed_blocker_refs", [])
+    if raw_items is None:
+        return {}
+    if not isinstance(raw_items, list):
+        raise WorkspaceStateError(
+            "opl_stage_source_runtime_evidence_typed_blocker_handoff.stage_typed_blocker_refs 必须是 list。"
+        )
+    stage_blockers: dict[str, Mapping[str, Any]] = {}
+    for index, item in enumerate(raw_items):
+        if not isinstance(item, Mapping):
+            raise WorkspaceStateError(
+                "opl_stage_source_runtime_evidence_typed_blocker_handoff."
+                f"stage_typed_blocker_refs[{index}] 必须是 object。"
+            )
+        stage_id = _require_nonempty_string(
+            item.get("stage_id"),
+            field_name="stage_id",
+            context=(
+                "opl_stage_source_runtime_evidence_typed_blocker_handoff."
+                f"stage_typed_blocker_refs[{index}]"
+            ),
+        )
+        stage_blockers[stage_id] = item
+    return stage_blockers
+
+
+def _stage_expected_receipt_payload_status(typed_blocker_refs: list[str]) -> str:
+    if typed_blocker_refs:
+        return "per_stage_expected_receipt_payload_refs_ready_with_live_evidence_typed_blockers"
+    return "per_stage_expected_receipt_payload_refs_ready"
+
+
+def _stage_accepted_payload_paths() -> dict[str, dict[str, Any]]:
+    return {
+        "success_refs_path": {
+            "required_any_operator_payload_refs": [
+                "domain_receipt_refs",
+                "monitor_freshness_refs",
+                "runtime_event_refs",
+            ],
+            "typed_blocker_refs_must_be_absent": True,
+            "closes_owner_chain": False,
+            "closes_domain_ready": False,
+            "closes_production_ready": False,
+        },
+        "typed_blocker_path": {
+            "required_operator_payload_refs": ["typed_blocker_refs"],
+            "success_claimed": False,
+            "closes_owner_chain": False,
+            "closes_domain_ready": False,
+            "closes_production_ready": False,
+        },
+    }
+
+
+def _stage_payload_authority_boundary() -> dict[str, Any]:
+    return {
+        "owner": TARGET_DOMAIN_ID,
+        "refs_only": True,
+        "mag_owns_domain_receipt_refs": True,
+        "mag_owns_typed_blocker_refs": True,
+        "opl_records_refs_only": True,
+        "can_execute_domain_action": False,
+        "can_write_domain_truth": False,
+        "can_write_owner_receipt": False,
+        "can_create_owner_receipt": False,
+        "can_generate_domain_owner_receipt": False,
+        "can_generate_typed_blocker": False,
+        "can_close_owner_chain": False,
+        "can_close_domain_ready": False,
+        "can_claim_production_ready": False,
+        "can_authorize_quality_or_export": False,
+        "can_declare_fundability_ready": False,
+        "can_declare_quality_ready": False,
+        "can_declare_export_ready": False,
+        "can_declare_submission_ready": False,
+        "typed_blocker_is_submission_ready": False,
+    }
 
 
 def _no_regression_evidence_refs(ledger: Mapping[str, Any]) -> list[str]:
