@@ -816,3 +816,49 @@ Next tranche write scope：
 
 - Continue OPL series whole-docs coverage outside MAG, prioritizing a repo whose main checkout and worktrees are safe for this automation.
 - Return to MAG only if new MAG docs appear, later code/contract changes reopen a section, or an implementation/evidence owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and requires doc foldback.
+
+### 2026-05-28 MAG current inventory refresh tranche
+
+本轮在 2026-05-27 MAG owner-payload、workspace receipt scaleout 与 grant-facing user stage log 文档折回之后，重新对 MAG 当前 `README*` 与 `docs/**/*.md` 做 exact inventory refresh。目标是确认 recent `docs/status.md`、`docs/active/mag-ideal-state-cross-repo-gap-plan.md` 与 `docs/decisions.md` 改动没有重新打开文档生命周期缺口，也不把 MAG runtime/evidence tail 误写成生产完成或物理删除授权。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`、本文件。
+- Recent doc-writing commits since 2026-05-27：`b03f0cd`、`68733c0`、`cbda7dd`、`5e9013e`、`c323933`、`e7913dd`、`187d871`。
+- Current inventory script over repo-root `README*` and `docs/**/*.md`: `inventory_count=120`、`missing_by_exact_string=0` after previously recorded MAG coverage entries.
+- Machine/source truth：`contracts/runtime-program/current-program.json`、`contracts/functional_privatization_audit.json`、`contracts/production_acceptance/mag-production-acceptance.json`、`MagDomainRuntime.describe_topology()`、`public_cli.PUBLIC_GROUP_COMMANDS`。
+
+Fresh semantic result：
+
+- Current MAG inventory has no uncovered exact path in the recorded `README*` / `docs/**/*.md` scope. No new MAG markdown path appeared that lacks a lifecycle role or coverage owner.
+- The recent `docs/status.md` and active gap plan edits are current truth foldback for owner-payload response, manifest consumer evidence, workspace receipt scaleout, OPL refs-only verification and grant-facing user stage log contract. They remain bounded by the same authority split: MAG owns grant truth、fundability / quality / export verdict、package authority、memory accept/reject、owner receipt and typed blocker; OPL owns Temporal provider runtime、queue、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、operator projection、observability/SLO、generated wrapper and App/workbench shell.
+- `contracts/runtime-program/current-program.json` still declares `default_task_runtime_owner=one-person-lab`、`default_runtime_substrate=temporal`、`mag_implements_daemon=false`、`mag_implements_scheduler=false`、`mag_implements_attempt_loop=false`、`mag_owns_attempt_ledger=false`、`claims_domain_repo_physical_delete_authorized=false` and `claims_production_long_run_soak_complete=false`. `mag_functional_structure_gap_count=0` remains a structural classification signal, not strict source-purity, production-ready, App sustained-consumption or physical-delete closeout.
+- `MagDomainRuntime.describe_topology()` still reports runtime ownership as OPL / one-person-lab, MAG as repo-side domain adapter / grant authority, `Codex CLI` as default stage executor, and `Hermes-Agent` as explicit opt-in proof executor only. `PUBLIC_GROUP_COMMANDS` still exposes grouped `workspace`、`mainline`、`domain-handler`、`authority`、`pass` and `package` commands rather than retired flat runtime aliases.
+- No prose body rewrite, archive, tombstone or deletion was needed. This tranche only records exact inventory refresh after recent live-truth doc foldback.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Current 120-file `README*` / `docs/**/*.md` inventory refreshed; support read of recent doc-writing commits, core/active/ideal-state docs, current contract truth, domain runtime topology and grouped public CLI surface. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。本轮没有发现新的 MAG doc path 需要归档、tombstone 或删除。
+
+Uncovered docs：
+
+- `med-autogrant`: none in the current 120-file `README*` / `docs/**/*.md` inventory for the recorded MAG governance scope. Future new docs or later source/contract changes can reopen specific sections.
+- Other OPL-series repos remain governed by the global coverage ledger. OPL、MAS、RCA and App still need their own remaining section-level coverage / safe-lane reconciliation before the global `/goal` can close.
+
+Remaining stale / retire candidates：
+
+- MAG implementation/evidence tails remain open as source/test/receipt work, not uncovered docs: physical delete authorization, production long-soak, submission-ready human gate, sustained real App/operator consumption and long-soak evidence.
+- Any future MAG docs wording that turns OPL projection、Temporal provider completion、owner-payload refs-only verification、workspace receipt scaleout、grant-facing user stage log projection、optional Hermes proof lane or zero exact inventory gap into grant-domain ready、fundability ready、submission/export ready、production ready、MAG-owned generic runtime、App/workbench ownership or physical delete authority is stale pollution.
+
+Next tranche write scope：
+
+- Continue OPL series whole-docs coverage outside MAG, prioritizing OPL / MAS / RCA safe document clusters and delaying App body docs until active App implementation/release lanes are safe or explicitly assigned.
+- Return to MAG only if new MAG docs appear, later code/contract changes reopen a section, or an implementation/evidence owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and requires doc foldback.
+
+Verification before absorb：
+
+- `git diff --check` passed.
+- Strict README/docs/contracts conflict-marker scan passed.
+- OPL Doc Governance doctor returned `finding_count=0`, active truth `pass`.
