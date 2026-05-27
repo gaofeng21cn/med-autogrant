@@ -10,6 +10,17 @@ pytestmark = pytest.mark.meta
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = "contracts/runtime-program/opl-family-contract-adoption.json"
+STAGE_CONTROL_PLANE_PATH = "contracts/stage_control_plane.json"
+USER_STAGE_LOG_REQUIRED_FIELDS = {
+    "stage_name",
+    "problem_summary",
+    "stage_goal",
+    "stage_work_done",
+    "changed_stage_surfaces",
+    "outcome",
+    "remaining_blockers",
+    "evidence_refs",
+}
 
 
 def _read(relative_path: str) -> str:
@@ -18,6 +29,10 @@ def _read(relative_path: str) -> str:
 
 def _contract() -> dict[str, object]:
     return json.loads(_read(CONTRACT_PATH))
+
+
+def _stage_control_plane() -> dict[str, object]:
+    return json.loads(_read(STAGE_CONTROL_PLANE_PATH))
 
 
 def _domain_memory_seed_fixture() -> dict[str, object]:
@@ -184,6 +199,35 @@ def test_mag_stage_control_projection_is_descriptor_only_and_maps_existing_stage
         assert set(pack[stage]["mag_surfaces"]) == surfaces
         assert pack[stage]["truth_owner"] == "med-autogrant"
         assert pack[stage]["authority"]
+
+
+def test_mag_stage_control_plane_requires_grant_facing_user_stage_log_semantics() -> None:
+    plane = _stage_control_plane()
+
+    assert "stage_contract.user_stage_log_contract" in plane["discovery_smoke"]["required_stage_fields"]
+    for stage in plane["stages"]:
+        stage_id = stage["stage_id"]
+        user_stage_log = stage["stage_contract"]["user_stage_log_contract"]
+
+        assert user_stage_log["surface_kind"] == "opl_standard_agent_user_stage_log_contract"
+        assert user_stage_log["version"] == "standard-user-stage-log.v1"
+        assert user_stage_log["standard_agent_requirement"] == (
+            "domain_stage_closeout_must_return_user_readable_stage_semantics_or_typed_blocker"
+        )
+        assert user_stage_log["opl_projection_surface"] == "stage_progress_log.user_stage_log"
+        assert set(user_stage_log["required_domain_semantic_fields"]) == USER_STAGE_LOG_REQUIRED_FIELDS
+        assert user_stage_log["required_observability_fields"] == ["duration", "token_usage", "cost"]
+        assert user_stage_log["missing_semantics_policy"] == (
+            "typed_blocker_or_missing_domain_semantic_summary_no_opl_inference"
+        )
+        assert user_stage_log["token_policy"] == "observed_or_explicit_missing_null_no_zero_fill"
+        assert user_stage_log["authority_boundary"] == {
+            "opl_can_infer_domain_semantics": False,
+            "opl_can_read_artifact_body": False,
+            "opl_can_write_domain_truth": False,
+            "opl_can_authorize_quality_or_export": False,
+            "provider_completion_can_claim_stage_semantics_complete": False,
+        }, stage_id
 
 
 def test_mag_adoption_contract_declares_lifecycle_adapter_mapping() -> None:

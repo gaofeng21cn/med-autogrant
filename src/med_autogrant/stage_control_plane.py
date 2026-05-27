@@ -5,6 +5,43 @@ from typing import Any, Mapping
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
 
 
+USER_STAGE_LOG_REQUIRED_FIELDS = [
+    "stage_name",
+    "problem_summary",
+    "stage_goal",
+    "stage_work_done",
+    "changed_stage_surfaces",
+    "outcome",
+    "remaining_blockers",
+    "evidence_refs",
+]
+
+USER_STAGE_LOG_CONTRACT = {
+    "surface_kind": "opl_standard_agent_user_stage_log_contract",
+    "version": "standard-user-stage-log.v1",
+    "owner": "one-person-lab",
+    "standard_agent_requirement": "domain_stage_closeout_must_return_user_readable_stage_semantics_or_typed_blocker",
+    "opl_projection_surface": "stage_progress_log.user_stage_log",
+    "domain_semantic_sources": [
+        "typed_closeout_packet.user_stage_log",
+        "typed_closeout_packet.stage_log_summary",
+        "route_impact.user_stage_log",
+        "route_impact.stage_log_summary",
+    ],
+    "required_domain_semantic_fields": USER_STAGE_LOG_REQUIRED_FIELDS,
+    "required_observability_fields": ["duration", "token_usage", "cost"],
+    "missing_semantics_policy": "typed_blocker_or_missing_domain_semantic_summary_no_opl_inference",
+    "token_policy": "observed_or_explicit_missing_null_no_zero_fill",
+    "authority_boundary": {
+        "opl_can_infer_domain_semantics": False,
+        "opl_can_read_artifact_body": False,
+        "opl_can_write_domain_truth": False,
+        "opl_can_authorize_quality_or_export": False,
+        "provider_completion_can_claim_stage_semantics_complete": False,
+    },
+}
+
+
 STAGE_PACK: tuple[dict[str, Any], ...] = (
     {
         "stage_id": "call_and_candidate_intake",
@@ -369,6 +406,7 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "expected_receipt_refs": expected_receipt_refs,
             "monitor_freshness_refs": monitor_freshness_refs,
             "stage_production_evidence_refs": production_evidence_closeout["evidence_refs"],
+            "user_stage_log_contract": USER_STAGE_LOG_CONTRACT,
             "boundary_assumptions": [
                 "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
                 "OPL admission only checks descriptor composition; it cannot authorize fundability-ready, quality-ready, or export-ready states.",
@@ -597,6 +635,7 @@ def build_mag_family_stage_control_plane(
                 "stage_contract",
                 "trust_boundary",
                 "stage_production_evidence_closeout",
+                "stage_contract.user_stage_log_contract",
             ],
             "allowed_action_catalog_ref": "/product_entry_manifest/family_action_catalog",
         },

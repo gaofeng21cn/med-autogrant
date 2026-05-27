@@ -12,6 +12,12 @@ Date: `2026-05-22`
 
 ## 当前有效决策
 
+### Grant-facing user stage log 由 MAG closeout 提供，OPL 只做投影
+
+- 决策：MAG 每个 grant stage 的 closeout 必须按 OPL 标准 `user_stage_log_contract` 返回用户可读 stage 语义，说明本阶段的基金问题、stage 目标、实际完成的 grant work、变更 surface、结果、剩余 blocker 和证据 refs；无法给出时返回 typed blocker。
+- 理由：用户需要知道 grant 申请推进到哪一步、解决了什么问题、是否真做了工作、花了多长时间和多少 token。duration、token、cost 属于 OPL 通用观测；基金语义必须由 MAG owner 产出，不能由 OPL 从正文、artifact 或运行痕迹里猜。
+- 影响：`contracts/stage_control_plane.json` 的每个 `stage_contract` 都声明 `user_stage_log_contract`。该合同不授权 OPL 写 grant truth、读取 grant artifact body、生成 fundability / quality / export verdict，provider completion 也不能宣称 stage 语义完整。
+
 ### OPL/Temporal 是默认任务运行 owner，MAG 保留 grant authority
 
 - 决策：任务启动后的默认运行 owner 是 OPL/Temporal hosted autonomous runtime；MAG 不实现 daemon、scheduler、attempt loop 或 attempt ledger；`Codex CLI` 是默认 stage executor。
