@@ -1,0 +1,67 @@
+from __future__ import annotations
+
+import json
+import unittest
+from pathlib import Path
+
+
+SCHEMA_ROOT = Path(__file__).resolve().parents[1] / "schemas" / "v1"
+
+
+class OwnerPayloadManifestSchemaTest(unittest.TestCase):
+    def test_product_entry_manifest_schema_pins_owner_payload_response_boundary(self) -> None:
+        manifest_schema = json.loads(
+            (SCHEMA_ROOT / "product-entry-manifest.schema.json").read_text(encoding="utf-8")
+        )
+        manifest = manifest_schema["$defs"]["productEntryManifest"]
+        self.assertIn("owner_payload_response", manifest["required"])
+        self.assertIn("workspace_receipt_scaleout_evidence", manifest["required"])
+        self.assertEqual(
+            manifest["properties"]["owner_payload_response"]["$ref"],
+            "#/$defs/magOplOwnerPayloadResponse",
+        )
+
+        owner_payload = manifest_schema["$defs"]["magOplOwnerPayloadResponse"]
+        self.assertEqual(
+            owner_payload["properties"]["surface_kind"]["const"],
+            "mag_opl_owner_payload_response",
+        )
+        self.assertEqual(
+            owner_payload["properties"]["payload_path_policy"]["const"],
+            "operator_must_choose_success_refs_path_or_domain_owned_typed_blocker_path_empty_template_blocks",
+        )
+        self.assertFalse(owner_payload["properties"]["body_included"]["const"])
+        self.assertFalse(owner_payload["properties"]["grant_ready_claimed"]["const"])
+        self.assertFalse(owner_payload["properties"]["quality_ready_claimed"]["const"])
+        self.assertFalse(owner_payload["properties"]["export_ready_claimed"]["const"])
+        self.assertFalse(owner_payload["properties"]["submission_ready_claimed"]["const"])
+
+        authority = owner_payload["properties"]["authority_boundary"]["properties"]
+        self.assertFalse(authority["opl_writes_grant_truth"]["const"])
+        self.assertFalse(authority["opl_reads_memory_body"]["const"])
+        self.assertFalse(authority["opl_reads_artifact_body"]["const"])
+        self.assertFalse(authority["opl_authorizes_quality_or_export"]["const"])
+        self.assertFalse(authority["can_declare_submission_ready"]["const"])
+        self.assertFalse(authority["typed_blocker_is_submission_ready"]["const"])
+
+        stage_summary = manifest_schema["$defs"]["magStageExpectedReceiptPayloadSummary"]
+        self.assertFalse(stage_summary["properties"]["payload_body_allowed"]["const"])
+        self.assertFalse(stage_summary["properties"]["success_refs_visible_is_completion"]["const"])
+        self.assertFalse(stage_summary["properties"]["grant_ready_claimed"]["const"])
+        self.assertFalse(stage_summary["properties"]["quality_ready_claimed"]["const"])
+        self.assertFalse(stage_summary["properties"]["export_ready_claimed"]["const"])
+        self.assertFalse(stage_summary["properties"]["submission_ready_claimed"]["const"])
+
+        scaleout = manifest_schema["$defs"]["magWorkspaceReceiptScaleoutEvidence"]
+        claims = scaleout["properties"]["claims"]["properties"]
+        self.assertFalse(claims["claims_grant_ready"]["const"])
+        self.assertFalse(claims["claims_submission_ready_export"]["const"])
+        self.assertFalse(
+            scaleout["properties"]["authority_boundary"]["properties"][
+                "can_declare_submission_ready"
+            ]["const"]
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -599,6 +599,72 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
             manifest["product_entry_status"]["next_focus"],
             manifest["repo_mainline"]["next_focus"],
         )
+        owner_payload = manifest["owner_payload_response"]
+        self.assertEqual(owner_payload["surface_kind"], "mag_opl_owner_payload_response")
+        self.assertEqual(owner_payload["status"], "blocked_by_submission_ready_human_gate")
+        self.assertEqual(
+            owner_payload["source_surface_refs"],
+            {
+                "production_acceptance_ref": (
+                    "contracts/production_acceptance/mag-production-acceptance.json"
+                ),
+                "external_evidence_ledger_ref": (
+                    "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+                ),
+                "workspace_receipt_scaleout_evidence_ref": (
+                    "contracts/production_acceptance/"
+                    "mag-workspace-receipt-scaleout-evidence-20260527.json"
+                ),
+            },
+        )
+        self.assertEqual(
+            owner_payload["manifest_projection_policy"],
+            "default_manifest_refs_only_owner_payload_response_with_count_only_scaleout_provenance",
+        )
+        self.assertFalse(owner_payload["body_included"])
+        self.assertFalse(owner_payload["operator_payload_submitted"])
+        self.assertFalse(owner_payload["workspace_receipt_scaleout_count_snapshot_is_receipt_refs"])
+        self.assertFalse(owner_payload["grant_ready_claimed"])
+        self.assertFalse(owner_payload["quality_ready_claimed"])
+        self.assertFalse(owner_payload["export_ready_claimed"])
+        self.assertFalse(owner_payload["submission_ready_claimed"])
+        self.assertFalse(owner_payload["authority_boundary"]["opl_writes_grant_truth"])
+        self.assertFalse(owner_payload["authority_boundary"]["opl_reads_memory_body"])
+        self.assertFalse(owner_payload["authority_boundary"]["opl_reads_artifact_body"])
+        self.assertFalse(owner_payload["authority_boundary"]["opl_authorizes_quality_or_export"])
+        self.assertFalse(owner_payload["authority_boundary"]["can_declare_submission_ready"])
+        self.assertFalse(owner_payload["authority_boundary"]["typed_blocker_is_submission_ready"])
+        self.assertIn(
+            "typed-blocker:mag/package_and_submit_ready/"
+            "submission_ready_export_gate/human-approval-required/2026-05-22",
+            owner_payload["typed_blocker_refs"],
+        )
+        self.assertNotIn("stage_expected_receipt_payload_summary", owner_payload["record_payload"])
+        stage_payload = owner_payload["stage_expected_receipt_payload_summary"]
+        self.assertEqual(stage_payload["surface_kind"], "mag_stage_expected_receipt_payload_summary")
+        self.assertEqual(stage_payload["stage_count"], 6)
+        self.assertFalse(stage_payload["payload_body_allowed"])
+        self.assertFalse(stage_payload["success_refs_visible_is_completion"])
+        self.assertFalse(stage_payload["grant_ready_claimed"])
+        self.assertFalse(stage_payload["quality_ready_claimed"])
+        self.assertFalse(stage_payload["export_ready_claimed"])
+        self.assertFalse(stage_payload["submission_ready_claimed"])
+        self.assertEqual(
+            owner_payload["workspace_receipt_scaleout_summary"]["total_receipt_ref_count"],
+            27,
+        )
+        self.assertEqual(
+            manifest["workspace_receipt_scaleout_evidence"]["surface_kind"],
+            "mag_workspace_receipt_scaleout_evidence.v1",
+        )
+        self.assertFalse(
+            manifest["workspace_receipt_scaleout_evidence"]["claims"]["claims_grant_ready"]
+        )
+        self.assertFalse(
+            manifest["workspace_receipt_scaleout_evidence"]["claims"][
+                "claims_submission_ready_export"
+            ]
+        )
         self.assertEqual(
             manifest["product_entry_shell"]["grant_progress"]["command"],
             public_cli_command(

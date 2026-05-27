@@ -7311,10 +7311,175 @@
         }
       }
     },
+    "magStageExpectedReceiptPayloadSummary": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["surface_kind", "owner", "consumer", "status", "payload_kind", "payload_path_policy", "payload_body_allowed", "empty_payload_template_is_success_evidence", "required_operator_payload_refs", "required_return_shapes", "stage_count", "stage_ids", "operator_payload_submitted", "success_refs_visible_is_completion", "domain_readiness_claimed", "grant_ready_claimed", "quality_ready_claimed", "export_ready_claimed", "submission_ready_claimed", "production_soak_complete_claimed", "authority_boundary"],
+      "properties": {
+        "surface_kind": {"const": "mag_stage_expected_receipt_payload_summary"},
+        "owner": {"const": "med-autogrant"},
+        "consumer": {"const": "one_person_lab"},
+        "status": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+        "payload_kind": {"const": "stage_expected_receipt_or_monitor_freshness_refs"},
+        "payload_path_policy": {"const": "operator_must_choose_success_refs_path_or_domain_owned_typed_blocker_path_empty_template_blocks"},
+        "payload_body_allowed": {"const": false},
+        "empty_payload_template_is_success_evidence": {"const": false},
+        "required_operator_payload_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+        "required_return_shapes": {"$ref": "common.schema.json#/$defs/stringList"},
+        "stage_count": {"type": "integer", "minimum": 1},
+        "stage_ids": {"$ref": "common.schema.json#/$defs/stringList"},
+        "operator_payload_submitted": {"const": false},
+        "success_refs_visible_is_completion": {"const": false},
+        "domain_readiness_claimed": {"const": false},
+        "grant_ready_claimed": {"const": false},
+        "quality_ready_claimed": {"const": false},
+        "export_ready_claimed": {"const": false},
+        "submission_ready_claimed": {"const": false},
+        "production_soak_complete_claimed": {"const": false},
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["owner", "refs_only", "can_write_domain_truth", "can_create_owner_receipt", "can_claim_production_ready", "can_authorize_quality_or_export", "can_declare_submission_ready", "typed_blocker_is_submission_ready"],
+          "properties": {
+            "owner": {"const": "med-autogrant"},
+            "refs_only": {"const": true},
+            "can_write_domain_truth": {"const": false},
+            "can_create_owner_receipt": {"const": false},
+            "can_claim_production_ready": {"const": false},
+            "can_authorize_quality_or_export": {"const": false},
+            "can_declare_submission_ready": {"const": false},
+            "typed_blocker_is_submission_ready": {"const": false}
+          }
+        }
+      }
+    },
+    "magOplOwnerPayloadResponse": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["surface_kind", "version", "status", "mode", "owner", "target_domain_id", "domain_id", "record_payload", "opl_runtime_action_execute_payload", "domain_owner_receipt_refs", "typed_blocker_refs", "owner_chain_refs", "no_regression_evidence_refs", "stage_expected_receipt_payload_summary", "required_return_shapes", "payload_path_policy", "accepted_payload_paths", "body_included", "grant_ready_claimed", "quality_ready_claimed", "export_ready_claimed", "submission_ready_claimed", "authority_boundary", "source_surface_refs", "workspace_receipt_scaleout_evidence_ref", "workspace_receipt_scaleout_summary", "workspace_receipt_scaleout_owner_payload_response_summary", "manifest_projection_policy", "operator_payload_submitted", "workspace_receipt_scaleout_count_snapshot_is_receipt_refs"],
+      "properties": {
+        "surface_kind": {"const": "mag_opl_owner_payload_response"},
+        "version": {"const": "v1"},
+        "status": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+        "mode": {"const": "refs_only_domain_owner_receipt_or_domain_owned_typed_blocker_payload"},
+        "owner": {"const": "med-autogrant"},
+        "target_domain_id": {"const": "med-autogrant"},
+        "domain_id": {"const": "med-autogrant"},
+        "record_payload": {"type": "object", "additionalProperties": true},
+        "opl_runtime_action_execute_payload": {"type": "object", "additionalProperties": true},
+        "domain_owner_receipt_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+        "typed_blocker_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+        "owner_chain_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+        "no_regression_evidence_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+        "stage_expected_receipt_payload_summary": {"$ref": "#/$defs/magStageExpectedReceiptPayloadSummary"},
+        "required_return_shapes": {"$ref": "common.schema.json#/$defs/stringList"},
+        "payload_path_policy": {"const": "operator_must_choose_success_refs_path_or_domain_owned_typed_blocker_path_empty_template_blocks"},
+        "accepted_payload_paths": {"type": "object", "additionalProperties": true},
+        "body_included": {"const": false},
+        "grant_ready_claimed": {"const": false},
+        "quality_ready_claimed": {"const": false},
+        "export_ready_claimed": {"const": false},
+        "submission_ready_claimed": {"const": false},
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["owner", "refs_only", "opl_writes_grant_truth", "opl_reads_memory_body", "opl_reads_artifact_body", "opl_authorizes_quality_or_export", "can_declare_fundability_ready", "can_declare_quality_ready", "can_declare_export_ready", "can_declare_submission_ready", "typed_blocker_is_submission_ready"],
+          "properties": {
+            "owner": {"const": "med-autogrant"},
+            "refs_only": {"const": true},
+            "opl_writes_grant_truth": {"const": false},
+            "opl_reads_memory_body": {"const": false},
+            "opl_reads_artifact_body": {"const": false},
+            "opl_authorizes_quality_or_export": {"const": false},
+            "can_declare_fundability_ready": {"const": false},
+            "can_declare_quality_ready": {"const": false},
+            "can_declare_export_ready": {"const": false},
+            "can_declare_submission_ready": {"const": false},
+            "typed_blocker_is_submission_ready": {"const": false}
+          }
+        },
+        "source_surface_refs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["production_acceptance_ref", "external_evidence_ledger_ref", "workspace_receipt_scaleout_evidence_ref"],
+          "properties": {
+            "production_acceptance_ref": {"const": "contracts/production_acceptance/mag-production-acceptance.json"},
+            "external_evidence_ledger_ref": {"const": "contracts/external_evidence/mag-evidence-receipt-ledger.json"},
+            "workspace_receipt_scaleout_evidence_ref": {"const": "contracts/production_acceptance/mag-workspace-receipt-scaleout-evidence-20260527.json"}
+          }
+        },
+        "workspace_receipt_scaleout_evidence_ref": {"const": "contracts/production_acceptance/mag-workspace-receipt-scaleout-evidence-20260527.json"},
+        "workspace_receipt_scaleout_summary": {"type": "object", "additionalProperties": true},
+        "workspace_receipt_scaleout_owner_payload_response_summary": {"type": "object", "additionalProperties": true},
+        "manifest_projection_policy": {"const": "default_manifest_refs_only_owner_payload_response_with_count_only_scaleout_provenance"},
+        "operator_payload_submitted": {"const": false},
+        "workspace_receipt_scaleout_count_snapshot_is_receipt_refs": {"const": false}
+      }
+    },
+    "magWorkspaceReceiptScaleoutEvidence": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["surface_kind", "owner", "target_domain_id", "state", "workspace_receipt_scaleout", "owner_payload_response", "claims", "authority_boundary", "payload_policy"],
+      "properties": {
+        "surface_kind": {"const": "mag_workspace_receipt_scaleout_evidence.v1"},
+        "owner": {"const": "med-autogrant"},
+        "target_domain_id": {"const": "med-autogrant"},
+        "state": {"const": "workspace_receipt_refs_scaleout_observed"},
+        "workspace_receipt_scaleout": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["workspace_count", "total_receipt_ref_count", "receipt_kind_coverage_ready"],
+          "properties": {
+            "workspace_count": {"type": "integer", "minimum": 1},
+            "total_receipt_ref_count": {"type": "integer", "minimum": 1},
+            "receipt_kind_coverage_ready": {"const": true}
+          }
+        },
+        "owner_payload_response": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["surface_kind", "status", "stage_expected_receipt_payload_stage_count", "stage_payload_body_allowed", "stage_success_refs_visible_is_completion"],
+          "properties": {
+            "surface_kind": {"const": "mag_opl_owner_payload_response"},
+            "status": {"$ref": "common.schema.json#/$defs/nonEmptyString"},
+            "stage_expected_receipt_payload_stage_count": {"type": "integer", "minimum": 1},
+            "stage_payload_body_allowed": {"const": false},
+            "stage_success_refs_visible_is_completion": {"const": false}
+          }
+        },
+        "claims": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["claims_grant_ready", "claims_quality_ready", "claims_export_ready", "claims_submission_ready_export", "claims_provider_long_soak_complete", "claims_physical_delete_authorized"],
+          "properties": {
+            "claims_grant_ready": {"const": false},
+            "claims_quality_ready": {"const": false},
+            "claims_export_ready": {"const": false},
+            "claims_submission_ready_export": {"const": false},
+            "claims_provider_long_soak_complete": {"const": false},
+            "claims_physical_delete_authorized": {"const": false}
+          }
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["opl_consumes_refs_only", "can_write_memory_body", "can_mutate_grant_artifact", "can_authorize_quality_or_export", "can_declare_submission_ready", "typed_blocker_is_submission_ready"],
+          "properties": {
+            "opl_consumes_refs_only": {"const": true},
+            "can_write_memory_body": {"const": false},
+            "can_mutate_grant_artifact": {"const": false},
+            "can_authorize_quality_or_export": {"const": false},
+            "can_declare_submission_ready": {"const": false},
+            "typed_blocker_is_submission_ready": {"const": false}
+          }
+        },
+        "payload_policy": {"const": "body_free_refs_only_receipt_scaleout_no_grant_truth_memory_body_artifact_body_or_ready_verdict"}
+      }
+    },
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "opl_provider_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "source_provenance", "artifact_locator_contract", "opl_substrate_adapter_export", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "production_live_acceptance_receipt", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "mag_consumer_thinning_contract", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "opl_provider_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "source_provenance", "artifact_locator_contract", "opl_substrate_adapter_export", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "production_live_acceptance_receipt", "owner_payload_response", "workspace_receipt_scaleout_evidence", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "mag_consumer_thinning_contract", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -7448,6 +7613,12 @@
         },
         "production_live_acceptance_receipt": {
           "$ref": "#/$defs/productionLiveAcceptanceReceipt"
+        },
+        "owner_payload_response": {
+          "$ref": "#/$defs/magOplOwnerPayloadResponse"
+        },
+        "workspace_receipt_scaleout_evidence": {
+          "$ref": "#/$defs/magWorkspaceReceiptScaleoutEvidence"
         },
         "domain_memory_descriptor": {
           "$ref": "#/$defs/familyDomainMemoryRef"

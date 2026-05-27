@@ -33,6 +33,9 @@ from med_autogrant.product_entry_parts.manifest_readiness import build_manifest_
 from med_autogrant.product_entry_parts.manifest_owner_receipt_surfaces import (
     build_production_live_acceptance_receipt_surface,
 )
+from med_autogrant.product_entry_parts.manifest_owner_payload_response import (
+    build_manifest_owner_payload_surfaces,
+)
 from med_autogrant.product_entry_parts.manifest_runtime_companions import build_manifest_runtime_companions
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
 from med_autogrant.product_entry_parts.manifest_builder_parts.shell_assembly import build_manifest_shell_assembly
@@ -430,6 +433,7 @@ class ProductEntryManifestBuilderMixin:
         domain_memory_surfaces = build_manifest_domain_memory_surfaces(
             progress_payload=progress_payload, verification_identity=verification_identity
         )
+        owner_payload_surfaces = build_manifest_owner_payload_surfaces()
         functional_closure_surfaces = build_manifest_functional_closure_surfaces(
             input_path=resolved_input_path,
             progress_payload=progress_payload,
@@ -538,6 +542,7 @@ class ProductEntryManifestBuilderMixin:
                 "production_live_acceptance_receipt": (
                     build_production_live_acceptance_receipt_surface()
                 ),
+                **owner_payload_surfaces,
                 **domain_memory_surfaces,
                 **functional_closure_surfaces,
             },
