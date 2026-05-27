@@ -31,6 +31,10 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     assert "domain app" in manifest["description"].lower()
     assert PLUGIN_ICON_PATH.is_file()
     assert PLUGIN_ICON_SOURCE_PATH.is_file()
+    icon_source = PLUGIN_ICON_SOURCE_PATH.read_text(encoding="utf-8")
+    assert '<rect width="512" height="512" rx="112"' in icon_source
+    assert 'stroke-width="42"' in icon_source
+    assert 'stroke="#FFE08A"' in icon_source
     assert PLUGIN_SKILL_PATH.is_file()
     assert PLUGIN_SKILL_UI_METADATA_PATH.is_file()
 

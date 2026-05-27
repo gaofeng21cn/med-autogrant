@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Med Auto Grant plugin icon">
-  <rect x="32" y="32" width="448" height="448" rx="116" fill="#D89C27"/>
-  <path d="M158 126H326L376 176V386H158Z" fill="#FFFFFF"/>
-  <path d="M326 126V176H376" fill="#F8D58A"/>
-  <path d="M202 250L244 292L320 210" fill="none" stroke="#D89C27" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M206 344H326" stroke="#E8B955" stroke-width="26" stroke-linecap="round"/>
+  <rect width="512" height="512" rx="112" fill="#D89C27"/>
+  <path d="M156 126H324L380 182V386H156Z" fill="#FFFFFF"/>
+  <path d="M324 126V182H380" fill="#F8D58A"/>
+  <path d="M202 252L246 296L324 214" fill="none" stroke="#D89C27" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M206 350H326" stroke="#FFE08A" stroke-width="34" stroke-linecap="round"/>
 </svg>
