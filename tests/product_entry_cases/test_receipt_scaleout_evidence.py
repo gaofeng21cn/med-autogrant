@@ -58,6 +58,13 @@ def _workspace_samples() -> tuple[tuple[str, Path, str, str, str], ...]:
             "typed_blocker",
             "accepted",
         ),
+        (
+            "workspace-d",
+            REVISION_EXAMPLE_PATH,
+            "proposal_authoring",
+            "domain_owner_receipt",
+            "rejected",
+        ),
     )
 
 
@@ -240,7 +247,7 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
         self.assertEqual(readiness["state"], "receipt_refs_ready_not_quality_ready")
         self.assertEqual(readiness["missing_categories"], [])
         self.assertEqual(readiness["summary"]["covered_category_count"], 4)
-        self.assertEqual(readiness["summary"]["total_receipt_ref_count"], 27)
+        self.assertEqual(readiness["summary"]["total_receipt_ref_count"], 36)
         for category in (
             "owner_receipt",
             "memory_accept_reject",
@@ -249,7 +256,7 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
         ):
             with self.subTest(category=category):
                 self.assertTrue(readiness["categories"][category]["covered"])
-                self.assertEqual(readiness["categories"][category]["counts"]["input_item_count"], 3)
+                self.assertEqual(readiness["categories"][category]["counts"]["input_item_count"], 4)
 
         self.assertEqual(owner_payload["status"], "blocked_by_submission_ready_human_gate")
         self.assertIn(SUBMISSION_GATE_BLOCKER_REF, owner_payload["typed_blocker_refs"])
@@ -329,8 +336,8 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
 
         self.assertEqual(snapshot["surface_kind"], "mag_workspace_receipt_scaleout_evidence.v1")
         self.assertEqual(snapshot["state"], "workspace_receipt_refs_scaleout_observed")
-        self.assertEqual(snapshot["workspace_receipt_scaleout"]["workspace_count"], 3)
-        self.assertEqual(snapshot["workspace_receipt_scaleout"]["total_receipt_ref_count"], 27)
+        self.assertEqual(snapshot["workspace_receipt_scaleout"]["workspace_count"], 4)
+        self.assertEqual(snapshot["workspace_receipt_scaleout"]["total_receipt_ref_count"], 36)
         self.assertTrue(snapshot["workspace_receipt_scaleout"]["receipt_kind_coverage_ready"])
         self.assertEqual(
             snapshot["owner_payload_response"]["status"],

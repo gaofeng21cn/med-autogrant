@@ -651,7 +651,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertFalse(stage_payload["submission_ready_claimed"])
         self.assertEqual(
             owner_payload["workspace_receipt_scaleout_summary"]["total_receipt_ref_count"],
-            27,
+            36,
         )
         self.assertEqual(
             manifest["workspace_receipt_scaleout_evidence"]["surface_kind"],

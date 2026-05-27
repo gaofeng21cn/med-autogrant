@@ -5,11 +5,12 @@
   "target_domain_id": "med-autogrant",
   "state": "workspace_receipt_refs_scaleout_observed",
   "workspace_receipt_scaleout": {
-    "workspace_count": 3,
+    "workspace_count": 4,
     "workspace_sample_ids": [
       "workspace-a",
       "workspace-b",
-      "workspace-c"
+      "workspace-c",
+      "workspace-d"
     ],
     "receipt_kind_coverage_ready": true,
     "required_categories": [
@@ -20,19 +21,19 @@
     ],
     "covered_category_count": 4,
     "missing_category_count": 0,
-    "total_receipt_ref_count": 27,
+    "total_receipt_ref_count": 36,
     "category_receipt_ref_counts": {
-      "owner_receipt": 3,
-      "memory_accept_reject": 6,
-      "package_export_lifecycle": 9,
-      "cleanup_restore_retention_lifecycle": 9
+      "owner_receipt": 4,
+      "memory_accept_reject": 8,
+      "package_export_lifecycle": 12,
+      "cleanup_restore_retention_lifecycle": 12
     }
   },
   "owner_payload_response": {
     "surface_kind": "mag_opl_owner_payload_response",
     "status": "blocked_by_submission_ready_human_gate",
-    "domain_owner_receipt_ref_count": 11,
-    "owner_chain_ref_count": 56,
+    "domain_owner_receipt_ref_count": 12,
+    "owner_chain_ref_count": 62,
     "typed_blocker_refs": [
       "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
     ],
