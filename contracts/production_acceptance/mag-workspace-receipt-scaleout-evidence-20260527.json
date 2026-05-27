@@ -1,0 +1,69 @@
+{
+  "surface_kind": "mag_workspace_receipt_scaleout_evidence.v1",
+  "surface_id": "mag.workspace_receipt_scaleout.2026-05-27",
+  "owner": "med-autogrant",
+  "target_domain_id": "med-autogrant",
+  "state": "workspace_receipt_refs_scaleout_observed",
+  "workspace_receipt_scaleout": {
+    "workspace_count": 3,
+    "workspace_sample_ids": [
+      "workspace-a",
+      "workspace-b",
+      "workspace-c"
+    ],
+    "receipt_kind_coverage_ready": true,
+    "required_categories": [
+      "owner_receipt",
+      "memory_accept_reject",
+      "package_export_lifecycle",
+      "cleanup_restore_retention_lifecycle"
+    ],
+    "covered_category_count": 4,
+    "missing_category_count": 0,
+    "total_receipt_ref_count": 27,
+    "category_receipt_ref_counts": {
+      "owner_receipt": 3,
+      "memory_accept_reject": 6,
+      "package_export_lifecycle": 9,
+      "cleanup_restore_retention_lifecycle": 9
+    }
+  },
+  "owner_payload_response": {
+    "surface_kind": "mag_opl_owner_payload_response",
+    "status": "blocked_by_submission_ready_human_gate",
+    "domain_owner_receipt_ref_count": 11,
+    "owner_chain_ref_count": 56,
+    "typed_blocker_refs": [
+      "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
+    ],
+    "payload_path_policy": "operator_must_choose_success_refs_path_or_domain_owned_typed_blocker_path_empty_template_blocks"
+  },
+  "evidence_refs": [
+    "tests/product_entry_cases/test_receipt_scaleout_evidence.py::ProductEntryReceiptScaleoutEvidenceTest::test_real_workspace_receipt_scaleout_reaches_owner_payload_without_body_or_ready_claim",
+    "tests/product_entry_cases/test_receipt_scaleout_evidence.py::ProductEntryReceiptScaleoutEvidenceTest::test_contract_snapshot_records_scaleout_closeout_without_grant_ready_claim",
+    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+    "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence"
+  ],
+  "claims": {
+    "claims_grant_ready": false,
+    "claims_fundability_ready": false,
+    "claims_quality_ready": false,
+    "claims_export_ready": false,
+    "claims_submission_ready_export": false,
+    "claims_provider_long_soak_complete": false,
+    "claims_physical_delete_authorized": false
+  },
+  "authority_boundary": {
+    "mag_owns_grant_truth": true,
+    "mag_owns_memory_accept_reject": true,
+    "mag_owns_package_export_verdict": true,
+    "mag_owns_submission_ready_human_gate": true,
+    "opl_consumes_refs_only": true,
+    "can_write_memory_body": false,
+    "can_mutate_grant_artifact": false,
+    "can_authorize_quality_or_export": false,
+    "can_declare_submission_ready": false,
+    "typed_blocker_is_submission_ready": false
+  },
+  "payload_policy": "body_free_refs_only_receipt_scaleout_no_grant_truth_memory_body_artifact_body_or_ready_verdict"
+}

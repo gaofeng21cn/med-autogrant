@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `ideal_state_gap_plan`
 State: `active_plan`
 Machine boundary: 本文是人读 current gap / completion plan。机器真相继续归 `contracts/runtime-program/current-program.json`、contracts、schemas、source、CLI/API 行为、product-entry manifest、workspace/runtime artifact root、runtime receipts、质量报告和导出包。
-Date: `2026-05-25`
+Date: `2026-05-27`
 
 ## 读法
 
@@ -71,7 +71,7 @@ MAG 必须保留的 authority：
 | --- | --- | --- |
 | Standard OPL Agent source shape | `replacement_ready_physical_delete_not_authorized` | `agent/`、stage control plane、quality gates、pack compiler input 和 MAG owner boundary 已是当前默认语义结构；OPL default-caller replacement/cutover readiness 已观测，但 product/status/user-loop/domain-handler/domain_runtime/autonomy/CLI target 仍作为 handler/adapter target 暂留，不声明 grant-ready、submission-ready、production-ready 或 physical-delete-ready。 |
 | Runtime / product shell thinning | `refs_only_handler_target_until_owner_delete_receipt` | product/status/user-loop/domain-handler/domain_runtime 面只能作为 direct handler、refs-only adapter、minimal authority function、diagnostic 或 migration input；不再作为长期 MAG surface 读取。 |
-| Evidence accounting | `refs_only_closed_for_requests_and_owner_payload_response_landed` | MAG evidence request ledger 已闭合 refs-only accounting；`authority owner-payload-response` 已把 MAG refs 整理成 OPL owner-payload workorder 可记录的 response；真实 OPL-hosted grant-stage attempt、workspace memory/package/lifecycle receipt 和 Temporal long soak 仍是证据尾项。 |
+| Evidence accounting | `refs_only_closed_for_requests_and_owner_payload_response_landed` | MAG evidence request ledger 已闭合 refs-only accounting；`authority owner-payload-response` 已把 MAG refs 整理成 OPL owner-payload workorder 可记录的 response；3 个 workspace 的 owner receipt、memory accept/reject、package/export lifecycle 和 cleanup/restore/retention lifecycle refs 已形成 repo-tracked scaleout snapshot。真实 OPL-hosted grant-stage attempt 持续证据、submission human-gate receipt 和 Temporal long soak 仍是证据尾项。 |
 | Human gate projection | `explicit_blocker_not_approval` | Submission-ready export human gate 现在作为 MAG-owned typed blocker authority boundary 暴露给 domain-handler 与 receipt reconciliation；真实 human approval receipt 仍未形成。 |
 | Docs lifecycle | `single_active_truth_owner` | 本文持有 current truth、gap、计划和下一轮 prompt；历史 proof、receipt 流水和旧路线继续留在 history/specs/provenance。 |
 
@@ -101,7 +101,7 @@ MAG 必须保留的 authority：
 | --- | --- | --- |
 | OPL-hosted grant-stage attempt | `needs_continuous_real_attempts` | 真实 OPL-hosted stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence。 |
 | Package stage source/runtime evidence | `blocked_by_submission_gate_typed_blocker` | `package_and_submit_ready` stage production evidence 已被 OPL external evidence ledger verified；App/operator 读到 source scope 与 runtime event observed，expected receipt / monitor freshness 仍由 `submission_ready_export_gate` typed blocker 阻塞。关闭条件仍是真实 MAG owner human-gate receipt 或可重复 no-regression / monitor freshness evidence，不是 OPL receipt 本身。 |
-| Real workspace memory/package/lifecycle scaleout | `needs_real_workspace_scaleout` | 真实 grant workspace 产生 accepted/rejected memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout。 |
+| Real workspace memory/package/lifecycle scaleout | `refs_only_scaleout_observed_followthrough_open` | 3 个 MAG workspace 样本已通过 MAG-owned owner receipt、memory accept/reject receipt、package/export lifecycle handoff 与 cleanup/restore/retention lifecycle receipt surface 形成 27 条 body-free receipt refs，并进入 `owner-payload-response`；关闭条件仍要求真实 owner human-gate receipt、持续 App/operator consumption、long-soak 与 no-regression follow-through，不能把 refs-only scaleout 写成 artifact authority、quality/export verdict 或 production ready。 |
 | Submission-ready human gate receipt | `blocked_on_real_human_gate_receipt` | `submission_ready_export_gate` typed blocker 已可机读；关闭条件仍是真实 MAG owner human-gate receipt 或人工审批路径证据。 |
 | App/operator/release consumption | `needs_sustained_consumption` | OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG package refs、quality refs、manual portal boundary、transition oracle refs、safe action refs 和 `authority owner-payload-response` 的 success / typed-blocker payload path。 |
 | Temporal provider long soak | `open` | `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 形成连续证据。 |
@@ -114,7 +114,7 @@ Refs-only ledger verification、request accounting closure、OPL workorder close
 1. 保持 `agent/` Declarative Grant Pack、stage control plane、contracts、quality gates、memory policy 与当前 source/contract 对齐。
 2. 保持 product/status/user-loop/domain-handler/CLI shell 的 refs-only adapter 或 direct handler target 边界；新增能力优先服务 OPL generated/default caller parity，不扩写 MAG-owned shell。
 3. 对 AI-first authority guard 做回归维护：任何 fundability / quality / export / submission-ready claim 必须回到 MAG owner surface 或 AI-backed artifact。
-4. 只用持续真实 workspace/App/operator/release evidence 与 Temporal long-soak window evidence 关闭 production evidence tail；refs-only accounting 只进入 ledger/history。
+4. 只用持续真实 workspace/App/operator/release evidence 与 Temporal long-soak window evidence 关闭 production evidence tail；refs-only accounting 和 workspace receipt scaleout snapshot 只进入 ledger/history 或 body-free production-acceptance snapshot。
 5. 在 production default caller 与 no-resurrection guard 成立后，删除旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；需要追溯只留 history/provenance，测试改为断言 current contract、schema、CLI/API、manifest、owner receipt、typed blocker、fail-closed 或 tombstone semantics。
 
 ## 下一轮 Agent prompt

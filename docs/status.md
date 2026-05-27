@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `current_status_and_evidence_boundary`
 State: `current`
 Machine boundary: 本文是人读状态摘要。机器真相继续归 `contracts/runtime-program/current-program.json`、production acceptance contract、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs。
-Date: `2026-05-25`
+Date: `2026-05-27`
 
 ## 当前结论
 
@@ -21,6 +21,7 @@ Date: `2026-05-25`
 - Production acceptance tail 已由 MAG-owned owner receipt projection 关闭；这只证明 MAG owner receipt / typed blocker / no-regression evidence 的 refs-only closeout shape，不授权 OPL、Provider、Agent Lab 或 OMA 替 MAG 生成 grant-ready、fundability-ready、quality/export-ready 或 submission-ready verdict。
 - `authority receipt-readiness` 是当前 MAG grouped CLI 的 body-free receipt refs readiness 入口，聚合 owner receipt、memory accept/reject receipt、package/export lifecycle handoff 和 cleanup/restore/retention lifecycle receipt refs；它只给 OPL/App/operator closeout 或 executor-first bundle 消费 refs，不声明 grant ready、quality ready、export ready、submission ready、provider long-soak complete 或 production ready。
 - `authority owner-payload-response` 是 OPL owner-payload workorder 可消费的 body-free response 入口，聚合 production acceptance owner receipt、grant-stage owner-chain refs、workspace receipt-readiness refs、no-regression refs 与 `submission_ready_export_gate` typed blocker refs，并显式输出 success / typed-blocker payload path；该 response 只解决 OPL 记录 payload 的 return-shape 对齐，不关闭 human gate、domain ready、submission-ready 或 production long-soak。2026-05-26 fresh CLI proof 已用 runtime-state receipt refs 重新生成 `receipt_refs_ready_not_quality_ready` readiness projection，并生成 `blocked_by_submission_ready_human_gate` owner-payload response。
+- Workspace receipt scaleout 已有 repo-tracked body-free snapshot：`contracts/production_acceptance/mag-workspace-receipt-scaleout-evidence-20260527.json` 记录 3 个 MAG workspace 样本通过 MAG-owned owner receipt、memory accept/reject receipt、package/export lifecycle handoff 与 cleanup/restore/retention lifecycle receipt surface 形成 27 条 receipt refs，并进入 `owner-payload-response`。该 snapshot 只证明 MAG app surface 可重复产出 refs-only owner payload；`submission_ready_export_gate` typed blocker 仍阻塞 human gate，不声明 grant-ready、quality-ready、export-ready、submission-ready、provider long-soak complete 或 physical delete authorized。
 - MAG grant-stage / lifecycle / legacy route-back payload 已可被 OPL refs-only external evidence ledger 记录并验证。该进展只证明 MAG-owned refs、owner-chain refs 与 typed blocker 可被外部 ledger 消费，不授权 OPL 写 grant truth、memory body、artifact body、quality/export verdict，也不声明 submission-ready、production-ready 或 Temporal long-soak complete；具体 attempt、receipt path 和 worklist 过程记录归 [MAG standard agent 文档过程归档 2026-05](./history/plans/mag-standard-agent-doc-process-history-2026-05.md)。
 - `package_and_submit_ready` 的 typed blocker projection 已显式输出 `submission_ready_export_gate`、MAG human-gate owner、`human_gate_receipt` requirement，以及 OPL/provider 不可绕过、不等于 submission/export/production ready 的机器字段；这只让 blocker 更可审计，不关闭 human approval gate。
 - OPL external evidence ledger 已把 MAG `package_and_submit_ready` stage production evidence 记录并验证为 stage 专用 receipt：source scope refs 与 `runtime_event:package_and_submit_ready.owner_receipt_recorded` 已被 App/operator 读为 observed，`human_gate:submission_ready_export_gate` expected receipt 与 monitor freshness 继续由 MAG-owned typed blocker 阻塞。该 receipt 只证明 OPL 能消费 MAG stage refs / typed blocker，不是 human approval、submission-ready、export-ready、grant-ready 或 production-ready verdict。
@@ -44,7 +45,7 @@ Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream 
 当前剩余工作不再写成 MAG repo 侧结构缺口，统一作为证据门管理：
 
 - 真实 OPL-hosted grant-stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence。
-- 真实 grant workspace 产生 accepted/rejected memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout。
+- 真实 grant workspace 继续产生 accepted/rejected memory receipt、package/export lifecycle receipt、cleanup/restore/retention receipt 和 owner receipt scaleout；当前已有 3 workspace body-free refs-only scaleout snapshot，后续仍需真实 owner human-gate receipt、long-soak 与 sustained App/operator consumption。
 - OPL/App/operator closeout 与 executor-first bundle 持续消费 `authority receipt-readiness` 输出，并在真实 workspace 中回连 owner receipt、typed blocker、no-regression evidence 与 lifecycle evidence。
 - OPL owner-payload workorder 持续消费 `authority owner-payload-response` 输出，并在真实 stage/workspace target 上记录 success refs path 或 domain-owned typed-blocker path；空模板或 typed blocker refs 不得被读成 owner-chain/domain-ready/production-ready。
 - OPL/App shell 持续消费 MAG package refs、gap report、manual portal boundary、quality refs、transition oracle refs 和 safe action refs。
