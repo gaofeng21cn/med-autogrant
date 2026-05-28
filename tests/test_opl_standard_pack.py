@@ -475,6 +475,7 @@ def test_stage_semantic_refs_resolve_to_agent_pack_files() -> None:
         assert stage_contract["dashboard_metric_refs"]
         assert stage_contract["expected_receipt_refs"]
         assert stage_contract["monitor_freshness_refs"]
+        assert stage_contract["replay_evidence_refs"]
         assert stage_contract["stage_production_evidence_refs"]
         assert any(ref["role"] == "opl_provider_stage_launch_trigger" for ref in stage_contract["trigger_refs"])
         expected_receipt = stage_contract["expected_receipt_refs"][0]
@@ -485,6 +486,20 @@ def test_stage_semantic_refs_resolve_to_agent_pack_files() -> None:
             "no_regression_evidence_ref",
         ]
         assert expected_receipt["body_free_payload_required"] is True
+        replay_refs_by_role = {
+            ref["role"]: ref
+            for ref in stage_contract["replay_evidence_refs"]
+        }
+        assert replay_refs_by_role["recorded_runtime_event_ref"]["ref"] == (
+            expected_receipt["runtime_event_refs"][0]
+        )
+        assert replay_refs_by_role["stage_closeout_receipt_ref"]["ref"] == expected_receipt["ref"]
+        monitor_roles = {ref["role"] for ref in stage_contract["monitor_refs"]}
+        assert "stage_replay_monitor" in monitor_roles
+        assert "stage_owner_receipt_handoff_monitor" in monitor_roles
+        assert "live_stage_attempt_monitor" in monitor_roles
+        assert "no_forbidden_write_guard_monitor" in monitor_roles
+        assert "direct_hosted_parity_no_regression_monitor" in monitor_roles
         closeout = stage["stage_production_evidence_closeout"]
         assert closeout["surface_kind"] == "mag_stage_production_evidence_closeout_refs"
         assert closeout["state"] == "body_free_refs_ready_for_opl_record_preflight"

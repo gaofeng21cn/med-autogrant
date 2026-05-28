@@ -345,6 +345,11 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
     stage_id = str(stage["stage_id"])
     expected_receipt_refs = _stage_expected_receipt_refs(stage_id, runtime_event_refs)
     monitor_freshness_refs = _stage_monitor_freshness_refs(stage_id)
+    replay_evidence_refs = _stage_replay_evidence_refs(
+        stage_id,
+        runtime_event_refs,
+        expected_receipt_refs,
+    )
     production_evidence_closeout = _stage_production_evidence_closeout(
         stage_id=stage_id,
         expected_receipt_refs=expected_receipt_refs,
@@ -405,6 +410,7 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             **cohort_loop_refs,
             "expected_receipt_refs": expected_receipt_refs,
             "monitor_freshness_refs": monitor_freshness_refs,
+            "replay_evidence_refs": replay_evidence_refs,
             "stage_production_evidence_refs": production_evidence_closeout["evidence_refs"],
             "user_stage_log_contract": USER_STAGE_LOG_CONTRACT,
             "boundary_assumptions": [
@@ -494,6 +500,28 @@ def _stage_monitor_freshness_refs(stage_id: str) -> list[dict[str, str]]:
     ]
 
 
+def _stage_replay_evidence_refs(
+    stage_id: str,
+    runtime_event_refs: list[str],
+    expected_receipt_refs: list[dict[str, Any]],
+) -> list[dict[str, str]]:
+    return [
+        {
+            "ref_kind": "runtime_event_ref",
+            "ref": runtime_event_ref,
+            "role": "recorded_runtime_event_ref",
+        }
+        for runtime_event_ref in runtime_event_refs
+    ] + [
+        {
+            "ref_kind": "closeout_receipt_ref",
+            "ref": str(expected_receipt_ref["ref"]),
+            "role": "stage_closeout_receipt_ref",
+        }
+        for expected_receipt_ref in expected_receipt_refs
+    ]
+
+
 def _stage_production_evidence_closeout(
     *,
     stage_id: str,
@@ -570,6 +598,48 @@ def _stage_cohort_loop_refs(stage: Mapping[str, Any]) -> dict[str, list[dict[str
         "monitor_refs": [
             {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "grant_progress_monitor"},
             {"ref_kind": "json_pointer", "ref": "/task_lifecycle", "role": "checkpoint_monitor"},
+            {
+                "ref_kind": "json_pointer",
+                "ref": (
+                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                    "grant_stage_controlled_attempt_closeout"
+                ),
+                "role": "stage_replay_monitor",
+            },
+            {
+                "ref_kind": "json_pointer",
+                "ref": (
+                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                    "grant_stage_controlled_attempt_closeout/opl_stage_evidence_receipt_handoff"
+                ),
+                "role": "stage_owner_receipt_handoff_monitor",
+            },
+            {
+                "ref_kind": "json_pointer",
+                "ref": (
+                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                    "grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet"
+                ),
+                "role": "live_stage_attempt_monitor",
+            },
+            {
+                "ref_kind": "json_pointer",
+                "ref": (
+                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                    "grant_stage_controlled_attempt_closeout/external_evidence_refs/"
+                    "no_forbidden_write_guard_ref"
+                ),
+                "role": "no_forbidden_write_guard_monitor",
+            },
+            {
+                "ref_kind": "json_pointer",
+                "ref": (
+                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                    "grant_stage_controlled_attempt_closeout/external_evidence_refs/"
+                    "direct_hosted_parity_no_regression_ref"
+                ),
+                "role": "direct_hosted_parity_no_regression_monitor",
+            },
         ],
         "dashboard_metric_refs": [
             {
@@ -615,6 +685,24 @@ def build_mag_family_stage_control_plane(
         "plane_id": "med_autogrant_stage_control_plane",
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
+        "replay_evidence_refs": [
+            {
+                "ref_kind": "append_only_event_log_ref",
+                "ref": (
+                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                    "grant_stage_controlled_attempt_closeout"
+                ),
+                "role": "append_only_event_log_ref",
+            },
+            {
+                "ref_kind": "attempt_ledger_ref",
+                "ref": (
+                    "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                    "grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet"
+                ),
+                "role": "attempt_ledger_ref",
+            },
+        ],
         "discovery_smoke": {
             "surface_kind": "family_stage_control_plane_discovery_smoke",
             "status": "ready",

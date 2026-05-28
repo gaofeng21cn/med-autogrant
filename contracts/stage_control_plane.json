@@ -50,6 +50,18 @@
     "status": "aligned"
   },
   "plane_id": "med_autogrant_stage_control_plane",
+  "replay_evidence_refs": [
+    {
+      "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+      "ref_kind": "append_only_event_log_ref",
+      "role": "append_only_event_log_ref"
+    },
+    {
+      "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet",
+      "ref_kind": "attempt_ledger_ref",
+      "role": "attempt_ledger_ref"
+    }
+  ],
   "source_refs": [
     {
       "ref": "/product_entry_manifest/family_action_catalog",
@@ -310,6 +322,43 @@
             "ref": "/task_lifecycle",
             "ref_kind": "json_pointer",
             "role": "checkpoint_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+            "ref_kind": "json_pointer",
+            "role": "stage_replay_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/opl_stage_evidence_receipt_handoff",
+            "ref_kind": "json_pointer",
+            "role": "stage_owner_receipt_handoff_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet",
+            "ref_kind": "json_pointer",
+            "role": "live_stage_attempt_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/no_forbidden_write_guard_ref",
+            "ref_kind": "json_pointer",
+            "role": "no_forbidden_write_guard_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/direct_hosted_parity_no_regression_ref",
+            "ref_kind": "json_pointer",
+            "role": "direct_hosted_parity_no_regression_monitor"
+          }
+        ],
+        "replay_evidence_refs": [
+          {
+            "ref": "runtime_event:call_and_candidate_intake.owner_receipt_recorded",
+            "ref_kind": "runtime_event_ref",
+            "role": "recorded_runtime_event_ref"
+          },
+          {
+            "ref": "receipt:mag/grant-stage-controlled-attempt/call_and_candidate_intake/owner-receipt-or-typed-blocker",
+            "ref_kind": "closeout_receipt_ref",
+            "role": "stage_closeout_receipt_ref"
           }
         ],
         "requires": [
@@ -715,6 +764,43 @@
             "ref": "/task_lifecycle",
             "ref_kind": "json_pointer",
             "role": "checkpoint_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+            "ref_kind": "json_pointer",
+            "role": "stage_replay_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/opl_stage_evidence_receipt_handoff",
+            "ref_kind": "json_pointer",
+            "role": "stage_owner_receipt_handoff_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet",
+            "ref_kind": "json_pointer",
+            "role": "live_stage_attempt_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/no_forbidden_write_guard_ref",
+            "ref_kind": "json_pointer",
+            "role": "no_forbidden_write_guard_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/direct_hosted_parity_no_regression_ref",
+            "ref_kind": "json_pointer",
+            "role": "direct_hosted_parity_no_regression_monitor"
+          }
+        ],
+        "replay_evidence_refs": [
+          {
+            "ref": "runtime_event:fundability_strategy.ai_decision_gate_recorded",
+            "ref_kind": "runtime_event_ref",
+            "role": "recorded_runtime_event_ref"
+          },
+          {
+            "ref": "receipt:mag/grant-stage-controlled-attempt/fundability_strategy/owner-receipt-or-typed-blocker",
+            "ref_kind": "closeout_receipt_ref",
+            "role": "stage_closeout_receipt_ref"
           }
         ],
         "requires": [
@@ -1124,6 +1210,43 @@
             "ref": "/task_lifecycle",
             "ref_kind": "json_pointer",
             "role": "checkpoint_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+            "ref_kind": "json_pointer",
+            "role": "stage_replay_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/opl_stage_evidence_receipt_handoff",
+            "ref_kind": "json_pointer",
+            "role": "stage_owner_receipt_handoff_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet",
+            "ref_kind": "json_pointer",
+            "role": "live_stage_attempt_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/no_forbidden_write_guard_ref",
+            "ref_kind": "json_pointer",
+            "role": "no_forbidden_write_guard_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/direct_hosted_parity_no_regression_ref",
+            "ref_kind": "json_pointer",
+            "role": "direct_hosted_parity_no_regression_monitor"
+          }
+        ],
+        "replay_evidence_refs": [
+          {
+            "ref": "runtime_event:specific_aims_and_structure.ai_decision_gate_recorded",
+            "ref_kind": "runtime_event_ref",
+            "role": "recorded_runtime_event_ref"
+          },
+          {
+            "ref": "receipt:mag/grant-stage-controlled-attempt/specific_aims_and_structure/owner-receipt-or-typed-blocker",
+            "ref_kind": "closeout_receipt_ref",
+            "role": "stage_closeout_receipt_ref"
           }
         ],
         "requires": [
@@ -1532,6 +1655,43 @@
             "ref": "/task_lifecycle",
             "ref_kind": "json_pointer",
             "role": "checkpoint_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+            "ref_kind": "json_pointer",
+            "role": "stage_replay_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/opl_stage_evidence_receipt_handoff",
+            "ref_kind": "json_pointer",
+            "role": "stage_owner_receipt_handoff_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet",
+            "ref_kind": "json_pointer",
+            "role": "live_stage_attempt_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/no_forbidden_write_guard_ref",
+            "ref_kind": "json_pointer",
+            "role": "no_forbidden_write_guard_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/direct_hosted_parity_no_regression_ref",
+            "ref_kind": "json_pointer",
+            "role": "direct_hosted_parity_no_regression_monitor"
+          }
+        ],
+        "replay_evidence_refs": [
+          {
+            "ref": "runtime_event:proposal_authoring.owner_receipt_recorded",
+            "ref_kind": "runtime_event_ref",
+            "role": "recorded_runtime_event_ref"
+          },
+          {
+            "ref": "receipt:mag/grant-stage-controlled-attempt/proposal_authoring/owner-receipt-or-typed-blocker",
+            "ref_kind": "closeout_receipt_ref",
+            "role": "stage_closeout_receipt_ref"
           }
         ],
         "requires": [
@@ -1937,6 +2097,43 @@
             "ref": "/task_lifecycle",
             "ref_kind": "json_pointer",
             "role": "checkpoint_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+            "ref_kind": "json_pointer",
+            "role": "stage_replay_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/opl_stage_evidence_receipt_handoff",
+            "ref_kind": "json_pointer",
+            "role": "stage_owner_receipt_handoff_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet",
+            "ref_kind": "json_pointer",
+            "role": "live_stage_attempt_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/no_forbidden_write_guard_ref",
+            "ref_kind": "json_pointer",
+            "role": "no_forbidden_write_guard_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/direct_hosted_parity_no_regression_ref",
+            "ref_kind": "json_pointer",
+            "role": "direct_hosted_parity_no_regression_monitor"
+          }
+        ],
+        "replay_evidence_refs": [
+          {
+            "ref": "runtime_event:review_and_rebuttal.ai_decision_gate_recorded",
+            "ref_kind": "runtime_event_ref",
+            "role": "recorded_runtime_event_ref"
+          },
+          {
+            "ref": "receipt:mag/grant-stage-controlled-attempt/review_and_rebuttal/owner-receipt-or-typed-blocker",
+            "ref_kind": "closeout_receipt_ref",
+            "role": "stage_closeout_receipt_ref"
           }
         ],
         "requires": [
@@ -2338,6 +2535,43 @@
             "ref": "/task_lifecycle",
             "ref_kind": "json_pointer",
             "role": "checkpoint_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
+            "ref_kind": "json_pointer",
+            "role": "stage_replay_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/opl_stage_evidence_receipt_handoff",
+            "ref_kind": "json_pointer",
+            "role": "stage_owner_receipt_handoff_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/live_grant_stage_attempt_ref_packet",
+            "ref_kind": "json_pointer",
+            "role": "live_stage_attempt_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/no_forbidden_write_guard_ref",
+            "ref_kind": "json_pointer",
+            "role": "no_forbidden_write_guard_monitor"
+          },
+          {
+            "ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout/external_evidence_refs/direct_hosted_parity_no_regression_ref",
+            "ref_kind": "json_pointer",
+            "role": "direct_hosted_parity_no_regression_monitor"
+          }
+        ],
+        "replay_evidence_refs": [
+          {
+            "ref": "runtime_event:package_and_submit_ready.owner_receipt_recorded",
+            "ref_kind": "runtime_event_ref",
+            "role": "recorded_runtime_event_ref"
+          },
+          {
+            "ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker",
+            "ref_kind": "closeout_receipt_ref",
+            "role": "stage_closeout_receipt_ref"
           }
         ],
         "requires": [

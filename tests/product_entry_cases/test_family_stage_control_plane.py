@@ -6,6 +6,14 @@ from med_autogrant.product_entry_parts import MedAutoGrantProductEntry
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
 
+def _assert_required_field_path(test_case: unittest.TestCase, payload: dict[str, object], path: str) -> None:
+    current: object = payload
+    for part in path.split("."):
+        test_case.assertIsInstance(current, dict, path)
+        test_case.assertIn(part, current, path)
+        current = current[part]  # type: ignore[index]
+
+
 class FamilyStageControlPlaneTest(unittest.TestCase):
     def test_stage_control_plane_preserves_opl_projection_and_mag_authority(self) -> None:
         manifest = MedAutoGrantProductEntry().build_product_entry_manifest(
@@ -71,7 +79,8 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
 
         for stage in stage_plane["stages"]:
             with self.subTest(stage=stage["stage_id"]):
-                self.assertLessEqual(required_stage_fields, set(stage))
+                for required_field in required_stage_fields:
+                    _assert_required_field_path(self, stage, required_field)
                 self.assertEqual(stage["owner"], "med-autogrant")
                 self.assertEqual(stage["stage_goal"], stage["goal"])
                 self.assertEqual(
@@ -103,6 +112,7 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                 self.assertTrue(stage["stage_contract"]["dashboard_metric_refs"])
                 self.assertTrue(stage["stage_contract"]["expected_receipt_refs"])
                 self.assertTrue(stage["stage_contract"]["monitor_freshness_refs"])
+                self.assertTrue(stage["stage_contract"]["replay_evidence_refs"])
                 self.assertTrue(stage["stage_contract"]["stage_production_evidence_refs"])
                 self.assertTrue(
                     any(
@@ -111,6 +121,10 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                     )
                 )
                 expected_receipt = stage["stage_contract"]["expected_receipt_refs"][0]
+                replay_refs_by_role = {
+                    ref["role"]: ref
+                    for ref in stage["stage_contract"]["replay_evidence_refs"]
+                }
                 self.assertEqual(expected_receipt["owner"], "med-autogrant")
                 self.assertEqual(
                     expected_receipt["required_return_shapes"],
@@ -121,6 +135,20 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                     ],
                 )
                 self.assertTrue(expected_receipt["body_free_payload_required"])
+                self.assertEqual(
+                    replay_refs_by_role["recorded_runtime_event_ref"]["ref"],
+                    expected_receipt["runtime_event_refs"][0],
+                )
+                self.assertEqual(
+                    replay_refs_by_role["stage_closeout_receipt_ref"]["ref"],
+                    expected_receipt["ref"],
+                )
+                monitor_roles = {ref["role"] for ref in stage["stage_contract"]["monitor_refs"]}
+                self.assertIn("stage_replay_monitor", monitor_roles)
+                self.assertIn("stage_owner_receipt_handoff_monitor", monitor_roles)
+                self.assertIn("live_stage_attempt_monitor", monitor_roles)
+                self.assertIn("no_forbidden_write_guard_monitor", monitor_roles)
+                self.assertIn("direct_hosted_parity_no_regression_monitor", monitor_roles)
                 closeout = stage["stage_production_evidence_closeout"]
                 self.assertEqual(
                     closeout["surface_kind"],
