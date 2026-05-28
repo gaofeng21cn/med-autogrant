@@ -217,6 +217,7 @@ def _sustained_consumption_followthrough_workorder() -> dict[str, Any]:
         "no_forbidden_write_ref",
         "long_soak_or_typed_blocker_ref",
     ]
+    allowed_operator_payload_fields = [*required_refs, "typed_blocker_refs"]
     return {
         "surface_kind": "mag_manifest_sustained_consumption_followthrough_workorder",
         "version": "v1",
@@ -228,6 +229,7 @@ def _sustained_consumption_followthrough_workorder() -> dict[str, Any]:
             "real_app_operator_or_default_caller_consumption_refs_or_domain_owned_typed_blocker"
         ),
         "required_operator_payload_refs": required_refs,
+        "allowed_operator_payload_fields": allowed_operator_payload_fields,
         "payload_template": {ref: [] for ref in required_refs},
         "accepted_payload_paths": {
             "sustained_consumption_refs_path": {
@@ -247,6 +249,7 @@ def _sustained_consumption_followthrough_workorder() -> dict[str, Any]:
             },
         },
         "empty_payload_template_is_success_evidence": False,
+        "rejects_unknown_operator_payload_fields": True,
         "operator_payload_submitted": False,
         "claims_sustained_app_consumption_complete": False,
         "claims_grant_ready": False,

@@ -40,6 +40,18 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
                 "long_soak_or_typed_blocker_ref",
             ],
         )
+        self.assertEqual(
+            workorder["allowed_operator_payload_fields"],
+            [
+                "app_operator_consumption_ref",
+                "default_caller_consumption_ref",
+                "owner_payload_response_ref",
+                "workspace_receipt_scaleout_evidence_ref",
+                "no_forbidden_write_ref",
+                "long_soak_or_typed_blocker_ref",
+                "typed_blocker_refs",
+            ],
+        )
         self.assertTrue(
             workorder["accepted_payload_paths"]["sustained_consumption_refs_path"][
                 "requires_long_soak_or_typed_blocker_ref"
@@ -47,6 +59,7 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
         )
         self.assertFalse(workorder["accepted_payload_paths"]["typed_blocker_path"]["success_claimed"])
         self.assertFalse(workorder["empty_payload_template_is_success_evidence"])
+        self.assertTrue(workorder["rejects_unknown_operator_payload_fields"])
         self.assertFalse(workorder["operator_payload_submitted"])
         self.assertFalse(workorder["claims_sustained_app_consumption_complete"])
         self.assertFalse(workorder["claims_grant_ready"])

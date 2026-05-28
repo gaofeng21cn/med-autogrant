@@ -78,6 +78,15 @@
         "no_forbidden_write_ref",
         "long_soak_or_typed_blocker_ref"
       ],
+      "allowed_operator_payload_fields": [
+        "app_operator_consumption_ref",
+        "default_caller_consumption_ref",
+        "owner_payload_response_ref",
+        "workspace_receipt_scaleout_evidence_ref",
+        "no_forbidden_write_ref",
+        "long_soak_or_typed_blocker_ref",
+        "typed_blocker_refs"
+      ],
       "payload_template": {
         "app_operator_consumption_ref": [],
         "default_caller_consumption_ref": [],
@@ -113,6 +122,7 @@
         }
       },
       "empty_payload_template_is_success_evidence": false,
+      "rejects_unknown_operator_payload_fields": true,
       "operator_payload_submitted": false,
       "claims_sustained_app_consumption_complete": false,
       "claims_grant_ready": false,

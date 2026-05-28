@@ -7393,7 +7393,7 @@
         "sustained_consumption_followthrough_workorder": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["surface_kind", "version", "status", "authority_command", "authority_command_internal", "payload_owner", "accepted_payload_path_policy", "required_operator_payload_refs", "payload_template", "accepted_payload_paths", "empty_payload_template_is_success_evidence", "operator_payload_submitted", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
+          "required": ["surface_kind", "version", "status", "authority_command", "authority_command_internal", "payload_owner", "accepted_payload_path_policy", "required_operator_payload_refs", "allowed_operator_payload_fields", "payload_template", "accepted_payload_paths", "empty_payload_template_is_success_evidence", "rejects_unknown_operator_payload_fields", "operator_payload_submitted", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
           "properties": {
             "surface_kind": {"const": "mag_manifest_sustained_consumption_followthrough_workorder"},
             "version": {"const": "v1"},
@@ -7403,9 +7403,11 @@
             "payload_owner": {"const": "app_operator_or_release_default_caller"},
             "accepted_payload_path_policy": {"const": "real_app_operator_or_default_caller_consumption_refs_or_domain_owned_typed_blocker"},
             "required_operator_payload_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+            "allowed_operator_payload_fields": {"$ref": "common.schema.json#/$defs/stringList"},
             "payload_template": {"type": "object"},
             "accepted_payload_paths": {"type": "object"},
             "empty_payload_template_is_success_evidence": {"const": false},
+            "rejects_unknown_operator_payload_fields": {"const": true},
             "operator_payload_submitted": {"const": false},
             "claims_sustained_app_consumption_complete": {"const": false},
             "claims_grant_ready": {"const": false},

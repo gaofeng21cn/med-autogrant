@@ -19,6 +19,9 @@ _REQUIRED_SUCCESS_REFS = (
     "no_forbidden_write_ref",
     "long_soak_or_typed_blocker_ref",
 )
+_TYPED_BLOCKER_REFS_FIELD = "typed_blocker_refs"
+_ALLOWED_OPERATOR_PAYLOAD_FIELDS = (*_REQUIRED_SUCCESS_REFS, _TYPED_BLOCKER_REFS_FIELD)
+_ALLOWED_OPERATOR_PAYLOAD_FIELD_SET = frozenset(_ALLOWED_OPERATOR_PAYLOAD_FIELDS)
 _FORBIDDEN_BODY_KEYS = frozenset(
     {
         "artifact_body",
@@ -73,8 +76,9 @@ def build_manifest_sustained_consumption_payload_response(
     if not isinstance(operator_payload, Mapping) or not operator_payload:
         raise WorkspaceStateError("manifest sustained consumption payload 必须是非空 JSON object。")
     _assert_body_free(operator_payload, path="operator_payload")
+    _assert_known_operator_payload_fields(operator_payload)
 
-    typed_blocker_refs = _read_ref_list(operator_payload, "typed_blocker_refs")
+    typed_blocker_refs = _read_ref_list(operator_payload, _TYPED_BLOCKER_REFS_FIELD)
     success_payload = {
         field_name: _read_ref_list(operator_payload, field_name)
         for field_name in _REQUIRED_SUCCESS_REFS
@@ -194,6 +198,8 @@ def _base_response(
             "workspace_count": _workspace_count(workspace_receipt_scaleout_evidence),
         },
         "accepted_payload_paths": _accepted_payload_paths(),
+        "allowed_operator_payload_fields": list(_ALLOWED_OPERATOR_PAYLOAD_FIELDS),
+        "rejects_unknown_operator_payload_fields": True,
         "operator_payload_submitted": operator_payload_submitted,
         "body_included": False,
         "claims_sustained_app_consumption_complete": False,
@@ -294,6 +300,19 @@ def _assert_body_free(value: Any, *, path: str) -> None:
 
 def _normalize_key(value: str) -> str:
     return value.strip().lower().replace("-", "_").replace(" ", "_")
+
+
+def _assert_known_operator_payload_fields(operator_payload: Mapping[str, Any]) -> None:
+    unknown_fields = [
+        _require_nonempty_string(raw_key, field_name="key", context="operator_payload")
+        for raw_key in operator_payload
+        if raw_key not in _ALLOWED_OPERATOR_PAYLOAD_FIELD_SET
+    ]
+    if unknown_fields:
+        joined = ", ".join(sorted(unknown_fields))
+        raise WorkspaceStateError(
+            "manifest sustained consumption payload 包含未声明字段: " + joined
+        )
 
 
 __all__ = [

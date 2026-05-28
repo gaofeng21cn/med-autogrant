@@ -80,6 +80,19 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
             response["record_payload"]["app_operator_consumption_refs"],
             ["opl://app/operator/mag/owner-payload-consumed/2026-05-28"],
         )
+        self.assertEqual(
+            response["allowed_operator_payload_fields"],
+            [
+                "app_operator_consumption_ref",
+                "default_caller_consumption_ref",
+                "owner_payload_response_ref",
+                "workspace_receipt_scaleout_evidence_ref",
+                "no_forbidden_write_ref",
+                "long_soak_or_typed_blocker_ref",
+                "typed_blocker_refs",
+            ],
+        )
+        self.assertTrue(response["rejects_unknown_operator_payload_fields"])
         self.assertFalse(response["claims_sustained_app_consumption_complete"])
         self.assertFalse(response["claims_provider_long_soak_complete"])
         self.assertFalse(response["claims_grant_ready"])
@@ -131,5 +144,20 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
                         "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-05-28"
                     ],
                     "grant_artifact_body": "PRIVATE_BODY_TOKEN",
+                },
+            )
+
+    def test_rejects_unknown_operator_payload_fields(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with self.assertRaisesRegex(WorkspaceStateError, "未声明字段"):
+            MedAutoGrantProductEntry().build_manifest_sustained_consumption_payload_response(
+                owner_payload_response=_owner_payload_response(),
+                workspace_receipt_scaleout_evidence=_workspace_scaleout_evidence(),
+                operator_payload={
+                    "typed_blocker_refs": [
+                        "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-05-28"
+                    ],
+                    "operator_note": "do not smuggle uncontracted payload fields",
                 },
             )

@@ -90,7 +90,10 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
             workorder["properties"]["authority_command"]["const"],
             "authority manifest-consumption-payload",
         )
+        self.assertIn("allowed_operator_payload_fields", workorder["required"])
+        self.assertIn("rejects_unknown_operator_payload_fields", workorder["required"])
         self.assertFalse(workorder["properties"]["empty_payload_template_is_success_evidence"]["const"])
+        self.assertTrue(workorder["properties"]["rejects_unknown_operator_payload_fields"]["const"])
         self.assertFalse(workorder["properties"]["claims_sustained_app_consumption_complete"]["const"])
         self.assertFalse(workorder["properties"]["claims_provider_long_soak_complete"]["const"])
         workorder_authority = workorder["properties"]["authority_boundary"]["properties"]

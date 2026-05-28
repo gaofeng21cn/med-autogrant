@@ -366,6 +366,7 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
             ],
             ["typed_blocker_refs"],
         )
+        self.assertTrue(workorder["rejects_unknown_operator_payload_fields"])
         self.assertFalse(workorder["claims_sustained_app_consumption_complete"])
         self.assertFalse(snapshot["claims"]["claims_grant_ready"])
         self.assertFalse(snapshot["claims"]["claims_submission_ready_export"])
