@@ -88,6 +88,119 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-29 post-R5A fail-closed / hosted-bundle history specs tranche
+
+本轮在 OPL series fresh hygiene scan 后，覆盖 MAG `docs/history/specs/`
+下 26 份 `2026-04-10-post-r5a-*.md` 历史 specs。目标是确认这些
+direct-file 历史入口不会把旧 local-runtime hardening、`ready for implementation`
+状态、fail-closed activation package、hosted-contract bundle、Gateway、host-agent、
+bare runtime command 或 worktree/root-resolution wording 误读成当前 runtime owner、
+formal entry、hosted runtime completion、App/workbench readiness、production readiness、
+submission/export-ready verdict、physical-delete authority 或 active backlog。本轮不改
+active truth，不关闭 OPL series 全局 `/goal`。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`、
+  `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、
+  `docs/history/specs/README.md` 和本文件。
+- Reviewed history specs: all 26 files matching
+  `docs/history/specs/2026-04-10-post-r5a-*.md`, grouped as 15
+  final-package artifact-bundle fail-closed specs, 6 hosted-contract-bundle
+  final-package fail-closed specs, and 5 local-runtime / stage-route /
+  revised-workspace / worktree-aware root-resolution records.
+- Machine/source/test truth:
+  `contracts/runtime-program/current-program.json`,
+  `contracts/production_acceptance/mag-production-acceptance.json`,
+  `contracts/runtime-program/opl-family-contract-adoption.json`,
+  `tests/test_repository_hygiene.py`, `tests/test_opl_standard_pack.py`, and
+  `tests/test_production_acceptance.py`.
+- Fresh repo state: MAG `main...origin/main = 0 0`, root checkout clean before
+  this edit, no extra local MAG worktree, and the only remote-only branch is
+  non-codex `origin/feature/ai-narration-contracts`, retained as external
+  history.
+
+Fresh semantic result：
+
+- All 26 reviewed files carry `Owner` / `Purpose` / `State` /
+  `Machine boundary` metadata and are already in `State: history`. Their first
+  screen lifecycle notes or machine boundaries route current truth back to core
+  docs, active plan, specs lifecycle map, contracts/schema/source/CLI behavior
+  and `current-program.json`.
+- The 15 final-package artifact-bundle files remain historical fail-closed
+  hardening provenance for `build-final-package` input validation. Their
+  Promotion Invariants keep `build-final-package` as local finalization/export
+  surface and explicitly prevent fallback, default-value patching, new formal
+  entry, `P5` expansion or actual hosted runtime semantics.
+- The 6 hosted-contract-bundle files remain historical fail-closed hardening
+  provenance for `build-hosted-contract-bundle` consuming a complete final
+  package. Their machine boundaries say current hosted/default task runtime
+  owner is OPL/Temporal, hosted-contract bundle is local hostedization-prep /
+  export provenance, and the files do not declare public hosted runtime、App
+  release ready or production ready.
+- The local-runtime validation, local walkthrough, stage-route checkpoint,
+  revised-workspace/operator and worktree-aware root-resolution records remain
+  local closeout / path-resolution / checkpoint-output provenance. Current
+  route checkpoint aggregation, validation behavior, runtime owner and grouped
+  CLI behavior stay with core docs、active plan、contracts/schema/source/tests
+  and `current-program.json`.
+- Current machine truth still says OPL/Temporal is the default task runtime
+  owner, `Codex CLI` is the default stage executor, MAG does not implement
+  daemon/scheduler/attempt loop/attempt ledger, physical delete is not
+  authorized, OPL/provider completion cannot authorize grant/fundability/
+  submission readiness, and Temporal/provider long-soak remains open.
+- Focused tests reinforce the same boundary: repository hygiene blocks retired
+  compatibility/local-state revival claims; standard-pack tests keep generated
+  surface ownership in OPL and physical delete unauthorized; production
+  acceptance requires MAG owner receipt / typed blocker / no-regression refs
+  and rejects provider-readiness upgrades.
+- No prose body rewrite was needed. This tranche records full paragraph-level
+  coverage over the 2026-04-10 post-R5A fail-closed / hosted-bundle history
+  body batch.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Full paragraph read of all 26 `docs/history/specs/2026-04-10-post-r5a-*.md` bodies; support read of specs lifecycle map, specs index, history specs index, core docs, active plan, current-program runtime owner fields, production acceptance contract, OPL-family contract adoption contract and focused boundary tests. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。这 26 份文件仍是有用的 history
+provenance；不需要移动、tombstone、删除或正文重写。
+
+Uncovered docs：
+
+- `med-autogrant`: this tranche closes the 2026-04-10 post-R5A fail-closed /
+  hosted-bundle history body batch. Remaining higher-risk history body batches
+  still include 2026-04-08 P5 / R-series activation packages,
+  2026-04-11 Hermes/reset/local-runtime records and 2026-04-12 hosted / OPL
+  handoff records unless covered by prior date/topic tranche entries.
+- Other OPL-series repos remain governed by the global coverage ledger. OPL、
+  MAS、RCA and App still need their own remaining section-level coverage /
+  safe-lane reconciliation before the global `/goal` can close.
+
+Remaining stale / retire candidates：
+
+- Any future direct-file use of these 2026-04-10 files as current formal entry,
+  MAG-owned generic runtime, actual hosted runtime completion, App/workbench
+  readiness, production readiness, submission/export-ready verdict,
+  physical-delete authority, active Gateway/local-manager route, old bare
+  runtime command contract or compatibility-interface source is stale pollution.
+- Historical `runtime-run` / `runtime-resume`、host-agent、Gateway、
+  hostedization prep、`ready for implementation` and local-runtime hardening
+  vocabulary must remain provenance unless current source/contracts/tests and
+  active owner docs explicitly re-admit an exact boundary.
+- MAG implementation/evidence tails remain source/test/receipt work: physical
+  delete authorization, production long-soak, submission-ready human gate,
+  sustained real App/operator consumption and long-soak evidence.
+
+Next tranche write scope：
+
+- Continue MAG history body coverage only if needed by global coverage,
+  prioritizing 2026-04-11 Hermes/reset/local-runtime records or 2026-04-12
+  hosted / OPL handoff specs because stale provider and hosted wording risk is
+  higher there.
+- Prefer OPL / MAS / RCA safe document clusters for the next OPL-series tranche
+  while App release docs remain tied to dirty or conflicting release lanes.
+
 ### 2026-05-29 P3/P4 rollback and verification history specs tranche
 
 本轮在 OPL series branch/worktree hygiene 后，覆盖 MAG `docs/history/specs/`
