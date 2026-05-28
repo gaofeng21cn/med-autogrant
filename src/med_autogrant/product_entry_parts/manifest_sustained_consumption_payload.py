@@ -111,9 +111,7 @@ def _build_success_ref_response(
     workspace_receipt_scaleout_evidence: Mapping[str, Any],
     success_payload: Mapping[str, list[str]],
 ) -> dict[str, Any]:
-    long_soak_or_typed_blocker_refs = list(success_payload["long_soak_or_typed_blocker_ref"])
     record_payload = {
-        "domain_id": TARGET_DOMAIN_ID,
         "app_operator_consumption_refs": list(success_payload["app_operator_consumption_ref"]),
         "default_caller_consumption_refs": list(success_payload["default_caller_consumption_ref"]),
         "owner_payload_response_refs": list(success_payload["owner_payload_response_ref"]),
@@ -121,12 +119,7 @@ def _build_success_ref_response(
             success_payload["workspace_receipt_scaleout_evidence_ref"]
         ),
         "no_forbidden_write_refs": list(success_payload["no_forbidden_write_ref"]),
-        "long_soak_or_typed_blocker_refs": long_soak_or_typed_blocker_refs,
-        "typed_blocker_refs": [
-            ref
-            for ref in long_soak_or_typed_blocker_refs
-            if ref.startswith("typed-blocker:")
-        ],
+        "long_soak_or_typed_blocker_refs": list(success_payload["long_soak_or_typed_blocker_ref"]),
     }
     return _base_response(
         owner_payload_response=owner_payload_response,
@@ -151,7 +144,6 @@ def _build_typed_blocker_response(
         recommended_payload_path="typed_blocker_path",
         operator_payload_submitted=True,
         record_payload={
-            "domain_id": TARGET_DOMAIN_ID,
             "typed_blocker_refs": list(typed_blocker_refs),
         },
     )

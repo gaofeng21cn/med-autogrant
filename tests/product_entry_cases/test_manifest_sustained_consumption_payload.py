@@ -72,13 +72,19 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
         self.assertEqual(response["status"], "sustained_consumption_payload_refs_ready")
         self.assertEqual(response["recommended_payload_path"], "sustained_consumption_refs_path")
         self.assertTrue(response["operator_payload_submitted"])
-        self.assertEqual(
-            response["record_payload"]["typed_blocker_refs"],
-            ["typed-blocker:opl/provider/temporal-long-soak-window/open/2026-05-28"],
-        )
+        self.assertNotIn("domain_id", response["record_payload"])
+        self.assertNotIn("typed_blocker_refs", response["record_payload"])
         self.assertEqual(
             response["record_payload"]["app_operator_consumption_refs"],
             ["opl://app/operator/mag/owner-payload-consumed/2026-05-28"],
+        )
+        self.assertEqual(
+            response["record_payload"]["long_soak_or_typed_blocker_refs"],
+            ["typed-blocker:opl/provider/temporal-long-soak-window/open/2026-05-28"],
+        )
+        self.assertEqual(
+            response["opl_runtime_action_execute_payload"],
+            response["record_payload"],
         )
         self.assertEqual(
             response["allowed_operator_payload_fields"],

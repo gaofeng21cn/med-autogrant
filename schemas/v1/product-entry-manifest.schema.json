@@ -7609,9 +7609,8 @@
         "record_payload": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["domain_id", "app_operator_consumption_refs", "default_caller_consumption_refs", "owner_payload_response_refs", "workspace_receipt_scaleout_evidence_refs", "no_forbidden_write_refs", "long_soak_or_typed_blocker_refs", "typed_blocker_refs"],
+          "required": ["app_operator_consumption_refs", "default_caller_consumption_refs", "owner_payload_response_refs", "workspace_receipt_scaleout_evidence_refs", "no_forbidden_write_refs", "long_soak_or_typed_blocker_refs"],
           "properties": {
-            "domain_id": {"const": "med-autogrant"},
             "app_operator_consumption_refs": {"$ref": "common.schema.json#/$defs/stringList"},
             "default_caller_consumption_refs": {"$ref": "common.schema.json#/$defs/stringList"},
             "owner_payload_response_refs": {"$ref": "common.schema.json#/$defs/stringList"},
