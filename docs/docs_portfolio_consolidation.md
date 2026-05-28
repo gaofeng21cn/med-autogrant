@@ -88,6 +88,46 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-28 MAG current entry / core index revalidation tranche
+
+本轮在 OPL series fresh hygiene scan 后，重新复核 MAG 当前入口与核心索引簇，确认 2026-05-28 sustained-consumption payload follow-through 之后，MAG docs 仍保持 single active truth owner、single north-star reference、history/specs lifecycle guard 和 thin support index 边界。本轮不重写产品事实、不关闭 MAG evidence tails、不声明全仓 docs/global `/goal` complete。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、root `README.md`、`README.zh-CN.md`、`agent/README.md`、`contracts/README.md`、`runtime/README.md`、`docs/README.md`、核心五件套、`docs/active/README.md`、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/active/opl-private-implementation-migration-inventory.md`、`docs/docs_portfolio_consolidation.md`、thin support indexes、specs/history indexes 和 north-star reference `docs/references/med-auto-grant-ideal-state.md`。
+- Machine/source truth：`contracts/runtime-program/current-program.json`、`contracts/domain_descriptor.json`、`contracts/pack_compiler_input.json`、`contracts/functional_privatization_audit.json`、`contracts/production_acceptance/mag-manifest-sustained-consumption-evidence-20260528.json`、`contracts/stage_control_plane.json`、package/test entry inventory 和 OPL Doc Governance doctor。
+- Fresh repo state：MAG `main...origin/main = 0 0`、root checkout clean、no local MAG extra worktree before this docs-governance worktree、open PR scan `[]`、doctor `finding_count=0` and active truth `pass`。
+
+Fresh semantic result：
+
+- Root `README*` remains a public entry; `docs/README.md` remains the second-level technical routing index; core five docs hold current role/status/architecture/invariants/decisions; `docs/active/mag-ideal-state-cross-repo-gap-plan.md` remains the single active truth owner for current progress、gaps and next-round prompt.
+- `docs/references/med-auto-grant-ideal-state.md` remains the north-star target-state reference. `docs/active/opl-private-implementation-migration-inventory.md` remains the physical morphology / private platform residue inventory; it does not replace the active gap plan.
+- `agent/README.md` is the human index for the Declarative Grant Pack. Non-README `agent/**/*.md` files are pack semantic inputs consumed through `contracts/pack_compiler_input.json`; they are not docs-lifecycle owner docs and do not need separate owner/purpose/state/machine-boundary headers.
+- `contracts/README.md` and `runtime/README.md` continue to index machine contracts and runtime descriptor boundaries without making prose paths machine interfaces.
+- Thin support indexes under `docs/product/`、`docs/runtime/`、`docs/delivery/`、`docs/source/` and `docs/policies/` still only route readers to current owner docs/contracts; they do not duplicate active truth.
+- `docs/specs/README.md` and `docs/specs/specs_lifecycle_map.md` still guard active/support specs; `docs/history/**` indexes still keep historical `Current Truth` titles and Hermes/Gateway/local-runtime wording inside provenance context.
+- Current contracts still say OPL/Temporal owns the default task runtime, `Codex CLI` is the default stage executor, MAG does not implement daemon/scheduler/attempt loop/attempt ledger, physical delete is not authorized, and production long-soak is not complete. MAG docs must continue to treat sustained-consumption payload response and OPL record/verify as refs-only evidence, not grant-ready、submission-ready、App sustained-consumption complete or production-ready proof.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Current entry/core index cluster: root `README*`, `agent/README.md`, `contracts/README.md`, `runtime/README.md`, `docs/README.md`, core five docs, active README/plan/inventory, docs portfolio, thin support indexes, specs/history indexes and north-star reference; support read of key contracts/source/test inventory and doctor risk map. | this coverage ledger only |
+
+Archived / tombstoned / deleted docs：无。本轮未发现当前入口或核心索引簇需要移动、tombstone、删除或正文重写。
+
+Uncovered docs：
+
+- `med-autogrant`: this tranche only revalidates the current entry/core index cluster. It does not claim a new full paragraph reread of every historical spec body beyond previously recorded MAG date/topic coverage and exact inventory reconcile entries.
+- Other OPL-series repos remain governed by the global coverage ledger; global `/goal` stays active.
+
+Remaining stale / retire candidates：
+
+- MAG evidence/implementation tails remain open as source/test/receipt work: physical delete authorization、production long-soak、submission-ready human gate、sustained real App/operator consumption and long-soak evidence.
+- Future MAG prose that upgrades refs-only payload/ledger verification、zero docs inventory gap、OPL projection、Temporal provider completion、support README indexes or optional Hermes proof lane into grant-domain ready、fundability ready、submission/export ready、production ready、MAG-owned generic runtime、App/workbench ownership or physical delete authority is stale pollution.
+
+Next tranche write scope：
+
+- Continue OPL series whole-docs coverage outside MAG, or return to MAG only if new MAG docs appear, source/contract changes reopen a section, or an implementation/evidence owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and needs doc foldback.
+
 ### 2026-05-26 thin support index coverage tranche
 
 本轮逐段覆盖 MAG thin support index：
