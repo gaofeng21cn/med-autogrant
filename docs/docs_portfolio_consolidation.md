@@ -88,6 +88,102 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-29 specs lifecycle / history direct-reader currentness tranche
+
+本轮在 OPL series fresh hygiene scan 后，复核 MAG specs lifecycle map、
+active specs、history specs/plans 索引和相关 machine guards。目标是确认
+direct-file reader 仍会被引回当前核心五件套、active plan、current-program、
+contracts/schema/source/tests，而不会把旧 `Current Truth` 标题、Hermes/Gateway
+/ local-runtime wording、hosted proof 或 historical activation package 误读成
+当前 runtime owner、retired interface surface、production readiness、physical
+delete authorization 或 active backlog。本轮不关闭 MAG evidence tails，不重写产品事实，
+不声明全仓 docs/global `/goal` complete。
+
+Live truth inputs：
+
+- MAG repo guidance and current docs: `AGENTS.md`, `TASTE.md`, core five docs,
+  `docs/README.md`, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`, and
+  this docs portfolio ledger.
+- Specs / history docs: `docs/specs/README.md`,
+  `docs/specs/specs_lifecycle_map.md`, the four active specs listed there,
+  `docs/history/specs/README.md`, and `docs/history/plans/README.md`.
+- Machine/source/test truth:
+  `contracts/runtime-program/current-program.json`,
+  `contracts/production_acceptance/mag-production-acceptance.json`,
+  `contracts/runtime-program/opl-family-contract-adoption.json`,
+  `tests/test_repository_hygiene.py`, `tests/test_opl_standard_pack.py`, and
+  `tests/test_production_acceptance.py`.
+- Fresh repo state: MAG `main...origin/main = 0 0`, root checkout clean before
+  this docs-governance worktree, open PR scan `[]`, and doctor
+  `finding_count=0` / active truth `pass`.
+
+Fresh semantic result：
+
+- `docs/specs/README.md` and `docs/specs/specs_lifecycle_map.md` still make the
+  active current specs explicit: critique Codex CLI executor vocabulary,
+  AI-first quality boundary, authoring completion semantics, and
+  quality/autonomy/family grammar. Each active spec has owner/purpose/state and
+  machine-boundary headers, and scopes its authority to a named boundary rather
+  than all product/runtime/readiness truth.
+- The specs lifecycle map still classifies remaining support records by current
+  subsection and routes pure historical P/R/post-R5A/provider/handoff records to
+  `docs/history/specs/`.
+- `docs/history/specs/README.md` and `docs/history/plans/README.md` continue to
+  mark historical specs/plans as provenance. Their directory-level machine
+  boundaries prevent old `Current Truth`, activation status, Hermes/Gateway,
+  hosted, local-runtime, `runtime-run`, `runtime-resume`, local journal and
+  attempt-ledger wording from becoming current owner lines.
+- Current machine refs still say OPL/Temporal is the default task runtime owner,
+  `codex_cli` is the default stage executor, MAG does not implement daemon /
+  scheduler / attempt loop / attempt ledger, OPL cannot authorize grant or
+  fundability readiness, provider completion is not submission-ready, and
+  Temporal/provider long-soak remains open.
+- Tests reinforce the same boundary: repository hygiene blocks local-state and
+  retired-interface revival claims; standard-pack tests keep retired aliases
+  disabled and physical delete unauthorized; production-acceptance tests require
+  MAG owner receipt / typed blocker refs and reject OPL/provider readiness
+  upgrades.
+- No body rewrite was needed. This tranche records paragraph-level currentness
+  coverage over the specs lifecycle owner/index layer and the active-spec
+  boundary set.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Specs lifecycle owner/index layer: `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, active specs for critique executor vocabulary, AI-first quality boundary, authoring completion semantics and quality/autonomy/family grammar, plus `docs/history/specs/README.md`, `docs/history/plans/README.md`, core docs and machine/test refs listed above. | this coverage ledger only |
+
+Archived / tombstoned / deleted docs：无。本轮未发现 specs lifecycle map、active specs
+或 history indexes 需要移动、tombstone、删除或正文重写。
+
+Uncovered docs：
+
+- `med-autogrant`: this tranche does not claim a full paragraph reread of every
+  `docs/history/specs/*.md` body. It closes the current specs lifecycle owner /
+  direct-reader guard layer and the four active current-spec bodies.
+- Remaining higher-risk history body batches still include 2026-04-08 P3/P4
+  rollback / verification gate records, 2026-04-08 P5 / R-series activation
+  packages, 2026-04-09 R3/R4/R5 / post-R5A records, 2026-04-10 fail-closed /
+  hosted-bundle records, 2026-04-11 Hermes/reset/local-runtime records and
+  2026-04-12 hosted/OPL handoff records unless covered by prior specific
+  tranche entries.
+
+Remaining stale / retire candidates：
+
+- Future specs or history prose that upgrades lifecycle map entries, active spec
+  titles, hosted proof, OPL projection, provider completion, refs-only payload /
+  ledger verification or historical activation-package completion into
+  grant-domain ready, fundability ready, submission/export ready, production
+  ready, MAG-owned generic runtime, App/workbench ownership, physical delete
+  authority, or retired interface revival is stale pollution.
+- MAG evidence/implementation tails remain source/test/receipt work: physical
+  delete authorization, production long-soak, submission-ready human gate,
+  sustained real App/operator consumption and long-soak evidence.
+
+Next tranche write scope：
+
+- Continue OPL series whole-docs coverage outside MAG, or return to MAG for
+  remaining high-risk history body batches / newly changed docs / source or
+  contract changes that reopen a specs boundary.
+
 ### 2026-05-28 MAG current entry / core index revalidation tranche
 
 本轮在 OPL series fresh hygiene scan 后，重新复核 MAG 当前入口与核心索引簇，确认 2026-05-28 sustained-consumption payload follow-through 之后，MAG docs 仍保持 single active truth owner、single north-star reference、history/specs lifecycle guard 和 thin support index 边界。本轮不重写产品事实、不关闭 MAG evidence tails、不声明全仓 docs/global `/goal` complete。
