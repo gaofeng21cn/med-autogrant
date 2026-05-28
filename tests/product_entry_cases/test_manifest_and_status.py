@@ -615,6 +615,9 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
                     "contracts/production_acceptance/"
                     "mag-workspace-receipt-scaleout-evidence-20260527.json"
                 ),
+                "manifest_sustained_consumption_evidence_ref": (
+                    "contracts/production_acceptance/mag-manifest-sustained-consumption-evidence-20260528.json"
+                ),
             },
         )
         self.assertEqual(

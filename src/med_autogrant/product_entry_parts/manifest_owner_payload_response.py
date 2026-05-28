@@ -17,6 +17,10 @@ EXTERNAL_EVIDENCE_LEDGER_REF = "contracts/external_evidence/mag-evidence-receipt
 WORKSPACE_RECEIPT_SCALEOUT_REF = (
     "contracts/production_acceptance/mag-workspace-receipt-scaleout-evidence-20260527.json"
 )
+MANIFEST_SUSTAINED_CONSUMPTION_EVIDENCE_REF = (
+    "contracts/production_acceptance/"
+    "mag-manifest-sustained-consumption-evidence-20260528.json"
+)
 _REQUIRED_CATEGORIES = (
     "owner_receipt",
     "memory_accept_reject",
@@ -29,6 +33,16 @@ def build_manifest_owner_payload_surfaces() -> dict[str, Any]:
     production_acceptance = _read_json_object(PRODUCTION_ACCEPTANCE_REF)
     external_evidence_ledger = _read_json_object(EXTERNAL_EVIDENCE_LEDGER_REF)
     workspace_scaleout_evidence = _read_json_object(WORKSPACE_RECEIPT_SCALEOUT_REF)
+    manifest_sustained_consumption_evidence = _read_json_object(
+        MANIFEST_SUSTAINED_CONSUMPTION_EVIDENCE_REF
+    )
+    manifest_sustained_consumption_payload_response = dict(
+        _require_mapping(
+            manifest_sustained_consumption_evidence,
+            "manifest_sustained_consumption_payload_response",
+            context="manifest_sustained_consumption_evidence",
+        )
+    )
 
     owner_payload_response = build_opl_owner_payload_response(
         production_acceptance=production_acceptance,
@@ -41,9 +55,18 @@ def build_manifest_owner_payload_surfaces() -> dict[str, Any]:
         "production_acceptance_ref": PRODUCTION_ACCEPTANCE_REF,
         "external_evidence_ledger_ref": EXTERNAL_EVIDENCE_LEDGER_REF,
         "workspace_receipt_scaleout_evidence_ref": WORKSPACE_RECEIPT_SCALEOUT_REF,
+        "manifest_sustained_consumption_evidence_ref": (
+            MANIFEST_SUSTAINED_CONSUMPTION_EVIDENCE_REF
+        ),
     }
     owner_payload_response["workspace_receipt_scaleout_evidence_ref"] = (
         WORKSPACE_RECEIPT_SCALEOUT_REF
+    )
+    owner_payload_response["manifest_sustained_consumption_evidence_ref"] = (
+        MANIFEST_SUSTAINED_CONSUMPTION_EVIDENCE_REF
+    )
+    owner_payload_response["manifest_sustained_consumption_payload_response"] = (
+        manifest_sustained_consumption_payload_response
     )
     owner_payload_response["workspace_receipt_scaleout_summary"] = dict(
         _require_mapping(
@@ -67,11 +90,13 @@ def build_manifest_owner_payload_surfaces() -> dict[str, Any]:
     owner_payload_response["manifest_consumer_evidence"] = _manifest_consumer_evidence(
         owner_payload_response,
         workspace_scaleout_evidence,
+        manifest_sustained_consumption_evidence,
     )
 
     return {
         "owner_payload_response": owner_payload_response,
         "workspace_receipt_scaleout_evidence": workspace_scaleout_evidence,
+        "manifest_sustained_consumption_evidence": manifest_sustained_consumption_evidence,
     }
 
 
@@ -121,6 +146,7 @@ def _manifest_receipt_readiness_projection(
 def _manifest_consumer_evidence(
     owner_payload_response: Mapping[str, Any],
     workspace_scaleout_evidence: Mapping[str, Any],
+    manifest_sustained_consumption_evidence: Mapping[str, Any],
 ) -> dict[str, Any]:
     scaleout_summary = _require_mapping(
         workspace_scaleout_evidence,
@@ -131,6 +157,11 @@ def _manifest_consumer_evidence(
         owner_payload_response,
         "stage_expected_receipt_payload_summary",
         context="owner_payload_response",
+    )
+    manifest_payload_response = _require_mapping(
+        manifest_sustained_consumption_evidence,
+        "manifest_sustained_consumption_payload_response",
+        context="manifest_sustained_consumption_evidence",
     )
     return {
         "surface_kind": "mag_manifest_owner_payload_consumer_evidence",
@@ -148,6 +179,13 @@ def _manifest_consumer_evidence(
                 "/product_entry_manifest/owner_payload_response/"
                 "stage_expected_receipt_payload_summary"
             ),
+            "manifest_sustained_consumption_evidence_ref": (
+                "/product_entry_manifest/manifest_sustained_consumption_evidence"
+            ),
+            "manifest_sustained_consumption_payload_response_ref": (
+                "/product_entry_manifest/manifest_sustained_consumption_evidence/"
+                "manifest_sustained_consumption_payload_response"
+            ),
         },
         "consumed_fields": [
             "domain_owner_receipt_refs",
@@ -156,6 +194,7 @@ def _manifest_consumer_evidence(
             "no_regression_evidence_refs",
             "stage_expected_receipt_payload_summary",
             "workspace_receipt_scaleout_summary",
+            "manifest_sustained_consumption_payload_response",
         ],
         "observed_counts": {
             "domain_owner_receipt_ref_count": len(
@@ -175,7 +214,15 @@ def _manifest_consumer_evidence(
             "count_only_scaleout_total_receipt_ref_count": scaleout_summary.get(
                 "total_receipt_ref_count"
             ),
+            "manifest_sustained_consumption_payload_response_count": 1,
         },
+        "manifest_sustained_consumption_payload_status": manifest_payload_response.get("status"),
+        "manifest_sustained_consumption_recommended_payload_path": (
+            manifest_payload_response.get("recommended_payload_path")
+        ),
+        "manifest_sustained_consumption_operator_payload_submitted": bool(
+            manifest_payload_response.get("operator_payload_submitted")
+        ),
         "human_gate_blocker_refs": list(_string_list(owner_payload_response.get("typed_blocker_refs"))),
         "sustained_consumption_followthrough_workorder": (
             _sustained_consumption_followthrough_workorder()

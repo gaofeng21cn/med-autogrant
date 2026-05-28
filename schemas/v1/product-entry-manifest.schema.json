@@ -7356,7 +7356,7 @@
     "magManifestOwnerPayloadConsumerEvidence": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["surface_kind", "version", "state", "consumer", "owner", "target_domain_id", "consumed_surface_refs", "consumed_fields", "observed_counts", "human_gate_blocker_refs", "sustained_consumption_followthrough_workorder", "projection_policy", "operator_payload_submitted", "count_only_scaleout_snapshot_is_receipt_refs", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_quality_ready", "claims_export_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
+      "required": ["surface_kind", "version", "state", "consumer", "owner", "target_domain_id", "consumed_surface_refs", "consumed_fields", "observed_counts", "manifest_sustained_consumption_payload_status", "manifest_sustained_consumption_recommended_payload_path", "manifest_sustained_consumption_operator_payload_submitted", "human_gate_blocker_refs", "sustained_consumption_followthrough_workorder", "projection_policy", "operator_payload_submitted", "count_only_scaleout_snapshot_is_receipt_refs", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_quality_ready", "claims_export_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
       "properties": {
         "surface_kind": {"const": "mag_manifest_owner_payload_consumer_evidence"},
         "version": {"const": "v1"},
@@ -7367,18 +7367,20 @@
         "consumed_surface_refs": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["owner_payload_response_ref", "workspace_receipt_scaleout_evidence_ref", "stage_expected_receipt_payload_summary_ref"],
+          "required": ["owner_payload_response_ref", "workspace_receipt_scaleout_evidence_ref", "stage_expected_receipt_payload_summary_ref", "manifest_sustained_consumption_evidence_ref", "manifest_sustained_consumption_payload_response_ref"],
           "properties": {
             "owner_payload_response_ref": {"const": "/product_entry_manifest/owner_payload_response"},
             "workspace_receipt_scaleout_evidence_ref": {"const": "/product_entry_manifest/workspace_receipt_scaleout_evidence"},
-            "stage_expected_receipt_payload_summary_ref": {"const": "/product_entry_manifest/owner_payload_response/stage_expected_receipt_payload_summary"}
+            "stage_expected_receipt_payload_summary_ref": {"const": "/product_entry_manifest/owner_payload_response/stage_expected_receipt_payload_summary"},
+            "manifest_sustained_consumption_evidence_ref": {"const": "/product_entry_manifest/manifest_sustained_consumption_evidence"},
+            "manifest_sustained_consumption_payload_response_ref": {"const": "/product_entry_manifest/manifest_sustained_consumption_evidence/manifest_sustained_consumption_payload_response"}
           }
         },
         "consumed_fields": {"$ref": "common.schema.json#/$defs/stringList"},
         "observed_counts": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["domain_owner_receipt_ref_count", "owner_chain_ref_count", "typed_blocker_ref_count", "stage_expected_receipt_payload_stage_count", "workspace_count", "count_only_scaleout_total_receipt_ref_count"],
+          "required": ["domain_owner_receipt_ref_count", "owner_chain_ref_count", "typed_blocker_ref_count", "stage_expected_receipt_payload_stage_count", "workspace_count", "count_only_scaleout_total_receipt_ref_count", "manifest_sustained_consumption_payload_response_count"],
           "properties": {
             "domain_owner_receipt_ref_count": {"type": "integer", "minimum": 1},
             "owner_chain_ref_count": {"type": "integer", "minimum": 1},
@@ -7386,9 +7388,13 @@
             "no_regression_evidence_ref_count": {"type": "integer", "minimum": 0},
             "stage_expected_receipt_payload_stage_count": {"type": "integer", "minimum": 1},
             "workspace_count": {"type": "integer", "minimum": 1},
-            "count_only_scaleout_total_receipt_ref_count": {"type": "integer", "minimum": 1}
+            "count_only_scaleout_total_receipt_ref_count": {"type": "integer", "minimum": 1},
+            "manifest_sustained_consumption_payload_response_count": {"const": 1}
           }
         },
+        "manifest_sustained_consumption_payload_status": {"const": "sustained_consumption_payload_refs_ready"},
+        "manifest_sustained_consumption_recommended_payload_path": {"const": "sustained_consumption_refs_path"},
+        "manifest_sustained_consumption_operator_payload_submitted": {"const": true},
         "human_gate_blocker_refs": {"$ref": "common.schema.json#/$defs/stringList"},
         "sustained_consumption_followthrough_workorder": {
           "type": "object",
@@ -7464,7 +7470,7 @@
     "magOplOwnerPayloadResponse": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["surface_kind", "version", "status", "mode", "owner", "target_domain_id", "domain_id", "record_payload", "opl_runtime_action_execute_payload", "domain_owner_receipt_refs", "typed_blocker_refs", "owner_chain_refs", "no_regression_evidence_refs", "stage_expected_receipt_payload_summary", "required_return_shapes", "payload_path_policy", "accepted_payload_paths", "body_included", "grant_ready_claimed", "quality_ready_claimed", "export_ready_claimed", "submission_ready_claimed", "authority_boundary", "source_surface_refs", "workspace_receipt_scaleout_evidence_ref", "workspace_receipt_scaleout_summary", "workspace_receipt_scaleout_owner_payload_response_summary", "manifest_consumer_evidence", "manifest_projection_policy", "operator_payload_submitted", "workspace_receipt_scaleout_count_snapshot_is_receipt_refs"],
+      "required": ["surface_kind", "version", "status", "mode", "owner", "target_domain_id", "domain_id", "record_payload", "opl_runtime_action_execute_payload", "domain_owner_receipt_refs", "typed_blocker_refs", "owner_chain_refs", "no_regression_evidence_refs", "stage_expected_receipt_payload_summary", "required_return_shapes", "payload_path_policy", "accepted_payload_paths", "body_included", "grant_ready_claimed", "quality_ready_claimed", "export_ready_claimed", "submission_ready_claimed", "authority_boundary", "source_surface_refs", "workspace_receipt_scaleout_evidence_ref", "manifest_sustained_consumption_evidence_ref", "manifest_sustained_consumption_payload_response", "workspace_receipt_scaleout_summary", "workspace_receipt_scaleout_owner_payload_response_summary", "manifest_consumer_evidence", "manifest_projection_policy", "operator_payload_submitted", "workspace_receipt_scaleout_count_snapshot_is_receipt_refs"],
       "properties": {
         "surface_kind": {"const": "mag_opl_owner_payload_response"},
         "version": {"const": "v1"},
@@ -7509,14 +7515,17 @@
         "source_surface_refs": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["production_acceptance_ref", "external_evidence_ledger_ref", "workspace_receipt_scaleout_evidence_ref"],
+          "required": ["production_acceptance_ref", "external_evidence_ledger_ref", "workspace_receipt_scaleout_evidence_ref", "manifest_sustained_consumption_evidence_ref"],
           "properties": {
             "production_acceptance_ref": {"const": "contracts/production_acceptance/mag-production-acceptance.json"},
             "external_evidence_ledger_ref": {"const": "contracts/external_evidence/mag-evidence-receipt-ledger.json"},
-            "workspace_receipt_scaleout_evidence_ref": {"const": "contracts/production_acceptance/mag-workspace-receipt-scaleout-evidence-20260527.json"}
+            "workspace_receipt_scaleout_evidence_ref": {"const": "contracts/production_acceptance/mag-workspace-receipt-scaleout-evidence-20260527.json"},
+            "manifest_sustained_consumption_evidence_ref": {"const": "contracts/production_acceptance/mag-manifest-sustained-consumption-evidence-20260528.json"}
           }
         },
         "workspace_receipt_scaleout_evidence_ref": {"const": "contracts/production_acceptance/mag-workspace-receipt-scaleout-evidence-20260527.json"},
+        "manifest_sustained_consumption_evidence_ref": {"const": "contracts/production_acceptance/mag-manifest-sustained-consumption-evidence-20260528.json"},
+        "manifest_sustained_consumption_payload_response": {"$ref": "#/$defs/magManifestSustainedConsumptionPayloadResponse"},
         "workspace_receipt_scaleout_summary": {"type": "object", "additionalProperties": true},
         "workspace_receipt_scaleout_owner_payload_response_summary": {"type": "object", "additionalProperties": true},
         "manifest_consumer_evidence": {"$ref": "#/$defs/magManifestOwnerPayloadConsumerEvidence"},
@@ -7585,10 +7594,130 @@
         "payload_policy": {"const": "body_free_refs_only_receipt_scaleout_no_grant_truth_memory_body_artifact_body_or_ready_verdict"}
       }
     },
+    "magManifestSustainedConsumptionPayloadResponse": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["surface_kind", "version", "status", "owner", "target_domain_id", "payload_kind", "recommended_payload_path", "record_payload", "opl_runtime_action_execute_payload", "observed_counts", "accepted_payload_paths", "allowed_operator_payload_fields", "rejects_unknown_operator_payload_fields", "operator_payload_submitted", "body_included", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_quality_ready", "claims_export_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
+      "properties": {
+        "surface_kind": {"const": "mag_manifest_sustained_consumption_payload_response"},
+        "version": {"const": "v1"},
+        "status": {"const": "sustained_consumption_payload_refs_ready"},
+        "owner": {"const": "med-autogrant"},
+        "target_domain_id": {"const": "med-autogrant"},
+        "payload_kind": {"const": "manifest_sustained_consumption_refs_or_typed_blocker"},
+        "recommended_payload_path": {"const": "sustained_consumption_refs_path"},
+        "record_payload": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["domain_id", "app_operator_consumption_refs", "default_caller_consumption_refs", "owner_payload_response_refs", "workspace_receipt_scaleout_evidence_refs", "no_forbidden_write_refs", "long_soak_or_typed_blocker_refs", "typed_blocker_refs"],
+          "properties": {
+            "domain_id": {"const": "med-autogrant"},
+            "app_operator_consumption_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+            "default_caller_consumption_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+            "owner_payload_response_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+            "workspace_receipt_scaleout_evidence_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+            "no_forbidden_write_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+            "long_soak_or_typed_blocker_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+            "typed_blocker_refs": {"$ref": "common.schema.json#/$defs/stringList"}
+          }
+        },
+        "opl_runtime_action_execute_payload": {"type": "object", "additionalProperties": true},
+        "observed_counts": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["domain_owner_receipt_ref_count", "owner_chain_ref_count", "typed_blocker_ref_count", "no_regression_evidence_ref_count", "workspace_count"],
+          "properties": {
+            "domain_owner_receipt_ref_count": {"type": "integer", "minimum": 1},
+            "owner_chain_ref_count": {"type": "integer", "minimum": 1},
+            "typed_blocker_ref_count": {"type": "integer", "minimum": 1},
+            "no_regression_evidence_ref_count": {"type": "integer", "minimum": 0},
+            "workspace_count": {"type": "integer", "minimum": 1}
+          }
+        },
+        "accepted_payload_paths": {"type": "object", "additionalProperties": true},
+        "allowed_operator_payload_fields": {"$ref": "common.schema.json#/$defs/stringList"},
+        "rejects_unknown_operator_payload_fields": {"const": true},
+        "operator_payload_submitted": {"const": true},
+        "body_included": {"const": false},
+        "claims_sustained_app_consumption_complete": {"const": false},
+        "claims_grant_ready": {"const": false},
+        "claims_quality_ready": {"const": false},
+        "claims_export_ready": {"const": false},
+        "claims_submission_ready": {"const": false},
+        "claims_provider_long_soak_complete": {"const": false},
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["owner", "refs_only", "mag_validates_payload_shape", "payload_owner", "can_write_grant_truth", "can_read_memory_body", "can_read_artifact_body", "can_create_owner_receipt", "can_submit_operator_payload", "can_declare_app_sustained_consumption_complete", "can_declare_submission_ready", "can_declare_provider_long_soak_complete"],
+          "properties": {
+            "owner": {"const": "med-autogrant"},
+            "refs_only": {"const": true},
+            "mag_validates_payload_shape": {"const": true},
+            "payload_owner": {"const": "app_operator_or_release_default_caller"},
+            "can_write_grant_truth": {"const": false},
+            "can_read_memory_body": {"const": false},
+            "can_read_artifact_body": {"const": false},
+            "can_create_owner_receipt": {"const": false},
+            "can_submit_operator_payload": {"const": false},
+            "can_declare_app_sustained_consumption_complete": {"const": false},
+            "can_declare_submission_ready": {"const": false},
+            "can_declare_provider_long_soak_complete": {"const": false}
+          }
+        }
+      }
+    },
+    "magManifestSustainedConsumptionEvidence": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["surface_kind", "owner", "target_domain_id", "state", "observed_at", "operator_payload", "manifest_sustained_consumption_payload_response", "claims", "authority_boundary", "payload_policy"],
+      "properties": {
+        "surface_kind": {"const": "mag_manifest_sustained_consumption_evidence.v1"},
+        "owner": {"const": "med-autogrant"},
+        "target_domain_id": {"const": "med-autogrant"},
+        "state": {"const": "app_operator_default_caller_payload_observed_refs_only"},
+        "observed_at": {"const": "2026-05-28"},
+        "operator_payload": {"type": "object", "additionalProperties": true},
+        "manifest_sustained_consumption_payload_response": {"$ref": "#/$defs/magManifestSustainedConsumptionPayloadResponse"},
+        "claims": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_quality_ready", "claims_export_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "claims_owner_receipt_created"],
+          "properties": {
+            "claims_sustained_app_consumption_complete": {"const": false},
+            "claims_grant_ready": {"const": false},
+            "claims_quality_ready": {"const": false},
+            "claims_export_ready": {"const": false},
+            "claims_submission_ready": {"const": false},
+            "claims_provider_long_soak_complete": {"const": false},
+            "claims_owner_receipt_created": {"const": false}
+          }
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["owner", "refs_only", "operator_payload_owner", "mag_validates_payload_shape", "can_write_grant_truth", "can_read_memory_body", "can_read_artifact_body", "can_create_owner_receipt", "can_submit_operator_payload", "can_declare_app_sustained_consumption_complete", "can_declare_submission_ready", "can_declare_provider_long_soak_complete"],
+          "properties": {
+            "owner": {"const": "med-autogrant"},
+            "refs_only": {"const": true},
+            "operator_payload_owner": {"const": "app_operator_or_release_default_caller"},
+            "mag_validates_payload_shape": {"const": true},
+            "can_write_grant_truth": {"const": false},
+            "can_read_memory_body": {"const": false},
+            "can_read_artifact_body": {"const": false},
+            "can_create_owner_receipt": {"const": false},
+            "can_submit_operator_payload": {"const": false},
+            "can_declare_app_sustained_consumption_complete": {"const": false},
+            "can_declare_submission_ready": {"const": false},
+            "can_declare_provider_long_soak_complete": {"const": false}
+          }
+        },
+        "payload_policy": {"const": "repo_tracked_refs_only_snapshot_of_real_operator_payload_response_no_ready_or_soak_claim"}
+      }
+    },
     "productEntryManifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "opl_provider_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "source_provenance", "artifact_locator_contract", "opl_substrate_adapter_export", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "production_live_acceptance_receipt", "owner_payload_response", "workspace_receipt_scaleout_evidence", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "mag_consumer_thinning_contract", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
+      "required": ["surface_kind", "manifest_version", "manifest_kind", "target_domain_id", "formal_entry", "workspace_locator", "recommended_shell", "recommended_command", "product_entry_surface", "operator_loop_surface", "operator_loop_actions", "repo_mainline", "runtime", "opl_provider_runtime_contract", "runtime_inventory", "task_lifecycle", "persistence_policy", "lifecycle_ledger", "owner_route", "session_continuity", "runtime_control", "progress_projection", "artifact_inventory", "skill_catalog", "automation", "product_entry_shell", "shared_handoff", "product_entry_start", "product_entry_overview", "product_entry_preflight", "product_entry_readiness", "grant_authoring_readiness", "autonomy_observability", "product_entry_quickstart", "family_orchestration", "family_action_catalog", "family_stage_control_plane", "grant_transition_oracle", "source_provenance", "artifact_locator_contract", "opl_substrate_adapter_export", "controlled_stage_attempt_projection", "controlled_soak_no_regression_attempt", "production_live_acceptance_receipt", "owner_payload_response", "workspace_receipt_scaleout_evidence", "manifest_sustained_consumption_evidence", "domain_memory_descriptor", "domain_memory_descriptor_locator", "controlled_domain_memory_apply_proof", "standard_domain_agent_skeleton", "owner_receipt_contract", "lifecycle_guarded_apply_proof", "physical_skeleton_follow_through", "mag_consumer_thinning_contract", "ideal_state_closure_status", "action_catalog_projections", "executor_defaults", "product_entry_status", "remaining_gaps", "notes"],
       "properties": {
         "surface_kind": {
           "const": "product_entry_manifest"
@@ -7728,6 +7857,9 @@
         },
         "workspace_receipt_scaleout_evidence": {
           "$ref": "#/$defs/magWorkspaceReceiptScaleoutEvidence"
+        },
+        "manifest_sustained_consumption_evidence": {
+          "$ref": "#/$defs/magManifestSustainedConsumptionEvidence"
         },
         "domain_memory_descriptor": {
           "$ref": "#/$defs/familyDomainMemoryRef"

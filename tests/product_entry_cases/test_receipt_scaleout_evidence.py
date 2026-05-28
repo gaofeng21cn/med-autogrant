@@ -11,6 +11,12 @@ CONTRACT_PATH = (
     / "production_acceptance"
     / "mag-workspace-receipt-scaleout-evidence-20260527.json"
 )
+SUSTAINED_CONSUMPTION_CONTRACT_PATH = (
+    REPO_ROOT
+    / "contracts"
+    / "production_acceptance"
+    / "mag-manifest-sustained-consumption-evidence-20260528.json"
+)
 SUBMISSION_GATE_BLOCKER_REF = (
     "typed-blocker:mag/package_and_submit_ready/"
     "submission_ready_export_gate/human-approval-required/2026-05-22"
@@ -372,3 +378,58 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
         self.assertFalse(snapshot["claims"]["claims_submission_ready_export"])
         self.assertFalse(snapshot["authority_boundary"]["can_write_memory_body"])
         self.assertFalse(snapshot["authority_boundary"]["can_mutate_grant_artifact"])
+
+    def test_manifest_sustained_consumption_snapshot_records_payload_without_ready_claim(self) -> None:
+        snapshot = json.loads(SUSTAINED_CONSUMPTION_CONTRACT_PATH.read_text(encoding="utf-8"))
+
+        self.assertEqual(
+            snapshot["surface_kind"],
+            "mag_manifest_sustained_consumption_evidence.v1",
+        )
+        self.assertEqual(snapshot["state"], "app_operator_default_caller_payload_observed_refs_only")
+        self.assertEqual(snapshot["operator_payload"]["owner_payload_response_ref"], [
+            "/product_entry_manifest/owner_payload_response",
+        ])
+        response = snapshot["manifest_sustained_consumption_payload_response"]
+        self.assertEqual(
+            response["surface_kind"],
+            "mag_manifest_sustained_consumption_payload_response",
+        )
+        self.assertEqual(response["status"], "sustained_consumption_payload_refs_ready")
+        self.assertEqual(response["recommended_payload_path"], "sustained_consumption_refs_path")
+        self.assertTrue(response["operator_payload_submitted"])
+        self.assertEqual(
+            response["record_payload"]["typed_blocker_refs"],
+            [
+                "typed-blocker:mag/manifest-sustained-consumption/"
+                "provider-long-soak-window-still-open/2026-05-28"
+            ],
+        )
+        self.assertFalse(response["body_included"])
+        self.assertFalse(response["claims_sustained_app_consumption_complete"])
+        self.assertFalse(response["claims_provider_long_soak_complete"])
+        self.assertFalse(response["claims_grant_ready"])
+        self.assertFalse(response["claims_quality_ready"])
+        self.assertFalse(response["claims_export_ready"])
+        self.assertFalse(response["claims_submission_ready"])
+        self.assertFalse(response["authority_boundary"]["can_create_owner_receipt"])
+        self.assertFalse(
+            response["authority_boundary"]["can_declare_app_sustained_consumption_complete"]
+        )
+        self.assertFalse(snapshot["claims"]["claims_owner_receipt_created"])
+        self.assertFalse(snapshot["authority_boundary"]["can_submit_operator_payload"])
+
+        encoded = json.dumps(
+            {
+                "operator_payload": snapshot["operator_payload"],
+                "record_payload": response["record_payload"],
+                "opl_runtime_action_execute_payload": response[
+                    "opl_runtime_action_execute_payload"
+                ],
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        self.assertNotIn("grant_truth_body", encoded)
+        self.assertNotIn("memory_body", encoded)
+        self.assertNotIn("proposal_text", encoded)

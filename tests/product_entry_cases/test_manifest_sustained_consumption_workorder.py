@@ -14,9 +14,12 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
         )
 
         manifest = payload["product_entry_manifest"]
+        owner_payload = manifest["owner_payload_response"]
+        manifest_consumer = owner_payload["manifest_consumer_evidence"]
         workorder = manifest["owner_payload_response"]["manifest_consumer_evidence"][
             "sustained_consumption_followthrough_workorder"
         ]
+        sustained_evidence = manifest["manifest_sustained_consumption_evidence"]
 
         self.assertEqual(
             workorder["surface_kind"],
@@ -72,3 +75,74 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
         self.assertFalse(
             workorder["authority_boundary"]["can_declare_provider_long_soak_complete"]
         )
+        self.assertEqual(
+            owner_payload["source_surface_refs"]["manifest_sustained_consumption_evidence_ref"],
+            "contracts/production_acceptance/"
+            "mag-manifest-sustained-consumption-evidence-20260528.json",
+        )
+        self.assertEqual(
+            owner_payload["manifest_sustained_consumption_evidence_ref"],
+            "contracts/production_acceptance/"
+            "mag-manifest-sustained-consumption-evidence-20260528.json",
+        )
+        self.assertEqual(
+            manifest_consumer["consumed_surface_refs"][
+                "manifest_sustained_consumption_evidence_ref"
+            ],
+            "/product_entry_manifest/manifest_sustained_consumption_evidence",
+        )
+        self.assertEqual(
+            manifest_consumer["consumed_surface_refs"][
+                "manifest_sustained_consumption_payload_response_ref"
+            ],
+            "/product_entry_manifest/manifest_sustained_consumption_evidence/"
+            "manifest_sustained_consumption_payload_response",
+        )
+        self.assertEqual(
+            manifest_consumer["observed_counts"][
+                "manifest_sustained_consumption_payload_response_count"
+            ],
+            1,
+        )
+        self.assertEqual(
+            manifest_consumer["manifest_sustained_consumption_payload_status"],
+            "sustained_consumption_payload_refs_ready",
+        )
+        self.assertEqual(
+            manifest_consumer["manifest_sustained_consumption_recommended_payload_path"],
+            "sustained_consumption_refs_path",
+        )
+        self.assertTrue(
+            manifest_consumer["manifest_sustained_consumption_operator_payload_submitted"]
+        )
+        self.assertTrue(
+            sustained_evidence["manifest_sustained_consumption_payload_response"][
+                "operator_payload_submitted"
+            ]
+        )
+        self.assertEqual(
+            owner_payload["manifest_sustained_consumption_payload_response"],
+            sustained_evidence["manifest_sustained_consumption_payload_response"],
+        )
+        self.assertEqual(
+            sustained_evidence["surface_kind"],
+            "mag_manifest_sustained_consumption_evidence.v1",
+        )
+        self.assertEqual(
+            sustained_evidence["manifest_sustained_consumption_payload_response"][
+                "recommended_payload_path"
+            ],
+            "sustained_consumption_refs_path",
+        )
+        self.assertFalse(
+            sustained_evidence["manifest_sustained_consumption_payload_response"][
+                "claims_sustained_app_consumption_complete"
+            ]
+        )
+        self.assertFalse(
+            sustained_evidence["manifest_sustained_consumption_payload_response"][
+                "claims_provider_long_soak_complete"
+            ]
+        )
+        self.assertFalse(sustained_evidence["claims"]["claims_submission_ready"])
+        self.assertFalse(sustained_evidence["authority_boundary"]["can_create_owner_receipt"])

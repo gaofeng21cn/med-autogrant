@@ -16,9 +16,14 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
         manifest = manifest_schema["$defs"]["productEntryManifest"]
         self.assertIn("owner_payload_response", manifest["required"])
         self.assertIn("workspace_receipt_scaleout_evidence", manifest["required"])
+        self.assertIn("manifest_sustained_consumption_evidence", manifest["required"])
         self.assertEqual(
             manifest["properties"]["owner_payload_response"]["$ref"],
             "#/$defs/magOplOwnerPayloadResponse",
+        )
+        self.assertEqual(
+            manifest["properties"]["manifest_sustained_consumption_evidence"]["$ref"],
+            "#/$defs/magManifestSustainedConsumptionEvidence",
         )
 
         owner_payload = manifest_schema["$defs"]["magOplOwnerPayloadResponse"]
@@ -35,6 +40,19 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
         self.assertFalse(owner_payload["properties"]["quality_ready_claimed"]["const"])
         self.assertFalse(owner_payload["properties"]["export_ready_claimed"]["const"])
         self.assertFalse(owner_payload["properties"]["submission_ready_claimed"]["const"])
+        self.assertEqual(
+            owner_payload["properties"]["manifest_sustained_consumption_evidence_ref"][
+                "const"
+            ],
+            "contracts/production_acceptance/"
+            "mag-manifest-sustained-consumption-evidence-20260528.json",
+        )
+        self.assertEqual(
+            owner_payload["properties"]["manifest_sustained_consumption_payload_response"][
+                "$ref"
+            ],
+            "#/$defs/magManifestSustainedConsumptionPayloadResponse",
+        )
 
         authority = owner_payload["properties"]["authority_boundary"]["properties"]
         self.assertFalse(authority["opl_writes_grant_truth"]["const"])
@@ -77,6 +95,17 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
             ]
         )
         self.assertFalse(manifest_consumer["properties"]["claims_submission_ready"]["const"])
+        self.assertTrue(
+            manifest_consumer["properties"][
+                "manifest_sustained_consumption_operator_payload_submitted"
+            ]["const"]
+        )
+        self.assertEqual(
+            manifest_consumer["properties"]["manifest_sustained_consumption_payload_status"][
+                "const"
+            ],
+            "sustained_consumption_payload_refs_ready",
+        )
         workorder = manifest_consumer["properties"]["sustained_consumption_followthrough_workorder"]
         self.assertEqual(
             workorder["properties"]["surface_kind"]["const"],
@@ -108,6 +137,49 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
             consumer_authority["can_declare_app_sustained_consumption_complete"]["const"]
         )
         self.assertFalse(consumer_authority["can_declare_submission_ready"]["const"])
+
+        sustained_response = manifest_schema["$defs"][
+            "magManifestSustainedConsumptionPayloadResponse"
+        ]
+        self.assertEqual(
+            sustained_response["properties"]["surface_kind"]["const"],
+            "mag_manifest_sustained_consumption_payload_response",
+        )
+        self.assertEqual(
+            sustained_response["properties"]["status"]["const"],
+            "sustained_consumption_payload_refs_ready",
+        )
+        self.assertTrue(sustained_response["properties"]["operator_payload_submitted"]["const"])
+        self.assertFalse(
+            sustained_response["properties"][
+                "claims_sustained_app_consumption_complete"
+            ]["const"]
+        )
+        self.assertFalse(
+            sustained_response["properties"]["claims_provider_long_soak_complete"]["const"]
+        )
+        sustained_authority = sustained_response["properties"]["authority_boundary"][
+            "properties"
+        ]
+        self.assertFalse(sustained_authority["can_create_owner_receipt"]["const"])
+        self.assertFalse(
+            sustained_authority["can_declare_app_sustained_consumption_complete"][
+                "const"
+            ]
+        )
+        self.assertFalse(
+            sustained_authority["can_declare_provider_long_soak_complete"]["const"]
+        )
+
+        sustained_evidence = manifest_schema["$defs"]["magManifestSustainedConsumptionEvidence"]
+        self.assertEqual(
+            sustained_evidence["properties"]["surface_kind"]["const"],
+            "mag_manifest_sustained_consumption_evidence.v1",
+        )
+        sustained_claims = sustained_evidence["properties"]["claims"]["properties"]
+        self.assertFalse(sustained_claims["claims_sustained_app_consumption_complete"]["const"])
+        self.assertFalse(sustained_claims["claims_provider_long_soak_complete"]["const"])
+        self.assertFalse(sustained_claims["claims_owner_receipt_created"]["const"])
 
         scaleout = manifest_schema["$defs"]["magWorkspaceReceiptScaleoutEvidence"]
         claims = scaleout["properties"]["claims"]["properties"]
