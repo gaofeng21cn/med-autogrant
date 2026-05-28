@@ -594,6 +594,7 @@ class ProductDomainHandlerTest(unittest.TestCase):
                 "/product_entry_manifest/grant_transition_oracle",
                 "/product_entry_manifest/controlled_soak_no_regression_attempt",
                 "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+                "/product_entry_manifest/physical_skeleton_follow_through/retired_public_command_scan",
             ],
         )
         self.assertEqual(
