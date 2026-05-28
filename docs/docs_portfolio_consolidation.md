@@ -88,6 +88,119 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-29 Hermes/reset/local-runtime history specs revalidation tranche
+
+本轮在 OPL series fresh hygiene scan 后，重新验证 MAG
+`docs/history/specs/` 下已由 2026-05-26 ledger 覆盖过的 4 份 2026-04-11
+Hermes/reset/local-runtime 历史 specs。目标是确认 recent main 语境下，这些
+direct-file 历史入口仍不会把旧 Hermes-backed runtime substrate、upstream
+Hermes-Agent reset、post-R5A local runtime honest-stop、`runtime-run` /
+`runtime-resume`、local journal、host-agent、Gateway/local-manager 或
+compatibility bridge wording 误读成当前 MAG runtime owner、default provider、
+attempt ledger、local runtime command alias、production hosted path、
+App/workbench readiness、production readiness、submission/export-ready verdict、
+physical-delete authority 或 active backlog。本轮不改 active truth，不关闭
+OPL series 全局 `/goal`。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`、
+  `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、
+  `docs/history/specs/README.md` 和本文件。
+- Reviewed history specs:
+  `docs/history/specs/2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md`,
+  `docs/history/specs/2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md`,
+  `docs/history/specs/2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`,
+  `docs/history/specs/2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`。
+- Machine/source/test truth:
+  `contracts/runtime-program/current-program.json`,
+  `contracts/production_acceptance/mag-production-acceptance.json`,
+  `contracts/runtime-program/opl-family-contract-adoption.json`,
+  `tests/test_repository_hygiene.py`, `tests/test_opl_standard_pack.py` and
+  `tests/test_production_acceptance.py`。
+- Fresh repo state: MAG tranche worktree created from `origin/main` at
+  `e8ae6c23ede3`; branch `codex/mag-doc-governance-20260529-0411-history`
+  started clean and aligned with `origin/main`; remote-only
+  `origin/feature/ai-narration-contracts` remains preserved as external,
+  non-codex history.
+
+Fresh semantic result：
+
+- All four reviewed files carry `Owner` / `Purpose` / `State` /
+  `Machine boundary` metadata and are already in `State: history`. Their
+  lifecycle notes route current truth back to core docs, active plan, specs
+  lifecycle map, contracts/schema/source/CLI behavior and
+  `current-program.json`.
+- The two `hermes-backed-*` files remain superseded provider-proof provenance.
+  They describe a historical proposal for Hermes-backed runtime substrate /
+  capability split, not the current default runtime owner, provider owner,
+  compatibility bridge or required runnable path. `hermes_agent` remains only
+  an explicit non-default executor / proof / provenance lane.
+- The post-R5A local runtime honest-stop file remains historical local-runtime
+  closeout provenance. Its old command catalog, local journal, host-agent ladder
+  and bare command examples do not re-admit MAG-owned daemon、scheduler、attempt
+  loop、attempt ledger、local runtime command alias、Hermes-backed default
+  provider or hosted runtime readiness.
+- The upstream Hermes-Agent truth-reset file remains retired provider-proof
+  provenance. It records the 2026-04-11 reset that repo-local runtime helper
+  code did not equal upstream Hermes-Agent integration; it is not a current
+  instruction to restore Hermes/Gateway/local-manager ownership.
+- Current machine truth still says OPL/Temporal is the default task runtime
+  owner, `Codex CLI` is the default stage executor, MAG does not implement
+  daemon/scheduler/attempt loop/attempt ledger, physical delete is not
+  authorized, OPL/provider completion cannot authorize grant/fundability/
+  submission readiness, and Temporal/provider long-soak remains open.
+- Focused tests reinforce the same boundary: repository hygiene and standard
+  pack tests keep retired public commands, generated surface ownership and
+  physical delete authority guarded; production acceptance tests reject
+  provider-completion upgrades to fundability/domain/submission readiness.
+- No prose body rewrite was needed. The 2026-05-26 ledger remains the original
+  body-coverage closeout for this batch; this tranche records fresh
+  currentness revalidation against current contracts/tests/source guards.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Fresh revalidation read of all four 2026-04-11 Hermes/reset/local-runtime history specs; support read of specs lifecycle map, specs index, history specs index, core docs, active plan, current-program runtime owner fields, production acceptance contract, OPL-family contract adoption contract and focused boundary tests. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。这 4 份文件仍是有用的 history
+provenance；不需要移动、tombstone、删除或正文重写。
+
+Uncovered docs：
+
+- `med-autogrant`: this revalidation opened no new uncovered `README*` /
+  `docs/**/*.md` path in the current recorded MAG governance scope. Future MAG
+  docs or source/contract changes can still reopen specific sections.
+- Other OPL-series repos remain governed by the global coverage ledger and the
+  final six-repo sweep. OPL、MAS、RCA、`opl-meta-agent` and App status must be
+  carried from their own current ledgers and active worktree safety before the
+  global `/goal` can close.
+
+Remaining stale / retire candidates：
+
+- Any future direct-file use of these 2026-04-11 files as current default
+  provider, MAG-owned generic runtime, Hermes/Gateway/local-manager active
+  route, compatibility bridge, local command alias, attempt ledger owner,
+  production hosted path, App/workbench readiness, production readiness,
+  submission/export-ready verdict or physical-delete authority is stale
+  pollution.
+- Historical `runtime-run` / `runtime-resume`、local journal、host-agent、
+  Gateway、Hermes-backed substrate、future Hermes host、truth-reset "next step"
+  wording and local runtime helper claims must remain provenance unless current
+  source/contracts/tests and active owner docs explicitly re-admit an exact
+  boundary.
+- MAG implementation/evidence tails remain source/test/receipt work: physical
+  delete authorization, production long-soak, submission-ready human gate,
+  sustained real App/operator consumption and long-soak evidence.
+
+Next tranche write scope：
+
+- Prefer OPL / MAS / RCA safe document clusters for the next OPL-series tranche
+  while App release docs remain tied to dirty or conflicting release lanes.
+- Return to MAG only if new MAG docs appear, later code/contract changes reopen
+  a section, or an implementation/evidence owner lane closes one of the
+  remaining runtime/evidence/physical-cleanup tails and requires doc foldback.
+
 ### 2026-05-29 post-R5A fail-closed / hosted-bundle history specs tranche
 
 本轮在 OPL series fresh hygiene scan 后，覆盖 MAG `docs/history/specs/`
