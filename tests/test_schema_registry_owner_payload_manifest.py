@@ -86,6 +86,10 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
             workorder["properties"]["payload_owner"]["const"],
             "app_operator_or_release_default_caller",
         )
+        self.assertEqual(
+            workorder["properties"]["authority_command"]["const"],
+            "authority manifest-consumption-payload",
+        )
         self.assertFalse(workorder["properties"]["empty_payload_template_is_success_evidence"]["const"])
         self.assertFalse(workorder["properties"]["claims_sustained_app_consumption_complete"]["const"])
         self.assertFalse(workorder["properties"]["claims_provider_long_soak_complete"]["const"])

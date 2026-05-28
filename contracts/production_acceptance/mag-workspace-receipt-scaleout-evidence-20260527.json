@@ -66,6 +66,8 @@
       "surface_kind": "mag_manifest_sustained_consumption_followthrough_workorder",
       "version": "v1",
       "status": "requires_real_app_operator_or_default_caller_payload",
+      "authority_command": "authority manifest-consumption-payload",
+      "authority_command_internal": "manifest-sustained-consumption-payload",
       "payload_owner": "app_operator_or_release_default_caller",
       "accepted_payload_path_policy": "real_app_operator_or_default_caller_consumption_refs_or_domain_owned_typed_blocker",
       "required_operator_payload_refs": [

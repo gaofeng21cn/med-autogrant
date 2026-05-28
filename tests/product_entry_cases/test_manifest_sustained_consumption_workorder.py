@@ -23,6 +23,11 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
             "mag_manifest_sustained_consumption_followthrough_workorder",
         )
         self.assertEqual(workorder["status"], "requires_real_app_operator_or_default_caller_payload")
+        self.assertEqual(workorder["authority_command"], "authority manifest-consumption-payload")
+        self.assertEqual(
+            workorder["authority_command_internal"],
+            "manifest-sustained-consumption-payload",
+        )
         self.assertEqual(workorder["payload_owner"], "app_operator_or_release_default_caller")
         self.assertEqual(
             workorder["required_operator_payload_refs"],

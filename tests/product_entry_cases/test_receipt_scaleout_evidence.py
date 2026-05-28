@@ -359,6 +359,7 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
             workorder["status"],
             "requires_real_app_operator_or_default_caller_payload",
         )
+        self.assertEqual(workorder["authority_command"], "authority manifest-consumption-payload")
         self.assertEqual(
             workorder["accepted_payload_paths"]["typed_blocker_path"][
                 "required_operator_payload_refs"

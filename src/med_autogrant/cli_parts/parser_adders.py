@@ -507,6 +507,20 @@ def _add_product_opl_owner_payload_response_command(
     command.set_defaults(handler=handler)
 
 
+def _add_product_manifest_sustained_consumption_payload_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    name: str,
+    handler: Any,
+    help_text: str,
+) -> None:
+    command = subparsers.add_parser(name, help=help_text)
+    command.add_argument("--owner-payload-response", required=True)
+    command.add_argument("--workspace-receipt-scaleout-evidence", required=True)
+    command.add_argument("--operator-payload", required=True)
+    command.add_argument("--format", choices=("json", "text"), default="json")
+    command.set_defaults(handler=handler)
+
+
 def _add_product_physical_morphology_guard_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
     name: str,

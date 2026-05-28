@@ -7393,11 +7393,13 @@
         "sustained_consumption_followthrough_workorder": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["surface_kind", "version", "status", "payload_owner", "accepted_payload_path_policy", "required_operator_payload_refs", "payload_template", "accepted_payload_paths", "empty_payload_template_is_success_evidence", "operator_payload_submitted", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
+          "required": ["surface_kind", "version", "status", "authority_command", "authority_command_internal", "payload_owner", "accepted_payload_path_policy", "required_operator_payload_refs", "payload_template", "accepted_payload_paths", "empty_payload_template_is_success_evidence", "operator_payload_submitted", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
           "properties": {
             "surface_kind": {"const": "mag_manifest_sustained_consumption_followthrough_workorder"},
             "version": {"const": "v1"},
             "status": {"const": "requires_real_app_operator_or_default_caller_payload"},
+            "authority_command": {"const": "authority manifest-consumption-payload"},
+            "authority_command_internal": {"const": "manifest-sustained-consumption-payload"},
             "payload_owner": {"const": "app_operator_or_release_default_caller"},
             "accepted_payload_path_policy": {"const": "real_app_operator_or_default_caller_consumption_refs_or_domain_owned_typed_blocker"},
             "required_operator_payload_refs": {"$ref": "common.schema.json#/$defs/stringList"},

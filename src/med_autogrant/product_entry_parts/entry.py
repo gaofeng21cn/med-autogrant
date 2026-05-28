@@ -93,6 +93,9 @@ from med_autogrant.product_entry_parts.operator_closeout import (
 from med_autogrant.product_entry_parts.opl_owner_payload_response import (
     build_opl_owner_payload_response,
 )
+from med_autogrant.product_entry_parts.manifest_sustained_consumption_payload import (
+    build_manifest_sustained_consumption_payload_response,
+)
 from med_autogrant.product_entry_parts.physical_morphology_guard import (
     build_physical_morphology_guard_projection,
 )
@@ -617,6 +620,19 @@ class MedAutoGrantProductEntry(ProductEntryProgressMixin, ProductEntryManifestMi
             production_acceptance=production_acceptance,
             external_evidence_receipt_ledger=external_evidence_receipt_ledger,
             receipt_readiness_projection=receipt_readiness_projection,
+        )
+
+    def build_manifest_sustained_consumption_payload_response(
+        self,
+        *,
+        owner_payload_response: Mapping[str, Any],
+        workspace_receipt_scaleout_evidence: Mapping[str, Any],
+        operator_payload: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        return build_manifest_sustained_consumption_payload_response(
+            owner_payload_response=owner_payload_response,
+            workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
+            operator_payload=operator_payload,
         )
 
     def build_physical_morphology_guard_projection(

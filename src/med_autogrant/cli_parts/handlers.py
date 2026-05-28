@@ -353,6 +353,16 @@ def handle_product_opl_owner_payload_response(args: argparse.Namespace) -> dict[
     )
 
 
+def handle_product_manifest_sustained_consumption_payload(args: argparse.Namespace) -> dict[str, Any]:
+    return _product_entry().build_manifest_sustained_consumption_payload_response(
+        owner_payload_response=_read_json_object(args.owner_payload_response),
+        workspace_receipt_scaleout_evidence=_read_json_object(
+            args.workspace_receipt_scaleout_evidence
+        ),
+        operator_payload=_read_json_object(args.operator_payload),
+    )
+
+
 def handle_product_physical_morphology_guard(args: argparse.Namespace) -> dict[str, Any]:
     return _product_entry().build_physical_morphology_guard_projection(
         source_items=[

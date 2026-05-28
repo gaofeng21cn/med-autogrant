@@ -58,6 +58,7 @@ from med_autogrant.cli_parts.handlers import (
     handle_product_domain_memory_receipt_evidence,
     handle_product_executor_first_closeout_bundle,
     handle_product_live_acceptance_receipt,
+    handle_product_manifest_sustained_consumption_payload,
     handle_product_opl_owner_payload_response,
     handle_product_owner_receipt_evidence,
     handle_product_physical_morphology_guard,
@@ -86,6 +87,7 @@ from med_autogrant.cli_parts.parser_adders import (
     _add_product_domain_memory_receipt_evidence_command,
     _add_product_executor_first_closeout_bundle_command,
     _add_product_live_acceptance_receipt_command,
+    _add_product_manifest_sustained_consumption_payload_command,
     _add_product_opl_owner_payload_response_command,
     _add_product_owner_receipt_evidence_command,
     _add_product_physical_morphology_guard_command,
@@ -357,6 +359,12 @@ def build_parser() -> argparse.ArgumentParser:
         "opl-owner-payload-response",
         handle_product_opl_owner_payload_response,
         "把 MAG receipt/typed-blocker refs 聚合成 OPL owner-payload workorder 可消费 response。",
+    )
+    _add_product_manifest_sustained_consumption_payload_command(
+        subparsers,
+        "manifest-sustained-consumption-payload",
+        handle_product_manifest_sustained_consumption_payload,
+        "校验 App/operator 或 default caller 对 MAG manifest owner-payload 的 sustained consumption refs payload。",
     )
     _add_product_physical_morphology_guard_command(
         subparsers,
