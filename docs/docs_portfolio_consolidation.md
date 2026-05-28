@@ -88,6 +88,116 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-29 P3/P4 rollback and verification history specs tranche
+
+本轮在 OPL series branch/worktree hygiene 后，覆盖 MAG `docs/history/specs/`
+下 2026-04-08 P3/P4 rollback、presubmission、verification gate 与 checkpoint
+历史 specs。目标是确认这些 direct-file 历史入口不会把旧 `Current Truth`
+标题、CLI-only verification gate、presubmission hard gate、checkpoint vocabulary
+或 activation status 误读成当前 runtime owner、formal entry、submission/export
+ready、App/workbench readiness、production readiness、physical delete authority
+或 active backlog。本轮不改 active truth，不关闭 OPL series 全局 `/goal`。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`、
+  `docs/references/med-auto-grant-ideal-state.md`、
+  `docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md`、
+  `docs/history/specs/README.md` 和本文件。
+- Reviewed history specs:
+  `docs/history/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`,
+  `docs/history/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`,
+  `docs/history/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`,
+  `docs/history/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`。
+- Machine/source/test truth:
+  `contracts/runtime-program/current-program.json`,
+  `contracts/production_acceptance/mag-production-acceptance.json`,
+  `tests/test_repository_hygiene.py`, `tests/test_opl_standard_pack.py`,
+  and `tests/test_production_acceptance.py`。
+- Fresh repo state: MAG `main...origin/main = 0 0`, no open PR,
+  previously stale clean `codex/mag-doc-governance-20260529` worktree/branch
+  was already equal to `main` and removed before this tranche; doctor
+  `finding_count=0` / active truth `pass`。
+
+Fresh semantic result：
+
+- All four reviewed specs already carry first-screen lifecycle notes plus
+  `Owner` / `Purpose` / `State` / `Machine boundary`. Their old `Current Truth`
+  titles are explicitly subordinated to current core docs, active specs,
+  contracts/schema/source, CLI/API behavior and `current-program.json`.
+- P3.B remains historical revision transition / re-review evidence provenance.
+  Current critique/revision and AI-first quality boundaries live in active specs,
+  source/contracts/tests, not this dated file.
+- P3.C remains historical forced rollback / presubmission gate provenance.
+  Current authoring completion, rollback and `submission_ready_export_gate`
+  ownership stay with active specs, package/export support surfaces,
+  owner receipt / typed blocker contracts and current status docs.
+- P4.A remains historical verification gate surface provenance. Current
+  verification entry is `scripts/verify.sh` plus current CLI/API/source/tests;
+  historical command lists do not become today's formal verification contract.
+- P4.B remains historical checkpoint surface provenance. `VerificationCheckpoint`
+  is historical planning context unless current source/contracts/read-model
+  expose a live route checkpoint; it is not a new formal entry, runtime identity,
+  controller capability or schema owner.
+- `docs/specs/specs_lifecycle_map.md`, `docs/specs/README.md` and
+  `docs/history/specs/README.md` still route this whole P3/P4 batch to
+  `historical_review_gate_provenance` / `historical_verification_gate_provenance`
+  and point current route、quality、checkpoint and verification truth back to
+  core docs、active specs、contracts/schema/source and `current-program.json`.
+- Current machine truth still says OPL/Temporal is the default task runtime
+  owner, `Codex CLI` is the default stage executor, MAG does not implement
+  daemon/scheduler/attempt loop/attempt ledger, OPL/provider completion cannot
+  authorize grant/fundability/submission readiness, and physical delete remains
+  unauthorized.
+- Repository hygiene / standard-pack / production-acceptance tests reinforce the
+  same boundary: retired compatibility claims must not reappear; OPL default
+  caller evidence does not grant delete authority; production acceptance accepts
+  MAG owner receipt / typed blocker / no-regression refs only.
+- No prose body rewrite was needed. This tranche records full paragraph-level
+  coverage over the P3/P4 rollback and verification history body batch.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Full paragraph read of the four 2026-04-08 P3/P4 history specs listed above; support read of specs lifecycle map, specs index, history specs index, core docs, active plan, ideal-state reference, current-program runtime owner fields, production acceptance contract and focused boundary tests. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。这四份文件仍是有用的 history
+provenance；不需要移动、tombstone、删除或正文重写。
+
+Uncovered docs：
+
+- `med-autogrant`: this tranche closes the current P3/P4 rollback and
+  verification history body batch. Remaining higher-risk history body batches
+  still include 2026-04-08 P5 / R-series activation packages, 2026-04-10
+  post-R5A fail-closed / hosted-bundle records, 2026-04-11
+  Hermes/reset/local-runtime records and 2026-04-12 hosted / OPL handoff records
+  unless covered by prior date/topic tranche entries.
+- Other OPL-series repos remain governed by the global coverage ledger. OPL、
+  MAS、RCA and App still need their own remaining section-level coverage /
+  safe-lane reconciliation before the global `/goal` can close.
+
+Remaining stale / retire candidates：
+
+- Any future direct-file use of these P3/P4 specs as current formal entry,
+  runtime owner, public CLI command shape, active verification contract,
+  submission/export-ready verdict, production readiness, App/workbench readiness,
+  physical-delete authority or compatibility-interface source is stale pollution.
+- Historical `ready_for_submission`、`presubmission_frozen`、`VerificationCheckpoint`
+  and checkpoint vocabulary must remain provenance unless current source,
+  contracts, tests and active owner docs explicitly re-admit the exact boundary.
+- MAG implementation/evidence tails remain source/test/receipt work: physical
+  delete authorization, production long-soak, submission-ready human gate,
+  sustained real App/operator consumption and long-soak evidence.
+
+Next tranche write scope：
+
+- Continue MAG history body coverage only if needed by global coverage,
+  prioritizing 2026-04-10 fail-closed / hosted-bundle records or
+  2026-04-11/2026-04-12 Hermes / hosted handoff specs because stale provider
+  and hosted wording risk is higher there.
+- Prefer OPL / MAS / RCA safe document clusters for the next OPL-series tranche
+  while App release docs remain tied to dirty or conflicting release lanes.
+
 ### 2026-05-29 specs lifecycle / history direct-reader currentness tranche
 
 本轮在 OPL series fresh hygiene scan 后，复核 MAG specs lifecycle map、
