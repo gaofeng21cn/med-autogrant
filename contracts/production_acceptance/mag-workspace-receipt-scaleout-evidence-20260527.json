@@ -62,6 +62,73 @@
     "human_gate_blocker_refs": [
       "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
     ],
+    "sustained_consumption_followthrough_workorder": {
+      "surface_kind": "mag_manifest_sustained_consumption_followthrough_workorder",
+      "version": "v1",
+      "status": "requires_real_app_operator_or_default_caller_payload",
+      "payload_owner": "app_operator_or_release_default_caller",
+      "accepted_payload_path_policy": "real_app_operator_or_default_caller_consumption_refs_or_domain_owned_typed_blocker",
+      "required_operator_payload_refs": [
+        "app_operator_consumption_ref",
+        "default_caller_consumption_ref",
+        "owner_payload_response_ref",
+        "workspace_receipt_scaleout_evidence_ref",
+        "no_forbidden_write_ref",
+        "long_soak_or_typed_blocker_ref"
+      ],
+      "payload_template": {
+        "app_operator_consumption_ref": [],
+        "default_caller_consumption_ref": [],
+        "owner_payload_response_ref": [],
+        "workspace_receipt_scaleout_evidence_ref": [],
+        "no_forbidden_write_ref": [],
+        "long_soak_or_typed_blocker_ref": []
+      },
+      "accepted_payload_paths": {
+        "sustained_consumption_refs_path": {
+          "required_operator_payload_refs": [
+            "app_operator_consumption_ref",
+            "default_caller_consumption_ref",
+            "owner_payload_response_ref",
+            "workspace_receipt_scaleout_evidence_ref",
+            "no_forbidden_write_ref",
+            "long_soak_or_typed_blocker_ref"
+          ],
+          "requires_long_soak_or_typed_blocker_ref": true,
+          "typed_blocker_refs_must_be_absent": true,
+          "closes_grant_ready": false,
+          "closes_submission_ready": false,
+          "closes_provider_long_soak": false
+        },
+        "typed_blocker_path": {
+          "required_operator_payload_refs": [
+            "typed_blocker_refs"
+          ],
+          "success_claimed": false,
+          "closes_grant_ready": false,
+          "closes_submission_ready": false,
+          "closes_provider_long_soak": false
+        }
+      },
+      "empty_payload_template_is_success_evidence": false,
+      "operator_payload_submitted": false,
+      "claims_sustained_app_consumption_complete": false,
+      "claims_grant_ready": false,
+      "claims_submission_ready": false,
+      "claims_provider_long_soak_complete": false,
+      "authority_boundary": {
+        "owner": "med-autogrant",
+        "refs_only": true,
+        "can_write_grant_truth": false,
+        "can_read_memory_body": false,
+        "can_read_artifact_body": false,
+        "can_create_owner_receipt": false,
+        "can_submit_operator_payload": false,
+        "can_declare_app_sustained_consumption_complete": false,
+        "can_declare_submission_ready": false,
+        "can_declare_provider_long_soak_complete": false
+      }
+    },
     "operator_payload_submitted": false,
     "claims_sustained_app_consumption_complete": false,
     "claims_submission_ready": false,

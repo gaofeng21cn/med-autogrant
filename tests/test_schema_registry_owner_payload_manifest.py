@@ -77,6 +77,23 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
             ]
         )
         self.assertFalse(manifest_consumer["properties"]["claims_submission_ready"]["const"])
+        workorder = manifest_consumer["properties"]["sustained_consumption_followthrough_workorder"]
+        self.assertEqual(
+            workorder["properties"]["surface_kind"]["const"],
+            "mag_manifest_sustained_consumption_followthrough_workorder",
+        )
+        self.assertEqual(
+            workorder["properties"]["payload_owner"]["const"],
+            "app_operator_or_release_default_caller",
+        )
+        self.assertFalse(workorder["properties"]["empty_payload_template_is_success_evidence"]["const"])
+        self.assertFalse(workorder["properties"]["claims_sustained_app_consumption_complete"]["const"])
+        self.assertFalse(workorder["properties"]["claims_provider_long_soak_complete"]["const"])
+        workorder_authority = workorder["properties"]["authority_boundary"]["properties"]
+        self.assertFalse(workorder_authority["can_create_owner_receipt"]["const"])
+        self.assertFalse(
+            workorder_authority["can_declare_app_sustained_consumption_complete"]["const"]
+        )
         consumer_authority = manifest_consumer["properties"]["authority_boundary"]["properties"]
         self.assertFalse(consumer_authority["can_create_owner_receipt"]["const"])
         self.assertFalse(consumer_authority["can_submit_operator_payload"]["const"])

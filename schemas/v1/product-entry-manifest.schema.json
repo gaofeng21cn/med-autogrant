@@ -7356,7 +7356,7 @@
     "magManifestOwnerPayloadConsumerEvidence": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["surface_kind", "version", "state", "consumer", "owner", "target_domain_id", "consumed_surface_refs", "consumed_fields", "observed_counts", "human_gate_blocker_refs", "projection_policy", "operator_payload_submitted", "count_only_scaleout_snapshot_is_receipt_refs", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_quality_ready", "claims_export_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
+      "required": ["surface_kind", "version", "state", "consumer", "owner", "target_domain_id", "consumed_surface_refs", "consumed_fields", "observed_counts", "human_gate_blocker_refs", "sustained_consumption_followthrough_workorder", "projection_policy", "operator_payload_submitted", "count_only_scaleout_snapshot_is_receipt_refs", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_quality_ready", "claims_export_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
       "properties": {
         "surface_kind": {"const": "mag_manifest_owner_payload_consumer_evidence"},
         "version": {"const": "v1"},
@@ -7390,6 +7390,44 @@
           }
         },
         "human_gate_blocker_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+        "sustained_consumption_followthrough_workorder": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["surface_kind", "version", "status", "payload_owner", "accepted_payload_path_policy", "required_operator_payload_refs", "payload_template", "accepted_payload_paths", "empty_payload_template_is_success_evidence", "operator_payload_submitted", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
+          "properties": {
+            "surface_kind": {"const": "mag_manifest_sustained_consumption_followthrough_workorder"},
+            "version": {"const": "v1"},
+            "status": {"const": "requires_real_app_operator_or_default_caller_payload"},
+            "payload_owner": {"const": "app_operator_or_release_default_caller"},
+            "accepted_payload_path_policy": {"const": "real_app_operator_or_default_caller_consumption_refs_or_domain_owned_typed_blocker"},
+            "required_operator_payload_refs": {"$ref": "common.schema.json#/$defs/stringList"},
+            "payload_template": {"type": "object"},
+            "accepted_payload_paths": {"type": "object"},
+            "empty_payload_template_is_success_evidence": {"const": false},
+            "operator_payload_submitted": {"const": false},
+            "claims_sustained_app_consumption_complete": {"const": false},
+            "claims_grant_ready": {"const": false},
+            "claims_submission_ready": {"const": false},
+            "claims_provider_long_soak_complete": {"const": false},
+            "authority_boundary": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["owner", "refs_only", "can_write_grant_truth", "can_read_memory_body", "can_read_artifact_body", "can_create_owner_receipt", "can_submit_operator_payload", "can_declare_app_sustained_consumption_complete", "can_declare_submission_ready", "can_declare_provider_long_soak_complete"],
+              "properties": {
+                "owner": {"const": "med-autogrant"},
+                "refs_only": {"const": true},
+                "can_write_grant_truth": {"const": false},
+                "can_read_memory_body": {"const": false},
+                "can_read_artifact_body": {"const": false},
+                "can_create_owner_receipt": {"const": false},
+                "can_submit_operator_payload": {"const": false},
+                "can_declare_app_sustained_consumption_complete": {"const": false},
+                "can_declare_submission_ready": {"const": false},
+                "can_declare_provider_long_soak_complete": {"const": false}
+              }
+            }
+          }
+        },
         "projection_policy": {"const": "default_manifest_consumer_reads_owner_payload_refs_and_count_only_scaleout_without_submitting_operator_payload_or_claiming_ready"},
         "operator_payload_submitted": {"const": false},
         "count_only_scaleout_snapshot_is_receipt_refs": {"const": false},

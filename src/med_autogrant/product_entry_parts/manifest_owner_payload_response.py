@@ -177,6 +177,9 @@ def _manifest_consumer_evidence(
             ),
         },
         "human_gate_blocker_refs": list(_string_list(owner_payload_response.get("typed_blocker_refs"))),
+        "sustained_consumption_followthrough_workorder": (
+            _sustained_consumption_followthrough_workorder()
+        ),
         "projection_policy": (
             "default_manifest_consumer_reads_owner_payload_refs_and_count_only_scaleout_"
             "without_submitting_operator_payload_or_claiming_ready"
@@ -201,6 +204,63 @@ def _manifest_consumer_evidence(
             "can_declare_app_sustained_consumption_complete": False,
             "can_declare_submission_ready": False,
             "typed_blocker_is_submission_ready": False,
+        },
+    }
+
+
+def _sustained_consumption_followthrough_workorder() -> dict[str, Any]:
+    required_refs = [
+        "app_operator_consumption_ref",
+        "default_caller_consumption_ref",
+        "owner_payload_response_ref",
+        "workspace_receipt_scaleout_evidence_ref",
+        "no_forbidden_write_ref",
+        "long_soak_or_typed_blocker_ref",
+    ]
+    return {
+        "surface_kind": "mag_manifest_sustained_consumption_followthrough_workorder",
+        "version": "v1",
+        "status": "requires_real_app_operator_or_default_caller_payload",
+        "payload_owner": "app_operator_or_release_default_caller",
+        "accepted_payload_path_policy": (
+            "real_app_operator_or_default_caller_consumption_refs_or_domain_owned_typed_blocker"
+        ),
+        "required_operator_payload_refs": required_refs,
+        "payload_template": {ref: [] for ref in required_refs},
+        "accepted_payload_paths": {
+            "sustained_consumption_refs_path": {
+                "required_operator_payload_refs": required_refs,
+                "requires_long_soak_or_typed_blocker_ref": True,
+                "typed_blocker_refs_must_be_absent": True,
+                "closes_grant_ready": False,
+                "closes_submission_ready": False,
+                "closes_provider_long_soak": False,
+            },
+            "typed_blocker_path": {
+                "required_operator_payload_refs": ["typed_blocker_refs"],
+                "success_claimed": False,
+                "closes_grant_ready": False,
+                "closes_submission_ready": False,
+                "closes_provider_long_soak": False,
+            },
+        },
+        "empty_payload_template_is_success_evidence": False,
+        "operator_payload_submitted": False,
+        "claims_sustained_app_consumption_complete": False,
+        "claims_grant_ready": False,
+        "claims_submission_ready": False,
+        "claims_provider_long_soak_complete": False,
+        "authority_boundary": {
+            "owner": TARGET_DOMAIN_ID,
+            "refs_only": True,
+            "can_write_grant_truth": False,
+            "can_read_memory_body": False,
+            "can_read_artifact_body": False,
+            "can_create_owner_receipt": False,
+            "can_submit_operator_payload": False,
+            "can_declare_app_sustained_consumption_complete": False,
+            "can_declare_submission_ready": False,
+            "can_declare_provider_long_soak_complete": False,
         },
     }
 

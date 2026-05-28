@@ -353,6 +353,19 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
         )
         self.assertFalse(snapshot["owner_payload_response"]["stage_payload_body_allowed"])
         self.assertFalse(snapshot["owner_payload_response"]["stage_success_refs_visible_is_completion"])
+        manifest_consumer = snapshot["manifest_consumer_evidence"]
+        workorder = manifest_consumer["sustained_consumption_followthrough_workorder"]
+        self.assertEqual(
+            workorder["status"],
+            "requires_real_app_operator_or_default_caller_payload",
+        )
+        self.assertEqual(
+            workorder["accepted_payload_paths"]["typed_blocker_path"][
+                "required_operator_payload_refs"
+            ],
+            ["typed_blocker_refs"],
+        )
+        self.assertFalse(workorder["claims_sustained_app_consumption_complete"])
         self.assertFalse(snapshot["claims"]["claims_grant_ready"])
         self.assertFalse(snapshot["claims"]["claims_submission_ready_export"])
         self.assertFalse(snapshot["authority_boundary"]["can_write_memory_body"])
