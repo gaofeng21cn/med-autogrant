@@ -114,6 +114,32 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                 self.assertTrue(stage["stage_contract"]["monitor_freshness_refs"])
                 self.assertTrue(stage["stage_contract"]["replay_evidence_refs"])
                 self.assertTrue(stage["stage_contract"]["stage_production_evidence_refs"])
+                admission_packet = stage["stage_contract"]["stage_admission_packet"]
+                self.assertEqual(admission_packet["surface_kind"], "mag_stage_admission_packet")
+                self.assertEqual(admission_packet["stage_id"], stage["stage_id"])
+                self.assertEqual(admission_packet["expected_grant_delta"]["owner"], "med-autogrant")
+                self.assertEqual(
+                    admission_packet["expected_grant_delta"]["domain_stage_refs"],
+                    stage["domain_stage_refs"],
+                )
+                self.assertEqual(
+                    admission_packet["closeout_target"]["accepted_return_shapes"],
+                    [
+                        "domain_owner_receipt_ref",
+                        "typed_blocker_ref",
+                        "no_regression_evidence_ref",
+                    ],
+                )
+                self.assertEqual(
+                    admission_packet["human_gate"]["gate_id"],
+                    "submission_ready_export_gate",
+                )
+                self.assertEqual(
+                    admission_packet["human_gate"]["required"],
+                    stage["stage_id"] == "package_and_submit_ready",
+                )
+                self.assertEqual(admission_packet["blocker_budget"]["repeat_budget"], 2)
+                self.assertEqual(admission_packet["blocker_budget"]["escalation_owner"], "med-autogrant")
                 self.assertTrue(
                     any(
                         ref["role"] == "opl_provider_stage_launch_trigger"

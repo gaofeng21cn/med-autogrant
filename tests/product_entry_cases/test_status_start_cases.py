@@ -360,6 +360,48 @@ class ProductEntryStatusStartCaseTest(unittest.TestCase):
         self.assertEqual(family_orchestration["human_gates"][0]["status"], "approved")
         self.assertEqual(family_orchestration["action_graph"]["edges"][0]["on"], "success")
 
+    def test_grant_progress_projects_progress_first_currentness_and_opl_delta(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        payload = MedAutoGrantProductEntry().read_grant_progress(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+        )
+
+        projection = payload["progress_projection"]
+        currentness = projection["currentness_resolver"]
+        self.assertEqual(currentness["surface_kind"], "mag_progress_first_currentness_resolver")
+        self.assertEqual(currentness["current_program"]["program_id"], "med-autogrant-mainline")
+        self.assertEqual(
+            currentness["current_program"]["ref"],
+            "contracts/runtime-program/current-program.json",
+        )
+        self.assertEqual(currentness["workspace_truth"]["workspace_id"], payload["workspace_id"])
+        self.assertEqual(currentness["workspace_truth"]["grant_run_id"], payload["grant_run_id"])
+        self.assertEqual(currentness["workspace_truth"]["lifecycle_stage"], payload["lifecycle_stage"])
+        self.assertEqual(currentness["last_receipt_or_blocker"]["owner"], "med-autogrant")
+        self.assertIn("typed_blocker_ref", currentness["last_receipt_or_blocker"]["required_return_shapes"])
+        self.assertEqual(
+            currentness["stage_refs"]["stage_control_plane_ref"],
+            "/product_entry_manifest/family_stage_control_plane",
+        )
+        self.assertIn("critique", currentness["stage_refs"]["domain_stage_refs"])
+        self.assertEqual(
+            currentness["manifest_refs"]["progress_projection_ref"],
+            "/product_entry_manifest/progress_projection",
+        )
+
+        opl_delta = projection["opl_progress_delta"]
+        self.assertEqual(opl_delta["surface_kind"], "opl_progress_first_delta_mapping")
+        self.assertEqual(opl_delta["progress_delta_classification"], "mixed")
+        self.assertEqual(opl_delta["deliverable_progress_delta"]["domain_alias"], "grant_work_progress")
+        self.assertGreaterEqual(opl_delta["deliverable_progress_delta"]["count"], 1)
+        self.assertEqual(opl_delta["platform_repair_delta"]["domain_alias"], "platform_evidence_progress")
+        self.assertEqual(opl_delta["grant_work_progress"]["maps_to"], "opl_deliverable_delta")
+        self.assertEqual(opl_delta["grant_work_progress"]["owner"], "med-autogrant")
+        self.assertEqual(opl_delta["platform_evidence_progress"]["maps_to"], "opl_platform_delta")
+        self.assertEqual(opl_delta["platform_evidence_progress"]["owner"], "one-person-lab")
+        self.assertFalse(opl_delta["platform_evidence_progress"]["can_claim_grant_ready"])
+
     def test_grant_progress_fails_closed_on_invalid_projection_shape(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
 

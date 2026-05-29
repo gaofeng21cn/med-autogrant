@@ -85,6 +85,265 @@
         }
       }
     },
+    "currentnessResolver": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "version",
+        "target_domain_id",
+        "current_program",
+        "workspace_truth",
+        "last_receipt_or_blocker",
+        "stage_refs",
+        "manifest_refs",
+        "authority_boundary"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_progress_first_currentness_resolver"
+        },
+        "version": {
+          "const": "mag-progress-currentness.v1"
+        },
+        "target_domain_id": {
+          "const": "med-autogrant"
+        },
+        "current_program": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "program_id",
+            "ref"
+          ],
+          "properties": {
+            "program_id": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "ref": {
+              "const": "contracts/runtime-program/current-program.json"
+            }
+          }
+        },
+        "workspace_truth": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "workspace_path",
+            "workspace_id",
+            "grant_run_id",
+            "lifecycle_stage",
+            "checkpoint_status"
+          ],
+          "properties": {
+            "workspace_path": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "workspace_id": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "grant_run_id": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "lifecycle_stage": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "checkpoint_status": {
+              "$ref": "product-entry.schema.json#/$defs/checkpointStatus"
+            }
+          }
+        },
+        "last_receipt_or_blocker": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "owner",
+            "ref",
+            "required_return_shapes",
+            "body_free_payload_required"
+          ],
+          "properties": {
+            "owner": {
+              "const": "med-autogrant"
+            },
+            "ref": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "required_return_shapes": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              }
+            },
+            "body_free_payload_required": {
+              "const": true
+            }
+          }
+        },
+        "stage_refs": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "stage_control_plane_ref",
+            "current_stage",
+            "recommended_next_stage",
+            "domain_stage_refs"
+          ],
+          "properties": {
+            "stage_control_plane_ref": {
+              "const": "/product_entry_manifest/family_stage_control_plane"
+            },
+            "current_stage": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "recommended_next_stage": {
+              "$ref": "common.schema.json#/$defs/nonEmptyString"
+            },
+            "domain_stage_refs": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              }
+            }
+          }
+        },
+        "manifest_refs": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "progress_projection_ref",
+            "product_entry_manifest_ref"
+          ],
+          "properties": {
+            "progress_projection_ref": {
+              "const": "/product_entry_manifest/progress_projection"
+            },
+            "product_entry_manifest_ref": {
+              "const": "/product_entry_manifest"
+            }
+          }
+        },
+        "authority_boundary": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "oplProgressDelta": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "version",
+        "progress_delta_classification",
+        "deliverable_progress_delta",
+        "platform_repair_delta"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "opl_progress_first_delta_mapping"
+        },
+        "version": {
+          "const": "mag-progress-first-delta.v1"
+        },
+        "progress_delta_classification": {
+          "enum": [
+            "deliverable_progress",
+            "platform_repair",
+            "mixed",
+            "typed_blocker",
+            "human_gate",
+            "stop_loss"
+          ]
+        },
+        "deliverable_progress_delta": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "count",
+            "domain_alias"
+          ],
+          "properties": {
+            "count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "domain_alias": {
+              "const": "grant_work_progress"
+            }
+          }
+        },
+        "platform_repair_delta": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "count",
+            "domain_alias"
+          ],
+          "properties": {
+            "count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "domain_alias": {
+              "const": "platform_evidence_progress"
+            }
+          }
+        },
+        "grant_work_progress": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "maps_to",
+            "owner",
+            "can_claim_grant_ready",
+            "can_claim_submission_ready"
+          ],
+          "properties": {
+            "maps_to": {
+              "const": "opl_deliverable_delta"
+            },
+            "owner": {
+              "const": "med-autogrant"
+            },
+            "can_claim_grant_ready": {
+              "const": false
+            },
+            "can_claim_submission_ready": {
+              "const": false
+            }
+          }
+        },
+        "platform_evidence_progress": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "maps_to",
+            "owner",
+            "can_claim_grant_ready",
+            "can_claim_fundability_ready",
+            "can_claim_export_ready"
+          ],
+          "properties": {
+            "maps_to": {
+              "const": "opl_platform_delta"
+            },
+            "owner": {
+              "const": "one-person-lab"
+            },
+            "can_claim_grant_ready": {
+              "const": false
+            },
+            "can_claim_fundability_ready": {
+              "const": false
+            },
+            "can_claim_export_ready": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
     "statusNarrationContract": {
       "type": "object",
       "additionalProperties": false,
@@ -196,6 +455,8 @@
         "next_system_action",
         "needs_author_decision",
         "author_decision_summary",
+        "currentness_resolver",
+        "opl_progress_delta",
         "focus",
         "product_entry_surface"
       ],
@@ -236,6 +497,12 @@
         },
         "author_decision_summary": {
           "$ref": "#/$defs/nullableString"
+        },
+        "currentness_resolver": {
+          "$ref": "#/$defs/currentnessResolver"
+        },
+        "opl_progress_delta": {
+          "$ref": "#/$defs/oplProgressDelta"
         },
         "status_narration_contract": {
           "$ref": "#/$defs/statusNarrationContract"

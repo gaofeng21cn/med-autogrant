@@ -412,6 +412,7 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "monitor_freshness_refs": monitor_freshness_refs,
             "replay_evidence_refs": replay_evidence_refs,
             "stage_production_evidence_refs": production_evidence_closeout["evidence_refs"],
+            "stage_admission_packet": _stage_admission_packet(stage),
             "user_stage_log_contract": USER_STAGE_LOG_CONTRACT,
             "boundary_assumptions": [
                 "MAG owns grant truth, fundability judgment, authoring quality, package authority, and submission-ready export gate.",
@@ -457,6 +458,50 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "can_write_grant_truth": False,
             "can_override_fundability_judgment": False,
             "can_bypass_submission_ready_gate": False,
+        },
+    }
+
+
+def _stage_admission_packet(stage: Mapping[str, Any]) -> dict[str, Any]:
+    stage_id = str(stage["stage_id"])
+    return {
+        "surface_kind": "mag_stage_admission_packet",
+        "version": "mag-stage-admission-packet.v1",
+        "stage_id": stage_id,
+        "expected_grant_delta": {
+            "owner": TARGET_DOMAIN_ID,
+            "delta_kind": "grant_work_progress",
+            "domain_stage_refs": list(stage.get("domain_stage_refs", [])),
+            "expected_outputs": list(stage.get("ensures", [])),
+            "maps_to": "opl_deliverable_delta",
+        },
+        "closeout_target": {
+            "owner": TARGET_DOMAIN_ID,
+            "accepted_return_shapes": [
+                "domain_owner_receipt_ref",
+                "typed_blocker_ref",
+                "no_regression_evidence_ref",
+            ],
+            "target_ref": f"receipt:mag/grant-stage-controlled-attempt/{stage_id}/owner-receipt-or-typed-blocker",
+            "body_free_payload_required": True,
+        },
+        "human_gate": {
+            "gate_id": "submission_ready_export_gate",
+            "owner": TARGET_DOMAIN_ID,
+            "required": stage_id == "package_and_submit_ready",
+            "opl_can_bypass": False,
+        },
+        "blocker_budget": {
+            "repeat_budget": 2,
+            "budget_scope": "same_stage_same_blocker_kind",
+            "escalation_owner": TARGET_DOMAIN_ID,
+            "escalation_route": "mag_owner_surface",
+        },
+        "authority_boundary": {
+            "opl_role": "stage_admission_consumer_only",
+            "can_write_grant_truth": False,
+            "can_declare_fundability_ready": False,
+            "can_declare_export_ready": False,
         },
     }
 

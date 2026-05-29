@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import (
+    TARGET_DOMAIN_ID,
     _optional_mapping,
     _optional_string_from_mapping,
     _read_nonempty_string_list,
@@ -182,6 +183,209 @@ def _build_workspace_status(*, blockers: list[str], needs_author_decision: bool)
     if blockers or needs_author_decision:
         return "attention_required"
     return "on_track"
+
+
+def _build_progress_first_currentness_resolver(
+    *,
+    current_program_contract: Mapping[str, Any],
+    route_report: Mapping[str, Any],
+    workspace_summary: Mapping[str, Any],
+    resolved_input_path: Any,
+    progress_projection: Mapping[str, Any],
+) -> dict[str, Any]:
+    program_id = _require_nonempty_string_from_mapping(
+        current_program_contract,
+        "program_id",
+        context="CURRENT_PROGRAM",
+    )
+    grant_run_id = _require_nonempty_string_from_mapping(
+        route_report,
+        "grant_run_id",
+        context="stage-route-report",
+    )
+    workspace_id = _require_nonempty_string_from_mapping(
+        route_report,
+        "workspace_id",
+        context="stage-route-report",
+    )
+    lifecycle_stage = _require_nonempty_string_from_mapping(
+        route_report,
+        "lifecycle_stage",
+        context="stage-route-report",
+    )
+    return {
+        "surface_kind": "mag_progress_first_currentness_resolver",
+        "version": "mag-progress-currentness.v1",
+        "target_domain_id": TARGET_DOMAIN_ID,
+        "current_program": {
+            "program_id": program_id,
+            "ref": "contracts/runtime-program/current-program.json",
+            "default_task_runtime_owner": _runtime_owner_field(
+                current_program_contract,
+                "default_task_runtime_owner",
+            ),
+            "default_runtime_substrate": _runtime_owner_field(
+                current_program_contract,
+                "default_runtime_substrate",
+            ),
+            "default_stage_executor": _runtime_owner_field(
+                current_program_contract,
+                "default_stage_executor",
+            ),
+        },
+        "workspace_truth": {
+            "workspace_path": str(resolved_input_path),
+            "workspace_id": workspace_id,
+            "grant_run_id": grant_run_id,
+            "lifecycle_stage": lifecycle_stage,
+            "checkpoint_status": _require_nonempty_string_from_mapping(
+                progress_projection,
+                "checkpoint_status",
+                context="grant-progress.progress_projection",
+            ),
+            "summary_source": "summarize-workspace",
+        },
+        "last_receipt_or_blocker": {
+            "owner": TARGET_DOMAIN_ID,
+            "ref": f"receipt:mag/grant-stage-controlled-attempt/{lifecycle_stage}/owner-receipt-or-typed-blocker",
+            "required_return_shapes": [
+                "domain_owner_receipt_ref",
+                "typed_blocker_ref",
+                "no_regression_evidence_ref",
+            ],
+            "source_ref": (
+                "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                "grant_stage_controlled_attempt_closeout"
+            ),
+            "body_free_payload_required": True,
+        },
+        "stage_refs": {
+            "stage_control_plane_ref": "/product_entry_manifest/family_stage_control_plane",
+            "current_stage": lifecycle_stage,
+            "recommended_next_stage": _require_nonempty_string_from_mapping(
+                progress_projection,
+                "recommended_next_stage",
+                context="grant-progress.progress_projection",
+            ),
+            "domain_stage_refs": _domain_stage_refs_for_lifecycle_stage(lifecycle_stage),
+        },
+        "manifest_refs": {
+            "progress_projection_ref": "/product_entry_manifest/progress_projection",
+            "product_entry_manifest_ref": "/product_entry_manifest",
+            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+            "runtime_control_ref": "/product_entry_manifest/runtime_control",
+        },
+        "authority_boundary": {
+            "resolver_role": "refs_only_currentness_projection",
+            "workspace_body_read": True,
+            "grant_truth_owner": TARGET_DOMAIN_ID,
+            "can_write_grant_truth": False,
+            "can_write_runtime_state": False,
+        },
+    }
+
+
+def _build_opl_progress_delta_mapping(
+    *,
+    progress_projection: Mapping[str, Any],
+) -> dict[str, Any]:
+    current_stage = _require_nonempty_string_from_mapping(
+        progress_projection,
+        "current_stage",
+        context="grant-progress.progress_projection",
+    )
+    recommended_next_stage = _require_nonempty_string_from_mapping(
+        progress_projection,
+        "recommended_next_stage",
+        context="grant-progress.progress_projection",
+    )
+    return {
+        "surface_kind": "opl_progress_first_delta_mapping",
+        "version": "mag-progress-first-delta.v1",
+        "progress_delta_classification": "mixed",
+        "deliverable_progress_delta": {
+            "count": 1,
+            "refs": [
+                "/progress_projection/current_stage_summary",
+                "/progress_projection/focus",
+                "/progress_projection/next_system_action",
+            ],
+            "domain_alias": "grant_work_progress",
+            "current_stage": current_stage,
+            "recommended_next_stage": recommended_next_stage,
+            "changed_surfaces": [
+                "/progress_projection/current_stage_summary",
+                "/progress_projection/focus",
+                "/progress_projection/next_system_action",
+            ],
+        },
+        "platform_repair_delta": {
+            "count": 1,
+            "refs": [
+                "/progress_projection/currentness_resolver/last_receipt_or_blocker",
+                "/progress_projection/currentness_resolver/stage_refs",
+                "/progress_projection/currentness_resolver/manifest_refs",
+            ],
+            "domain_alias": "platform_evidence_progress",
+            "evidence_surfaces": [
+                "/progress_projection/currentness_resolver/last_receipt_or_blocker",
+                "/progress_projection/currentness_resolver/stage_refs",
+                "/progress_projection/currentness_resolver/manifest_refs",
+            ],
+        },
+        "grant_work_progress": {
+            "maps_to": "opl_deliverable_delta",
+            "owner": TARGET_DOMAIN_ID,
+            "current_stage": current_stage,
+            "recommended_next_stage": recommended_next_stage,
+            "changed_surfaces": [
+                "/progress_projection/current_stage_summary",
+                "/progress_projection/focus",
+                "/progress_projection/next_system_action",
+            ],
+            "can_claim_grant_ready": False,
+            "can_claim_submission_ready": False,
+        },
+        "platform_evidence_progress": {
+            "maps_to": "opl_platform_delta",
+            "owner": "one-person-lab",
+            "evidence_surfaces": [
+                "/progress_projection/currentness_resolver/last_receipt_or_blocker",
+                "/progress_projection/currentness_resolver/stage_refs",
+                "/progress_projection/currentness_resolver/manifest_refs",
+            ],
+            "can_claim_grant_ready": False,
+            "can_claim_fundability_ready": False,
+            "can_claim_export_ready": False,
+        },
+    }
+
+
+def _runtime_owner_field(current_program_contract: Mapping[str, Any], field_name: str) -> str:
+    runtime_owner = _require_mapping(
+        current_program_contract,
+        "runtime_owner",
+        context="CURRENT_PROGRAM",
+    )
+    return _require_nonempty_string_from_mapping(
+        runtime_owner,
+        field_name,
+        context="CURRENT_PROGRAM.runtime_owner",
+    )
+
+
+def _domain_stage_refs_for_lifecycle_stage(lifecycle_stage: str) -> list[str]:
+    if lifecycle_stage in {"input_intake", "direction_screening"}:
+        return ["discover-funding-opportunities", "select-project-profile", "initialize-intake-workspace", "input_intake"]
+    if lifecycle_stage in {"question_refinement", "argument_building", "fit_alignment", "outline"}:
+        return ["question_refinement", "argument_building", "outline"]
+    if lifecycle_stage in {"drafting", "revision"}:
+        return ["drafting", "revision", "grant-progress", "grant-user-loop"]
+    if lifecycle_stage == "critique":
+        return ["critique", "review", "grant_quality_closure_dossier", "quality-diff"]
+    if lifecycle_stage == "frozen":
+        return ["freeze", "frozen", "package submission-ready", "submission-ready export gate"]
+    return [lifecycle_stage]
 
 
 __all__ = [name for name in globals() if not name.startswith("__")]

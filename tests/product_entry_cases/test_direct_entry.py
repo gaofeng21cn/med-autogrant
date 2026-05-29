@@ -117,6 +117,127 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
                     "next_system_action": "执行 revision plan 中的 P0/P1 项。",
                     "needs_author_decision": False,
                     "author_decision_summary": None,
+                    "currentness_resolver": {
+                        "surface_kind": "mag_progress_first_currentness_resolver",
+                        "version": "mag-progress-currentness.v1",
+                        "target_domain_id": "med-autogrant",
+                        "current_program": {
+                            "program_id": "med-autogrant-mainline",
+                            "ref": "contracts/runtime-program/current-program.json",
+                            "default_task_runtime_owner": "one-person-lab",
+                            "default_runtime_substrate": "temporal",
+                            "default_stage_executor": "codex_cli",
+                        },
+                        "workspace_truth": {
+                            "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
+                            "workspace_id": "nsfc-demo-001",
+                            "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
+                            "lifecycle_stage": "critique",
+                            "checkpoint_status": "forward_progress",
+                            "summary_source": "summarize-workspace",
+                        },
+                        "last_receipt_or_blocker": {
+                            "owner": "med-autogrant",
+                            "ref": (
+                                "receipt:mag/grant-stage-controlled-attempt/critique/"
+                                "owner-receipt-or-typed-blocker"
+                            ),
+                            "required_return_shapes": [
+                                "domain_owner_receipt_ref",
+                                "typed_blocker_ref",
+                                "no_regression_evidence_ref",
+                            ],
+                            "source_ref": (
+                                "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                                "grant_stage_controlled_attempt_closeout"
+                            ),
+                            "body_free_payload_required": True,
+                        },
+                        "stage_refs": {
+                            "stage_control_plane_ref": "/product_entry_manifest/family_stage_control_plane",
+                            "current_stage": "critique",
+                            "recommended_next_stage": "revision",
+                            "domain_stage_refs": [
+                                "critique",
+                                "review",
+                                "grant_quality_closure_dossier",
+                                "quality-diff",
+                            ],
+                        },
+                        "manifest_refs": {
+                            "progress_projection_ref": "/product_entry_manifest/progress_projection",
+                            "product_entry_manifest_ref": "/product_entry_manifest",
+                            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+                            "runtime_control_ref": "/product_entry_manifest/runtime_control",
+                        },
+                        "authority_boundary": {
+                            "resolver_role": "refs_only_currentness_projection",
+                            "workspace_body_read": True,
+                            "grant_truth_owner": "med-autogrant",
+                            "can_write_grant_truth": False,
+                            "can_write_runtime_state": False,
+                        },
+                    },
+                    "opl_progress_delta": {
+                        "surface_kind": "opl_progress_first_delta_mapping",
+                        "version": "mag-progress-first-delta.v1",
+                        "progress_delta_classification": "mixed",
+                        "deliverable_progress_delta": {
+                            "count": 1,
+                            "refs": [
+                                "/progress_projection/current_stage_summary",
+                                "/progress_projection/focus",
+                                "/progress_projection/next_system_action",
+                            ],
+                            "domain_alias": "grant_work_progress",
+                            "current_stage": "critique",
+                            "recommended_next_stage": "revision",
+                            "changed_surfaces": [
+                                "/progress_projection/current_stage_summary",
+                                "/progress_projection/focus",
+                                "/progress_projection/next_system_action",
+                            ],
+                        },
+                        "platform_repair_delta": {
+                            "count": 1,
+                            "refs": [
+                                "/progress_projection/currentness_resolver/last_receipt_or_blocker",
+                                "/progress_projection/currentness_resolver/stage_refs",
+                                "/progress_projection/currentness_resolver/manifest_refs",
+                            ],
+                            "domain_alias": "platform_evidence_progress",
+                            "evidence_surfaces": [
+                                "/progress_projection/currentness_resolver/last_receipt_or_blocker",
+                                "/progress_projection/currentness_resolver/stage_refs",
+                                "/progress_projection/currentness_resolver/manifest_refs",
+                            ],
+                        },
+                        "grant_work_progress": {
+                            "maps_to": "opl_deliverable_delta",
+                            "owner": "med-autogrant",
+                            "current_stage": "critique",
+                            "recommended_next_stage": "revision",
+                            "changed_surfaces": [
+                                "/progress_projection/current_stage_summary",
+                                "/progress_projection/focus",
+                                "/progress_projection/next_system_action",
+                            ],
+                            "can_claim_grant_ready": False,
+                            "can_claim_submission_ready": False,
+                        },
+                        "platform_evidence_progress": {
+                            "maps_to": "opl_platform_delta",
+                            "owner": "one-person-lab",
+                            "evidence_surfaces": [
+                                "/progress_projection/currentness_resolver/last_receipt_or_blocker",
+                                "/progress_projection/currentness_resolver/stage_refs",
+                                "/progress_projection/currentness_resolver/manifest_refs",
+                            ],
+                            "can_claim_grant_ready": False,
+                            "can_claim_fundability_ready": False,
+                            "can_claim_export_ready": False,
+                        },
+                    },
                     "status_narration_contract": {
                         "schema_version": 1,
                         "contract_kind": "ai_status_narration",
