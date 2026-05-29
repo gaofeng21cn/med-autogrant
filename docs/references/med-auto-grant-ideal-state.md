@@ -4,12 +4,12 @@ Owner: `Med Auto Grant`
 Purpose: `north_star_reference`
 State: `active_support`
 Machine boundary: 本文是人读目标态参考。机器真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、workspace/runtime artifact root、receipt、质量报告、导出包和 `contracts/runtime-program/current-program.json`。
-Date: `2026-05-22`
 
 ## 文档读法
 
 - 本文只写 MAG 的 north-star 目标态和长期 owner boundary；当前差距、执行顺序和证据缺口回到 [MAG 理想目标态差距与完善计划](../active/mag-ideal-state-cross-repo-gap-plan.md)。
 - 过程性校准、fresh audit、follow-through、receipt proof 和 closeout 流水归档到 [MAG standard agent 文档过程归档 2026-05](../history/plans/mag-standard-agent-doc-process-history-2026-05.md)。
+- 本文不冻结某次运行的日期、计数、receipt id、worktree 状态或 readiness 输出。需要判断当前完成度时，读取 active gap plan、`docs/status.md`、`contracts/runtime-program/current-program.json`、production acceptance / external evidence contracts、MAG grouped CLI 和 OPL `stages readiness` / App drilldown fresh read model。
 - 目标态优先于当前实现。当前 MAG 内已经存在的 product-entry、旧 product-sidecar、grouped CLI/API、projection builder、lifecycle adapter、local journal、attempt ledger、workspace/source intake 或 package/memory helper 只能作为迁移输入，不是长期架构约束。
 - 目标态不承诺旧 runtime / journal / probe / alias 兼容。旧模块、旧接口、旧测试和旧 docs 入口在 replacement、owner receipt parity 与 no-active-caller proof 成立后直接移除或进入 history/tombstone；MAG 不再新增 compatibility facade 来照顾过时调用方。
 
@@ -122,7 +122,7 @@ App 可以触发 OPL framework action、MAG guarded dispatch 或 direct domain e
 - OPL generated / hosted surfaces 是 MAG generic wrapper/caller 的长期 owner；MAG 手写 shell 只保留 domain handler、authority function、refs-only adapter、diagnostic cleanup 或 provenance fixture。MAG repo 侧 bridge 退出必须经过 generated-surface bridge exit gate 或 legacy exit gate；外部 production/default caller 和 live soak 另走证据门。
 - OPL standard conformance gate 必须保持通过；旧 local journal / attempt ledger / repo scheduler / executor probe / compat alias 的 active exact residue 不允许复活，只能在 history/tombstone/provenance 或 negative guard 中出现。
 - `mag_functional_structure_gap_count=0` 只表示 MAG repo 侧历史 bridge / owner 分类已收薄，不表示 strict source-purity 完成、external production/default caller、真实 App/workbench consumption 或 production long-run soak 已完成。仍有 active caller 的手写 shell 必须按 OPL cutover 后删除处理。
-- OPL `stages cohort-loop --domain mag` 能把六个 MAG stage 都读成 closed-loop ready；该门槛只证明声明式 launch/readiness loop 可被 OPL 消费，不替代 grant-stage owner receipt、App consumption、direct/hosted parity 或 Temporal long soak。
+- OPL stage launch / readiness 门槛以 `opl stages readiness --domain mag --json` 或 `--domain med-autogrant --json` 为默认 operator/App 读面；`stages cohort-loop`、proof bundle、runtime budget、assumptions 和 replay certification 只是折叠进 readiness 的 diagnostic drilldown。`cohort_loop.closed_loop_ready_count=6` 只能证明声明式 stage scope / cohort query / trigger / monitor refs 可被 OPL 消费，不替代 grant-stage owner receipt、App consumption、direct/hosted parity、runtime budget success-rate ref、replay evidence 或 Temporal long soak。
 - MAG retained private authority surfaces 完成逐项 AI-first 审计：fundability、authoring quality/export 和 grant strategy memory accept/reject 是 AI-first judgment surface，必须回到 grant stage output 或 AI critique artifact；package authority、owner receipt 和 grant helper 是 programmatic guard surface，只能依 owner receipt、typed blocker、refs 和 action metadata 工作。程序只做 schema validator、materializer、receipt signer、guard 和 refs projection，不能机械生成 ready verdict。
 - privatized audit 与 generated-surface handoff 中的 code path / source_ref 与当前 physical source tree 对齐；漂移路径只能进入 history/tombstone/source-ref refresh，不作为完成证明。
 - physical source tree 中的 product-entry、domain-handler、domain_runtime、runtime/lifecycle/workbench 命名必须持续被合同约束为 domain handler、refs-only adapter、minimal authority function、diagnostic 或 tombstone；旧 product-sidecar 命名只能作为 history/provenance 或 no-resurrection guard 出现，不能让命名重新表达 MAG-owned generic runtime。

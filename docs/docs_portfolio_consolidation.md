@@ -88,6 +88,46 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-30 MAG ideal-state readiness currentness tranche
+
+本轮在 `RUN_SNAPSHOT_TS=2026-05-29T20:24:57Z` 的 OPL-series frozen inventory 下处理 MAG 小范围 docs-governance tranche。MAG main 在快照内 clean/synced，无额外 worktree、无快照前 1 小时写入、open PR 为 `[]`；本轮只处理快照内已存在的 MAG north-star reference currentness 风险，不接管快照后新活动，不关闭 OPL series 全局 `/goal`。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`、`docs/active/opl-private-implementation-migration-inventory.md` 和本文件。
+- Current support inventory remains 120 markdown reader paths when counting root `README*`、`docs/**/*.md` plus `agent/README.md`、`contracts/README.md` and `runtime/README.md`.
+- Machine/source truth：`contracts/runtime-program/current-program.json`、`contracts/functional_privatization_audit.json`、`contracts/production_acceptance/mag-production-acceptance.json`、MAG grouped public CLI surface 和 OPL stage-readiness source.
+- Fresh OPL read-model check：`opl stages readiness --domain mag --json` and `--domain med-autogrant --json` report 6 admitted stages, 0 hard blockers, 7 warnings, with `cohort_loop` as `diagnostic_only`; `opl stages cohort-loop --domain mag|med-autogrant --json` reports 6 closed-loop-ready stages but authority boundary remains projection-only.
+- OPL source confirms `stages readiness` is the default operator command and `stages cohort-loop` is a diagnostic drilldown folded into readiness, not the default operator path.
+- OPL Doc Governance doctor output from this run: `finding_count=0`, active truth `pass`.
+
+Fresh semantic result：
+
+- `docs/references/med-auto-grant-ideal-state.md` is still the north-star reference, not a dated execution snapshot. It no longer freezes `Date: 2026-05-22`; current completion, counters, receipt ids and worktree/run state must come from active gap/status docs, contracts, CLI/read-model and runtime evidence.
+- The ideal completion gate now points to OPL `stages readiness` as the default operator/App read surface. `stages cohort-loop` remains valid only as a diagnostic lens proving stage scope / cohort query / trigger / monitor refs are consumable by OPL; it does not replace grant-stage owner receipt, App consumption, direct/hosted parity, runtime budget success-rate ref, replay evidence or Temporal long-soak.
+- Current machine truth still prevents overclaiming: OPL/Temporal is the default task runtime owner, MAG does not implement daemon / scheduler / attempt loop / attempt ledger, physical delete is not authorized, and provider/readiness/conformance outputs cannot authorize grant-domain ready, fundability ready, submission/export ready or production ready.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | North-star reference currentness policy and ideal completion gate; support read of active gap/status/private inventory, contracts, production acceptance, OPL stage readiness/cohort-loop read model and OPL public command source. | `docs/references/med-auto-grant-ideal-state.md`, this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。本轮没有发现新的 MAG doc path 需要归档、tombstone 或删除。
+
+Uncovered docs：
+
+- `med-autogrant`: none reopened in the previously recorded MAG root/docs + support README coverage scope. Future new docs or later source/contract changes can reopen specific sections.
+- Other OPL-series repos remain governed by the global coverage ledger. OPL、MAS、RCA and App still need their own remaining section-level coverage / safe-lane reconciliation before the global `/goal` can close.
+
+Remaining stale / retire candidates：
+
+- MAG implementation/evidence tails remain source/test/receipt work: physical delete authorization, production long-soak, submission-ready human gate, sustained real App/operator consumption, runtime budget success-rate refs and replay evidence tail.
+- Any future MAG docs wording that turns `Date` metadata, `stages cohort-loop` closed-loop counts, OPL readiness warnings/blocker counts, conformance, owner-payload refs-only verification, optional Hermes proof lane or zero exact inventory gap into grant-domain ready、fundability ready、submission/export ready、production ready、MAG-owned generic runtime、App/workbench ownership or physical delete authority is stale pollution.
+
+Next tranche write scope：
+
+- Continue OPL series whole-docs coverage outside MAG, prioritizing OPL / MAS / RCA safe document clusters and stale worktree/branch lanes that are clean, old enough and semantically decidable. App body docs remain delayed while active App implementation/release lanes are dirty or conflicting.
+- Return to MAG only if new MAG docs appear, source/contract/read-model changes reopen a section, or an implementation/evidence owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and requires doc foldback.
+
 ### 2026-05-30 MAG inventory scope clarification revalidation
 
 本轮在 `RUN_SNAPSHOT_TS=2026-05-29T17:07:57Z` 的 OPL-series frozen inventory 下复核 MAG 文档组合。MAG main clean/synced，无额外 worktree、无快照前 1 小时写入、open PR 为 `[]`，适合作为本轮低冲突 docs-governance tranche。目标是澄清本地 coverage ledger 中 `117` 与 `120` 两种 inventory 计数的口径，避免把旧条目里的 combined support README scope 误读成 root `README*` + `docs/**/*.md` exact-path 漂移；本轮不改 active truth，不关闭 OPL series 全局 `/goal`。
