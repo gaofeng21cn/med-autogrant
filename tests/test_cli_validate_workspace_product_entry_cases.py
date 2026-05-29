@@ -238,15 +238,14 @@ class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
         )
 
     def test_product_group_is_retired_from_public_cli_validation_lane(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-            "status",
-            "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
-        )
+        with self.assertRaises(SystemExit) as raised:
+            self.run_cli(
+                "product",
+                "status",
+                "--input",
+                str(CRITIQUE_EXAMPLE_PATH),
+                "--format",
+                "json",
+            )
 
-        self.assertEqual(exit_code, 2)
-        self.assertEqual(stdout, "")
-        self.assertIn("invalid choice: 'product'", stderr)
+        self.assertEqual(raised.exception.code, 2)

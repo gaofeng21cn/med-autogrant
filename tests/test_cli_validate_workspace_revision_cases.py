@@ -130,46 +130,6 @@ class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):
         self.assertEqual(payload["execution_status"], "planned")
         self.assertEqual(payload["recommended_next_stage"], "revision")
 
-    def test_grant_cockpit_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "cockpit",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "text",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前状态: 需要处理", stdout)
-        self.assertIn("当前判断: 必要性表述仍略偏现象描述。", stdout)
-        self.assertIn("- 可用命令 build_direct_entry:", stdout)
-        self.assertNotIn("workspace_status:", stdout)
-        self.assertNotIn("- alert:", stdout)
-
-    def test_grant_direct_entry_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "direct-entry",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--task-intent",
-            "tighten-grant-mainline",
-            "--format",
-            "text",
-        )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        self.assertIn("当前阶段: 批注审阅", stdout)
-        self.assertIn("当前状态: 需要处理", stdout)
-        self.assertIn("推荐执行路径: 修订落实", stdout)
-        self.assertIn("当前判断: 必要性表述仍略偏现象描述。", stdout)
-        self.assertNotIn("workspace_status:", stdout)
-        self.assertNotIn("recommended_route:", stdout)
-        self.assertNotIn("- alert:", stdout)
-
     def test_critique_summary_exposes_completed_revision_evidence_for_p2c_revision(self) -> None:
         exit_code, stdout, stderr = self.run_cli(
             "workspace",

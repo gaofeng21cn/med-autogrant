@@ -20,7 +20,9 @@ Date: `2026-05-19`
 
 当前 direct path 是：
 
-`Med Auto Grant app skill -> CLI / MedAutoGrantDomainEntry -> product status / user-loop / direct-entry -> workspace progress / cockpit -> pass / package commands`
+`Med Auto Grant app skill -> OPL/App generated status or manifest refs -> MAG CLI / MedAutoGrantDomainEntry / domain-handler target -> generated grant-progress / grant-cockpit refs -> generated grant-direct-entry / grant-user-loop refs -> pass / package commands`
+
+`workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`、`product manifest` 与 `product status` 不作为 repo-local public CLI group 复活；当前 repo-local grouped CLI 只保留 workspace audit、mainline、domain-handler、authority、pass 与 package command target。
 
 OPL-hosted path 可以读取 MAG descriptor、stage/control plane、domain-handler/projection 和 owner receipt refs，但必须回到同一套 MAG-owned grant truth、fundability / quality / export verdict、package authority、memory accept/reject、owner receipt 和 typed blocker。
 

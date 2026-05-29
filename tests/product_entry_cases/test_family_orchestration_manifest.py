@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import os
+import tempfile
+from pathlib import Path
+
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
@@ -184,3 +188,25 @@ class ProductEntryFamilyOrchestrationTest(unittest.TestCase):
                 "json",
             ),
         )
+
+    def test_grant_user_loop_keeps_runtime_root_semantic_path_when_codex_projects_is_symlink(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp_root = Path(tmpdir)
+            codex_home = tmp_root / "codex-home"
+            workspace_target = tmp_root / "workspace-projects-target"
+            codex_home.mkdir()
+            workspace_target.mkdir()
+            (codex_home / "projects").symlink_to(workspace_target, target_is_directory=True)
+
+            with patch.dict(os.environ, {"CODEX_HOME": str(codex_home)}, clear=False):
+                payload = MedAutoGrantProductEntry().build_grant_user_loop(
+                    input_path=str(DRAFTING_EXAMPLE_PATH),
+                    task_intent="prepare-critique-handoff",
+                )
+
+            command = payload["grant_user_loop"]["next_action"]["command"]
+            expected_root = codex_home / "projects" / "med-autogrant" / "runtime-state"
+            self.assertIn(str(expected_root), command)
+            self.assertNotIn(str(workspace_target / "med-autogrant" / "runtime-state"), command)

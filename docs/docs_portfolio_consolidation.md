@@ -88,6 +88,61 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-29 product projection CLI drift closeout
+
+本轮关闭先前 ledger 反复标记的 `workspace cockpit` / `product direct-entry` repo-local CLI 正向测试漂移。Fresh source/test truth 显示当前 public CLI group 只保留 workspace audit、mainline、domain-handler、authority、pass 与 package command target；`workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`、`product manifest` 与 `product status` 继续作为 OPL/App generated refs 或 `MedAutoGrantProductEntry` projection builder target，不作为 repo-local public CLI group 复活。
+
+Landed changes：
+
+- 删除 `tests/test_cli_validate_workspace_revision_cases.py` 中两个旧正向 CLI 用例：`workspace cockpit` 与 `product direct-entry`。
+- 保留并修正 `tests/test_cli_validate_workspace_product_entry_cases.py` 的 no-resurrection validation-lane 断言，确认 `product status` 仍以 exit code 2 fail closed。
+- 更新 `docs/architecture.md` 与 `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`，把 product/projection shell 明确写成 generated refs / projection builder target，而不是 repo-local public CLI。
+
+Verification：
+
+- Reproduced pre-fix focused failure: `tests/test_cli_validate_workspace_revision_cases.py` 仅 `workspace cockpit` 与 `product direct-entry` 两个旧正向用例失败，其余同文件用例通过。
+- Post-fix focused verification passed: `tests/test_cli_validate_workspace_revision_cases.py`、`tests/test_cli_validate_workspace_product_entry_cases.py`、`tests/product_entry_cases/test_cli_dispatch.py`、`tests/product_entry_cases/test_direct_entry.py` returned 43 pytest cases plus 21 subtests.
+- `git diff --check` passed.
+
+Follow-up：
+
+- `tests/product_entry_cases/test_family_orchestration_manifest.py` 暴露的 product user-loop runtime-state root expectation drift 不属于本 CLI no-resurrection closeout；该问题已由下一节 `grant-user-loop runtime-state semantic path closeout` 关闭。
+
+### 2026-05-29 grant-user-loop runtime-state semantic path closeout
+
+本轮修复 `grant-user-loop` landed route command 的 runtime output path 漂移：
+当 `$CODEX_HOME/projects` 是符号链接时，`_build_runtime_route_output_path`
+过去会对整条输出路径调用物理 `resolve()`，导致对外命令把
+`$CODEX_HOME/projects/med-autogrant/runtime-state/...` 展开为本机物理目标路径。
+修复后该路径保留 `$CODEX_HOME` 下的 runtime-state 语义根，只拼接受控
+`program_id`、`grant_run_id`、`workspace_id`、`draft_id` 和输出文件名。
+
+Live truth inputs：
+
+- MAG `TASTE.md`、`AGENTS.md`、核心状态与 active gap plan。
+- Runtime-state 不变量：用户级 runtime state 统一位于
+  `$CODEX_HOME/projects/med-autogrant/runtime-state/`。
+- Source/test path：
+  `src/med_autogrant/product_entry_parts/loop_route_shell.py`、
+  `tests/product_entry_cases/test_family_orchestration_manifest.py`、
+  `tests/product_entry_cases/test_status_start_cases.py`、
+  `tests/product_entry_cases/test_loop_and_readiness.py`、
+  `tests/product_entry_cases/test_manifest_and_status.py`。
+
+Fresh semantic result：
+
+- `grant-user-loop` route execution command 不再泄露本机符号链接物理目标路径，
+  App/operator/default-caller 仍消费 runtime-state 语义 locator。
+- 新增 symlink-root 回归测试，固定 `$CODEX_HOME/projects` 为 symlink 时仍输出
+  `$CODEX_HOME/projects/med-autogrant/runtime-state/...` 语义路径。
+- 该 closeout 只修复 product-entry command locator 漂移；不关闭 App sustained
+  consumption、submission human gate、Temporal long-soak、physical delete authority
+  或 OPL family global goal。
+
+| repo | touched surface | edited files |
+| --- | --- | --- |
+| `med-autogrant` | `grant-user-loop` landed route output locator and regression coverage. | `loop_route_shell.py`, `test_family_orchestration_manifest.py`, this coverage ledger |
+
 ### 2026-05-29 Hermes/reset/local-runtime history specs revalidation tranche
 
 本轮在 OPL series fresh hygiene scan 后，重新验证 MAG

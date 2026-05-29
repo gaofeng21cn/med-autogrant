@@ -192,7 +192,7 @@ def _build_runtime_route_output_path(
         / _require_runtime_path_segment(workspace_id, field_name="workspace_id")
         / _require_runtime_path_segment(draft_id or "no-draft", field_name="draft_id")
         / output_file
-    ).resolve()
+    )
 
 
 def _require_runtime_path_segment(value: str, *, field_name: str) -> str:
