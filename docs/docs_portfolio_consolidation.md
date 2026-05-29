@@ -88,6 +88,48 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-30 MAG inventory scope clarification revalidation
+
+本轮在 `RUN_SNAPSHOT_TS=2026-05-29T17:07:57Z` 的 OPL-series frozen inventory 下复核 MAG 文档组合。MAG main clean/synced，无额外 worktree、无快照前 1 小时写入、open PR 为 `[]`，适合作为本轮低冲突 docs-governance tranche。目标是澄清本地 coverage ledger 中 `117` 与 `120` 两种 inventory 计数的口径，避免把旧条目里的 combined support README scope 误读成 root `README*` + `docs/**/*.md` exact-path 漂移；本轮不改 active truth，不关闭 OPL series 全局 `/goal`。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md` 和本文件。
+- Current exact inventory script: repo-root `README*` + `docs/**/*.md` has `117` files.
+- Support README inventory: `agent/README.md`、`contracts/README.md`、`runtime/README.md` has `3` files. Together with the root/docs scope, the combined support-reader coverage scope is `120` files.
+- Recent doc-writing commit after prior MAG tranche: `0c14077 Fix MAG projection CLI drift`, touching `README.zh-CN.md`、`docs/architecture.md`、`docs/specs/2026-04-07-formal-entry-matrix-current-truth.md` and this ledger, with no new or removed markdown path.
+- Machine/source truth: `contracts/runtime-program/current-program.json`、`contracts/functional_privatization_audit.json`、`contracts/production_acceptance/mag-production-acceptance.json`、production-consumption evidence contracts, `MagDomainRuntime.describe_topology()` and `PUBLIC_GROUP_COMMANDS`.
+- OPL Doc Governance doctor output from this run: `finding_count=0`, active truth `pass`.
+
+Fresh semantic result：
+
+- The current root/docs exact scope is `117`; the older `120-file` rows are valid only when read as `117` root/docs files plus the three support README indexes listed above. They are not evidence of three missing root/docs files.
+- No current MAG root `README*`、`docs/**/*.md` or support README path lacks a lifecycle role. No archive、tombstone、delete or prose body rewrite was needed for this clarification.
+- The `0c14077` projection CLI drift closeout changed current wording and tests, not the document inventory shape. It keeps product/projection shell as generated refs / projection builder targets and does not revive repo-local public `workspace cockpit`、`product direct-entry` or `product status` command surfaces.
+- Current machine truth still prevents overclaiming: OPL/Temporal is the default task runtime owner, MAG does not implement daemon / scheduler / attempt loop / attempt ledger, physical delete is not authorized, provider completion is not domain/fundability/submission ready, and MAG does not own App workbench or OPL runtime.
+- Fresh clean-runner probe of `MagDomainRuntime.describe_topology()` reports `runtime_owner="one-person-lab"`、`can_claim_generic_runtime_owner=false`、default stage attempt executor `Codex CLI`, and optional proof executor `Hermes-Agent` with `explicit opt-in only`; `PUBLIC_GROUP_COMMANDS` exposes grouped `workspace`、`mainline`、`domain-handler`、`authority`、`pass` and `package` command groups.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Current 117-file repo-root `README*` / `docs/**/*.md` inventory plus 3 support README indexes reconciled against prior MAG coverage entries; support read of core/active/ideal-state docs, current contract truth, domain runtime topology, grouped public CLI surface and recent projection CLI drift closeout. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。本轮没有发现新的 MAG doc path 需要归档、tombstone 或删除。
+
+Uncovered docs：
+
+- `med-autogrant`: none in the current 117-file root/docs scope or the 3-file support README scope for the recorded MAG governance coverage. Future new docs or later source/contract changes can reopen specific sections.
+- Other OPL-series repos remain governed by the global coverage ledger. OPL、MAS、RCA and App still need their own remaining section-level coverage / safe-lane reconciliation before the global `/goal` can close.
+
+Remaining stale / retire candidates：
+
+- MAG implementation/evidence tails remain source/test/receipt work: physical delete authorization, production long-soak, submission-ready human gate, sustained real App/operator consumption and long-soak evidence.
+- Any future MAG docs wording that turns OPL projection、Temporal provider completion、projection CLI drift closeout、optional Hermes proof lane、combined 120-file ledger scope or zero exact inventory gap into grant-domain ready、fundability ready、submission/export ready、production ready、MAG-owned generic runtime、App/workbench ownership or physical delete authority is stale pollution.
+
+Next tranche write scope：
+
+- Continue OPL series whole-docs coverage outside MAG, prioritizing OPL / MAS / RCA safe document clusters. App body docs remain delayed while active App implementation/release lanes are dirty or conflicting.
+- Return to MAG only if new MAG docs appear, source/contract changes reopen a section, or an implementation/evidence owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and requires doc foldback.
+
 ### 2026-05-29 product projection CLI drift closeout
 
 本轮关闭先前 ledger 反复标记的 `workspace cockpit` / `product direct-entry` repo-local CLI 正向测试漂移。Fresh source/test truth 显示当前 public CLI group 只保留 workspace audit、mainline、domain-handler、authority、pass 与 package command target；`workspace progress`、`workspace cockpit`、`product direct-entry`、`product user-loop`、`product manifest` 与 `product status` 继续作为 OPL/App generated refs 或 `MedAutoGrantProductEntry` projection builder target，不作为 repo-local public CLI group 复活。
@@ -1242,13 +1284,13 @@ Next tranche write scope：
 Live truth inputs：
 
 - MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md` 和本文件。
-- Current inventory script over `README*` and `docs/**/*.md`: `inventory_count=120`。
+- Current combined support-reader inventory: repo-root `README*` + `docs/**/*.md` has `117` files, and support README indexes `agent/README.md`、`contracts/README.md`、`runtime/README.md` add `3` files, for `combined_inventory_count=120`。
 - Reconcile scan: 26 paths were not literal substrings in this local ledger before this tranche, but all map to earlier grouped coverage: root/agent/contracts/runtime README support, docs/core/active portfolio entry coverage, current specs/thin index coverage, 2026-04-06 history specs coverage, non-spec history coverage, or the later global compaction row.
 - Machine/source truth: `contracts/runtime-program/current-program.json`、`contracts/functional_privatization_audit.json`、`contracts/production_acceptance/mag-production-acceptance.json`、`contracts/external_evidence/mag-evidence-receipt-ledger.json`、`MagDomainRuntime.describe_topology()` and `public_cli.PUBLIC_GROUP_COMMANDS`。
 
 Fresh semantic result：
 
-- Current MAG inventory remains 120 markdown files in scope. No new MAG `README*` or `docs/**/*.md` appeared after the recorded MAG coverage tranches.
+- Current MAG combined support-reader inventory remains 120 markdown files in scope: 117 repo-root `README*` / `docs/**/*.md` paths plus 3 support README indexes. No new MAG `README*`、`docs/**/*.md` or support README path appeared after the recorded MAG coverage tranches.
 - The 26 previously not-literal ledger paths are reconciled as covered by grouped entries, not reopened doc gaps:
   - `README.zh-CN.md`、`agent/README.md`、`contracts/README.md`、`docs/README.md`、`docs/active/README.md`、`docs/active/opl-private-implementation-migration-inventory.md`、`docs/docs_portfolio_consolidation.md` and `runtime/README.md` were covered by the docs portfolio entry coverage tranche as MAG entry/support docs.
   - `docs/public/README.md` and all current `docs/specs/*.md` records were covered by the specs / thin index coverage tranche.
@@ -1260,13 +1302,13 @@ Fresh semantic result：
 
 | repo | reviewed docs/sections | edited docs |
 | --- | --- | --- |
-| `med-autogrant` | Current 120-file `README*` / `docs/**/*.md` inventory reconciled against prior MAG grouped coverage entries; support read of core/active/ideal-state docs, current contract truth, domain runtime topology and grouped public CLI surface. | this coverage ledger |
+| `med-autogrant` | Current 117-file repo-root `README*` / `docs/**/*.md` inventory plus 3 support README indexes reconciled against prior MAG grouped coverage entries; support read of core/active/ideal-state docs, current contract truth, domain runtime topology and grouped public CLI surface. | this coverage ledger |
 
 Archived / tombstoned / deleted docs：无。本轮没有发现新的 MAG doc path 需要归档、tombstone 或删除。
 
 Uncovered docs：
 
-- `med-autogrant`: none in the current 120-file `README*` / `docs/**/*.md` inventory for the recorded MAG governance scope. Future new docs or later source/contract changes can reopen specific sections.
+- `med-autogrant`: none in the current 117-file repo-root `README*` / `docs/**/*.md` inventory or the 3-file support README inventory for the recorded MAG governance scope. Future new docs or later source/contract changes can reopen specific sections.
 - Other OPL-series repos remain governed by the global coverage ledger: OPL and MAS still have open repo-wide coverage areas, RCA/App writes remain delayed while their main checkouts carry external dirty implementation/release lanes, and OMA remains covered by its earlier full README/docs tranche unless changed later.
 
 Remaining stale / retire candidates：
@@ -1352,7 +1394,7 @@ Live truth inputs：
 
 - MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`、本文件。
 - Recent doc-writing commits since 2026-05-27：`b03f0cd`、`68733c0`、`cbda7dd`、`5e9013e`、`c323933`、`e7913dd`、`187d871`。
-- Current inventory script over repo-root `README*` and `docs/**/*.md`: `inventory_count=120`、`missing_by_exact_string=0` after previously recorded MAG coverage entries.
+- Current exact inventory script over repo-root `README*` and `docs/**/*.md`: `inventory_count=117`、`missing_by_exact_string=0` after previously recorded MAG coverage entries; `agent/README.md`、`contracts/README.md` and `runtime/README.md` are additional support README indexes tracked by the combined 120-file support-reader scope.
 - Machine/source truth：`contracts/runtime-program/current-program.json`、`contracts/functional_privatization_audit.json`、`contracts/production_acceptance/mag-production-acceptance.json`、`MagDomainRuntime.describe_topology()`、`public_cli.PUBLIC_GROUP_COMMANDS`。
 
 Fresh semantic result：
@@ -1365,13 +1407,13 @@ Fresh semantic result：
 
 | repo | reviewed docs/sections | edited docs |
 | --- | --- | --- |
-| `med-autogrant` | Current 120-file `README*` / `docs/**/*.md` inventory refreshed; support read of recent doc-writing commits, core/active/ideal-state docs, current contract truth, domain runtime topology and grouped public CLI surface. | this coverage ledger |
+| `med-autogrant` | Current 117-file repo-root `README*` / `docs/**/*.md` inventory plus 3 support README indexes refreshed; support read of recent doc-writing commits, core/active/ideal-state docs, current contract truth, domain runtime topology and grouped public CLI surface. | this coverage ledger |
 
 Archived / tombstoned / deleted docs：无。本轮没有发现新的 MAG doc path 需要归档、tombstone 或删除。
 
 Uncovered docs：
 
-- `med-autogrant`: none in the current 120-file `README*` / `docs/**/*.md` inventory for the recorded MAG governance scope. Future new docs or later source/contract changes can reopen specific sections.
+- `med-autogrant`: none in the current 117-file repo-root `README*` / `docs/**/*.md` inventory or the 3-file support README inventory for the recorded MAG governance scope. Future new docs or later source/contract changes can reopen specific sections.
 - Other OPL-series repos remain governed by the global coverage ledger. OPL、MAS、RCA and App still need their own remaining section-level coverage / safe-lane reconciliation before the global `/goal` can close.
 
 Remaining stale / retire candidates：
@@ -1397,7 +1439,7 @@ Verification before absorb：
 Live truth inputs：
 
 - MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`、`docs/specs/README.md`、`docs/specs/specs_lifecycle_map.md` 和本文件。
-- Current inventory script over repo-root `README*` and `docs/**/*.md`: `inventory_count=120`.
+- Current exact inventory script over repo-root `README*` and `docs/**/*.md`: `inventory_count=117`; the combined support-reader scope remains 120 when `agent/README.md`、`contracts/README.md` and `runtime/README.md` are included.
 - Current `docs/specs/*.md` inventory: 15 files, consisting of `README.md`, `specs_lifecycle_map.md`, four `active_current_spec` records and nine `support_current_truth` records.
 - Machine/source truth: `contracts/runtime-program/current-program.json`, `contracts/functional_privatization_audit.json`, `src/med_autogrant/product_entry_parts/functional_closure.py`, product-entry manifest schema/tests, and public CLI / domain-entry source refs found by live search.
 - OPL Doc Governance doctor output from this run: `finding_count=0`, active truth `pass`.
