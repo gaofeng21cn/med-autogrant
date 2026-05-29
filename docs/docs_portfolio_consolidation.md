@@ -88,6 +88,44 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-30 MAG decisions currentness tranche
+
+本轮在 `RUN_SNAPSHOT_TS=2026-05-29T21:19:56Z` 的 OPL-series frozen inventory 下处理 MAG docs-only currentness tranche。MAG main 在快照内 clean/synced at `f1dd6cb`，无额外 worktree，open PR 为 `[]`，快照窗口内只有既有 tracked docs/support refs 的 mtime；本轮只处理快照内已存在的 decisions currentness 污染，不接管快照后 OPL root/provider-scheduler 活动，不关闭 OPL series 全局 `/goal`。
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`、本文件和 `docs/history/plans/mag-standard-agent-doc-process-history-2026-05.md`。
+- Machine truth：`contracts/runtime-program/current-program.json` reports OPL/Temporal as default task runtime owner, `codex_cli` as default stage executor, and MAG does not implement daemon/scheduler/attempt loop/attempt ledger.
+- `contracts/functional_privatization_audit.json` reports OPL replacement evidence exists, physical delete remains unauthorized, production long-run soak remains incomplete, and generic runtime has not been fully physically removed from MAG.
+- `contracts/production_acceptance/mag-production-acceptance.json` keeps production acceptance as MAG-owned refs-only evidence, with authority boundary forbidding OPL/provider structural or runtime completion from authorizing grant-domain ready、fundability ready、review ready、submission ready or production ready.
+- OPL Doc Governance doctor output from this run: `finding_count=0`, active truth `pass`.
+
+Fresh semantic result：
+
+- `docs/decisions.md` remains the current human decision log, not a dated snapshot. It no longer freezes `Date: 2026-05-22`, and its read policy now sends branch/worktree/receipt/count/closeout flow to history/provenance or machine/live read-model surfaces.
+- The current valid decisions remain unchanged: OPL/Temporal owns default task runtime; MAG keeps grant truth、fundability / quality / export verdict、package authority、memory accept/reject and owner receipt; history-only local runtime / Hermes / Gateway / flat alias / patch bridge surfaces do not regain compatibility status.
+- This tranche does not retire any source, contract, test, workflow, CLI entry, branch or worktree. It retires only the stale reading that MAG decisions are tied to a fixed 2026-05-22 snapshot or should carry dated process ledgers.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Decisions read policy; support read of active gap/status/ideal-state docs, process history, current-program runtime owner, functional privatization audit and production acceptance authority boundary. | `docs/decisions.md`, this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。本轮没有发现新的 MAG doc path 需要归档、tombstone 或删除。
+
+Uncovered docs：
+
+- `med-autogrant`: no body-level section outside the decisions currentness slice was reopened by this tranche.
+- Other OPL-series repos remain governed by the global coverage ledger. OPL root/provider-scheduler activity, MAS ahead/preflight, RCA recent native-PPT activity and App dirty lanes still need their own frozen-intake handling.
+
+Remaining stale / retire candidates：
+
+- MAG implementation/evidence tails remain source/test/receipt work: physical delete authorization, production long-soak, submission-ready human gate, sustained real App/operator consumption, runtime budget success-rate refs and replay evidence tail.
+- Any future MAG docs wording that turns fixed dates, branch/worktree state, receipt ids, OPL refs-only ledger verification, structural conformance, provider completion or process closeout into grant-domain ready、fundability ready、submission/export ready、production ready、MAG-owned generic runtime、App/workbench ownership or physical delete authority is stale pollution.
+
+Next tranche write scope：
+
+- Continue OPL series frozen-inventory cleanup outside MAG. For MAG, reopen only when new docs/source/contracts/read-model changes alter current decision boundaries or an implementation/evidence owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and requires current-doc foldback.
+
 ### 2026-05-30 MAG ideal-state readiness currentness tranche
 
 本轮在 `RUN_SNAPSHOT_TS=2026-05-29T20:24:57Z` 的 OPL-series frozen inventory 下处理 MAG 小范围 docs-governance tranche。MAG main 在快照内 clean/synced，无额外 worktree、无快照前 1 小时写入、open PR 为 `[]`；本轮只处理快照内已存在的 MAG north-star reference currentness 风险，不接管快照后新活动，不关闭 OPL series 全局 `/goal`。

@@ -4,11 +4,10 @@ Owner: `Med Auto Grant`
 Purpose: `current_decision_log`
 State: `current`
 Machine boundary: 本文是人读决策记录。机器真相继续归 contracts、schemas、source、CLI/API 行为、product-entry manifest、runtime receipts 与 workspace/artifact outputs；历史决策若与当前 status/current-program 冲突，以当前 owner surfaces 为准。
-Date: `2026-05-22`
 
 ## 读法
 
-本文只保留当前仍有效、会影响后续维护判断的决策。2026-05 的 consumer thinning、receipt proof、external evidence closeout、physical cleanup、stale worktree closeout 等过程性增量，统一回到 [MAG standard agent 文档过程归档 2026-05](./history/plans/mag-standard-agent-doc-process-history-2026-05.md)。当前差距和执行顺序回到 [MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)。
+本文只保留当前仍有效、会影响后续维护判断的决策，不冻结某次运行日期、分支、worktree、receipt id、计数或 closeout 流水。consumer thinning、receipt proof、external evidence、physical cleanup、stale worktree 等过程性增量，统一回到 [MAG standard agent 文档过程归档 2026-05](./history/plans/mag-standard-agent-doc-process-history-2026-05.md) 或对应 history/provenance。当前差距和执行顺序回到 [MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)，当前机器事实回到 `contracts/runtime-program/current-program.json`、production acceptance / external evidence contracts、source、CLI/API 和 live OPL/App read-model。
 
 ## 当前有效决策
 
@@ -68,4 +67,4 @@ Date: `2026-05-22`
 - 上游 Hermes 作为默认 provider 的 sidecar adapter 口径：已被 Temporal-backed OPL hosted autonomy 和显式 executor adapter/proof lane 口径取代。
 - local runtime / journal / attempt ledger closeout：已归入 history/provenance；当前测试明确拒绝 `runtime-run`、`runtime-resume` 和 `probe-upstream-hermes`。
 - 旧 domain runtime facade patch bridge、flat alias、compat aggregate test：active caller 迁出后直接退役，当前不保留 compatibility surface。
-- 2026-05 的 step-by-step receipt/proof/lane closeout：统一从 history 归档读取，不作为当前状态页或决策页的增量 ledger。
+- step-by-step receipt/proof/lane closeout：统一从 history 归档读取，不作为当前状态页或决策页的增量 ledger。
