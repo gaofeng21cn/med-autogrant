@@ -384,6 +384,53 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_admission_packet": {
+          "authority_boundary": {
+            "can_declare_export_ready": false,
+            "can_declare_fundability_ready": false,
+            "can_write_grant_truth": false,
+            "opl_role": "stage_admission_consumer_only"
+          },
+          "blocker_budget": {
+            "budget_scope": "same_stage_same_blocker_kind",
+            "escalation_owner": "med-autogrant",
+            "escalation_route": "mag_owner_surface",
+            "repeat_budget": 2
+          },
+          "closeout_target": {
+            "accepted_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "target_ref": "receipt:mag/grant-stage-controlled-attempt/call_and_candidate_intake/owner-receipt-or-typed-blocker"
+          },
+          "expected_grant_delta": {
+            "delta_kind": "grant_work_progress",
+            "domain_stage_refs": [
+              "discover-funding-opportunities",
+              "select-project-profile",
+              "initialize-intake-workspace",
+              "input_intake"
+            ],
+            "expected_outputs": [
+              "call_candidate_intake_ready"
+            ],
+            "maps_to": "opl_deliverable_delta",
+            "owner": "med-autogrant"
+          },
+          "human_gate": {
+            "gate_id": "submission_ready_export_gate",
+            "opl_can_bypass": false,
+            "owner": "med-autogrant",
+            "required": false
+          },
+          "stage_id": "call_and_candidate_intake",
+          "surface_kind": "mag_stage_admission_packet",
+          "version": "mag-stage-admission-packet.v1"
+        },
         "stage_production_evidence_refs": [
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
@@ -826,6 +873,53 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_admission_packet": {
+          "authority_boundary": {
+            "can_declare_export_ready": false,
+            "can_declare_fundability_ready": false,
+            "can_write_grant_truth": false,
+            "opl_role": "stage_admission_consumer_only"
+          },
+          "blocker_budget": {
+            "budget_scope": "same_stage_same_blocker_kind",
+            "escalation_owner": "med-autogrant",
+            "escalation_route": "mag_owner_surface",
+            "repeat_budget": 2
+          },
+          "closeout_target": {
+            "accepted_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "target_ref": "receipt:mag/grant-stage-controlled-attempt/fundability_strategy/owner-receipt-or-typed-blocker"
+          },
+          "expected_grant_delta": {
+            "delta_kind": "grant_work_progress",
+            "domain_stage_refs": [
+              "direction_screening",
+              "fit_alignment",
+              "grant_quality_scorecard",
+              "fundability gate"
+            ],
+            "expected_outputs": [
+              "fundability_strategy_gate_recorded"
+            ],
+            "maps_to": "opl_deliverable_delta",
+            "owner": "med-autogrant"
+          },
+          "human_gate": {
+            "gate_id": "submission_ready_export_gate",
+            "opl_can_bypass": false,
+            "owner": "med-autogrant",
+            "required": false
+          },
+          "stage_id": "fundability_strategy",
+          "surface_kind": "mag_stage_admission_packet",
+          "version": "mag-stage-admission-packet.v1"
+        },
         "stage_production_evidence_refs": [
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
@@ -1271,6 +1365,52 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_admission_packet": {
+          "authority_boundary": {
+            "can_declare_export_ready": false,
+            "can_declare_fundability_ready": false,
+            "can_write_grant_truth": false,
+            "opl_role": "stage_admission_consumer_only"
+          },
+          "blocker_budget": {
+            "budget_scope": "same_stage_same_blocker_kind",
+            "escalation_owner": "med-autogrant",
+            "escalation_route": "mag_owner_surface",
+            "repeat_budget": 2
+          },
+          "closeout_target": {
+            "accepted_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "target_ref": "receipt:mag/grant-stage-controlled-attempt/specific_aims_and_structure/owner-receipt-or-typed-blocker"
+          },
+          "expected_grant_delta": {
+            "delta_kind": "grant_work_progress",
+            "domain_stage_refs": [
+              "question_refinement",
+              "argument_building",
+              "outline"
+            ],
+            "expected_outputs": [
+              "specific_aims_structure_accepted"
+            ],
+            "maps_to": "opl_deliverable_delta",
+            "owner": "med-autogrant"
+          },
+          "human_gate": {
+            "gate_id": "submission_ready_export_gate",
+            "opl_can_bypass": false,
+            "owner": "med-autogrant",
+            "required": false
+          },
+          "stage_id": "specific_aims_and_structure",
+          "surface_kind": "mag_stage_admission_packet",
+          "version": "mag-stage-admission-packet.v1"
+        },
         "stage_production_evidence_refs": [
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
@@ -1717,6 +1857,53 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_admission_packet": {
+          "authority_boundary": {
+            "can_declare_export_ready": false,
+            "can_declare_fundability_ready": false,
+            "can_write_grant_truth": false,
+            "opl_role": "stage_admission_consumer_only"
+          },
+          "blocker_budget": {
+            "budget_scope": "same_stage_same_blocker_kind",
+            "escalation_owner": "med-autogrant",
+            "escalation_route": "mag_owner_surface",
+            "repeat_budget": 2
+          },
+          "closeout_target": {
+            "accepted_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "target_ref": "receipt:mag/grant-stage-controlled-attempt/proposal_authoring/owner-receipt-or-typed-blocker"
+          },
+          "expected_grant_delta": {
+            "delta_kind": "grant_work_progress",
+            "domain_stage_refs": [
+              "drafting",
+              "revision",
+              "grant-progress",
+              "grant-user-loop"
+            ],
+            "expected_outputs": [
+              "proposal_draft_reviewable"
+            ],
+            "maps_to": "opl_deliverable_delta",
+            "owner": "med-autogrant"
+          },
+          "human_gate": {
+            "gate_id": "submission_ready_export_gate",
+            "opl_can_bypass": false,
+            "owner": "med-autogrant",
+            "required": false
+          },
+          "stage_id": "proposal_authoring",
+          "surface_kind": "mag_stage_admission_packet",
+          "version": "mag-stage-admission-packet.v1"
+        },
         "stage_production_evidence_refs": [
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
@@ -2159,6 +2346,53 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_admission_packet": {
+          "authority_boundary": {
+            "can_declare_export_ready": false,
+            "can_declare_fundability_ready": false,
+            "can_write_grant_truth": false,
+            "opl_role": "stage_admission_consumer_only"
+          },
+          "blocker_budget": {
+            "budget_scope": "same_stage_same_blocker_kind",
+            "escalation_owner": "med-autogrant",
+            "escalation_route": "mag_owner_surface",
+            "repeat_budget": 2
+          },
+          "closeout_target": {
+            "accepted_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "target_ref": "receipt:mag/grant-stage-controlled-attempt/review_and_rebuttal/owner-receipt-or-typed-blocker"
+          },
+          "expected_grant_delta": {
+            "delta_kind": "grant_work_progress",
+            "domain_stage_refs": [
+              "critique",
+              "review",
+              "grant_quality_closure_dossier",
+              "quality-diff"
+            ],
+            "expected_outputs": [
+              "grant_review_gate_receipt_recorded"
+            ],
+            "maps_to": "opl_deliverable_delta",
+            "owner": "med-autogrant"
+          },
+          "human_gate": {
+            "gate_id": "submission_ready_export_gate",
+            "opl_can_bypass": false,
+            "owner": "med-autogrant",
+            "required": false
+          },
+          "stage_id": "review_and_rebuttal",
+          "surface_kind": "mag_stage_admission_packet",
+          "version": "mag-stage-admission-packet.v1"
+        },
         "stage_production_evidence_refs": [
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",
@@ -2597,6 +2831,53 @@
             "role": "stage_source_ref_projection"
           }
         ],
+        "stage_admission_packet": {
+          "authority_boundary": {
+            "can_declare_export_ready": false,
+            "can_declare_fundability_ready": false,
+            "can_write_grant_truth": false,
+            "opl_role": "stage_admission_consumer_only"
+          },
+          "blocker_budget": {
+            "budget_scope": "same_stage_same_blocker_kind",
+            "escalation_owner": "med-autogrant",
+            "escalation_route": "mag_owner_surface",
+            "repeat_budget": 2
+          },
+          "closeout_target": {
+            "accepted_return_shapes": [
+              "domain_owner_receipt_ref",
+              "typed_blocker_ref",
+              "no_regression_evidence_ref"
+            ],
+            "body_free_payload_required": true,
+            "owner": "med-autogrant",
+            "target_ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker"
+          },
+          "expected_grant_delta": {
+            "delta_kind": "grant_work_progress",
+            "domain_stage_refs": [
+              "freeze",
+              "frozen",
+              "package submission-ready",
+              "submission-ready export gate"
+            ],
+            "expected_outputs": [
+              "submission_ready_package_receipt_recorded"
+            ],
+            "maps_to": "opl_deliverable_delta",
+            "owner": "med-autogrant"
+          },
+          "human_gate": {
+            "gate_id": "submission_ready_export_gate",
+            "opl_can_bypass": false,
+            "owner": "med-autogrant",
+            "required": true
+          },
+          "stage_id": "package_and_submit_ready",
+          "surface_kind": "mag_stage_admission_packet",
+          "version": "mag-stage-admission-packet.v1"
+        },
         "stage_production_evidence_refs": [
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
           "contracts/external_evidence/mag-evidence-receipt-ledger.json#/request_closures/2",

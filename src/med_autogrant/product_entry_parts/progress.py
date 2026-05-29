@@ -34,6 +34,8 @@ from med_autogrant.product_entry_parts.progress_projection_helpers import (
     _build_author_decision_summary,
     _build_current_stage_summary,
     _build_focus_payload,
+    _build_opl_progress_delta_mapping,
+    _build_progress_first_currentness_resolver,
     _build_workspace_overview,
     _build_workspace_status,
     _read_next_system_action,
@@ -42,6 +44,7 @@ from med_autogrant.product_entry_parts.progress_projection_helpers import (
 from med_autogrant.product_entry_parts.runtime_contracts import (
     GRANT_COCKPIT_SCHEMA_FILE,
     GRANT_PROGRESS_SCHEMA_FILE,
+    _read_current_program_contract,
     _validate_contract_schema,
 )
 from med_autogrant.product_entry_parts.loop_contracts import (
@@ -147,6 +150,17 @@ class ProductEntryProgressMixin:
                 "workspace_path": str(resolved_input_path),
             },
         }
+        current_program_contract = _read_current_program_contract()
+        progress_projection["currentness_resolver"] = _build_progress_first_currentness_resolver(
+            current_program_contract=current_program_contract,
+            route_report=route_report,
+            workspace_summary=workspace_summary,
+            resolved_input_path=resolved_input_path,
+            progress_projection=progress_projection,
+        )
+        progress_projection["opl_progress_delta"] = _build_opl_progress_delta_mapping(
+            progress_projection=progress_projection,
+        )
         progress_projection["status_narration_contract"] = build_status_narration_contract(
             contract_id=f"grant-progress::{workspace_id}",
             surface_kind="grant_progress",
