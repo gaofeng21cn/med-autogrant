@@ -114,6 +114,44 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                 self.assertTrue(stage["stage_contract"]["monitor_freshness_refs"])
                 self.assertTrue(stage["stage_contract"]["replay_evidence_refs"])
                 self.assertTrue(stage["stage_contract"]["stage_production_evidence_refs"])
+                progress_delta_policy = stage["stage_contract"]["progress_delta_policy"]
+                self.assertEqual(progress_delta_policy["surface_kind"], "opl_stage_progress_delta_policy")
+                self.assertTrue(
+                    {
+                        "progress_delta_classification",
+                        "deliverable_progress_delta",
+                        "platform_repair_delta",
+                        "next_forced_delta",
+                    }
+                    <= set(progress_delta_policy["required_fields"])
+                )
+                self.assertEqual(
+                    progress_delta_policy["deliverable_delta_aliases"]["grant_work_progress"],
+                    "deliverable_progress_delta",
+                )
+                self.assertEqual(
+                    progress_delta_policy["platform_delta_aliases"]["platform_evidence_progress"],
+                    "platform_repair_delta",
+                )
+                self.assertTrue(progress_delta_policy["platform_only_is_not_deliverable_progress"])
+                typed_blocker_lineage_policy = stage["stage_contract"]["typed_blocker_lineage_policy"]
+                self.assertEqual(typed_blocker_lineage_policy["surface_kind"], "family-stall-lineage.v1")
+                self.assertTrue(
+                    {
+                        "blocker_family",
+                        "repeat_count",
+                        "next_forced_delta",
+                        "escalation_owner",
+                    }
+                    <= set(typed_blocker_lineage_policy["required_fields"])
+                )
+                self.assertEqual(
+                    typed_blocker_lineage_policy["repeat_budget"],
+                    {
+                        "mechanism_repair_after_repeat_count": 2,
+                        "human_gate_or_stop_loss_after_repeat_count": 3,
+                    },
+                )
                 admission_packet = stage["stage_contract"]["stage_admission_packet"]
                 self.assertEqual(admission_packet["surface_kind"], "mag_stage_admission_packet")
                 self.assertEqual(admission_packet["stage_id"], stage["stage_id"])

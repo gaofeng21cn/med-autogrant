@@ -228,6 +228,33 @@ def test_mag_stage_control_plane_requires_grant_facing_user_stage_log_semantics(
             "opl_can_authorize_quality_or_export": False,
             "provider_completion_can_claim_stage_semantics_complete": False,
         }, stage_id
+        progress_delta_policy = stage["stage_contract"]["progress_delta_policy"]
+        assert progress_delta_policy["surface_kind"] == "opl_stage_progress_delta_policy"
+        assert set(progress_delta_policy["required_fields"]) >= {
+            "progress_delta_classification",
+            "deliverable_progress_delta",
+            "platform_repair_delta",
+            "next_forced_delta",
+        }
+        assert progress_delta_policy["deliverable_delta_aliases"] == {
+            "grant_work_progress": "deliverable_progress_delta",
+        }
+        assert progress_delta_policy["platform_delta_aliases"] == {
+            "platform_evidence_progress": "platform_repair_delta",
+        }
+        assert progress_delta_policy["platform_only_is_not_deliverable_progress"] is True
+        typed_blocker_lineage_policy = stage["stage_contract"]["typed_blocker_lineage_policy"]
+        assert typed_blocker_lineage_policy["surface_kind"] == "family-stall-lineage.v1"
+        assert set(typed_blocker_lineage_policy["required_fields"]) >= {
+            "blocker_family",
+            "repeat_count",
+            "next_forced_delta",
+            "escalation_owner",
+        }
+        assert typed_blocker_lineage_policy["repeat_budget"] == {
+            "mechanism_repair_after_repeat_count": 2,
+            "human_gate_or_stop_loss_after_repeat_count": 3,
+        }
 
 
 def test_mag_adoption_contract_declares_lifecycle_adapter_mapping() -> None:
