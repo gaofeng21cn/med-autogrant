@@ -15,15 +15,25 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 
 # Med Auto Grant
 
-**A Foundry Agent for medical grant authoring, published as an OPL-compatible package built on the OPL Framework**
+**An AI grant-writing workspace for medical teams, keeping topic framing, body drafting, critique, revision, and review-package delivery on one traceable application line.**
 
-> `Med Auto Grant` is an independent medical grant domain agent and OPL-compatible Foundry Agent package. It keeps specified-funder body authoring, critique, revision, and scientific review-package delivery on one line for investigator-side medical grant applications.
+A medical grant proposal is more than a form to fill in. A review-ready application needs the target call, research foundation, scientific question, technical route, applicant fit, and reviewer concerns to stay aligned across many rounds of work.
+
+Once AI moves from "polish this paragraph" to "help me finish this proposal," several problems show up quickly:
+
+- The funding call is fixed, but how should prior papers, pilot evidence, and applicant strengths become one clear scientific story?
+- After many revisions, which version solved which problem, and which hard issues remain open?
+- Can the system review the draft like a grant reviewer and turn critique into the next revision?
+- Can portal forms and objective supplements stay separate from the scientific body instead of blocking the writing loop?
+- Can longer writing and revision work continue while the user is away, with progress and blockers left behind for review?
+
+`Med Auto Grant` is built around those questions. For a specified funding task, it keeps material organization, proposal drafting, reviewer-style critique, revision rounds, and review-package delivery inside one workspace so a draft can move toward a version worth showing to experts.
 
 <table>
   <tr>
     <td width="33%" valign="top">
       <strong>Who It Serves</strong><br/>
-      Doctors, PIs, faculty members, and medical research teams preparing investigator-side grant applications
+      Doctors, PIs, faculty members, and medical research teams preparing researcher-led medical grant applications
     </td>
     <td width="33%" valign="top">
       <strong>What It Organizes</strong><br/>
@@ -37,8 +47,25 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 </table>
 
 <p align="center">
-  <img src="assets/branding/medautogrant-overview.png" alt="Med Auto Grant overview" width="100%" />
+  <img src="assets/branding/medautogrant-overview-v2.png" alt="Med Auto Grant overview" width="100%" />
 </p>
+
+## Core Highlights
+
+**Continuous Writing Around One Funding Call**<br/>
+It does not give generic advice. It keeps working under the same target call, organizing materials, rewriting the body, closing issues, and advancing versions.
+
+**From Materials To A Review Package**<br/>
+Papers, pilot evidence, applicant background, and constraints are shaped into title, abstract, aims, research plan, technical route, and applicant narrative, then collected into a review-ready proposal package.
+
+**Reviewer-Style Critique That Turns Into Revision**<br/>
+Each round can examine scientific question, significance, novelty, technical route, applicant fit, and evidence gaps, then turn the critique into the next draft.
+
+**Traceable Progress And Versions**<br/>
+The workspace keeps drafts, comments, version changes, quality scorecards, and evidence-gap reports together so the team can see where the proposal stands.
+
+**Scientific Writing And Portal Supplements Stay Separate**<br/>
+Portal submission, formal forms, and objective supplements are tracked as their own follow-up work. The default focus is to make the scientific body reviewable first.
 
 ## One-Sentence Quick Start
 
@@ -53,9 +80,9 @@ You can start with prompts like:
 - Turning prior work, pilot data, and applicant materials into a stronger title, abstract, aims, and research plan under a specified funding call.
 - Keeping revision rounds, reviewer-style critique, and version changes traceable inside one workspace.
 - Comparing proposal quality across versions through structured scorecards, issue closure, and evidence-gap reports.
-- Running longer controller-led authoring cycles that can continue, roll back, or stop with a blocker report.
+- Running longer writing and revision cycles that can continue, roll back, or stop with a blocker report.
 - Delivering a scientifically complete review-ready package before portal-facing formal checks.
-- Tracking formal/objective supplements as explicit TODO wakeups, instead of blocking body authoring by default.
+- Tracking formal/objective supplements as explicit follow-up work, instead of blocking body authoring by default.
 
 ## How It Works
 
