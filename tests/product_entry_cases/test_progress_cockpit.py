@@ -4,6 +4,72 @@ from __future__ import annotations
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
+PROGRESS_PROJECTION_KEYS = {
+    "projection_version",
+    "projection_kind",
+    "workspace_surface_kind",
+    "current_stage",
+    "current_stage_summary",
+    "checkpoint_status",
+    "recommended_next_stage",
+    "current_blockers",
+    "next_system_action",
+    "needs_author_decision",
+    "author_decision_summary",
+    "currentness_resolver",
+    "opl_progress_delta",
+    "status_narration_contract",
+    "focus",
+    "product_entry_surface",
+}
+
+
+def _assert_progress_first_projection_contract(
+    test_case: unittest.TestCase,
+    projection: dict[str, object],
+    *,
+    current_stage: str,
+    recommended_next_stage: str,
+    checkpoint_status: str,
+    workspace_path: Path,
+) -> None:
+    test_case.assertEqual(set(projection), PROGRESS_PROJECTION_KEYS)
+
+    currentness = projection["currentness_resolver"]
+    test_case.assertIsInstance(currentness, dict)
+    test_case.assertEqual(currentness["surface_kind"], "mag_progress_first_currentness_resolver")
+    test_case.assertEqual(currentness["current_program"]["program_id"], "med-autogrant-mainline")
+    test_case.assertEqual(currentness["workspace_truth"]["workspace_id"], "nsfc-demo-001")
+    test_case.assertEqual(
+        currentness["workspace_truth"]["grant_run_id"],
+        "grant-run-nsfc-demo-001-baseline-001",
+    )
+    test_case.assertEqual(currentness["workspace_truth"]["lifecycle_stage"], current_stage)
+    test_case.assertEqual(currentness["workspace_truth"]["checkpoint_status"], checkpoint_status)
+    test_case.assertEqual(currentness["workspace_truth"]["workspace_path"], str(workspace_path.resolve()))
+    test_case.assertEqual(
+        currentness["last_receipt_or_blocker"]["ref"],
+        f"receipt:mag/grant-stage-controlled-attempt/{current_stage}/owner-receipt-or-typed-blocker",
+    )
+    test_case.assertEqual(currentness["stage_refs"]["current_stage"], current_stage)
+    test_case.assertEqual(currentness["stage_refs"]["recommended_next_stage"], recommended_next_stage)
+    test_case.assertEqual(
+        currentness["manifest_refs"]["progress_projection_ref"],
+        "/product_entry_manifest/progress_projection",
+    )
+
+    opl_delta = projection["opl_progress_delta"]
+    test_case.assertIsInstance(opl_delta, dict)
+    test_case.assertEqual(opl_delta["surface_kind"], "opl_progress_first_delta_mapping")
+    test_case.assertEqual(opl_delta["progress_delta_classification"], "mixed")
+    test_case.assertEqual(opl_delta["grant_work_progress"]["owner"], "med-autogrant")
+    test_case.assertEqual(opl_delta["grant_work_progress"]["current_stage"], current_stage)
+    test_case.assertEqual(opl_delta["grant_work_progress"]["recommended_next_stage"], recommended_next_stage)
+    test_case.assertEqual(opl_delta["platform_evidence_progress"]["owner"], "one-person-lab")
+    test_case.assertFalse(opl_delta["grant_work_progress"]["can_claim_submission_ready"])
+    test_case.assertFalse(opl_delta["platform_evidence_progress"]["can_claim_export_ready"])
+
+
 class ProductEntryProgressCockpitTest(unittest.TestCase):
     def test_grant_progress_projects_critique_stage_for_direct_entry(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
@@ -20,8 +86,35 @@ class ProductEntryProgressCockpitTest(unittest.TestCase):
         self.assertEqual(payload["input_path"], str(CRITIQUE_EXAMPLE_PATH.resolve()))
         self.assertEqual(payload["grant_intake_audit"]["intake_status"], "ready")
         self.assertEqual(payload["grant_evidence_grounding"]["grounding_status"], "selection_grounded")
+        progress_projection = payload["progress_projection"]
+        _assert_progress_first_projection_contract(
+            self,
+            progress_projection,
+            current_stage="critique",
+            recommended_next_stage="revision",
+            checkpoint_status="forward_progress",
+            workspace_path=CRITIQUE_EXAMPLE_PATH,
+        )
         self.assertEqual(
-            payload["progress_projection"],
+            {
+                key: progress_projection[key]
+                for key in (
+                    "projection_version",
+                    "projection_kind",
+                    "workspace_surface_kind",
+                    "current_stage",
+                    "current_stage_summary",
+                    "checkpoint_status",
+                    "recommended_next_stage",
+                    "current_blockers",
+                    "next_system_action",
+                    "needs_author_decision",
+                    "author_decision_summary",
+                    "status_narration_contract",
+                    "focus",
+                    "product_entry_surface",
+                )
+            },
             {
                 "projection_version": 1,
                 "projection_kind": "grant_progress",
@@ -98,8 +191,35 @@ class ProductEntryProgressCockpitTest(unittest.TestCase):
         )
 
         self.assertEqual(payload["lifecycle_stage"], "frozen")
+        progress_projection = payload["progress_projection"]
+        _assert_progress_first_projection_contract(
+            self,
+            progress_projection,
+            current_stage="frozen",
+            recommended_next_stage="frozen",
+            checkpoint_status="submission_frozen",
+            workspace_path=FROZEN_EXAMPLE_PATH,
+        )
         self.assertEqual(
-            payload["progress_projection"],
+            {
+                key: progress_projection[key]
+                for key in (
+                    "projection_version",
+                    "projection_kind",
+                    "workspace_surface_kind",
+                    "current_stage",
+                    "current_stage_summary",
+                    "checkpoint_status",
+                    "recommended_next_stage",
+                    "current_blockers",
+                    "next_system_action",
+                    "needs_author_decision",
+                    "author_decision_summary",
+                    "status_narration_contract",
+                    "focus",
+                    "product_entry_surface",
+                )
+            },
             {
                 "projection_version": 1,
                 "projection_kind": "grant_progress",
