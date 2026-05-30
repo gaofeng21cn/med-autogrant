@@ -88,6 +88,57 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-30 MAG Progress-First contract foldback tranche
+
+本轮在 `RUN_SNAPSHOT_TS=2026-05-30T00:00:33Z` 的 OPL-series frozen inventory 下处理 MAG ledger-only foldback。MAG main 在快照内 `HEAD == origin/main == 5c687d764ef3a614ccd0bd4e9046a47921b79bfe`，root clean，无额外 worktree，PR fallback `[]`，快照后无 MAG 文件写入；因此本轮只把已在 main 的 `Add MAG standard pack progress-first policies` 合同 / source / test 事实折回文档组合治理台账，不接管 OPL、MAS、OMA、RCA 或 App 的 dirty / recent lanes，不关闭 OPL series 全局 `/goal`。
+
+Six-repo frozen inventory summary：
+
+- `one-person-lab`: synced at `906b9fb725cb35b6471f1336aa2a9e1423c48974` but dirty `docs/status.md`、`src/family-stage-control-plane-oma.ts`、`tests/src/cli/cases/workspace-domain.stages.test.ts`; `docs/status.md` is post-snapshot activity, so OPL retained.
+- `med-autoscience`: ahead 2 at `d24ef0512823bd5de1fa4f8485af1db39720c959`, dirty `docs/active/mas-ideal-state-gap-plan.md` and `docs/status.md`, retained.
+- `med-autogrant`: clean/synced at `5c687d764ef3a614ccd0bd4e9046a47921b79bfe`, selected for ledger-only foldback.
+- `redcube-ai`: clean/synced at `6b766dac1e9e3f0ddb58bc345a38099881df0956`, but recent build/source/docs writes filled the snapshot window, retained.
+- `opl-meta-agent`: clean/synced at `1349850707c86047063a09066c628e8d55e65465` but dirty `contracts/stage_control_plane.json` and `tests/contracts.test.ts`, retained.
+- `one-person-lab-app`: clean/synced at `dd96d96a6c2603f36025882bac432b9516e4896f` but dirty app shell/status/docs/script files plus `.playwright-mcp/`, and App runtime processes remained active, retained.
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、`docs/status.md`、`docs/decisions.md`、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、本文件，以及 OPL Doc Governance doctor。
+- Machine/source truth：`contracts/stage_control_plane.json` now exposes `progress_delta_policy` and `typed_blocker_lineage_policy` under each of the 6 grant stage contracts.
+- Source implementation：`src/med_autogrant/stage_control_plane.py` defines `PROGRESS_DELTA_POLICY` and `TYPED_BLOCKER_LINEAGE_POLICY`, then injects them into each stage contract.
+- Tests：`tests/product_entry_cases/test_family_stage_control_plane.py` and `tests/test_opl_family_contract_adoption.py` assert `opl_stage_progress_delta_policy`, `family-stall-lineage.v1`, `deliverable_progress_delta`, `platform_repair_delta`, `next_forced_delta`, MAG aliases `grant_work_progress` / `platform_evidence_progress`, and repeat-budget / escalation-owner fields.
+- Current docs already carry the semantic boundary: `docs/status.md` and `docs/decisions.md` say Progress-First separates grant work progress from platform evidence repair and does not authorize OPL/App to read grant bodies, write grant truth, bypass human gate, or create fundability / quality / export / submission verdicts.
+
+Fresh semantic result：
+
+- The Progress-First shared contract is current machine truth for MAG stage control, not a standalone ready verdict. It adds a common OPL projection vocabulary while preserving MAG-owned grant semantics.
+- `grant_work_progress` maps to OPL `deliverable_progress_delta`; `platform_evidence_progress` maps to OPL `platform_repair_delta`. Platform-only repair still does not reset grant deliverable stall budget.
+- Typed blocker lineage now carries repeat budget, next forced delta and escalation owner fields. This improves stall accounting; it does not let OPL generate MAG blockers, infer grant work, approve submission, or override `submission_ready_export_gate`.
+- No additional active truth body rewrite was needed: current status / decisions / active gap plan already route the new policy to contracts/source/tests and keep remaining evidence gates open.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | Progress-First and typed-blocker sections in `docs/status.md`, `docs/decisions.md`, active gap plan, this ledger, `contracts/stage_control_plane.json`, `src/med_autogrant/stage_control_plane.py`, focused stage-control tests and OPL family contract adoption tests. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。本轮没有发现新的 MAG doc path 需要归档、tombstone 或删除。
+
+Retired modules / interfaces / tests / workflows / entries：无。本轮没有退役 source、contract、test、workflow、CLI entry、branch 或 worktree；也没有新增 compatibility surface、alias、facade、wrapper 或 fallback。
+
+Uncovered docs：
+
+- `med-autogrant`: no new README/docs path or body section was reopened by this Progress-First foldback. Future source/contract changes can reopen specific sections.
+- Other OPL-series repos remain governed by the global coverage ledger. OPL dirty post-snapshot work, MAS ahead/dirty lane, OMA dirty control-plane/test lane, RCA recent build/source/docs lane and App dirty shell/status/docs lane still require their own frozen-intake handling.
+
+Remaining stale / retire candidates：
+
+- MAG implementation/evidence tails remain unchanged: physical delete authorization, production long-soak, submission-ready human gate, sustained real App/operator consumption, runtime budget success-rate refs, replay evidence tail and no-active legacy caller proof still need owner evidence before source/interface/test retirement.
+- Any future MAG docs wording that turns Progress-First fields, OPL generic `deliverable_progress_delta`, typed blocker lineage, repeat budget, provider completion or refs-only ledger verification into grant-domain ready、fundability ready、submission/export ready、production ready、physical delete authority or OPL-owned grant truth is stale pollution.
+
+Next tranche write scope：
+
+- Continue OPL series frozen-inventory cleanup outside MAG. Prefer OPL / MAS / OMA / App dirty lane intake only after fresh ownership and post-snapshot checks; RCA should wait until recent build/source/docs activity stabilizes.
+- Return to MAG only if new MAG docs appear, later source/contracts/read-model changes reopen a section, or a source/test owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and requires active truth foldback.
+
 ### 2026-05-30 MAG decisions currentness tranche
 
 本轮在 `RUN_SNAPSHOT_TS=2026-05-29T21:19:56Z` 的 OPL-series frozen inventory 下处理 MAG docs-only currentness tranche。MAG main 在快照内 clean/synced at `f1dd6cb`，无额外 worktree，open PR 为 `[]`，快照窗口内只有既有 tracked docs/support refs 的 mtime；本轮只处理快照内已存在的 decisions currentness 污染，不接管快照后 OPL root/provider-scheduler 活动，不关闭 OPL series 全局 `/goal`。
