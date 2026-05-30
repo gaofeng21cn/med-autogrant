@@ -15,6 +15,7 @@
   "standard_contract_refs": {
     "action_catalog": "contracts/action_catalog.json",
     "agent_lab_handoff": "contracts/agent_lab_handoff.json",
+    "foundry_agent_series": "contracts/foundry_agent_series.json",
     "functional_privatization_audit": "contracts/functional_privatization_audit.json",
     "generated_surface_handoff": "contracts/generated_surface_handoff.json",
     "oma_handoff_refs": "contracts/oma_handoff_refs.json",

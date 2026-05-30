@@ -23,6 +23,7 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     generated = build_standard_pack()
 
     assert _read_contract("domain_descriptor") == generated["domain_descriptor"]
+    assert _read_contract("foundry_agent_series") == generated["foundry_agent_series"]
     assert _read_contract("action_catalog") == generated["action_catalog"]
     assert _read_contract("stage_control_plane") == generated["stage_control_plane"]
     assert _read_contract("functional_privatization_audit") == generated["functional_privatization_audit"]
@@ -33,6 +34,18 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
 
     assert generated["action_catalog"]["target_domain_id"] == "med-autogrant"
     assert generated["stage_control_plane"]["target_domain_id"] == "med-autogrant"
+    assert generated["foundry_agent_series"]["surface_kind"] == "opl_foundry_agent_series_contract"
+    assert generated["foundry_agent_series"]["version"] == "foundry-agent-series.v1"
+    assert generated["foundry_agent_series"]["product_layer"] == "foundry_agent"
+    assert generated["foundry_agent_series"]["domain_id"] == "medautogrant"
+    assert generated["foundry_agent_series"]["stage_control_plane_target_domain_id"] == "med-autogrant"
+    assert generated["foundry_agent_series"]["domain_adapter_policy"]["no_parallel_progress_schema"] is True
+    assert (
+        generated["foundry_agent_series"]["app_projection_policy"][
+            "app_consumes_shared_progress_projection_only"
+        ]
+        is True
+    )
     assert generated["pack_compiler_input"]["generated_surface_owner"] == "one-person-lab"
     pack_taxonomy = generated["pack_compiler_input"]["minimal_authority_surface_taxonomy"]
     assert pack_taxonomy["retired_legacy_function_id_compatibility"] is False
