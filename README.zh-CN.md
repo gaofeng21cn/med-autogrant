@@ -130,6 +130,7 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 <details>
   <summary><strong>如果你准备把这个仓直接交给 Codex 或其他 Agent，先看这里</strong></summary>
 
+- 不会自动安装。单独 clone 这个仓不会把 OPL Framework 或托管运行时一起装好。要把 MAG 用到能用，先准备好当前的 `one-person-lab` checkout 或 release bundle，然后再用下面这些 repo-local clean runner 命令查看 skill surface 或导出 domain handler。
 - 先读 [文档索引](./docs/README.md)。这里已经把当前技术全景、formal-entry matrix、稳定 capability surface 和 repo-tracked 真相所在位置收口好了。
 - 然后读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。这是恢复 active product-entry shell、schema-backed surface 和当前 mainline 指针的最快路径。
 - 在改 route、入口 wording 或公开表述前，把 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 当成公开与技术真相集。

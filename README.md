@@ -130,6 +130,7 @@ You can start with prompts like:
 <details>
   <summary><strong>Start here if you are handing this repo to Codex or another agent</strong></summary>
 
+- No. Cloning this repo does not auto-install OPL Framework or the hosted runtime. To make MAG usable, first make the current `one-person-lab` checkout or release bundle available, then use the repo-local clean runner commands below to inspect the skill surface or export the domain handler.
 - Read the [Docs Guide](./docs/README.md) first. It summarizes the current technical picture, the formal-entry matrix, the stable capability surface, and where repo-tracked truth lives.
 - Then read [Contracts Overview](./contracts/README.md) and [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json). That is the fastest path to the active product-entry shell, schema-backed surfaces, and current mainline pointer.
 - Treat [Project](./docs/project.md), [Status](./docs/status.md), [Architecture](./docs/architecture.md), [Invariants](./docs/invariants.md), and [Decisions](./docs/decisions.md) as the public and technical truth set before changing routes or wording.
