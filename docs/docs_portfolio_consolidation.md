@@ -88,6 +88,65 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-30 MAG README agent install path currentness foldback tranche
+
+本轮沿用 `RUN_SNAPSHOT_TS=2026-05-30T00:40:35Z` 的 OPL-series frozen inventory。MAG main 在快照内 `HEAD == origin/main == 79a2a573ff20b3e93da49f5b46f058722edf6303`，branch `main` clean/synced，无额外 worktree，open PR fallback `[]`，frozen inventory 记录 MAG 无 post-snapshot 写入；因此本轮只把已在 main 的 `docs: clarify agent install path` README 边界说明折回本文档组合治理台账，不接管其他 repo 的 dirty / recent / process-blocked lane，也不关闭 OPL series 全局 `/goal`。
+
+Six-repo frozen inventory summary：
+
+- `one-person-lab`: main `cb464c49f4e77e78ce5afb5becfec8aaef8ef93b` synced but dirty `docs/status.md`，且该文件是 post-snapshot activity；worktree `codex/opl-research-pack-readmodel` at `1686246a0a5fdb6f9f868f55a7e4144b5b678c3d` has `HEAD...main=1 1` and recent snapshot writes. Retained.
+- `med-autoscience`: main `5c97bf09f564a60fb36ecab376a426919815ff59` dirty `docs/active/mas-ideal-state-gap-plan.md` and `docs/status.md`; five worktrees remain either dirty, recent, ahead/behind, or semantically unjudged. Retained.
+- `med-autogrant`: main `79a2a573ff20b3e93da49f5b46f058722edf6303` clean/synced, no extra worktree, selected for ledger-only foldback.
+- `redcube-ai`: main `0740fd0668085e84c3e6331eaec2f4c14c6a39f9` dirty contract/docs/source/test files with recent snapshot writes. Retained.
+- `opl-meta-agent`: main `b39f9f130c96bf6ef711ae6ad98154e47b81335c` dirty `contracts/stage_control_plane.json` and `tests/contracts.test.ts`. Retained.
+- `one-person-lab-app`: main `dd96d96a6c2603f36025882bac432b9516e4896f` dirty app shell/docs/script files plus untracked `.playwright-mcp/`; worktree `codex/full-first-run-stable-gate-20260525` is dirty and remote-backed with `HEAD...main=3 103`. Retained.
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、root `README.md` / `README.zh-CN.md`、`docs/README.md`、`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`、`docs/active/mag-ideal-state-cross-repo-gap-plan.md` and this ledger.
+- Machine / executable support read：`contracts/runtime-program/current-program.json` reports OPL/Temporal as default task runtime owner and `mag_implements_daemon=false`、`mag_implements_scheduler=false`、`mag_implements_attempt_loop=false`、`mag_owns_attempt_ledger=false`; `executor_defaults.default_executor_name=codex_cli`. `scripts/run-python-clean.sh` exists and routes bytecode, venv and pytest cache outside the checkout before invoking `med_autogrant.cli`.
+- Latest MAG commit reviewed：`79a2a57 docs: clarify agent install path`, touching only `README.md` and `README.zh-CN.md`.
+
+Fresh semantic result：
+
+- The README quick-start wording is current: cloning MAG alone does not install OPL Framework or the hosted runtime. A technical operator must make the current `one-person-lab` checkout or release bundle available before using MAG's repo-local clean runner commands to inspect skill/domain-handler surfaces.
+- This clarification matches MAG's current owner boundary: MAG remains the grant-domain agent and direct skill / CLI / `MedAutoGrantDomainEntry` remain stable entry targets; OPL/Temporal owns post-start hosted autonomous runtime. It does not claim MAG owns a daemon, scheduler, attempt loop, attempt ledger, App workbench, Temporal provider, or OPL generated caller.
+- The change is human-doc currentness only. It does not alter machine truth, source, contracts, tests, workflows, CLI/API behavior, runtime receipts, artifact authority, or grant-domain ready verdicts.
+- No current MAG active truth body rewrite was needed: status, architecture, invariants, decisions and the active gap plan already preserve the same install/runtime/owner boundary and keep production/default-caller, App consumption, human gate, long-soak and physical-delete evidence tails open.
+
+| repo | reviewed docs / surfaces | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | README agent/operator quick start in both languages; docs index, project/status/architecture/invariants/decisions, active gap plan, current-program runtime owner pointer, clean runner script, current ledger. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。本轮没有归档、tombstone 或删除 MAG 文档。
+
+Retired modules / interfaces / tests / workflows / entries：无。本轮没有退役 source、contract、test、workflow、CLI entry、branch 或 worktree；也没有新增 compatibility surface、alias、facade、wrapper、fallback 或 compatibility-only test。
+
+Retained public surfaces and rationale：
+
+- Root `README*` remains the public repository entry because it is the first user/operator reading surface and now points technical operators to the correct OPL/MAG install boundary.
+- Direct app skill / CLI / `MedAutoGrantDomainEntry` / repo-local clean runner remain retained because current docs and `current-program` still treat them as stable agent/domain-handler targets while physical deletion of handler/adapter shells is not authorized.
+
+Uncovered docs：
+
+- `med-autogrant`: no new README/docs path or body section was reopened by this install-path foldback. Future source/contract/read-model changes can reopen specific sections.
+- Other OPL-series repos remain governed by the global frozen inventory. OPL post-snapshot dirty status, MAS dirty/recent/process-backed lanes, RCA dirty recent control-plane work, OMA dirty contract/test lane and App dirty shell/release worktree remain blocked or retained for their own heartbeat intake.
+
+Post-snapshot activity：
+
+- MAG: 本 tranche 写入本文 coverage ledger；`./scripts/verify.sh` 还触碰了 `.agents/plugins/marketplace.json` mtime，但 `git status` 无内容 diff，未扩展本轮治理 scope。
+- Other repos: OPL `docs/status.md` appeared as post-snapshot dirty activity in the frozen worktree detail and is recorded for next intake instead of expanding this tranche.
+
+Remaining stale / retire candidates：
+
+- MAG evidence / cleanup tails remain unchanged: physical delete authority, production long-soak, submission-ready human gate, sustained real App/operator consumption, runtime success-rate refs, replay evidence tail and no-active legacy caller proof still need owner evidence before source/interface/test retirement.
+- Any future MAG docs wording that implies a clone installs OPL/hosted runtime, that repo-local clean runners are OPL runtime installation, or that MAG owns daemon/scheduler/attempt-ledger/App-workbench/Temporal provider authority is stale pollution.
+
+Next tranche write scope：
+
+- Continue OPL-series frozen-inventory cleanup outside MAG, prioritizing lanes that are clean, old enough, semantically decidable and not post-snapshot active.
+- Return to MAG only if new docs appear, later source/contracts/read-model changes reopen a section, or an implementation/evidence owner lane closes one of the remaining runtime/evidence/physical-cleanup tails and requires active truth foldback.
+
 ### 2026-05-30 MAG Progress-First contract foldback tranche
 
 本轮在 `RUN_SNAPSHOT_TS=2026-05-30T00:00:33Z` 的 OPL-series frozen inventory 下处理 MAG ledger-only foldback。MAG main 在快照内 `HEAD == origin/main == 5c687d764ef3a614ccd0bd4e9046a47921b79bfe`，root clean，无额外 worktree，PR fallback `[]`，快照后无 MAG 文件写入；因此本轮只把已在 main 的 `Add MAG standard pack progress-first policies` 合同 / source / test 事实折回文档组合治理台账，不接管 OPL、MAS、OMA、RCA 或 App 的 dirty / recent lanes，不关闭 OPL series 全局 `/goal`。
