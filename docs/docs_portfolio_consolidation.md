@@ -88,6 +88,66 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger
 
+### 2026-05-30 MAG generated-interface currentness / no-retirement foldback tranche
+
+本轮冻结 `RUN_SNAPSHOT_TS=2026-05-30T05:15:46Z`（本地 `2026-05-30T13:15:46+0800`）。MAG 在该 frozen inventory 内 `HEAD == origin/main == fced91c12e26a07a114ac97e72471008cb97f816`，root clean/synced，staged 0，无额外 worktree，recent-to-snapshot 0，post-snapshot 0，open PR `[]`，remote heads 为 `main` 与 external retained `feature/ai-narration-contracts`。本轮选择 MAG 作为 clean docs-governance lane，只做 live truth currentness / generated-interface evidence foldback；不接管其他 repo 的 dirty、recent、post-snapshot 或 process-blocked lane，也不关闭 OPL series 全局 `/goal`。
+
+Six-repo frozen inventory summary：
+
+- `one-person-lab`: main `96897562fd75850310561ddd2a2ead9d18a20170` ahead `origin/main` by 2，dirty `docs/active/current-development-lines.md`、`docs/active/current-state-vs-ideal-gap.md`、`docs/status.md`，recent-to-snapshot 16；remote `fix/opl-temporal-worker-stale-repair-20260528` 是当前 HEAD 祖先但缺少 positive deletion authority。Retained.
+- `med-autoscience`: main `5c2bd9693b680a27ef71fff070a4128232b2730a` synced but dirty；快照后出现 source/test/doc 写入，包含 `src/med_autoscience/controllers/domain_owner_action_dispatch_parts/action_execution.py`、`.../ai_reviewer_record_production.py` 与 `tests/test_domain_owner_action_dispatch_cases/ai_reviewer_record_validation.py`，并有正在运行的 focused pytest；old `fix/github-ci-20260530-mas-preflight` worktree 仍 dirty/behind 51。Retained.
+- `med-autogrant`: clean/synced at `fced91c12e26a07a114ac97e72471008cb97f816`，selected for this ledger foldback. Remote `feature/ai-narration-contracts` remains external/non-codex superseded-retained and was not deleted.
+- `redcube-ai`: main `0515a8338bc2778028121ee9164f930cd64bc875` synced but dirty `README.zh-CN.md`、`docs/status.md`、`plugins/rca/.codex-plugin/plugin.json`。Retained.
+- `opl-meta-agent`: main `3f717c683e2940552364a6c75b2a40555aad496a` clean/synced，无 recent/post-snapshot，无本轮 cleanup candidate。Retained as already-covered unless truth changes.
+- `one-person-lab-app`: main `8b03dd4ad8ac0e604023ebc2a63f172a3e8d8850` synced but dirty untracked `.playwright-mcp/`；remote-backed worktree `codex/full-first-run-stable-gate-20260525` dirty with tracked App profile/docs/scripts/tests and untracked `docs/product/gui-shell-adapter.md`。Retained.
+
+Live truth inputs：
+
+- MAG `AGENTS.md`、`TASTE.md`、root `README.md` / `README.zh-CN.md`、`docs/README.md`、`docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、`docs/decisions.md`、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/active/opl-private-implementation-migration-inventory.md`、`docs/references/med-auto-grant-ideal-state.md` and this ledger.
+- Machine / source truth：`contracts/runtime-program/current-program.json`、`contracts/functional_privatization_audit.json`、`contracts/production_acceptance/mag-production-acceptance.json`、`contracts/foundry_agent_series.json`、`contracts/stage_control_plane.json`、`plugins/mag/.codex-plugin/plugin.json`、active source/test path scan and retired public command / no-resurrection search.
+- OPL read models：`opl agents conformance --repo-dir /Users/gaofeng/workspace/med-autogrant --json` passed with `structural_conformance_status=passed` and no blockers；`opl stages readiness --domain mag --json` returned `launch_warning` with 6 admitted stages, 0 hard blockers, 6 runtime-budget success-rate warnings and 1 replay warning；`opl agents interfaces --domain mag --json` returned generated CLI/MCP/skill/product/openai/AI-SDK descriptors `status=ready` and `active_caller_cutover_proof.status=cutover_to_opl_generated_or_domain_handler_targets`, while still declaring `claims_live_soak_complete=false` and `claims_domain_ready=false`.
+
+Fresh semantic result：
+
+- MAG current docs remain aligned with live truth: MAG is a grant-domain Foundry Agent package; OPL owns generated/hosted surfaces, Temporal-backed runtime, queue/attempt/workbench shell and generic primitives; MAG retains grant truth, fundability / quality / export verdicts, package authority, memory accept/reject and owner receipt authority.
+- Generated-interface and active-caller cutover proof are current and ready as descriptor/domain-handler-target evidence. They do not authorize MAG repo physical deletion of still-active handler/adapter shells, do not close Temporal long-soak, do not bypass `submission_ready_export_gate`, and do not create grant-ready / fundability-ready / quality-ready / export-ready / submission-ready verdicts.
+- Stage readiness has no hard blockers, but runtime budget success-rate refs and replay tail remain warnings. This is a current evidence tail, not stale pollution.
+- Search over active docs/contracts/source/tests found no safe source/interface/test/workflow retirement candidate for this tranche: old `runtime-run` / `runtime-resume` / `probe-upstream-hermes` / patch bridge / flat alias / compat aggregate surfaces are already absent or guarded as history/tombstone/no-resurrection; remaining product/status/domain-handler/runtime/autonomy/CLI shells still have active handler/adapter callers and explicit physical-delete blocker refs.
+- Therefore no active truth body rewrite was necessary. The correct action is ledger foldback of the no-retirement decision and remaining evidence gates, not compatibility preservation or destructive cleanup.
+
+| repo | reviewed docs / surfaces | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | README public entries; docs index, project/status/architecture/invariants/decisions, active gap plan, private implementation inventory, ideal-state reference, runtime-program, functional privatization audit, production acceptance, Foundry Agent contract, stage control plane, plugin manifest, generated interface/readiness/conformance read models, active stale-surface search. | this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。本轮没有归档、tombstone 或删除 MAG 文档。
+
+Retired modules / interfaces / tests / workflows / entries：无。Live evidence shows generated/default caller descriptors are ready, but `domain_repo_physical_delete_authorized=false` and active handler/adapter callers remain. No compatibility surface、alias、facade、wrapper、fallback 或 compatibility-only test was added.
+
+Retained public surfaces and rationale：
+
+- Direct app skill / CLI / `MedAutoGrantDomainEntry` / domain-handler export-dispatch remain retained as current stable MAG action targets and authority-function surfaces.
+- Product/status/user-loop/domain-handler/runtime/autonomy/CLI shells remain retained only as refs-only adapter、direct handler target、minimal authority function、diagnostic or migration input until explicit owner receipt authorizes physical delete.
+- Remote `origin/feature/ai-narration-contracts` remains retained as external/non-codex superseded history without deletion authority.
+
+Uncovered docs：
+
+- `med-autogrant`: this tranche covers generated-interface currentness, strict no-retirement classification, and core docs alignment. It does not claim every `README*` / `docs/**/*.md` section has been fully re-audited in the global OPL series sense; future source/contract/read-model changes can reopen specific sections.
+- Other OPL-series repos remain governed by their frozen inventory blockers listed above.
+
+Post-snapshot activity：
+
+- MAG: none before edit; this ledger edit is this tranche's only repo-tracked write.
+- MAS: post-snapshot source/test/docs and focused pytest were observed and routed to next heartbeat intake; they do not expand MAG scope.
+
+Remaining stale / retire candidates：
+
+- MAG evidence / cleanup tails remain: physical delete authorization, production default caller no-active-caller proof, real App/operator sustained consumption, runtime boundary success-rate refs, replay evidence tail, `submission_ready_export_gate` human receipt and Temporal long-soak.
+- Any future MAG docs wording that treats generated descriptors, conformance pass, OPL readiness, refs-only ledger verification, package existence or provider completion as grant-ready、fundability-ready、quality/export-ready、submission-ready、production-ready or physical-delete authority is stale pollution.
+
+Next tranche write scope：
+
+- Continue OPL-series frozen-inventory cleanup outside MAG. Return to MAG only if new source/contracts/read-model evidence closes a remaining physical-cleanup or production-evidence gate, or if new docs reopen current truth.
+
 ### 2026-05-30 MAG README agent install path currentness foldback tranche
 
 本轮沿用 `RUN_SNAPSHOT_TS=2026-05-30T00:40:35Z` 的 OPL-series frozen inventory。MAG main 在快照内 `HEAD == origin/main == 79a2a573ff20b3e93da49f5b46f058722edf6303`，branch `main` clean/synced，无额外 worktree，open PR fallback `[]`，frozen inventory 记录 MAG 无 post-snapshot 写入；因此本轮只把已在 main 的 `docs: clarify agent install path` README 边界说明折回本文档组合治理台账，不接管其他 repo 的 dirty / recent / process-blocked lane，也不关闭 OPL series 全局 `/goal`。
