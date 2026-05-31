@@ -16,6 +16,7 @@
     "action_catalog": "contracts/action_catalog.json",
     "agent_lab_handoff": "contracts/agent_lab_handoff.json",
     "foundry_agent_series": "contracts/foundry_agent_series.json",
+    "foundry_agent_series_policy_release": "contracts/opl-framework/foundry-agent-series-policy-release.json",
     "functional_privatization_audit": "contracts/functional_privatization_audit.json",
     "generated_surface_handoff": "contracts/generated_surface_handoff.json",
     "oma_handoff_refs": "contracts/oma_handoff_refs.json",
