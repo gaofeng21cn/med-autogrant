@@ -373,6 +373,18 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
             ["typed_blocker_refs"],
         )
         self.assertTrue(workorder["rejects_unknown_operator_payload_fields"])
+        self.assertEqual(
+            workorder["provider_long_soak_followthrough"]["status"],
+            "requires_temporal_provider_long_soak_window_evidence",
+        )
+        self.assertFalse(
+            workorder["provider_long_soak_followthrough"][
+                "typed_blocker_is_provider_long_soak_completion"
+            ]
+        )
+        self.assertFalse(
+            workorder["provider_long_soak_followthrough"]["claims_provider_long_soak_complete"]
+        )
         self.assertFalse(workorder["claims_sustained_app_consumption_complete"])
         self.assertFalse(snapshot["claims"]["claims_grant_ready"])
         self.assertFalse(snapshot["claims"]["claims_submission_ready_export"])
@@ -408,6 +420,21 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
             ],
         )
         self.assertEqual(
+            response["provider_long_soak_followthrough"]["status"],
+            "blocked_by_provider_long_soak_typed_blocker",
+        )
+        self.assertEqual(
+            response["provider_long_soak_followthrough"]["typed_blocker_refs"],
+            [
+                "typed-blocker:mag/manifest-sustained-consumption/"
+                "provider-long-soak-window-still-open/2026-05-28"
+            ],
+        )
+        self.assertEqual(response["provider_long_soak_followthrough"]["long_soak_evidence_refs"], [])
+        self.assertFalse(
+            response["provider_long_soak_followthrough"]["claims_provider_long_soak_complete"]
+        )
+        self.assertEqual(
             response["opl_runtime_action_execute_payload"],
             response["record_payload"],
         )
@@ -421,6 +448,37 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
         self.assertFalse(response["authority_boundary"]["can_create_owner_receipt"])
         self.assertFalse(
             response["authority_boundary"]["can_declare_app_sustained_consumption_complete"]
+        )
+        cli_regression = snapshot["grouped_cli_regression_evidence"]
+        self.assertEqual(
+            cli_regression["surface_kind"],
+            "mag_manifest_sustained_consumption_grouped_cli_regression_evidence",
+        )
+        self.assertEqual(
+            cli_regression["status"],
+            "direct_cli_default_caller_payload_path_and_fail_closed_errors_verified",
+        )
+        self.assertIn(
+            "sustained_consumption_refs_path_returns_provider_followthrough_typed_blocker",
+            cli_regression["covered_paths"],
+        )
+        self.assertEqual(
+            cli_regression["success_path_provider_long_soak_status"],
+            "blocked_by_provider_long_soak_typed_blocker",
+        )
+        self.assertTrue(cli_regression["unknown_field_rejection_verified"])
+        self.assertTrue(cli_regression["mixed_path_rejection_verified"])
+        self.assertFalse(cli_regression["body_included"])
+        self.assertFalse(cli_regression["claims_sustained_app_consumption_complete"])
+        self.assertFalse(cli_regression["claims_provider_long_soak_complete"])
+        self.assertFalse(cli_regression["closes_provider_long_soak"])
+        self.assertFalse(
+            cli_regression["authority_boundary"][
+                "can_declare_app_sustained_consumption_complete"
+            ]
+        )
+        self.assertFalse(
+            cli_regression["authority_boundary"]["can_declare_provider_long_soak_complete"]
         )
         self.assertFalse(snapshot["claims"]["claims_owner_receipt_created"])
         self.assertFalse(snapshot["authority_boundary"]["can_submit_operator_payload"])

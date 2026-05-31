@@ -121,6 +121,20 @@
           "closes_provider_long_soak": false
         }
       },
+      "provider_long_soak_followthrough": {
+        "surface_kind": "mag_manifest_provider_long_soak_followthrough",
+        "version": "v1",
+        "status": "requires_temporal_provider_long_soak_window_evidence",
+        "evidence_owner": "one-person-lab",
+        "long_soak_or_typed_blocker_refs": [],
+        "typed_blocker_refs": [],
+        "long_soak_evidence_refs": [],
+        "requires_temporal_provider_long_soak_window_evidence": true,
+        "typed_blocker_is_provider_long_soak_completion": false,
+        "claims_provider_long_soak_complete": false,
+        "closes_provider_long_soak": false,
+        "can_declare_provider_long_soak_complete": false
+      },
       "empty_payload_template_is_success_evidence": false,
       "rejects_unknown_operator_payload_fields": true,
       "operator_payload_submitted": false,
@@ -136,6 +150,7 @@
         "can_read_artifact_body": false,
         "can_create_owner_receipt": false,
         "can_submit_operator_payload": false,
+        "can_satisfy_provider_long_soak": false,
         "can_declare_app_sustained_consumption_complete": false,
         "can_declare_submission_ready": false,
         "can_declare_provider_long_soak_complete": false

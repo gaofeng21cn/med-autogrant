@@ -100,6 +100,58 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
                 "manifest_sustained_consumption_operator_payload_submitted"
             ]["const"]
         )
+        self.assertIn(
+            "manifest_sustained_consumption_provider_long_soak_status",
+            manifest_consumer["required"],
+        )
+        self.assertIn(
+            "manifest_sustained_consumption_provider_long_soak_typed_blocker_refs",
+            manifest_consumer["required"],
+        )
+        self.assertIn(
+            "manifest_sustained_consumption_grouped_cli_regression_status",
+            manifest_consumer["required"],
+        )
+        consumed_refs = manifest_consumer["properties"]["consumed_surface_refs"]["properties"]
+        self.assertEqual(
+            consumed_refs[
+                "manifest_sustained_consumption_grouped_cli_regression_evidence_ref"
+            ]["const"],
+            "/product_entry_manifest/manifest_sustained_consumption_evidence/"
+            "grouped_cli_regression_evidence",
+        )
+        self.assertEqual(
+            manifest_consumer["properties"][
+                "manifest_sustained_consumption_provider_long_soak_status"
+            ]["const"],
+            "blocked_by_provider_long_soak_typed_blocker",
+        )
+        self.assertEqual(
+            manifest_consumer["properties"][
+                "manifest_sustained_consumption_grouped_cli_regression_status"
+            ]["const"],
+            "direct_cli_default_caller_payload_path_and_fail_closed_errors_verified",
+        )
+        self.assertTrue(
+            manifest_consumer["properties"][
+                "manifest_sustained_consumption_grouped_cli_success_path_verified"
+            ]["const"]
+        )
+        self.assertTrue(
+            manifest_consumer["properties"][
+                "manifest_sustained_consumption_grouped_cli_unknown_field_rejection_verified"
+            ]["const"]
+        )
+        self.assertTrue(
+            manifest_consumer["properties"][
+                "manifest_sustained_consumption_grouped_cli_mixed_path_rejection_verified"
+            ]["const"]
+        )
+        self.assertFalse(
+            manifest_consumer["properties"][
+                "manifest_sustained_consumption_grouped_cli_claims_provider_long_soak_complete"
+            ]["const"]
+        )
         self.assertEqual(
             manifest_consumer["properties"]["manifest_sustained_consumption_payload_status"][
                 "const"
@@ -125,6 +177,21 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
         self.assertTrue(workorder["properties"]["rejects_unknown_operator_payload_fields"]["const"])
         self.assertFalse(workorder["properties"]["claims_sustained_app_consumption_complete"]["const"])
         self.assertFalse(workorder["properties"]["claims_provider_long_soak_complete"]["const"])
+        self.assertEqual(
+            workorder["properties"]["provider_long_soak_followthrough"]["$ref"],
+            "#/$defs/magManifestProviderLongSoakFollowthroughWorkorder",
+        )
+        workorder_followthrough = manifest_schema["$defs"][
+            "magManifestProviderLongSoakFollowthroughWorkorder"
+        ]["properties"]
+        self.assertEqual(
+            workorder_followthrough["status"]["const"],
+            "requires_temporal_provider_long_soak_window_evidence",
+        )
+        self.assertFalse(
+            workorder_followthrough["claims_provider_long_soak_complete"]["const"]
+        )
+        self.assertFalse(workorder_followthrough["closes_provider_long_soak"]["const"])
         workorder_authority = workorder["properties"]["authority_boundary"]["properties"]
         self.assertFalse(workorder_authority["can_create_owner_receipt"]["const"])
         self.assertFalse(
@@ -158,10 +225,26 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
         self.assertFalse(
             sustained_response["properties"]["claims_provider_long_soak_complete"]["const"]
         )
+        self.assertEqual(
+            sustained_response["properties"]["provider_long_soak_followthrough"]["$ref"],
+            "#/$defs/magManifestProviderLongSoakFollowthroughResponse",
+        )
+        sustained_followthrough = manifest_schema["$defs"][
+            "magManifestProviderLongSoakFollowthroughResponse"
+        ]["properties"]
+        self.assertEqual(
+            sustained_followthrough["status"]["const"],
+            "blocked_by_provider_long_soak_typed_blocker",
+        )
+        self.assertFalse(
+            sustained_followthrough["claims_provider_long_soak_complete"]["const"]
+        )
+        self.assertFalse(sustained_followthrough["closes_provider_long_soak"]["const"])
         sustained_authority = sustained_response["properties"]["authority_boundary"][
             "properties"
         ]
         self.assertFalse(sustained_authority["can_create_owner_receipt"]["const"])
+        self.assertFalse(sustained_authority["can_satisfy_provider_long_soak"]["const"])
         self.assertFalse(
             sustained_authority["can_declare_app_sustained_consumption_complete"][
                 "const"
@@ -176,6 +259,28 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
             sustained_evidence["properties"]["surface_kind"]["const"],
             "mag_manifest_sustained_consumption_evidence.v1",
         )
+        self.assertIn("grouped_cli_regression_evidence", sustained_evidence["required"])
+        cli_regression = sustained_evidence["properties"]["grouped_cli_regression_evidence"][
+            "properties"
+        ]
+        self.assertEqual(
+            cli_regression["surface_kind"]["const"],
+            "mag_manifest_sustained_consumption_grouped_cli_regression_evidence",
+        )
+        self.assertEqual(
+            cli_regression["status"]["const"],
+            "direct_cli_default_caller_payload_path_and_fail_closed_errors_verified",
+        )
+        self.assertEqual(
+            cli_regression["success_path_provider_long_soak_status"]["const"],
+            "blocked_by_provider_long_soak_typed_blocker",
+        )
+        self.assertTrue(cli_regression["unknown_field_rejection_verified"]["const"])
+        self.assertTrue(cli_regression["mixed_path_rejection_verified"]["const"])
+        self.assertFalse(cli_regression["body_included"]["const"])
+        self.assertFalse(cli_regression["claims_sustained_app_consumption_complete"]["const"])
+        self.assertFalse(cli_regression["claims_provider_long_soak_complete"]["const"])
+        self.assertFalse(cli_regression["closes_provider_long_soak"]["const"])
         sustained_claims = sustained_evidence["properties"]["claims"]["properties"]
         self.assertFalse(sustained_claims["claims_sustained_app_consumption_complete"]["const"])
         self.assertFalse(sustained_claims["claims_provider_long_soak_complete"]["const"])

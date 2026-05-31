@@ -83,6 +83,23 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
             ["typed-blocker:opl/provider/temporal-long-soak-window/open/2026-05-28"],
         )
         self.assertEqual(
+            response["provider_long_soak_followthrough"]["status"],
+            "blocked_by_provider_long_soak_typed_blocker",
+        )
+        self.assertEqual(
+            response["provider_long_soak_followthrough"]["typed_blocker_refs"],
+            ["typed-blocker:opl/provider/temporal-long-soak-window/open/2026-05-28"],
+        )
+        self.assertEqual(response["provider_long_soak_followthrough"]["long_soak_evidence_refs"], [])
+        self.assertTrue(
+            response["provider_long_soak_followthrough"][
+                "requires_temporal_provider_long_soak_window_evidence"
+            ]
+        )
+        self.assertFalse(
+            response["provider_long_soak_followthrough"]["claims_provider_long_soak_complete"]
+        )
+        self.assertEqual(
             response["opl_runtime_action_execute_payload"],
             response["record_payload"],
         )
@@ -103,6 +120,7 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
         self.assertFalse(response["claims_provider_long_soak_complete"])
         self.assertFalse(response["claims_grant_ready"])
         self.assertFalse(response["claims_submission_ready"])
+        self.assertFalse(response["authority_boundary"]["can_satisfy_provider_long_soak"])
         self.assertFalse(response["authority_boundary"]["can_create_owner_receipt"])
         self.assertFalse(
             response["authority_boundary"]["can_declare_app_sustained_consumption_complete"]
@@ -127,6 +145,18 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
 
         self.assertEqual(response["status"], "blocked_by_app_operator_typed_blocker")
         self.assertEqual(response["recommended_payload_path"], "typed_blocker_path")
+        self.assertEqual(
+            response["provider_long_soak_followthrough"]["status"],
+            "blocked_by_app_operator_typed_blocker_path",
+        )
+        self.assertTrue(
+            response["provider_long_soak_followthrough"][
+                "requires_temporal_provider_long_soak_window_evidence"
+            ]
+        )
+        self.assertFalse(
+            response["provider_long_soak_followthrough"]["claims_provider_long_soak_complete"]
+        )
         self.assertFalse(response["claims_sustained_app_consumption_complete"])
         self.assertFalse(response["accepted_payload_paths"]["typed_blocker_path"]["success_claimed"])
 

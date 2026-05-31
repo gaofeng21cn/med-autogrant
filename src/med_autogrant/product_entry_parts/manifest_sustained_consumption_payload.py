@@ -121,6 +121,9 @@ def _build_success_ref_response(
         "no_forbidden_write_refs": list(success_payload["no_forbidden_write_ref"]),
         "long_soak_or_typed_blocker_refs": list(success_payload["long_soak_or_typed_blocker_ref"]),
     }
+    provider_long_soak_followthrough = _provider_long_soak_followthrough_from_refs(
+        success_payload["long_soak_or_typed_blocker_ref"]
+    )
     return _base_response(
         owner_payload_response=owner_payload_response,
         workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
@@ -128,6 +131,7 @@ def _build_success_ref_response(
         recommended_payload_path="sustained_consumption_refs_path",
         operator_payload_submitted=True,
         record_payload=record_payload,
+        provider_long_soak_followthrough=provider_long_soak_followthrough,
     )
 
 
@@ -146,6 +150,9 @@ def _build_typed_blocker_response(
         record_payload={
             "typed_blocker_refs": list(typed_blocker_refs),
         },
+        provider_long_soak_followthrough=_provider_long_soak_followthrough_from_typed_blocker_path(
+            typed_blocker_refs
+        ),
     )
 
 
@@ -157,6 +164,7 @@ def _base_response(
     recommended_payload_path: str,
     operator_payload_submitted: bool,
     record_payload: Mapping[str, Any],
+    provider_long_soak_followthrough: Mapping[str, Any],
 ) -> dict[str, Any]:
     return {
         "surface_kind": MAG_MANIFEST_SUSTAINED_CONSUMPTION_PAYLOAD_RESPONSE_KIND,
@@ -178,6 +186,7 @@ def _base_response(
                 "manifest_consumer_evidence/sustained_consumption_followthrough_workorder"
             ),
         },
+        "provider_long_soak_followthrough": dict(provider_long_soak_followthrough),
         "observed_counts": {
             "domain_owner_receipt_ref_count": len(
                 _read_ref_list(owner_payload_response, "domain_owner_receipt_refs")
@@ -203,6 +212,55 @@ def _base_response(
         "authority_boundary": _authority_boundary(),
         "forbidden_payload_fields": sorted(_FORBIDDEN_BODY_KEYS),
     }
+
+
+def _provider_long_soak_followthrough_from_refs(refs: list[str]) -> dict[str, Any]:
+    typed_blocker_refs = [ref for ref in refs if _is_typed_blocker_ref(ref)]
+    long_soak_evidence_refs = [ref for ref in refs if not _is_typed_blocker_ref(ref)]
+    status = (
+        "blocked_by_provider_long_soak_typed_blocker"
+        if typed_blocker_refs
+        else "provider_long_soak_evidence_refs_observed_not_mag_closeout"
+    )
+    return {
+        "surface_kind": "mag_manifest_provider_long_soak_followthrough",
+        "version": "v1",
+        "status": status,
+        "evidence_owner": "one-person-lab",
+        "long_soak_or_typed_blocker_refs": list(refs),
+        "typed_blocker_refs": typed_blocker_refs,
+        "long_soak_evidence_refs": long_soak_evidence_refs,
+        "requires_temporal_provider_long_soak_window_evidence": bool(
+            typed_blocker_refs or not long_soak_evidence_refs
+        ),
+        "typed_blocker_is_provider_long_soak_completion": False,
+        "claims_provider_long_soak_complete": False,
+        "closes_provider_long_soak": False,
+        "can_declare_provider_long_soak_complete": False,
+    }
+
+
+def _provider_long_soak_followthrough_from_typed_blocker_path(
+    typed_blocker_refs: list[str],
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_manifest_provider_long_soak_followthrough",
+        "version": "v1",
+        "status": "blocked_by_app_operator_typed_blocker_path",
+        "evidence_owner": "one-person-lab",
+        "long_soak_or_typed_blocker_refs": [],
+        "typed_blocker_refs": list(typed_blocker_refs),
+        "long_soak_evidence_refs": [],
+        "requires_temporal_provider_long_soak_window_evidence": True,
+        "typed_blocker_is_provider_long_soak_completion": False,
+        "claims_provider_long_soak_complete": False,
+        "closes_provider_long_soak": False,
+        "can_declare_provider_long_soak_complete": False,
+    }
+
+
+def _is_typed_blocker_ref(ref: str) -> bool:
+    return ref.startswith("typed-blocker:")
 
 
 def _accepted_payload_paths() -> dict[str, dict[str, Any]]:
@@ -239,6 +297,7 @@ def _authority_boundary() -> dict[str, bool | str]:
         "can_read_artifact_body": False,
         "can_create_owner_receipt": False,
         "can_submit_operator_payload": False,
+        "can_satisfy_provider_long_soak": False,
         "can_declare_app_sustained_consumption_complete": False,
         "can_declare_submission_ready": False,
         "can_declare_provider_long_soak_complete": False,

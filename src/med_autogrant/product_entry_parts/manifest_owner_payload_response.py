@@ -163,6 +163,16 @@ def _manifest_consumer_evidence(
         "manifest_sustained_consumption_payload_response",
         context="manifest_sustained_consumption_evidence",
     )
+    provider_long_soak_followthrough = _require_mapping(
+        manifest_payload_response,
+        "provider_long_soak_followthrough",
+        context="manifest_sustained_consumption_payload_response",
+    )
+    grouped_cli_regression_evidence = _require_mapping(
+        manifest_sustained_consumption_evidence,
+        "grouped_cli_regression_evidence",
+        context="manifest_sustained_consumption_evidence",
+    )
     return {
         "surface_kind": "mag_manifest_owner_payload_consumer_evidence",
         "version": "v1",
@@ -186,6 +196,14 @@ def _manifest_consumer_evidence(
                 "/product_entry_manifest/manifest_sustained_consumption_evidence/"
                 "manifest_sustained_consumption_payload_response"
             ),
+            "manifest_sustained_consumption_provider_long_soak_followthrough_ref": (
+                "/product_entry_manifest/manifest_sustained_consumption_evidence/"
+                "manifest_sustained_consumption_payload_response/provider_long_soak_followthrough"
+            ),
+            "manifest_sustained_consumption_grouped_cli_regression_evidence_ref": (
+                "/product_entry_manifest/manifest_sustained_consumption_evidence/"
+                "grouped_cli_regression_evidence"
+            ),
         },
         "consumed_fields": [
             "domain_owner_receipt_refs",
@@ -195,6 +213,8 @@ def _manifest_consumer_evidence(
             "stage_expected_receipt_payload_summary",
             "workspace_receipt_scaleout_summary",
             "manifest_sustained_consumption_payload_response",
+            "manifest_sustained_consumption_payload_response.provider_long_soak_followthrough",
+            "manifest_sustained_consumption_evidence.grouped_cli_regression_evidence",
         ],
         "observed_counts": {
             "domain_owner_receipt_ref_count": len(
@@ -215,13 +235,44 @@ def _manifest_consumer_evidence(
                 "total_receipt_ref_count"
             ),
             "manifest_sustained_consumption_payload_response_count": 1,
+            "manifest_sustained_consumption_provider_long_soak_typed_blocker_ref_count": len(
+                _string_list(provider_long_soak_followthrough.get("typed_blocker_refs"))
+            ),
+            "manifest_sustained_consumption_provider_long_soak_evidence_ref_count": len(
+                _string_list(provider_long_soak_followthrough.get("long_soak_evidence_refs"))
+            ),
         },
         "manifest_sustained_consumption_payload_status": manifest_payload_response.get("status"),
         "manifest_sustained_consumption_recommended_payload_path": (
             manifest_payload_response.get("recommended_payload_path")
         ),
+        "manifest_sustained_consumption_provider_long_soak_status": (
+            provider_long_soak_followthrough.get("status")
+        ),
+        "manifest_sustained_consumption_provider_long_soak_typed_blocker_refs": list(
+            _string_list(provider_long_soak_followthrough.get("typed_blocker_refs"))
+        ),
+        "manifest_sustained_consumption_provider_long_soak_evidence_refs": list(
+            _string_list(provider_long_soak_followthrough.get("long_soak_evidence_refs"))
+        ),
         "manifest_sustained_consumption_operator_payload_submitted": bool(
             manifest_payload_response.get("operator_payload_submitted")
+        ),
+        "manifest_sustained_consumption_grouped_cli_regression_status": (
+            grouped_cli_regression_evidence.get("status")
+        ),
+        "manifest_sustained_consumption_grouped_cli_success_path_verified": (
+            "sustained_consumption_refs_path_returns_provider_followthrough_typed_blocker"
+            in _string_list(grouped_cli_regression_evidence.get("covered_paths"))
+        ),
+        "manifest_sustained_consumption_grouped_cli_unknown_field_rejection_verified": bool(
+            grouped_cli_regression_evidence.get("unknown_field_rejection_verified")
+        ),
+        "manifest_sustained_consumption_grouped_cli_mixed_path_rejection_verified": bool(
+            grouped_cli_regression_evidence.get("mixed_path_rejection_verified")
+        ),
+        "manifest_sustained_consumption_grouped_cli_claims_provider_long_soak_complete": bool(
+            grouped_cli_regression_evidence.get("claims_provider_long_soak_complete")
         ),
         "human_gate_blocker_refs": list(_string_list(owner_payload_response.get("typed_blocker_refs"))),
         "sustained_consumption_followthrough_workorder": (
@@ -251,6 +302,7 @@ def _manifest_consumer_evidence(
             "can_declare_app_sustained_consumption_complete": False,
             "can_declare_submission_ready": False,
             "typed_blocker_is_submission_ready": False,
+            "can_declare_provider_long_soak_complete": False,
         },
     }
 
@@ -295,6 +347,20 @@ def _sustained_consumption_followthrough_workorder() -> dict[str, Any]:
                 "closes_provider_long_soak": False,
             },
         },
+        "provider_long_soak_followthrough": {
+            "surface_kind": "mag_manifest_provider_long_soak_followthrough",
+            "version": "v1",
+            "status": "requires_temporal_provider_long_soak_window_evidence",
+            "evidence_owner": "one-person-lab",
+            "long_soak_or_typed_blocker_refs": [],
+            "typed_blocker_refs": [],
+            "long_soak_evidence_refs": [],
+            "requires_temporal_provider_long_soak_window_evidence": True,
+            "typed_blocker_is_provider_long_soak_completion": False,
+            "claims_provider_long_soak_complete": False,
+            "closes_provider_long_soak": False,
+            "can_declare_provider_long_soak_complete": False,
+        },
         "empty_payload_template_is_success_evidence": False,
         "rejects_unknown_operator_payload_fields": True,
         "operator_payload_submitted": False,
@@ -313,6 +379,7 @@ def _sustained_consumption_followthrough_workorder() -> dict[str, Any]:
             "can_declare_app_sustained_consumption_complete": False,
             "can_declare_submission_ready": False,
             "can_declare_provider_long_soak_complete": False,
+            "can_satisfy_provider_long_soak": False,
         },
     }
 

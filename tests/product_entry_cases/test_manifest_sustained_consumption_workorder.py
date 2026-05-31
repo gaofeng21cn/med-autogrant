@@ -60,6 +60,20 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
                 "requires_long_soak_or_typed_blocker_ref"
             ]
         )
+        self.assertEqual(
+            workorder["provider_long_soak_followthrough"]["status"],
+            "requires_temporal_provider_long_soak_window_evidence",
+        )
+        self.assertTrue(
+            workorder["provider_long_soak_followthrough"][
+                "requires_temporal_provider_long_soak_window_evidence"
+            ]
+        )
+        self.assertFalse(
+            workorder["provider_long_soak_followthrough"][
+                "claims_provider_long_soak_complete"
+            ]
+        )
         self.assertFalse(workorder["accepted_payload_paths"]["typed_blocker_path"]["success_claimed"])
         self.assertFalse(workorder["empty_payload_template_is_success_evidence"])
         self.assertTrue(workorder["rejects_unknown_operator_payload_fields"])
@@ -99,6 +113,13 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
             "manifest_sustained_consumption_payload_response",
         )
         self.assertEqual(
+            manifest_consumer["consumed_surface_refs"][
+                "manifest_sustained_consumption_grouped_cli_regression_evidence_ref"
+            ],
+            "/product_entry_manifest/manifest_sustained_consumption_evidence/"
+            "grouped_cli_regression_evidence",
+        )
+        self.assertEqual(
             manifest_consumer["observed_counts"][
                 "manifest_sustained_consumption_payload_response_count"
             ],
@@ -112,8 +133,47 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
             manifest_consumer["manifest_sustained_consumption_recommended_payload_path"],
             "sustained_consumption_refs_path",
         )
+        self.assertEqual(
+            manifest_consumer["manifest_sustained_consumption_provider_long_soak_status"],
+            "blocked_by_provider_long_soak_typed_blocker",
+        )
+        self.assertEqual(
+            manifest_consumer["manifest_sustained_consumption_provider_long_soak_typed_blocker_refs"],
+            [
+                "typed-blocker:mag/manifest-sustained-consumption/"
+                "provider-long-soak-window-still-open/2026-05-28"
+            ],
+        )
+        self.assertEqual(
+            manifest_consumer["manifest_sustained_consumption_provider_long_soak_evidence_refs"],
+            [],
+        )
         self.assertTrue(
             manifest_consumer["manifest_sustained_consumption_operator_payload_submitted"]
+        )
+        self.assertEqual(
+            manifest_consumer["manifest_sustained_consumption_grouped_cli_regression_status"],
+            "direct_cli_default_caller_payload_path_and_fail_closed_errors_verified",
+        )
+        self.assertTrue(
+            manifest_consumer[
+                "manifest_sustained_consumption_grouped_cli_success_path_verified"
+            ]
+        )
+        self.assertTrue(
+            manifest_consumer[
+                "manifest_sustained_consumption_grouped_cli_unknown_field_rejection_verified"
+            ]
+        )
+        self.assertTrue(
+            manifest_consumer[
+                "manifest_sustained_consumption_grouped_cli_mixed_path_rejection_verified"
+            ]
+        )
+        self.assertFalse(
+            manifest_consumer[
+                "manifest_sustained_consumption_grouped_cli_claims_provider_long_soak_complete"
+            ]
         )
         self.assertTrue(
             sustained_evidence["manifest_sustained_consumption_payload_response"][
@@ -143,6 +203,11 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
             sustained_evidence["manifest_sustained_consumption_payload_response"][
                 "claims_provider_long_soak_complete"
             ]
+        )
+        self.assertFalse(
+            sustained_evidence["manifest_sustained_consumption_payload_response"][
+                "provider_long_soak_followthrough"
+            ]["claims_provider_long_soak_complete"]
         )
         self.assertFalse(sustained_evidence["claims"]["claims_submission_ready"])
         self.assertFalse(sustained_evidence["authority_boundary"]["can_create_owner_receipt"])

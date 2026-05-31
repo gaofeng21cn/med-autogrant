@@ -39,6 +39,27 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     assert generated["foundry_agent_series"]["product_layer"] == "foundry_agent"
     assert generated["foundry_agent_series"]["domain_id"] == "medautogrant"
     assert generated["foundry_agent_series"]["stage_control_plane_target_domain_id"] == "med-autogrant"
+    assert generated["foundry_agent_series"]["contract_version_policy"] == {
+        "current_version": "foundry-agent-series.v1",
+        "domain_contract_ref": "contracts/foundry_agent_series.json",
+        "exact_version_pin_required": True,
+        "compatible_version_range": ["foundry-agent-series.v1"],
+        "breaking_change_requires_new_version": True,
+        "domain_descriptor_must_reference_domain_contract": True,
+    }
+    assert generated["foundry_agent_series"]["shared_release_pin_strategy"] == {
+        "owner_release_contract_ref": "contracts/family-release/shared-owner-release.json",
+        "owner_commit_pin_required": True,
+        "domain_dependency_pin_required": True,
+        "supported_pin_sources": [
+            "pyproject.toml",
+            "uv.lock",
+            "package.json",
+            "package-lock.json",
+        ],
+        "consumer_alignment_check": "family:shared-release",
+        "domain_contract_version_pin_does_not_authorize_domain_truth": True,
+    }
     assert generated["foundry_agent_series"]["domain_adapter_policy"]["no_parallel_progress_schema"] is True
     assert (
         generated["foundry_agent_series"]["app_projection_policy"][
