@@ -60,6 +60,21 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         "consumer_alignment_check": "family:shared-release",
         "domain_contract_version_pin_does_not_authorize_domain_truth": True,
     }
+    assert generated["foundry_agent_series"]["shared_policy_release"] == {
+        "policy_release_contract_ref": (
+            "contracts/opl-framework/foundry-agent-series-policy-release.json"
+        ),
+        "policy_bundle_fingerprint": (
+            "sha256:5d77102e99e6e49acd88714cd94dcafe0969b8f2a5529928d753002ac3d4619d"
+        ),
+        "fingerprint_algorithm": "sha256:stable-json",
+        "domain_contract_policy_release_pin_required": True,
+        "domain_adapter_must_not_copy_policy_body_as_authority": True,
+        "consumer_alignment_check": "foundry:policy-release",
+    }
+    assert generated["domain_descriptor"]["standard_contract_refs"][
+        "foundry_agent_series_policy_release"
+    ] == "contracts/opl-framework/foundry-agent-series-policy-release.json"
     assert generated["foundry_agent_series"]["domain_adapter_policy"]["no_parallel_progress_schema"] is True
     assert (
         generated["foundry_agent_series"]["app_projection_policy"][
