@@ -50,6 +50,107 @@ SHARED_POLICY_RELEASE = {
     "consumer_alignment_check": "foundry:policy-release",
 }
 
+SERIES_DESIGN_PROFILE = {
+    "surface_kind": "opl_foundry_agent_series_design_profile",
+    "version": "foundry-agent-series-design-profile.v1",
+    "profile_id": "opl_foundry_agent_series_design_profile.v1",
+    "profile_summary": (
+        "All Foundry Agents share the same OPL domain-pack to stage-led execution "
+        "to gate/receipt to handoff lifecycle; domain inputs, outputs, aliases, "
+        "and authority functions vary by agent."
+    ),
+    "shared_lifecycle_pipeline": [
+        "domain_material_intake",
+        "domain_pack_interpretation",
+        "stage_led_agent_execution",
+        "independent_quality_gate_or_owner_review",
+        "owner_receipt_or_typed_blocker_closeout",
+        "artifact_or_deliverable_handoff",
+        "opl_refs_only_projection_and_recovery",
+    ],
+    "domain_io_profile": {
+        "input_slot": "domain_materials_or_task_request",
+        "output_slot": "domain_deliverable_or_owner_handoff",
+        "input_is_domain_specific": True,
+        "output_is_domain_specific": True,
+        "shared_runtime_interpretation": (
+            "OPL treats input/output as opaque domain refs and projects identity, "
+            "stage, progress, closeout, evidence, and recovery metadata only."
+        ),
+    },
+    "stage_pack_sections": [
+        "prompts",
+        "stages",
+        "skills",
+        "knowledge",
+        "quality_gates",
+    ],
+    "shared_closeout_contract": {
+        "success_shape": "domain_owner_receipt_ref",
+        "blocked_shape": "domain_owned_typed_blocker_ref",
+        "route_back_shape": "route_back_or_human_gate_ref",
+        "provider_completion_is_closeout": False,
+    },
+    "authority_invariants": {
+        "opl_can_infer_domain_output": False,
+        "opl_can_read_domain_body": False,
+        "opl_can_write_domain_truth": False,
+        "opl_can_authorize_quality_or_export": False,
+        "domain_owns_input_truth_and_output_authority": True,
+    },
+}
+
+DOMAIN_SPECIFIC_PROFILE = {
+    "profile_id": "mag_domain_specific_series_profile.v1",
+    "series_members": ["MAS", "MAG", "RCA", "OMA"],
+    "shared_opl_agent_lifecycle": [
+        "domain_pack",
+        "stage_led_execution",
+        "independent_quality_gate",
+        "owner_receipt_or_typed_blocker",
+        "handoff",
+    ],
+    "mag_domain_input_profile": {
+        "domain_pack_kind": "declarative_grant_pack",
+        "primary_inputs": [
+            "funding_call_refs",
+            "applicant_profile_refs",
+            "grant_strategy_memory_refs",
+            "source_material_refs",
+        ],
+    },
+    "mag_domain_output_profile": {
+        "primary_outputs": [
+            "grant_proposal_refs",
+            "revision_package_refs",
+            "submission_ready_package_refs",
+            "owner_receipt_or_typed_blocker_refs",
+        ],
+        "domain_specific_gate": "independent_fundability_quality_export_and_submission_gate",
+    },
+    "series_variation_policy": (
+        "MAG differs from MAS/RCA/OMA by grant and fund-material inputs plus grant proposal "
+        "and package outputs, not by lifecycle ownership."
+    ),
+    "opl_scope": "refs_projection_runtime_only",
+    "mag_authority_retained": [
+        "grant_truth",
+        "fundability_verdict",
+        "authoring_quality_verdict",
+        "export_verdict",
+        "submission_verdict",
+        "artifact_authority",
+        "memory_accept_reject",
+        "owner_receipt",
+    ],
+    "forbidden_series_drift": [
+        "mag_specific_lifecycle_fork",
+        "opl_claims_grant_truth",
+        "opl_claims_quality_or_submission_verdict",
+        "generated_surface_signs_owner_receipt",
+    ],
+}
+
 FORBIDDEN_GENERIC_OWNER_ROLES = [
     "generic_scheduler_owner",
     "generic_daemon_owner",
@@ -581,6 +682,8 @@ def _foundry_agent_series_contract(stage_control_plane: Mapping[str, Any]) -> di
             "domain_contract_version_pin_does_not_authorize_domain_truth": True,
         },
         "shared_policy_release": SHARED_POLICY_RELEASE,
+        "series_design_profile": SERIES_DESIGN_PROFILE,
+        "domain_specific_profile": DOMAIN_SPECIFIC_PROFILE,
         "domain_id": "medautogrant",
         "foundry_agent_id": "medautogrant",
         "domain_label": "Grant Foundry",
