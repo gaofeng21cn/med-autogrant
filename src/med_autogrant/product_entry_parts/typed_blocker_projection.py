@@ -21,6 +21,7 @@ def build_typed_blocker_projection(
         "source_ref": receipt.get("source_ref"),
         "lineage": _typed_blocker_lineage(receipt, blocker_kind=blocker_kind),
         "repeat_budget": _typed_blocker_repeat_budget(),
+        "next_forced_delta": _typed_blocker_next_forced_delta(receipt, blocker_kind=blocker_kind),
         "escalation_owner": TARGET_DOMAIN_ID,
         "escalation_policy": {
             "route": "mag_owner_surface",
@@ -75,6 +76,24 @@ def _typed_blocker_lineage(receipt: Mapping[str, Any], *, blocker_kind: str) -> 
         "receipt_ref": receipt.get("receipt_instance_ref"),
         "source_ref": receipt.get("source_ref"),
         "owner": TARGET_DOMAIN_ID,
+    }
+
+
+def _typed_blocker_next_forced_delta(receipt: Mapping[str, Any], *, blocker_kind: str) -> dict[str, Any]:
+    stage_id = receipt.get("stage_id")
+    return {
+        "required_delta_kind": "grant_deliverable_progress_delta_or_domain_owned_typed_blocker",
+        "stage_id": stage_id,
+        "blocker_kind": blocker_kind,
+        "next_owner": TARGET_DOMAIN_ID,
+        "escalation_owner": TARGET_DOMAIN_ID,
+        "accepted_return_shapes": [
+            "domain_owner_receipt_ref",
+            "typed_blocker_ref",
+            "no_regression_evidence_ref",
+        ],
+        "can_claim_grant_ready": False,
+        "can_claim_submission_ready": False,
     }
 
 

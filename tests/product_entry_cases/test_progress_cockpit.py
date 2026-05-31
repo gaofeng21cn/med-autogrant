@@ -68,6 +68,16 @@ def _assert_progress_first_projection_contract(
     test_case.assertEqual(opl_delta["platform_evidence_progress"]["owner"], "one-person-lab")
     test_case.assertFalse(opl_delta["grant_work_progress"]["can_claim_submission_ready"])
     test_case.assertFalse(opl_delta["platform_evidence_progress"]["can_claim_export_ready"])
+    test_case.assertEqual(
+        opl_delta["next_forced_delta"]["required_delta_kind"],
+        "grant_deliverable_progress_delta_or_domain_owned_typed_blocker",
+    )
+    test_case.assertEqual(opl_delta["next_forced_delta"]["current_stage"], current_stage)
+    test_case.assertEqual(opl_delta["next_forced_delta"]["recommended_next_stage"], recommended_next_stage)
+    test_case.assertEqual(opl_delta["next_forced_delta"]["next_owner"], "med-autogrant")
+    test_case.assertIn("typed_blocker_ref", opl_delta["next_forced_delta"]["accepted_return_shapes"])
+    test_case.assertFalse(opl_delta["next_forced_delta"]["can_claim_grant_ready"])
+    test_case.assertFalse(opl_delta["next_forced_delta"]["can_claim_export_ready"])
 
 
 class ProductEntryProgressCockpitTest(unittest.TestCase):

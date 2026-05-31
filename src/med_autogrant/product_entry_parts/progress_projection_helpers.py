@@ -358,6 +358,20 @@ def _build_opl_progress_delta_mapping(
             "can_claim_fundability_ready": False,
             "can_claim_export_ready": False,
         },
+        "next_forced_delta": {
+            "required_delta_kind": "grant_deliverable_progress_delta_or_domain_owned_typed_blocker",
+            "current_stage": current_stage,
+            "recommended_next_stage": recommended_next_stage,
+            "next_owner": TARGET_DOMAIN_ID,
+            "accepted_return_shapes": [
+                "domain_owner_receipt_ref",
+                "typed_blocker_ref",
+                "no_regression_evidence_ref",
+            ],
+            "can_claim_grant_ready": False,
+            "can_claim_fundability_ready": False,
+            "can_claim_export_ready": False,
+        },
     }
 
 

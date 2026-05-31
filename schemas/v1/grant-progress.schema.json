@@ -237,7 +237,8 @@
         "version",
         "progress_delta_classification",
         "deliverable_progress_delta",
-        "platform_repair_delta"
+        "platform_repair_delta",
+        "next_forced_delta"
       ],
       "properties": {
         "surface_kind": {
@@ -434,11 +435,37 @@
               "type": "array",
               "items": {
                 "$ref": "common.schema.json#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "next_forced_delta": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "required_delta_kind",
+            "next_owner",
+            "accepted_return_shapes"
+          ],
+          "properties": {
+            "required_delta_kind": {
+              "const": "grant_deliverable_progress_delta_or_domain_owned_typed_blocker"
+            },
+            "next_owner": {
+              "const": "med-autogrant"
+            },
+            "accepted_return_shapes": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "contains": {
+                "const": "typed_blocker_ref"
               }
             }
           }
         }
       }
+    }
     },
     "grantProgressProjection": {
       "type": "object",

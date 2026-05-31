@@ -47,5 +47,15 @@ class ProductEntryHumanGateTypedBlockerTest(unittest.TestCase):
         self.assertEqual(blocker["lineage"]["receipt_ref"], blocker["receipt_ref"])
         self.assertEqual(blocker["repeat_budget"]["max_repeats_before_escalation"], 2)
         self.assertEqual(blocker["repeat_budget"]["budget_scope"], "same_stage_same_blocker_kind")
+        self.assertEqual(
+            blocker["next_forced_delta"]["required_delta_kind"],
+            "grant_deliverable_progress_delta_or_domain_owned_typed_blocker",
+        )
+        self.assertEqual(blocker["next_forced_delta"]["stage_id"], "package_and_submit_ready")
+        self.assertEqual(blocker["next_forced_delta"]["blocker_kind"], "mag_stage_attempt_owner_receipt_required")
+        self.assertEqual(blocker["next_forced_delta"]["next_owner"], "med-autogrant")
+        self.assertIn("typed_blocker_ref", blocker["next_forced_delta"]["accepted_return_shapes"])
+        self.assertFalse(blocker["next_forced_delta"]["can_claim_grant_ready"])
+        self.assertFalse(blocker["next_forced_delta"]["can_claim_submission_ready"])
         self.assertEqual(blocker["escalation_owner"], "med-autogrant")
         self.assertEqual(blocker["escalation_policy"]["route"], "mag_owner_surface")
