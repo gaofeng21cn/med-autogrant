@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `opl_private_implementation_migration_inventory`
 State: `active_inventory`
 Machine boundary: 本文是 human-readable 迁移治理台账。机器真相继续归 `contracts/`、schemas、CLI/API 行为、product-entry manifest、domain_handler export/dispatch、runtime receipts、workspace artifact 与 MAG owner receipt。
-Date: `2026-05-23`
+Date: `2026-06-02`
 
 ## 读法
 
@@ -15,6 +15,8 @@ Date: `2026-05-23`
 MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider runtime、queue、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、generated wrapper、observability/SLO 和 App/workbench shell。MAG 必须保留 grant truth、fundability / quality / export verdict、package authority、grant strategy memory body 与 accept/reject decision、owner receipt、transition oracle、typed blocker 和 grant-native helper。
 
 当前风险集中在 hand-written product-entry / domain_handler / CLI / autonomy controller / domain-runtime 命名和聚合文件，容易被误读成 MAG 私有平台。所有这类 surface 只能按 direct domain handler、refs-only adapter、minimal authority function、diagnostic 或 migration input 读取；OPL generated/default caller parity、owner receipt roundtrip、no-active-caller 和 no-forbidden-write proof 是 replacement/cutover 证据，物理删除还需要 explicit MAG owner receipt authorizing physical delete。不以 tombstone code、compat alias 或 re-export facade 形式长期保留。
+
+Purpose-first owner-delta / domain-thinning 的机器 gate 现在由 `contracts/private_functional_surface_policy.json#/purpose_first_owner_delta_domain_thinning_gate` 持有。本台账的 product-entry、grouped CLI、status/user-loop、domain-handler、runtime/control projection 与 lifecycle surface 都按该 gate 读取：暂留期间只输出 MAG owner delta、typed blocker 或 no-regression refs；删除、rename 或 tombstone 前必须有 generated/default caller consumption、sustained App/default-caller consumption、direct/hosted parity、owner receipt 或 typed blocker roundtrip、no-active domain repo generic shell caller、continuous no-forbidden-write 和 MAG owner physical-delete/tombstone receipt。`submission_ready_export_gate` 是 human-gate blocker；package/schema/stage projection、OPL ledger verification、grouped CLI success、manifest success 或 refs-only accounting closeout 都不能把它改写成 grant readiness。
 
 ## 分类词表
 
@@ -71,6 +73,7 @@ MAG 是 OPL-compatible grant domain agent。OPL Framework 持有通用 provider 
 - standard skeleton / locator projection shell 变成 MAG-owned runner、queue、attempt ledger、workbench、artifact indexer 或 memory store。
 - active caller 仍在 MAG，却写成 OPL generated/default caller 已完成迁移。
 - package existence、quality scorecard、schema completeness、controller route 或 queue completion 被写成 fundability/quality/export verdict。
+- stage replay projection、OPL ledger verification、grouped CLI success、product-entry manifest success 或 refs-only accounting closeout 被写成 grant-ready、export-ready 或 submission-ready。
 - 旧 local runtime / Hermes / Gateway / compatibility wording 被恢复为当前目标、默认 owner 或兼容保留理由。
 
 ## OPL primitive dependencies
