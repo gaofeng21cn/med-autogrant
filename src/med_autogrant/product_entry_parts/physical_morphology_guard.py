@@ -27,6 +27,9 @@ _MISSING_EXTERNAL_EVIDENCE_REFS = (
     "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
     "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
 )
+_PHYSICAL_DELETE_OWNER_RECEIPT_REF = (
+    "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+)
 
 _REQUIRED_EXTERNAL_EVIDENCE_REF_MARKERS = (
     ("active_caller_migration", ("active-caller-migration", "active_caller_migration")),
@@ -212,6 +215,11 @@ def _project_source_item(item: Mapping[str, Any], *, index: int) -> dict[str, An
         )
 
     allowed = not blocker_reasons
+    deletion_readiness = _deletion_readiness(
+        module_id=module_id,
+        blocked_by_surface_gate=not allowed,
+        item_required_refs=required_next_evidence_refs,
+    )
     return {
         "path": path,
         "module_id": module_id,
@@ -222,6 +230,38 @@ def _project_source_item(item: Mapping[str, Any], *, index: int) -> dict[str, An
         "true_forbidden_flags": true_forbidden_flags,
         "blocker_reasons": blocker_reasons,
         "required_next_evidence_refs": _dedupe(required_next_evidence_refs),
+        "deletion_readiness": deletion_readiness,
+    }
+
+
+def _deletion_readiness(
+    *,
+    module_id: str,
+    blocked_by_surface_gate: bool,
+    item_required_refs: list[str],
+) -> dict[str, Any]:
+    missing_retirement_evidence_refs = _dedupe(
+        list(item_required_refs)
+        + list(_MISSING_EXTERNAL_EVIDENCE_REFS)
+        + [_PHYSICAL_DELETE_OWNER_RECEIPT_REF]
+    )
+    return {
+        "surface_id": module_id,
+        "state": "blocked_by_surface_evidence_or_owner_receipt",
+        "physical_delete_authorized": False,
+        "owner_receipt_required_ref": _PHYSICAL_DELETE_OWNER_RECEIPT_REF,
+        "typed_blocker_allowed_ref": (
+            f"typed_blocker://mag/physical_delete_or_tombstone/{module_id}"
+        ),
+        "missing_retirement_evidence_refs": missing_retirement_evidence_refs,
+        "next_owner_delta_required": (
+            "mag_owner_physical_delete_receipt_or_domain_owned_typed_blocker_required"
+        ),
+        "delete_or_tombstone_only_after_gate": True,
+        "blocked_by_surface_gate": blocked_by_surface_gate,
+        "claims_grant_ready": False,
+        "claims_submission_ready": False,
+        "claims_production_ready": False,
     }
 
 

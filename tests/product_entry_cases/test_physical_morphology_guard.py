@@ -75,6 +75,38 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
             projection["required_next_evidence_refs"],
         )
+        product_entry_deletion_readiness = projection["allowed_items"][0]["deletion_readiness"]
+        self.assertEqual(product_entry_deletion_readiness["surface_id"], "product_entry")
+        self.assertEqual(
+            product_entry_deletion_readiness["state"],
+            "blocked_by_surface_evidence_or_owner_receipt",
+        )
+        self.assertFalse(product_entry_deletion_readiness["physical_delete_authorized"])
+        self.assertEqual(
+            product_entry_deletion_readiness["owner_receipt_required_ref"],
+            "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+        )
+        self.assertEqual(
+            product_entry_deletion_readiness["typed_blocker_allowed_ref"],
+            "typed_blocker://mag/physical_delete_or_tombstone/product_entry",
+        )
+        self.assertIn(
+            "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+            product_entry_deletion_readiness["missing_retirement_evidence_refs"],
+        )
+        self.assertIn(
+            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
+            product_entry_deletion_readiness["missing_retirement_evidence_refs"],
+        )
+        self.assertEqual(
+            product_entry_deletion_readiness["next_owner_delta_required"],
+            "mag_owner_physical_delete_receipt_or_domain_owned_typed_blocker_required",
+        )
+        self.assertTrue(product_entry_deletion_readiness["delete_or_tombstone_only_after_gate"])
+        self.assertFalse(product_entry_deletion_readiness["blocked_by_surface_gate"])
+        self.assertFalse(product_entry_deletion_readiness["claims_grant_ready"])
+        self.assertFalse(product_entry_deletion_readiness["claims_submission_ready"])
+        self.assertFalse(product_entry_deletion_readiness["claims_production_ready"])
         self.assertEqual(
             projection["retirement_gate"]["state"],
             "active_caller_migration_evidence_required",
@@ -137,6 +169,16 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             projection["blocked_items"][0]["blocker_reasons"][0]["reason"],
             "forbidden_role_flag_true",
         )
+        self.assertTrue(
+            projection["blocked_items"][0]["deletion_readiness"]["blocked_by_surface_gate"]
+        )
+        self.assertFalse(
+            projection["blocked_items"][0]["deletion_readiness"]["physical_delete_authorized"]
+        )
+        self.assertIn(
+            "physical_morphology://items/scheduler/no_forbidden_role_write_proof",
+            projection["blocked_items"][0]["deletion_readiness"]["missing_retirement_evidence_refs"],
+        )
         self.assertFalse(
             projection["claims"]["claims_physical_morphology_cleanup_complete"]
         )
@@ -171,6 +213,10 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             "physical_morphology://items/runtime_owner/no_forbidden_role_write_proof",
             projection["required_next_evidence_refs"],
         )
+        self.assertIn(
+            "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+            projection["blocked_items"][0]["deletion_readiness"]["missing_retirement_evidence_refs"],
+        )
 
     def test_all_allowed_with_external_evidence_refs_can_mark_guard_complete(self) -> None:
         from med_autogrant.product_entry_parts.physical_morphology_guard import (
@@ -201,6 +247,11 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertEqual(projection["state"], "allowed_external_evidence_present")
         self.assertEqual(projection["blocked_items"], [])
         self.assertEqual(projection["required_next_evidence_refs"], [])
+        self.assertFalse(projection["allowed_items"][0]["deletion_readiness"]["physical_delete_authorized"])
+        self.assertIn(
+            "owner_receipt://mag/physical_delete_or_tombstone_authorization",
+            projection["allowed_items"][0]["deletion_readiness"]["missing_retirement_evidence_refs"],
+        )
         self.assertEqual(
             projection["retirement_gate"]["state"],
             "eligible_for_owner_receipted_cleanup",

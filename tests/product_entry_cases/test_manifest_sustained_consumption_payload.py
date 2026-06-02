@@ -113,7 +113,28 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
                 "no_forbidden_write_ref",
                 "long_soak_or_typed_blocker_ref",
                 "typed_blocker_refs",
+                "operator_payload_attempts",
             ],
+        )
+        self.assertEqual(response["operator_payload_attempt_summary"]["attempt_count"], 1)
+        self.assertEqual(
+            response["operator_payload_attempt_summary"][
+                "sustained_consumption_refs_path_attempt_count"
+            ],
+            1,
+        )
+        self.assertFalse(
+            response["operator_payload_attempt_summary"][
+                "claims_sustained_app_consumption_complete"
+            ]
+        )
+        self.assertFalse(
+            response["operator_payload_attempt_summary"]["claims_provider_long_soak_complete"]
+        )
+        self.assertEqual(len(response["operator_payload_attempt_records"]), 1)
+        self.assertEqual(
+            response["operator_payload_attempt_records"][0]["payload_path"],
+            "sustained_consumption_refs_path",
         )
         self.assertTrue(response["rejects_unknown_operator_payload_fields"])
         self.assertFalse(response["claims_sustained_app_consumption_complete"])
@@ -159,6 +180,88 @@ class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
         )
         self.assertFalse(response["claims_sustained_app_consumption_complete"])
         self.assertFalse(response["accepted_payload_paths"]["typed_blocker_path"]["success_claimed"])
+        self.assertEqual(response["operator_payload_attempt_summary"]["attempt_count"], 1)
+        self.assertEqual(
+            response["operator_payload_attempt_summary"]["typed_blocker_path_attempt_count"],
+            1,
+        )
+
+    def test_attempt_batch_payload_projects_scaleout_ledger_without_closeout_claim(self) -> None:
+        from med_autogrant.product_entry import MedAutoGrantProductEntry
+
+        provider_long_soak_typed_blocker_ref = (
+            "typed-blocker:mag/manifest-sustained-consumption/"
+            "provider-long-soak-window-still-open/2026-06-01"
+        )
+        app_operator_blocker_ref = (
+            "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-06-01"
+        )
+        response = MedAutoGrantProductEntry().build_manifest_sustained_consumption_payload_response(
+            owner_payload_response=_owner_payload_response(),
+            workspace_receipt_scaleout_evidence=_workspace_scaleout_evidence(),
+            operator_payload={
+                "operator_payload_attempts": [
+                    {
+                        "attempt_id": "manifest-sustained-consumption-attempt-20260601-a",
+                        "observed_at": "2026-06-01T00:00:00Z",
+                        "app_operator_consumption_ref": [
+                            "opl://app/operator/mag/owner-payload-consumed/2026-06-01-a"
+                        ],
+                        "default_caller_consumption_ref": [
+                            "opl://release/default-caller/mag/owner-payload-consumed/2026-06-01-a"
+                        ],
+                        "owner_payload_response_ref": [
+                            "/product_entry_manifest/owner_payload_response",
+                        ],
+                        "workspace_receipt_scaleout_evidence_ref": [
+                            "/product_entry_manifest/workspace_receipt_scaleout_evidence",
+                        ],
+                        "no_forbidden_write_ref": [
+                            "no-forbidden-write:mag/manifest-consumption/2026-06-01-a",
+                        ],
+                        "long_soak_or_typed_blocker_ref": [
+                            provider_long_soak_typed_blocker_ref
+                        ],
+                    },
+                    {
+                        "attempt_id": "manifest-sustained-consumption-attempt-20260601-b",
+                        "observed_at": "2026-06-01T00:10:00Z",
+                        "typed_blocker_refs": [app_operator_blocker_ref],
+                    },
+                ],
+            },
+        )
+
+        self.assertEqual(response["status"], "sustained_consumption_payload_refs_ready")
+        self.assertEqual(response["recommended_payload_path"], "operator_payload_attempts_path")
+        self.assertEqual(
+            response["record_payload"]["long_soak_or_typed_blocker_refs"],
+            [provider_long_soak_typed_blocker_ref],
+        )
+        self.assertEqual(response["record_payload"]["typed_blocker_refs"], [app_operator_blocker_ref])
+        self.assertEqual(len(response["operator_payload_attempt_records"]), 2)
+        self.assertEqual(
+            [
+                attempt["payload_path"]
+                for attempt in response["operator_payload_attempt_records"]
+            ],
+            ["sustained_consumption_refs_path", "typed_blocker_path"],
+        )
+        summary = response["operator_payload_attempt_summary"]
+        self.assertEqual(summary["attempt_count"], 2)
+        self.assertEqual(summary["sustained_consumption_refs_path_attempt_count"], 1)
+        self.assertEqual(summary["typed_blocker_path_attempt_count"], 1)
+        self.assertEqual(summary["provider_long_soak_typed_blocker_attempt_count"], 1)
+        self.assertFalse(summary["attempt_records_are_app_sustained_consumption_closeout"])
+        self.assertFalse(summary["attempt_records_are_provider_long_soak_closeout"])
+        self.assertFalse(summary["claims_sustained_app_consumption_complete"])
+        self.assertFalse(summary["claims_provider_long_soak_complete"])
+        self.assertEqual(
+            response["provider_long_soak_followthrough"]["typed_blocker_refs"],
+            [provider_long_soak_typed_blocker_ref],
+        )
+        self.assertFalse(response["claims_sustained_app_consumption_complete"])
+        self.assertFalse(response["claims_provider_long_soak_complete"])
 
     def test_rejects_empty_payload_and_private_body(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry

@@ -52,6 +52,7 @@
         "true_forbidden_flags",
         "blocker_reasons",
         "required_next_evidence_refs",
+        "deletion_readiness",
         "allowed"
       ],
       "properties": {
@@ -82,8 +83,67 @@
         "required_next_evidence_refs": {
           "$ref": "common.schema.json#/$defs/stringList"
         },
+        "deletion_readiness": {
+          "$ref": "#/$defs/deletionReadiness"
+        },
         "allowed": {
           "type": "boolean"
+        }
+      }
+    },
+    "deletionReadiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surface_id",
+        "state",
+        "physical_delete_authorized",
+        "owner_receipt_required_ref",
+        "typed_blocker_allowed_ref",
+        "missing_retirement_evidence_refs",
+        "next_owner_delta_required",
+        "delete_or_tombstone_only_after_gate",
+        "blocked_by_surface_gate",
+        "claims_grant_ready",
+        "claims_submission_ready",
+        "claims_production_ready"
+      ],
+      "properties": {
+        "surface_id": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "state": {
+          "const": "blocked_by_surface_evidence_or_owner_receipt"
+        },
+        "physical_delete_authorized": {
+          "const": false
+        },
+        "owner_receipt_required_ref": {
+          "const": "owner_receipt://mag/physical_delete_or_tombstone_authorization"
+        },
+        "typed_blocker_allowed_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "missing_retirement_evidence_refs": {
+          "$ref": "common.schema.json#/$defs/stringList"
+        },
+        "next_owner_delta_required": {
+          "const": "mag_owner_physical_delete_receipt_or_domain_owned_typed_blocker_required"
+        },
+        "delete_or_tombstone_only_after_gate": {
+          "const": true
+        },
+        "blocked_by_surface_gate": {
+          "type": "boolean"
+        },
+        "claims_grant_ready": {
+          "const": false
+        },
+        "claims_submission_ready": {
+          "const": false
+        },
+        "claims_production_ready": {
+          "const": false
         }
       }
     },

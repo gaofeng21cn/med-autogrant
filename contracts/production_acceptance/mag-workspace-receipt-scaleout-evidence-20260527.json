@@ -85,7 +85,8 @@
         "workspace_receipt_scaleout_evidence_ref",
         "no_forbidden_write_ref",
         "long_soak_or_typed_blocker_ref",
-        "typed_blocker_refs"
+        "typed_blocker_refs",
+        "operator_payload_attempts"
       ],
       "payload_template": {
         "app_operator_consumption_ref": [],
@@ -119,8 +120,28 @@
           "closes_grant_ready": false,
           "closes_submission_ready": false,
           "closes_provider_long_soak": false
+        },
+        "operator_payload_attempts_path": {
+          "required_operator_payload_refs": [
+            "operator_payload_attempts"
+          ],
+          "success_claimed": false,
+          "closes_grant_ready": false,
+          "closes_submission_ready": false,
+          "closes_provider_long_soak": false
         }
       },
+      "operator_payload_attempt_template": {
+        "attempt_id": "",
+        "observed_at": "",
+        "app_operator_consumption_ref": [],
+        "default_caller_consumption_ref": [],
+        "owner_payload_response_ref": [],
+        "workspace_receipt_scaleout_evidence_ref": [],
+        "no_forbidden_write_ref": [],
+        "long_soak_or_typed_blocker_ref": []
+      },
+      "operator_payload_attempts_are_success_evidence": false,
       "provider_long_soak_followthrough": {
         "surface_kind": "mag_manifest_provider_long_soak_followthrough",
         "version": "v1",

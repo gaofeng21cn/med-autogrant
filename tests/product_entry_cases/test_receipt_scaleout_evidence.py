@@ -373,6 +373,13 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
             ["typed_blocker_refs"],
         )
         self.assertTrue(workorder["rejects_unknown_operator_payload_fields"])
+        self.assertFalse(workorder["operator_payload_attempts_are_success_evidence"])
+        self.assertEqual(
+            workorder["accepted_payload_paths"]["operator_payload_attempts_path"][
+                "required_operator_payload_refs"
+            ],
+            ["operator_payload_attempts"],
+        )
         self.assertEqual(
             workorder["provider_long_soak_followthrough"]["status"],
             "requires_temporal_provider_long_soak_window_evidence",
@@ -438,6 +445,12 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
             response["opl_runtime_action_execute_payload"],
             response["record_payload"],
         )
+        self.assertEqual(response["operator_payload_attempt_summary"]["attempt_count"], 1)
+        self.assertFalse(
+            response["operator_payload_attempt_summary"][
+                "attempt_records_are_app_sustained_consumption_closeout"
+            ]
+        )
         self.assertFalse(response["body_included"])
         self.assertFalse(response["claims_sustained_app_consumption_complete"])
         self.assertFalse(response["claims_provider_long_soak_complete"])
@@ -462,12 +475,17 @@ class ProductEntryReceiptScaleoutEvidenceTest(unittest.TestCase):
             "sustained_consumption_refs_path_returns_provider_followthrough_typed_blocker",
             cli_regression["covered_paths"],
         )
+        self.assertIn(
+            "operator_payload_attempts_path_returns_attempt_records_without_closeout",
+            cli_regression["covered_paths"],
+        )
         self.assertEqual(
             cli_regression["success_path_provider_long_soak_status"],
             "blocked_by_provider_long_soak_typed_blocker",
         )
         self.assertTrue(cli_regression["unknown_field_rejection_verified"])
         self.assertTrue(cli_regression["mixed_path_rejection_verified"])
+        self.assertTrue(cli_regression["attempt_batch_path_verified"])
         self.assertFalse(cli_regression["body_included"])
         self.assertFalse(cli_regression["claims_sustained_app_consumption_complete"])
         self.assertFalse(cli_regression["claims_provider_long_soak_complete"])

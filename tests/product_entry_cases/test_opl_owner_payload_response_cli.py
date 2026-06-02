@@ -248,6 +248,12 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
         self.assertFalse(response["authority_boundary"]["can_satisfy_provider_long_soak"])
         self.assertFalse(response["claims_sustained_app_consumption_complete"])
         self.assertFalse(response["claims_provider_long_soak_complete"])
+        self.assertEqual(response["operator_payload_attempt_summary"]["attempt_count"], 1)
+        self.assertFalse(
+            response["operator_payload_attempt_summary"][
+                "attempt_records_are_app_sustained_consumption_closeout"
+            ]
+        )
 
         encoded_payload = json.dumps(
             {
@@ -260,6 +266,94 @@ class ProductEntryOplOwnerPayloadResponseCliTest(unittest.TestCase):
         self.assertNotIn("grant_artifact_body", encoded_payload)
         self.assertNotIn("memory_body", encoded_payload)
         self.assertNotIn("proposal_text", encoded_payload)
+
+    def test_manifest_consumption_payload_cli_accepts_attempt_batch_without_closeout_claim(
+        self,
+    ) -> None:
+        owner_payload_response = {
+            "surface_kind": "mag_opl_owner_payload_response",
+            "status": "blocked_by_submission_ready_human_gate",
+            "domain_owner_receipt_refs": [
+                "receipt:mag/production-live-acceptance/2026-05-20",
+            ],
+            "typed_blocker_refs": [
+                "typed-blocker:mag/package_and_submit_ready/"
+                "submission_ready_export_gate/human-approval-required/2026-05-22"
+            ],
+            "owner_chain_refs": [
+                "receipt:mag/production-live-acceptance/2026-05-20",
+            ],
+            "no_regression_evidence_refs": [
+                "no-regression:mag/direct-hosted-parity/2026-05-20",
+            ],
+        }
+        workspace_receipt_scaleout_evidence = {
+            "surface_kind": "mag_workspace_receipt_scaleout_evidence.v1",
+            "workspace_receipt_scaleout": {"workspace_count": 4},
+        }
+        provider_long_soak_typed_blocker_ref = (
+            "typed-blocker:mag/manifest-sustained-consumption/"
+            "provider-long-soak-window-still-open/2026-06-01"
+        )
+        operator_payload = {
+            "operator_payload_attempts": [
+                {
+                    "attempt_id": "manifest-sustained-consumption-cli-a",
+                    "observed_at": "2026-06-01T00:00:00Z",
+                    "app_operator_consumption_ref": [
+                        "opl://app/operator/mag/owner-payload-consumed/2026-06-01-a"
+                    ],
+                    "default_caller_consumption_ref": [
+                        "opl://release/default-caller/mag/owner-payload-consumed/2026-06-01-a"
+                    ],
+                    "owner_payload_response_ref": [
+                        "/product_entry_manifest/owner_payload_response"
+                    ],
+                    "workspace_receipt_scaleout_evidence_ref": [
+                        "/product_entry_manifest/workspace_receipt_scaleout_evidence"
+                    ],
+                    "no_forbidden_write_ref": [
+                        "no-forbidden-write:mag/manifest-consumption/2026-06-01-a",
+                    ],
+                    "long_soak_or_typed_blocker_ref": [provider_long_soak_typed_blocker_ref],
+                },
+                {
+                    "attempt_id": "manifest-sustained-consumption-cli-b",
+                    "observed_at": "2026-06-01T00:10:00Z",
+                    "typed_blocker_refs": [
+                        "typed-blocker:app/operator/mag/sustained-consumption-missing/2026-06-01"
+                    ],
+                },
+            ]
+        }
+
+        exit_code, stdout, stderr = self.run_manifest_consumption_payload_cli(
+            owner_payload_response=owner_payload_response,
+            workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
+            operator_payload=operator_payload,
+        )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stderr, "")
+        response = json.loads(stdout)
+        self.assertEqual(response["recommended_payload_path"], "operator_payload_attempts_path")
+        self.assertEqual(len(response["operator_payload_attempt_records"]), 2)
+        self.assertEqual(response["operator_payload_attempt_summary"]["attempt_count"], 2)
+        self.assertTrue(
+            response["operator_payload_attempt_summary"]["repeated_attempt_evidence_observed"]
+        )
+        self.assertFalse(
+            response["operator_payload_attempt_summary"][
+                "attempt_records_are_app_sustained_consumption_closeout"
+            ]
+        )
+        self.assertFalse(
+            response["operator_payload_attempt_summary"][
+                "attempt_records_are_provider_long_soak_closeout"
+            ]
+        )
+        self.assertFalse(response["claims_sustained_app_consumption_complete"])
+        self.assertFalse(response["claims_provider_long_soak_complete"])
 
     def test_manifest_consumption_payload_cli_rejects_unknown_operator_field(self) -> None:
         owner_payload_response = {

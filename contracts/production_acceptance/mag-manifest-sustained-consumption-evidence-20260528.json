@@ -98,6 +98,44 @@
       "closes_provider_long_soak": false,
       "can_declare_provider_long_soak_complete": false
     },
+    "operator_payload_attempt_records": [
+      {
+        "attempt_ordinal": 1,
+        "payload_path": "sustained_consumption_refs_path",
+        "record_payload_ref_counts": {
+          "app_operator_consumption_refs": 1,
+          "default_caller_consumption_refs": 2,
+          "owner_payload_response_refs": 1,
+          "workspace_receipt_scaleout_evidence_refs": 1,
+          "no_forbidden_write_refs": 1,
+          "long_soak_or_typed_blocker_refs": 1
+        },
+        "provider_long_soak_status": "blocked_by_provider_long_soak_typed_blocker",
+        "provider_long_soak_typed_blocker_refs": [
+          "typed-blocker:mag/manifest-sustained-consumption/provider-long-soak-window-still-open/2026-05-28"
+        ],
+        "provider_long_soak_evidence_refs": [],
+        "body_included": false,
+        "claims_sustained_app_consumption_complete": false,
+        "claims_provider_long_soak_complete": false,
+        "closes_provider_long_soak": false
+      }
+    ],
+    "operator_payload_attempt_summary": {
+      "surface_kind": "mag_manifest_sustained_consumption_operator_payload_attempt_summary",
+      "version": "v1",
+      "attempt_count": 1,
+      "sustained_consumption_refs_path_attempt_count": 1,
+      "typed_blocker_path_attempt_count": 0,
+      "provider_long_soak_typed_blocker_attempt_count": 1,
+      "provider_long_soak_evidence_attempt_count": 0,
+      "repeated_attempt_evidence_observed": false,
+      "attempt_records_are_app_sustained_consumption_closeout": false,
+      "attempt_records_are_provider_long_soak_closeout": false,
+      "claims_sustained_app_consumption_complete": false,
+      "claims_provider_long_soak_complete": false,
+      "closes_provider_long_soak": false
+    },
     "observed_counts": {
       "domain_owner_receipt_ref_count": 8,
       "owner_chain_ref_count": 38,
@@ -132,6 +170,16 @@
         "closes_grant_ready": false,
         "closes_submission_ready": false,
         "closes_provider_long_soak": false
+      },
+      "operator_payload_attempts_path": {
+        "required_operator_payload_refs": [
+          "operator_payload_attempts"
+        ],
+        "success_claimed": false,
+        "closes_app_sustained_consumption": false,
+        "closes_grant_ready": false,
+        "closes_submission_ready": false,
+        "closes_provider_long_soak": false
       }
     },
     "allowed_operator_payload_fields": [
@@ -141,7 +189,8 @@
       "workspace_receipt_scaleout_evidence_ref",
       "no_forbidden_write_ref",
       "long_soak_or_typed_blocker_ref",
-      "typed_blocker_refs"
+      "typed_blocker_refs",
+      "operator_payload_attempts"
     ],
     "rejects_unknown_operator_payload_fields": true,
     "operator_payload_submitted": true,
@@ -189,6 +238,7 @@
     "authority_command": "authority manifest-consumption-payload",
     "covered_paths": [
       "sustained_consumption_refs_path_returns_provider_followthrough_typed_blocker",
+      "operator_payload_attempts_path_returns_attempt_records_without_closeout",
       "unknown_operator_payload_field_rejected",
       "mixed_success_refs_and_typed_blocker_path_rejected"
     ],
@@ -196,6 +246,7 @@
     "success_path_claims_provider_long_soak_complete": false,
     "unknown_field_rejection_verified": true,
     "mixed_path_rejection_verified": true,
+    "attempt_batch_path_verified": true,
     "body_included": false,
     "claims_sustained_app_consumption_complete": false,
     "claims_provider_long_soak_complete": false,

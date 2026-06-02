@@ -173,7 +173,12 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
         )
         self.assertIn("allowed_operator_payload_fields", workorder["required"])
         self.assertIn("rejects_unknown_operator_payload_fields", workorder["required"])
+        self.assertIn("operator_payload_attempt_template", workorder["required"])
+        self.assertIn("operator_payload_attempts_are_success_evidence", workorder["required"])
         self.assertFalse(workorder["properties"]["empty_payload_template_is_success_evidence"]["const"])
+        self.assertFalse(
+            workorder["properties"]["operator_payload_attempts_are_success_evidence"]["const"]
+        )
         self.assertTrue(workorder["properties"]["rejects_unknown_operator_payload_fields"]["const"])
         self.assertFalse(workorder["properties"]["claims_sustained_app_consumption_complete"]["const"])
         self.assertFalse(workorder["properties"]["claims_provider_long_soak_complete"]["const"])
@@ -217,6 +222,12 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
             "sustained_consumption_payload_refs_ready",
         )
         self.assertTrue(sustained_response["properties"]["operator_payload_submitted"]["const"])
+        self.assertIn("operator_payload_attempt_records", sustained_response["required"])
+        self.assertIn("operator_payload_attempt_summary", sustained_response["required"])
+        self.assertEqual(
+            sustained_response["properties"]["operator_payload_attempt_summary"]["$ref"],
+            "#/$defs/magManifestSustainedConsumptionOperatorPayloadAttemptSummary",
+        )
         self.assertFalse(
             sustained_response["properties"][
                 "claims_sustained_app_consumption_complete"
@@ -277,6 +288,7 @@ class OwnerPayloadManifestSchemaTest(unittest.TestCase):
         )
         self.assertTrue(cli_regression["unknown_field_rejection_verified"]["const"])
         self.assertTrue(cli_regression["mixed_path_rejection_verified"]["const"])
+        self.assertTrue(cli_regression["attempt_batch_path_verified"]["const"])
         self.assertFalse(cli_regression["body_included"]["const"])
         self.assertFalse(cli_regression["claims_sustained_app_consumption_complete"]["const"])
         self.assertFalse(cli_regression["claims_provider_long_soak_complete"]["const"])

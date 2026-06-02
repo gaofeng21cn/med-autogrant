@@ -7411,7 +7411,7 @@
         "sustained_consumption_followthrough_workorder": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["surface_kind", "version", "status", "authority_command", "authority_command_internal", "payload_owner", "accepted_payload_path_policy", "required_operator_payload_refs", "allowed_operator_payload_fields", "payload_template", "accepted_payload_paths", "provider_long_soak_followthrough", "empty_payload_template_is_success_evidence", "rejects_unknown_operator_payload_fields", "operator_payload_submitted", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
+          "required": ["surface_kind", "version", "status", "authority_command", "authority_command_internal", "payload_owner", "accepted_payload_path_policy", "required_operator_payload_refs", "allowed_operator_payload_fields", "payload_template", "accepted_payload_paths", "operator_payload_attempt_template", "operator_payload_attempts_are_success_evidence", "provider_long_soak_followthrough", "empty_payload_template_is_success_evidence", "rejects_unknown_operator_payload_fields", "operator_payload_submitted", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
           "properties": {
             "surface_kind": {"const": "mag_manifest_sustained_consumption_followthrough_workorder"},
             "version": {"const": "v1"},
@@ -7424,6 +7424,8 @@
             "allowed_operator_payload_fields": {"$ref": "common.schema.json#/$defs/stringList"},
             "payload_template": {"type": "object"},
             "accepted_payload_paths": {"type": "object"},
+            "operator_payload_attempt_template": {"type": "object"},
+            "operator_payload_attempts_are_success_evidence": {"const": false},
             "provider_long_soak_followthrough": {"$ref": "#/$defs/magManifestProviderLongSoakFollowthroughWorkorder"},
             "empty_payload_template_is_success_evidence": {"const": false},
             "rejects_unknown_operator_payload_fields": {"const": true},
@@ -7650,7 +7652,7 @@
     "magManifestSustainedConsumptionPayloadResponse": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["surface_kind", "version", "status", "owner", "target_domain_id", "payload_kind", "recommended_payload_path", "record_payload", "opl_runtime_action_execute_payload", "provider_long_soak_followthrough", "observed_counts", "accepted_payload_paths", "allowed_operator_payload_fields", "rejects_unknown_operator_payload_fields", "operator_payload_submitted", "body_included", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_quality_ready", "claims_export_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
+      "required": ["surface_kind", "version", "status", "owner", "target_domain_id", "payload_kind", "recommended_payload_path", "record_payload", "opl_runtime_action_execute_payload", "provider_long_soak_followthrough", "operator_payload_attempt_records", "operator_payload_attempt_summary", "observed_counts", "accepted_payload_paths", "allowed_operator_payload_fields", "rejects_unknown_operator_payload_fields", "operator_payload_submitted", "body_included", "claims_sustained_app_consumption_complete", "claims_grant_ready", "claims_quality_ready", "claims_export_ready", "claims_submission_ready", "claims_provider_long_soak_complete", "authority_boundary"],
       "properties": {
         "surface_kind": {"const": "mag_manifest_sustained_consumption_payload_response"},
         "version": {"const": "v1"},
@@ -7675,6 +7677,11 @@
         },
         "opl_runtime_action_execute_payload": {"type": "object", "additionalProperties": true},
         "provider_long_soak_followthrough": {"$ref": "#/$defs/magManifestProviderLongSoakFollowthroughResponse"},
+        "operator_payload_attempt_records": {
+          "type": "array",
+          "items": {"type": "object", "additionalProperties": true}
+        },
+        "operator_payload_attempt_summary": {"$ref": "#/$defs/magManifestSustainedConsumptionOperatorPayloadAttemptSummary"},
         "observed_counts": {
           "type": "object",
           "additionalProperties": true,
@@ -7720,6 +7727,26 @@
         }
       }
     },
+    "magManifestSustainedConsumptionOperatorPayloadAttemptSummary": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["surface_kind", "version", "attempt_count", "sustained_consumption_refs_path_attempt_count", "typed_blocker_path_attempt_count", "provider_long_soak_typed_blocker_attempt_count", "provider_long_soak_evidence_attempt_count", "repeated_attempt_evidence_observed", "attempt_records_are_app_sustained_consumption_closeout", "attempt_records_are_provider_long_soak_closeout", "claims_sustained_app_consumption_complete", "claims_provider_long_soak_complete", "closes_provider_long_soak"],
+      "properties": {
+        "surface_kind": {"const": "mag_manifest_sustained_consumption_operator_payload_attempt_summary"},
+        "version": {"const": "v1"},
+        "attempt_count": {"type": "integer", "minimum": 1},
+        "sustained_consumption_refs_path_attempt_count": {"type": "integer", "minimum": 0},
+        "typed_blocker_path_attempt_count": {"type": "integer", "minimum": 0},
+        "provider_long_soak_typed_blocker_attempt_count": {"type": "integer", "minimum": 0},
+        "provider_long_soak_evidence_attempt_count": {"type": "integer", "minimum": 0},
+        "repeated_attempt_evidence_observed": {"type": "boolean"},
+        "attempt_records_are_app_sustained_consumption_closeout": {"const": false},
+        "attempt_records_are_provider_long_soak_closeout": {"const": false},
+        "claims_sustained_app_consumption_complete": {"const": false},
+        "claims_provider_long_soak_complete": {"const": false},
+        "closes_provider_long_soak": {"const": false}
+      }
+    },
     "magManifestSustainedConsumptionEvidence": {
       "type": "object",
       "additionalProperties": true,
@@ -7735,7 +7762,7 @@
         "grouped_cli_regression_evidence": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["surface_kind", "version", "status", "authority_command", "covered_paths", "success_path_provider_long_soak_status", "success_path_claims_provider_long_soak_complete", "unknown_field_rejection_verified", "mixed_path_rejection_verified", "body_included", "claims_sustained_app_consumption_complete", "claims_provider_long_soak_complete", "closes_provider_long_soak", "authority_boundary"],
+          "required": ["surface_kind", "version", "status", "authority_command", "covered_paths", "success_path_provider_long_soak_status", "success_path_claims_provider_long_soak_complete", "unknown_field_rejection_verified", "mixed_path_rejection_verified", "attempt_batch_path_verified", "body_included", "claims_sustained_app_consumption_complete", "claims_provider_long_soak_complete", "closes_provider_long_soak", "authority_boundary"],
           "properties": {
             "surface_kind": {"const": "mag_manifest_sustained_consumption_grouped_cli_regression_evidence"},
             "version": {"const": "v1"},
@@ -7749,6 +7776,7 @@
             "success_path_claims_provider_long_soak_complete": {"const": false},
             "unknown_field_rejection_verified": {"const": true},
             "mixed_path_rejection_verified": {"const": true},
+            "attempt_batch_path_verified": {"const": true},
             "body_included": {"const": false},
             "claims_sustained_app_consumption_complete": {"const": false},
             "claims_provider_long_soak_complete": {"const": false},

@@ -316,7 +316,7 @@ def _sustained_consumption_followthrough_workorder() -> dict[str, Any]:
         "no_forbidden_write_ref",
         "long_soak_or_typed_blocker_ref",
     ]
-    allowed_operator_payload_fields = [*required_refs, "typed_blocker_refs"]
+    allowed_operator_payload_fields = [*required_refs, "typed_blocker_refs", "operator_payload_attempts"]
     return {
         "surface_kind": "mag_manifest_sustained_consumption_followthrough_workorder",
         "version": "v1",
@@ -346,7 +346,20 @@ def _sustained_consumption_followthrough_workorder() -> dict[str, Any]:
                 "closes_submission_ready": False,
                 "closes_provider_long_soak": False,
             },
+            "operator_payload_attempts_path": {
+                "required_operator_payload_refs": ["operator_payload_attempts"],
+                "success_claimed": False,
+                "closes_grant_ready": False,
+                "closes_submission_ready": False,
+                "closes_provider_long_soak": False,
+            },
         },
+        "operator_payload_attempt_template": {
+            "attempt_id": "",
+            "observed_at": "",
+            **{ref: [] for ref in required_refs},
+        },
+        "operator_payload_attempts_are_success_evidence": False,
         "provider_long_soak_followthrough": {
             "surface_kind": "mag_manifest_provider_long_soak_followthrough",
             "version": "v1",

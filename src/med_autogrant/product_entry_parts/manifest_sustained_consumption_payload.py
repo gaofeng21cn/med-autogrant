@@ -20,8 +20,17 @@ _REQUIRED_SUCCESS_REFS = (
     "long_soak_or_typed_blocker_ref",
 )
 _TYPED_BLOCKER_REFS_FIELD = "typed_blocker_refs"
-_ALLOWED_OPERATOR_PAYLOAD_FIELDS = (*_REQUIRED_SUCCESS_REFS, _TYPED_BLOCKER_REFS_FIELD)
+_ATTEMPT_BATCH_FIELD = "operator_payload_attempts"
+_ATTEMPT_METADATA_FIELDS = ("attempt_id", "observed_at")
+_ALLOWED_OPERATOR_PAYLOAD_FIELDS = (
+    *_REQUIRED_SUCCESS_REFS,
+    _TYPED_BLOCKER_REFS_FIELD,
+    _ATTEMPT_BATCH_FIELD,
+)
 _ALLOWED_OPERATOR_PAYLOAD_FIELD_SET = frozenset(_ALLOWED_OPERATOR_PAYLOAD_FIELDS)
+_ALLOWED_ATTEMPT_PAYLOAD_FIELD_SET = frozenset(
+    (*_REQUIRED_SUCCESS_REFS, _TYPED_BLOCKER_REFS_FIELD, *_ATTEMPT_METADATA_FIELDS)
+)
 _FORBIDDEN_BODY_KEYS = frozenset(
     {
         "artifact_body",
@@ -77,6 +86,12 @@ def build_manifest_sustained_consumption_payload_response(
         raise WorkspaceStateError("manifest sustained consumption payload 必须是非空 JSON object。")
     _assert_body_free(operator_payload, path="operator_payload")
     _assert_known_operator_payload_fields(operator_payload)
+    if _ATTEMPT_BATCH_FIELD in operator_payload:
+        return _build_attempt_batch_response(
+            owner_payload_response=owner_payload_response,
+            workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
+            attempt_payloads=_read_attempt_payloads(operator_payload),
+        )
 
     typed_blocker_refs = _read_ref_list(operator_payload, _TYPED_BLOCKER_REFS_FIELD)
     success_payload = {
@@ -132,6 +147,14 @@ def _build_success_ref_response(
         operator_payload_submitted=True,
         record_payload=record_payload,
         provider_long_soak_followthrough=provider_long_soak_followthrough,
+        operator_payload_attempt_records=[
+            _operator_payload_attempt_entry(
+                attempt_ordinal=1,
+                payload_path="sustained_consumption_refs_path",
+                record_payload=record_payload,
+                provider_long_soak_followthrough=provider_long_soak_followthrough,
+            )
+        ],
     )
 
 
@@ -153,6 +176,113 @@ def _build_typed_blocker_response(
         provider_long_soak_followthrough=_provider_long_soak_followthrough_from_typed_blocker_path(
             typed_blocker_refs
         ),
+        operator_payload_attempt_records=[
+            _operator_payload_attempt_entry(
+                attempt_ordinal=1,
+                payload_path="typed_blocker_path",
+                record_payload={"typed_blocker_refs": list(typed_blocker_refs)},
+                provider_long_soak_followthrough=_provider_long_soak_followthrough_from_typed_blocker_path(
+                    typed_blocker_refs
+                ),
+            )
+        ],
+    )
+
+
+def _build_attempt_batch_response(
+    *,
+    owner_payload_response: Mapping[str, Any],
+    workspace_receipt_scaleout_evidence: Mapping[str, Any],
+    attempt_payloads: list[Mapping[str, Any]],
+) -> dict[str, Any]:
+    record_payload: dict[str, list[str]] = {
+        "app_operator_consumption_refs": [],
+        "default_caller_consumption_refs": [],
+        "owner_payload_response_refs": [],
+        "workspace_receipt_scaleout_evidence_refs": [],
+        "no_forbidden_write_refs": [],
+        "long_soak_or_typed_blocker_refs": [],
+        "typed_blocker_refs": [],
+    }
+    attempt_records: list[dict[str, Any]] = []
+    for attempt_ordinal, attempt_payload in enumerate(attempt_payloads, start=1):
+        _assert_known_attempt_payload_fields(attempt_payload, attempt_ordinal=attempt_ordinal)
+        typed_blocker_refs = _read_ref_list(attempt_payload, _TYPED_BLOCKER_REFS_FIELD)
+        success_payload = {
+            field_name: _read_ref_list(attempt_payload, field_name)
+            for field_name in _REQUIRED_SUCCESS_REFS
+        }
+        has_complete_success_payload = all(
+            success_payload[field_name] for field_name in _REQUIRED_SUCCESS_REFS
+        )
+        if typed_blocker_refs and has_complete_success_payload:
+            raise WorkspaceStateError(
+                "manifest sustained consumption attempt 只能选择 success refs path 或 typed blocker path。"
+            )
+        if not typed_blocker_refs and not has_complete_success_payload:
+            raise WorkspaceStateError(
+                "manifest sustained consumption attempt 缺少 success refs path 或 typed blocker refs。"
+            )
+        if typed_blocker_refs:
+            attempt_record_payload = {"typed_blocker_refs": list(typed_blocker_refs)}
+            attempt_followthrough = _provider_long_soak_followthrough_from_typed_blocker_path(
+                typed_blocker_refs
+            )
+            payload_path = "typed_blocker_path"
+        else:
+            attempt_record_payload = {
+                "app_operator_consumption_refs": list(
+                    success_payload["app_operator_consumption_ref"]
+                ),
+                "default_caller_consumption_refs": list(
+                    success_payload["default_caller_consumption_ref"]
+                ),
+                "owner_payload_response_refs": list(success_payload["owner_payload_response_ref"]),
+                "workspace_receipt_scaleout_evidence_refs": list(
+                    success_payload["workspace_receipt_scaleout_evidence_ref"]
+                ),
+                "no_forbidden_write_refs": list(success_payload["no_forbidden_write_ref"]),
+                "long_soak_or_typed_blocker_refs": list(
+                    success_payload["long_soak_or_typed_blocker_ref"]
+                ),
+            }
+            attempt_followthrough = _provider_long_soak_followthrough_from_refs(
+                success_payload["long_soak_or_typed_blocker_ref"]
+            )
+            payload_path = "sustained_consumption_refs_path"
+        _merge_attempt_record_payload(record_payload, attempt_record_payload)
+        attempt_records.append(
+            _operator_payload_attempt_entry(
+                attempt_ordinal=attempt_ordinal,
+                payload_path=payload_path,
+                record_payload=attempt_record_payload,
+                provider_long_soak_followthrough=attempt_followthrough,
+                attempt_payload=attempt_payload,
+            )
+        )
+
+    if record_payload["long_soak_or_typed_blocker_refs"]:
+        provider_long_soak_followthrough = _provider_long_soak_followthrough_from_refs(
+            record_payload["long_soak_or_typed_blocker_refs"]
+        )
+    else:
+        provider_long_soak_followthrough = _provider_long_soak_followthrough_from_typed_blocker_path(
+            record_payload["typed_blocker_refs"]
+        )
+    status = (
+        "sustained_consumption_payload_refs_ready"
+        if record_payload["long_soak_or_typed_blocker_refs"]
+        else "blocked_by_app_operator_typed_blocker"
+    )
+    return _base_response(
+        owner_payload_response=owner_payload_response,
+        workspace_receipt_scaleout_evidence=workspace_receipt_scaleout_evidence,
+        status=status,
+        recommended_payload_path="operator_payload_attempts_path",
+        operator_payload_submitted=True,
+        record_payload={key: refs for key, refs in record_payload.items() if refs},
+        provider_long_soak_followthrough=provider_long_soak_followthrough,
+        operator_payload_attempt_records=attempt_records,
     )
 
 
@@ -165,6 +295,7 @@ def _base_response(
     operator_payload_submitted: bool,
     record_payload: Mapping[str, Any],
     provider_long_soak_followthrough: Mapping[str, Any],
+    operator_payload_attempt_records: list[Mapping[str, Any]],
 ) -> dict[str, Any]:
     return {
         "surface_kind": MAG_MANIFEST_SUSTAINED_CONSUMPTION_PAYLOAD_RESPONSE_KIND,
@@ -187,6 +318,12 @@ def _base_response(
             ),
         },
         "provider_long_soak_followthrough": dict(provider_long_soak_followthrough),
+        "operator_payload_attempt_records": [
+            dict(attempt) for attempt in operator_payload_attempt_records
+        ],
+        "operator_payload_attempt_summary": _operator_payload_attempt_summary(
+            operator_payload_attempt_records
+        ),
         "observed_counts": {
             "domain_owner_receipt_ref_count": len(
                 _read_ref_list(owner_payload_response, "domain_owner_receipt_refs")
@@ -283,6 +420,14 @@ def _accepted_payload_paths() -> dict[str, dict[str, Any]]:
             "closes_submission_ready": False,
             "closes_provider_long_soak": False,
         },
+        "operator_payload_attempts_path": {
+            "required_operator_payload_refs": [_ATTEMPT_BATCH_FIELD],
+            "success_claimed": False,
+            "closes_app_sustained_consumption": False,
+            "closes_grant_ready": False,
+            "closes_submission_ready": False,
+            "closes_provider_long_soak": False,
+        },
     }
 
 
@@ -331,6 +476,125 @@ def _read_ref_list(value: Mapping[str, Any], field_name: str) -> list[str]:
     ]
 
 
+def _read_attempt_payloads(operator_payload: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    if len(operator_payload) != 1:
+        raise WorkspaceStateError(
+            "manifest sustained consumption payload 使用 operator_payload_attempts 时不能混用顶层 refs 字段。"
+        )
+    raw_attempts = operator_payload.get(_ATTEMPT_BATCH_FIELD)
+    if not isinstance(raw_attempts, list) or not raw_attempts:
+        raise WorkspaceStateError("operator_payload_attempts 必须是非空 JSON object list。")
+    attempt_payloads: list[Mapping[str, Any]] = []
+    for index, raw_attempt in enumerate(raw_attempts, start=1):
+        if not isinstance(raw_attempt, Mapping) or not raw_attempt:
+            raise WorkspaceStateError(
+                f"operator_payload_attempts[{index}] 必须是非空 JSON object。"
+            )
+        attempt_payloads.append(raw_attempt)
+    return attempt_payloads
+
+
+def _merge_attempt_record_payload(
+    aggregate_payload: dict[str, list[str]],
+    attempt_payload: Mapping[str, Any],
+) -> None:
+    for field_name, refs in attempt_payload.items():
+        if not isinstance(refs, list):
+            continue
+        _extend_unique(aggregate_payload.setdefault(field_name, []), refs)
+
+
+def _extend_unique(target: list[str], refs: list[str]) -> None:
+    for ref in refs:
+        if ref not in target:
+            target.append(ref)
+
+
+def _operator_payload_attempt_entry(
+    *,
+    attempt_ordinal: int,
+    payload_path: str,
+    record_payload: Mapping[str, Any],
+    provider_long_soak_followthrough: Mapping[str, Any],
+    attempt_payload: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    entry: dict[str, Any] = {
+        "attempt_ordinal": attempt_ordinal,
+        "payload_path": payload_path,
+        "record_payload_ref_counts": {
+            field_name: len(refs)
+            for field_name, refs in record_payload.items()
+            if isinstance(refs, list)
+        },
+        "provider_long_soak_status": provider_long_soak_followthrough.get("status"),
+        "provider_long_soak_typed_blocker_refs": list(
+            _read_ref_list(provider_long_soak_followthrough, "typed_blocker_refs")
+        ),
+        "provider_long_soak_evidence_refs": list(
+            _read_ref_list(provider_long_soak_followthrough, "long_soak_evidence_refs")
+        ),
+        "body_included": False,
+        "claims_sustained_app_consumption_complete": False,
+        "claims_provider_long_soak_complete": False,
+        "closes_provider_long_soak": False,
+    }
+    if attempt_payload is not None:
+        attempt_id = attempt_payload.get("attempt_id")
+        if attempt_id is not None:
+            entry["attempt_id"] = _require_nonempty_string(
+                attempt_id, field_name="attempt_id", context="operator_payload_attempt"
+            )
+        observed_at = attempt_payload.get("observed_at")
+        if observed_at is not None:
+            entry["observed_at"] = _require_nonempty_string(
+                observed_at, field_name="observed_at", context="operator_payload_attempt"
+            )
+    return entry
+
+
+def _operator_payload_attempt_summary(
+    operator_payload_attempt_records: list[Mapping[str, Any]],
+) -> dict[str, Any]:
+    sustained_attempt_count = sum(
+        1
+        for attempt in operator_payload_attempt_records
+        if attempt.get("payload_path") == "sustained_consumption_refs_path"
+    )
+    typed_blocker_attempt_count = sum(
+        1
+        for attempt in operator_payload_attempt_records
+        if attempt.get("payload_path") == "typed_blocker_path"
+    )
+    provider_typed_blocker_attempt_count = sum(
+        1
+        for attempt in operator_payload_attempt_records
+        if attempt.get("provider_long_soak_status")
+        == "blocked_by_provider_long_soak_typed_blocker"
+    )
+    provider_evidence_attempt_count = sum(
+        1
+        for attempt in operator_payload_attempt_records
+        if _read_ref_list(attempt, "provider_long_soak_evidence_refs")
+    )
+    return {
+        "surface_kind": "mag_manifest_sustained_consumption_operator_payload_attempt_summary",
+        "version": "v1",
+        "attempt_count": len(operator_payload_attempt_records),
+        "sustained_consumption_refs_path_attempt_count": sustained_attempt_count,
+        "typed_blocker_path_attempt_count": typed_blocker_attempt_count,
+        "provider_long_soak_typed_blocker_attempt_count": (
+            provider_typed_blocker_attempt_count
+        ),
+        "provider_long_soak_evidence_attempt_count": provider_evidence_attempt_count,
+        "repeated_attempt_evidence_observed": len(operator_payload_attempt_records) > 1,
+        "attempt_records_are_app_sustained_consumption_closeout": False,
+        "attempt_records_are_provider_long_soak_closeout": False,
+        "claims_sustained_app_consumption_complete": False,
+        "claims_provider_long_soak_complete": False,
+        "closes_provider_long_soak": False,
+    }
+
+
 def _assert_body_free(value: Any, *, path: str) -> None:
     if isinstance(value, Mapping):
         for raw_key, item in value.items():
@@ -363,6 +627,27 @@ def _assert_known_operator_payload_fields(operator_payload: Mapping[str, Any]) -
         joined = ", ".join(sorted(unknown_fields))
         raise WorkspaceStateError(
             "manifest sustained consumption payload 包含未声明字段: " + joined
+        )
+
+
+def _assert_known_attempt_payload_fields(
+    attempt_payload: Mapping[str, Any],
+    *,
+    attempt_ordinal: int,
+) -> None:
+    unknown_fields = [
+        _require_nonempty_string(
+            raw_key,
+            field_name="key",
+            context=f"operator_payload_attempts[{attempt_ordinal}]",
+        )
+        for raw_key in attempt_payload
+        if raw_key not in _ALLOWED_ATTEMPT_PAYLOAD_FIELD_SET
+    ]
+    if unknown_fields:
+        joined = ", ".join(sorted(unknown_fields))
+        raise WorkspaceStateError(
+            "manifest sustained consumption attempt 包含未声明字段: " + joined
         )
 
 

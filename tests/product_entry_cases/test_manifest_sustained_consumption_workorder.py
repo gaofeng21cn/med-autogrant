@@ -53,6 +53,7 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
                 "no_forbidden_write_ref",
                 "long_soak_or_typed_blocker_ref",
                 "typed_blocker_refs",
+                "operator_payload_attempts",
             ],
         )
         self.assertTrue(
@@ -75,6 +76,19 @@ class ProductEntryManifestSustainedConsumptionWorkorderTest(unittest.TestCase):
             ]
         )
         self.assertFalse(workorder["accepted_payload_paths"]["typed_blocker_path"]["success_claimed"])
+        self.assertEqual(
+            workorder["accepted_payload_paths"]["operator_payload_attempts_path"][
+                "required_operator_payload_refs"
+            ],
+            ["operator_payload_attempts"],
+        )
+        self.assertFalse(
+            workorder["accepted_payload_paths"]["operator_payload_attempts_path"][
+                "success_claimed"
+            ]
+        )
+        self.assertIn("attempt_id", workorder["operator_payload_attempt_template"])
+        self.assertFalse(workorder["operator_payload_attempts_are_success_evidence"])
         self.assertFalse(workorder["empty_payload_template_is_success_evidence"])
         self.assertTrue(workorder["rejects_unknown_operator_payload_fields"])
         self.assertFalse(workorder["operator_payload_submitted"])
