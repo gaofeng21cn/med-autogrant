@@ -30,6 +30,7 @@ Machine boundary: 本文是人读历史归档索引。历史文档只保存 prov
 当前归档路线：
 
 - [Plan 完成度审计 2026-05-01](./plan-completion-audit-2026-05-01.md)
+- [Docs portfolio coverage ledger](./docs-portfolio-coverage-ledger/README.md)
 - [Domain Harness OS 定位历史说明](./positioning/domain-harness-os-positioning.md)
 - [OPL 托管运行时三层合同](./runtime/opl-managed-runtime-three-layer-contract.md)
 - [轻量产品入口与 OPL Handoff 历史说明](./product/lightweight-product-entry-and-opl-handoff.md)
