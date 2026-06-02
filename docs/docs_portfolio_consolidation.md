@@ -1766,3 +1766,40 @@ Next tranche write scope：
 
 - Continue MAG `docs/history/specs/*.md` in date/topic batches only if needed by global coverage, prioritizing 2026-04-10 post-R5A fail-closed records or 2026-04-11/2026-04-12 Hermes / hosted handoff specs because stale provider/hosted wording risk is higher there.
 - Prefer OPL / MAS / RCA safe document clusters for the next OPL-series tranche while App release docs remain tied to dirty/conflicting release lanes.
+
+### 2026-06-02 MAG runtime README boundary reconcile tranche
+
+本轮在 OPL series heartbeat 中对 MAG `runtime/README.md` 做 focused lifecycle governance。目标是避免 repo-root runtime skeleton 被直读成 sidecar projection、lifecycle adapter contract 或 MAG-owned generic runtime surface；本轮不改变 MAG source/contracts/tests，也不关闭 runtime/evidence/physical-delete 证据尾项。
+
+Live truth inputs：
+
+- `runtime/README.md`、`docs/runtime/README.md`、核心五件套、`docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/references/med-auto-grant-ideal-state.md`。
+- `contracts/runtime-program/current-program.json` 仍声明默认 task runtime owner 是 `one-person-lab` / Temporal，MAG 不实现 daemon、scheduler、attempt loop 或 attempt ledger。
+- `contracts/private_functional_surface_policy.json` 和 `contracts/functional_privatization_audit.json` 仍把 product-entry、domain handler、runtime registration、projection/lifecycle shell 归为 refs-only adapter、migration input 或 physical-delete gate 下的保留面；物理删除仍需要 explicit owner receipt、direct/hosted parity、no-active-caller 和 no-resurrection evidence。
+- Live search showed `runtime/README.md` was the only repo-source README still summarizing this root as "sidecar projections, and lifecycle adapter contracts"; docs/runtime already states it is only runtime/control/projection support and cannot claim MAG-owned generic runtime.
+
+Fresh semantic result：
+
+- `runtime/README.md` now has explicit lifecycle fields and states that it is a human-readable runtime descriptor boundary, not a runtime artifact root, sidecar, scheduler, lifecycle engine, attempt ledger, App/workbench shell, or OPL runtime implementation.
+- The file now routes runtime truth to contracts, source, runtime evidence, owner receipts, user-level runtime-state and workspace artifact roots, while preserving MAG's legitimate grant-domain handler refs、refs-only projections、owner receipt refs、typed blockers and authority refs.
+- No source/interface/test/workflow/CLI entry was retired in MAG. Remaining active product/status/domain-handler/runtime/projection/lifecycle shells still have active handler/adapter callers and explicit physical-delete blocker refs.
+
+| repo | reviewed docs/sections | edited docs |
+| --- | --- | --- |
+| `med-autogrant` | `runtime/README.md`, `docs/runtime/README.md`, active/status/ideal-state runtime boundary, runtime-program owner fields and private functional surface policy. | `runtime/README.md`, this coverage ledger |
+
+Archived / tombstoned / deleted docs：无。本轮只收敛 runtime skeleton 的 lifecycle wording，不移动、tombstone 或删除文档。
+
+Uncovered docs：
+
+- `med-autogrant`: no newly opened README/docs path in this focused tranche. Future source/contract/runtime evidence changes can reopen specific runtime sections.
+- Other OPL-series repos remain governed by the global heartbeat coverage ledger.
+
+Remaining stale / retire candidates：
+
+- MAG physical cleanup remains blocked by active handler/adapter callers plus explicit physical-delete evidence requirements; do not delete product-entry、domain-handler、runtime registration、projection/lifecycle shell 或 CLI surfaces until owner receipt / no-active-caller / no-resurrection evidence exists.
+- Any future wording that turns repo-root `runtime/` into MAG-owned generic runtime, sidecar, lifecycle engine, scheduler, App/workbench shell, attempt ledger, production ready or physical-delete authority is stale pollution.
+
+Next tranche write scope：
+
+- Continue OPL series stale-surface audit with clean repos or fresh governance worktrees; prefer candidates with concrete source/test/workflow/entry evidence rather than wording-only legacy terms.
