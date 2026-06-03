@@ -113,6 +113,16 @@ TYPED_BLOCKER_LINEAGE_POLICY = {
 }
 
 
+STAGE_OUTPUT_ROLE_BY_STAGE_ID: dict[str, str] = {
+    "call_and_candidate_intake": "call_candidate_intake_manifest_ref",
+    "fundability_strategy": "fundability_strategy_owner_receipt_ref",
+    "specific_aims_and_structure": "specific_aims_structure_manifest_ref",
+    "proposal_authoring": "reviewable_grant_artifact_bundle_ref",
+    "review_and_rebuttal": "review_quality_closure_receipt_ref",
+    "package_and_submit_ready": "submission_ready_package_manifest_ref",
+}
+
+
 STAGE_PACK: tuple[dict[str, Any], ...] = (
     {
         "stage_id": "call_and_candidate_intake",
@@ -426,6 +436,10 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
         expected_receipt_refs=expected_receipt_refs,
         monitor_freshness_refs=monitor_freshness_refs,
     )
+    stage_native_artifact_contract = _stage_native_artifact_contract(
+        stage=stage,
+        expected_receipt_refs=expected_receipt_refs,
+    )
     return {
         **stage,
         "owner": TARGET_DOMAIN_ID,
@@ -455,6 +469,11 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
         "outputs": [
             {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "stage_status"},
             {"ref_kind": "json_pointer", "ref": "/artifact_inventory", "role": "artifact_inventory"},
+            {
+                "ref_kind": "stage_output_role",
+                "ref": stage_native_artifact_contract["required_output_roles"][0],
+                "role": "stage_native_artifact_output_role",
+            },
         ],
         "evaluation": [
             {"ref_kind": "repo_path", "ref": ref, "role": "stage_quality_gate"}
@@ -484,6 +503,7 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
             "replay_evidence_refs": replay_evidence_refs,
             "stage_production_evidence_refs": production_evidence_closeout["evidence_refs"],
             "stage_admission_packet": _stage_admission_packet(stage),
+            "stage_native_artifact_contract": stage_native_artifact_contract,
             "user_stage_log_contract": USER_STAGE_LOG_CONTRACT,
             "progress_delta_policy": PROGRESS_DELTA_POLICY,
             "typed_blocker_lineage_policy": TYPED_BLOCKER_LINEAGE_POLICY,
@@ -575,6 +595,93 @@ def _stage_admission_packet(stage: Mapping[str, Any]) -> dict[str, Any]:
             "can_write_grant_truth": False,
             "can_declare_fundability_ready": False,
             "can_declare_export_ready": False,
+        },
+}
+
+
+def _stage_native_artifact_contract(
+    *,
+    stage: Mapping[str, Any],
+    expected_receipt_refs: list[dict[str, Any]],
+) -> dict[str, Any]:
+    stage_id = str(stage["stage_id"])
+    output_role = STAGE_OUTPUT_ROLE_BY_STAGE_ID[stage_id]
+    return {
+        "surface_kind": "mag_stage_native_artifact_contract",
+        "version": "mag-stage-native-artifact-contract.v1",
+        "stage_id": stage_id,
+        "owner": TARGET_DOMAIN_ID,
+        "required_output_roles": [output_role],
+        "manifest_requirements": {
+            "required_fields": [
+                "grant_run_id",
+                "workspace_id",
+                "lifecycle_stage",
+                "stage_id",
+                "stage_output_role",
+                "artifact_classification",
+                "manifest_ref",
+                "current_pointer_ref",
+                "owner_receipt_or_typed_blocker_ref",
+            ],
+            "identity_fields": [
+                "grant_run_id",
+                "workspace_id",
+                "draft_id",
+                "lifecycle_stage",
+                "stage_id",
+                "stage_output_role",
+            ],
+            "body_free_projection_required": True,
+            "manifest_ref_template": (
+                f"mag-artifact://{stage_id}/{output_role}/"
+                "{grant_run_id}/{workspace_id}/{draft_id_or_no_draft}/manifest"
+            ),
+        },
+        "owner_closeout_requirements": {
+            "accepted_return_shapes": [
+                "domain_owner_receipt_ref",
+                "typed_blocker_ref",
+                "no_regression_evidence_ref",
+            ],
+            "expected_receipt_refs": expected_receipt_refs,
+            "typed_blocker_required_when_output_missing": True,
+            "owner_receipt_required_for_current_pointer_advance": True,
+            "provider_completion_is_not_owner_closeout": True,
+        },
+        "current_pointer_rules": {
+            "pointer_owner": TARGET_DOMAIN_ID,
+            "pointer_ref_template": f"current:mag/stages/{stage_id}/{output_role}",
+            "advance_requires": [
+                "stage_output_manifest_ref",
+                "domain_owner_receipt_ref_or_typed_blocker_ref",
+            ],
+            "opl_can_advance_pointer": False,
+            "missing_pointer_policy": "typed_blocker_no_opl_inference",
+        },
+        "artifact_classification_boundary": {
+            "classification": "grant_stage_output_ref",
+            "artifact_body_owner": TARGET_DOMAIN_ID,
+            "artifact_authority_owner": TARGET_DOMAIN_ID,
+            "opl_consumes": [
+                "stage_output_role",
+                "manifest_ref",
+                "current_pointer_ref",
+                "owner_receipt_or_typed_blocker_ref",
+            ],
+            "opl_forbidden_inferences": [
+                "fundability_ready",
+                "authoring_quality_ready",
+                "export_ready",
+                "submission_ready",
+                "grant_truth",
+            ],
+            "opl_can_read_artifact_body": False,
+            "opl_can_write_artifact_body": False,
+            "opl_can_declare_fundability_ready": False,
+            "opl_can_declare_quality_ready": False,
+            "opl_can_declare_export_ready": False,
+            "opl_can_declare_submission_ready": False,
         },
     }
 
@@ -842,6 +949,7 @@ def build_mag_family_stage_control_plane(
                 "trust_boundary",
                 "stage_production_evidence_closeout",
                 "stage_contract.user_stage_log_contract",
+                "stage_contract.stage_native_artifact_contract",
             ],
             "allowed_action_catalog_ref": "/product_entry_manifest/family_action_catalog",
         },

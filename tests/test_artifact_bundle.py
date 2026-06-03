@@ -20,6 +20,44 @@ REVISION_EXAMPLE_PATH = REPO_ROOT / 'examples' / 'nsfc_workspace_p2c_revision.js
 RE_REVIEW_MAJOR_REVISION_EXAMPLE_PATH = REPO_ROOT / 'examples' / 'nsfc_workspace_p3b_re_review_major_revision.json'
 
 
+def _assert_stage_output_projection(
+    test_case: unittest.TestCase,
+    *,
+    bundle: dict[str, object],
+    stage_id: str,
+    stage_output_role: str,
+) -> None:
+    projection = bundle['stage_output_projection']
+    test_case.assertIsInstance(projection, dict)
+    test_case.assertEqual(projection['surface_kind'], 'mag_stage_output_projection')
+    test_case.assertEqual(projection['owner'], 'med-autogrant')
+    test_case.assertEqual(projection['stage_id'], stage_id)
+    test_case.assertEqual(projection['stage_output_role'], stage_output_role)
+    test_case.assertEqual(projection['artifact_classification'], 'grant_stage_output_ref')
+    test_case.assertEqual(bundle['manifest']['stage_id'], stage_id)
+    test_case.assertEqual(bundle['manifest']['stage_output_role'], stage_output_role)
+    test_case.assertEqual(bundle['manifest']['artifact_classification'], 'grant_stage_output_ref')
+    test_case.assertEqual(bundle['manifest']['manifest_ref'], projection['manifest_ref'])
+    test_case.assertEqual(bundle['manifest']['current_pointer_ref'], projection['current_pointer_ref'])
+    test_case.assertEqual(
+        bundle['manifest']['owner_receipt_or_typed_blocker_ref'],
+        projection['owner_receipt_or_typed_blocker_ref'],
+    )
+    test_case.assertEqual(projection['current_pointer_ref'], f'current:mag/stages/{stage_id}/{stage_output_role}')
+    test_case.assertEqual(
+        projection['owner_receipt_or_typed_blocker_ref'],
+        f'receipt:mag/grant-stage-controlled-attempt/{stage_id}/owner-receipt-or-typed-blocker',
+    )
+    opl_consumption = projection['opl_consumption']
+    test_case.assertEqual(opl_consumption['role'], 'refs_manifest_receipt_only')
+    test_case.assertFalse(opl_consumption['can_read_artifact_body'])
+    test_case.assertFalse(opl_consumption['can_write_grant_truth'])
+    test_case.assertFalse(opl_consumption['can_infer_fundability'])
+    test_case.assertFalse(opl_consumption['can_infer_quality'])
+    test_case.assertFalse(opl_consumption['can_infer_export'])
+    test_case.assertFalse(opl_consumption['can_infer_submission_ready'])
+
+
 class ArtifactBundleCliTest(unittest.TestCase):
     def run_cli(self, *args: str) -> tuple[int, str, str]:
         return run_cli(*args)
@@ -60,15 +98,19 @@ class ArtifactBundleCliTest(unittest.TestCase):
                 'active_fit_mapping_id': 'fit-001',
                 'active_draft_id': 'draft-outline-v1',
             })
-            self.assertEqual(bundle['manifest'], {
-                'direction_id': 'dir-inflammatory-remodeling',
-                'question_id': 'question-immune-fibrosis',
-                'argument_chain_id': 'arg-001',
-                'fit_mapping_id': 'fit-001',
-                'draft_id': 'draft-outline-v1',
-                'draft_version_label': 'outline-v1',
-                'draft_status': 'outline',
-            })
+            self.assertEqual(bundle['manifest']['direction_id'], 'dir-inflammatory-remodeling')
+            self.assertEqual(bundle['manifest']['question_id'], 'question-immune-fibrosis')
+            self.assertEqual(bundle['manifest']['argument_chain_id'], 'arg-001')
+            self.assertEqual(bundle['manifest']['fit_mapping_id'], 'fit-001')
+            self.assertEqual(bundle['manifest']['draft_id'], 'draft-outline-v1')
+            self.assertEqual(bundle['manifest']['draft_version_label'], 'outline-v1')
+            self.assertEqual(bundle['manifest']['draft_status'], 'outline')
+            _assert_stage_output_projection(
+                self,
+                bundle=bundle,
+                stage_id='specific_aims_and_structure',
+                stage_output_role='specific_aims_structure_manifest_ref',
+            )
             self.assertEqual(bundle['lineage'], {
                 'frozen_question_id': 'question-immune-fibrosis',
                 'argument_chain_id': 'arg-001',
@@ -108,6 +150,12 @@ class ArtifactBundleCliTest(unittest.TestCase):
             self.assertEqual(bundle['lifecycle_stage'], 'revision')
             self.assertEqual(bundle['manifest']['draft_version_label'], 'v0.4')
             self.assertEqual(bundle['manifest']['draft_status'], 'revised')
+            _assert_stage_output_projection(
+                self,
+                bundle=bundle,
+                stage_id='proposal_authoring',
+                stage_output_role='reviewable_grant_artifact_bundle_ref',
+            )
             self.assertEqual(bundle['lineage']['frozen_question_id'], 'question-immune-fibrosis')
             self.assertEqual(bundle['bundle_summary'], {'outline_count': 2, 'section_count': 3})
             self.assertNotIn('program_id', bundle)
@@ -155,6 +203,12 @@ class ArtifactBundleCliTest(unittest.TestCase):
             self.assertEqual(bundle['lifecycle_stage'], 'critique')
             self.assertEqual(bundle['manifest']['draft_version_label'], 'v0.5')
             self.assertEqual(bundle['manifest']['draft_status'], 'revised')
+            _assert_stage_output_projection(
+                self,
+                bundle=bundle,
+                stage_id='review_and_rebuttal',
+                stage_output_role='review_quality_closure_receipt_ref',
+            )
             self.assertEqual(bundle['lineage']['draft_id'], 'draft-v1')
             self.assertEqual(len(bundle['artifacts']['draft_sections']), 3)
             self.assertTrue(bundle_path.exists())

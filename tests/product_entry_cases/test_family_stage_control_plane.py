@@ -70,6 +70,14 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
             "review_and_rebuttal": ["package_and_submit_ready"],
             "package_and_submit_ready": [],
         }
+        expected_stage_output_roles = {
+            "call_and_candidate_intake": "call_candidate_intake_manifest_ref",
+            "fundability_strategy": "fundability_strategy_owner_receipt_ref",
+            "specific_aims_and_structure": "specific_aims_structure_manifest_ref",
+            "proposal_authoring": "reviewable_grant_artifact_bundle_ref",
+            "review_and_rebuttal": "review_quality_closure_receipt_ref",
+            "package_and_submit_ready": "submission_ready_package_manifest_ref",
+        }
         independent_gate_stage_ids = {
             "fundability_strategy",
             "specific_aims_and_structure",
@@ -178,6 +186,91 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                 )
                 self.assertEqual(admission_packet["blocker_budget"]["repeat_budget"], 2)
                 self.assertEqual(admission_packet["blocker_budget"]["escalation_owner"], "med-autogrant")
+                stage_native_artifact_contract = stage["stage_contract"]["stage_native_artifact_contract"]
+                expected_stage_output_role = expected_stage_output_roles[stage["stage_id"]]
+                self.assertEqual(
+                    stage_native_artifact_contract["surface_kind"],
+                    "mag_stage_native_artifact_contract",
+                )
+                self.assertEqual(stage_native_artifact_contract["owner"], "med-autogrant")
+                self.assertEqual(stage_native_artifact_contract["stage_id"], stage["stage_id"])
+                self.assertEqual(
+                    stage_native_artifact_contract["required_output_roles"],
+                    [expected_stage_output_role],
+                )
+                self.assertIn(
+                    {
+                        "ref_kind": "stage_output_role",
+                        "ref": expected_stage_output_role,
+                        "role": "stage_native_artifact_output_role",
+                    },
+                    stage["outputs"],
+                )
+                manifest_requirements = stage_native_artifact_contract["manifest_requirements"]
+                self.assertTrue(manifest_requirements["body_free_projection_required"])
+                self.assertTrue(
+                    {
+                        "stage_id",
+                        "stage_output_role",
+                        "artifact_classification",
+                        "manifest_ref",
+                        "current_pointer_ref",
+                        "owner_receipt_or_typed_blocker_ref",
+                    }
+                    <= set(manifest_requirements["required_fields"])
+                )
+                self.assertIn("stage_output_role", manifest_requirements["identity_fields"])
+                owner_closeout_requirements = stage_native_artifact_contract[
+                    "owner_closeout_requirements"
+                ]
+                self.assertEqual(
+                    owner_closeout_requirements["accepted_return_shapes"],
+                    [
+                        "domain_owner_receipt_ref",
+                        "typed_blocker_ref",
+                        "no_regression_evidence_ref",
+                    ],
+                )
+                self.assertEqual(
+                    owner_closeout_requirements["expected_receipt_refs"],
+                    stage["stage_contract"]["expected_receipt_refs"],
+                )
+                self.assertTrue(owner_closeout_requirements["typed_blocker_required_when_output_missing"])
+                self.assertTrue(
+                    owner_closeout_requirements["owner_receipt_required_for_current_pointer_advance"]
+                )
+                self.assertTrue(owner_closeout_requirements["provider_completion_is_not_owner_closeout"])
+                current_pointer_rules = stage_native_artifact_contract["current_pointer_rules"]
+                self.assertEqual(current_pointer_rules["pointer_owner"], "med-autogrant")
+                self.assertEqual(
+                    current_pointer_rules["pointer_ref_template"],
+                    f"current:mag/stages/{stage['stage_id']}/{expected_stage_output_role}",
+                )
+                self.assertFalse(current_pointer_rules["opl_can_advance_pointer"])
+                self.assertEqual(
+                    current_pointer_rules["missing_pointer_policy"],
+                    "typed_blocker_no_opl_inference",
+                )
+                classification_boundary = stage_native_artifact_contract[
+                    "artifact_classification_boundary"
+                ]
+                self.assertEqual(classification_boundary["classification"], "grant_stage_output_ref")
+                self.assertEqual(classification_boundary["artifact_body_owner"], "med-autogrant")
+                self.assertFalse(classification_boundary["opl_can_read_artifact_body"])
+                self.assertFalse(classification_boundary["opl_can_write_artifact_body"])
+                self.assertFalse(classification_boundary["opl_can_declare_fundability_ready"])
+                self.assertFalse(classification_boundary["opl_can_declare_quality_ready"])
+                self.assertFalse(classification_boundary["opl_can_declare_export_ready"])
+                self.assertFalse(classification_boundary["opl_can_declare_submission_ready"])
+                self.assertEqual(
+                    classification_boundary["opl_consumes"],
+                    [
+                        "stage_output_role",
+                        "manifest_ref",
+                        "current_pointer_ref",
+                        "owner_receipt_or_typed_blocker_ref",
+                    ],
+                )
                 self.assertTrue(
                     any(
                         ref["role"] == "opl_provider_stage_launch_trigger"
