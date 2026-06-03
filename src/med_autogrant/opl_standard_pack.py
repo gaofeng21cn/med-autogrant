@@ -733,6 +733,37 @@ def _foundry_agent_series_contract(stage_control_plane: Mapping[str, Any]) -> di
             "no_parallel_blocker_lineage_schema": True,
             "no_domain_runtime_fork": True,
         },
+        "purpose_first_adapter_thinning_policy": {
+            "policy_id": "mag.purpose_first_adapter_thinning.v1",
+            "default_retained_surface_roles": [
+                "refs_only_adapter",
+                "domain_handler_target",
+                "minimal_authority_function",
+                "migration_input",
+                "history_or_tombstone_provenance",
+            ],
+            "default_operator_delta_shape": (
+                "grant_deliverable_progress_delta_or_mag_owned_typed_blocker"
+            ),
+            "physical_delete_required_gates": [
+                "replacement_parity",
+                "no_active_caller",
+                "owner_receipt_or_typed_blocker",
+                "no_forbidden_write",
+                "tombstone_or_provenance",
+            ],
+            "evidence_tail_boundary": {
+                "structural_conformance_is_domain_ready": False,
+                "provider_completion_is_submission_ready": False,
+                "grouped_cli_success_is_grant_ready": False,
+                "generated_surface_can_claim_production_ready": False,
+                "submission_ready_export_gate_closeout_requires": (
+                    "human_gate_receipt_or_mag_owned_typed_blocker"
+                ),
+            },
+            "private_surface_policy_ref": "contracts/private_functional_surface_policy.json",
+            "active_plan_ref": "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
+        },
         "app_projection_policy": {
             "app_consumes_shared_progress_projection_only": True,
             "app_can_read_domain_body": False,

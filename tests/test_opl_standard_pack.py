@@ -175,6 +175,31 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         "foundry_agent_series_policy_release"
     ] == "contracts/opl-framework/foundry-agent-series-policy-release.json"
     assert generated["foundry_agent_series"]["domain_adapter_policy"]["no_parallel_progress_schema"] is True
+    thinning = generated["foundry_agent_series"]["purpose_first_adapter_thinning_policy"]
+    assert thinning["default_retained_surface_roles"] == [
+        "refs_only_adapter",
+        "domain_handler_target",
+        "minimal_authority_function",
+        "migration_input",
+        "history_or_tombstone_provenance",
+    ]
+    assert thinning["default_operator_delta_shape"] == (
+        "grant_deliverable_progress_delta_or_mag_owned_typed_blocker"
+    )
+    assert thinning["physical_delete_required_gates"] == [
+        "replacement_parity",
+        "no_active_caller",
+        "owner_receipt_or_typed_blocker",
+        "no_forbidden_write",
+        "tombstone_or_provenance",
+    ]
+    assert (
+        thinning["evidence_tail_boundary"][
+            "submission_ready_export_gate_closeout_requires"
+        ]
+        == "human_gate_receipt_or_mag_owned_typed_blocker"
+    )
+    assert thinning["evidence_tail_boundary"]["provider_completion_is_submission_ready"] is False
     assert (
         generated["foundry_agent_series"]["app_projection_policy"][
             "app_consumes_shared_progress_projection_only"
