@@ -56,7 +56,7 @@ MAG 必须保留的 authority：
 
 这些 authority 不迁给 OPL，也不能由 schema completeness、scorecard 分数、package existence、provider completion、queue completion 或 controller route 机械生成 ready verdict。
 
-## 当前状态矩阵
+## 当前完成进度
 
 | Layer | 当前状态 | 当前 owner / 读法 |
 | --- | --- | --- |
@@ -115,13 +115,50 @@ MAG 必须保留的 authority：
 
 Refs-only ledger verification、request accounting closure、OPL workorder closeout、source ref declaration、schema completeness、scorecard 分数、package existence、stage replay projection、grouped CLI success、product-entry manifest success 或 provider completion 都不能替代真实 workspace / App / provider evidence，也不能声明 grant-ready、fundability-ready、quality-ready、export-ready、submission-ready 或 production-ready。
 
-## 近期完善计划
+## 下一轮 Agent prompt
 
-1. 保持 `agent/` Declarative Grant Pack、stage control plane、contracts、quality gates、memory policy 与当前 source/contract 对齐。
-2. 保持 product/status/user-loop/domain-handler/CLI shell 的 refs-only adapter 或 direct handler target 边界；新增能力优先服务 OPL generated/default caller parity，不扩写 MAG-owned shell。
-3. 对 AI-first authority guard 做回归维护：任何 fundability / quality / export / submission-ready claim 必须回到 MAG owner surface 或 AI-backed artifact。
-4. 只用持续真实 workspace/App/operator/release evidence、stage success-rate refs 与 Temporal long-soak window evidence 关闭 production evidence tail；refs-only accounting、stage replay projection、workspace receipt scaleout snapshot、manifest sustained-consumption payload response snapshot、operator payload records 和 provider long-soak follow-through typed-blocker projection 只进入 ledger/history 或 body-free production-acceptance snapshot。
-5. 在 production default caller 与 no-resurrection guard 成立后，删除旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；需要追溯只留 history/provenance，测试改为断言 current contract、schema、CLI/API、manifest、owner receipt、typed blocker、fail-closed 或 tombstone semantics。
+- Write scope: MAG active truth owner、current status summary、Declarative Grant Pack、
+  product/status/user-loop/domain-handler/CLI refs-only adapter boundary、AI-first authority
+  guard、production evidence tail、Temporal long-soak、default-caller thinning 和 docs
+  lifecycle foldback。
+- Non-goals: 不把 OPL provider completion、stage replay projection、package existence、
+  schema completeness、scorecard 分数、grouped CLI success、product-entry manifest success、
+  refs-only accounting 或 doctor pass 写成 grant-ready、fundability-ready、quality-ready、
+  export-ready、submission-ready 或 production-ready；不扩写 MAG-owned generic shell、compat
+  alias、facade、wrapper 或 fallback 文案。
+- Live truth inputs: 读取 `contracts/runtime-program/current-program.json`、MAG
+  contracts/schemas/source/tests、product-entry manifest、domain-handler/action metadata、
+  owner receipt / memory / package / lifecycle contracts、OPL/App fresh read-model、runtime
+  receipts、workspace/package evidence 和 docs portfolio；dated proof、receipt id、payload
+  path、command transcript 和 old worktree closeout 只作 provenance。
+- Required actions:
+  1. 保持 `agent/` Declarative Grant Pack、stage control plane、contracts、quality gates、
+     memory policy 与当前 source/contract 对齐。
+  2. 保持 product/status/user-loop/domain-handler/CLI shell 的 refs-only adapter 或 direct
+     handler target 边界；新增能力优先服务 OPL generated/default caller parity，不扩写
+     MAG-owned shell。
+  3. 对 AI-first authority guard 做回归维护：任何 fundability / quality / export /
+     submission-ready claim 必须回到 MAG owner surface 或 AI-backed artifact。
+  4. 只用持续真实 workspace/App/operator/release evidence、stage success-rate refs 与
+     Temporal long-soak window evidence 关闭 production evidence tail；refs-only accounting、
+     stage replay projection、workspace receipt scaleout snapshot、manifest sustained-consumption
+     payload response snapshot、operator payload records 和 provider long-soak follow-through
+     typed-blocker projection 只进入 ledger/history 或 body-free production-acceptance snapshot。
+  5. 在 production default caller 与 no-resurrection guard 成立后，删除旧 wrapper、alias、
+     facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；需要追溯只留
+     history/provenance，测试改为断言 current contract、schema、CLI/API、manifest、owner
+     receipt、typed blocker、fail-closed 或 tombstone semantics。
+- Verification commands: docs-only 维护运行 `rtk git diff --check`、
+  `rtk rg -n "<<<<<<<|>>>>>>>|=======" docs` 和 docs inventory sanity；触及
+  source/contracts/tests 时运行 `rtk ./scripts/verify.sh` 或 focused pytest。
+- Completion gate: 本轮只能在 active plan、docs portfolio、contracts/source/tests 与 fresh
+  read-model 一致，且 open production evidence tail 没有被误写成 ready verdict 后关闭；
+  production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence、
+  App/workbench consumption 与 no-active legacy caller scan 未满足前，不授权 physical delete。
+- Foldback target: durable 当前结论折回本文、核心五件套、`docs/specs/README.md`、
+  specs lifecycle map 或 machine contracts；执行 prompt、worktree/branch 状态、命令
+  transcript、receipt id、payload path、proof closeout 和 dated coverage 进入
+  `docs/history/**`、ledger、contracts 或提交历史。
 
 ## 后续工作准入
 
