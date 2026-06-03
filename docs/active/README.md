@@ -1,6 +1,6 @@
 # 活跃文档
 
-Owner: `MedAutoGrant`
+Owner: `Med Auto Grant`
 Purpose: `active_execution_and_gap_index`
 State: `active_support`
 Machine boundary: 人读索引。机器真相继续归 contracts、schemas、source、current-program records、runtime evidence 与 grant artifacts。

@@ -16,6 +16,23 @@ MAG 采用 OPL-family canonical docs taxonomy：
 
 这个目录集合按长期职责保留，不按当前文件数量决定。MAG 当前真实 owner 主要在核心五件套、`active/`、`references/`、`specs/` 和 `history/`；`public/product/runtime/delivery/source/policies` 当前较薄，但都有长期职责，后续按 current 内容小批量吸收。
 
+## 本轮 Inventory Sanity
+
+截至 `2026-06-03`，本仓共有 20 个 `README*` 入口和 117 个 `docs/**/*.md` 文档。当前生命周期角色按 owner 层读取，而不是按文件名日期读取：
+
+| 文档集合 | 当前角色 | 处理规则 |
+| --- | --- | --- |
+| 根层 `README.md` / `README.zh-CN.md` | `current_public` | 公开第一入口；不承担技术 truth ledger。 |
+| 非 docs README：`agent/README.md`、`contracts/README.md`、`runtime/README.md` | repo-source / machine-surface 人读索引 | 各自只解释目录边界；机器真相仍归对应 contracts/source/runtime evidence。 |
+| docs 根入口与核心五件套 | current 人读 truth set | 只保留角色、边界、入口、证据门和决策；不追加 receipt proof、worktree closeout 或 dated proof 清单。 |
+| `docs/active/**` | active gap / inventory | `mag-ideal-state-cross-repo-gap-plan.md` 是唯一 active gap plan；`opl-private-implementation-migration-inventory.md` 是 per-surface 明细，不替代 active plan。 |
+| `docs/public/product/runtime/delivery/source/policies/**` | 薄 support index | 只做目录职责和下一跳，不把核心事实复制成第二真相源。 |
+| `docs/specs/**` | active specs / support records / lifecycle map | 只按 `docs/specs/README.md` 与 `specs_lifecycle_map.md` 标注的 active subsection 阅读。 |
+| `docs/references/**` | reference | north-star、OPL adoption、memory policy、governance checklist；不承担 current status。 |
+| `docs/history/**` | history / provenance | 保存旧 specs、旧 plans、provider proof、coverage ledger、OMX 和 tombstone；标题中的 `Current Truth` 只能按当时语境阅读。 |
+
+本轮未发现需要新增 docs 目录或把 history 文件恢复为 active/support owner 的证据。发现的主要漂移是 active/status 入口携带过多 proof-by-proof 明细，已按 owner/gate/status 层压回 `docs/status.md` 与 active gap plan；dated coverage 和 proof 流水继续留在 history 或机器合同。
+
 ## 与 OPL 的分层
 
 OPL 系列项目全局主参考是 `/Users/gaofeng/workspace/one-person-lab/docs/active/opl-family-development-reference.md`。它持有全局 framework 目标、跨仓差距顺序、shared primitive 上收、App/workbench 目标和同名 docs taxonomy。

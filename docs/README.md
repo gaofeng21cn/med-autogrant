@@ -17,6 +17,18 @@ Machine boundary: 本文是人读索引。机器真相继续归 contracts、sche
 | 技术规划者、架构读者、方向同步读者 | [项目概览](./project.md)、[当前状态](./status.md)、[架构](./architecture.md)、[不变量](./invariants.md)、[决策记录](./decisions.md)、[合同说明](../contracts/README.md) | 快速抓住当前技术形态、边界和主线方向 |
 | 开发者与维护者 | [Specs 索引](./specs/README.md)、[Specs lifecycle map](./specs/specs_lifecycle_map.md)、[References 目录](./references/)、[Active baton 与当前计划](./active/README.md)、[历史归档](./history/README.md) | 查看技术记录、内部参考、active baton 材料和归档材料 |
 
+## 入口职责
+
+| 层 | 职责 |
+| --- | --- |
+| 核心五件套 | 当前角色、架构边界、不变量、决策和状态摘要。 |
+| `docs/active/` | 当前 gap、当前计划、证据门和 private implementation inventory。 |
+| `docs/specs/` | active spec 与 support current-truth subsection；不能按 dated 文件名直接推断当前状态。 |
+| `docs/references/` | north-star、OPL adoption、memory policy 和治理 checklist。 |
+| `docs/history/` | 旧路线、旧 provider/runtime proof、已完成计划、coverage ledger 和 tombstone provenance。 |
+
+Active/support/history 的边界由 [MAG 文档组合治理](./docs_portfolio_consolidation.md) 与 [Specs lifecycle map](./specs/specs_lifecycle_map.md) 统一维护。`README*`、`docs/**` 和参考文档都是人读面；脚本、测试、runtime status 和 contracts 不应依赖 Markdown prose path 或章节标题作为机器接口。
+
 ## OPL 系列分层
 
 OPL 系列项目的全局主参考是 `/Users/gaofeng/workspace/one-person-lab/docs/active/opl-family-development-reference.md`。它维护 OPL Framework 的全局目标、全局差距、通用能力上收边界、App/workbench 目标和跨仓开发顺序。
@@ -36,7 +48,7 @@ MAG repo source 只保存 locator、index、schema、receipt ref、restore/reten
 - OPL 是 Temporal-backed stage-led、以 Agent executor 为最小执行单位的完整智能体运行框架。任务启动后的默认运行驻留由 OPL/Temporal 承担；除非活跃合同显式选择非默认 executor/backend，`Codex CLI` 是 stage attempt 的默认执行单元。
 - OPL 可以消费 MAG 的 runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue，用于调度、唤醒、交接、回执、重试和投影；它不持有 MAG grant truth、authoring execution、fundability judgment、quality verdict 或 submission-ready export authority。
 - 旧 `OPL Runtime Manager`、上游 Hermes 作为默认 provider 的旧口径、gateway 与本地 host runtime 说明只作为历史追溯或 provider-specific 迁移记录保留；Temporal-backed provider 是当前 OPL production online runtime 的必需 substrate，默认 MAG/OPL 边界由核心文档和 active specs 持有。
-- [Docs portfolio consolidation boundary](./docs_portfolio_consolidation.md) 是当前文档生命周期 owner，记录逐分区当前 owner、已吸收内容和历史归位理由；旧 OPL Runtime Manager 与 Hermes/upstream-provider proof 说明已归入 history，lightweight handoff 仍作为 `docs/specs/` integration reference 阅读。
+- [Docs portfolio consolidation boundary](./docs_portfolio_consolidation.md) 是当前文档生命周期 owner，记录逐分区当前 owner、已吸收内容和历史归位理由；旧 OPL Runtime Manager、Hermes/upstream-provider proof 与 lightweight handoff 说明已归入 history，当前 handoff / product-entry / OPL generated boundary 回到核心文档、contracts/source 和 specs lifecycle map。
 - 历史 program 记录与迁移说明统一从 `docs/history/` 进入；较早 dated specs 可以继续留在 `docs/specs/` 作为 provenance，明确退役的 provider-proof specs 进入 `docs/history/specs/`。机器可读面通过语义化 `human_doc:*` 标识引用它们，而不是把旧路径钉成稳定接口。
 - product status、user-loop、projection 与本地 `submission-ready` package 已作为 app skill 下的 refs-only command contract、OPL/App generated shell target 或 direct-product projection 落地；当前 repo-local active/default handler target 是 `domain-handler export|dispatch`。当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，外部基金官网 portal submission 仍是单独的人类监督步骤；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/active/`。
 - `OPL` family routing 与 `Codex` skill activation 继续消费同一套 MAG capability surface；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。

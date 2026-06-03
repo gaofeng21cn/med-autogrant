@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `ideal_state_gap_plan`
 State: `active_plan`
 Machine boundary: 本文是人读 current gap / completion plan。机器真相继续归 `contracts/runtime-program/current-program.json`、contracts、schemas、source、CLI/API 行为、product-entry manifest、workspace/runtime artifact root、runtime receipts、质量报告和导出包。
-Date: `2026-06-02`
+Date: `2026-06-03`
 
 ## 读法
 
@@ -12,7 +12,7 @@ Date: `2026-06-02`
 
 差距按理想态判断，不按现有 MAG 代码是否还能运行判断。通用 runtime、runner、queue、session、journal、workspace/source intake、memory/package transport、workbench、observability、generic CLI/product-entry/status wrapper 和旧 product-sidecar wrapper 属于 OPL / shared family layer；MAG 只保留 grant authority、domain handler、refs-only adapter、diagnostic、fixture 或 tombstone。
 
-本文不保存长篇执行 prompt、dated closeout checklist 或 receipt proof 流水。每轮完成后只把当前 truth、剩余 gap、证据门和近期计划折回本文；细节进入合同、history、specs lifecycle map 或提交历史。
+本文不保存长篇执行 prompt、dated closeout checklist、receipt proof 流水、逐日期 command transcript 或 worktree closeout。每轮完成后只把当前状态、仍开放 gap、证据门和近期顺序折回本文；细节进入合同、history、specs lifecycle map 或提交历史。
 
 ## 当前唯一真相
 
@@ -56,33 +56,24 @@ MAG 必须保留的 authority：
 
 这些 authority 不迁给 OPL，也不能由 schema completeness、scorecard 分数、package existence、provider completion、queue completion 或 controller route 机械生成 ready verdict。
 
-## 已落地
+## 当前状态矩阵
 
-| Area | 当前状态 | 当前 owner / evidence |
+| Layer | 当前状态 | 当前 owner / 读法 |
 | --- | --- | --- |
-| Identity / runtime owner boundary | `landed` | 核心五件套与 `current-program.json` 已固定 MAG 是 grant authority，OPL/Temporal 是默认 task runtime owner。 |
-| Declarative Grant Pack | `landed_with_evidence_tail` | `agent/`、stage control plane、quality gates、pack compiler input 已作为 OPL generated surface 输入。 |
+| Identity / runtime owner boundary | `landed` | 核心五件套与 `current-program.json` 固定 MAG 是 grant authority，OPL/Temporal 是默认 task runtime owner。 |
+| Declarative Grant Pack | `landed_with_evidence_tail` | `agent/`、stage control plane、quality gates 和 pack compiler input 是 OPL generated surface 输入；stage semantics 仍归 MAG。 |
 | Retained authority taxonomy | `landed_with_guard_tail` | fundability、quality、export、package、memory、owner receipt、grant helper 已分成 AI-first judgment surface 与 programmatic guard surface。 |
 | Purpose-first adapter thinning | `machine_guard_landed_evidence_tail_remaining` | `contracts/foundry_agent_series.json#/purpose_first_adapter_thinning_policy` 和 `tests/test_opl_standard_pack.py` 固定 retained shell 只能作为 refs-only adapter、domain handler target、minimal authority function、migration input 或 tombstone/provenance 读取；默认下一跳是 MAG owner delta 或 MAG-owned typed blocker。 |
 | Consumer thinning / refs-only boundary | `landed_with_external_gate` | `mag_consumer_thinning_contract`、domain-handler、receipt projection、lifecycle/package/memory refs 只输出 refs、typed blocker、owner receipt 与 action metadata。 |
 | Submission-ready human gate blocker projection | `landed_as_blocker_projection` | `package_and_submit_ready` 的 typed blocker 已显式投影 `submission_ready_export_gate`、MAG human-gate owner、`human_gate_receipt` requirement 与 OPL/provider 不可绕过字段；该 projection 不关闭人工审批，不声明 submission/export/production ready。 |
 | External evidence request accounting | `refs_only_closed` | `mag-evidence-receipt-ledger.json` 已记录 7 个 request refs-only close；剩余真实证据门是 `temporal_provider_long_soak_window_evidence` 和持续 no-regression / consumption。 |
-| OPL owner-payload response | `return_shape_landed_manifest_consumption_workorder_landed_payload_response_projected` | `authority owner-payload-response` 现在输出 OPL owner-payload workorder 可消费的 `domain_owner_receipt_refs`、`owner_chain_refs`、`no_regression_evidence_refs`、`typed_blocker_refs`、success / typed-blocker payload path、required return shapes 和 legacy alias；同时暴露逐 stage expected receipt / monitor freshness / runtime event refs summary，并把 source/runtime live-evidence pending 表达为 MAG-owned typed blocker path。Product-entry manifest 默认暴露 `owner_payload_response`、`workspace_receipt_scaleout_evidence` 与 `manifest_sustained_consumption_evidence`，让 OPL/App/operator manifest consumer 可发现 owner-payload summary、workspace scaleout provenance 与本轮 payload response；`manifest_consumer_evidence.sustained_consumption_followthrough_workorder` 继续把后续真实 App/operator 或 release default caller payload 需求显式化。`authority receipt-readiness` 仍是当前 MAG-owned receipt refs 前置入口，`submission_ready_export_gate` typed blocker 仍是 blocker，不是 approval 或 ready verdict。 |
-| Manifest sustained-consumption payload response | `payload_response_snapshot_landed_cli_attempt_records_scaleout_not_closeout` | `authority manifest-consumption-payload` 校验真实 App/operator 或 release default caller 提交的 sustained-consumption payload，接受 success refs path、typed-blocker path 或 `operator_payload_attempts` 批量 path，拒绝未声明 operator payload 字段，并输出 body-free response 给 OPL refs-only record/verify。`contracts/production_acceptance/mag-manifest-sustained-consumption-evidence-20260528.json` 已记录一次 success refs path payload response，但 `long_soak_or_typed_blocker_ref` 仍是 provider long-soak window typed blocker；payload response 显式投影 `provider_long_soak_followthrough`、`operator_payload_attempt_records` 与 `operator_payload_attempt_summary`，并固定 `claims_provider_long_soak_complete=false` / `closes_provider_long_soak=false`。非 mocked grouped CLI 回归已覆盖 parser/handler/product-entry 串联，证明 direct CLI/default-caller payload path 和 batch attempt path 会返回同一 refs-only operator payload records / provider follow-through shape，并在 CLI 层 fail-closed 拒绝未声明 operator 字段以及 success refs path / typed blocker path 混用；同一事实已折回 production acceptance snapshot 的 `grouped_cli_regression_evidence` 字段。该 snapshot 与 CLI regression 不生成 operator payload、不创建 MAG owner receipt、不关闭 App sustained-consumption、human gate、submission-ready 或 Temporal long-soak。 |
-| Stage replay / monitor evidence projection | `replay_and_monitor_refs_projected_human_gate_open` | `contracts/stage_control_plane.json` 已把 `grant_stage_controlled_attempt_closeout` 的 append-only event log、live attempt packet、逐 stage runtime event、owner receipt-or-typed-blocker、no-regression 和 no-forbidden-write refs 投影为 OPL 可读取的 `replay_evidence_refs` / `monitor_refs`。该投影关闭的是 OPL diagnostic replay/monitor coverage tail；`package_and_submit_ready` 的 `human_gate:submission_ready_export_gate` 和各 stage 真实 boundary success-rate ref 仍保持开放，不声明 stage ready、submission ready 或 production ready。 |
-| Process/history foldback | `landed` | dated closeout、receipt proof、provider/Gateway/local-manager 背景已回到 history/specs/provenance，不再作为 active plan 流水。 |
-
-## 当前完成进度
-
-| Area | 当前进度 | 当前读法 |
-| --- | --- | --- |
 | Standard OPL Agent source shape | `replacement_ready_physical_delete_not_authorized` | `agent/`、stage control plane、quality gates、pack compiler input 和 MAG owner boundary 已是当前默认语义结构；OPL default-caller replacement/cutover readiness 已观测，但 product/status/user-loop/domain-handler/domain_runtime/autonomy/CLI target 仍作为 handler/adapter target 暂留，不声明 grant-ready、submission-ready、production-ready 或 physical-delete-ready。 |
 | Foundry Agent series pin contract | `done_for_structural_conformance` | `contracts/foundry_agent_series.json`、`src/med_autogrant/opl_standard_pack.py`、`tests/test_opl_standard_pack.py`、OPL family conformance | `contract_version_policy`、`shared_release_pin_strategy` 与 canonical `shared_policy_release` 已对齐 OPL standard scaffold / Foundry policy release artifact；这只关闭 structural blocker，不授权 domain ready、quality/export verdict、owner receipt 或 default promotion。 |
 | Runtime / product shell thinning | `refs_only_handler_target_until_owner_delete_receipt` | product/status/user-loop/domain-handler/domain_runtime 面只能作为 direct handler、refs-only adapter、minimal authority function、diagnostic 或 migration input；不再作为长期 MAG surface 读取。 |
 | Purpose-first owner-delta / domain-thinning gate | `landed_as_contract_gate` | `private_functional_surface_policy.json` 与 `foundry_agent_series.json` 已把 product-entry、grouped CLI、status/user-loop、domain-handler、runtime/control projection 与 lifecycle shell 固定为 owner-delta 输出面。该 gate 只允许 MAG owner receipt、MAG-owned typed blocker 或 no-regression evidence 作为下一步 return shape，并把 `submission_ready_export_gate` 保持为 human-gate blocker。 |
-| Evidence accounting | `refs_only_closed_owner_payload_record_verify_followthrough_payload_response_attempt_records_schema_projected_stage_replay_projected` | MAG evidence request ledger 已闭合 refs-only accounting；`authority owner-payload-response` 已把 MAG owner refs、stage expected receipt / monitor freshness / runtime event refs 和 typed blocker refs 整理成 OPL owner-payload workorder 可记录的 response；4 个 workspace 的 owner receipt、memory accept/reject、package/export lifecycle 和 cleanup/restore/retention lifecycle refs 已形成 repo-tracked scaleout snapshot。Product-entry manifest 默认暴露这些 body-free refs-only / count-only provenance，并通过 `manifest_consumer_evidence` 证明 App/operator 默认 manifest consumer 已消费 owner payload、stage expected receipt payload、workspace scaleout count-only provenance、`submission_ready_export_gate` blocker refs、sustained-consumption payload response、provider long-soak follow-through typed blocker、operator payload attempt records contract 和 grouped CLI success/fail-closed/batch regression evidence；同一 evidence 暴露 sustained consumption follow-through workorder，且 `authority manifest-consumption-payload` 已能按 allowlist 校验真实 payload、批量 attempt 或 typed blocker refs、拒绝未声明字段。该 CLI regression 已作为 body-free `grouped_cli_regression_evidence` 进入 production acceptance snapshot/schema，并被默认 manifest consumer 投影给 App/operator path。当前 snapshot、operator payload records 和 CLI regression 的 long-soak refs 仍是 typed blocker，不是 closeout。Stage control plane 现在也把 existing ledger refs 投影给 OPL `stages readiness` 的 replay / monitor coverage lens；剩余 stage diagnostic tail 是 `submission_ready_export_gate` human-gate receipt 和真实 boundary success-rate refs。真实 OPL-hosted grant-stage attempt 持续证据、submission human-gate receipt、repeated App/operator sustained consumption 和 Temporal long soak 仍是证据尾项。 |
-| Human gate projection | `explicit_blocker_not_approval` | Submission-ready export human gate 现在作为 MAG-owned typed blocker authority boundary 暴露给 domain-handler 与 receipt reconciliation；真实 human approval receipt 仍未形成。 |
-| Docs lifecycle | `single_active_truth_owner` | 本文持有 current truth、gap、计划和下一轮 prompt；历史 proof、receipt 流水和旧路线继续留在 history/specs/provenance。 |
+| Evidence accounting surfaces | `refs_only_closed_with_followthrough_open` | external ledger、owner-payload response、workspace receipt scaleout、manifest sustained-consumption、stage replay/monitor projection 均按 body-free refs-only / count-only provenance 读取；真实 App/operator sustained consumption、human gate、stage success-rate 和 Temporal long soak 仍开放。 |
+| Human gate projection | `explicit_blocker_not_approval` | `submission_ready_export_gate` 是 MAG-owned typed blocker authority boundary；真实 human approval receipt 仍未形成。 |
+| Docs lifecycle | `single_active_gap_owner` | 本文只持有 open gap、证据门、近期顺序和禁止误写；proof 流水、receipt ids、dated coverage 和旧路线归 history/specs/provenance。 |
 
 ## 功能/结构差距
 
@@ -100,7 +91,7 @@ MAG 必须保留的 authority：
    Fundability、quality、export、memory accept/reject 是 AI-first judgment surface；package authority、owner receipt signer 和 grant helper 是 programmatic guard surface。程序只能 validator / materializer / receipt signer / guard / refs projection，不能机械生成 ready verdict。
 
 3. `generated_default_caller_cutover`
-   `product_entry_parts/*`、`domain_runtime_parts/*`、runtime registration、autonomy loop/report shell、lifecycle/memory/package helpers、CLI/rendering shell 等 active path 必须持续被合同约束为 handler、refs-only adapter、minimal authority function、diagnostic 或 migration input。default caller、direct/hosted parity、owner receipt roundtrip 与 no-active-caller 证据成立后删除旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；详细 path-level inventory 归 [MAG 私有实现与 OPL 迁移台账](./opl-private-implementation-migration-inventory.md)。
+   `product_entry_parts/*`、`domain_runtime_parts/*`、runtime registration、autonomy loop/report shell、lifecycle/memory/package helpers、CLI/rendering shell 等 active path 必须持续被合同约束为 handler、refs-only adapter、minimal authority function、diagnostic 或 migration input。default caller、direct/hosted parity、owner receipt roundtrip 与 no-active-caller 证据成立后删除旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；详细 path-level inventory 归 [MAG 私有实现与 OPL 迁移台账](./opl-private-implementation-migration-inventory.md)，不在本文继续堆 path 长清单。
 
 4. `opl_non_default_executor_receipt_tail`
    `hermes_agent` critique 路径当前只作为 OPL-owned non-default executor receipt lane 读取；MAG 只消费 `AgentExecutionReceipt`、domain closeout packet、grant critique / revision plan payload 和 independent review evidence。`opl_hermes_executor_helper.py` / `hermes_native_executor.py` 仍被 active focused tests 与 explicit critique caller 使用，不能按旧 Hermes/Gateway residue 直接删除。删除门是 OPL generic executor adapter 提供 replacement parity，MAG caller 迁到 OPL-owned adapter surface，focused receipt tests 改到该 surface，no-active-caller scan 通过，并形成 MAG owner receipt 或 typed blocker。
@@ -114,12 +105,12 @@ MAG 必须保留的 authority：
 
 | Evidence gate | 当前状态 | 关闭条件 |
 | --- | --- | --- |
-| OPL-hosted grant-stage attempt | `replay_refs_projected_needs_continuous_real_attempts` | 现有 grant-stage closeout refs 已进入 stage control plane 的 `replay_evidence_refs` 与 monitor refs，OPL readiness 可复验 staged runtime-event / owner-receipt-or-typed-blocker coverage；关闭条件仍是真实 OPL-hosted stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence，并形成可重复 success-rate / long-run evidence。 |
-| Package stage source/runtime evidence | `blocked_by_submission_gate_typed_blocker` | `package_and_submit_ready` stage production evidence 已被 OPL external evidence ledger verified，并已通过 stage control plane 投影给 OPL replay / monitor lens；App/operator 读到 source scope 与 runtime event observed，但 `human_gate:submission_ready_export_gate` expected receipt 仍由 MAG-owned typed blocker 阻塞。关闭条件仍是真实 MAG owner human-gate receipt 或可重复 no-regression / monitor freshness / success-rate evidence，不是 OPL receipt 本身。 |
-| Real workspace memory/package/lifecycle scaleout | `refs_only_scaleout_observed_owner_payload_recorded_followthrough_open` | 4 个 MAG workspace 样本已通过 MAG-owned owner receipt、memory accept/reject receipt、package/export lifecycle handoff 与 cleanup/restore/retention lifecycle receipt surface 形成 36 条 body-free receipt refs，并进入 `owner-payload-response`；同一 response 已暴露 6-stage expected receipt payload summary，供 OPL/App 读取 success refs path 或 typed-blocker path。OPL 已验证 7 条 owner-payload-summary typed-blocker path receipt，证明外部 workorder 可消费这些 body-free blocker refs；关闭条件仍要求真实 owner human-gate receipt、持续 App/operator consumption、long-soak 与 no-regression follow-through，不能把 refs-only scaleout 或 OPL ledger verification 写成 artifact authority、quality/export verdict 或 production ready。 |
+| OPL-hosted grant-stage attempt | `replay_refs_projected_needs_continuous_real_attempts` | 关闭条件仍是真实 OPL-hosted stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence，并形成可重复 success-rate / long-run evidence。 |
+| Package stage source/runtime evidence | `blocked_by_submission_gate_typed_blocker` | OPL replay / monitor lens 可读不等于 stage closeout；关闭条件是真实 MAG owner human-gate receipt 或可重复 no-regression / monitor freshness / success-rate evidence。 |
+| Real workspace memory/package/lifecycle scaleout | `refs_only_scaleout_observed_followthrough_open` | 已有 body-free refs-only scaleout 只能证明 surface 可重复产出 refs；关闭条件仍要求真实 owner human-gate receipt、持续 App/operator consumption、long-soak 与 no-regression follow-through。 |
 | Submission-ready human gate receipt | `blocked_on_real_human_gate_receipt` | `submission_ready_export_gate` typed blocker 已可机读；关闭条件仍是真实 MAG owner human-gate receipt 或人工审批路径证据。 |
-| App/operator/release consumption | `payload_response_attempt_records_scaleout_observed_provider_followthrough_open` | Product-entry manifest 已默认暴露 `owner_payload_response`、`workspace_receipt_scaleout_evidence` 与 `manifest_sustained_consumption_evidence`，让 OPL/App/operator default manifest path 可发现 MAG owner-payload summary、scaleout provenance 与 payload response；`manifest_consumer_evidence` 已固定默认 manifest consumer 消费的 refs、counts、human-gate blocker path、sustained-consumption payload response、provider long-soak follow-through status、operator payload attempt records contract 和 grouped CLI regression evidence，并提供 `sustained_consumption_followthrough_workorder`。`authority manifest-consumption-payload` 现在可按 allowlist 校验真实 `app_operator_consumption_ref`、`default_caller_consumption_ref`、owner payload / workspace scaleout refs、no-forbidden-write ref 与 long-soak 或 typed blocker ref，或接收 App/operator typed blocker path / `operator_payload_attempts` 批量 path，并对未声明字段 fail-closed；非 mocked grouped CLI regression 已证明 direct CLI/default-caller payload path 会返回 body-free provider follow-through typed blocker shape、batch path 会返回 operator payload records，也会拒绝未声明字段和 mixed payload path。本轮 repo-tracked snapshot、CLI regression、operator payload records schema 和 manifest projection 只形成 body-free refs response、attempt scaleout contract 和 long-soak typed-blocker 分类，不声明 sustained completion。OPL `domain-owner-payload-summary` ledger 已把 7 条 MAG typed-blocker path 记录并验证为 refs-only receipt；关闭条件仍是 OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG package refs、quality refs、manual portal boundary、transition oracle refs、safe action refs 和 `authority owner-payload-response` 的 owner receipt success refs path、stage expected receipt / monitor freshness / runtime event refs、typed-blocker payload path。 |
-| Temporal provider long soak | `open_provider_followthrough_typed_blocker_projected` | `manifest_sustained_consumption_payload_response.provider_long_soak_followthrough` 已能把 `long_soak_or_typed_blocker_ref` 投影成 provider long-soak typed blocker 或 long-soak evidence refs，并明确 typed blocker 不等于 provider long-soak completion。关闭条件仍是 `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 形成连续证据。 |
+| App/operator/release consumption | `payload_response_observed_sustained_closeout_open` | manifest / payload response / CLI regression 只形成 refs response、attempt scaleout contract 和 long-soak typed-blocker 分类；关闭条件是真实 OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG refs。 |
+| Temporal provider long soak | `open_provider_followthrough_typed_blocker_projected` | typed blocker follow-through 不等于 long-soak completion；关闭条件仍是 `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 连续证据。 |
 | Physical cleanup / no-resurrection | `replacement_ready_delete_authority_open` | repo-local active path scan 与 retired public command scan 已形成 no-resurrection 结构输入；production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence、App/workbench consumption 与 no-active legacy caller scan 仍未授权删除 active handler/adapter shell。删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests 仍需要 explicit MAG owner receipt authorizing physical delete。 |
 
 Refs-only ledger verification、request accounting closure、OPL workorder closeout、source ref declaration、schema completeness、scorecard 分数、package existence、stage replay projection、grouped CLI success、product-entry manifest success 或 provider completion 都不能替代真实 workspace / App / provider evidence，也不能声明 grant-ready、fundability-ready、quality-ready、export-ready、submission-ready 或 production-ready。
@@ -132,48 +123,13 @@ Refs-only ledger verification、request accounting closure、OPL workorder close
 4. 只用持续真实 workspace/App/operator/release evidence、stage success-rate refs 与 Temporal long-soak window evidence 关闭 production evidence tail；refs-only accounting、stage replay projection、workspace receipt scaleout snapshot、manifest sustained-consumption payload response snapshot、operator payload records 和 provider long-soak follow-through typed-blocker projection 只进入 ledger/history 或 body-free production-acceptance snapshot。
 5. 在 production default caller 与 no-resurrection guard 成立后，删除旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；需要追溯只留 history/provenance，测试改为断言 current contract、schema、CLI/API、manifest、owner receipt、typed blocker、fail-closed 或 tombstone semantics。
 
-## 下一轮 Agent prompt
+## 后续工作准入
 
-Objective:
+后续 agent / maintainer 继续处理 production evidence、default caller 或 no-resurrection 尾项时，只在确认以下 source of truth 后更新本文：核心五件套、MAG ideal-state reference、`contracts/runtime-program/current-program.json`、private/functional surface contracts、owner receipt / memory / package / lifecycle contracts、domain-handler/product-entry/action metadata、focused repo-native verification 和 OPL/App fresh read-model。
 
-- 继续治理 `/Users/gaofeng/workspace/med-autogrant` 的 MAG 标准 OPL Agent production evidence / default caller / no-resurrection 尾项；保持 grant authority 留在 MAG，通用 runtime / generated/default caller 留在 OPL。
+可写入本文的内容只包括仍开放 gap、证据门状态变化、近期顺序和禁止误写口径。执行 prompt、worktree/branch 状态、命令 transcript、receipt id、payload path、proof-by-proof closeout 和 dated coverage 进入 `docs/history/**`、ledger、contracts 或提交历史。
 
-Write scope:
-
-- `docs/active/mag-ideal-state-cross-repo-gap-plan.md`、`docs/status.md`、`docs/active/opl-private-implementation-migration-inventory.md`、MAG contracts/source/tests 中仍影响 owner boundary、generated/default caller 或 no-resurrection 的 surface。
-
-Live truth inputs:
-
-- `AGENTS.md`、`TASTE.md`、核心五件套、本文、MAG ideal-state reference。
-- `contracts/runtime-program/current-program.json`、functional/private surface contracts、owner receipt / memory / package / lifecycle contracts、domain-handler/product-entry/action metadata。
-- Focused pytest、`scripts/verify.sh`、OPL `agents interfaces --domain mag --json`、OPL framework readiness / App drilldown 中 MAG refs-only evidence 读面。
-
-Required actions:
-
-- 核实 production default caller、App/workbench consumption、direct/hosted parity、owner receipt roundtrip、Temporal long-soak 与 no-resurrection 证据。
-- 核实 `submission_ready_export_gate` human-gate receipt、stage boundary success-rate refs、真实 App/operator sustained consumption 与 Temporal long-soak 是否已有 live evidence；若没有，继续保留为 typed blocker / evidence tail。
-- 若 default caller / receipt / no-active-caller proof 成立，直接删除、archive 或 tombstone 旧 wrapper、alias、facade、patch bridge 和 compatibility aggregate test。
-- 把已关闭项折回本文或核心五件套；把 proof 流水折回 history/provenance。
-
-Non-goals:
-
-- 不把 scorecard、schema completeness、package existence、provider completion、queue completion 或 refs-only accounting 写成 fundability-ready、grant-ready、quality-ready、export-ready、submission-ready 或 production-ready。
-- 不把 memory body、grant artifact/private evidence、owner receipt authority 或 quality verdict 上收到 OPL。
-- 不新增 compatibility shim、facade、alias 或旧 runtime/probe fallback。
-
-Verification commands:
-
-- Docs-only：`rtk git diff --check`、`rtk rg -n "<<<<<<<|>>>>>>>|=======" docs`。
-- 触及 source/contracts/tests：`rtk ./scripts/verify.sh` 或相关 focused `rtk python -m pytest ...`。
-
-Completion gate:
-
-- Current plan 只保留 still-open gap 和下一步；closed gap 已重写为完成进度或移入 history/provenance。
-- main checkout 上完成触及面验证；worktree/branch 已吸收清理，或明确因近期写入/未提交改动保留。
-
-Foldback target:
-
-- Durable current truth 折回本文、核心五件套、private inventory 或 machine-readable contracts；过程命令、receipt id、旧路线和 closeout 流水进入 `docs/history/**`、ledger 或提交历史。
+Docs-only 验证使用 `rtk git diff --check`、`rtk rg -n "<<<<<<<|>>>>>>>|=======" docs` 与 docs inventory sanity；触及 source/contracts/tests 时再运行 `rtk ./scripts/verify.sh` 或 focused pytest。
 
 ## 历史索引
 
