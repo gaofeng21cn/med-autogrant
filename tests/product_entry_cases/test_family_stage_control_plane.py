@@ -228,9 +228,47 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                         "artifact_bundle_output_role": expected_stage_output_role,
                         "artifact_bundle_manifest_required": True,
                         "artifact_bundle_owner_receipt_or_typed_blocker_required": True,
+                        "physical_kernel_locator_roles": [
+                            "stage_json_ref",
+                            "attempt_json_ref",
+                            "manifest_json_ref",
+                            "receipt_json_ref",
+                            "current_json_ref",
+                            "latest_json_ref",
+                            "canonical_pointer_ref",
+                            "export_artifact_ref",
+                            "lineage_events_ref",
+                            "lineage_graph_ref",
+                            "retention_policy_ref",
+                            "conformance_summary_ref",
+                        ],
+                        "conformance_required": True,
                         "opl_consumption": "refs_manifest_missing_output_receipt_blocker_handoff_only",
                         "opl_can_interpret_grant_quality": False,
                     },
+                )
+                physical_kernel = stage_native_artifact_contract["physical_stage_folder_kernel"]
+                self.assertEqual(
+                    physical_kernel["maps_to_opl_contract"],
+                    "opl_stage_artifact_runtime_contract.v1",
+                )
+                self.assertEqual(
+                    physical_kernel["stage_output_role"],
+                    expected_stage_output_role,
+                )
+                self.assertIn("stage.json", physical_kernel["required_attempt_entries"])
+                self.assertIn("attempt.json", physical_kernel["required_attempt_entries"])
+                self.assertIn("manifest.json", physical_kernel["required_attempt_entries"])
+                self.assertIn("receipts/receipt.json", physical_kernel["required_attempt_entries"])
+                self.assertIn("current_json_ref", physical_kernel["required_physical_locator_roles"])
+                self.assertIn("lineage_events_ref", physical_kernel["required_physical_locator_roles"])
+                self.assertIn("retention_policy_ref", physical_kernel["required_physical_locator_roles"])
+                self.assertFalse(physical_kernel["conformance_refs"]["domain_readiness_claim"])
+                self.assertFalse(
+                    physical_kernel["authority_boundary"]["opl_can_create_mag_owner_receipt"]
+                )
+                self.assertFalse(
+                    physical_kernel["authority_boundary"]["opl_can_interpret_grant_quality"]
                 )
                 verdict_policy = stage_native_artifact_contract["owner_verdict_signature_policy"]
                 self.assertEqual(verdict_policy["owner"], "med-autogrant")
@@ -323,6 +361,10 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                         "canonical_promotion_ref",
                     )
                     self.assertEqual(
+                        package_projection["final_package"]["physical_locator_role"],
+                        "canonical_pointer_ref",
+                    )
+                    self.assertEqual(
                         package_projection["final_package"]["canonical_ref_template"],
                         "mag-package://final-package/{grant_run_id}/{workspace_id}/{draft_id}",
                     )
@@ -331,8 +373,17 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                         "export_artifact_ref",
                     )
                     self.assertEqual(
+                        package_projection["submission_ready_package"]["physical_locator_role"],
+                        "export_artifact_ref",
+                    )
+                    self.assertEqual(
                         package_projection["submission_ready_package"]["export_ref_template"],
                         "mag-package://submission-ready/{grant_run_id}/{workspace_id}/{draft_id}",
+                    )
+                    self.assertTrue(
+                        package_projection["physical_kernel_handoff_requirements"][
+                            "conformance_summary_required"
+                        ]
                     )
                     self.assertEqual(
                         package_projection["owner_receipt_or_typed_blocker_ref"],

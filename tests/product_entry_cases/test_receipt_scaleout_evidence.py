@@ -140,12 +140,35 @@ def _package_lifecycle_for_sample(
     owner_receipt_ref: str,
     lifecycle_bundle: dict[str, object],
 ) -> dict[str, object]:
+    stage_root = (
+        "runtime-state/domains/med-autogrant/deliverables/local-program/"
+        f"grant-run-{sample_id}/workspace-{sample_id}/draft-{sample_id}/"
+        "stages/package_and_submit_ready"
+    )
+    attempt_root = f"{stage_root}/attempts/attempt-{sample_id}"
+    lifecycle_receipt_refs = dict(lifecycle_bundle["receipt_refs"])
+    lifecycle_receipt_refs["lifecycle_receipt_ref"] = lifecycle_receipt_refs["retention"]
     return entry.build_package_lifecycle_handoff_projection(
         package_refs={
             "artifact_bundle_ref": f"mag-package://receipt-scaleout/{sample_id}/artifact-bundle",
             "final_package_ref": f"mag-package://receipt-scaleout/{sample_id}/final-package",
             "submission_ready_package_ref": (
                 f"mag-package://receipt-scaleout/{sample_id}/submission-ready-package-ref-only"
+            ),
+            "stage_json_ref": f"{attempt_root}/stage.json",
+            "attempt_json_ref": f"{attempt_root}/attempt.json",
+            "manifest_json_ref": f"{attempt_root}/manifest.json",
+            "receipt_json_ref": f"{attempt_root}/receipts/receipt.json",
+            "current_json_ref": f"{stage_root}/current.json",
+            "latest_json_ref": f"{stage_root}/latest.json",
+            "canonical_pointer_ref": f"{stage_root}/canonical/current.json",
+            "export_artifact_ref": f"{stage_root}/exports/submission_ready_package_manifest_ref.json",
+            "lineage_events_ref": f"{stage_root}/lineage/events.jsonl",
+            "lineage_graph_ref": f"{stage_root}/lineage/graph.json",
+            "retention_policy_ref": f"{stage_root}/retention/policy.json",
+            "conformance_summary_ref": (
+                "opl-conformance://stage-artifact/med-autogrant/"
+                f"package_and_submit_ready/attempt-{sample_id}"
             ),
         },
         gap_report={
@@ -166,7 +189,7 @@ def _package_lifecycle_for_sample(
             "state": "human_portal_required_for_external_submit",
             "safe_action_ref": f"mag-action://receipt-scaleout/{sample_id}/manual-portal/open",
         },
-        lifecycle_receipt_refs=dict(lifecycle_bundle["receipt_refs"]),
+        lifecycle_receipt_refs=lifecycle_receipt_refs,
     )
 
 

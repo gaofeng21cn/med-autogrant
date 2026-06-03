@@ -17,10 +17,28 @@ PACKAGE_STAGE_OUTPUT_ROLE = "submission_ready_package_manifest_ref"
 FINAL_PACKAGE_LIFECYCLE_ROLE = "canonical_promotion_ref"
 SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE = "export_artifact_ref"
 PACKAGE_LIFECYCLE_HANDOFF_POLICY = "refs_manifest_missing_output_receipt_blocker_handoff_only"
+OPL_STAGE_ARTIFACT_RUNTIME_CONTRACT_REF = (
+    "contracts/opl-framework/stage-artifact-runtime-contract.json"
+)
+PHYSICAL_KERNEL_LOCATOR_REF_KEYS = (
+    "stage_json_ref",
+    "attempt_json_ref",
+    "manifest_json_ref",
+    "receipt_json_ref",
+    "current_json_ref",
+    "latest_json_ref",
+    "canonical_pointer_ref",
+    "export_artifact_ref",
+    "lineage_events_ref",
+    "lineage_graph_ref",
+    "retention_policy_ref",
+    "conformance_summary_ref",
+)
 REQUIRED_STAGE_FOLDER_PACKAGE_REF_KEYS = (
     "artifact_bundle_ref",
     "final_package_ref",
     "submission_ready_package_ref",
+    *PHYSICAL_KERNEL_LOCATOR_REF_KEYS,
 )
 
 _FORBIDDEN_BODY_KEY_PARTS = (
@@ -81,6 +99,8 @@ def build_package_lifecycle_handoff_projection(
         "owner": TARGET_DOMAIN_ID,
         "target_domain_id": TARGET_DOMAIN_ID,
         "package_refs": projected_package_refs,
+        "physical_kernel_locator_refs": _physical_kernel_locator_refs(projected_package_refs),
+        "physical_kernel_conformance_refs": _physical_kernel_conformance_refs(projected_package_refs),
         "stage_folder_lifecycle_projection": _stage_folder_lifecycle_projection(
             package_refs=projected_package_refs,
             lifecycle_receipt_refs=projected_receipt_refs,
@@ -170,15 +190,25 @@ def _stage_folder_lifecycle_projection(
             "ref": str(package_refs["artifact_bundle_ref"]),
             "lifecycle_contract_role": STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE,
             "stage_output_role": PACKAGE_STAGE_OUTPUT_ROLE,
+            "physical_locator_roles": [
+                "stage_json_ref",
+                "attempt_json_ref",
+                "manifest_json_ref",
+                "receipt_json_ref",
+            ],
         },
         "final_package": {
             "ref": str(package_refs["final_package_ref"]),
             "lifecycle_contract_role": FINAL_PACKAGE_LIFECYCLE_ROLE,
+            "canonical_pointer_ref": str(package_refs["canonical_pointer_ref"]),
         },
         "submission_ready_package": {
             "ref": str(package_refs["submission_ready_package_ref"]),
             "lifecycle_contract_role": SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE,
+            "export_artifact_ref": str(package_refs["export_artifact_ref"]),
         },
+        "physical_kernel_locators": _physical_kernel_locator_refs(package_refs),
+        "physical_kernel_conformance_refs": _physical_kernel_conformance_refs(package_refs),
         "owner_receipt_or_typed_blocker_ref": owner_closeout_ref,
         "missing_output_policy": "typed_blocker_required_no_opl_inference",
         "handoff_policy": PACKAGE_LIFECYCLE_HANDOFF_POLICY,
@@ -189,6 +219,33 @@ def _stage_folder_lifecycle_projection(
             "opl_can_interpret_grant_quality": False,
             "opl_can_declare_submission_ready": False,
         },
+    }
+
+
+def _physical_kernel_locator_refs(package_refs: Mapping[str, Any]) -> dict[str, str]:
+    return {
+        key: _require_nonempty_string(
+            package_refs.get(key),
+            field_name=key,
+            context="package_refs",
+        )
+        for key in PHYSICAL_KERNEL_LOCATOR_REF_KEYS
+    }
+
+
+def _physical_kernel_conformance_refs(package_refs: Mapping[str, Any]) -> dict[str, str | bool]:
+    return {
+        "surface_kind": "mag_package_stage_physical_kernel_conformance_refs",
+        "opl_contract_ref": OPL_STAGE_ARTIFACT_RUNTIME_CONTRACT_REF,
+        "opl_conformance_contract_ref": (
+            f"{OPL_STAGE_ARTIFACT_RUNTIME_CONTRACT_REF}#/conformance_gate"
+        ),
+        "conformance_summary_ref": _require_nonempty_string(
+            package_refs.get("conformance_summary_ref"),
+            field_name="conformance_summary_ref",
+            context="package_refs",
+        ),
+        "domain_readiness_claim": False,
     }
 
 
@@ -290,7 +347,9 @@ def _authority_boundary() -> dict[str, bool | str]:
         "mag_owns_gap_report": True,
         "mag_owns_manual_portal_boundary": True,
         "mag_owns_lifecycle_receipt_refs": True,
+        "mag_owns_physical_kernel_handoff_refs": True,
         "opl_owns_artifact_package_lifecycle_shell": True,
+        "opl_owns_stage_artifact_physical_kernel": True,
         "opl_owns_locator": True,
         "opl_owns_retention_ui": True,
         "opl_role": "artifact_package_lifecycle_shell_consumer",

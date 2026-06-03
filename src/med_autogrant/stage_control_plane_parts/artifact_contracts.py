@@ -10,6 +10,23 @@ PACKAGE_STAGE_ID = "package_and_submit_ready"
 FINAL_PACKAGE_LIFECYCLE_ROLE = "canonical_promotion_ref"
 SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE = "export_artifact_ref"
 PACKAGE_LIFECYCLE_OPL_CONSUMPTION = "refs_manifest_missing_output_receipt_blocker_handoff_only"
+OPL_STAGE_ARTIFACT_RUNTIME_CONTRACT_REF = (
+    "contracts/opl-framework/stage-artifact-runtime-contract.json"
+)
+PHYSICAL_KERNEL_LOCATOR_ROLES = [
+    "stage_json_ref",
+    "attempt_json_ref",
+    "manifest_json_ref",
+    "receipt_json_ref",
+    "current_json_ref",
+    "latest_json_ref",
+    "canonical_pointer_ref",
+    "export_artifact_ref",
+    "lineage_events_ref",
+    "lineage_graph_ref",
+    "retention_policy_ref",
+    "conformance_summary_ref",
+]
 OWNER_VERDICT_SIGNATURE_POLICY = {
     "surface_kind": "mag_owner_verdict_signature_policy",
     "version": "mag-owner-verdict-signature-policy.v1",
@@ -32,6 +49,138 @@ OWNER_VERDICT_SIGNATURE_POLICY = {
     "opl_can_sign_or_infer_verdict": False,
     "provider_completion_can_sign_verdict": False,
 }
+
+
+def _physical_stage_folder_kernel_contract(*, stage_id: str, output_role: str) -> dict[str, Any]:
+    attempt_root = (
+        "runtime-state/domains/med-autogrant/deliverables/{program_id}/{grant_run_id}/"
+        "{workspace_id}/{draft_id_or_no_draft}/"
+        f"stages/{stage_id}/attempts/{{attempt_id}}"
+    )
+    stage_root = (
+        "runtime-state/domains/med-autogrant/deliverables/{program_id}/{grant_run_id}/"
+        "{workspace_id}/{draft_id_or_no_draft}/"
+        f"stages/{stage_id}"
+    )
+    return {
+        "surface_kind": "mag_stage_physical_folder_kernel_contract",
+        "version": "mag-stage-physical-folder-kernel-contract.v1",
+        "maps_to_opl_contract": "opl_stage_artifact_runtime_contract.v1",
+        "opl_contract_ref": OPL_STAGE_ARTIFACT_RUNTIME_CONTRACT_REF,
+        "domain": TARGET_DOMAIN_ID,
+        "stage_id": stage_id,
+        "stage_output_role": output_role,
+        "attempt_root_ref_template": attempt_root,
+        "stage_root_ref_template": stage_root,
+        "required_physical_locator_roles": list(PHYSICAL_KERNEL_LOCATOR_ROLES),
+        "required_attempt_entries": [
+            "stage.json",
+            "attempt.json",
+            "manifest.json",
+            "inputs/",
+            "outputs/",
+            "evidence/",
+            "receipts/receipt.json",
+        ],
+        "physical_locator_templates": {
+            "stage_json_ref": f"{attempt_root}/stage.json",
+            "attempt_json_ref": f"{attempt_root}/attempt.json",
+            "manifest_json_ref": f"{attempt_root}/manifest.json",
+            "receipt_json_ref": f"{attempt_root}/receipts/receipt.json",
+            "current_json_ref": f"{stage_root}/current.json",
+            "latest_json_ref": f"{stage_root}/latest.json",
+            "canonical_pointer_ref": f"{stage_root}/canonical/current.json",
+            "export_artifact_ref": f"{stage_root}/exports/{output_role}.json",
+            "lineage_events_ref": f"{stage_root}/lineage/events.jsonl",
+            "lineage_graph_ref": f"{stage_root}/lineage/graph.json",
+            "retention_policy_ref": f"{stage_root}/retention/policy.json",
+            "conformance_summary_ref": (
+                f"opl-conformance://stage-artifact/med-autogrant/{stage_id}/{{attempt_id}}"
+            ),
+        },
+        "manifest_hash_semantics": {
+            "algorithm": "sha256",
+            "required_hash_fields": [
+                "output_hashes",
+                "evidence_hashes",
+                "receipt_hashes",
+            ],
+            "hash_entries_required_for_physical_files": True,
+            "success_with_hash_mismatch_is_broken": True,
+        },
+        "read_model_semantics": {
+            "status_source_of_truth": "physical_stage_folder",
+            "success_requires": [
+                "valid_manifest",
+                "required_outputs_present",
+                "mag_owner_receipt_ref_and_receipt_file",
+            ],
+            "blocked_requires": [
+                "mag_owned_typed_blocker_ref",
+                "blocker_evidence_file",
+            ],
+            "orphan_artifact_is_completion": False,
+            "missing_deltas_must_be_reported": True,
+        },
+        "conformance_refs": {
+            "surface_kind": "mag_opl_stage_artifact_conformance_refs",
+            "opl_conformance_contract_ref": (
+                f"{OPL_STAGE_ARTIFACT_RUNTIME_CONTRACT_REF}#/conformance_gate"
+            ),
+            "strict_units": [
+                "Stage Folder",
+                "Manifest",
+                "Receipt",
+                "content_hashes",
+                "latest_pointer",
+                "current_pointer",
+                "lineage_events",
+            ],
+            "fails_on_ref": f"{OPL_STAGE_ARTIFACT_RUNTIME_CONTRACT_REF}#/conformance_gate/fails_on",
+            "domain_readiness_claim": False,
+        },
+        "workbench_projection_refs": {
+            "projects": [
+                "current_pointer",
+                "stage_status",
+                "attempt_manifest_refs",
+                "owner_receipt_refs",
+                "typed_blocker_refs",
+                "decision_receipt_refs",
+                "content_hashes",
+                "canonical_artifacts",
+                "export_artifacts",
+                "lineage_refs",
+                "retention_policy",
+                "conformance_summary",
+            ],
+            "artifact_body_access": False,
+            "domain_verdict_authority": False,
+        },
+        "retention_restore_boundary": {
+            "retention_policy_ref_template": f"{stage_root}/retention/policy.json",
+            "retention_archive_ref_template": (
+                f"{stage_root}/retention/attempts/{stage_id}/{{attempt_id}}"
+            ),
+            "restore_requires_restore_proof_ref": True,
+            "restore_does_not_create_owner_receipt": True,
+            "restore_does_not_declare_domain_truth_or_quality": True,
+        },
+        "authority_boundary": {
+            "mag_owns_grant_truth": True,
+            "mag_owns_package_authority": stage_id == PACKAGE_STAGE_ID,
+            "mag_owns_export_verdict": True,
+            "opl_can_index_refs": True,
+            "opl_can_rebuild_projection": True,
+            "opl_can_promote_canonical_pointer": True,
+            "opl_can_create_mag_owner_receipt": False,
+            "opl_can_write_grant_truth": False,
+            "opl_can_mutate_artifact_body": False,
+            "opl_can_interpret_grant_quality": False,
+            "opl_can_declare_export_ready": False,
+            "opl_can_declare_submission_ready": False,
+        },
+    }
 
 
 def stage_native_artifact_contract(
@@ -89,9 +238,15 @@ def stage_native_artifact_contract(
             "artifact_bundle_output_role": output_role,
             "artifact_bundle_manifest_required": True,
             "artifact_bundle_owner_receipt_or_typed_blocker_required": True,
+            "physical_kernel_locator_roles": list(PHYSICAL_KERNEL_LOCATOR_ROLES),
+            "conformance_required": True,
             "opl_consumption": PACKAGE_LIFECYCLE_OPL_CONSUMPTION,
             "opl_can_interpret_grant_quality": False,
         },
+        "physical_stage_folder_kernel": _physical_stage_folder_kernel_contract(
+            stage_id=stage_id,
+            output_role=output_role,
+        ),
         "owner_verdict_signature_policy": dict(OWNER_VERDICT_SIGNATURE_POLICY),
         "current_pointer_rules": {
             "pointer_owner": TARGET_DOMAIN_ID,
@@ -153,16 +308,30 @@ def package_stage_lifecycle_projection(*, output_role: str) -> dict[str, Any]:
                 f"mag-artifact://{PACKAGE_STAGE_ID}/{output_role}/"
                 "{grant_run_id}/{workspace_id}/{draft_id_or_no_draft}/manifest"
             ),
+            "physical_locator_roles": [
+                "stage_json_ref",
+                "attempt_json_ref",
+                "manifest_json_ref",
+                "receipt_json_ref",
+            ],
         },
         "final_package": {
             "lifecycle_contract_role": FINAL_PACKAGE_LIFECYCLE_ROLE,
             "canonical_ref_template": "mag-package://final-package/{grant_run_id}/{workspace_id}/{draft_id}",
             "current_pointer_ref": "current:mag/package/final-package",
+            "physical_locator_role": "canonical_pointer_ref",
         },
         "submission_ready_package": {
             "lifecycle_contract_role": SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE,
             "export_ref_template": "mag-package://submission-ready/{grant_run_id}/{workspace_id}/{draft_id}",
             "current_pointer_ref": "current:mag/package/submission-ready",
+            "physical_locator_role": "export_artifact_ref",
+        },
+        "physical_kernel_handoff_requirements": {
+            "required_locator_roles": list(PHYSICAL_KERNEL_LOCATOR_ROLES),
+            "conformance_summary_required": True,
+            "locator_policy": "physical_stage_folder_refs_only_no_package_body",
+            "opl_contract_ref": OPL_STAGE_ARTIFACT_RUNTIME_CONTRACT_REF,
         },
         "owner_receipt_or_typed_blocker_ref": owner_closeout_ref,
         "missing_output_policy": "typed_blocker_required_no_opl_inference",
