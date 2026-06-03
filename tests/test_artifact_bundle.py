@@ -34,9 +34,11 @@ def _assert_stage_output_projection(
     test_case.assertEqual(projection['stage_id'], stage_id)
     test_case.assertEqual(projection['stage_output_role'], stage_output_role)
     test_case.assertEqual(projection['artifact_classification'], 'grant_stage_output_ref')
+    test_case.assertEqual(projection['lifecycle_contract_role'], 'stage_output_artifact_ref')
     test_case.assertEqual(bundle['manifest']['stage_id'], stage_id)
     test_case.assertEqual(bundle['manifest']['stage_output_role'], stage_output_role)
     test_case.assertEqual(bundle['manifest']['artifact_classification'], 'grant_stage_output_ref')
+    test_case.assertEqual(bundle['manifest']['lifecycle_contract_role'], 'stage_output_artifact_ref')
     test_case.assertEqual(bundle['manifest']['manifest_ref'], projection['manifest_ref'])
     test_case.assertEqual(bundle['manifest']['current_pointer_ref'], projection['current_pointer_ref'])
     test_case.assertEqual(
@@ -50,6 +52,18 @@ def _assert_stage_output_projection(
     )
     opl_consumption = projection['opl_consumption']
     test_case.assertEqual(opl_consumption['role'], 'refs_manifest_receipt_only')
+    test_case.assertEqual(
+        opl_consumption['allowed_projection_fields'],
+        [
+            'stage_id',
+            'stage_output_role',
+            'lifecycle_contract_role',
+            'artifact_classification',
+            'manifest_ref',
+            'current_pointer_ref',
+            'owner_receipt_or_typed_blocker_ref',
+        ],
+    )
     test_case.assertFalse(opl_consumption['can_read_artifact_body'])
     test_case.assertFalse(opl_consumption['can_write_grant_truth'])
     test_case.assertFalse(opl_consumption['can_infer_fundability'])

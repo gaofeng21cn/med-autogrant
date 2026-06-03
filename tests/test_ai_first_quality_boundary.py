@@ -58,6 +58,7 @@ def test_submission_ready_schema_requires_owner_export_verdict_gate() -> None:
     assert "med-autogrant" in verdict["properties"]["owner"]["enum"]
     assert "Codex CLI critique executor" in verdict["properties"]["owner"]["enum"]
     assert "mag_owner_receipt" in verdict["properties"]["source_kind"]["enum"]
+    assert "mag_owner_typed_blocker" in verdict["properties"]["source_kind"]["enum"]
 
 
 def test_quality_candidate_statuses_are_gated_by_ai_reviewer_backed_critique() -> None:

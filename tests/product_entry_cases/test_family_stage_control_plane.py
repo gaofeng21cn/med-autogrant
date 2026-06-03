@@ -212,6 +212,7 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                     {
                         "stage_id",
                         "stage_output_role",
+                        "lifecycle_contract_role",
                         "artifact_classification",
                         "manifest_ref",
                         "current_pointer_ref",
@@ -220,6 +221,36 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                     <= set(manifest_requirements["required_fields"])
                 )
                 self.assertIn("stage_output_role", manifest_requirements["identity_fields"])
+                self.assertEqual(
+                    stage_native_artifact_contract["stage_folder_lifecycle_contract"],
+                    {
+                        "artifact_bundle_role": "stage_output_artifact_ref",
+                        "artifact_bundle_output_role": expected_stage_output_role,
+                        "artifact_bundle_manifest_required": True,
+                        "artifact_bundle_owner_receipt_or_typed_blocker_required": True,
+                        "opl_consumption": "refs_manifest_missing_output_receipt_blocker_handoff_only",
+                        "opl_can_interpret_grant_quality": False,
+                    },
+                )
+                verdict_policy = stage_native_artifact_contract["owner_verdict_signature_policy"]
+                self.assertEqual(verdict_policy["owner"], "med-autogrant")
+                self.assertEqual(
+                    verdict_policy["required_verdicts"],
+                    [
+                        "fundability_verdict",
+                        "authoring_quality_verdict",
+                        "export_verdict",
+                        "submission_ready_verdict",
+                    ],
+                )
+                self.assertEqual(
+                    verdict_policy["accepted_signature_shapes"],
+                    [
+                        "mag_owner_receipt_ref",
+                        "mag_owned_typed_blocker_ref",
+                    ],
+                )
+                self.assertFalse(verdict_policy["opl_can_sign_or_infer_verdict"])
                 owner_closeout_requirements = stage_native_artifact_contract[
                     "owner_closeout_requirements"
                 ]
@@ -266,11 +297,54 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                     classification_boundary["opl_consumes"],
                     [
                         "stage_output_role",
+                        "lifecycle_contract_role",
                         "manifest_ref",
                         "current_pointer_ref",
                         "owner_receipt_or_typed_blocker_ref",
+                        "missing_output_ref",
+                        "handoff_ref",
                     ],
                 )
+                if stage["stage_id"] == "package_and_submit_ready":
+                    package_projection = stage_native_artifact_contract[
+                        "package_stage_lifecycle_projection"
+                    ]
+                    self.assertEqual(package_projection["stage_id"], "package_and_submit_ready")
+                    self.assertEqual(
+                        package_projection["artifact_bundle"]["lifecycle_contract_role"],
+                        "stage_output_artifact_ref",
+                    )
+                    self.assertEqual(
+                        package_projection["artifact_bundle"]["stage_output_role"],
+                        "submission_ready_package_manifest_ref",
+                    )
+                    self.assertEqual(
+                        package_projection["final_package"]["lifecycle_contract_role"],
+                        "canonical_promotion_ref",
+                    )
+                    self.assertEqual(
+                        package_projection["final_package"]["canonical_ref_template"],
+                        "mag-package://final-package/{grant_run_id}/{workspace_id}/{draft_id}",
+                    )
+                    self.assertEqual(
+                        package_projection["submission_ready_package"]["lifecycle_contract_role"],
+                        "export_artifact_ref",
+                    )
+                    self.assertEqual(
+                        package_projection["submission_ready_package"]["export_ref_template"],
+                        "mag-package://submission-ready/{grant_run_id}/{workspace_id}/{draft_id}",
+                    )
+                    self.assertEqual(
+                        package_projection["owner_receipt_or_typed_blocker_ref"],
+                        "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker",
+                    )
+                    self.assertEqual(
+                        package_projection["missing_output_policy"],
+                        "typed_blocker_required_no_opl_inference",
+                    )
+                    self.assertFalse(
+                        package_projection["authority_boundary"]["opl_can_interpret_grant_quality"]
+                    )
                 self.assertTrue(
                     any(
                         ref["role"] == "opl_provider_stage_launch_trigger"

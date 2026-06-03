@@ -15,6 +15,16 @@ from med_autogrant.workspace_types import WorkspaceStateError
 
 BUNDLE_VERSION = 1
 BUNDLE_KIND = "artifact_bundle"
+STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE = "stage_output_artifact_ref"
+STAGE_OUTPUT_ALLOWED_PROJECTION_FIELDS = [
+    "stage_id",
+    "stage_output_role",
+    "lifecycle_contract_role",
+    "artifact_classification",
+    "manifest_ref",
+    "current_pointer_ref",
+    "owner_receipt_or_typed_blocker_ref",
+]
 STAGE_OUTPUT_ROLE_BY_LIFECYCLE_STAGE = {
     "input_intake": ("call_and_candidate_intake", "call_candidate_intake_manifest_ref"),
     "direction_screening": ("fundability_strategy", "fundability_strategy_owner_receipt_ref"),
@@ -81,6 +91,7 @@ def build_artifact_bundle_document(*, document: dict[str, Any]) -> dict[str, Any
             "stage_id": stage_output_projection["stage_id"],
             "stage_output_role": stage_output_projection["stage_output_role"],
             "artifact_classification": stage_output_projection["artifact_classification"],
+            "lifecycle_contract_role": stage_output_projection["lifecycle_contract_role"],
             "manifest_ref": stage_output_projection["manifest_ref"],
             "current_pointer_ref": stage_output_projection["current_pointer_ref"],
             "owner_receipt_or_typed_blocker_ref": (
@@ -133,6 +144,7 @@ def _stage_output_projection(
         "stage_id": stage_id,
         "stage_output_role": stage_output_role,
         "artifact_classification": "grant_stage_output_ref",
+        "lifecycle_contract_role": STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE,
         "manifest_ref": (
             f"mag-artifact://{stage_id}/{stage_output_role}/"
             f"{grant_run_id}/{workspace_id}/{draft_ref}/manifest"
@@ -144,6 +156,7 @@ def _stage_output_projection(
         ),
         "opl_consumption": {
             "role": "refs_manifest_receipt_only",
+            "allowed_projection_fields": list(STAGE_OUTPUT_ALLOWED_PROJECTION_FIELDS),
             "can_read_artifact_body": False,
             "can_write_grant_truth": False,
             "can_infer_fundability": False,

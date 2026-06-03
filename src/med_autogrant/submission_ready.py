@@ -15,6 +15,7 @@ SUBMISSION_READY_EXPORT_VERDICT_SOURCE_KINDS = frozenset(
     {
         "mag_owner_receipt",
         "mag_owner_export_artifact",
+        "mag_owner_typed_blocker",
         "ai_backed_reviewer_artifact",
         "ai_backed_export_artifact",
         "ai_backed_export_receipt",

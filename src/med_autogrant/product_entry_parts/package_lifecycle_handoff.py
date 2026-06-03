@@ -11,6 +11,17 @@ from med_autogrant.workspace_types import WorkspaceStateError
 
 
 PACKAGE_LIFECYCLE_HANDOFF_PROJECTION_KIND = "mag_package_lifecycle_handoff_projection"
+PACKAGE_STAGE_ID = "package_and_submit_ready"
+STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE = "stage_output_artifact_ref"
+PACKAGE_STAGE_OUTPUT_ROLE = "submission_ready_package_manifest_ref"
+FINAL_PACKAGE_LIFECYCLE_ROLE = "canonical_promotion_ref"
+SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE = "export_artifact_ref"
+PACKAGE_LIFECYCLE_HANDOFF_POLICY = "refs_manifest_missing_output_receipt_blocker_handoff_only"
+REQUIRED_STAGE_FOLDER_PACKAGE_REF_KEYS = (
+    "artifact_bundle_ref",
+    "final_package_ref",
+    "submission_ready_package_ref",
+)
 
 _FORBIDDEN_BODY_KEY_PARTS = (
     ("artifact", "body"),
@@ -60,17 +71,24 @@ def build_package_lifecycle_handoff_projection(
         _require_mapping_payload(payload, context=context)
         _reject_forbidden_payload(payload, context=context)
 
+    projected_package_refs = _read_ref_mapping(package_refs, context="package_refs")
+    projected_receipt_refs = _read_ref_mapping(lifecycle_receipt_refs, context="lifecycle_receipt_refs")
+
     return {
         "surface_kind": PACKAGE_LIFECYCLE_HANDOFF_PROJECTION_KIND,
         "version": "v1",
         "state": "refs_ready_for_opl_artifact_package_lifecycle_shell",
         "owner": TARGET_DOMAIN_ID,
         "target_domain_id": TARGET_DOMAIN_ID,
-        "package_refs": _read_ref_mapping(package_refs, context="package_refs"),
+        "package_refs": projected_package_refs,
+        "stage_folder_lifecycle_projection": _stage_folder_lifecycle_projection(
+            package_refs=projected_package_refs,
+            lifecycle_receipt_refs=projected_receipt_refs,
+        ),
         "gap_summary": _project_gap_summary(gap_report),
         "export_verdict_refs": _project_export_verdict_refs(export_verdict),
         "manual_portal_boundary": _project_manual_portal_boundary(manual_portal_boundary),
-        "receipt_refs": _read_ref_mapping(lifecycle_receipt_refs, context="lifecycle_receipt_refs"),
+        "receipt_refs": projected_receipt_refs,
         "authority_boundary": _authority_boundary(),
         "projection_policy": "refs_and_gap_summary_only_no_content_payloads_no_private_material",
     }
@@ -127,7 +145,61 @@ def _read_ref_mapping(payload: Mapping[str, Any], *, context: str) -> dict[str, 
         raise WorkspaceStateError(f"{context}.{key} must be a ref string or ref string list.")
     if not refs:
         raise WorkspaceStateError(f"{context} requires at least one ref.")
+    if context == "package_refs":
+        _require_stage_folder_package_refs(refs)
     return refs
+
+
+def _require_stage_folder_package_refs(refs: Mapping[str, Any]) -> None:
+    for key in REQUIRED_STAGE_FOLDER_PACKAGE_REF_KEYS:
+        value = refs.get(key)
+        if not isinstance(value, str) or not value.strip():
+            raise WorkspaceStateError(f"package_refs.{key} is required for stage folder lifecycle projection.")
+
+
+def _stage_folder_lifecycle_projection(
+    *,
+    package_refs: Mapping[str, Any],
+    lifecycle_receipt_refs: Mapping[str, Any],
+) -> dict[str, Any]:
+    owner_closeout_ref = _owner_receipt_or_typed_blocker_ref(lifecycle_receipt_refs)
+    return {
+        "surface_kind": "mag_stage_folder_lifecycle_projection",
+        "stage_id": PACKAGE_STAGE_ID,
+        "artifact_bundle": {
+            "ref": str(package_refs["artifact_bundle_ref"]),
+            "lifecycle_contract_role": STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE,
+            "stage_output_role": PACKAGE_STAGE_OUTPUT_ROLE,
+        },
+        "final_package": {
+            "ref": str(package_refs["final_package_ref"]),
+            "lifecycle_contract_role": FINAL_PACKAGE_LIFECYCLE_ROLE,
+        },
+        "submission_ready_package": {
+            "ref": str(package_refs["submission_ready_package_ref"]),
+            "lifecycle_contract_role": SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE,
+        },
+        "owner_receipt_or_typed_blocker_ref": owner_closeout_ref,
+        "missing_output_policy": "typed_blocker_required_no_opl_inference",
+        "handoff_policy": PACKAGE_LIFECYCLE_HANDOFF_POLICY,
+        "authority_boundary": {
+            "mag_owns_package_authority": True,
+            "mag_owns_export_verdict": True,
+            "opl_can_read_artifact_body": False,
+            "opl_can_interpret_grant_quality": False,
+            "opl_can_declare_submission_ready": False,
+        },
+    }
+
+
+def _owner_receipt_or_typed_blocker_ref(lifecycle_receipt_refs: Mapping[str, Any]) -> str:
+    for key in ("owner_receipt_ref", "typed_blocker_ref", "lifecycle_receipt_ref"):
+        value = lifecycle_receipt_refs.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    raise WorkspaceStateError(
+        "lifecycle_receipt_refs requires owner_receipt_ref, typed_blocker_ref, or lifecycle_receipt_ref."
+    )
 
 
 def _project_gap_summary(gap_report: Mapping[str, Any]) -> dict[str, Any]:
@@ -213,6 +285,7 @@ def _authority_boundary() -> dict[str, bool | str]:
         "mag_owns_submission_ready_export_verdict": True,
         "mag_owns_export_verdict": True,
         "mag_owns_package_authority": True,
+        "mag_owns_stage_folder_lifecycle_projection": True,
         "mag_owns_package_refs": True,
         "mag_owns_gap_report": True,
         "mag_owns_manual_portal_boundary": True,
@@ -222,10 +295,12 @@ def _authority_boundary() -> dict[str, bool | str]:
         "opl_owns_retention_ui": True,
         "opl_role": "artifact_package_lifecycle_shell_consumer",
         "opl_can_declare_export_ready": False,
+        "opl_can_declare_submission_ready": False,
         "opl_can_issue_export_verdict": False,
         "opl_can_write_artifact_body": False,
         "opl_can_write_package_content": False,
         "opl_can_hold_package_authority": False,
+        "opl_can_interpret_grant_quality": False,
     }
 
 

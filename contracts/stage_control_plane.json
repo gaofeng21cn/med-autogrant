@@ -485,9 +485,12 @@
             "opl_can_write_artifact_body": false,
             "opl_consumes": [
               "stage_output_role",
+              "lifecycle_contract_role",
               "manifest_ref",
               "current_pointer_ref",
-              "owner_receipt_or_typed_blocker_ref"
+              "owner_receipt_or_typed_blocker_ref",
+              "missing_output_ref",
+              "handoff_ref"
             ],
             "opl_forbidden_inferences": [
               "fundability_ready",
@@ -524,6 +527,7 @@
               "lifecycle_stage",
               "stage_id",
               "stage_output_role",
+              "lifecycle_contract_role",
               "artifact_classification",
               "manifest_ref",
               "current_pointer_ref",
@@ -559,9 +563,39 @@
             "provider_completion_is_not_owner_closeout": true,
             "typed_blocker_required_when_output_missing": true
           },
+          "owner_verdict_signature_policy": {
+            "accepted_signature_shapes": [
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "opl_can_sign_or_infer_verdict": false,
+            "owner": "med-autogrant",
+            "provider_completion_can_sign_verdict": false,
+            "required_verdicts": [
+              "fundability_verdict",
+              "authoring_quality_verdict",
+              "export_verdict",
+              "submission_ready_verdict"
+            ],
+            "source_surfaces": [
+              "MAG owner receipt",
+              "MAG-owned typed blocker",
+              "owner-backed export artifact ref"
+            ],
+            "surface_kind": "mag_owner_verdict_signature_policy",
+            "version": "mag-owner-verdict-signature-policy.v1"
+          },
           "required_output_roles": [
             "call_candidate_intake_manifest_ref"
           ],
+          "stage_folder_lifecycle_contract": {
+            "artifact_bundle_manifest_required": true,
+            "artifact_bundle_output_role": "call_candidate_intake_manifest_ref",
+            "artifact_bundle_owner_receipt_or_typed_blocker_required": true,
+            "artifact_bundle_role": "stage_output_artifact_ref",
+            "opl_can_interpret_grant_quality": false,
+            "opl_consumption": "refs_manifest_missing_output_receipt_blocker_handoff_only"
+          },
           "stage_id": "call_and_candidate_intake",
           "surface_kind": "mag_stage_native_artifact_contract",
           "version": "mag-stage-native-artifact-contract.v1"
@@ -1138,9 +1172,12 @@
             "opl_can_write_artifact_body": false,
             "opl_consumes": [
               "stage_output_role",
+              "lifecycle_contract_role",
               "manifest_ref",
               "current_pointer_ref",
-              "owner_receipt_or_typed_blocker_ref"
+              "owner_receipt_or_typed_blocker_ref",
+              "missing_output_ref",
+              "handoff_ref"
             ],
             "opl_forbidden_inferences": [
               "fundability_ready",
@@ -1177,6 +1214,7 @@
               "lifecycle_stage",
               "stage_id",
               "stage_output_role",
+              "lifecycle_contract_role",
               "artifact_classification",
               "manifest_ref",
               "current_pointer_ref",
@@ -1212,9 +1250,39 @@
             "provider_completion_is_not_owner_closeout": true,
             "typed_blocker_required_when_output_missing": true
           },
+          "owner_verdict_signature_policy": {
+            "accepted_signature_shapes": [
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "opl_can_sign_or_infer_verdict": false,
+            "owner": "med-autogrant",
+            "provider_completion_can_sign_verdict": false,
+            "required_verdicts": [
+              "fundability_verdict",
+              "authoring_quality_verdict",
+              "export_verdict",
+              "submission_ready_verdict"
+            ],
+            "source_surfaces": [
+              "MAG owner receipt",
+              "MAG-owned typed blocker",
+              "owner-backed export artifact ref"
+            ],
+            "surface_kind": "mag_owner_verdict_signature_policy",
+            "version": "mag-owner-verdict-signature-policy.v1"
+          },
           "required_output_roles": [
             "fundability_strategy_owner_receipt_ref"
           ],
+          "stage_folder_lifecycle_contract": {
+            "artifact_bundle_manifest_required": true,
+            "artifact_bundle_output_role": "fundability_strategy_owner_receipt_ref",
+            "artifact_bundle_owner_receipt_or_typed_blocker_required": true,
+            "artifact_bundle_role": "stage_output_artifact_ref",
+            "opl_can_interpret_grant_quality": false,
+            "opl_consumption": "refs_manifest_missing_output_receipt_blocker_handoff_only"
+          },
           "stage_id": "fundability_strategy",
           "surface_kind": "mag_stage_native_artifact_contract",
           "version": "mag-stage-native-artifact-contract.v1"
@@ -1793,9 +1861,12 @@
             "opl_can_write_artifact_body": false,
             "opl_consumes": [
               "stage_output_role",
+              "lifecycle_contract_role",
               "manifest_ref",
               "current_pointer_ref",
-              "owner_receipt_or_typed_blocker_ref"
+              "owner_receipt_or_typed_blocker_ref",
+              "missing_output_ref",
+              "handoff_ref"
             ],
             "opl_forbidden_inferences": [
               "fundability_ready",
@@ -1832,6 +1903,7 @@
               "lifecycle_stage",
               "stage_id",
               "stage_output_role",
+              "lifecycle_contract_role",
               "artifact_classification",
               "manifest_ref",
               "current_pointer_ref",
@@ -1867,9 +1939,39 @@
             "provider_completion_is_not_owner_closeout": true,
             "typed_blocker_required_when_output_missing": true
           },
+          "owner_verdict_signature_policy": {
+            "accepted_signature_shapes": [
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "opl_can_sign_or_infer_verdict": false,
+            "owner": "med-autogrant",
+            "provider_completion_can_sign_verdict": false,
+            "required_verdicts": [
+              "fundability_verdict",
+              "authoring_quality_verdict",
+              "export_verdict",
+              "submission_ready_verdict"
+            ],
+            "source_surfaces": [
+              "MAG owner receipt",
+              "MAG-owned typed blocker",
+              "owner-backed export artifact ref"
+            ],
+            "surface_kind": "mag_owner_verdict_signature_policy",
+            "version": "mag-owner-verdict-signature-policy.v1"
+          },
           "required_output_roles": [
             "specific_aims_structure_manifest_ref"
           ],
+          "stage_folder_lifecycle_contract": {
+            "artifact_bundle_manifest_required": true,
+            "artifact_bundle_output_role": "specific_aims_structure_manifest_ref",
+            "artifact_bundle_owner_receipt_or_typed_blocker_required": true,
+            "artifact_bundle_role": "stage_output_artifact_ref",
+            "opl_can_interpret_grant_quality": false,
+            "opl_consumption": "refs_manifest_missing_output_receipt_blocker_handoff_only"
+          },
           "stage_id": "specific_aims_and_structure",
           "surface_kind": "mag_stage_native_artifact_contract",
           "version": "mag-stage-native-artifact-contract.v1"
@@ -2450,9 +2552,12 @@
             "opl_can_write_artifact_body": false,
             "opl_consumes": [
               "stage_output_role",
+              "lifecycle_contract_role",
               "manifest_ref",
               "current_pointer_ref",
-              "owner_receipt_or_typed_blocker_ref"
+              "owner_receipt_or_typed_blocker_ref",
+              "missing_output_ref",
+              "handoff_ref"
             ],
             "opl_forbidden_inferences": [
               "fundability_ready",
@@ -2489,6 +2594,7 @@
               "lifecycle_stage",
               "stage_id",
               "stage_output_role",
+              "lifecycle_contract_role",
               "artifact_classification",
               "manifest_ref",
               "current_pointer_ref",
@@ -2524,9 +2630,39 @@
             "provider_completion_is_not_owner_closeout": true,
             "typed_blocker_required_when_output_missing": true
           },
+          "owner_verdict_signature_policy": {
+            "accepted_signature_shapes": [
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "opl_can_sign_or_infer_verdict": false,
+            "owner": "med-autogrant",
+            "provider_completion_can_sign_verdict": false,
+            "required_verdicts": [
+              "fundability_verdict",
+              "authoring_quality_verdict",
+              "export_verdict",
+              "submission_ready_verdict"
+            ],
+            "source_surfaces": [
+              "MAG owner receipt",
+              "MAG-owned typed blocker",
+              "owner-backed export artifact ref"
+            ],
+            "surface_kind": "mag_owner_verdict_signature_policy",
+            "version": "mag-owner-verdict-signature-policy.v1"
+          },
           "required_output_roles": [
             "reviewable_grant_artifact_bundle_ref"
           ],
+          "stage_folder_lifecycle_contract": {
+            "artifact_bundle_manifest_required": true,
+            "artifact_bundle_output_role": "reviewable_grant_artifact_bundle_ref",
+            "artifact_bundle_owner_receipt_or_typed_blocker_required": true,
+            "artifact_bundle_role": "stage_output_artifact_ref",
+            "opl_can_interpret_grant_quality": false,
+            "opl_consumption": "refs_manifest_missing_output_receipt_blocker_handoff_only"
+          },
           "stage_id": "proposal_authoring",
           "surface_kind": "mag_stage_native_artifact_contract",
           "version": "mag-stage-native-artifact-contract.v1"
@@ -3103,9 +3239,12 @@
             "opl_can_write_artifact_body": false,
             "opl_consumes": [
               "stage_output_role",
+              "lifecycle_contract_role",
               "manifest_ref",
               "current_pointer_ref",
-              "owner_receipt_or_typed_blocker_ref"
+              "owner_receipt_or_typed_blocker_ref",
+              "missing_output_ref",
+              "handoff_ref"
             ],
             "opl_forbidden_inferences": [
               "fundability_ready",
@@ -3142,6 +3281,7 @@
               "lifecycle_stage",
               "stage_id",
               "stage_output_role",
+              "lifecycle_contract_role",
               "artifact_classification",
               "manifest_ref",
               "current_pointer_ref",
@@ -3177,9 +3317,39 @@
             "provider_completion_is_not_owner_closeout": true,
             "typed_blocker_required_when_output_missing": true
           },
+          "owner_verdict_signature_policy": {
+            "accepted_signature_shapes": [
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "opl_can_sign_or_infer_verdict": false,
+            "owner": "med-autogrant",
+            "provider_completion_can_sign_verdict": false,
+            "required_verdicts": [
+              "fundability_verdict",
+              "authoring_quality_verdict",
+              "export_verdict",
+              "submission_ready_verdict"
+            ],
+            "source_surfaces": [
+              "MAG owner receipt",
+              "MAG-owned typed blocker",
+              "owner-backed export artifact ref"
+            ],
+            "surface_kind": "mag_owner_verdict_signature_policy",
+            "version": "mag-owner-verdict-signature-policy.v1"
+          },
           "required_output_roles": [
             "review_quality_closure_receipt_ref"
           ],
+          "stage_folder_lifecycle_contract": {
+            "artifact_bundle_manifest_required": true,
+            "artifact_bundle_output_role": "review_quality_closure_receipt_ref",
+            "artifact_bundle_owner_receipt_or_typed_blocker_required": true,
+            "artifact_bundle_role": "stage_output_artifact_ref",
+            "opl_can_interpret_grant_quality": false,
+            "opl_consumption": "refs_manifest_missing_output_receipt_blocker_handoff_only"
+          },
           "stage_id": "review_and_rebuttal",
           "surface_kind": "mag_stage_native_artifact_contract",
           "version": "mag-stage-native-artifact-contract.v1"
@@ -3752,9 +3922,12 @@
             "opl_can_write_artifact_body": false,
             "opl_consumes": [
               "stage_output_role",
+              "lifecycle_contract_role",
               "manifest_ref",
               "current_pointer_ref",
-              "owner_receipt_or_typed_blocker_ref"
+              "owner_receipt_or_typed_blocker_ref",
+              "missing_output_ref",
+              "handoff_ref"
             ],
             "opl_forbidden_inferences": [
               "fundability_ready",
@@ -3791,6 +3964,7 @@
               "lifecycle_stage",
               "stage_id",
               "stage_output_role",
+              "lifecycle_contract_role",
               "artifact_classification",
               "manifest_ref",
               "current_pointer_ref",
@@ -3826,9 +4000,70 @@
             "provider_completion_is_not_owner_closeout": true,
             "typed_blocker_required_when_output_missing": true
           },
+          "owner_verdict_signature_policy": {
+            "accepted_signature_shapes": [
+              "mag_owner_receipt_ref",
+              "mag_owned_typed_blocker_ref"
+            ],
+            "opl_can_sign_or_infer_verdict": false,
+            "owner": "med-autogrant",
+            "provider_completion_can_sign_verdict": false,
+            "required_verdicts": [
+              "fundability_verdict",
+              "authoring_quality_verdict",
+              "export_verdict",
+              "submission_ready_verdict"
+            ],
+            "source_surfaces": [
+              "MAG owner receipt",
+              "MAG-owned typed blocker",
+              "owner-backed export artifact ref"
+            ],
+            "surface_kind": "mag_owner_verdict_signature_policy",
+            "version": "mag-owner-verdict-signature-policy.v1"
+          },
+          "package_stage_lifecycle_projection": {
+            "artifact_bundle": {
+              "lifecycle_contract_role": "stage_output_artifact_ref",
+              "manifest_ref_template": "mag-artifact://package_and_submit_ready/submission_ready_package_manifest_ref/{grant_run_id}/{workspace_id}/{draft_id_or_no_draft}/manifest",
+              "stage_output_role": "submission_ready_package_manifest_ref"
+            },
+            "authority_boundary": {
+              "mag_owns_export_verdict": true,
+              "mag_owns_package_authority": true,
+              "mag_owns_submission_ready_verdict": true,
+              "opl_can_declare_submission_ready": false,
+              "opl_can_interpret_grant_quality": false,
+              "opl_can_read_artifact_body": false
+            },
+            "final_package": {
+              "canonical_ref_template": "mag-package://final-package/{grant_run_id}/{workspace_id}/{draft_id}",
+              "current_pointer_ref": "current:mag/package/final-package",
+              "lifecycle_contract_role": "canonical_promotion_ref"
+            },
+            "handoff_policy": "refs_manifest_missing_output_receipt_blocker_handoff_only",
+            "missing_output_policy": "typed_blocker_required_no_opl_inference",
+            "owner_receipt_or_typed_blocker_ref": "receipt:mag/grant-stage-controlled-attempt/package_and_submit_ready/owner-receipt-or-typed-blocker",
+            "stage_id": "package_and_submit_ready",
+            "submission_ready_package": {
+              "current_pointer_ref": "current:mag/package/submission-ready",
+              "export_ref_template": "mag-package://submission-ready/{grant_run_id}/{workspace_id}/{draft_id}",
+              "lifecycle_contract_role": "export_artifact_ref"
+            },
+            "surface_kind": "mag_package_stage_folder_lifecycle_projection_contract",
+            "version": "mag-package-stage-folder-lifecycle-projection.v1"
+          },
           "required_output_roles": [
             "submission_ready_package_manifest_ref"
           ],
+          "stage_folder_lifecycle_contract": {
+            "artifact_bundle_manifest_required": true,
+            "artifact_bundle_output_role": "submission_ready_package_manifest_ref",
+            "artifact_bundle_owner_receipt_or_typed_blocker_required": true,
+            "artifact_bundle_role": "stage_output_artifact_ref",
+            "opl_can_interpret_grant_quality": false,
+            "opl_consumption": "refs_manifest_missing_output_receipt_blocker_handoff_only"
+          },
           "stage_id": "package_and_submit_ready",
           "surface_kind": "mag_stage_native_artifact_contract",
           "version": "mag-stage-native-artifact-contract.v1"

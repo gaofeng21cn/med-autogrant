@@ -3,7 +3,9 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
-
+from med_autogrant.stage_control_plane_parts.artifact_contracts import (
+    build_stage_native_artifact_contract,
+)
 
 USER_STAGE_LOG_REQUIRED_FIELDS = [
     "stage_name",
@@ -436,9 +438,10 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
         expected_receipt_refs=expected_receipt_refs,
         monitor_freshness_refs=monitor_freshness_refs,
     )
-    stage_native_artifact_contract = _stage_native_artifact_contract(
+    stage_native_artifact_contract = build_stage_native_artifact_contract(
         stage=stage,
         expected_receipt_refs=expected_receipt_refs,
+        output_role=STAGE_OUTPUT_ROLE_BY_STAGE_ID[stage_id],
     )
     return {
         **stage,
@@ -597,93 +600,6 @@ def _stage_admission_packet(stage: Mapping[str, Any]) -> dict[str, Any]:
             "can_declare_export_ready": False,
         },
 }
-
-
-def _stage_native_artifact_contract(
-    *,
-    stage: Mapping[str, Any],
-    expected_receipt_refs: list[dict[str, Any]],
-) -> dict[str, Any]:
-    stage_id = str(stage["stage_id"])
-    output_role = STAGE_OUTPUT_ROLE_BY_STAGE_ID[stage_id]
-    return {
-        "surface_kind": "mag_stage_native_artifact_contract",
-        "version": "mag-stage-native-artifact-contract.v1",
-        "stage_id": stage_id,
-        "owner": TARGET_DOMAIN_ID,
-        "required_output_roles": [output_role],
-        "manifest_requirements": {
-            "required_fields": [
-                "grant_run_id",
-                "workspace_id",
-                "lifecycle_stage",
-                "stage_id",
-                "stage_output_role",
-                "artifact_classification",
-                "manifest_ref",
-                "current_pointer_ref",
-                "owner_receipt_or_typed_blocker_ref",
-            ],
-            "identity_fields": [
-                "grant_run_id",
-                "workspace_id",
-                "draft_id",
-                "lifecycle_stage",
-                "stage_id",
-                "stage_output_role",
-            ],
-            "body_free_projection_required": True,
-            "manifest_ref_template": (
-                f"mag-artifact://{stage_id}/{output_role}/"
-                "{grant_run_id}/{workspace_id}/{draft_id_or_no_draft}/manifest"
-            ),
-        },
-        "owner_closeout_requirements": {
-            "accepted_return_shapes": [
-                "domain_owner_receipt_ref",
-                "typed_blocker_ref",
-                "no_regression_evidence_ref",
-            ],
-            "expected_receipt_refs": expected_receipt_refs,
-            "typed_blocker_required_when_output_missing": True,
-            "owner_receipt_required_for_current_pointer_advance": True,
-            "provider_completion_is_not_owner_closeout": True,
-        },
-        "current_pointer_rules": {
-            "pointer_owner": TARGET_DOMAIN_ID,
-            "pointer_ref_template": f"current:mag/stages/{stage_id}/{output_role}",
-            "advance_requires": [
-                "stage_output_manifest_ref",
-                "domain_owner_receipt_ref_or_typed_blocker_ref",
-            ],
-            "opl_can_advance_pointer": False,
-            "missing_pointer_policy": "typed_blocker_no_opl_inference",
-        },
-        "artifact_classification_boundary": {
-            "classification": "grant_stage_output_ref",
-            "artifact_body_owner": TARGET_DOMAIN_ID,
-            "artifact_authority_owner": TARGET_DOMAIN_ID,
-            "opl_consumes": [
-                "stage_output_role",
-                "manifest_ref",
-                "current_pointer_ref",
-                "owner_receipt_or_typed_blocker_ref",
-            ],
-            "opl_forbidden_inferences": [
-                "fundability_ready",
-                "authoring_quality_ready",
-                "export_ready",
-                "submission_ready",
-                "grant_truth",
-            ],
-            "opl_can_read_artifact_body": False,
-            "opl_can_write_artifact_body": False,
-            "opl_can_declare_fundability_ready": False,
-            "opl_can_declare_quality_ready": False,
-            "opl_can_declare_export_ready": False,
-            "opl_can_declare_submission_ready": False,
-        },
-    }
 
 
 def _stage_expected_receipt_refs(stage_id: str, runtime_event_refs: list[str]) -> list[dict[str, Any]]:

@@ -51,6 +51,36 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
             "mag-package://submission-ready/p3c",
         )
         self.assertEqual(
+            projection["stage_folder_lifecycle_projection"],
+            {
+                "surface_kind": "mag_stage_folder_lifecycle_projection",
+                "stage_id": "package_and_submit_ready",
+                "artifact_bundle": {
+                    "ref": "mag-package://artifact-bundle/p3c",
+                    "lifecycle_contract_role": "stage_output_artifact_ref",
+                    "stage_output_role": "submission_ready_package_manifest_ref",
+                },
+                "final_package": {
+                    "ref": "mag-package://final-package/p3c",
+                    "lifecycle_contract_role": "canonical_promotion_ref",
+                },
+                "submission_ready_package": {
+                    "ref": "mag-package://submission-ready/p3c",
+                    "lifecycle_contract_role": "export_artifact_ref",
+                },
+                "owner_receipt_or_typed_blocker_ref": "runtime://mag/receipts/owner/p3c.json",
+                "missing_output_policy": "typed_blocker_required_no_opl_inference",
+                "handoff_policy": "refs_manifest_missing_output_receipt_blocker_handoff_only",
+                "authority_boundary": {
+                    "mag_owns_package_authority": True,
+                    "mag_owns_export_verdict": True,
+                    "opl_can_read_artifact_body": False,
+                    "opl_can_interpret_grant_quality": False,
+                    "opl_can_declare_submission_ready": False,
+                },
+            },
+        )
+        self.assertEqual(
             projection["export_verdict_refs"],
             {
                 "export_verdict_ref": "mag-verdict://submission-ready-export/p3c",
@@ -80,11 +110,93 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
         authority = projection["authority_boundary"]
         self.assertTrue(authority["mag_owns_submission_export_verdict"])
         self.assertTrue(authority["mag_owns_package_authority"])
+        self.assertTrue(authority["mag_owns_stage_folder_lifecycle_projection"])
         self.assertTrue(authority["opl_owns_artifact_package_lifecycle_shell"])
         self.assertTrue(authority["opl_owns_locator"])
         self.assertTrue(authority["opl_owns_retention_ui"])
+        self.assertFalse(authority["opl_can_interpret_grant_quality"])
+        self.assertFalse(authority["opl_can_declare_submission_ready"])
         self.assertFalse(authority["opl_can_declare_export_ready"])
         self.assertFalse(authority["opl_can_write_artifact_body"])
+
+    def test_package_lifecycle_handoff_requires_stage_folder_lifecycle_refs(self) -> None:
+        from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
+            build_package_lifecycle_handoff_projection,
+        )
+
+        for missing_key in (
+            "artifact_bundle_ref",
+            "final_package_ref",
+            "submission_ready_package_ref",
+        ):
+            with self.subTest(missing_key=missing_key):
+                package_refs = {
+                    "artifact_bundle_ref": "mag-package://artifact-bundle/p3c",
+                    "final_package_ref": "mag-package://final-package/p3c",
+                    "submission_ready_package_ref": "mag-package://submission-ready/p3c",
+                }
+                package_refs.pop(missing_key)
+
+                with self.assertRaisesRegex(WorkspaceStateError, missing_key):
+                    build_package_lifecycle_handoff_projection(
+                        package_refs=package_refs,
+                        gap_report={
+                            "gap_report_ref": "mag-gap://package-export/p3c",
+                            "summary": "missing lifecycle ref must fail closed",
+                        },
+                        export_verdict={
+                            "export_verdict_ref": "mag-verdict://submission-ready-export/p3c",
+                            "verdict_state": "submission_ready",
+                            "owner": "med-autogrant",
+                            "source_kind": "mag_owner_receipt",
+                            "provenance_ref": "runtime://mag/receipts/export/p3c.json",
+                        },
+                        manual_portal_boundary={
+                            "manual_portal_boundary_ref": "mag-boundary://manual-portal/p3c",
+                        },
+                        lifecycle_receipt_refs={
+                            "owner_receipt_ref": "runtime://mag/receipts/owner/p3c.json",
+                        },
+                    )
+
+    def test_package_lifecycle_handoff_accepts_typed_blocker_as_verdict_signature(self) -> None:
+        from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
+            build_package_lifecycle_handoff_projection,
+        )
+
+        projection = build_package_lifecycle_handoff_projection(
+            package_refs={
+                "artifact_bundle_ref": "mag-package://artifact-bundle/p3c",
+                "final_package_ref": "mag-package://final-package/p3c",
+                "submission_ready_package_ref": "mag-package://submission-ready/p3c",
+            },
+            gap_report={
+                "gap_report_ref": "mag-gap://package-export/p3c",
+                "summary": "export remains blocked by MAG typed blocker",
+            },
+            export_verdict={
+                "export_verdict_ref": "mag-verdict://submission-ready-export/p3c",
+                "verdict_state": "blocked",
+                "owner": "med-autogrant",
+                "source_kind": "mag_owner_typed_blocker",
+                "provenance_ref": "typed-blocker://mag/export/p3c",
+            },
+            manual_portal_boundary={
+                "manual_portal_boundary_ref": "mag-boundary://manual-portal/p3c",
+            },
+            lifecycle_receipt_refs={
+                "typed_blocker_ref": "typed-blocker://mag/export/p3c",
+            },
+        )
+
+        self.assertEqual(
+            projection["export_verdict_refs"]["source_kind"],
+            "mag_owner_typed_blocker",
+        )
+        self.assertEqual(
+            projection["stage_folder_lifecycle_projection"]["owner_receipt_or_typed_blocker_ref"],
+            "typed-blocker://mag/export/p3c",
+        )
 
     def test_package_lifecycle_handoff_rejects_opl_export_ready_claim(self) -> None:
         from med_autogrant.product_entry_parts.package_lifecycle_handoff import (
@@ -93,7 +205,11 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
 
         with self.assertRaisesRegex(WorkspaceStateError, "OPL.*export"):
             build_package_lifecycle_handoff_projection(
-                package_refs={"final_package_ref": "mag-package://final/p3c"},
+                package_refs={
+                    "artifact_bundle_ref": "mag-package://artifact-bundle/p3c",
+                    "final_package_ref": "mag-package://final/p3c",
+                    "submission_ready_package_ref": "mag-package://submission-ready/p3c",
+                },
                 gap_report={
                     "gap_report_ref": "mag-gap://package-export/p3c",
                     "summary": "bad claim",
@@ -121,7 +237,11 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
 
         with self.assertRaisesRegex(WorkspaceStateError, "export_verdict.*owner|provenance"):
             build_package_lifecycle_handoff_projection(
-                package_refs={"final_package_ref": "mag-package://final/p3c"},
+                package_refs={
+                    "artifact_bundle_ref": "mag-package://artifact-bundle/p3c",
+                    "final_package_ref": "mag-package://final/p3c",
+                    "submission_ready_package_ref": "mag-package://submission-ready/p3c",
+                },
                 gap_report={
                     "gap_report_ref": "mag-gap://package-export/p3c",
                     "summary": "missing verdict provenance must fail closed",
@@ -169,7 +289,11 @@ class ProductEntryPackageLifecycleHandoffTest(unittest.TestCase):
             )
 
         projection = build_package_lifecycle_handoff_projection(
-            package_refs={"final_package_ref": "mag-package://final/p3c"},
+            package_refs={
+                "artifact_bundle_ref": "mag-package://artifact-bundle/p3c",
+                "final_package_ref": "mag-package://final/p3c",
+                "submission_ready_package_ref": "mag-package://submission-ready/p3c",
+            },
             gap_report={
                 "gap_report_ref": "mag-gap://package-export/p3c",
                 "summary": "refs only",
