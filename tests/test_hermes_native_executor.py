@@ -144,6 +144,9 @@ class HermesNativeExecutorRunTest(unittest.TestCase):
         self.assertEqual(result["proof"]["provider_reasoning_status"], "unproven_custom_chat_completions")
         receipt = result["agent_execution_receipt"]
         self.assertEqual(receipt["surface_kind"], "opl_agent_execution_receipt")
+        self.assertEqual(receipt["receipt_owner"], "one-person-lab")
+        self.assertFalse(receipt["mag_executor_owner"])
+        self.assertEqual(receipt["adapter_lane"], "explicit_non_default_opl_executor_adapter")
         self.assertEqual(receipt["executor_kind"], "hermes_agent")
         self.assertEqual(receipt["mode"], "agent_loop")
         self.assertEqual(receipt["cwd"], str(REPO_ROOT.resolve()))

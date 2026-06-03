@@ -45,6 +45,17 @@ class GrantAutonomyCliTest(unittest.TestCase):
             with tempfile.TemporaryDirectory() as tmp_dir:
                 request_path = Path(tmp_dir) / "autonomy-request.json"
                 output_dir = Path(tmp_dir) / "autonomy-output"
+                attempt_path = Path(tmp_dir) / "opl-stage-attempt.json"
+                attempt_path.write_text(
+                    json.dumps(
+                        {
+                            "runtime_owner": "one-person-lab",
+                            "executor_kind": "codex_cli",
+                            "attempt_lease_ref": "lease:opl/stage-attempt/cli",
+                        }
+                    ),
+                    encoding="utf-8",
+                )
                 exit_code, stdout, stderr = self.run_cli(
                     "pass",
                     "autonomy-controller",
@@ -52,6 +63,8 @@ class GrantAutonomyCliTest(unittest.TestCase):
                     str(request_path),
                     "--output-dir",
                     str(output_dir),
+                    "--opl-stage-attempt",
+                    str(attempt_path),
                     "--format",
                     "json",
                 )
@@ -64,5 +77,10 @@ class GrantAutonomyCliTest(unittest.TestCase):
                 "command": "execute-grant-autonomy-controller",
                 "input_path": str(request_path),
                 "output_dir": str(output_dir),
+                "opl_stage_attempt": {
+                    "runtime_owner": "one-person-lab",
+                    "executor_kind": "codex_cli",
+                    "attempt_lease_ref": "lease:opl/stage-attempt/cli",
+                },
             }
         )

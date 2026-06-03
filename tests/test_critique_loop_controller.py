@@ -13,8 +13,57 @@ if str(SRC_ROOT) not in sys.path:
 
 from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop  # noqa: E402
 
+OPL_STAGE_ATTEMPT = {
+    "runtime_owner": "one-person-lab",
+    "executor_kind": "codex_cli",
+    "attempt_lease_ref": "lease:opl/stage-attempt/test",
+}
+
 
 class CritiqueLoopControllerTest(unittest.TestCase):
+    def test_missing_opl_stage_attempt_returns_typed_blocker_without_running(self) -> None:
+        def critique_runner(_document: dict[str, Any]) -> dict[str, Any]:
+            raise AssertionError("缺少 OPL attempt 时不应运行 critique_runner")
+
+        result = run_critique_revision_closed_loop(
+            current_document={"doc": "initial"},
+            max_rounds=3,
+            critique_runner=critique_runner,
+            revision_runner=critique_runner,
+            route_resolver=critique_runner,
+        )
+
+        self.assertEqual(result["loop_status"], "failed_closed")
+        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assertEqual(
+            result["typed_blocker"]["typed_blocker_ref"],
+            "typed-blocker:mag/critique-loop/opl-default-stage-attempt-required",
+        )
+
+    def test_empty_attempt_lease_object_does_not_authorize_loop(self) -> None:
+        def critique_runner(_document: dict[str, Any]) -> dict[str, Any]:
+            raise AssertionError("缺少 OPL lease/receipt ref 时不应运行 critique_runner")
+
+        result = run_critique_revision_closed_loop(
+            current_document={"doc": "initial"},
+            max_rounds=3,
+            critique_runner=critique_runner,
+            revision_runner=critique_runner,
+            route_resolver=critique_runner,
+            opl_stage_attempt={
+                "runtime_owner": "one-person-lab",
+                "executor_kind": "codex_cli",
+                "attempt_lease": {},
+            },
+        )
+
+        self.assertEqual(result["loop_status"], "failed_closed")
+        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assertEqual(
+            result["typed_blocker"]["blocker_kind"],
+            "opl_attempt_lease_or_receipt_required",
+        )
+
     def test_ready_for_submission_stops_in_first_round(self) -> None:
         current_document = {"stage": "drafting"}
 
@@ -35,6 +84,7 @@ class CritiqueLoopControllerTest(unittest.TestCase):
             critique_runner=critique_runner,
             revision_runner=revision_runner,
             route_resolver=route_resolver,
+            opl_stage_attempt=OPL_STAGE_ATTEMPT,
         )
 
         self.assertEqual(result["loop_status"], "passed")
@@ -66,6 +116,7 @@ class CritiqueLoopControllerTest(unittest.TestCase):
             critique_runner=critique_runner,
             revision_runner=revision_runner,
             route_resolver=route_resolver,
+            opl_stage_attempt=OPL_STAGE_ATTEMPT,
         )
 
         self.assertEqual(result["loop_status"], "passed")
@@ -93,6 +144,7 @@ class CritiqueLoopControllerTest(unittest.TestCase):
             critique_runner=critique_runner,
             revision_runner=revision_runner,
             route_resolver=route_resolver,
+            opl_stage_attempt=OPL_STAGE_ATTEMPT,
         )
 
         self.assertEqual(result["loop_status"], "rollback_required")
@@ -122,6 +174,7 @@ class CritiqueLoopControllerTest(unittest.TestCase):
             critique_runner=critique_runner,
             revision_runner=revision_runner,
             route_resolver=route_resolver,
+            opl_stage_attempt=OPL_STAGE_ATTEMPT,
         )
 
         self.assertEqual(result["loop_status"], "failed_closed")

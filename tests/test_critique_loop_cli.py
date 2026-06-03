@@ -49,6 +49,17 @@ class CritiqueLoopCliTest(unittest.TestCase):
             entry.dispatch.return_value = expected_payload
 
             with tempfile.TemporaryDirectory() as tmp_dir:
+                attempt_path = Path(tmp_dir) / "opl-stage-attempt.json"
+                attempt_path.write_text(
+                    json.dumps(
+                        {
+                            "runtime_owner": "one-person-lab",
+                            "executor_kind": "codex_cli",
+                            "attempt_lease_ref": "lease:opl/stage-attempt/cli",
+                        }
+                    ),
+                    encoding="utf-8",
+                )
                 exit_code, stdout, stderr = self.run_cli(
                     "pass",
                     "critique-loop",
@@ -58,6 +69,8 @@ class CritiqueLoopCliTest(unittest.TestCase):
                     tmp_dir,
                     "--max-rounds",
                     "3",
+                    "--opl-stage-attempt",
+                    str(attempt_path),
                     "--format",
                     "json",
                 )
@@ -72,5 +85,10 @@ class CritiqueLoopCliTest(unittest.TestCase):
                 "input_path": str(DRAFTING_EXAMPLE_PATH),
                 "output_dir": unittest.mock.ANY,
                 "max_rounds": 3,
+                "opl_stage_attempt": {
+                    "runtime_owner": "one-person-lab",
+                    "executor_kind": "codex_cli",
+                    "attempt_lease_ref": "lease:opl/stage-attempt/cli",
+                },
             }
         )

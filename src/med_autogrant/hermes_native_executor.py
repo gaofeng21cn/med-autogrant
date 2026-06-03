@@ -216,6 +216,9 @@ def _build_agent_execution_receipt(
 ) -> dict[str, Any]:
     return {
         "surface_kind": "opl_agent_execution_receipt",
+        "receipt_owner": "one-person-lab",
+        "mag_executor_owner": False,
+        "adapter_lane": "explicit_non_default_opl_executor_adapter",
         "executor_kind": "hermes_agent",
         "mode": "agent_loop",
         "cwd": str(cwd),

@@ -16,6 +16,11 @@ if str(SRC_ROOT) not in sys.path:
 
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 NIH_SELECTION_INPUT_PATH = REPO_ROOT / "examples" / "profile_selection_input_nih_r21.json"
+OPL_STAGE_ATTEMPT = {
+    "runtime_owner": "one-person-lab",
+    "executor_kind": "codex_cli",
+    "attempt_lease_ref": "lease:opl/stage-attempt/runtime-autonomy",
+}
 
 
 def _load_json(path: Path) -> dict[str, object]:
@@ -151,6 +156,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
         )
         request = {
             "request_id": "autonomy-req-001",
+            "opl_stage_attempt": dict(OPL_STAGE_ATTEMPT),
             "start": {
                 "mode": "workspace",
                 "workspace": workspace,
@@ -308,6 +314,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
         )
         request = {
             "request_id": "autonomy-req-nih-001",
+            "opl_stage_attempt": dict(OPL_STAGE_ATTEMPT),
             "start": {
                 "mode": "selection_input",
                 "selection_input": selection_input,
@@ -455,6 +462,7 @@ class MagRuntimeAutonomyControllerTest(unittest.TestCase):
         selection_input = _load_json(NIH_SELECTION_INPUT_PATH)
         request = {
             "request_id": "autonomy-nih-r21-proof-001",
+            "opl_stage_attempt": dict(OPL_STAGE_ATTEMPT),
             "start": {
                 "mode": "selection_input",
                 "selection_input": selection_input,

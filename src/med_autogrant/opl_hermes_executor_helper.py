@@ -36,6 +36,8 @@ def run_mag_hermes_executor_request(request: dict[str, Any]) -> dict[str, Any]:
 
     result = run_hermes_agent_exec(prompt, cwd=cwd)
     receipt = _require_object(result, "agent_execution_receipt")
+    if receipt.get("receipt_owner") != "one-person-lab" or receipt.get("mag_executor_owner") is not False:
+        raise WorkspaceStateError("MAG OPL Hermes helper 只接受 OPL-owned non-default adapter receipt。")
     receipt["executor_contract"] = _require_object(result, "contract")
     receipt["closeout_packet"] = {
         "surface_kind": "mag_critique_closeout_packet",

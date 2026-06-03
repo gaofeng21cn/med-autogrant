@@ -3,6 +3,8 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Callable
 
+from med_autogrant.opl_execution_boundary import require_opl_default_stage_attempt
+
 
 CritiqueRunner = Callable[[dict[str, Any]], dict[str, Any]]
 RevisionRunner = Callable[[dict[str, Any]], dict[str, Any]]
@@ -25,9 +27,24 @@ def run_critique_revision_closed_loop(
     critique_runner: CritiqueRunner,
     revision_runner: RevisionRunner,
     route_resolver: RouteResolver,
+    opl_stage_attempt: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if not isinstance(max_rounds, int) or max_rounds <= 0:
         raise ValueError("max_rounds 必须是正整数。")
+
+    boundary = require_opl_default_stage_attempt(
+        opl_stage_attempt,
+        controller_id="critique-loop",
+    )
+    if not boundary["ok"]:
+        return {
+            "rounds": [],
+            "loop_status": "failed_closed",
+            "final_workspace": deepcopy(current_document),
+            "final_route": {},
+            "termination_reason": "opl_provider_attempt_required",
+            "typed_blocker": boundary["typed_blocker"],
+        }
 
     workspace = deepcopy(current_document)
     rounds: list[dict[str, Any]] = []

@@ -222,6 +222,56 @@
           "$ref": "grant-autonomy-controller-report.schema.json"
         }
       }
+    },
+    "oplStageAttempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime_owner",
+        "executor_kind"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "attempt_lease_ref"
+          ]
+        },
+        {
+          "required": [
+            "stage_attempt_receipt_ref"
+          ]
+        },
+        {
+          "required": [
+            "receipt_ref"
+          ]
+        },
+        {
+          "required": [
+            "lease_ref"
+          ]
+        }
+      ],
+      "properties": {
+        "runtime_owner": {
+          "const": "one-person-lab"
+        },
+        "executor_kind": {
+          "const": "codex_cli"
+        },
+        "attempt_lease_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "stage_attempt_receipt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "receipt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "lease_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
     }
   },
   "required": [
@@ -239,6 +289,9 @@
   "properties": {
     "request_id": {
       "$ref": "#/$defs/nonEmptyString"
+    },
+    "opl_stage_attempt": {
+      "$ref": "#/$defs/oplStageAttempt"
     },
     "start": {
       "oneOf": [

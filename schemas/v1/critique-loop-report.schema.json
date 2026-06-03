@@ -10,6 +10,30 @@
         "null"
       ]
     },
+    "oplExecutionBoundaryTypedBlocker": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "typed_blocker_ref",
+        "required_runtime_owner",
+        "required_default_executor_kind"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_opl_execution_boundary_typed_blocker"
+        },
+        "typed_blocker_ref": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "required_runtime_owner": {
+          "const": "one-person-lab"
+        },
+        "required_default_executor_kind": {
+          "const": "codex_cli"
+        }
+      }
+    },
     "loopRoundSummary": {
       "type": "object",
       "additionalProperties": false,
@@ -110,6 +134,9 @@
     },
     "grant_quality_closure_dossier": {
       "$ref": "grant-quality-closure-dossier.schema.json#/$defs/grantQualityClosureDossier"
+    },
+    "typed_blocker": {
+      "$ref": "#/$defs/oplExecutionBoundaryTypedBlocker"
     }
   }
 }

@@ -75,17 +75,17 @@ SERVICE_SAFE_DOMAIN_COMMANDS: dict[str, DomainEntryCommandSpec] = {
     ),
     "execute-critique-revision-loop": DomainEntryCommandSpec(
         "execute_critique_revision_loop",
-        ("input_path", "output_dir"),
+        ("input_path", "output_dir", "opl_stage_attempt"),
         ("max_rounds", "executor_kind"),
     ),
     "execute-authoring-mainline-loop": DomainEntryCommandSpec(
         "execute_authoring_mainline_loop",
-        ("input_path", "output_dir"),
+        ("input_path", "output_dir", "opl_stage_attempt"),
         ("max_cycles", "executor_kind"),
     ),
     "execute-grant-autonomy-controller": DomainEntryCommandSpec(
         "execute_grant_autonomy_controller",
-        ("input_path", "output_dir"),
+        ("input_path", "output_dir", "opl_stage_attempt"),
         ("executor_kind",),
     ),
     "execute-revision-pass": DomainEntryCommandSpec("execute_revision_pass", ("input_path", "output_path")),

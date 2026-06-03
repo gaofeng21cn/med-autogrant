@@ -484,6 +484,7 @@ def handle_execute_critique_revision_loop(args: argparse.Namespace) -> dict[str,
         "input_path": args.input,
         "output_dir": args.output_dir,
         "max_rounds": args.max_rounds,
+        "opl_stage_attempt": _read_json_object(args.opl_stage_attempt),
     }
     if args.executor is not None:
         request["executor_kind"] = args.executor
@@ -496,6 +497,7 @@ def handle_execute_authoring_mainline_loop(args: argparse.Namespace) -> dict[str
         "input_path": args.input,
         "output_dir": args.output_dir,
         "max_cycles": args.max_cycles,
+        "opl_stage_attempt": _read_json_object(args.opl_stage_attempt),
     }
     if args.executor is not None:
         request["executor_kind"] = args.executor
@@ -507,6 +509,7 @@ def handle_execute_grant_autonomy_controller(args: argparse.Namespace) -> dict[s
         "command": "execute-grant-autonomy-controller",
         "input_path": args.input,
         "output_dir": args.output_dir,
+        "opl_stage_attempt": _read_json_object(args.opl_stage_attempt),
     }
     if args.executor is not None:
         request["executor_kind"] = args.executor

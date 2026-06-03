@@ -7,6 +7,8 @@ from med_autogrant.grant_autonomy_controller_plan import _normalize_controller_p
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
 from med_autogrant.grant_autonomy_start import _resolve_grant_autonomy_start
 from med_autogrant.grant_governance_adapter import apply_family_governance_to_controller_plan
+from med_autogrant.grant_autonomy_report_resume import _fail_closed_report
+from med_autogrant.opl_execution_boundary import require_opl_default_stage_attempt
 
 Discoverer = Callable[[dict[str, Any]], dict[str, Any]]
 Selector = Callable[[dict[str, Any]], dict[str, Any]]
@@ -23,6 +25,7 @@ def run_grant_autonomy_controller(
     mainline_runner: MainlineRunner,
     quality_evaluator: QualityEvaluator,
     discoverer: Discoverer | None = None,
+    opl_stage_attempt: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     request_state = validate_grant_autonomy_request(request)
     if not request_state["ok"]:
@@ -44,6 +47,35 @@ def run_grant_autonomy_controller(
     rollback_enabled = request_state["rollback_enabled"]
     max_reselections = request_state["max_reselections"]
     max_rollbacks = request_state["max_rollbacks"]
+
+    requested_opl_stage_attempt = (
+        opl_stage_attempt if opl_stage_attempt is not None else request.get("opl_stage_attempt")
+    )
+    boundary = require_opl_default_stage_attempt(
+        requested_opl_stage_attempt if isinstance(requested_opl_stage_attempt, dict) else None,
+        controller_id="autonomy-controller",
+    )
+    if not boundary["ok"]:
+        return _fail_closed_report(
+            request_id=request_id,
+            started_from_mode=start_mode,
+            goal=goal,
+            max_rounds_or_cycles=max_rounds_or_cycles,
+            budget_max=budget_max,
+            spent_steps=0,
+            termination_reason="opl_provider_attempt_required",
+            blocker_queue=initial_blockers,
+            evidence_gap_queue=initial_evidence_gaps,
+            unresolved_blockers=[boundary["typed_blocker"]["typed_blocker_ref"]],
+            evidence_gaps=[],
+            action_trace=[],
+            reselection_decisions=[],
+            rollback_decisions=[],
+            controller_plan=controller_plan_input if isinstance(controller_plan_input, dict) else None,
+            tranche_history=[],
+            completed_cycles=0,
+            final_workspace={},
+        )
 
     action_trace: list[dict[str, Any]] = []
     reselection_decisions: list[dict[str, Any]] = []

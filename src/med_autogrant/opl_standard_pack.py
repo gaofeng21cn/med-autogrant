@@ -436,8 +436,18 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
         "forbidden_roles": [
             "long_running_runtime_loop",
             "repo_scheduler_daemon",
+            "repo_owned_durable_attempt_loop",
+            "repo_owned_default_executor_helper",
             "mechanical_quality_or_export_verdict",
         ],
+        "execution_boundary": {
+            "required_runtime_owner": "one-person-lab",
+            "required_default_executor": "codex_cli",
+            "required_evidence": "OPL stage attempt lease or default executor receipt",
+            "missing_evidence_return_shape": "typed_blocker",
+            "mag_owns_durable_loop": False,
+            "hermes_agent_role": "explicit_non_default_opl_executor_adapter_receipt_lane_only",
+        },
     },
     {
         "surface_id": "owner_receipt_helper",

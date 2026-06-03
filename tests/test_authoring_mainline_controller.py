@@ -13,8 +13,32 @@ if str(SRC_ROOT) not in sys.path:
 
 from med_autogrant.authoring_mainline_controller import run_authoring_mainline_controller  # noqa: E402
 
+OPL_STAGE_ATTEMPT = {
+    "runtime_owner": "one-person-lab",
+    "executor_kind": "codex_cli",
+    "attempt_lease_ref": "lease:opl/stage-attempt/test",
+}
+
 
 class AuthoringMainlineControllerTest(unittest.TestCase):
+    def test_missing_opl_stage_attempt_returns_typed_blocker_without_running(self) -> None:
+        def route_resolver(_workspace: dict[str, Any]) -> dict[str, Any]:
+            raise AssertionError("缺少 OPL attempt 时不应解析 route")
+
+        result = run_authoring_mainline_controller(
+            current_workspace={"stage": "drafting"},
+            max_cycles=3,
+            route_resolver=route_resolver,
+            stage_runners={},
+        )
+
+        self.assertEqual(result["loop_status"], "failed_closed")
+        self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
+        self.assertEqual(
+            result["typed_blocker"]["typed_blocker_ref"],
+            "typed-blocker:mag/authoring-mainline-loop/opl-default-stage-attempt-required",
+        )
+
     def test_drafting_to_critique_revision_then_passed(self) -> None:
         calls: list[str] = []
 
@@ -46,6 +70,7 @@ class AuthoringMainlineControllerTest(unittest.TestCase):
                 "critique": critique_runner,
                 "revision": revision_runner,
             },
+            opl_stage_attempt=OPL_STAGE_ATTEMPT,
         )
 
         self.assertEqual(result["loop_status"], "passed")
@@ -84,6 +109,7 @@ class AuthoringMainlineControllerTest(unittest.TestCase):
                 "question_refinement": question_refinement_runner,
                 "critique": critique_runner,
             },
+            opl_stage_attempt=OPL_STAGE_ATTEMPT,
         )
 
         self.assertEqual(result["loop_status"], "passed")
@@ -123,6 +149,7 @@ class AuthoringMainlineControllerTest(unittest.TestCase):
                 "fit_alignment": fit_alignment_runner,
                 "revision": revision_runner,
             },
+            opl_stage_attempt=OPL_STAGE_ATTEMPT,
         )
 
         self.assertEqual(result["loop_status"], "passed")
@@ -139,6 +166,7 @@ class AuthoringMainlineControllerTest(unittest.TestCase):
             max_cycles=3,
             route_resolver=route_resolver,
             stage_runners={},
+            opl_stage_attempt=OPL_STAGE_ATTEMPT,
         )
 
         self.assertEqual(result["loop_status"], "failed_closed")
@@ -157,6 +185,7 @@ class AuthoringMainlineControllerTest(unittest.TestCase):
             max_cycles=2,
             route_resolver=route_resolver,
             stage_runners={"critique": critique_runner},
+            opl_stage_attempt=OPL_STAGE_ATTEMPT,
         )
 
         self.assertEqual(result["loop_status"], "failed_closed")

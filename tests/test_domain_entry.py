@@ -313,6 +313,11 @@ class DomainEntryDispatchTest(unittest.TestCase):
                 "input_path": str(CRITIQUE_EXAMPLE_PATH),
                 "output_dir": "/tmp/critique-loop",
                 "max_rounds": 4,
+                "opl_stage_attempt": {
+                    "runtime_owner": "one-person-lab",
+                    "executor_kind": "codex_cli",
+                    "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+                },
             }
         )
 
@@ -320,6 +325,11 @@ class DomainEntryDispatchTest(unittest.TestCase):
         runtime.execute_critique_revision_loop.assert_called_once_with(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
             output_dir="/tmp/critique-loop",
+            opl_stage_attempt={
+                "runtime_owner": "one-person-lab",
+                "executor_kind": "codex_cli",
+                "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+            },
             max_rounds=4,
         )
 
@@ -336,6 +346,11 @@ class DomainEntryDispatchTest(unittest.TestCase):
                 "input_path": str(INPUT_EXAMPLE_PATH),
                 "output_dir": "/tmp/mainline-loop",
                 "max_cycles": 6,
+                "opl_stage_attempt": {
+                    "runtime_owner": "one-person-lab",
+                    "executor_kind": "codex_cli",
+                    "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+                },
             }
         )
 
@@ -343,6 +358,11 @@ class DomainEntryDispatchTest(unittest.TestCase):
         runtime.execute_authoring_mainline_loop.assert_called_once_with(
             input_path=str(INPUT_EXAMPLE_PATH),
             output_dir="/tmp/mainline-loop",
+            opl_stage_attempt={
+                "runtime_owner": "one-person-lab",
+                "executor_kind": "codex_cli",
+                "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+            },
             max_cycles=6,
         )
 
@@ -358,6 +378,11 @@ class DomainEntryDispatchTest(unittest.TestCase):
                 "command": "execute-grant-autonomy-controller",
                 "input_path": "/tmp/autonomy-request.json",
                 "output_dir": "/tmp/autonomy-output",
+                "opl_stage_attempt": {
+                    "runtime_owner": "one-person-lab",
+                    "executor_kind": "codex_cli",
+                    "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+                },
             }
         )
 
@@ -365,6 +390,11 @@ class DomainEntryDispatchTest(unittest.TestCase):
         runtime.execute_grant_autonomy_controller.assert_called_once_with(
             input_path="/tmp/autonomy-request.json",
             output_dir="/tmp/autonomy-output",
+            opl_stage_attempt={
+                "runtime_owner": "one-person-lab",
+                "executor_kind": "codex_cli",
+                "attempt_lease_ref": "lease:opl/stage-attempt/domain-entry",
+            },
         )
 
     def test_domain_entry_dispatches_build_submission_ready_package(self) -> None:

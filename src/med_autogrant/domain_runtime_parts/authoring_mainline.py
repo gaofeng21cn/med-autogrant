@@ -112,6 +112,8 @@ class AuthoringMainlineRuntime:
             "grant_quality_scorecard": quality_scorecard,
             "grant_quality_closure_dossier": quality_closure_dossier,
         }
+        if isinstance(loop.get("typed_blocker"), dict):
+            mainline_loop_report["typed_blocker"] = loop["typed_blocker"]
         _validate_schema_payload(
             mainline_loop_report,
             schema_file=AUTHORING_MAINLINE_LOOP_REPORT_SCHEMA_FILE,
@@ -219,6 +221,7 @@ def build_authoring_mainline_payload(
     starting_workspace: dict[str, Any],
     max_cycles: int,
     executor_kind: str | None,
+    opl_stage_attempt: dict[str, Any] | None,
     run_authoring_mainline_controller: Any,
 ) -> dict[str, Any]:
     authoring_runtime = AuthoringMainlineRuntime(
@@ -232,6 +235,7 @@ def build_authoring_mainline_payload(
         max_cycles=max_cycles,
         route_resolver=authoring_runtime.quality_aware_route_resolver,
         stage_runners=authoring_runtime.build_stage_runners(),
+        opl_stage_attempt=opl_stage_attempt,
     )
     final_workspace = loop["final_workspace"]
     final_route = loop["final_route"]

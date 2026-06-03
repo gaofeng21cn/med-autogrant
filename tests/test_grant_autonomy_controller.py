@@ -15,6 +15,12 @@ if str(SRC_ROOT) not in sys.path:
 from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller  # noqa: E402
 from med_autogrant.grant_autonomy_trace import spend_budget_step  # noqa: E402
 
+OPL_STAGE_ATTEMPT = {
+    "runtime_owner": "one-person-lab",
+    "executor_kind": "codex_cli",
+    "attempt_lease_ref": "lease:opl/stage-attempt/test",
+}
+
 
 class GrantAutonomyControllerTest(unittest.TestCase):
     def test_spend_budget_step_records_action_trace_without_overrun(self) -> None:
@@ -57,6 +63,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
     def _selection_start_request(self) -> dict[str, Any]:
         return {
             "request_id": "autonomy-req-001",
+            "opl_stage_attempt": dict(OPL_STAGE_ATTEMPT),
             "start": {
                 "mode": "selection_input",
                 "selection_input": {
@@ -89,6 +96,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
     def _workspace_start_request(self) -> dict[str, Any]:
         return {
             "request_id": "autonomy-req-002",
+            "opl_stage_attempt": dict(OPL_STAGE_ATTEMPT),
             "start": {
                 "mode": "workspace",
                 "workspace": {
@@ -936,6 +944,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
 
         resume_request = {
             "request_id": "autonomy-resume-001",
+            "opl_stage_attempt": dict(OPL_STAGE_ATTEMPT),
             "start": {"mode": "controller_report", "controller_report": first},
             "goal": request["goal"],
             "max_rounds_or_cycles": 2,

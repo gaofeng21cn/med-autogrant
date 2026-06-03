@@ -88,6 +88,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
         output_dir: str | Path,
         max_rounds: int = 3,
         executor_kind: str | None = None,
+        opl_stage_attempt: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         resolved_input_path = Path(input_path).expanduser().resolve()
         starting_document = self._load_workspace(resolved_input_path)
@@ -142,6 +143,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
             critique_runner=critique_runner,
             revision_runner=revision_runner,
             route_resolver=determine_next_step,
+            opl_stage_attempt=opl_stage_attempt,
         )
         final_workspace = loop["final_workspace"]
         final_route = loop["final_route"]
@@ -185,6 +187,8 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
             "grant_quality_scorecard": quality_scorecard,
             "grant_quality_closure_dossier": quality_closure_dossier,
         }
+        if isinstance(loop.get("typed_blocker"), dict):
+            loop_report["typed_blocker"] = loop["typed_blocker"]
         _validate_schema_payload(
             loop_report,
             schema_file=CRITIQUE_LOOP_REPORT_SCHEMA_FILE,
@@ -217,6 +221,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
         output_dir: str | Path,
         max_cycles: int = 8,
         executor_kind: str | None = None,
+        opl_stage_attempt: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         resolved_input_path = Path(input_path).expanduser().resolve()
         starting_workspace = self._load_workspace(resolved_input_path)
@@ -230,6 +235,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
             starting_workspace=starting_workspace,
             max_cycles=max_cycles,
             executor_kind=executor_kind,
+            opl_stage_attempt=opl_stage_attempt,
             run_authoring_mainline_controller=run_authoring_mainline_controller,
         )
 
@@ -239,6 +245,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
         input_path: str | Path,
         output_dir: str | Path,
         executor_kind: str | None = None,
+        opl_stage_attempt: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         request = _load_json_object(input_path, context="grant autonomy controller input")
         _validate_schema_payload(
@@ -297,6 +304,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
                 output_dir=cycle_output_dir,
                 max_cycles=1,
                 executor_kind=executor_kind,
+                opl_stage_attempt=opl_stage_attempt,
             )
             return {
                 "workspace": mainline_payload["final_workspace"],
@@ -311,6 +319,7 @@ class DomainRuntimeAuthoringSurfaceMixin(DomainRuntimePackageSurfaceMixin):
             mainline_runner=_mainline_runner,
             quality_evaluator=_build_autonomy_quality_evaluator_output,
             discoverer=_discoverer,
+            opl_stage_attempt=opl_stage_attempt,
         )
         _validate_schema_payload(
             report,

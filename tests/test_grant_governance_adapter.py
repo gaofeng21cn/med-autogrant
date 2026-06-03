@@ -24,6 +24,12 @@ from med_autogrant.grant_governance_adapter import (  # noqa: E402
 )
 from med_autogrant.project_profile_selector import _build_grant_family_grammar  # noqa: E402
 
+OPL_STAGE_ATTEMPT = {
+    "runtime_owner": "one-person-lab",
+    "executor_kind": "codex_cli",
+    "attempt_lease_ref": "lease:opl/stage-attempt/test",
+}
+
 
 class GrantGovernanceAdapterTest(unittest.TestCase):
     def _workspace_for_preset(self, preset_id: str) -> dict[str, Any]:
@@ -214,6 +220,7 @@ class GrantGovernanceAdapterTest(unittest.TestCase):
         ]
         request = {
             "request_id": "adapter-controller-001",
+            "opl_stage_attempt": dict(OPL_STAGE_ATTEMPT),
             "start": {"mode": "workspace", "workspace": workspace},
             "goal": {
                 "target_status": "near_submission_candidate",

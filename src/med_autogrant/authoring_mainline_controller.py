@@ -3,6 +3,8 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Callable
 
+from med_autogrant.opl_execution_boundary import require_opl_default_stage_attempt
+
 
 RouteResolver = Callable[[dict[str, Any]], dict[str, Any]]
 StageRunner = Callable[[dict[str, Any]], dict[str, Any]]
@@ -22,11 +24,26 @@ def run_authoring_mainline_controller(
     max_cycles: int,
     route_resolver: RouteResolver,
     stage_runners: dict[str, StageRunner],
+    opl_stage_attempt: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if not isinstance(max_cycles, int) or max_cycles <= 0:
         raise ValueError("max_cycles 必须是正整数。")
     if not isinstance(stage_runners, dict):
         raise TypeError("stage_runners 必须是 stage -> runner 的映射。")
+
+    boundary = require_opl_default_stage_attempt(
+        opl_stage_attempt,
+        controller_id="authoring-mainline-loop",
+    )
+    if not boundary["ok"]:
+        return {
+            "cycles": [],
+            "loop_status": "failed_closed",
+            "final_workspace": deepcopy(current_workspace),
+            "final_route": {},
+            "termination_reason": "opl_provider_attempt_required",
+            "typed_blocker": boundary["typed_blocker"],
+        }
 
     workspace = deepcopy(current_workspace)
     cycles: list[dict[str, Any]] = []
