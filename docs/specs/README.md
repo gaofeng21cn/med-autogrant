@@ -28,10 +28,12 @@ proof、activation package、local-runtime closeout 和 tombstone 进入
 
 密集 specs 组合的生命周期分类见 [Specs Lifecycle Map](./specs_lifecycle_map.md)。编辑或移动任何 dated spec 前，先用这份 map 的 file-level lifecycle table 区分 active record、support current-truth record、integration reference、historical activation package、historical route snapshot 与 superseded provider proof。
 
+旧 P4A/P4B/P4C/P4E/P4F product-entry / package support specs 已折叠为 [Product Entry Support Record](./product-entry-support-record.md)，原文件进入 `../history/specs/`。当前 direct-file reader 应先读 support record，再按需追溯历史文件。
+
 当前 specs lifecycle map 已覆盖 `docs/specs/*.md` 与 `docs/history/specs/*.md` 的文件级归位。保留在本目录的 dated specs 只按两类处理：
 
 - `active_current_spec`：仅四份，承担明确命名的当前边界。
-- `support_current_truth`：只在仍 current 的 subsection 内支撑 schema、product-entry、package/export 或 executor routing 读法。
+- `support_current_truth`：只在仍 current 的 subsection 内支撑 schema、product-entry、package/export 或 executor routing 读法；P4 product-entry / package 读法现在由 `product-entry-support-record.md` 汇总。
 
 `2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`
 与

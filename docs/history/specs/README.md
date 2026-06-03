@@ -27,7 +27,8 @@ Machine boundary: 本文是人读历史 specs 索引。历史 specs 只保存形
 - 2026-04-10 post-R5A fail-closed hardening activation packages 与 local-runtime walkthrough：`./2026-04-10-post-r5a-final-package-*.md`、`./2026-04-10-post-r5a-hosted-contract-bundle-*.md`、`./2026-04-10-post-r5a-local-runtime-validation-*.md`、`./2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`、`./2026-04-10-post-r5a-revised-*.md`、`./2026-04-10-post-r5a-stage-route-*.md` 和 `./2026-04-10-post-r5a-worktree-aware-*.md`
 - 2026-04-11 Hermes/reset 与 local-runtime closeout 记录：已退役 provider proof 位于本目录的 `2026-04-11-hermes-backed-*.md` 与 `2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`；local-runtime honest-stop 记录位于 `./2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`，只作为 fail-closed / honest-stop provenance 阅读。
 - 2026-04-12 hosted-caller、OPL alignment、product-entry、route snapshot 与 handoff 记录：已退役 upstream Hermes fast-cutover board/current-truth、author-side executor routing snapshot、OPL alignment historical snapshot、hosted caller consumption、hosted contract bundle export 与 lightweight product-entry handoff 记录均位于本目录，只作为 provenance 阅读；当前 contract export、product-entry、OPL generated/hosted caller 和 App/workbench 边界回到核心文档、active gap plan、contracts/schema/source 与 `current-program.json`。
-- 2026-04-13 authoring route landing、默认 executor vocabulary 与 submission-ready 记录：`../../specs/2026-04-13-*.md`；已退役 Hermes-native proof tombstone：`./2026-04-13-hermes-native-critique-proof-tombstone.md`
+- 2026-04-12/13 P4 product-entry / package support 记录：`./2026-04-12-p4a-*`、`./2026-04-12-p4b-*`、`./2026-04-12-p4c-*`、`./2026-04-13-p4e-*` 和 `./2026-04-13-p4f-*`；当前 support 读法回到 `../../specs/product-entry-support-record.md`。
+- 2026-04-13 authoring route landing、默认 executor vocabulary 与 submission-ready 记录：`../../specs/2026-04-13-*.md` 中的 active/support records；已退役 Hermes-native proof tombstone：`./2026-04-13-hermes-native-critique-proof-tombstone.md`
 
 Active specs 继续列在 [Specs 索引](../../specs/README.md)。
 若 dated spec 与核心文档或 `current-program.json` 冲突，除非它被明确列为 active boundary record，否则按 provenance 处理。
@@ -62,3 +63,8 @@ Active specs 继续列在 [Specs 索引](../../specs/README.md)。
 - [Hosted caller consumption proof provenance](./2026-04-12-hosted-caller-consumption-proof-current-truth.md)
 - [Hosted contract bundle entry and route catalog provenance](./2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md)
 - [Lightweight product-entry and OPL handoff provenance](./2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md)
+- [P4.A Direct grant cockpit and progress projection provenance](./2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md)
+- [P4.B Direct grant entry composition provenance](./2026-04-12-p4b-direct-grant-entry-composition-current-truth.md)
+- [P4.C Mainline status and grant user loop provenance](./2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md)
+- [P4.E Schema-backed product status and manifest provenance](./2026-04-13-p4e-schema-backed-product-status-and-manifest-current-truth.md)
+- [P4.F Local submission-ready package provenance](./2026-04-13-p4f-local-submission-ready-package-current-truth.md)

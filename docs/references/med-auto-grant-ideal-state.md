@@ -2,7 +2,7 @@
 
 Owner: `Med Auto Grant`
 Purpose: `north_star_reference`
-State: `active_support`
+State: `north_star_reference`
 Machine boundary: 本文是人读目标态参考。机器真相继续归 `contracts/`、`schemas/`、源码、CLI/API 行为、workspace/runtime artifact root、receipt、质量报告、导出包和 `contracts/runtime-program/current-program.json`。
 
 ## 文档读法
