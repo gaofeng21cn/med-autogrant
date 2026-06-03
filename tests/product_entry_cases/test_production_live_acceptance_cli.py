@@ -43,8 +43,8 @@ class ProductEntryProductionLiveAcceptanceCliTest(unittest.TestCase):
                 )
 
                 exit_code, stdout, stderr = self.run_cli(
-                    "product",
-                    "production-live-acceptance-receipt",
+                    "authority",
+                    "production-acceptance",
                     "--owner-receipt-evidence",
                     str(owner_receipt_path),
                     "--agent-lab-suite-result",
@@ -100,8 +100,8 @@ class ProductEntryProductionLiveAcceptanceCliTest(unittest.TestCase):
                 )
 
                 exit_code, stdout, stderr = self.run_cli(
-                    "product",
-                    "production-live-acceptance-receipt",
+                    "authority",
+                    "production-acceptance",
                     "--owner-receipt-evidence",
                     str(owner_receipt_path),
                     "--agent-lab-suite-result",

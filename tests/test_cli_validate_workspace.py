@@ -20,6 +20,7 @@ from support.workspaces import (  # noqa: E402
     write_revision_completed_without_revised_workspace,
     write_revision_outline_workspace,
 )
+from med_autogrant.product_entry import MedAutoGrantProductEntry  # noqa: E402
 
 
 EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_minimal.json"
@@ -428,18 +429,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         )
 
     def test_grant_progress_projects_user_facing_stage_summary_for_critique_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "progress",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
+        payload = MedAutoGrantProductEntry().read_grant_progress(
+            input_path=str(CRITIQUE_EXAMPLE_PATH)
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "grant-progress")
         self.assertEqual(payload["lifecycle_stage"], "critique")
@@ -455,17 +447,13 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("resume_contract", payload["family_orchestration"])
 
     def test_grant_progress_plain_text_prefers_shared_human_status_narration(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "progress",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "text",
-        )
+        from med_autogrant.cli_rendering_parts import _render_text
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
+        payload = MedAutoGrantProductEntry().read_grant_progress(
+            input_path=str(CRITIQUE_EXAMPLE_PATH)
+        )
+        stdout = _render_text("grant-progress", payload)
+
         self.assertIn("当前阶段: 批注审阅", stdout)
         self.assertIn("当前判断: 当前状态：批注审阅；下一阶段：修订落实；当前卡点：必要性表述仍略偏现象描述。", stdout)
         self.assertIn("下一步建议: 执行 revision plan 中的 P0/P1 项。", stdout)
@@ -473,18 +461,9 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertNotIn("next_system_action:", stdout)
 
     def test_grant_cockpit_projects_workspace_alerts_and_commands(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "workspace",
-                "cockpit",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--format",
-            "json",
+        payload = MedAutoGrantProductEntry().read_grant_cockpit(
+            input_path=str(CRITIQUE_EXAMPLE_PATH)
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "grant-cockpit")
         self.assertEqual(payload["lifecycle_stage"], "critique")
@@ -499,20 +478,10 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("resume_contract", payload["family_orchestration"])
 
     def test_grant_direct_entry_composes_product_surface_for_critique_workspace(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "direct-entry",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--task-intent",
-            "tighten-grant-mainline",
-            "--format",
-            "json",
+        payload = MedAutoGrantProductEntry().build_grant_direct_entry(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            task_intent="tighten-grant-mainline",
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "grant-direct-entry")
         self.assertEqual(payload["lifecycle_stage"], "critique")
@@ -643,20 +612,10 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertEqual(payload["maintainer_reference"]["record_detail"]["status"], "next")
 
     def test_grant_user_loop_projects_mainline_snapshot_and_route_action(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "user-loop",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--task-intent",
-            "tighten-grant-mainline",
-            "--format",
-            "json",
+        payload = MedAutoGrantProductEntry().build_grant_user_loop(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            task_intent="tighten-grant-mainline",
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["command"], "grant-user-loop")
         self.assertEqual(payload["grant_user_loop"]["entry_kind"], "grant_user_loop")
@@ -674,19 +633,14 @@ class CliValidateWorkspaceTest(unittest.TestCase):
         self.assertIn("resume_contract", payload["family_orchestration"])
 
     def test_grant_user_loop_plain_text_prefers_human_facing_labels(self) -> None:
-        exit_code, stdout, stderr = self.run_cli(
-            "product",
-                "user-loop",
-                "--input",
-            str(CRITIQUE_EXAMPLE_PATH),
-            "--task-intent",
-            "tighten-grant-mainline",
-            "--format",
-            "text",
-        )
+        from med_autogrant.cli_rendering_parts import _render_text
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
+        payload = MedAutoGrantProductEntry().build_grant_user_loop(
+            input_path=str(CRITIQUE_EXAMPLE_PATH),
+            task_intent="tighten-grant-mainline",
+        )
+        stdout = _render_text("grant-user-loop", payload)
+
         self.assertIn("当前 grant run:", stdout)
         self.assertIn("当前 workspace:", stdout)
         self.assertIn("当前草稿编号:", stdout)

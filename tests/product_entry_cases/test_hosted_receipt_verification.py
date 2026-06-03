@@ -195,23 +195,14 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            exit_code, stdout, stderr = self.run_cli(
-                main,
-                "product",
-                "hosted-receipt-verification",
-                "--owner-receipt-evidence",
-                str(owner_receipt_path),
-                "--opl-attempt-evidence",
-                str(opl_attempt_path),
-                "--domain_handler-closeout-result",
-                str(domain_handler_closeout_path),
-                "--format",
-                "json",
+            payload = entry.build_focused_hosted_receipt_verification(
+                owner_receipt_evidence=json.loads(owner_receipt_path.read_text(encoding="utf-8")),
+                opl_attempt_evidence=json.loads(opl_attempt_path.read_text(encoding="utf-8")),
+                domain_handler_closeout_result=json.loads(
+                    domain_handler_closeout_path.read_text(encoding="utf-8")
+                ),
             )
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(stderr, "")
-        payload = json.loads(stdout)
         verification = payload["focused_hosted_receipt_verification"]
         self.assertEqual(verification["surface_kind"], "mag_focused_hosted_receipt_verification")
         self.assertTrue(verification["matches"]["owner_receipt_ref_matches_opl"])

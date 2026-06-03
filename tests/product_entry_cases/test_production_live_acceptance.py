@@ -101,7 +101,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
             surface["accepted_closeout_shapes"],
             ["domain_owner_receipt", "typed_blocker"],
         )
-        self.assertIn("production-live-acceptance-receipt", surface["command"])
+        self.assertIn("authority production-acceptance", surface["command"])
         self.assertEqual(
             set(surface["required_patch_loop_refs"]),
             {

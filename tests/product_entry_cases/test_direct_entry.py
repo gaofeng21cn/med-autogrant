@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 from product_entry_cases.support import *  # noqa: F401,F403
 
 
@@ -29,6 +28,7 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
             "grant_progress",
         )
         self.assertEqual(payload["artifact_inventory"]["surface_kind"], "artifact_inventory")
+
         runtime_control = payload["runtime_control"]
         self.assertEqual(runtime_control["surface_kind"], "runtime_control")
         self.assertEqual(runtime_control["runtime_owner"], "one-person-lab")
@@ -44,13 +44,56 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
             "--task-intent tighten-grant-mainline",
             runtime_control["direct_entry"]["command"],
         )
-        runtime_substrate_contract = payload["grant_direct_entry"]["direct_entry"]["runtime_session_contract"][
-            "runtime_substrate_contract"
-        ]
-        self.assertEqual(runtime_substrate_contract["runtime_owner"], "configured_family_runtime_provider")
-        self.assertEqual(runtime_substrate_contract["task_runtime_owner"], "one-person-lab")
-        self.assertEqual(runtime_substrate_contract["runtime_substrate"], "temporal")
-        self.assertEqual(runtime_substrate_contract["stage_executor_owner"], "codex_cli")
+
+        grant_direct_entry = payload["grant_direct_entry"]
+        self.assertEqual(grant_direct_entry["entry_version"], 1)
+        self.assertEqual(grant_direct_entry["entry_kind"], "grant_direct_entry")
+        self.assertEqual(grant_direct_entry["target_domain_id"], "med-autogrant")
+        self.assertEqual(grant_direct_entry["workspace_surface_kind"], "nsfc_workspace")
+        self.assertEqual(grant_direct_entry["task_intent"], "tighten-grant-mainline")
+        self.assertEqual(grant_direct_entry["workspace_status"], "attention_required")
+        self.assertEqual(grant_direct_entry["workspace_alerts"], ["必要性表述仍略偏现象描述。"])
+        self.assertEqual(
+            grant_direct_entry["workspace_overview"]["selected_question"],
+            "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
+        )
+
+        progress_projection = grant_direct_entry["progress_projection"]
+        self.assertEqual(progress_projection["projection_version"], 1)
+        self.assertEqual(progress_projection["projection_kind"], "grant_progress")
+        self.assertEqual(progress_projection["current_stage"], "critique")
+        self.assertEqual(progress_projection["recommended_next_stage"], "revision")
+        self.assertEqual(progress_projection["current_blockers"], ["必要性表述仍略偏现象描述。"])
+        self.assertFalse(progress_projection["needs_author_decision"])
+        self.assertEqual(
+            progress_projection["currentness_resolver"]["authority_boundary"]["grant_truth_owner"],
+            "med-autogrant",
+        )
+        self.assertFalse(
+            progress_projection["currentness_resolver"]["authority_boundary"]["can_write_grant_truth"]
+        )
+        self.assertEqual(
+            progress_projection["opl_progress_delta"]["progress_delta_classification"],
+            "mixed",
+        )
+        self.assertEqual(
+            progress_projection["status_narration_contract"]["facts"]["grant_run_id"],
+            payload["grant_run_id"],
+        )
+        self.assertEqual(
+            progress_projection["product_entry_surface"]["builder_command"],
+            PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
+        )
+
+        self.assertEqual(
+            grant_direct_entry["current_stage_route"],
+            _expected_route("critique", source_stage="critique"),
+        )
+        self.assertEqual(
+            grant_direct_entry["recommended_executor_route"],
+            _expected_route("revision", source_stage="critique"),
+        )
+
         expected_return_surface_contract = {
             "entry_adapter": "MedAutoGrantDomainEntry",
             "default_formal_entry": "CLI",
@@ -78,325 +121,88 @@ class ProductEntryDirectEntryTest(unittest.TestCase):
             "artifact_inventory": payload["artifact_inventory"],
             "runtime_control": payload["runtime_control"],
         }
-        self.assertEqual(
-            payload["grant_direct_entry"],
-            {
-                "entry_version": 1,
-                "entry_kind": "grant_direct_entry",
-                "target_domain_id": "med-autogrant",
-                "workspace_surface_kind": "nsfc_workspace",
-                "task_intent": "tighten-grant-mainline",
-                "workspace_overview": {
-                    "applicant_name": "示例申请人",
-                    "funding_program": "nsfc-2026-general",
-                    "project_profile_label": "NSFC general medical grant profile",
-                    "template_label": "NSFC general medical grant template",
-                    "critique_policy_id": "nsfc_mentor_critique_v1",
-                    "lifecycle_stage": "critique",
-                    "checkpoint_status": "forward_progress",
-                    "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
-                    "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
-                    "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
-                    "critique_verdict": "major_revision",
-                },
-                "workspace_status": "attention_required",
-                "workspace_alerts": [
-                    "必要性表述仍略偏现象描述。",
-                ],
-                "progress_projection": {
-                    "projection_version": 1,
-                    "projection_kind": "grant_progress",
-                    "workspace_surface_kind": "nsfc_workspace",
-                    "current_stage": "critique",
-                    "current_stage_summary": "当前 grant 已进入 critique 阶段；导师批注 verdict=major_revision，应先执行结构化修订。",
-                    "checkpoint_status": "forward_progress",
-                    "recommended_next_stage": "revision",
-                    "current_blockers": [
-                        "必要性表述仍略偏现象描述。",
-                    ],
-                    "next_system_action": "执行 revision plan 中的 P0/P1 项。",
-                    "needs_author_decision": False,
-                    "author_decision_summary": None,
-                    "currentness_resolver": {
-                        "surface_kind": "mag_progress_first_currentness_resolver",
-                        "version": "mag-progress-currentness.v1",
-                        "target_domain_id": "med-autogrant",
-                        "current_program": {
-                            "program_id": "med-autogrant-mainline",
-                            "ref": "contracts/runtime-program/current-program.json",
-                            "default_task_runtime_owner": "one-person-lab",
-                            "default_runtime_substrate": "temporal",
-                            "default_stage_executor": "codex_cli",
-                        },
-                        "workspace_truth": {
-                            "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
-                            "workspace_id": "nsfc-demo-001",
-                            "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
-                            "lifecycle_stage": "critique",
-                            "checkpoint_status": "forward_progress",
-                            "summary_source": "summarize-workspace",
-                        },
-                        "last_receipt_or_blocker": {
-                            "owner": "med-autogrant",
-                            "ref": (
-                                "receipt:mag/grant-stage-controlled-attempt/critique/"
-                                "owner-receipt-or-typed-blocker"
-                            ),
-                            "required_return_shapes": [
-                                "domain_owner_receipt_ref",
-                                "typed_blocker_ref",
-                                "no_regression_evidence_ref",
-                            ],
-                            "source_ref": (
-                                "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
-                                "grant_stage_controlled_attempt_closeout"
-                            ),
-                            "body_free_payload_required": True,
-                        },
-                        "stage_refs": {
-                            "stage_control_plane_ref": "/product_entry_manifest/family_stage_control_plane",
-                            "current_stage": "critique",
-                            "recommended_next_stage": "revision",
-                            "domain_stage_refs": [
-                                "critique",
-                                "review",
-                                "grant_quality_closure_dossier",
-                                "quality-diff",
-                            ],
-                        },
-                        "manifest_refs": {
-                            "progress_projection_ref": "/product_entry_manifest/progress_projection",
-                            "product_entry_manifest_ref": "/product_entry_manifest",
-                            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
-                            "runtime_control_ref": "/product_entry_manifest/runtime_control",
-                        },
-                        "authority_boundary": {
-                            "resolver_role": "refs_only_currentness_projection",
-                            "workspace_body_read": True,
-                            "grant_truth_owner": "med-autogrant",
-                            "can_write_grant_truth": False,
-                            "can_write_runtime_state": False,
-                        },
-                    },
-                    "opl_progress_delta": {
-                        "surface_kind": "opl_progress_first_delta_mapping",
-                        "version": "mag-progress-first-delta.v1",
-                        "progress_delta_classification": "mixed",
-                        "deliverable_progress_delta": {
-                            "count": 1,
-                            "refs": [
-                                "/progress_projection/current_stage_summary",
-                                "/progress_projection/focus",
-                                "/progress_projection/next_system_action",
-                            ],
-                            "domain_alias": "grant_work_progress",
-                            "current_stage": "critique",
-                            "recommended_next_stage": "revision",
-                            "changed_surfaces": [
-                                "/progress_projection/current_stage_summary",
-                                "/progress_projection/focus",
-                                "/progress_projection/next_system_action",
-                            ],
-                        },
-                        "platform_repair_delta": {
-                            "count": 1,
-                            "refs": [
-                                "/progress_projection/currentness_resolver/last_receipt_or_blocker",
-                                "/progress_projection/currentness_resolver/stage_refs",
-                                "/progress_projection/currentness_resolver/manifest_refs",
-                            ],
-                            "domain_alias": "platform_evidence_progress",
-                            "evidence_surfaces": [
-                                "/progress_projection/currentness_resolver/last_receipt_or_blocker",
-                                "/progress_projection/currentness_resolver/stage_refs",
-                                "/progress_projection/currentness_resolver/manifest_refs",
-                            ],
-                        },
-                        "grant_work_progress": {
-                            "maps_to": "opl_deliverable_delta",
-                            "owner": "med-autogrant",
-                            "current_stage": "critique",
-                            "recommended_next_stage": "revision",
-                            "changed_surfaces": [
-                                "/progress_projection/current_stage_summary",
-                                "/progress_projection/focus",
-                                "/progress_projection/next_system_action",
-                            ],
-                            "can_claim_grant_ready": False,
-                            "can_claim_submission_ready": False,
-                        },
-                        "platform_evidence_progress": {
-                            "maps_to": "opl_platform_delta",
-                            "owner": "one-person-lab",
-                            "evidence_surfaces": [
-                                "/progress_projection/currentness_resolver/last_receipt_or_blocker",
-                                "/progress_projection/currentness_resolver/stage_refs",
-                                "/progress_projection/currentness_resolver/manifest_refs",
-                            ],
-                            "can_claim_grant_ready": False,
-                            "can_claim_fundability_ready": False,
-                            "can_claim_export_ready": False,
-                        },
-                    },
-                    "status_narration_contract": {
-                        "schema_version": 1,
-                        "contract_kind": "ai_status_narration",
-                        "contract_id": "grant-progress::nsfc-demo-001",
-                        "surface_kind": "grant_progress",
-                        "audience": "human_user",
-                        "milestone": {},
-                        "stage": {
-                            "current_stage": "critique",
-                            "recommended_next_stage": "revision",
-                            "checkpoint_status": "forward_progress",
-                        },
-                        "readiness": {
-                            "needs_author_decision": False,
-                        },
-                        "remaining_scope": {},
-                        "current_blockers": [
-                            "必要性表述仍略偏现象描述。",
-                        ],
-                        "latest_update": "当前 grant 已进入 critique 阶段；导师批注 verdict=major_revision，应先执行结构化修订。",
-                        "next_step": "执行 revision plan 中的 P0/P1 项。",
-                        "human_gate": {},
-                        "facts": {
-                            "workspace_id": "nsfc-demo-001",
-                            "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
-                        },
-                        "narration_policy": {
-                            "mode": "ai_first",
-                            "legacy_summary_role": "fallback_only",
-                            "style": "plain_language",
-                            "answer_checklist": ["current_stage", "current_blockers", "next_step"],
-                        },
-                    },
-                    "focus": {
-                        "applicant_name": "示例申请人",
-                        "funding_program": "nsfc-2026-general",
-                        "project_profile_label": "NSFC general medical grant profile",
-                        "template_label": "NSFC general medical grant template",
-                        "critique_policy_id": "nsfc_mentor_critique_v1",
-                        "selected_direction_title": "心梗后免疫-成纤维细胞互作驱动心肌纤维化重塑",
-                        "selected_question": "炎症巨噬细胞介导的跨细胞通讯机制如何在心梗后特定时间窗调控成纤维细胞致纤维化重编程？",
-                        "active_draft_title": "心梗后炎症巨噬细胞介导的跨细胞通讯机制与心肌纤维化重塑",
-                        "critique_verdict": "major_revision",
-                    },
-                    "product_entry_surface": {
-                        "builder_command": PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
-                        "target_domain_id": "med-autogrant",
-                        "supported_entry_modes": ["direct", "opl-handoff"],
-                        "task_intent_required": True,
-                        "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
-                    },
-                },
-                "current_stage_route": _expected_route("critique", source_stage="critique"),
-                "recommended_executor_route": _expected_route("revision", source_stage="critique"),
-                "direct_entry": {
-                    "entry_version": 1,
-                    "entry_kind": "med_auto_grant_product_entry",
-                    "target_domain_id": "med-autogrant",
-                    "task_intent": "tighten-grant-mainline",
-                    "entry_mode": "direct",
-                    "workspace_locator": {
+
+        runtime_substrate_contract = grant_direct_entry["direct_entry"]["runtime_session_contract"][
+            "runtime_substrate_contract"
+        ]
+        self.assertEqual(runtime_substrate_contract["runtime_owner"], "configured_family_runtime_provider")
+        self.assertEqual(runtime_substrate_contract["task_runtime_owner"], "one-person-lab")
+        self.assertEqual(runtime_substrate_contract["runtime_substrate"], "temporal")
+        self.assertEqual(runtime_substrate_contract["stage_executor_owner"], "codex_cli")
+
+        for entry_key, entry_mode in (
+            ("direct_entry", "direct"),
+            ("opl_handoff_entry", "opl-handoff"),
+        ):
+            with self.subTest(entry_key=entry_key):
+                entry = grant_direct_entry[entry_key]
+                self.assertEqual(entry["entry_version"], 1)
+                self.assertEqual(entry["entry_kind"], "med_auto_grant_product_entry")
+                self.assertEqual(entry["target_domain_id"], "med-autogrant")
+                self.assertEqual(entry["task_intent"], "tighten-grant-mainline")
+                self.assertEqual(entry["entry_mode"], entry_mode)
+                self.assertEqual(
+                    entry["workspace_locator"],
+                    {
                         "workspace_surface_kind": "nsfc_workspace",
                         "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
                     },
-                    "runtime_session_contract": {
-                        "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
-                        "session_handle_kind": "grant_run_id",
-                        "session_owner": "one-person-lab",
-                        "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
-                        "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
-                        "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
-                        "runtime_substrate_contract": runtime_substrate_contract,
-                        "runtime_state_contract": {
-                            "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
-                            "session_state_owner": "one-person-lab",
-                            "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
-                            "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
-                            "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
-                            "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
-                            "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
-                            "handoff_state_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/",
-                            "non_repo_tracked": True,
-                        },
-                    },
-                    "return_surface_contract": {
-                        **expected_return_surface_contract,
-                    },
-                    "domain_payload": {
+                )
+                self.assertEqual(entry["return_surface_contract"], expected_return_surface_contract)
+                self.assertEqual(
+                    entry["domain_payload"],
+                    {
                         "workspace_id": "nsfc-demo-001",
                         "draft_id": "draft-v1",
                         "funding_call": "nsfc-2026-general",
                     },
-                    "stage_snapshot": {
+                )
+                self.assertEqual(
+                    entry["stage_snapshot"],
+                    {
                         "lifecycle_stage": "critique",
                         "checkpoint_status": "forward_progress",
                         "recommended_next_stage": "revision",
                     },
-                    "executor_routing_contract": {
-                        "contract_version": 1,
-                        "current_stage_route": _expected_route("critique", source_stage="critique"),
-                        "recommended_executor_route": _expected_route("revision", source_stage="critique"),
-                        "author_side_route_catalog": [
-                            _expected_route(route_id, source_stage=route_id)
-                            for route_id in AUTHOR_SIDE_ROUTE_IDS
-                        ],
-                    },
-                },
-                "opl_handoff_entry": {
-                    "entry_version": 1,
-                    "entry_kind": "med_auto_grant_product_entry",
-                    "target_domain_id": "med-autogrant",
-                    "task_intent": "tighten-grant-mainline",
-                    "entry_mode": "opl-handoff",
-                    "workspace_locator": {
-                        "workspace_surface_kind": "nsfc_workspace",
-                        "workspace_path": str(CRITIQUE_EXAMPLE_PATH.resolve()),
-                    },
-                    "runtime_session_contract": {
-                        "grant_run_id": "grant-run-nsfc-demo-001-baseline-001",
-                        "session_handle_kind": "grant_run_id",
-                        "session_owner": "one-person-lab",
-                        "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
-                        "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
-                        "domain_authority_surface_ref": "/product_entry_manifest/owner_receipt_contract",
-                        "runtime_substrate_contract": runtime_substrate_contract,
-                        "runtime_state_contract": {
-                            "root": "$CODEX_HOME/projects/med-autogrant/runtime-state/",
-                            "session_state_owner": "one-person-lab",
-                            "generated_session_surface_ref": "opl://generated-surfaces/mag/product-entry-session",
-                            "generated_resume_surface_ref": "opl://generated-surfaces/mag/product-entry-session#resume",
-                            "logs_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/logs/",
-                            "reports_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/reports/<program_id>/",
-                            "prompts_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/prompts/",
-                            "handoff_state_root": "$CODEX_HOME/projects/med-autogrant/runtime-state/handoff_state/",
-                            "non_repo_tracked": True,
-                        },
-                    },
-                    "return_surface_contract": {
-                        **expected_return_surface_contract,
-                    },
-                    "domain_payload": {
-                        "workspace_id": "nsfc-demo-001",
-                        "draft_id": "draft-v1",
-                        "funding_call": "nsfc-2026-general",
-                    },
-                    "stage_snapshot": {
-                        "lifecycle_stage": "critique",
-                        "checkpoint_status": "forward_progress",
-                        "recommended_next_stage": "revision",
-                    },
-                    "executor_routing_contract": {
-                        "contract_version": 1,
-                        "current_stage_route": _expected_route("critique", source_stage="critique"),
-                        "recommended_executor_route": _expected_route("revision", source_stage="critique"),
-                        "author_side_route_catalog": [
-                            _expected_route(route_id, source_stage=route_id)
-                            for route_id in AUTHOR_SIDE_ROUTE_IDS
-                        ],
-                    },
-                },
-            },
-        )
+                )
+
+                runtime_session_contract = entry["runtime_session_contract"]
+                self.assertEqual(runtime_session_contract["grant_run_id"], payload["grant_run_id"])
+                self.assertEqual(runtime_session_contract["session_handle_kind"], "grant_run_id")
+                self.assertEqual(runtime_session_contract["session_owner"], "one-person-lab")
+                self.assertEqual(
+                    runtime_session_contract["generated_session_surface_ref"],
+                    "opl://generated-surfaces/mag/product-entry-session",
+                )
+                self.assertEqual(
+                    runtime_session_contract["generated_resume_surface_ref"],
+                    "opl://generated-surfaces/mag/product-entry-session#resume",
+                )
+                self.assertEqual(
+                    runtime_session_contract["domain_authority_surface_ref"],
+                    "/product_entry_manifest/owner_receipt_contract",
+                )
+                self.assertEqual(
+                    runtime_session_contract["runtime_substrate_contract"],
+                    runtime_substrate_contract,
+                )
+                self.assertEqual(
+                    runtime_session_contract["runtime_state_contract"]["root"],
+                    "$CODEX_HOME/projects/med-autogrant/runtime-state/",
+                )
+                self.assertTrue(runtime_session_contract["runtime_state_contract"]["non_repo_tracked"])
+
+                executor_routing_contract = entry["executor_routing_contract"]
+                self.assertEqual(executor_routing_contract["contract_version"], 1)
+                self.assertEqual(
+                    executor_routing_contract["current_stage_route"],
+                    _expected_route("critique", source_stage="critique"),
+                )
+                self.assertEqual(
+                    executor_routing_contract["recommended_executor_route"],
+                    _expected_route("revision", source_stage="critique"),
+                )
+                self.assertEqual(
+                    executor_routing_contract["author_side_route_catalog"],
+                    [_expected_route(route_id, source_stage=route_id) for route_id in AUTHOR_SIDE_ROUTE_IDS],
+                )
