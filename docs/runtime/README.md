@@ -25,6 +25,8 @@ Machine boundary: 人读索引。Runtime truth 继续归 contracts、schemas、s
 
 这些导出面只给 OPL 消费 opaque workspace refs、body-free source provenance refs、source JSON pointer refs、artifact locator/index refs、memory locator/receipt refs、lifecycle receipt refs、runtime_control refs 与 projection refs。grant truth、fundability verdict、authoring quality verdict、submission-ready export verdict、package body、memory body 和 owner receipt authority 继续由 MAG 持有。`source_provenance` 是 OPL `substrate projections` 可直接解析的顶层 source refs surface；它不让 MAG 持有通用 workspace/source intake shell、runtime、workbench、ledger 或 scheduler。
 
+OPL State Index Kernel / SQLite sidecar index 的 MAG adoption 只在 refs-only 层成立：`contracts/stage_artifact_kernel_adoption.json#/state_index_kernel_adoption` 与 `contracts/runtime-program/opl-family-contract-adoption.json#/lifecycle_adapter/state_index_sidecar_consumption` 声明 `sqlite_migration_required=false`。MAG 不持有 generic SQLite、state index、read-model、runtime、queue 或 lifecycle owner；文件、stage folder refs 与 MAG-owned artifact files 仍是 grant truth。SQLite sidecar 只能索引 opaque refs，不存 grant body、memory body、verdict body、package body 或 artifact body。
+
 已退役的 local journal、attempt ledger、`runtime-run` / `runtime-resume`、Hermes/Gateway/local-manager probe 和 compatibility alias 只从 `docs/history/**` 或 tombstone/provenance 语境阅读；不得写回 current runtime owner。
 
 MAG 不内置 daemon、scheduler、attempt loop 或 attempt ledger。`Codex CLI` 是默认 stage executor，不是默认 task runtime owner；持久在线调度、唤醒、retry、resume 和 provider residency 由 OPL/Temporal 承担。

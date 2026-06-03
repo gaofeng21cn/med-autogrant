@@ -166,6 +166,7 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         ],
         "forbidden_series_drift": [
             "mag_specific_lifecycle_fork",
+            "mag_specific_sqlite_or_state_index_kernel_owner",
             "opl_claims_grant_truth",
             "opl_claims_quality_or_submission_verdict",
             "generated_surface_signs_owner_receipt",

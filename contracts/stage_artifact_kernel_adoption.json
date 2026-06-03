@@ -33,6 +33,56 @@
     "derived_index_rebuildable": true,
     "manifest_receipt_hash_required": true
   },
+  "state_index_kernel_adoption": {
+    "surface_kind": "opl_state_index_kernel_sidecar_adoption",
+    "version": "opl-state-index-kernel-sidecar-adoption.v1",
+    "state_index_kernel_owner": "one-person-lab",
+    "sqlite_sidecar_owner": "one-person-lab",
+    "sqlite_migration_required": false,
+    "mag_consumption_role": "opaque_refs_only_sidecar_index_consumer",
+    "index_authority": "derived_refs_only_no_domain_body_authority",
+    "source_of_truth": "physical_stage_folder_files_and_mag_owned_artifact_files",
+    "derived_index_rebuildable": true,
+    "consumed_index_refs": [
+      "stage_folder_ref_index",
+      "manifest_ref_index",
+      "receipt_ref_index",
+      "current_pointer_ref_index",
+      "canonical_artifact_ref_index",
+      "export_ref_index",
+      "lineage_ref_index",
+      "retention_ref_index",
+      "conformance_ref_index"
+    ],
+    "forbidden_sqlite_payloads": [
+      "grant_body",
+      "grant_strategy_memory_body",
+      "fundability_verdict_body",
+      "authoring_quality_verdict_body",
+      "submission_ready_export_verdict_body",
+      "package_body",
+      "artifact_body"
+    ],
+    "forbidden_mag_owner_roles": [
+      "generic_sqlite_owner",
+      "generic_state_index_kernel_owner",
+      "generic_runtime_owner",
+      "generic_lifecycle_owner",
+      "generic_queue_owner",
+      "generic_read_model_owner"
+    ],
+    "authority_boundary": {
+      "mag_can_write_sqlite_sidecar_index": false,
+      "mag_can_store_grant_body_in_sqlite": false,
+      "mag_can_store_memory_body_in_sqlite": false,
+      "mag_can_store_verdict_body_in_sqlite": false,
+      "mag_can_store_package_body_in_sqlite": false,
+      "opl_can_read_grant_body_from_index": false,
+      "opl_can_read_memory_body_from_index": false,
+      "opl_can_read_verdict_body_from_index": false,
+      "opl_can_read_package_body_from_index": false
+    }
+  },
   "domain_pack_binding": {
     "accepted_source_refs": [
       "contracts/stage_control_plane.json",

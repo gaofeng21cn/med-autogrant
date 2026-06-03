@@ -1861,6 +1861,33 @@
     "adapter_id": "mag.opl_family.lifecycle_adapter.v1",
     "maps_existing_surfaces_only": true,
     "sqlite_migration_required": false,
+    "state_index_kernel_adoption_ref": "contracts/stage_artifact_kernel_adoption.json#/state_index_kernel_adoption",
+    "state_index_sidecar_consumption": {
+      "maps_to": "opl_state_index_kernel_sidecar",
+      "state_index_kernel_owner": "one-person-lab",
+      "sqlite_sidecar_owner": "one-person-lab",
+      "mag_consumption_role": "opaque_refs_only_sidecar_index_consumer",
+      "sqlite_migration_required": false,
+      "source_of_truth": "physical_stage_folder_files_and_mag_owned_artifact_files",
+      "write_policy": "opl_refs_only_index_no_domain_truth_writes",
+      "forbidden_sqlite_payloads": [
+        "grant_body",
+        "grant_strategy_memory_body",
+        "fundability_verdict_body",
+        "authoring_quality_verdict_body",
+        "submission_ready_export_verdict_body",
+        "package_body",
+        "artifact_body"
+      ],
+      "forbidden_mag_owner_roles": [
+        "generic_sqlite_owner",
+        "generic_state_index_kernel_owner",
+        "generic_runtime_owner",
+        "generic_lifecycle_owner",
+        "generic_queue_owner",
+        "generic_read_model_owner"
+      ]
+    },
     "persistence_projection": {
       "maps_to": "opl_stage_runtime_native_state_projection",
       "maps_existing_surfaces": [
