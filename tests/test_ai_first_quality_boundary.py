@@ -66,8 +66,7 @@ def test_quality_candidate_statuses_are_gated_by_ai_reviewer_backed_critique() -
 
     assert AI_REVIEWER_BACKED_OWNERS == {
         "Codex CLI critique executor",
-        "Hermes-Agent critique executor",
-        "OPL Hermes-Agent critique executor",
+        "OPL executor adapter critique receipt owner",
     }
 
     def projection_only_scorecard(workspace: dict[str, object]) -> dict[str, object]:
@@ -244,7 +243,7 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         executor_payload=hermes_executor,
         payload=payload,
     )
-    assert hermes_critique["metadata"]["owner"] == "OPL Hermes-Agent critique executor"
+    assert hermes_critique["metadata"]["owner"] == "OPL executor adapter critique receipt owner"
     assert hermes_critique["metadata"]["independent_review_evidence"]["execution_attempt_ref"] == (
         "draft_artifact::grant-run-1::draft-1"
     )
@@ -252,5 +251,5 @@ def test_critique_executor_payloads_stamp_known_ai_reviewer_owners(monkeypatch: 
         "opl_agent_execution_receipt::session-1"
     )
     assert hermes_critique["metadata"]["independent_review_evidence"]["reviewer_owner"] == (
-        "OPL Hermes-Agent critique executor"
+        "OPL executor adapter critique receipt owner"
     )

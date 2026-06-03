@@ -191,8 +191,8 @@ def _completed_records() -> list[dict[str, str]]:
     return [
         {
             "record_id": "P1",
-            "title": "explicit Hermes proof lane",
-            "summary": "真实上游 Hermes-Agent 只保留为显式 proof lane；默认 runtime owner 是 Codex CLI。",
+            "title": "explicit OPL non-default executor receipt lane",
+            "summary": "hermes_agent 只保留为 OPL-owned 显式非默认 executor receipt lane；默认 runtime owner 是 OPL/Temporal，默认 stage executor 是 Codex CLI。",
         },
         {
             "record_id": "P2",

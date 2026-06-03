@@ -79,8 +79,7 @@
           "enum": [
             "med-autogrant",
             "Codex CLI critique executor",
-            "Hermes-Agent critique executor",
-            "OPL Hermes-Agent critique executor"
+            "OPL executor adapter critique receipt owner"
           ]
         },
         "source_kind": {

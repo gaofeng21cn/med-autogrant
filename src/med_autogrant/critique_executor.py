@@ -223,7 +223,7 @@ def _require_agent_execution_receipt(
     receipt: dict[str, Any],
     hermes_proof: dict[str, Any],
 ) -> dict[str, Any]:
-    context = "OPL Hermes AgentExecutionReceipt"
+    context = "OPL non-default AgentExecutionReceipt"
     surface_kind = _require_string(receipt, "surface_kind", context=context)
     if surface_kind != "opl_agent_execution_receipt":
         raise WorkspaceStateError(f"{context} surface_kind 必须是 opl_agent_execution_receipt。")
@@ -254,7 +254,7 @@ def _require_agent_execution_receipt(
 
 def _require_domain_closeout_payload(receipt: dict[str, Any]) -> dict[str, Any]:
     closeout = _require_object(receipt, "closeout_packet")
-    context = "OPL Hermes domain closeout packet"
+    context = "OPL non-default domain closeout packet"
     surface_kind = _require_string(closeout, "surface_kind", context=context)
     if surface_kind != "mag_critique_closeout_packet":
         raise WorkspaceStateError(f"{context} surface_kind 必须是 mag_critique_closeout_packet。")
@@ -436,7 +436,7 @@ def _normalize_mentor_critique(
     executor_kind = str(executor_payload.get("kind") or "").strip()
     critique["critique_id"] = critique_context["next_critique_id"]
     if executor_kind == "hermes_agent":
-        metadata["owner"] = "OPL Hermes-Agent critique executor"
+        metadata["owner"] = "OPL executor adapter critique receipt owner"
     else:
         metadata["owner"] = "Codex CLI critique executor"
     metadata["independent_review_evidence"] = _build_independent_review_evidence(
