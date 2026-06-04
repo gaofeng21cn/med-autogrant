@@ -7,6 +7,14 @@
   },
   "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
   "canonical_semantic_pack_root": "agent/",
+  "cognitive_kernel_adoption_ref": "contracts/cognitive_kernel_adoption.json",
+  "cognitive_kernel_policy": {
+    "advisory_not_launch_hard_gate": true,
+    "independent_gate_receipt_required_for_quality_progression": true,
+    "route_can_execute_without_stage_attempt": false,
+    "same_attempt_self_review_can_close_quality_gate": false,
+    "strategy_refs_completeness_is_launch_hard_gate": false
+  },
   "declarative_domain_pack": [
     "stage_descriptors",
     "action_catalog",
@@ -14,7 +22,10 @@
     "funding_call_source_policy",
     "domain_memory_locator",
     "artifact_locator_contract",
-    "owner_receipt_schema"
+    "owner_receipt_schema",
+    "tool_affordance_catalog",
+    "cognitive_kernel_adoption_contract",
+    "golden_path_profile"
   ],
   "domain_id": "med-autogrant",
   "domain_pack_owner": "med-autogrant",
@@ -30,6 +41,7 @@
     "workbench_drilldown",
     "functional_harness_cases"
   ],
+  "golden_path_profile_ref": "contracts/golden_path_profile.json",
   "minimal_authority_functions": [
     "fundability_verdict",
     "quality_verdict",
@@ -563,7 +575,8 @@
     "agent/quality_gates/authority_boundaries.md",
     "agent/knowledge/grant_strategy_memory.md",
     "agent/knowledge/package_authority.md",
-    "agent/knowledge/owner_receipt_boundary.md"
+    "agent/knowledge/owner_receipt_boundary.md",
+    "agent/tools/domain_affordances.md"
   ],
   "schema_version": 1,
   "source_refs": {
@@ -572,5 +585,147 @@
     "functional_audit": "src/med_autogrant/product_entry_parts/consumer_thinning.py::build_mag_consumer_thinning_contract",
     "stage_control_plane": "src/med_autogrant/stage_control_plane.py::build_mag_family_stage_control_plane"
   },
-  "surface_kind": "opl_domain_pack_compiler_input"
+  "stage_pack_required_sections": [
+    "prompt_refs",
+    "skill_refs",
+    "tool_refs",
+    "tool_affordance_boundary",
+    "knowledge_refs",
+    "quality_gate_refs",
+    "strategy_refs",
+    "candidate_pool_policy",
+    "independent_gate_policy",
+    "handoff_policy"
+  ],
+  "surface_kind": "opl_domain_pack_compiler_input",
+  "tool_affordance_boundary": {
+    "capability_refs": [
+      {
+        "ref": "grant_source_and_applicant_context_reading",
+        "ref_kind": "policy_ref",
+        "role": "capability_boundary"
+      },
+      {
+        "ref": "grant_authoring_and_revision_workspace_operation",
+        "ref_kind": "policy_ref",
+        "role": "capability_boundary"
+      },
+      {
+        "ref": "fundability_quality_and_export_review_support",
+        "ref_kind": "policy_ref",
+        "role": "capability_boundary"
+      },
+      {
+        "ref": "refs_only_receipt_and_stage_artifact_materialization",
+        "ref_kind": "policy_ref",
+        "role": "capability_boundary"
+      }
+    ],
+    "catalog_role": "available_affordance_catalog_not_workflow_script",
+    "credential_boundary_refs": [
+      {
+        "ref": "no_secret_material_in_stage_pack",
+        "ref_kind": "policy_ref",
+        "role": "credential_boundary_boundary"
+      },
+      {
+        "ref": "executor_must_request_human_gate_for_missing_credentials",
+        "ref_kind": "policy_ref",
+        "role": "credential_boundary_boundary"
+      }
+    ],
+    "executor_autonomy": {
+      "executor_can_choose_order_and_parallelism": true,
+      "executor_can_choose_tools": true,
+      "executor_can_request_missing_context_or_human_gate": true,
+      "executor_can_skip_tools": true,
+      "executor_can_substitute_tools_within_boundary": true,
+      "tool_catalog_can_authorize_forbidden_write": false,
+      "tool_catalog_can_define_cognitive_strategy": false,
+      "tool_catalog_can_override_stage_goal": false,
+      "tool_catalog_can_prescribe_tool_sequence": false
+    },
+    "forbidden_authority_refs": [
+      {
+        "ref": "fundability_verdict_without_mag_owner_receipt",
+        "ref_kind": "policy_ref",
+        "role": "forbidden_authority_boundary"
+      },
+      {
+        "ref": "quality_verdict_without_mag_owner_receipt",
+        "ref_kind": "policy_ref",
+        "role": "forbidden_authority_boundary"
+      },
+      {
+        "ref": "export_verdict_without_mag_owner_receipt",
+        "ref_kind": "policy_ref",
+        "role": "forbidden_authority_boundary"
+      },
+      {
+        "ref": "grant_truth_write_by_opl",
+        "ref_kind": "policy_ref",
+        "role": "forbidden_authority_boundary"
+      },
+      {
+        "ref": "memory_body_write_by_opl",
+        "ref_kind": "policy_ref",
+        "role": "forbidden_authority_boundary"
+      }
+    ],
+    "permission_scope_refs": [
+      {
+        "ref": "repo_context_read",
+        "ref_kind": "policy_ref",
+        "role": "permission_scope_boundary"
+      },
+      {
+        "ref": "declared_domain_workspace_read",
+        "ref_kind": "policy_ref",
+        "role": "permission_scope_boundary"
+      },
+      {
+        "ref": "bounded_domain_artifact_write_when_owner_authorized",
+        "ref_kind": "policy_ref",
+        "role": "permission_scope_boundary"
+      },
+      {
+        "ref": "receipt_or_typed_blocker_return",
+        "ref_kind": "policy_ref",
+        "role": "permission_scope_boundary"
+      }
+    ],
+    "policy": "med-autogrant tool refs declare available affordances and safety boundaries only; they do not prescribe executor order, stage strategy, stage goal, or forbidden writes.",
+    "side_effect_risk_refs": [
+      {
+        "ref": "external_network_or_portal_side_effect_requires_explicit_stage_permission",
+        "ref_kind": "policy_ref",
+        "role": "side_effect_risk_boundary"
+      },
+      {
+        "ref": "artifact_or_package_mutation_requires_domain_owner_receipt",
+        "ref_kind": "policy_ref",
+        "role": "side_effect_risk_boundary"
+      }
+    ],
+    "write_scope_refs": [
+      {
+        "ref": "grant_workspace_refs_only",
+        "ref_kind": "policy_ref",
+        "role": "write_scope_boundary"
+      },
+      {
+        "ref": "submission_package_artifact_refs_only_until_package_authority_receipt",
+        "ref_kind": "policy_ref",
+        "role": "write_scope_boundary"
+      }
+    ]
+  },
+  "tool_refs": [
+    {
+      "catalog_role": "available_affordance_catalog_not_workflow_script",
+      "ref": "agent/tools/domain_affordances.md",
+      "ref_kind": "repo_path",
+      "role": "domain_tool_affordance_catalog"
+    }
+  ]
 }

@@ -62,6 +62,7 @@ MAG 必须保留的 authority：
 | --- | --- | --- |
 | Identity / runtime owner boundary | `landed` | 核心五件套与 `current-program.json` 固定 MAG 是 grant authority，OPL/Temporal 是默认 task runtime owner。 |
 | Declarative Grant Pack | `landed_with_evidence_tail` | `agent/`、stage control plane、quality gates 和 pack compiler input 是 OPL generated surface 输入；stage semantics 仍归 MAG。 |
+| Cognitive Kernel adoption | `landed_as_advisory_contract` | `contracts/cognitive_kernel_adoption.json`、`contracts/golden_path_profile.json`、`agent/tools/domain_affordances.md`、`contracts/pack_compiler_input.json` 与 `contracts/stage_control_plane.json` 已把 tool affordance、stage strategy refs、independent gate policy 和 owner-delta handoff 接入 grant stage pack。工具 catalog 不是 workflow script，不改变已指定 funder / grant authoring 默认链路，也不授权 OPL 或 provider completion 生成 fundability / quality / export / submission verdict。 |
 | Retained authority taxonomy | `landed_with_guard_tail` | fundability、quality、export、package、memory、owner receipt、grant helper 已分成 AI-first judgment surface 与 programmatic guard surface。 |
 | Purpose-first adapter thinning | `machine_guard_landed_evidence_tail_remaining` | `contracts/foundry_agent_series.json#/purpose_first_adapter_thinning_policy` 和 `tests/test_opl_standard_pack.py` 固定 retained shell 只能作为 refs-only adapter、domain handler target、minimal authority function、migration input 或 tombstone/provenance 读取；默认下一跳是 MAG owner delta 或 MAG-owned typed blocker。 |
 | Consumer thinning / refs-only boundary | `landed_with_external_gate` | `mag_consumer_thinning_contract`、domain-handler、receipt projection、lifecycle/package/memory refs 只输出 refs、typed blocker、owner receipt 与 action metadata。 |
@@ -132,8 +133,10 @@ Refs-only ledger verification、request accounting closure、OPL workorder close
   receipts、workspace/package evidence 和 docs portfolio；dated proof、receipt id、payload
   path、command transcript 和 old worktree closeout 只作 provenance。
 - Required actions:
-  1. 保持 `agent/` Declarative Grant Pack、stage control plane、contracts、quality gates、
-     memory policy 与当前 source/contract 对齐。
+  1. 保持 `agent/` Declarative Grant Pack、cognitive-kernel adoption、stage control plane、
+     contracts、quality gates、memory policy 与当前 source/contract 对齐；新增 tool
+     affordance 只能进入 affordance catalog / boundary，不写成 executor sequence、authoring
+     workflow 或 readiness verdict。
   2. 保持 product/status/user-loop/domain-handler/CLI shell 的 refs-only adapter 或 direct
      handler target 边界；新增能力优先服务 OPL generated/default caller parity，不扩写
      MAG-owned shell。

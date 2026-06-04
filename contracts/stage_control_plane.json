@@ -9,6 +9,7 @@
     "submission_ready_export_gate_owner": "med-autogrant",
     "write_policy": "no_grant_truth_writes"
   },
+  "cognitive_kernel_adoption_ref": "contracts/cognitive_kernel_adoption.json",
   "discovery_smoke": {
     "allowed_action_catalog_ref": "/product_entry_manifest/family_action_catalog",
     "consumer": "opl_family_manifest_discovery_smoke",
@@ -27,6 +28,7 @@
       "authority_boundary",
       "stage_contract",
       "trust_boundary",
+      "selected_executor",
       "stage_production_evidence_closeout",
       "stage_contract.user_stage_log_contract",
       "stage_contract.stage_native_artifact_contract"
@@ -40,6 +42,7 @@
     "source_observed_at_ref": "/product_entry_manifest/task_lifecycle/checkpoint_summary",
     "stale_if_source_refs_missing": true
   },
+  "golden_path_profile_ref": "contracts/golden_path_profile.json",
   "notes": [
     "Descriptor-only projection over existing MAG grant authoring surfaces.",
     "OPL discovery must not own grant truth, fundability judgment, or submission-ready export authority."
@@ -90,6 +93,18 @@
       "role": "handoff_contract"
     }
   ],
+  "stage_pack_required_sections": [
+    "prompt_refs",
+    "skill_refs",
+    "tool_refs",
+    "tool_affordance_boundary",
+    "knowledge_refs",
+    "quality_gate_refs",
+    "strategy_refs",
+    "candidate_pool_policy",
+    "independent_gate_policy",
+    "handoff_policy"
+  ],
   "stages": [
     {
       "allowed_action_refs": [
@@ -106,6 +121,12 @@
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "candidate_pool_policy": {
+        "accepted_artifact_mutation_requires_owner_receipt": true,
+        "candidate_body_stays_in_domain_workspace": true,
+        "candidate_lineage_required": true,
+        "candidate_pool_is_stage_internal_artifact": true
       },
       "domain_stage_refs": [
         "discover-funding-opportunities",
@@ -151,6 +172,34 @@
         ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
+      },
+      "handoff_policy": {
+        "framework_transport_cannot_claim_domain_ready": true,
+        "owner_delta_first": true,
+        "required_return_shapes": [
+          "deliverable_delta_ref",
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "quality_gate_receipt_ref",
+          "no_regression_evidence_ref"
+        ]
+      },
+      "independent_gate_policy": {
+        "allowed_closeout_refs": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref",
+          "no_regression_evidence_ref"
+        ],
+        "execution_review_separation_required": true,
+        "gate_owner": "med-autogrant",
+        "gate_ref": "agent/quality_gates/memory_and_receipts.md",
+        "generated_surface_readiness_can_claim_quality_or_export": false,
+        "mechanical_completion_can_close_stage": false,
+        "provider_completion_can_claim_domain_ready": false,
+        "same_attempt_self_review_can_close_quality_gate": false
       },
       "inputs": [
         {
@@ -202,18 +251,6 @@
         }
       ],
       "owner": "med-autogrant",
-      "selected_executor": {
-        "executor_kind": "codex_cli",
-        "default_executor": true,
-        "executor_binding_ref": "default_codex_cli",
-        "binding_policy": "default_first_class_executor_for_ai_first_stage_execution",
-        "required_capabilities": [
-          "repo_context_reading",
-          "domain_skill_invocation",
-          "receipt_or_typed_blocker_return",
-          "no_forbidden_write_guard"
-        ]
-      },
       "prompt_refs": [
         {
           "ref": "agent/prompts/call_and_candidate_intake.md",
@@ -224,6 +261,19 @@
       "requires": [
         "grant_request_received"
       ],
+      "selected_executor": {
+        "binding_policy": "codex_cli_first_class_executor_for_grant_stage_attempts",
+        "default_executor": true,
+        "executor_binding_ref": "default_codex_cli",
+        "executor_kind": "codex_cli",
+        "required_capabilities": [
+          "repo_context_reading",
+          "domain_skill_invocation",
+          "tool_affordance_boundary_compliance",
+          "receipt_or_typed_blocker_return",
+          "no_forbidden_write_guard"
+        ]
+      },
       "skills": [
         {
           "ref": "agent/skills/grant_authoring.md",
@@ -909,8 +959,49 @@
         "state": "body_free_refs_ready_for_opl_record_preflight",
         "surface_kind": "mag_stage_production_evidence_closeout_refs"
       },
+      "strategy_refs": [
+        {
+          "ref": "call_fit_candidate_generation",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "grant_review_grounded_reflection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "specific_aims_comparative_selection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "proposal_revision_lineage",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "submission_package_independent_gate",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        }
+      ],
       "summary": "Call and candidate intake projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Call and candidate intake",
+      "tool_affordance_boundary_ref": {
+        "ref": "contracts/cognitive_kernel_adoption.json#/tool_affordance_boundary",
+        "ref_kind": "json_pointer",
+        "role": "stage_tool_affordance_boundary",
+        "stage_id": "call_and_candidate_intake"
+      },
+      "tool_refs": [
+        {
+          "catalog_role": "available_affordance_catalog_not_workflow_script",
+          "ref": "agent/tools/domain_affordances.md",
+          "ref_kind": "repo_path",
+          "role": "stage_tool_affordance_catalog"
+        }
+      ],
       "trust_boundary": {
         "effect_boundary": false,
         "human_gate_required": false,
@@ -940,6 +1031,12 @@
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "candidate_pool_policy": {
+        "accepted_artifact_mutation_requires_owner_receipt": true,
+        "candidate_body_stays_in_domain_workspace": true,
+        "candidate_lineage_required": true,
+        "candidate_pool_is_stage_internal_artifact": true
       },
       "domain_stage_refs": [
         "direction_screening",
@@ -990,6 +1087,34 @@
         ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
+      },
+      "handoff_policy": {
+        "framework_transport_cannot_claim_domain_ready": true,
+        "owner_delta_first": true,
+        "required_return_shapes": [
+          "deliverable_delta_ref",
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "quality_gate_receipt_ref",
+          "no_regression_evidence_ref"
+        ]
+      },
+      "independent_gate_policy": {
+        "allowed_closeout_refs": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref",
+          "no_regression_evidence_ref"
+        ],
+        "execution_review_separation_required": true,
+        "gate_owner": "med-autogrant",
+        "gate_ref": "agent/quality_gates/fundability.md",
+        "generated_surface_readiness_can_claim_quality_or_export": false,
+        "mechanical_completion_can_close_stage": false,
+        "provider_completion_can_claim_domain_ready": false,
+        "same_attempt_self_review_can_close_quality_gate": false
       },
       "independent_gate_receipt_required": true,
       "inputs": [
@@ -1052,6 +1177,19 @@
       "requires": [
         "call_candidate_intake_ready"
       ],
+      "selected_executor": {
+        "binding_policy": "codex_cli_first_class_executor_for_grant_stage_attempts",
+        "default_executor": false,
+        "executor_binding_ref": "default_codex_cli",
+        "executor_kind": "codex_cli",
+        "required_capabilities": [
+          "repo_context_reading",
+          "domain_skill_invocation",
+          "tool_affordance_boundary_compliance",
+          "receipt_or_typed_blocker_return",
+          "no_forbidden_write_guard"
+        ]
+      },
       "skills": [
         {
           "ref": "agent/skills/grant_authoring.md",
@@ -1737,8 +1875,49 @@
         "state": "body_free_refs_ready_for_opl_record_preflight",
         "surface_kind": "mag_stage_production_evidence_closeout_refs"
       },
+      "strategy_refs": [
+        {
+          "ref": "call_fit_candidate_generation",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "grant_review_grounded_reflection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "specific_aims_comparative_selection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "proposal_revision_lineage",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "submission_package_independent_gate",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        }
+      ],
       "summary": "Fundability strategy projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Fundability strategy",
+      "tool_affordance_boundary_ref": {
+        "ref": "contracts/cognitive_kernel_adoption.json#/tool_affordance_boundary",
+        "ref_kind": "json_pointer",
+        "role": "stage_tool_affordance_boundary",
+        "stage_id": "fundability_strategy"
+      },
+      "tool_refs": [
+        {
+          "catalog_role": "available_affordance_catalog_not_workflow_script",
+          "ref": "agent/tools/domain_affordances.md",
+          "ref_kind": "repo_path",
+          "role": "stage_tool_affordance_catalog"
+        }
+      ],
       "trust_boundary": {
         "effect_boundary": true,
         "human_gate_required": false,
@@ -1768,6 +1947,12 @@
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "candidate_pool_policy": {
+        "accepted_artifact_mutation_requires_owner_receipt": true,
+        "candidate_body_stays_in_domain_workspace": true,
+        "candidate_lineage_required": true,
+        "candidate_pool_is_stage_internal_artifact": true
       },
       "domain_stage_refs": [
         "question_refinement",
@@ -1822,6 +2007,34 @@
         ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
+      },
+      "handoff_policy": {
+        "framework_transport_cannot_claim_domain_ready": true,
+        "owner_delta_first": true,
+        "required_return_shapes": [
+          "deliverable_delta_ref",
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "quality_gate_receipt_ref",
+          "no_regression_evidence_ref"
+        ]
+      },
+      "independent_gate_policy": {
+        "allowed_closeout_refs": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref",
+          "no_regression_evidence_ref"
+        ],
+        "execution_review_separation_required": true,
+        "gate_owner": "med-autogrant",
+        "gate_ref": "agent/quality_gates/fundability.md",
+        "generated_surface_readiness_can_claim_quality_or_export": false,
+        "mechanical_completion_can_close_stage": false,
+        "provider_completion_can_claim_domain_ready": false,
+        "same_attempt_self_review_can_close_quality_gate": false
       },
       "independent_gate_receipt_required": true,
       "inputs": [
@@ -1884,6 +2097,19 @@
       "requires": [
         "fundability_strategy_gate_recorded"
       ],
+      "selected_executor": {
+        "binding_policy": "codex_cli_first_class_executor_for_grant_stage_attempts",
+        "default_executor": false,
+        "executor_binding_ref": "default_codex_cli",
+        "executor_kind": "codex_cli",
+        "required_capabilities": [
+          "repo_context_reading",
+          "domain_skill_invocation",
+          "tool_affordance_boundary_compliance",
+          "receipt_or_typed_blocker_return",
+          "no_forbidden_write_guard"
+        ]
+      },
       "skills": [
         {
           "ref": "agent/skills/grant_authoring.md",
@@ -2567,8 +2793,49 @@
         "state": "body_free_refs_ready_for_opl_record_preflight",
         "surface_kind": "mag_stage_production_evidence_closeout_refs"
       },
+      "strategy_refs": [
+        {
+          "ref": "call_fit_candidate_generation",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "grant_review_grounded_reflection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "specific_aims_comparative_selection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "proposal_revision_lineage",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "submission_package_independent_gate",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        }
+      ],
       "summary": "Specific aims and structure projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Specific aims and structure",
+      "tool_affordance_boundary_ref": {
+        "ref": "contracts/cognitive_kernel_adoption.json#/tool_affordance_boundary",
+        "ref_kind": "json_pointer",
+        "role": "stage_tool_affordance_boundary",
+        "stage_id": "specific_aims_and_structure"
+      },
+      "tool_refs": [
+        {
+          "catalog_role": "available_affordance_catalog_not_workflow_script",
+          "ref": "agent/tools/domain_affordances.md",
+          "ref_kind": "repo_path",
+          "role": "stage_tool_affordance_catalog"
+        }
+      ],
       "trust_boundary": {
         "effect_boundary": true,
         "human_gate_required": false,
@@ -2598,6 +2865,12 @@
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "candidate_pool_policy": {
+        "accepted_artifact_mutation_requires_owner_receipt": true,
+        "candidate_body_stays_in_domain_workspace": true,
+        "candidate_lineage_required": true,
+        "candidate_pool_is_stage_internal_artifact": true
       },
       "domain_stage_refs": [
         "drafting",
@@ -2648,6 +2921,34 @@
         ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
+      },
+      "handoff_policy": {
+        "framework_transport_cannot_claim_domain_ready": true,
+        "owner_delta_first": true,
+        "required_return_shapes": [
+          "deliverable_delta_ref",
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "quality_gate_receipt_ref",
+          "no_regression_evidence_ref"
+        ]
+      },
+      "independent_gate_policy": {
+        "allowed_closeout_refs": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref",
+          "no_regression_evidence_ref"
+        ],
+        "execution_review_separation_required": true,
+        "gate_owner": "med-autogrant",
+        "gate_ref": "agent/quality_gates/quality.md",
+        "generated_surface_readiness_can_claim_quality_or_export": false,
+        "mechanical_completion_can_close_stage": false,
+        "provider_completion_can_claim_domain_ready": false,
+        "same_attempt_self_review_can_close_quality_gate": false
       },
       "inputs": [
         {
@@ -2714,6 +3015,19 @@
       "requires": [
         "specific_aims_structure_accepted"
       ],
+      "selected_executor": {
+        "binding_policy": "codex_cli_first_class_executor_for_grant_stage_attempts",
+        "default_executor": false,
+        "executor_binding_ref": "default_codex_cli",
+        "executor_kind": "codex_cli",
+        "required_capabilities": [
+          "repo_context_reading",
+          "domain_skill_invocation",
+          "tool_affordance_boundary_compliance",
+          "receipt_or_typed_blocker_return",
+          "no_forbidden_write_guard"
+        ]
+      },
       "skills": [
         {
           "ref": "agent/skills/grant_authoring.md",
@@ -3399,8 +3713,49 @@
         "state": "body_free_refs_ready_for_opl_record_preflight",
         "surface_kind": "mag_stage_production_evidence_closeout_refs"
       },
+      "strategy_refs": [
+        {
+          "ref": "call_fit_candidate_generation",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "grant_review_grounded_reflection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "specific_aims_comparative_selection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "proposal_revision_lineage",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "submission_package_independent_gate",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        }
+      ],
       "summary": "Proposal authoring projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Proposal authoring",
+      "tool_affordance_boundary_ref": {
+        "ref": "contracts/cognitive_kernel_adoption.json#/tool_affordance_boundary",
+        "ref_kind": "json_pointer",
+        "role": "stage_tool_affordance_boundary",
+        "stage_id": "proposal_authoring"
+      },
+      "tool_refs": [
+        {
+          "catalog_role": "available_affordance_catalog_not_workflow_script",
+          "ref": "agent/tools/domain_affordances.md",
+          "ref_kind": "repo_path",
+          "role": "stage_tool_affordance_catalog"
+        }
+      ],
       "trust_boundary": {
         "effect_boundary": false,
         "human_gate_required": false,
@@ -3430,6 +3785,12 @@
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "candidate_pool_policy": {
+        "accepted_artifact_mutation_requires_owner_receipt": true,
+        "candidate_body_stays_in_domain_workspace": true,
+        "candidate_lineage_required": true,
+        "candidate_pool_is_stage_internal_artifact": true
       },
       "domain_stage_refs": [
         "critique",
@@ -3480,6 +3841,34 @@
         ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
+      },
+      "handoff_policy": {
+        "framework_transport_cannot_claim_domain_ready": true,
+        "owner_delta_first": true,
+        "required_return_shapes": [
+          "deliverable_delta_ref",
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "quality_gate_receipt_ref",
+          "no_regression_evidence_ref"
+        ]
+      },
+      "independent_gate_policy": {
+        "allowed_closeout_refs": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref",
+          "no_regression_evidence_ref"
+        ],
+        "execution_review_separation_required": true,
+        "gate_owner": "med-autogrant",
+        "gate_ref": "agent/quality_gates/quality.md",
+        "generated_surface_readiness_can_claim_quality_or_export": false,
+        "mechanical_completion_can_close_stage": false,
+        "provider_completion_can_claim_domain_ready": false,
+        "same_attempt_self_review_can_close_quality_gate": false
       },
       "independent_gate_receipt_required": true,
       "inputs": [
@@ -3542,6 +3931,19 @@
       "requires": [
         "proposal_draft_reviewable"
       ],
+      "selected_executor": {
+        "binding_policy": "codex_cli_first_class_executor_for_grant_stage_attempts",
+        "default_executor": false,
+        "executor_binding_ref": "default_codex_cli",
+        "executor_kind": "codex_cli",
+        "required_capabilities": [
+          "repo_context_reading",
+          "domain_skill_invocation",
+          "tool_affordance_boundary_compliance",
+          "receipt_or_typed_blocker_return",
+          "no_forbidden_write_guard"
+        ]
+      },
       "skills": [
         {
           "ref": "agent/skills/grant_authoring.md",
@@ -4227,8 +4629,49 @@
         "state": "body_free_refs_ready_for_opl_record_preflight",
         "surface_kind": "mag_stage_production_evidence_closeout_refs"
       },
+      "strategy_refs": [
+        {
+          "ref": "call_fit_candidate_generation",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "grant_review_grounded_reflection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "specific_aims_comparative_selection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "proposal_revision_lineage",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "submission_package_independent_gate",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        }
+      ],
       "summary": "Review and rebuttal projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Review and rebuttal",
+      "tool_affordance_boundary_ref": {
+        "ref": "contracts/cognitive_kernel_adoption.json#/tool_affordance_boundary",
+        "ref_kind": "json_pointer",
+        "role": "stage_tool_affordance_boundary",
+        "stage_id": "review_and_rebuttal"
+      },
+      "tool_refs": [
+        {
+          "catalog_role": "available_affordance_catalog_not_workflow_script",
+          "ref": "agent/tools/domain_affordances.md",
+          "ref_kind": "repo_path",
+          "role": "stage_tool_affordance_catalog"
+        }
+      ],
       "trust_boundary": {
         "effect_boundary": true,
         "human_gate_required": false,
@@ -4258,6 +4701,12 @@
         "maps_existing_surfaces_only": true,
         "opl_role": "projection_consumer_only",
         "submission_ready_export_gate_owner": "med-autogrant"
+      },
+      "candidate_pool_policy": {
+        "accepted_artifact_mutation_requires_owner_receipt": true,
+        "candidate_body_stays_in_domain_workspace": true,
+        "candidate_lineage_required": true,
+        "candidate_pool_is_stage_internal_artifact": true
       },
       "domain_stage_refs": [
         "freeze",
@@ -4306,6 +4755,34 @@
         ],
         "resume_surface_ref": "/operator_loop_surface",
         "shared_handoff_ref": "/shared_handoff"
+      },
+      "handoff_policy": {
+        "framework_transport_cannot_claim_domain_ready": true,
+        "owner_delta_first": true,
+        "required_return_shapes": [
+          "deliverable_delta_ref",
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "quality_gate_receipt_ref",
+          "no_regression_evidence_ref"
+        ]
+      },
+      "independent_gate_policy": {
+        "allowed_closeout_refs": [
+          "owner_receipt_ref",
+          "typed_blocker_ref",
+          "human_gate_ref",
+          "route_back_ref",
+          "no_regression_evidence_ref"
+        ],
+        "execution_review_separation_required": true,
+        "gate_owner": "med-autogrant",
+        "gate_ref": "agent/quality_gates/export_and_package.md",
+        "generated_surface_readiness_can_claim_quality_or_export": false,
+        "mechanical_completion_can_close_stage": false,
+        "provider_completion_can_claim_domain_ready": false,
+        "same_attempt_self_review_can_close_quality_gate": false
       },
       "independent_gate_receipt_required": true,
       "inputs": [
@@ -4366,6 +4843,19 @@
       "requires": [
         "grant_review_gate_receipt_recorded"
       ],
+      "selected_executor": {
+        "binding_policy": "codex_cli_first_class_executor_for_grant_stage_attempts",
+        "default_executor": false,
+        "executor_binding_ref": "default_codex_cli",
+        "executor_kind": "codex_cli",
+        "required_capabilities": [
+          "repo_context_reading",
+          "domain_skill_invocation",
+          "tool_affordance_boundary_compliance",
+          "receipt_or_typed_blocker_return",
+          "no_forbidden_write_guard"
+        ]
+      },
       "skills": [
         {
           "ref": "agent/skills/grant_authoring.md",
@@ -5109,8 +5599,49 @@
         "state": "body_free_refs_ready_for_opl_record_preflight",
         "surface_kind": "mag_stage_production_evidence_closeout_refs"
       },
+      "strategy_refs": [
+        {
+          "ref": "call_fit_candidate_generation",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "grant_review_grounded_reflection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "specific_aims_comparative_selection",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "proposal_revision_lineage",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        },
+        {
+          "ref": "submission_package_independent_gate",
+          "ref_kind": "strategy_ref",
+          "role": "cognitive_kernel_strategy"
+        }
+      ],
       "summary": "Package and submit-ready projected from MAG-owned grant authoring surfaces for OPL discovery.",
       "title": "Package and submit-ready",
+      "tool_affordance_boundary_ref": {
+        "ref": "contracts/cognitive_kernel_adoption.json#/tool_affordance_boundary",
+        "ref_kind": "json_pointer",
+        "role": "stage_tool_affordance_boundary",
+        "stage_id": "package_and_submit_ready"
+      },
+      "tool_refs": [
+        {
+          "catalog_role": "available_affordance_catalog_not_workflow_script",
+          "ref": "agent/tools/domain_affordances.md",
+          "ref_kind": "repo_path",
+          "role": "stage_tool_affordance_catalog"
+        }
+      ],
       "trust_boundary": {
         "effect_boundary": false,
         "human_gate_required": false,

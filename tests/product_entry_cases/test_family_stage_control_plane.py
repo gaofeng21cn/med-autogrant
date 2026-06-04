@@ -84,6 +84,12 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
             "review_and_rebuttal",
             "package_and_submit_ready",
         }
+        default_executor_stage_ids = [
+            stage["stage_id"]
+            for stage in stage_plane["stages"]
+            if stage["selected_executor"]["default_executor"] is True
+        ]
+        self.assertEqual(default_executor_stage_ids, ["call_and_candidate_intake"])
 
         for stage in stage_plane["stages"]:
             with self.subTest(stage=stage["stage_id"]):
@@ -91,6 +97,12 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                     _assert_required_field_path(self, stage, required_field)
                 self.assertEqual(stage["owner"], "med-autogrant")
                 self.assertEqual(stage["stage_goal"], stage["goal"])
+                self.assertEqual(stage["selected_executor"]["executor_kind"], "codex_cli")
+                self.assertEqual(stage["selected_executor"]["executor_binding_ref"], "default_codex_cli")
+                self.assertEqual(
+                    stage["selected_executor"]["default_executor"],
+                    stage["stage_id"] == "call_and_candidate_intake",
+                )
                 self.assertEqual(
                     stage["prompt_refs"],
                     [

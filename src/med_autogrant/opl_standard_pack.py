@@ -28,6 +28,9 @@ from med_autogrant.opl_standard_pack_private_policy import (
 )
 from med_autogrant.public_cli import public_cli_command
 from med_autogrant.stage_control_plane import build_mag_family_stage_control_plane
+from med_autogrant.stage_control_plane_parts.cognitive_kernel import (
+    pack_compiler_cognitive_kernel_fields,
+)
 from opl_harness_shared.product_entry_companions import build_operator_loop_action_catalog
 
 
@@ -195,6 +198,9 @@ DECLARATIVE_DOMAIN_PACK = [
     "domain_memory_locator",
     "artifact_locator_contract",
     "owner_receipt_schema",
+    "tool_affordance_catalog",
+    "cognitive_kernel_adoption_contract",
+    "golden_path_profile",
 ]
 
 REQUIRED_DOMAIN_PACK_PATHS = [
@@ -219,6 +225,7 @@ REQUIRED_DOMAIN_PACK_PATHS = [
     "agent/knowledge/grant_strategy_memory.md",
     "agent/knowledge/package_authority.md",
     "agent/knowledge/owner_receipt_boundary.md",
+    "agent/tools/domain_affordances.md",
 ]
 
 MINIMAL_AUTHORITY_FUNCTIONS = [
@@ -792,6 +799,7 @@ def _pack_compiler_input(minimal_authority_surfaces: list[dict[str, Any]]) -> di
         "canonical_semantic_pack_role": "repo_source_declarative_grant_pack",
         "required_domain_pack_paths": REQUIRED_DOMAIN_PACK_PATHS,
         "declarative_domain_pack": DECLARATIVE_DOMAIN_PACK,
+        **pack_compiler_cognitive_kernel_fields(),
         "minimal_authority_functions": MINIMAL_AUTHORITY_FUNCTIONS,
         "minimal_authority_surface_taxonomy": build_mag_minimal_authority_surface_taxonomy(),
         "minimal_authority_surface_contracts": _json_ready(minimal_authority_surfaces),

@@ -6,6 +6,14 @@ from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
 from med_autogrant.stage_control_plane_parts.artifact_contracts import (
     build_stage_native_artifact_contract,
 )
+from med_autogrant.stage_control_plane_parts.cognitive_kernel import (
+    plane_cognitive_kernel_refs,
+    stage_descriptor_cognitive_kernel_fields,
+)
+from med_autogrant.stage_control_plane_parts.transition_oracle import (
+    build_mag_grant_transition_oracle,
+)
+from med_autogrant.runtime_defaults import DEFAULT_EXECUTOR_OWNER
 
 USER_STAGE_LOG_REQUIRED_FIELDS = [
     "stage_name",
@@ -113,8 +121,6 @@ TYPED_BLOCKER_LINEAGE_POLICY = {
         "opl_can_claim_deliverable_progress_from_platform_repair": False,
     },
 }
-
-
 STAGE_OUTPUT_ROLE_BY_STAGE_ID: dict[str, str] = {
     "call_and_candidate_intake": "call_candidate_intake_manifest_ref",
     "fundability_strategy": "fundability_strategy_owner_receipt_ref",
@@ -123,6 +129,8 @@ STAGE_OUTPUT_ROLE_BY_STAGE_ID: dict[str, str] = {
     "review_and_rebuttal": "review_quality_closure_receipt_ref",
     "package_and_submit_ready": "submission_ready_package_manifest_ref",
 }
+
+DEFAULT_GOLDEN_PATH_STAGE_ID = "call_and_candidate_intake"
 
 
 STAGE_PACK: tuple[dict[str, Any], ...] = (
@@ -214,152 +222,6 @@ STAGE_PACK: tuple[dict[str, Any], ...] = (
     },
 )
 
-GRANT_TRANSITION_ORACLE_FIXTURES: tuple[dict[str, Any], ...] = (
-    {
-        "fixture_id": "call_intake_ready_to_fundability_strategy",
-        "source_stage_id": "call_and_candidate_intake",
-        "input_state": {
-            "call_materials_status": "complete",
-            "candidate_profile_status": "selected",
-            "human_gate": "not_required",
-        },
-        "expected_transition_id": "call_intake_complete_to_fundability_strategy",
-    },
-    {
-        "fixture_id": "fundability_blocked_requests_human_gate",
-        "source_stage_id": "fundability_strategy",
-        "input_state": {
-            "fundability_verdict": "blocked",
-            "blocking_gap": "funder_fit_unclear",
-            "human_gate": "required",
-        },
-        "expected_transition_id": "fundability_blocked_to_human_gate",
-    },
-    {
-        "fixture_id": "specific_aims_ready_to_authoring",
-        "source_stage_id": "specific_aims_and_structure",
-        "input_state": {
-            "specific_aims_status": "accepted",
-            "argument_structure_status": "ready",
-            "human_gate": "not_required",
-        },
-        "expected_transition_id": "specific_aims_accepted_to_proposal_authoring",
-    },
-    {
-        "fixture_id": "proposal_draft_ready_to_review",
-        "source_stage_id": "proposal_authoring",
-        "input_state": {
-            "draft_status": "complete",
-            "authoring_quality_gate": "ready_for_review",
-            "human_gate": "not_required",
-        },
-        "expected_transition_id": "proposal_draft_complete_to_review",
-    },
-    {
-        "fixture_id": "review_blocked_to_repair",
-        "source_stage_id": "review_and_rebuttal",
-        "input_state": {
-            "review_verdict": "blocked",
-            "repair_target_status": "available",
-            "human_gate": "not_required",
-        },
-        "expected_transition_id": "review_blocked_to_proposal_repair",
-    },
-    {
-        "fixture_id": "quality_closed_to_package",
-        "source_stage_id": "review_and_rebuttal",
-        "input_state": {
-            "review_verdict": "closed",
-            "quality_dossier_status": "accepted",
-            "human_gate": "not_required",
-        },
-        "expected_transition_id": "review_closed_to_package_and_submit_ready",
-    },
-    {
-        "fixture_id": "package_missing_portal_material_to_human_gate",
-        "source_stage_id": "package_and_submit_ready",
-        "input_state": {
-            "submission_ready_verdict": "blocked",
-            "missing_material_kind": "external_portal_field",
-            "human_gate": "required",
-        },
-        "expected_transition_id": "package_blocked_to_human_gate",
-    },
-)
-
-GRANT_TRANSITION_TABLE: tuple[dict[str, Any], ...] = (
-    {
-        "transition_id": "call_intake_complete_to_fundability_strategy",
-        "from_stage_id": "call_and_candidate_intake",
-        "to_stage_id": "fundability_strategy",
-        "guard_id": "call_materials_and_profile_selected",
-        "owner_action": "open_grant_user_loop",
-        "return_shape": "domain_owner_receipt",
-        "receipt_requirement": "intake_handoff_receipt",
-        "blocked_shape": "typed_blocker",
-    },
-    {
-        "transition_id": "fundability_blocked_to_human_gate",
-        "from_stage_id": "fundability_strategy",
-        "to_stage_id": "fundability_strategy",
-        "guard_id": "fundability_blocker_requires_human_gate",
-        "owner_action": "open_grant_user_loop",
-        "return_shape": "typed_blocker",
-        "receipt_requirement": "human_gate_receipt",
-        "blocked_shape": "typed_blocker",
-    },
-    {
-        "transition_id": "specific_aims_accepted_to_proposal_authoring",
-        "from_stage_id": "specific_aims_and_structure",
-        "to_stage_id": "proposal_authoring",
-        "guard_id": "specific_aims_and_argument_structure_accepted",
-        "owner_action": "open_grant_user_loop",
-        "return_shape": "domain_owner_receipt",
-        "receipt_requirement": "specific_aims_handoff_receipt",
-        "blocked_shape": "typed_blocker",
-    },
-    {
-        "transition_id": "proposal_draft_complete_to_review",
-        "from_stage_id": "proposal_authoring",
-        "to_stage_id": "review_and_rebuttal",
-        "guard_id": "proposal_draft_complete_and_reviewable",
-        "owner_action": "open_grant_user_loop",
-        "return_shape": "domain_owner_receipt",
-        "receipt_requirement": "draft_review_handoff_receipt",
-        "blocked_shape": "typed_blocker",
-    },
-    {
-        "transition_id": "review_blocked_to_proposal_repair",
-        "from_stage_id": "review_and_rebuttal",
-        "to_stage_id": "proposal_authoring",
-        "guard_id": "review_blocked_with_repair_target",
-        "owner_action": "open_grant_user_loop",
-        "return_shape": "typed_blocker",
-        "receipt_requirement": "repair_target_receipt",
-        "blocked_shape": "typed_blocker",
-    },
-    {
-        "transition_id": "review_closed_to_package_and_submit_ready",
-        "from_stage_id": "review_and_rebuttal",
-        "to_stage_id": "package_and_submit_ready",
-        "guard_id": "review_quality_closed",
-        "owner_action": "build_submission_ready_package",
-        "return_shape": "domain_owner_receipt",
-        "receipt_requirement": "quality_closure_receipt",
-        "blocked_shape": "typed_blocker",
-    },
-    {
-        "transition_id": "package_blocked_to_human_gate",
-        "from_stage_id": "package_and_submit_ready",
-        "to_stage_id": "package_and_submit_ready",
-        "guard_id": "package_missing_external_portal_material",
-        "owner_action": "open_grant_user_loop",
-        "return_shape": "typed_blocker",
-        "receipt_requirement": "human_gate_receipt",
-        "blocked_shape": "typed_blocker",
-    },
-)
-
 STAGE_KNOWLEDGE_REFS: dict[str, tuple[str, ...]] = {
     "call_and_candidate_intake": (
         "agent/knowledge/grant_strategy_memory.md",
@@ -448,6 +310,19 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
         "owner": TARGET_DOMAIN_ID,
         "stage_goal": stage["goal"],
         "summary": f"{stage['title']} projected from MAG-owned grant authoring surfaces for OPL discovery.",
+        "selected_executor": {
+            "executor_kind": DEFAULT_EXECUTOR_OWNER,
+            "default_executor": stage_id == DEFAULT_GOLDEN_PATH_STAGE_ID,
+            "executor_binding_ref": "default_codex_cli",
+            "binding_policy": "codex_cli_first_class_executor_for_grant_stage_attempts",
+            "required_capabilities": [
+                "repo_context_reading",
+                "domain_skill_invocation",
+                "tool_affordance_boundary_compliance",
+                "receipt_or_typed_blocker_return",
+                "no_forbidden_write_guard",
+            ],
+        },
         "inputs": [
             {"ref_kind": "json_pointer", "ref": "/family_action_catalog", "role": "allowed_action_catalog"},
             {"ref_kind": "json_pointer", "ref": "/progress_projection", "role": "grant_progress_read_model"},
@@ -488,6 +363,10 @@ def _stage_descriptor(stage: dict[str, Any]) -> dict[str, Any]:
                 "role": "owner_receipt_gate",
             }
         ],
+        **stage_descriptor_cognitive_kernel_fields(
+            stage_id=stage_id,
+            gate_ref=STAGE_QUALITY_GATE_REFS[stage_id][0],
+        ),
         "handoff": {
             "next_owner": TARGET_DOMAIN_ID,
             "next_stage_refs": list(stage.get("next_stage_refs", [])),
@@ -826,6 +705,7 @@ def build_mag_family_stage_control_plane(
         "plane_id": "med_autogrant_stage_control_plane",
         "target_domain_id": TARGET_DOMAIN_ID,
         "owner": TARGET_DOMAIN_ID,
+        **plane_cognitive_kernel_refs(),
         "replay_evidence_refs": [
             {
                 "ref_kind": "append_only_event_log_ref",
@@ -863,6 +743,7 @@ def build_mag_family_stage_control_plane(
                 "authority_boundary",
                 "stage_contract",
                 "trust_boundary",
+                "selected_executor",
                 "stage_production_evidence_closeout",
                 "stage_contract.user_stage_log_contract",
                 "stage_contract.stage_native_artifact_contract",
@@ -901,94 +782,5 @@ def build_mag_family_stage_control_plane(
         "notes": [
             "Descriptor-only projection over existing MAG grant authoring surfaces.",
             "OPL discovery must not own grant truth, fundability judgment, or submission-ready export authority.",
-        ],
-    }
-
-
-def build_mag_grant_transition_oracle(
-    *,
-    family_stage_control_plane: Mapping[str, Any],
-    family_action_catalog: Mapping[str, Any],
-) -> dict[str, Any]:
-    stage_ids = {
-        str(stage["stage_id"])
-        for stage in family_stage_control_plane["stages"]
-        if isinstance(stage, Mapping)
-    }
-    action_ids = {
-        str(action["action_id"])
-        for action in family_action_catalog["actions"]
-        if isinstance(action, Mapping)
-    }
-    transition_ids = {str(transition["transition_id"]) for transition in GRANT_TRANSITION_TABLE}
-
-    missing_stage_refs = sorted(
-        {
-            stage_id
-            for transition in GRANT_TRANSITION_TABLE
-            for stage_id in (transition["from_stage_id"], transition["to_stage_id"])
-            if stage_id not in stage_ids
-        }
-    )
-    missing_action_refs = sorted(
-        {
-            str(transition["owner_action"])
-            for transition in GRANT_TRANSITION_TABLE
-            if transition["owner_action"] not in action_ids
-        }
-    )
-    missing_fixture_refs = sorted(
-        {
-            str(fixture["expected_transition_id"])
-            for fixture in GRANT_TRANSITION_ORACLE_FIXTURES
-            if fixture["expected_transition_id"] not in transition_ids
-        }
-    )
-    if missing_stage_refs or missing_action_refs or missing_fixture_refs:
-        raise ValueError(
-            "MAG transition oracle references unresolved stage/action/transition ids: "
-            f"stages={missing_stage_refs}, actions={missing_action_refs}, fixtures={missing_fixture_refs}"
-        )
-
-    return {
-        "surface_kind": "mag_grant_transition_oracle",
-        "version": "mag-grant-transition-oracle.v1",
-        "oracle_id": "mag.grant_transition.oracle.v1",
-        "target_domain_id": TARGET_DOMAIN_ID,
-        "owner": TARGET_DOMAIN_ID,
-        "state": "domain_spec_landed_external_runner_gate",
-        "runner_owner": "one-person-lab",
-        "runner_contract_ref": "contracts/opl-framework/family-transition-runner-contract.json",
-        "transition_table_status": "landed",
-        "oracle_fixture_status": "landed",
-        "stage_control_plane_ref": "/product_entry_manifest/family_stage_control_plane",
-        "action_catalog_ref": "/product_entry_manifest/family_action_catalog",
-        "authority_boundary": {
-            "domain_truth_owner": TARGET_DOMAIN_ID,
-            "fundability_verdict_owner": TARGET_DOMAIN_ID,
-            "authoring_quality_verdict_owner": TARGET_DOMAIN_ID,
-            "submission_ready_export_verdict_owner": TARGET_DOMAIN_ID,
-            "opl_role": "generic_transition_runner_only",
-            "opl_can_infer_fundability_ready": False,
-            "opl_can_infer_authoring_quality_ready": False,
-            "opl_can_infer_submission_ready_export_ready": False,
-            "opl_can_write_grant_truth": False,
-        },
-        "transition_table": [dict(transition) for transition in GRANT_TRANSITION_TABLE],
-        "oracle_fixtures": [dict(fixture) for fixture in GRANT_TRANSITION_ORACLE_FIXTURES],
-        "validation": {
-            "status": "ready_for_opl_runner_ingestion",
-            "transition_count": len(GRANT_TRANSITION_TABLE),
-            "oracle_fixture_count": len(GRANT_TRANSITION_ORACLE_FIXTURES),
-            "checked_stage_count": len(stage_ids),
-            "checked_action_count": len(action_ids),
-            "missing_stage_refs": missing_stage_refs,
-            "missing_action_refs": missing_action_refs,
-            "missing_fixture_transition_refs": missing_fixture_refs,
-        },
-        "notes": [
-            "MAG declares grant transition semantics; OPL may only run the generic transition contract.",
-            "Transition output is a domain owner receipt, typed blocker, or no-regression evidence ref.",
-            "Provider completion must not be treated as fundability, quality, or export readiness.",
         ],
     }
