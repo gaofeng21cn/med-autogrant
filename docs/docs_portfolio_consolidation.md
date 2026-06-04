@@ -16,9 +16,9 @@ MAG 采用 OPL-family canonical docs taxonomy：
 
 这个目录集合按长期职责保留，不按当前文件数量决定。MAG 当前真实 owner 主要在核心五件套、`active/`、`references/`、`specs/` 和 `history/`；`public/product/runtime/delivery/source/policies` 当前较薄，但都有长期职责，后续按 current 内容小批量吸收。
 
-## 本轮 Inventory Sanity
+## Current Inventory Sanity
 
-截至 `2026-06-03`，本仓共有 20 个 `README*` 入口和 117 个 `docs/**/*.md` 文档。当前生命周期角色按 owner 层读取，而不是按文件名日期读取：
+截至 `2026-06-04T17:02:16Z`，本仓共有 20 个 `README*` 入口、118 个 `docs/**/*.md` 文档和 123 个长期人读文档。当前生命周期角色按 owner 层读取，而不是按文件名日期读取：
 
 | 文档集合 | 当前角色 | 处理规则 |
 | --- | --- | --- |
@@ -31,7 +31,7 @@ MAG 采用 OPL-family canonical docs taxonomy：
 | `docs/references/**` | reference | north-star、OPL adoption、memory policy、governance checklist；不承担 current status。 |
 | `docs/history/**` | history / provenance | 保存旧 specs、旧 plans、provider proof、coverage ledger、OMX 和 tombstone；标题中的 `Current Truth` 只能按当时语境阅读。 |
 
-本轮未发现需要新增 docs 目录或把 history 文件恢复为 active/support owner 的证据。发现的主要漂移是 active/status 入口携带过多 proof-by-proof 明细，已按 owner/gate/status 层压回 `docs/status.md` 与 active gap plan；dated coverage 和 proof 流水继续留在 history 或机器合同。
+当前没有需要新增 docs 目录或把 history 文件恢复为 active/support owner 的证据。此前 active/status 入口携带的 proof-by-proof 明细已按 owner/gate/status 层压回 `docs/status.md` 与 active gap plan；dated coverage、retirement audit 和 proof 流水继续留在 history 或机器合同。
 
 ## 与 OPL 的分层
 
@@ -76,6 +76,8 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 当旧模块、旧接口、旧 CLI alias、旧 wrapper、旧 facade、patch bridge、旧测试入口或旧文档入口已被当前 owner surface 替代时，默认直接退役。迁移 active caller 后删除旧面；需要来龙去脉时只保留 history/tombstone/provenance，不新增 compatibility shim、别名、re-export facade 或 compatibility-only 聚合测试。
 
 当前 direct retirement posture 的 active owner 是 `docs/active/mag-ideal-state-cross-repo-gap-plan.md`，机器投影是 `product-entry-manifest.ideal_state_closure_status.direct_retirement_posture`。维护时应先看 manifest 中的 `physical_skeleton_follow_through` 与 `controlled_domain_memory_apply_proof.repo_source_layout_audit`，确认旧面已经没有 active caller，再删除或归档；不要用旧路径稳定性作为保留兼容壳的理由。
+
+截至 `2026-06-04T17:02:16Z`，旧 public/domain-entry runtime command family `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 已不在 `SERVICE_SAFE_DOMAIN_COMMANDS`、grouped public CLI catalog 或 `pyproject.toml` console script 中作为 active entry 出现；它们只保留在 fail-closed tests、`functional_closure_skeleton` no-resurrection scan、active/support 边界说明和 history/provenance 中。该 audit 记录在 [2026-06-04 MAG retired command family audit](./history/docs-portfolio-coverage-ledger/2026-06-04-mag-retired-command-family-audit.md)。
 
 ## 当前生命周期决策
 

@@ -19,4 +19,5 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 | 文件 | 内容 | 当前读法 |
 | --- | --- | --- |
+| [2026-06-04-mag-retired-command-family-audit.md](./2026-06-04-mag-retired-command-family-audit.md) | MAG 旧 public/domain-entry runtime command family 的 coverage 与 retirement audit。 | 只读 provenance；当前 no-resurrection truth 继续归 source/tests/contracts 与 active gap plan。 |
 | [2026-06-02-mag-docs-portfolio-coverage-ledger-archive.md](./2026-06-02-mag-docs-portfolio-coverage-ledger-archive.md) | 原 `docs/docs_portfolio_consolidation.md` 中的 MAG dated coverage ledger。 | 只读 provenance；durable 规则已折回 active governance、core docs、active gap plan、spec lifecycle map、contracts/source/tests。 |
