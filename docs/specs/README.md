@@ -5,10 +5,7 @@ Purpose: `specs_index`
 State: `current_index`
 Machine boundary: 本文是人读 specs 索引。机器消费者必须使用 `contracts/runtime-program/current-program.json`、schemas、source files、CLI/API behavior 或语义化 `human_doc:*` id。
 
-本目录保留 `Med Auto Grant` 的当前技术记录层。它不是旧
-Hermes/Gateway/local-runtime 文档的兼容保留区；明确 superseded 的 provider
-proof、activation package、local-runtime closeout 和 tombstone 进入
-`docs/history/specs/`。
+本目录保留 `Med Auto Grant` 的当前技术记录层。它不是旧 Hermes/Gateway/local-runtime/hosted-handoff 文档的兼容保留区；明确 superseded 的 provider proof、activation package、local-runtime closeout、old route snapshot、hosted handoff 和 tombstone 进入 `docs/history/specs/`。
 
 生命周期信号：
 
@@ -30,31 +27,12 @@ proof、activation package、local-runtime closeout 和 tombstone 进入
 
 旧 P4A/P4B/P4C/P4E/P4F product-entry / package support specs 已折叠为 [Product Entry Support Record](./product-entry-support-record.md)，原文件进入 `../history/specs/`。当前 direct-file reader 应先读 support record，再按需追溯历史文件。
 
-当前 specs lifecycle map 已覆盖 `docs/specs/*.md` 与 `docs/history/specs/*.md` 的文件级归位。保留在本目录的 dated specs 只按两类处理：
+当前 specs lifecycle map 已覆盖 `docs/specs/*.md` 与 `docs/history/specs/*.md` 的归位规则。保留在本目录的 specs 只按两类处理：
 
 - `active_current_spec`：仅四份，承担明确命名的当前边界。
-- `support_current_truth`：只在仍 current 的 subsection 内支撑 schema、product-entry、package/export 或 executor routing 读法；P4 product-entry / package 读法现在由 `product-entry-support-record.md` 汇总。
+- `support_current_truth`：只在仍 current 的 subsection 内支撑 formal-entry、durability、schema/product-entry、package/export 或 executor routing 读法；P4 product-entry / package 读法由 `product-entry-support-record.md` 汇总。
 
-`2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`
-与
-`2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`
-已经移动到 `../history/specs/`。它们只记录 post-R5A local-runtime
-closeout / honest-stop provenance，不再位于 current specs 层。
-`2026-04-07-p2*`、`2026-04-07-p3a*`、`2026-04-08-p3*` 与
-`2026-04-08-p4*` 也已经移动到 `../history/specs/`。它们只记录
-早期 authoring-flow、review/rollback 与 verification gate 形成过程；当前 route、quality、
-checkpoint 和验证边界由核心五件套、active specs、contracts/schema/source 与
-`current-program.json` 持有。
-
-因此，本目录不再保留纯历史 activation package、R/P/post-R5A tranche 或 fail-closed hardening notes。直接打开任何 dated support spec 时，第一屏 lifecycle note 优先于标题里的 `Current Truth`、`Activation Package` 或 tranche label。
-`2026-04-12-author-side-executor-routing-contract-current-truth.md` 已移动到 `../history/specs/`，因为当前 route catalog 已由 `2026-04-13-full-grant-authoring-executor-current-truth.md`、contracts、schema 和 source 接管。
-`2026-04-12-hosted-caller-consumption-proof-current-truth.md`、
-`2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md` 与
-`2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md`
-也已经移动到 `../history/specs/`。它们只记录旧 hosted / OPL handoff
-形成过程；当前 contract export、product-entry、OPL generated/hosted caller 和
-App/workbench 边界由核心五件套、active gap plan、contracts/schema/source 与
-`current-program.json` 持有。
+本目录不保留纯历史 activation package、R/P/post-R5A tranche、fail-closed hardening note、local-runtime closeout、old route snapshot、old hosted handoff 或 provider proof。直接打开任何 dated support spec 时，第一屏 lifecycle note 优先于标题里的 `Current Truth`、`Activation Package` 或 tranche label。
 
 `contracts/runtime-program/current-program.json` 仍是完整 repo-tracked truth-surface 清单的 canonical pointer。它可能引用少量 support `human_doc:*` 或 specs，但这种引用不提升整份 dated spec 为当前 owner。Hermes-backed、Hermes reset、Gateway、future P5、runtime-first activation、post-R5A hardening 和旧 provider specs 只保留 history / provenance / audit path；只有 lifecycle map 明确列为 active 的 subsection 才能作为当前边界阅读。已经归档到 `../history/specs/` 的文件不再是 `docs/specs/` support surface。
 

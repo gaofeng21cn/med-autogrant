@@ -16,9 +16,9 @@ MAG 采用 OPL-family canonical docs taxonomy：
 
 这个目录集合按长期职责保留，不按当前文件数量决定。MAG 当前真实 owner 主要在核心五件套、`active/`、`references/`、`specs/` 和 `history/`；`public/product/runtime/delivery/source/policies` 当前较薄，但都有长期职责，后续按 current 内容小批量吸收。
 
-## Current Inventory Sanity
+## Portfolio 核对规则
 
-截至 `2026-06-04T17:02:16Z`，本仓共有 20 个 `README*` 入口、118 个 `docs/**/*.md` 文档和 123 个长期人读文档。当前生命周期角色按 owner 层读取，而不是按文件名日期读取：
+本文件不再维护 frozen inventory count、逐日期 coverage 或 proof-by-proof closeout。需要核对当前 portfolio 时，用 `find docs -maxdepth 3 -type f | sort` 读取 live 文件集；生命周期角色按 owner 层读取，而不是按文件名日期读取：
 
 | 文档集合 | 当前角色 | 处理规则 |
 | --- | --- | --- |
@@ -27,11 +27,13 @@ MAG 采用 OPL-family canonical docs taxonomy：
 | docs 根入口与核心五件套 | current 人读 truth set | 只保留角色、边界、入口、证据门和决策；不追加 receipt proof、worktree closeout 或 dated proof 清单。 |
 | `docs/active/**` | active gap / inventory | `mag-ideal-state-cross-repo-gap-plan.md` 是唯一 active gap plan；`opl-private-implementation-migration-inventory.md` 是 per-surface 明细，不替代 active plan。 |
 | `docs/public/product/runtime/delivery/source/policies/**` | 薄 support index | 只做目录职责和下一跳，不把核心事实复制成第二真相源。 |
-| `docs/specs/**` | active specs / support records / lifecycle map | 只按 `docs/specs/README.md` 与 `specs_lifecycle_map.md` 标注的 active subsection 阅读。 |
+| `docs/specs/**` | active specs / support records / lifecycle map | 只按 `docs/specs/README.md` 与 `specs_lifecycle_map.md` 标注的 active 或 support subsection 阅读。 |
 | `docs/references/**` | reference | north-star、OPL adoption、memory policy、governance checklist；不承担 current status。 |
 | `docs/history/**` | history / provenance | 保存旧 specs、旧 plans、provider proof、coverage ledger、OMX 和 tombstone；标题中的 `Current Truth` 只能按当时语境阅读。 |
 
 当前没有需要新增 docs 目录或把 history 文件恢复为 active/support owner 的证据。此前 active/status 入口携带的 proof-by-proof 明细已按 owner/gate/status 层压回 `docs/status.md` 与 active gap plan；dated coverage、retirement audit 和 proof 流水继续留在 history 或机器合同。
+
+History 文件不得因为 `current-program.json` 保留 `human_doc:*` 语义 id、文件名含 `current-truth`、或旧审计路径仍可达而恢复为 active/support owner。若仍有 current 规则，先抽取到核心五件套、active plan、support record、contract/schema/source 或对应薄入口，再保留原文件作为 provenance。
 
 ## 与 OPL 的分层
 
@@ -51,7 +53,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 | `docs/delivery/` | submission-ready package、export、delivery、manual portal boundary | 当前较薄；grant artifact/export authority 仍 MAG-owned。 |
 | `docs/source/` | funder/task/source intake、workspace canonical document、source truth consumption | 当前较薄；后续承接 workspace/source intake 和 funder-source 边界。 |
 | `docs/policies/` | 稳定治理规则、文档规则、repo-local operating discipline | 当前较薄；长期规则可从 invariants/decisions/governance checklist 抽取。 |
-| `docs/specs/` | active specs、support current-truth records、integration references | 只保留当前或仍支撑当前 subsection 的技术记录；纯历史 R/P/post-R5A/future-P5/provider-proof 记录已归档到 `docs/history/specs/`。 |
+| `docs/specs/` | active specs、support records、integration references | 只保留 active current specs、少量 support records 和 lifecycle map；纯历史 R/P/post-R5A/future-P5/provider-proof/hosted-handoff 记录归档到 `docs/history/specs/`。 |
 | `docs/references/` | north-star、OPL adoption、memory policy、governance checklist | 真实承载；不承担 active owner。 |
 | `docs/history/` | 完成计划、旧 specs、旧 provider/runtime/OMX/provenance | 真实承载；不承担 current truth。 |
 
@@ -59,7 +61,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 旧 `docs/plans/` 已物理退役，不再作为 active owner。完成计划留在 `docs/history/plans/`。如果历史计划仍含 current truth，先抽取内容进入 `active/product/runtime/delivery/source/policies/specs` 的当前 owner，再保留原文件作为 provenance。
 
-`docs/specs/` 是 current/support 技术记录层，不是旧接口兼容层。只有 README 和 `specs_lifecycle_map.md` 明确列为 active 的 specs 才能作为 current owner；其余留在本目录的 dated specs 只按 support/provenance subsection 阅读。纯历史 activation package、早期 P2/P3/P4 flow/verification tranche、future P5、runtime-first R/P tranche、post-R5A local-runtime closeout、post-R5A fail-closed hardening、provider proof 和 tombstone 已经移动到 `docs/history/specs/`，不得再被恢复为 active spec、default runtime owner、Gateway/local-manager 路线、flat CLI alias 或 compatibility test 的依据。
+`docs/specs/` 是 current/support 技术记录层，不是旧接口兼容层。只有 README 和 `specs_lifecycle_map.md` 明确列为 active 的 specs 才能作为 current owner；其余留在本目录的 dated specs 只按 support subsection 阅读。纯历史 activation package、早期 P2/P3/P4 flow/verification tranche、future P5、runtime-first R/P tranche、post-R5A local-runtime closeout、post-R5A fail-closed hardening、provider proof、hosted handoff、old route snapshot 和 tombstone 应位于 `docs/history/specs/`，不得再被恢复为 active spec、default runtime owner、Gateway/local-manager 路线、flat CLI alias 或 compatibility test 的依据。
 
 ## 内容级整合规则
 
@@ -81,12 +83,12 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 ## 当前生命周期决策
 
-- 核心五件套 `docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md` 与 `docs/decisions.md` 现在显式标注 `owner/purpose/state/machine boundary`，继续承担 current 人读 truth set。它们解释当前边界，但不成为机器接口；其中 `docs/status.md` 只保留当前角色、边界、入口、证据门和下一跳，不承载 dated machine-surface closeout、receipt ledger 流水或新增 proof 清单。
+- 核心五件套 `docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md` 与 `docs/decisions.md` 继续承担 current 人读 truth set。它们解释当前边界，但不成为机器接口；其中 `docs/status.md` 只保留当前角色、边界、入口、证据门和下一跳，不承载 dated closeout、receipt ledger 流水或新增 proof 清单。
+- `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 是唯一 active gap / plan owner；`docs/active/opl-private-implementation-migration-inventory.md` 是 per-surface inventory，不替代 active plan。
 - `docs/public/domain-positioning.md` 与 `docs/public/mvp-scope.md` 是 current public support；它们只补充公开定位和 MVP 范围。hosted / OPL consumption 旧证明只作历史上下文，外部 OPL/App/production caller 消费、direct/hosted parity 和 long-soak 仍归 active evidence gate。
 - `docs/references/integration/opl-family-contract-adoption.md` 是 OPL family contract adoption reference；它说明 MAG 如何暴露 descriptor/projection/receipt refs，不声明 production provider-hosted grant soak、App/workbench consumption 或 bridge exit 全部完成。
-- 原 `docs/specs/2026-04-06-*`、`2026-04-07-p2*`、`2026-04-07-p3a*`、`2026-04-08-p3*`、`2026-04-08-p4*`、`2026-04-08-p5*`、`2026-04-08-r*`、`2026-04-08-runtime-first-*`、`2026-04-09-*`、大部分 `2026-04-10-post-r5a-*`、`2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`、`2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`、`2026-04-11-hermes-backed-*`、`2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`、`2026-04-12-upstream-hermes-agent-fast-cutover-*`、`2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md`、`2026-04-12-hosted-caller-consumption-proof-current-truth.md`、`2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md` 与 `2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md` 已无 active owner 角色，物理移动到 `docs/history/specs/`。
-- package/export、formal-entry、authoring completion、AI-first quality、quality/autonomy/family grammar 和 current product-entry support specs 仍留在 `docs/specs/`，但只按 lifecycle map 标注的具体 subsection 阅读；它们不承担 public identity、runtime owner 或 production soak 结论。local runtime honest-stop 与旧 hosted/handoff 相关文件只从 `docs/history/specs/` 阅读。
-- `docs/product/`、`docs/runtime/`、`docs/delivery/`、`docs/source/`、`docs/policies/` 当前保持薄索引职责；不要为了填目录把核心五件套内容拆散成第二真相源。
+- `docs/specs/` 当前只保留 active specs、support records 和 lifecycle map；历史 P/R/post-R5A/provider proof/hosted handoff/old route snapshot 统一从 `docs/history/specs/` 阅读。`docs/specs/specs_lifecycle_map.md` 维护聚合生命周期，不再在本文件堆每个 dated tranche。
+- `docs/product/`、`docs/runtime/`、`docs/delivery/`、`docs/source/`、`docs/policies/` 保持薄索引职责；不要为了填目录把核心五件套内容拆散成第二真相源。
 - 旧 `tests/test_product_entry.py` 聚合入口、`domain_runtime_parts.patch_targets` patch bridge、Gateway/local-manager default path 与 legacy flat CLI shell alias 继续按 direct retirement posture 处理；文档层只保留 history/provenance，不新增兼容入口。
 
 ## 长清单治理

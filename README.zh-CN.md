@@ -29,6 +29,8 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 
 `Med Auto Grant` 正是围绕这些问题设计的。它面向已经明确的基金任务，把材料整理、正文生成、评审式批注、修订回合和待审包交付放在同一个工作区里，让申请书从草稿逐步推进到“可以拿给专家看的版本”。
 
+它不会把基金写作当成固定模板填空。一个本子可以围绕同一目标基金反复比较叙事方案、核对主张和证据、吸收评审式批注，再形成下一版更能拿给专家看的正文和待审包。
+
 <table>
   <tr>
     <td width="33%" valign="top">
@@ -67,6 +69,9 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 **正文与补件分层管理**<br/>
 门户提交、形式材料和客观补件作为单独待办管理；默认先保证正文科学上成立，再进入提交前补件。
 
+**给写作保留判断和修订空间**<br/>
+系统不是按固定顺序机械改稿，而是围绕同一基金任务反复生成方案、比较版本、定位硬伤、重写薄弱段落，并把修改过程和质量变化留在同一工作区里。
+
 ## 一句话快速启动
 
 你可以直接这样说：
@@ -94,16 +99,12 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 ## 当前边界
 
 - `Med Auto Grant` 是独立的医学基金领域智能体，不是 `OPL` 仓库里的内部模块。
-- 公开发布定位：`Foundry Agent / OPL-compatible package built on OPL Framework`。
-- 对外第一入口是单一 `Med Auto Grant` 技能；`Codex`、`OPL` 和其他通用智能体可以通过这个入口，或直接通过 `CLI` / `MedAutoGrantDomainEntry` 访问稳定能力面。
-- 仓库根层 OPL standard pack 是 OPL generated-interface 的来源；OPL 将该 pack 编译为 generated CLI / MCP / Skill / product-entry / tool descriptors，本地 CLI、`MedAutoGrantDomainEntry`、产品入口/投影命令与 schema-backed 本地脚本/合同仍是这些 descriptor 背后的 MAG-owned action target 和 authority function。
-- OPL/Temporal hosted autonomous runtime 是标准 OPL Agent 任务启动后的默认运行驻留；MAG 不实现自己的 daemon、scheduler、attempt loop 或 attempt ledger，`Codex CLI` 继续是默认具体 stage executor。
-- `product entry/product status/direct-entry/user-loop` 保持为技能下的内部命令合同与直接产品投影，不写成对外第一主语。
-- 统一发布形态由 app skill catalog、MAG-owned stage control plane、hosted-contract-bundle 交接导出和本地 `submission-ready` 交付导出共同组成。
+- 对外第一入口是单一 `Med Auto Grant` 技能；`Codex`、`OPL` 和其他通用智能体可以通过这个入口访问稳定能力面。
+- MAG 负责基金写作本身：基金任务理解、正文结构、科学问题、证据组织、写作修订和可待审交付包。One Person Lab 负责托管运行、进度展示、恢复重试和跨 Agent 的入口体验。
+- 它可以作为 One Person Lab 里的基金工坊使用，也可以由 Codex 或其他 Agent 直接调用稳定能力入口。
 - MAG 当前任务边界锁定在“指定基金任务正文写作”。
 - “科学完成”交付面是可待审包；“形式/客观补件完成”是并行分层，不与正文语义混写。
 - 形式/客观补件默认按 `TODO + 显式唤醒` 处理，除非直接破坏正文科学成立，否则不升级为正文阻塞项。
-- `hosted-contract-bundle` 与 `runtime_control` 仅保留集成/参考面，用于 machine-readable handoff，不作为默认公开入口。
 - 人工 gate 仅限同一基金任务内的作者决策，不写成跨基金重选。
 - 外部基金官网提交由人工监督完成。
 
@@ -113,6 +114,8 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 - `OPL` 是 stage-led 的完整智能体运行框架，MAG 可以作为外部领域依赖接入。
 - 在这套框架中，Agent executor 是最小执行单位；`Codex CLI` 是当前第一公民 executor。Hermes-Agent 等其他 executor 是显式 opt-in adapter，必须产出可审计回执，不默认承诺行为或质量效果与 Codex CLI 等价。
 - OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
+- MAG stage pack 给 executor 提供目标、上下文、authority boundary、skill、knowledge refs、tool affordance 和 quality gate；route 只管理 owner 与恢复边界，不预先编排 grant authoring 的认知策略。
+- MAG 工具目录是 affordance catalog，不是 workflow script：它声明工具能做什么、能写哪里、凭据边界在哪里、不能签发什么权威；executor 在 attempt 内自主决定先读什么、是否并行、调用或跳过哪些工具、何时请求人工 gate 或 reviewer。
 - MAG 继续独立持有 grant truth、fundability verdict、authoring quality verdict、route owner 与 submission/export authority。
 - Domain memory 与 owner/lifecycle receipt apply 只允许投影 consumed memory refs、writeback proposal、MAG accept/reject decision、owner/no-regression receipt refs、lifecycle receipt refs、runtime receipt evidence、operator receipt projection 与 repo-source layout audit；不把 fundability verdict、真实 grant artifact、memory body、export verdict 或 receipt instance 写进 repo source。
 - 旧 `OPL Runtime Manager`、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留；Temporal 作为 OPL production substrate 的必需性由 OPL Framework 持有，并且是任务启动后的默认托管自治 runtime substrate，但不由 MAG 改写为 grant-domain runtime truth。

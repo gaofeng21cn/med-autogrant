@@ -29,6 +29,8 @@ Once AI moves from "polish this paragraph" to "help me finish this proposal," se
 
 `Med Auto Grant` is built around those questions. For a specified funding task, it keeps material organization, proposal drafting, reviewer-style critique, revision rounds, and review-package delivery inside one workspace so a draft can move toward a version worth showing to experts.
 
+It does not treat grant writing as fixed-template filling. A proposal can keep comparing narrative options, checking claims against evidence, absorbing reviewer-style critique, and producing the next stronger body and review package under the same funding call.
+
 <table>
   <tr>
     <td width="33%" valign="top">
@@ -67,6 +69,9 @@ The workspace keeps drafts, comments, version changes, quality scorecards, and e
 **Scientific Writing And Portal Supplements Stay Separate**<br/>
 Portal submission, formal forms, and objective supplements are tracked as their own follow-up work. The default focus is to make the scientific body reviewable first.
 
+**Room For Judgment And Revision**<br/>
+The system does not mechanically revise in a fixed order. It can generate options, compare versions, locate hard weaknesses, rewrite weak sections, and keep the change history plus quality movement in one workspace.
+
 ## One-Sentence Quick Start
 
 You can start with prompts like:
@@ -94,16 +99,12 @@ You can start with prompts like:
 ## Current Boundary
 
 - `Med Auto Grant` is an independent medical grant domain agent, not an internal module inside the `OPL` workspace.
-- Public package role: `Foundry Agent / OPL-compatible package built on OPL Framework`.
-- Its first public surface is the single Med Auto Grant app skill; `Codex`, `OPL`, and other general agents can reach the stable callable surfaces through that skill or directly through `CLI` / `MedAutoGrantDomainEntry`.
-- The repo-root OPL standard pack is the generated-interface source for OPL. OPL compiles that pack into the generated CLI / MCP / Skill / product-entry / tool descriptors. The local CLI, `MedAutoGrantDomainEntry`, product-entry/projection commands, and schema-backed local scripts/contracts are strict migration inputs or grant-domain handler targets until OPL generated/default callers take over; they are not permanent MAG-owned generic wrappers. Long-term retained code is limited to grant authority functions, owner receipt / typed blocker production, grant-domain handler targets, and necessary grant-native helpers.
-- OPL/Temporal hosted autonomous runtime is the default post-start runtime posture for standard OPL Agent operation. MAG does not implement its own daemon, scheduler, attempt loop, or attempt ledger; `Codex CLI` remains the default concrete stage executor.
-- `product entry/product status/direct-entry/user-loop` stay as internal command contracts and direct-product projections under the app skill, not as the public first subject.
-- The unified release shape is the app skill catalog plus MAG-owned stage control plane, hosted-contract-bundle handoff export, and local `submission-ready` delivery export.
+- Its first public surface is the single Med Auto Grant app skill; `Codex`, `OPL`, and other general agents can reach stable capabilities through that skill.
+- MAG owns the grant-writing work itself: funding-call understanding, proposal structure, scientific questions, evidence organization, drafting, revision, and review-ready delivery packages. One Person Lab handles hosted runtime, progress display, recovery/retry, and the cross-agent product entry.
+- It can be used as the Grant Foundry inside One Person Lab, and it can also be called directly by Codex or another agent through stable capability entries.
 - MAG task scope is locked to body authoring for a specified funding call.
 - Scientific completion is delivered as a review-ready package; formal/objective supplements are tracked separately.
 - Formal/objective supplements default to `TODO + explicit wakeup` and do not block body authoring unless they directly break scientific validity.
-- `hosted-contract-bundle` and `runtime_control` stay as integration/reference surfaces for machine-readable handoff, not as the primary public entry.
 - Human gate decisions stay inside the same funding-call task and are author decisions, not cross-funder reselection.
 - External funding portal submission stays under human supervision.
 
@@ -113,6 +114,8 @@ You can start with prompts like:
 - `OPL` is the stage-led agent runtime framework that can host MAG as an external domain dependency.
 - Within that framework, an Agent executor is the minimum execution unit. `Codex CLI` is the current first-class executor; Hermes-Agent and similar executors are explicit opt-in adapters that must produce auditable receipts and are not assumed to match Codex CLI behavior or quality.
 - OPL can schedule stages, wakeups, handoffs, receipts, retries, and projections, while MAG keeps the grant stage pack, prompts, skills, fundability/authoring quality gates, authoring truth, and submission-ready export authority.
+- A MAG stage pack gives the executor a goal, context, authority boundary, skills, knowledge refs, tool affordances, and quality gate. The route manages owner and recovery boundaries; it does not pre-script the grant-authoring cognitive strategy.
+- MAG's tool catalog is an affordance catalog, not a workflow script: it declares what a tool can do, where it may write, where credentials are bounded, and what authority it cannot sign. The executor decides during the attempt what to read first, whether to run in parallel, which tools to use or skip, and when to ask for a human gate or reviewer.
 - MAG remains the owner for grant truth, fundability verdicts, authoring quality verdicts, route ownership, and submission/export authority.
 - Domain memory and owner/lifecycle receipt apply are limited to consumed memory refs, writeback proposals, MAG accept/reject decisions, owner/no-regression receipt refs, lifecycle receipt refs, runtime receipt evidence, operator receipt projections, and repo-source layout audit. They do not write fundability verdicts, real grant artifacts, memory bodies, export verdicts, or receipt instances into repo source.
 - Historical `OPL Runtime Manager`, Hermes-first, gateway, and local-host runtime wording is provenance or an implementation-provider detail. Temporal's required OPL production-substrate role is owned by OPL Framework and is the default hosted autonomous runtime substrate after task start; it does not become MAG grant-domain runtime truth. MAG remains the grant-truth and authoring-contract owner.

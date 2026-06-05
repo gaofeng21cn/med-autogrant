@@ -33,38 +33,10 @@ Machine boundary: 本文是人读历史 specs 索引。历史 specs 只保存形
 Active specs 继续列在 [Specs 索引](../../specs/README.md)。
 若 dated spec 与核心文档或 `current-program.json` 冲突，除非它被明确列为 active boundary record，否则按 provenance 处理。
 
-已物理归档的历史 specs 包括：
+本页不再维护逐文件长清单。需要找具体历史文件时，按文件名前缀或主题运行：
 
-- [Med Auto Grant top-level design](./2026-04-06-med-auto-grant-top-level-design.md)
-- [Med Auto Grant mainline and OMX bridge](./2026-04-06-med-autogrant-mainline-and-omx-bridge.md)
-- [NSFC main flow and critique loop](./2026-04-06-nsfc-main-flow-and-critique-loop.md)
-- [Object model schema v1](./2026-04-06-object-model-schema-v1.md)
-- [P2.A intake-direction-question mainline provenance](./2026-04-07-p2a-intake-direction-question-mainline-current-truth.md)
-- [P2.B argument-fit-outline mainline provenance](./2026-04-07-p2b-argument-fit-outline-mainline-current-truth.md)
-- [P2.C draft-critique-revision skeleton provenance](./2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md)
-- [P3.A mentor verdict contract freeze provenance](./2026-04-07-p3a-mentor-verdict-contract-freeze-current-truth.md)
-- [P3.B revision transition and re-review hardening provenance](./2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md)
-- [P3.C forced rollback and presubmission gate provenance](./2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md)
-- [P4.A verification gate surface provenance](./2026-04-08-p4a-verification-gate-surface-current-truth.md)
-- [P4.B verification OS and checkpoint surface provenance](./2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md)
-- [Runtime-first productization program](./2026-04-08-runtime-first-productization-program.md)
-- [Runtime-first R1 to R5 boundary map](./2026-04-08-runtime-first-r1-to-r5-boundary-map.md)
-- [Post-R5A local runtime walkthrough and output consistency](./2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md)
-- [Post-R5A local runtime upper-bound honest stop](./2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md)
-- [OPL aligned ideal target and phase map historical snapshot](./2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md)
-- [Hermes-backed runtime capability migration map](./2026-04-11-hermes-backed-runtime-capability-migration-map-current-truth.md)
-- [Hermes-backed runtime substrate program](./2026-04-11-hermes-backed-runtime-substrate-program-current-truth.md)
-- [Upstream Hermes-Agent truth reset](./2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md)
-- [Upstream Hermes-Agent fast cutover board](./2026-04-12-upstream-hermes-agent-fast-cutover-board.md)
-- [Upstream Hermes-Agent fast cutover current truth](./2026-04-12-upstream-hermes-agent-fast-cutover-current-truth.md)
-- [Author-side executor routing snapshot](./2026-04-12-author-side-executor-routing-contract-current-truth.md)
-- [Critique pending handoff snapshot](./2026-04-12-critique-pending-handoff-contract-current-truth.md)
-- [Pending authoring route handoff matrix snapshot](./2026-04-12-pending-authoring-route-handoff-matrix-current-truth.md)
-- [Hosted caller consumption proof provenance](./2026-04-12-hosted-caller-consumption-proof-current-truth.md)
-- [Hosted contract bundle entry and route catalog provenance](./2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md)
-- [Lightweight product-entry and OPL handoff provenance](./2026-04-12-lightweight-product-entry-and-opl-handoff-current-truth.md)
-- [P4.A Direct grant cockpit and progress projection provenance](./2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md)
-- [P4.B Direct grant entry composition provenance](./2026-04-12-p4b-direct-grant-entry-composition-current-truth.md)
-- [P4.C Mainline status and grant user loop provenance](./2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md)
-- [P4.E Schema-backed product status and manifest provenance](./2026-04-13-p4e-schema-backed-product-status-and-manifest-current-truth.md)
-- [P4.F Local submission-ready package provenance](./2026-04-13-p4f-local-submission-ready-package-current-truth.md)
+```bash
+find docs/history/specs -maxdepth 1 -type f | sort
+```
+
+需要判断生命周期时，回到 [Specs 生命周期地图](../../specs/specs_lifecycle_map.md)。需要把历史规则恢复为 current owner 时，先抽取到核心五件套、active gap plan、support record、contract/schema/source 或对应薄入口；不要在历史文件中追加当前状态。

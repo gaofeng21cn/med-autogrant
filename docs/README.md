@@ -23,6 +23,12 @@ Machine boundary: 本文是人读索引。机器真相继续归 contracts、sche
 | --- | --- |
 | 核心五件套 | 当前角色、架构边界、不变量、决策和状态摘要。 |
 | `docs/active/` | 当前 gap、当前计划、证据门和 private implementation inventory。 |
+| `docs/public/` | 仓库首页之后的公开补充入口。 |
+| `docs/product/` | App skill / product-entry / user-loop / operator support 的人读索引。 |
+| `docs/runtime/` | OPL/Temporal runtime boundary、domain-handler/projection/receipt 支撑索引。 |
+| `docs/delivery/` | package/export/submission-ready delivery 支撑索引。 |
+| `docs/source/` | workspace/source intake 与 source refs 支撑索引。 |
+| `docs/policies/` | 稳定治理规则入口。 |
 | `docs/specs/` | active spec 与 support current-truth subsection；不能按 dated 文件名直接推断当前状态。 |
 | `docs/references/` | north-star、OPL adoption、memory policy 和治理 checklist。 |
 | `docs/history/` | 旧路线、旧 provider/runtime proof、已完成计划、coverage ledger 和 tombstone provenance。 |
@@ -41,28 +47,17 @@ MAG 的 repo-source layout 按标准 domain agent 职责读取：`agent/` 持有
 
 MAG repo source 只保存 locator、index、schema、receipt ref、restore/retention policy 和 no-forbidden-write 证据。grant truth、fundability/quality/export verdict、package authority、grant strategy memory body accept/reject 与 owner receipt 仍归 MAG owner chain；OPL 只上收通用 workspace/file lifecycle primitive、scheduler/runner/session/workbench shell 和 projection。
 
-## 当前技术图景
+## 当前技术入口摘要
 
-- `Med Auto Grant` 是独立的医学基金 domain agent，对外第一主语是单一 `Med Auto Grant` app skill；其下稳定 capability surface 由 `CLI`、`MedAutoGrantDomainEntry`、本地脚本与 schema-backed contract 组成。
-- formal-entry matrix 继续固定为 `CLI`、`MCP` 与 `controller`。
-- OPL 是 Temporal-backed stage-led、以 Agent executor 为最小执行单位的完整智能体运行框架。任务启动后的默认运行驻留由 OPL/Temporal 承担；除非活跃合同显式选择非默认 executor/backend，`Codex CLI` 是 stage attempt 的默认执行单元。
-- OPL 可以消费 MAG 的 runtime_control、runtime_continuity、workspace projection、artifact locator 与 explicit wakeup/TODO queue，用于调度、唤醒、交接、回执、重试和投影；它不持有 MAG grant truth、authoring execution、fundability judgment、quality verdict 或 submission-ready export authority。
-- 旧 `OPL Runtime Manager`、上游 Hermes 作为默认 provider 的旧口径、gateway 与本地 host runtime 说明只作为历史追溯或 provider-specific 迁移记录保留；Temporal-backed provider 是当前 OPL production online runtime 的必需 substrate，默认 MAG/OPL 边界由核心文档和 active specs 持有。
-- [Docs portfolio consolidation boundary](./docs_portfolio_consolidation.md) 是当前文档生命周期 owner，记录逐分区当前 owner、已吸收内容和历史归位理由；旧 OPL Runtime Manager、Hermes/upstream-provider proof 与 lightweight handoff 说明已归入 history，当前 handoff / product-entry / OPL generated boundary 回到核心文档、contracts/source 和 specs lifecycle map。
-- 历史 program 记录与迁移说明统一从 `docs/history/` 进入；较早 dated specs 可以继续留在 `docs/specs/` 作为 provenance，明确退役的 provider-proof specs 进入 `docs/history/specs/`。机器可读面通过语义化 `human_doc:*` 标识引用它们，而不是把旧路径钉成稳定接口。
-- product status、user-loop、projection 与本地 `submission-ready` package 已作为 app skill 下的 refs-only command contract、OPL/App generated shell target 或 direct-product projection 落地；当前 repo-local active/default handler target 是 `domain-handler export|dispatch`。当前任务边界已明确区分“科学待审就绪”和更严格的本地导出 gate，外部基金官网 portal submission 仍是单独的人类监督步骤；未来 hosted 产品扩展只有在确属活跃计划时才放入 `docs/active/`。
-- `OPL` family routing 与 `Codex` skill activation 继续消费同一套 MAG capability surface；MAG 负责 grant-domain truth、direct grant entry 与 execution routing。
-- MAG 当前任务边界锁定在“指定基金任务正文 authoring”；“科学完成”与“形式/客观补件完成”是显式分层。
-- 科学层交付的是可待审包，用于同任务内作者/评审决策。
-- 形式/客观补件默认按 `TODO + 显式唤醒` 管理；除非直接破坏正文科学成立，否则不作为正文 authoring blocker。
-- 人工 gate 只作用于同一基金任务内的作者决策，不扩展成跨 funder 重选。
-- 当前 controller-owned、read-only 的 projection 继续包括 `workspace progress`、`workspace cockpit`、`product direct-entry` 与 `product user-loop` target，并在作者侧主线之上保持 schema-backed refs-only 边界。
-- MAG 现在通过 `controlled_domain_memory_apply_proof`、`owner_receipt_contract` 与 `lifecycle_guarded_apply_proof` 暴露 controlled grant-stage domain memory 与 owner/lifecycle receipt apply proof：consumed grant strategy memory refs、writeback proposal、MAG accept/reject decision、owner/no-regression receipt refs、lifecycle receipt refs、runtime receipt evidence、operator receipt projection 与 repo-source layout audit 都可验证，但不把 memory body、grant artifact、export verdict 或 receipt instance 存入 repo source。
-- 当前 grouped shell 保留 `domain-handler export|dispatch`、authority、pass 与 package command target；`product build-entry`、`product manifest` 与 `product status` 作为 OPL/App generated refs target 或 migration input 读取，不能写回 repo-local public/default CLI。
-- 当前轻量 grant `product entry` shell 是 app skill 背后的内部产品入口 shell 与 domain/API catalog builder；未来 hosted 产品形态在活跃阶段放入 `docs/active/`，完成后归入 history。
-- 质量治理已经通过 `workspace quality-scorecard` 与 `workspace quality-diff` 收成 schema-backed surface。
-- 长时间自治已经通过 `pass autonomy-controller` 暴露为正式入口，并输出结构化 blocker 与 evidence-gap report。
-- 通用 grant grammar 与 funder-specific family profile 规则继续在 `grant_family_registry.py` 分层；跨 funder 重选不进入默认正文 authoring gate 语义。
+本页只做 reader routing，不承载当前状态 ledger。当前技术真相按下面入口读取：
+
+- `Med Auto Grant` 的角色、默认运行 owner、任务边界和证据门：读 [当前状态](./status.md)、[架构](./architecture.md)、[不变量](./invariants.md) 和 [`current-program.json`](../contracts/runtime-program/current-program.json)。
+- 当前唯一 active gap / plan：读 [MAG 理想目标态差距与完善计划](./active/mag-ideal-state-cross-repo-gap-plan.md)。
+- per-surface private implementation residue：读 [MAG 私有实现与 OPL 迁移台账](./active/opl-private-implementation-migration-inventory.md)。
+- active/support specs 的可读 subsection：读 [Specs 索引](./specs/README.md) 与 [Specs lifecycle map](./specs/specs_lifecycle_map.md)。
+- 旧 `OPL Runtime Manager`、Hermes-first、Gateway/federation、local-runtime、hosted-caller proof、lightweight handoff 和 dated completion claim：只从 [历史归档](./history/README.md) 与 [历史 specs](./history/specs/README.md) 进入。
+
+若本文、历史 specs 或 `current-program.json` 中的 `human_doc:*` 语义引用看起来仍指向旧 dated 文件，阅读时仍以核心五件套、active gap plan、contracts/schema/source 和 specs lifecycle map 的当前 owner 标注为准。语义引用不把整份旧文件提升成 current owner。
 
 ## 技术工作集
 
@@ -103,10 +98,7 @@ public-doc allowlist 保持稀疏：
 - [合同说明](../contracts/README.md)
 - [Grant Strategy Memory Policy](./references/grant_strategy_memory_policy.md)
 
-当前 grant product-entry shell 继续作为 app skill 背后的 domain/API catalog builder，也是稳定可调用面的一部分；当前 schema-backed 冻结也会把 `hosted contract bundle`、`domain_entry_contract`、`supported_commands` 与 `command_contracts` 作为集成/参考面暴露给 hosted caller / 外部 caller 使用。
-fundability、specific aims、reviewer grammar 和 template strategy 这类经验按自然语言 memory 管理；`domain_memory_descriptor_locator`、`controlled_domain_memory_apply_proof`、`owner_receipt_contract` 与 `lifecycle_guarded_apply_proof` 现在只投影 writeback proposal / accept-reject / owner / no-regression / lifecycle runtime receipt evidence refs 和 repo-source layout audit，不把真实 memory entry、grant artifact 或 export verdict 写进 repo。`workspace quality-scorecard`、`grant-quality-closure-dossier`、autonomy controller report 和 submission-ready package 继续保持结构化权威。
-质量治理与自治 controller schema 已进入 [`schema-index.json`](../schemas/v1/schema-index.json) 和 current-program truth surface。
-完整 repo-tracked truth surface 清单以 [`current-program.json`](../contracts/runtime-program/current-program.json) 的 `repo_tracked_truth_surfaces` 为准；contract/schema/source surface 保持 repo path，叙述文档使用语义化 `human_doc:*` 标识。Specs 索引与 specs lifecycle map 共同区分 active boundary records、support records 和 historical provenance records；已移动到 `docs/history/specs/` 的 provider proof、local-runtime closeout 和 fail-closed tranche 不再参与 current/support specs 阅读路径。
+完整 repo-tracked truth surface 清单以 [`current-program.json`](../contracts/runtime-program/current-program.json) 的 `repo_tracked_truth_surfaces` 为准；contract/schema/source surface 保持 repo path，叙述文档使用语义化 `human_doc:*` 标识。Specs 索引与 specs lifecycle map 共同区分 active boundary records、support records 和 historical provenance records；已移动到 `docs/history/specs/` 的 provider proof、local-runtime closeout、hosted handoff 和 fail-closed tranche 不参与 current/support specs 阅读路径。
 
 ## 追溯记录
 
