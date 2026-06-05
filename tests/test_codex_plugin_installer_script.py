@@ -41,7 +41,10 @@ def test_codex_plugin_installer_script_keeps_codex_paths_repo_local(tmp_path: Pa
     assert not (home_dir / "plugins" / "mag").exists()
     assert not (home_dir / ".agents" / "skills" / "mag").exists()
     assert not (home_dir / ".agents" / "plugins" / "marketplace.json").exists()
-    assert (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").exists()
+    assert not (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").exists()
+    assert payload["plugin_manifest_path"] == str(REPO_ROOT / "plugins" / "mag" / ".codex-plugin" / "plugin.json")
+    assert payload["repo_local_marketplace_written"] == "false"
+    assert payload["codex_marketplace_owner"] == "opl_owned_wrapper"
 
 
 def test_codex_plugin_installer_writes_clean_runner_tool_wrappers_without_editable_install(tmp_path: Path) -> None:
@@ -124,4 +127,7 @@ def test_codex_plugin_installer_script_skip_tools_does_not_require_shared_runtim
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
     assert payload["plugin_root"] == str(repo_copy / "plugins" / "mag")
-    assert (repo_copy / ".agents" / "plugins" / "marketplace.json").exists()
+    assert payload["plugin_manifest_path"] == str(repo_copy / "plugins" / "mag" / ".codex-plugin" / "plugin.json")
+    assert payload["repo_local_marketplace_written"] == "false"
+    assert payload["codex_marketplace_owner"] == "opl_owned_wrapper"
+    assert not (repo_copy / ".agents" / "plugins" / "marketplace.json").exists()

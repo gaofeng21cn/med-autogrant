@@ -20,6 +20,7 @@ TRACKED_PATH_FORBIDDEN_EXACT_NAMES = {
     ".agent-contract-baseline.json",
 }
 TRACKED_PATH_FORBIDDEN_PARTS = {
+    ".agents",
     ".codex",
     ".omx",
     ".runtime-program",
@@ -29,7 +30,6 @@ TRACKED_PATH_FORBIDDEN_PARTS = {
     "out",
     "runtime-state",
 }
-TRACKED_PLUGIN_ENTRYPOINT = ".agents/plugins/marketplace.json"
 
 
 def _tracked_code_files() -> list[Path]:
@@ -122,13 +122,11 @@ class RepositoryHygieneTest(unittest.TestCase):
 
         self.assertEqual(forbidden_paths, [])
 
-    def test_repo_tracked_plugin_entrypoint_is_limited_to_marketplace_source(self) -> None:
+    def test_repo_does_not_track_repo_local_agent_state(self) -> None:
         agent_paths = [path for path in _tracked_files() if path.startswith(".agents/")]
 
-        self.assertEqual(agent_paths, [TRACKED_PLUGIN_ENTRYPOINT])
-        marketplace = json.loads((REPO_ROOT / TRACKED_PLUGIN_ENTRYPOINT).read_text(encoding="utf-8"))
-        self.assertEqual(marketplace["plugins"][0]["source"]["source"], "local")
-        self.assertEqual(marketplace["plugins"][0]["source"]["path"], "./plugins/mag")
+        self.assertEqual(agent_paths, [])
+        self.assertTrue((REPO_ROOT / "plugins" / "mag" / ".codex-plugin" / "plugin.json").is_file())
 
     def test_pyproject_pins_opl_harness_shared_to_a_full_commit(self) -> None:
         pyproject = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))

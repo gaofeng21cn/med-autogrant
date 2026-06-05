@@ -91,10 +91,10 @@ main() {
   install_codex_paths
 
   if [[ "${SKIP_TOOLS}" -eq 1 ]]; then
-    printf "refreshed MedAutoGrant repo-local Codex plugin metadata (skip-tools)\n" >&2
+    printf "checked MedAutoGrant tracked Codex plugin source and retired repo-local marketplace metadata (skip-tools)\n" >&2
   else
-    printf "installed MedAutoGrant CLI tools into %s and refreshed repo-local Codex plugin metadata\n" "${INSTALL_HOME}" >&2
-    printf "restart Codex in this repository so repo-local skill discovery and plugin metadata are reloaded\n" >&2
+    printf "installed MedAutoGrant CLI tools into %s and checked tracked Codex plugin source\n" "${INSTALL_HOME}" >&2
+    printf "Codex marketplace registration is owned by the OPL wrapper, not this domain repo\n" >&2
   fi
 }
 

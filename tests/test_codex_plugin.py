@@ -39,16 +39,8 @@ def test_codex_plugin_manifest_tracks_repo_metadata_and_skill_layout() -> None:
     assert PLUGIN_SKILL_UI_METADATA_PATH.is_file()
 
 
-def test_codex_plugin_marketplace_uses_full_display_name() -> None:
-    marketplace = json.loads(MARKETPLACE_PATH.read_text(encoding="utf-8"))
-    plugin_entry = next(item for item in marketplace["plugins"] if item["name"] == "mag")
-
-    assert marketplace["interface"]["displayName"] == "Med Auto Grant Local"
-    assert plugin_entry["source"] == {
-        "source": "local",
-        "path": "./plugins/mag",
-    }
-    assert plugin_entry["category"] == "Research"
+def test_repo_does_not_track_repo_local_codex_marketplace() -> None:
+    assert not MARKETPLACE_PATH.exists()
 
 
 def test_mag_skill_metadata_declares_app_skill_and_contract_surfaces() -> None:
