@@ -117,10 +117,12 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 - OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
 - MAG stage pack 给 executor 提供目标、上下文、authority boundary、skill、knowledge refs、tool affordance 和 quality gate；route 只管理 owner 与恢复边界，不预先编排 grant authoring 的认知策略。
 - candidate generation、reflection、ranking、revision 和 meta-review 只作为 stage 内执行策略或证据 refs；它们不是 MAG-owned scheduler、runner、session store、workbench wrapper、runtime journal cadence 或硬编码 workflow。
-- `contracts/stage_run_canary_evidence.json` 是 repo-local controlled StageRun canary evidence fixture，记录 candidate grant direction/section variant、reflection/review、ranking/selection、revision lineage、meta-review learning、independent fundability/review gate 与 owner receipt closeout 的 refs；scope 固定为 `controlled_fixture_not_live_domain_progress`。
+- `contracts/stage_run_canary_evidence.json` 是 repo-local controlled StageRun canary evidence fixture，记录 candidate grant direction/section variant、reflection/review、ranking/selection、revision lineage、meta-review learning、independent fundability/review gate、owner receipt closeout、scoped operator summary 与 explicit overclaim boundary 的 refs；scope 固定为 `controlled_fixture_not_live_domain_progress`。
+- controlled canary operator summary 只报告 fixture refs 与 current-owner-delta 形态；不声明 live domain progress、stage complete、grant ready、fundability ready、authoring quality ready、artifact/package freshness、submission ready、production ready 或 external submission authorization。
 - MAG 工具目录是 affordance catalog，不是 workflow script：它声明工具能做什么、能写哪里、凭据边界在哪里、不能签发什么权威；executor 在 attempt 内自主决定先读什么、是否并行、调用或跳过哪些工具、何时请求人工 gate 或 reviewer。
 - MAG 继续独立持有 grant truth、fundability verdict、authoring quality verdict、route owner 与 submission/export authority。
 - Domain memory 与 owner/lifecycle receipt apply 只允许投影 consumed memory refs、writeback proposal、MAG accept/reject decision、owner/no-regression receipt refs、lifecycle receipt refs、runtime receipt evidence、operator receipt projection 与 repo-source layout audit；不把 fundability verdict、真实 grant artifact、memory body、export verdict 或 receipt instance 写进 repo source。
+- `contracts/stage_run_kernel_profile.json` 携带 `legacy_runtime_residue_guard`，用于守住旧本地 runtime surface 的边界。这些 residue 只能作为 history、diagnostic、provenance、refs-only adapter 或 tombstone 读取；canary fixture 或 conformance pass 不能关闭 residue retirement，也不能恢复 MAG-owned scheduler、attempt ledger、session store、workbench、generic runner 或 workflow wrapper。
 - 旧 `OPL Runtime Manager`、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留；Temporal 作为 OPL production substrate 的必需性由 OPL Framework 持有，并且是任务启动后的默认托管自治 runtime substrate，但不由 MAG 改写为 grant-domain runtime truth。
 
 </details>

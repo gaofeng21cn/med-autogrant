@@ -134,6 +134,55 @@
       "tombstone_or_provenance_ref"
     ]
   },
+  "legacy_runtime_residue_guard": {
+    "surface_id": "legacy_runtime_residue",
+    "state": "active_guard",
+    "default_runtime_owner": "one-person-lab",
+    "residue_role": "history_or_tombstone_only",
+    "guard_scope": "stage_run_profile_and_controlled_canary_follow_through",
+    "source_refs": [
+      "contracts/stage_run_kernel_profile.json#/domain_thinning_policy",
+      "contracts/functional_privatization_audit.json#/physical_source_morphology/surface_classifications/legacy_runtime_residue",
+      "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md"
+    ],
+    "allowed_remaining_roles": [
+      "migration_input",
+      "diagnostic",
+      "provenance",
+      "refs_only_adapter",
+      "tombstone"
+    ],
+    "forbidden_default_active_paths": [
+      "mag_owned_durable_scheduler",
+      "mag_owned_attempt_ledger",
+      "mag_owned_session_store",
+      "mag_owned_status_workbench",
+      "mag_owned_generic_runner",
+      "mag_owned_workflow_wrapper"
+    ],
+    "required_negative_guards": {
+      "mag_owned_durable_scheduler": false,
+      "mag_owned_attempt_ledger": false,
+      "mag_owned_session_store": false,
+      "mag_owned_status_workbench": false,
+      "mag_owned_generic_runner": false,
+      "mag_owned_workflow_wrapper": false,
+      "runtime_journal_cadence_default": false,
+      "controlled_canary_can_close_residue_retirement": false,
+      "conformance_pass_can_close_residue_retirement": false
+    },
+    "closeout_gate": {
+      "physical_delete_requires": [
+        "replacement_parity",
+        "no_active_caller",
+        "mag_owner_receipt_or_typed_blocker",
+        "no_forbidden_write",
+        "tombstone_or_provenance_ref"
+      ],
+      "canary_fixture_can_close_residue_retirement": false,
+      "conformance_pass_can_close_residue_retirement": false
+    }
+  },
   "stage_internal_strategy_policy": {
     "strategy_refs_are_advisory": true,
     "strategies_are_stage_internal_execution_choices": true,

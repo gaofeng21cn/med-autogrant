@@ -139,6 +139,62 @@ def test_stage_run_controlled_canary_evidence_shape_is_body_free() -> None:
     assert all(canary["role_artifact_refs"].values())
 
 
+def test_stage_run_controlled_canary_operator_summary_stays_scoped() -> None:
+    canary = _read_canary()
+
+    summary = canary["operator_summary"]
+    assert summary["surface_kind"] == "stage_run_controlled_canary_operator_summary"
+    assert summary["status"] == "fixture_closeout_ref_recorded"
+    assert summary["read_root"] == "stage_run_current_owner_delta"
+    assert summary["progress_delta_classification"] == (
+        "controlled_fixture_owner_receipt_ref"
+    )
+    assert summary["stage_run_ref"] == canary["stage_run_ref"]
+    assert summary["stage_manifest_ref"] == canary["stage_manifest_ref"]
+    assert summary["current_owner_delta_ref"] == canary["current_pointer_ref"]
+    assert summary["closeout_ref"] == canary["closeout"]["owner_receipt_ref"]
+    assert summary["accepted_claims"] == [
+        "controlled_fixture_shape_declared",
+        "strategy_trace_refs_present",
+        "role_artifact_refs_present",
+        "owner_receipt_ref_present",
+    ]
+    assert summary["operator_action"] == "audit_fixture_boundary_only"
+
+
+def test_stage_run_controlled_canary_overclaim_boundary_is_explicit() -> None:
+    canary = _read_canary()
+
+    overclaim = canary["overclaim_boundary"]
+    assert overclaim["accepted_evidence_scope"] == canary["evidence_scope"]
+    for field in [
+        "can_claim_live_domain_progress",
+        "can_claim_stage_complete",
+        "can_claim_grant_ready",
+        "can_claim_fundability_ready",
+        "can_claim_authoring_quality_ready",
+        "can_claim_artifact_ready",
+        "can_claim_package_fresh",
+        "can_claim_submission_ready",
+        "can_claim_production_ready",
+        "can_authorize_external_submission",
+    ]:
+        assert overclaim[field] is False
+
+    assert overclaim["forbidden_claims"] == [
+        "live_domain_progress",
+        "stage_complete",
+        "grant_ready",
+        "fundability_ready",
+        "authoring_quality_ready",
+        "artifact_ready",
+        "package_fresh",
+        "submission_ready",
+        "production_ready",
+        "external_submission_authorized",
+    ]
+
+
 def test_stage_run_controlled_canary_closeout_and_authority_are_fail_closed() -> None:
     canary = _read_canary()
 
@@ -165,3 +221,28 @@ def test_stage_run_controlled_canary_closeout_and_authority_are_fail_closed() ->
         "opl_can_create_typed_blocker": False,
         "opl_can_authorize_quality_or_export": False,
     }
+
+
+def test_stage_run_profile_guards_legacy_runtime_residue() -> None:
+    profile = _read_profile()
+
+    thinning = profile["domain_thinning_policy"]
+    guard = profile["legacy_runtime_residue_guard"]
+    assert guard["surface_id"] == "legacy_runtime_residue"
+    assert guard["state"] == "active_guard"
+    assert guard["default_runtime_owner"] == thinning["opl_hosted_runtime_owner"]
+    assert guard["residue_role"] == "history_or_tombstone_only"
+    assert guard["guard_scope"] == (
+        "stage_run_profile_and_controlled_canary_follow_through"
+    )
+    assert guard["allowed_remaining_roles"] == thinning["allowed_legacy_roles"]
+    assert guard["forbidden_default_active_paths"] == thinning["forbidden_resurrection"]
+    assert guard["closeout_gate"]["physical_delete_requires"] == (
+        thinning["physical_delete_gate"]
+    )
+    assert guard["closeout_gate"]["canary_fixture_can_close_residue_retirement"] is False
+    assert (
+        guard["closeout_gate"]["conformance_pass_can_close_residue_retirement"] is False
+    )
+    assert all(value is False for value in guard["required_negative_guards"].values())
+    assert "legacy_runtime_residue" in guard["source_refs"][1]
