@@ -38,7 +38,7 @@ def test_stage_run_profile_keeps_mag_thin_and_opl_hosted() -> None:
     assert thinning["mag_long_term_role"] == (
         "declarative_grant_pack_plus_refs_only_adapter_plus_minimal_authority_functions"
     )
-    assert "repo_owned_scheduler" in thinning["retired_or_thinned_mag_surfaces"]
+    assert "legacy_scheduler_surface" in thinning["retired_or_thinned_mag_surfaces"]
     assert "workbench_wrapper" in thinning["retired_or_thinned_mag_surfaces"]
     assert "runtime_journal_cadence" in thinning["retired_or_thinned_mag_surfaces"]
     assert thinning["allowed_legacy_roles"] == [

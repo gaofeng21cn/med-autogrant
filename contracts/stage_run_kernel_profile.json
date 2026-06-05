@@ -102,7 +102,7 @@
     "mag_long_term_role": "declarative_grant_pack_plus_refs_only_adapter_plus_minimal_authority_functions",
     "opl_hosted_runtime_owner": "one-person-lab",
     "retired_or_thinned_mag_surfaces": [
-      "repo_owned_scheduler",
+      "legacy_scheduler_surface",
       "repo_owned_runner",
       "session_store",
       "status_shell",
