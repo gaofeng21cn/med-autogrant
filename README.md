@@ -88,11 +88,12 @@ You can start with prompts like:
 - Running longer writing and revision cycles that can continue, roll back, or stop with a blocker report.
 - Delivering a scientifically complete review-ready package before portal-facing formal checks.
 - Tracking formal/objective supplements as explicit follow-up work, instead of blocking body authoring by default.
+- Comparing narrative options, evidence support, and reviewer-style critique inside the same funding task, then producing the next more-reviewable body draft.
 
 ## How It Works
 
 - Applicants provide the target funding call, existing evidence, constraints, and final judgment.
-- The AI operator helps with scientific structure, drafting, critique, and revision within that call.
+- The AI operator helps with scientific structure, option comparison, drafting, critique, and revision within that call.
 - The workspace keeps comments, versions, and deliverable files together so the proposal line stays reviewable.
 - New intake workspaces are directory scaffolds: `workspace.json` is the canonical document, while lightweight contracts/artifacts can be Git-tracked and local runtime outputs remain ignored.
 
@@ -115,6 +116,8 @@ You can start with prompts like:
 - Within that framework, an Agent executor is the minimum execution unit. `Codex CLI` is the current first-class executor; Hermes-Agent and similar executors are explicit opt-in adapters that must produce auditable receipts and are not assumed to match Codex CLI behavior or quality.
 - OPL can schedule stages, wakeups, handoffs, receipts, retries, and projections, while MAG keeps the grant stage pack, prompts, skills, fundability/authoring quality gates, authoring truth, and submission-ready export authority.
 - A MAG stage pack gives the executor a goal, context, authority boundary, skills, knowledge refs, tool affordances, and quality gate. The route manages owner and recovery boundaries; it does not pre-script the grant-authoring cognitive strategy.
+- Candidate generation, reflection, ranking, revision, and meta-review are stage-internal strategy or evidence refs. They are not a MAG-owned scheduler, runner, session store, workbench wrapper, runtime journal cadence, or hard-coded workflow.
+- `contracts/stage_run_canary_evidence.json` is the repo-local controlled StageRun canary evidence fixture. It records refs for candidate grant directions and section variants, reflection/review, ranking/selection, revision lineage, meta-review learning, an independent fundability/review gate, and owner receipt closeout; its scope is `controlled_fixture_not_live_domain_progress`.
 - MAG's tool catalog is an affordance catalog, not a workflow script: it declares what a tool can do, where it may write, where credentials are bounded, and what authority it cannot sign. The executor decides during the attempt what to read first, whether to run in parallel, which tools to use or skip, and when to ask for a human gate or reviewer.
 - MAG remains the owner for grant truth, fundability verdicts, authoring quality verdicts, route ownership, and submission/export authority.
 - Domain memory and owner/lifecycle receipt apply are limited to consumed memory refs, writeback proposals, MAG accept/reject decisions, owner/no-regression receipt refs, lifecycle receipt refs, runtime receipt evidence, operator receipt projections, and repo-source layout audit. They do not write fundability verdicts, real grant artifacts, memory bodies, export verdicts, or receipt instances into repo source.

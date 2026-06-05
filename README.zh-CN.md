@@ -88,11 +88,12 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 - 运行较长的写作和修订周期，按当前质量判断继续、回退或带阻塞原因停止。
 - 先交付科学上可审阅的申请书包，再进入门户提交前的形式和客观材料补件。
 - 把形式/客观补件作为显式待办和提醒管理，默认不阻塞正文写作。
+- 在同一基金任务里比较叙事方案、证据支撑和评审意见，持续生成下一版更可待审的正文。
 
 ## 工作方式
 
 - 申请人提供目标基金任务、已有材料、限制条件和最终判断。
-- AI 助手负责该任务内的科学结构整理、正文草拟、批注整合和修订推进。
+- AI 助手负责该任务内的科学结构整理、方案比较、正文草拟、批注整合和修订推进。
 - 工作区持续保存版本、评审意见和交付文件，方便回看与比较。
 - 新建材料接收工作区采用目录结构：`workspace.json` 是权威工作区文件，轻量合同和产物可以被 Git 跟踪，本地运行输出保持忽略。
 
@@ -115,6 +116,8 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 - 在这套框架中，Agent executor 是最小执行单位；`Codex CLI` 是当前第一公民 executor。Hermes-Agent 等其他 executor 是显式 opt-in adapter，必须产出可审计回执，不默认承诺行为或质量效果与 Codex CLI 等价。
 - OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
 - MAG stage pack 给 executor 提供目标、上下文、authority boundary、skill、knowledge refs、tool affordance 和 quality gate；route 只管理 owner 与恢复边界，不预先编排 grant authoring 的认知策略。
+- candidate generation、reflection、ranking、revision 和 meta-review 只作为 stage 内执行策略或证据 refs；它们不是 MAG-owned scheduler、runner、session store、workbench wrapper、runtime journal cadence 或硬编码 workflow。
+- `contracts/stage_run_canary_evidence.json` 是 repo-local controlled StageRun canary evidence fixture，记录 candidate grant direction/section variant、reflection/review、ranking/selection、revision lineage、meta-review learning、independent fundability/review gate 与 owner receipt closeout 的 refs；scope 固定为 `controlled_fixture_not_live_domain_progress`。
 - MAG 工具目录是 affordance catalog，不是 workflow script：它声明工具能做什么、能写哪里、凭据边界在哪里、不能签发什么权威；executor 在 attempt 内自主决定先读什么、是否并行、调用或跳过哪些工具、何时请求人工 gate 或 reviewer。
 - MAG 继续独立持有 grant truth、fundability verdict、authoring quality verdict、route owner 与 submission/export authority。
 - Domain memory 与 owner/lifecycle receipt apply 只允许投影 consumed memory refs、writeback proposal、MAG accept/reject decision、owner/no-regression receipt refs、lifecycle receipt refs、runtime receipt evidence、operator receipt projection 与 repo-source layout audit；不把 fundability verdict、真实 grant artifact、memory body、export verdict 或 receipt instance 写进 repo source。

@@ -1,0 +1,81 @@
+{
+  "surface_kind": "opl_stage_run_controlled_canary_evidence",
+  "version": "stage-run-controlled-canary.v1",
+  "domain_id": "med-autogrant",
+  "canary_id": "mag.stage_run.controlled_canary.specific_aims_and_structure.v1",
+  "stage_id": "specific_aims_and_structure",
+  "evidence_scope": "controlled_fixture_not_live_domain_progress",
+  "stage_run_ref": "stage-run-fixture:mag/specific_aims_and_structure/controlled-canary/2026-06-05",
+  "stage_manifest_ref": "stage-manifest-fixture:mag/specific_aims_and_structure/controlled-canary/manifest",
+  "current_pointer_ref": "current-pointer-fixture:mag/specific_aims_and_structure/controlled-canary/current",
+  "strategy_trace": {
+    "candidate_generation": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/candidate-direction-and-section-variants"
+      ],
+      "evidence_role": "candidate_grant_direction_and_section_variant_refs"
+    },
+    "grounded_reflection": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/reflection-review"
+      ],
+      "evidence_role": "reflection_and_review_refs"
+    },
+    "comparative_selection": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/ranking-selection"
+      ],
+      "evidence_role": "ranking_and_selection_refs"
+    },
+    "evolution_and_revision": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/revision-lineage"
+      ],
+      "evidence_role": "revision_and_evolution_lineage_refs"
+    },
+    "meta_review_learning": {
+      "refs": [
+        "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/meta-review-learning"
+      ],
+      "evidence_role": "meta_review_learning_refs"
+    },
+    "independent_quality_gate": {
+      "refs": [
+        "gate-ref:mag/stage-run-canary/specific_aims_and_structure/independent-fundability-review-gate"
+      ],
+      "evidence_role": "independent_fundability_and_review_gate_ref"
+    }
+  },
+  "role_artifact_refs": {
+    "candidate_pool_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/candidate-pool",
+    "reflection_review_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/reflection-review",
+    "ranking_selection_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/ranking-selection",
+    "revision_lineage_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/revision-lineage",
+    "meta_review_ref": "artifact-ref:mag/stage-run-canary/specific_aims_and_structure/meta-review",
+    "independent_gate_ref": "gate-ref:mag/stage-run-canary/specific_aims_and_structure/independent-fundability-review-gate"
+  },
+  "closeout": {
+    "terminal_outcome": "owner_receipt",
+    "owner_receipt_ref": "receipt-ref:mag/stage-run-canary/specific_aims_and_structure/owner-receipt",
+    "typed_blocker_ref": null,
+    "same_attempt_self_review": false
+  },
+  "tool_affordance_boundary": {
+    "tool_refs_are_affordances": true,
+    "tool_refs_define_workflow": false,
+    "tool_refs_can_sign_receipt_or_quality_gate": false
+  },
+  "authority_boundary": {
+    "refs_only": true,
+    "controlled_canary_claims_live_domain_progress": false,
+    "provider_completion_counts_as_closeout": false,
+    "file_presence_counts_as_closeout": false,
+    "read_model_counts_as_closeout": false,
+    "conformance_pass_counts_as_closeout": false,
+    "opl_can_write_domain_truth": false,
+    "opl_can_mutate_artifact_body": false,
+    "opl_can_sign_owner_receipt": false,
+    "opl_can_create_typed_blocker": false,
+    "opl_can_authorize_quality_or_export": false
+  }
+}
