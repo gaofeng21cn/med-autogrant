@@ -190,7 +190,8 @@
         "claims_generic_runtime_owner",
         "claims_app_workbench_owner",
         "claims_compatibility_alias_owner",
-        "claims_physical_morphology_cleanup_complete"
+        "claims_physical_morphology_cleanup_complete",
+        "claims_ready_for_owner_receipted_cleanup"
       ],
       "properties": {
         "claims_scheduler_daemon_owner": {
@@ -212,6 +213,9 @@
           "const": false
         },
         "claims_physical_morphology_cleanup_complete": {
+          "const": false
+        },
+        "claims_ready_for_owner_receipted_cleanup": {
           "type": "boolean"
         }
       }
@@ -228,7 +232,8 @@
         "mag_implements_local_journal",
         "mag_implements_app_workbench",
         "mag_restores_compatibility_alias",
-        "can_declare_physical_cleanup_complete"
+        "can_declare_physical_cleanup_complete",
+        "can_declare_ready_for_owner_receipted_cleanup"
       ],
       "properties": {
         "projection_scope": {
@@ -256,6 +261,9 @@
           "const": false
         },
         "can_declare_physical_cleanup_complete": {
+          "const": false
+        },
+        "can_declare_ready_for_owner_receipted_cleanup": {
           "type": "boolean"
         }
       }

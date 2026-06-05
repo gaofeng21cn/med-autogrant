@@ -66,7 +66,7 @@ def build_physical_morphology_guard_projection(
         required_next_evidence_refs + missing_external_evidence_refs
     )
 
-    claims_physical_cleanup_complete = (
+    claims_ready_for_owner_receipted_cleanup = (
         not blocked_items
         and not item_evidence_gated
         and not missing_external_evidence_refs
@@ -100,7 +100,8 @@ def build_physical_morphology_guard_projection(
         "missing_external_evidence_refs": missing_external_evidence_refs,
         "required_next_evidence_refs": required_next_evidence_refs,
         "claims": {
-            "claims_physical_morphology_cleanup_complete": claims_physical_cleanup_complete,
+            "claims_physical_morphology_cleanup_complete": False,
+            "claims_ready_for_owner_receipted_cleanup": claims_ready_for_owner_receipted_cleanup,
             "claims_generic_runtime_owner": False,
             "claims_app_workbench_owner": False,
             "claims_scheduler_daemon_owner": False,
@@ -117,7 +118,8 @@ def build_physical_morphology_guard_projection(
             "mag_implements_attempt_ledger": False,
             "mag_implements_local_journal": False,
             "mag_restores_compatibility_alias": False,
-            "can_declare_physical_cleanup_complete": claims_physical_cleanup_complete,
+            "can_declare_physical_cleanup_complete": False,
+            "can_declare_ready_for_owner_receipted_cleanup": claims_ready_for_owner_receipted_cleanup,
         },
         "retirement_gate": {
             "gate_id": "mag.physical_morphology.retirement_gate.v1",

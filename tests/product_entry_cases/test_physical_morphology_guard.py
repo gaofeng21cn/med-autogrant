@@ -124,10 +124,16 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertFalse(
             projection["claims"]["claims_physical_morphology_cleanup_complete"]
         )
+        self.assertFalse(
+            projection["claims"]["claims_ready_for_owner_receipted_cleanup"]
+        )
         self.assertFalse(projection["authority_boundary"]["mag_implements_opl_runtime"])
         self.assertFalse(projection["authority_boundary"]["mag_implements_app_workbench"])
         self.assertFalse(
             projection["authority_boundary"]["can_declare_physical_cleanup_complete"]
+        )
+        self.assertFalse(
+            projection["authority_boundary"]["can_declare_ready_for_owner_receipted_cleanup"]
         )
 
     def test_forbidden_true_flags_fail_closed(self) -> None:
@@ -182,6 +188,9 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
         self.assertFalse(
             projection["claims"]["claims_physical_morphology_cleanup_complete"]
         )
+        self.assertFalse(
+            projection["claims"]["claims_ready_for_owner_receipted_cleanup"]
+        )
 
     def test_unclassified_runtime_owner_role_is_blocked(self) -> None:
         from med_autogrant.product_entry_parts.physical_morphology_guard import (
@@ -218,7 +227,7 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             projection["blocked_items"][0]["deletion_readiness"]["missing_retirement_evidence_refs"],
         )
 
-    def test_all_allowed_with_external_evidence_refs_can_mark_guard_complete(self) -> None:
+    def test_all_allowed_with_external_evidence_refs_can_mark_ready_for_owner_receipted_cleanup(self) -> None:
         from med_autogrant.product_entry_parts.physical_morphology_guard import (
             build_physical_morphology_guard_projection,
         )
@@ -256,11 +265,17 @@ class ProductEntryPhysicalMorphologyGuardTest(unittest.TestCase):
             projection["retirement_gate"]["state"],
             "eligible_for_owner_receipted_cleanup",
         )
-        self.assertTrue(
+        self.assertFalse(
             projection["claims"]["claims_physical_morphology_cleanup_complete"]
         )
         self.assertTrue(
+            projection["claims"]["claims_ready_for_owner_receipted_cleanup"]
+        )
+        self.assertFalse(
             projection["authority_boundary"]["can_declare_physical_cleanup_complete"]
+        )
+        self.assertTrue(
+            projection["authority_boundary"]["can_declare_ready_for_owner_receipted_cleanup"]
         )
 
     def test_invalid_flags_and_missing_evidence_shape_fail_closed(self) -> None:
