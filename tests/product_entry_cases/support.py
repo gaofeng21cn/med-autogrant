@@ -15,16 +15,16 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from med_autogrant.cli import main  # noqa: E402
-from med_autogrant.public_cli import public_cli_argv, public_cli_command, public_command_label  # noqa: E402
 from med_autogrant.control_plane import read_program_id, resolve_runtime_state_root  # noqa: E402
-from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
-from support.domain_contracts import (  # noqa: E402
-    AUTHOR_SIDE_ROUTE_IDS,
-    CANONICAL_EXPORT_SURFACES,
-    DOMAIN_ENTRY_COMMAND_CONTRACTS,
-    SUPPORTED_DOMAIN_ENTRY_COMMANDS,
+from med_autogrant.cli import main  # noqa: E402
+from med_autogrant.domain_entry_contract import build_domain_entry_contract  # noqa: E402
+from med_autogrant.domain_runtime_parts.contracts import (  # noqa: E402
+    build_author_side_route_contract,
+    build_operator_contract,
 )
+from med_autogrant.domain_runtime_parts.shared import AUTHOR_SIDE_ROUTE_IDS  # noqa: E402
+from med_autogrant.public_cli import public_cli_argv, public_cli_command, public_command_label  # noqa: E402
+from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
 
 
 CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.json"
@@ -34,242 +34,16 @@ FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission
 INPUT_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_input_intake.json"
 DIRECTION_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2a_direction_screening.json"
 
-REVIEW_CONTEXT_STAGES = {"critique", "revision", "frozen"}
-DRAFT_ID_CONTEXT_STAGES = {"outline", "drafting", "critique", "revision", "frozen"}
-PENDING_ROUTE_REQUIREMENTS = {
-    "direction_screening": {
-        "summary_fields": [
-            "current_selection.selected_direction_id",
-            "selected_direction.id",
-            "selected_direction.title",
-            "selected_direction.decision_status",
-        ],
-        "gate_fields": ["gates.direction_frozen"],
-    },
-    "question_refinement": {
-        "summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "selected_direction.id",
-            "selected_direction.title",
-            "selected_question.id",
-            "selected_question.core_question",
-            "selected_question.knowledge_boundary",
-        ],
-        "gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-        ],
-    },
-    "argument_building": {
-        "summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "selected_question.core_question",
-            "active_argument_chain.id",
-            "active_argument_chain.necessity_claim",
-        ],
-        "gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-        ],
-    },
-    "fit_alignment": {
-        "summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "current_selection.active_fit_mapping_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "active_argument_chain.id",
-            "active_fit_mapping.id",
-            "active_fit_mapping.applicant_fit_summary",
-            "active_fit_mapping.unique_advantage",
-        ],
-        "gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-            "gates.fit_alignment_frozen",
-        ],
-    },
-    "outline": {
-        "summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "current_selection.active_fit_mapping_id",
-            "current_selection.active_draft_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "active_argument_chain.id",
-            "active_fit_mapping.id",
-            "active_draft.id",
-            "active_draft.version_label",
-            "active_draft.status",
-            "active_draft.outline_count",
-        ],
-        "gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-            "gates.fit_alignment_frozen",
-            "gates.outline_frozen",
-        ],
-    },
-    "drafting": {
-        "summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "current_selection.active_fit_mapping_id",
-            "current_selection.active_draft_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "active_argument_chain.id",
-            "active_fit_mapping.id",
-            "active_draft.id",
-            "active_draft.version_label",
-            "active_draft.status",
-            "active_draft.outline_count",
-            "active_draft.section_count",
-        ],
-        "gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-            "gates.fit_alignment_frozen",
-            "gates.outline_frozen",
-        ],
-    },
-    "critique": {
-        "summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "current_selection.active_fit_mapping_id",
-            "current_selection.active_draft_id",
-            "current_selection.active_revision_plan_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "active_argument_chain.id",
-            "active_fit_mapping.id",
-            "active_draft.id",
-            "active_draft.version_label",
-            "active_draft.status",
-            "active_revision_plan.id",
-            "active_revision_plan.execution_status",
-            "active_critique.id",
-            "active_critique.verdict",
-            "active_critique.blocking_issue_count",
-        ],
-        "gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-            "gates.fit_alignment_frozen",
-            "gates.outline_frozen",
-            "gates.presubmission_frozen",
-        ],
-    },
-    "frozen": {
-        "summary_fields": [
-            "current_selection.selected_direction_id",
-            "current_selection.selected_question_id",
-            "current_selection.active_fit_mapping_id",
-            "current_selection.active_draft_id",
-            "current_selection.active_revision_plan_id",
-            "selected_direction.id",
-            "selected_question.id",
-            "active_argument_chain.id",
-            "active_fit_mapping.id",
-            "active_draft.id",
-            "active_draft.version_label",
-            "active_draft.status",
-            "active_draft.section_count",
-            "active_revision_plan.id",
-            "active_revision_plan.execution_status",
-            "active_critique.id",
-            "active_critique.verdict",
-        ],
-        "gate_fields": [
-            "gates.direction_frozen",
-            "gates.scientific_question_frozen",
-            "gates.argument_chain_frozen",
-            "gates.fit_alignment_frozen",
-            "gates.outline_frozen",
-            "gates.presubmission_frozen",
-        ],
-    },
-}
+_DOMAIN_ENTRY_CONTRACT = build_domain_entry_contract()
+SUPPORTED_DOMAIN_ENTRY_COMMANDS = _DOMAIN_ENTRY_CONTRACT["supported_commands"]
+DOMAIN_ENTRY_COMMAND_CONTRACTS = _DOMAIN_ENTRY_CONTRACT["command_contracts"]
+CANONICAL_EXPORT_SURFACES = build_operator_contract()["canonical_export_surfaces"]
 
 PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND = public_command_label("build-product-entry")
 
 
-def _service_safe_surface(command: str) -> dict[str, str]:
-    return {
-        "surface_kind": "service-safe-domain-entry-command",
-        "entry_adapter": "MedAutoGrantDomainEntry",
-        "command": command,
-    }
-
-
-def _expected_landed_route(route_id: str) -> dict[str, object]:
-    return {
-        "route_id": route_id,
-        "route_status": "landed",
-        "executor_owner": "med-autogrant",
-        "execution_surface": _service_safe_surface(
-            {
-                "direction_screening": "execute-direction-screening-pass",
-                "question_refinement": "execute-question-refinement-pass",
-                "argument_building": "execute-argument-building-pass",
-                "fit_alignment": "execute-fit-alignment-pass",
-                "outline": "execute-outline-pass",
-                "drafting": "execute-drafting-pass",
-                "critique": "execute-critique-pass",
-                "revision": "execute-revision-pass",
-                "frozen": "execute-freeze-pass",
-                "artifact_bundle": "build-artifact-bundle",
-                "final_package": "build-final-package",
-                "hosted_contract_bundle": "build-hosted-contract-bundle",
-            }[route_id]
-        ),
-        "handoff_contract_kind": "service-safe-domain-entry-command",
-    }
-
-
-def _expected_pending_route(route_id: str, *, source_stage: str) -> dict[str, object]:
-    requirements = PENDING_ROUTE_REQUIREMENTS[route_id]
-    required_domain_surfaces = [_service_safe_surface("summarize-workspace")]
-    if source_stage in REVIEW_CONTEXT_STAGES:
-        required_domain_surfaces.append(_service_safe_surface("critique-summary"))
-    required_domain_surfaces.append(_service_safe_surface("stage-route-report"))
-
-    required_identity_fields = ["grant_run_id", "workspace_id"]
-    if source_stage in DRAFT_ID_CONTEXT_STAGES:
-        required_identity_fields.append("draft_id")
-
-    return {
-        "route_id": route_id,
-        "route_status": "pending",
-        "executor_owner": "med-autogrant",
-        "execution_surface": None,
-        "handoff_contract_kind": "handoff-required",
-        "handoff_requirements": {
-            "contract_kind": f"{route_id}-product-status-required",
-            "workspace_surface_kind": "nsfc_workspace",
-            "required_domain_surfaces": required_domain_surfaces,
-            "required_identity_fields": required_identity_fields,
-            "required_summary_fields": requirements["summary_fields"],
-            "required_gate_fields": requirements["gate_fields"],
-        },
-    }
-
-
 def _expected_route(route_id: str, *, source_stage: str) -> dict[str, object]:
-    del source_stage
-    return _expected_landed_route(route_id)
+    return build_author_side_route_contract(route_id, source_stage=source_stage)
 
 
 def _expected_runtime_output_path(

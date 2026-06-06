@@ -17,15 +17,16 @@ if str(SRC_ROOT) not in sys.path:
 
 from med_autogrant.cli import main  # noqa: E402
 from med_autogrant.domain_entry_contract import build_domain_entry_contract  # noqa: E402
+from med_autogrant.domain_runtime_parts.contracts import build_operator_contract  # noqa: E402
 from med_autogrant.public_cli import public_cli_argv, public_command_label  # noqa: E402
 from med_autogrant import hosted_contract_bundle as hosted_contract_bundle_module  # noqa: E402
-from support.domain_contracts import CANONICAL_EXPORT_SURFACES  # noqa: E402
 
 
 FROZEN_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p3c_presubmission_frozen.json"
 CURRENT_PROGRAM_CONTRACT = REPO_ROOT / "contracts" / "runtime-program" / "current-program.json"
 
 PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND = public_command_label("build-product-entry")
+CANONICAL_EXPORT_SURFACES = build_operator_contract()["canonical_export_surfaces"]
 
 
 
