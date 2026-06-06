@@ -23,7 +23,8 @@ from med_autogrant.domain_runtime_parts.contracts import (  # noqa: E402
     build_operator_contract,
 )
 from med_autogrant.domain_runtime_parts.shared import AUTHOR_SIDE_ROUTE_IDS  # noqa: E402
-from med_autogrant.public_cli import public_cli_argv, public_cli_command, public_command_label  # noqa: E402
+from med_autogrant.public_cli import public_cli_command, public_command_label  # noqa: E402
+from support.cli import public_cli_argv  # noqa: E402
 from med_autogrant.workspace import WorkspaceStateError  # noqa: E402
 
 

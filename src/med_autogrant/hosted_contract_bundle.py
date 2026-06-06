@@ -159,14 +159,14 @@ def build_hosted_contract_bundle_payload(
         lifecycle_stage=final_package["lifecycle_stage"],
     )
     resolved_output_path = Path(output_path).expanduser().resolve()
-    _guard_output_identity(
+    _guard_hosted_contract_output_identity(
         resolved_output_path,
         grant_run_id=final_package["grant_run_id"],
         workspace_id=final_package["workspace_id"],
         draft_id=final_package["draft_id"],
         program_id=program_id,
     )
-    _write_hosted_contract_bundle(resolved_output_path, hosted_contract_bundle)
+    _write_hosted_contract_bundle_output(resolved_output_path, hosted_contract_bundle)
     return {
         "ok": True,
         "command": "build-hosted-contract-bundle",
@@ -218,24 +218,3 @@ def _select_control_plane_current_program_path(
 
 def _parse_git_worktree_list_porcelain(worktree_list_text: str) -> list[dict[str, str]]:
     return parse_git_worktree_list_porcelain(worktree_list_text)
-
-
-def _guard_output_identity(
-    output_path: Path,
-    *,
-    grant_run_id: str,
-    workspace_id: str,
-    draft_id: str,
-    program_id: str,
-) -> None:
-    _guard_hosted_contract_output_identity(
-        output_path,
-        grant_run_id=grant_run_id,
-        workspace_id=workspace_id,
-        draft_id=draft_id,
-        program_id=program_id,
-    )
-
-
-def _write_hosted_contract_bundle(output_path: Path, hosted_contract_bundle: dict[str, Any]) -> None:
-    _write_hosted_contract_bundle_output(output_path, hosted_contract_bundle)

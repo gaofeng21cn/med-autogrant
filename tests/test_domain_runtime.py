@@ -17,7 +17,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from med_autogrant.cli import main  # noqa: E402
 from med_autogrant.product_entry_contract_api import build_author_side_route_contract  # noqa: E402
-from med_autogrant.public_cli import public_cli_argv  # noqa: E402
+from support.cli import public_cli_argv  # noqa: E402
 from med_autogrant.domain_runtime_parts.shared import AUTHOR_SIDE_ROUTE_IDS  # noqa: E402
 
 
@@ -257,9 +257,9 @@ class HostedContractBundleBridgeTest(unittest.TestCase):
         ) as build_document, patch(
             "med_autogrant.hosted_contract_bundle._validate_hosted_contract_bundle",
         ) as validate_bundle, patch(
-            "med_autogrant.hosted_contract_bundle._guard_output_identity",
+            "med_autogrant.hosted_contract_bundle._guard_hosted_contract_output_identity",
         ) as guard_output, patch(
-            "med_autogrant.hosted_contract_bundle._write_hosted_contract_bundle",
+            "med_autogrant.hosted_contract_bundle._write_hosted_contract_bundle_output",
         ) as write_bundle:
             payload = build_hosted_contract_bundle_payload(
                 final_package_path="/tmp/final-package.json",

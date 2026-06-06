@@ -52,7 +52,7 @@ if "run_agent" not in sys.modules:
     sys.modules["run_agent"] = run_agent
 
 from med_autogrant.cli import main  # noqa: E402
-from med_autogrant.public_cli import public_cli_argv  # noqa: E402
+from support.cli import public_cli_argv  # noqa: E402
 
 
 NSFC_SELECTION_INPUT = REPO_ROOT / "examples" / "profile_selection_input_nsfc_general.json"

@@ -6,7 +6,10 @@ from io import StringIO
 from typing import Any
 
 from med_autogrant.cli import main
-from med_autogrant.public_cli import public_cli_argv
+
+
+def public_cli_argv(argv: list[str] | tuple[str, ...]) -> list[str]:
+    return list(argv)
 
 
 def run_cli(*args: str, allow_system_exit: bool = True) -> tuple[int, str, str]:

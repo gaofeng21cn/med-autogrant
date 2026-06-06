@@ -18,7 +18,8 @@ if str(SRC_ROOT) not in sys.path:
 from med_autogrant.cli import main  # noqa: E402
 from med_autogrant.domain_entry_contract import build_domain_entry_contract  # noqa: E402
 from med_autogrant.domain_runtime_parts.contracts import build_operator_contract  # noqa: E402
-from med_autogrant.public_cli import public_cli_argv, public_command_label  # noqa: E402
+from med_autogrant.public_cli import public_command_label  # noqa: E402
+from support.cli import public_cli_argv  # noqa: E402
 from med_autogrant import hosted_contract_bundle as hosted_contract_bundle_module  # noqa: E402
 
 

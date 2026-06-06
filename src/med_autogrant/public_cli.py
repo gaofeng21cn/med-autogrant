@@ -132,7 +132,3 @@ def public_cli_command(command: str, *args: str) -> str:
         return " ".join([generated_ref, *args])
     command_words = list(tokens) if tokens is not None else [command]
     return " ".join(["uv", "run", "python", "-m", "med_autogrant", *command_words, *args])
-
-
-def public_cli_argv(argv: list[str] | tuple[str, ...]) -> list[str]:
-    return list(argv)

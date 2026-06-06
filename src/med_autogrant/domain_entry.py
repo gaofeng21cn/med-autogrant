@@ -115,7 +115,7 @@ class MedAutoGrantDomainEntry:
         self._runtime = runtime or MagDomainRuntime()
 
     def dispatch(self, request: Mapping[str, Any]) -> dict[str, Any]:
-        command = _normalize_command(_require_command(request))
+        command = _require_command(request)
 
         spec = SERVICE_SAFE_DOMAIN_COMMANDS.get(command)
         if spec is None:
@@ -142,10 +142,6 @@ class MedAutoGrantDomainEntry:
         if "command" not in payload:
             return {"command": command, **payload}
         return payload
-
-
-def _normalize_command(command: str) -> str:
-    return command
 
 
 def _require_command(request: Mapping[str, Any]) -> str:
