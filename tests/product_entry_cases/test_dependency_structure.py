@@ -14,6 +14,22 @@ class ProductEntryPartsStructureTest(unittest.TestCase):
             (REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts" / "shared.py").exists()
         )
 
+    def test_consumer_thinning_audit_private_reexports_are_not_present(self) -> None:
+        package_text = (
+            REPO_ROOT
+            / "src"
+            / "med_autogrant"
+            / "product_entry_parts"
+            / "consumer_thinning_audit"
+            / "__init__.py"
+        ).read_text(encoding="utf-8")
+        consumer_text = (
+            REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts" / "consumer_thinning.py"
+        ).read_text(encoding="utf-8")
+
+        self.assertNotIn("_build_", package_text)
+        self.assertNotIn("_build_privatized_functional_module_audit", consumer_text)
+
     def test_product_entry_parts_do_not_star_import_each_other(self) -> None:
         product_entry_parts = sorted(
             (REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts").glob("*.py")

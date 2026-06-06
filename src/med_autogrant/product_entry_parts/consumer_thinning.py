@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
-from med_autogrant.product_entry_parts.consumer_thinning_audit import (
-    _build_privatized_functional_module_audit,
+from med_autogrant.product_entry_parts.consumer_thinning_audit.report import (
+    build_privatized_functional_module_audit,
 )
 from med_autogrant.product_entry_parts.consumer_thinning_pack import (
     MAG_MINIMAL_AUTHORITY_FUNCTION_IDS,
@@ -80,7 +80,7 @@ def build_mag_consumer_thinning_contract(
         "opl_family_conflict_blocker_projection": build_opl_family_conflict_blocker_projection(),
         "opl_runtime_observability_consumption": build_opl_runtime_observability_consumption(),
         "functional_harness_consumer_coverage": build_functional_harness_consumer_coverage(),
-        "privatized_functional_module_audit": _build_privatized_functional_module_audit(),
+        "privatized_functional_module_audit": build_privatized_functional_module_audit(),
         "declarative_grant_pack_compiler_input": build_declarative_grant_pack_compiler_input(),
         "generated_surface_handoff": build_generated_surface_handoff(),
         "generated_hosted_default_caller_proof": build_generated_hosted_default_caller_proof(),
