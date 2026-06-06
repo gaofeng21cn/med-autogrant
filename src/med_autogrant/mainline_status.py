@@ -78,8 +78,6 @@ def _phase_details() -> dict[str, dict[str, Any]]:
             ],
             "phase_docs": [
                 "human_doc:2026_04_12_schema_backed_product_entry_and_routing_contract_current_truth",
-                "human_doc:2026_04_12_author_side_executor_routing_contract_current_truth",
-                "human_doc:2026_04_12_hosted_contract_bundle_entry_and_route_catalog_current_truth",
             ],
         },
         "P3": {
@@ -119,8 +117,8 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "hosted caller / OPL caller 不再需要 repo-local helper 才能构造 request。",
             ],
             "phase_docs": [
-                "human_doc:2026_04_12_hosted_caller_consumption_proof_current_truth",
-                "human_doc:2026_04_12_hosted_contract_bundle_entry_and_route_catalog_current_truth",
+                "human_doc:2026_04_12_schema_backed_product_entry_and_routing_contract_current_truth",
+                "human_doc:product_entry_support_record",
             ],
         },
         "P4": {
@@ -175,13 +173,8 @@ def _phase_details() -> dict[str, dict[str, Any]]:
                 "这层 shell 仍然诚实保持 controller-owned，不越界声称 mature frontend / hosted runtime 已完成。",
             ],
             "phase_docs": [
-                "human_doc:2026_04_12_opl_aligned_ideal_target_and_phase_map_current_truth",
-                "human_doc:2026_04_12_p4a_direct_grant_cockpit_and_progress_projection_current_truth",
-                "human_doc:2026_04_12_p4b_direct_grant_entry_composition_current_truth",
-                "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth",
+                "human_doc:product_entry_support_record",
                 "human_doc:2026_04_13_full_grant_authoring_executor_current_truth",
-                "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth",
-                "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth",
             ],
         },
     }

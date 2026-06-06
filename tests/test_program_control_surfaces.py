@@ -354,40 +354,35 @@ class ProgramControlSurfaceTest(unittest.TestCase):
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "human_doc:2026_04_12_opl_aligned_ideal_target_and_phase_map_current_truth",
+            "human_doc:product_entry_support_record",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "human_doc:2026_04_12_hosted_caller_consumption_proof_current_truth",
+            "human_doc:2026_04_12_schema_backed_product_entry_and_routing_contract_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
-            "human_doc:2026_04_12_lightweight_product_entry_and_opl_handoff_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_12_p4a_direct_grant_cockpit_and_progress_projection_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_12_p4b_direct_grant_entry_composition_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth",
-            contract["repo_tracked_truth_surfaces"],
-        )
-        self.assertIn(
-            "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth",
+            "human_doc:2026_04_13_full_grant_authoring_executor_current_truth",
             contract["repo_tracked_truth_surfaces"],
         )
         self.assertIn(
             "human_doc:2026_04_13_critique_codex_cli_executor_current_truth",
             contract["repo_tracked_truth_surfaces"],
+        )
+        retired_history_only_support_ids = {
+            "human_doc:2026_04_12_hosted_caller_consumption_proof_current_truth",
+            "human_doc:2026_04_12_opl_aligned_ideal_target_and_phase_map_current_truth",
+            "human_doc:2026_04_12_p4a_direct_grant_cockpit_and_progress_projection_current_truth",
+            "human_doc:2026_04_12_p4b_direct_grant_entry_composition_current_truth",
+            "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth",
+            "human_doc:2026_04_12_hosted_contract_bundle_entry_and_route_catalog_current_truth",
+            "human_doc:2026_04_12_lightweight_product_entry_and_opl_handoff_current_truth",
+            "human_doc:2026_04_12_author_side_executor_routing_contract_current_truth",
+            "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth",
+            "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth",
+        }
+        self.assertTrue(
+            retired_history_only_support_ids.isdisjoint(contract["repo_tracked_truth_surfaces"])
         )
         self.assertNotIn(
             "human_doc:2026_04_13_" + "critique_codex_cli" + "_autonomous_executor_current_truth",

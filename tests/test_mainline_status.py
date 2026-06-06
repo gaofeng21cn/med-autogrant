@@ -38,18 +38,18 @@ def test_mainline_status_projects_line_focus_records_and_maintainer_references()
     assert maintainer_references["phase_ladder"][0]["phase_id"] == "P1"
     assert maintainer_references["phase_ladder"][3]["phase_id"] == "P4"
     assert any(item["name"] == "grant_user_loop" for item in maintainer_references["phase_ladder"][3]["entry_points"])
-    assert any(
-        item == "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth"
-        for item in maintainer_references["phase_ladder"][3]["phase_docs"]
-    )
-    assert any(
-        item == "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth"
-        for item in maintainer_references["phase_ladder"][3]["phase_docs"]
-    )
-    assert any(
-        item == "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth"
-        for item in maintainer_references["phase_ladder"][3]["phase_docs"]
-    )
+    p4_phase_docs = maintainer_references["phase_ladder"][3]["phase_docs"]
+    assert "human_doc:product_entry_support_record" in p4_phase_docs
+    assert "human_doc:2026_04_13_full_grant_authoring_executor_current_truth" in p4_phase_docs
+    retired_p4_support_ids = {
+        "human_doc:2026_04_12_opl_aligned_ideal_target_and_phase_map_current_truth",
+        "human_doc:2026_04_12_p4a_direct_grant_cockpit_and_progress_projection_current_truth",
+        "human_doc:2026_04_12_p4b_direct_grant_entry_composition_current_truth",
+        "human_doc:2026_04_12_p4c_mainline_status_and_grant_user_loop_current_truth",
+        "human_doc:2026_04_13_p4e_schema_backed_product_status_and_manifest_current_truth",
+        "human_doc:2026_04_13_p4f_local_submission_ready_package_current_truth",
+    }
+    assert not retired_p4_support_ids.intersection(p4_phase_docs)
     assert any("Web UI" in item for item in payload["remaining_gaps"])
     assert any("官网提交" in item for item in payload["remaining_gaps"])
     assert any("OPL stage-led framework" in item for item in maintainer_references["explicitly_not_now"])
