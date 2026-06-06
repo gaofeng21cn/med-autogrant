@@ -9,6 +9,11 @@ OLD_RUNTIME_IMPORT = f"from med_autogrant import {OLD_RUNTIME_TOKEN}"
 
 
 class ProductEntryPartsStructureTest(unittest.TestCase):
+    def test_retired_product_entry_shared_reexport_is_not_present(self) -> None:
+        self.assertFalse(
+            (REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts" / "shared.py").exists()
+        )
+
     def test_product_entry_parts_do_not_star_import_each_other(self) -> None:
         product_entry_parts = sorted(
             (REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts").glob("*.py")

@@ -514,4 +514,4 @@ from med_autogrant.domain_runtime_parts.runtime_ops import (
     _looks_like_workspace,
 )
 
-__all__ = [name for name in globals() if not name.startswith("__")]
+__all__ = ["MagDomainRuntime"]

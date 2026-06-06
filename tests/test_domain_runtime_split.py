@@ -37,6 +37,11 @@ class RuntimeSplitStructureTest(unittest.TestCase):
         self.assertEqual(topology["optional_proof_executor"], "Hermes-Agent")
         self.assertEqual(topology["optional_proof_executor_boundary"], "explicit opt-in only")
 
+    def test_runtime_substrate_exports_only_domain_runtime_adapter(self) -> None:
+        from med_autogrant.domain_runtime_parts import substrate
+
+        self.assertEqual(substrate.__all__, ["MagDomainRuntime"])
+
     def test_package_surface_owns_export_methods_under_authoring_mixin(self) -> None:
         from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
         from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
