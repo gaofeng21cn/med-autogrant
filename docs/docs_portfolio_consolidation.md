@@ -77,9 +77,9 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 当旧模块、旧接口、旧 CLI alias、旧 wrapper、旧 facade、patch bridge、旧测试入口或旧文档入口已被当前 owner surface 替代时，默认直接退役。迁移 active caller 后删除旧面；需要来龙去脉时只保留 history/tombstone/provenance，不新增 compatibility shim、别名、re-export facade 或 compatibility-only 聚合测试。
 
-当前 direct retirement posture 的 active owner 是 `docs/active/mag-ideal-state-cross-repo-gap-plan.md`，机器投影是 `product-entry-manifest.ideal_state_closure_status.direct_retirement_posture`。维护时应先看 manifest 中的 `physical_skeleton_follow_through` 与 `controlled_domain_memory_apply_proof.repo_source_layout_audit`，确认旧面已经没有 active caller，再删除或归档；不要用旧路径稳定性作为保留兼容壳的理由。
+当前 direct retirement posture 的 active owner 是 `docs/active/mag-ideal-state-cross-repo-gap-plan.md`；per-surface 明细 owner 是 `docs/active/opl-private-implementation-migration-inventory.md`。机器投影回到 `product-entry-manifest.ideal_state_closure_status.direct_retirement_posture`、`product-entry-manifest.physical_skeleton_follow_through`、`controlled_domain_memory_apply_proof.repo_source_layout_audit`、`contracts/private_functional_surface_policy.json#/purpose_first_owner_delta_domain_thinning_gate` 与 `contracts/foundry_agent_series.json#/purpose_first_adapter_thinning_policy`。维护时先按 active plan 判断当前 gate，再按 inventory 和 machine surface 确认 active caller；不要用旧路径稳定性作为保留兼容壳的理由。
 
-截至 `2026-06-04T17:02:16Z`，旧 public/domain-entry runtime command family `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 已不在 `SERVICE_SAFE_DOMAIN_COMMANDS`、grouped public CLI catalog 或 `pyproject.toml` console script 中作为 active entry 出现；它们只保留在 fail-closed tests、`functional_closure_skeleton` no-resurrection scan、active/support 边界说明和 history/provenance 中。该 audit 记录在 [2026-06-04 MAG retired command family audit](./history/docs-portfolio-coverage-ledger/2026-06-04-mag-retired-command-family-audit.md)。
+旧 public/domain-entry runtime command family `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 的 dated audit 记录在 [2026-06-04 MAG retired command family audit](./history/docs-portfolio-coverage-ledger/2026-06-04-mag-retired-command-family-audit.md)。当前文档只保留 no-resurrection 规则：旧 runtime command、local journal、attempt ledger、Gateway/local-manager、flat alias、facade patch bridge 和 compatibility aggregate test 只能出现在 negative guard、tombstone 或 history/provenance 中；无 active caller 后直接删除或归档，不新增 compatibility surface。
 
 ## 当前生命周期决策
 
@@ -89,7 +89,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 - `docs/references/integration/opl-family-contract-adoption.md` 是 OPL family contract adoption reference；它说明 MAG 如何暴露 descriptor/projection/receipt refs，不声明 production provider-hosted grant soak、App/workbench consumption 或 bridge exit 全部完成。
 - `docs/specs/` 当前只保留 active specs、support records 和 lifecycle map；历史 P/R/post-R5A/provider proof/hosted handoff/old route snapshot 统一从 `docs/history/specs/` 阅读。`docs/specs/specs_lifecycle_map.md` 维护聚合生命周期，不再在本文件堆每个 dated tranche。
 - `docs/product/`、`docs/runtime/`、`docs/delivery/`、`docs/source/`、`docs/policies/` 保持薄索引职责；不要为了填目录把核心五件套内容拆散成第二真相源。
-- 旧 `tests/test_product_entry.py` 聚合入口、`domain_runtime_parts.patch_targets` patch bridge、Gateway/local-manager default path 与 legacy flat CLI shell alias 继续按 direct retirement posture 处理；文档层只保留 history/provenance，不新增兼容入口。
+- 旧 `tests/test_product_entry.py` 聚合入口、`domain_runtime_parts.patch_targets` patch bridge、Gateway/local-manager default path 与 legacy flat CLI shell alias 继续按 direct retirement posture 处理；具体 path-level 状态回到 private inventory 和 machine audit，文档层只保留 history/provenance，不新增兼容入口。
 
 ## 长清单治理
 
