@@ -7,10 +7,13 @@ Machine boundary: 人读索引。交付 authority 继续归 MAG artifact/package
 
 本目录承接 submission-ready package、export 和 delivery 支撑。可跨 MAS/MAG/RCA 复用的通用 artifact/package lifecycle primitive 应记录为 MAG-to-OPL 上收候选。
 
-当前本目录只做 delivery/export 支撑索引；不复制 package/export gate、active evidence ledger 或 submission-ready status。新增内容必须区分“科学完成可待审包”“本地 submission-ready package export gate”和“外部官网 portal submission”，并保持 fundability、quality、export verdict 与 package authority 归 MAG owner surface。
+当前本目录只做 delivery/export 支撑索引；不复制 package/export gate、active evidence ledger 或 submission-ready status。package/export 与 local submission-ready package 的 support current-truth 统一回到 [Product Entry Support Record](../specs/product-entry-support-record.md)，机器真相继续回到 artifact/package contracts、schemas、source、CLI/API behavior、workspace artifacts、runtime receipts、owner receipts 和相关 tests。
+
+新增内容必须区分“科学完成可待审包”“本地 submission-ready package export gate”和“外部官网 portal submission”，并保持 fundability、quality、export verdict 与 package authority 归 MAG owner surface。
 
 当前入口先看：
 
 - [架构](../architecture.md)
 - [当前状态](../status.md)
 - [Specs 索引](../specs/README.md)
+- [Product Entry Support Record](../specs/product-entry-support-record.md)

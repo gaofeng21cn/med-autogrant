@@ -32,9 +32,12 @@ Machine SSOT:
 
 Human-doc owners:
 
+- `docs/specs/product-entry-support-record.md`
+  - owns product-entry / product status / direct-entry / user-loop / manifest / package-export support current-truth.
+  - `docs/product/README.md` and `docs/delivery/README.md` must point here instead of copying P4 support content or turning index docs into parallel current narratives.
 - `docs/status.md`, `docs/invariants.md`, `docs/decisions.md`, and `docs/active/mag-ideal-state-cross-repo-gap-plan.md`
   - already state that MAG retains package authority, owner receipts, quality/export/submission verdicts, and grant truth.
-  - no prose edit was required in this lane.
+  - no prose edit was required in these core docs.
 
 ## Peer Surface Classification
 
@@ -45,11 +48,15 @@ Human-doc owners:
 | `src/med_autogrant/stage_control_plane_parts/artifact_contracts.py#authority_boundary` | `conflicts_with_ssot` | Replaced `opl_can_promote_canonical_pointer=true` with `opl_can_promote_canonical_pointer=false` and added `opl_can_index_canonical_pointer_ref=true`. |
 | `contracts/stage_control_plane.json` | `generated_contract` | Regenerated through `./scripts/run-python-clean.sh -m med_autogrant.opl_standard_pack`; only the pointer authority fields changed. |
 | `tests/product_entry_cases/test_family_stage_control_plane.py` | `covered_by_ssot` guard gap | Added assertions for canonical pointer ref indexing and no OPL canonical pointer promotion. |
+| `docs/specs/product-entry-support-record.md` | `support_current_truth` | Kept as product-entry / package support SSOT; no copied support content. |
+| `docs/product/README.md` | `covered_by_ssot` + `entry_pointer_needed` | Added a direct pointer to `product-entry-support-record.md`; kept the directory as an index, not a product truth owner. |
+| `docs/delivery/README.md` | `covered_by_ssot` + `entry_pointer_needed` | Added a direct pointer to `product-entry-support-record.md`; kept package/export truth on contracts/source/tests and MAG authority surfaces. |
 | `docs/status.md`, `docs/invariants.md`, `docs/decisions.md`, `docs/active/mag-ideal-state-cross-repo-gap-plan.md` | `covered_by_ssot` human support | Already state MAG-owned package authority and no OPL readiness/verdict authority. No edit. |
 
 ## Content-Level Consolidation
 
 - Product-entry contract API is a public thin bridge, not a private compatibility facade.
+- Product/delivery docs are thin indexes; their support current-truth points to `docs/specs/product-entry-support-record.md` instead of repeating product-entry/package semantics.
 - OPL can index canonical pointer refs and rebuild projections for App/workbench consumption.
 - OPL cannot promote MAG canonical pointers, advance current pointers, sign MAG owner receipts, interpret grant quality, write grant truth, mutate artifact bodies, or declare export/submission readiness.
 - MAG keeps package/canonical pointer authority and emits owner receipt or typed blocker refs when a package/pointer change is valid or blocked.
@@ -75,6 +82,20 @@ Result:
 - Conflict-marker scan found no matches.
 - Targeted stale scan found no matches.
 - `scripts/verify.sh` passed: line-budget check, CLI smoke `4 passed`, fast tests `239 passed`, `462 deselected`, `154 subtests passed`.
+
+Docs pointer follow-up verification:
+
+```bash
+rtk git diff --check
+rtk rg -n "^(<<<<<<<|=======|>>>>>>>)" docs/product/README.md docs/delivery/README.md docs/history/docs-portfolio-coverage-ledger/README.md docs/history/docs-portfolio-coverage-ledger/2026-06-06-mag-product-entry-package-authority-ssot-closeout.md
+/Users/gaofeng/.local/bin/opl-doc-doctor doctor . --format json
+```
+
+Result:
+
+- `git diff --check` passed.
+- Conflict-marker scan found no matches.
+- OPL Doc doctor reported `finding_count=0`.
 
 ## Remaining Scope
 
