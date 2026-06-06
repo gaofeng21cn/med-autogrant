@@ -156,8 +156,9 @@ class ProductEntryOplOwnerPayloadResponseTest(unittest.TestCase):
             "runtime://mag/receipts/package/lifecycle.json",
             response["owner_chain_refs"],
         )
-        self.assertEqual(response["domain_receipt_refs"], response["domain_owner_receipt_refs"])
-        self.assertEqual(response["no_regression_refs"], response["no_regression_evidence_refs"])
+        self.assertNotIn("domain_receipt_refs", response)
+        self.assertNotIn("no_regression_refs", response)
+        self.assertNotIn("legacy_payload_field_aliases", response)
         self.assertEqual(
             response["opl_runtime_action_execute_payload"]["typed_blocker_refs"],
             response["typed_blocker_refs"],
