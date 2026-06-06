@@ -63,7 +63,7 @@
     ],
     "domain_owned_authority": [
       "domain_truth",
-      "quality_export_visual_verdict",
+      "fundability_quality_export_submission_verdict",
       "artifact_body_authority",
       "memory_body_accept_reject",
       "owner_receipt"
