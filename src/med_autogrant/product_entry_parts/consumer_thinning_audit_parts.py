@@ -11,26 +11,33 @@ def build_retire_or_tombstone_surfaces(
 ) -> list[dict[str, Any]]:
     return [
         build_retired_functional_module_audit_item(
-            "default_hermes_gateway_local_manager_runtime_owner",
+            "retired_hermes_gateway_local_manager_default_paths",
             code_paths=[
-                "src/med_autogrant/product_entry_parts/executor_defaults.py:active_executor_adapter_metadata_only",
+                "src/med_autogrant/gateway.py:absent",
+                "src/med_autogrant/local_manager.py:absent",
+                "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:retired_legacy_default_path_receipts",
             ],
             active_callers=[],
-            active_caller_status="legacy_runtime_owner_absent_executor_adapter_metadata_only",
+            active_caller_status="legacy_default_runtime_paths_absent_no_active_caller",
             migration_action=(
-                "Delete old Hermes/Gateway/local-manager runtime owner code; current non-default "
-                "executor use must go through explicit OPL executor adapter refs."
+                "Keep only tombstone and MAG owner-handoff receipt refs for retired default "
+                "Hermes/Gateway/local-manager paths; explicit non-default executor use goes "
+                "through OPL executor adapter refs."
             ),
             retention_reason=(
-                "Only executor-default guard metadata remains in active source; old runtime owner and "
-                "probe code is not retained as a compatibility surface."
+                "No default Hermes/Gateway/local-manager path remains as active source residue or "
+                "compatibility surface; receipt refs are body-free provenance only."
             ),
             cannot_absorb_reason=(
-                "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution is "
-                "modeled separately as an executor adapter receipt path, not a runtime owner."
+                "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution "
+                "remains a separate non-default executor adapter receipt path, not this retired "
+                "default path."
             ),
             evidence_refs=[
-                "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+                (
+                    "/product_entry_manifest/physical_skeleton_follow_through/"
+                    "retired_legacy_default_path_receipts"
+                ),
                 "docs/status.md#旧面退役校准",
             ],
         ),

@@ -278,10 +278,29 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         )
         self.assertEqual(audit["retired_active_path_policy"], "physically_removed_or_history_tombstone_only")
         self.assertEqual(audit["forbidden_active_path_residue"], [])
-        residue_states = {entry["path_family"]: entry["state"] for entry in audit["legacy_active_path_residue"]}
-        self.assertEqual(residue_states["default Hermes active path"], "tombstone_only")
-        self.assertEqual(residue_states["default Gateway active path"], "physically_removed_from_active_source")
-        self.assertEqual(residue_states["default local-manager active path"], "physically_removed_from_active_source")
+        self.assertEqual(audit["legacy_active_path_residue"], [])
+        self.assertIn(
+            ".agents/plugins/marketplace.json",
+            follow_through["active_path_scan_no_legacy_default_caller"]["scanned_scope"]["files"],
+        )
+        receipt_states = {
+            entry["path_family"]: entry["state"]
+            for entry in follow_through["retired_legacy_default_path_receipts"]
+        }
+        self.assertEqual(
+            receipt_states,
+            {
+                "default Hermes active path": "tombstone_only",
+                "default Gateway active path": "physically_removed_from_active_source",
+                "default local-manager active path": "physically_removed_from_active_source",
+            },
+        )
+        self.assertTrue(
+            all(
+                entry["active_source_residue"] is False
+                for entry in follow_through["retired_legacy_default_path_receipts"]
+            )
+        )
         for root_key, root in follow_through["roots"].items():
             with self.subTest(root=root_key):
                 self.assertTrue((REPO_ROOT / root["anchor_ref"]).exists())

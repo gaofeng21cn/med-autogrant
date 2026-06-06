@@ -344,12 +344,19 @@ class ProductDomainHandlerTest(unittest.TestCase):
         )
         retire_modules = {item["module_id"]: item for item in audit["retire_or_tombstone_surfaces"]}
         self.assertEqual(
-            retire_modules["default_hermes_gateway_local_manager_runtime_owner"]["active_caller_status"],
-            "legacy_runtime_owner_absent_executor_adapter_metadata_only",
+            retire_modules["retired_hermes_gateway_local_manager_default_paths"]["active_caller_status"],
+            "legacy_default_runtime_paths_absent_no_active_caller",
         )
         self.assertEqual(
-            retire_modules["default_hermes_gateway_local_manager_runtime_owner"]["code_paths"],
-            ["src/med_autogrant/product_entry_parts/executor_defaults.py:active_executor_adapter_metadata_only"],
+            retire_modules["retired_hermes_gateway_local_manager_default_paths"]["code_paths"],
+            [
+                "src/med_autogrant/gateway.py:absent",
+                "src/med_autogrant/local_manager.py:absent",
+                (
+                    "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:"
+                    "retired_legacy_default_path_receipts"
+                ),
+            ],
         )
         self.assertFalse(audit["fail_closed_rules"]["provider_completion_is_grant_ready"])
         self.assertFalse(audit["fail_closed_rules"]["mag_can_rebuild_generic_runtime"])
@@ -615,9 +622,10 @@ class ProductDomainHandlerTest(unittest.TestCase):
                 "docs/status.md#旧面退役校准",
             ],
         )
+        self.assertEqual(physical_follow_through["legacy_active_path_residue"], [])
         removed_residue = [
             item
-            for item in physical_follow_through["legacy_active_path_residue"]
+            for item in physical_follow_through["retired_legacy_default_path_receipts"]
             if item["state"] == "physically_removed_from_active_source"
         ]
         self.assertEqual(

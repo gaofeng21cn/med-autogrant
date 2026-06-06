@@ -48,6 +48,8 @@ MAG 与 MAS、RCA、OMA 共享同一 OPL Foundry Agent 生命周期：`domain pa
 
 Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream Hermes probe、flat shell alias、facade patch bridge、compat aggregate test、Gateway/local-manager default path 和旧 hosted/provider specs 只能作为 history、tombstone、explicit proof history 或 regression oracle 阅读。无 active caller 后直接删除或归档，不新增 compatibility alias、re-export facade 或 compatibility-only 聚合测试。
 
+`physical_skeleton_follow_through.legacy_active_path_residue` 与 `controlled_domain_memory_apply_proof.repo_source_layout_audit.legacy_active_path_residue` 当前均为空；默认 Hermes / Gateway / local-manager path 只保留在 `retired_legacy_default_path_receipts` 里作为 tombstone 或 `mag://owner-handoff/*-retired` refs，不再作为 active/default/compat surface。
+
 ## 当前证据门
 
 当前剩余工作不再写成 MAG repo 侧结构缺口，统一作为 evidence gate 管理：
@@ -59,7 +61,7 @@ Local runtime journal / attempt ledger、repo-owned scheduler daemon、upstream 
 | App/operator/release consumption | 首批 refs-only evidence 可消费；sustained consumption 未关闭。 | OPL/App/operator closeout、executor-first bundle、release/default caller 持续消费 MAG package refs、quality refs、manual portal boundary、transition oracle refs 和 safe action refs。 |
 | Submission-ready human gate | `submission_ready_export_gate` 仍阻塞。 | 真实 MAG owner human-gate receipt，或新的 MAG-owned typed blocker 更新。 |
 | Temporal provider long soak | receipt reconciliation refs 已可读；long-soak window evidence 未关闭。 | `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 的连续证据。 |
-| Physical cleanup / no-resurrection | repo-local active path scan 与 retired public command scan 已守住 legacy default caller / retired command 不复活。 | production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence、explicit physical delete owner receipt 与 no-active legacy caller scan 稳定后，删除仍有 active handler/adapter caller 的旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests。 |
+| Physical cleanup / no-resurrection | repo-local active path scan 与 retired public command scan 已守住 legacy default caller / retired command 不复活；default Hermes / Gateway / local-manager active residue 已清零，只保留 retired receipt refs。 | production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence、explicit physical delete owner receipt 与 no-active legacy caller scan 稳定后，删除仍有 active handler/adapter caller 的旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests。 |
 
 ## 当前入口
 

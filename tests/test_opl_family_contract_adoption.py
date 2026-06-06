@@ -634,11 +634,11 @@ def test_mag_adoption_contract_declares_repo_source_layout_audit_for_memory_skel
     )
     assert audit["retired_active_path_policy"] == "physically_removed_or_history_tombstone_only"
     assert audit["forbidden_active_path_residue"] == []
-    assert {entry["path_family"]: entry["state"] for entry in audit["legacy_active_path_residue"]} == {
+    assert audit["legacy_active_path_residue"] == []
+    assert {entry["path_family"]: entry["state"] for entry in audit["retired_legacy_default_path_receipts"]} == {
         "default Hermes active path": "tombstone_only",
         "default Gateway active path": "physically_removed_from_active_source",
         "default local-manager active path": "physically_removed_from_active_source",
-        "repo-local host-agent runtime as product owner": "physically_removed_from_active_source",
     }
     for boundary in audit["boundary_keys"]:
         assert (REPO_ROOT / boundary).is_dir()
@@ -892,10 +892,10 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
                 "MAG_keeps_guarded_domain_adapter_refs"
             ),
         },
-        "optional_hermes_state_db": {
-            "module_ref": "default_hermes_gateway_local_manager_runtime_owner",
-            "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
-            "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
+        "retired_default_runtime_paths": {
+            "module_ref": "retired_hermes_gateway_local_manager_default_paths",
+            "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
+            "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs",
         },
     }
     assert audit["audit_refs"]["external_evidence_request_pack_ref"] == (

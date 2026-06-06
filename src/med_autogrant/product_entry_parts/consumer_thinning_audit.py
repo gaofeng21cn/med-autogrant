@@ -643,13 +643,13 @@ def _build_privatized_functional_module_audit() -> dict[str, Any]:
                     "MAG_keeps_guarded_domain_adapter_refs"
                 ),
             },
-            "optional_hermes_state_db": {
-                "module_ref": "default_hermes_gateway_local_manager_runtime_owner",
+            "retired_default_runtime_paths": {
+                "module_ref": "retired_hermes_gateway_local_manager_default_paths",
                 "active_caller_status": (
-                    "legacy_runtime_owner_absent_executor_adapter_metadata_only"
+                    "legacy_default_runtime_paths_absent_no_active_caller"
                 ),
                 "migration_action": (
-                    "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe"
+                    "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs"
                 ),
             },
         },

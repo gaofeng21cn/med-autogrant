@@ -207,7 +207,7 @@
             "grant_memory_accept_reject"
           ],
           "legacy_proof_tombstones": [
-            "default_hermes_gateway_local_manager_runtime_owner",
+            "retired_hermes_gateway_local_manager_default_paths",
             "legacy_local_runtime_history_attempt_record",
             "domain_runtime_patch_bridge",
             "compatibility_only_product_entry_aggregate_test",
@@ -235,10 +235,10 @@
               "active_caller_status": "active_refs_only_domain_handler_adapter",
               "migration_action": "OPL_generates_product_operator_shell_and_generic_dispatch_actions_MAG_keeps_guarded_domain_adapter_refs"
             },
-            "optional_hermes_state_db": {
-              "module_ref": "default_hermes_gateway_local_manager_runtime_owner",
-              "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
-              "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe"
+            "retired_default_runtime_paths": {
+              "module_ref": "retired_hermes_gateway_local_manager_default_paths",
+              "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
+              "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs"
             }
           },
           "claims_opl_replacement_exists": true,

@@ -9,6 +9,9 @@ from med_autogrant.product_entry_parts.domain_agent_projection_surfaces import (
 from med_autogrant.product_entry_parts.domain_memory_runtime import (
     build_domain_memory_operator_projection_contract,
 )
+from med_autogrant.product_entry_parts.functional_closure_skeleton import (
+    build_retired_legacy_default_path_receipts,
+)
 from med_autogrant.product_entry_parts.primitives import (
     TARGET_DOMAIN_ID,
     _optional_string_from_mapping,
@@ -479,28 +482,8 @@ def _build_repo_source_layout_audit() -> dict[str, Any]:
             "semantic pack compiler inputs or current machine source refs."
         ),
         "retired_active_path_policy": "physically_removed_or_history_tombstone_only",
-        "legacy_active_path_residue": [
-            {
-                "path_family": "default Hermes active path",
-                "state": "tombstone_only",
-                "evidence_ref": "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
-            },
-            {
-                "path_family": "default Gateway active path",
-                "state": "physically_removed_from_active_source",
-                "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
-            },
-            {
-                "path_family": "default local-manager active path",
-                "state": "physically_removed_from_active_source",
-                "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
-            },
-            {
-                "path_family": "repo-local host-agent runtime as product owner",
-                "state": "physically_removed_from_active_source",
-                "evidence_ref": "docs/status.md#旧面退役校准",
-            },
-        ],
+        "legacy_active_path_residue": [],
+        "retired_legacy_default_path_receipts": build_retired_legacy_default_path_receipts(),
         "forbidden_active_path_residue": [],
         "source_ref_status": [
             {

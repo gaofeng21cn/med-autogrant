@@ -4121,7 +4121,8 @@
         "active_path_scan_no_legacy_default_caller_ref",
         "active_path_scan_no_legacy_default_caller",
         "legacy_active_path_policy",
-        "legacy_active_path_residue"
+        "legacy_active_path_residue",
+        "retired_legacy_default_path_receipts"
       ],
       "properties": {
         "surface_kind": {
@@ -4217,17 +4218,29 @@
         },
         "legacy_active_path_residue": {
           "type": "array",
+          "maxItems": 0
+        },
+        "retired_legacy_default_path_receipts": {
+          "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": true,
-            "required": ["path_family", "state", "evidence_ref"],
+            "required": ["path_family", "state", "active_source_residue", "evidence_ref"],
             "properties": {
+              "path_family": {
+                "enum": [
+                  "default Hermes active path",
+                  "default Gateway active path",
+                  "default local-manager active path"
+                ]
+              },
               "state": {
                 "enum": ["physically_removed_from_active_source", "tombstone_only"]
-              }
+              },
+              "active_source_residue": {"const": false}
             }
           },
-          "minItems": 1
+          "minItems": 3
         }
       }
     },
@@ -5291,7 +5304,7 @@
               "required": [
                 "legacy_local_runtime_history_attempt_record",
                 "domain_handler_dispatch_product_shell",
-                "optional_hermes_state_db"
+                "retired_default_runtime_paths"
               ],
               "properties": {
                 "legacy_local_runtime_history_attempt_record": {
@@ -5322,17 +5335,17 @@
                     }
                   }
                 },
-                "optional_hermes_state_db": {
+                "retired_default_runtime_paths": {
                   "type": "object",
                   "additionalProperties": true,
                   "required": ["module_ref", "active_caller_status", "migration_action"],
                   "properties": {
-                    "module_ref": {"const": "default_hermes_gateway_local_manager_runtime_owner"},
+                    "module_ref": {"const": "retired_hermes_gateway_local_manager_default_paths"},
                     "active_caller_status": {
-                      "const": "legacy_runtime_owner_absent_executor_adapter_metadata_only"
+                      "const": "legacy_default_runtime_paths_absent_no_active_caller"
                     },
                     "migration_action": {
-                      "const": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe"
+                      "const": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs"
                     }
                   }
                 }

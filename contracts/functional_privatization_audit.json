@@ -4108,31 +4108,33 @@
           "migration_action": "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code",
           "module_ref": "legacy_local_runtime_history_attempt_record"
         },
-        "optional_hermes_state_db": {
-          "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
-          "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
-          "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
+        "retired_default_runtime_paths": {
+          "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
+          "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs",
+          "module_ref": "retired_hermes_gateway_local_manager_default_paths"
         }
       },
       "retire_or_tombstone_surfaces": [
         {
           "active_caller_allowed": false,
-          "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
+          "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
           "active_callers": [],
-          "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution is modeled separately as an executor adapter receipt path, not a runtime owner.",
+          "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution remains a separate non-default executor adapter receipt path, not this retired default path.",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
-            "src/med_autogrant/product_entry_parts/executor_defaults.py:active_executor_adapter_metadata_only"
+            "src/med_autogrant/gateway.py:absent",
+            "src/med_autogrant/local_manager.py:absent",
+            "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:retired_legacy_default_path_receipts"
           ],
           "compatibility_alias_allowed": false,
           "evidence_refs": [
-            "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+            "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
             "docs/status.md#旧面退役校准"
           ],
-          "migration_action": "Delete old Hermes/Gateway/local-manager runtime owner code; current non-default executor use must go through explicit OPL executor adapter refs.",
-          "module_id": "default_hermes_gateway_local_manager_runtime_owner",
+          "migration_action": "Keep only tombstone and MAG owner-handoff receipt refs for retired default Hermes/Gateway/local-manager paths; explicit non-default executor use goes through OPL executor adapter refs.",
+          "module_id": "retired_hermes_gateway_local_manager_default_paths",
           "owner": "none_active",
-          "retention_reason": "Only executor-default guard metadata remains in active source; old runtime owner and probe code is not retained as a compatibility surface.",
+          "retention_reason": "No default Hermes/Gateway/local-manager path remains as active source residue or compatibility surface; receipt refs are body-free provenance only.",
           "state": "retired_or_tombstone_only"
         },
         {
@@ -6185,31 +6187,33 @@
         "migration_action": "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code",
         "module_ref": "legacy_local_runtime_history_attempt_record"
       },
-      "optional_hermes_state_db": {
-        "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
-        "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
-        "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
+      "retired_default_runtime_paths": {
+        "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
+        "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs",
+        "module_ref": "retired_hermes_gateway_local_manager_default_paths"
       }
     },
     "retire_or_tombstone_surfaces": [
       {
         "active_caller_allowed": false,
-        "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
+        "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
         "active_callers": [],
-        "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution is modeled separately as an executor adapter receipt path, not a runtime owner.",
+        "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution remains a separate non-default executor adapter receipt path, not this retired default path.",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
-          "src/med_autogrant/product_entry_parts/executor_defaults.py:active_executor_adapter_metadata_only"
+          "src/med_autogrant/gateway.py:absent",
+          "src/med_autogrant/local_manager.py:absent",
+          "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:retired_legacy_default_path_receipts"
         ],
         "compatibility_alias_allowed": false,
         "evidence_refs": [
-          "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+          "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
           "docs/status.md#旧面退役校准"
         ],
-        "migration_action": "Delete old Hermes/Gateway/local-manager runtime owner code; current non-default executor use must go through explicit OPL executor adapter refs.",
-        "module_id": "default_hermes_gateway_local_manager_runtime_owner",
+        "migration_action": "Keep only tombstone and MAG owner-handoff receipt refs for retired default Hermes/Gateway/local-manager paths; explicit non-default executor use goes through OPL executor adapter refs.",
+        "module_id": "retired_hermes_gateway_local_manager_default_paths",
         "owner": "none_active",
-        "retention_reason": "Only executor-default guard metadata remains in active source; old runtime owner and probe code is not retained as a compatibility surface.",
+        "retention_reason": "No default Hermes/Gateway/local-manager path remains as active source residue or compatibility surface; receipt refs are body-free provenance only.",
         "state": "retired_or_tombstone_only"
       },
       {
@@ -6831,31 +6835,33 @@
       "migration_action": "OPL_owns_session_records_MAG_deleted_local_runtime_history_attempt_record_code",
       "module_ref": "legacy_local_runtime_history_attempt_record"
     },
-    "optional_hermes_state_db": {
-      "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
-      "migration_action": "OPL_owns_generic_executor_adapter_MAG_deleted_legacy_runtime_probe",
-      "module_ref": "default_hermes_gateway_local_manager_runtime_owner"
+    "retired_default_runtime_paths": {
+      "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
+      "migration_action": "OPL_owns_generic_executor_adapter_MAG_keeps_only_tombstone_and_owner_handoff_refs",
+      "module_ref": "retired_hermes_gateway_local_manager_default_paths"
     }
   },
   "retire_or_tombstone_surfaces": [
     {
       "active_caller_allowed": false,
-      "active_caller_status": "legacy_runtime_owner_absent_executor_adapter_metadata_only",
+      "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
       "active_callers": [],
-      "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution is modeled separately as an executor adapter receipt path, not a runtime owner.",
+      "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution remains a separate non-default executor adapter receipt path, not this retired default path.",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
-        "src/med_autogrant/product_entry_parts/executor_defaults.py:active_executor_adapter_metadata_only"
+        "src/med_autogrant/gateway.py:absent",
+        "src/med_autogrant/local_manager.py:absent",
+        "src/med_autogrant/product_entry_parts/functional_closure_skeleton.py:retired_legacy_default_path_receipts"
       ],
       "compatibility_alias_allowed": false,
       "evidence_refs": [
-        "/product_entry_manifest/controlled_domain_memory_apply_proof/repo_source_layout_audit",
+        "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
         "docs/status.md#旧面退役校准"
       ],
-      "migration_action": "Delete old Hermes/Gateway/local-manager runtime owner code; current non-default executor use must go through explicit OPL executor adapter refs.",
-      "module_id": "default_hermes_gateway_local_manager_runtime_owner",
+      "migration_action": "Keep only tombstone and MAG owner-handoff receipt refs for retired default Hermes/Gateway/local-manager paths; explicit non-default executor use goes through OPL executor adapter refs.",
+      "module_id": "retired_hermes_gateway_local_manager_default_paths",
       "owner": "none_active",
-      "retention_reason": "Only executor-default guard metadata remains in active source; old runtime owner and probe code is not retained as a compatibility surface.",
+      "retention_reason": "No default Hermes/Gateway/local-manager path remains as active source residue or compatibility surface; receipt refs are body-free provenance only.",
       "state": "retired_or_tombstone_only"
     },
     {

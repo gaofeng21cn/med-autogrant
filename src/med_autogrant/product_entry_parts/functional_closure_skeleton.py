@@ -79,6 +79,39 @@ _FORBIDDEN_DEFAULT_CALLER_PATTERNS = (
 )
 
 
+def build_retired_legacy_default_path_receipts() -> list[dict[str, Any]]:
+    return [
+        {
+            "path_family": "default Hermes active path",
+            "state": "tombstone_only",
+            "active_source_residue": False,
+            "evidence_ref": "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
+            "domain_owner_handoff_receipt_refs": [],
+        },
+        {
+            "path_family": "default Gateway active path",
+            "state": "physically_removed_from_active_source",
+            "active_source_residue": False,
+            "evidence_ref": (
+                "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-"
+                "supersedes-gateway-manager-wording"
+            ),
+            "domain_owner_handoff_receipt_refs": [
+                "mag://owner-handoff/default-gateway-active-path-retired",
+            ],
+        },
+        {
+            "path_family": "default local-manager active path",
+            "state": "physically_removed_from_active_source",
+            "active_source_residue": False,
+            "evidence_ref": "docs/status.md#旧面退役校准",
+            "domain_owner_handoff_receipt_refs": [
+                "mag://owner-handoff/default-local-manager-active-path-retired",
+            ],
+        },
+    ]
+
+
 def build_physical_skeleton_follow_through() -> dict[str, Any]:
     roots = {
         "agent": {
@@ -212,29 +245,8 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
             "domain-memory receipt evidence writer persists accepted/rejected receipt instances under runtime roots only",
         ],
         "legacy_active_path_policy": "physically_removed_or_history_tombstone_only",
-        "legacy_active_path_residue": [
-            {
-                "path_family": "default Hermes active path",
-                "state": "tombstone_only",
-                "evidence_ref": "docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md",
-            },
-            {
-                "path_family": "default Gateway active path",
-                "state": "physically_removed_from_active_source",
-                "evidence_ref": "docs/decisions.md#2026-05-12-temporal-backed-opl-production-runtime-supersedes-gateway-manager-wording",
-                "domain_owner_handoff_receipt_refs": [
-                    "mag://owner-handoff/default-gateway-active-path-retired"
-                ],
-            },
-            {
-                "path_family": "default local-manager active path",
-                "state": "physically_removed_from_active_source",
-                "evidence_ref": "docs/status.md#旧面退役校准",
-                "domain_owner_handoff_receipt_refs": [
-                    "mag://owner-handoff/default-local-manager-active-path-retired"
-                ],
-            },
-        ],
+        "legacy_active_path_residue": [],
+        "retired_legacy_default_path_receipts": build_retired_legacy_default_path_receipts(),
         "next_physical_moves": [
             {
                 "path_family": "domain entry and stage descriptors",
