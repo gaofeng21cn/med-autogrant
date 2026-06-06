@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import json
 import subprocess
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -25,8 +26,17 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
     assert "min_quality = 0.59" in rules_text
     assert "max_cycles = 0" in rules_text
     assert "max_depth = 14" in rules_text
-    assert "runtime_facade" in rules_text
+    assert "runtime_facade" not in rules_text
+    assert "src/med_autogrant/hermes_runtime.py" not in rules_text
     assert "export_package" in rules_text
+    rules = tomllib.loads(rules_text)
+    assert {layer["name"] for layer in rules["layers"]} == {
+        "entry",
+        "product_entry",
+        "domain_logic",
+        "export_package",
+    }
+    assert all(boundary["to"] != "runtime_facade" for boundary in rules["boundaries"])
 
     workflow_text = workflow_path.read_text(encoding="utf-8")
     assert "continue-on-error: true" in workflow_text

@@ -16,29 +16,19 @@ paths = ["src/med_autogrant/product_entry_parts/**"]
 order = 2
 
 [[layers]]
-name = "runtime_facade"
-paths = ["src/med_autogrant/hermes_runtime.py"]
-order = 3
-
-[[layers]]
 name = "domain_logic"
 paths = ["src/med_autogrant/workspace*.py", "src/med_autogrant/*executor.py", "src/med_autogrant/*controller.py"]
-order = 4
+order = 3
 
 [[layers]]
 name = "export_package"
 paths = ["src/med_autogrant/artifact_bundle.py", "src/med_autogrant/final_package.py", "src/med_autogrant/hosted_contract_bundle.py", "src/med_autogrant/submission_ready.py"]
-order = 5
+order = 4
 
 [[boundaries]]
 from = "export_package"
 to = "entry"
 reason = "package/export builders must not call entry facades"
-
-[[boundaries]]
-from = "export_package"
-to = "runtime_facade"
-reason = "package/export builders own artifacts and may only use split IO helpers"
 
 [[boundaries]]
 from = "domain_logic"
