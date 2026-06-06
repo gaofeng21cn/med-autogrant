@@ -11,10 +11,6 @@ from med_autogrant.family_shared_release import inspect_current_repo_family_shar
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-LINE_BUDGET_TARGET = 1000
-LINE_BUDGET_LIMIT = 1500
-LEGACY_OVER_TARGET_BUDGETS: dict[str, int] = {}
-CODE_SUFFIXES = {".py", ".sh", ".js", ".ts", ".tsx", ".jsx"}
 TRACKED_PATH_FORBIDDEN_EXACT_NAMES = {
     ".DS_Store",
     ".agent-contract-baseline.json",
@@ -30,21 +26,6 @@ TRACKED_PATH_FORBIDDEN_PARTS = {
     "out",
     "runtime-state",
 }
-
-
-def _tracked_code_files() -> list[Path]:
-    completed = subprocess.run(
-        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
-        cwd=REPO_ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return [
-        REPO_ROOT / path
-        for path in completed.stdout.splitlines()
-        if (REPO_ROOT / path).suffix in CODE_SUFFIXES
-    ]
 
 
 def _tracked_files() -> list[str]:
@@ -81,10 +62,13 @@ def _is_forbidden_tracked_path(path: str) -> bool:
 class RepositoryHygieneTest(unittest.TestCase):
     def test_repo_hygiene_script_removes_only_ignored_generated_artifacts(self) -> None:
         ignored_cache = REPO_ROOT / "src" / "med_autogrant" / "__pycache__"
+        ignored_quality_details = REPO_ROOT / "artifacts" / "opl-quality-details"
         unignored_cache = REPO_ROOT / "local_unignored_cache" / "__pycache__"
         ignored_cache.mkdir(parents=True, exist_ok=True)
+        ignored_quality_details.mkdir(parents=True, exist_ok=True)
         unignored_cache.mkdir(parents=True, exist_ok=True)
         (ignored_cache / "module.pyc").write_bytes(b"cache")
+        (ignored_quality_details / "quality-details.json").write_text("{}", encoding="utf-8")
         (unignored_cache / "module.pyc").write_bytes(b"cache")
 
         try:
@@ -103,10 +87,13 @@ class RepositoryHygieneTest(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertFalse(ignored_cache.exists())
+            self.assertFalse(ignored_quality_details.exists())
             self.assertFalse(unignored_cache.exists())
         finally:
             if ignored_cache.exists():
                 shutil.rmtree(ignored_cache)
+            if ignored_quality_details.exists():
+                shutil.rmtree(ignored_quality_details)
             if unignored_cache.parent.exists():
                 shutil.rmtree(unignored_cache.parent)
 
@@ -154,24 +141,18 @@ class RepositoryHygieneTest(unittest.TestCase):
         self.assertTrue(all(item["status"] == "aligned" for item in inspection["findings"]))
         self.assertTrue(all(item["pins"] == [inspection["owner_commit"]] for item in inspection["findings"]))
 
-    def test_repo_tracked_code_files_stay_within_line_budget(self) -> None:
-        over_limit: list[str] = []
-        new_or_grown_over_target: list[str] = []
-        for path in _tracked_code_files():
-            if not path.exists():
-                continue
-            line_count = sum(1 for _ in path.open(encoding="utf-8"))
-            relative_path = path.relative_to(REPO_ROOT).as_posix()
-            if line_count > LINE_BUDGET_LIMIT:
-                over_limit.append(f"{line_count} {relative_path}")
-            elif line_count > LINE_BUDGET_TARGET:
-                allowed_line_count = LEGACY_OVER_TARGET_BUDGETS.get(relative_path)
-                if allowed_line_count is None or line_count > allowed_line_count:
-                    budget = allowed_line_count or LINE_BUDGET_TARGET
-                    new_or_grown_over_target.append(f"{line_count} {relative_path} (budget {budget})")
+    def test_repo_tracked_code_file_line_budget_is_advisory_by_default(self) -> None:
+        result = subprocess.run(
+            ["python", "scripts/line_budget.py"],
+            cwd=REPO_ROOT,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+        )
 
-        self.assertEqual(over_limit, [])
-        self.assertEqual(new_or_grown_over_target, [])
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertIn("test-line-budget-strict:", (REPO_ROOT / "Makefile").read_text(encoding="utf-8"))
 
     def test_machine_surfaces_do_not_restore_retired_product_entry_compatibility_claims(self) -> None:
         retired_claim_patterns = (

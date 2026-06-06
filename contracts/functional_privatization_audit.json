@@ -1945,13 +1945,13 @@
               },
               {
                 "exists": true,
-                "path": "src/med_autogrant/product_entry_parts/manifest_builder_parts/shell_assembly.py",
+                "path": "src/med_autogrant/product_entry_parts/manifest_shell/shell_assembly.py",
                 "proof_kind": "repo_file_exists_at_manifest_build_time",
                 "role": "current_mag_domain_handler_or_refs_only_adapter_path"
               },
               {
                 "exists": true,
-                "path": "src/med_autogrant/product_entry_parts/manifest_builder_parts/runtime_task_shell.py",
+                "path": "src/med_autogrant/product_entry_parts/manifest_shell/runtime_task_shell.py",
                 "proof_kind": "repo_file_exists_at_manifest_build_time",
                 "role": "current_mag_domain_handler_or_refs_only_adapter_path"
               },
@@ -1969,8 +1969,8 @@
           "current_mag_paths": [
             "src/med_autogrant/product_entry_parts/progress.py",
             "src/med_autogrant/product_entry_parts/manifest_builder.py",
-            "src/med_autogrant/product_entry_parts/manifest_builder_parts/shell_assembly.py",
-            "src/med_autogrant/product_entry_parts/manifest_builder_parts/runtime_task_shell.py",
+            "src/med_autogrant/product_entry_parts/manifest_shell/shell_assembly.py",
+            "src/med_autogrant/product_entry_parts/manifest_shell/runtime_task_shell.py",
             "src/med_autogrant/product_entry_parts/receipt_observability.py"
           ],
           "current_owner": "med-autogrant",

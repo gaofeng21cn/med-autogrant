@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 from pathlib import Path
 
@@ -28,9 +29,15 @@ IGNORED_SUFFIXES = (".min.js",)
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Enforce the tracked code line budget.")
+    parser = argparse.ArgumentParser(description="Report the tracked code line budget.")
     parser.add_argument("--list", action="store_true", help="list tracked code files over the default budget")
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="exit non-zero when line-budget issues are found",
+    )
     args = parser.parse_args()
+    strict = args.strict or os.environ.get("OPL_LINE_BUDGET_STRICT") == "1"
 
     repo_root = Path(__file__).resolve().parent.parent
     tracked_files = subprocess.run(
@@ -78,10 +85,17 @@ def main() -> int:
             )
 
     if failures:
-        print(f"line budget check failed ({len(failures)} issue{'s' if len(failures) != 1 else ''}):")
+        if strict:
+            print(f"line budget strict check failed ({len(failures)} issue{'s' if len(failures) != 1 else ''}):")
+        else:
+            print(f"line budget advisory found {len(failures)} issue{'s' if len(failures) != 1 else ''}:")
+            print(
+                "ordinary development is not blocked; run scripts/line_budget.py --strict "
+                "or set OPL_LINE_BUDGET_STRICT=1 for hard enforcement"
+            )
         for failure in failures:
             print(f"- {failure}")
-        return 1
+        return 1 if strict else 0
     return 0
 
 

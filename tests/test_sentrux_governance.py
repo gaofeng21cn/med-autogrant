@@ -43,13 +43,20 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
     makefile_text = (REPO_ROOT / "Makefile").read_text(encoding="utf-8")
     assert "sentrux gate ." in structural_gate_script
     assert "sentrux check ." in structural_gate_script
+    assert 'case "${1:-}" in' in structural_gate_script
+    assert '""|"--advisory")' in structural_gate_script
+    assert '"--strict")' in structural_gate_script
+    assert '&& "${strict}" == "true"' in structural_gate_script
     assert "complete .sentrux/rules.toml sidecar" in structural_gate_script
+    assert 'default_output_dir="${TMPDIR:-/tmp}/med-autogrant/opl-quality-details"' in quality_details_script
     assert 'compare_ref="${OPL_QUALITY_DETAILS_COMPARE_REF:-origin/main}"' in quality_details_script
     assert 'quality details --root . --format markdown --limit 20 --compare-ref "${compare_ref}"' in quality_details_script
     assert 'quality details --root . --format json --compare-ref "${compare_ref}"' in quality_details_script
     assert "sentrux-rules.toml" in quality_details_script
     assert "structure)" in verify_script
     assert "test-structure:" in makefile_text
+    assert "test-structure-strict:" in makefile_text
+    assert "./scripts/run-structural-quality-gate.sh --strict" in makefile_text
 
 
 @pytest.mark.meta

@@ -20,6 +20,8 @@ def test_makefile_exposes_layered_test_entrypoints() -> None:
     assert '$(PYTEST_CLEAN) -q -m "not meta and not regression and not proof"' in makefile
     assert "test-line-budget:" in makefile
     assert "$(PYTHON_CLEAN) scripts/line_budget.py" in makefile
+    assert "test-line-budget-strict:" in makefile
+    assert "$(PYTHON_CLEAN) scripts/line_budget.py --strict" in makefile
     assert "test-cli-smoke:" in makefile
     assert "$(PYTEST_CLEAN) -q -m smoke" in makefile
     assert "test-regression:" in makefile
@@ -78,6 +80,7 @@ def test_verify_script_wraps_canonical_make_lanes() -> None:
     verify_script = _read("scripts/verify.sh")
 
     assert "make test-line-budget" in verify_script
+    assert "make test-line-budget-strict" not in verify_script
     assert "make test-fast" in verify_script
     assert "make test-family" in verify_script
     assert "make test-meta" in verify_script
@@ -106,6 +109,7 @@ def test_opl_module_healthcheck_uses_product_smoke_lane() -> None:
     assert "command -v python3" in healthcheck
     assert "command -v uv" in healthcheck
     assert "python3 scripts/line_budget.py" in healthcheck
+    assert "python3 scripts/line_budget.py --strict" not in healthcheck
     assert "make test-cli-smoke" in healthcheck
     assert "make test-fast" not in healthcheck
     assert "make test-family" not in healthcheck

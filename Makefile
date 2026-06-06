@@ -1,7 +1,7 @@
 PYTHON_CLEAN := ./scripts/run-python-clean.sh
 PYTEST_CLEAN := ./scripts/run-pytest-clean.sh
 
-.PHONY: test test-fast test-line-budget test-family test-meta test-cli-smoke test-regression test-proof test-structure test-full
+.PHONY: test test-fast test-line-budget test-line-budget-strict test-family test-meta test-cli-smoke test-regression test-proof test-structure test-structure-strict test-full
 
 test: test-fast
 
@@ -12,6 +12,9 @@ test-fast:
 
 test-line-budget:
 	$(PYTHON_CLEAN) scripts/line_budget.py
+
+test-line-budget-strict:
+	$(PYTHON_CLEAN) scripts/line_budget.py --strict
 
 test-family:
 	$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q -m "not proof"
@@ -32,7 +35,11 @@ test-proof:
 
 test-structure:
 	make test-line-budget
-	./scripts/run-structural-quality-gate.sh
+	./scripts/run-structural-quality-gate.sh --advisory
+
+test-structure-strict:
+	make test-line-budget-strict
+	./scripts/run-structural-quality-gate.sh --strict
 
 test-full:
 	$(PYTEST_CLEAN) -q -m "not proof"

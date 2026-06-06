@@ -38,8 +38,8 @@ from med_autogrant.product_entry_parts.manifest_owner_payload_response import (
 )
 from med_autogrant.product_entry_parts.manifest_runtime_companions import build_manifest_runtime_companions
 from med_autogrant.product_entry_parts.manifest_skill_catalog import build_product_entry_skill_catalog
-from med_autogrant.product_entry_parts.manifest_builder_parts.shell_assembly import build_manifest_shell_assembly
-from med_autogrant.product_entry_parts.manifest_builder_parts.runtime_task_shell import (
+from med_autogrant.product_entry_parts.manifest_shell.shell_assembly import build_manifest_shell_assembly
+from med_autogrant.product_entry_parts.manifest_shell.runtime_task_shell import (
     build_manifest_runtime_task_shell,
 )
 from med_autogrant.product_entry_parts.domain_agent_projection_surfaces import (

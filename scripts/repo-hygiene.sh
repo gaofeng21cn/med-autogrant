@@ -21,6 +21,7 @@ if [ "${fix}" = "1" ]; then
       -path './dist' -prune -o \
       -path './.worktrees' -prune -o \
       -path './worktrees' -prune -o \
+      -path './artifacts/opl-quality-details' -print -o \
       \( -name '.venv' -o -name '__pycache__' -o -name '.pytest_cache' -o -name '*.egg-info' -o -name '.DS_Store' \) \
       -print
   )

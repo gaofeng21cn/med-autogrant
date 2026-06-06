@@ -117,16 +117,21 @@ advisory 模式，现有基线通过聚焦 cleanup lane 逐步收紧。合入判
 和 repo-native 验证：大幅且无法解释的结构退化、cycle 回归、rules 违规或测试失败
 应阻止吸收；若依赖 ownership 更清楚，Sentrux 分数小幅波动可以接受。
 
-本地 `structure` lane 与 advisory workflow 还会在 `artifacts/opl-quality-details/`
-写入 OPL quality details sidecar：通过
+本地 `structure` lane 与 advisory workflow 还会在仓外
+`${TMPDIR:-/tmp}/med-autogrant/opl-quality-details/` 写入 OPL quality details
+sidecar；如需指定诊断落点，可设置 `OPL_QUALITY_DETAILS_DIR`。通过
 `/Users/gaofeng/workspace/one-person-lab/bin/opl quality details --root . --format markdown --limit 20`
 生成 markdown，通过同一命令的 `--format json` 生成 JSON，并额外保留完整
 `.sentrux/rules.toml` sidecar。若 Sentrux gate/check 失败，脚本会先生成并打印这些
-诊断，再报告 Sentrux 失败。
+诊断，再报告 Sentrux 失败。`./scripts/run-structural-quality-gate.sh` 默认 advisory；
+只有显式传入 `--strict` 时才把 Sentrux 失败码作为脚本退出码。
 
-默认本地验证入口是 `./scripts/verify.sh`。它只运行一次 line-budget，然后通过
+默认本地验证入口是 `./scripts/verify.sh`。它运行一次 advisory line-budget，然后通过
 repo-local clean runner 运行小 `smoke` lane 与不需要 optional proof dependency
 的非重型 fast core lane；Python bytecode、pytest cache 和临时同步副产物不得写回开发 checkout。
+普通开发不因 line-budget oversized / growth / stale baseline 阻断；每日结构治理或维护收紧
+使用 `scripts/line_budget.py --strict`、`OPL_LINE_BUDGET_STRICT=1` 或
+`make test-line-budget-strict`。
 矩阵型、
 runtime/session、hosted/export、product-entry 与 provenance-oracle 回归覆盖归入
 `./scripts/verify.sh regression`；显式 Hermes hosted/proof 检查归入
@@ -140,8 +145,9 @@ case 模块直接由 `tests/product_entry_cases/` 收集，旧
 `.agents/`、`.agent-contract-baseline.json` 这类生成物 / 本地状态。MAG 只维护
 `plugins/mag/.codex-plugin/plugin.json` 与 skill source；Codex config 的 marketplace
 由 OPL-owned wrapper 生成，不再把 `.agents/plugins/marketplace.json` 写回本仓。
-同一测试也继续约束 tracked source/test line budget，新增或增长的超长文件应拆分，
-而不是扩大单文件基线。
+同一测试也继续确认 tracked source/test line budget 的 advisory 默认和 strict 入口；
+新增或增长的超长文件应拆分，而不是扩大单文件基线，但硬 enforcement 只属于显式 strict
+维护 lane。
 
 ## Active baton 与历史规划工件
 

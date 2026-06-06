@@ -4,7 +4,8 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 cd "${repo_root}"
 
-output_dir="${OPL_QUALITY_DETAILS_DIR:-artifacts/opl-quality-details}"
+default_output_dir="${TMPDIR:-/tmp}/med-autogrant/opl-quality-details"
+output_dir="${OPL_QUALITY_DETAILS_DIR:-${default_output_dir}}"
 opl_bin="${OPL_QUALITY_DETAILS_BIN:-/Users/gaofeng/workspace/one-person-lab/bin/opl}"
 compare_ref="${OPL_QUALITY_DETAILS_COMPARE_REF:-origin/main}"
 

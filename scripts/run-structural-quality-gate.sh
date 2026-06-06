@@ -4,10 +4,19 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 cd "${repo_root}"
 
-advisory=false
-if [[ "${1:-}" == "--advisory" ]]; then
-  advisory=true
-fi
+strict=false
+case "${1:-}" in
+  ""|"--advisory")
+    strict=false
+    ;;
+  "--strict")
+    strict=true
+    ;;
+  *)
+    echo "Usage: $0 [--advisory|--strict]" >&2
+    exit 2
+    ;;
+esac
 
 status=0
 
@@ -36,6 +45,6 @@ else
   echo "::notice::No .sentrux/rules.toml found; skipping rules check."
 fi
 
-if [[ "${status}" -ne 0 && "${advisory}" == "false" ]]; then
+if [[ "${status}" -ne 0 && "${strict}" == "true" ]]; then
   exit "${status}"
 fi
