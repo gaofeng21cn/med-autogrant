@@ -1,7 +1,7 @@
 PYTHON_CLEAN := ./scripts/run-python-clean.sh
 PYTEST_CLEAN := ./scripts/run-pytest-clean.sh
 
-.PHONY: test test-fast test-line-budget test-line-budget-strict test-family test-meta test-cli-smoke test-regression test-proof test-structure test-structure-strict test-full
+.PHONY: test test-fast test-line-budget test-line-budget-strict test-generated-aggregate-sources test-family test-meta test-cli-smoke test-regression test-proof test-structure test-structure-strict test-full
 
 test: test-fast
 
@@ -16,12 +16,16 @@ test-line-budget:
 test-line-budget-strict:
 	$(PYTHON_CLEAN) scripts/line_budget.py --strict
 
+test-generated-aggregate-sources:
+	$(PYTHON_CLEAN) scripts/check_generated_aggregate_sources.py
+
 test-family:
 	$(PYTEST_CLEAN) tests/test_repository_hygiene.py tests/test_test_command_surfaces.py tests/test_domain_entry.py tests/test_editable_shared_bootstrap.py -q -m "not proof"
 
 test-meta:
 	./scripts/repo-hygiene.sh --fix
 	./scripts/repo-hygiene.sh
+	$(MAKE) test-generated-aggregate-sources
 	$(PYTEST_CLEAN) -q -m meta
 
 test-cli-smoke:

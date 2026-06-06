@@ -88,6 +88,7 @@ class RepositoryHygieneTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertFalse(ignored_cache.exists())
             self.assertFalse(ignored_quality_details.exists())
+            self.assertFalse((REPO_ROOT / "artifacts").exists())
             self.assertFalse(unignored_cache.exists())
         finally:
             if ignored_cache.exists():
