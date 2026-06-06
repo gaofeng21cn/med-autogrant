@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+
 
 from product_entry_cases.support import *  # noqa: F401,F403
 
@@ -14,20 +16,42 @@ class ProductEntryPartsStructureTest(unittest.TestCase):
             (REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts" / "shared.py").exists()
         )
 
-    def test_consumer_thinning_audit_private_reexports_are_not_present(self) -> None:
-        package_text = (
+    def test_consumer_thinning_audit_package_reexports_are_not_present(self) -> None:
+        package_path = (
             REPO_ROOT
             / "src"
             / "med_autogrant"
             / "product_entry_parts"
             / "consumer_thinning_audit"
             / "__init__.py"
-        ).read_text(encoding="utf-8")
+        )
+        package_text = package_path.read_text(encoding="utf-8")
         consumer_text = (
             REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts" / "consumer_thinning.py"
         ).read_text(encoding="utf-8")
+        package_tree = ast.parse(package_text)
 
-        self.assertNotIn("_build_", package_text)
+        forbidden_nodes = [
+            node
+            for node in ast.walk(package_tree)
+            if isinstance(node, (ast.Import, ast.ImportFrom))
+            or (
+                isinstance(node, ast.Assign)
+                and any(isinstance(target, ast.Name) and target.id == "__all__" for target in node.targets)
+            )
+        ]
+        self.assertEqual([], forbidden_nodes)
+        for builder_name in (
+            "build_default_caller_deletion_bridge_exit_gate",
+            "build_functional_module_audit_item",
+            "build_legacy_exit_gate",
+            "build_privatized_functional_module_audit",
+            "build_retired_functional_module_audit_item",
+        ):
+            self.assertNotIn(builder_name, package_text)
+
+        self.assertIn("consumer_thinning_audit.report", consumer_text)
+        self.assertNotIn("from med_autogrant.product_entry_parts.consumer_thinning_audit import", consumer_text)
         self.assertNotIn("_build_privatized_functional_module_audit", consumer_text)
 
     def test_product_entry_parts_do_not_star_import_each_other(self) -> None:
