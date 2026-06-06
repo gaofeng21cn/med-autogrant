@@ -28,7 +28,7 @@ MAG 采用 OPL-family canonical docs taxonomy：
 | `docs/active/**` | active gap / inventory | `mag-ideal-state-cross-repo-gap-plan.md` 是唯一 active gap plan；`opl-private-implementation-migration-inventory.md` 是 per-surface 明细，不替代 active plan。 |
 | `docs/public/product/runtime/delivery/source/policies/**` | 薄 support index | 只做目录职责和下一跳，不把核心事实复制成第二真相源。 |
 | `docs/specs/**` | active specs / support records / lifecycle map | 只按 `docs/specs/README.md` 与 `specs_lifecycle_map.md` 标注的 active 或 support subsection 阅读。 |
-| `docs/references/**` | reference | north-star、OPL adoption、memory policy、governance checklist；不承担 current status。 |
+| `docs/references/**` | reference | north-star、OPL adoption、memory policy、series governance checklist；不承担 current status、docs lifecycle governance 或 active plan。 |
 | `docs/history/**` | history / provenance | 保存旧 specs、旧 plans、provider proof、coverage ledger、OMX 和 tombstone；标题中的 `Current Truth` 只能按当时语境阅读。 |
 
 当前没有需要新增 docs 目录或把 history 文件恢复为 active/support owner 的证据。此前 active/status 入口携带的 proof-by-proof 明细已按 owner/gate/status 层压回 `docs/status.md` 与 active gap plan；dated coverage、retirement audit 和 proof 流水继续留在 history 或机器合同。
@@ -54,7 +54,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 | `docs/source/` | funder/task/source intake、workspace canonical document、source truth consumption | 当前较薄；后续承接 workspace/source intake 和 funder-source 边界。 |
 | `docs/policies/` | 稳定治理规则、文档规则、repo-local operating discipline | 当前较薄；长期规则可从 invariants/decisions/governance checklist 抽取。 |
 | `docs/specs/` | active specs、support records、integration references | 只保留 active current specs、少量 support records 和 lifecycle map；纯历史 R/P/post-R5A/future-P5/provider-proof/hosted-handoff 记录归档到 `docs/history/specs/`。 |
-| `docs/references/` | north-star、OPL adoption、memory policy、governance checklist | 真实承载；不承担 active owner。 |
+| `docs/references/` | north-star、OPL adoption、memory policy、series governance checklist | 真实承载；不承担 active owner、docs lifecycle governance 或 current status。 |
 | `docs/history/` | 完成计划、旧 specs、旧 provider/runtime/OMX/provenance | 真实承载；不承担 current truth。 |
 
 ## 非 canonical 目录
