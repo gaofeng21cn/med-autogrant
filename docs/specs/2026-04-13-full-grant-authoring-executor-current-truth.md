@@ -134,8 +134,8 @@ Date: `2026-04-13`
 - 当前 product loop、hosted bundle 与 route contract 已共享同一份 landed truth
 - 当前执行器边界与失效清理规则已经冻结
 
-它不意味着：
+明确不表示以下内容已经成立或需要恢复：
 
-- mature direct grant Web UI / hosted runtime 已完成
-- 旧 `OPL Gateway` landed wording 只保留为 provenance，不是 current owner line
-- 所有 landed route 都已经自动变成 Hermes-native full agent loop
+- 不表示 mature direct grant Web UI / hosted runtime 已完成
+- 不表示旧 `OPL Gateway` landed wording 是 current owner line；它只保留为 provenance
+- 不表示所有 landed route 都已经自动变成 Hermes-native full agent loop

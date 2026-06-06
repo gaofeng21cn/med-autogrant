@@ -142,10 +142,10 @@ Date: `2026-04-12`
 - 当前 `product_entry` / `executor_routing_contract` 已经升级成 schema-backed contract
 - repo 现在会在生成时 fail-closed，阻止 contract drift
 
-它不意味着：
+明确不表示以下内容已经成立或需要恢复：
 
-- mature product UX 已完成
-- critique executor 已 landed
-- hosted runtime 已完成
-- 旧 `OPL Gateway` landed wording 只保留为 provenance，不是 current owner line
-- Hermes-backed runtime owner、Gateway/federation caller 或 compatibility bridge 不是当前目标
+- 不表示 mature product UX 已完成
+- 不表示 critique executor 已 landed；critique executor 的当前 truth 以 `2026-04-13-critique-codex-cli-executor-current-truth.md` 和 source/tests 为准
+- 不表示 hosted runtime 已完成
+- 不表示旧 `OPL Gateway` landed wording 是 current owner line；它只保留为 provenance
+- 不表示 Hermes-backed runtime owner、Gateway/federation caller 或 compatibility bridge 是当前目标

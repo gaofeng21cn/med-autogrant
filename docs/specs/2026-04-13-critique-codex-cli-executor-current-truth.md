@@ -83,7 +83,7 @@ Date: `2026-04-13`
 
 `run_codex_exec(...)` 不会固定 repo-local `gpt-5.4 / xhigh`，而是跟随本机 Codex 默认配置；只有显式覆盖时，才会把 override 传进 `codex exec`。
 
-### 4. 当前 landed executor 不把 Hermes-Agent 当作默认 authoring executor
+### 4. 当前 landed executor 的默认 authoring path 由 Codex CLI 持有
 
 当前成立的是：
 
@@ -93,8 +93,8 @@ Date: `2026-04-13`
 
 当前不成立的是：
 
-- `critique` 的默认 concrete executor 已经切换到 `Hermes-Agent`
-- `Hermes-Agent` 拥有 MAG 默认 runtime、默认 authoring executor、grant truth 或 quality verdict
+- `critique` 的默认 concrete executor 已经离开 `Codex CLI`
+- MAG runtime、authoring executor、grant truth 或 quality verdict 由显式 receipt lane 持有
 
 只有带 session substrate、route orchestration、domain mutation、durable state transition 与 OPL `AgentExecutionReceipt` 风格 proof 的 full agent loop 才算显式 receipt lane；chat relay / prompt relay / 单次 chat completion 不算。
 
@@ -143,8 +143,8 @@ Date: `2026-04-13`
 - 非默认 executor 只承诺可接入、可回执、可审计、fail-closed，不承诺效果等价
 - 其他 executor 值会 fail-closed
 
-它不意味着：
+明确不表示以下内容已经成立或需要恢复：
 
-- `critique` 已经变成 Hermes-Agent default executor
-- 这份文档单独定义了 full authoring route catalog；那部分真相应以 `2026-04-13-full-grant-authoring-executor-current-truth.md` 为准
-- actual hosted runtime 已完成
+- 不表示 `critique` 的默认 executor 已经离开 `Codex CLI`
+- 不表示这份文档单独定义 full authoring route catalog；那部分真相应以 `2026-04-13-full-grant-authoring-executor-current-truth.md` 为准
+- 不表示 actual hosted runtime 已完成
