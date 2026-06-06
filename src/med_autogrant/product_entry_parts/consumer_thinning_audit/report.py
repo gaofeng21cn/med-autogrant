@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.product_entry_parts.consumer_thinning_audit_parts.classification import (
+from med_autogrant.product_entry_parts.consumer_thinning_audit.classification import (
     build_declarative_pack_surfaces,
     build_mag_owned_grant_authority_surfaces,
     build_refs_only_adapter_surfaces,
 )
-from med_autogrant.product_entry_parts.consumer_thinning_audit_parts.retired_surfaces import (
+from med_autogrant.product_entry_parts.consumer_thinning_audit.retired_surfaces import (
     build_retire_or_tombstone_surfaces,
 )
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID

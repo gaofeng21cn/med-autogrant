@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.product_entry_parts.consumer_thinning_audit_parts.model import (
+from med_autogrant.product_entry_parts.consumer_thinning_audit.model import (
     build_functional_module_audit_item,
 )
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID

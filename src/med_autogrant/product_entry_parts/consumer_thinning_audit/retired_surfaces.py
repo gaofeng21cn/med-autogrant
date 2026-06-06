@@ -3,10 +3,10 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from med_autogrant.product_entry_parts.consumer_thinning_audit_parts.evidence_gates import (
+from med_autogrant.product_entry_parts.consumer_thinning_audit.evidence_gates import (
     build_legacy_exit_gate as _default_build_legacy_exit_gate,
 )
-from med_autogrant.product_entry_parts.consumer_thinning_audit_parts.model import (
+from med_autogrant.product_entry_parts.consumer_thinning_audit.model import (
     build_retired_functional_module_audit_item as _default_build_retired_functional_module_audit_item,
 )
 

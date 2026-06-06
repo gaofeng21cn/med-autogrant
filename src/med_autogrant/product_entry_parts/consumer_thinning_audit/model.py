@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from med_autogrant.product_entry_parts.consumer_thinning_audit_parts.evidence_gates import (
+from med_autogrant.product_entry_parts.consumer_thinning_audit.evidence_gates import (
     build_default_caller_deletion_bridge_exit_gate,
 )
 
@@ -80,4 +80,3 @@ def build_retired_functional_module_audit_item(
     if exit_gate is not None:
         payload["exit_gate"] = exit_gate
     return payload
-
