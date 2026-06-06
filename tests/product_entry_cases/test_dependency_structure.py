@@ -46,3 +46,27 @@ class ProductEntryPartsStructureTest(unittest.TestCase):
         self.assertIn("med_autogrant.product_entry_contract_api", bridge_text)
         self.assertNotIn("med_autogrant.domain_runtime_parts", bridge_text)
         self.assertNotIn("med_autogrant.domain_runtime import", bridge_text)
+
+    def test_product_entry_contract_api_exports_public_bridge_only(self) -> None:
+        from med_autogrant import product_entry_contract_api as contract_api
+
+        expected_exports = {
+            "GRANT_COCKPIT_SCHEMA_FILE",
+            "GRANT_DIRECT_ENTRY_SCHEMA_FILE",
+            "GRANT_PROGRESS_SCHEMA_FILE",
+            "GRANT_USER_LOOP_SCHEMA_FILE",
+            "PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE",
+            "PRODUCT_ENTRY_SCHEMA_FILE",
+            "PRODUCT_STATUS_SCHEMA_FILE",
+            "build_author_side_route_contract",
+            "build_executor_routing_contract",
+            "build_operator_contract",
+            "build_runtime_state_contract",
+            "build_runtime_substrate_contract",
+            "read_current_program_contract",
+            "validate_contract_schema",
+            "validate_executor_routing_contract",
+        }
+
+        self.assertEqual(set(contract_api.__all__), expected_exports)
+        self.assertTrue(all(not name.startswith("_") for name in contract_api.__all__))

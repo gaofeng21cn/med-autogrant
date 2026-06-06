@@ -276,6 +276,13 @@ class FamilyStageControlPlaneTest(unittest.TestCase):
                 self.assertIn("lineage_events_ref", physical_kernel["required_physical_locator_roles"])
                 self.assertIn("retention_policy_ref", physical_kernel["required_physical_locator_roles"])
                 self.assertFalse(physical_kernel["conformance_refs"]["domain_readiness_claim"])
+                self.assertTrue(physical_kernel["authority_boundary"]["opl_can_index_refs"])
+                self.assertTrue(
+                    physical_kernel["authority_boundary"]["opl_can_index_canonical_pointer_ref"]
+                )
+                self.assertFalse(
+                    physical_kernel["authority_boundary"]["opl_can_promote_canonical_pointer"]
+                )
                 self.assertFalse(
                     physical_kernel["authority_boundary"]["opl_can_create_mag_owner_receipt"]
                 )

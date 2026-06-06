@@ -30,4 +30,20 @@ read_current_program_contract = _read_current_program_contract
 validate_contract_schema = _validate_contract_schema
 validate_executor_routing_contract = _validate_executor_routing_contract
 
-__all__ = [name for name in globals() if name.startswith("_") or name.endswith("_SCHEMA_FILE")]
+__all__ = [
+    "GRANT_COCKPIT_SCHEMA_FILE",
+    "GRANT_DIRECT_ENTRY_SCHEMA_FILE",
+    "GRANT_PROGRESS_SCHEMA_FILE",
+    "GRANT_USER_LOOP_SCHEMA_FILE",
+    "PRODUCT_ENTRY_MANIFEST_SCHEMA_FILE",
+    "PRODUCT_ENTRY_SCHEMA_FILE",
+    "PRODUCT_STATUS_SCHEMA_FILE",
+    "build_author_side_route_contract",
+    "build_executor_routing_contract",
+    "build_operator_contract",
+    "build_runtime_state_contract",
+    "build_runtime_substrate_contract",
+    "read_current_program_contract",
+    "validate_contract_schema",
+    "validate_executor_routing_contract",
+]
