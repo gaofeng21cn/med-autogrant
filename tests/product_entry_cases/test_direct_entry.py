@@ -1,6 +1,14 @@
 from __future__ import annotations
 
-from product_entry_cases.support import *  # noqa: F401,F403
+import unittest
+from med_autogrant.domain_entry_contract import build_domain_entry_contract
+from med_autogrant.domain_runtime_parts.shared import AUTHOR_SIDE_ROUTE_IDS
+from product_entry_cases.support import (
+    _expected_route,
+    CANONICAL_EXPORT_SURFACES,
+    CRITIQUE_EXAMPLE_PATH,
+    PUBLIC_PRODUCT_ENTRY_BUILDER_COMMAND,
+)
 
 
 class ProductEntryDirectEntryTest(unittest.TestCase):

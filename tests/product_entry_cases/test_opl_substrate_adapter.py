@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from product_entry_cases.support import *  # noqa: F401,F403
+import unittest
+from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
 
 class ProductEntryOplSubstrateAdapterTest(unittest.TestCase):

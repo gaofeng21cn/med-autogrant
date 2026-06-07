@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import json
+import unittest
 
-from product_entry_cases.support import *  # noqa: F401,F403
+from med_autogrant.workspace import WorkspaceStateError
 
 
 def _physical_kernel_locator_refs() -> dict[str, str]:

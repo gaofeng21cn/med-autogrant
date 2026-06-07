@@ -1,6 +1,17 @@
 from __future__ import annotations
 
-from product_entry_cases.support import *  # noqa: F401,F403
+import json
+import unittest
+from contextlib import (
+    redirect_stderr,
+    redirect_stdout,
+)
+from io import StringIO
+from unittest.mock import patch
+from med_autogrant.cli import main
+from med_autogrant.public_cli import public_cli_command
+from support.cli import public_cli_argv
+from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
 
 class ProductEntryCliDispatchTest(unittest.TestCase):

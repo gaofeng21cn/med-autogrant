@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import ast
+import unittest
 
-
-from product_entry_cases.support import *  # noqa: F401,F403
+from product_entry_cases.support import REPO_ROOT
 
 
 OLD_RUNTIME_TOKEN = "hermes" + "_runtime"
@@ -65,6 +65,29 @@ class ProductEntryPartsStructureTest(unittest.TestCase):
             if "import *" in path.read_text(encoding="utf-8")
         ]
 
+        self.assertEqual([], offenders)
+
+    def test_product_entry_case_support_is_not_a_star_import_facade(self) -> None:
+        support_path = REPO_ROOT / "tests" / "product_entry_cases" / "support.py"
+        support_tree = ast.parse(support_path.read_text(encoding="utf-8"))
+        support_all_exports = [
+            node
+            for node in ast.walk(support_tree)
+            if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "__all__" for target in node.targets)
+        ]
+        self.assertEqual([], support_all_exports)
+
+        offenders = [
+            path.relative_to(REPO_ROOT).as_posix()
+            for path in sorted((REPO_ROOT / "tests" / "product_entry_cases").glob("test_*.py"))
+            if any(
+                isinstance(node, ast.ImportFrom)
+                and node.module == "product_entry_cases.support"
+                and any(alias.name == "*" for alias in node.names)
+                for node in ast.walk(ast.parse(path.read_text(encoding="utf-8")))
+            )
+        ]
         self.assertEqual([], offenders)
 
     def test_product_entry_parts_do_not_call_runtime_facade(self) -> None:

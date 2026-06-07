@@ -1,11 +1,16 @@
 from __future__ import annotations
 
+import unittest
 
+from med_autogrant.domain_entry_contract import build_domain_entry_contract
+from med_autogrant.public_cli import public_cli_command
 from product_entry_cases.domain_memory_assertions import assert_domain_memory_descriptor_locator
 from product_entry_cases.executor_defaults_assertions import assert_executor_defaults
-from product_entry_cases.support import *  # noqa: F401,F403
-
-
+from product_entry_cases.support import (
+    _assert_family_orchestration_companion,
+    CRITIQUE_EXAMPLE_PATH,
+    REPO_ROOT,
+)
 
 class ProductEntryManifestStatusTest(unittest.TestCase):
     def test_product_entry_manifest_projects_current_grant_shell_and_shared_handoff(self) -> None:

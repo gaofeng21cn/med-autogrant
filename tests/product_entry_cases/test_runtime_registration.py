@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import tomllib
+import unittest
 
-
-from product_entry_cases.support import *  # noqa: F401,F403
+from product_entry_cases.support import (
+    CRITIQUE_EXAMPLE_PATH,
+    REPO_ROOT,
+)
 
 
 class ProductEntryRuntimeRegistrationTest(unittest.TestCase):

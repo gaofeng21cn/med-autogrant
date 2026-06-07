@@ -131,5 +131,3 @@ def _assert_family_orchestration_companion(
         project_profile_companion["critique_policy"]["policy_id"],
         "nsfc_mentor_critique_v1",
     )
-
-__all__ = [name for name in globals() if not name.startswith("__")]

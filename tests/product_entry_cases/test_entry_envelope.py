@@ -1,7 +1,16 @@
 from __future__ import annotations
 
+import unittest
 
-from product_entry_cases.support import *  # noqa: F401,F403
+from med_autogrant.domain_entry_contract import build_domain_entry_contract
+from med_autogrant.domain_runtime_parts.shared import AUTHOR_SIDE_ROUTE_IDS
+from product_entry_cases.support import (
+    _expected_route,
+    CRITIQUE_EXAMPLE_PATH,
+    DRAFTING_EXAMPLE_PATH,
+    FROZEN_EXAMPLE_PATH,
+    REVISION_EXAMPLE_PATH,
+)
 
 
 class ProductEntryEnvelopeTest(unittest.TestCase):

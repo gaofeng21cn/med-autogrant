@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import tempfile
+import unittest
 from pathlib import Path
 
-from product_entry_cases.support import *  # noqa: F401,F403
+from product_entry_cases.support import (
+    CRITIQUE_EXAMPLE_PATH,
+    REPO_ROOT,
+)
 
 
 class ProductEntryFunctionalClosureTest(unittest.TestCase):
