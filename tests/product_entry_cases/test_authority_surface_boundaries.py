@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import unittest
 
+from med_autogrant.product_entry import MedAutoGrantProductEntry
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
-from med_autogrant.product_entry_parts import MedAutoGrantProductEntry
 
 
 class AuthoritySurfaceBoundaryTest(unittest.TestCase):

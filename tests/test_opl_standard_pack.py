@@ -684,8 +684,8 @@ def test_stage_semantic_refs_resolve_to_agent_pack_files() -> None:
         assert closeout["authority_boundary"]["opl_can_declare_export_ready"] is False
 
 
-def test_product_entry_package_keeps_lazy_public_export() -> None:
-    from med_autogrant.product_entry_parts import MedAutoGrantProductEntry
+def test_product_entry_canonical_module_keeps_public_export() -> None:
+    from med_autogrant.product_entry import MedAutoGrantProductEntry
 
     assert MedAutoGrantProductEntry.__name__ == "MedAutoGrantProductEntry"
 

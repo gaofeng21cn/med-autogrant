@@ -11,6 +11,23 @@ OLD_RUNTIME_IMPORT = f"from med_autogrant import {OLD_RUNTIME_TOKEN}"
 
 
 class ProductEntryPartsStructureTest(unittest.TestCase):
+    def test_product_entry_parts_package_root_is_marker_only(self) -> None:
+        package_path = REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts" / "__init__.py"
+        package_text = package_path.read_text(encoding="utf-8")
+        package_tree = ast.parse(package_text)
+
+        forbidden_nodes = [
+            node
+            for node in ast.walk(package_tree)
+            if isinstance(node, (ast.Import, ast.ImportFrom, ast.FunctionDef, ast.AsyncFunctionDef))
+            or (
+                isinstance(node, ast.Assign)
+                and any(isinstance(target, ast.Name) and target.id == "__all__" for target in node.targets)
+            )
+        ]
+        self.assertEqual([], forbidden_nodes)
+        self.assertNotIn("MedAutoGrantProductEntry", package_text)
+
     def test_retired_product_entry_shared_reexport_is_not_present(self) -> None:
         self.assertFalse(
             (REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts" / "shared.py").exists()
