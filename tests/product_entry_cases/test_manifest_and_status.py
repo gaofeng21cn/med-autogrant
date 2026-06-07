@@ -4,7 +4,10 @@ import unittest
 
 from med_autogrant.domain_entry_contract import build_domain_entry_contract
 from med_autogrant.public_cli import public_cli_command
-from product_entry_cases.domain_memory_assertions import assert_domain_memory_descriptor_locator
+from product_entry_cases.domain_memory_assertions import (
+    assert_domain_memory_descriptor_locator,
+    assert_generated_surface_handoff,
+)
 from product_entry_cases.executor_defaults_assertions import assert_executor_defaults
 from product_entry_cases.support import (
     _assert_family_orchestration_companion,
@@ -308,98 +311,7 @@ class ProductEntryManifestStatusTest(unittest.TestCase):
         self.assertFalse(compiler_input["authority_boundary"]["opl_can_write_grant_truth"])
         self.assertFalse(compiler_input["authority_boundary"]["opl_can_sign_owner_receipt"])
         self.assertFalse(compiler_input["authority_boundary"]["opl_can_declare_fundability_verdict"])
-        generated_handoff = thinning["generated_surface_handoff"]
-        self.assertEqual(generated_handoff["surface_kind"], "mag_generated_surface_handoff")
-        self.assertEqual(generated_handoff["owner"], "med-autogrant")
-        self.assertEqual(generated_handoff["target_generator_owner"], "one-person-lab")
-        self.assertEqual(generated_handoff["active_caller_owner"], "med-autogrant")
-        self.assertEqual(generated_handoff["domain_handler_target"], "med-autogrant")
-        self.assertEqual(generated_handoff["domain_handler_owner"], "med-autogrant")
-        self.assertEqual(
-            generated_handoff["bridge_exit_gate"]["gate_status"],
-            "mag_handler_boundary_ready_external_caller_evidence_required",
-        )
-        self.assertIn(
-            "no_active_legacy_wrapper_caller_scan",
-            generated_handoff["bridge_exit_gate"]["required_evidence"],
-        )
-        self.assertFalse(generated_handoff["bridge_exit_gate"]["claims_exit_complete"])
-        self.assertFalse(
-            generated_handoff["bridge_exit_gate"]["claims_production_long_run_soak_complete"]
-        )
-        self.assertEqual(
-            generated_handoff["bridge_exit_gate"]["production_soak_gate_status"],
-            "external_live_soak_and_caller_evidence_not_claimed_by_mag_repo",
-        )
-        self.assertEqual(
-            generated_handoff["generated_surface_ids"],
-            [
-                "product_status",
-                "product_user_loop",
-                "domain_handler",
-                "grouped_cli_api",
-                "projection_builder",
-                "lifecycle_wrapper",
-            ],
-        )
-        self.assertEqual(
-            generated_handoff["current_mag_path_status"]["surface_kind"],
-            "mag_generated_surface_handoff_currentness_proof",
-        )
-        self.assertEqual(generated_handoff["current_mag_path_status"]["status"], "current")
-        self.assertEqual(generated_handoff["missing_current_mag_path_count"], 0)
-        self.assertEqual(
-            generated_handoff["current_mag_path_status"]["missing_current_mag_path_count"],
-            0,
-        )
-        self.assertEqual(
-            generated_handoff["stale_path_policy"],
-            "history_or_source_ref_refresh_only",
-        )
-        self.assertTrue(generated_handoff["current_mag_path_status"]["claims_opl_replacement_exists"])
-        self.assertFalse(
-            generated_handoff["current_mag_path_status"][
-                "claims_domain_repo_physical_delete_authorized"
-            ]
-        )
-        self.assertFalse(generated_handoff["current_mag_path_status"]["claims_all_bridge_exits_complete"])
-        self.assertFalse(
-            generated_handoff["current_mag_path_status"]["claims_production_long_run_soak_complete"]
-        )
-        self.assertEqual(generated_handoff["mag_long_term_owner_surface_ids"], [])
-        for surface in generated_handoff["generated_or_bridge_surfaces"]:
-            with self.subTest(generated_surface=surface["surface_id"]):
-                self.assertEqual(
-                    surface["surface_status"],
-                    "mag_handler_ref_only_adapter_waiting_for_opl_generated_or_hosted_caller_evidence",
-                )
-                self.assertEqual(surface["active_caller_owner"], "med-autogrant")
-                self.assertEqual(surface["current_owner"], "med-autogrant")
-                self.assertEqual(surface["target_owner"], "one-person-lab")
-                self.assertEqual(surface["domain_handler_target"], "med-autogrant")
-                self.assertEqual(surface["domain_handler_owner"], "med-autogrant")
-                self.assertEqual(
-                    surface["bridge_exit_gate"]["gate_status"],
-                    "mag_handler_boundary_ready_external_caller_evidence_required",
-                )
-                self.assertFalse(surface["bridge_exit_gate"]["claims_exit_complete"])
-                self.assertFalse(surface["bridge_exit_gate"]["claims_production_long_run_soak_complete"])
-                self.assertTrue(surface["generated_by_opl_in_target"])
-                self.assertFalse(surface["current_mag_long_term_owner"])
-                self.assertFalse(surface["keeps_mag_authority_functions"])
-                self.assertEqual(surface["current_mag_path_status"]["status"], "current")
-                self.assertEqual(surface["missing_current_mag_path_count"], 0)
-                self.assertEqual(surface["current_mag_path_status"]["missing_count"], 0)
-                self.assertEqual(
-                    surface["stale_path_policy"],
-                    "history_or_source_ref_refresh_only",
-                )
-                for path_status in surface["current_mag_path_status"]["paths"]:
-                    self.assertTrue(path_status["exists"])
-                    self.assertTrue((REPO_ROOT / path_status["path"]).is_file())
-        self.assertFalse(generated_handoff["authority_boundary"]["mag_long_term_owner"])
-        self.assertFalse(generated_handoff["authority_boundary"]["generated_surface_can_sign_owner_receipt"])
-        self.assertFalse(generated_handoff["authority_boundary"]["generated_surface_can_declare_verdict"])
+        assert_generated_surface_handoff(self, thinning, REPO_ROOT)
         self.assertEqual(
             thinning["minimal_authority_function_ids"],
             [
