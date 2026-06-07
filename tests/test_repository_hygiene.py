@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import shutil
 import subprocess
@@ -184,6 +185,23 @@ class RepositoryHygieneTest(unittest.TestCase):
                     violations.append(f"{relative_path}: {pattern}")
 
         self.assertEqual(violations, [])
+
+    def test_cli_validate_cases_is_not_a_star_import_facade(self) -> None:
+        offenders: list[str] = []
+        for relative_path in _tracked_or_pending_files():
+            if not relative_path.startswith("tests/test_cli_validate_workspace_") or not relative_path.endswith(".py"):
+                continue
+            path = REPO_ROOT / relative_path
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            if any(
+                isinstance(node, ast.ImportFrom)
+                and node.module == "cli_validate_cases"
+                and any(alias.name == "*" for alias in node.names)
+                for node in ast.walk(tree)
+            ):
+                offenders.append(relative_path)
+
+        self.assertEqual(offenders, [])
 
 
 if __name__ == "__main__":

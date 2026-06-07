@@ -1,7 +1,22 @@
 from __future__ import annotations
 
-from cli_validate_cases import *  # noqa: F401,F403
+import json
+import tempfile
+from pathlib import Path
 
+from cli_validate_cases import (
+    CRITIQUE_EXAMPLE_PATH,
+    DRAFTING_EXAMPLE_PATH,
+    FORCED_ROLLBACK_EXAMPLE_PATH,
+    MAJOR_REFRAME_EXAMPLE_PATH,
+    OUTLINE_EXAMPLE_PATH,
+    PRESUBMISSION_FROZEN_EXAMPLE_PATH,
+    QUESTION_EXAMPLE_PATH,
+    READY_FOR_SUBMISSION_EXAMPLE_PATH,
+    REVISION_EXAMPLE_PATH,
+    RE_REVIEW_EXAMPLE_PATH,
+    CliValidateWorkspaceTest,
+)
 
 
 class CliValidateWorkspaceRevisionCasesTest(CliValidateWorkspaceTest):

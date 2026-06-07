@@ -1,6 +1,16 @@
 from __future__ import annotations
 
-from cli_validate_cases import *  # noqa: F401,F403
+import json
+import os
+import subprocess
+import sys
+
+from cli_validate_cases import (
+    CliValidateWorkspaceTest,
+    EXAMPLE_PATH,
+    REPO_ROOT,
+    SRC_ROOT,
+)
 
 
 class CliValidateWorkspaceErrorCasesTest(CliValidateWorkspaceTest):

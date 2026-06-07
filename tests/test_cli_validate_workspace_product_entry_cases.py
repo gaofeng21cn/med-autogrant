@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from cli_validate_cases import *  # noqa: F401,F403
+from cli_validate_cases import (
+    CRITIQUE_EXAMPLE_PATH,
+    CliValidateWorkspaceTest,
+)
 
 
 class CliValidateWorkspaceProductEntryCasesTest(CliValidateWorkspaceTest):
