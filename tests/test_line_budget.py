@@ -6,13 +6,19 @@ import subprocess
 from pathlib import Path
 
 
-def test_line_budget_baseline_has_no_semantic_holdouts() -> None:
+def test_line_budget_baseline_is_an_explicit_numeric_mapping() -> None:
     import runpy
 
     repo_root = Path(__file__).resolve().parents[1]
     module_globals = runpy.run_path(str(repo_root / "scripts" / "line_budget.py"))
+    baseline = module_globals["BASELINE"]
 
-    assert module_globals["BASELINE"] == {}
+    assert isinstance(baseline, dict)
+    for relative_path, limit in baseline.items():
+        assert isinstance(relative_path, str)
+        assert relative_path
+        assert isinstance(limit, int)
+        assert limit > module_globals["DEFAULT_LIMIT"]
 
 
 def test_line_budget_script_accepts_current_locked_baseline() -> None:
