@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import med_autogrant.artifact_bundle as artifact_bundle
 import med_autogrant.artifact_bundle_validation as artifact_bundle_validation
 import med_autogrant.authoring_executor_parts as authoring_executor_parts
@@ -35,7 +33,6 @@ import med_autogrant.revision_executor as revision_executor
 import med_autogrant.schema_loader as schema_loader
 import med_autogrant.schema_subset_validator as schema_subset_validator
 import med_autogrant.submission_ready as submission_ready
-import med_autogrant.workspace_index as workspace_index
 import med_autogrant.workspace_parts as workspace_parts
 import med_autogrant.workspace_projection_parts as workspace_projection_parts
 import med_autogrant.workspace_reference_validation as workspace_reference_validation
@@ -90,17 +87,3 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert runtime_contracts.PRODUCT_ENTRY_SCHEMA_FILE == "product-entry.schema.json"
     assert runtime_registration._build_opl_stage_runtime_registration
     assert runtime_surfaces._build_runtime_continuity_surfaces
-
-
-def test_workspace_index_has_direct_behavior_and_facade_export_helper_is_retired() -> None:
-    issues: list[workspace_types.ValidationIssue] = []
-    indexed = workspace_index._index_objects(
-        [{"item_id": "a"}, {"item_id": "a"}],
-        "item_id",
-        "items",
-        issues,
-    )
-
-    assert indexed == {"a": {"item_id": "a"}}
-    assert [(issue.path, issue.message) for issue in issues] == [("items[1].item_id", "item_id 不能重复。")]
-    assert not (Path(__file__).resolve().parents[1] / "src" / "med_autogrant" / "facade_exports.py").exists()

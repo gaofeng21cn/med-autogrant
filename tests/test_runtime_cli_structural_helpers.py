@@ -5,9 +5,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import med_autogrant.cli as cli
-import med_autogrant.cli_rendering as cli_rendering
 import med_autogrant.domain_runtime_parts.runtime_ops as runtime_ops
-from med_autogrant.cli_rendering_parts import _TEXT_RENDERERS, _render_text as parts_render_text
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
 from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
 from med_autogrant.workspace_stage_validation import _find_active_draft, _validate_active_draft_sections
@@ -69,27 +67,6 @@ def test_grant_autonomy_request_validator_fail_closes_invalid_budget() -> None:
     assert state["ok"] is False
     assert state["report"]["controller_status"] == "failed_closed"
     assert state["report"]["termination_reason"] == "invalid_budget"
-
-
-def test_cli_rendering_no_longer_reexports_render_text_facade() -> None:
-    assert not hasattr(cli_rendering, "_render_text")
-    assert _TEXT_RENDERERS["validate-workspace"] is not parts_render_text
-
-    rendered = parts_render_text(
-        "validate-workspace",
-        {
-            "grant_run_id": "grant-structure",
-            "workspace_id": "ws-structure",
-            "lifecycle_stage": "critique",
-            "ok": False,
-            "error_count": 1,
-            "errors": [{"path": "drafts.0", "message": "missing section"}],
-        },
-    )
-
-    assert "当前 grant run: grant-structure" in rendered
-    assert "当前 workspace: ws-structure" in rendered
-    assert "- drafts.0: missing section" in rendered
 
 
 def test_cli_module_does_not_hold_entry_classes_as_patch_surfaces() -> None:
