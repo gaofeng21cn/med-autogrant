@@ -4,6 +4,7 @@ from typing import Final
 
 
 PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
+    "foundry": "OPL Foundry Agent series status、inspect、interfaces、validate、doctor 与 peers。",
     "workspace": "工作区诊断、摘要、阶段路由与 grant quality refs。",
     "mainline": "当前 line/current focus 概览与维护者参考记录。",
     "domain-handler": "OPL standard domain handler target：export refs 与 dispatch guarded actions。",
@@ -13,6 +14,7 @@ PUBLIC_COMMAND_GROUP_SUMMARIES: Final[dict[str, str]] = {
 }
 
 PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
+    "foundry",
     "workspace",
     "mainline",
     "domain-handler",
@@ -21,7 +23,18 @@ PUBLIC_COMMAND_ORDER: Final[tuple[str, ...]] = (
     "package",
 )
 
+PUBLIC_GROUP_ALIASES: Final[dict[str, str]] = {
+    "grant": "workspace",
+    "work": "pass",
+}
+
 INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
+    "foundry-status": ("foundry", "status"),
+    "foundry-inspect": ("foundry", "inspect"),
+    "foundry-interfaces": ("foundry", "interfaces"),
+    "foundry-validate": ("foundry", "validate"),
+    "foundry-doctor": ("foundry", "doctor"),
+    "foundry-peers": ("foundry", "peers"),
     "validate-workspace": ("workspace", "validate"),
     "summarize-workspace": ("workspace", "summarize"),
     "grant-intake-audit": ("workspace", "intake-audit"),
@@ -71,6 +84,12 @@ INTERNAL_TO_PUBLIC_COMMAND: Final[dict[str, tuple[str, str]]] = {
 
 PUBLIC_TO_INTERNAL_COMMAND: Final[dict[tuple[str, str], str]] = {
     value: key for key, value in INTERNAL_TO_PUBLIC_COMMAND.items()
+}
+
+PUBLIC_TOP_LEVEL_COMMANDS: Final[dict[str, str]] = {
+    subcommand: internal
+    for internal, (group, subcommand) in INTERNAL_TO_PUBLIC_COMMAND.items()
+    if group == "foundry"
 }
 
 PUBLIC_THREE_TOKEN_COMMANDS: Final[dict[tuple[str, str, str], str]] = {}

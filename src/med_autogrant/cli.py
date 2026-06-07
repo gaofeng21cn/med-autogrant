@@ -11,7 +11,9 @@ _editable_shared_bootstrap.ensure_editable_dependency_paths()
 from med_autogrant.public_cli import (
     PUBLIC_COMMAND_GROUP_SUMMARIES,
     PUBLIC_COMMAND_ORDER,
+    PUBLIC_GROUP_ALIASES,
     PUBLIC_GROUP_COMMANDS,
+    PUBLIC_TOP_LEVEL_COMMANDS,
     PUBLIC_THREE_TOKEN_COMMANDS,
     PUBLIC_TO_INTERNAL_COMMAND,
 )
@@ -43,6 +45,12 @@ from med_autogrant.cli_parts.handlers import (
     handle_execute_outline_pass,
     handle_execute_question_refinement_pass,
     handle_execute_revision_pass,
+    handle_foundry_doctor,
+    handle_foundry_inspect,
+    handle_foundry_interfaces,
+    handle_foundry_peers,
+    handle_foundry_status,
+    handle_foundry_validate,
     handle_grant_evidence_grounding,
     handle_grant_intake_audit,
     handle_grant_quality_closure_dossier,
@@ -108,6 +116,42 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="medautogrant")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    _add_simple_command(
+        subparsers,
+        "foundry-status",
+        handle_foundry_status,
+        "输出 MAG 的 OPL Foundry Agent series 状态。",
+    )
+    _add_simple_command(
+        subparsers,
+        "foundry-inspect",
+        handle_foundry_inspect,
+        "检查 MAG 的 Foundry Agent identity、输入输出与 authority profile。",
+    )
+    _add_simple_command(
+        subparsers,
+        "foundry-interfaces",
+        handle_foundry_interfaces,
+        "列出 MAG 的 Foundry Agent public interface grammar。",
+    )
+    _add_simple_command(
+        subparsers,
+        "foundry-validate",
+        handle_foundry_validate,
+        "校验 MAG 的 Foundry Agent series contract 与 CLI frontdoor。",
+    )
+    _add_simple_command(
+        subparsers,
+        "foundry-doctor",
+        handle_foundry_doctor,
+        "输出 MAG 的 Foundry Agent authority/currentness diagnostic。",
+    )
+    _add_simple_command(
+        subparsers,
+        "foundry-peers",
+        handle_foundry_peers,
+        "列出同系列 Foundry Agent peers 与 MAG topology profile。",
+    )
     _add_workspace_command(
         subparsers,
         "validate-workspace",
@@ -392,6 +436,8 @@ def _print_public_help() -> None:
         [
             "",
             "Examples:",
+            "  medautogrant foundry status --format json",
+            "  medautogrant status --format json",
             "  medautogrant workspace validate --input <workspace-path> --format json",
             "  medautogrant pass revision --input <workspace-path> --output <output-path> --format json",
             "",
@@ -420,6 +466,7 @@ def _maybe_handle_public_help(argv: list[str]) -> int | None:
         _print_public_help()
         return 0
     group = argv[0]
+    group = PUBLIC_GROUP_ALIASES.get(group, group)
     if group in PUBLIC_GROUP_COMMANDS and (len(argv) == 1 or argv[1] in {"-h", "--help", "help"}):
         _print_public_group_help(group)
         return 0
@@ -431,6 +478,11 @@ def _normalize_public_command_argv(argv: list[str]) -> list[str]:
         return argv
     if argv[0] in RETIRED_FLAT_COMMANDS:
         raise SystemExit(f"argument command: invalid choice: '{argv[0]}'")
+    if argv[0] in PUBLIC_TOP_LEVEL_COMMANDS:
+        return [PUBLIC_TOP_LEVEL_COMMANDS[argv[0]], *argv[1:]]
+    group = PUBLIC_GROUP_ALIASES.get(argv[0], argv[0])
+    if group != argv[0]:
+        argv = [group, *argv[1:]]
     if len(argv) >= 3 and (argv[0], argv[1], argv[2]) in PUBLIC_THREE_TOKEN_COMMANDS:
         return [PUBLIC_THREE_TOKEN_COMMANDS[(argv[0], argv[1], argv[2])], *argv[3:]]
     if len(argv) >= 2 and (argv[0], argv[1]) in PUBLIC_TO_INTERNAL_COMMAND:

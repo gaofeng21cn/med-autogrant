@@ -5,7 +5,39 @@ import json
 from pathlib import Path
 from typing import Any
 
+from med_autogrant.foundry_series_cli import (
+    build_foundry_series_doctor,
+    build_foundry_series_inspect,
+    build_foundry_series_interfaces,
+    build_foundry_series_peers,
+    build_foundry_series_status,
+    build_foundry_series_validate,
+)
 from med_autogrant import mainline_status
+
+
+def handle_foundry_status(args: argparse.Namespace) -> dict[str, Any]:
+    return build_foundry_series_status()
+
+
+def handle_foundry_inspect(args: argparse.Namespace) -> dict[str, Any]:
+    return build_foundry_series_inspect()
+
+
+def handle_foundry_interfaces(args: argparse.Namespace) -> dict[str, Any]:
+    return build_foundry_series_interfaces()
+
+
+def handle_foundry_validate(args: argparse.Namespace) -> dict[str, Any]:
+    return build_foundry_series_validate()
+
+
+def handle_foundry_doctor(args: argparse.Namespace) -> dict[str, Any]:
+    return build_foundry_series_doctor()
+
+
+def handle_foundry_peers(args: argparse.Namespace) -> dict[str, Any]:
+    return build_foundry_series_peers()
 
 
 def handle_validate_workspace(args: argparse.Namespace) -> dict[str, Any]:

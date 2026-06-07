@@ -40,10 +40,79 @@ def test_public_cli_help_renders_group_index() -> None:
     assert exit_code == 0
     assert stderr == ""
     assert "Public command groups:" in stdout
+    assert "foundry" in stdout
+    assert "medautogrant foundry status --format json" in stdout
     assert "workspace" in stdout
     assert "authority" in stdout
     assert "product" not in stdout
     assert "runtime" not in stdout
+
+
+@pytest.mark.smoke
+def test_foundry_group_exposes_series_operations() -> None:
+    exit_code, stdout, stderr = _run_cli("foundry", "--help")
+
+    assert exit_code == 0
+    assert stderr == ""
+    for operation in ("status", "inspect", "interfaces", "validate", "doctor", "peers"):
+        assert operation in stdout
+
+
+@pytest.mark.smoke
+def test_foundry_status_projects_mag_series_identity() -> None:
+    payload = _run_json_cli("foundry", "status", "--format", "json")
+
+    assert payload["ok"] is True
+    assert payload["command"] == "foundry-status"
+    assert payload["foundry_agent_series"]["version"] == "foundry-agent-series.v1"
+    assert payload["foundry_agent_series"]["foundry_agent_id"] == "medautogrant"
+    assert payload["status"]["series_label"] == "OPL Foundry Agent"
+
+
+@pytest.mark.smoke
+def test_top_level_status_alias_dispatches_foundry_status() -> None:
+    payload = _run_json_cli("status", "--format", "json")
+
+    assert payload["command"] == "foundry-status"
+    assert payload["status"]["public_frontdoor"] == "medautogrant foundry"
+
+
+@pytest.mark.smoke
+def test_foundry_interfaces_exposes_grant_and_work_aliases() -> None:
+    payload = _run_json_cli("interfaces", "--format", "json")
+
+    assert payload["command"] == "foundry-interfaces"
+    assert payload["interfaces"]["alias_groups"] == {"grant": "workspace", "work": "pass"}
+    assert "validate" in payload["interfaces"]["commands_by_group"]["workspace"]
+    assert "revision" in payload["interfaces"]["commands_by_group"]["pass"]
+
+
+@pytest.mark.smoke
+def test_grant_and_work_aliases_dispatch_existing_public_groups() -> None:
+    validate_payload = _run_json_cli(
+        "grant",
+        "validate",
+        "--input",
+        str(CRITIQUE_EXAMPLE_PATH),
+        "--format",
+        "json",
+    )
+    assert validate_payload["command"] == "validate-workspace"
+
+    exit_code, stdout, stderr = _run_cli("work", "--help")
+    assert exit_code == 0
+    assert stderr == ""
+    assert "revision" in stdout
+    assert "mainline-loop" in stdout
+
+
+@pytest.mark.smoke
+def test_foundry_validate_checks_frontdoor_contract() -> None:
+    payload = _run_json_cli("validate", "--format", "json")
+
+    assert payload["command"] == "foundry-validate"
+    assert payload["validation"]["ok"] is True
+    assert payload["validation"]["problems"] == []
 
 
 @pytest.mark.smoke

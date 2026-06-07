@@ -28,6 +28,20 @@ OPL generated surface 负责 product manifest、status、user-loop、direct-entr
 
 默认先由 OPL/App generated status 或 manifest 读取当前 funding call、task intent 和 draft 状态，再回到上述 MAG grant-native handler / authority target。
 
+## OPL Foundry Agent series CLI grammar
+
+MAG 的 repo-local CLI 第一层公共语法使用 OPL Foundry Agent series spine：
+
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry status --format json`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry inspect --format json`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry interfaces --format json`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry validate --format json`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry doctor --format json`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry peers --format json`
+- `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli status --format json`
+
+`grant` 是 `workspace` 的公共 alias，`work` 是 `pass` 的公共 alias；它们只映射到现有 MAG grant-native handler，不新增 runtime owner 或 product shell。
+
 ## Domain runtime 护栏
 
 - 用户点名 `MAG` / `Med Auto Grant`，或任务属于基金方向、申请书、立项依据、研究内容、技术路线、修改包、submission-ready package 等 MAG 覆盖范围时，必须通过 OPL/App generated shell 回到 MAG schema-backed authoring contract、domain entry 或 authority target 推进。

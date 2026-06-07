@@ -119,6 +119,13 @@ def test_mag_skill_keeps_generic_shells_out_of_repo_local_public_commands() -> N
     skill = _read("plugins/mag/skills/mag/SKILL.md")
 
     expected_public_command_surfaces = (
+        "foundry status",
+        "foundry inspect",
+        "foundry interfaces",
+        "foundry validate",
+        "foundry doctor",
+        "foundry peers",
+        "status",
         "workspace route-report",
         "workspace quality-scorecard",
         "pass revision",
