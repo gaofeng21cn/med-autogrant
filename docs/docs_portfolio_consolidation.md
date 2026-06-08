@@ -79,7 +79,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 当前 direct retirement posture 的 active owner 是 `docs/active/mag-ideal-state-cross-repo-gap-plan.md`；per-surface 明细 owner 是 `docs/active/opl-private-implementation-migration-inventory.md`。机器投影回到 `product-entry-manifest.ideal_state_closure_status.direct_retirement_posture`、`product-entry-manifest.physical_skeleton_follow_through`、`controlled_domain_memory_apply_proof.repo_source_layout_audit`、`contracts/private_functional_surface_policy.json#/purpose_first_owner_delta_domain_thinning_gate` 与 `contracts/foundry_agent_series.json#/purpose_first_adapter_thinning_policy`。维护时先按 active plan 判断当前 gate，再按 inventory 和 machine surface 确认 active caller；不要用旧路径稳定性作为保留兼容壳的理由。
 
-旧 public/domain-entry runtime command family `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 的 dated audit 记录在 [2026-06-04 MAG retired command family audit](./history/docs-portfolio-coverage-ledger/2026-06-04-mag-retired-command-family-audit.md)。当前文档只保留 no-resurrection 规则：旧 runtime command、local journal、attempt ledger、Gateway/local-manager、flat alias、facade patch bridge 和 compatibility aggregate test 只能出现在 negative guard、tombstone 或 history/provenance 中；无 active caller 后直接删除或归档，不新增 compatibility surface。
+旧 public/domain-entry runtime command family `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 的 dated audit 已压缩到 [MAG retired surface provenance](./history/docs-portfolio-coverage-ledger/retired-surface-provenance.md)。当前文档只保留 no-resurrection 规则：旧 runtime command、local journal、attempt ledger、Gateway/local-manager、flat alias、facade patch bridge 和 compatibility aggregate test 只能出现在 negative guard、tombstone 或 history/provenance 中；无 active caller 后直接删除或归档，不新增 compatibility surface。
 
 ## 当前生命周期决策
 
@@ -109,7 +109,7 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger foldback
 
-Dated coverage entries that previously lived in this active governance document are archived in [MAG docs portfolio coverage ledger archive](./history/docs-portfolio-coverage-ledger/2026-06-02-mag-docs-portfolio-coverage-ledger-archive.md).
+Dated coverage entries, frozen inventory notes, retirement audits, no-rewrite closeouts and proof/read-model foldback records that previously lived as per-tranche files are compressed under [MAG docs portfolio coverage ledger](./history/docs-portfolio-coverage-ledger/README.md), with durable no-resurrection rules in [MAG retired surface provenance](./history/docs-portfolio-coverage-ledger/retired-surface-provenance.md).
 
 This file now keeps only current lifecycle rules, owner split, direct-retirement posture, long-list governance, and the current transition/oracle gap location. Do not append future frozen inventories, command transcripts, branch/worktree closeout, receipt ledgers, or proof-by-proof tranches here. New dated coverage belongs under `docs/history/docs-portfolio-coverage-ledger/` or another precise `docs/history/**` owner; durable conclusions must be folded back into the core five docs, active gap plan, lifecycle map, contracts, source, or tests.
 

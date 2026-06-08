@@ -2,43 +2,46 @@
 
 Owner: `Med Auto Grant`
 Purpose: `docs_portfolio_coverage_ledger_index`
-State: `history_index`
-Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真相继续归 `contracts/runtime-program/current-program.json`、schemas、source、CLI/API 行为、runtime receipts 和语义化 `human_doc:*` id。
+State: `historical_archive_index`
+Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真相继续归 `contracts/runtime-program/current-program.json`、schemas、source、CLI/API 行为、runtime receipts、owner receipts、typed blockers 和语义化 `human_doc:*` id。
 
-本目录保存从 active governance 文档移出的 dated docs coverage、frozen inventory、proof/read-model 折返和 no-retirement 过程记录。它们只说明当时如何审计和折回结论，不作为 MAG 当前 active gap plan、runtime owner、grant readiness、submission readiness、production readiness 或 physical-delete authority。
+## 读法
 
-当前 MAG docs lifecycle truth 回到：
+本目录只保留 MAG docs portfolio、private-surface、runtime/entrypoint retirement 和 no-resurrection 的压缩 provenance。历史过程按主题保留，不再维护逐日 closeout 长清单。若某条历史结论仍有当前规则价值，先折回 `docs/docs_portfolio_consolidation.md`、核心五件套、active gap plan、private inventory、spec lifecycle map、contract/schema/source/test owner 或 runtime receipt，再把过程记录压缩在本目录。
 
-- [MAG 文档组合治理](../../docs_portfolio_consolidation.md)
-- [MAG 当前状态](../../status.md)
-- [MAG ideal-state cross-repo gap plan](../../active/mag-ideal-state-cross-repo-gap-plan.md)
-- [Specs 生命周期地图](../../specs/specs_lifecycle_map.md)
-- `contracts/runtime-program/current-program.json`
+这些材料不能作为 MAG 当前 active gap plan、runtime owner、grant readiness、submission readiness、production readiness、App/workbench consumption、owner delete authorization、keep-as-authority-adapter authorization 或 physical-delete authority。
 
-## Ledger
+## Single Source Of Truth
 
-| 文件 | 内容 | 当前读法 |
+| Theme | Current owner |
+| --- | --- |
+| 当前完成口径、功能/结构差距、测试/证据差距、下一轮 prompt | `docs/active/mag-ideal-state-cross-repo-gap-plan.md` |
+| per-surface private implementation / physical morphology inventory | `docs/active/opl-private-implementation-migration-inventory.md` |
+| 文档生命周期、目录职责、direct-retirement posture、long-list governance | `docs/docs_portfolio_consolidation.md` |
+| 当前状态和 evidence boundary | `docs/status.md` |
+| runtime owner、architecture split、no-resurrection invariants、active decisions | `docs/project.md`, `docs/architecture.md`, `docs/invariants.md`, `docs/decisions.md` |
+| active specs / support specs lifecycle | `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md` |
+| MAG north-star / OPL adoption / series governance checklist | `docs/references/**` |
+| product/delivery/source/runtime thin support | `docs/product/README.md`, `docs/delivery/README.md`, `docs/source/README.md`, `docs/runtime/README.md` |
+| machine truth and retirement guards | `contracts/runtime-program/current-program.json`, private surface contracts, Foundry series contract, product-entry manifest / functional audits, source, CLI/API behavior, tests, runtime receipts |
+| Retired surface no-resurrection provenance | [`retired-surface-provenance.md`](./retired-surface-provenance.md) |
+
+## Compressed Provenance
+
+| Provenance group | What remains here | What moved out |
 | --- | --- | --- |
-| [2026-06-07-mag-product-entry-parts-init-facade-retirement-closeout.md](./2026-06-07-mag-product-entry-parts-init-facade-retirement-closeout.md) | MAG product_entry_parts package-root lazy `MedAutoGrantProductEntry` re-export facade 的退役 closeout。 | 只读 provenance；当前 product-entry public class truth 继续归 `med_autogrant.product_entry.MedAutoGrantProductEntry`，product_entry_parts 包根只作为 implementation parts marker，具体 leaf modules 继续按 owner module 直接导入。 |
-| [2026-06-07-mag-cli-validate-test-star-facade-retirement-closeout.md](./2026-06-07-mag-cli-validate-test-star-facade-retirement-closeout.md) | MAG CLI validate workspace split tests 中 `cli_validate_cases import *` test facade 的退役 closeout。 | 只读 provenance；当前 CLI validate test helper truth 继续归显式 test imports、`tests/cli_validate_cases.py` helper definitions、repository hygiene guard、source tree、CLI/API behavior 和 `contracts/runtime-program/current-program.json`。 |
-| [2026-06-07-mag-product-entry-test-support-star-facade-retirement-closeout.md](./2026-06-07-mag-product-entry-test-support-star-facade-retirement-closeout.md) | MAG product-entry test-side `support import *` facade 与动态 `support.py#__all__` 的退役 closeout。 | 只读 provenance；当前 product-entry test helper truth 继续归显式 test imports、`tests/product_entry_cases/support.py` helper definitions、结构测试、source tree、CLI/API behavior 和 `contracts/runtime-program/current-program.json`。 |
-| [2026-06-07-mag-consumer-audit-package-facade-retirement-closeout.md](./2026-06-07-mag-consumer-audit-package-facade-retirement-closeout.md) | MAG consumer thinning audit 包根 builder re-export facade 的物理退役 closeout。 | 只读 provenance；当前 consumer thinning audit truth 继续归具体 owner modules、source tree、结构测试、CLI/API behavior、runtime receipts 和 `contracts/runtime-program/current-program.json`。 |
-| [2026-06-07-mag-broader-docs-portfolio-ssot-closeout.md](./2026-06-07-mag-broader-docs-portfolio-ssot-closeout.md) | MAG broader docs portfolio currentness / stale-surface routing 的 no-rewrite SSOT closeout，覆盖 root README、agent/contracts/runtime README、docs index/lifecycle、核心五件套、active plan、private inventory、public/product/runtime/delivery/source/policies/specs/references 和 history 的唯一职责分层。 | 只读 provenance；当前 MAG product/runtime/source/delivery/spec/currentness truth 继续归核心五件套、active gap plan、private inventory、specs lifecycle map、contracts/source/tests/CLI/API、runtime receipts、owner receipts 和 MAG grant authority surfaces。 |
-| [2026-06-07-mag-governance-checklist-role-ssot-closeout.md](./2026-06-07-mag-governance-checklist-role-ssot-closeout.md) | MAG series governance checklist role 与 docs lifecycle governance owner 的 SSOT closeout。 | 只读 provenance；当前 docs lifecycle governance truth 继续归 `docs/docs_portfolio_consolidation.md`，series checklist 只作为 OPL series 跨仓 docs intake / 对齐巡检支撑。 |
-| [2026-06-07-mag-default-caller-owner-decision-required-closeout.md](./2026-06-07-mag-default-caller-owner-decision-required-closeout.md) | MAG default caller deletion prerequisites observed 后的 owner-decision gate closeout。 | 只读 provenance；当前 owner decision truth 继续归 active plan、private inventory、private surface policy、Foundry Agent series policy、current-program、OPL Framework read-model 和 MAG owner delete / keep-as-authority-adapter / typed blocker receipt。 |
-| [2026-06-06-mag-helper-shim-retirement-closeout.md](./2026-06-06-mag-helper-shim-retirement-closeout.md) | MAG source-side test convenience helper、identity command normalizer 与 hosted-contract bundle one-line private wrapper 的退役 closeout。 | 只读 provenance；当前 public CLI truth 继续归 grouped command catalog，domain-entry truth 继续归 service-safe command catalog，hosted bundle IO truth 继续归 split IO owner helpers、schema/source/tests、CLI/API behavior 和 runtime receipts。 |
-| [2026-06-06-mag-human-doc-support-id-foldback-closeout.md](./2026-06-06-mag-human-doc-support-id-foldback-closeout.md) | MAG repo-tracked current-program 与 mainline status 中历史 dated `human_doc:*` support/provenance ids 的折叠退役 closeout。 | 只读 provenance；当前 product-entry/package support 语义统一读 `human_doc:product_entry_support_record`，hosted/proof/handoff/OPL alignment 历史 ids 只留在 `docs/history/specs/` 与 no-resurrection tests。 |
-| [2026-06-06-mag-consumer-audit-private-reexport-retirement-closeout.md](./2026-06-06-mag-consumer-audit-private-reexport-retirement-closeout.md) | MAG consumer thinning audit 包级 `_build_*` 私有 re-export facade 的退役 closeout。 | 只读 provenance；当前 consumer thinning audit truth 继续归具体 owner modules、source tree、结构测试、CLI/API behavior、runtime receipts 和 `contracts/runtime-program/current-program.json`。 |
-| [2026-06-06-mag-thin-stale-export-surfaces-closeout.md](./2026-06-06-mag-thin-stale-export-surfaces-closeout.md) | MAG product-entry stale aggregate re-export 与 domain runtime substrate dynamic helper export surface 的退役 closeout。 | 只读 provenance；当前 public export truth 继续归 source tree、`substrate.__all__`、结构测试、CLI/API behavior、runtime receipts 和 `contracts/runtime-program/current-program.json`。 |
-| [2026-06-06-mag-default-caller-evidence-gate-ssot-closeout.md](./2026-06-06-mag-default-caller-evidence-gate-ssot-closeout.md) | MAG default caller / generated caller evidence gate 与 no-active-caller proof 的 SSOT no-rewrite closeout。 | 只读 provenance；当前 deletion gate truth 继续归 active plan、private inventory、private surface policy、Foundry Agent series policy、product-entry manifest / functional audit、source/tests、runtime receipts、OPL Framework read-model 和 MAG owner delete/keep/blocker decision。 |
-| [2026-06-06-mag-active-inventory-longlist-no-rewrite-closeout.md](./2026-06-06-mag-active-inventory-longlist-no-rewrite-closeout.md) | MAG active plan / private inventory 长清单压缩问题的 no-rewrite SSOT closeout。 | 只读 provenance；当前 active gap truth 继续归 active plan，per-surface private inventory truth 继续归 private inventory，机器 gate 继续归 private surface policy、Foundry Agent series policy、current-program、product-entry manifest、source/tests 和 runtime receipts。 |
-| [2026-06-06-mag-runtime-topology-project-overview-ssot-closeout.md](./2026-06-06-mag-runtime-topology-project-overview-ssot-closeout.md) | MAG runtime topology 与 project overview role boundary 的 SSOT closeout。 | 只读 provenance；当前 runtime topology truth 继续归 `current-program.json`、product-entry manifest/private surface contracts、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md`、active gap plan、private inventory、source/tests 和 runtime receipts。 |
-| [2026-06-06-mag-private-physical-delete-ssot-closeout.md](./2026-06-06-mag-private-physical-delete-ssot-closeout.md) | MAG private implementation residue、physical-delete gate 与 direct-retirement posture 的 SSOT closeout。 | 只读 provenance；当前 physical-delete truth 继续归 active gap plan、private inventory、private surface policy、Foundry Agent series policy、product-entry manifest / functional audit、source/tests、runtime receipts 和 MAG owner receipts / typed blockers。 |
-| [2026-06-06-mag-sentrux-runtime-facade-retirement-closeout.md](./2026-06-06-mag-sentrux-runtime-facade-retirement-closeout.md) | MAG Sentrux sidecar 中已不存在 `src/med_autogrant/hermes_runtime.py` 对应 `runtime_facade` layer 的退役 closeout。 | 只读 provenance；当前结构边界继续归 `.sentrux/rules.toml`、source tree、tests、Sentrux advisory gate 和 runtime owner contracts。 |
-| [2026-06-06-mag-package-export-support-readout-ssot-closeout.md](./2026-06-06-mag-package-export-support-readout-ssot-closeout.md) | MAG package/export support current-truth readout 的 SSOT closeout。 | 只读 provenance；当前 package/export truth 继续归 MAG package authority source、package/export gate、stage control plane、private surface policy、package lifecycle handoff projection、owner receipts 和 typed blockers。 |
-| [2026-06-06-mag-delivery-package-lifecycle-ssot-closeout.md](./2026-06-06-mag-delivery-package-lifecycle-ssot-closeout.md) | MAG delivery/package lifecycle route、domain entry command contract 与 canonical export surface 测试侧第二真相源清理 closeout。 | 只读 provenance；当前 delivery/package lifecycle truth 继续归 MAG package authority source、domain entry / route / operator contract builders、CLI/API behavior、runtime receipts 和 MAG owner physical-delete gate。 |
-| [2026-06-06-mag-source-workspace-lifecycle-ssot-closeout.md](./2026-06-06-mag-source-workspace-lifecycle-ssot-closeout.md) | MAG source/workspace/file lifecycle policy、source refs support index 与 OPL-owned workspace/source shell boundary 的 SSOT closeout。 | 只读 provenance；当前 source/workspace lifecycle truth 继续归 `contracts/workspace_lifecycle_policy.json`、`contracts/runtime-program/opl-family-contract-adoption.json#source_provenance`、`product-entry-manifest.source_provenance`、source/domain-handler tests、CLI/API behavior 和 MAG owner receipts / typed blockers。 |
-| [2026-06-06-mag-product-entry-package-authority-ssot-closeout.md](./2026-06-06-mag-product-entry-package-authority-ssot-closeout.md) | MAG product-entry public bridge、product/delivery support 指针与 package/canonical pointer authority 的 SSOT closeout。 | 只读 provenance；当前 product-entry/package support truth 继续归 `docs/specs/product-entry-support-record.md`，机器 authority truth 继续归 `product_entry_contract_api.py`、stage control source、`contracts/stage_control_plane.json`、product-entry tests、CLI/API behavior 和 MAG owner receipts / typed blockers。 |
-| [2026-06-06-mag-executor-receipt-boundary-ssot-closeout.md](./2026-06-06-mag-executor-receipt-boundary-ssot-closeout.md) | MAG `codex_cli` 默认 executor 与显式非默认 `hermes_agent` receipt/proof lane 的 SSOT 治理 closeout。 | 只读 provenance；当前 executor truth 继续归 `current-program.json`、private surface policy、source/tests 与 active specs lifecycle owner。 |
-| [2026-06-04-mag-retired-command-family-audit.md](./2026-06-04-mag-retired-command-family-audit.md) | MAG 旧 public/domain-entry runtime command family 的 coverage 与 retirement audit。 | 只读 provenance；当前 no-resurrection truth 继续归 source/tests/contracts 与 active gap plan。 |
-| [2026-06-02-mag-docs-portfolio-coverage-ledger-archive.md](./2026-06-02-mag-docs-portfolio-coverage-ledger-archive.md) | 原 `docs/docs_portfolio_consolidation.md` 中的 MAG dated coverage ledger。 | 只读 provenance；durable 规则已折回 active governance、core docs、active gap plan、spec lifecycle map、contracts/source/tests。 |
+| Docs lifecycle and coverage | 本索引只记录 current owner、coverage snapshot 和 reopen 入口。 | Dated coverage ledger、frozen inventory、doctor transcript、worktree closeout、proof-by-proof table 不再以单独 Markdown 文件维护。 |
+| Retired command / module / facade / helper / test tails | `retired-surface-provenance.md` 保留 no-resurrection rules 和 current owner refs。 | old runtime command family、helper shims、private re-export facade、dynamic export lists、test star facades、package root facades、Sentrux runtime facade、patch bridge、legacy flat aliases 和 compatibility aggregate tests 的 closeout 文件已压缩。 |
+| Default caller / physical delete / evidence gates | 当前读法回到 active plan、private inventory、private surface contracts、Foundry series policy、product-entry manifest、source/tests、runtime receipts 和 OPL read-model。 | dated default-caller, physical-delete, consumer audit, active inventory, package/export, source/workspace, executor receipt 和 owner-decision closeout 不再作为当前 truth 保存。 |
+| Product / runtime / delivery / source support | 当前 support 只保留 thin index 与 owner pointers。 | dated no-rewrite / SSOT closeout 不再作为入口文件维护； durable rules 已折回 owner docs 或 machine surfaces。 |
+
+## Coverage Snapshot
+
+2026-06-08 MAG coverage-ledger compression tranche:
+
+- Reviewed: `AGENTS.md`, `TASTE.md`, `README*`, `docs/README.md`, `docs/project.md`, `docs/status.md`, `docs/architecture.md`, `docs/invariants.md`, `docs/decisions.md`, `docs/docs_portfolio_consolidation.md`, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`, `docs/active/opl-private-implementation-migration-inventory.md`, `docs/history/README.md`, previous `docs/history/docs-portfolio-coverage-ledger/*.md`, `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `package`/verification metadata, and exact contract/source/test references to dated coverage-ledger files.
+- Edited: `docs/history/docs-portfolio-coverage-ledger/README.md`, `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`, `docs/docs_portfolio_consolidation.md`.
+- Compressed / deleted: previous dated MAG docs-portfolio coverage ledger Markdown files under `docs/history/docs-portfolio-coverage-ledger/`, after durable conclusions were folded into current owners above or into `retired-surface-provenance.md`.
+- Unreviewed in this tranche: non-ledger MAG docs were read for SSOT alignment and stale dated-reference cleanup only. Full line-by-line governance of all MAG docs remains open under the parent OPL series goal unless covered by prior accepted tranches.
+- Remaining stale / retire candidates in MAG coverage ledger: none identified after compression. Open MAG work remains the active evidence/physical-delete tails already listed in `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
+- Next write scope: continue SSOT-first compression on the remaining clean sibling repo, then return to dirty `one-person-lab` and `med-autoscience` only when their concurrent write sets are safe to absorb or disjoint.
