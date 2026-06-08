@@ -36,6 +36,8 @@ Active specs 继续列在 [Specs 索引](../../specs/README.md)。
 
 - `2026-04-10-post-r5a-final-package-*.md` 中的 final-package artifact-bundle per-field fail-closed activation packages 已压缩为本主题索引和 coverage ledger 记录；原 15 个逐字段历史文件已删除。当前 fail-closed truth 回到 `src/med_autogrant/artifact_bundle_validation.py`、`src/med_autogrant/final_package.py`、`schemas/v1/submission-ready-package.schema.json`、`schemas/v1/hosted-contract-bundle.schema.json`、`tests/test_final_package.py` 和 package/export owner docs。
 - 该压缩只退役历史长清单文件，不改变 `build-final-package` / `build-artifact-bundle` / `build-hosted-contract-bundle` 行为，不授权 hosted runtime、Gateway route、grant readiness、fundability verdict、quality/export verdict 或 submission-ready approval。
+- `2026-04-10-post-r5a-hosted-contract-bundle-*final-package*.md` 中的 hosted-contract-bundle final-package per-field fail-closed activation packages 已压缩为本主题索引和 coverage ledger 记录；原 6 个逐字段历史文件已删除。当前 fail-closed truth 回到 `src/med_autogrant/hosted_contract_bundle.py`、`src/med_autogrant/final_package_validation.py`、`schemas/v1/hosted-contract-bundle.schema.json`、`tests/test_hosted_contract_bundle.py` 和 `tests/test_hosted_contract_bundle_checkpoint_cases.py`。
+- 该压缩只退役历史长清单文件，不改变 `build-hosted-contract-bundle` 行为，不授权 public hosted runtime、App release readiness、production readiness、Gateway/local-manager route 或 hosted caller long-soak completion。
 
 本页不再维护逐文件长清单。需要找具体历史文件时，按文件名前缀或主题运行：
 
