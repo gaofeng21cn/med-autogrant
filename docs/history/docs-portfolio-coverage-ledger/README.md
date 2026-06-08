@@ -37,6 +37,47 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG OPL standard pack source-shape SSOT tranche:
+
+- Theme / SSOT: OPL standard pack source-shape and generated contract owner split.
+  Machine SSOT remains `med_autogrant.opl_standard_pack.build_standard_pack`,
+  generated contract JSON under `contracts/`, generated aggregate source index,
+  `tests/test_opl_standard_pack.py`, `tests/test_generated_aggregate_source_index.py`,
+  and the private physical-delete gates in
+  `contracts/private_functional_surface_policy.json` /
+  `contracts/foundry_agent_series.json`.
+- Reviewed: `AGENTS.md`, `TASTE.md`, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/active/opl-private-implementation-migration-inventory.md`,
+  `docs/docs_portfolio_consolidation.md`, this coverage ledger,
+  `src/med_autogrant/opl_standard_pack.py`, `tests/test_opl_standard_pack.py`,
+  `tests/test_generated_aggregate_source_index.py`, generated aggregate source
+  metadata, and the family structure advisory entry for MAG.
+- Edited: `src/med_autogrant/opl_standard_pack.py`,
+  `src/med_autogrant/opl_standard_pack_constants.py`,
+  `src/med_autogrant/opl_standard_pack_profiles.py`,
+  `src/med_autogrant/opl_standard_pack_source_policy.py`,
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/active/opl-private-implementation-migration-inventory.md`, and this
+  file.
+- Coverage result: `opl_standard_pack.py` now keeps the thin `build_standard_pack()`
+  / `sync_standard_pack()` entry and contract assembly functions. Static
+  series/profile data and physical source-policy classifications moved to
+  focused owner modules, reducing the entry file from 1124 lines to 555 while
+  keeping generated contract output covered by focused tests. This closes the
+  MAG `needs_design_pass` advisory for `src/med_autogrant/opl_standard_pack.py`.
+- Retired / guarded: no contract, command, workflow, handler, adapter or test was
+  retired. The split is structure-only; it does not authorize generated/default
+  caller promotion, physical delete, grant-ready, fundability-ready,
+  quality/export-ready, submission-ready, production-ready, App/workbench
+  consumption, or Temporal long-soak claims.
+- Remaining MAG unreviewed scope under the parent OPL series goal: full body-level
+  governance of individual active/support specs, individual historical spec
+  bodies, physical-delete evidence tails, and sibling repo uncovered docs remains
+  open unless covered by another accepted tranche.
+- Next write scope: continue with another concrete SSOT theme after fresh intake.
+  Good candidates are active/support specs body governance, individual history
+  spec tombstones, physical-delete evidence tails, or a clean sibling repo lane.
+
 2026-06-08 MAG references lifecycle tranche:
 
 - Theme / SSOT: MAG north-star, OPL adoption, grant strategy memory policy and
