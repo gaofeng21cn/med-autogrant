@@ -37,6 +37,64 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG post-R5A local-runtime history compression tranche:
+
+- Theme / SSOT: post-R5A local-runtime, worktree-root and route/checkpoint
+  historical specs. Current machine SSOT is
+  `contracts/runtime-program/current-program.json`,
+  `src/med_autogrant/route_report.py`, `src/med_autogrant/control_plane.py`,
+  `src/med_autogrant/domain_runtime_parts/contracts.py`,
+  `src/med_autogrant/product_entry_parts/functional_closure_skeleton.py`,
+  `src/med_autogrant/mainline_status.py`,
+  `tests/test_cli_validate_workspace_revision_cases.py`,
+  `tests/test_domain_entry.py`, and
+  `tests/test_hosted_contract_bundle_control_plane.py`; current human-doc
+  reading remains the core five docs,
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/runtime/README.md`, `docs/specs/README.md`,
+  `docs/specs/specs_lifecycle_map.md`, and
+  `docs/history/specs/README.md`.
+- Reviewed: `AGENTS.md`, `TASTE.md`,
+  `docs/docs_portfolio_consolidation.md`,
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/runtime/README.md`, `docs/specs/README.md`,
+  `docs/specs/specs_lifecycle_map.md`,
+  `docs/history/specs/README.md`, this coverage ledger, all tracked
+  post-R5A local-runtime, revised-workspace validation, stage-route
+  checkpoint and worktree-root historical spec files,
+  `contracts/runtime-program/current-program.json`, retired-command scans,
+  route/checkpoint source, control-plane source, and focused tests for
+  stage-route-report, retired runtime commands and CURRENT_PROGRAM contract
+  resolution.
+- Edited: `docs/history/specs/README.md`, this file, and deletion of 5
+  historical post-R5A local-runtime / route-checkpoint / worktree-root spec
+  files under `docs/history/specs/`.
+- Coverage result: the deleted files were duplicate historical slice packages
+  for revised-workspace validation, local walkthrough/output consistency,
+  route/checkpoint mirror shape, validation-failed route shape and old
+  worktree-aware control-plane root discovery. Their durable current rule is
+  already represented by current owner docs, `current-program.json`,
+  route/checkpoint source/tests, repo-tracked CURRENT_PROGRAM contract
+  resolution, and retired-command negative guards. No file-specific
+  `current-program.json`, source or test reference required path stability for
+  the removed Markdown files.
+- Retired / guarded: the retired surface is the historical Markdown long list,
+  not current route/checkpoint, workspace validation, hosted-contract-bundle or
+  package/export behavior. Do not recreate these files as active specs, local
+  runtime owner evidence, `runtime-run` / `runtime-resume` compatibility
+  checklists, main-worktree `.runtime-program` fallback instructions,
+  Gateway/local-manager routes, hosted runtime proof, App release evidence,
+  production readiness or provider long-soak evidence.
+- Remaining MAG unreviewed scope under the parent OPL series goal: individual
+  historical spec bodies outside the compressed post-R5A final-package,
+  hosted-contract final-package and local-runtime groups, active/support spec
+  body governance, active private inventory details and physical-delete
+  evidence tails remain open unless covered by another accepted tranche.
+- Next write scope: continue with another concrete SSOT theme after fresh
+  intake. Good MAG candidates remain active/support spec body governance,
+  other individual history spec tombstones, physical-delete evidence tails, or
+  a clean sibling repo lane.
+
 2026-06-08 MAG hosted-contract final-package history compression tranche:
 
 - Theme / SSOT: post-R5A hosted-contract-bundle final-package fail-closed
