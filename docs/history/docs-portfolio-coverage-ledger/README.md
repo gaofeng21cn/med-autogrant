@@ -37,6 +37,16 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG Progress-First domain-alias semantic audit tranche:
+
+- Theme / SSOT: `grant_work_progress` and `platform_evidence_progress` under the OPL family Progress-First delta contract. Machine SSOT is `contracts/foundry_agent_series.json`, `src/med_autogrant/stage_control_plane.py`, `src/med_autogrant/product_entry_parts/progress_projection_helpers.py`, `schemas/v1/grant-progress.schema.json`, `contracts/stage_control_plane.json`, and focused product-entry / stage-control tests.
+- Reviewed: `docs/decisions.md`, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`, `contracts/foundry_agent_series.json`, `contracts/stage_control_plane.json`, `schemas/v1/grant-progress.schema.json`, `src/med_autogrant/stage_control_plane.py`, `src/med_autogrant/product_entry_parts/progress_projection_helpers.py`, `src/med_autogrant/opl_standard_pack.py`, `tests/product_entry_cases/test_status_start_cases.py`, `tests/product_entry_cases/test_progress_cockpit.py`, `tests/product_entry_cases/test_family_stage_control_plane.py`, and `tests/test_opl_family_contract_adoption.py`.
+- Edited: this file only.
+- Coverage result: these strings are current MAG domain aliases, not stale compatibility aliases. They map grant-facing progress and platform/evidence repair into canonical `deliverable_progress_delta`, `platform_repair_delta`, and `progress_delta_classification`, while tests assert owner and readiness boundaries. They must not be retired without a new machine contract replacing the domain-alias projection and focused tests.
+- Retired / guarded: none in this tranche. The correct retirement target remains old runtime commands, wrapper/facade/patch-bridge residue, flat aliases, compatibility aggregate tests, and readiness claims from refs-only accounting; Progress-First MAG aliases stay active.
+- Remaining MAG unreviewed scope under the parent OPL series goal: full semantic governance for non-Progress-First alias themes remains open, especially product/runtime/delivery/source thin support docs, active specs beyond already reviewed support guards, and physical-delete evidence tails.
+- Next write scope: continue with another concrete SSOT theme after fresh intake; do not delete Progress-First domain aliases unless current contracts/source/tests first move to a replacement machine surface.
+
 2026-06-08 MAG formal-entry / durability retired-command SSOT tranche:
 
 - Theme / SSOT: formal-entry and durability support specs that mention retired runtime commands. Machine SSOT is `MedAutoGrantDomainEntry` behavior, grouped CLI catalogs, `src/med_autogrant/mainline_status.py`, `src/med_autogrant/product_entry_parts/functional_closure_skeleton.py`, `tests/test_domain_entry.py`, `contracts/runtime-program/current-program.json`, and the active no-resurrection gates in `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
