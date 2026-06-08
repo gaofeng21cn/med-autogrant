@@ -495,8 +495,97 @@
       "opl_can_declare_submission_ready": false
     }
   },
+  "owner_chain_live_progress_evidence_lane": {
+    "surface_kind": "mag_owner_chain_live_progress_evidence_lane.v1",
+    "state": "live_progress_refs_recorded_without_readiness_claim",
+    "domain_id": "med-autogrant",
+    "owner": "med-autogrant",
+    "evidence_scope": "live_progress_refs_only_not_readiness",
+    "stage_id": "specific_aims_and_structure",
+    "attempt_ref": "workspace-runtime-ref:mag/grant-stage/specific-aims-and-structure/live-owner-chain/2026-06-08",
+    "kernel_profile_ref": "contracts/stage_run_kernel_profile.json#/owner_chain_live_progress_evidence_ref",
+    "controlled_canary_ref": "contracts/stage_run_canary_evidence.json",
+    "opl_hosted_path": {
+      "runtime_owner": "one-person-lab",
+      "executor": "codex_cli",
+      "domain_owner": "med-autogrant",
+      "path_kind": "opl_hosted_stage_attempt_refs_only",
+      "payload_body_included": false,
+      "workspace_mutated": false,
+      "grant_body_generated": false
+    },
+    "accepted_return_shapes": [
+      "domain_owner_receipt_ref",
+      "typed_blocker_ref",
+      "quality_receipt_ref",
+      "export_receipt_ref",
+      "package_receipt_ref",
+      "no_regression_evidence_ref"
+    ],
+    "accepted_ref_shapes": {
+      "domain_owner_receipt_ref": "receipt:mag/owner-chain-live-progress/specific_aims_and_structure/domain-owner-receipt/2026-06-08",
+      "typed_blocker_ref": "typed-blocker:mag/owner-chain-live-progress/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-06-08",
+      "quality_receipt_ref": "receipt:mag/grant-quality/owner-chain-live-progress/specific_aims_and_structure/quality-receipt-ref/2026-06-08",
+      "export_receipt_ref": "receipt:mag/export-verdict/owner-chain-live-progress/package_and_submit_ready/export-blocked-ref/2026-06-08",
+      "package_receipt_ref": "receipt:mag/package-lifecycle/owner-chain-live-progress/package_and_submit_ready/package-receipt-ref/2026-06-08",
+      "no_regression_evidence_ref": "no-regression:mag/owner-chain-live-progress/direct-hosted-parity/2026-06-08"
+    },
+    "machine_readable_evidence": {
+      "owner_receipt": {
+        "owner": "med-autogrant",
+        "receipt_ref": "receipt:mag/owner-chain-live-progress/specific_aims_and_structure/domain-owner-receipt/2026-06-08",
+        "stage_id": "specific_aims_and_structure",
+        "body_included": false
+      },
+      "typed_blocker": {
+        "owner": "med-autogrant",
+        "typed_blocker_ref": "typed-blocker:mag/owner-chain-live-progress/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-06-08",
+        "blocker_kind": "submission_ready_export_gate_human_approval_required",
+        "body_included": false
+      },
+      "quality_export_package_receipts": {
+        "owner": "med-autogrant",
+        "quality_receipt_ref": "receipt:mag/grant-quality/owner-chain-live-progress/specific_aims_and_structure/quality-receipt-ref/2026-06-08",
+        "export_receipt_ref": "receipt:mag/export-verdict/owner-chain-live-progress/package_and_submit_ready/export-blocked-ref/2026-06-08",
+        "package_receipt_ref": "receipt:mag/package-lifecycle/owner-chain-live-progress/package_and_submit_ready/package-receipt-ref/2026-06-08",
+        "body_included": false
+      },
+      "no_regression": {
+        "owner": "med-autogrant",
+        "no_regression_evidence_ref": "no-regression:mag/owner-chain-live-progress/direct-hosted-parity/2026-06-08",
+        "body_included": false
+      }
+    },
+    "false_authority_flags": {
+      "claims_live_domain_progress": true,
+      "claims_grant_ready": false,
+      "claims_fundability_ready": false,
+      "claims_authoring_quality_ready": false,
+      "claims_export_ready": false,
+      "claims_package_fresh": false,
+      "claims_submission_ready": false,
+      "claims_production_ready": false,
+      "claims_external_submission_authorized": false
+    },
+    "authority_boundary": {
+      "mag_owns_owner_receipt_and_typed_blocker": true,
+      "mag_owns_quality_export_package_receipts": true,
+      "opl_records_refs_only": true,
+      "opl_can_write_grant_truth": false,
+      "opl_can_mutate_artifact_body": false,
+      "opl_can_sign_owner_receipt": false,
+      "opl_can_create_typed_blocker": false,
+      "opl_can_authorize_quality_or_export": false,
+      "opl_can_declare_grant_ready": false,
+      "opl_can_declare_submission_ready": false,
+      "provider_completion_counts_as_readiness": false,
+      "file_presence_counts_as_readiness": false,
+      "read_model_counts_as_readiness": false
+    }
+  },
   "verification_refs": [
     "rtk ./scripts/run-pytest-clean.sh tests/test_production_acceptance.py tests/product_entry_cases/test_external_evidence_consumption_ledger.py tests/product_entry_cases/test_production_live_acceptance.py tests/test_executor_first_landing_program.py tests/test_program_control_surfaces.py tests/test_opl_family_contract_adoption.py -q",
+    "rtk ./scripts/run-pytest-clean.sh tests/test_owner_chain_live_progress_evidence.py -q",
     "rtk ./scripts/verify.sh meta",
     "rtk git diff --check"
   ],
