@@ -37,6 +37,16 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG formal-entry / durability retired-command SSOT tranche:
+
+- Theme / SSOT: formal-entry and durability support specs that mention retired runtime commands. Machine SSOT is `MedAutoGrantDomainEntry` behavior, grouped CLI catalogs, `src/med_autogrant/mainline_status.py`, `src/med_autogrant/product_entry_parts/functional_closure_skeleton.py`, `tests/test_domain_entry.py`, `contracts/runtime-program/current-program.json`, and the active no-resurrection gates in `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
+- Reviewed: `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`, `docs/specs/2026-04-07-durability-model-clarification.md`, `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `docs/history/specs/README.md`, `docs/docs_portfolio_consolidation.md`, `docs/status.md`, `docs/architecture.md`, `docs/invariants.md`, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`, `docs/active/opl-private-implementation-migration-inventory.md`, `docs/runtime/README.md`, `README*`, `src/med_autogrant/mainline_status.py`, `src/med_autogrant/product_entry_parts/functional_closure_skeleton.py`, and negative guard tests for retired runtime commands.
+- Edited: this file and `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`.
+- Coverage result: the two support specs are already lifecycle-guarded as `support_current_truth` and only mention `runtime-run`, `runtime-resume`, `probe-upstream-hermes`, and journal wording inside retired/history sections. They remain in `docs/specs/` as support guards rather than active runtime owners; no current MAG doc outside history authorizes a compatibility command surface.
+- Retired / guarded: `run-local`, `runtime-run`, `runtime-resume`, and `probe-upstream-hermes` stay absent from active domain-entry/public command catalogs and are covered by fail-closed negative tests and retired-command scan refs. Provenance now points at the concrete source/test owners rather than only generic "negative tests" wording.
+- Remaining MAG unreviewed scope under the parent OPL series goal: full line-by-line semantic governance for non-formal-entry/non-durability themes, especially product/runtime/delivery/source thin support docs, active specs beyond the two support guards, and physical-delete evidence tails. Functional and evidence gaps remain in `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
+- Next write scope: continue with a clean sibling repo or another MAG theme only after fresh intake and a concrete SSOT; do not delete active handler/adapter shell without MAG owner delete receipt or typed blocker.
+
 2026-06-08 MAG coverage-ledger compression tranche:
 
 - Reviewed: `AGENTS.md`, `TASTE.md`, `README*`, `docs/README.md`, `docs/project.md`, `docs/status.md`, `docs/architecture.md`, `docs/invariants.md`, `docs/decisions.md`, `docs/docs_portfolio_consolidation.md`, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`, `docs/active/opl-private-implementation-migration-inventory.md`, `docs/history/README.md`, previous `docs/history/docs-portfolio-coverage-ledger/*.md`, `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `package`/verification metadata, and exact contract/source/test references to dated coverage-ledger files.
