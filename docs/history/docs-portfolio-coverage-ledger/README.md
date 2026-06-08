@@ -37,6 +37,16 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG historical-specs index compression tranche:
+
+- Theme / SSOT: historical specs entry and direct-reader lifecycle guard. Current SSOT is `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `docs/history/specs/README.md`, and machine truth references in `contracts/runtime-program/current-program.json`, `contracts/private_functional_surface_policy.json`, `contracts/stage_run_kernel_profile.json`, `src/med_autogrant/opl_standard_pack.py`, `src/med_autogrant/product_entry_parts/functional_closure_skeleton.py`, and focused tests that retain the Hermes-native tombstone path.
+- Reviewed: `AGENTS.md`, `TASTE.md`, `docs/docs_portfolio_consolidation.md`, `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `docs/history/specs/README.md`, this coverage ledger, `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`, history-specs directory inventory, `contracts/runtime-program/current-program.json`, `contracts/private_functional_surface_policy.json`, `contracts/stage_run_kernel_profile.json`, `src/med_autogrant/opl_standard_pack.py`, `src/med_autogrant/product_entry_parts/functional_closure_skeleton.py`, and the tests that assert the path-stable Hermes-native critique proof tombstone.
+- Edited: `docs/history/specs/README.md` and this file.
+- Coverage result: the historical specs directory contains 70 Markdown files including `README.md`. The README now keeps a semantic theme index instead of a date/pattern long list. Active/support spec truth remains in `docs/specs/README.md` and `docs/specs/specs_lifecycle_map.md`; historical files stay provenance even when their titles contain `Current Truth`.
+- Retired / guarded: no file was moved or deleted in this tranche. Path-stable tombstone refs such as `docs/history/specs/2026-04-13-hermes-native-critique-proof-tombstone.md` remain machine evidence refs and do not authorize restoring Hermes-native, Gateway, local-runtime, hosted runtime, or compatibility command surfaces.
+- Remaining MAG unreviewed scope under the parent OPL series goal: full line-by-line semantic governance of individual historical spec bodies remains open, along with product/runtime/delivery/source thin support docs, active specs beyond already reviewed support guards, and physical-delete evidence tails.
+- Next write scope: continue with a concrete SSOT theme; likely candidates are product/runtime/delivery/source thin support docs or individual history spec body tombstones. Do not use this compression as proof that every historical spec body has been line-reviewed.
+
 2026-06-08 MAG Progress-First domain-alias semantic audit tranche:
 
 - Theme / SSOT: `grant_work_progress` and `platform_evidence_progress` under the OPL family Progress-First delta contract. Machine SSOT is `contracts/foundry_agent_series.json`, `src/med_autogrant/stage_control_plane.py`, `src/med_autogrant/product_entry_parts/progress_projection_helpers.py`, `schemas/v1/grant-progress.schema.json`, `contracts/stage_control_plane.json`, and focused product-entry / stage-control tests.

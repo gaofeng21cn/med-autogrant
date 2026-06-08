@@ -18,17 +18,16 @@ Machine boundary: 本文是人读历史 specs 索引。历史 specs 只保存形
 
 本目录下没有单独 lifecycle 头的历史 spec 默认继承上面的目录级信号。旧 `Current Truth`、`Activation Status`、Hermes/Gateway/local-runtime wording 和 dated completion claim 都不能覆盖当前核心五件套、active gap plan、contracts/schema/source 与 `current-program.json`。
 
-由本归档入口承接的历史分组：
+本归档入口按语义主题承接历史记录，不再维护日期顺序或逐文件长清单：
 
-- 2026-04-06 foundation design 与 OMX bridge 记录：`./2026-04-06-*.md`
-- 2026-04-07 P2/P3 mainline 与 review-gate tranche 记录：已归档到本目录的 `./2026-04-07-p2*.md` 与 `./2026-04-07-p3a*.md`；formal-entry 与 durability support guard 仍留在 `../../specs/`。
-- 2026-04-08 P3/P4 rollback、verification gate 与 checkpoint tranche 记录：已归档到本目录的 `./2026-04-08-p3*.md` 与 `./2026-04-08-p4*.md`；P5 future activation 与 R1/R3 runtime-productization packages 位于本目录的 `./2026-04-08-p5*.md`、`./2026-04-08-r*.md` 和 `./2026-04-08-runtime-first-*.md`。
-- 2026-04-09 R3/R5 与 post-R5A hardening briefs：`./2026-04-09-*.md`
-- 2026-04-10 post-R5A fail-closed hardening activation packages 与 local-runtime walkthrough：`./2026-04-10-post-r5a-final-package-*.md`、`./2026-04-10-post-r5a-hosted-contract-bundle-*.md`、`./2026-04-10-post-r5a-local-runtime-validation-*.md`、`./2026-04-10-post-r5a-local-runtime-walkthrough-and-output-consistency-current-truth.md`、`./2026-04-10-post-r5a-revised-*.md`、`./2026-04-10-post-r5a-stage-route-*.md` 和 `./2026-04-10-post-r5a-worktree-aware-*.md`
-- 2026-04-11 Hermes/reset 与 local-runtime closeout 记录：已退役 provider proof 位于本目录的 `2026-04-11-hermes-backed-*.md` 与 `2026-04-11-upstream-hermes-agent-truth-reset-current-truth.md`；local-runtime honest-stop 记录位于 `./2026-04-11-post-r5a-local-runtime-upper-bound-honest-stop-current-truth.md`，只作为 fail-closed / honest-stop provenance 阅读。
-- 2026-04-12 hosted-caller、OPL alignment、product-entry、route snapshot 与 handoff 记录：已退役 upstream Hermes fast-cutover board/current-truth、author-side executor routing snapshot、OPL alignment historical snapshot、hosted caller consumption、hosted contract bundle export 与 lightweight product-entry handoff 记录均位于本目录，只作为 provenance 阅读；当前 contract export、product-entry、OPL generated/hosted caller 和 App/workbench 边界回到核心文档、active gap plan、contracts/schema/source 与 `current-program.json`。
-- 2026-04-12/13 P4 product-entry / package support 记录：`./2026-04-12-p4a-*`、`./2026-04-12-p4b-*`、`./2026-04-12-p4c-*`、`./2026-04-13-p4e-*` 和 `./2026-04-13-p4f-*`；当前 support 读法回到 `../../specs/product-entry-support-record.md`。
-- 2026-04-13 authoring route landing、默认 executor vocabulary 与 submission-ready 记录：`../../specs/2026-04-13-*.md` 中的 active/support records；已退役 Hermes-native proof tombstone：`./2026-04-13-hermes-native-critique-proof-tombstone.md`
+| 主题 | 本目录保留的内容 | 当前 owner / 阅读动作 |
+| --- | --- | --- |
+| Foundation、object model、early mainline 与 OMX bridge | MAG 早期顶层设计、NSFC 主流程、对象模型和旧 Codex App / OMX 交接 provenance。 | 当前 MAG role、runtime owner、OPL/Temporal 边界和 active specs 回到核心五件套、`../../specs/README.md`、`../../specs/specs_lifecycle_map.md` 与 `current-program.json`。 |
+| Authoring、review、rollback 与 verification tranche | P2/P3/P4 grant authoring、mentor verdict、revision、rollback、verification gate 和 checkpoint surface 形成过程。 | 当前 authoring route、quality verdict、completion semantics 和 verification entry 回到 active/current specs、source/contracts/tests 与 `current-program.json`。 |
+| Runtime-first、local-runtime、Gateway/federation 与 provider proof | R/P/post-R5A runtime-productization packages、local-runtime hardening、honest-stop、Gateway/federation future activation、Hermes-backed proof 和 upstream Hermes reset records。 | 只作为 retired provider proof / migration lesson。默认 runtime owner、provider-backed substrate、queue、attempt ledger、App/workbench 和 executor adapter 边界回到 OPL/core docs、active gap plan、contracts/source/tests。 |
+| Package/export、hosted contract bundle 与 fail-closed hardening | final-package artifact bundle、hosted contract bundle、route checkpoint shape、workspace validator 和 package/export fail-closed hardening provenance。 | 当前 package/export authority、schema behavior 和 fail-closed gates 回到 package/export source、schemas、tests、support record 与 owner receipts；不恢复旧 hosted runtime 或 Gateway route。 |
+| Product-entry、OPL handoff、hosted caller 和 route snapshots | lightweight product-entry envelope、schema-backed product status、grant user-loop、hosted caller consumption、author-side routing snapshot 和 OPL alignment snapshots。 | 当前 product-entry / package support 读法回到 `../../specs/product-entry-support-record.md`、core docs、active gap plan、contracts/schema/source 与 `current-program.json`。 |
+| Tombstones and no-resurrection proof | Hermes-native critique proof tombstone and path-stable retired-surface evidence refs that are still used by contracts/source/tests. | Keep as history/provenance only. Machine refs may point here for tombstone evidence, but that does not elevate the historical spec into current truth. |
 
 Active specs 继续列在 [Specs 索引](../../specs/README.md)。
 若 dated spec 与核心文档或 `current-program.json` 冲突，除非它被明确列为 active boundary record，否则按 provenance 处理。
