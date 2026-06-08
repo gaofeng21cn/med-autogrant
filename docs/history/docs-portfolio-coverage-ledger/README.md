@@ -37,6 +37,58 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG references lifecycle tranche:
+
+- Theme / SSOT: MAG north-star, OPL adoption, grant strategy memory policy and
+  series governance reference docs. Current SSOT for status, gaps, runtime
+  owner, readiness gates, active specs lifecycle and machine behavior remains
+  the core five docs, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`,
+  `docs/docs_portfolio_consolidation.md`,
+  `contracts/runtime-program/current-program.json`,
+  `contracts/runtime-program/opl-family-contract-adoption.json`,
+  `contracts/runtime-program/domain-memory-seed-fixture.json`, source/CLI/API
+  behavior and focused tests.
+- Reviewed: `AGENTS.md`, `TASTE.md`, `docs/README.md`,
+  `docs/status.md`, `docs/specs/README.md`,
+  `docs/specs/specs_lifecycle_map.md`,
+  `docs/docs_portfolio_consolidation.md`,
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/references/README.md`,
+  `docs/references/med-auto-grant-ideal-state.md`,
+  `docs/references/grant_strategy_memory_policy.md`,
+  `docs/references/integration/opl-family-contract-adoption.md`,
+  `docs/references/governance/series-doc-governance-checklist.md`,
+  `contracts/runtime-program/current-program.json`, reference-path scans across
+  contracts/source/tests/specs/history, stale-word scans over reference and
+  owner docs, and this coverage ledger.
+- Edited: this file only.
+- Coverage result: `docs/references/**` already has one role: support
+  reference. The ideal-state doc is north-star only; the memory policy is a
+  human policy/seed reference; the OPL adoption doc explains descriptor,
+  projection and ref exports; the series checklist supports cross-repo docs
+  intake. None of them carries current completion status, active plan,
+  production/provider readiness, App/workbench consumption, grant-ready,
+  fundability-ready, quality-ready, export-ready, submission-ready, physical
+  delete authority or runtime-owner truth.
+- Retired / guarded: no reference doc, contract, source module, command,
+  workflow or test was retired in this tranche. Existing machine refs to
+  `grant_strategy_memory_policy.md` and
+  `integration/opl-family-contract-adoption.md` remain path-stable support refs
+  only. Old Runtime Manager, Hermes/Gateway/local-manager, hosted handoff,
+  compatibility alias/facade and provider-proof narratives remain excluded from
+  references unless the current owner docs explicitly keep them as
+  history/provenance or negative guards.
+- Remaining MAG unreviewed scope under the parent OPL series goal: active
+  support spec bodies, individual historical spec bodies, active private
+  inventory details and physical-delete evidence tails remain open unless
+  covered by another accepted tranche.
+- Next write scope: continue with a concrete SSOT theme after fresh intake,
+  likely active/support specs body governance, individual history spec body
+  tombstones, active private inventory details, physical-delete evidence tails
+  or a clean sibling repo lane. Do not use this reference review as proof that
+  every MAG spec/history paragraph has been line-reviewed.
+
 2026-06-08 MAG public-doc support lifecycle tranche:
 
 - Theme / SSOT: public repository and docs-public narrative support. Public
