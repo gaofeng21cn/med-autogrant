@@ -172,6 +172,27 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
             "generated_surface_signs_owner_receipt",
         ],
     }
+    workspace_topology = generated["foundry_agent_series"]["workspace_topology_profile"]
+    assert workspace_topology["surface_kind"] == "opl_workspace_topology_profile"
+    assert workspace_topology["profile_id"] == "opl.workspace_topology_profile.v1"
+    assert workspace_topology["default_profiles"]["one_off"][
+        "project_collection_path"
+    ] == "projects"
+    assert workspace_topology["default_profiles"]["rca_series"][
+        "project_collection_path"
+    ] == "projects"
+    assert workspace_topology["default_profiles"]["mas_portfolio"][
+        "project_collection_path"
+    ] == "projects"
+    assert workspace_topology["workspace_initialization_policy"][
+        "default_project_collection_path"
+    ] == "projects"
+    assert workspace_topology["workspace_initialization_policy"][
+        "legacy_project_collection_aliases"
+    ] == ["deliverables", "studies"]
+    assert "one_off_still_uses_project_collection_path" not in workspace_topology[
+        "workspace_initialization_policy"
+    ]
     assert generated["domain_descriptor"]["standard_contract_refs"][
         "foundry_agent_series_policy_release"
     ] == "contracts/opl-framework/foundry-agent-series-policy-release.json"
