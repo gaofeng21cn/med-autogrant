@@ -37,6 +37,50 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-09 MAG Foundry command-surface field retirement tranche:
+
+- Theme / SSOT: MAG Foundry Agent series command-surface projection and public
+  quickstart wording. Machine SSOT is `src/med_autogrant/foundry_series_cli.py`,
+  `src/med_autogrant/cli.py`, grouped public command routing in
+  `src/med_autogrant/public_cli.py`, and focused smoke tests in
+  `tests/test_cli_smoke.py`; current architecture/readme owner text is
+  `docs/architecture.md`, `README.md` and `README.zh-CN.md`.
+- Reviewed: `AGENTS.md`, `TASTE.md`, root README pair, `docs/architecture.md`,
+  `docs/status.md`, `docs/docs_portfolio_consolidation.md`,
+  `docs/history/docs-portfolio-coverage-ledger/README.md`,
+  `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`,
+  `contracts/foundry_agent_series.json`, `src/med_autogrant/foundry_series_cli.py`,
+  `src/med_autogrant/cli.py`, `src/med_autogrant/public_cli.py`,
+  `src/med_autogrant/cli_rendering_parts.py`, `tests/test_cli_smoke.py`,
+  `tests/test_test_command_surfaces.py`, and MAG OPL Doc doctor output.
+- Edited: `src/med_autogrant/foundry_series_cli.py`,
+  `src/med_autogrant/cli.py`, `tests/test_cli_smoke.py`, `README.md`,
+  `README.zh-CN.md`, `docs/architecture.md`, this coverage ledger, and
+  `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`.
+- Retired active machine fields / wording:
+  `status.public_frontdoor`, `status.executable_frontdoors`,
+  `interfaces.ordinary_public_frontdoor_spine`,
+  `validation.checked_frontdoor_operations`, and
+  `missing_frontdoor_operation:*`.
+- Replacement fields / wording: `status.public_command_surface`,
+  `status.executable_command_surfaces`, `interfaces.ordinary_command_spine`,
+  `validation.checked_command_surface_operations`, and
+  `missing_command_surface_operation:*`.
+- Coverage result: MAG now matches the OPL/RCA command-surface vocabulary for
+  active CLI JSON, public help, smoke tests, architecture current truth and
+  README quickstart. `grant` and `work` remain active MAG domain aliases; they
+  are not stale compatibility aliases and were not retired.
+- Retired / guarded: no command operation was removed. Focused smoke tests now
+  assert the replacement fields and assert the old active fields are absent.
+  Remaining `frontdoor` text is allowed only in history/provenance or
+  no-resurrection/negative-guard contexts.
+- Remaining MAG unreviewed scope under the parent OPL series goal: unrelated
+  reference docs, active/support spec bodies, individual historical spec bodies,
+  private inventory details and physical-delete evidence tails remain open.
+- Next write scope: after fresh six-repo intake, continue with another concrete
+  SSOT theme or physical-delete candidate. Do not restore active MAG Foundry
+  CLI JSON/help/test/status wording under `frontdoor`.
+
 2026-06-08 MAG authoring route history compression tranche:
 
 - Theme / SSOT: author-side route catalog, executor routing contract, stage

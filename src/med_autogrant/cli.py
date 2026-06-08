@@ -138,7 +138,7 @@ def build_parser() -> argparse.ArgumentParser:
         subparsers,
         "foundry-validate",
         handle_foundry_validate,
-        "校验 MAG 的 Foundry Agent series contract 与 CLI frontdoor。",
+        "校验 MAG 的 Foundry Agent series contract 与 CLI command surface。",
     )
     _add_simple_command(
         subparsers,
@@ -431,7 +431,7 @@ def _print_public_help() -> None:
         "Series: OPL Foundry Agent",
         "Agent id: medautogrant",
         "Ordinary path: workspace/work/stage/run/vault/handoff/connect",
-        "Executable frontdoor: medautogrant or mag",
+        "Executable command surface: medautogrant or mag",
         "Authority boundary: MAG owns grant truth, quality/export verdicts, package authority, memory decisions, and owner receipts; OPL reads refs and projects state.",
         "",
         "Public command groups:",

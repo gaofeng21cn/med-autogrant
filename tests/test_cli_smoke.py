@@ -42,7 +42,7 @@ def test_public_cli_help_renders_group_index() -> None:
     assert "Series: OPL Foundry Agent" in stdout
     assert "Agent id: medautogrant" in stdout
     assert "Ordinary path: workspace/work/stage/run/vault/handoff/connect" in stdout
-    assert "Executable frontdoor: medautogrant or mag" in stdout
+    assert "Executable command surface: medautogrant or mag" in stdout
     assert "Authority boundary:" in stdout
     assert "Public command groups:" in stdout
     assert "foundry" in stdout
@@ -74,7 +74,8 @@ def test_foundry_status_projects_mag_series_identity() -> None:
     assert payload["foundry_agent_series"]["foundry_agent_id"] == "medautogrant"
     assert payload["status"]["series_label"] == "OPL Foundry Agent"
     assert payload["status"]["ordinary_path"] == "workspace/work/stage/run/vault/handoff/connect"
-    assert payload["status"]["executable_frontdoors"] == ["medautogrant", "mag"]
+    assert payload["status"]["executable_command_surfaces"] == ["medautogrant", "mag"]
+    assert "executable_frontdoors" not in payload["status"]
 
 
 @pytest.mark.smoke
@@ -82,7 +83,8 @@ def test_top_level_status_alias_dispatches_foundry_status() -> None:
     payload = _run_json_cli("status", "--format", "json")
 
     assert payload["command"] == "foundry-status"
-    assert payload["status"]["public_frontdoor"] == "medautogrant foundry"
+    assert payload["status"]["public_command_surface"] == "medautogrant foundry"
+    assert "public_frontdoor" not in payload["status"]
 
 
 @pytest.mark.smoke
@@ -99,7 +101,7 @@ def test_foundry_interfaces_exposes_grant_and_work_aliases() -> None:
         "handoff",
         "connect",
     ]
-    assert payload["interfaces"]["ordinary_public_frontdoor_spine"] == [
+    assert payload["interfaces"]["ordinary_command_spine"] == [
         "workspace",
         "work",
         "stage",
@@ -108,6 +110,7 @@ def test_foundry_interfaces_exposes_grant_and_work_aliases() -> None:
         "handoff",
         "connect",
     ]
+    assert "ordinary_public_frontdoor_spine" not in payload["interfaces"]
     assert payload["interfaces"]["alias_groups"] == {"grant": "workspace", "work": "pass"}
     assert payload["interfaces"]["mag_domain_aliases"]["authority"] == "vault"
     assert payload["interfaces"]["mag_domain_aliases"]["domain-handler"] == "connect"
@@ -135,11 +138,20 @@ def test_grant_and_work_aliases_dispatch_existing_public_groups() -> None:
 
 
 @pytest.mark.smoke
-def test_foundry_validate_checks_frontdoor_contract() -> None:
+def test_foundry_validate_checks_command_surface_contract() -> None:
     payload = _run_json_cli("validate", "--format", "json")
 
     assert payload["command"] == "foundry-validate"
     assert payload["validation"]["ok"] is True
+    assert payload["validation"]["checked_command_surface_operations"] == [
+        "status",
+        "inspect",
+        "interfaces",
+        "validate",
+        "doctor",
+        "peers",
+    ]
+    assert "checked_frontdoor_operations" not in payload["validation"]
     assert payload["validation"]["problems"] == []
 
 

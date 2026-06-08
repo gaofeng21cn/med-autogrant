@@ -33,8 +33,8 @@ def build_foundry_series_status() -> dict[str, Any]:
             "authority_owner": contract["authority_owner"],
             "stage_control_plane_ref": contract["stage_control_plane_ref"],
             "ordinary_path": "workspace/work/stage/run/vault/handoff/connect",
-            "public_frontdoor": "medautogrant foundry",
-            "executable_frontdoors": ["medautogrant", "mag"],
+            "public_command_surface": "medautogrant foundry",
+            "executable_command_surfaces": ["medautogrant", "mag"],
             "top_level_shortcuts": list(EXPECTED_OPERATIONS),
             "alias_groups": dict(PUBLIC_GROUP_ALIASES),
         },
@@ -71,7 +71,7 @@ def build_foundry_series_interfaces() -> dict[str, Any]:
         interfaces={
             "ordinary_operations": list(EXPECTED_OPERATIONS),
             "ordinary_series_spine": list(ORDINARY_SERIES_SPINE),
-            "ordinary_public_frontdoor_spine": list(ORDINARY_SERIES_SPINE),
+            "ordinary_command_spine": list(ORDINARY_SERIES_SPINE),
             "alias_groups": dict(PUBLIC_GROUP_ALIASES),
             "mag_domain_aliases": {
                 "grant": "workspace",
@@ -101,13 +101,16 @@ def build_foundry_series_validate() -> dict[str, Any]:
         if not isinstance(contract.get(field), str) or not str(contract.get(field)).strip()
     ]
     required_packets = tuple(contract["required_stage_packets"])
-    missing_frontdoor_ops = [
+    missing_command_surface_ops = [
         operation
         for operation in EXPECTED_OPERATIONS
         if ("foundry", operation) not in PUBLIC_TO_INTERNAL_COMMAND
     ]
     problems = [f"missing_identity_field:{field}" for field in missing_fields]
-    problems.extend(f"missing_frontdoor_operation:{operation}" for operation in missing_frontdoor_ops)
+    problems.extend(
+        f"missing_command_surface_operation:{operation}"
+        for operation in missing_command_surface_ops
+    )
     return _base_payload(
         contract,
         "foundry-validate",
@@ -115,7 +118,7 @@ def build_foundry_series_validate() -> dict[str, Any]:
             "ok": not problems,
             "checked_identity_fields": list(required_fields),
             "checked_stage_packets": list(required_packets),
-            "checked_frontdoor_operations": list(EXPECTED_OPERATIONS),
+            "checked_command_surface_operations": list(EXPECTED_OPERATIONS),
             "problems": problems,
         },
     )
