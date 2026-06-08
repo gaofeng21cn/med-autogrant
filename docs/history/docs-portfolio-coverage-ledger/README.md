@@ -37,6 +37,59 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG authoring route history compression tranche:
+
+- Theme / SSOT: author-side route catalog, executor routing contract, stage
+  action envelope and pending handoff historical snapshots. Current machine
+  SSOT is `src/med_autogrant/domain_runtime_parts/contracts.py`,
+  `src/med_autogrant/product_entry_parts/entry.py`,
+  `schemas/v1/executor-routing-contract.schema.json`,
+  `schemas/v1/product-entry.schema.json`, hosted-contract-bundle schema/source,
+  `tests/test_domain_runtime.py`, product-entry cases, hosted bundle tests and
+  the current-program pointer; current human-doc reading remains
+  `docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md`,
+  `docs/specs/2026-04-13-critique-codex-cli-executor-current-truth.md`,
+  `docs/specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md`,
+  `docs/specs/product-entry-support-record.md`, the core five docs, active gap
+  plan and `docs/history/specs/README.md`.
+- Reviewed: `AGENTS.md`, `TASTE.md`, the route/product-entry support specs,
+  `docs/status.md`, `docs/architecture.md`, `docs/invariants.md`,
+  `docs/decisions.md`, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`,
+  `docs/history/specs/README.md`, this coverage ledger, route/executor source,
+  executor-routing schemas, focused route tests, current-program negative
+  guards, and the 4 tracked route/handoff historical spec files.
+- Edited: `docs/history/specs/README.md`, this file, and deletion of 4
+  route/handoff historical spec files under `docs/history/specs/`.
+- Coverage result: the deleted files were historical snapshots for R1.B
+  `stage_action_envelope`, old `runtime-run` / `runtime-resume` journal
+  continuation, author-side executor routing, critique pending handoff and the
+  pending authoring route handoff matrix. Their current semantics are already
+  represented by landed route support specs, schema-backed route source,
+  current product-entry / hosted bundle outputs and tests. The remaining
+  `human_doc:*` mentions for old route/pending ids are negative guards proving
+  those historical ids are not current truth surfaces; they do not require the
+  deleted Markdown files to stay path-stable.
+- Retired / guarded: the retired surface is the historical Markdown long list,
+  not the landed `direction_screening -> hosted_contract_bundle` route catalog,
+  Codex CLI default executor, schema-backed `executor_routing_contract`,
+  product-entry output, hosted bundle authoring contract or focused negative
+  tests. Do not recreate these files as active specs, route compatibility
+  docs, `runtime-run` / `runtime-resume` instructions, local journal evidence,
+  `stage_action_envelope` durable path, `handoff_requirements`, pending route
+  matrix, Gateway/Hermes default-runtime plan, App readiness or production
+  proof.
+- Remaining MAG unreviewed scope under the parent OPL series goal: historical
+  spec bodies outside the compressed foundation, authoring route, post-R5A
+  final-package, hosted-contract final-package and local-runtime groups,
+  active/support spec body governance, active private inventory details and
+  physical-delete evidence tails remain open unless covered by another accepted
+  tranche.
+- Next write scope: continue with another concrete SSOT theme after fresh
+  intake. Good MAG candidates remain active/support specs body governance,
+  remaining individual history spec tombstones, physical-delete evidence tails,
+  or a clean sibling repo lane.
+
 2026-06-08 MAG foundation history compression tranche:
 
 - Theme / SSOT: early MAG foundation, NSFC main flow and top-level design
