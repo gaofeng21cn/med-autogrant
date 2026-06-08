@@ -37,6 +37,46 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG public-doc support lifecycle tranche:
+
+- Theme / SSOT: public repository and docs-public narrative support. Public
+  first entry remains root `README.md` / `README.zh-CN.md`; docs-public support
+  remains `docs/public/README.md`, `docs/public/domain-positioning.md` and
+  `docs/public/mvp-scope.md`. Current technical status, runtime owner,
+  active evidence gates and grant-readiness boundaries remain the core five
+  docs, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/docs_portfolio_consolidation.md`,
+  `contracts/runtime-program/current-program.json`, source/CLI/API behavior and
+  focused tests.
+- Reviewed: `README.md`, `README.zh-CN.md`, `docs/README.md`,
+  `docs/public/README.md`, `docs/public/domain-positioning.md`,
+  `docs/public/mvp-scope.md`, `docs/project.md`, `docs/status.md`,
+  `docs/architecture.md`, `docs/invariants.md`, `docs/decisions.md`,
+  `docs/docs_portfolio_consolidation.md`,
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `contracts/runtime-program/current-program.json`, specs lifecycle public
+  identity references, and this coverage ledger.
+- Edited: this file only.
+- Coverage result: MAG public docs already have one role each. Root README
+  files remain public entries; `docs/public/README.md` remains a public support
+  index; `domain-positioning.md` explains MAG public identity / OPL-provider
+  boundary; `mvp-scope.md` explains NSFC MVP scope and non-goals. They do not
+  carry active runtime truth, production readiness, App/workbench consumption,
+  grant-ready, fundability-ready, quality/export-ready or submission-ready
+  verdicts.
+- Retired / guarded: no public doc was retired. The guarded stale surfaces are
+  old hosted caller proof, public hosted runtime, Gateway/local-manager,
+  `runtime-run` / `runtime-resume`, flat public aliases and compatibility
+  product/workbench wording; current public docs either omit them or keep them
+  under explicit history / active-evidence-gate language.
+- Remaining MAG unreviewed scope under the parent OPL series goal: active/support
+  spec bodies, individual historical spec bodies, reference docs beyond public
+  identity pointers, active private inventory details and physical-delete
+  evidence tails remain open unless covered by another accepted tranche.
+- Next write scope: continue with a concrete SSOT theme after fresh intake,
+  likely reference docs, active/support specs body governance, physical-delete
+  evidence tails, or a clean sibling repo lane.
+
 2026-06-08 MAG product/runtime/delivery/source/policies thin-support lifecycle tranche:
 
 - Theme / SSOT: thin support indexes for product entry, runtime projection,
