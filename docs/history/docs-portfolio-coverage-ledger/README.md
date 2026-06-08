@@ -37,6 +37,51 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG foundation history compression tranche:
+
+- Theme / SSOT: early MAG foundation, NSFC main flow and top-level design
+  historical specs. Current machine SSOT is
+  `contracts/runtime-program/current-program.json`, `agent/` Declarative Grant
+  Pack, stage control plane, quality gates, source/contracts/tests and
+  MAG-owned owner receipt / typed blocker / package authority surfaces; current
+  human-doc reading remains the core five docs,
+  `docs/references/med-auto-grant-ideal-state.md`,
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, and
+  `docs/history/specs/README.md`.
+- Reviewed: `AGENTS.md`, `TASTE.md`, the core five docs,
+  `docs/references/med-auto-grant-ideal-state.md`,
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `contracts/runtime-program/current-program.json`,
+  `docs/history/specs/README.md`, this coverage ledger, and the two tracked
+  early foundation historical spec files.
+- Edited: `docs/history/specs/README.md`, this file, and deletion of 2
+  early foundation historical spec files under `docs/history/specs/`.
+- Coverage result: the deleted files were early provenance for Grant Foundry
+  naming/top-level design, NSFC flow, mentor critique/revision loop,
+  Auto/HITL split, old host-agent/local-runtime sequencing and first MVP
+  boundaries. Their durable current semantics are already represented by the
+  current owner docs, current-program pointer, Declarative Grant Pack, active
+  specs lifecycle, source/contracts/tests and MAG authority surfaces. No
+  file-specific contract, source or test reference required path stability for
+  the removed Markdown files.
+- Retired / guarded: the retired surface is the historical Markdown long list,
+  not grant flow, stage pack, authoring route, quality gate, package authority,
+  memory accept/reject, owner receipt or typed blocker behavior. Do not
+  recreate these files as active specs, Grant Foundry roadmap,
+  host-agent/local-runtime default path, same-repo HITL product plan, readiness
+  evidence, compatibility entry, production proof or current truth owner.
+- Remaining MAG unreviewed scope under the parent OPL series goal: individual
+  historical spec bodies outside the compressed foundation, post-R5A
+  final-package, hosted-contract final-package and local-runtime groups,
+  active/support spec body governance, active private inventory details and
+  physical-delete evidence tails remain open unless covered by another accepted
+  tranche.
+- Next write scope: continue with another concrete SSOT theme after fresh
+  intake. Good MAG candidates remain active/support specs body governance,
+  other individual history spec tombstones, physical-delete evidence tails, or a
+  clean sibling repo lane.
+
 2026-06-08 MAG post-R5A local-runtime history compression tranche:
 
 - Theme / SSOT: post-R5A local-runtime, worktree-root and route/checkpoint
