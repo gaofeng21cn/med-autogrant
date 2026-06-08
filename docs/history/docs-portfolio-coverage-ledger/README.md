@@ -37,6 +37,51 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG final-package artifact-bundle history compression tranche:
+
+- Theme / SSOT: post-R5A final-package artifact-bundle fail-closed historical
+  specs. Current machine SSOT is
+  `src/med_autogrant/artifact_bundle_validation.py`,
+  `src/med_autogrant/final_package.py`,
+  `schemas/v1/submission-ready-package.schema.json`,
+  `schemas/v1/hosted-contract-bundle.schema.json`, and
+  `tests/test_final_package.py`; current human-doc reading remains
+  `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`,
+  `docs/specs/product-entry-support-record.md`, and
+  `docs/history/specs/README.md`.
+- Reviewed: `AGENTS.md`, `TASTE.md`,
+  `docs/docs_portfolio_consolidation.md`,
+  `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`,
+  `docs/history/specs/README.md`, this coverage ledger,
+  all tracked `docs/history/specs/2026-04-10-post-r5a-final-package-*.md`
+  files, `contracts/runtime-program/current-program.json`,
+  `src/med_autogrant/artifact_bundle_validation.py`,
+  `src/med_autogrant/final_package.py`, relevant schemas, and
+  `tests/test_final_package.py`.
+- Edited: `docs/history/specs/README.md`, this file, and deletion of 15
+  per-field historical spec files under
+  `docs/history/specs/2026-04-10-post-r5a-final-package-*.md`.
+- Coverage result: the deleted files were duplicate activation packages for the
+  same historical hardening theme: malformed artifact bundle, required nested
+  fields, scalar/count/list/object/list-element value types, linkage fields and
+  `linked_object_ids` fail-closed cases. Their durable current rule is already
+  represented by source/schema/tests and the package/export support owner. No
+  file-specific `current-program.json` or source/test reference required path
+  stability for the removed Markdown files.
+- Retired / guarded: the retired surface is the historical per-field Markdown
+  long list, not the package/export validation behavior. Do not recreate these
+  files as active specs, compatibility checklists, hosted-runtime proof,
+  Gateway/local-manager routes, or package/export readiness evidence.
+- Remaining MAG unreviewed scope under the parent OPL series goal: individual
+  historical spec bodies outside this final-package artifact-bundle group,
+  active/support spec body governance, active private inventory details and
+  physical-delete evidence tails remain open unless covered by another accepted
+  tranche.
+- Next write scope: continue with another concrete SSOT theme after fresh
+  intake. Good MAG candidates remain active/support spec body governance,
+  other individual history spec tombstones, physical-delete evidence tails, or a
+  clean sibling repo lane.
+
 2026-06-08 MAG OPL standard pack source-shape SSOT tranche:
 
 - Theme / SSOT: OPL standard pack source-shape and generated contract owner split.
