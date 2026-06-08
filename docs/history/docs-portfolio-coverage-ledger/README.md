@@ -37,6 +37,51 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-08 MAG product/runtime/delivery/source/policies thin-support lifecycle tranche:
+
+- Theme / SSOT: thin support indexes for product entry, runtime projection,
+  delivery/export, source/workspace and stable policy docs. Current SSOT remains
+  the core five docs, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/specs/product-entry-support-record.md`, `docs/specs/README.md`,
+  `docs/specs/specs_lifecycle_map.md`,
+  `contracts/runtime-program/current-program.json`,
+  `contracts/workspace_lifecycle_policy.json`, product-entry manifests,
+  source/CLI/API behavior and focused tests.
+- Reviewed: `AGENTS.md`, `TASTE.md`, `docs/docs_portfolio_consolidation.md`,
+  `docs/status.md`, `docs/architecture.md`, `docs/invariants.md`,
+  `docs/decisions.md`, `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/product/README.md`, `docs/runtime/README.md`,
+  `docs/delivery/README.md`, `docs/source/README.md`,
+  `docs/policies/README.md`, `docs/specs/product-entry-support-record.md`,
+  `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`,
+  `contracts/runtime-program/current-program.json`,
+  `contracts/workspace_lifecycle_policy.json`, product-entry / runtime /
+  package lifecycle / source provenance source refs, and this coverage ledger.
+- Edited: this file only.
+- Coverage result: the five support README files are already thin indexes. They
+  point readers back to the current owner docs and machine surfaces instead of
+  carrying package/export gates, runtime status, workspace truth, stable policy
+  rules, dated proof logs, or product-entry manifests as prose copies. No
+  support README should be expanded into a parallel active owner while the
+  SSOTs above remain current.
+- Retired / guarded: no file, command, contract, source module, test, or support
+  README was retired in this tranche. The guarded stale surface is the temptation
+  to treat these thin indexes as second truth sources for grant readiness,
+  submission readiness, App/workbench consumption, runtime ownership, package
+  authority, source truth, or policy enforcement. Keep old runtime commands,
+  Gateway/local-manager wording, facade/alias/wrapper residue and compatibility
+  tests confined to no-resurrection or history/provenance context.
+- Remaining MAG unreviewed scope under the parent OPL series goal: full
+  line-by-line semantic governance of active spec bodies, individual historical
+  spec bodies, reference docs, public docs, active private inventory details and
+  physical-delete evidence tails remains open unless covered by a prior accepted
+  tranche.
+- Next write scope: continue with a concrete SSOT theme after fresh intake,
+  likely active/support specs body governance, reference docs, public docs, or a
+  clean sibling repo lane. Do not use this thin-support review as proof that
+  every product/runtime/delivery/source/policy-related historical spec body has
+  been line-reviewed.
+
 2026-06-08 MAG historical-specs index compression tranche:
 
 - Theme / SSOT: historical specs entry and direct-reader lifecycle guard. Current SSOT is `docs/specs/README.md`, `docs/specs/specs_lifecycle_map.md`, `docs/history/specs/README.md`, and machine truth references in `contracts/runtime-program/current-program.json`, `contracts/private_functional_surface_policy.json`, `contracts/stage_run_kernel_profile.json`, `src/med_autogrant/opl_standard_pack.py`, `src/med_autogrant/product_entry_parts/functional_closure_skeleton.py`, and focused tests that retain the Hermes-native tombstone path.
