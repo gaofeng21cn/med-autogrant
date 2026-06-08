@@ -23,6 +23,7 @@ proof = [
 
 [project.scripts]
 medautogrant = "med_autogrant.cli:entrypoint"
+mag = "med_autogrant.cli:entrypoint"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

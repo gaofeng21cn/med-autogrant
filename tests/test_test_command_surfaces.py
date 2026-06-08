@@ -58,6 +58,9 @@ def test_clean_python_runners_route_caches_outside_checkout() -> None:
 
 def test_pyproject_registers_test_lane_markers() -> None:
     pyproject = tomllib.loads(_read("pyproject.toml"))
+    scripts = pyproject["project"]["scripts"]
+    assert scripts["medautogrant"] == "med_autogrant.cli:entrypoint"
+    assert scripts["mag"] == "med_autogrant.cli:entrypoint"
     pytest_options = pyproject["tool"]["pytest"]["ini_options"]
     markers = pytest_options["markers"]
 

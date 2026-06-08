@@ -39,9 +39,15 @@ def test_public_cli_help_renders_group_index() -> None:
 
     assert exit_code == 0
     assert stderr == ""
+    assert "Series: OPL Foundry Agent" in stdout
+    assert "Agent id: medautogrant" in stdout
+    assert "Ordinary path: workspace/work/stage/run/vault/handoff/connect" in stdout
+    assert "Executable frontdoor: medautogrant or mag" in stdout
+    assert "Authority boundary:" in stdout
     assert "Public command groups:" in stdout
     assert "foundry" in stdout
     assert "medautogrant foundry status --format json" in stdout
+    assert "mag foundry status --json" in stdout
     assert "workspace" in stdout
     assert "authority" in stdout
     assert "product" not in stdout
@@ -60,13 +66,15 @@ def test_foundry_group_exposes_series_operations() -> None:
 
 @pytest.mark.smoke
 def test_foundry_status_projects_mag_series_identity() -> None:
-    payload = _run_json_cli("foundry", "status", "--format", "json")
+    payload = _run_json_cli("foundry", "status", "--json")
 
     assert payload["ok"] is True
     assert payload["command"] == "foundry-status"
     assert payload["foundry_agent_series"]["version"] == "foundry-agent-series.v1"
     assert payload["foundry_agent_series"]["foundry_agent_id"] == "medautogrant"
     assert payload["status"]["series_label"] == "OPL Foundry Agent"
+    assert payload["status"]["ordinary_path"] == "workspace/work/stage/run/vault/handoff/connect"
+    assert payload["status"]["executable_frontdoors"] == ["medautogrant", "mag"]
 
 
 @pytest.mark.smoke
@@ -79,10 +87,30 @@ def test_top_level_status_alias_dispatches_foundry_status() -> None:
 
 @pytest.mark.smoke
 def test_foundry_interfaces_exposes_grant_and_work_aliases() -> None:
-    payload = _run_json_cli("interfaces", "--format", "json")
+    payload = _run_json_cli("interfaces", "--json")
 
     assert payload["command"] == "foundry-interfaces"
+    assert payload["interfaces"]["ordinary_series_spine"] == [
+        "workspace",
+        "work",
+        "stage",
+        "run",
+        "vault",
+        "handoff",
+        "connect",
+    ]
+    assert payload["interfaces"]["ordinary_public_frontdoor_spine"] == [
+        "workspace",
+        "work",
+        "stage",
+        "run",
+        "vault",
+        "handoff",
+        "connect",
+    ]
     assert payload["interfaces"]["alias_groups"] == {"grant": "workspace", "work": "pass"}
+    assert payload["interfaces"]["mag_domain_aliases"]["authority"] == "vault"
+    assert payload["interfaces"]["mag_domain_aliases"]["domain-handler"] == "connect"
     assert "validate" in payload["interfaces"]["commands_by_group"]["workspace"]
     assert "revision" in payload["interfaces"]["commands_by_group"]["pass"]
 

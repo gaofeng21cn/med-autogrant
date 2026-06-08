@@ -17,6 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SERIES_CONTRACT_PATH = REPO_ROOT / "contracts" / "foundry_agent_series.json"
 EXPECTED_OPERATIONS = ("status", "inspect", "interfaces", "validate", "doctor", "peers")
 PEER_AGENTS = ("medautoscience", "medautogrant", "redcube", "opl_meta_agent")
+ORDINARY_SERIES_SPINE = ("workspace", "work", "stage", "run", "vault", "handoff", "connect")
 
 
 def build_foundry_series_status() -> dict[str, Any]:
@@ -31,7 +32,9 @@ def build_foundry_series_status() -> dict[str, Any]:
             "domain_label": contract["domain_label"],
             "authority_owner": contract["authority_owner"],
             "stage_control_plane_ref": contract["stage_control_plane_ref"],
+            "ordinary_path": "workspace/work/stage/run/vault/handoff/connect",
             "public_frontdoor": "medautogrant foundry",
+            "executable_frontdoors": ["medautogrant", "mag"],
             "top_level_shortcuts": list(EXPECTED_OPERATIONS),
             "alias_groups": dict(PUBLIC_GROUP_ALIASES),
         },
@@ -67,8 +70,17 @@ def build_foundry_series_interfaces() -> dict[str, Any]:
         "foundry-interfaces",
         interfaces={
             "ordinary_operations": list(EXPECTED_OPERATIONS),
-            "ordinary_public_frontdoor_spine": list(PUBLIC_GROUP_COMMANDS),
+            "ordinary_series_spine": list(ORDINARY_SERIES_SPINE),
+            "ordinary_public_frontdoor_spine": list(ORDINARY_SERIES_SPINE),
             "alias_groups": dict(PUBLIC_GROUP_ALIASES),
+            "mag_domain_aliases": {
+                "grant": "workspace",
+                "mainline": "run_status",
+                "domain-handler": "connect",
+                "authority": "vault",
+                "pass": "work",
+                "package": "handoff",
+            },
             "group_summaries": {
                 group: PUBLIC_COMMAND_GROUP_SUMMARIES[group] for group in PUBLIC_GROUP_COMMANDS
             },

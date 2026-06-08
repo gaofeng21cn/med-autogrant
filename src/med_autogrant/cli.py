@@ -426,22 +426,30 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _print_public_help() -> None:
     lines = [
-        "Usage: medautogrant <group> <command> [options]",
+        "Usage: medautogrant|mag <group> <command> [options]",
+        "",
+        "Series: OPL Foundry Agent",
+        "Agent id: medautogrant",
+        "Ordinary path: workspace/work/stage/run/vault/handoff/connect",
+        "Executable frontdoor: medautogrant or mag",
+        "Authority boundary: MAG owns grant truth, quality/export verdicts, package authority, memory decisions, and owner receipts; OPL reads refs and projects state.",
         "",
         "Public command groups:",
     ]
+    group_width = max(len(group) for group in PUBLIC_COMMAND_ORDER) + 2
     for group in PUBLIC_COMMAND_ORDER:
-        lines.append(f"  {group:<10}{PUBLIC_COMMAND_GROUP_SUMMARIES[group]}")
+        lines.append(f"  {group:<{group_width}}{PUBLIC_COMMAND_GROUP_SUMMARIES[group]}")
     lines.extend(
         [
             "",
             "Examples:",
+            "  mag foundry status --json",
             "  medautogrant foundry status --format json",
-            "  medautogrant status --format json",
+            "  medautogrant status --json",
             "  medautogrant workspace validate --input <workspace-path> --format json",
             "  medautogrant pass revision --input <workspace-path> --output <output-path> --format json",
             "",
-            "Use `medautogrant <group>` to inspect the available commands in that group.",
+            "Use `medautogrant <group>` or `mag <group>` to inspect the available commands in that group.",
         ]
     )
     print("\n".join(lines))
