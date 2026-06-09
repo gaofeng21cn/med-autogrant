@@ -56,7 +56,7 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 | Future P5 / federation / gateway records | active gap plan or OPL domain admission owners if reactivated | 不作为 active backlog 或 product target。 |
 | Runtime-first R/P packages and post-R5A local runtime closeout | core docs + runtime support index + history/specs index | 只读 fail-closed、honest-stop 和 migration lessons；不恢复 local runtime owner。 |
 | Post-R5A fail-closed hardening notes | package/export schemas + source/tests + history/specs index | 只作为 package/export fail-closed provenance。 |
-| Hosted caller, hosted contract bundle, lightweight OPL handoff and old route snapshots | core docs + active plan + product-entry support record + contracts/schema/source | 只读 historical handoff / route formation；不表示 public hosted runtime、App workbench 或 production soak 完成。 |
+| Hosted caller, hosted contract bundle, lightweight OPL handoff and old route snapshots | core docs + active plan + product-entry support record + contracts/schema/source + history specs compression record | 只读 historical handoff / route formation；长正文已压缩到历史 specs 索引和 support record，不表示 public hosted runtime、App workbench 或 production soak 完成。 |
 | Hermes-backed / upstream Hermes proof records | current executor defaults + explicit non-default proof lane docs + history specs compression record | 只作为 proof/provenance；长正文已压缩到历史 specs 索引，仍被机器面引用的 Hermes-native critique tombstone 单独保留；不得恢复 Hermes-backed owner、Gateway/local-manager、旧兼容别名或 default-runtime wording。 |
 
 ## Support Current-Truth Records

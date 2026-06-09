@@ -7,7 +7,7 @@ Machine boundary: 本文是人读 support record。机器真相继续归 `contra
 
 ## 当前读法
 
-本文件吸收旧 P4A/P4B/P4C/P4E/P4F dated specs 中仍 current 的 product-entry、product status、user-loop、manifest 和 package/export 支撑语义。旧文件已经进入 `docs/history/specs/`，只作为 provenance 阅读。
+本文件吸收旧 P3/P4 dated specs 中仍 current 的 hosted caller、product-entry、product status、user-loop、manifest 和 package/export 支撑语义。旧逐 tranche 长正文已压缩到 `docs/history/specs/README.md` 与 git history，只作为 provenance 阅读。
 
 MAG 的 public identity 仍是单一 `Med Auto Grant` app skill。Product-entry、product status、direct-entry、user-loop 和 package/export surfaces 都位于这个 skill 之下，作为 command contract、projection 或 export support；它们不能升级为第二个 public product、旧 Gateway/hosted runtime owner、submission-ready authority 或 OPL-owned grant truth。
 
@@ -39,10 +39,4 @@ Package/export 的机器 SSOT 分层如下：
 
 ## 历史入口
 
-旧 P4 support specs 保留在 [历史 specs](../history/specs/README.md)：
-
-- `2026-04-12-p4a-direct-grant-cockpit-and-progress-projection-current-truth.md`
-- `2026-04-12-p4b-direct-grant-entry-composition-current-truth.md`
-- `2026-04-12-p4c-mainline-status-and-grant-user-loop-current-truth.md`
-- `2026-04-13-p4e-schema-backed-product-status-and-manifest-current-truth.md`
-- `2026-04-13-p4f-local-submission-ready-package-current-truth.md`
+旧 hosted caller / OPL handoff / P4 product-entry support specs 已压缩为 [历史 specs](../history/specs/README.md) 的主题记录。当前 product-entry / product status / user-loop / package-export 支撑读法以本文、核心五件套、`current-program.json`、product-entry manifest、schemas/source/tests 和 owner receipts 为准；原逐文件长正文只从 git history 读取。

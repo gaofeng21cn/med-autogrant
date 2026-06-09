@@ -3,139 +3,19 @@
 Owner: `Med Auto Grant`
 Purpose: `historical_opl_aligned_hosted_caller_plan_provenance`
 State: `history`
-Machine boundary: 本文是人读历史计划，保留 2026-04-12 OPL-aligned target shape、hosted caller proof 和旧 Hermes/Gateway 迁移计划。当前 OPL/Temporal stage-led runtime owner、MAG grant authority、hosted caller evidence、product-entry handoff 与机器行为以核心五件套、active gap plan、history specs lifecycle map、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不声明 Hermes 默认 owner、OPL Gateway ready 或 active hosted runtime backlog。
+Machine boundary: 本文是人读历史计划压缩记录。当前 OPL/Temporal stage-led runtime owner、MAG grant authority、hosted caller evidence、product-entry handoff 与机器行为以核心五件套、active gap plan、spec lifecycle map、contracts、schemas、source、CLI/API 行为与 `contracts/runtime-program/current-program.json` 为准；本文不声明 Hermes 默认 owner、OPL Gateway ready、active hosted runtime backlog 或可执行测试入口。
 
-> Historical completed plan. `P3 hosted caller / OPL consumption proof` is already completed. Current mainline truth now lives in `docs/project.md`, `docs/decisions.md`, and `contracts/runtime-program/current-program.json`.
+本文原来保存 2026-04-12 `P3 hosted caller / OPL consumption proof` 的逐步执行计划，包括旧 `docs/specs/2026-04-12-*` 文件路径、测试片段、commit 命令和分步 checklist。那些内容已压缩，不再作为当前工作入口或可执行 runbook。
 
-**Historical goal:** Prove the then-next honest `P3` phase without inventing new repo-local hosted helpers: external hosted callers and future `OPL Gateway` must consume the already frozen `domain_entry_contract`, `schema_contract`, and `authoring_contract`.
+当前读法：
 
-**Historical architecture:** Keep `Hermes-Agent` as substrate owner, keep `Med Auto Grant` as authoring-truth owner, and make the next phase a caller-consumption proof rather than another local runtime rewrite. Reuse `build-product-entry`, `build-hosted-contract-bundle`, and `MedAutoGrantDomainEntry` as the only contract sources.
+- 当时目标：证明 external hosted caller / future OPL caller 能消费已冻结的 `domain_entry_contract`、`schema_contract` 和 `authoring_contract`，而不是继续新增 repo-local hosted helper。
+- 已吸收内容：OPL-aligned target shape、hosted caller proof、product-entry handoff、P4 direct product-entry/user-loop/manifest/package support 的 current support 语义已归入 `docs/specs/product-entry-support-record.md`、核心五件套、`docs/specs/specs_lifecycle_map.md`、`docs/history/specs/README.md`、contracts/source/tests 和 git history。
+- 当前 owner：runtime owner、product-entry support、package/export authority 和 hosted caller boundary 分别回到 OPL/default runtime owner、MAG support record、MAG package/export authority surfaces 和 active gap plan；本文只保留历史形成过程。
 
-**Historical tech stack:** Python CLI, repo-tracked markdown current truth, JSON contracts, pytest meta tests
+不得恢复：
 
----
-
-### Historical Task 1: Freeze The P3 Proof Boundary
-
-**Files:**
-- Modify: `docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md`
-- Modify: `docs/status.md`
-- Test: `tests/test_hermes_runtime_truth.py`
-
-- [ ] **Step 1: Write the failing test**
-
-```python
-def test_docs_and_contracts_index_opl_aligned_ideal_target_and_phase_map() -> None:
-    assert "./specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md" in docs_readme_en
-    assert "phase_map" in current_program
-    assert "ideal_target" in current_program
-```
-
-- [ ] **Step 2: Run test to verify it fails**
-
-Run: `uv run pytest tests/test_hermes_runtime_truth.py tests/test_program_control_surfaces.py -q`
-Expected: FAIL because the ideal-target current truth and `current-program` phase map are missing.
-
-- [ ] **Step 3: Write minimal implementation**
-
-```md
-- `P1` completed
-- `P2` completed
-- `P3` next
-- `P4` future
-```
-
-- [ ] **Step 4: Run test to verify it passes**
-
-Run: `uv run pytest tests/test_hermes_runtime_truth.py tests/test_program_control_surfaces.py -q`
-Expected: PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add docs/specs/2026-04-12-opl-aligned-ideal-target-and-phase-map-current-truth.md docs/status.md tests/test_hermes_runtime_truth.py tests/test_program_control_surfaces.py
-git commit -m "Freeze OPL-aligned ideal target and phase map"
-```
-
-### Historical Task 2: Add Hosted Caller Consumption Truth
-
-**Files:**
-- Modify: `docs/architecture.md`
-- Modify: `docs/project.md`
-- Modify: `docs/specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md`
-- Test: `tests/test_hermes_runtime_truth.py`
-
-- [ ] **Step 1: Write the failing test**
-
-```python
-assert "hosted caller / OPL consumption proof" in ideal_target_phase_map_truth
-assert "domain_entry_contract" in hosted_contract_bundle_truth
-assert "schema_contract" in hosted_contract_bundle_truth
-assert "authoring_contract" in hosted_contract_bundle_truth
-```
-
-- [ ] **Step 2: Run test to verify it fails**
-
-Run: `uv run pytest tests/test_hermes_runtime_truth.py -q`
-Expected: FAIL because P3 consumption proof boundary is not frozen clearly enough.
-
-- [ ] **Step 3: Write minimal implementation**
-
-```md
-- next phase: prove external hosted caller / `OPL Gateway` consumes frozen contracts
-- do not add new repo-local hosted helper
-```
-
-- [ ] **Step 4: Run test to verify it passes**
-
-Run: `uv run pytest tests/test_hermes_runtime_truth.py -q`
-Expected: PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add docs/architecture.md docs/project.md docs/specs/2026-04-12-hosted-contract-bundle-entry-and-route-catalog-current-truth.md tests/test_hermes_runtime_truth.py
-git commit -m "Freeze hosted caller proof boundary"
-```
-
-### Historical Task 3: Prepare The Next Honest Proof Lane
-
-**Files:**
-- Modify: `docs/plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md`
-- Modify: `docs/README.md`
-- Modify: `docs/README.md`
-- Test: `tests/test_hermes_runtime_truth.py`
-
-- [ ] **Step 1: Write the failing test**
-
-```python
-assert "./plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md" in docs_readme_en
-assert "Task 1" in ideal_target_execution_plan
-assert "Task 2" in ideal_target_execution_plan
-assert "Task 3" in ideal_target_execution_plan
-```
-
-- [ ] **Step 2: Run test to verify it fails**
-
-Run: `uv run pytest tests/test_hermes_runtime_truth.py -q`
-Expected: FAIL because the execution plan is not indexed or not written yet.
-
-- [ ] **Step 3: Write minimal implementation**
-
-```md
-### Task 1: Freeze The P3 Proof Boundary
-### Task 2: Add Hosted Caller Consumption Truth
-### Task 3: Prepare The Next Honest Proof Lane
-```
-
-- [ ] **Step 4: Run test to verify it passes**
-
-Run: `uv run pytest tests/test_hermes_runtime_truth.py -q`
-Expected: PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add docs/plans/2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md docs/README.md docs/README.md tests/test_hermes_runtime_truth.py
-git commit -m "Add OPL-aligned hosted caller execution plan"
-```
+- 旧 `docs/specs/2026-04-12-*` 文件路径作为 current owner、test oracle 或 docs index requirement。
+- 旧 `tests/test_hermes_runtime_truth.py` 片段作为当前验证入口。
+- `Hermes-Agent` default runtime owner、`OPL Gateway` readiness、local hosted helper、Gateway/local-manager route 或 production hosted readiness claim。
+- 按历史 checklist 新增 compatibility alias、facade、wrapper、fallback command 或 prose-oracle test。
