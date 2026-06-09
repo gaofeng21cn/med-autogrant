@@ -3,12 +3,14 @@
 Owner: `Med Auto Grant`
 Purpose: `opl_private_implementation_migration_inventory`
 State: `active_inventory`
-Machine boundary: 本文是 human-readable 迁移治理台账。机器真相继续归 `contracts/`、schemas、CLI/API 行为、product-entry manifest、domain_handler export/dispatch、runtime receipts、workspace artifact 与 MAG owner receipt。
-Date: `2026-06-02`
+Machine boundary: 本文是 human-readable 迁移治理台账。机器真相继续归 `contracts/private_functional_surface_policy.json`、`contracts/foundry_agent_series.json`、`contracts/runtime-program/current-program.json`、schemas、CLI/API 行为、product-entry manifest、domain_handler export/dispatch、runtime receipts、workspace artifact 与 MAG owner receipt。
+Date: `2026-06-09`
 
 ## 读法
 
 本文只维护当前 private-platform residue 的分类、active caller、MAG 必须保留的 authority、可上收到 OPL 的 generic 子域和退役门槛。它不保存逐日拆文件 closeout、line-count ledger 或 receipt/proof 流水；这些过程记录进入 `docs/history/**` 或代码提交历史。`standard_agent_source_shape_status=landed` 只表示历史合同分类已收薄；按 strict purity，仍有 active caller 的 product/status/domain_handler/runtime/autonomy/CLI shell 已进入 OPL replacement-ready / physical-delete-not-authorized 状态。Production evidence、default caller 与 no-resurrection cleanup tail 由 [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md) 维护。
+
+本轮 currentness refresh 以 `contracts/private_functional_surface_policy.json#/physical_source_morphology_policy/surface_classifications` 为 per-surface Single Source of Truth；下方 path-level rows 只作维护者定位和 focused verification 指针。若本文路径清单与 contract surface-id 冲突，先更新 contract/source/tests 或重新生成 manifest/audit，再折回本文。
 
 ## 当前 clean truth
 
@@ -27,6 +29,27 @@ Purpose-first owner-delta / domain-thinning 的机器 gate 现在由 `contracts/
 | `already_thin_adapter` | 已收薄为 refs-only adapter/projection/diagnostic，仍因 direct path 或 evidence caller 暂留。 |
 | `legacy_proof_tombstone` | 已退役或只作 regression/provenance 的旧 runtime、probe、alias、patch bridge 或 compat surface。 |
 | `strict_delete_after_cutover` | 仍有 active caller 的 repo-local generic shell / wrapper / projection / compatibility test；当前可运行不构成完成态，必须在 OPL cutover 后删除。 |
+
+## Surface-ID SSOT Map
+
+该表从 current private surface policy 读取，不按文件名、行数或历史 closeout 判断 owner。`active_refs_only_adapter_until_opl_generated_caller_migration` 表示仍有 MAG-side active caller，当前只能守住 refs-only / typed blocker / no-regression 读法；`retained_mag_authority_function` 表示 MAG authority retained，不是 OPL 上收候选；`no_active_caller_history_or_tombstone_only` 表示只能保留 history/provenance 或 negative guard。
+
+| Surface id | Contract classification | Current active caller status | Current read / next gate |
+| --- | --- | --- | --- |
+| `domain_runtime` | `declarative_grant_handler` | `active_domain_pack_or_handler_target` | 保持 repo-side domain adapter / entry adapter；不恢复 runtime facade、patch bridge 或 generic runtime owner。 |
+| `product_entry` | `refs_only_adapter` | `active_refs_only_adapter_until_opl_generated_caller_migration` | 只输出 grant refs、owner receipt、typed blocker 和 action metadata；等待 OPL generated/default caller、direct/hosted parity 与 owner receipt roundtrip。 |
+| `grouped_cli_wrapper` | `refs_only_adapter` | `active_refs_only_adapter_until_opl_generated_caller_migration` | CLI 仍是 repo-local formal entry；不能恢复 flat alias、compat public command 或 generated surface owner in MAG。 |
+| `status` | `refs_only_adapter` | `active_refs_only_adapter_until_opl_generated_caller_migration` | 只做 grant status refs / typed blocker projection；不变成 workbench、generic observability 或 readiness owner。 |
+| `user_loop` | `refs_only_adapter` | `active_refs_only_adapter_until_opl_generated_caller_migration` | 只投影 MAG owner delta 和 safe action refs；等待 OPL App/user-loop generated caller parity。 |
+| `domain_handler` | `refs_only_adapter` | `active_refs_only_adapter_until_opl_generated_caller_migration` | 保持 `domain-handler export|dispatch` target；OPL queue/dispatch shell 接管前不得删除，也不得迁走 grant truth / verdict / package authority。 |
+| `runtime_registration` | `declarative_grant_handler` | `active_domain_pack_or_handler_target` | 作为 declarative pack / OPL substrate adapter refs；不声明 MAG 持有 provider runtime。 |
+| `control_plane` | `refs_only_adapter` | `active_refs_only_adapter_until_opl_generated_caller_migration` | 只服务 MAG refs/control projection；generic transition runner、matrix runner、retry/dead-letter 归 OPL。 |
+| `lifecycle` | `refs_only_adapter` | `active_refs_only_adapter_until_opl_generated_caller_migration` | lifecycle receipt / reconciliation 保持 body-free refs；generic lifecycle shell 和 ledger 归 OPL。 |
+| `memory` | `minimal_authority_function` | `retained_mag_authority_function` | MAG 保留 grant memory body 与 accept/reject authority；OPL 只能消费 refs。 |
+| `package` | `minimal_authority_function` | `retained_mag_authority_function` | MAG 保留 submission package/export authority 与 human gate blocker；package existence 不等于 submission-ready。 |
+| `autonomy_controller` | `minimal_authority_function` | `retained_mag_authority_function` | 保留 grant route/budget/blocker/quality payload authority；OPL 只托管 attempt lifecycle。 |
+| `owner_receipt_helper` | `minimal_authority_function` | `retained_mag_authority_function` | MAG 签发 owner receipt / lifecycle receipt / typed blocker refs；OPL receipt ledger 只能索引和消费。 |
+| `legacy_runtime_residue` | `legacy_proof_tombstone` | `no_active_caller_history_or_tombstone_only` | 旧 local journal、attempt ledger、Hermes/Gateway/local-manager、flat alias、facade/patch bridge 只能在 history/provenance 或 negative guard 中出现。 |
 
 ## 当前 Inventory
 
@@ -65,6 +88,17 @@ Purpose-first owner-delta / domain-thinning 的机器 gate 现在由 `contracts/
 | `src/med_autogrant/opl_standard_pack.py`、`src/med_autogrant/opl_standard_pack_profiles.py`、`src/med_autogrant/opl_standard_pack_source_policy.py`、`src/med_autogrant/opl_standard_pack_constants.py`、`src/med_autogrant/stage_control_plane.py` | 555 / 243 / 350 / 4 / 786 | OPL pack/conformance/stage readiness tests、generated aggregate source tests | `opl_standard_pack.py` 保留 `build_standard_pack()` / `sync_standard_pack()` 入口；profile、workspace topology、domain source classification 和 physical-delete gate policy 分别进入 focused owner modules；contract output 保持由测试比对。 | `domain_authority_retained` | grant stage semantics、prompt/skill/quality gate refs、transition oracle、owner receipt refs、private authority taxonomy、no-resurrection policy | OPL pack compiler/generated interface bundle and stage attempt runtime consumes refs | 不迁 stage semantics；OPL generated interface readiness 不等于 grant ready；source-shape 拆分只关闭 `opl_standard_pack.py` 单文件结构 advisory，不授权 physical delete。 | `tests/test_opl_standard_pack.py`、`tests/test_generated_aggregate_source_index.py`、`tests/test_opl_family_contract_adoption.py` |
 | `src/med_autogrant/product_entry_parts/consumer_thinning_audit.py` | 779 | functional privatization audit read model, pack compiler refs | consumer thinning / private functional audit projection and bridge exit evidence. | `already_thin_adapter` | private authority taxonomy, bridge exit refs, no-resurrection policy | OPL generated surface compiler/read model, external evidence request primitive | Stable audit vocabulary can move to contracts/OPL read model; helper must not become production default caller proof. | `tests/test_opl_standard_pack.py`、`tests/product_entry_cases/test_functional_closure.py` |
 | local runtime journal / attempt ledger、repo scheduler、upstream Hermes probe、Gateway/local-manager default path、flat alias、facade patch bridge、compat aggregate test | none after retirement; negative guard / tombstone only；`physical_skeleton_follow_through.retired_public_command_scan` 已对 `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 做 active domain/public command catalog no-resurrection scan | `legacy_proof_tombstone` | none | history/provenance, no-resurrection guard | 不恢复 active caller；不新增 compatibility shell、alias、facade 或 aggregate test；repo-local command scan 不授权删除仍有 active handler/adapter caller 的 surface。 |
+
+## Concrete Retirement Register
+
+当前 register 只列已经能证明 owner 替代或无 active caller 的 docs/test/workflow surface；仍有 active caller 的 product-entry、domain-handler、CLI、status/user-loop、control-plane 和 lifecycle shell 不进入 physical delete register。
+
+| Surface | Current owner / proof | Status |
+| --- | --- | --- |
+| stale test-level facade negative assertions: `facade_exports.py` absence check, `_render_text` re-export absence check, and duplicated workspace-index facade helper closeout | Behavior coverage lives in `tests/test_workspace_index.py`, CLI/output tests and `cli_rendering_parts` owner module; no-resurrection policy is covered by private surface contracts, `tests/product_entry_cases/test_dependency_structure.py`, `tests/test_domain_runtime_split.py`, `tests/test_runtime_cli_structural_helpers.py`, `tests/test_repository_hygiene.py`, and source tree scans. | Retired as test/doc process tail. The dated closeout is compressed into retired-surface provenance; do not recreate a separate per-tranche closeout file or prose-oracle test. |
+| Foundry Agent `frontdoor` fields/help/test wording | Current active command surface is `public_command_surface`, `executable_command_surfaces`, `ordinary_command_spine`, and `checked_command_surface_operations` in `src/med_autogrant/foundry_series_cli.py`, `src/med_autogrant/cli.py`, README quickstart, `docs/architecture.md`, and `tests/test_cli_smoke.py`. | Retired from active machine/human surfaces; historical `frontdoor` wording stays provenance/negative-guard only. |
+| old runtime command family: `run-local`, `runtime-run`, `runtime-resume`, `probe-upstream-hermes` | Negative guards live in `tests/test_domain_entry.py`, product-entry functional closure skeleton and current-program/runtime owner fields. | Retired; do not restore flat runtime commands, local journal owner, attempt ledger or compatibility public aliases. |
+| `domain_runtime_parts.patch_targets`, package-root re-export facades, dynamic private `__all__`, star-import test support, Sentrux runtime facade | Current owner modules and direct imports are guarded by dependency-structure, domain-runtime split, runtime CLI structural helper and repository-hygiene tests. | Retired; keep only tombstone/provenance and negative guards. |
 
 ## Bad-smell flags
 

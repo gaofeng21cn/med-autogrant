@@ -13,7 +13,6 @@ Machine boundary: 本文是人读历史计划索引。历史计划只保存 prov
 
 已归档计划文件：
 
-- [MAG stale test guard retirement closeout 2026-06-07](./2026-06-07-mag-stale-test-guard-retirement-closeout.md)
 - [Med Auto Grant 最小 scaffold 计划](./2026-04-06-med-autogrant-minimal-scaffold-plan.md)
 - [P1 formal entry 与 durability planning brief](./2026-04-07-p1-formal-entry-and-durability-planning-brief.md)
 - [OPL-aligned target shape and hosted caller plan](./2026-04-12-opl-aligned-target-shape-and-hosted-caller-plan.md)
