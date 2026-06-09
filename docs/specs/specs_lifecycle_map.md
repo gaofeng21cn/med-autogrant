@@ -53,8 +53,8 @@ Machine boundary: 本文是人读生命周期索引。机器面必须使用 `con
 | --- | --- | --- |
 | Foundation / object-model / early mainline records | core five + history/specs index | 只作为早期设计 provenance。 |
 | P2/P3/P4 authoring/review/verification tranche | current route, quality and verification owner docs + source/contracts | 只作为 authoring-flow、review/rollback 与 verification gate 形成历史。 |
-| Future P5 / federation / gateway records | active gap plan or OPL domain admission owners if reactivated | 不作为 active backlog 或 product target。 |
-| Runtime-first R/P packages and post-R5A local runtime closeout | core docs + runtime support index + history/specs index | 只读 fail-closed、honest-stop 和 migration lessons；不恢复 local runtime owner。 |
+| Future P5 / federation / gateway records | active gap plan or OPL domain admission owners if reactivated + history/specs compression record | 不作为 active backlog 或 product target；长正文只从 git history 追溯。 |
+| Runtime-first R/P packages and post-R5A local runtime closeout | core docs + runtime support index + history/specs index | 只读 fail-closed、honest-stop 和 migration lessons；长正文只从 git history 追溯，不恢复 local runtime owner。 |
 | Post-R5A fail-closed hardening notes | package/export schemas + source/tests + history/specs index | 只作为 package/export fail-closed provenance。 |
 | Hosted caller, hosted contract bundle, lightweight OPL handoff and old route snapshots | core docs + active plan + product-entry support record + contracts/schema/source + history specs compression record | 只读 historical handoff / route formation；长正文已压缩到历史 specs 索引和 support record，不表示 public hosted runtime、App workbench 或 production soak 完成。 |
 | Hermes-backed / upstream Hermes proof records | current executor defaults + explicit non-default proof lane docs + history specs compression record | 只作为 proof/provenance；长正文已压缩到历史 specs 索引，仍被机器面引用的 Hermes-native critique tombstone 单独保留；不得恢复 Hermes-backed owner、Gateway/local-manager、旧兼容别名或 default-runtime wording。 |
@@ -78,7 +78,7 @@ Support records 只在仍 current 的 subsection 内有效。若其中包含旧 
 | --- | --- |
 | historical `2026-04-11-hermes-backed-*` specs 中的 `Hermes-backed runtime substrate owner` | 已退役 provider proof / provenance，长正文已压缩到 `docs/history/specs/README.md`。`hermes_agent` 只表示显式非默认 executor/proof/provenance lane，不是 active provider owner、compatibility target 或 default runtime path。 |
 | `upstream Hermes-Agent fast cutover` board 与 proof records | 历史 / proof context，长正文已压缩到 `docs/history/specs/README.md`；仍被机器面引用的 Hermes-native critique tombstone 继续保留在 history specs。它们只支撑 proof-lane vocabulary 和 fail-closed evidence；默认 execution、runtime ownership 和 OPL handoff boundary 在当前 owner docs。 |
-| `OPL Gateway`、`gateway/federation`、`future P5` language | 历史或 future activation context。当前没有需要保留的 active Gateway/federation/compat surface；新 caller 使用 OPL stage-led framework + MAG descriptor/projection path。 |
+| `OPL Gateway`、`gateway/federation`、`future P5` language | 历史或 future activation context；P5.A / P5.B 长正文已压缩到历史 specs 索引。当前没有需要保留的 active Gateway/federation/compat surface；新 caller 使用 OPL stage-led framework + MAG descriptor/projection path。 |
 | `OPL Runtime Manager`、Temporal target、provider-backed runtime、active-adapter、compatibility-bridge、local journal、attempt ledger wording | 历史 / provider-specific migration context。当前 MAG 口径是 OPL 作为 stage-led framework，以 Agent executor 为最小执行单位，消费 MAG-owned descriptor/projection；MAG 保留 grant truth、quality、route 和 export authority。 |
 | `hosted contract bundle` | 当前 integration/reference export surface。Hosted runtime、Web UI 和 external portal submission 需要单独 current owner evidence。 |
 
