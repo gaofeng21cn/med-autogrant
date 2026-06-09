@@ -37,6 +37,60 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 ## Coverage Snapshot
 
+2026-06-09 MAG active-shell SSOT thinning tranche:
+
+- Theme / SSOT: generated/default caller cutover, purpose-first domain thinning
+  and active shell physical-delete gate reading. Machine SSOT is
+  `contracts/private_functional_surface_policy.json#/purpose_first_owner_delta_domain_thinning_gate`,
+  `contracts/foundry_agent_series.json#/purpose_first_adapter_thinning_policy`,
+  `contracts/functional_privatization_audit.json`, source active callers under
+  `src/med_autogrant/product_entry_parts/**`, `src/med_autogrant/domain_runtime_parts/**`
+  and focused tests such as `tests/test_opl_standard_pack.py`. Human SSOT for
+  path-level roles is `docs/active/opl-private-implementation-migration-inventory.md`.
+- Peer docs / section classification:
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md` current-truth rows and
+  evidence gates are `more_specific_detail` for open gap state and retained;
+  its previous path-family deletion-gate prose was `covered_by_ssot` by the
+  private inventory and machine contracts, so it was thinned into a gap table
+  with owner pointers. `docs/status.md` and `docs/architecture.md` are
+  `more_specific_detail` summaries and remain unchanged. This ledger is
+  `history_or_provenance`. No `conflicts_with_ssot` section was found in this
+  tranche.
+- Reviewed: `AGENTS.md`, `TASTE.md`,
+  `docs/active/mag-ideal-state-cross-repo-gap-plan.md`,
+  `docs/active/opl-private-implementation-migration-inventory.md`,
+  `docs/status.md`, `docs/architecture.md`,
+  `docs/history/docs-portfolio-coverage-ledger/README.md`,
+  `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`,
+  `contracts/private_functional_surface_policy.json`,
+  `contracts/foundry_agent_series.json`,
+  `contracts/functional_privatization_audit.json`,
+  `src/med_autogrant/opl_standard_pack_source_policy.py`,
+  product-entry/domain-runtime active caller surfaces, and focused tests naming
+  default-caller / physical-delete gates.
+- Edited: `docs/active/mag-ideal-state-cross-repo-gap-plan.md` and this
+  coverage ledger. No source, contract, test, workflow, package or CLI/API
+  file changed.
+- Coverage result: the active gap owner now holds only current open-gap state,
+  evidence gates, next owner prompt and no-ready / no-delete warnings. It no
+  longer preserves a parallel path-level inventory for product-entry,
+  domain-handler, runtime/control projection, lifecycle, autonomy or CLI shell
+  surfaces; those details remain in the private inventory and machine gates.
+- Retired / guarded: no active shell was physically deleted in this tranche.
+  Current evidence still says replacement-ready but physical-delete-not-
+  authorized; deletion still requires generated/default caller consumption,
+  sustained App/default-caller consumption, direct/hosted parity, owner receipt
+  or typed blocker roundtrip, no-active generic shell caller, continuous
+  no-forbidden-write and MAG owner delete/tombstone receipt.
+- Remaining MAG unreviewed scope under the parent OPL series goal: active/support
+  spec body governance, product/runtime/delivery/source thin support docs,
+  remaining historical spec bodies, private inventory detail refresh and
+  concrete physical-delete candidates remain open unless covered by another
+  accepted tranche.
+- Next write scope: continue with a concrete source/test/workflow/package
+  retirement candidate or another SSOT theme after fresh intake. Do not expand
+  the active gap plan back into a path-level shell inventory.
+
 2026-06-09 MAG Foundry command-surface field retirement tranche:
 
 - Theme / SSOT: MAG Foundry Agent series command-surface projection and public

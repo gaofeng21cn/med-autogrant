@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `ideal_state_gap_plan`
 State: `active_plan`
 Machine boundary: 本文是人读 current gap / completion plan。机器真相继续归 `contracts/runtime-program/current-program.json`、contracts、schemas、source、CLI/API 行为、product-entry manifest、workspace/runtime artifact root、runtime receipts、质量报告和导出包。
-Date: `2026-06-03`
+Date: `2026-06-09`
 
 ## 读法
 
@@ -30,7 +30,7 @@ MAG 是医学基金申请 domain agent，也是 OPL-compatible Foundry Agent pac
 
 当前 `product_entry*`、`product_entry_parts/*`、`domain_runtime*`、runtime registration、domain-handler、lifecycle、memory/package projection、autonomy loop、status/user-loop shell 与部分 CLI/rendering shell 仍可见于 active source。它们只能按 direct handler、refs-only adapter、minimal grant authority function、diagnostic 或 migration input 读取，不能重新写成 MAG 私有 runtime platform；按 strict purity，它们已进入 OPL replacement-ready / physical-delete-not-authorized 状态。旧 product-sidecar / sidecar CLI wrapper 已从 active caller 口径移除，只能作为 no-resurrection guard 或 history/provenance 词汇出现。
 
-Purpose-first owner-delta / domain-thinning 的当前机器 gate 由 `contracts/private_functional_surface_policy.json#/purpose_first_owner_delta_domain_thinning_gate` 和 `contracts/foundry_agent_series.json#/purpose_first_adapter_thinning_policy` 共同持有。该 gate 把 product-entry、status/user-loop、domain-handler、grouped CLI、runtime/control projection 和 lifecycle shell 统一收敛成 MAG owner delta 输出面：默认下一步必须是 `grant_deliverable_progress_delta_or_mag_owned_typed_blocker`，可接受 return shape 只有 domain owner receipt ref、MAG-owned typed blocker ref 或 no-regression evidence ref。删除、rename 或 tombstone 这些暂留 shell 前，必须同时满足 OPL generated/default caller 消费同一 refs、持续 App/default-caller consumption、direct/hosted parity、owner receipt 或 typed blocker roundtrip、no-active domain repo generic shell caller、continuous no-forbidden-write 和 MAG physical delete/tombstone owner receipt。
+Purpose-first owner-delta / domain-thinning 的当前机器 gate 由 `contracts/private_functional_surface_policy.json#/purpose_first_owner_delta_domain_thinning_gate` 和 `contracts/foundry_agent_series.json#/purpose_first_adapter_thinning_policy` 共同持有。该 gate 把 product-entry、status/user-loop、domain-handler、grouped CLI、runtime/control projection 和 lifecycle shell 统一收敛成 MAG owner delta 输出面；per-surface active caller、路径分类、可迁子域和删除门只在 [MAG 私有实现与 OPL 迁移台账](./opl-private-implementation-migration-inventory.md) 与机器合同维护。
 
 该 gate 明确把 `submission_ready_export_gate` 固定为当前 `blocking_human_gate`。关闭条件是真实 human-gate receipt 或 MAG-owned typed blocker 更新；package existence、schema completeness、stage replay projection、OPL ledger verification、provider completion、grouped CLI success、product-entry manifest success 和 refs-only accounting closeout 都不能作为 grant-ready、fundability-ready、quality-ready、export-ready 或 submission-ready 替代证据。
 
@@ -80,25 +80,16 @@ MAG 必须保留的 authority：
 
 按 strict standard-agent purity，当前 MAG repo 侧 active source 已完成 replacement-ready 分类，但未获得 physical delete authority。`mag_functional_structure_gap_count=0` 只表示历史合同分类闭合，不代表 active shell 已清零。`opl_standard_pack.py` 的结构 advisory 已通过 focused owner modules 消除；这不改变 product/status/user-loop/domain-handler/domain_runtime/autonomy/CLI handler/adapter shell 的删除门。`generated_surface_bridge_exit`、`legacy_runtime_session_lifecycle_exit`、`package_memory_lifecycle_refs_only_boundary`、`private_authority_ai_first_guard` 和 `physical_morphology_tail` 必须继续守住 OPL generated/default caller 接管证据与 repo-local wrapper 删除门。
 
-当前必须推进或守住的结构项：
+当前 active plan 只维护仍开放的结构 gap 与下一步门槛；路径级 inventory 和 retired-surface 来源不在本文展开：
 
-0. `purpose_first_owner_delta_domain_thinning_gate`
-   Product-entry、grouped CLI、status/user-loop、domain-handler、runtime/control projection 与 lifecycle shell 只能作为 owner-delta refs-only 输出面。新增能力只能服务 MAG owner delta、typed blocker、no-regression evidence 或 OPL generated/default caller parity；不能扩写 MAG-owned product shell、status shell、domain-handler shell、lifecycle shell 或 grouped CLI wrapper。收薄 gate 关闭前不得物理删除 active shell；gate 关闭后也只允许 delete、rename_to_domain_handler_target 或 history tombstone，不新增 compatibility alias、facade 或 re-export。
-
-1. `package_memory_lifecycle_refs_only_boundary`
-   Memory receipt projection、package lifecycle handoff、lifecycle receipt bundle、continuous receipt reconciliation 和 domain-handler export 必须保持 body-free refs、owner receipt、verdict refs、typed blocker 和 safe action metadata，不输出 memory body、grant artifact/private evidence 或 OPL ledger state。
-
-2. `private_authority_ai_first_guard`
-   Fundability、quality、export、memory accept/reject 是 AI-first judgment surface；package authority、owner receipt signer 和 grant helper 是 programmatic guard surface。程序只能 validator / materializer / receipt signer / guard / refs projection，不能机械生成 ready verdict。
-
-3. `generated_default_caller_cutover`
-   `product_entry_parts/*`、`domain_runtime_parts/*`、runtime registration、autonomy loop/report shell、lifecycle/memory/package helpers、CLI/rendering shell 等 active path 必须持续被合同约束为 handler、refs-only adapter、minimal authority function、diagnostic 或 migration input。default caller、direct/hosted parity、owner receipt roundtrip 与 no-active-caller 证据成立后删除旧 wrapper、alias、facade、patch bridge、compat aggregate test 和 legacy runtime/probe residue；详细 path-level inventory 归 [MAG 私有实现与 OPL 迁移台账](./opl-private-implementation-migration-inventory.md)，不在本文继续堆 path 长清单。
-
-4. `opl_non_default_executor_receipt_tail`
-   `hermes_agent` critique 路径当前只作为 OPL-owned non-default executor receipt lane 读取；MAG 只消费 `AgentExecutionReceipt`、domain closeout packet、grant critique / revision plan payload 和 independent review evidence。`opl_hermes_executor_helper.py` / `hermes_native_executor.py` 仍被 active focused tests 与 explicit critique caller 使用，不能按旧 Hermes/Gateway residue 直接删除。删除门是 OPL generic executor adapter 提供 replacement parity，MAG caller 迁到 OPL-owned adapter surface，focused receipt tests 改到该 surface，no-active-caller scan 通过，并形成 MAG owner receipt 或 typed blocker。
-
-5. `no_resurrection_cleanup_tail`
-   已退役 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、facade patch bridge 和 compatibility aggregate test 不能恢复为 compatibility shim、re-export facade 或 active caller。`physical_skeleton_follow_through.retired_public_command_scan` 已把 `run-local`、`runtime-run`、`runtime-resume`、`probe-upstream-hermes` 对照 `SERVICE_SAFE_DOMAIN_COMMANDS` 与 grouped public CLI catalog 做成 repo-local no-resurrection receipt，并指向 fail-closed negative tests；`legacy_active_path_residue` 已清空，默认 Hermes / Gateway / local-manager 只留 `retired_legacy_default_path_receipts` 的 tombstone / owner-handoff refs。历史只保留在 `docs/history/**`、tombstone/provenance 或 negative guard。
+| Gap | 本文保留的当前口径 | 细节 owner |
+| --- | --- | --- |
+| `purpose_first_owner_delta_domain_thinning_gate` | 暂留 shell 只能产出 MAG owner delta、typed blocker 或 no-regression refs；新增能力只能服务 MAG owner delta、OPL generated/default caller parity 或 no-resurrection proof，不扩写 MAG-owned generic shell。 | `contracts/private_functional_surface_policy.json#/purpose_first_owner_delta_domain_thinning_gate`、`contracts/foundry_agent_series.json#/purpose_first_adapter_thinning_policy`、private inventory |
+| `package_memory_lifecycle_refs_only_boundary` | Memory/package/lifecycle/domain-handler 输出保持 body-free refs、owner receipt、verdict refs、typed blocker 和 safe action metadata。 | owner receipt / memory / package / lifecycle contracts、domain-handler source/tests、private inventory |
+| `private_authority_ai_first_guard` | Fundability、quality、export、memory accept/reject 仍是 MAG AI-first judgment surface；程序面只做 validator、materializer、receipt signer、guard 或 refs projection。 | core five docs、quality/export/package source/tests、private inventory |
+| `generated_default_caller_cutover` | OPL generated/default caller replacement 已有结构证据，但 production default caller、direct/hosted parity、owner receipt roundtrip、no-active-caller 和 App/workbench consumption 未授权 MAG 物理删除。 | private inventory path-level table、functional privatization audit、production acceptance contracts、focused tests |
+| `opl_non_default_executor_receipt_tail` | `hermes_agent` critique 路径只作为 OPL-owned non-default executor receipt lane 读取；MAG 消费 receipt / closeout / critique payload。当前 helper 有 active caller，不能按旧 Hermes/Gateway residue 删除。 | executor receipt source/tests、OPL adapter owner evidence、history/provenance |
+| `no_resurrection_cleanup_tail` | 已退役 local journal、attempt ledger、Hermes probe、Gateway/local-manager、flat CLI alias、facade patch bridge 和 compatibility aggregate test 只保留 tombstone/provenance 或 negative guard，不恢复 compatibility surface。 | `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`、retired public command scan、negative tests |
 
 ## 证据差距
 
