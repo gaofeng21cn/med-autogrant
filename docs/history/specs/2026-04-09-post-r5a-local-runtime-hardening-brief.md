@@ -123,12 +123,10 @@ Machine boundary: 本文是人读历史 spec，保留 2026-04-09 post-R5A local 
 - `AGENTS.md`
 - `README.md`
 - `docs/README.md`
-- `docs/specs/2026-04-08-runtime-first-productization-program.md`
-- `docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
-- `docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
-- `docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
-- `docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
-- 本文 `docs/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`
+- `docs/history/specs/2026-04-08-runtime-first-productization-program.md`
+- `docs/history/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+- `docs/history/specs/README.md` 中的 runtime-first R1-R5 compression record；原 R1-R5 boundary / activation package 长正文已删除，精确正文只从 git history 读取
+- 本文 `docs/history/specs/2026-04-09-post-r5a-local-runtime-hardening-brief.md`
 - `.runtime-program/context/CURRENT_PROGRAM.md`
 - `.runtime-program/reports/med-autogrant-mainline/LATEST_STATUS.md`
 - `.runtime-program/reports/med-autogrant-mainline/OPEN_ISSUES.md`

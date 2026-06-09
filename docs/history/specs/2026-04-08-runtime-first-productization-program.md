@@ -56,17 +56,15 @@ Date: `2026-04-08`
 
 ## Pre-Frozen Boundary Map
 
-当前 `R1 -> R5` 的 future activation boundary 已一次性冻结在：
-
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-runtime-first-r1-to-r5-boundary-map.md`
+当前 `R1 -> R5` 的 future activation boundary 长正文已压缩到 `docs/history/specs/README.md` 的 runtime-first R1-R5 compression record；原 boundary map 精确正文只从 git history 读取。
 
 这份边界图当前承认：
 
 - `R1.B / Stage Action Executor Envelope` 与 `R2.A / Artifact Bundle Production Surface` 已从 pre-frozen package 进入 absorbed current truth
 - `R3.A / R4.A / R5.A` 已在 frozen object boundary 内完成实现并一起 absorbed 到 `main`
 - latest absorbed runtime slice 已是 `R5.A / Hosted-Friendly Session Boundary`
-- `R3.A` 的 machine-applicable implementation contract 已冻结并成为 absorbed runtime truth 的一部分：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
+- `R3.A` 的 machine-applicable implementation contract 已冻结并成为 absorbed runtime truth 的历史形成记录：
+  - `/Users/gaofeng/workspace/med-autogrant/docs/history/specs/2026-04-09-r3a-machine-applicable-revision-mutation-contract.md`
 - 已 absorbed 的 post-`R5.A` local runtime hardening 继续锁定：
   1. revised workspace validator / checkpoint regression
   2. runtime-first truth / operator walkthrough 与 landed 本地 runtime ladder 的一致性
@@ -77,16 +75,7 @@ Date: `2026-04-08`
   3. 不得把 closeout后的本地 runtime 误写成 actual hosted runtime、`P5` expansion 或 submission-grade autopilot reality
 - 当前 owner line 已切换为 `post-R5A local runtime closeout / honest stop`
 
-当前 realized activation packages：
-
-- `R3.A`：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-r3a-critique-revision-executor-surface-activation-package.md`
-- `R4.A`：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r4a-final-freeze-and-export-package-activation-package.md`
-- `R5.A`：
-  - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-09-r5a-hosted-friendly-session-boundary-activation-package.md`
-
-也就是说，边界图仍然是 runtime boundary contract，但它现在记录的是“已 absorbed through `R5.A` 的对象边界 + absorbed post-`R5.A` closeout + freeze-before-continue rule”，而不是 `R3.A / R4.A / R5.A` 的待实现队列。
+原 R1.A / R2.A / R3.A / R4.A / R5.A activation package 长正文已删除并由历史 specs 索引承接。也就是说，runtime-first 历史现在记录的是“已 absorbed through `R5.A` 的对象边界 + absorbed post-`R5.A` closeout + freeze-before-continue rule”的 provenance，而不是 `R3.A / R4.A / R5.A` 的待实现队列或当前 runtime owner。
 
 ## Program Ladder
 
