@@ -31,10 +31,7 @@ Date: `2026-04-08`
 - `/Users/gaofeng/workspace/med-autogrant/docs/history/specs/README.md` 中的 Foundation / early mainline 压缩记录
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-durability-model-clarification.md`
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p4a-verification-gate-surface-current-truth.md`
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p4b-verification-os-and-checkpoint-surface-current-truth.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/history/specs/README.md` 中的 P2/P3/P4 authoring-review-verification compression record；原逐 tranche 长正文只从 git history 读取
 
 ## Admission Package Boundary
 

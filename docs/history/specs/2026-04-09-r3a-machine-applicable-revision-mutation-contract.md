@@ -26,9 +26,7 @@ Date: `2026-04-09`
 
 - `/Users/gaofeng/workspace/med-autogrant/AGENTS.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/history/specs/README.md` 中的 runtime-first R1-R5 compression record；原 R3.A activation package 与 R1-R5 boundary map 长正文已删除，精确正文只从 git history 读取
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/history/specs/README.md` 中的 P2/P3/P4 authoring-review-verification compression record；原 P2.C / P3.B / P3.C 长正文只从 git history 读取
 - `/Users/gaofeng/workspace/med-autogrant/docs/history/specs/README.md` 中的 Foundation / object model 压缩记录，以及当前 schema/source/contracts owner
 
 ## Contract Scope
