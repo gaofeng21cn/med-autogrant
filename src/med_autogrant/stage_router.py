@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from med_autogrant.opl_execution_boundary import build_stage_transition_authority_boundary
 from med_autogrant.workspace_projection_parts import _require_workspace_context
 from med_autogrant.workspace_types import WorkspaceStateError
 from med_autogrant.workspace_validation import validate_workspace_document
@@ -36,7 +37,8 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
         forced_rollback_stage = critique.get("forced_rollback_stage")
         forced_rollback_reason = critique.get("forced_rollback_reason")
         if forced_rollback_stage is not None:
-            return {
+            return _with_transition_oracle_boundary(
+                {
                 **identity,
                 "current_stage": stage,
                 "recommended_stage": forced_rollback_stage,
@@ -48,9 +50,11 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                     if forced_rollback_stage in {"direction_screening", "question_refinement"}
                     else False
                 ),
-            }
+                }
+            )
         if verdict == "major_reframe":
-            return {
+            return _with_transition_oracle_boundary(
+                {
                 **identity,
                 "current_stage": stage,
                 "recommended_stage": "question_refinement",
@@ -60,14 +64,16 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                     "如当前方向无法支撑机制级问题，回退到 direction_screening。",
                 ],
                 "requires_human_confirmation": document["mode"] != "auto",
-            }
+                }
+            )
         if verdict in {"major_revision", "minor_revision"}:
             if (
                 stage == "revision"
                 and active_draft["status"] == "revised"
                 and revision_plan.get("execution_status") == "completed"
             ):
-                return {
+                return _with_transition_oracle_boundary(
+                    {
                     **identity,
                     "current_stage": stage,
                     "recommended_stage": "critique",
@@ -77,8 +83,10 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                         "基于 comparison_summary 核对本轮修订是否覆盖前一轮 blocking issues。",
                     ],
                     "requires_human_confirmation": False,
-                }
-            return {
+                    }
+                )
+            return _with_transition_oracle_boundary(
+                {
                 **identity,
                 "current_stage": stage,
                 "recommended_stage": "revision",
@@ -88,9 +96,11 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                     "修订后重新进入导师批注闭环。",
                 ],
                 "requires_human_confirmation": False,
-            }
+                }
+            )
         if verdict == "ready_for_submission":
-            return {
+            return _with_transition_oracle_boundary(
+                {
                 **identity,
                 "current_stage": stage,
                 "recommended_stage": "frozen" if gates["presubmission_frozen"] else "frozen",
@@ -100,10 +110,12 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                     "记录最终送审前版本和下一轮外部 review 入口。",
                 ],
                 "requires_human_confirmation": True,
-            }
+                }
+            )
 
     if not gates["direction_frozen"]:
-        return {
+        return _with_transition_oracle_boundary(
+            {
             **identity,
             "current_stage": stage,
             "recommended_stage": "direction_screening",
@@ -112,9 +124,11 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 "筛选并冻结唯一主方向。",
             ],
             "requires_human_confirmation": document["mode"] != "auto",
-        }
+            }
+        )
     if not gates["scientific_question_frozen"]:
-        return {
+        return _with_transition_oracle_boundary(
+            {
             **identity,
             "current_stage": stage,
             "recommended_stage": "question_refinement",
@@ -123,9 +137,11 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 "明确知识边界、未知机制和可证伪表述。",
             ],
             "requires_human_confirmation": document["mode"] != "auto",
-        }
+            }
+        )
     if not gates["argument_chain_frozen"]:
-        return {
+        return _with_transition_oracle_boundary(
+            {
             **identity,
             "current_stage": stage,
             "recommended_stage": "argument_building",
@@ -134,9 +150,11 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 "补足 field gap、necessity claim 和非任意路线理由。",
             ],
             "requires_human_confirmation": document["mode"] != "auto",
-        }
+            }
+        )
     if not gates["fit_alignment_frozen"]:
-        return {
+        return _with_transition_oracle_boundary(
+            {
             **identity,
             "current_stage": stage,
             "recommended_stage": "fit_alignment",
@@ -146,9 +164,11 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 "把 applicant fit 证据链绑定到当前 ArgumentChain。",
             ],
             "requires_human_confirmation": document["mode"] != "auto",
-        }
+            }
+        )
     if not gates["outline_frozen"]:
-        return {
+        return _with_transition_oracle_boundary(
+            {
             **identity,
             "current_stage": stage,
             "recommended_stage": "outline",
@@ -157,9 +177,11 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 "冻结章节提纲及每节核心论点。",
             ],
             "requires_human_confirmation": document["mode"] != "auto",
-        }
+            }
+        )
     if stage == "outline":
-        return {
+        return _with_transition_oracle_boundary(
+            {
             **identity,
             "current_stage": stage,
             "recommended_stage": "drafting",
@@ -169,9 +191,11 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 "保持当前 question / argument chain / fit mapping 链接不漂移。",
             ],
             "requires_human_confirmation": document["mode"] != "auto",
-        }
+            }
+        )
     if stage == "drafting":
-        return {
+        return _with_transition_oracle_boundary(
+            {
             **identity,
             "current_stage": stage,
             "recommended_stage": "critique",
@@ -180,8 +204,10 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
                 "生成导师批注并抽取结构化修订计划。",
             ],
             "requires_human_confirmation": False,
-        }
-    return {
+            }
+        )
+    return _with_transition_oracle_boundary(
+        {
         **identity,
         "current_stage": stage,
         "recommended_stage": stage,
@@ -190,6 +216,33 @@ def determine_next_step(document: dict[str, Any]) -> dict[str, Any]:
             "沿当前阶段继续执行主线任务。",
         ],
         "requires_human_confirmation": document["mode"] != "auto",
+        }
+    )
+
+
+def _with_transition_oracle_boundary(payload: dict[str, Any]) -> dict[str, Any]:
+    current_stage = str(payload.get("current_stage") or "")
+    recommended_stage = str(payload.get("recommended_stage") or "")
+    return {
+        "surface_kind": "mag_stage_transition_oracle_recommendation",
+        **payload,
+        "current_stage_role": "workspace_lifecycle_observation",
+        "recommended_stage_role": "transition_intent_recommendation",
+        "stage_transition_authority": "one-person-lab",
+        "authority_boundary": build_stage_transition_authority_boundary(
+            surface_id="mag.next-step",
+            mag_role="transition_oracle_recommendation_only",
+        ),
+        "transition_intent": {
+            "surface_kind": "mag_stage_transition_intent_recommendation",
+            "intent_kind": "domain_route_recommendation",
+            "source_stage": current_stage,
+            "target_stage": recommended_stage,
+            "requires_opl_stage_transition_authority": True,
+            "return_shape": (
+                "typed_blocker" if bool(payload.get("requires_human_confirmation")) else "transition_intent_ref"
+            ),
+        },
     }
 
 

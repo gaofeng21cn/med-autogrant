@@ -461,6 +461,21 @@ class DomainEntryContractSurfaceTest(unittest.TestCase):
         self.assertEqual(domain_agent_entry_spec["entry_command"], "product-status")
         self.assertEqual(domain_agent_entry_spec["manifest_command"], "product-entry-manifest")
 
+    def test_loop_commands_require_opl_stage_attempt_in_machine_contract(self) -> None:
+        contract = build_domain_entry_contract()
+        command_specs = {
+            item["command"]: item
+            for item in contract["command_contracts"]
+        }
+
+        for command in (
+            "execute-critique-revision-loop",
+            "execute-authoring-mainline-loop",
+            "execute-grant-autonomy-controller",
+        ):
+            with self.subTest(command=command):
+                self.assertIn("opl_stage_attempt", command_specs[command]["required_fields"])
+
 
 class DomainEntryFreshProofTest(unittest.TestCase):
     def test_family_shared_release_adapter_targets_medautogrant_repo(self) -> None:

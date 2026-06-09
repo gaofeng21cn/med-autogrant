@@ -18,6 +18,33 @@ CRITIQUE_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_critique.js
 DRAFTING_EXAMPLE_PATH = REPO_ROOT / "examples" / "nsfc_workspace_p2c_drafting.json"
 
 
+def _loop_authority_fields(target_stage: str = "frozen") -> dict[str, object]:
+    return {
+        "loop_status_role": "mag_domain_controller_result_not_opl_stage_terminal",
+        "stage_transition_authority": "one-person-lab",
+        "authority_boundary": {
+            "surface_kind": "mag_stage_transition_authority_boundary",
+            "stage_transition_authority": "one-person-lab",
+            "stage_transition_authority_role": "sole_stage_current_terminal_next_writer",
+            "mag_writes_stage_current_pointer": False,
+            "mag_writes_stage_terminal_state": False,
+            "recommendation_requires_opl_stage_transition_authority": True,
+        },
+        "stage_transition_intent": {
+            "surface_kind": "mag_stage_transition_intent_recommendation",
+            "requires_opl_stage_transition_authority": True,
+            "return_shape": "no_regression_evidence",
+            "target_stage": target_stage,
+        },
+        "authority_return": {
+            "surface_kind": "mag_stage_authority_return",
+            "result_shape": "no_regression_evidence",
+            "requires_opl_stage_transition_authority": True,
+            "body_policy": "refs_only_no_stage_current_or_terminal_write",
+        },
+    }
+
+
 def _load_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -94,6 +121,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
                     "termination_reason": "ready_for_submission",
                     "final_workspace": critique_workspace,
                     "final_route": {"recommended_stage": "frozen", "reason": "ready"},
+                    **_loop_authority_fields(),
                 },
             ), patch(
                 "med_autogrant.domain_runtime_parts.authoring_surface.build_grant_quality_scorecard",
@@ -143,6 +171,7 @@ class MagRuntimeQualityGateTest(unittest.TestCase):
                     "termination_reason": "ready_for_submission",
                     "final_workspace": workspace,
                     "final_route": {"recommended_stage": "frozen", "reason": "ready"},
+                    **_loop_authority_fields(),
                 },
             ), patch(
                 "med_autogrant.domain_runtime_parts.authoring_mainline.build_grant_quality_scorecard",

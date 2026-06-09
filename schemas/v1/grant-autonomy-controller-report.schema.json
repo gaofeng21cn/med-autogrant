@@ -254,10 +254,16 @@
         "mag_role",
         "post_start_residency_owner",
         "attempt_ledger_owner",
+        "stage_transition_authority",
+        "controller_status_role",
         "max_domain_cycles_per_invocation",
         "mag_long_running_driver",
         "mag_scheduler_daemon_owner",
-        "mag_owns_attempt_ledger"
+        "mag_owns_attempt_ledger",
+        "mag_writes_stage_current_pointer",
+        "mag_writes_stage_terminal_state",
+        "mag_selects_next_opl_stage",
+        "requires_opl_stage_transition_authority"
       ],
       "properties": {
         "surface_kind": {
@@ -275,6 +281,12 @@
         "attempt_ledger_owner": {
           "const": "one-person-lab"
         },
+        "stage_transition_authority": {
+          "const": "one-person-lab"
+        },
+        "controller_status_role": {
+          "const": "mag_domain_controller_result_not_opl_stage_terminal"
+        },
         "max_domain_cycles_per_invocation": {
           "type": "integer",
           "const": 1
@@ -287,6 +299,18 @@
         },
         "mag_owns_attempt_ledger": {
           "const": false
+        },
+        "mag_writes_stage_current_pointer": {
+          "const": false
+        },
+        "mag_writes_stage_terminal_state": {
+          "const": false
+        },
+        "mag_selects_next_opl_stage": {
+          "const": false
+        },
+        "requires_opl_stage_transition_authority": {
+          "const": true
         }
       }
     },
@@ -339,7 +363,13 @@
           "required": [
             "mag_writes_opl_attempt_ledger",
             "mag_runs_scheduler_daemon",
-            "mag_returns_runtime_or_grant_body"
+            "mag_returns_runtime_or_grant_body",
+            "stage_transition_authority",
+            "controller_status_role",
+            "mag_writes_stage_current_pointer",
+            "mag_writes_stage_terminal_state",
+            "mag_selects_next_opl_stage",
+            "requires_opl_stage_transition_authority"
           ],
           "properties": {
             "mag_writes_opl_attempt_ledger": {
@@ -350,6 +380,24 @@
             },
             "mag_returns_runtime_or_grant_body": {
               "const": false
+            },
+            "stage_transition_authority": {
+              "const": "one-person-lab"
+            },
+            "controller_status_role": {
+              "const": "mag_domain_controller_result_not_opl_stage_terminal"
+            },
+            "mag_writes_stage_current_pointer": {
+              "const": false
+            },
+            "mag_writes_stage_terminal_state": {
+              "const": false
+            },
+            "mag_selects_next_opl_stage": {
+              "const": false
+            },
+            "requires_opl_stage_transition_authority": {
+              "const": true
             }
           }
         }

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from med_autogrant.opl_execution_boundary import build_stage_transition_authority_boundary
 from med_autogrant.stage_router import determine_next_step
 from med_autogrant.workspace import (
     build_critique_summary,
@@ -30,6 +31,7 @@ def build_stage_route_report(document: dict[str, Any]) -> dict[str, Any]:
         "validate_workspace": validation_payload,
         "summarize_workspace": summary,
         "next_step": next_step,
+        "transition_oracle": next_step,
     }
     critique_summary: dict[str, Any] | None = None
     if document["lifecycle_stage"] in {"critique", "revision", "frozen"}:
@@ -45,11 +47,19 @@ def build_stage_route_report(document: dict[str, Any]) -> dict[str, Any]:
     )
     return {
         "ok": True,
+        "surface_kind": "mag_stage_route_recommendation_report",
         "grant_run_id": document["grant_run_id"],
         "workspace_id": document["workspace_id"],
         "lifecycle_stage": document["lifecycle_stage"],
+        "lifecycle_stage_role": "workspace_lifecycle_observation",
+        "stage_transition_authority": "one-person-lab",
+        "authority_boundary": build_stage_transition_authority_boundary(
+            surface_id="mag.stage-route-report",
+            mag_role="route_checkpoint_projection_only",
+        ),
         "route": route,
         "checkpoint_status": verification_checkpoint["checkpoint_status"],
+        "checkpoint_status_role": "domain_checkpoint_projection_not_opl_stage_terminal",
         "verification_checkpoint": verification_checkpoint,
     }
 

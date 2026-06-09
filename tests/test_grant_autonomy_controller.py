@@ -15,11 +15,12 @@ if str(SRC_ROOT) not in sys.path:
 from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller  # noqa: E402
 from med_autogrant.grant_autonomy_trace import spend_budget_step  # noqa: E402
 
-OPL_STAGE_ATTEMPT = {
-    "runtime_owner": "one-person-lab",
-    "executor_kind": "codex_cli",
-    "attempt_lease_ref": "lease:opl/stage-attempt/test",
-}
+OPL_STAGE_ATTEMPT = {"runtime_owner": "one-person-lab", "executor_kind": "codex_cli", "attempt_lease_ref": "lease:opl/stage-attempt/test"}
+
+
+def _assert_no_stage_transition_authority(test_case: unittest.TestCase, boundary: dict[str, Any]) -> None:
+    test_case.assertFalse(any(boundary[key] for key in ("mag_writes_stage_current_pointer", "mag_writes_stage_terminal_state", "mag_selects_next_opl_stage")))
+    test_case.assertTrue(boundary["requires_opl_stage_transition_authority"])
 
 
 class GrantAutonomyControllerTest(unittest.TestCase):
@@ -360,6 +361,8 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         )
         self.assertFalse(result["controller_execution_boundary"]["mag_long_running_driver"])
         self.assertFalse(result["controller_execution_boundary"]["mag_owns_attempt_ledger"])
+        _assert_no_stage_transition_authority(self, result["controller_execution_boundary"])
+        self.assertEqual(result["controller_execution_boundary"]["controller_status_role"], "mag_domain_controller_result_not_opl_stage_terminal")
         self.assertEqual(
             result["controller_execution_boundary"]["post_start_residency_owner"],
             "one-person-lab",
@@ -370,6 +373,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         )
         self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
         self.assertEqual(result["authority_return"]["body_policy"], "refs_only_no_runtime_or_grant_body")
+        _assert_no_stage_transition_authority(self, result["authority_return"]["authority_boundary"])
 
     def test_fail_closed_report_keeps_latest_active_closure_package(self) -> None:
         request = self._workspace_start_request()

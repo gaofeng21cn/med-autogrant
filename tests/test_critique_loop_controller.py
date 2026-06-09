@@ -34,6 +34,13 @@ class CritiqueLoopControllerTest(unittest.TestCase):
         )
 
         self.assertEqual(result["loop_status"], "failed_closed")
+        self.assertEqual(result["loop_status_role"], "mag_domain_controller_result_not_opl_stage_terminal")
+        self.assertEqual(result["stage_transition_authority"], "one-person-lab")
+        self.assertFalse(result["authority_boundary"]["mag_writes_stage_current_pointer"])
+        self.assertFalse(result["authority_boundary"]["mag_writes_stage_terminal_state"])
+        self.assertTrue(
+            result["authority_boundary"]["recommendation_requires_opl_stage_transition_authority"]
+        )
         self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
         self.assertEqual(
             result["typed_blocker"]["typed_blocker_ref"],
@@ -88,6 +95,9 @@ class CritiqueLoopControllerTest(unittest.TestCase):
         )
 
         self.assertEqual(result["loop_status"], "passed")
+        self.assertEqual(result["loop_status_role"], "mag_domain_controller_result_not_opl_stage_terminal")
+        self.assertEqual(result["authority_return"]["result_shape"], "no_regression_evidence")
+        self.assertTrue(result["authority_return"]["requires_opl_stage_transition_authority"])
         self.assertEqual(result["termination_reason"], "ready_for_submission")
         self.assertEqual(len(result["rounds"]), 1)
 
@@ -149,6 +159,8 @@ class CritiqueLoopControllerTest(unittest.TestCase):
 
         self.assertEqual(result["loop_status"], "rollback_required")
         self.assertEqual(result["termination_reason"], "forced_rollback")
+        self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
+        self.assertEqual(result["typed_blocker"]["blocker_kind"], "forced_rollback")
 
     def test_max_rounds_stops_fail_closed(self) -> None:
         def critique_runner(document: dict[str, Any]) -> dict[str, Any]:
@@ -179,3 +191,4 @@ class CritiqueLoopControllerTest(unittest.TestCase):
 
         self.assertEqual(result["loop_status"], "failed_closed")
         self.assertEqual(result["termination_reason"], "max_rounds_exhausted")
+        self.assertEqual(result["typed_blocker"]["blocker_kind"], "max_rounds_exhausted")

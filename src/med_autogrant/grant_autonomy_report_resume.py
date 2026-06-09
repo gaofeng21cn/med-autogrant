@@ -33,10 +33,16 @@ def _build_controller_execution_boundary() -> dict[str, Any]:
         "mag_role": "refs_only_domain_authority_action_target",
         "post_start_residency_owner": "one-person-lab",
         "attempt_ledger_owner": "one-person-lab",
+        "stage_transition_authority": "one-person-lab",
+        "controller_status_role": "mag_domain_controller_result_not_opl_stage_terminal",
         "max_domain_cycles_per_invocation": 1,
         "mag_long_running_driver": False,
         "mag_scheduler_daemon_owner": False,
         "mag_owns_attempt_ledger": False,
+        "mag_writes_stage_current_pointer": False,
+        "mag_writes_stage_terminal_state": False,
+        "mag_selects_next_opl_stage": False,
+        "requires_opl_stage_transition_authority": True,
     }
 
 
@@ -67,6 +73,12 @@ def _build_authority_return(*, termination_reason: str) -> dict[str, Any]:
             "mag_writes_opl_attempt_ledger": False,
             "mag_runs_scheduler_daemon": False,
             "mag_returns_runtime_or_grant_body": False,
+            "stage_transition_authority": "one-person-lab",
+            "controller_status_role": "mag_domain_controller_result_not_opl_stage_terminal",
+            "mag_writes_stage_current_pointer": False,
+            "mag_writes_stage_terminal_state": False,
+            "mag_selects_next_opl_stage": False,
+            "requires_opl_stage_transition_authority": True,
         },
     }
 

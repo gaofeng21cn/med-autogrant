@@ -33,6 +33,13 @@ class AuthoringMainlineControllerTest(unittest.TestCase):
         )
 
         self.assertEqual(result["loop_status"], "failed_closed")
+        self.assertEqual(result["loop_status_role"], "mag_domain_controller_result_not_opl_stage_terminal")
+        self.assertEqual(result["stage_transition_authority"], "one-person-lab")
+        self.assertFalse(result["authority_boundary"]["mag_writes_stage_current_pointer"])
+        self.assertFalse(result["authority_boundary"]["mag_writes_stage_terminal_state"])
+        self.assertTrue(
+            result["authority_boundary"]["recommendation_requires_opl_stage_transition_authority"]
+        )
         self.assertEqual(result["termination_reason"], "opl_provider_attempt_required")
         self.assertEqual(
             result["typed_blocker"]["typed_blocker_ref"],
@@ -74,6 +81,10 @@ class AuthoringMainlineControllerTest(unittest.TestCase):
         )
 
         self.assertEqual(result["loop_status"], "passed")
+        self.assertEqual(result["loop_status_role"], "mag_domain_controller_result_not_opl_stage_terminal")
+        self.assertEqual(result["authority_return"]["result_shape"], "no_regression_evidence")
+        self.assertTrue(result["authority_return"]["requires_opl_stage_transition_authority"])
+        self.assertEqual(result["stage_transition_intent"]["target_stage"], "frozen")
         self.assertEqual(result["termination_reason"], "ready_for_submission")
         self.assertEqual(result["final_workspace"]["stage"], "after_revision")
         self.assertEqual(calls, ["critique", "revision"])
@@ -172,6 +183,8 @@ class AuthoringMainlineControllerTest(unittest.TestCase):
         self.assertEqual(result["loop_status"], "failed_closed")
         self.assertEqual(result["termination_reason"], "unknown_recommended_stage")
         self.assertEqual(result["final_route"]["recommended_stage"], "impossible_stage")
+        self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
+        self.assertEqual(result["typed_blocker"]["blocker_kind"], "unknown_recommended_stage")
 
     def test_max_cycles_exhausted_fail_closed(self) -> None:
         def route_resolver(_workspace: dict[str, Any]) -> dict[str, Any]:
@@ -191,3 +204,4 @@ class AuthoringMainlineControllerTest(unittest.TestCase):
         self.assertEqual(result["loop_status"], "failed_closed")
         self.assertEqual(result["termination_reason"], "max_cycles_exhausted")
         self.assertEqual(len(result["cycles"]), 2)
+        self.assertEqual(result["typed_blocker"]["blocker_kind"], "max_cycles_exhausted")

@@ -10,6 +10,90 @@
         "null"
       ]
     },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "stage_transition_authority",
+        "stage_transition_authority_role",
+        "mag_writes_stage_current_pointer",
+        "mag_writes_stage_terminal_state",
+        "recommendation_requires_opl_stage_transition_authority"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_stage_transition_authority_boundary"
+        },
+        "stage_transition_authority": {
+          "const": "one-person-lab"
+        },
+        "stage_transition_authority_role": {
+          "const": "sole_stage_current_terminal_next_writer"
+        },
+        "mag_writes_stage_current_pointer": {
+          "const": false
+        },
+        "mag_writes_stage_terminal_state": {
+          "const": false
+        },
+        "recommendation_requires_opl_stage_transition_authority": {
+          "const": true
+        }
+      }
+    },
+    "stageTransitionIntent": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "requires_opl_stage_transition_authority",
+        "return_shape"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_stage_transition_intent_recommendation"
+        },
+        "requires_opl_stage_transition_authority": {
+          "const": true
+        },
+        "return_shape": {
+          "type": "string",
+          "enum": [
+            "typed_blocker",
+            "no_regression_evidence"
+          ]
+        }
+      }
+    },
+    "authorityReturn": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "surface_kind",
+        "result_shape",
+        "requires_opl_stage_transition_authority",
+        "body_policy"
+      ],
+      "properties": {
+        "surface_kind": {
+          "const": "mag_stage_authority_return"
+        },
+        "result_shape": {
+          "type": "string",
+          "enum": [
+            "typed_blocker",
+            "no_regression_evidence"
+          ]
+        },
+        "requires_opl_stage_transition_authority": {
+          "const": true
+        },
+        "body_policy": {
+          "const": "refs_only_no_stage_current_or_terminal_write"
+        }
+      }
+    },
     "oplExecutionBoundaryTypedBlocker": {
       "type": "object",
       "additionalProperties": true,
@@ -79,6 +163,11 @@
     "surface_kind",
     "loop_version",
     "loop_status",
+    "loop_status_role",
+    "stage_transition_authority",
+    "authority_boundary",
+    "stage_transition_intent",
+    "authority_return",
     "started_from_stage",
     "completed_cycles",
     "max_cycles",
@@ -103,6 +192,21 @@
         "passed",
         "failed_closed"
       ]
+    },
+    "loop_status_role": {
+      "const": "mag_domain_controller_result_not_opl_stage_terminal"
+    },
+    "stage_transition_authority": {
+      "const": "one-person-lab"
+    },
+    "authority_boundary": {
+      "$ref": "#/$defs/authorityBoundary"
+    },
+    "stage_transition_intent": {
+      "$ref": "#/$defs/stageTransitionIntent"
+    },
+    "authority_return": {
+      "$ref": "#/$defs/authorityReturn"
     },
     "started_from_stage": {
       "$ref": "common.schema.json#/$defs/nonEmptyString"

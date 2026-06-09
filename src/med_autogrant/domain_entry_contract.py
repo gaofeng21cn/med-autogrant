@@ -109,17 +109,17 @@ DOMAIN_ENTRY_COMMAND_CATALOG_ENTRIES: list[dict[str, Any]] = [
     },
     {
         "command": "execute-critique-revision-loop",
-        "required_fields": ["input_path", "output_dir"],
+        "required_fields": ["input_path", "output_dir", "opl_stage_attempt"],
         "optional_fields": ["max_rounds", "executor_kind"],
     },
     {
         "command": "execute-authoring-mainline-loop",
-        "required_fields": ["input_path", "output_dir"],
+        "required_fields": ["input_path", "output_dir", "opl_stage_attempt"],
         "optional_fields": ["max_cycles", "executor_kind"],
     },
     {
         "command": "execute-grant-autonomy-controller",
-        "required_fields": ["input_path", "output_dir"],
+        "required_fields": ["input_path", "output_dir", "opl_stage_attempt"],
         "optional_fields": ["executor_kind"],
     },
     {

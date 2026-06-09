@@ -48,9 +48,23 @@ class StageRouterTest(unittest.TestCase):
     def test_input_intake_routes_to_direction_screening(self) -> None:
         route = determine_next_step(json.loads(INPUT_EXAMPLE_PATH.read_text(encoding="utf-8")))
 
+        self.assertEqual(route["surface_kind"], "mag_stage_transition_oracle_recommendation")
         self.assertEqual(route["grant_run_id"], "grant-run-nsfc-demo-001-baseline-001")
         self.assertEqual(route["current_stage"], "input_intake")
         self.assertEqual(route["recommended_stage"], "direction_screening")
+        self.assertEqual(route["current_stage_role"], "workspace_lifecycle_observation")
+        self.assertEqual(route["recommended_stage_role"], "transition_intent_recommendation")
+        self.assertEqual(route["stage_transition_authority"], "one-person-lab")
+        self.assertFalse(route["authority_boundary"]["mag_writes_stage_current_pointer"])
+        self.assertFalse(route["authority_boundary"]["mag_writes_stage_terminal_state"])
+        self.assertTrue(
+            route["authority_boundary"]["recommendation_requires_opl_stage_transition_authority"]
+        )
+        self.assertEqual(
+            route["transition_intent"]["surface_kind"],
+            "mag_stage_transition_intent_recommendation",
+        )
+        self.assertTrue(route["transition_intent"]["requires_opl_stage_transition_authority"])
 
     def test_direction_screening_routes_to_question_refinement(self) -> None:
         route = determine_next_step(json.loads(DIRECTION_EXAMPLE_PATH.read_text(encoding="utf-8")))

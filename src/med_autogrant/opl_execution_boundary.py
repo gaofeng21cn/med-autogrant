@@ -5,6 +5,13 @@ from typing import Any, Mapping
 
 _DEFAULT_EXECUTOR_KIND = "codex_cli"
 _OPL_OWNER = "one-person-lab"
+_STAGE_TRANSITION_AUTHORITY = "one-person-lab"
+_ALLOWED_STAGE_AUTHORITY_RETURN_SHAPES = [
+    "transition_intent_ref",
+    "domain_owner_receipt",
+    "typed_blocker",
+    "no_regression_evidence",
+]
 
 
 def require_opl_default_stage_attempt(
@@ -73,7 +80,33 @@ def require_opl_default_stage_attempt(
                 "typed_blocker",
                 "no_regression_evidence",
             ],
+            "stage_transition_authority": _STAGE_TRANSITION_AUTHORITY,
+            "mag_writes_stage_current_pointer": False,
+            "mag_writes_stage_terminal_state": False,
+            "provider_completion_is_stage_transition": False,
         },
+    }
+
+
+def build_stage_transition_authority_boundary(
+    *,
+    surface_id: str,
+    mag_role: str,
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "mag_stage_transition_authority_boundary",
+        "surface_id": surface_id,
+        "stage_transition_authority": _STAGE_TRANSITION_AUTHORITY,
+        "stage_transition_authority_role": "sole_stage_current_terminal_next_writer",
+        "mag_role": mag_role,
+        "mag_writes_stage_current_pointer": False,
+        "mag_writes_stage_terminal_state": False,
+        "mag_writes_current_owner_delta": False,
+        "mag_selects_next_opl_stage": False,
+        "provider_completion_is_stage_transition": False,
+        "workspace_lifecycle_stage_is_domain_observation": True,
+        "recommendation_requires_opl_stage_transition_authority": True,
+        "allowed_return_shapes": list(_ALLOWED_STAGE_AUTHORITY_RETURN_SHAPES),
     }
 
 
@@ -88,6 +121,9 @@ def _build_typed_blocker(*, controller_id: str, reason: str) -> dict[str, Any]:
         "required_evidence": "OPL stage attempt lease or default executor receipt",
         "mag_owns_durable_loop": False,
         "mag_owns_attempt_ledger": False,
+        "stage_transition_authority": _STAGE_TRANSITION_AUTHORITY,
+        "mag_writes_stage_current_pointer": False,
+        "mag_writes_stage_terminal_state": False,
         "hermes_agent_boundary": "explicit_non_default_opl_executor_adapter_receipt_lane_only",
     }
 
@@ -100,4 +136,4 @@ def _read_string(payload: Mapping[str, Any], key: str) -> str | None:
     return text or None
 
 
-__all__ = ["require_opl_default_stage_attempt"]
+__all__ = ["build_stage_transition_authority_boundary", "require_opl_default_stage_attempt"]
