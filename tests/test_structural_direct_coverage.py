@@ -25,6 +25,7 @@ import med_autogrant.product_entry_parts.manifest_builder as manifest_builder
 import med_autogrant.product_entry_parts.manifest_readiness as manifest_readiness
 import med_autogrant.product_entry_parts.manifest_skill_catalog as manifest_skill_catalog
 import med_autogrant.product_entry_parts.preflight as preflight
+import med_autogrant.product_entry_parts.primitives as primitives
 import med_autogrant.product_entry_parts.progress as progress
 import med_autogrant.product_entry_parts.runtime_registration as runtime_registration
 import med_autogrant.product_entry_parts.runtime_contracts as runtime_contracts
@@ -32,6 +33,7 @@ import med_autogrant.product_entry_parts.runtime_surfaces as runtime_surfaces
 import med_autogrant.revision_executor as revision_executor
 import med_autogrant.schema_loader as schema_loader
 import med_autogrant.schema_subset_validator as schema_subset_validator
+import med_autogrant.stage_control_plane as stage_control_plane
 import med_autogrant.submission_ready as submission_ready
 import med_autogrant.workspace_parts as workspace_parts
 import med_autogrant.workspace_projection_parts as workspace_projection_parts
@@ -83,7 +85,11 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert manifest_readiness.build_manifest_readiness_surfaces
     assert manifest_skill_catalog.build_product_entry_skill_catalog
     assert preflight.ProductEntryPreflightMixin
+    assert primitives.TARGET_DOMAIN_ID == "med-autogrant"
+    assert primitives._require_entry_mode("direct") == "direct"
     assert progress.ProductEntryProgressMixin
     assert runtime_contracts.PRODUCT_ENTRY_SCHEMA_FILE == "product-entry.schema.json"
     assert runtime_registration._build_opl_stage_runtime_registration
     assert runtime_surfaces._build_runtime_continuity_surfaces
+    assert stage_control_plane.DEFAULT_GOLDEN_PATH_STAGE_ID == "call_and_candidate_intake"
+    assert stage_control_plane.build_mag_family_stage_control_plane
