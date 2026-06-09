@@ -109,8 +109,17 @@ MAG-owned grant transition/oracle 后续工作也归 `docs/active/mag-ideal-stat
 
 ## Coverage ledger foldback
 
-Dated coverage entries, frozen inventory notes, retirement audits, no-rewrite closeouts and proof/read-model foldback records that previously lived as per-tranche files are compressed under [MAG docs portfolio coverage ledger](./history/docs-portfolio-coverage-ledger/README.md), with durable no-resurrection rules in [MAG retired surface provenance](./history/docs-portfolio-coverage-ledger/retired-surface-provenance.md).
+Dated coverage entries, frozen inventory notes, retirement audits, no-rewrite closeouts and proof/read-model foldback records are compressed under [MAG docs portfolio coverage ledger](./history/docs-portfolio-coverage-ledger/README.md), with durable no-resurrection rules in [MAG retired surface provenance](./history/docs-portfolio-coverage-ledger/retired-surface-provenance.md).
 
-This file now keeps only current lifecycle rules, owner split, direct-retirement posture, long-list governance, and the current transition/oracle gap location. Do not append future frozen inventories, command transcripts, branch/worktree closeout, receipt ledgers, or proof-by-proof tranches here. New dated coverage belongs under `docs/history/docs-portfolio-coverage-ledger/` or another precise `docs/history/**` owner; durable conclusions must be folded back into the core five docs, active gap plan, lifecycle map, contracts, source, or tests.
+The coverage ledger is now a topic-level process index. It records SSOT owners, compressed provenance groups, remaining unreviewed scope and next write scope; it must not grow back into frozen inventory dumps, command transcripts, branch/worktree closeout, receipt ledgers, or proof-by-proof tranches.
+
+Future foldback uses this routing:
+
+| Future evidence | Owner |
+| --- | --- |
+| Durable MAG status, active gap, private surface role or direct-retirement rule | Core five docs, active gap plan, private inventory, specs lifecycle map, contracts, source or tests |
+| Dense spec lifecycle or historical spec body decision | `docs/specs/specs_lifecycle_map.md`, `docs/history/specs/README.md`, or a precise history/tombstone owner |
+| Docs lifecycle tranche closeout | `docs/history/docs-portfolio-coverage-ledger/README.md` as a compressed theme row, not a dated proof ledger |
+| Retired command/module/facade/test no-resurrection | `retired-surface-provenance.md` plus machine guard/source/test owner |
 
 Current active owner remains [MAG ideal-state cross-repo gap plan](./active/mag-ideal-state-cross-repo-gap-plan.md). Dense specs are read through [Specs 生命周期地图](./specs/specs_lifecycle_map.md); historical specs stay under [历史 specs 索引](./history/specs/README.md).
