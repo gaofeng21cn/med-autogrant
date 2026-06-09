@@ -28,7 +28,7 @@ Date: `2026-04-08`
 
 ## Hard Boundary Docs
 
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-06-med-autogrant-mainline-and-omx-bridge.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/history/specs/README.md` 中的 Foundation / early mainline 压缩记录
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-durability-model-clarification.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`

@@ -30,7 +30,7 @@ Date: `2026-04-09`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-07-p2c-draft-critique-revision-skeleton-mainline-current-truth.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p3b-revision-transition-and-re-review-hardening-current-truth.md`
 - `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-08-p3c-forced-rollback-and-presubmission-gate-current-truth.md`
-- `/Users/gaofeng/workspace/med-autogrant/docs/specs/2026-04-06-object-model-schema-v1.md`
+- `/Users/gaofeng/workspace/med-autogrant/docs/history/specs/README.md` 中的 Foundation / object model 压缩记录，以及当前 schema/source/contracts owner
 
 ## Contract Scope
 
