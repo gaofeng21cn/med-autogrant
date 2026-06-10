@@ -14,11 +14,14 @@ Machine boundary: 人读索引。机器真相继续归 contracts、schemas、sou
 - [文档索引](../README.md)
 - [当前状态](../status.md)
 - [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md)
+- [MAG Foundry Agent OS 目标差异页](./foundry-agent-os-target-delta.md)
 - [MAG 私有实现与 OPL 迁移台账](./opl-private-implementation-migration-inventory.md)
 
 当前 active plan 采用 direct retirement posture：旧模块、旧接口、旧 CLI alias、facade patch bridge、兼容聚合测试或旧 runtime owner wording 若已被当前 owner surface 替代，应先迁移 active caller，再删除或归入 history/tombstone，不新增 compatibility shell。该 posture 也被 `product-entry-manifest` 的 `ideal_state_closure_status.direct_retirement_posture` 投影。
 
 MAG-owned transition/oracle 后续工作以 [MAG 理想目标态差距与完善计划](./mag-ideal-state-cross-repo-gap-plan.md) 为唯一 active plan 入口：MAG 负责 grant transition table、guard、typed blocker、owner action 和 oracle fixture；generic state-machine runner、queue、retry/dead-letter 与 provider lifecycle 归 OPL Framework。当前仓内 transition table / oracle fixture 已落地，并有 oracle -> domain_handler `stage-attempt/closeout` -> owner/no-regression receipt refs 的 focused proof；这仍不等于 OPL-hosted production long-run soak 已完成。
+
+[MAG Foundry Agent OS 目标差异页](./foundry-agent-os-target-delta.md) 是本仓对 OPL family `foundry_agent_os_standard` 的 target delta：它只说明哪些 generic surface 上收到 OPL、哪些 grant authority 留在 MAG kernel、默认读根如何回到 `current_owner_delta`，不替代当前 active gap plan，也不声明 grant ready / production ready。
 
 [MAG 私有实现与 OPL 迁移台账](./opl-private-implementation-migration-inventory.md) 是当前 physical morphology / private platform residue 的明细 inventory：它记录 product-entry、domain_handler、CLI、autonomy controller、domain-runtime 命名面的 active caller、分类、保留 authority、可上收 generic 子域、迁移门槛和验证入口。该台账不替代 `mag-ideal-state-cross-repo-gap-plan.md`，也不把台账化写成 production/default caller 已迁移完成。
 
