@@ -20,6 +20,8 @@ MAG 与 MAS、RCA、OMA 共享同一 OPL Foundry Agent 生命周期：`domain pa
 
 OPL family `Foundry Agent OS` 目标下，MAG 的 target delta 读 [MAG Foundry Agent OS 目标差异页](./active/foundry-agent-os-target-delta.md)：generic runtime、Pack compiler、generated surfaces、source/package shell、quality/readiness projection、Console/workbench 和 capability registry ABI 上收到 OPL；grant truth、fundability / quality / export verdict、submission/package authority、grant strategy memory accept/reject、owner receipt、typed blocker 和 grant-native helper 保留为 MAG authority kernel。该 target delta 只冻结架构方向，不声明 grant-ready、submission-ready、App sustained-consumption 或 production-ready。
 
+`contracts/foundry-agent-os-domain-kernel-manifest.json` 是 W4 `domain-kernel-manifest` 的 MAG machine-readable 落点。它把 retained Grant Authority Kernel、OPL upcollect surfaces、`current_owner_delta` 默认读根、owner receipt / typed blocker / fundability-quality-export-submission signer 归属和 OPL/Vault/Console/Runway/Pack/Capability Registry false-authority flags 固定为可测试合同；它不声明 grant-ready、fundability-ready、quality-ready、export-ready、submission-ready、production-ready、App release-ready 或 physical delete authority。
+
 无论从 direct path 还是 OPL 托管 path 进入，执行都必须回到 MAG-owned grant truth、fundability / quality / export verdict、package authority、grant strategy memory accept/reject、owner receipt 和 typed blocker。OPL 持有 Temporal-backed provider runtime、typed queue、scheduler / daemon、attempt ledger、generic transition runner、workspace/source shell、memory locator、artifact/package lifecycle shell、operator projection、observability/SLO、generated wrapper 和 App/workbench shell。
 
 ## 当前机器事实摘要

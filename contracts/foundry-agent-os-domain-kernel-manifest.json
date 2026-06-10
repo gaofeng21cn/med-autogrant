@@ -1,0 +1,128 @@
+{
+  "surface_kind": "foundry_agent_os_domain_kernel_manifest",
+  "version": "foundry-agent-os-domain-kernel-manifest.v1",
+  "domain_id": "med-autogrant",
+  "domain_agent_id": "mag",
+  "owner": "Med Auto Grant",
+  "state": "active_contract",
+  "role": "w4_domain_kernel_manifest",
+  "source_of_truth_refs": [
+    "docs/active/foundry-agent-os-target-delta.md",
+    "contracts/runtime-program/current-program.json",
+    "contracts/foundry_agent_series.json",
+    "contracts/private_functional_surface_policy.json"
+  ],
+  "default_read_root": {
+    "surface": "current_owner_delta",
+    "ordinary_operator_root": true,
+    "raw_worklist_role": "drilldown_only",
+    "provider_completion_role": "transport_evidence_only",
+    "evidence_count_role": "audit_only",
+    "projection_can_be_owner_answer": false
+  },
+  "domain_authority_kernel": {
+    "retained_surfaces": [
+      "grant_truth",
+      "funding_call_interpretation",
+      "profile_task_lock",
+      "fundability_strategy",
+      "specific_aims_and_proposal_route_truth",
+      "fundability_quality_export_submission_verdict",
+      "submission_package_authority",
+      "manual_portal_boundary",
+      "grant_strategy_memory_accept_reject_or_blocker",
+      "owner_receipt_signer",
+      "typed_blocker_materializer",
+      "grant_native_helper_guard"
+    ],
+    "retained_surface_owner": "med-autogrant",
+    "owner_receipt_signer": "med-autogrant_authority_kernel",
+    "typed_blocker_signer": "med-autogrant_authority_kernel",
+    "quality_export_publication_review_verdict_signers": [
+      "fundability_quality_export_submission_verdict",
+      "submission_package_authority",
+      "manual_portal_boundary"
+    ],
+    "accepted_answer_shapes": [
+      "mag_owner_receipt_ref",
+      "mag_typed_blocker_ref",
+      "fundability_verdict_ref",
+      "quality_verdict_ref",
+      "export_verdict_ref",
+      "submission_ready_gate_ref",
+      "human_gate_ref",
+      "no_regression_evidence_ref"
+    ]
+  },
+  "opl_upcollect_surfaces": [
+    "generic_runtime",
+    "stage_run_kernel",
+    "queue_and_attempt_ledger",
+    "retry_dead_letter_resume",
+    "human_gate_shell",
+    "pack_compiler",
+    "generated_cli_mcp_app_status_workbench_surfaces",
+    "workspace_source_package_shell",
+    "artifact_lifecycle_shell",
+    "memory_locator_shell",
+    "quality_readiness_projection",
+    "console_current_owner_delta_projection",
+    "refs_only_vault_lineage",
+    "capability_registry_abi"
+  ],
+  "forbidden_authority_flags": {
+    "opl": {
+      "can_write_domain_truth": false,
+      "can_sign_owner_receipt": false,
+      "can_create_domain_typed_blocker": false,
+      "can_authorize_quality_export_publication_or_review_verdict": false
+    },
+    "vault": {
+      "can_write_domain_truth": false,
+      "can_sign_owner_receipt": false,
+      "can_create_domain_typed_blocker": false,
+      "can_authorize_quality_export_publication_or_review_verdict": false
+    },
+    "console": {
+      "can_write_domain_truth": false,
+      "can_sign_owner_receipt": false,
+      "can_create_domain_typed_blocker": false,
+      "can_authorize_quality_export_publication_or_review_verdict": false
+    },
+    "runway": {
+      "can_write_domain_truth": false,
+      "can_sign_owner_receipt": false,
+      "can_create_domain_typed_blocker": false,
+      "can_authorize_quality_export_publication_or_review_verdict": false
+    },
+    "pack": {
+      "can_write_domain_truth": false,
+      "can_sign_owner_receipt": false,
+      "can_create_domain_typed_blocker": false,
+      "can_authorize_quality_export_publication_or_review_verdict": false
+    },
+    "capability_registry": {
+      "can_write_domain_truth": false,
+      "can_sign_owner_receipt": false,
+      "can_create_domain_typed_blocker": false,
+      "can_authorize_quality_export_publication_or_review_verdict": false
+    }
+  },
+  "non_claims": {
+    "domain_ready": false,
+    "grant_ready": false,
+    "fundability_ready": false,
+    "quality_ready": false,
+    "export_ready": false,
+    "submission_ready": false,
+    "production_ready": false,
+    "app_release_ready": false,
+    "physical_delete_authorized": false
+  },
+  "verification": {
+    "focused_tests": [
+      "tests/test_foundry_agent_os_domain_kernel_manifest_contract.py"
+    ],
+    "docs_ref": "docs/active/foundry-agent-os-target-delta.md"
+  }
+}
