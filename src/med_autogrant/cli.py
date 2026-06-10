@@ -426,12 +426,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _print_public_help() -> None:
     lines = [
-        "Usage: medautogrant|mag <group> <command> [options]",
+        "Usage: medautogrant <group> <command> [options]",
         "",
         "Series: OPL Foundry Agent",
         "Agent id: medautogrant",
         "Ordinary path: workspace/work/stage/run/vault/handoff/connect",
-        "Executable command surface: medautogrant or mag",
+        "Executable command surface: medautogrant",
+        "Brand shorthand: mag (package alias; do not use as PATH readiness evidence on macOS)",
         "Authority boundary: MAG owns grant truth, quality/export verdicts, package authority, memory decisions, and owner receipts; OPL reads refs and projects state.",
         "",
         "Public command groups:",
@@ -443,13 +444,13 @@ def _print_public_help() -> None:
         [
             "",
             "Examples:",
-            "  mag foundry status --json",
             "  medautogrant foundry status --format json",
+            "  <med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry status --json",
             "  medautogrant status --json",
             "  medautogrant workspace validate --input <workspace-path> --format json",
             "  medautogrant pass revision --input <workspace-path> --output <output-path> --format json",
             "",
-            "Use `medautogrant <group>` or `mag <group>` to inspect the available commands in that group.",
+            "Use `medautogrant <group>` to inspect the available commands in that group.",
         ]
     )
     print("\n".join(lines))

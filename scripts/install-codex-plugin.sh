@@ -65,6 +65,7 @@ write_clean_runner_entrypoint() {
   local module="$2"
   local script_path="${INSTALL_HOME}/.local/bin/${name}"
   rm -f "${script_path}.uv-entrypoint"
+  rm -f "${script_path}"
   cat >"${script_path}" <<EOF
 #!/usr/bin/env bash
 set -euo pipefail

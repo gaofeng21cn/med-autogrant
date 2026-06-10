@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
+import sys
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
@@ -42,12 +45,13 @@ def test_public_cli_help_renders_group_index() -> None:
     assert "Series: OPL Foundry Agent" in stdout
     assert "Agent id: medautogrant" in stdout
     assert "Ordinary path: workspace/work/stage/run/vault/handoff/connect" in stdout
-    assert "Executable command surface: medautogrant or mag" in stdout
+    assert "Executable command surface: medautogrant" in stdout
+    assert "Brand shorthand: mag" in stdout
     assert "Authority boundary:" in stdout
     assert "Public command groups:" in stdout
     assert "foundry" in stdout
     assert "medautogrant foundry status --format json" in stdout
-    assert "mag foundry status --json" in stdout
+    assert "<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry status --json" in stdout
     assert "workspace" in stdout
     assert "authority" in stdout
     assert "product" not in stdout
@@ -74,8 +78,37 @@ def test_foundry_status_projects_mag_series_identity() -> None:
     assert payload["foundry_agent_series"]["foundry_agent_id"] == "medautogrant"
     assert payload["status"]["series_label"] == "OPL Foundry Agent"
     assert payload["status"]["ordinary_path"] == "workspace/work/stage/run/vault/handoff/connect"
-    assert payload["status"]["executable_command_surfaces"] == ["medautogrant", "mag"]
+    assert payload["status"]["executable_command_surfaces"] == ["medautogrant"]
+    assert payload["status"]["brand_shorthand"] == "mag"
+    assert payload["status"]["brand_shorthand_path_safe"] is False
     assert "executable_frontdoors" not in payload["status"]
+
+
+@pytest.mark.smoke
+def test_repo_local_clean_runner_is_cwd_independent(tmp_path: Path) -> None:
+    env = os.environ.copy()
+    env["MAG_CLEAN_RUNNER_SKIP_SYNC"] = "1"
+    env.setdefault("UV_PROJECT_ENVIRONMENT", sys.prefix)
+
+    result = subprocess.run(
+        [
+            str(REPO_ROOT / "scripts" / "run-python-clean.sh"),
+            "-m",
+            "med_autogrant.cli",
+            "foundry",
+            "status",
+            "--json",
+        ],
+        cwd=tmp_path,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+
+    payload = json.loads(result.stdout)
+    assert payload["command"] == "foundry-status"
+    assert payload["status"]["executable_command_surfaces"] == ["medautogrant"]
 
 
 @pytest.mark.smoke
