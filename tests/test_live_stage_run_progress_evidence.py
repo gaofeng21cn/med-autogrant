@@ -24,8 +24,12 @@ def _ledger() -> dict[str, object]:
 def test_live_stage_run_progress_evidence_is_mag_source_of_truth_blocker() -> None:
     payload = _live_progress()
 
-    assert payload["surface_kind"] == "mag_live_stage_run_progress_evidence.v1"
+    assert payload["surface_kind"] == "domain_live_stage_run_progress_evidence"
+    assert payload["mag_surface_kind"] == "mag_live_stage_run_progress_evidence.v1"
+    assert payload["schema_ref"] == "contracts/opl-framework/domain-live-stage-run-progress-evidence.schema.json"
+    assert payload["schema_version"] == 1
     assert payload["owner"] == "med-autogrant"
+    assert payload["status"] == "owner_typed_blocker_recorded_not_ready_claim"
     assert payload["source_of_truth"] is True
     assert payload["state"] == "blocked_by_mag_owned_typed_blocker"
     assert payload["evidence_scope"] == "live_stage_run_progress_owner_answer_or_blocker"
@@ -142,6 +146,7 @@ def test_live_stage_run_progress_binds_existing_canary_as_provenance_only() -> N
 def test_live_stage_run_progress_authority_boundary_has_no_ready_claims() -> None:
     payload = _live_progress()
 
+    assert payload["authority_boundary"]["refs_only"] is True
     assert payload["authority_boundary"]["mag_owns_live_progress_owner_answer"] is True
     assert payload["authority_boundary"]["opl_records_refs_only"] is True
     for forbidden in (
@@ -150,8 +155,12 @@ def test_live_stage_run_progress_authority_boundary_has_no_ready_claims() -> Non
         "opl_can_sign_owner_receipt",
         "opl_can_create_typed_blocker",
         "opl_can_authorize_quality_or_export",
+        "opl_can_claim_domain_ready",
+        "opl_can_claim_production_ready",
         "opl_can_declare_grant_ready",
         "opl_can_declare_submission_ready",
+        "provider_completion_counts_as_domain_ready",
+        "structural_conformance_counts_as_live_progress",
         "provider_completion_counts_as_readiness",
         "file_presence_counts_as_readiness",
         "read_model_counts_as_readiness",
@@ -161,4 +170,3 @@ def test_live_stage_run_progress_authority_boundary_has_no_ready_claims() -> Non
 
     for claim_name, value in payload["claims"].items():
         assert value is False, claim_name
-
