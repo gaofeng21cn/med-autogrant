@@ -97,7 +97,7 @@ MAG 必须保留的 authority：
 
 | Evidence gate | 当前状态 | 关闭条件 |
 | --- | --- | --- |
-| OPL-hosted grant-stage attempt | `replay_refs_projected_needs_continuous_real_attempts` | 关闭条件仍是真实 OPL-hosted stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence，并形成可重复 success-rate / long-run evidence。 |
+| OPL-hosted grant-stage attempt | `blocked_by_mag_owned_live_progress_typed_blocker` | 当前 source of truth 是 `contracts/live_stage_run_progress_evidence.json`；关闭条件仍是真实 OPL-hosted stage attempt 持续返回 MAG owner receipt、typed blocker 或 no-regression evidence，并形成可重复 success-rate / long-run evidence。 |
 | Package stage source/runtime evidence | `blocked_by_submission_gate_typed_blocker` | OPL replay / monitor lens 可读不等于 stage closeout；关闭条件是真实 MAG owner human-gate receipt 或可重复 no-regression / monitor freshness / success-rate evidence。 |
 | Real workspace memory/package/lifecycle scaleout | `refs_only_scaleout_observed_followthrough_open` | 已有 body-free refs-only scaleout 只能证明 surface 可重复产出 refs；关闭条件仍要求真实 owner human-gate receipt、持续 App/operator consumption、long-soak 与 no-regression follow-through。 |
 | Submission-ready human gate receipt | `blocked_on_real_human_gate_receipt` | `submission_ready_export_gate` typed blocker 已可机读；关闭条件仍是真实 MAG owner human-gate receipt 或人工审批路径证据。 |
@@ -105,7 +105,7 @@ MAG 必须保留的 authority：
 | Temporal provider long soak | `open_provider_followthrough_typed_blocker_projected` | typed blocker follow-through 不等于 long-soak completion；关闭条件仍是 `temporal_provider_long_soak_window_evidence`、long SLO、repair cadence 和 live receipt reconciliation 连续证据。 |
 | Physical cleanup / no-resurrection | `replacement_ready_delete_authority_open` | repo-local active path scan 与 retired public command scan 已形成 no-resurrection 结构输入；production default caller、direct/hosted parity、owner receipt roundtrip、continuous evidence、App/workbench consumption 与 no-active legacy caller scan 仍未授权删除 active handler/adapter shell。删除旧 wrapper、alias、facade、patch bridge 和 compat aggregate tests 仍需要 explicit MAG owner receipt authorizing physical delete。 |
 
-Refs-only ledger verification、request accounting closure、OPL workorder closeout、source ref declaration、schema completeness、scorecard 分数、package existence、stage replay projection、grouped CLI success、product-entry manifest success 或 provider completion 都不能替代真实 workspace / App / provider evidence，也不能声明 grant-ready、fundability-ready、quality-ready、export-ready、submission-ready 或 production-ready。
+Refs-only ledger verification、request accounting closure、production acceptance tail、OPL workorder closeout、source ref declaration、schema completeness、scorecard 分数、package existence、stage replay projection、grouped CLI success、product-entry manifest success 或 provider completion 都不能替代 `contracts/live_stage_run_progress_evidence.json` 的 MAG-owned live progress owner answer / blocker，也不能声明 grant-ready、fundability-ready、quality-ready、export-ready、submission-ready 或 production-ready。
 
 ## 下一轮 Agent prompt
 

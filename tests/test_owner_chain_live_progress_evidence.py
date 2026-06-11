@@ -11,6 +11,7 @@ pytestmark = pytest.mark.meta
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LEDGER_PATH = REPO_ROOT / "contracts" / "external_evidence" / "mag-evidence-receipt-ledger.json"
 KERNEL_PROFILE_PATH = REPO_ROOT / "contracts" / "stage_run_kernel_profile.json"
+LIVE_PROGRESS_PATH = REPO_ROOT / "contracts" / "live_stage_run_progress_evidence.json"
 
 
 def _ledger() -> dict[str, object]:
@@ -19,6 +20,10 @@ def _ledger() -> dict[str, object]:
 
 def _kernel_profile() -> dict[str, object]:
     return json.loads(KERNEL_PROFILE_PATH.read_text(encoding="utf-8"))
+
+
+def _live_progress() -> dict[str, object]:
+    return json.loads(LIVE_PROGRESS_PATH.read_text(encoding="utf-8"))
 
 
 def test_owner_chain_live_progress_evidence_lane_records_all_mag_owned_ref_shapes() -> None:
@@ -175,10 +180,16 @@ def test_owner_chain_live_progress_canary_keeps_readiness_claims_closed() -> Non
         assert boundary[forbidden] is False, forbidden
 
 
-def test_kernel_profile_points_to_owner_chain_live_progress_evidence_lane() -> None:
+def test_kernel_profile_points_to_live_progress_contract_and_keeps_owner_chain_as_provenance() -> None:
     profile = _kernel_profile()
+    live_progress = _live_progress()
 
-    assert profile["owner_chain_live_progress_evidence_ref"] == (
+    assert profile["live_stage_run_progress_evidence_ref"] == (
+        "contracts/live_stage_run_progress_evidence.json"
+    )
+    assert profile["owner_chain_live_progress_provenance_ref"] == (
         "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
         "owner_chain_live_progress_evidence_lane"
     )
+    assert live_progress["source_of_truth"] is True
+    assert live_progress["refs"]["typed_blocker_refs"]

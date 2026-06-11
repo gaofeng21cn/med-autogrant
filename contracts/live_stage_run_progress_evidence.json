@@ -1,0 +1,187 @@
+{
+  "surface_kind": "mag_live_stage_run_progress_evidence.v1",
+  "surface_id": "mag.live_stage_run_progress_evidence.2026-06-11",
+  "domain_id": "med-autogrant",
+  "owner": "med-autogrant",
+  "state": "blocked_by_mag_owned_typed_blocker",
+  "evidence_scope": "live_stage_run_progress_owner_answer_or_blocker",
+  "source_of_truth": true,
+  "live_stage_run": {
+    "runtime_owner": "one-person-lab",
+    "executor": "codex_cli",
+    "domain_owner": "med-autogrant",
+    "stage_id": "specific_aims_and_structure",
+    "progress_delta_classification": "typed_blocker",
+    "payload_body_included": false,
+    "production_acceptance_tail_is_live_progress": false
+  },
+  "owner_answer": {
+    "accepted_return_shapes": [
+      "domain_owner_receipt_ref",
+      "typed_blocker_ref",
+      "human_gate_ref",
+      "quality_or_export_receipt_ref",
+      "no_regression_ref",
+      "long_soak_ref"
+    ],
+    "accepted_return_shape": "typed_blocker_ref",
+    "typed_blocker_ref": "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-11",
+    "next_owner": "med-autogrant_or_app_live_operator"
+  },
+  "refs": {
+    "owner_receipt_refs": [
+      "receipt:mag/owner-chain-live-progress/specific_aims_and_structure/domain-owner-receipt/2026-06-08"
+    ],
+    "typed_blocker_refs": [
+      "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-11",
+      "typed-blocker:mag/owner-chain-live-progress/specific_aims_and_structure/quality-package-gates-blocked/2026-06-09",
+      "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
+    ],
+    "human_gate_refs": [
+      "human_gate:submission_ready_export_gate"
+    ],
+    "quality_or_export_receipt_refs": [
+      "receipt:mag/grant-quality/owner-chain-live-progress/specific_aims_and_structure/blocked-quality-scorecard/2026-06-09",
+      "receipt:mag/export-verdict/owner-chain-live-progress/package_and_submit_ready/export-blocked-ref/2026-06-09"
+    ],
+    "no_regression_refs": [
+      "no-regression:mag/owner-chain-live-progress/quality-package-fail-closed/2026-06-09"
+    ],
+    "long_soak_refs": [
+      "typed-blocker:mag/manifest-sustained-consumption/provider-long-soak-window-still-open/2026-05-28"
+    ]
+  },
+  "typed_blocker": {
+    "owner": "med-autogrant",
+    "typed_blocker_ref": "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-11",
+    "blocker_kind": "missing_real_live_stage_run_progress_prerequisites",
+    "blocker_state": "current_live_progress_blocked_no_ready_claim",
+    "blocker_reason": "MAG has body-free owner-chain refs and a command-backed canary typed blocker/no-regression pair, but it does not yet have sustained real OPL-hosted grant-stage attempts, real submission-ready human-gate approval, sustained App/operator/default-caller consumption, Temporal provider long-soak evidence, or production success-rate evidence.",
+    "lineage": [
+      "contracts/external_evidence/mag-evidence-receipt-ledger.json#/owner_chain_live_progress_evidence_lane",
+      "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence"
+    ],
+    "repeat_budget": {
+      "max_repeat_without_new_evidence": 1,
+      "repeat_budget_owner": "med-autogrant",
+      "repeat_budget_policy": "refresh_or_replace_only_after_new_real_live_progress_evidence"
+    },
+    "next_forced_delta": {
+      "owner": "med-autogrant_or_app_live_operator",
+      "required_shape": "real_owner_receipt_or_typed_blocker_or_no_regression_evidence_ref",
+      "required_refs": [
+        "real_opl_hosted_grant_stage_attempt_receipt_ref",
+        "submission_ready_human_gate_receipt_or_typed_blocker_ref",
+        "app_operator_or_default_caller_sustained_consumption_ref",
+        "temporal_provider_long_soak_window_evidence_ref",
+        "production_success_rate_or_no_regression_evidence_ref"
+      ]
+    },
+    "escalation_owner": "med-autogrant"
+  },
+  "missing_real_progress_prerequisites": [
+    {
+      "prerequisite_id": "sustained_opl_hosted_grant_stage_attempts",
+      "state": "open",
+      "current_refs": [
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/owner_chain_live_progress_evidence_lane"
+      ],
+      "current_ref_is_success_evidence": false,
+      "required_evidence": "Repeated real OPL-hosted grant-stage attempts return MAG owner receipt, typed blocker, quality/export receipt, or no-regression refs with success-rate evidence."
+    },
+    {
+      "prerequisite_id": "submission_ready_human_gate_receipt",
+      "state": "blocked_by_existing_human_gate_typed_blocker",
+      "current_refs": [
+        "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
+      ],
+      "current_ref_is_success_evidence": false,
+      "required_evidence": "A real MAG owner human-gate receipt, or a refreshed MAG-owned typed blocker that keeps submission-ready export blocked."
+    },
+    {
+      "prerequisite_id": "sustained_app_operator_or_default_caller_consumption",
+      "state": "open",
+      "current_refs": [
+        "contracts/production_acceptance/mag-manifest-sustained-consumption-evidence-20260528.json"
+      ],
+      "current_ref_is_success_evidence": false,
+      "required_evidence": "Sustained OPL/App/operator closeout or release/default-caller consumption of MAG package refs, quality refs, transition oracle refs, manual portal boundary, and safe action refs."
+    },
+    {
+      "prerequisite_id": "temporal_provider_long_soak_window_evidence",
+      "state": "open",
+      "current_refs": [
+        "typed-blocker:mag/manifest-sustained-consumption/provider-long-soak-window-still-open/2026-05-28"
+      ],
+      "current_ref_is_success_evidence": false,
+      "required_evidence": "Temporal provider long-soak window evidence with long SLO, repair cadence, and live receipt reconciliation."
+    },
+    {
+      "prerequisite_id": "production_success_rate_or_no_regression_followthrough",
+      "state": "open",
+      "current_refs": [
+        "contracts/production_acceptance/mag-workspace-receipt-scaleout-evidence-20260527.json",
+        "no-regression:mag/owner-chain-live-progress/quality-package-fail-closed/2026-06-09"
+      ],
+      "current_ref_is_success_evidence": false,
+      "required_evidence": "Repeated real workspace no-regression or success-rate evidence across owner receipt, memory accept/reject, package/export lifecycle, and cleanup/restore/retention receipts."
+    }
+  ],
+  "production_acceptance_tail_policy": {
+    "production_acceptance_tail_ref": "contracts/production_acceptance/mag-production-acceptance.json",
+    "production_acceptance_tail_counts_as_live_progress": false,
+    "production_acceptance_tail_role": "historical_acceptance_provenance_not_live_stage_progress_source_of_truth"
+  },
+  "doc_refs": [
+    "docs/status.md",
+    "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
+    "contracts/README.md"
+  ],
+  "next_verification_command_refs": [
+    "rtk jq empty contracts/live_stage_run_progress_evidence.json",
+    "rtk ./scripts/run-pytest-clean.sh tests/test_live_stage_run_progress_evidence.py tests/test_stage_run_kernel_profile_contract.py tests/test_owner_chain_live_progress_evidence.py -q",
+    "rtk ./scripts/verify.sh",
+    "rtk git diff --check"
+  ],
+  "refs_only_policy": {
+    "repo_tracks_receipt_instance_body": false,
+    "repo_tracks_grant_truth_body": false,
+    "repo_tracks_grant_artifact_body": false,
+    "repo_tracks_memory_body": false,
+    "repo_tracks_verdict_body": false,
+    "accepted_payload_policy": "refs_receipts_typed_blockers_no_regression_human_gate_and_command_refs_only"
+  },
+  "authority_boundary": {
+    "mag_owns_live_progress_owner_answer": true,
+    "mag_owns_typed_blocker_refs": true,
+    "mag_owns_owner_receipt_refs": true,
+    "mag_owns_quality_or_export_receipt_refs": true,
+    "opl_records_refs_only": true,
+    "opl_can_write_grant_truth": false,
+    "opl_can_mutate_artifact_body": false,
+    "opl_can_sign_owner_receipt": false,
+    "opl_can_create_typed_blocker": false,
+    "opl_can_authorize_quality_or_export": false,
+    "opl_can_declare_grant_ready": false,
+    "opl_can_declare_submission_ready": false,
+    "provider_completion_counts_as_readiness": false,
+    "file_presence_counts_as_readiness": false,
+    "read_model_counts_as_readiness": false,
+    "production_acceptance_tail_counts_as_live_progress": false
+  },
+  "claims": {
+    "claims_live_stage_run_progress_ready": false,
+    "claims_grant_ready": false,
+    "claims_fundability_ready": false,
+    "claims_authoring_quality_ready": false,
+    "claims_quality_ready": false,
+    "claims_export_ready": false,
+    "claims_package_fresh": false,
+    "claims_submission_ready": false,
+    "claims_submission_ready_export": false,
+    "claims_production_ready": false,
+    "claims_external_submission_authorized": false,
+    "claims_temporal_provider_long_soak_complete": false,
+    "claims_sustained_app_consumption_complete": false
+  }
+}

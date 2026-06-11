@@ -23,6 +23,14 @@ def _read_canary() -> dict[str, object]:
     )
 
 
+def _read_live_progress() -> dict[str, object]:
+    return json.loads(
+        (REPO_ROOT / "contracts" / "live_stage_run_progress_evidence.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+
 def test_stage_run_profile_keeps_mag_thin_and_opl_hosted() -> None:
     profile = _read_profile()
 
@@ -68,6 +76,27 @@ def test_stage_run_profile_consumes_opl_contract_refs_without_copying_framework_
         "contracts/opl-framework/stage-owner-receipt.schema.json",
         "contracts/opl-framework/stage-typed-blocker.schema.json",
     ]
+
+
+def test_stage_run_profile_points_to_live_progress_owner_answer_contract() -> None:
+    profile = _read_profile()
+    live_progress = _read_live_progress()
+
+    assert profile["live_stage_run_progress_evidence_ref"] == (
+        "contracts/live_stage_run_progress_evidence.json"
+    )
+    assert profile["owner_chain_live_progress_provenance_ref"] == (
+        "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+        "owner_chain_live_progress_evidence_lane"
+    )
+    assert live_progress["source_of_truth"] is True
+    assert live_progress["state"] == "blocked_by_mag_owned_typed_blocker"
+    assert (
+        live_progress["production_acceptance_tail_policy"][
+            "production_acceptance_tail_counts_as_live_progress"
+        ]
+        is False
+    )
 
 
 def test_stage_run_strategy_canary_does_not_hardcode_workflow() -> None:

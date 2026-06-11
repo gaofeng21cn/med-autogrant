@@ -14,7 +14,8 @@
   "stage_artifact_kernel_adoption_ref": "contracts/stage_artifact_kernel_adoption.json",
   "owner_receipt_contract_ref": "contracts/owner_receipt_contract.json",
   "controlled_canary_evidence_ref": "contracts/stage_run_canary_evidence.json",
-  "owner_chain_live_progress_evidence_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/owner_chain_live_progress_evidence_lane",
+  "live_stage_run_progress_evidence_ref": "contracts/live_stage_run_progress_evidence.json",
+  "owner_chain_live_progress_provenance_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/owner_chain_live_progress_evidence_lane",
   "opl_contract_refs": {
     "owner": "one-person-lab",
     "domain_repo_role": "consumer_profile_ref_only",
