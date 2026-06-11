@@ -176,6 +176,36 @@ def test_mag_production_acceptance_requires_owner_receipt_or_typed_blocker() -> 
         assert closure["next_verification_ref"] in refs["next_verification_command_refs"]
 
 
+def test_production_acceptance_tail_is_not_w7_live_owner_closing_ref() -> None:
+    surface = _acceptance()
+    policy = surface["live_stage_run_progress_tail_policy"]
+
+    assert policy["surface_kind"] == "mag_live_stage_run_progress_tail_policy.v1"
+    assert policy["owner"] == "med-autogrant"
+    assert policy["w7_owner_evidence_tail_role"] == (
+        "provenance_input_not_domain_owned_closing_ref"
+    )
+    assert policy["live_stage_run_progress_source_of_truth"] == (
+        "contracts/live_stage_run_progress_evidence.json"
+    )
+    assert policy["production_acceptance_tail_counts_as_live_owner_closing_ref"] is False
+    assert policy["domain_owned_closing_ref"] is None
+    assert policy["required_live_closing_shapes"] == [
+        "real_submission_ready_human_gate_receipt_ref",
+        "real_quality_or_export_receipt_ref",
+        "temporal_provider_long_soak_window_evidence_ref",
+        "owner_acceptance_or_success_rate_evidence_ref",
+    ]
+    assert policy["current_blocked_gate_categories"] == [
+        "human_gate",
+        "quality_or_export",
+        "long_soak",
+        "owner_acceptance",
+    ]
+    for claim_name, value in policy["forbidden_claims"].items():
+        assert value is False, claim_name
+
+
 def test_mag_production_acceptance_exposes_real_target_patch_loop_refs() -> None:
     surface = _acceptance()
     patch_loop_refs = surface["patch_loop_refs"]

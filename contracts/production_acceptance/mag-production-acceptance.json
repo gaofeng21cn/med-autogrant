@@ -65,6 +65,34 @@
     "claims_grant_or_fundability_ready": false,
     "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout"
   },
+  "live_stage_run_progress_tail_policy": {
+    "surface_kind": "mag_live_stage_run_progress_tail_policy.v1",
+    "owner": "med-autogrant",
+    "w7_owner_evidence_tail_role": "provenance_input_not_domain_owned_closing_ref",
+    "live_stage_run_progress_source_of_truth": "contracts/live_stage_run_progress_evidence.json",
+    "production_acceptance_tail_counts_as_live_owner_closing_ref": false,
+    "domain_owned_closing_ref": null,
+    "required_live_closing_shapes": [
+      "real_submission_ready_human_gate_receipt_ref",
+      "real_quality_or_export_receipt_ref",
+      "temporal_provider_long_soak_window_evidence_ref",
+      "owner_acceptance_or_success_rate_evidence_ref"
+    ],
+    "current_blocked_gate_categories": [
+      "human_gate",
+      "quality_or_export",
+      "long_soak",
+      "owner_acceptance"
+    ],
+    "forbidden_claims": {
+      "claims_live_owner_evidence_tail_closed": false,
+      "claims_grant_ready": false,
+      "claims_quality_ready": false,
+      "claims_export_ready": false,
+      "claims_submission_ready": false,
+      "claims_production_ready": false
+    }
+  },
   "patch_loop_refs": {
     "blocked_suite_result_ref": "agent-lab-suite-result:oma/mag/blocked-suite",
     "developer_patch_work_order_ref": "developer-work-order:oma/mag/ai-first-mag-patch-smoke",

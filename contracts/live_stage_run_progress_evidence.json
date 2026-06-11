@@ -76,12 +76,79 @@
       "required_refs": [
         "real_opl_hosted_grant_stage_attempt_receipt_ref",
         "submission_ready_human_gate_receipt_or_typed_blocker_ref",
+        "quality_or_export_receipt_ref_from_real_attempt",
         "app_operator_or_default_caller_sustained_consumption_ref",
         "temporal_provider_long_soak_window_evidence_ref",
-        "production_success_rate_or_no_regression_evidence_ref"
+        "owner_acceptance_or_production_success_rate_evidence_ref"
       ]
     },
     "escalation_owner": "med-autogrant"
+  },
+  "domain_owned_closing_ref": null,
+  "blocked_gate_categories": [
+    "human_gate",
+    "quality_or_export",
+    "long_soak",
+    "owner_acceptance"
+  ],
+  "w7_owner_evidence_tail_read_model": {
+    "surface_kind": "mag_w7_owner_evidence_tail_read_model.v1",
+    "owner": "med-autogrant",
+    "state": "typed_blocker_read_model_not_closing_ref",
+    "accepted_return_shape": "typed_blocker_ref",
+    "domain_owned_closing_ref": null,
+    "typed_blocker_ref": "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-11",
+    "production_acceptance_tail_role": "provenance_only_not_live_owner_closing_ref",
+    "production_acceptance_tail_ref": "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence",
+    "read_model_counts_as_readiness": false,
+    "closes_w7_owner_evidence_tail": false,
+    "can_claim_submission_ready": false,
+    "can_claim_production_ready": false,
+    "blocked_gates": [
+      {
+        "gate_category": "human_gate",
+        "gate_id": "submission_ready_export_gate",
+        "state": "blocked_by_submission_ready_human_gate_typed_blocker",
+        "current_refs": [
+          "human_gate:submission_ready_export_gate",
+          "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
+        ],
+        "required_evidence_shape": "real_submission_ready_human_gate_receipt_ref_or_refreshed_mag_owned_typed_blocker_ref",
+        "current_refs_close_gate": false
+      },
+      {
+        "gate_category": "quality_or_export",
+        "gate_id": "real_attempt_quality_export_receipts",
+        "state": "blocked_pending_real_quality_or_export_receipt_from_live_attempt",
+        "current_refs": [
+          "receipt:mag/grant-quality/owner-chain-live-progress/specific_aims_and_structure/blocked-quality-scorecard/2026-06-09",
+          "receipt:mag/export-verdict/owner-chain-live-progress/package_and_submit_ready/export-blocked-ref/2026-06-09"
+        ],
+        "required_evidence_shape": "real_quality_or_export_receipt_ref_from_live_attempt",
+        "current_refs_close_gate": false
+      },
+      {
+        "gate_category": "long_soak",
+        "gate_id": "temporal_provider_long_soak_window",
+        "state": "blocked_by_provider_long_soak_typed_blocker",
+        "current_refs": [
+          "typed-blocker:mag/manifest-sustained-consumption/provider-long-soak-window-still-open/2026-05-28"
+        ],
+        "required_evidence_shape": "temporal_provider_long_soak_window_evidence_ref",
+        "current_refs_close_gate": false
+      },
+      {
+        "gate_category": "owner_acceptance",
+        "gate_id": "w7_live_owner_acceptance_or_success_rate",
+        "state": "blocked_pending_real_owner_acceptance_or_success_rate_evidence",
+        "current_refs": [
+          "receipt:mag/owner-chain-live-progress/specific_aims_and_structure/domain-owner-receipt/2026-06-08",
+          "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence"
+        ],
+        "required_evidence_shape": "owner_acceptance_or_production_success_rate_evidence_ref_from_real_live_progress",
+        "current_refs_close_gate": false
+      }
+    ]
   },
   "missing_real_progress_prerequisites": [
     {

@@ -94,7 +94,69 @@ def test_live_stage_run_progress_typed_blocker_has_lineage_budget_and_next_delta
     assert typed_blocker["next_forced_delta"]["required_shape"] == (
         "real_owner_receipt_or_typed_blocker_or_no_regression_evidence_ref"
     )
+    assert typed_blocker["next_forced_delta"]["required_refs"] == [
+        "real_opl_hosted_grant_stage_attempt_receipt_ref",
+        "submission_ready_human_gate_receipt_or_typed_blocker_ref",
+        "quality_or_export_receipt_ref_from_real_attempt",
+        "app_operator_or_default_caller_sustained_consumption_ref",
+        "temporal_provider_long_soak_window_evidence_ref",
+        "owner_acceptance_or_production_success_rate_evidence_ref",
+    ]
     assert typed_blocker["escalation_owner"] == "med-autogrant"
+
+
+def test_live_stage_run_progress_w7_owner_evidence_tail_read_model_classifies_open_gates() -> None:
+    payload = _live_progress()
+    read_model = payload["w7_owner_evidence_tail_read_model"]
+
+    assert payload["domain_owned_closing_ref"] is None
+    assert payload["blocked_gate_categories"] == [
+        "human_gate",
+        "quality_or_export",
+        "long_soak",
+        "owner_acceptance",
+    ]
+    assert read_model["surface_kind"] == "mag_w7_owner_evidence_tail_read_model.v1"
+    assert read_model["owner"] == "med-autogrant"
+    assert read_model["state"] == "typed_blocker_read_model_not_closing_ref"
+    assert read_model["accepted_return_shape"] == "typed_blocker_ref"
+    assert read_model["domain_owned_closing_ref"] is None
+    assert read_model["typed_blocker_ref"] == payload["typed_blocker"]["typed_blocker_ref"]
+    assert read_model["production_acceptance_tail_role"] == (
+        "provenance_only_not_live_owner_closing_ref"
+    )
+    assert read_model["production_acceptance_tail_ref"] == (
+        "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence"
+    )
+    assert read_model["read_model_counts_as_readiness"] is False
+    assert read_model["closes_w7_owner_evidence_tail"] is False
+    assert read_model["can_claim_submission_ready"] is False
+    assert read_model["can_claim_production_ready"] is False
+
+    gates = {gate["gate_category"]: gate for gate in read_model["blocked_gates"]}
+    assert set(gates) == {
+        "human_gate",
+        "quality_or_export",
+        "long_soak",
+        "owner_acceptance",
+    }
+    assert gates["human_gate"]["gate_id"] == "submission_ready_export_gate"
+    assert gates["human_gate"]["current_refs"] == payload["refs"]["human_gate_refs"] + [
+        "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
+    ]
+    assert gates["quality_or_export"]["current_refs"] == payload["refs"][
+        "quality_or_export_receipt_refs"
+    ]
+    assert gates["long_soak"]["current_refs"] == payload["refs"]["long_soak_refs"]
+    assert gates["owner_acceptance"]["current_refs"] == payload["refs"]["owner_receipt_refs"] + [
+        "contracts/production_acceptance/mag-production-acceptance.json#/closure_evidence"
+    ]
+
+    for gate_id, gate in gates.items():
+        assert gate["state"].startswith("blocked_"), gate_id
+        assert gate["current_refs"], gate_id
+        assert gate["required_evidence_shape"], gate_id
+        assert gate["current_refs_close_gate"] is False, gate_id
 
 
 def test_live_stage_run_progress_lists_missing_real_prerequisites_without_success_claims() -> None:
