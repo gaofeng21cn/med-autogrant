@@ -203,6 +203,74 @@
     "production_acceptance_tail_counts_as_live_progress": false,
     "production_acceptance_tail_role": "historical_acceptance_provenance_not_live_stage_progress_source_of_truth"
   },
+  "domain_owner_chain_scaleout": {
+    "surface_kind": "mag_domain_owner_chain_scaleout_evidence_lane",
+    "gate_id": "domain_owner_chain_scaleout",
+    "owner": "med-autogrant",
+    "status": "domain_owned_refs_recorded_not_ready_claim",
+    "opl_consumption_status": "owner_chain_refs_available_with_mag_owned_typed_blocker",
+    "ready_claim_authorized": false,
+    "domain_ready_claimed": false,
+    "production_ready_claimed": false,
+    "evidence_ref": "contracts/live_stage_run_progress_evidence.json#/domain_owner_chain_scaleout",
+    "provenance_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/owner_chain_live_progress_evidence_lane",
+    "accepted_ref_shapes": [
+      "owner_receipt_ref",
+      "typed_blocker_ref",
+      "human_gate_ref",
+      "quality_or_export_receipt_ref",
+      "no_regression_ref",
+      "long_soak_or_typed_blocker_ref"
+    ],
+    "opl_backfill_refs": {
+      "owner_receipt_refs": [
+        "receipt:mag/owner-chain-live-progress/specific_aims_and_structure/domain-owner-receipt/2026-06-08"
+      ],
+      "typed_blocker_refs": [
+        "typed-blocker:mag/live-stage-run-progress/specific_aims_and_structure/real-production-prerequisites-missing/2026-06-11",
+        "typed-blocker:mag/owner-chain-live-progress/specific_aims_and_structure/quality-package-gates-blocked/2026-06-09",
+        "typed-blocker:mag/package_and_submit_ready/submission_ready_export_gate/human-approval-required/2026-05-22"
+      ],
+      "human_gate_refs": [
+        "human_gate:submission_ready_export_gate"
+      ],
+      "quality_or_export_receipt_refs": [
+        "receipt:mag/grant-quality/owner-chain-live-progress/specific_aims_and_structure/blocked-quality-scorecard/2026-06-09",
+        "receipt:mag/export-verdict/owner-chain-live-progress/package_and_submit_ready/export-blocked-ref/2026-06-09"
+      ],
+      "no_regression_refs": [
+        "no-regression:mag/owner-chain-live-progress/quality-package-fail-closed/2026-06-09"
+      ],
+      "long_soak_refs": [
+        "typed-blocker:mag/manifest-sustained-consumption/provider-long-soak-window-still-open/2026-05-28"
+      ]
+    },
+    "observed_ref_counts": {
+      "owner_receipt_ref_count": 1,
+      "typed_blocker_ref_count": 3,
+      "human_gate_ref_count": 1,
+      "quality_or_export_receipt_ref_count": 2,
+      "no_regression_ref_count": 1,
+      "long_soak_ref_count": 1
+    },
+    "blocked_gate_categories": [
+      "human_gate",
+      "quality_or_export",
+      "long_soak",
+      "owner_acceptance"
+    ],
+    "authority_boundary": {
+      "refs_only": true,
+      "mag_owns_owner_chain_refs": true,
+      "opl_can_consume_refs": true,
+      "opl_can_write_grant_truth": false,
+      "opl_can_sign_owner_receipt": false,
+      "opl_can_create_typed_blocker": false,
+      "opl_can_authorize_quality_or_export": false,
+      "opl_can_claim_domain_ready": false,
+      "opl_can_claim_production_ready": false
+    }
+  },
   "doc_refs": [
     "docs/status.md",
     "docs/active/mag-ideal-state-cross-repo-gap-plan.md",
