@@ -44,7 +44,29 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 | Active truth owners | `docs/active/mag-ideal-state-cross-repo-gap-plan.md` remains the only active gap / completion owner. `docs/active/opl-private-implementation-migration-inventory.md` remains the private surface-id and path-level implementation owner. `docs/specs/specs_lifecycle_map.md` owns dense spec lifecycle; this file only keeps coverage provenance. | New private-inventory refreshes should start from `contracts/private_functional_surface_policy.json` surface ids, then fold concrete source/test/workflow/package retirement candidates into the active inventory or retired-surface provenance. Production/default-caller evidence tails remain active work under the active plan, not this history ledger. |
 | Content-level consolidation | Active-shell SSOT, Foundry command-surface field retirement, authoring-route history, foundation history, P2/P3/P4 authoring-review-verification history, runtime-first / post-R5A / P5 future activation history, Hermes/upstream provider-proof history, hosted caller / product-entry support history, product/runtime/delivery/source/policies thin-support indexes, specs lifecycle map and history specs index are represented by the provenance groups above and owner docs. Detailed deletion / field-retirement facts stay recoverable from git history and `retired-surface-provenance.md`; current rules stay in owner docs and machine surfaces. | Do not add file-by-file closeout logs here. If a historical rule is still current, fold it back into the owner doc, spec lifecycle map, contract, source or test before compressing the process trace. |
 | Retired / guarded surfaces | This ledger records no source, contract, test, workflow, package or CLI/API deletion authority by itself. Guarded retired surfaces remain `run-local`, `runtime-run`, `runtime-resume`, `probe-upstream-hermes`, active `frontdoor` fields/help wording, local journal / attempt ledger, Gateway/local-manager default path, flat aliases, facades, patch bridge, stale test-level facade closeouts, compatibility aggregate tests and physical-delete-by-read-model claims. | Concrete retirement lanes need no-active-caller, replacement owner, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer before physical delete or test/interface retirement. |
-| Parent OPL series goal | Active/support specs and product/runtime/delivery/source/policies thin-support bodies are covered by their directory indexes and `docs/specs/specs_lifecycle_map.md`; historical specs are covered by `docs/history/specs/README.md` for docs lifecycle purposes. This is a tranche-level foldback, not six-repo completion. | Next write scope is one precise SSOT theme, a triggered spec/history-body reopening or one physical-delete candidate. Do not expand this ledger or the active gap plan back into dated proof logs or path-level shell inventories. |
+| Parent OPL series goal | Active/support specs and product/runtime/delivery/source/policies thin-support bodies are covered by their directory indexes and `docs/specs/specs_lifecycle_map.md`; historical specs are covered by `docs/history/specs/README.md` for docs lifecycle purposes. This is a tranche-level foldback, not six-repo completion. | Next write scope is one precise SSOT theme, a triggered spec/history-body reopening, private inventory refresh, production/default-caller evidence tail, App/workbench sustained consumption, Temporal long-soak, or one physical-delete candidate. Do not expand this ledger or the active gap plan back into dated proof logs or path-level shell inventories. |
+
+## Fresh Intake 2026-06-12 Decisions SSOT Review
+
+Semantic theme: MAG decision log must preserve durable decision boundaries without freezing field-level Stage Folder Kernel implementation detail or keeping `docs/decisions.md` as an open docs-governance tail.
+
+Single Source of Truth:
+
+- Current decision boundary: `docs/decisions.md`.
+- Current status and evidence boundary: `docs/status.md`.
+- Active gap and physical-delete gate: `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
+- Machine truth: `contracts/runtime-program/current-program.json`, `contracts/stage_control_plane.json`, private surface contracts, Foundry series contract, schema registry, source, CLI/API behavior and tests.
+
+Edited docs:
+
+- `docs/decisions.md`: added `Last reviewed` metadata and compressed the Stage Folder Kernel decision from field/file implementation detail into owner-boundary language that routes schema, builder payload and conformance assertions back to machine owners.
+- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this as topic-level coverage and removes `docs/decisions.md` as a standing unreviewed docs-governance tail.
+
+Coverage / carry-forward:
+
+- Covered: decision-log paragraphs that could duplicate Stage Folder Kernel refs, SQLite sidecar constraints or builder payload fields as current prose truth.
+- Not covered: private inventory refresh, production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, concrete source/test/workflow/package retirement lanes, and full six-repo paragraph coverage.
+- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
 
 ## Fresh Intake 2026-06-12 Private Inventory Retired Register Compression
 
