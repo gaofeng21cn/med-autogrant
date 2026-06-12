@@ -13,7 +13,7 @@ Machine boundary: 本文是人读支撑记录，只在 schema-backed product-ent
 - Superseded：`Upstream Hermes-Agent Fast Cutover`、`future OPL Gateway`、Hermes substrate runtime owner、gateway/federation caller language。
 - Direct retirement posture：如果旧 module/interface/test 只为保留 superseded Gateway/Hermes wording 且没有 current caller，应把 caller 迁到 MAG schema/source/product-entry manifest，并删除或归档旧 surface；不新增 compatibility aliases。
 
-Date: `2026-04-12`
+Last reviewed: `2026-06-12`
 
 ## Activation Status
 

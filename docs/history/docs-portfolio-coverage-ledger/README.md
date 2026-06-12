@@ -40,11 +40,40 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 
 | Theme | Current coverage | Remaining scope / next write |
 | --- | --- | --- |
-| MAG docs portfolio scope | Root `README*`, `docs/*.md`, `docs/active/*.md`, `docs/public/*.md`, `docs/product/*.md`, `docs/runtime/*.md`, `docs/delivery/*.md`, `docs/source/*.md`, `docs/policies/*.md`, `docs/specs/*.md`, `docs/references/**/*.md` and `docs/history/docs-portfolio-coverage-ledger/*.md` have lifecycle roles routed through `docs/docs_portfolio_consolidation.md`, specs lifecycle maps, this coverage ledger and retired-surface provenance. | Reopen a precise document body only when a fresh scan finds active-looking checklist text, reusable prompt material, current-owner conflict, stale SSOT duplication or machine surface dependence on historical prose. |
+| MAG docs portfolio scope | Root `README*`, repo-source support `agent/README.md`, `contracts/README.md`, `runtime/README.md`, every tracked `docs/*.md` and `docs/**/*.md` have lifecycle roles routed through `docs/README.md`, `docs/docs_portfolio_consolidation.md`, directory indexes, specs lifecycle map, history indexes, this coverage ledger and retired-surface provenance. `docs/history/README.md`, `docs/history/plans/README.md`, `docs/history/specs/README.md` and this file are the current history owner-route indexes; historical bodies under `docs/history/**` are provenance unless a current owner explicitly promotes a subsection. | Reopen a precise document body only when a fresh scan finds active-looking checklist text, reusable prompt material, current-owner conflict, stale SSOT duplication, missing lifecycle routing, or machine surface dependence on historical prose. |
 | Active truth owners | `docs/active/mag-ideal-state-cross-repo-gap-plan.md` remains the only active gap / completion owner. `docs/active/opl-private-implementation-migration-inventory.md` remains the private surface-id and path-level implementation owner. `docs/specs/specs_lifecycle_map.md` owns dense spec lifecycle; this file only keeps coverage provenance. | New private-inventory refreshes should start from `contracts/private_functional_surface_policy.json` surface ids, then fold concrete source/test/workflow/package retirement candidates into the active inventory or retired-surface provenance. Production/default-caller evidence tails remain active work under the active plan, not this history ledger. |
 | Content-level consolidation | Active-shell SSOT, Foundry command-surface field retirement, authoring-route history, foundation history, P2/P3/P4 authoring-review-verification history, runtime-first / post-R5A / P5 future activation history, Hermes/upstream provider-proof history, hosted caller / product-entry support history, product/runtime/delivery/source/policies thin-support indexes, specs lifecycle map and history specs index are represented by the provenance groups above and owner docs. Detailed deletion / field-retirement facts stay recoverable from git history and `retired-surface-provenance.md`; current rules stay in owner docs and machine surfaces. | Do not add file-by-file closeout logs here. If a historical rule is still current, fold it back into the owner doc, spec lifecycle map, contract, source or test before compressing the process trace. |
 | Retired / guarded surfaces | This ledger records no source, contract, test, workflow, package or CLI/API deletion authority by itself. Guarded retired surfaces remain `run-local`, `runtime-run`, `runtime-resume`, `probe-upstream-hermes`, active `frontdoor` fields/help wording, local journal / attempt ledger, Gateway/local-manager default path, flat aliases, facades, patch bridge, stale test-level facade closeouts, compatibility aggregate tests and physical-delete-by-read-model claims. | Concrete retirement lanes need no-active-caller, replacement owner, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer before physical delete or test/interface retirement. |
 | Parent OPL series goal | Active/support specs and product/runtime/delivery/source/policies thin-support bodies are covered by their directory indexes and `docs/specs/specs_lifecycle_map.md`; historical specs are covered by `docs/history/specs/README.md` for docs lifecycle purposes. This is a tranche-level foldback, not six-repo completion. | Next write scope is one precise SSOT theme, a triggered spec/history-body reopening, private inventory refresh, production/default-caller evidence tail, App/workbench sustained consumption, Temporal long-soak, or one physical-delete candidate. Do not expand this ledger or the active gap plan back into dated proof logs or path-level shell inventories. |
+
+## Fresh Intake 2026-06-12 Current/Support Metadata Scope Closure
+
+Semantic theme: current and support docs that remain in active reader paths should not carry first-screen `Date` metadata that makes them read as frozen historical snapshots.
+
+Single Source of Truth:
+
+- Active spec routing: `docs/specs/README.md` and `docs/specs/specs_lifecycle_map.md`.
+- Reference routing: `docs/README.md`, `docs/references/README.md` and `docs/docs_portfolio_consolidation.md`.
+- History routing: `docs/history/README.md`, `docs/history/plans/README.md`, `docs/history/specs/README.md`, this ledger and retired-surface provenance.
+
+Edited docs:
+
+- `docs/specs/2026-04-13-critique-codex-cli-executor-current-truth.md`
+- `docs/specs/2026-04-27-ai-first-quality-boundary-current-truth.md`
+- `docs/specs/2026-04-23-authoring-completion-semantics-current-truth.md`
+- `docs/specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md`
+- `docs/specs/2026-04-13-full-grant-authoring-executor-current-truth.md`
+- `docs/specs/2026-04-12-schema-backed-product-entry-and-routing-contract-current-truth.md`
+- `docs/specs/2026-04-07-formal-entry-matrix-current-truth.md`
+- `docs/specs/2026-04-07-durability-model-clarification.md`
+- `docs/references/grant_strategy_memory_policy.md`
+- `docs/history/docs-portfolio-coverage-ledger/README.md`
+
+Coverage / carry-forward:
+
+- Covered: first-screen `Date` metadata in current active specs, support current-truth specs and the current memory-policy reference; MAG docs portfolio coverage scope now explicitly includes root `README*`, repo-source support `README.md`, `docs/*.md` and all tracked `docs/**/*.md`, with history-body routing through history indexes.
+- Not covered: production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, private source thinning, concrete source/test/workflow/package retirement lanes or any physical surface deletion.
+- This tranche authorizes no source, contract, test, workflow, package, CLI/API, runtime state, owner receipt or typed blocker change. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
 
 ## Fresh Intake 2026-06-12 Decisions SSOT Review
 

@@ -4,7 +4,7 @@ Owner: `Med Auto Grant`
 Purpose: `durability_boundary_support_record`
 State: `support_current_truth`
 Machine boundary: 本文是人读支撑记录。当前机器真相继续归 `contracts/runtime-program/current-program.json`、schemas、source、CLI/API behavior、workspace/runtime artifact root、owner receipts 和语义化 `human_doc:*` id。
-Date: `2026-05-19`
+Last reviewed: `2026-06-12`
 
 ## 当前读法
 
