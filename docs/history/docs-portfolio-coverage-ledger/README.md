@@ -90,3 +90,24 @@ Coverage / carry-forward:
 - Covered: MAG `docs/architecture.md` sections that repeated product-entry/domain-handler generated surfaces and MAG `docs/status.md` rows that froze dated canary evidence as current state.
 - Not covered: full MAG `docs/architecture.md` body thinning, `docs/decisions.md` review, private inventory refresh, concrete source/test/workflow/package retirement lanes, and full six-repo paragraph coverage.
 - This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
+
+## Fresh Intake 2026-06-12 Active Gap Reviewed Header Cleanup
+
+Semantic theme: MAG active gap plan metadata still carried a frozen `Date` field even though the document is the current active gap / completion owner rather than a historical snapshot.
+
+Single Source of Truth:
+
+- Current active gap and next baton: `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
+- Historical coverage / provenance: this ledger and git history.
+- Machine truth: `contracts/runtime-program/current-program.json`, private surface contracts, Foundry series contract, source, tests, CLI/API behavior, owner receipts and typed blockers.
+
+Edited docs:
+
+- `docs/active/mag-ideal-state-cross-repo-gap-plan.md`: changed the frozen `Date` metadata to `Last reviewed` while preserving the active plan state, active gap owner role, and open production/default-caller evidence tails.
+- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this as topic-level coverage, not a dated proof log.
+
+Coverage / carry-forward:
+
+- Covered: active-plan metadata that could make the current MAG active truth read like a 2026-06-09 snapshot.
+- Not covered: production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, private source thinning, `docs/decisions.md` review, or any physical surface retirement.
+- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
