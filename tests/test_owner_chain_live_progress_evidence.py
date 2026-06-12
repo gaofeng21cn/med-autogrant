@@ -193,3 +193,61 @@ def test_kernel_profile_points_to_live_progress_contract_and_keeps_owner_chain_a
     )
     assert live_progress["source_of_truth"] is True
     assert live_progress["refs"]["typed_blocker_refs"]
+
+
+def test_domain_owner_chain_scaleout_backfill_is_refs_only_not_ready_claim() -> None:
+    live_progress = _live_progress()
+    scaleout = live_progress["domain_owner_chain_scaleout"]
+
+    assert scaleout["surface_kind"] == "mag_domain_owner_chain_scaleout_evidence_lane"
+    assert scaleout["gate_id"] == "domain_owner_chain_scaleout"
+    assert scaleout["owner"] == "med-autogrant"
+    assert scaleout["status"] == "domain_owned_refs_recorded_not_ready_claim"
+    assert scaleout["opl_consumption_status"] == (
+        "owner_chain_refs_available_with_mag_owned_typed_blocker"
+    )
+    assert scaleout["ready_claim_authorized"] is False
+    assert scaleout["domain_ready_claimed"] is False
+    assert scaleout["production_ready_claimed"] is False
+    assert scaleout["accepted_ref_shapes"] == [
+        "owner_receipt_ref",
+        "typed_blocker_ref",
+        "human_gate_ref",
+        "quality_or_export_receipt_ref",
+        "no_regression_ref",
+        "long_soak_or_typed_blocker_ref",
+    ]
+
+    backfill_refs = scaleout["opl_backfill_refs"]
+    live_refs = live_progress["refs"]
+    assert backfill_refs["owner_receipt_refs"] == live_refs["owner_receipt_refs"]
+    assert backfill_refs["typed_blocker_refs"] == live_refs["typed_blocker_refs"]
+    assert backfill_refs["human_gate_refs"] == live_refs["human_gate_refs"]
+    assert backfill_refs["quality_or_export_receipt_refs"] == live_refs[
+        "quality_or_export_receipt_refs"
+    ]
+    assert backfill_refs["no_regression_refs"] == live_refs["no_regression_refs"]
+    assert backfill_refs["long_soak_refs"] == live_refs["long_soak_refs"]
+
+    assert scaleout["observed_ref_counts"] == {
+        "owner_receipt_ref_count": 1,
+        "typed_blocker_ref_count": 3,
+        "human_gate_ref_count": 1,
+        "quality_or_export_receipt_ref_count": 2,
+        "no_regression_ref_count": 1,
+        "long_soak_ref_count": 1,
+    }
+    assert scaleout["blocked_gate_categories"] == live_progress["blocked_gate_categories"]
+    boundary = scaleout["authority_boundary"]
+    assert boundary["refs_only"] is True
+    assert boundary["mag_owns_owner_chain_refs"] is True
+    assert boundary["opl_can_consume_refs"] is True
+    for field_name in (
+        "opl_can_write_grant_truth",
+        "opl_can_sign_owner_receipt",
+        "opl_can_create_typed_blocker",
+        "opl_can_authorize_quality_or_export",
+        "opl_can_claim_domain_ready",
+        "opl_can_claim_production_ready",
+    ):
+        assert boundary[field_name] is False, field_name
