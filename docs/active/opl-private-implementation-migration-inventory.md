@@ -4,7 +4,6 @@ Owner: `Med Auto Grant`
 Purpose: `opl_private_implementation_migration_inventory`
 State: `active_inventory`
 Machine boundary: 本文是 human-readable 迁移治理台账。机器真相继续归 `contracts/private_functional_surface_policy.json`、`contracts/foundry_agent_series.json`、`contracts/runtime-program/current-program.json`、schemas、CLI/API 行为、product-entry manifest、domain_handler export/dispatch、runtime receipts、workspace artifact 与 MAG owner receipt。
-Date: `2026-06-09`
 
 ## 读法
 
@@ -91,14 +90,9 @@ Purpose-first owner-delta / domain-thinning 的机器 gate 现在由 `contracts/
 
 ## Concrete Retirement Register
 
-当前 register 只列已经能证明 owner 替代或无 active caller 的 docs/test/workflow surface；仍有 active caller 的 product-entry、domain-handler、CLI、status/user-loop、control-plane 和 lifecycle shell 不进入 physical delete register。
+本 active inventory 不再维护逐项 retired surface register。当前读法是：可运行或仍有 active caller 的 product-entry、domain-handler、CLI、status/user-loop、control-plane 和 lifecycle shell 继续按上方 `Surface-ID SSOT Map` 与 `Path-Level Current Checkpoints` 读取；已经退役或只能作 no-resurrection guard 的 runtime command、frontdoor wording、facade、patch bridge、star import、Sentrux runtime facade 和 stale test closeout 细节归 [`retired-surface-provenance.md`](../history/docs-portfolio-coverage-ledger/retired-surface-provenance.md)。
 
-| Surface | Current owner / proof | Status |
-| --- | --- | --- |
-| stale test-level facade negative assertions: `facade_exports.py` absence check, `_render_text` re-export absence check, and duplicated workspace-index facade helper closeout | Behavior coverage lives in `tests/test_workspace_index.py`, CLI/output tests and `cli_rendering_parts` owner module; no-resurrection policy is covered by private surface contracts, `tests/product_entry_cases/test_dependency_structure.py`, `tests/test_domain_runtime_split.py`, `tests/test_runtime_cli_structural_helpers.py`, `tests/test_repository_hygiene.py`, and source tree scans. | Retired as test/doc process tail. The dated closeout is compressed into retired-surface provenance; do not recreate a separate per-tranche closeout file or prose-oracle test. |
-| Foundry Agent `frontdoor` fields/help/test wording | Current active command surface is `public_command_surface`, `executable_command_surfaces`, `ordinary_command_spine`, and `checked_command_surface_operations` in `src/med_autogrant/foundry_series_cli.py`, `src/med_autogrant/cli.py`, README quickstart, `docs/architecture.md`, and `tests/test_cli_smoke.py`. | Retired from active machine/human surfaces; historical `frontdoor` wording stays provenance/negative-guard only. |
-| old runtime command family: `run-local`, `runtime-run`, `runtime-resume`, `probe-upstream-hermes` | Negative guards live in `tests/test_domain_entry.py`, product-entry functional closure skeleton and current-program/runtime owner fields. | Retired; do not restore flat runtime commands, local journal owner, attempt ledger or compatibility public aliases. |
-| `domain_runtime_parts.patch_targets`, package-root re-export facades, dynamic private `__all__`, star-import test support, Sentrux runtime facade | Current owner modules and direct imports are guarded by dependency-structure, domain-runtime split, runtime CLI structural helper and repository-hygiene tests. | Retired; keep only tombstone/provenance and negative guards. |
+物理删除仍由 `contracts/private_functional_surface_policy.json`、source/tests、MAG owner receipt / typed blocker roundtrip、no-active-caller、no-forbidden-write 和 tombstone/provenance refs 共同授权。本文只保留当前迁移门和维护定位，不作为 source、test、workflow、package、CLI/API 或 runtime surface 的删除许可。
 
 ## Bad-smell flags
 

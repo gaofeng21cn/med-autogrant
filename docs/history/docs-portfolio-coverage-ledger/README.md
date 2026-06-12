@@ -46,6 +46,27 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 | Retired / guarded surfaces | This ledger records no source, contract, test, workflow, package or CLI/API deletion authority by itself. Guarded retired surfaces remain `run-local`, `runtime-run`, `runtime-resume`, `probe-upstream-hermes`, active `frontdoor` fields/help wording, local journal / attempt ledger, Gateway/local-manager default path, flat aliases, facades, patch bridge, stale test-level facade closeouts, compatibility aggregate tests and physical-delete-by-read-model claims. | Concrete retirement lanes need no-active-caller, replacement owner, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer before physical delete or test/interface retirement. |
 | Parent OPL series goal | Active/support specs and product/runtime/delivery/source/policies thin-support bodies are covered by their directory indexes and `docs/specs/specs_lifecycle_map.md`; historical specs are covered by `docs/history/specs/README.md` for docs lifecycle purposes. This is a tranche-level foldback, not six-repo completion. | Next write scope is one precise SSOT theme, a triggered spec/history-body reopening or one physical-delete candidate. Do not expand this ledger or the active gap plan back into dated proof logs or path-level shell inventories. |
 
+## Fresh Intake 2026-06-12 Private Inventory Retired Register Compression
+
+Semantic theme: MAG active private implementation inventory carried a dated header and an itemized concrete retirement register that duplicated retired-surface provenance and machine guard owners.
+
+Single Source of Truth:
+
+- Current per-surface private implementation status: `docs/active/opl-private-implementation-migration-inventory.md`.
+- Retired surface no-resurrection itemization: `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`.
+- Machine gates: `contracts/private_functional_surface_policy.json`, `contracts/foundry_agent_series.json`, product-entry manifest / functional audits, source/tests and MAG owner receipts / typed blockers.
+
+Edited docs:
+
+- `docs/active/opl-private-implementation-migration-inventory.md`: removed the frozen `Date` field and compressed `Concrete Retirement Register` from itemized retired rows into a pointer plus deletion-gate rule.
+- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this as topic-level coverage, not a new dated proof log.
+
+Coverage / carry-forward:
+
+- Covered: active inventory retired-tail duplication for stale test-level facade assertions, Foundry `frontdoor` wording, old runtime command family and facade / patch-bridge / star-import tails.
+- Not covered: path-level source thinning, default-caller production proof, App/workbench sustained consumption, Temporal long-soak, or any physical deletion.
+- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
+
 ## Fresh Intake 2026-06-12 Architecture / Status Implementation-List Compression
 
 Semantic theme: MAG current architecture and status pages were duplicating product-entry, domain-handler, projection, schema, receipt and canary implementation detail that belongs to source/tests/contracts, product-entry manifest, schema registry, runtime receipts or history provenance.
