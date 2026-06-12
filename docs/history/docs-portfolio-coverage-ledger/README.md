@@ -133,3 +133,26 @@ Coverage / carry-forward:
 - Covered: active-plan metadata that could make the current MAG active truth read like a 2026-06-09 snapshot.
 - Not covered: production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, private source thinning, `docs/decisions.md` review, or any physical surface retirement.
 - This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
+
+## Fresh Intake 2026-06-12 Status Stage Progress Evidence Compression
+
+Semantic theme: MAG current status should summarize live stage progress, Stage Folder / progress contracts and retired residue as current readouts, without freezing payload field names, file-level kernel mappings or retired receipt shapes as prose truth.
+
+Single Source of Truth:
+
+- Current status and evidence boundary: `docs/status.md`.
+- Current live stage progress owner answer: `contracts/live_stage_run_progress_evidence.json`.
+- Stage/progress and artifact mapping: `contracts/stage_control_plane.json`, production acceptance contracts, stage-native artifact contracts, source/builders and focused tests.
+- Active gap and physical-delete gates: `docs/active/mag-ideal-state-cross-repo-gap-plan.md`, `docs/active/opl-private-implementation-migration-inventory.md`, `contracts/private_functional_surface_policy.json` and `contracts/foundry_agent_series.json`.
+- Retired runtime / command / residue provenance: `docs/history/docs-portfolio-coverage-ledger/retired-surface-provenance.md`.
+
+Edited docs:
+
+- `docs/status.md`: compressed live progress refs, Stage Folder Kernel field/file mappings, package lifecycle ref names and legacy residue refs into owner-boundary summaries that route implementation detail back to contracts, source/tests, active inventory and provenance.
+- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this as topic-level coverage, not a dated proof log.
+
+Coverage / carry-forward:
+
+- Covered: `docs/status.md` paragraphs and status-table rows that could duplicate `contracts/live_stage_run_progress_evidence.json`, Stage Folder / artifact contracts, production acceptance payloads or retired residue refs as current prose truth.
+- Not covered: production/default-caller evidence, App/workbench sustained consumption, Temporal long-soak, path-level source thinning, private inventory refresh, concrete source/test/workflow/package retirement lanes or full six-repo paragraph coverage.
+- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
