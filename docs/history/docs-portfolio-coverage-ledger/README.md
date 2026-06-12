@@ -45,3 +45,27 @@ Machine boundary: 本文是人读历史 coverage ledger 索引。当前机器真
 | Content-level consolidation | Active-shell SSOT, Foundry command-surface field retirement, authoring-route history, foundation history, P2/P3/P4 authoring-review-verification history, runtime-first / post-R5A / P5 future activation history, Hermes/upstream provider-proof history, hosted caller / product-entry support history, product/runtime/delivery/source/policies thin-support indexes, specs lifecycle map and history specs index are represented by the provenance groups above and owner docs. Detailed deletion / field-retirement facts stay recoverable from git history and `retired-surface-provenance.md`; current rules stay in owner docs and machine surfaces. | Do not add file-by-file closeout logs here. If a historical rule is still current, fold it back into the owner doc, spec lifecycle map, contract, source or test before compressing the process trace. |
 | Retired / guarded surfaces | This ledger records no source, contract, test, workflow, package or CLI/API deletion authority by itself. Guarded retired surfaces remain `run-local`, `runtime-run`, `runtime-resume`, `probe-upstream-hermes`, active `frontdoor` fields/help wording, local journal / attempt ledger, Gateway/local-manager default path, flat aliases, facades, patch bridge, stale test-level facade closeouts, compatibility aggregate tests and physical-delete-by-read-model claims. | Concrete retirement lanes need no-active-caller, replacement owner, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer before physical delete or test/interface retirement. |
 | Parent OPL series goal | Active/support specs and product/runtime/delivery/source/policies thin-support bodies are covered by their directory indexes and `docs/specs/specs_lifecycle_map.md`; historical specs are covered by `docs/history/specs/README.md` for docs lifecycle purposes. This is a tranche-level foldback, not six-repo completion. | Next write scope is one precise SSOT theme, a triggered spec/history-body reopening or one physical-delete candidate. Do not expand this ledger or the active gap plan back into dated proof logs or path-level shell inventories. |
+
+## Fresh Intake 2026-06-12 Architecture / Status Implementation-List Compression
+
+Semantic theme: MAG current architecture and status pages were duplicating product-entry, domain-handler, projection, schema, receipt and canary implementation detail that belongs to source/tests/contracts, product-entry manifest, schema registry, runtime receipts or history provenance.
+
+Single Source of Truth:
+
+- Current status and evidence boundary: `docs/status.md`.
+- Architecture and owner boundary: `docs/architecture.md`.
+- Active gap and physical-delete gate: `docs/active/mag-ideal-state-cross-repo-gap-plan.md`.
+- Per-surface implementation inventory: `docs/active/opl-private-implementation-migration-inventory.md`.
+- Machine truth: `contracts/runtime-program/current-program.json`, private surface contracts, Foundry series contract, product-entry manifest, schema registry, source, CLI/API behavior, tests and runtime receipts.
+
+Edited docs:
+
+- `docs/architecture.md`: compressed the `入口与执行` implementation longlist into a role/owner table and routed command/schema/builder/helper detail back to machine owners.
+- `docs/status.md`: changed the status date to `Last reviewed` and compressed the dated owner-chain canary detail into provenance-only wording.
+- `docs/history/docs-portfolio-coverage-ledger/README.md`: records this tranche as topic-level coverage instead of adding a dated proof log.
+
+Coverage / carry-forward:
+
+- Covered: MAG `docs/architecture.md` sections that repeated product-entry/domain-handler generated surfaces and MAG `docs/status.md` rows that froze dated canary evidence as current state.
+- Not covered: full MAG `docs/architecture.md` body thinning, `docs/decisions.md` review, private inventory refresh, concrete source/test/workflow/package retirement lanes, and full six-repo paragraph coverage.
+- This tranche authorizes no source, contract, test, workflow, package, CLI/API or runtime surface deletion. Physical retirement still requires replacement owner, no-active-caller, MAG owner receipt / typed blocker roundtrip, no-forbidden-write proof and tombstone/provenance pointer.
