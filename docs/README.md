@@ -92,6 +92,7 @@ public-doc allowlist 保持稀疏：
 - [`current-program.json`](../contracts/runtime-program/current-program.json)
 - [Specs 索引](./specs/README.md)
 - [Specs lifecycle map](./specs/specs_lifecycle_map.md)
+- [Critique executor vocabulary current truth](./specs/2026-04-13-critique-codex-cli-executor-current-truth.md)
 - [AI-first 质量边界 current truth](./specs/2026-04-27-ai-first-quality-boundary-current-truth.md)
 - [Authoring completion semantics current truth](./specs/2026-04-23-authoring-completion-semantics-current-truth.md)
 - [Quality governance, autonomy controller, and family grammar current truth](./specs/2026-04-22-quality-autonomy-family-grammar-current-truth.md)
