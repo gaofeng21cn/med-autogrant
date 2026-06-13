@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-import importlib
 import json
 from pathlib import Path
+
+import med_autogrant.codex_plugin_installer as codex_plugin_installer
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_install_repo_local_codex_plugin_uses_repo_local_plugin_and_marketplace(tmp_path: Path) -> None:
-    module = importlib.import_module("med_autogrant.codex_plugin_installer")
     home = tmp_path / "home"
     legacy_plugin_link = home / "plugins" / "med-autogrant"
     legacy_skill_link = home / ".agents" / "skills" / "med-autogrant"
@@ -26,7 +26,7 @@ def test_install_repo_local_codex_plugin_uses_repo_local_plugin_and_marketplace(
         encoding="utf-8",
     )
 
-    result = module.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+    result = codex_plugin_installer.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
 
     plugin_link = home / "plugins" / "mag"
     skill_link = home / ".agents" / "skills" / "mag"
@@ -45,10 +45,9 @@ def test_install_repo_local_codex_plugin_uses_repo_local_plugin_and_marketplace(
 
 
 def test_install_repo_local_codex_plugin_keeps_skill_repo_local(tmp_path: Path) -> None:
-    module = importlib.import_module("med_autogrant.codex_plugin_installer")
     home = tmp_path / "home"
 
-    result = module.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+    result = codex_plugin_installer.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
 
     assert not (home / ".agents" / "skills" / "mag").exists()
     assert not (home / ".codex" / "skills" / "mag").exists()
@@ -56,7 +55,6 @@ def test_install_repo_local_codex_plugin_keeps_skill_repo_local(tmp_path: Path) 
 
 
 def test_install_repo_local_codex_plugin_removes_legacy_test_skill_stub(tmp_path: Path) -> None:
-    module = importlib.import_module("med_autogrant.codex_plugin_installer")
     home = tmp_path / "home"
     stub = home / ".codex" / "skills" / "mag"
     stub.mkdir(parents=True)
@@ -65,13 +63,12 @@ def test_install_repo_local_codex_plugin_removes_legacy_test_skill_stub(tmp_path
         encoding="utf-8",
     )
 
-    module.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+    codex_plugin_installer.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
 
     assert not stub.exists()
 
 
 def test_install_repo_local_codex_plugin_preserves_non_stub_user_skill(tmp_path: Path) -> None:
-    module = importlib.import_module("med_autogrant.codex_plugin_installer")
     home = tmp_path / "home"
     skill = home / ".codex" / "skills" / "mag"
     skill.mkdir(parents=True)
@@ -80,18 +77,17 @@ def test_install_repo_local_codex_plugin_preserves_non_stub_user_skill(tmp_path:
         encoding="utf-8",
     )
 
-    module.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+    codex_plugin_installer.install_repo_local_codex_plugin(repo_root=REPO_ROOT, home=home)
 
     assert skill.exists()
     assert "custom local MAG skill" in (skill / "SKILL.md").read_text(encoding="utf-8")
 
 
 def test_install_home_local_codex_plugin_is_idempotent(tmp_path: Path) -> None:
-    module = importlib.import_module("med_autogrant.codex_plugin_installer")
     home = tmp_path / "home"
 
-    first = module.install_home_local_codex_plugin(repo_root=REPO_ROOT, home=home)
-    second = module.install_home_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+    first = codex_plugin_installer.install_home_local_codex_plugin(repo_root=REPO_ROOT, home=home)
+    second = codex_plugin_installer.install_home_local_codex_plugin(repo_root=REPO_ROOT, home=home)
 
     assert first["marketplace_path"] == second["marketplace_path"]
     assert first["plugin_root"] == second["plugin_root"]
