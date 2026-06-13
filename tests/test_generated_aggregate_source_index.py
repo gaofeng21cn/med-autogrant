@@ -6,13 +6,14 @@ from pathlib import Path
 
 import pytest
 
+import scripts.check_generated_aggregate_sources as aggregate_checker
 from med_autogrant.opl_standard_pack import build_standard_pack
 
 
 pytestmark = pytest.mark.meta
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-SOURCE_INDEX_PATH = REPO_ROOT / "contracts" / "generated_aggregate_source_index.json"
+REPO_ROOT = aggregate_checker.REPO_ROOT
+SOURCE_INDEX_PATH = aggregate_checker.INDEX_PATH
 
 
 def _read_json(relative_path: str) -> dict[str, object]:

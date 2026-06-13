@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.cli import main  # noqa: E402
+import med_autogrant.domain_runtime_parts.handoff_surfaces as handoff_surfaces  # noqa: E402
 from med_autogrant.product_entry_contract_api import build_author_side_route_contract  # noqa: E402
 from support.cli import public_cli_argv  # noqa: E402
 from med_autogrant.domain_runtime_parts.shared import AUTHOR_SIDE_ROUTE_IDS  # noqa: E402
@@ -291,8 +292,9 @@ class RevisionExecutionHandoffTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             workspace_path = Path(tmp_dir) / "critique.json"
-            with patch(
-                "med_autogrant.domain_runtime_parts.handoff_surfaces.build_critique_execution_document",
+            with patch.object(
+                handoff_surfaces,
+                "build_critique_execution_document",
                 return_value={
                     "grant_run_id": "grant-run-test",
                     "workspace_id": "workspace-test",
@@ -310,10 +312,12 @@ class RevisionExecutionHandoffTest(unittest.TestCase):
                         "lifecycle_stage": "critique",
                     },
                 },
-            ) as build_document, patch(
-                "med_autogrant.domain_runtime_parts.handoff_surfaces._guard_critique_output_identity",
-            ), patch(
-                "med_autogrant.domain_runtime_parts.handoff_surfaces._write_revised_workspace_output",
+            ) as build_document, patch.object(
+                handoff_surfaces,
+                "_guard_critique_output_identity",
+            ), patch.object(
+                handoff_surfaces,
+                "_write_revised_workspace_output",
             ):
                 runtime.execute_critique_pass(
                     input_path=str(REVISION_EXAMPLE_PATH),

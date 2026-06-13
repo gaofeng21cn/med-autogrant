@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from med_autogrant import editable_shared_bootstrap as module
+import med_autogrant.editable_shared_bootstrap as module
 
 
 @pytest.fixture(autouse=True)
