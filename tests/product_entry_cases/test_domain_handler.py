@@ -18,6 +18,11 @@ from med_autogrant.product_entry_parts.domain_handler_projection import (
     default_executor_owner,
     first_skill,
 )
+from med_autogrant.product_entry_parts.domain_handler_shell_projection import (
+    build_domain_handler_caller_owner_contract,
+    build_domain_handler_shell_payload,
+    build_domain_handler_substrate_boundary,
+)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.domain_handler_export_assertions import (
     assert_domain_handler_export_maps_runtime_and_attention_surfaces,
@@ -83,6 +88,32 @@ class ProductDomainHandlerTest(unittest.TestCase):
                 user_loop_command=user_loop_command,
             ),
             export["user_loop_attention_queue"],
+        )
+        self.assertEqual(
+            build_domain_handler_caller_owner_contract(),
+            export["caller_owner_contract"],
+        )
+        self.assertEqual(
+            build_domain_handler_substrate_boundary(manifest),
+            export["substrate_boundary"],
+        )
+        self.assertEqual(
+            build_domain_handler_shell_payload(
+                manifest=manifest,
+                runtime_registration=export["opl_control_plane"]["registration"],
+                automation=manifest["automation"],
+                autonomy_observability=manifest["autonomy_observability"],
+                user_loop_command=user_loop_command,
+            ),
+            {
+                "caller_owner_contract": export["caller_owner_contract"],
+                "substrate_boundary": export["substrate_boundary"],
+                "todo_wakeup": export["todo_wakeup"],
+                "autonomy_controller": export["autonomy_controller"],
+                "user_loop_attention_queue": export["user_loop_attention_queue"],
+                "opl_control_plane": export["opl_control_plane"],
+                "guardrails": export["guardrails"],
+            },
         )
 
     def test_domain_handler_dispatch_retires_generic_wrapper_actions(self) -> None:
