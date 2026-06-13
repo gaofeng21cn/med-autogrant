@@ -13,6 +13,7 @@ import med_autogrant.grant_quality_closure as grant_quality_closure
 import med_autogrant.grant_quality_issue_builder as grant_quality_issue_builder
 import med_autogrant.grant_quality_parts as grant_quality_parts
 import med_autogrant.grant_quality_value_helpers as grant_quality_value_helpers
+import med_autogrant.cli_rendering_labels as cli_rendering_labels
 import med_autogrant.domain_runtime_parts.contracts as contracts
 import med_autogrant.domain_runtime_parts.io as io
 import med_autogrant.domain_runtime_parts.package_surface as package_surface
@@ -62,6 +63,8 @@ def test_structural_leaf_modules_expose_expected_contract_surfaces() -> None:
     assert grant_autonomy_start._resolve_grant_autonomy_start
     assert grant_quality_assessment._resolve_dimension_status
     assert grant_quality_closure._build_quality_closure_packages
+    assert cli_rendering_labels._render_field
+    assert cli_rendering_labels._workspace_status_label
     assert grant_quality_issue_builder._build_issue
     assert grant_quality_parts._build_issue
     assert grant_quality_parts._read_active_draft_id
