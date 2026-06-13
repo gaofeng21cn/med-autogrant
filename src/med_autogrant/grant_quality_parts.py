@@ -14,7 +14,7 @@ from med_autogrant.grant_quality_value_helpers import (
     _safe_int,
     _stable_digest,
 )
-from med_autogrant.workspace import build_critique_summary
+from med_autogrant.workspace_surface_builders import build_critique_summary
 from med_autogrant.workspace_types import WorkspaceStateError
 
 _QUALITY_CONTROLLER_ACTIONS = {
