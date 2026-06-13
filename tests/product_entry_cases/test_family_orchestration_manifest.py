@@ -7,6 +7,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 from med_autogrant.public_cli import public_cli_command
+from med_autogrant.product_entry_parts import orchestration_companions as module
+from med_autogrant.product_entry_parts.orchestration_companions import (
+    _build_family_orchestration_companion,
+)
 from product_entry_cases.support import (
     _assert_family_orchestration_companion,
     _expected_runtime_output_path,
@@ -61,8 +65,6 @@ class ProductEntryFamilyOrchestrationTest(unittest.TestCase):
         )
 
     def test_family_orchestration_action_graph_uses_shared_product_entry_orchestration(self) -> None:
-        from med_autogrant.product_entry_parts import orchestration_companions as module
-
         captured: dict[str, object] = {}
 
         def _fake_build_family_product_entry_orchestration(**kwargs: object) -> dict[str, object]:
@@ -101,7 +103,7 @@ class ProductEntryFamilyOrchestrationTest(unittest.TestCase):
             "_build_shared_family_product_entry_orchestration",
             side_effect=_fake_build_family_product_entry_orchestration,
         ):
-            payload = module._build_family_orchestration_companion(
+            payload = _build_family_orchestration_companion(
                 current_route_id="drafting",
                 recommended_route_id="critique",
                 recommended_route_status="pending",
