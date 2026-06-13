@@ -9,6 +9,9 @@ from pathlib import Path
 from med_autogrant.product_entry_parts.owner_receipt_common import (
     PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND,
 )
+from med_autogrant.product_entry_parts.manifest_owner_receipt_surfaces import (
+    build_production_live_acceptance_receipt_surface,
+)
 from med_autogrant.product_entry_parts.production_live_acceptance import (
     build_production_live_acceptance_receipt_projection,
 )
@@ -106,6 +109,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
         )
 
         surface = payload["product_entry_manifest"]["production_live_acceptance_receipt"]
+        self.assertEqual(surface, build_production_live_acceptance_receipt_surface())
         self.assertEqual(surface["surface_kind"], "mag_production_live_acceptance_receipt_surface")
         self.assertEqual(surface["accepted_owner_receipt_shape"], "domain_owner_receipt")
         self.assertEqual(
