@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 
 import med_autogrant.cli as cli
 import med_autogrant.domain_runtime_parts.runtime_ops as runtime_ops
+from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
 from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
 from med_autogrant.workspace_stage_validation import _find_active_draft, _validate_active_draft_sections
@@ -124,6 +125,22 @@ def test_product_entry_default_domain_entry_loader_is_lazy() -> None:
 
     assert loaded is domain_entry
     import_module.assert_called_once_with("med_autogrant.domain_entry")
+
+
+def test_functional_closure_skeleton_reads_command_catalog_without_domain_entry_runtime() -> None:
+    skeleton_path = (
+        SRC_ROOT
+        / "med_autogrant"
+        / "product_entry_parts"
+        / "functional_closure_skeleton.py"
+    )
+    skeleton_source = skeleton_path.read_text(encoding="utf-8")
+
+    assert "from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS" in skeleton_source
+    assert "from med_autogrant.domain_entry import SERVICE_SAFE_DOMAIN_COMMANDS" not in skeleton_source
+    assert SERVICE_SAFE_DOMAIN_COMMANDS["build-hosted-contract-bundle"].runtime_method == (
+        "build_hosted_contract_bundle"
+    )
 
 
 def test_workspace_stage_validation_helpers_keep_active_draft_lookup_and_section_errors() -> None:

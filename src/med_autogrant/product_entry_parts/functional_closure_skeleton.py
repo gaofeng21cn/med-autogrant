@@ -263,7 +263,7 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
 
 
 def _build_retired_public_command_scan() -> dict[str, Any]:
-    from med_autogrant.domain_entry import SERVICE_SAFE_DOMAIN_COMMANDS
+    from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
     from med_autogrant.public_cli import (
         PUBLIC_THREE_TOKEN_COMMANDS,
         PUBLIC_TO_INTERNAL_COMMAND,
