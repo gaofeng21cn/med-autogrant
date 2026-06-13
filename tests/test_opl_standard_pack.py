@@ -9,6 +9,12 @@ import pytest
 
 from med_autogrant.opl_standard_pack import build_standard_pack
 from med_autogrant.opl_standard_pack_constants import DOMAIN_LABEL, GENERATED_SURFACE_OWNER
+from med_autogrant.opl_standard_pack_source_policy import (
+    GENERATED_SURFACES,
+    PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS,
+    REQUIRED_DOMAIN_PACK_PATHS,
+    RETIREMENT_EVIDENCE_REFS,
+)
 
 
 pytestmark = pytest.mark.meta
@@ -290,6 +296,9 @@ def _assert_pack_compiler_input(generated: dict[str, object]) -> None:
 
 def _assert_standard_handoff_refs(generated: dict[str, object]) -> None:
     assert generated["generated_surface_handoff"]["domain_repo_can_own_generated_surface"] is False
+    assert [
+        surface["surface_id"] for surface in generated["generated_surface_handoff"]["generated_surfaces"]
+    ] == GENERATED_SURFACES
     assert _read_contract("agent_lab_handoff") == generated["agent_lab_handoff"]
     assert generated["domain_descriptor"]["standard_contract_refs"]["agent_lab_handoff"] == (
         "contracts/agent_lab_handoff.json"
@@ -365,12 +374,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     morphology = policy["physical_source_morphology_policy"]
 
     assert morphology["state"] == "classified_no_generic_runtime_reflow"
-    assert morphology["classification_buckets"] == [
-        "declarative_grant_handler",
-        "refs_only_adapter",
-        "minimal_authority_function",
-        "legacy_proof_tombstone",
-    ]
+    assert morphology["classification_buckets"] == PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS
     assert morphology["required_surface_ids"] == [
         "domain_runtime",
         "product_entry",
@@ -466,13 +470,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert morphology["retirement_gate"] == {
         "gate_id": "mag.physical_morphology.retirement_gate.v1",
         "state": "active_caller_migration_evidence_required",
-        "required_evidence_refs": [
-            "external_evidence://physical_morphology_hygiene/active_caller_migration_receipt",
-            "external_evidence://physical_morphology_hygiene/direct_hosted_parity_no_regression",
-            "external_evidence://physical_morphology_hygiene/owner_receipt_or_typed_blocker_roundtrip",
-            "external_evidence://physical_morphology_hygiene/continuous_no_forbidden_write",
-            "physical_morphology://no_active_compat_alias_or_facade_scan",
-        ],
+        "required_evidence_refs": RETIREMENT_EVIDENCE_REFS,
         "delete_or_tombstone_only_after_gate": True,
         "compatibility_alias_allowed": False,
         "claims_physical_cleanup_complete": False,
@@ -631,6 +629,7 @@ def test_opl_standard_pack_declares_real_agent_domain_pack_paths() -> None:
 
     assert compiler_input["canonical_semantic_pack_root"] == "agent/"
     assert compiler_input["canonical_semantic_pack_role"] == "repo_source_declarative_grant_pack"
+    assert pack_paths == REQUIRED_DOMAIN_PACK_PATHS
     assert len(pack_paths) >= 20
     assert not any(path.endswith("/README.md") for path in pack_paths)
     assert any(path.startswith("agent/prompts/") for path in pack_paths)
