@@ -31,6 +31,7 @@ import med_autogrant.product_entry_parts.runtime_registration as runtime_registr
 import med_autogrant.product_entry_parts.runtime_contracts as runtime_contracts
 import med_autogrant.product_entry_parts.runtime_surfaces as runtime_surfaces
 import med_autogrant.revision_executor as revision_executor
+import med_autogrant.runtime_defaults as runtime_defaults
 import med_autogrant.schema_loader as schema_loader
 import med_autogrant.schema_subset_validator as schema_subset_validator
 import med_autogrant.stage_control_plane as stage_control_plane
@@ -89,6 +90,19 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert primitives._require_entry_mode("direct") == "direct"
     assert progress.ProductEntryProgressMixin
     assert runtime_contracts.PRODUCT_ENTRY_SCHEMA_FILE == "product-entry.schema.json"
+    runtime_summary = runtime_defaults.build_default_runtime_summary(
+        current_owner_line="OPL hosted runtime owns task execution"
+    )
+    assert runtime_summary["runtime_owner"] == runtime_defaults.DEFAULT_RUNTIME_OWNER
+    assert runtime_summary["default_task_runtime_owner"] == "one-person-lab"
+    assert runtime_summary["default_stage_executor"] == "codex_cli"
+    assert runtime_summary["optional_carriers"] == ["hermes_agent", "claude_code"]
+    assert runtime_defaults.parse_opl_command({}) == ("opl",)
+    assert runtime_defaults.parse_opl_command({"MED_AUTOGRANT_OPL_COMMAND": "opl run --json"}) == (
+        "opl",
+        "run",
+        "--json",
+    )
     assert runtime_registration._build_opl_stage_runtime_registration
     assert runtime_surfaces._build_runtime_continuity_surfaces
     assert stage_control_plane.DEFAULT_GOLDEN_PATH_STAGE_ID == "call_and_candidate_intake"
