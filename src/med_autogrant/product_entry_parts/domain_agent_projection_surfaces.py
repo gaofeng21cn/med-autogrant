@@ -510,111 +510,143 @@ def build_controlled_stage_attempt_projection(
             context="controlled_stage_attempt.task_lifecycle",
         ),
         "last_observed_projection": dict(progress_projection),
-        "proof": {
-            "surface_kind": "controlled_stage_attempt_fixture_proof",
-            "proof_id": "mag.controlled_stage_attempt.critique_revision_package.fixture.v1",
-            "proof_state": "fixture_contract_landed",
-            "stage_chain": [
-                "review_and_rebuttal",
-                "proposal_authoring",
-                "package_and_submit_ready",
-            ],
-            "direct_skill_refs": [
-                "/product_entry_manifest/skill_catalog/skills/0/domain_projection/standard_domain_agent_skeleton",
-                "/product_entry_manifest/domain_memory_descriptor_locator",
-                "/product_entry_manifest/artifact_locator_contract",
-            ],
-            "opl_hosted_refs": [
-                "/product_entry_manifest/standard_domain_agent_skeleton",
-                "/product_entry_manifest/controlled_stage_attempt_projection",
-                "/product_entry_manifest/domain_memory_descriptor_locator",
-            ],
-            "shared_descriptor_refs": [
-                "/product_entry_manifest/domain_memory_descriptor_locator",
-                "/product_entry_manifest/domain_memory_descriptor_locator/controlled_apply_fixture",
-                "/product_entry_manifest/domain_memory_descriptor_locator/controlled_consumed_memory_proof",
-                "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof",
-                "/product_entry_manifest/artifact_locator_contract",
-                "/product_entry_manifest/grant_authoring_readiness",
-            ],
-            "quality_ref_owner": TARGET_DOMAIN_ID,
-            "artifact_write_policy": "runtime_or_workspace_only_no_repo_artifact_instance",
-            "direct_skill_and_opl_hosted_use_same_descriptor_domain_handler_quality_refs": True,
-            "opl_verdict_authority": {
-                "fundability": False,
-                "submission_ready_export": False,
-            },
-        },
-        "opl_hosted_controlled_grant_stage_attempt_proof": {
-            "surface_kind": "opl_hosted_controlled_grant_stage_attempt_proof",
-            "proof_id": "mag.opl_hosted.controlled_grant_stage_attempt.proof.v1",
-            "proof_state": "controlled_fixture_contract_landed",
-            "maps_to_opl_contract": "opl_hosted_controlled_stage_attempt_proof.v1",
-            "attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
-            "stage_chain": [
-                "review_and_rebuttal",
-                "proposal_authoring",
-                "package_and_submit_ready",
-            ],
-            "consumed_memory_proof_ref": (
-                "/product_entry_manifest/domain_memory_descriptor_locator/"
-                "controlled_consumed_memory_proof"
-            ),
-            "writeback_receipt_proof_ref": (
-                "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof"
-            ),
-            "domain_handler_export_ref": "/product_entry_manifest/skill_catalog/skills/0/domain_projection/opl_stage_runtime_registration",
-            "stage_attempt_receipt_ref": (
-                "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
-                f"{grant_run_id}/stage-attempt/{lifecycle_stage}.json"
-            ),
-            "provider_role": "opl_hosted_attempt_lifecycle_and_receipt_router",
-            "domain_owner": TARGET_DOMAIN_ID,
-            "repo_tracked_real_receipt_instance": False,
-            "repo_tracked_real_memory_body": False,
-            "direct_skill_and_opl_hosted_use_same_descriptor_domain_handler_quality_refs": True,
-            "authority_boundary": {
-                "fundability_verdict_owner": TARGET_DOMAIN_ID,
-                "authoring_quality_verdict_owner": TARGET_DOMAIN_ID,
-                "submission_ready_export_verdict_owner": TARGET_DOMAIN_ID,
-                "opl_can_hold_fundability_verdict": False,
-                "opl_can_hold_authoring_quality_verdict": False,
-                "opl_can_hold_export_verdict": False,
-            },
-        },
-        "receipt_refs": {
-            "domain_handler_dispatch_receipt_ref": (
-                "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
-                f"{grant_run_id}/domain_handler-dispatch/<task_id>.json"
-            ),
-            "stage_attempt_receipt_ref": (
-                "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
-                f"{grant_run_id}/stage-attempt/{lifecycle_stage}.json"
-            ),
-            "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
-        },
-        "opl_consumption_contract": {
-            "consumes": [
-                "descriptor",
-                "source_refs",
-                "receipt_refs",
-                "runtime_status_projection",
-            ],
-            "does_not_consume": [
-                "fundability_verdict",
-                "submission_ready_export_verdict",
-                "canonical_grant_artifact_content",
-            ],
-            "can_hold_fundability_verdict": False,
-            "can_hold_export_verdict": False,
-        },
-        "authority_boundary": {
-            "domain_truth_owner": TARGET_DOMAIN_ID,
-            "fundability_verdict_owner": TARGET_DOMAIN_ID,
-            "submission_ready_export_verdict_owner": TARGET_DOMAIN_ID,
-            "opl_role": "controlled_attempt_descriptor_and_receipt_ref_consumer",
+        "proof": _controlled_stage_attempt_fixture_proof(),
+        "opl_hosted_controlled_grant_stage_attempt_proof": (
+            _opl_hosted_controlled_stage_attempt_proof(grant_run_id, lifecycle_stage)
+        ),
+        "receipt_refs": _controlled_stage_attempt_receipt_refs(grant_run_id, lifecycle_stage),
+        "opl_consumption_contract": _controlled_stage_attempt_opl_consumption_contract(),
+        "authority_boundary": _controlled_stage_attempt_authority_boundary(),
+    }
+
+
+def _controlled_stage_attempt_fixture_proof() -> dict[str, Any]:
+    return {
+        "surface_kind": "controlled_stage_attempt_fixture_proof",
+        "proof_id": "mag.controlled_stage_attempt.critique_revision_package.fixture.v1",
+        "proof_state": "fixture_contract_landed",
+        "stage_chain": _controlled_stage_attempt_stage_chain(),
+        "direct_skill_refs": [
+            "/product_entry_manifest/skill_catalog/skills/0/domain_projection/standard_domain_agent_skeleton",
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+            "/product_entry_manifest/artifact_locator_contract",
+        ],
+        "opl_hosted_refs": [
+            "/product_entry_manifest/standard_domain_agent_skeleton",
+            "/product_entry_manifest/controlled_stage_attempt_projection",
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+        ],
+        "shared_descriptor_refs": [
+            "/product_entry_manifest/domain_memory_descriptor_locator",
+            "/product_entry_manifest/domain_memory_descriptor_locator/controlled_apply_fixture",
+            "/product_entry_manifest/domain_memory_descriptor_locator/controlled_consumed_memory_proof",
+            "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof",
+            "/product_entry_manifest/artifact_locator_contract",
+            "/product_entry_manifest/grant_authoring_readiness",
+        ],
+        "quality_ref_owner": TARGET_DOMAIN_ID,
+        "artifact_write_policy": "runtime_or_workspace_only_no_repo_artifact_instance",
+        "direct_skill_and_opl_hosted_use_same_descriptor_domain_handler_quality_refs": True,
+        "opl_verdict_authority": {
+            "fundability": False,
+            "submission_ready_export": False,
         },
     }
+
+
+def _opl_hosted_controlled_stage_attempt_proof(
+    grant_run_id: str,
+    lifecycle_stage: str,
+) -> dict[str, Any]:
+    return {
+        "surface_kind": "opl_hosted_controlled_grant_stage_attempt_proof",
+        "proof_id": "mag.opl_hosted.controlled_grant_stage_attempt.proof.v1",
+        "proof_state": "controlled_fixture_contract_landed",
+        "maps_to_opl_contract": "opl_hosted_controlled_stage_attempt_proof.v1",
+        "attempt_ref": "/product_entry_manifest/controlled_stage_attempt_projection",
+        "stage_chain": _controlled_stage_attempt_stage_chain(),
+        "consumed_memory_proof_ref": (
+            "/product_entry_manifest/domain_memory_descriptor_locator/"
+            "controlled_consumed_memory_proof"
+        ),
+        "writeback_receipt_proof_ref": (
+            "/product_entry_manifest/domain_memory_descriptor_locator/writeback_receipt_proof"
+        ),
+        "domain_handler_export_ref": (
+            "/product_entry_manifest/skill_catalog/skills/0/domain_projection/"
+            "opl_stage_runtime_registration"
+        ),
+        "stage_attempt_receipt_ref": _stage_attempt_receipt_ref(grant_run_id, lifecycle_stage),
+        "provider_role": "opl_hosted_attempt_lifecycle_and_receipt_router",
+        "domain_owner": TARGET_DOMAIN_ID,
+        "repo_tracked_real_receipt_instance": False,
+        "repo_tracked_real_memory_body": False,
+        "direct_skill_and_opl_hosted_use_same_descriptor_domain_handler_quality_refs": True,
+        "authority_boundary": {
+            "fundability_verdict_owner": TARGET_DOMAIN_ID,
+            "authoring_quality_verdict_owner": TARGET_DOMAIN_ID,
+            "submission_ready_export_verdict_owner": TARGET_DOMAIN_ID,
+            "opl_can_hold_fundability_verdict": False,
+            "opl_can_hold_authoring_quality_verdict": False,
+            "opl_can_hold_export_verdict": False,
+        },
+    }
+
+
+def _controlled_stage_attempt_receipt_refs(
+    grant_run_id: str,
+    lifecycle_stage: str,
+) -> dict[str, str]:
+    return {
+        "domain_handler_dispatch_receipt_ref": (
+            "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+            f"{grant_run_id}/domain_handler-dispatch/<task_id>.json"
+        ),
+        "stage_attempt_receipt_ref": _stage_attempt_receipt_ref(grant_run_id, lifecycle_stage),
+        "owner_receipt_contract_ref": "/product_entry_manifest/owner_receipt_contract",
+    }
+
+
+def _controlled_stage_attempt_opl_consumption_contract() -> dict[str, Any]:
+    return {
+        "consumes": [
+            "descriptor",
+            "source_refs",
+            "receipt_refs",
+            "runtime_status_projection",
+        ],
+        "does_not_consume": [
+            "fundability_verdict",
+            "submission_ready_export_verdict",
+            "canonical_grant_artifact_content",
+        ],
+        "can_hold_fundability_verdict": False,
+        "can_hold_export_verdict": False,
+    }
+
+
+def _controlled_stage_attempt_authority_boundary() -> dict[str, str]:
+    return {
+        "domain_truth_owner": TARGET_DOMAIN_ID,
+        "fundability_verdict_owner": TARGET_DOMAIN_ID,
+        "submission_ready_export_verdict_owner": TARGET_DOMAIN_ID,
+        "opl_role": "controlled_attempt_descriptor_and_receipt_ref_consumer",
+    }
+
+
+def _controlled_stage_attempt_stage_chain() -> list[str]:
+    return [
+        "review_and_rebuttal",
+        "proposal_authoring",
+        "package_and_submit_ready",
+    ]
+
+
+def _stage_attempt_receipt_ref(grant_run_id: str, lifecycle_stage: str) -> str:
+    return (
+        "$CODEX_HOME/projects/med-autogrant/runtime-state/receipts/"
+        f"{grant_run_id}/stage-attempt/{lifecycle_stage}.json"
+    )
 
 
 def build_controlled_soak_no_regression_attempt() -> dict[str, Any]:
