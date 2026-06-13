@@ -24,6 +24,7 @@ import med_autogrant.product_entry_parts.manifest as manifest
 import med_autogrant.product_entry_parts.manifest_builder as manifest_builder
 import med_autogrant.product_entry_parts.manifest_readiness as manifest_readiness
 import med_autogrant.product_entry_parts.manifest_skill_catalog as manifest_skill_catalog
+import med_autogrant.product_entry_parts.owner_receipt_writers as owner_receipt_writers
 import med_autogrant.product_entry_parts.preflight as preflight
 import med_autogrant.product_entry_parts.primitives as primitives
 import med_autogrant.product_entry_parts.progress as progress
@@ -85,6 +86,8 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert manifest_builder.ProductEntryManifestBuilderMixin
     assert manifest_readiness.build_manifest_readiness_surfaces
     assert manifest_skill_catalog.build_product_entry_skill_catalog
+    assert owner_receipt_writers.write_owner_receipt_evidence
+    assert owner_receipt_writers.write_lifecycle_receipt_evidence
     assert preflight.ProductEntryPreflightMixin
     assert primitives.TARGET_DOMAIN_ID == "med-autogrant"
     assert primitives._require_entry_mode("direct") == "direct"
