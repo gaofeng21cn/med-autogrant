@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from med_autogrant.opl_standard_pack import build_standard_pack
+from med_autogrant.opl_standard_pack_constants import DOMAIN_LABEL, GENERATED_SURFACE_OWNER
 
 
 pytestmark = pytest.mark.meta
@@ -47,6 +48,8 @@ def _assert_root_contracts_match(generated: dict[str, object]) -> None:
 def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
     assert generated["action_catalog"]["target_domain_id"] == "med-autogrant"
     assert generated["stage_control_plane"]["target_domain_id"] == "med-autogrant"
+    assert generated["domain_descriptor"]["domain_label"] == DOMAIN_LABEL
+    assert generated["domain_descriptor"]["generated_surface_owner"] == GENERATED_SURFACE_OWNER
 
 
 def _assert_foundry_agent_series_contract(series: dict[str, object]) -> None:
@@ -253,7 +256,7 @@ def _assert_adapter_thinning_policy(generated: dict[str, object]) -> None:
 
 
 def _assert_pack_compiler_input(generated: dict[str, object]) -> None:
-    assert generated["pack_compiler_input"]["generated_surface_owner"] == "one-person-lab"
+    assert generated["pack_compiler_input"]["generated_surface_owner"] == GENERATED_SURFACE_OWNER
     pack_taxonomy = generated["pack_compiler_input"]["minimal_authority_surface_taxonomy"]
     assert pack_taxonomy["retired_legacy_function_id_compatibility"] is False
     assert pack_taxonomy["compatibility_alias_allowed"] is False
@@ -440,7 +443,10 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert classifications["grouped_cli_wrapper"]["active_caller_status"] == (
         "active_refs_only_adapter_until_opl_generated_caller_migration"
     )
-    assert classifications["grouped_cli_wrapper"]["target_owner_after_migration"] == "one-person-lab"
+    assert (
+        classifications["grouped_cli_wrapper"]["target_owner_after_migration"]
+        == GENERATED_SURFACE_OWNER
+    )
     assert classifications["grouped_cli_wrapper"]["retirement_gate"]["state"] == (
         "active_caller_migration_required_before_retirement"
     )
@@ -556,7 +562,7 @@ def test_agent_lab_handoff_is_standard_body_free_consumer_refs_only() -> None:
     assert refs["typed_blocker"]["ledger_ref"] == "contracts/external_evidence/mag-evidence-receipt-ledger.json"
     assert "typed_blocker_ref" in refs["typed_blocker"]["accepted_return_shapes"]
     assert refs["generated_surface_handoff"]["contract_ref"] == "contracts/generated_surface_handoff.json"
-    assert refs["generated_surface_handoff"]["generator_owner"] == "one-person-lab"
+    assert refs["generated_surface_handoff"]["generator_owner"] == GENERATED_SURFACE_OWNER
     assert refs["editable_surface_hints"]["editable_shared_bootstrap_ref"] == (
         "src/med_autogrant/editable_shared_bootstrap.py"
     )
