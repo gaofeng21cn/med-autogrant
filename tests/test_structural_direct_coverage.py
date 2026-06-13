@@ -14,6 +14,7 @@ import med_autogrant.grant_quality_parts as grant_quality_parts
 import med_autogrant.domain_runtime_parts.contracts as contracts
 import med_autogrant.domain_runtime_parts.io as io
 import med_autogrant.domain_runtime_parts.package_surface as package_surface
+import med_autogrant.domain_runtime_parts.quality_surface as quality_surface
 import med_autogrant.domain_runtime_parts.shared as shared
 import med_autogrant.domain_runtime_parts.substrate as substrate
 import med_autogrant.mainline_status as mainline_status
@@ -78,6 +79,7 @@ def test_runtime_and_product_entry_leaf_modules_keep_split_contracts() -> None:
     assert contracts.build_runtime_substrate_contract
     assert io._read_active_draft_id({"current_selection": {"active_draft_id": "draft-1"}}) == "draft-1"
     assert package_surface.DomainRuntimePackageSurfaceMixin.build_final_package
+    assert quality_surface.DomainRuntimeQualitySurfaceMixin.grant_quality_scorecard
     assert shared.PRODUCT_ENTRY_SCHEMA_FILE == "product-entry.schema.json"
     assert substrate.MagDomainRuntime.__name__ == "MagDomainRuntime"
     assert autonomy_observability.build_grant_autonomy_observability

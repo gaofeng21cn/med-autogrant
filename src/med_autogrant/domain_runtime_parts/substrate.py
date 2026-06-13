@@ -16,11 +16,6 @@ from med_autogrant.control_plane import (
 from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop
 from med_autogrant.authoring_mainline_controller import run_authoring_mainline_controller
 from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller
-from med_autogrant.grant_quality import (
-    build_grant_quality_closure_dossier,
-    build_grant_quality_diff,
-    build_grant_quality_scorecard,
-)
 from med_autogrant.final_package import (
     _validate_required_artifact_bundle_fields,
     build_final_package_document,
@@ -70,20 +65,22 @@ from med_autogrant.domain_runtime_parts.shared import (
     FUNDING_LANDSCAPE_DISCOVERY_SCHEMA_FILE,
     GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE,
     GRANT_INTAKE_AUDIT_SCHEMA_FILE,
-    GRANT_QUALITY_CLOSURE_DOSSIER_SCHEMA_FILE,
-    GRANT_QUALITY_DIFF_SCHEMA_FILE,
-    GRANT_QUALITY_SCORECARD_SCHEMA_FILE,
     PROJECT_PROFILE_SELECTION_INPUT_SCHEMA_FILE,
     PROJECT_PROFILE_SELECTION_SCHEMA_FILE,
 )
 from med_autogrant.domain_runtime_parts.authoring_surface import DomainRuntimeAuthoringSurfaceMixin
 from med_autogrant.domain_runtime_parts.handoff_surfaces import DomainRuntimeHandoffSurfaceMixin
+from med_autogrant.domain_runtime_parts.quality_surface import DomainRuntimeQualitySurfaceMixin
 
 
 _editable_shared_bootstrap.ensure_editable_dependency_paths()
 
 
-class MagDomainRuntime(DomainRuntimeAuthoringSurfaceMixin, DomainRuntimeHandoffSurfaceMixin):
+class MagDomainRuntime(
+    DomainRuntimeAuthoringSurfaceMixin,
+    DomainRuntimeHandoffSurfaceMixin,
+    DomainRuntimeQualitySurfaceMixin,
+):
     """Repo-side domain adapter and regression oracle for grant authoring, quality, and export."""
 
     runtime_owner = "one-person-lab"
@@ -162,82 +159,6 @@ class MagDomainRuntime(DomainRuntimeAuthoringSurfaceMixin, DomainRuntimeHandoffS
             payload,
             schema_file=GRANT_EVIDENCE_GROUNDING_SCHEMA_FILE,
             context="grant_evidence_grounding",
-            grant_run_id=document["grant_run_id"],
-            workspace_id=document["workspace_id"],
-            lifecycle_stage=document["lifecycle_stage"],
-        )
-        return payload
-
-    def grant_quality_scorecard(self, *, input_path: str | Path) -> dict[str, Any]:
-        document = self._load_workspace(input_path)
-        payload = {
-            "ok": True,
-            "command": "grant-quality-scorecard",
-            "grant_run_id": document["grant_run_id"],
-            "workspace_id": document["workspace_id"],
-            "draft_id": _read_active_draft_id(document),
-            "lifecycle_stage": document["lifecycle_stage"],
-            "input_path": str(Path(input_path).expanduser().resolve()),
-            "grant_quality_scorecard": build_grant_quality_scorecard(document),
-        }
-        _validate_contract_schema(
-            payload,
-            schema_file=GRANT_QUALITY_SCORECARD_SCHEMA_FILE,
-            context="grant_quality_scorecard",
-            grant_run_id=document["grant_run_id"],
-            workspace_id=document["workspace_id"],
-            lifecycle_stage=document["lifecycle_stage"],
-        )
-        return payload
-
-    def grant_quality_diff(
-        self,
-        *,
-        input_path: str | Path,
-        previous_input_path: str | Path,
-    ) -> dict[str, Any]:
-        current_document = self._load_workspace(input_path)
-        previous_document = self._load_workspace(previous_input_path)
-        payload = {
-            "ok": True,
-            "command": "grant-quality-diff",
-            "grant_run_id": current_document["grant_run_id"],
-            "workspace_id": current_document["workspace_id"],
-            "draft_id": _read_active_draft_id(current_document),
-            "lifecycle_stage": current_document["lifecycle_stage"],
-            "input_path": str(Path(input_path).expanduser().resolve()),
-            "previous_input_path": str(Path(previous_input_path).expanduser().resolve()),
-            "grant_quality_diff": build_grant_quality_diff(
-                current_document=current_document,
-                previous_document=previous_document,
-            ),
-        }
-        _validate_contract_schema(
-            payload,
-            schema_file=GRANT_QUALITY_DIFF_SCHEMA_FILE,
-            context="grant_quality_diff",
-            grant_run_id=current_document["grant_run_id"],
-            workspace_id=current_document["workspace_id"],
-            lifecycle_stage=current_document["lifecycle_stage"],
-        )
-        return payload
-
-    def grant_quality_closure_dossier(self, *, input_path: str | Path) -> dict[str, Any]:
-        document = self._load_workspace(input_path)
-        payload = {
-            "ok": True,
-            "command": "grant-quality-closure-dossier",
-            "grant_run_id": document["grant_run_id"],
-            "workspace_id": document["workspace_id"],
-            "draft_id": _read_active_draft_id(document),
-            "lifecycle_stage": document["lifecycle_stage"],
-            "input_path": str(Path(input_path).expanduser().resolve()),
-            "grant_quality_closure_dossier": build_grant_quality_closure_dossier(document),
-        }
-        _validate_contract_schema(
-            payload,
-            schema_file=GRANT_QUALITY_CLOSURE_DOSSIER_SCHEMA_FILE,
-            context="grant_quality_closure_dossier",
             grant_run_id=document["grant_run_id"],
             workspace_id=document["workspace_id"],
             lifecycle_stage=document["lifecycle_stage"],
@@ -498,7 +419,6 @@ from med_autogrant.domain_runtime_parts.io import (
     _load_existing_cache_snapshot,
     _load_funding_landscape_cache_if_needed,
     _load_json_object,
-    _read_active_draft_id,
     _read_artifact_bundle,
     _read_final_package,
     _write_artifact_bundle_output,

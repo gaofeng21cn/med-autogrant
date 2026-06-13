@@ -61,6 +61,24 @@ class RuntimeSplitStructureTest(unittest.TestCase):
             MagDomainRuntime.build_submission_ready_package.__module__,
         )
 
+    def test_quality_surface_owns_runtime_quality_methods(self) -> None:
+        from med_autogrant.domain_runtime_parts.substrate import MagDomainRuntime
+        from med_autogrant.domain_runtime_parts.quality_surface import DomainRuntimeQualitySurfaceMixin
+
+        self.assertTrue(issubclass(MagDomainRuntime, DomainRuntimeQualitySurfaceMixin))
+        self.assertEqual(
+            "med_autogrant.domain_runtime_parts.quality_surface",
+            MagDomainRuntime.grant_quality_scorecard.__module__,
+        )
+        self.assertEqual(
+            "med_autogrant.domain_runtime_parts.quality_surface",
+            MagDomainRuntime.grant_quality_diff.__module__,
+        )
+        self.assertEqual(
+            "med_autogrant.domain_runtime_parts.quality_surface",
+            MagDomainRuntime.grant_quality_closure_dossier.__module__,
+        )
+
     def test_runtime_substrate_does_not_directly_import_handoff_owners(self) -> None:
         substrate_path = SRC_ROOT / "med_autogrant" / "domain_runtime_parts" / "substrate.py"
         tree = ast.parse(substrate_path.read_text(encoding="utf-8"))
