@@ -10,7 +10,9 @@ import med_autogrant.grant_autonomy_report_resume as grant_autonomy_report_resum
 import med_autogrant.grant_autonomy_start as grant_autonomy_start
 import med_autogrant.grant_quality_assessment as grant_quality_assessment
 import med_autogrant.grant_quality_closure as grant_quality_closure
+import med_autogrant.grant_quality_issue_builder as grant_quality_issue_builder
 import med_autogrant.grant_quality_parts as grant_quality_parts
+import med_autogrant.grant_quality_value_helpers as grant_quality_value_helpers
 import med_autogrant.domain_runtime_parts.contracts as contracts
 import med_autogrant.domain_runtime_parts.io as io
 import med_autogrant.domain_runtime_parts.package_surface as package_surface
@@ -59,8 +61,10 @@ def test_structural_leaf_modules_expose_expected_contract_surfaces() -> None:
     assert grant_autonomy_start._resolve_grant_autonomy_start
     assert grant_quality_assessment._resolve_dimension_status
     assert grant_quality_closure._build_quality_closure_packages
+    assert grant_quality_issue_builder._build_issue
     assert grant_quality_parts._build_issue
     assert grant_quality_parts._read_active_draft_id
+    assert grant_quality_value_helpers._read_active_draft_id
     assert mainline_status.read_mainline_status
     assert revision_executor.build_revision_execution_document
     assert schema_loader.SchemaStore
