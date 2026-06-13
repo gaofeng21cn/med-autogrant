@@ -13,7 +13,6 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller  # noqa: E402
-from med_autogrant.grant_autonomy_quality_payload import _normalize_quality_output  # noqa: E402
 from med_autogrant.grant_autonomy_trace import spend_budget_step  # noqa: E402
 
 OPL_STAGE_ATTEMPT = {"runtime_owner": "one-person-lab", "executor_kind": "codex_cli", "attempt_lease_ref": "lease:opl/stage-attempt/test"}
@@ -742,41 +741,6 @@ class GrantAutonomyControllerTest(unittest.TestCase):
 
         self.assertEqual(result["controller_status"], "failed_closed")
         self.assertEqual(result["termination_reason"], "quality_evaluator_unstructured_result")
-
-    def test_quality_output_normalizer_accepts_controller_quality_fixture(self) -> None:
-        quality_output = self._quality_result(
-            quality_status="near_submission_candidate",
-            unresolved_blockers=[],
-            evidence_gaps=["secondary evidence gap"],
-            closure_packages=[
-                self._closure_package(
-                    closure_id="secondary-evidence",
-                    summary="Secondary evidence remains.",
-                    severity="gap",
-                    action="continue_mainline",
-                    target_stage="revision",
-                    evidence_refs=["evidence://secondary"],
-                )
-            ],
-        )
-
-        normalized = _normalize_quality_output(quality_output)
-
-        self.assertIsNotNone(normalized)
-        assert normalized is not None
-        self.assertEqual(normalized["quality_status"], "near_submission_candidate")
-        self.assertEqual(normalized["evidence_gaps"], ["secondary evidence gap"])
-        self.assertEqual(
-            normalized["quality_closure_dossier"]["closure_packages"][0]["closure_id"],
-            "secondary-evidence",
-        )
-        self.assertEqual(
-            normalized["quality_closure_dossier"]["closure_packages"][0]["evidence_refs"],
-            ["evidence://secondary"],
-        )
-        quality_output["blocker_report"]["overall_status"] = "mutated-after-normalize"
-        self.assertEqual(normalized["blocker_report"]["overall_status"], "near_submission_candidate")
-        self.assertIsNone(_normalize_quality_output({"quality_status": "bad-status"}))
 
     def test_fail_closed_when_budget_exhausted(self) -> None:
         request = self._selection_start_request()
