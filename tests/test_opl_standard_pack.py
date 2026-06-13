@@ -22,6 +22,17 @@ def _read_contract(name: str) -> dict[str, object]:
 def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None:
     generated = build_standard_pack()
 
+    _assert_root_contracts_match(generated)
+    _assert_action_and_stage_domains(generated)
+    _assert_foundry_agent_series_contract(generated["foundry_agent_series"])
+    _assert_workspace_topology_profile(generated["foundry_agent_series"])
+    _assert_adapter_thinning_policy(generated)
+    _assert_pack_compiler_input(generated)
+    _assert_standard_handoff_refs(generated)
+    _assert_functional_privatization_audit(generated)
+
+
+def _assert_root_contracts_match(generated: dict[str, object]) -> None:
     assert _read_contract("domain_descriptor") == generated["domain_descriptor"]
     assert _read_contract("foundry_agent_series") == generated["foundry_agent_series"]
     assert _read_contract("action_catalog") == generated["action_catalog"]
@@ -32,14 +43,19 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         == generated["private_functional_surface_policy"]
     )
 
+
+def _assert_action_and_stage_domains(generated: dict[str, object]) -> None:
     assert generated["action_catalog"]["target_domain_id"] == "med-autogrant"
     assert generated["stage_control_plane"]["target_domain_id"] == "med-autogrant"
-    assert generated["foundry_agent_series"]["surface_kind"] == "opl_foundry_agent_series_contract"
-    assert generated["foundry_agent_series"]["version"] == "foundry-agent-series.v1"
-    assert generated["foundry_agent_series"]["product_layer"] == "foundry_agent"
-    assert generated["foundry_agent_series"]["domain_id"] == "medautogrant"
-    assert generated["foundry_agent_series"]["stage_control_plane_target_domain_id"] == "med-autogrant"
-    assert generated["foundry_agent_series"]["contract_version_policy"] == {
+
+
+def _assert_foundry_agent_series_contract(series: dict[str, object]) -> None:
+    assert series["surface_kind"] == "opl_foundry_agent_series_contract"
+    assert series["version"] == "foundry-agent-series.v1"
+    assert series["product_layer"] == "foundry_agent"
+    assert series["domain_id"] == "medautogrant"
+    assert series["stage_control_plane_target_domain_id"] == "med-autogrant"
+    assert series["contract_version_policy"] == {
         "current_version": "foundry-agent-series.v1",
         "domain_contract_ref": "contracts/foundry_agent_series.json",
         "exact_version_pin_required": True,
@@ -47,7 +63,7 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         "breaking_change_requires_new_version": True,
         "domain_descriptor_must_reference_domain_contract": True,
     }
-    assert generated["foundry_agent_series"]["shared_release_pin_strategy"] == {
+    assert series["shared_release_pin_strategy"] == {
         "owner_release_contract_ref": "contracts/family-release/shared-owner-release.json",
         "owner_commit_pin_required": True,
         "domain_dependency_pin_required": True,
@@ -60,7 +76,7 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         "consumer_alignment_check": "family:shared-release",
         "domain_contract_version_pin_does_not_authorize_domain_truth": True,
     }
-    assert generated["foundry_agent_series"]["shared_policy_release"] == {
+    assert series["shared_policy_release"] == {
         "policy_release_contract_ref": (
             "contracts/opl-framework/foundry-agent-series-policy-release.json"
         ),
@@ -72,7 +88,7 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         "domain_adapter_must_not_copy_policy_body_as_authority": True,
         "consumer_alignment_check": "foundry:policy-release",
     }
-    assert generated["foundry_agent_series"]["series_design_profile"] == {
+    assert series["series_design_profile"] == {
         "surface_kind": "opl_foundry_agent_series_design_profile",
         "version": "foundry-agent-series-design-profile.v1",
         "profile_id": "opl_foundry_agent_series_design_profile.v1",
@@ -121,7 +137,7 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
             "domain_owns_input_truth_and_output_authority": True,
         },
     }
-    assert generated["foundry_agent_series"]["domain_specific_profile"] == {
+    assert series["domain_specific_profile"] == {
         "profile_id": "mag_domain_specific_series_profile.v1",
         "series_members": ["MAS", "MAG", "RCA", "OMA"],
         "shared_opl_agent_lifecycle": [
@@ -172,7 +188,10 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
             "generated_surface_signs_owner_receipt",
         ],
     }
-    workspace_topology = generated["foundry_agent_series"]["workspace_topology_profile"]
+
+
+def _assert_workspace_topology_profile(series: dict[str, object]) -> None:
+    workspace_topology = series["workspace_topology_profile"]
     assert workspace_topology["surface_kind"] == "opl_workspace_topology_profile"
     assert workspace_topology["profile_id"] == "opl.workspace_topology_profile.v1"
     assert workspace_topology["default_profiles"]["one_off"][
@@ -193,6 +212,9 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     assert "one_off_still_uses_project_collection_path" not in workspace_topology[
         "workspace_initialization_policy"
     ]
+
+
+def _assert_adapter_thinning_policy(generated: dict[str, object]) -> None:
     assert generated["domain_descriptor"]["standard_contract_refs"][
         "foundry_agent_series_policy_release"
     ] == "contracts/opl-framework/foundry-agent-series-policy-release.json"
@@ -228,6 +250,9 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         ]
         is True
     )
+
+
+def _assert_pack_compiler_input(generated: dict[str, object]) -> None:
     assert generated["pack_compiler_input"]["generated_surface_owner"] == "one-person-lab"
     pack_taxonomy = generated["pack_compiler_input"]["minimal_authority_surface_taxonomy"]
     assert pack_taxonomy["retired_legacy_function_id_compatibility"] is False
@@ -258,6 +283,9 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
         and "legacy_function_id_compatibility" not in surface
         for surface in generated["pack_compiler_input"]["minimal_authority_surface_contracts"]
     )
+
+
+def _assert_standard_handoff_refs(generated: dict[str, object]) -> None:
     assert generated["generated_surface_handoff"]["domain_repo_can_own_generated_surface"] is False
     assert _read_contract("agent_lab_handoff") == generated["agent_lab_handoff"]
     assert generated["domain_descriptor"]["standard_contract_refs"]["agent_lab_handoff"] == (
@@ -267,6 +295,9 @@ def test_opl_standard_pack_root_contracts_match_mag_canonical_metadata() -> None
     assert generated["domain_descriptor"]["standard_contract_refs"]["oma_handoff_refs"] == (
         "contracts/oma_handoff_refs.json"
     )
+
+
+def _assert_functional_privatization_audit(generated: dict[str, object]) -> None:
     assert generated["functional_privatization_audit"]["functional_followthrough_gap_classification"][
         "mag_functional_structure_gap_count"
     ] == 0
