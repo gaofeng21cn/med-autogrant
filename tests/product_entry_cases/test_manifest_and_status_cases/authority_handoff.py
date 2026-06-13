@@ -9,6 +9,9 @@ from med_autogrant.action_catalog import (
     project_mag_family_action_catalog,
 )
 from med_autogrant.product_entry_parts.manifest_shell import shell_assembly as shell_assembly_module
+from med_autogrant.product_entry_parts.source_provenance import (
+    build_source_provenance_surface,
+)
 from product_entry_cases.domain_memory_assertions import assert_generated_surface_handoff
 from product_entry_cases.support import REPO_ROOT
 from product_entry_cases.test_manifest_and_status_cases.context import ManifestStatusContext
@@ -73,6 +76,7 @@ def assert_authority_handoff(
         user_loop_action["source_command"]["command"],
     )
     source_provenance = manifest["source_provenance"]
+    test_case.assertEqual(source_provenance, build_source_provenance_surface())
     test_case.assertEqual(source_provenance["surface_kind"], "source_provenance")
     test_case.assertEqual(source_provenance["capability_classification"], "source_provenance_only")
     test_case.assertEqual(source_provenance["source_provenance_ref"]["ref"], "docs/source/README.md")
