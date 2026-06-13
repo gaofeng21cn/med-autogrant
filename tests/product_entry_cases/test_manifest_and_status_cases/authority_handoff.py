@@ -2,6 +2,13 @@ from __future__ import annotations
 
 import unittest
 
+from med_autogrant.action_catalog import (
+    CATALOG_ID,
+    annotate_operator_loop_actions_with_catalog_refs,
+    build_mag_family_action_catalog,
+    project_mag_family_action_catalog,
+)
+from med_autogrant.product_entry_parts.manifest_shell import shell_assembly as shell_assembly_module
 from product_entry_cases.domain_memory_assertions import assert_generated_surface_handoff
 from product_entry_cases.support import REPO_ROOT
 from product_entry_cases.test_manifest_and_status_cases.context import ManifestStatusContext
@@ -28,8 +35,20 @@ def assert_authority_handoff(
         default_caller_proof["authority_boundary"]["mag_claims_direct_hosted_parity_passed"]
     )
     action_catalog = manifest["family_action_catalog"]
+    test_case.assertIs(
+        shell_assembly_module.build_mag_family_action_catalog,
+        build_mag_family_action_catalog,
+    )
+    test_case.assertIs(
+        shell_assembly_module.project_mag_family_action_catalog,
+        project_mag_family_action_catalog,
+    )
+    test_case.assertIs(
+        shell_assembly_module.annotate_operator_loop_actions_with_catalog_refs,
+        annotate_operator_loop_actions_with_catalog_refs,
+    )
     test_case.assertEqual(action_catalog["surface_kind"], "family_action_catalog")
-    test_case.assertEqual(action_catalog["catalog_id"], "med_autogrant_action_catalog")
+    test_case.assertEqual(action_catalog["catalog_id"], CATALOG_ID)
     test_case.assertEqual(action_catalog["target_domain_id"], "med-autogrant")
     test_case.assertEqual(action_catalog["authority_boundary"]["domain_truth_owner"], "med-autogrant")
     test_case.assertIn("MCP projection is descriptor-only", action_catalog["notes"])

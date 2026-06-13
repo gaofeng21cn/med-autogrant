@@ -5,23 +5,25 @@ from pathlib import Path
 
 import pytest
 
+from med_autogrant import opl_standard_pack as opl_standard_pack_module
+from med_autogrant import stage_control_plane as stage_control_plane_module
+from med_autogrant.stage_control_plane_parts.cognitive_kernel import (
+    COGNITIVE_KERNEL_ADOPTION_REF,
+    COGNITIVE_KERNEL_STAGE_PACK_REQUIRED_SECTIONS,
+    DOMAIN_PACK_TOOL_AFFORDANCE_REF,
+    GOLDEN_PATH_PROFILE_REF,
+    MAG_TOOL_AFFORDANCE_BOUNDARY,
+    pack_compiler_cognitive_kernel_fields,
+    plane_cognitive_kernel_refs,
+    stage_descriptor_cognitive_kernel_fields,
+)
+
 
 pytestmark = pytest.mark.meta
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-REQUIRED_STAGE_PACK_SECTIONS = [
-    "prompt_refs",
-    "skill_refs",
-    "tool_refs",
-    "tool_affordance_boundary",
-    "knowledge_refs",
-    "quality_gate_refs",
-    "strategy_refs",
-    "candidate_pool_policy",
-    "independent_gate_policy",
-    "handoff_policy",
-]
+REQUIRED_STAGE_PACK_SECTIONS = COGNITIVE_KERNEL_STAGE_PACK_REQUIRED_SECTIONS
 
 
 def _read_json(relative_path: str) -> dict[str, object]:
@@ -37,25 +39,19 @@ def test_mag_pack_declares_advisory_cognitive_kernel_contracts() -> None:
     adoption = _read_json("contracts/cognitive_kernel_adoption.json")
     golden = _read_json("contracts/golden_path_profile.json")
 
+    assert opl_standard_pack_module.pack_compiler_cognitive_kernel_fields is pack_compiler_cognitive_kernel_fields
     assert pack["stage_pack_required_sections"] == REQUIRED_STAGE_PACK_SECTIONS
-    assert pack["cognitive_kernel_adoption_ref"] == "contracts/cognitive_kernel_adoption.json"
-    assert pack["golden_path_profile_ref"] == "contracts/golden_path_profile.json"
+    assert pack["cognitive_kernel_adoption_ref"] == COGNITIVE_KERNEL_ADOPTION_REF
+    assert pack["golden_path_profile_ref"] == GOLDEN_PATH_PROFILE_REF
     assert "tool_affordance_catalog" in pack["declarative_domain_pack"]
     assert "agent/tools/domain_affordances.md" in pack["required_domain_pack_paths"]
     assert (REPO_ROOT / "agent/tools/domain_affordances.md").is_file()
 
     tool_refs = pack["tool_refs"]
-    assert tool_refs == [
-        {
-            "ref": "agent/tools/domain_affordances.md",
-            "ref_kind": "repo_path",
-            "role": "domain_tool_affordance_catalog",
-            "catalog_role": "available_affordance_catalog_not_workflow_script",
-        }
-    ]
+    assert tool_refs == [DOMAIN_PACK_TOOL_AFFORDANCE_REF]
 
     boundary = pack["tool_affordance_boundary"]
-    assert boundary["catalog_role"] == "available_affordance_catalog_not_workflow_script"
+    assert boundary["catalog_role"] == MAG_TOOL_AFFORDANCE_BOUNDARY["catalog_role"]
     assert boundary["executor_autonomy"]["executor_can_choose_order_and_parallelism"] is True
     assert boundary["executor_autonomy"]["tool_catalog_can_prescribe_tool_sequence"] is False
     assert "fundability_verdict_without_mag_owner_receipt" in _refs(boundary["forbidden_authority_refs"])
@@ -78,8 +74,13 @@ def test_mag_stage_control_plane_declares_tool_boundaries_and_independent_gates(
     adoption = _read_json("contracts/cognitive_kernel_adoption.json")
     adoption_boundary = adoption["tool_affordance_boundary"]
 
-    assert plane["cognitive_kernel_adoption_ref"] == "contracts/cognitive_kernel_adoption.json"
-    assert plane["golden_path_profile_ref"] == "contracts/golden_path_profile.json"
+    assert stage_control_plane_module.plane_cognitive_kernel_refs is plane_cognitive_kernel_refs
+    assert (
+        stage_control_plane_module.stage_descriptor_cognitive_kernel_fields
+        is stage_descriptor_cognitive_kernel_fields
+    )
+    assert plane["cognitive_kernel_adoption_ref"] == COGNITIVE_KERNEL_ADOPTION_REF
+    assert plane["golden_path_profile_ref"] == GOLDEN_PATH_PROFILE_REF
     assert plane["stage_pack_required_sections"] == REQUIRED_STAGE_PACK_SECTIONS
 
     default_route_stage_ids = [
@@ -101,7 +102,7 @@ def test_mag_stage_control_plane_declares_tool_boundaries_and_independent_gates(
 
         boundary_ref = stage["tool_affordance_boundary_ref"]
         assert boundary_ref["stage_id"] == stage_id
-        assert boundary_ref["ref"] == "contracts/cognitive_kernel_adoption.json#/tool_affordance_boundary"
+        assert boundary_ref["ref"] == f"{COGNITIVE_KERNEL_ADOPTION_REF}#/tool_affordance_boundary"
         assert "grant_source_and_applicant_context_reading" in _refs(adoption_boundary["capability_refs"])
         assert adoption_boundary["executor_autonomy"]["executor_can_choose_tools"] is True
         assert adoption_boundary["executor_autonomy"]["tool_catalog_can_define_cognitive_strategy"] is False
