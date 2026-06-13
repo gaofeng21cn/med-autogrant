@@ -246,6 +246,20 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
     closeout = ledger["grant_stage_controlled_attempt_closeout"]
     stage_closeouts = closeout["stage_closeout_refs"]
 
+    _assert_stage_controlled_attempt_closeout_header(closeout, stage_closeouts, stage_plane)
+    _assert_live_grant_stage_attempt_ref_packet(closeout, stage_closeouts)
+    _assert_stage_closeouts_match_stage_plane(closeout, stage_closeouts, stage_plane)
+    _assert_opl_stage_evidence_receipt_handoff(closeout, stage_plane)
+    _assert_submission_ready_export_gate_tail(closeout, stage_closeouts)
+    _assert_source_runtime_typed_blocker_handoff(closeout, stage_plane)
+    _assert_stage_closeout_forbidden_write_and_authority(closeout)
+
+
+def _assert_stage_controlled_attempt_closeout_header(
+    closeout,
+    stage_closeouts,
+    stage_plane,
+) -> None:
     assert closeout["surface_kind"] == "mag_grant_stage_controlled_attempt_body_free_closeout.v1"
     assert closeout["state"] == "closed_by_mag_owner_receipt_ref_body_free"
     assert closeout["accepted_return_shape"] == "domain_owner_receipt_ref"
@@ -267,6 +281,9 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
     assert closeout["external_evidence_refs"]["temporal_reconciliation_ref"].endswith(
         "/request_closures/6"
     )
+
+
+def _assert_live_grant_stage_attempt_ref_packet(closeout, stage_closeouts) -> None:
     live_attempt = closeout["live_grant_stage_attempt_ref_packet"]
     assert live_attempt["surface_kind"] == "mag_live_grant_stage_attempt_ref_packet.v1"
     assert live_attempt["stage_id"] == "specific_aims_and_structure"
@@ -293,6 +310,8 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
         "claims_submission_ready_export": False,
     }
 
+
+def _assert_stage_closeouts_match_stage_plane(closeout, stage_closeouts, stage_plane) -> None:
     for index, stage in enumerate(stage_plane["stages"]):
         stage_contract = stage["stage_contract"]
         stage_closeout = stage_closeouts[index]
@@ -312,6 +331,9 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
             "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
             "grant_stage_controlled_attempt_closeout"
         )
+
+
+def _assert_opl_stage_evidence_receipt_handoff(closeout, stage_plane) -> None:
     handoff = closeout["opl_stage_evidence_receipt_handoff"]
     assert handoff["surface_kind"] == "mag_opl_stage_evidence_receipt_handoff.v1"
     assert handoff["status"] == (
@@ -358,6 +380,9 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
         "claims_grant_ready": False,
         "claims_submission_ready_export": False,
     }
+
+
+def _assert_submission_ready_export_gate_tail(closeout, stage_closeouts) -> None:
     package_closeout = stage_closeouts[5]
     assert package_closeout["stage_id"] == "package_and_submit_ready"
     assert package_closeout["submission_ready_export_gate_ref"] == (
@@ -403,6 +428,8 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
         },
     }
 
+
+def _assert_source_runtime_typed_blocker_handoff(closeout, stage_plane) -> None:
     source_runtime_handoff = closeout["opl_stage_source_runtime_evidence_typed_blocker_handoff"]
     assert source_runtime_handoff["surface_kind"] == (
         "mag_opl_stage_source_runtime_evidence_typed_blocker_handoff.v1"
@@ -455,6 +482,8 @@ def test_grant_stage_controlled_attempt_closeout_covers_expected_receipts_and_mo
         "claims_submission_ready_export": False,
     }
 
+
+def _assert_stage_closeout_forbidden_write_and_authority(closeout) -> None:
     for forbidden, value in closeout["forbidden_write_proof"].items():
         assert value is False, forbidden
     for claim, value in closeout["claims"].items():
