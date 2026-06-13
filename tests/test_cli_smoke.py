@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import subprocess
@@ -10,6 +11,10 @@ from pathlib import Path
 
 import pytest
 
+import med_autogrant.__main__ as main_module
+import med_autogrant.cli as cli_module
+import med_autogrant.cli_parts.handlers as cli_handlers
+import med_autogrant.cli_parts.parser_adders as parser_adders
 import med_autogrant.foundry_series_cli as foundry_series_cli
 from med_autogrant.cli import main
 
@@ -35,6 +40,29 @@ def _run_json_cli(*args: str) -> dict[str, object]:
     assert exit_code == 0
     assert stderr == ""
     return json.loads(stdout)
+
+
+@pytest.mark.smoke
+def test_module_entrypoint_reuses_cli_entrypoint() -> None:
+    assert main_module.entrypoint is cli_module.entrypoint
+
+
+@pytest.mark.smoke
+def test_cli_parts_bind_foundry_status_handler_to_parser() -> None:
+    parser = argparse.ArgumentParser(prog="medautogrant")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    parser_adders._add_simple_command(
+        subparsers,
+        "foundry-status",
+        cli_handlers.handle_foundry_status,
+        "输出 MAG 的 OPL Foundry Agent series 状态。",
+    )
+
+    args = parser.parse_args(["foundry-status", "--json"])
+
+    assert args.format == "json"
+    assert args.handler is cli_handlers.handle_foundry_status
+    assert args.handler(args) == foundry_series_cli.build_foundry_series_status()
 
 
 @pytest.mark.smoke

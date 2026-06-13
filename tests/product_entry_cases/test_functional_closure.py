@@ -174,14 +174,19 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
 
     def test_manifest_exposes_physical_skeleton_follow_through_with_repo_source_anchors(self) -> None:
         from med_autogrant.product_entry import MedAutoGrantProductEntry
+        from med_autogrant.product_entry_parts.functional_closure_skeleton import (
+            build_physical_skeleton_follow_through,
+        )
 
         payload = MedAutoGrantProductEntry().build_product_entry_manifest(
             input_path=str(CRITIQUE_EXAMPLE_PATH),
         )
         manifest = payload["product_entry_manifest"]
         follow_through = manifest["physical_skeleton_follow_through"]
+        direct_follow_through = build_physical_skeleton_follow_through()
         audit = manifest["controlled_domain_memory_apply_proof"]["repo_source_layout_audit"]
 
+        self.assertEqual(follow_through, direct_follow_through)
         self.assertEqual(follow_through["surface_kind"], "mag_physical_skeleton_follow_through")
         self.assertEqual(follow_through["state"], "declarative_grant_pack_landed")
         self.assertEqual(audit["layout_state"], "declarative_grant_pack_follow_through_landed")
