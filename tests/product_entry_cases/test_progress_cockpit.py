@@ -3,6 +3,9 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
+from med_autogrant.product_entry_parts.progress_projection_helpers import (
+    _build_opl_progress_delta_mapping,
+)
 from med_autogrant.public_cli import public_cli_command
 from product_entry_cases.support import (
     CRITIQUE_EXAMPLE_PATH,
@@ -67,6 +70,10 @@ def _assert_progress_first_projection_contract(
 
     opl_delta = projection["opl_progress_delta"]
     test_case.assertIsInstance(opl_delta, dict)
+    test_case.assertEqual(
+        opl_delta,
+        _build_opl_progress_delta_mapping(progress_projection=projection),
+    )
     test_case.assertEqual(opl_delta["surface_kind"], "opl_progress_first_delta_mapping")
     test_case.assertEqual(opl_delta["progress_delta_classification"], "mixed")
     test_case.assertEqual(opl_delta["grant_work_progress"]["owner"], "med-autogrant")
