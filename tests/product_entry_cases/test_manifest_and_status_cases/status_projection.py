@@ -2,6 +2,14 @@ from __future__ import annotations
 
 import unittest
 
+from med_autogrant.product_entry_parts import manifest_builder as manifest_builder_module
+from med_autogrant.product_entry_parts.manifest_owner_payload_response import (
+    EXTERNAL_EVIDENCE_LEDGER_REF,
+    MANIFEST_SUSTAINED_CONSUMPTION_EVIDENCE_REF,
+    PRODUCTION_ACCEPTANCE_REF,
+    WORKSPACE_RECEIPT_SCALEOUT_REF,
+    build_manifest_owner_payload_surfaces,
+)
 from product_entry_cases.test_manifest_and_status_cases.context import ManifestStatusContext
 
 
@@ -11,6 +19,10 @@ def assert_status_projection(
 ) -> None:
     manifest = context.manifest
 
+    test_case.assertIs(
+        manifest_builder_module.build_manifest_owner_payload_surfaces,
+        build_manifest_owner_payload_surfaces,
+    )
     test_case.assertEqual(manifest["operator_loop_surface"]["shell_key"], "grant_user_loop")
     test_case.assertEqual(manifest["operator_loop_surface"]["command"], manifest["recommended_command"])
     test_case.assertEqual(manifest["operator_loop_surface"]["surface_kind"], "grant_user_loop")
@@ -56,18 +68,11 @@ def assert_status_projection(
     test_case.assertEqual(
         owner_payload["source_surface_refs"],
         {
-            "production_acceptance_ref": (
-                "contracts/production_acceptance/mag-production-acceptance.json"
-            ),
-            "external_evidence_ledger_ref": (
-                "contracts/external_evidence/mag-evidence-receipt-ledger.json"
-            ),
-            "workspace_receipt_scaleout_evidence_ref": (
-                "contracts/production_acceptance/"
-                "mag-workspace-receipt-scaleout-evidence-20260527.json"
-            ),
+            "production_acceptance_ref": PRODUCTION_ACCEPTANCE_REF,
+            "external_evidence_ledger_ref": EXTERNAL_EVIDENCE_LEDGER_REF,
+            "workspace_receipt_scaleout_evidence_ref": WORKSPACE_RECEIPT_SCALEOUT_REF,
             "manifest_sustained_consumption_evidence_ref": (
-                "contracts/production_acceptance/mag-manifest-sustained-consumption-evidence-20260528.json"
+                MANIFEST_SUSTAINED_CONSUMPTION_EVIDENCE_REF
             ),
         },
     )

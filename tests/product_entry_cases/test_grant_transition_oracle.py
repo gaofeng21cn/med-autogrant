@@ -5,6 +5,15 @@ import tempfile
 import json
 import unittest
 from pathlib import Path
+
+from med_autogrant.stage_control_plane import (
+    build_mag_grant_transition_oracle as public_build_mag_grant_transition_oracle,
+)
+from med_autogrant.stage_control_plane_parts.transition_oracle import (
+    GRANT_TRANSITION_ORACLE_FIXTURES,
+    GRANT_TRANSITION_TABLE,
+    build_mag_grant_transition_oracle,
+)
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
 
@@ -18,6 +27,7 @@ class ProductEntryGrantTransitionOracleTest(unittest.TestCase):
         manifest = payload["product_entry_manifest"]
 
         transition_oracle = manifest["grant_transition_oracle"]
+        self.assertIs(public_build_mag_grant_transition_oracle, build_mag_grant_transition_oracle)
         self.assertEqual(transition_oracle["surface_kind"], "mag_grant_transition_oracle")
         self.assertEqual(transition_oracle["state"], "domain_spec_landed_external_runner_gate")
         self.assertEqual(transition_oracle["runner_owner"], "one-person-lab")
@@ -44,6 +54,11 @@ class ProductEntryGrantTransitionOracleTest(unittest.TestCase):
             for fixture in transition_oracle["oracle_fixtures"]
         }
         self.assertLessEqual(fixture_transition_ids, transition_ids)
+        self.assertEqual(len(transition_oracle["transition_table"]), len(GRANT_TRANSITION_TABLE))
+        self.assertEqual(
+            len(transition_oracle["oracle_fixtures"]),
+            len(GRANT_TRANSITION_ORACLE_FIXTURES),
+        )
         self.assertEqual(transition_oracle["validation"]["status"], "ready_for_opl_runner_ingestion")
         self.assertEqual(transition_oracle["validation"]["missing_stage_refs"], [])
         self.assertEqual(transition_oracle["validation"]["missing_action_refs"], [])
