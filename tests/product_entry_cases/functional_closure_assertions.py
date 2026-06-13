@@ -11,6 +11,12 @@ from med_autogrant.product_entry_parts.consumer_thinning_audit.evidence_gates im
     build_default_caller_deletion_bridge_exit_gate,
     build_legacy_exit_gate,
 )
+from med_autogrant.product_entry_parts.consumer_thinning_audit.model import (
+    build_retired_functional_module_audit_item,
+)
+from med_autogrant.product_entry_parts.consumer_thinning_audit.retired_surfaces import (
+    build_retire_or_tombstone_surfaces,
+)
 from med_autogrant.product_entry_parts.consumer_thinning_shell import (
     FORBIDDEN_MAG_GENERIC_OWNER_ROLES,
     MAG_THIN_SURFACE_OUTPUT_CLASSES,
@@ -366,6 +372,10 @@ def assert_consumer_thinning_audit_mag_authority_modules(testcase: Any, audit: M
     )
 
 def assert_consumer_thinning_audit_retired_surfaces(testcase: Any, audit: Mapping[str, Any]) -> None:
+    testcase.assertEqual(
+        audit["retire_or_tombstone_surfaces"],
+        build_retire_or_tombstone_surfaces(),
+    )
     retire_modules = {item["module_id"]: item for item in audit["retire_or_tombstone_surfaces"]}
     testcase.assertIn("repo_owned_scheduler_daemon", retire_modules)
     testcase.assertFalse(retire_modules["repo_owned_scheduler_daemon"]["active_caller_allowed"])
@@ -400,6 +410,29 @@ def assert_consumer_thinning_audit_retired_surfaces(testcase: Any, audit: Mappin
     testcase.assertEqual(
         retire_modules["domain_runtime_patch_bridge"]["code_paths"],
         ["src/med_autogrant/domain_runtime.py:absent"],
+    )
+    testcase.assertEqual(
+        retire_modules["domain_runtime_patch_bridge"],
+        build_retired_functional_module_audit_item(
+            "domain_runtime_patch_bridge",
+            code_paths=["src/med_autogrant/domain_runtime.py:absent"],
+            active_callers=[],
+            active_caller_status="retired_physical_facade_removed_no_active_caller",
+            migration_action=(
+                "Keep only tombstone/provenance; do not add compatibility aliases or "
+                "re-export facades."
+            ),
+            retention_reason="The old domain_runtime facade file is absent from active source.",
+            cannot_absorb_reason=(
+                "This is retired compatibility glue, not an OPL primitive to absorb."
+            ),
+            evidence_refs=[
+                "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
+                "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
+                "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
+                "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge",
+            ],
+        ),
     )
     testcase.assertIn(
         "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
