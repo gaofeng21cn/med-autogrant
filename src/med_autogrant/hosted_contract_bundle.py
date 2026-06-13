@@ -24,7 +24,7 @@ from med_autogrant.domain_runtime_parts.io import (
     _read_final_package as _read_final_package_from_runtime_parts,
     _write_hosted_contract_bundle_output,
 )
-from med_autogrant.product_entry_parts.runtime_surfaces import (
+from med_autogrant.domain_runtime_parts.shared import (
     DOMAIN_AUTHORITY_SURFACE_REF,
     GENERATED_SESSION_RESUME_SURFACE_REF,
     GENERATED_SESSION_SURFACE_REF,

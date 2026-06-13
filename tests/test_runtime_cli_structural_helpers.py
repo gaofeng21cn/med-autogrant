@@ -6,7 +6,13 @@ from unittest.mock import Mock, patch
 
 import med_autogrant.cli as cli
 import med_autogrant.domain_runtime_parts.runtime_ops as runtime_ops
+import med_autogrant.hosted_contract_bundle as hosted_contract_bundle
 from med_autogrant.domain_entry_catalog import SERVICE_SAFE_DOMAIN_COMMANDS
+from med_autogrant.domain_runtime_parts.shared import (
+    DOMAIN_AUTHORITY_SURFACE_REF,
+    GENERATED_SESSION_RESUME_SURFACE_REF,
+    GENERATED_SESSION_SURFACE_REF,
+)
 from med_autogrant.grant_autonomy_request import validate_grant_autonomy_request
 from med_autogrant.product_entry_parts.domain_entry_loader import build_default_domain_entry
 from med_autogrant.workspace_stage_validation import _find_active_draft, _validate_active_draft_sections
@@ -141,6 +147,20 @@ def test_functional_closure_skeleton_reads_command_catalog_without_domain_entry_
     assert SERVICE_SAFE_DOMAIN_COMMANDS["build-hosted-contract-bundle"].runtime_method == (
         "build_hosted_contract_bundle"
     )
+
+
+def test_hosted_contract_bundle_reads_surface_refs_from_runtime_shared_contracts() -> None:
+    bundle_path = SRC_ROOT / "med_autogrant" / "hosted_contract_bundle.py"
+    bundle_source = bundle_path.read_text(encoding="utf-8")
+
+    assert "from med_autogrant.domain_runtime_parts.shared import (" in bundle_source
+    assert "from med_autogrant.product_entry_parts.runtime_surfaces import" not in bundle_source
+    assert hosted_contract_bundle.DOMAIN_AUTHORITY_SURFACE_REF == DOMAIN_AUTHORITY_SURFACE_REF
+    assert (
+        hosted_contract_bundle.GENERATED_SESSION_RESUME_SURFACE_REF
+        == GENERATED_SESSION_RESUME_SURFACE_REF
+    )
+    assert hosted_contract_bundle.GENERATED_SESSION_SURFACE_REF == GENERATED_SESSION_SURFACE_REF
 
 
 def test_workspace_stage_validation_helpers_keep_active_draft_lookup_and_section_errors() -> None:
