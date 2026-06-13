@@ -5,6 +5,7 @@ import tempfile
 import json
 import unittest
 from pathlib import Path
+import med_autogrant.product_entry_parts.owner_receipt_reconciliation as receipt_reconciliation
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
 
@@ -66,7 +67,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
             entry = MedAutoGrantProductEntry()
             closeout = entry.dispatch_domain_handler_task(task_path=task_path)["domain_handler_dispatch"]["result"]
             receipt = closeout["owner_receipt_evidence"]
-            payload = entry.build_controlled_soak_receipt_reconciliation_proof(
+            payload = receipt_reconciliation.build_controlled_soak_receipt_reconciliation_proof(
                 owner_receipt_evidence=receipt,
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/closeout/1",
                 domain_handler_closeout_result=closeout,
@@ -119,7 +120,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
                     ),
                 },
             )["owner_receipt_evidence"]
-            payload = entry.build_controlled_soak_receipt_reconciliation_proof(
+            payload = receipt_reconciliation.build_controlled_soak_receipt_reconciliation_proof(
                 owner_receipt_evidence=receipt,
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/blocked/1",
             )
@@ -158,7 +159,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
                 runtime_root=runtime_root,
                 receipt_id="package-human-gate-blocker-1",
             )["owner_receipt_evidence"]
-            payload = entry.build_controlled_soak_receipt_reconciliation_proof(
+            payload = receipt_reconciliation.build_controlled_soak_receipt_reconciliation_proof(
                 owner_receipt_evidence=receipt,
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/package-human-gate/1",
             )
@@ -210,7 +211,7 @@ class ProductEntryControlledSoakTest(unittest.TestCase):
                 runtime_root=runtime_root,
                 receipt_id="inventory-typed-blocker",
             )["owner_receipt_evidence"]
-            payload = entry.build_controlled_soak_receipt_reconciliation_inventory(
+            payload = receipt_reconciliation.build_controlled_soak_receipt_reconciliation_inventory(
                 owner_receipt_evidence_items=[no_regression, typed_blocker],
                 opl_ledger_ref="opl-ledger://mag/stage-attempt/inventory",
                 domain_handler_closeout_results=[{"receipt_ref": no_regression["receipt_instance_ref"]}],

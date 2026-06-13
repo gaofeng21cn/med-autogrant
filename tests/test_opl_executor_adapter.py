@@ -8,6 +8,8 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import med_autogrant.opl_hermes_executor_helper as hermes_helper
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
@@ -62,6 +64,42 @@ class OplExecutorAdapterTest(unittest.TestCase):
             )
 
         self.assertEqual(payload, receipt)
+
+    def test_opl_hermes_executor_helper_accepts_opl_owned_critique_receipt(self) -> None:
+        result = {
+            "agent_execution_receipt": {
+                "receipt_owner": "one-person-lab",
+                "mag_executor_owner": False,
+                "executor_kind": "hermes_agent",
+            },
+            "contract": {"adapter": "hermes_agent"},
+            "payload": {
+                "mentor_critique": {"verdict": "major_revision"},
+                "revision_plan": {"plan_id": "revision-plan"},
+            },
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir, patch.object(
+            hermes_helper,
+            "run_hermes_agent_exec",
+            return_value=result,
+        ) as run_hermes:
+            receipt = hermes_helper.run_mag_hermes_executor_request(
+                {
+                    "executor_kind": "hermes_agent",
+                    "prompt": "critique prompt",
+                    "cwd": tmp_dir,
+                    "domain_payload": {"route_id": "critique"},
+                }
+            )
+
+        run_hermes.assert_called_once_with("critique prompt", cwd=Path(tmp_dir).resolve())
+        self.assertEqual(receipt["executor_contract"], {"adapter": "hermes_agent"})
+        self.assertEqual(receipt["closeout_packet"]["surface_kind"], "mag_critique_closeout_packet")
+        self.assertEqual(
+            receipt["closeout_packet"]["mentor_critique"],
+            {"verdict": "major_revision"},
+        )
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
-from med_autogrant.product_entry_parts import domain_handler_dispatch as dispatch_module
+import med_autogrant.product_entry_parts.domain_handler_dispatch as dispatch_module
 from med_autogrant.product_entry_parts.domain_handler_closeout import (
     _dispatch_codex_stage_receipts,
     _dispatch_executor_first_bundle,

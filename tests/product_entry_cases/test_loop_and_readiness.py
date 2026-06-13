@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 from unittest.mock import patch
 
+import med_autogrant.product_entry_parts.loop_route_shell as loop_route_shell
 from med_autogrant.public_cli import public_cli_command
 from product_entry_cases.support import (
     _expected_runtime_output_path,
@@ -59,6 +60,16 @@ class ProductEntryLoopReadinessTest(unittest.TestCase):
                 "--format",
                 "json",
             ),
+        )
+        self.assertEqual(
+            loop_route_shell._build_route_execution_command(
+                route_id="revision",
+                input_path=CRITIQUE_EXAMPLE_PATH,
+                grant_run_id="grant-run-nsfc-demo-001-baseline-001",
+                workspace_id="nsfc-demo-001",
+                draft_id="draft-v1",
+            ),
+            payload["grant_user_loop"]["next_action"]["command"],
         )
         self.assertNotIn("<", payload["grant_user_loop"]["next_action"]["command"])
         self.assertIsNone(payload["grant_user_loop"]["next_action"]["handoff_surfaces"])

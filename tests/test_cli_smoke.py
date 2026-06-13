@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pytest
 
+import med_autogrant.foundry_series_cli as foundry_series_cli
 from med_autogrant.cli import main
 
 
@@ -71,8 +72,10 @@ def test_foundry_group_exposes_series_operations() -> None:
 @pytest.mark.smoke
 def test_foundry_status_projects_mag_series_identity() -> None:
     payload = _run_json_cli("foundry", "status", "--json")
+    direct_payload = foundry_series_cli.build_foundry_series_status()
 
     assert payload["ok"] is True
+    assert payload == direct_payload
     assert payload["command"] == "foundry-status"
     assert payload["foundry_agent_series"]["version"] == "foundry-agent-series.v1"
     assert payload["foundry_agent_series"]["foundry_agent_id"] == "medautogrant"
