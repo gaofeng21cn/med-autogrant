@@ -9,6 +9,10 @@ import pytest
 
 from med_autogrant.opl_standard_pack import build_standard_pack
 from med_autogrant.opl_standard_pack_constants import DOMAIN_LABEL, GENERATED_SURFACE_OWNER
+from med_autogrant.opl_standard_pack_handoff_refs import (
+    AHE_PATCH_LOOP_CLOSEOUT_REFS,
+    AHE_PATCH_LOOP_REF_KEYS,
+)
 from med_autogrant.opl_standard_pack_source_policy import (
     GENERATED_SURFACES,
     PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS,
@@ -580,28 +584,16 @@ def test_agent_lab_handoff_is_standard_body_free_consumer_refs_only() -> None:
     assert closeout["read_model_consumption_ref"] == (
         "/product_entry_manifest/production_live_acceptance_receipt"
     )
-    assert set(closeout["required_closeout_ref_keys"]) == {
-        "blocked_suite_result_ref",
-        "developer_patch_work_order_ref",
-        "patch_traceability_matrix_ref",
-        "target_repo_verification_refs",
-        "target_runtime_read_model_consumption_ref",
-        "workspace_environment_proof_ref",
-        "no_forbidden_write_proof_ref",
-        "target_owner_receipt_or_typed_blocker_ref",
-        "patch_absorption_ref",
-        "worktree_cleanup_ref",
-        "agent_lab_re_evaluation_ref",
-    }
+    assert closeout["required_closeout_ref_keys"] == AHE_PATCH_LOOP_REF_KEYS
     assert set(closeout["closeout_refs"]) == set(closeout["required_closeout_ref_keys"])
     assert closeout["closeout_refs"]["developer_patch_work_order_ref"] == (
-        "developer-work-order:oma/mag/ai-first-mag-patch-smoke"
+        AHE_PATCH_LOOP_CLOSEOUT_REFS["developer_patch_work_order_ref"]
     )
     assert closeout["closeout_refs"]["target_runtime_read_model_consumption_ref"] == (
-        "/product_entry_manifest/production_live_acceptance_receipt"
+        AHE_PATCH_LOOP_CLOSEOUT_REFS["target_runtime_read_model_consumption_ref"]
     )
     assert closeout["closeout_refs"]["target_owner_receipt_or_typed_blocker_ref"] == (
-        "receipt:mag/production-live-acceptance/2026-05-20"
+        AHE_PATCH_LOOP_CLOSEOUT_REFS["target_owner_receipt_or_typed_blocker_ref"]
     )
 
 
