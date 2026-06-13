@@ -3,6 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
+from med_autogrant.product_entry_parts.domain_handler_contract import (
+    DOMAIN_HANDLER_ADAPTER_ID,
+    DOMAIN_HANDLER_EXPORT_KIND,
+)
+
 
 def assert_domain_handler_export_maps_runtime_and_attention_surfaces(
     testcase: Any,
@@ -24,8 +29,8 @@ def assert_domain_handler_export_maps_runtime_and_attention_surfaces(
 
 
 def assert_domain_handler_export_identity(testcase: Any, export: Mapping[str, Any]) -> None:
-    testcase.assertEqual(export["surface_kind"], "mag_product_domain_handler_export")
-    testcase.assertEqual(export["adapter_id"], "mag.opl_stage_led.domain_handler.v1")
+    testcase.assertEqual(export["surface_kind"], DOMAIN_HANDLER_EXPORT_KIND)
+    testcase.assertEqual(export["adapter_id"], DOMAIN_HANDLER_ADAPTER_ID)
     caller_owner = export["caller_owner_contract"]
     testcase.assertEqual(caller_owner["active_caller_owner"], "med-autogrant")
     testcase.assertEqual(
