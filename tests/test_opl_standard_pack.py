@@ -13,11 +13,19 @@ from med_autogrant.opl_standard_pack_handoff_refs import (
     AHE_PATCH_LOOP_CLOSEOUT_REFS,
     AHE_PATCH_LOOP_REF_KEYS,
 )
+from med_autogrant.opl_standard_pack_private_policy import (
+    build_private_functional_surface_policy,
+)
 from med_autogrant.opl_standard_pack_source_policy import (
+    ACTIVE_CALLER_STATUS_BY_PHYSICAL_CLASSIFICATION,
+    FORBIDDEN_GENERIC_OWNER_ROLES,
+    FORBIDDEN_PHYSICAL_RESIDUE_CLASSES,
     GENERATED_SURFACES,
     PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS,
+    PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS,
     REQUIRED_DOMAIN_PACK_PATHS,
     RETIREMENT_EVIDENCE_REFS,
+    TARGET_OWNER_BY_PHYSICAL_CLASSIFICATION,
 )
 
 
@@ -375,6 +383,18 @@ def test_opl_default_callers_see_mag_deletion_evidence_without_delete_authority(
 def test_private_functional_policy_classifies_physical_source_morphology() -> None:
     generated = build_standard_pack()
     policy = generated["private_functional_surface_policy"]
+    direct_policy = build_private_functional_surface_policy(
+        forbidden_generic_owner_roles=FORBIDDEN_GENERIC_OWNER_ROLES,
+        physical_source_classification_buckets=PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS,
+        physical_source_surface_classifications=PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS,
+        forbidden_physical_residue_classes=FORBIDDEN_PHYSICAL_RESIDUE_CLASSES,
+        retirement_evidence_refs=RETIREMENT_EVIDENCE_REFS,
+        target_owner_by_physical_classification=TARGET_OWNER_BY_PHYSICAL_CLASSIFICATION,
+        active_caller_status_by_physical_classification=(
+            ACTIVE_CALLER_STATUS_BY_PHYSICAL_CLASSIFICATION
+        ),
+    )
+    assert policy == direct_policy
     morphology = policy["physical_source_morphology_policy"]
 
     assert morphology["state"] == "classified_no_generic_runtime_reflow"
