@@ -5,6 +5,10 @@ import tempfile
 import json
 import unittest
 from pathlib import Path
+
+from med_autogrant.product_entry_parts.domain_memory_runtime import (
+    DOMAIN_MEMORY_RUNTIME_RECEIPT_EVIDENCE_KIND,
+)
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
 
@@ -41,7 +45,7 @@ class ProductEntryDomainMemoryReceiptEvidenceTest(unittest.TestCase):
             receipt = evidence["domain_memory_receipt_evidence"]
             receipt_path = Path(receipt["receipt_instance_ref"])
             self.assertTrue(receipt_path.exists())
-            self.assertEqual(receipt["surface_kind"], "mag_domain_memory_runtime_receipt_evidence")
+            self.assertEqual(receipt["surface_kind"], DOMAIN_MEMORY_RUNTIME_RECEIPT_EVIDENCE_KIND)
             self.assertEqual(receipt["state"], "runtime_receipt_instance_written")
             self.assertEqual(receipt["decision"], "accepted")
             self.assertEqual(receipt["owner"], "med-autogrant")

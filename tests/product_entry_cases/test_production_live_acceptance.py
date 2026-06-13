@@ -5,6 +5,13 @@ import tempfile
 from copy import deepcopy
 import unittest
 from pathlib import Path
+
+from med_autogrant.product_entry_parts.owner_receipt_common import (
+    PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND,
+)
+from med_autogrant.product_entry_parts.production_live_acceptance import (
+    build_production_live_acceptance_receipt_projection,
+)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
@@ -146,7 +153,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
                     "meta_agent_coordination_ref": "meta-agent:mag/live-acceptance",
                 },
             )["owner_receipt_evidence"]
-            payload = entry.build_production_live_acceptance_receipt_projection(
+            payload = build_production_live_acceptance_receipt_projection(
                 owner_receipt_evidence=receipt,
                 agent_lab_suite_result=_agent_lab_suite_result(),
                 meta_agent_coordination_result=_meta_agent_coordination_result(),
@@ -155,7 +162,7 @@ class ProductEntryProductionLiveAcceptanceTest(unittest.TestCase):
         projection = payload["production_live_acceptance_receipt"]
         self.assertEqual(
             projection["surface_kind"],
-            "mag_production_live_acceptance_receipt_projection",
+            PRODUCTION_LIVE_ACCEPTANCE_RECEIPT_PROJECTION_KIND,
         )
         self.assertEqual(
             projection["state"],
