@@ -2,6 +2,10 @@ from __future__ import annotations
 
 import unittest
 
+from med_autogrant.product_entry_parts import manifest_builder as manifest_builder_module
+from med_autogrant.product_entry_parts.manifest_shell.runtime_task_shell import (
+    build_manifest_runtime_task_shell,
+)
 from product_entry_cases.test_manifest_and_status_cases.context import ManifestStatusContext
 
 
@@ -12,6 +16,10 @@ def assert_runtime_control(
     payload = context.payload
     manifest = context.manifest
 
+    test_case.assertIs(
+        manifest_builder_module.build_manifest_runtime_task_shell,
+        build_manifest_runtime_task_shell,
+    )
     test_case.assertEqual(
         manifest["opl_provider_runtime_contract"],
         {

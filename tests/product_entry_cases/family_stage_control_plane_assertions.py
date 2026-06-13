@@ -3,6 +3,17 @@ from __future__ import annotations
 import unittest
 from typing import Any, Mapping
 
+from med_autogrant.stage_control_plane import (
+    build_stage_native_artifact_contract as public_build_stage_native_artifact_contract,
+)
+from med_autogrant.stage_control_plane_parts.artifact_contracts import (
+    FINAL_PACKAGE_LIFECYCLE_ROLE,
+    PACKAGE_LIFECYCLE_OPL_CONSUMPTION,
+    STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE,
+    SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE,
+    build_stage_native_artifact_contract,
+)
+
 
 def assert_family_stage_control_plane_preserves_opl_projection_and_mag_authority(
     test_case: unittest.TestCase,
@@ -239,6 +250,10 @@ def _assert_stage_native_artifact_contract(
     expected_stage_output_role: str,
 ) -> None:
     stage_native_artifact_contract = stage["stage_contract"]["stage_native_artifact_contract"]
+    test_case.assertIs(
+        public_build_stage_native_artifact_contract,
+        build_stage_native_artifact_contract,
+    )
     test_case.assertEqual(
         stage_native_artifact_contract["surface_kind"],
         "mag_stage_native_artifact_contract",
@@ -309,7 +324,7 @@ def _assert_manifest_requirements_and_folder_lifecycle(
     test_case.assertEqual(
         stage_native_artifact_contract["stage_folder_lifecycle_contract"],
         {
-            "artifact_bundle_role": "stage_output_artifact_ref",
+            "artifact_bundle_role": STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE,
             "artifact_bundle_output_role": expected_stage_output_role,
             "artifact_bundle_manifest_required": True,
             "artifact_bundle_owner_receipt_or_typed_blocker_required": True,
@@ -328,7 +343,7 @@ def _assert_manifest_requirements_and_folder_lifecycle(
                 "conformance_summary_ref",
             ],
             "conformance_required": True,
-            "opl_consumption": "refs_manifest_missing_output_receipt_blocker_handoff_only",
+            "opl_consumption": PACKAGE_LIFECYCLE_OPL_CONSUMPTION,
             "opl_can_interpret_grant_quality": False,
         },
     )
@@ -453,7 +468,7 @@ def _assert_package_stage_lifecycle_projection(
     test_case.assertEqual(package_projection["stage_id"], "package_and_submit_ready")
     test_case.assertEqual(
         package_projection["artifact_bundle"]["lifecycle_contract_role"],
-        "stage_output_artifact_ref",
+        STAGE_OUTPUT_ARTIFACT_LIFECYCLE_ROLE,
     )
     test_case.assertEqual(
         package_projection["artifact_bundle"]["stage_output_role"],
@@ -461,7 +476,7 @@ def _assert_package_stage_lifecycle_projection(
     )
     test_case.assertEqual(
         package_projection["final_package"]["lifecycle_contract_role"],
-        "canonical_promotion_ref",
+        FINAL_PACKAGE_LIFECYCLE_ROLE,
     )
     test_case.assertEqual(package_projection["final_package"]["physical_locator_role"], "canonical_pointer_ref")
     test_case.assertEqual(
@@ -470,7 +485,7 @@ def _assert_package_stage_lifecycle_projection(
     )
     test_case.assertEqual(
         package_projection["submission_ready_package"]["lifecycle_contract_role"],
-        "export_artifact_ref",
+        SUBMISSION_READY_PACKAGE_LIFECYCLE_ROLE,
     )
     test_case.assertEqual(
         package_projection["submission_ready_package"]["physical_locator_role"],
