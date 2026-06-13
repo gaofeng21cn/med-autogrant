@@ -10,6 +10,11 @@ from contextlib import (
 )
 from io import StringIO
 from pathlib import Path
+
+from med_autogrant.product_entry_parts.hosted_receipt_verification import (
+    HOSTED_RECEIPT_VERIFICATION_KIND,
+    build_focused_hosted_receipt_verification,
+)
 from med_autogrant.workspace import WorkspaceStateError
 from product_entry_cases.support import CRITIQUE_EXAMPLE_PATH
 
@@ -38,7 +43,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
                 },
             }
 
-        payload = entry.build_focused_hosted_receipt_verification(
+        payload = build_focused_hosted_receipt_verification(
             owner_receipt_evidence=receipt,
             opl_attempt_evidence={
                 "surface_kind": "opl_hosted_stage_attempt_evidence",
@@ -60,7 +65,7 @@ class ProductEntryHostedReceiptVerificationTest(unittest.TestCase):
         )
 
         verification = payload["focused_hosted_receipt_verification"]
-        self.assertEqual(verification["surface_kind"], "mag_focused_hosted_receipt_verification")
+        self.assertEqual(verification["surface_kind"], HOSTED_RECEIPT_VERIFICATION_KIND)
         self.assertEqual(verification["state"], "focused_hosted_receipt_refs_verified_not_live_soak")
         self.assertEqual(verification["stage_id"], "review_and_rebuttal")
         self.assertTrue(verification["matches"]["owner_receipt_ref_matches_opl"])
