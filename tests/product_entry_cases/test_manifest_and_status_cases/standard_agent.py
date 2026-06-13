@@ -6,6 +6,11 @@ from med_autogrant.domain_entry_contract import (
     build_domain_entry_contract,
     build_user_interaction_contract,
 )
+from med_autogrant.product_entry_parts.domain_agent_projection_surfaces import (
+    ARTIFACT_LOCATOR_KIND,
+    CONTROLLED_STAGE_ATTEMPT_KIND,
+    DOMAIN_MEMORY_DESCRIPTOR_LOCATOR_KIND,
+)
 
 from product_entry_cases.domain_memory_assertions import assert_domain_memory_descriptor_locator
 from product_entry_cases.test_manifest_and_status_cases.context import ManifestStatusContext
@@ -18,7 +23,7 @@ def assert_standard_agent_contract(
     manifest = context.manifest
 
     artifact_locator = manifest["artifact_locator_contract"]
-    test_case.assertEqual(artifact_locator["surface_kind"], "domain_artifact_locator_contract")
+    test_case.assertEqual(artifact_locator["surface_kind"], ARTIFACT_LOCATOR_KIND)
     test_case.assertEqual(artifact_locator["locator_id"], "mag.artifact_locator.v1")
     test_case.assertFalse(artifact_locator["runtime_artifact_root"]["repo_tracked"])
     test_case.assertIn(
@@ -39,7 +44,7 @@ def assert_standard_agent_contract(
         artifact_locator["opl_consumption"]["requires_mag_receipt_for_domain_artifact_mutation"]
     )
     controlled_attempt = manifest["controlled_stage_attempt_projection"]
-    test_case.assertEqual(controlled_attempt["surface_kind"], "controlled_stage_attempt_projection")
+    test_case.assertEqual(controlled_attempt["surface_kind"], CONTROLLED_STAGE_ATTEMPT_KIND)
     test_case.assertEqual(
         controlled_attempt["maps_to_opl_contract"],
         "opl_family_runtime_attempt_contract.v1",
@@ -66,6 +71,7 @@ def assert_standard_agent_contract(
     test_case.assertFalse(proof["opl_verdict_authority"]["submission_ready_export"])
     stage_plane = manifest["family_stage_control_plane"]
     memory_locator = manifest["domain_memory_descriptor_locator"]
+    test_case.assertEqual(memory_locator["surface_kind"], DOMAIN_MEMORY_DESCRIPTOR_LOCATOR_KIND)
     assert_domain_memory_descriptor_locator(test_case, memory_locator, stage_plane)
     skeleton = manifest["standard_domain_agent_skeleton"]
     test_case.assertEqual(skeleton["surface_kind"], "standard_domain_agent_skeleton")
