@@ -14,13 +14,14 @@ if str(SRC_ROOT) not in sys.path:
 
 from med_autogrant.grant_autonomy_controller import run_grant_autonomy_controller  # noqa: E402
 from med_autogrant.grant_autonomy_trace import spend_budget_step  # noqa: E402
-
-OPL_STAGE_ATTEMPT = {"runtime_owner": "one-person-lab", "executor_kind": "codex_cli", "attempt_lease_ref": "lease:opl/stage-attempt/test"}
-
-
-def _assert_no_stage_transition_authority(test_case: unittest.TestCase, boundary: dict[str, Any]) -> None:
-    test_case.assertFalse(any(boundary[key] for key in ("mag_writes_stage_current_pointer", "mag_writes_stage_terminal_state", "mag_selects_next_opl_stage")))
-    test_case.assertTrue(boundary["requires_opl_stage_transition_authority"])
+from tests.support.grant_autonomy_controller import (  # noqa: E402
+    OPL_STAGE_ATTEMPT,
+    assert_no_stage_transition_authority,
+    closure_package,
+    quality_result,
+    selection_start_request,
+    workspace_start_request,
+)
 
 
 class GrantAutonomyControllerTest(unittest.TestCase):
@@ -61,72 +62,6 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(spent_steps, 1)
         self.assertEqual(len(action_trace), 1)
 
-    def _selection_start_request(self) -> dict[str, Any]:
-        return {
-            "request_id": "autonomy-req-001",
-            "opl_stage_attempt": dict(OPL_STAGE_ATTEMPT),
-            "start": {
-                "mode": "selection_input",
-                "selection_input": {
-                    "selection_input_id": "sel-001",
-                    "funding_opportunity_pool": [{"brief_id": "nsfc-2026-general"}],
-                },
-            },
-            "goal": {
-                "target_status": "submission_grade_candidate",
-                "summary": "进入可提交态",
-            },
-            "max_rounds_or_cycles": 3,
-            "budget": {"max_total_steps": 20},
-            "stop_conditions": {
-                "require_zero_blockers": True,
-                "require_zero_evidence_gaps": True,
-            },
-            "blocker_queue": ["初始 blocker"],
-            "evidence_gap_queue": ["初始证据缺口"],
-            "reselection_policy": {
-                "enabled": True,
-                "max_reselections": 1,
-            },
-            "rollback_policy": {
-                "enabled": True,
-                "max_rollbacks": 1,
-            },
-        }
-
-    def _workspace_start_request(self) -> dict[str, Any]:
-        return {
-            "request_id": "autonomy-req-002",
-            "opl_stage_attempt": dict(OPL_STAGE_ATTEMPT),
-            "start": {
-                "mode": "workspace",
-                "workspace": {
-                    "workspace_id": "ws-001",
-                    "lifecycle_stage": "critique",
-                },
-            },
-            "goal": {
-                "target_status": "near_submission_candidate",
-                "summary": "先达到 near submission",
-            },
-            "max_rounds_or_cycles": 2,
-            "budget": {"max_total_steps": 10},
-            "stop_conditions": {
-                "require_zero_blockers": True,
-                "require_zero_evidence_gaps": True,
-            },
-            "blocker_queue": [],
-            "evidence_gap_queue": [],
-            "reselection_policy": {
-                "enabled": False,
-                "max_reselections": 0,
-            },
-            "rollback_policy": {
-                "enabled": False,
-                "max_rollbacks": 0,
-            },
-        }
-
     def test_runtime_quality_evaluator_keeps_projection_only_scorecard_not_ready(self) -> None:
         from med_autogrant.domain_runtime_parts.runtime_ops import build_autonomy_quality_evaluator_output
 
@@ -141,152 +76,8 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertTrue(quality_output["blocker_report"]["ai_reviewer_required"])
         self.assertEqual(quality_output["blocker_report"]["assessment_owner"], "projection_only")
 
-    def _closure_package(
-        self,
-        *,
-        closure_id: str,
-        summary: str,
-        severity: str = "hard",
-        action: str = "continue_mainline",
-        target_stage: str | None = None,
-        required_input_ids: list[str] | None = None,
-        linked_issue_ids: list[str] | None = None,
-        blocking_reasons: list[str] | None = None,
-        evidence_refs: list[str] | None = None,
-    ) -> dict[str, Any]:
-        return {
-            "closure_id": closure_id,
-            "summary": summary,
-            "severity": severity,
-            "target_stage": target_stage,
-            "action": action,
-            "required_input_ids": list(required_input_ids or []),
-            "evidence_refs": list(evidence_refs or []),
-            "linked_issue_ids": list(linked_issue_ids or []),
-            "blocking_reasons": list(blocking_reasons or []),
-            "evidence_obligations": [],
-            "acceptance_signals": [
-                {
-                    "signal_id": f"signal:{closure_id}",
-                    "signal_kind": "controller_action",
-                    "summary": summary,
-                    "source_surface": "grant_quality",
-                    "required_input_ids": list(required_input_ids or []),
-                    "evidence_refs": list(evidence_refs or []),
-                }
-            ],
-        }
-
-    def _quality_result(
-        self,
-        *,
-        quality_status: str,
-        unresolved_blockers: list[str] | None = None,
-        evidence_gaps: list[str] | None = None,
-        closure_packages: list[dict[str, Any]] | None = None,
-        evidence_supply_queue: list[dict[str, Any]] | None = None,
-        workspace_id: str = "ws-001",
-        lifecycle_stage: str = "critique",
-        draft_id: str | None = "draft-001",
-        grant_run_id: str = "grant-001",
-        overall_score: int | None = None,
-        overall_status: str | None = None,
-        summary: str | None = None,
-        loop_gate_action: str | None = None,
-        loop_gate_stage: str | None = None,
-        loop_gate_reason: str | None = None,
-    ) -> dict[str, Any]:
-        unresolved = list(unresolved_blockers or [])
-        gaps = list(evidence_gaps or [])
-        packages = [dict(item) for item in (closure_packages or [])]
-        supply_queue = [dict(item) for item in (evidence_supply_queue or [])]
-        resolved_overall_status = overall_status
-        if resolved_overall_status is None:
-            resolved_overall_status = quality_status if quality_status != "not_ready" else "blocked"
-        resolved_score = overall_score
-        if resolved_score is None:
-            if quality_status == "submission_grade_candidate":
-                resolved_score = 90
-            elif quality_status == "near_submission_candidate":
-                resolved_score = 78
-            else:
-                resolved_score = 55
-        resolved_summary = summary or f"quality:{resolved_overall_status}"
-        resolved_loop_gate_action = loop_gate_action
-        if resolved_loop_gate_action is None:
-            resolved_loop_gate_action = "continue" if quality_status != "not_ready" else "rollback_required"
-        resolved_loop_gate_reason = loop_gate_reason or (unresolved[0] if unresolved else resolved_summary)
-        gap_ids = [
-            str(item.get("gap_id") or "").strip()
-            for item in supply_queue
-            if str(item.get("gap_id") or "").strip()
-        ]
-        status_counts: dict[str, list[str]] = {}
-        kind_counts: dict[str, list[str]] = {}
-        for item in supply_queue:
-            gap_id = str(item.get("gap_id") or "").strip()
-            supply_status = str(item.get("supply_status") or "").strip()
-            gap_kind = str(item.get("gap_kind") or "").strip()
-            if gap_id and supply_status:
-                status_counts.setdefault(supply_status, []).append(gap_id)
-            if gap_id and gap_kind:
-                kind_counts.setdefault(gap_kind, []).append(gap_id)
-
-        return {
-            "quality_status": quality_status,
-            "blocker_report": {
-                "surface_kind": "grant_quality_scorecard",
-                "overall_status": resolved_overall_status,
-                "overall_score": resolved_score,
-            },
-            "unresolved_blockers": unresolved,
-            "evidence_gaps": gaps,
-            "evidence_supply_queue": supply_queue,
-            "quality_closure_dossier": {
-                "surface_kind": "grant_quality_closure_dossier",
-                "dossier_version": 1,
-                "workspace_surface_kind": "nsfc_workspace",
-                "grant_run_id": grant_run_id,
-                "workspace_id": workspace_id,
-                "lifecycle_stage": lifecycle_stage,
-                "draft_id": draft_id,
-                "quality_summary": {
-                    "overall_status": resolved_overall_status,
-                    "overall_score": resolved_score,
-                    "summary": resolved_summary,
-                    "loop_gate": {
-                        "action": resolved_loop_gate_action,
-                        "recommended_stage": loop_gate_stage,
-                        "reason": resolved_loop_gate_reason,
-                    },
-                },
-                "unclosed_hard_issues": unresolved,
-                "evidence_supply_queue_summary": {
-                    "total_gap_count": len(gap_ids),
-                    "outstanding_gap_ids": gap_ids,
-                    "status_counts": [
-                        {
-                            "supply_status": status,
-                            "count": len(ids),
-                            "gap_ids": ids,
-                        }
-                        for status, ids in status_counts.items()
-                    ],
-                    "kind_counts": [
-                        {
-                            "gap_kind": gap_kind,
-                            "count": len(ids),
-                            "gap_ids": ids,
-                        }
-                        for gap_kind, ids in kind_counts.items()
-                    ],
-                },
-                "closure_packages": packages,
-            },
-        }
-
     def test_report_exposes_tranche_plan_and_yields_after_one_domain_action(self) -> None:
-        request = self._workspace_start_request()
+        request = workspace_start_request()
         request["controller_plan"] = {
             "current_tranche": "quality_closure",
             "tranche_objective": "关闭质量硬伤并形成 near-submission candidate",
@@ -306,12 +97,12 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         def quality_evaluator(_workspace: dict[str, Any]) -> dict[str, Any]:
             quality_calls["count"] += 1
             if quality_calls["count"] == 1:
-                return self._quality_result(
+                return quality_result(
                     quality_status="not_ready",
                     unresolved_blockers=["科学问题尚未闭合"],
                     evidence_gaps=["申请人适配证据不足"],
                     closure_packages=[
-                        self._closure_package(
+                        closure_package(
                             closure_id="scientific-question",
                             summary="科学问题尚未闭合",
                             severity="hard",
@@ -321,7 +112,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                         )
                     ],
                 )
-            return self._quality_result(
+            return quality_result(
                 quality_status="near_submission_candidate",
                 unresolved_blockers=[],
                 evidence_gaps=[],
@@ -361,7 +152,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         )
         self.assertFalse(result["controller_execution_boundary"]["mag_long_running_driver"])
         self.assertFalse(result["controller_execution_boundary"]["mag_owns_attempt_ledger"])
-        _assert_no_stage_transition_authority(self, result["controller_execution_boundary"])
+        assert_no_stage_transition_authority(self, result["controller_execution_boundary"])
         self.assertEqual(result["controller_execution_boundary"]["controller_status_role"], "mag_domain_controller_result_not_opl_stage_terminal")
         self.assertEqual(
             result["controller_execution_boundary"]["post_start_residency_owner"],
@@ -373,10 +164,10 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         )
         self.assertEqual(result["authority_return"]["result_shape"], "typed_blocker")
         self.assertEqual(result["authority_return"]["body_policy"], "refs_only_no_runtime_or_grant_body")
-        _assert_no_stage_transition_authority(self, result["authority_return"]["authority_boundary"])
+        assert_no_stage_transition_authority(self, result["authority_return"]["authority_boundary"])
 
     def test_fail_closed_report_keeps_latest_active_closure_package(self) -> None:
-        request = self._workspace_start_request()
+        request = workspace_start_request()
         request["max_rounds_or_cycles"] = 1
 
         result = run_grant_autonomy_controller(
@@ -384,12 +175,12 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             selector=lambda selection_input: selection_input,
             initializer=lambda selection_input, selection: {"workspace": {"selection": selection_input, "meta": selection}},
             mainline_runner=lambda _payload: (_ for _ in ()).throw(AssertionError("max=1 不应进入 mainline_runner")),
-            quality_evaluator=lambda _workspace: self._quality_result(
+            quality_evaluator=lambda _workspace: quality_result(
                 quality_status="not_ready",
                 unresolved_blockers=["核心科学问题仍未成立"],
                 evidence_gaps=["需要补充关键 preliminary evidence"],
                 closure_packages=[
-                    self._closure_package(
+                    closure_package(
                         closure_id="evidence-gap",
                         summary="需要补充关键 preliminary evidence",
                         severity="gap",
@@ -397,7 +188,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                         target_stage="revision",
                         blocking_reasons=["需要补充关键 preliminary evidence"],
                     ),
-                    self._closure_package(
+                    closure_package(
                         closure_id="scientific-question",
                         summary="核心科学问题仍未成立",
                         severity="hard",
@@ -424,7 +215,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertIn("typed_blocker_ref", result["authority_return"]["refs"])
 
     def test_family_governance_policy_shapes_default_controller_plan(self) -> None:
-        request = self._workspace_start_request()
+        request = workspace_start_request()
         request["start"]["workspace"] = {
             "workspace_id": "ws-nih-001",
             "lifecycle_stage": "critique",
@@ -461,7 +252,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         }
 
         def quality_evaluator(_workspace: dict[str, Any]) -> dict[str, Any]:
-            return self._quality_result(
+            return quality_result(
                 quality_status="near_submission_candidate",
                 unresolved_blockers=[],
                 evidence_gaps=["仍需补一条次级 supporting evidence"],
@@ -486,7 +277,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         )
 
     def test_quality_supply_queue_can_trigger_inline_reselection(self) -> None:
-        request = self._selection_start_request()
+        request = selection_start_request()
         request["goal"]["target_status"] = "near_submission_candidate"
         request["max_rounds_or_cycles"] = 2
         selector_calls = {"count": 0}
@@ -515,7 +306,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             quality_calls["count"] += 1
             if quality_calls["count"] == 1:
                 self.assertEqual(workspace["workspace_id"], "sel-001-v1")
-                return self._quality_result(
+                return quality_result(
                     quality_status="not_ready",
                     unresolved_blockers=["当前 funding opportunity 与问题不匹配"],
                     evidence_gaps=["需要重选可兼容的 funding family"],
@@ -541,7 +332,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                         }
                     ],
                     closure_packages=[
-                        self._closure_package(
+                        closure_package(
                             closure_id="gap-opportunity-fit",
                             summary="重选兼容的 funding / family 组合。",
                             severity="hard",
@@ -556,7 +347,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                     lifecycle_stage="input_intake",
                 )
             self.assertEqual(workspace["workspace_id"], "sel-001-v2")
-            return self._quality_result(
+            return quality_result(
                 quality_status="near_submission_candidate",
                 unresolved_blockers=[],
                 evidence_gaps=[],
@@ -612,14 +403,14 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             call_order.append("quality_evaluator")
             if quality_calls["count"] == 1:
                 self.assertEqual(workspace["stage"], "input_intake")
-                return self._quality_result(
+                return quality_result(
                     quality_status="near_submission_candidate",
                     unresolved_blockers=["关键论证尚未闭环"],
                     evidence_gaps=["机制证据需要补强"],
                     workspace_id="sel-001",
                     lifecycle_stage="input_intake",
                     closure_packages=[
-                        self._closure_package(
+                        closure_package(
                             closure_id="argument-closure",
                             summary="关键论证尚未闭环",
                             severity="hard",
@@ -631,7 +422,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                     overall_status="near_submission_candidate",
                 )
             self.assertEqual(workspace["stage"], "drafting")
-            return self._quality_result(
+            return quality_result(
                 quality_status="submission_grade_candidate",
                 unresolved_blockers=[],
                 evidence_gaps=[],
@@ -641,7 +432,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             )
 
         result = run_grant_autonomy_controller(
-            request=self._selection_start_request(),
+            request=selection_start_request(),
             selector=selector,
             initializer=initializer,
             mainline_runner=mainline_runner,
@@ -685,7 +476,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
 
         def quality_evaluator(workspace: dict[str, Any]) -> dict[str, Any]:
             self.assertEqual(workspace["workspace_id"], "ws-001")
-            return self._quality_result(
+            return quality_result(
                 quality_status="near_submission_candidate",
                 unresolved_blockers=[],
                 evidence_gaps=[],
@@ -695,7 +486,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             )
 
         result = run_grant_autonomy_controller(
-            request=self._workspace_start_request(),
+            request=workspace_start_request(),
             selector=selector,
             initializer=initializer,
             mainline_runner=mainline_runner,
@@ -715,7 +506,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(result["authority_return"]["result_shape"], "no_regression_evidence")
 
     def test_fail_closed_when_missing_required_input(self) -> None:
-        request = self._selection_start_request()
+        request = selection_start_request()
         request["start"] = {"mode": "selection_input"}
 
         result = run_grant_autonomy_controller(
@@ -732,7 +523,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
 
     def test_fail_closed_when_quality_result_is_unstructured(self) -> None:
         result = run_grant_autonomy_controller(
-            request=self._workspace_start_request(),
+            request=workspace_start_request(),
             selector=lambda selection_input: selection_input,
             initializer=lambda selection_input, selection: {"workspace": {"selection": selection_input, "meta": selection}},
             mainline_runner=lambda payload: payload,
@@ -743,7 +534,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(result["termination_reason"], "quality_evaluator_unstructured_result")
 
     def test_fail_closed_when_budget_exhausted(self) -> None:
-        request = self._selection_start_request()
+        request = selection_start_request()
         request["budget"] = {"max_total_steps": 2}
 
         result = run_grant_autonomy_controller(
@@ -751,7 +542,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             selector=lambda _selection_input: {"selected_profile_id": "profile-nsfc"},
             initializer=lambda selection_input, _selection: {"workspace": {"workspace_id": selection_input["selection_input_id"]}},
             mainline_runner=lambda payload: {"workspace": payload["workspace"]},
-            quality_evaluator=lambda _workspace: self._quality_result(
+            quality_evaluator=lambda _workspace: quality_result(
                 quality_status="near_submission_candidate",
                 unresolved_blockers=["blocker-a"],
                 evidence_gaps=[],
@@ -764,11 +555,11 @@ class GrantAutonomyControllerTest(unittest.TestCase):
 
     def test_fail_closed_when_blockers_not_cleared(self) -> None:
         result = run_grant_autonomy_controller(
-            request=self._workspace_start_request(),
+            request=workspace_start_request(),
             selector=lambda selection_input: selection_input,
             initializer=lambda selection_input, selection: {"workspace": {"selection": selection_input, "meta": selection}},
             mainline_runner=lambda payload: payload,
-            quality_evaluator=lambda _workspace: self._quality_result(
+            quality_evaluator=lambda _workspace: quality_result(
                 quality_status="submission_grade_candidate",
                 unresolved_blockers=["blocker-a"],
                 evidence_gaps=[],
@@ -780,7 +571,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(result["termination_reason"], "blockers_not_cleared")
 
     def test_reselection_decision_respected_when_policy_enabled(self) -> None:
-        request = self._selection_start_request()
+        request = selection_start_request()
         quality_calls = {"count": 0}
         selection_calls = {"count": 0}
 
@@ -795,14 +586,14 @@ class GrantAutonomyControllerTest(unittest.TestCase):
             quality_calls["count"] += 1
             if quality_calls["count"] == 1:
                 self.assertEqual(workspace["stage"], "profile-1")
-                return self._quality_result(
+                return quality_result(
                     quality_status="near_submission_candidate",
                     unresolved_blockers=["需要重选 profile"],
                     evidence_gaps=[],
                     workspace_id="sel-001",
                     lifecycle_stage="profile-1",
                     closure_packages=[
-                        self._closure_package(
+                        closure_package(
                             closure_id="profile-fit",
                             summary="需要重选 profile",
                             severity="hard",
@@ -816,7 +607,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                     overall_status="near_submission_candidate",
                 )
             self.assertEqual(workspace["stage"], "profile-2")
-            return self._quality_result(
+            return quality_result(
                 quality_status="submission_grade_candidate",
                 unresolved_blockers=[],
                 evidence_gaps=[],
@@ -853,7 +644,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         )
 
     def test_fail_closed_when_rollback_policy_disallows_request(self) -> None:
-        request = self._workspace_start_request()
+        request = workspace_start_request()
 
         result = run_grant_autonomy_controller(
             request=request,
@@ -863,12 +654,12 @@ class GrantAutonomyControllerTest(unittest.TestCase):
                 "workspace": payload["workspace"],
                 "rollback_decision": {"action": "rollback", "reason": "证据冲突"},
             },
-            quality_evaluator=lambda _workspace: self._quality_result(
+            quality_evaluator=lambda _workspace: quality_result(
                 quality_status="not_ready",
                 unresolved_blockers=["需回滚到问题定义"],
                 evidence_gaps=[],
                 closure_packages=[
-                    self._closure_package(
+                    closure_package(
                         closure_id="question-definition",
                         summary="需回滚到问题定义",
                         severity="hard",
@@ -889,7 +680,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
         self.assertEqual(result["tranche_history"][0]["decision_reason"], "证据冲突")
 
     def test_resume_from_controller_report_continues_cycles_and_preserves_history(self) -> None:
-        request = self._workspace_start_request()
+        request = workspace_start_request()
         request["goal"]["target_status"] = "near_submission_candidate"
         request["max_rounds_or_cycles"] = 2
         request["budget"] = {"max_total_steps": 10}
@@ -915,12 +706,12 @@ class GrantAutonomyControllerTest(unittest.TestCase):
 
         def quality_evaluator(_workspace: dict[str, Any]) -> dict[str, Any]:
             quality_calls["count"] += 1
-            return self._quality_result(
+            return quality_result(
                 quality_status="not_ready",
                 unresolved_blockers=["blocker-a"],
                 evidence_gaps=["gap-a"],
                 closure_packages=[
-                    self._closure_package(
+                        closure_package(
                         closure_id="blocker-a",
                         summary="blocker-a",
                         severity="hard",
@@ -962,7 +753,7 @@ class GrantAutonomyControllerTest(unittest.TestCase):
 
         def quality_evaluator_resume(workspace: dict[str, Any]) -> dict[str, Any]:
             self.assertEqual(workspace["lifecycle_stage"], "revision")
-            return self._quality_result(
+            return quality_result(
                 quality_status="near_submission_candidate",
                 unresolved_blockers=[],
                 evidence_gaps=[],
