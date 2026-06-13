@@ -2,6 +2,19 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
+from med_autogrant.product_entry_parts.consumer_thinning_audit.classification import (
+    build_declarative_pack_surfaces,
+    build_mag_owned_grant_authority_surfaces,
+    build_refs_only_adapter_surfaces,
+)
+from med_autogrant.product_entry_parts.consumer_thinning_shell import (
+    FORBIDDEN_MAG_GENERIC_OWNER_ROLES,
+    MAG_THIN_SURFACE_OUTPUT_CLASSES,
+    PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES,
+    build_consumed_opl_standard_surfaces,
+    build_opl_replacement_expectations,
+)
+
 
 def assert_consumer_thinning_contract_for_opl_replacement_handoff(
     testcase: Any,
@@ -51,34 +64,17 @@ def assert_consumer_thinning_contract_identity(testcase: Any, thinning: Mapping[
     testcase.assertTrue(thinning["bridge_exit_gate_refs"]["mag_handler_boundary_ready"])
     testcase.assertEqual(
         set(thinning["mag_owned_outputs"]),
-        {
-            "grant_owned_refs",
-            "owner_receipt",
-            "typed_blocker",
-            "verdict_refs",
-            "domain_action_metadata",
-        },
+        set(MAG_THIN_SURFACE_OUTPUT_CLASSES),
     )
     testcase.assertEqual(thinning["forbidden_mag_owned_generic_primitives"], [])
     testcase.assertEqual(
         thinning["forbidden_mag_generic_owner_roles"],
-        [
-            "generic_scheduler_owner",
-            "generic_daemon_owner",
-            "generic_lifecycle_owner",
-            "generic_queue_owner",
-            "generic_attempt_ledger_owner",
-            "generic_state_machine_runner_owner",
-            "generic_workspace_source_intake_owner",
-            "generic_memory_transport_owner",
-            "generic_artifact_gallery_owner",
-            "generic_operator_workbench_owner",
-            "generic_observability_slo_owner",
-        ],
+        list(FORBIDDEN_MAG_GENERIC_OWNER_ROLES),
     )
 
 def assert_consumer_thinning_consumed_surfaces(testcase: Any, thinning: Mapping[str, Any]) -> None:
     consumed = thinning["consumed_opl_standard_surfaces"]
+    testcase.assertEqual(consumed, build_consumed_opl_standard_surfaces())
     testcase.assertEqual(consumed["surface_kind"], "mag_consumed_opl_standard_surfaces")
     testcase.assertEqual(
         consumed["consumption_policy"],
@@ -266,6 +262,7 @@ def assert_consumer_thinning_audit_header(testcase: Any, audit: Mapping[str, Any
     )
 
 def assert_consumer_thinning_audit_pack_modules(testcase: Any, audit: Mapping[str, Any]) -> None:
+    testcase.assertEqual(audit["declarative_pack_surfaces"], build_declarative_pack_surfaces())
     pack_modules = {
         item["module_id"]: item
         for item in audit["declarative_pack_surfaces"]
@@ -289,6 +286,7 @@ def assert_consumer_thinning_audit_pack_modules(testcase: Any, audit: Mapping[st
     testcase.assertIn("grant_lifecycle_stage", pack_modules["task_lifecycle"]["mag_retained_authority"])
 
 def assert_consumer_thinning_audit_refs_modules(testcase: Any, audit: Mapping[str, Any]) -> None:
+    testcase.assertEqual(audit["refs_only_adapter_surfaces"], build_refs_only_adapter_surfaces())
     refs_modules = {
         item["module_id"]: item
         for item in audit["refs_only_adapter_surfaces"]
@@ -317,6 +315,10 @@ def assert_consumer_thinning_audit_refs_modules(testcase: Any, audit: Mapping[st
     )
 
 def assert_consumer_thinning_audit_mag_authority_modules(testcase: Any, audit: Mapping[str, Any]) -> None:
+    testcase.assertEqual(
+        audit["mag_owned_grant_authority_surfaces"],
+        build_mag_owned_grant_authority_surfaces(),
+    )
     mag_modules = {item["module_id"]: item for item in audit["mag_owned_grant_authority_surfaces"]}
     testcase.assertEqual(
         set(mag_modules),
@@ -505,17 +507,7 @@ def assert_consumer_thinning_output_guard_and_authority(testcase: Any, thinning:
     )
     testcase.assertEqual(
         output_guard["private_functional_state_output_classes_forbidden"],
-        [
-            "local_runtime_journal_state",
-            "local_attempt_record_state",
-            "attention_queue_state",
-            "stage_attempt_records_state",
-            "package_lifecycle_state",
-            "source_intake_state",
-            "operator_workbench_state",
-            "scheduler_daemon_state",
-            "hermes_state_db_runtime_state",
-        ],
+        list(PRIVATE_FUNCTIONAL_STATE_OUTPUT_CLASSES),
     )
     testcase.assertIn("generic_scheduler_state", output_guard["forbidden_output_classes"])
     testcase.assertIn("generic_workbench_state", output_guard["forbidden_output_classes"])
@@ -570,6 +562,7 @@ def assert_consumer_thinning_output_guard_and_authority(testcase: Any, thinning:
     testcase.assertFalse(authority["opl_harness_pass_can_declare_export_ready"])
 
 def assert_consumer_thinning_replacement_expectations(testcase: Any, manifest: Mapping[str, Any], thinning: Mapping[str, Any]) -> None:
+    testcase.assertEqual(thinning["opl_replacement_expectations"], build_opl_replacement_expectations())
     replacement_ids = {item["primitive_id"] for item in thinning["opl_replacement_expectations"]}
     testcase.assertEqual(
         replacement_ids,
