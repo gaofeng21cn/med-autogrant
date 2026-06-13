@@ -7,6 +7,10 @@ from med_autogrant.product_entry_parts.consumer_thinning_audit.classification im
     build_mag_owned_grant_authority_surfaces,
     build_refs_only_adapter_surfaces,
 )
+from med_autogrant.product_entry_parts.consumer_thinning_audit.evidence_gates import (
+    build_default_caller_deletion_bridge_exit_gate,
+    build_legacy_exit_gate,
+)
 from med_autogrant.product_entry_parts.consumer_thinning_shell import (
     FORBIDDEN_MAG_GENERIC_OWNER_ROLES,
     MAG_THIN_SURFACE_OUTPUT_CLASSES,
@@ -280,6 +284,15 @@ def assert_consumer_thinning_audit_pack_modules(testcase: Any, audit: Mapping[st
         "declarative_pack_surface",
     )
     testcase.assertEqual(
+        pack_modules["task_lifecycle"]["bridge_exit_gate"],
+        build_default_caller_deletion_bridge_exit_gate(
+            module_id="task_lifecycle",
+            classification=pack_modules["task_lifecycle"]["classification"],
+            current_surface_refs=pack_modules["task_lifecycle"]["current_surface_refs"],
+            mag_retained_authority=pack_modules["task_lifecycle"]["mag_retained_authority"],
+        ),
+    )
+    testcase.assertEqual(
         pack_modules["source_intake_shell"]["active_caller_status"],
         "active_declarative_source_requirements_pack_projection",
     )
@@ -367,6 +380,18 @@ def assert_consumer_thinning_audit_retired_surfaces(testcase: Any, audit: Mappin
     testcase.assertIn(
         "src/med_autogrant/scheduler_daemon.py:absent",
         retire_modules["repo_owned_scheduler_daemon"]["code_paths"],
+    )
+    testcase.assertEqual(
+        retire_modules["repo_owned_scheduler_daemon"]["exit_gate"],
+        build_legacy_exit_gate(
+            gate_id="mag.legacy.repo_owned_scheduler_daemon.exit.v1",
+            replacement_primitives=[
+                "generic_scheduler_daemon",
+                "provider_daemon",
+                "repair_command_projection",
+            ],
+            exit_action="delete_or_history_tombstone_repo_owned_scheduler_daemon_surface",
+        ),
     )
     testcase.assertEqual(
         retire_modules["domain_runtime_patch_bridge"]["active_caller_status"],
