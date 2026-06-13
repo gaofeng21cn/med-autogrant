@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import json
 import unittest
+from med_autogrant.product_entry_parts.manifest_sustained_consumption_payload import (
+    MAG_MANIFEST_SUSTAINED_CONSUMPTION_PAYLOAD_RESPONSE_KIND,
+)
 from med_autogrant.workspace import WorkspaceStateError
 
 
@@ -37,6 +40,12 @@ def _workspace_scaleout_evidence() -> dict[str, object]:
 
 
 class ProductEntryManifestSustainedConsumptionPayloadTest(unittest.TestCase):
+    def test_sustained_consumption_payload_module_declares_response_kind(self) -> None:
+        self.assertEqual(
+            MAG_MANIFEST_SUSTAINED_CONSUMPTION_PAYLOAD_RESPONSE_KIND,
+            "mag_manifest_sustained_consumption_payload_response",
+        )
+
     def test_sustained_consumption_payload_success_path_is_signed_refs_only_without_ready_claim(
         self,
     ) -> None:
