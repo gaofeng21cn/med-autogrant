@@ -12,6 +12,10 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from med_autogrant.critique_loop_controller import run_critique_revision_closed_loop  # noqa: E402
+from med_autogrant.opl_execution_boundary import (  # noqa: E402
+    build_stage_transition_authority_boundary,
+    require_opl_default_stage_attempt,
+)
 
 OPL_STAGE_ATTEMPT = {
     "runtime_owner": "one-person-lab",
@@ -21,6 +25,37 @@ OPL_STAGE_ATTEMPT = {
 
 
 class CritiqueLoopControllerTest(unittest.TestCase):
+    def test_opl_execution_boundary_helpers_require_provider_owned_stage_attempt(self) -> None:
+        missing = require_opl_default_stage_attempt(
+            None,
+            controller_id="critique-loop",
+        )
+        self.assertFalse(missing["ok"])
+        self.assertEqual(missing["typed_blocker"]["blocker_kind"], "missing_opl_stage_attempt")
+        self.assertFalse(missing["typed_blocker"]["mag_owns_attempt_ledger"])
+        self.assertEqual(missing["typed_blocker"]["stage_transition_authority"], "one-person-lab")
+
+        allowed = require_opl_default_stage_attempt(
+            OPL_STAGE_ATTEMPT,
+            controller_id="critique-loop",
+        )
+        self.assertTrue(allowed["ok"])
+        boundary = allowed["execution_boundary"]
+        self.assertEqual(boundary["runtime_owner"], "one-person-lab")
+        self.assertFalse(boundary["mag_writes_stage_current_pointer"])
+        self.assertFalse(boundary["mag_writes_stage_terminal_state"])
+        self.assertFalse(boundary["provider_completion_is_stage_transition"])
+
+        authority = build_stage_transition_authority_boundary(
+            surface_id="critique-loop",
+            mag_role="domain_controller_result_not_stage_writer",
+        )
+        self.assertEqual(authority["surface_kind"], "mag_stage_transition_authority_boundary")
+        self.assertEqual(authority["stage_transition_authority"], "one-person-lab")
+        self.assertFalse(authority["mag_selects_next_opl_stage"])
+        self.assertFalse(authority["provider_completion_is_stage_transition"])
+        self.assertIn("transition_intent_ref", authority["allowed_return_shapes"])
+
     def test_missing_opl_stage_attempt_returns_typed_blocker_without_running(self) -> None:
         def critique_runner(_document: dict[str, Any]) -> dict[str, Any]:
             raise AssertionError("缺少 OPL attempt 时不应运行 critique_runner")
