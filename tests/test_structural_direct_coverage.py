@@ -47,6 +47,8 @@ import med_autogrant.workspace_parts as workspace_parts
 import med_autogrant.workspace_projection_parts as workspace_projection_parts
 import med_autogrant.workspace_reference_validation as workspace_reference_validation
 import med_autogrant.workspace_runtime_constraints as workspace_runtime_constraints
+import med_autogrant.workspace_runtime_policy as workspace_runtime_policy
+import med_autogrant.workspace_runtime_selection as workspace_runtime_selection
 import med_autogrant.workspace_scaffold as workspace_scaffold
 import med_autogrant.workspace_surface_builders as workspace_surface_builders
 import med_autogrant.workspace_types as workspace_types
@@ -80,6 +82,8 @@ def test_structural_leaf_modules_expose_expected_contract_surfaces() -> None:
     assert workspace_projection_parts._build_workspace_state
     assert workspace_reference_validation._draft_sections_link_object
     assert workspace_runtime_constraints._validate_runtime_constraints
+    assert workspace_runtime_policy._requirements_for_stage("critique").revision_plan
+    assert workspace_runtime_selection._resolve_runtime_selection
     assert workspace_scaffold.resolve_mag_workspace_document_path
     assert workspace_surface_builders.build_critique_summary
     assert workspace_surface_builders.build_grant_intake_audit

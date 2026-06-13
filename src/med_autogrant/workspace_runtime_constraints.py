@@ -8,12 +8,15 @@ from med_autogrant.workspace_reference_validation import (
     _draft_links_fit_mapping,
     _validate_reference_sets,
 )
+from med_autogrant.workspace_runtime_policy import _requirements_for_stage
+from med_autogrant.workspace_runtime_selection import _resolve_runtime_selection
 from med_autogrant.workspace_stage_validation import _validate_stage_requirements
 from med_autogrant.workspace_types import ValidationIssue
 
 def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIssue]:
     issues: list[ValidationIssue] = []
     stage = document.get("lifecycle_stage")
+    requirements = _requirements_for_stage(stage)
 
     directions = _index_objects(document.get("direction_hypotheses"), "direction_id", "direction_hypotheses", issues)
     questions = _index_objects(document.get("scientific_question_cards"), "question_id", "scientific_question_cards", issues)
@@ -23,129 +26,23 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
     critiques = _index_objects(document.get("mentor_critiques"), "critique_id", "mentor_critiques", issues)
     revision_plans = _index_objects(document.get("revision_plans"), "revision_plan_id", "revision_plans", issues)
 
-    requires_direction = stage in {
-        "direction_screening",
-        "question_refinement",
-        "argument_building",
-        "fit_alignment",
-        "outline",
-        "drafting",
-        "critique",
-        "revision",
-        "frozen",
-    }
-    requires_question = stage in {
-        "question_refinement",
-        "argument_building",
-        "fit_alignment",
-        "outline",
-        "drafting",
-        "critique",
-        "revision",
-        "frozen",
-    }
-    requires_argument_chain = stage in {
-        "argument_building",
-        "fit_alignment",
-        "outline",
-        "drafting",
-        "critique",
-        "revision",
-        "frozen",
-    }
-    requires_fit_mapping = stage in {
-        "fit_alignment",
-        "outline",
-        "drafting",
-        "critique",
-        "revision",
-        "frozen",
-    }
-    requires_draft = stage in {"outline", "drafting", "critique", "revision", "frozen"}
-    requires_revision_plan = stage in {"critique", "revision", "frozen"}
-
-    selected_directions = [
-        item["direction_id"]
-        for item in document.get("direction_hypotheses", [])
-        if isinstance(item, dict) and item.get("decision_status") == "selected"
-    ]
-    if stage in {"direction_screening", "question_refinement"}:
-        direction_count = len(document.get("direction_hypotheses", []))
-        if direction_count < 2 or direction_count > 5:
-            issues.append(
-                ValidationIssue(
-                    path="direction_hypotheses",
-                    message="P2.A 方向阶段必须保留 2 到 5 个 DirectionHypothesis。",
-                )
-            )
-
-    selection = document.get("current_selection", {})
-    selected_direction_id = selection.get("selected_direction_id")
-    selected_question_id = selection.get("selected_question_id")
-    active_fit_mapping_id = selection.get("active_fit_mapping_id")
-    active_draft_id = selection.get("active_draft_id")
-    active_revision_plan_id = selection.get("active_revision_plan_id")
-
-    if requires_direction and len(selected_directions) != 1:
-        issues.append(
-            ValidationIssue(
-                path="direction_hypotheses",
-                message="必须且只能有一个 decision_status=selected 的 DirectionHypothesis。",
-            )
-        )
-
-    selected_direction = directions.get(selected_direction_id) if isinstance(selected_direction_id, str) else None
-    if requires_direction and selected_direction_id is None:
-        issues.append(
-            ValidationIssue(
-                path="current_selection.selected_direction_id",
-                message=f"{stage} 阶段必须显式绑定当前 DirectionHypothesis。",
-            )
-        )
-    elif selected_direction_id is not None and selected_direction is None:
-        issues.append(
-            ValidationIssue(
-                path="current_selection.selected_direction_id",
-                message="未找到对应的 DirectionHypothesis。",
-            )
-        )
-    elif selected_direction is not None and selected_direction.get("decision_status") != "selected":
-        issues.append(
-            ValidationIssue(
-                path="current_selection.selected_direction_id",
-                message="当前选中方向必须处于 selected 状态。",
-            )
-        )
-
-    selected_question = questions.get(selected_question_id) if isinstance(selected_question_id, str) else None
-    if requires_question and selected_question_id is None:
-        issues.append(
-            ValidationIssue(
-                path="current_selection.selected_question_id",
-                message=f"{stage} 阶段必须显式绑定当前 ScientificQuestionCard。",
-            )
-        )
-    elif selected_question_id is not None and selected_question is None:
-        issues.append(
-            ValidationIssue(
-                path="current_selection.selected_question_id",
-                message="未找到对应的 ScientificQuestionCard。",
-            )
-        )
-    elif (
-        selected_direction is not None
-        and selected_question is not None
-        and selected_question.get("parent_direction_id") != selected_direction.get("direction_id")
-    ):
-        issues.append(
-            ValidationIssue(
-                path="current_selection.selected_question_id",
-                message="当前选中问题不属于当前选中方向。",
-            )
-        )
+    selection = _resolve_runtime_selection(
+        document,
+        stage=stage,
+        requirements=requirements,
+        directions=directions,
+        questions=questions,
+        issues=issues,
+    )
+    selected_direction_id = selection.selected_direction_id
+    selected_question_id = selection.selected_question_id
+    active_fit_mapping_id = selection.active_fit_mapping_id
+    active_draft_id = selection.active_draft_id
+    active_revision_plan_id = selection.active_revision_plan_id
+    selected_question = selection.selected_question
 
     active_argument_chain = None
-    if selected_question is not None and requires_argument_chain:
+    if selected_question is not None and requirements.argument_chain:
         selected_argument_chains = [
             item
             for item in document.get("argument_chains", [])
@@ -169,7 +66,7 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
             active_argument_chain = selected_argument_chains[0]
 
     active_fit_mapping = fit_mappings.get(active_fit_mapping_id) if isinstance(active_fit_mapping_id, str) else None
-    if requires_fit_mapping and active_fit_mapping_id is None:
+    if requirements.fit_mapping and active_fit_mapping_id is None:
         issues.append(
             ValidationIssue(
                 path="current_selection.active_fit_mapping_id",
@@ -203,7 +100,7 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
         )
 
     active_draft = drafts.get(active_draft_id) if isinstance(active_draft_id, str) else None
-    if requires_draft and active_draft_id is None:
+    if requirements.draft and active_draft_id is None:
         issues.append(
             ValidationIssue(
                 path="current_selection.active_draft_id",
@@ -240,7 +137,7 @@ def _validate_runtime_constraints(document: dict[str, Any]) -> list[ValidationIs
         )
 
     active_revision_plan = revision_plans.get(active_revision_plan_id) if isinstance(active_revision_plan_id, str) else None
-    if requires_revision_plan and active_revision_plan_id is None:
+    if requirements.revision_plan and active_revision_plan_id is None:
         issues.append(
             ValidationIssue(
                 path="current_selection.active_revision_plan_id",
