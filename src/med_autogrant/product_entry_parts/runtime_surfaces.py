@@ -675,5 +675,3 @@ def _schema_payload_without_contract_bundle(
         surface["product_entry_manifest"] = normalized_manifest
     normalized_payload[surface_key] = surface
     return normalized_payload
-
-__all__ = [name for name in globals() if name.startswith("_") and not name.startswith("__")]

@@ -17,6 +17,3 @@ from med_autogrant.product_entry_contract_api import (
     validate_contract_schema as _validate_contract_schema,
     validate_executor_routing_contract as _validate_executor_routing_contract,
 )
-
-
-__all__ = [name for name in globals() if name.startswith("_") or name.endswith("_SCHEMA_FILE")]

@@ -84,6 +84,27 @@ class ProductEntryPartsStructureTest(unittest.TestCase):
 
         self.assertEqual([], offenders)
 
+    def test_product_entry_parts_do_not_generate_dynamic_all_exports(self) -> None:
+        product_entry_parts = sorted(
+            (REPO_ROOT / "src" / "med_autogrant" / "product_entry_parts").glob("*.py")
+        )
+        offenders: list[str] = []
+        for path in product_entry_parts:
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if not (
+                    isinstance(node, ast.Assign)
+                    and any(isinstance(target, ast.Name) and target.id == "__all__" for target in node.targets)
+                    and isinstance(node.value, ast.ListComp)
+                    and isinstance(node.value.generators[0].iter, ast.Call)
+                    and isinstance(node.value.generators[0].iter.func, ast.Name)
+                    and node.value.generators[0].iter.func.id == "globals"
+                ):
+                    continue
+                offenders.append(path.relative_to(REPO_ROOT).as_posix())
+
+        self.assertEqual([], offenders)
+
     def test_product_entry_case_support_is_not_a_star_import_facade(self) -> None:
         support_path = REPO_ROOT / "tests" / "product_entry_cases" / "support.py"
         support_tree = ast.parse(support_path.read_text(encoding="utf-8"))

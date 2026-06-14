@@ -487,6 +487,3 @@ def _build_project_profile_companion(workspace_summary: Mapping[str, Any] | None
             "label": "funding opportunity brief",
         },
     }
-
-
-__all__ = [name for name in globals() if not name.startswith("__")]

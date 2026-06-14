@@ -400,6 +400,3 @@ def _domain_stage_refs_for_lifecycle_stage(lifecycle_stage: str) -> list[str]:
     if lifecycle_stage == "frozen":
         return ["freeze", "frozen", "package submission-ready", "submission-ready export gate"]
     return [lifecycle_stage]
-
-
-__all__ = [name for name in globals() if not name.startswith("__")]
