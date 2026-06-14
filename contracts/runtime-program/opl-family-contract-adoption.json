@@ -682,6 +682,9 @@
       "target_domain_id": "med-autogrant",
       "owner": "med-autogrant",
       "state": "manifest_projected_for_opl_unified_audit",
+      "standard_agent_source_shape_status": "landed",
+      "mag_repo_active_source_shape_landed": true,
+      "claims_descriptor_source_available_for_opl_generation": true,
       "classification_policy": "classify_private_functional_surfaces_as_pack_refs_authority_or_legacy_proof",
       "opl_unified_audit_read_model": true,
       "claims_generic_runtime_removed_from_mag": false,
@@ -728,6 +731,48 @@
             "stage_pack_refs",
             "safe_action_refs"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.runtime_registration.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
+            "required_before_retire": [
+              "domain_authority_refs_preserved",
+              "no_forbidden_write_proof_recorded",
+              "explicit_owner_receipt_authorizes_physical_delete"
+            ],
+            "current_surface_refs": [
+              "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
+              "/domain_handler_export/opl_control_plane/registration"
+            ],
+            "retained_mag_authority": [
+              "domain_id",
+              "stage_pack_refs",
+              "safe_action_refs"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/runtime_registration/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/runtime_registration/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/runtime_registration/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/skill_catalog/domain_projection/opl_stage_runtime_registration",
+              "/domain_handler_export/opl_control_plane/registration"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -764,6 +809,47 @@
             "grant_lifecycle_stage",
             "grant_checkpoint_meaning"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.task_lifecycle.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
+            "required_before_retire": [
+              "domain_authority_refs_preserved",
+              "no_forbidden_write_proof_recorded",
+              "explicit_owner_receipt_authorizes_physical_delete"
+            ],
+            "current_surface_refs": [
+              "/product_entry_manifest/task_lifecycle",
+              "/product_entry_manifest/progress_projection"
+            ],
+            "retained_mag_authority": [
+              "grant_lifecycle_stage",
+              "grant_checkpoint_meaning"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/task_lifecycle/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/task_lifecycle/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/task_lifecycle/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/task_lifecycle",
+              "/product_entry_manifest/progress_projection"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -803,6 +889,48 @@
             "profile_selection",
             "grant_task_lock"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.source_intake_shell.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
+            "required_before_retire": [
+              "domain_authority_refs_preserved",
+              "no_forbidden_write_proof_recorded",
+              "explicit_owner_receipt_authorizes_physical_delete"
+            ],
+            "current_surface_refs": [
+              "/product_entry_manifest/workspace_locator",
+              "/product_entry_manifest/product_entry_preflight"
+            ],
+            "retained_mag_authority": [
+              "funding_call_interpretation",
+              "profile_selection",
+              "grant_task_lock"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/source_intake_shell/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/source_intake_shell/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/source_intake_shell/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/workspace_locator",
+              "/product_entry_manifest/product_entry_preflight"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -816,7 +944,7 @@
           "mag_role": "guarded_receipt_refs_adapter",
           "code_paths": [
             "src/med_autogrant/product_entry_parts/lifecycle_receipt_bundle.py",
-            "src/med_autogrant/product_entry_parts/owner_receipt_common.py",
+            "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
             "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
             "src/med_autogrant/product_entry_parts/continuous_reconciliation.py",
             "src/med_autogrant/product_entry_parts/runtime_registration.py"
@@ -843,6 +971,47 @@
             "domain_mutation_requires_mag_owner_receipt",
             "package_authority"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.lifecycle_adapter.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
+            "required_before_retire": [
+              "domain_authority_refs_preserved",
+              "no_forbidden_write_proof_recorded",
+              "explicit_owner_receipt_authorizes_physical_delete"
+            ],
+            "current_surface_refs": [
+              "/product_entry_manifest/lifecycle_guarded_apply_proof",
+              "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
+            ],
+            "retained_mag_authority": [
+              "domain_mutation_requires_mag_owner_receipt",
+              "package_authority"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/lifecycle_adapter/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/lifecycle_adapter/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/lifecycle_adapter/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/lifecycle_guarded_apply_proof",
+              "/domain_handler_export/opl_control_plane/family_lifecycle_adapter"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -881,6 +1050,48 @@
             "typed_blocker_refs",
             "verdict_refs"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.observability.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
+            "required_before_retire": [
+              "domain_authority_refs_preserved",
+              "no_forbidden_write_proof_recorded",
+              "explicit_owner_receipt_authorizes_physical_delete"
+            ],
+            "current_surface_refs": [
+              "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
+              "/domain_handler_export/opl_runtime_observability_consumption"
+            ],
+            "retained_mag_authority": [
+              "owner_receipt_refs",
+              "typed_blocker_refs",
+              "verdict_refs"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/observability/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/observability/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/observability/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/mag_consumer_thinning_contract/opl_runtime_observability_consumption",
+              "/domain_handler_export/opl_runtime_observability_consumption"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -906,6 +1117,10 @@
           "retention_reason": "OPL needs a MAG-owned domain_handler adapter to read receipts and invoke guarded domain actions without owning grant truth.",
           "cannot_absorb_reason": "The generic shell can be absorbed, but MAG-specific dispatch validation, receipt refs, and safe action semantics remain domain owned.",
           "current_surface_refs": [
+            "product_status",
+            "status_read_model",
+            "domain_handler",
+            "workbench_drilldown",
             "/product_entry_manifest/product_entry_status",
             "/domain_handler_export"
           ],
@@ -919,6 +1134,56 @@
             "owner_receipt_refs",
             "safe_action_refs"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.domain_handler_product_status_shell.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
+            "required_before_retire": [
+              "domain_authority_refs_preserved",
+              "no_forbidden_write_proof_recorded",
+              "explicit_owner_receipt_authorizes_physical_delete"
+            ],
+            "current_surface_refs": [
+              "product_status",
+              "status_read_model",
+              "domain_handler",
+              "workbench_drilldown",
+              "/product_entry_manifest/product_entry_status",
+              "/domain_handler_export"
+            ],
+            "retained_mag_authority": [
+              "grant_status_meaning",
+              "owner_receipt_refs",
+              "safe_action_refs"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/domain_handler_product_status_shell/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/domain_handler_product_status_shell/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/domain_handler_product_status_shell/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "product_status",
+              "status_read_model",
+              "domain_handler",
+              "workbench_drilldown",
+              "/product_entry_manifest/product_entry_status",
+              "/domain_handler_export"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -957,6 +1222,48 @@
             "export_gate",
             "manual_portal_boundary"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.package_lifecycle_shell.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
+            "required_before_retire": [
+              "domain_authority_refs_preserved",
+              "no_forbidden_write_proof_recorded",
+              "explicit_owner_receipt_authorizes_physical_delete"
+            ],
+            "current_surface_refs": [
+              "/product_entry_manifest/artifact_locator_contract",
+              "/product_entry_manifest/lifecycle_guarded_apply_proof"
+            ],
+            "retained_mag_authority": [
+              "submission_ready_verdict",
+              "export_gate",
+              "manual_portal_boundary"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/package_lifecycle_shell/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/package_lifecycle_shell/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/package_lifecycle_shell/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/artifact_locator_contract",
+              "/product_entry_manifest/lifecycle_guarded_apply_proof"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -982,6 +1289,10 @@
           "retention_reason": "MAG still needs refs-only user-loop/status projections for direct skill and OPL domain_handler callers.",
           "cannot_absorb_reason": "The workbench and scheduler can be absorbed; MAG's domain action metadata and typed blocker meaning cannot.",
           "current_surface_refs": [
+            "cli",
+            "mcp",
+            "skill",
+            "product_entry",
             "/product_entry_manifest/mag_consumer_thinning_contract/consumed_opl_standard_surfaces",
             "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
           ],
@@ -995,6 +1306,55 @@
             "domain_action_metadata",
             "typed_blocker"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.human_workbench_scheduler_daemon.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "bridge_until_explicit_owner_receipt_authorizes_physical_delete",
+            "required_before_retire": [
+              "domain_authority_refs_preserved",
+              "no_forbidden_write_proof_recorded",
+              "explicit_owner_receipt_authorizes_physical_delete"
+            ],
+            "current_surface_refs": [
+              "cli",
+              "mcp",
+              "skill",
+              "product_entry",
+              "/product_entry_manifest/mag_consumer_thinning_contract/consumed_opl_standard_surfaces",
+              "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+            ],
+            "retained_mag_authority": [
+              "domain_action_metadata",
+              "typed_blocker"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/human_workbench_scheduler_daemon/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/human_workbench_scheduler_daemon/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/human_workbench_scheduler_daemon/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "cli",
+              "mcp",
+              "skill",
+              "product_entry",
+              "/product_entry_manifest/mag_consumer_thinning_contract/consumed_opl_standard_surfaces",
+              "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -1009,7 +1369,6 @@
           "code_paths": [
             "src/med_autogrant/product_entry_parts/runtime_contracts.py",
             "src/med_autogrant/product_entry_parts/progress.py",
-            "src/med_autogrant/product_entry_parts/owner_receipt_common.py",
             "src/med_autogrant/product_entry_parts/owner_receipt_writers.py"
           ],
           "active_callers": [
@@ -1033,6 +1392,44 @@
             "stage_meaning",
             "owner_receipt"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.grant_lifecycle_stage.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "retained_mag_authority",
+            "required_before_retire": [],
+            "current_surface_refs": [
+              "/product_entry_manifest/owner_receipt_contract/identity/lifecycle_stage",
+              "/product_entry_manifest/task_lifecycle"
+            ],
+            "retained_mag_authority": [
+              "lifecycle_stage",
+              "stage_meaning",
+              "owner_receipt"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/grant_lifecycle_stage/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/grant_lifecycle_stage/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/grant_lifecycle_stage/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/owner_receipt_contract/identity/lifecycle_stage",
+              "/product_entry_manifest/task_lifecycle"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -1068,6 +1465,44 @@
             "authoring_quality_verdict",
             "submission_ready_export_verdict"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.fundability_quality_export_verdicts.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "retained_mag_authority",
+            "required_before_retire": [],
+            "current_surface_refs": [
+              "/product_entry_manifest/grant_authoring_readiness",
+              "/product_entry_manifest/mag_consumer_thinning_contract/verdict_authority_refs"
+            ],
+            "retained_mag_authority": [
+              "fundability_verdict",
+              "authoring_quality_verdict",
+              "submission_ready_export_verdict"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/fundability_quality_export_verdicts/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/fundability_quality_export_verdicts/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/fundability_quality_export_verdicts/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/grant_authoring_readiness",
+              "/product_entry_manifest/mag_consumer_thinning_contract/verdict_authority_refs"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -1103,6 +1538,44 @@
             "submission_ready_verdict",
             "export_gate"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.package_readiness_submission_ready.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "retained_mag_authority",
+            "required_before_retire": [],
+            "current_surface_refs": [
+              "/product_entry_manifest/artifact_locator_contract",
+              "package submission-ready"
+            ],
+            "retained_mag_authority": [
+              "package_authority",
+              "submission_ready_verdict",
+              "export_gate"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/package_readiness_submission_ready/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/package_readiness_submission_ready/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/package_readiness_submission_ready/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/artifact_locator_contract",
+              "package submission-ready"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -1138,6 +1611,44 @@
             "authoring_quality_guards",
             "package_human_gate_guards"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.grant_transition_oracle.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "retained_mag_authority",
+            "required_before_retire": [],
+            "current_surface_refs": [
+              "/product_entry_manifest/grant_transition_oracle",
+              "/product_entry_manifest/ideal_state_closure_status/mag_owned_transition_oracle"
+            ],
+            "retained_mag_authority": [
+              "fundability_guards",
+              "authoring_quality_guards",
+              "package_human_gate_guards"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/grant_transition_oracle/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/grant_transition_oracle/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/grant_transition_oracle/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/grant_transition_oracle",
+              "/product_entry_manifest/ideal_state_closure_status/mag_owned_transition_oracle"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -1148,7 +1659,6 @@
           "owner": "med-autogrant",
           "mag_role": "receipt_authority_owner",
           "code_paths": [
-            "src/med_autogrant/product_entry_parts/owner_receipt_common.py",
             "src/med_autogrant/product_entry_parts/owner_receipt_writers.py",
             "src/med_autogrant/product_entry_parts/owner_receipt_reconciliation.py",
             "src/med_autogrant/product_entry_parts/production_live_acceptance.py",
@@ -1177,6 +1687,44 @@
             "typed_blocker",
             "no_regression_evidence"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.owner_receipt_and_no_regression_evidence.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "retained_mag_authority",
+            "required_before_retire": [],
+            "current_surface_refs": [
+              "/product_entry_manifest/owner_receipt_contract",
+              "/product_entry_manifest/controlled_soak_no_regression_attempt"
+            ],
+            "retained_mag_authority": [
+              "domain_owner_receipt",
+              "typed_blocker",
+              "no_regression_evidence"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/owner_receipt_and_no_regression_evidence/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/owner_receipt_and_no_regression_evidence/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/owner_receipt_and_no_regression_evidence/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/owner_receipt_contract",
+              "/product_entry_manifest/controlled_soak_no_regression_attempt"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -1213,6 +1761,44 @@
             "writeback_accept_reject",
             "memory_receipt_writer"
           ],
+          "bridge_exit_gate": {
+            "surface_kind": "mag_default_caller_deletion_bridge_exit_gate",
+            "gate_id": "mag.default_caller_deletion.grant_memory_accept_reject.bridge_exit.v1",
+            "bridge_owner": "med-autogrant",
+            "replacement_owner": "one-person-lab",
+            "current_status": "retained_mag_authority",
+            "required_before_retire": [],
+            "current_surface_refs": [
+              "/product_entry_manifest/domain_memory_descriptor_locator",
+              "/product_entry_manifest/controlled_domain_memory_apply_proof"
+            ],
+            "retained_mag_authority": [
+              "grant_strategy_memory_body",
+              "writeback_accept_reject",
+              "memory_receipt_writer"
+            ],
+            "default_caller_deletion_evidence_scope": "domain_owned_typed_blocker_and_no_forbidden_write_refs_only_no_physical_delete_authorization",
+            "typed_blocker_refs": [
+              "typed-blocker:mag/default-caller-deletion/grant_memory_accept_reject/physical-delete-requires-explicit-owner-receipt"
+            ],
+            "no_forbidden_write_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/grant_memory_accept_reject/refs-only-boundary"
+            ],
+            "no_forbidden_write_evidence_refs": [
+              "no-forbidden-write:mag/default-caller-deletion/grant_memory_accept_reject/refs-only-boundary"
+            ],
+            "provenance_refs": [
+              "/product_entry_manifest/domain_memory_descriptor_locator",
+              "/product_entry_manifest/controlled_domain_memory_apply_proof"
+            ],
+            "domain_repo_physical_delete_authorized": false,
+            "physical_delete_authorized_by_refs": false,
+            "mag_can_write_generic_runtime": false,
+            "mag_can_own_generated_default_caller": false,
+            "opl_can_write_grant_truth": false,
+            "opl_can_declare_fundability_or_export_verdict": false,
+            "opl_can_issue_mag_owner_receipt": false
+          },
           "implemented_as_generic_runtime_in_mag": false,
           "opl_can_write_grant_truth": false,
           "opl_can_declare_verdict": false
@@ -1238,6 +1824,35 @@
             "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
             "docs/status.md#旧面退役校准"
           ],
+          "no_active_caller_evidence": {
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence",
+            "evidence_id": "mag.retired_surface.retired_hermes_gateway_local_manager_default_paths.no_active_caller.v1",
+            "module_id": "retired_hermes_gateway_local_manager_default_paths",
+            "status": "no_active_caller_observed",
+            "no_active_caller_observed": true,
+            "active_caller_count": 0,
+            "active_callers": [],
+            "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "evidence_refs": [
+              "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
+              "docs/status.md#旧面退役校准"
+            ],
+            "physical_delete_authorized": false,
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "authority_boundary": {
+              "refs_only": true,
+              "can_authorize_physical_delete": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false
+            }
+          },
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "active_caller_allowed": false,
           "compatibility_alias_allowed": false
         },
@@ -1261,6 +1876,36 @@
             "/product_entry_manifest/automation",
             "/domain_handler_export/user_loop_attention_queue"
           ],
+          "no_active_caller_evidence": {
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence",
+            "evidence_id": "mag.retired_surface.legacy_local_runtime_history_attempt_record.no_active_caller.v1",
+            "module_id": "legacy_local_runtime_history_attempt_record",
+            "status": "no_active_caller_observed",
+            "no_active_caller_observed": true,
+            "active_caller_count": 0,
+            "active_callers": [],
+            "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "evidence_refs": [
+              "/product_entry_manifest/session_continuity",
+              "/product_entry_manifest/automation",
+              "/domain_handler_export/user_loop_attention_queue"
+            ],
+            "physical_delete_authorized": false,
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "authority_boundary": {
+              "refs_only": true,
+              "can_authorize_physical_delete": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false
+            }
+          },
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "active_caller_allowed": false,
           "compatibility_alias_allowed": false,
           "exit_gate": {
@@ -1288,15 +1933,15 @@
             "exit_action": "delete_or_history_tombstone_local_runtime_history_attempt_record_code",
             "claims_exit_complete": false,
             "claims_production_long_run_soak_complete": false,
+            "mag_handler_boundary_ready": true,
+            "external_opl_generated_or_hosted_caller_evidence_required": true,
             "authority_boundary": {
               "mag_can_keep_compatibility_alias": false,
               "mag_can_keep_generic_runtime_owner": false,
               "mag_keeps_safe_action_refs": true,
               "opl_can_write_grant_truth": false,
               "opl_can_declare_verdict": false
-            },
-            "mag_handler_boundary_ready": true,
-            "external_opl_generated_or_hosted_caller_evidence_required": true
+            }
           }
         },
         {
@@ -1318,6 +1963,37 @@
             "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
             "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge"
           ],
+          "no_active_caller_evidence": {
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence",
+            "evidence_id": "mag.retired_surface.domain_runtime_patch_bridge.no_active_caller.v1",
+            "module_id": "domain_runtime_patch_bridge",
+            "status": "no_active_caller_observed",
+            "no_active_caller_observed": true,
+            "active_caller_count": 0,
+            "active_callers": [],
+            "active_caller_status": "retired_physical_facade_removed_no_active_caller",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "evidence_refs": [
+              "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
+              "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
+              "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
+              "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge"
+            ],
+            "physical_delete_authorized": false,
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "authority_boundary": {
+              "refs_only": true,
+              "can_authorize_physical_delete": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false
+            }
+          },
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "active_caller_allowed": false,
           "compatibility_alias_allowed": false
         },
@@ -1338,6 +2014,35 @@
             "tests/test_product_entry.py:absent",
             "tests/product_entry_cases/:focused_replacement_tests"
           ],
+          "no_active_caller_evidence": {
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence",
+            "evidence_id": "mag.retired_surface.compatibility_only_product_entry_aggregate_test.no_active_caller.v1",
+            "module_id": "compatibility_only_product_entry_aggregate_test",
+            "status": "no_active_caller_observed",
+            "no_active_caller_observed": true,
+            "active_caller_count": 0,
+            "active_callers": [],
+            "active_caller_status": "legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "evidence_refs": [
+              "tests/test_product_entry.py:absent",
+              "tests/product_entry_cases/:focused_replacement_tests"
+            ],
+            "physical_delete_authorized": false,
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "authority_boundary": {
+              "refs_only": true,
+              "can_authorize_physical_delete": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false
+            }
+          },
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "active_caller_allowed": false,
           "compatibility_alias_allowed": false
         },
@@ -1359,6 +2064,35 @@
             "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
             "docs/status.md#旧面退役校准"
           ],
+          "no_active_caller_evidence": {
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence",
+            "evidence_id": "mag.retired_surface.legacy_flat_shell_aliases.no_active_caller.v1",
+            "module_id": "legacy_flat_shell_aliases",
+            "status": "no_active_caller_observed",
+            "no_active_caller_observed": true,
+            "active_caller_count": 0,
+            "active_callers": [],
+            "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "evidence_refs": [
+              "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
+              "docs/status.md#旧面退役校准"
+            ],
+            "physical_delete_authorized": false,
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "authority_boundary": {
+              "refs_only": true,
+              "can_authorize_physical_delete": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false
+            }
+          },
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "active_caller_allowed": false,
           "compatibility_alias_allowed": false
         },
@@ -1381,6 +2115,35 @@
             "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
             "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
           ],
+          "no_active_caller_evidence": {
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence",
+            "evidence_id": "mag.retired_surface.repo_owned_scheduler_daemon.no_active_caller.v1",
+            "module_id": "repo_owned_scheduler_daemon",
+            "status": "no_active_caller_observed",
+            "no_active_caller_observed": true,
+            "active_caller_count": 0,
+            "active_callers": [],
+            "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "evidence_refs": [
+              "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
+              "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+            ],
+            "physical_delete_authorized": false,
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "authority_boundary": {
+              "refs_only": true,
+              "can_authorize_physical_delete": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false
+            }
+          },
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "active_caller_allowed": false,
           "compatibility_alias_allowed": false,
           "exit_gate": {
@@ -1408,18 +2171,73 @@
             "exit_action": "delete_or_history_tombstone_repo_owned_scheduler_daemon_surface",
             "claims_exit_complete": false,
             "claims_production_long_run_soak_complete": false,
+            "mag_handler_boundary_ready": true,
+            "external_opl_generated_or_hosted_caller_evidence_required": true,
             "authority_boundary": {
               "mag_can_keep_compatibility_alias": false,
               "mag_can_keep_generic_runtime_owner": false,
               "mag_keeps_safe_action_refs": true,
               "opl_can_write_grant_truth": false,
               "opl_can_declare_verdict": false
-            },
-            "mag_handler_boundary_ready": true,
-            "external_opl_generated_or_hosted_caller_evidence_required": true
+            }
           }
         }
       ],
+      "no_active_caller_evidence_summary": {
+        "surface_kind": "mag_retired_surfaces_no_active_caller_evidence_summary",
+        "status": "all_retired_surfaces_no_active_caller_observed",
+        "retired_surface_count": 6,
+        "no_active_caller_observed_count": 6,
+        "active_caller_present_count": 0,
+        "all_retired_surfaces_have_no_active_caller_evidence": true,
+        "observed_module_ids": [
+          "retired_hermes_gateway_local_manager_default_paths",
+          "legacy_local_runtime_history_attempt_record",
+          "domain_runtime_patch_bridge",
+          "compatibility_only_product_entry_aggregate_test",
+          "legacy_flat_shell_aliases",
+          "repo_owned_scheduler_daemon"
+        ],
+        "active_caller_module_ids": [],
+        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "physical_delete_authorized": false,
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "authority_boundary": {
+          "refs_only": true,
+          "can_authorize_physical_delete": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false
+        }
+      },
+      "private_platform_retirement_owner_evidence": {
+        "surface_kind": "mag_private_platform_retirement_owner_evidence",
+        "status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "accepted_ref_shapes": [
+          "physical_delete_authorization_ref",
+          "keep_as_authority_adapter_ref",
+          "typed_blocker_ref",
+          "owner_acceptance_ref"
+        ],
+        "observed_ref_shapes": [
+          "no_active_caller_scan_ref"
+        ],
+        "no_active_caller_evidence_summary_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit/no_active_caller_evidence_summary",
+        "physical_delete_authorized": false,
+        "ready_claim_authorized": false,
+        "next_owner_action": "mag_owner_record_physical_delete_authorization_keep_adapter_or_typed_blocker",
+        "authority_boundary": {
+          "refs_only": true,
+          "can_authorize_physical_delete": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false
+        }
+      },
       "domain_authority_do_not_retire": [
         "grant_lifecycle_stage",
         "package_readiness_submission_ready",
@@ -1472,11 +2290,11 @@
         "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
         "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
         "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+        "external_evidence_receipt_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+        "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
+        "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
         "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard",
         "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
-        "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
-        "external_evidence_receipt_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
-        "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
         "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate"
       },
       "fail_closed_rules": {

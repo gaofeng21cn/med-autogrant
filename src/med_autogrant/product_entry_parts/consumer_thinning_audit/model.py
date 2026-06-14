@@ -4,6 +4,7 @@ from typing import Any
 
 from med_autogrant.product_entry_parts.consumer_thinning_audit.evidence_gates import (
     build_default_caller_deletion_bridge_exit_gate,
+    build_no_active_caller_evidence,
 )
 
 
@@ -62,6 +63,12 @@ def build_retired_functional_module_audit_item(
     evidence_refs: list[str],
     exit_gate: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    no_active_caller_evidence = build_no_active_caller_evidence(
+        module_id=module_id,
+        active_callers=active_callers,
+        active_caller_status=active_caller_status,
+        evidence_refs=evidence_refs,
+    )
     payload: dict[str, Any] = {
         "module_id": module_id,
         "classification": "legacy_proof_tombstone",
@@ -74,6 +81,12 @@ def build_retired_functional_module_audit_item(
         "retention_reason": retention_reason,
         "cannot_absorb_reason": cannot_absorb_reason,
         "evidence_refs": evidence_refs,
+        "no_active_caller_evidence": no_active_caller_evidence,
+        "no_active_caller_observed": no_active_caller_evidence[
+            "no_active_caller_observed"
+        ],
+        "physical_delete_authorized": False,
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
         "active_caller_allowed": False,
         "compatibility_alias_allowed": False,
     }

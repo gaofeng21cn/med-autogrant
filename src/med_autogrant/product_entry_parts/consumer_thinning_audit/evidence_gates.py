@@ -102,3 +102,43 @@ def build_legacy_exit_gate(
             "opl_can_declare_verdict": False,
         },
     }
+
+
+def build_no_active_caller_evidence(
+    *,
+    module_id: str,
+    active_callers: list[str],
+    active_caller_status: str,
+    evidence_refs: list[str],
+) -> dict[str, Any]:
+    no_active_caller = not active_callers
+    return {
+        "surface_kind": "mag_retired_surface_no_active_caller_evidence",
+        "evidence_id": f"mag.retired_surface.{module_id}.no_active_caller.v1",
+        "module_id": module_id,
+        "status": (
+            "no_active_caller_observed"
+            if no_active_caller
+            else "active_caller_present_delete_blocked"
+        ),
+        "no_active_caller_observed": no_active_caller,
+        "active_caller_count": len(active_callers),
+        "active_callers": list(active_callers),
+        "active_caller_status": active_caller_status,
+        "scan_ref": (
+            "/product_entry_manifest/physical_skeleton_follow_through/"
+            "active_path_scan_no_legacy_default_caller"
+        ),
+        "evidence_refs": list(evidence_refs),
+        "physical_delete_authorized": False,
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "authority_boundary": {
+            "refs_only": True,
+            "can_authorize_physical_delete": False,
+            "can_create_owner_receipt": False,
+            "can_create_typed_blocker": False,
+            "can_write_grant_truth": False,
+            "can_claim_domain_ready": False,
+            "can_claim_production_ready": False,
+        },
+    }

@@ -368,6 +368,15 @@ def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Map
         retire_modules["retired_hermes_gateway_local_manager_default_paths"]["active_caller_status"],
         "legacy_default_runtime_paths_absent_no_active_caller",
     )
+    no_active_caller_evidence = retire_modules[
+        "retired_hermes_gateway_local_manager_default_paths"
+    ]["no_active_caller_evidence"]
+    testcase.assertEqual(
+        no_active_caller_evidence["status"],
+        "no_active_caller_observed",
+    )
+    testcase.assertTrue(no_active_caller_evidence["no_active_caller_observed"])
+    testcase.assertFalse(no_active_caller_evidence["physical_delete_authorized"])
     testcase.assertEqual(
         retire_modules["retired_hermes_gateway_local_manager_default_paths"]["code_paths"],
         [
@@ -379,6 +388,21 @@ def assert_domain_handler_consumed_surfaces_and_audit(testcase: Any, export: Map
             ),
         ],
     )
+    no_active_caller_summary = audit["no_active_caller_evidence_summary"]
+    testcase.assertEqual(
+        no_active_caller_summary["status"],
+        "all_retired_surfaces_no_active_caller_observed",
+    )
+    testcase.assertEqual(no_active_caller_summary["retired_surface_count"], 6)
+    testcase.assertEqual(no_active_caller_summary["no_active_caller_observed_count"], 6)
+    testcase.assertFalse(no_active_caller_summary["physical_delete_authorized"])
+    private_retirement_evidence = audit["private_platform_retirement_owner_evidence"]
+    testcase.assertEqual(
+        private_retirement_evidence["status"],
+        "no_active_caller_evidence_observed_not_delete_authorized",
+    )
+    testcase.assertFalse(private_retirement_evidence["physical_delete_authorized"])
+    testcase.assertFalse(private_retirement_evidence["ready_claim_authorized"])
     testcase.assertFalse(audit["fail_closed_rules"]["provider_completion_is_grant_ready"])
     testcase.assertFalse(audit["fail_closed_rules"]["mag_can_rebuild_generic_runtime"])
     testcase.assertEqual(

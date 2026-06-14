@@ -853,6 +853,16 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert len(audit["refs_only_adapter_surfaces"]) == 5
     assert len(audit["mag_owned_grant_authority_surfaces"]) == 6
     assert len(audit["retire_or_tombstone_surfaces"]) == 6
+    no_active_caller_summary = audit["no_active_caller_evidence_summary"]
+    assert no_active_caller_summary["retired_surface_count"] == 6
+    assert no_active_caller_summary["no_active_caller_observed_count"] == 6
+    assert no_active_caller_summary["physical_delete_authorized"] is False
+    assert audit["private_platform_retirement_owner_evidence"][
+        "status"
+    ] == "no_active_caller_evidence_observed_not_delete_authorized"
+    assert audit["private_platform_retirement_owner_evidence"][
+        "physical_delete_authorized"
+    ] is False
     assert audit["domain_authority_do_not_retire"] == [
         "grant_lifecycle_stage",
         "package_readiness_submission_ready",

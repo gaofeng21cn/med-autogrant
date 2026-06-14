@@ -14,6 +14,10 @@ from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
 
 
 def build_privatized_functional_module_audit() -> dict[str, Any]:
+    retire_or_tombstone_surfaces = build_retire_or_tombstone_surfaces()
+    no_active_caller_evidence_summary = _build_no_active_caller_evidence_summary(
+        retire_or_tombstone_surfaces
+    )
     return {
         "surface_kind": "mag_privatized_functional_module_audit",
         "audit_id": "mag.privatized_functional_module_audit.v1",
@@ -40,7 +44,43 @@ def build_privatized_functional_module_audit() -> dict[str, Any]:
         "declarative_pack_surfaces": build_declarative_pack_surfaces(),
         "refs_only_adapter_surfaces": build_refs_only_adapter_surfaces(),
         "mag_owned_grant_authority_surfaces": build_mag_owned_grant_authority_surfaces(),
-        "retire_or_tombstone_surfaces": build_retire_or_tombstone_surfaces(),
+        "retire_or_tombstone_surfaces": retire_or_tombstone_surfaces,
+        "no_active_caller_evidence_summary": no_active_caller_evidence_summary,
+        "private_platform_retirement_owner_evidence": {
+            "surface_kind": "mag_private_platform_retirement_owner_evidence",
+            "status": (
+                "no_active_caller_evidence_observed_not_delete_authorized"
+                if no_active_caller_evidence_summary[
+                    "all_retired_surfaces_have_no_active_caller_evidence"
+                ]
+                else "active_caller_evidence_required"
+            ),
+            "accepted_ref_shapes": [
+                "physical_delete_authorization_ref",
+                "keep_as_authority_adapter_ref",
+                "typed_blocker_ref",
+                "owner_acceptance_ref",
+            ],
+            "observed_ref_shapes": ["no_active_caller_scan_ref"],
+            "no_active_caller_evidence_summary_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "privatized_functional_module_audit/no_active_caller_evidence_summary"
+            ),
+            "physical_delete_authorized": False,
+            "ready_claim_authorized": False,
+            "next_owner_action": (
+                "mag_owner_record_physical_delete_authorization_keep_adapter_or_typed_blocker"
+            ),
+            "authority_boundary": {
+                "refs_only": True,
+                "can_authorize_physical_delete": False,
+                "can_create_owner_receipt": False,
+                "can_create_typed_blocker": False,
+                "can_write_grant_truth": False,
+                "can_claim_domain_ready": False,
+                "can_claim_production_ready": False,
+            },
+        },
         "domain_authority_do_not_retire": [
             "grant_lifecycle_stage",
             "package_readiness_submission_ready",
@@ -104,6 +144,17 @@ def build_privatized_functional_module_audit() -> dict[str, Any]:
             "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
             "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
             "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
+            "external_evidence_receipt_ledger_ref": (
+                "contracts/external_evidence/mag-evidence-receipt-ledger.json"
+            ),
+            "external_evidence_request_pack_ref": (
+                "/product_entry_manifest/mag_consumer_thinning_contract/"
+                "external_evidence_request_pack"
+            ),
+            "grant_stage_controlled_attempt_closeout_ref": (
+                "contracts/external_evidence/mag-evidence-receipt-ledger.json#/"
+                "grant_stage_controlled_attempt_closeout"
+            ),
             "thin_output_guard_ref": (
                 "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
             ),
@@ -120,5 +171,49 @@ def build_privatized_functional_module_audit() -> dict[str, Any]:
             "provider_completion_is_grant_ready": False,
             "opl_observability_can_create_verdict": False,
             "mag_can_rebuild_generic_runtime": False,
+        },
+    }
+
+
+def _build_no_active_caller_evidence_summary(
+    retire_or_tombstone_surfaces: list[dict[str, Any]],
+) -> dict[str, Any]:
+    observed_module_ids = [
+        item["module_id"]
+        for item in retire_or_tombstone_surfaces
+        if item.get("no_active_caller_observed") is True
+    ]
+    active_caller_module_ids = [
+        item["module_id"]
+        for item in retire_or_tombstone_surfaces
+        if item.get("no_active_caller_observed") is not True
+    ]
+    return {
+        "surface_kind": "mag_retired_surfaces_no_active_caller_evidence_summary",
+        "status": (
+            "all_retired_surfaces_no_active_caller_observed"
+            if not active_caller_module_ids
+            else "active_caller_evidence_required"
+        ),
+        "retired_surface_count": len(retire_or_tombstone_surfaces),
+        "no_active_caller_observed_count": len(observed_module_ids),
+        "active_caller_present_count": len(active_caller_module_ids),
+        "all_retired_surfaces_have_no_active_caller_evidence": not active_caller_module_ids,
+        "observed_module_ids": observed_module_ids,
+        "active_caller_module_ids": active_caller_module_ids,
+        "scan_ref": (
+            "/product_entry_manifest/physical_skeleton_follow_through/"
+            "active_path_scan_no_legacy_default_caller"
+        ),
+        "physical_delete_authorized": False,
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "authority_boundary": {
+            "refs_only": True,
+            "can_authorize_physical_delete": False,
+            "can_create_owner_receipt": False,
+            "can_create_typed_blocker": False,
+            "can_write_grant_truth": False,
+            "can_claim_domain_ready": False,
+            "can_claim_production_ready": False,
         },
     }

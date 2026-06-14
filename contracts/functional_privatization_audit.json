@@ -3,7 +3,10 @@
   "audit_refs": {
     "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
     "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
+    "external_evidence_receipt_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+    "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
     "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
+    "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
     "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
     "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
     "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
@@ -2931,7 +2934,10 @@
       "audit_refs": {
         "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
         "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
+        "external_evidence_receipt_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+        "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
         "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
+        "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
         "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
         "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
         "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
@@ -3659,6 +3665,35 @@
         "refs_only_projection_builders",
         "focused_contract_tests"
       ],
+      "no_active_caller_evidence_summary": {
+        "active_caller_module_ids": [],
+        "active_caller_present_count": 0,
+        "all_retired_surfaces_have_no_active_caller_evidence": true,
+        "authority_boundary": {
+          "can_authorize_physical_delete": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "refs_only": true
+        },
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "no_active_caller_observed_count": 6,
+        "observed_module_ids": [
+          "retired_hermes_gateway_local_manager_default_paths",
+          "legacy_local_runtime_history_attempt_record",
+          "domain_runtime_patch_bridge",
+          "compatibility_only_product_entry_aggregate_test",
+          "legacy_flat_shell_aliases",
+          "repo_owned_scheduler_daemon"
+        ],
+        "physical_delete_authorized": false,
+        "retired_surface_count": 6,
+        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "status": "all_retired_surfaces_no_active_caller_observed",
+        "surface_kind": "mag_retired_surfaces_no_active_caller_evidence_summary"
+      },
       "opl_must_absorb_code_surfaces": [
         "workspace_source_intake_shell",
         "session_ledger",
@@ -3673,6 +3708,32 @@
       ],
       "opl_unified_audit_read_model": true,
       "owner": "med-autogrant",
+      "private_platform_retirement_owner_evidence": {
+        "accepted_ref_shapes": [
+          "physical_delete_authorization_ref",
+          "keep_as_authority_adapter_ref",
+          "typed_blocker_ref",
+          "owner_acceptance_ref"
+        ],
+        "authority_boundary": {
+          "can_authorize_physical_delete": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "refs_only": true
+        },
+        "next_owner_action": "mag_owner_record_physical_delete_authorization_keep_adapter_or_typed_blocker",
+        "no_active_caller_evidence_summary_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit/no_active_caller_evidence_summary",
+        "observed_ref_shapes": [
+          "no_active_caller_scan_ref"
+        ],
+        "physical_delete_authorized": false,
+        "ready_claim_authorized": false,
+        "status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "surface_kind": "mag_private_platform_retirement_owner_evidence"
+      },
       "refs_only_adapter_surfaces": [
         {
           "active_caller_status": "active_refs_only_adapter_no_generic_lifecycle_owner",
@@ -4120,6 +4181,7 @@
           "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
           "active_callers": [],
           "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution remains a separate non-default executor adapter receipt path, not this retired default path.",
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
             "src/med_autogrant/gateway.py:absent",
@@ -4133,7 +4195,35 @@
           ],
           "migration_action": "Keep only tombstone and MAG owner-handoff receipt refs for retired default Hermes/Gateway/local-manager paths; explicit non-default executor use goes through OPL executor adapter refs.",
           "module_id": "retired_hermes_gateway_local_manager_default_paths",
+          "no_active_caller_evidence": {
+            "active_caller_count": 0,
+            "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
+            "active_callers": [],
+            "authority_boundary": {
+              "can_authorize_physical_delete": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "refs_only": true
+            },
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "evidence_id": "mag.retired_surface.retired_hermes_gateway_local_manager_default_paths.no_active_caller.v1",
+            "evidence_refs": [
+              "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
+              "docs/status.md#旧面退役校准"
+            ],
+            "module_id": "retired_hermes_gateway_local_manager_default_paths",
+            "no_active_caller_observed": true,
+            "physical_delete_authorized": false,
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "status": "no_active_caller_observed",
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+          },
+          "no_active_caller_observed": true,
           "owner": "none_active",
+          "physical_delete_authorized": false,
           "retention_reason": "No default Hermes/Gateway/local-manager path remains as active source residue or compatibility surface; receipt refs are body-free provenance only.",
           "state": "retired_or_tombstone_only"
         },
@@ -4142,6 +4232,7 @@
           "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
           "active_callers": [],
           "cannot_absorb_reason": "The legacy local attempt-record store itself should not be absorbed as MAG-owned code; OPL should provide the generic stage record surface while MAG keeps safe action refs and grant next-action meaning.",
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
             "src/med_autogrant/product_entry_parts/local_runtime_journal.py:absent",
@@ -4191,7 +4282,36 @@
           },
           "migration_action": "Old local runtime history and attempt-record code has been deleted; OPL owns session records, typed attention queue, wakeup scheduler, and stage-attempt records.",
           "module_id": "legacy_local_runtime_history_attempt_record",
+          "no_active_caller_evidence": {
+            "active_caller_count": 0,
+            "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
+            "active_callers": [],
+            "authority_boundary": {
+              "can_authorize_physical_delete": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "refs_only": true
+            },
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "evidence_id": "mag.retired_surface.legacy_local_runtime_history_attempt_record.no_active_caller.v1",
+            "evidence_refs": [
+              "/product_entry_manifest/session_continuity",
+              "/product_entry_manifest/automation",
+              "/domain_handler_export/user_loop_attention_queue"
+            ],
+            "module_id": "legacy_local_runtime_history_attempt_record",
+            "no_active_caller_observed": true,
+            "physical_delete_authorized": false,
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "status": "no_active_caller_observed",
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+          },
+          "no_active_caller_observed": true,
           "owner": "none_active",
+          "physical_delete_authorized": false,
           "retention_reason": "Active MAG source retains refs-only session/runtime locator projections under refs-only adapter classifications; local runtime history implementation and tests are not retained.",
           "state": "retired_or_tombstone_only"
         },
@@ -4200,6 +4320,7 @@
           "active_caller_status": "retired_physical_facade_removed_no_active_caller",
           "active_callers": [],
           "cannot_absorb_reason": "This is retired compatibility glue, not an OPL primitive to absorb.",
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
             "src/med_autogrant/domain_runtime.py:absent"
@@ -4213,7 +4334,37 @@
           ],
           "migration_action": "Keep only tombstone/provenance; do not add compatibility aliases or re-export facades.",
           "module_id": "domain_runtime_patch_bridge",
+          "no_active_caller_evidence": {
+            "active_caller_count": 0,
+            "active_caller_status": "retired_physical_facade_removed_no_active_caller",
+            "active_callers": [],
+            "authority_boundary": {
+              "can_authorize_physical_delete": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "refs_only": true
+            },
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "evidence_id": "mag.retired_surface.domain_runtime_patch_bridge.no_active_caller.v1",
+            "evidence_refs": [
+              "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
+              "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
+              "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
+              "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge"
+            ],
+            "module_id": "domain_runtime_patch_bridge",
+            "no_active_caller_observed": true,
+            "physical_delete_authorized": false,
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "status": "no_active_caller_observed",
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+          },
+          "no_active_caller_observed": true,
           "owner": "none_active",
+          "physical_delete_authorized": false,
           "retention_reason": "The old domain_runtime facade file is absent from active source.",
           "state": "retired_or_tombstone_only"
         },
@@ -4222,6 +4373,7 @@
           "active_caller_status": "legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
           "active_callers": [],
           "cannot_absorb_reason": "Testing layout is repo-local hygiene, not a generic OPL runtime primitive.",
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
             "tests/test_product_entry.py"
@@ -4233,7 +4385,35 @@
           ],
           "migration_action": "Keep focused replacement tests; do not classify them as legacy aggregate callers.",
           "module_id": "compatibility_only_product_entry_aggregate_test",
+          "no_active_caller_evidence": {
+            "active_caller_count": 0,
+            "active_caller_status": "legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
+            "active_callers": [],
+            "authority_boundary": {
+              "can_authorize_physical_delete": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "refs_only": true
+            },
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "evidence_id": "mag.retired_surface.compatibility_only_product_entry_aggregate_test.no_active_caller.v1",
+            "evidence_refs": [
+              "tests/test_product_entry.py:absent",
+              "tests/product_entry_cases/:focused_replacement_tests"
+            ],
+            "module_id": "compatibility_only_product_entry_aggregate_test",
+            "no_active_caller_observed": true,
+            "physical_delete_authorized": false,
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "status": "no_active_caller_observed",
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+          },
+          "no_active_caller_observed": true,
           "owner": "none_active",
+          "physical_delete_authorized": false,
           "retention_reason": "The aggregate compatibility test entry is gone; focused tests protect current machine-readable contracts.",
           "state": "retired_or_tombstone_only"
         },
@@ -4242,6 +4422,7 @@
           "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
           "active_callers": [],
           "cannot_absorb_reason": "Flat aliases are retired local CLI surface, not a reusable OPL primitive.",
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
             "src/med_autogrant/cli_parts/legacy_flat_aliases.py:absent",
@@ -4254,7 +4435,35 @@
           ],
           "migration_action": "Keep grouped product/workspace/pass/package commands classified as direct domain handler targets; do not keep a legacy flat-alias compatibility surface.",
           "module_id": "legacy_flat_shell_aliases",
+          "no_active_caller_evidence": {
+            "active_caller_count": 0,
+            "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
+            "active_callers": [],
+            "authority_boundary": {
+              "can_authorize_physical_delete": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "refs_only": true
+            },
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "evidence_id": "mag.retired_surface.legacy_flat_shell_aliases.no_active_caller.v1",
+            "evidence_refs": [
+              "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
+              "docs/status.md#旧面退役校准"
+            ],
+            "module_id": "legacy_flat_shell_aliases",
+            "no_active_caller_observed": true,
+            "physical_delete_authorized": false,
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "status": "no_active_caller_observed",
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+          },
+          "no_active_caller_observed": true,
           "owner": "none_active",
+          "physical_delete_authorized": false,
           "retention_reason": "Machine command fields may stay stable in grouped handlers, but retired flat aliases have no active caller and must not be reintroduced as compatibility commands.",
           "state": "retired_or_tombstone_only"
         },
@@ -4263,6 +4472,7 @@
           "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
           "active_callers": [],
           "cannot_absorb_reason": "OPL owns production scheduler/daemon; MAG only exposes grant route and authority refs.",
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
           "classification": "legacy_proof_tombstone",
           "code_paths": [
             "src/med_autogrant/scheduler_daemon.py:absent",
@@ -4311,7 +4521,35 @@
           },
           "migration_action": "OPL owns provider scheduler/daemon; MAG keeps any runtime_control projection under refs-only adapter classifications without local run/resume diagnostics.",
           "module_id": "repo_owned_scheduler_daemon",
+          "no_active_caller_evidence": {
+            "active_caller_count": 0,
+            "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
+            "active_callers": [],
+            "authority_boundary": {
+              "can_authorize_physical_delete": false,
+              "can_claim_domain_ready": false,
+              "can_claim_production_ready": false,
+              "can_create_owner_receipt": false,
+              "can_create_typed_blocker": false,
+              "can_write_grant_truth": false,
+              "refs_only": true
+            },
+            "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+            "evidence_id": "mag.retired_surface.repo_owned_scheduler_daemon.no_active_caller.v1",
+            "evidence_refs": [
+              "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
+              "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+            ],
+            "module_id": "repo_owned_scheduler_daemon",
+            "no_active_caller_observed": true,
+            "physical_delete_authorized": false,
+            "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+            "status": "no_active_caller_observed",
+            "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+          },
+          "no_active_caller_observed": true,
           "owner": "none_active",
+          "physical_delete_authorized": false,
           "retention_reason": "Runtime-control metadata remains covered by refs-only adapter entries, not by this legacy scheduler/daemon tombstone.",
           "state": "retired_or_tombstone_only"
         }
@@ -4991,6 +5229,35 @@
     "refs_only_projection_builders",
     "focused_contract_tests"
   ],
+  "no_active_caller_evidence_summary": {
+    "active_caller_module_ids": [],
+    "active_caller_present_count": 0,
+    "all_retired_surfaces_have_no_active_caller_evidence": true,
+    "authority_boundary": {
+      "can_authorize_physical_delete": false,
+      "can_claim_domain_ready": false,
+      "can_claim_production_ready": false,
+      "can_create_owner_receipt": false,
+      "can_create_typed_blocker": false,
+      "can_write_grant_truth": false,
+      "refs_only": true
+    },
+    "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+    "no_active_caller_observed_count": 6,
+    "observed_module_ids": [
+      "retired_hermes_gateway_local_manager_default_paths",
+      "legacy_local_runtime_history_attempt_record",
+      "domain_runtime_patch_bridge",
+      "compatibility_only_product_entry_aggregate_test",
+      "legacy_flat_shell_aliases",
+      "repo_owned_scheduler_daemon"
+    ],
+    "physical_delete_authorized": false,
+    "retired_surface_count": 6,
+    "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+    "status": "all_retired_surfaces_no_active_caller_observed",
+    "surface_kind": "mag_retired_surfaces_no_active_caller_evidence_summary"
+  },
   "opl_must_absorb_code_surfaces": [
     "workspace_source_intake_shell",
     "session_ledger",
@@ -5005,12 +5272,41 @@
   ],
   "opl_unified_audit_read_model": true,
   "owner": "med-autogrant",
+  "private_platform_retirement_owner_evidence": {
+    "accepted_ref_shapes": [
+      "physical_delete_authorization_ref",
+      "keep_as_authority_adapter_ref",
+      "typed_blocker_ref",
+      "owner_acceptance_ref"
+    ],
+    "authority_boundary": {
+      "can_authorize_physical_delete": false,
+      "can_claim_domain_ready": false,
+      "can_claim_production_ready": false,
+      "can_create_owner_receipt": false,
+      "can_create_typed_blocker": false,
+      "can_write_grant_truth": false,
+      "refs_only": true
+    },
+    "next_owner_action": "mag_owner_record_physical_delete_authorization_keep_adapter_or_typed_blocker",
+    "no_active_caller_evidence_summary_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit/no_active_caller_evidence_summary",
+    "observed_ref_shapes": [
+      "no_active_caller_scan_ref"
+    ],
+    "physical_delete_authorized": false,
+    "ready_claim_authorized": false,
+    "status": "no_active_caller_evidence_observed_not_delete_authorized",
+    "surface_kind": "mag_private_platform_retirement_owner_evidence"
+  },
   "privatized_functional_module_audit": {
     "audit_id": "mag.privatized_functional_module_audit.v1",
     "audit_refs": {
       "consumer_thinning_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
       "domain_handler_projection_ref": "/domain_handler_export/mag_consumer_thinning_contract",
+      "external_evidence_receipt_ledger_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json",
+      "external_evidence_request_pack_ref": "/product_entry_manifest/mag_consumer_thinning_contract/external_evidence_request_pack",
       "generated_surface_bridge_exit_gate_ref": "/product_entry_manifest/mag_consumer_thinning_contract/generated_surface_handoff/bridge_exit_gate",
+      "grant_stage_controlled_attempt_closeout_ref": "contracts/external_evidence/mag-evidence-receipt-ledger.json#/grant_stage_controlled_attempt_closeout",
       "ideal_state_ref": "/product_entry_manifest/ideal_state_closure_status",
       "manifest_ref": "/product_entry_manifest/mag_consumer_thinning_contract",
       "thin_output_guard_ref": "/product_entry_manifest/mag_consumer_thinning_contract/thin_surface_output_guard"
@@ -5738,6 +6034,35 @@
       "refs_only_projection_builders",
       "focused_contract_tests"
     ],
+    "no_active_caller_evidence_summary": {
+      "active_caller_module_ids": [],
+      "active_caller_present_count": 0,
+      "all_retired_surfaces_have_no_active_caller_evidence": true,
+      "authority_boundary": {
+        "can_authorize_physical_delete": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false,
+        "can_create_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_write_grant_truth": false,
+        "refs_only": true
+      },
+      "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+      "no_active_caller_observed_count": 6,
+      "observed_module_ids": [
+        "retired_hermes_gateway_local_manager_default_paths",
+        "legacy_local_runtime_history_attempt_record",
+        "domain_runtime_patch_bridge",
+        "compatibility_only_product_entry_aggregate_test",
+        "legacy_flat_shell_aliases",
+        "repo_owned_scheduler_daemon"
+      ],
+      "physical_delete_authorized": false,
+      "retired_surface_count": 6,
+      "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+      "status": "all_retired_surfaces_no_active_caller_observed",
+      "surface_kind": "mag_retired_surfaces_no_active_caller_evidence_summary"
+    },
     "opl_must_absorb_code_surfaces": [
       "workspace_source_intake_shell",
       "session_ledger",
@@ -5752,6 +6077,32 @@
     ],
     "opl_unified_audit_read_model": true,
     "owner": "med-autogrant",
+    "private_platform_retirement_owner_evidence": {
+      "accepted_ref_shapes": [
+        "physical_delete_authorization_ref",
+        "keep_as_authority_adapter_ref",
+        "typed_blocker_ref",
+        "owner_acceptance_ref"
+      ],
+      "authority_boundary": {
+        "can_authorize_physical_delete": false,
+        "can_claim_domain_ready": false,
+        "can_claim_production_ready": false,
+        "can_create_owner_receipt": false,
+        "can_create_typed_blocker": false,
+        "can_write_grant_truth": false,
+        "refs_only": true
+      },
+      "next_owner_action": "mag_owner_record_physical_delete_authorization_keep_adapter_or_typed_blocker",
+      "no_active_caller_evidence_summary_ref": "/product_entry_manifest/mag_consumer_thinning_contract/privatized_functional_module_audit/no_active_caller_evidence_summary",
+      "observed_ref_shapes": [
+        "no_active_caller_scan_ref"
+      ],
+      "physical_delete_authorized": false,
+      "ready_claim_authorized": false,
+      "status": "no_active_caller_evidence_observed_not_delete_authorized",
+      "surface_kind": "mag_private_platform_retirement_owner_evidence"
+    },
     "refs_only_adapter_surfaces": [
       {
         "active_caller_status": "active_refs_only_adapter_no_generic_lifecycle_owner",
@@ -6199,6 +6550,7 @@
         "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
         "active_callers": [],
         "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution remains a separate non-default executor adapter receipt path, not this retired default path.",
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
           "src/med_autogrant/gateway.py:absent",
@@ -6212,7 +6564,35 @@
         ],
         "migration_action": "Keep only tombstone and MAG owner-handoff receipt refs for retired default Hermes/Gateway/local-manager paths; explicit non-default executor use goes through OPL executor adapter refs.",
         "module_id": "retired_hermes_gateway_local_manager_default_paths",
+        "no_active_caller_evidence": {
+          "active_caller_count": 0,
+          "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
+          "active_callers": [],
+          "authority_boundary": {
+            "can_authorize_physical_delete": false,
+            "can_claim_domain_ready": false,
+            "can_claim_production_ready": false,
+            "can_create_owner_receipt": false,
+            "can_create_typed_blocker": false,
+            "can_write_grant_truth": false,
+            "refs_only": true
+          },
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+          "evidence_id": "mag.retired_surface.retired_hermes_gateway_local_manager_default_paths.no_active_caller.v1",
+          "evidence_refs": [
+            "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
+            "docs/status.md#旧面退役校准"
+          ],
+          "module_id": "retired_hermes_gateway_local_manager_default_paths",
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+          "status": "no_active_caller_observed",
+          "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+        },
+        "no_active_caller_observed": true,
         "owner": "none_active",
+        "physical_delete_authorized": false,
         "retention_reason": "No default Hermes/Gateway/local-manager path remains as active source residue or compatibility surface; receipt refs are body-free provenance only.",
         "state": "retired_or_tombstone_only"
       },
@@ -6221,6 +6601,7 @@
         "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
         "active_callers": [],
         "cannot_absorb_reason": "The legacy local attempt-record store itself should not be absorbed as MAG-owned code; OPL should provide the generic stage record surface while MAG keeps safe action refs and grant next-action meaning.",
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
           "src/med_autogrant/product_entry_parts/local_runtime_journal.py:absent",
@@ -6270,7 +6651,36 @@
         },
         "migration_action": "Old local runtime history and attempt-record code has been deleted; OPL owns session records, typed attention queue, wakeup scheduler, and stage-attempt records.",
         "module_id": "legacy_local_runtime_history_attempt_record",
+        "no_active_caller_evidence": {
+          "active_caller_count": 0,
+          "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
+          "active_callers": [],
+          "authority_boundary": {
+            "can_authorize_physical_delete": false,
+            "can_claim_domain_ready": false,
+            "can_claim_production_ready": false,
+            "can_create_owner_receipt": false,
+            "can_create_typed_blocker": false,
+            "can_write_grant_truth": false,
+            "refs_only": true
+          },
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+          "evidence_id": "mag.retired_surface.legacy_local_runtime_history_attempt_record.no_active_caller.v1",
+          "evidence_refs": [
+            "/product_entry_manifest/session_continuity",
+            "/product_entry_manifest/automation",
+            "/domain_handler_export/user_loop_attention_queue"
+          ],
+          "module_id": "legacy_local_runtime_history_attempt_record",
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+          "status": "no_active_caller_observed",
+          "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+        },
+        "no_active_caller_observed": true,
         "owner": "none_active",
+        "physical_delete_authorized": false,
         "retention_reason": "Active MAG source retains refs-only session/runtime locator projections under refs-only adapter classifications; local runtime history implementation and tests are not retained.",
         "state": "retired_or_tombstone_only"
       },
@@ -6279,6 +6689,7 @@
         "active_caller_status": "retired_physical_facade_removed_no_active_caller",
         "active_callers": [],
         "cannot_absorb_reason": "This is retired compatibility glue, not an OPL primitive to absorb.",
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
           "src/med_autogrant/domain_runtime.py:absent"
@@ -6292,7 +6703,37 @@
         ],
         "migration_action": "Keep only tombstone/provenance; do not add compatibility aliases or re-export facades.",
         "module_id": "domain_runtime_patch_bridge",
+        "no_active_caller_evidence": {
+          "active_caller_count": 0,
+          "active_caller_status": "retired_physical_facade_removed_no_active_caller",
+          "active_callers": [],
+          "authority_boundary": {
+            "can_authorize_physical_delete": false,
+            "can_claim_domain_ready": false,
+            "can_claim_production_ready": false,
+            "can_create_owner_receipt": false,
+            "can_create_typed_blocker": false,
+            "can_write_grant_truth": false,
+            "refs_only": true
+          },
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+          "evidence_id": "mag.retired_surface.domain_runtime_patch_bridge.no_active_caller.v1",
+          "evidence_refs": [
+            "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
+            "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
+            "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
+            "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge"
+          ],
+          "module_id": "domain_runtime_patch_bridge",
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+          "status": "no_active_caller_observed",
+          "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+        },
+        "no_active_caller_observed": true,
         "owner": "none_active",
+        "physical_delete_authorized": false,
         "retention_reason": "The old domain_runtime facade file is absent from active source.",
         "state": "retired_or_tombstone_only"
       },
@@ -6301,6 +6742,7 @@
         "active_caller_status": "legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
         "active_callers": [],
         "cannot_absorb_reason": "Testing layout is repo-local hygiene, not a generic OPL runtime primitive.",
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
           "tests/test_product_entry.py"
@@ -6312,7 +6754,35 @@
         ],
         "migration_action": "Keep focused replacement tests; do not classify them as legacy aggregate callers.",
         "module_id": "compatibility_only_product_entry_aggregate_test",
+        "no_active_caller_evidence": {
+          "active_caller_count": 0,
+          "active_caller_status": "legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
+          "active_callers": [],
+          "authority_boundary": {
+            "can_authorize_physical_delete": false,
+            "can_claim_domain_ready": false,
+            "can_claim_production_ready": false,
+            "can_create_owner_receipt": false,
+            "can_create_typed_blocker": false,
+            "can_write_grant_truth": false,
+            "refs_only": true
+          },
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+          "evidence_id": "mag.retired_surface.compatibility_only_product_entry_aggregate_test.no_active_caller.v1",
+          "evidence_refs": [
+            "tests/test_product_entry.py:absent",
+            "tests/product_entry_cases/:focused_replacement_tests"
+          ],
+          "module_id": "compatibility_only_product_entry_aggregate_test",
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+          "status": "no_active_caller_observed",
+          "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+        },
+        "no_active_caller_observed": true,
         "owner": "none_active",
+        "physical_delete_authorized": false,
         "retention_reason": "The aggregate compatibility test entry is gone; focused tests protect current machine-readable contracts.",
         "state": "retired_or_tombstone_only"
       },
@@ -6321,6 +6791,7 @@
         "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
         "active_callers": [],
         "cannot_absorb_reason": "Flat aliases are retired local CLI surface, not a reusable OPL primitive.",
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
           "src/med_autogrant/cli_parts/legacy_flat_aliases.py:absent",
@@ -6333,7 +6804,35 @@
         ],
         "migration_action": "Keep grouped product/workspace/pass/package commands classified as direct domain handler targets; do not keep a legacy flat-alias compatibility surface.",
         "module_id": "legacy_flat_shell_aliases",
+        "no_active_caller_evidence": {
+          "active_caller_count": 0,
+          "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
+          "active_callers": [],
+          "authority_boundary": {
+            "can_authorize_physical_delete": false,
+            "can_claim_domain_ready": false,
+            "can_claim_production_ready": false,
+            "can_create_owner_receipt": false,
+            "can_create_typed_blocker": false,
+            "can_write_grant_truth": false,
+            "refs_only": true
+          },
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+          "evidence_id": "mag.retired_surface.legacy_flat_shell_aliases.no_active_caller.v1",
+          "evidence_refs": [
+            "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
+            "docs/status.md#旧面退役校准"
+          ],
+          "module_id": "legacy_flat_shell_aliases",
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+          "status": "no_active_caller_observed",
+          "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+        },
+        "no_active_caller_observed": true,
         "owner": "none_active",
+        "physical_delete_authorized": false,
         "retention_reason": "Machine command fields may stay stable in grouped handlers, but retired flat aliases have no active caller and must not be reintroduced as compatibility commands.",
         "state": "retired_or_tombstone_only"
       },
@@ -6342,6 +6841,7 @@
         "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
         "active_callers": [],
         "cannot_absorb_reason": "OPL owns production scheduler/daemon; MAG only exposes grant route and authority refs.",
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
         "classification": "legacy_proof_tombstone",
         "code_paths": [
           "src/med_autogrant/scheduler_daemon.py:absent",
@@ -6390,7 +6890,35 @@
         },
         "migration_action": "OPL owns provider scheduler/daemon; MAG keeps any runtime_control projection under refs-only adapter classifications without local run/resume diagnostics.",
         "module_id": "repo_owned_scheduler_daemon",
+        "no_active_caller_evidence": {
+          "active_caller_count": 0,
+          "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
+          "active_callers": [],
+          "authority_boundary": {
+            "can_authorize_physical_delete": false,
+            "can_claim_domain_ready": false,
+            "can_claim_production_ready": false,
+            "can_create_owner_receipt": false,
+            "can_create_typed_blocker": false,
+            "can_write_grant_truth": false,
+            "refs_only": true
+          },
+          "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+          "evidence_id": "mag.retired_surface.repo_owned_scheduler_daemon.no_active_caller.v1",
+          "evidence_refs": [
+            "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
+            "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+          ],
+          "module_id": "repo_owned_scheduler_daemon",
+          "no_active_caller_observed": true,
+          "physical_delete_authorized": false,
+          "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+          "status": "no_active_caller_observed",
+          "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+        },
+        "no_active_caller_observed": true,
         "owner": "none_active",
+        "physical_delete_authorized": false,
         "retention_reason": "Runtime-control metadata remains covered by refs-only adapter entries, not by this legacy scheduler/daemon tombstone.",
         "state": "retired_or_tombstone_only"
       }
@@ -6847,6 +7375,7 @@
       "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
       "active_callers": [],
       "cannot_absorb_reason": "Default runtime ownership must not stay in MAG. Explicit hermes_agent execution remains a separate non-default executor adapter receipt path, not this retired default path.",
+      "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
         "src/med_autogrant/gateway.py:absent",
@@ -6860,7 +7389,35 @@
       ],
       "migration_action": "Keep only tombstone and MAG owner-handoff receipt refs for retired default Hermes/Gateway/local-manager paths; explicit non-default executor use goes through OPL executor adapter refs.",
       "module_id": "retired_hermes_gateway_local_manager_default_paths",
+      "no_active_caller_evidence": {
+        "active_caller_count": 0,
+        "active_caller_status": "legacy_default_runtime_paths_absent_no_active_caller",
+        "active_callers": [],
+        "authority_boundary": {
+          "can_authorize_physical_delete": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "refs_only": true
+        },
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "evidence_id": "mag.retired_surface.retired_hermes_gateway_local_manager_default_paths.no_active_caller.v1",
+        "evidence_refs": [
+          "/product_entry_manifest/physical_skeleton_follow_through/retired_legacy_default_path_receipts",
+          "docs/status.md#旧面退役校准"
+        ],
+        "module_id": "retired_hermes_gateway_local_manager_default_paths",
+        "no_active_caller_observed": true,
+        "physical_delete_authorized": false,
+        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "status": "no_active_caller_observed",
+        "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+      },
+      "no_active_caller_observed": true,
       "owner": "none_active",
+      "physical_delete_authorized": false,
       "retention_reason": "No default Hermes/Gateway/local-manager path remains as active source residue or compatibility surface; receipt refs are body-free provenance only.",
       "state": "retired_or_tombstone_only"
     },
@@ -6869,6 +7426,7 @@
       "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
       "active_callers": [],
       "cannot_absorb_reason": "The legacy local attempt-record store itself should not be absorbed as MAG-owned code; OPL should provide the generic stage record surface while MAG keeps safe action refs and grant next-action meaning.",
+      "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
         "src/med_autogrant/product_entry_parts/local_runtime_journal.py:absent",
@@ -6918,7 +7476,36 @@
       },
       "migration_action": "Old local runtime history and attempt-record code has been deleted; OPL owns session records, typed attention queue, wakeup scheduler, and stage-attempt records.",
       "module_id": "legacy_local_runtime_history_attempt_record",
+      "no_active_caller_evidence": {
+        "active_caller_count": 0,
+        "active_caller_status": "legacy_local_runtime_history_attempt_record_absent_no_active_caller",
+        "active_callers": [],
+        "authority_boundary": {
+          "can_authorize_physical_delete": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "refs_only": true
+        },
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "evidence_id": "mag.retired_surface.legacy_local_runtime_history_attempt_record.no_active_caller.v1",
+        "evidence_refs": [
+          "/product_entry_manifest/session_continuity",
+          "/product_entry_manifest/automation",
+          "/domain_handler_export/user_loop_attention_queue"
+        ],
+        "module_id": "legacy_local_runtime_history_attempt_record",
+        "no_active_caller_observed": true,
+        "physical_delete_authorized": false,
+        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "status": "no_active_caller_observed",
+        "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+      },
+      "no_active_caller_observed": true,
       "owner": "none_active",
+      "physical_delete_authorized": false,
       "retention_reason": "Active MAG source retains refs-only session/runtime locator projections under refs-only adapter classifications; local runtime history implementation and tests are not retained.",
       "state": "retired_or_tombstone_only"
     },
@@ -6927,6 +7514,7 @@
       "active_caller_status": "retired_physical_facade_removed_no_active_caller",
       "active_callers": [],
       "cannot_absorb_reason": "This is retired compatibility glue, not an OPL primitive to absorb.",
+      "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
         "src/med_autogrant/domain_runtime.py:absent"
@@ -6940,7 +7528,37 @@
       ],
       "migration_action": "Keep only tombstone/provenance; do not add compatibility aliases or re-export facades.",
       "module_id": "domain_runtime_patch_bridge",
+      "no_active_caller_evidence": {
+        "active_caller_count": 0,
+        "active_caller_status": "retired_physical_facade_removed_no_active_caller",
+        "active_callers": [],
+        "authority_boundary": {
+          "can_authorize_physical_delete": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "refs_only": true
+        },
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "evidence_id": "mag.retired_surface.domain_runtime_patch_bridge.no_active_caller.v1",
+        "evidence_refs": [
+          "docs/decisions.md#2026-05-14：退役-domain-runtime-facade-patch-bridge",
+          "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_runtime_patch_target_bridge_is_retired",
+          "tests/test_domain_runtime_split.py::RuntimeSplitStructureTest::test_retired_runtime_facade_is_not_present_in_source",
+          "tests/test_runtime_cli_structural_helpers.py::test_domain_runtime_parts_do_not_depend_on_facade_patch_bridge"
+        ],
+        "module_id": "domain_runtime_patch_bridge",
+        "no_active_caller_observed": true,
+        "physical_delete_authorized": false,
+        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "status": "no_active_caller_observed",
+        "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+      },
+      "no_active_caller_observed": true,
       "owner": "none_active",
+      "physical_delete_authorized": false,
       "retention_reason": "The old domain_runtime facade file is absent from active source.",
       "state": "retired_or_tombstone_only"
     },
@@ -6949,6 +7567,7 @@
       "active_caller_status": "legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
       "active_callers": [],
       "cannot_absorb_reason": "Testing layout is repo-local hygiene, not a generic OPL runtime primitive.",
+      "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
         "tests/test_product_entry.py"
@@ -6960,7 +7579,35 @@
       ],
       "migration_action": "Keep focused replacement tests; do not classify them as legacy aggregate callers.",
       "module_id": "compatibility_only_product_entry_aggregate_test",
+      "no_active_caller_evidence": {
+        "active_caller_count": 0,
+        "active_caller_status": "legacy_aggregate_test_physically_removed_focused_cases_are_replacement_tests",
+        "active_callers": [],
+        "authority_boundary": {
+          "can_authorize_physical_delete": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "refs_only": true
+        },
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "evidence_id": "mag.retired_surface.compatibility_only_product_entry_aggregate_test.no_active_caller.v1",
+        "evidence_refs": [
+          "tests/test_product_entry.py:absent",
+          "tests/product_entry_cases/:focused_replacement_tests"
+        ],
+        "module_id": "compatibility_only_product_entry_aggregate_test",
+        "no_active_caller_observed": true,
+        "physical_delete_authorized": false,
+        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "status": "no_active_caller_observed",
+        "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+      },
+      "no_active_caller_observed": true,
       "owner": "none_active",
+      "physical_delete_authorized": false,
       "retention_reason": "The aggregate compatibility test entry is gone; focused tests protect current machine-readable contracts.",
       "state": "retired_or_tombstone_only"
     },
@@ -6969,6 +7616,7 @@
       "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
       "active_callers": [],
       "cannot_absorb_reason": "Flat aliases are retired local CLI surface, not a reusable OPL primitive.",
+      "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
         "src/med_autogrant/cli_parts/legacy_flat_aliases.py:absent",
@@ -6981,7 +7629,35 @@
       ],
       "migration_action": "Keep grouped product/workspace/pass/package commands classified as direct domain handler targets; do not keep a legacy flat-alias compatibility surface.",
       "module_id": "legacy_flat_shell_aliases",
+      "no_active_caller_evidence": {
+        "active_caller_count": 0,
+        "active_caller_status": "legacy_alias_absent_grouped_cli_is_domain_handler_target",
+        "active_callers": [],
+        "authority_boundary": {
+          "can_authorize_physical_delete": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "refs_only": true
+        },
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "evidence_id": "mag.retired_surface.legacy_flat_shell_aliases.no_active_caller.v1",
+        "evidence_refs": [
+          "/product_entry_manifest/ideal_state_closure_status/direct_retirement_posture",
+          "docs/status.md#旧面退役校准"
+        ],
+        "module_id": "legacy_flat_shell_aliases",
+        "no_active_caller_observed": true,
+        "physical_delete_authorized": false,
+        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "status": "no_active_caller_observed",
+        "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+      },
+      "no_active_caller_observed": true,
       "owner": "none_active",
+      "physical_delete_authorized": false,
       "retention_reason": "Machine command fields may stay stable in grouped handlers, but retired flat aliases have no active caller and must not be reintroduced as compatibility commands.",
       "state": "retired_or_tombstone_only"
     },
@@ -6990,6 +7666,7 @@
       "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
       "active_callers": [],
       "cannot_absorb_reason": "OPL owns production scheduler/daemon; MAG only exposes grant route and authority refs.",
+      "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
       "classification": "legacy_proof_tombstone",
       "code_paths": [
         "src/med_autogrant/scheduler_daemon.py:absent",
@@ -7038,7 +7715,35 @@
       },
       "migration_action": "OPL owns provider scheduler/daemon; MAG keeps any runtime_control projection under refs-only adapter classifications without local run/resume diagnostics.",
       "module_id": "repo_owned_scheduler_daemon",
+      "no_active_caller_evidence": {
+        "active_caller_count": 0,
+        "active_caller_status": "legacy_scheduler_daemon_absent_runtime_control_is_refs_only_adapter",
+        "active_callers": [],
+        "authority_boundary": {
+          "can_authorize_physical_delete": false,
+          "can_claim_domain_ready": false,
+          "can_claim_production_ready": false,
+          "can_create_owner_receipt": false,
+          "can_create_typed_blocker": false,
+          "can_write_grant_truth": false,
+          "refs_only": true
+        },
+        "claim_status": "no_active_caller_evidence_observed_not_delete_authorized",
+        "evidence_id": "mag.retired_surface.repo_owned_scheduler_daemon.no_active_caller.v1",
+        "evidence_refs": [
+          "/product_entry_manifest/mag_consumer_thinning_contract/forbidden_mag_generic_owner_roles",
+          "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller"
+        ],
+        "module_id": "repo_owned_scheduler_daemon",
+        "no_active_caller_observed": true,
+        "physical_delete_authorized": false,
+        "scan_ref": "/product_entry_manifest/physical_skeleton_follow_through/active_path_scan_no_legacy_default_caller",
+        "status": "no_active_caller_observed",
+        "surface_kind": "mag_retired_surface_no_active_caller_evidence"
+      },
+      "no_active_caller_observed": true,
       "owner": "none_active",
+      "physical_delete_authorized": false,
       "retention_reason": "Runtime-control metadata remains covered by refs-only adapter entries, not by this legacy scheduler/daemon tombstone.",
       "state": "retired_or_tombstone_only"
     }

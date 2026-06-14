@@ -232,6 +232,16 @@ def _assert_functional_privatization_audit(generated: dict[str, object]) -> None
         "/product_entry_manifest/physical_skeleton_follow_through/"
         "active_path_scan_no_legacy_default_caller"
     )
+    audit = generated["functional_privatization_audit"]["privatized_functional_module_audit"]
+    assert audit["no_active_caller_evidence_summary"][
+        "status"
+    ] == "all_retired_surfaces_no_active_caller_observed"
+    assert audit["no_active_caller_evidence_summary"][
+        "no_active_caller_observed_count"
+    ] == 6
+    assert audit["private_platform_retirement_owner_evidence"][
+        "physical_delete_authorized"
+    ] is False
 
 
 def test_opl_default_callers_see_mag_deletion_evidence_without_delete_authority() -> None:
