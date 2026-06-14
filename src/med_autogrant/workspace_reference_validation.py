@@ -111,6 +111,7 @@ def _collect_known_ids(document: dict[str, Any]) -> set[str]:
 
     return known_ids
 
+
 def _draft_links_argument_chain(draft: dict[str, Any], argument_chain_id: str) -> bool:
     for section_group in ("outline", "sections"):
         for item in draft.get(section_group, []):
@@ -120,6 +121,7 @@ def _draft_links_argument_chain(draft: dict[str, Any], argument_chain_id: str) -
             if isinstance(linked_ids, list) and argument_chain_id in linked_ids:
                 return True
     return False
+
 
 def _draft_links_fit_mapping(draft: dict[str, Any], fit_mapping_id: str) -> bool:
     for section_group in ("outline", "sections"):
@@ -131,6 +133,7 @@ def _draft_links_fit_mapping(draft: dict[str, Any], fit_mapping_id: str) -> bool
                 return True
     return False
 
+
 def _draft_sections_link_object(draft: dict[str, Any], object_id: str) -> bool:
     for item in draft.get("sections", []):
         if not isinstance(item, dict):
@@ -139,6 +142,3 @@ def _draft_sections_link_object(draft: dict[str, Any], object_id: str) -> bool:
         if isinstance(linked_ids, list) and object_id in linked_ids:
             return True
     return False
-
-
-__all__ = [name for name in globals() if name.startswith("_") and not name.startswith("__")]

@@ -203,6 +203,27 @@ class RepositoryHygieneTest(unittest.TestCase):
 
         self.assertEqual(offenders, [])
 
+    def test_source_modules_do_not_generate_dynamic_all_exports(self) -> None:
+        offenders: list[str] = []
+        for relative_path in _tracked_or_pending_files():
+            if not relative_path.startswith("src/") or not relative_path.endswith(".py"):
+                continue
+            path = REPO_ROOT / relative_path
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if not (
+                    isinstance(node, ast.Assign)
+                    and any(isinstance(target, ast.Name) and target.id == "__all__" for target in node.targets)
+                    and isinstance(node.value, ast.ListComp)
+                    and isinstance(node.value.generators[0].iter, ast.Call)
+                    and isinstance(node.value.generators[0].iter.func, ast.Name)
+                    and node.value.generators[0].iter.func.id == "globals"
+                ):
+                    continue
+                offenders.append(relative_path)
+
+        self.assertEqual(offenders, [])
+
 
 if __name__ == "__main__":
     unittest.main()

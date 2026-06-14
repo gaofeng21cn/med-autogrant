@@ -305,5 +305,3 @@ def _build_closure_acceptance_signals(
             "evidence_refs": _read_nonempty_string_list((gap or {}).get("evidence_refs")),
         }
     ]
-
-__all__ = [name for name in globals() if name.startswith("_") and not name.startswith("__")]

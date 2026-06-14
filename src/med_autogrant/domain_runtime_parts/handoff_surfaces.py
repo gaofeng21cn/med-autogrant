@@ -230,6 +230,3 @@ class DomainRuntimeHandoffSurfaceMixin:
             "critique_execution": critique_document["critique_execution"],
             "critique_workspace": critique_document["critique_workspace"],
         }
-
-
-__all__ = [name for name in globals() if not name.startswith("__")]
