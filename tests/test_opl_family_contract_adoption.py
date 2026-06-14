@@ -5,6 +5,10 @@ from pathlib import Path
 
 import pytest
 
+from opl_family_contract_adoption_cases.controlled_soak import (
+    test_mag_controlled_soak_deferred_without_descriptor_index_skeleton_regression,
+)
+
 
 pytestmark = pytest.mark.meta
 
@@ -982,28 +986,3 @@ def test_mag_adoption_contract_consumes_opl_scheduler_replacement_without_generi
     assert thinning["claims_domain_repo_physical_delete_authorized"] is False
     assert thinning["claims_production_long_run_soak_complete"] is False
     assert thinning["mag_rebuilds_opl_runtime"] is False
-
-
-def test_mag_controlled_soak_deferred_without_descriptor_index_skeleton_regression() -> None:
-    contract = _contract()
-    skeleton = contract["standard_domain_agent_skeleton"]
-    controlled_soak = skeleton["controlled_soak"]
-
-    assert controlled_soak["state"] == "deferred"
-    assert controlled_soak["required_opl_substrate"] == "Temporal production online runtime"
-    assert controlled_soak["no_regression_surfaces"] == [
-        "family_action_catalog",
-        "family_stage_control_plane",
-        "standard_domain_agent_skeleton",
-        "artifact_locator_contract",
-        "controlled_stage_attempt_projection",
-        "controlled_domain_memory_apply_proof",
-        "owner_receipt_contract",
-        "lifecycle_guarded_apply_proof",
-        "physical_skeleton_follow_through",
-        "domain_memory_descriptor_locator",
-        "repo_source_layout_audit",
-    ]
-    assert "provider_hosted_controlled_grant_stage_soak_completed" in controlled_soak["forbidden_deferred_claims"]
-    assert "accepted_or_rejected_receipt_instance_repo_tracked" in controlled_soak["forbidden_deferred_claims"]
-    assert "OPL_holds_fundability_or_submission_ready_export_verdict" in controlled_soak["forbidden_deferred_claims"]
