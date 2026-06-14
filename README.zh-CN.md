@@ -112,18 +112,10 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 <details>
   <summary><strong>技术层 OPL / executor 边界</strong></summary>
 
-- `OPL` 是 stage-led 的完整智能体运行框架，MAG 可以作为外部领域依赖接入。
-- 在这套框架中，Agent executor 是最小执行单位；`Codex CLI` 是当前第一公民 executor。Hermes-Agent 等其他 executor 是显式 opt-in adapter，必须产出可审计回执，不默认承诺行为或质量效果与 Codex CLI 等价。
-- OPL 可以提供阶段调度、唤醒、队列、交接、回执、重试和投影支撑，但 MAG 继续持有基金阶段包、提示、技能、可资助性/写作质量门槛、正文真相和可提交包导出权威。
-- MAG stage pack 给 executor 提供目标、上下文、authority boundary、skill、knowledge refs、tool affordance 和 quality gate；route 只管理 owner 与恢复边界，不预先编排 grant authoring 的认知策略。
-- candidate generation、reflection、ranking、revision 和 meta-review 只作为 stage 内执行策略或证据 refs；它们不是 MAG-owned scheduler、runner、session store、workbench wrapper、runtime journal cadence 或硬编码 workflow。
-- `contracts/stage_run_canary_evidence.json` 是 repo-local controlled StageRun canary evidence fixture，记录 candidate grant direction/section variant、reflection/review、ranking/selection、revision lineage、meta-review learning、independent fundability/review gate、owner receipt closeout、scoped operator summary 与 explicit overclaim boundary 的 refs；scope 固定为 `controlled_fixture_not_live_domain_progress`。
-- controlled canary operator summary 只报告 fixture refs 与 current-owner-delta 形态；不声明 live domain progress、stage complete、grant ready、fundability ready、authoring quality ready、artifact/package freshness、submission ready、production ready 或 external submission authorization。
-- MAG 工具目录是 affordance catalog，不是 workflow script：它声明工具能做什么、能写哪里、凭据边界在哪里、不能签发什么权威；executor 在 attempt 内自主决定先读什么、是否并行、调用或跳过哪些工具、何时请求人工 gate 或 reviewer。
-- MAG 继续独立持有 grant truth、fundability verdict、authoring quality verdict、route owner 与 submission/export authority。
-- Domain memory 与 owner/lifecycle receipt apply 只允许投影 consumed memory refs、writeback proposal、MAG accept/reject decision、owner/no-regression receipt refs、lifecycle receipt refs、runtime receipt evidence、operator receipt projection 与 repo-source layout audit；不把 fundability verdict、真实 grant artifact、memory body、export verdict 或 receipt instance 写进 repo source。
-- `contracts/stage_run_kernel_profile.json` 携带 `legacy_runtime_residue_guard`，用于守住旧本地 runtime surface 的边界。这些 residue 只能作为 history、diagnostic、provenance、refs-only adapter 或 tombstone 读取；canary fixture 或 conformance pass 不能关闭 residue retirement，也不能恢复 MAG-owned scheduler、attempt ledger、session store、workbench、generic runner 或 workflow wrapper。
-- 旧 `OPL Runtime Manager`、Hermes-first、gateway 和本地 host runtime 表述只作为历史追溯或实现 provider 细节保留；Temporal 作为 OPL production substrate 的必需性由 OPL Framework 持有，并且是任务启动后的默认托管自治 runtime substrate，但不由 MAG 改写为 grant-domain runtime truth。
+- `OPL` 可以把 MAG 作为外部领域智能体托管，并提供阶段调度、唤醒、队列、交接、回执、重试和投影。
+- MAG 保留基金侧权威：正文真相、可资助性和写作质量判断、route ownership，以及 submission/export authority。
+- `Codex CLI` 是当前第一公民 executor；Hermes-Agent、Claude Code 等其他 executor 是显式 opt-in adapter，必须产出可审计回执。
+- 完整技术边界、当前入口矩阵、合同 refs 与 proof surfaces 由 [文档索引](./docs/README.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md)、[决策记录](./docs/decisions.md) 和 [合同说明](./contracts/README.md) 维护。
 
 </details>
 
@@ -138,18 +130,11 @@ Machine boundary: Human-readable entry only. Machine truth remains in contracts,
 <details>
   <summary><strong>如果你准备把这个仓直接交给 Codex 或其他 Agent，先看这里</strong></summary>
 
-- 不会自动安装。单独 clone 这个仓不会把 OPL Framework 或托管运行时一起装好。要把 MAG 用到能用，先准备好当前的 `one-person-lab` checkout 或 release bundle，然后再用下面这些 repo-local clean runner 命令查看 skill surface 或导出 domain handler。
-- 先读 [文档索引](./docs/README.md)。这里已经把当前技术全景、formal-entry matrix、稳定 capability surface 和 repo-tracked 真相所在位置收口好了。
-- 然后读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。这是恢复 active product-entry shell、schema-backed surface 和当前 mainline 指针的最快路径。
-- 在改 route、入口 wording 或公开表述前，把 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 当成公开与技术真相集。
-- 当前 formal-entry matrix 是 `CLI`、`MCP` 和 `controller`。`CLI` / `MedAutoGrantDomainEntry` 是 agent entry；`product entry/product status/direct-entry/user-loop`、本地脚本与 schema-backed contract 共同构成 app skill 下的内部 command contract 和 direct-product projection。OPL/Temporal 托管自治 runtime 是任务启动后的默认运行驻留；非默认 executor / proof backend 只在显式 opt-in 集成 lane 中出现。
-- MAG 可以通过 Codex app skill 直接调用，也可以通过 OPL 托管调用。两条路径必须回到同一套 MAG-owned route、quality、workspace 和 export surface。
-- 检查 OPL Foundry Agent series command surface 时，优先使用 repo-local clean runner：`<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli foundry status --format json`。只有在已确认当前 shell 的 `mag` 来自本仓安装或受控开发环境时，才用 `mag foundry status --format json`；不要把裸 `uv run mag` 或 PATH 上的 `mag` 当作 readiness evidence。help 首屏会显示 `Series: OPL Foundry Agent`、`Agent id: medautogrant`、ordinary path `workspace/work/stage/run/vault/handoff/connect`、executable command surface 和 MAG authority boundary。`status`、`inspect`、`interfaces`、`validate`、`doctor` 和 `peers` 是顶层快捷命令，`grant` alias 到 `workspace`，`work` alias 到 `pass`。
-- 如果外部 agent 或 OPL 需要直接读取 repo-tracked handler surface，用 repo-local clean runner：`<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli domain-handler export --input <input_path> --format json`；返回的是 MAG domain-handler export、authority refs、typed blocker refs 与 generated-surface handoff refs，并且不会把 Python 副产物写回 checkout。
-- pre-authoring intake 用 `<med-autogrant-repo>/scripts/run-python-clean.sh -m med_autogrant.cli workspace initialize-intake --input <selection_input> --workspace-root <workspace_dir> --format json`；目录会带 workspace-local Git boundary，`workspace.json` 是 MAG canonical document。
-- 当前单一 skill descriptor 已携带可直接消费的 `runtime_continuity` envelope，并复用既有 `session_continuity` / `progress_projection` / `artifact_inventory` / `runtime_control` truth。
-- 当前 product-entry manifest 也携带 `controlled_domain_memory_apply_proof`、`owner_receipt_contract` 与 `lifecycle_guarded_apply_proof`，让 OPL 或 direct caller 可以审计 consumed grant-strategy memory refs、writeback proposal、accept/reject decision、owner/no-regression receipt refs、lifecycle receipt refs、runtime receipt evidence、operator receipt projection 与 repo-source layout，而不会拿到 memory body 或 grant artifact。
-- 当前可机读治理面包括 `workspace quality-scorecard`、`workspace quality-diff` 和 `pass autonomy-controller`。
+- 单独 clone 这个仓不会安装 OPL Framework 或托管运行时。需要托管执行时，先准备当前 `one-person-lab` checkout 或 release bundle。
+- 先读 [文档索引](./docs/README.md)，再读 [合同说明](./contracts/README.md) 和 [`contracts/runtime-program/current-program.json`](./contracts/runtime-program/current-program.json)。
+- 改 route、公开表述或 operator 命令前，以 [项目概览](./docs/project.md)、[当前状态](./docs/status.md)、[架构](./docs/architecture.md)、[不变量](./docs/invariants.md) 和 [决策记录](./docs/decisions.md) 作为当前技术真相集。
+- MAG direct path 与 OPL-hosted path 必须回到同一套 MAG-owned route、workspace、quality 和 export surfaces。
+- 检查 command surface 或导出 handler 数据时，使用文档索引与 contracts 中记录的 repo-local clean runner 命令；除非已确认当前 shell 指向本 checkout，不要把 PATH 上的裸 `mag` 当成 readiness evidence。
 
 </details>
 
