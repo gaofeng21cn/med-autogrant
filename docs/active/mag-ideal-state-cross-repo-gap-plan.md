@@ -162,6 +162,12 @@ Refs-only ledger verification、request accounting closure、production acceptan
 
 Docs-only 验证使用 `rtk git diff --check`、`rtk rg -n "<<<<<<<|>>>>>>>|=======" docs` 与 docs inventory sanity；触及 source/contracts/tests 时再运行 `rtk ./scripts/verify.sh` 或 focused pytest。
 
+## 合理重构巡检口径
+
+2026-06-15 的 OPL family 合理重构快照把 MAG 归为 `watch_only / contract-generated` 为主的仓库，而不是源码拆分优先仓。当前 repo-native line budget 通过，源码和测试没有新的 `>=1000` 行强拆信号；接近预算的 `tests/test_final_package.py` 与 `tests/test_cli_validate_workspace.py` 仍按场景聚合读取，只有在继续增长、churn 叠加或测试定位成本上升时才按 existing `product_entry_cases/` 模式 case 化。
+
+大体量文件主要是 `schemas/v1/product-entry-manifest.schema.json`、`contracts/functional_privatization_audit.json`、`contracts/stage_control_plane.json` 和 `contracts/runtime-program/opl-family-contract-adoption.json` 这类 schema / contract / generated aggregate。它们不按普通源码行数盲拆；后续只在 source parts、generator、schema index 或 check 命令不清晰时治理生成链路。`<40` 行的 `__init__`、public entry marker、schema loader、workspace helper、test support 和 `product_entry.py` 这类薄入口默认保留；只有 deletion test 证明它只是单 caller pass-through 且删除后复杂度不会分散时，才合并或内联。
+
 ## 历史索引
 
 | 内容类型 | 当前落点 |
