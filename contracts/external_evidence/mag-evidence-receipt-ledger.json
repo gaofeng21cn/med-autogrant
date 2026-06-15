@@ -692,6 +692,145 @@
           "opl_can_authorize_quality_or_export": false,
           "human_gate_approval_recorded": false
         }
+      },
+      {
+        "attempt_id": "mag-owner-chain-live-progress-canary-2026-06-15",
+        "attempt_date": "2026-06-15",
+        "state": "blocked_by_mag_owned_typed_blocker_with_runtime_receipt_refs",
+        "evidence_scope": "mag_authority_surfaces_executed_body_free_not_readiness",
+        "workspace_ref": "examples/nsfc_workspace_p2c_critique.json",
+        "runtime_receipt_root": "/tmp/mag-owner-evidence-refresh-20260615-runtime",
+        "repo_tracks_runtime_receipt_instance_body": false,
+        "commands": [
+          {
+            "command_ref": "cmd:mag-owner-chain-canary-quality-scorecard-20260615",
+            "command": "./scripts/run-python-clean.sh -m med_autogrant.cli workspace quality-scorecard --input examples/nsfc_workspace_p2c_critique.json --format json",
+            "result": {
+              "ok": true,
+              "workspace_id": "nsfc-demo-001",
+              "draft_id": "draft-v1",
+              "lifecycle_stage": "critique",
+              "overall_status": "blocked",
+              "overall_score": 85,
+              "unresolved_hard_issue_count": 5,
+              "claims_quality_ready": false
+            }
+          },
+          {
+            "command_ref": "cmd:mag-owner-chain-canary-quality-closure-dossier-20260615",
+            "command": "./scripts/run-python-clean.sh -m med_autogrant.cli workspace quality-closure-dossier --input examples/nsfc_workspace_p2c_critique.json --format json",
+            "result": {
+              "ok": true,
+              "workspace_id": "nsfc-demo-001",
+              "draft_id": "draft-v1",
+              "lifecycle_stage": "critique",
+              "quality_status": "blocked",
+              "quality_score": 85,
+              "claims_quality_ready": false
+            }
+          },
+          {
+            "command_ref": "cmd:mag-owner-chain-canary-package-20260615",
+            "command": "./scripts/run-python-clean.sh -m med_autogrant.cli package submission-ready --input examples/nsfc_workspace_p3c_presubmission_frozen.json --output-dir /tmp/mag-owner-evidence-refresh-20260615-package --format json",
+            "result": {
+              "ok": false,
+              "workspace_id": "nsfc-demo-001",
+              "lifecycle_stage": "frozen",
+              "error": "submission ready package blocked: missing_mandatory_sections, unresolved_preliminary_evidence_gaps, missing_submission_ready_export_verdict",
+              "error_codes": [
+                "missing_mandatory_sections",
+                "unresolved_preliminary_evidence_gaps",
+                "missing_submission_ready_export_verdict"
+              ],
+              "output_dir_created": false,
+              "claims_export_ready": false,
+              "claims_submission_ready_export": false
+            }
+          },
+          {
+            "command_ref": "cmd:mag-owner-chain-canary-typed-blocker-receipt-20260615",
+            "command": "./scripts/run-python-clean.sh -m med_autogrant.cli authority owner-receipt-evidence --input examples/nsfc_workspace_p2c_critique.json --receipt-shape typed_blocker --stage-id specific_aims_and_structure --source-ref contracts/external_evidence/mag-evidence-receipt-ledger.json#/owner_chain_live_progress_evidence_lane/canary_attempts/2026-06-15 --closeout-summary 'Fresh MAG owner-chain canary remains blocked: quality scorecard is blocked and submission-ready package fails closed; this is typed blocker evidence, not a readiness claim.' --runtime-root /tmp/mag-owner-evidence-refresh-20260615-runtime --receipt-id owner-chain-canary-20260615-typed-blocker --format json",
+            "result": {
+              "ok": true,
+              "receipt_shape": "typed_blocker",
+              "receipt_instance_ref": "/private/tmp/mag-owner-evidence-refresh-20260615-runtime/receipts/owner-receipts/owner-chain-canary-20260615-typed-blocker.json",
+              "body_included": false,
+              "repo_tracked": false,
+              "closeout_summary_required": true
+            }
+          },
+          {
+            "command_ref": "cmd:mag-owner-chain-canary-no-regression-receipt-20260615",
+            "command": "./scripts/run-python-clean.sh -m med_autogrant.cli authority owner-receipt-evidence --input examples/nsfc_workspace_p2c_critique.json --receipt-shape no_regression_evidence --stage-id review_and_rebuttal --source-ref contracts/external_evidence/mag-evidence-receipt-ledger.json#/owner_chain_live_progress_evidence_lane/canary_attempts/2026-06-15 --closeout-summary 'Fresh MAG owner-chain canary preserves fail-closed behavior without grant truth, artifact, memory, export verdict, or OPL runtime state writes.' --runtime-root /tmp/mag-owner-evidence-refresh-20260615-runtime --receipt-id owner-chain-canary-20260615-no-regression --format json",
+            "result": {
+              "ok": true,
+              "receipt_shape": "no_regression_evidence",
+              "receipt_instance_ref": "/private/tmp/mag-owner-evidence-refresh-20260615-runtime/receipts/owner-receipts/owner-chain-canary-20260615-no-regression.json",
+              "body_included": false,
+              "repo_tracked": false,
+              "closeout_summary_required": true
+            }
+          }
+        ],
+        "mag_owned_typed_blocker": {
+          "owner": "med-autogrant",
+          "typed_blocker_ref": "typed-blocker:mag/owner-chain-live-progress/specific_aims_and_structure/quality-package-gates-blocked/2026-06-15",
+          "runtime_receipt_instance_ref": "/private/tmp/mag-owner-evidence-refresh-20260615-runtime/receipts/owner-receipts/owner-chain-canary-20260615-typed-blocker.json",
+          "blocker_kind": "quality_and_submission_ready_package_gates_blocked",
+          "blocker_reason": "Fresh MAG authority surfaces executed against repo fixture workspaces on 2026-06-15; quality remains blocked and submission-ready package generation fails closed; no live human-gate receipt or complete package/export evidence exists.",
+          "next_owner": "med-autogrant_or_app_live_operator",
+          "body_included": false
+        },
+        "mag_owned_no_regression": {
+          "owner": "med-autogrant",
+          "no_regression_evidence_ref": "no-regression:mag/owner-chain-live-progress/quality-package-fail-closed/2026-06-15",
+          "runtime_receipt_instance_ref": "/private/tmp/mag-owner-evidence-refresh-20260615-runtime/receipts/owner-receipts/owner-chain-canary-20260615-no-regression.json",
+          "body_included": false
+        },
+        "quality_export_package_evidence": {
+          "owner": "med-autogrant",
+          "quality_command_ref": "cmd:mag-owner-chain-canary-quality-scorecard-20260615",
+          "quality_receipt_ref": "receipt:mag/grant-quality/owner-chain-live-progress/specific_aims_and_structure/blocked-quality-scorecard/2026-06-15",
+          "export_receipt_ref": "receipt:mag/export-verdict/owner-chain-live-progress/package_and_submit_ready/export-blocked-ref/2026-06-15",
+          "package_receipt_ref": "receipt:mag/package-lifecycle/owner-chain-live-progress/package_and_submit_ready/package-blocked-ref/2026-06-15",
+          "body_included": false
+        },
+        "forbidden_write_proof": {
+          "repo_receipt_instance_written": false,
+          "grant_truth_written": false,
+          "grant_artifact_written": false,
+          "memory_body_written": false,
+          "fundability_verdict_written": false,
+          "authoring_quality_verdict_written": false,
+          "submission_ready_export_verdict_written": false,
+          "opl_runtime_state_written": false,
+          "app_workbench_state_written": false
+        },
+        "claims": {
+          "claims_live_domain_progress": true,
+          "claims_grant_ready": false,
+          "claims_fundability_ready": false,
+          "claims_authoring_quality_ready": false,
+          "claims_quality_ready": false,
+          "claims_export_ready": false,
+          "claims_package_fresh": false,
+          "claims_submission_ready": false,
+          "claims_submission_ready_export": false,
+          "claims_production_ready": false,
+          "claims_external_submission_authorized": false
+        },
+        "authority_boundary": {
+          "mag_owns_typed_blocker": true,
+          "mag_owns_no_regression_evidence": true,
+          "mag_owns_quality_export_package_refs": true,
+          "opl_records_refs_only": true,
+          "opl_can_write_grant_truth": false,
+          "opl_can_mutate_artifact_body": false,
+          "opl_can_sign_owner_receipt": false,
+          "opl_can_create_typed_blocker": false,
+          "opl_can_authorize_quality_or_export": false,
+          "human_gate_approval_recorded": false
+        }
       }
     ],
     "false_authority_flags": {

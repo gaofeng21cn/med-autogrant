@@ -103,25 +103,33 @@ def test_owner_chain_live_progress_canary_records_command_backed_typed_blocker()
 
     assert isinstance(attempts, list)
     attempt = attempts[-1]
-    assert attempt["attempt_id"] == "mag-owner-chain-live-progress-canary-2026-06-09"
+    attempt_date = attempt["attempt_date"]
+    command_date = attempt_date.replace("-", "")
+    assert attempt["attempt_id"] == f"mag-owner-chain-live-progress-canary-{attempt_date}"
     assert attempt["state"] == "blocked_by_mag_owned_typed_blocker_with_runtime_receipt_refs"
     assert attempt["repo_tracks_runtime_receipt_instance_body"] is False
 
     commands = {item["command_ref"]: item for item in attempt["commands"]}
     assert set(commands) == {
-        "cmd:mag-owner-chain-canary-quality-scorecard-20260609",
-        "cmd:mag-owner-chain-canary-quality-closure-dossier-20260609",
-        "cmd:mag-owner-chain-canary-package-20260609",
-        "cmd:mag-owner-chain-canary-typed-blocker-receipt-20260609",
-        "cmd:mag-owner-chain-canary-no-regression-receipt-20260609",
+        f"cmd:mag-owner-chain-canary-quality-scorecard-{command_date}",
+        f"cmd:mag-owner-chain-canary-quality-closure-dossier-{command_date}",
+        f"cmd:mag-owner-chain-canary-package-{command_date}",
+        f"cmd:mag-owner-chain-canary-typed-blocker-receipt-{command_date}",
+        f"cmd:mag-owner-chain-canary-no-regression-receipt-{command_date}",
     }
-    assert commands["cmd:mag-owner-chain-canary-quality-scorecard-20260609"]["result"][
+    assert commands[f"cmd:mag-owner-chain-canary-quality-scorecard-{command_date}"]["result"][
         "overall_status"
     ] == "blocked"
-    assert commands["cmd:mag-owner-chain-canary-package-20260609"]["result"]["ok"] is False
-    assert commands["cmd:mag-owner-chain-canary-package-20260609"]["result"][
+    assert commands[f"cmd:mag-owner-chain-canary-package-{command_date}"]["result"]["ok"] is False
+    assert commands[f"cmd:mag-owner-chain-canary-package-{command_date}"]["result"][
         "output_dir_created"
     ] is False
+    assert commands[f"cmd:mag-owner-chain-canary-typed-blocker-receipt-{command_date}"][
+        "result"
+    ]["closeout_summary_required"] is True
+    assert commands[f"cmd:mag-owner-chain-canary-no-regression-receipt-{command_date}"][
+        "result"
+    ]["closeout_summary_required"] is True
 
     typed_blocker = attempt["mag_owned_typed_blocker"]
     assert typed_blocker["owner"] == "med-autogrant"
