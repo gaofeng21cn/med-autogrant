@@ -91,10 +91,11 @@ def test_verify_script_wraps_canonical_make_lanes() -> None:
     assert "make test-regression" in verify_script
     assert "make test-proof" in verify_script
     assert "make test-full" in verify_script
+    assert 'lane" == "cleanup"' in verify_script
     assert "scripts/repo-hygiene.sh --fix" in verify_script
     assert "scripts/repo-hygiene.sh" in verify_script
     assert "python scripts/line_budget.py" not in verify_script
-    assert "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|proof|structure|full]" in verify_script
+    assert "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|proof|structure|full|cleanup]" in verify_script
 
 
 def test_product_entry_cases_are_direct_regression_cases() -> None:

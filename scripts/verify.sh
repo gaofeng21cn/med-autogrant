@@ -3,7 +3,12 @@ set -euo pipefail
 
 lane="${1:-fast}"
 
-scripts/repo-hygiene.sh --fix
+if [[ "$lane" == "cleanup" || "$lane" == "fix" || "$lane" == "hygiene:fix" ]]; then
+  scripts/repo-hygiene.sh --fix
+  scripts/repo-hygiene.sh
+  exit 0
+fi
+
 scripts/repo-hygiene.sh
 
 case "$lane" in
@@ -35,7 +40,7 @@ case "$lane" in
     ;;
   *)
     echo "Unknown lane: $lane" >&2
-    echo "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|proof|structure|full]" >&2
+    echo "Usage: $0 [fast|smoke|cli-smoke|family|meta|regression|proof|structure|full|cleanup]" >&2
     exit 2
     ;;
 esac

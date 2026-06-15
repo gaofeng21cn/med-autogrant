@@ -67,6 +67,7 @@
 
 - 默认最小验证入口是 `scripts/verify.sh`。
 - `scripts/verify.sh` 默认执行 `make test-fast`；`scripts/verify.sh full` 执行 `make test-full`。
+- `scripts/verify.sh` 默认只检查 repo hygiene，不自动删除本地 ignored 产物；需要清理时显式运行 `scripts/verify.sh cleanup`。
 - `make test-fast` 是默认开发验证，并默认排除 `meta` 套件。
 - `make test-meta` 仅用于 repo-tracked program control 与 repo hygiene 检查。
 - `make test-cli-smoke` 是 CLI/local-runtime smoke lane，`make test-full` 是 clean-clone baseline。
