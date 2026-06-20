@@ -165,6 +165,7 @@
       "declarative_grant_handler",
       "refs_only_adapter",
       "minimal_authority_function",
+      "repo_native_verification_wrapper",
       "legacy_proof_tombstone"
     ],
     "forbidden_reflow_policy": "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_executor_probe_or_compat_alias",
@@ -214,6 +215,7 @@
       "package",
       "autonomy_controller",
       "owner_receipt_helper",
+      "repo_shell_verification_wrappers",
       "legacy_runtime_residue"
     ],
     "retirement_gate": {
@@ -690,6 +692,63 @@
         ],
         "surface_id": "owner_receipt_helper",
         "target_owner_after_migration": "med-autogrant"
+      },
+      {
+        "active_caller_status": "active_repo_verification_entry",
+        "allowed_role": "repo_native_verification_hygiene_temp_env_bootstrap_and_quality_entry",
+        "authority_boundary": {
+          "can_authorize_physical_delete": false,
+          "can_claim_grant_readiness": false,
+          "can_claim_production_long_run_soak": false,
+          "can_own_generated_wrapper": false,
+          "can_own_generic_runtime": false
+        },
+        "classification": "repo_native_verification_wrapper",
+        "forbidden_roles": [
+          "generic_scheduler_owner",
+          "generic_daemon_owner",
+          "generic_queue_owner",
+          "generic_attempt_ledger_owner",
+          "generic_state_machine_runner_owner",
+          "generic_cli_mcp_product_wrapper_owner",
+          "generic_domain_handler_owner",
+          "generic_session_store_owner",
+          "generic_status_workbench_owner",
+          "generic_workspace_source_intake_owner",
+          "generic_memory_transport_owner",
+          "generic_artifact_gallery_owner",
+          "generic_operator_workbench_owner",
+          "generic_observability_slo_owner",
+          "generic_native_helper_envelope_owner",
+          "generic_review_repair_transport_owner",
+          "generated_surface_owner_in_domain_repo"
+        ],
+        "retirement_gate": {
+          "allowed_terminal_actions": [
+            "retain_as_repo_native_verification_wrapper",
+            "delete_or_rename_only_with_repo_verification_replacement"
+          ],
+          "compatibility_alias_allowed": false,
+          "no_resurrection_policy": "no_runtime_session_queue_workbench_or_generated_surface_owner",
+          "required_before_delete_or_rename": [
+            "repo_hygiene_replacement_command",
+            "verification_entry_no_regression"
+          ],
+          "state": "retained_repo_native_verification_entry_do_not_promote_to_runtime_owner",
+          "target_owner_after_migration": "repo_hygiene_boundary"
+        },
+        "source_refs": [
+          "scripts/install-codex-plugin.sh",
+          "scripts/opl-module-healthcheck.sh",
+          "scripts/repo-hygiene.sh",
+          "scripts/run-opl-quality-details.sh",
+          "scripts/run-pytest-clean.sh",
+          "scripts/run-python-clean.sh",
+          "scripts/run-structural-quality-gate.sh",
+          "scripts/verify.sh"
+        ],
+        "surface_id": "repo_shell_verification_wrappers",
+        "target_owner_after_migration": "repo_hygiene_boundary"
       },
       {
         "active_caller_status": "no_active_caller_history_or_tombstone_only",

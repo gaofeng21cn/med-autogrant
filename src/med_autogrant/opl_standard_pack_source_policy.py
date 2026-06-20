@@ -90,6 +90,7 @@ PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS = [
     "declarative_grant_handler",
     "refs_only_adapter",
     "minimal_authority_function",
+    "repo_native_verification_wrapper",
     "legacy_proof_tombstone",
 ]
 
@@ -391,6 +392,47 @@ PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
         ],
     },
     {
+        "surface_id": "repo_shell_verification_wrappers",
+        "classification": "repo_native_verification_wrapper",
+        "source_refs": [
+            "scripts/install-codex-plugin.sh",
+            "scripts/opl-module-healthcheck.sh",
+            "scripts/repo-hygiene.sh",
+            "scripts/run-opl-quality-details.sh",
+            "scripts/run-pytest-clean.sh",
+            "scripts/run-python-clean.sh",
+            "scripts/run-structural-quality-gate.sh",
+            "scripts/verify.sh",
+        ],
+        "allowed_role": "repo_native_verification_hygiene_temp_env_bootstrap_and_quality_entry",
+        "forbidden_roles": [
+            "generic_scheduler_owner",
+            "generic_daemon_owner",
+            "generic_queue_owner",
+            "generic_attempt_ledger_owner",
+            "generic_state_machine_runner_owner",
+            "generic_cli_mcp_product_wrapper_owner",
+            "generic_domain_handler_owner",
+            "generic_session_store_owner",
+            "generic_status_workbench_owner",
+            "generic_workspace_source_intake_owner",
+            "generic_memory_transport_owner",
+            "generic_artifact_gallery_owner",
+            "generic_operator_workbench_owner",
+            "generic_observability_slo_owner",
+            "generic_native_helper_envelope_owner",
+            "generic_review_repair_transport_owner",
+            "generated_surface_owner_in_domain_repo",
+        ],
+        "authority_boundary": {
+            "can_own_generic_runtime": False,
+            "can_own_generated_wrapper": False,
+            "can_authorize_physical_delete": False,
+            "can_claim_grant_readiness": False,
+            "can_claim_production_long_run_soak": False,
+        },
+    },
+    {
         "surface_id": "legacy_runtime_residue",
         "classification": "legacy_proof_tombstone",
         "source_refs": [
@@ -408,6 +450,7 @@ TARGET_OWNER_BY_PHYSICAL_CLASSIFICATION = {
     "declarative_grant_handler": TARGET_DOMAIN_ID,
     "refs_only_adapter": GENERATED_SURFACE_OWNER,
     "minimal_authority_function": TARGET_DOMAIN_ID,
+    "repo_native_verification_wrapper": "repo_hygiene_boundary",
     "legacy_proof_tombstone": "history_tombstone",
 }
 
@@ -415,5 +458,6 @@ ACTIVE_CALLER_STATUS_BY_PHYSICAL_CLASSIFICATION = {
     "declarative_grant_handler": "active_domain_pack_or_handler_target",
     "refs_only_adapter": "active_refs_only_adapter_until_opl_generated_caller_migration",
     "minimal_authority_function": "retained_mag_authority_function",
+    "repo_native_verification_wrapper": "active_repo_verification_entry",
     "legacy_proof_tombstone": "no_active_caller_history_or_tombstone_only",
 }

@@ -323,6 +323,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         "package",
         "autonomy_controller",
         "owner_receipt_helper",
+        "repo_shell_verification_wrappers",
         "legacy_runtime_residue",
     ]
 
@@ -351,6 +352,10 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert classifications["package"]["classification"] == "minimal_authority_function"
     assert classifications["autonomy_controller"]["classification"] == "minimal_authority_function"
     assert classifications["owner_receipt_helper"]["classification"] == "minimal_authority_function"
+    assert (
+        classifications["repo_shell_verification_wrappers"]["classification"]
+        == "repo_native_verification_wrapper"
+    )
     assert classifications["legacy_runtime_residue"]["classification"] == "legacy_proof_tombstone"
 
     for forbidden in (
@@ -378,6 +383,35 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
     assert "generic_memory_transport_owner" in classifications["memory"]["forbidden_roles"]
     assert "generic_artifact_lifecycle_owner" in classifications["package"]["forbidden_roles"]
     assert "generic_attempt_ledger_owner" in classifications["owner_receipt_helper"]["forbidden_roles"]
+    assert (
+        classifications["repo_shell_verification_wrappers"]["source_refs"]
+        == sorted(
+            path.relative_to(REPO_ROOT).as_posix()
+            for path in (REPO_ROOT / "scripts").glob("*.sh")
+            if path.is_file()
+        )
+    )
+    assert (
+        classifications["repo_shell_verification_wrappers"]["active_caller_status"]
+        == "active_repo_verification_entry"
+    )
+    assert (
+        classifications["repo_shell_verification_wrappers"]["target_owner_after_migration"]
+        == "repo_hygiene_boundary"
+    )
+    assert classifications["repo_shell_verification_wrappers"]["authority_boundary"] == {
+        "can_own_generic_runtime": False,
+        "can_own_generated_wrapper": False,
+        "can_authorize_physical_delete": False,
+        "can_claim_grant_readiness": False,
+        "can_claim_production_long_run_soak": False,
+    }
+    assert "generic_state_machine_runner_owner" in classifications[
+        "repo_shell_verification_wrappers"
+    ]["forbidden_roles"]
+    assert classifications["repo_shell_verification_wrappers"]["retirement_gate"]["state"] == (
+        "retained_repo_native_verification_entry_do_not_promote_to_runtime_owner"
+    )
     assert classifications["grouped_cli_wrapper"]["active_caller_status"] == (
         "active_refs_only_adapter_until_opl_generated_caller_migration"
     )

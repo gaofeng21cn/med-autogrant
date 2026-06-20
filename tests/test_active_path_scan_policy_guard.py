@@ -25,6 +25,11 @@ def _contract_active_path_policy() -> dict[str, object]:
     return morphology["active_path_scan_policy"]
 
 
+def _contract_physical_source_morphology_policy() -> dict[str, object]:
+    payload = json.loads((REPO_ROOT / POLICY_REF).read_text(encoding="utf-8"))
+    return payload["physical_source_morphology_policy"]
+
+
 def _assert_repo_local_path(path: str) -> None:
     parsed = urlparse(path)
     assert not parsed.scheme, path
@@ -83,6 +88,34 @@ def test_active_path_scan_policy_is_contract_owned_and_repo_local() -> None:
         "host_agent_default_runtime_owner",
         "json_hermes_default_executor",
     }
+
+
+def test_repo_shell_wrappers_are_explicitly_classified_as_verification_wrappers() -> None:
+    morphology = _contract_physical_source_morphology_policy()
+    classifications = {
+        surface["surface_id"]: surface
+        for surface in morphology["surface_classifications"]
+    }
+    shell_wrapper_surface = classifications["repo_shell_verification_wrappers"]
+
+    assert shell_wrapper_surface["classification"] == "repo_native_verification_wrapper"
+    assert shell_wrapper_surface["active_caller_status"] == "active_repo_verification_entry"
+    assert shell_wrapper_surface["target_owner_after_migration"] == "repo_hygiene_boundary"
+    assert shell_wrapper_surface["authority_boundary"] == {
+        "can_own_generic_runtime": False,
+        "can_own_generated_wrapper": False,
+        "can_authorize_physical_delete": False,
+        "can_claim_grant_readiness": False,
+        "can_claim_production_long_run_soak": False,
+    }
+
+    active_shell_scripts = sorted(
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in (REPO_ROOT / "scripts").glob("*.sh")
+        if path.is_file()
+    )
+    assert active_shell_scripts
+    assert shell_wrapper_surface["source_refs"] == active_shell_scripts
 
 
 def test_active_path_scan_uses_policy_and_fails_closed_on_injected_legacy_literal() -> None:

@@ -105,6 +105,7 @@ def build_private_functional_surface_policy(
                 "package",
                 "autonomy_controller",
                 "owner_receipt_helper",
+                "repo_shell_verification_wrappers",
                 "legacy_runtime_residue",
             ],
             "surface_classifications": _physical_source_surface_classifications(
@@ -267,6 +268,21 @@ def _surface_retirement_gate(
             "target_owner_after_migration": target_owner,
             "compatibility_alias_allowed": False,
             "no_resurrection_policy": "no_mechanical_verdict_or_generic_runtime_wrapper",
+        }
+    if classification == "repo_native_verification_wrapper":
+        return {
+            "state": "retained_repo_native_verification_entry_do_not_promote_to_runtime_owner",
+            "required_before_delete_or_rename": [
+                "repo_hygiene_replacement_command",
+                "verification_entry_no_regression",
+            ],
+            "allowed_terminal_actions": [
+                "retain_as_repo_native_verification_wrapper",
+                "delete_or_rename_only_with_repo_verification_replacement",
+            ],
+            "target_owner_after_migration": target_owner,
+            "compatibility_alias_allowed": False,
+            "no_resurrection_policy": "no_runtime_session_queue_workbench_or_generated_surface_owner",
         }
     return {
         "state": "active_caller_migration_required_before_retirement",
