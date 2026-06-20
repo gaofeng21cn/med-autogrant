@@ -26,9 +26,17 @@ def test_sentrux_governance_files_are_tracked_and_advisory() -> None:
     assert "min_quality = 0.59" in rules_text
     assert "max_cycles = 0" in rules_text
     assert "max_depth = 14" in rules_text
+    assert "max_file_lines" not in rules_text
     assert "runtime_facade" not in rules_text
     assert "src/med_autogrant/hermes_runtime.py" not in rules_text
     assert "export_package" in rules_text
+    source_index = json.loads(
+        (REPO_ROOT / "contracts" / "generated_aggregate_source_index.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert source_index["line_budget_policy"] == "do_not_relax_line_budget_for_large_aggregate_surfaces"
+    assert source_index["checker"]["make_target"] == "make test-generated-aggregate-sources"
     rules = tomllib.loads(rules_text)
     assert {layer["name"] for layer in rules["layers"]} == {
         "entry",

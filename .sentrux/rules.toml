@@ -2,7 +2,6 @@
 min_quality = 0.59
 max_cycles = 0
 max_depth = 14
-max_file_lines = 2500
 no_god_files = false
 
 [[layers]]

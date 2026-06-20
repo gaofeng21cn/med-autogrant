@@ -133,6 +133,11 @@ repo-local clean runner 运行小 `smoke` lane 与不需要 optional proof depen
 普通开发不因 line-budget oversized / growth / stale baseline 阻断；每日结构治理或维护收紧
 使用 `scripts/line_budget.py --strict`、`OPL_LINE_BUDGET_STRICT=1` 或
 `make test-line-budget-strict`。
+Sentrux strict rules 不承接大型机器聚合合同 / schema 的单文件行数预算；这类 surface
+由 `contracts/generated_aggregate_source_index.json`、`make test-generated-aggregate-sources`
+和对应 leaf-source / generator checker 约束。这样 strict structure gate 继续阻断真实结构
+回归和规则违规，同时不会把已登记的 generated aggregate / pinned schema 误判为需要通过
+放宽源码 line budget 解决的普通源码文件。
 矩阵型、
 runtime/session、hosted/export、product-entry 与 provenance-oracle 回归覆盖归入
 `./scripts/verify.sh regression`；显式 Hermes hosted/proof 检查归入
