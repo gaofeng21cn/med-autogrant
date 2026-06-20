@@ -4,6 +4,8 @@
 
 This knowledge boundary tells Codex stages how to use MAG strategy memory without turning memory transport into grant truth.
 
+Strategy memory is Markdown-first advisory context. It gives Codex prior fundability and reviewer-risk experience to reason with; it is not a programmatic grant recipe engine, fundability scorer, route controller, quality/export gate, or submission-readiness gate.
+
 ## Owned Content
 
 - Strategy memory bodies are MAG-owned and workspace/runtime-state backed.
@@ -16,6 +18,7 @@ This knowledge boundary tells Codex stages how to use MAG strategy memory withou
 - Fundability may accept, reject, or mark memory stale based on current call fit and reviewer risk.
 - Aims and authoring may use accepted memory as strategy guidance, never as substitute evidence.
 - Review may use memory to detect repeated weaknesses or prior closure patterns.
+- Missing strategy memory does not block ordinary stage work by default. Memory conflict becomes a hard blocker only when it conflicts with the locked call, eligibility, current source evidence, owner receipt, or explicit owner gate.
 
 ## Accept/Reject Standard
 
@@ -28,6 +31,7 @@ This knowledge boundary tells Codex stages how to use MAG strategy memory withou
 - Do not store memory bodies in `agent/`, `contracts/`, OPL generated surfaces, or docs as machine truth.
 - Do not let memory override funding-call guidance, eligibility, source evidence, or owner receipts.
 - Do not claim memory acceptance from locator success alone.
+- Do not turn accepted memory into a numeric fundability score, default route, package/export verdict, or submission-ready claim.
 
 ## Receipt Expectations
 

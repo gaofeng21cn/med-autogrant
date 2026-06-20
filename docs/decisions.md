@@ -64,8 +64,8 @@ Last reviewed: `2026-06-12`
 ### Domain memory 只由 MAG 决定 body 与 accept/reject
 
 - 决策：OPL 可以索引 memory refs、携带 consumed refs、显示 provenance 和路由 writeback receipts；MAG 持有 grant strategy memory body、accept/reject authority、fundability/quality 影响判断和 owner receipt。
-- 理由：grant strategy memory 是辅助 Codex stage reasoning 的自然语言经验，不是跨 funder recipe engine 或 quality/export verdict generator。
-- 影响：真实 memory store、receipt instance 和 workspace artifact 只进入 workspace/runtime artifact root 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/`；repo source 只保存 descriptor、schema、locator、fixture 模板和 proof surface。
+- 理由：grant strategy memory 是辅助 Codex stage reasoning 的 Markdown-first 自然语言经验，不是跨 funder recipe engine、fundability scorer、route controller、quality/export verdict generator 或 submission-ready gate。
+- 影响：真实 memory store、receipt instance 和 workspace artifact 只进入 workspace/runtime artifact root 或 `$CODEX_HOME/projects/med-autogrant/runtime-state/`；repo source 只保存 descriptor、schema、locator、fixture 模板和 proof surface。缺少或陈旧 memory 默认只是 advisory / route-back / reviewer attention；只有 memory 被用于 hard owner/fundability/export/submission claim，或与 locked call/source/owner evidence 冲突时，才 fail closed。
 
 ### Submission-ready package 是本地交付 gate，不等于官网提交或正文质量完成
 
