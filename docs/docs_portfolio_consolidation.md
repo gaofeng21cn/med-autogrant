@@ -14,7 +14,7 @@ MAG 采用 OPL-family canonical docs taxonomy：
 
 `active/public/product/runtime/delivery/source/policies/specs/references/history`
 
-这个目录集合按长期职责保留，不按当前文件数量决定。MAG 当前真实 owner 主要在核心五件套、`active/`、`references/`、`specs/` 和 `history/`；`public/product/runtime/delivery/source/policies` 当前较薄，但都有长期职责，后续按 current 内容小批量吸收。
+这个目录集合按长期职责保留，不按当前文件数量决定。MAG 当前真实 owner 主要在核心五件套、`active/`、`references/`、`specs/` 和 `history/`；`public/product/runtime/delivery/source/policies` 当前较薄，但都有长期职责，后续按 current 内容小批量吸收。OPL family Foundry Agent OS target delta 的机器 owner 是 `contracts/foundry-agent-os-domain-kernel-manifest.json`，人读 support owner 是 `docs/active/foundry-agent-os-target-delta.md`；它只解释 MAG authority kernel 与 OPL upcollect surfaces，不替代 active gap plan 或 readiness evidence。
 
 ## Portfolio 核对规则
 
@@ -25,7 +25,7 @@ MAG 采用 OPL-family canonical docs taxonomy：
 | 根层 `README.md` / `README.zh-CN.md` | `current_public` | 公开第一入口；不承担技术 truth ledger。 |
 | 非 docs README：`agent/README.md`、`contracts/README.md`、`runtime/README.md` | repo-source / machine-surface 人读索引 | 各自只解释目录边界；机器真相仍归对应 contracts/source/runtime evidence。 |
 | docs 根入口与核心五件套 | current 人读 truth set | 只保留角色、边界、入口、证据门和决策；不追加 receipt proof、worktree closeout 或 dated proof 清单。 |
-| `docs/active/**` | active gap / inventory | `mag-ideal-state-cross-repo-gap-plan.md` 是唯一 active gap plan；`opl-private-implementation-migration-inventory.md` 是 per-surface 明细，不替代 active plan。 |
+| `docs/active/**` | active gap / inventory / target-delta support | `mag-ideal-state-cross-repo-gap-plan.md` 是唯一 active gap plan；`opl-private-implementation-migration-inventory.md` 是 per-surface 明细；`foundry-agent-os-target-delta.md` 是 `contracts/foundry-agent-os-domain-kernel-manifest.json` 的人读 support。后两者都不替代 active plan。 |
 | `docs/public/product/runtime/delivery/source/policies/**` | 薄 support index | 只做目录职责和下一跳，不把核心事实复制成第二真相源。 |
 | `docs/specs/**` | active specs / support records / lifecycle map | 只按 `docs/specs/README.md` 与 `specs_lifecycle_map.md` 标注的 active 或 support subsection 阅读。 |
 | `docs/references/**` | reference | north-star、OPL adoption、memory policy、series governance checklist；不承担 current status、docs lifecycle governance 或 active plan。 |
@@ -67,11 +67,12 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 
 1. 当前 public identity 和 product boundary 回到 `docs/public/`、核心五件套和 current-program。
 2. 当前 gap 和计划留在 `docs/active/`；evidence request / receipt ledger 的机器细节留在 contracts、source、manifest 或 history，`docs/status.md` 只保留 current boundary 摘要。
-3. Product-entry、user-loop、operator guidance 进入 `docs/product/`；grant truth 不迁出 MAG。
-4. Runtime/control/projection 支撑进入 `docs/runtime/`；machine truth 仍归 contracts/source/runtime evidence。
-5. Submission-ready package/export/delivery 支撑进入 `docs/delivery/`；fundability、quality、export verdict 和 package authority 仍归 MAG。
-6. Funder/source/workspace 支撑进入 `docs/source/`；generic shell 候选记录为 MAG-to-OPL 上收边界。
-7. 稳定规则进入 `docs/policies/`；一次性计划不得放入 policies。
+3. Foundry Agent OS target delta 的机器合同入口是 `contracts/foundry-agent-os-domain-kernel-manifest.json`；`docs/active/foundry-agent-os-target-delta.md` 只解释 retained Grant Authority Kernel、OPL upcollect surfaces、`current_owner_delta` 默认读根和 false-authority flags。
+4. Product-entry、user-loop、operator guidance 进入 `docs/product/`；grant truth 不迁出 MAG。
+5. Runtime/control/projection 支撑进入 `docs/runtime/`；machine truth 仍归 contracts/source/runtime evidence。
+6. Submission-ready package/export/delivery 支撑进入 `docs/delivery/`；fundability、quality、export verdict 和 package authority 仍归 MAG。
+7. Funder/source/workspace 支撑进入 `docs/source/`；generic shell 候选记录为 MAG-to-OPL 上收边界。
+8. 稳定规则进入 `docs/policies/`；一次性计划不得放入 policies。
 
 ## Direct Retirement
 
@@ -84,7 +85,7 @@ MAG 文档只维护 grant domain agent 的目标、差距、grant truth、fundab
 ## 当前生命周期决策
 
 - 核心五件套 `docs/project.md`、`docs/status.md`、`docs/architecture.md`、`docs/invariants.md` 与 `docs/decisions.md` 继续承担 current 人读 truth set。它们解释当前边界，但不成为机器接口；其中 `docs/status.md` 只保留当前角色、边界、入口、证据门和下一跳，不承载 dated closeout、receipt ledger 流水或新增 proof 清单。
-- `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 是唯一 active gap / plan owner；`docs/active/opl-private-implementation-migration-inventory.md` 是 per-surface inventory，不替代 active plan。
+- `docs/active/mag-ideal-state-cross-repo-gap-plan.md` 是唯一 active gap / plan owner；`docs/active/opl-private-implementation-migration-inventory.md` 是 per-surface inventory；`docs/active/foundry-agent-os-target-delta.md` 是 Foundry Agent OS target-delta support doc。后二者都不替代 active plan。
 - `docs/public/domain-positioning.md` 与 `docs/public/mvp-scope.md` 是 current public support；它们只补充公开定位和 MVP 范围。hosted / OPL consumption 旧证明只作历史上下文，外部 OPL/App/production caller 消费、direct/hosted parity 和 long-soak 仍归 active evidence gate。
 - `docs/references/integration/opl-family-contract-adoption.md` 是 OPL family contract adoption reference；它说明 MAG 如何暴露 descriptor/projection/receipt refs，不声明 production provider-hosted grant soak、App/workbench consumption 或 bridge exit 全部完成。
 - `docs/specs/` 当前只保留 active specs、support records 和 lifecycle map；历史 P/R/post-R5A/provider proof/hosted handoff/old route snapshot 统一从 `docs/history/specs/` 阅读。`docs/specs/specs_lifecycle_map.md` 维护聚合生命周期，不再在本文件堆每个 dated tranche。
@@ -118,6 +119,7 @@ Future foldback uses this routing:
 | Future evidence | Owner |
 | --- | --- |
 | Durable MAG status, active gap, private surface role or direct-retirement rule | Core five docs, active gap plan, private inventory, specs lifecycle map, contracts, source or tests |
+| Foundry Agent OS target-delta owner split or default-read-root rule | `contracts/foundry-agent-os-domain-kernel-manifest.json`, with `docs/active/foundry-agent-os-target-delta.md` as human support |
 | Dense spec lifecycle or historical spec body decision | `docs/specs/specs_lifecycle_map.md`, `docs/history/specs/README.md`, or a precise history/tombstone owner |
 | Docs lifecycle tranche closeout | `docs/history/docs-portfolio-coverage-ledger/README.md` as a compressed theme row, not a dated proof ledger |
 | Retired command/module/facade/test no-resurrection | `retired-surface-provenance.md` plus machine guard/source/test owner |
