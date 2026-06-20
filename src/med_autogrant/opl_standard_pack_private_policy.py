@@ -11,6 +11,7 @@ def build_private_functional_surface_policy(
     physical_source_classification_buckets: list[str],
     physical_source_surface_classifications: list[dict[str, Any]],
     forbidden_physical_residue_classes: list[str],
+    active_path_scan_policy: Mapping[str, Any],
     retirement_evidence_refs: list[str],
     target_owner_by_physical_classification: Mapping[str, str],
     active_caller_status_by_physical_classification: Mapping[str, str],
@@ -115,6 +116,7 @@ def build_private_functional_surface_policy(
                 retirement_evidence_refs=retirement_evidence_refs,
             ),
             "forbidden_residue_classes": forbidden_physical_residue_classes,
+            "active_path_scan_policy": _active_path_scan_policy(active_path_scan_policy),
             "forbidden_reflow_policy": (
                 "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_"
                 "executor_probe_or_compat_alias"
@@ -160,6 +162,35 @@ def build_private_functional_surface_policy(
                 "opl_can_write_memory_body": False,
                 "opl_can_declare_export_ready": False,
             },
+        },
+    }
+
+
+def _active_path_scan_policy(policy: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "surface_kind": str(policy["surface_kind"]),
+        "policy_id": str(policy["policy_id"]),
+        "target_domain_id": str(policy["target_domain_id"]),
+        "state": str(policy["state"]),
+        "roots": [str(item) for item in policy["roots"]],
+        "files": [str(item) for item in policy["files"]],
+        "suffixes": sorted(str(item) for item in policy["suffixes"]),
+        "excludes_human_docs": bool(policy["excludes_human_docs"]),
+        "human_doc_policy": str(policy["human_doc_policy"]),
+        "scans_repo_source_only": bool(policy["scans_repo_source_only"]),
+        "retired_active_paths": [str(item) for item in policy["retired_active_paths"]],
+        "forbidden_default_caller_patterns": [
+            {
+                "pattern_id": str(pattern["pattern_id"]),
+                "literal_parts": [str(item) for item in pattern["literal_parts"]],
+                "policy": str(pattern["policy"]),
+            }
+            for pattern in policy["forbidden_default_caller_patterns"]
+        ],
+        "authority_boundary": {
+            "policy_can_authorize_physical_delete": False,
+            "policy_can_claim_production_long_run_soak": False,
+            "policy_can_claim_grant_readiness": False,
         },
     }
 

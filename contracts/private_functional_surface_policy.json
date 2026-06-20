@@ -37,6 +37,121 @@
     "generic_observability_runtime"
   ],
   "physical_source_morphology_policy": {
+    "active_path_scan_policy": {
+      "authority_boundary": {
+        "policy_can_authorize_physical_delete": false,
+        "policy_can_claim_grant_readiness": false,
+        "policy_can_claim_production_long_run_soak": false
+      },
+      "excludes_human_docs": true,
+      "files": [
+        "Makefile",
+        "pyproject.toml",
+        ".agents/plugins/marketplace.json"
+      ],
+      "forbidden_default_caller_patterns": [
+        {
+          "literal_parts": [
+            "med_autogrant.domain_runtime_parts",
+            ".patch_targets"
+          ],
+          "pattern_id": "domain_runtime_patch_bridge_import",
+          "policy": "patch runtime owner modules directly; do not use retired facade patch bridge"
+        },
+        {
+          "literal_parts": [
+            "DEFAULT_RUNTIME_OWNER = \"",
+            "hermes_agent",
+            "\""
+          ],
+          "pattern_id": "hermes_default_runtime_owner",
+          "policy": "Hermes-Agent remains explicit proof/provider provenance only"
+        },
+        {
+          "literal_parts": [
+            "DEFAULT_EXECUTOR_OWNER = \"",
+            "hermes_agent",
+            "\""
+          ],
+          "pattern_id": "hermes_default_executor_owner",
+          "policy": "default executor stays Codex CLI"
+        },
+        {
+          "literal_parts": [
+            "DEFAULT_EXECUTOR_OWNER = \"",
+            "claude_code",
+            "\""
+          ],
+          "pattern_id": "claude_default_executor_owner",
+          "policy": "non-default executors require explicit OPL adapter selection"
+        },
+        {
+          "literal_parts": [
+            "DEFAULT_RUNTIME_OWNER = \"",
+            "gateway",
+            "\""
+          ],
+          "pattern_id": "gateway_default_runtime_owner",
+          "policy": "Gateway/local-manager wording is retired from active runtime ownership"
+        },
+        {
+          "literal_parts": [
+            "DEFAULT_RUNTIME_OWNER = \"",
+            "local_manager",
+            "\""
+          ],
+          "pattern_id": "local_manager_default_runtime_owner",
+          "policy": "local-manager is not a default product/runtime owner"
+        },
+        {
+          "literal_parts": [
+            "DEFAULT_RUNTIME_OWNER = \"",
+            "host_agent",
+            "\""
+          ],
+          "pattern_id": "host_agent_default_runtime_owner",
+          "policy": "repo-local host-agent runtime is not a product owner"
+        },
+        {
+          "literal_parts": [
+            "\"default_executor_name\": \"",
+            "hermes_agent",
+            "\""
+          ],
+          "pattern_id": "json_hermes_default_executor",
+          "policy": "manifest/contracts must keep Codex CLI as default executor"
+        }
+      ],
+      "human_doc_policy": "docs/history/provenance may name retired surfaces without making them default callers",
+      "policy_id": "mag.active_path_scan.no_legacy_default_caller.policy.v1",
+      "retired_active_paths": [
+        "tests/test_product_entry.py",
+        "src/med_autogrant/domain_runtime_parts/patch_targets.py",
+        "src/med_autogrant/gateway.py",
+        "src/med_autogrant/local_manager.py",
+        "src/med_autogrant/host_agent.py"
+      ],
+      "roots": [
+        "src",
+        "tests",
+        "schemas",
+        "contracts",
+        "scripts",
+        "plugins"
+      ],
+      "scans_repo_source_only": true,
+      "state": "contract_owned_no_resurrection_scan_policy",
+      "suffixes": [
+        ".json",
+        ".py",
+        ".sh",
+        ".toml",
+        ".yaml",
+        ".yml"
+      ],
+      "surface_kind": "mag_active_path_scan_policy",
+      "target_domain_id": "med-autogrant"
+    },
     "authority_boundary": {
       "mag_can_emit_local_persistence_or_attempt_records": false,
       "mag_can_own_generated_wrapper": false,

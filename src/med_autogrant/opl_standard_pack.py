@@ -34,6 +34,7 @@ from med_autogrant.opl_standard_pack_profiles import (
     WORKSPACE_TOPOLOGY_PROFILE,
 )
 from med_autogrant.opl_standard_pack_source_policy import (
+    ACTIVE_PATH_SCAN_POLICY,
     ACTIVE_CALLER_STATUS_BY_PHYSICAL_CLASSIFICATION,
     DECLARATIVE_DOMAIN_PACK,
     FORBIDDEN_GENERIC_OWNER_ROLES,
@@ -71,7 +72,9 @@ def build_standard_pack() -> dict[str, Any]:
     stage_control_plane = build_mag_family_stage_control_plane(
         family_action_catalog=action_catalog,
     )
-    physical_skeleton_follow_through = build_physical_skeleton_follow_through()
+    physical_skeleton_follow_through = build_physical_skeleton_follow_through(
+        active_path_scan_policy=ACTIVE_PATH_SCAN_POLICY,
+    )
     consumer_thinning_contract = build_mag_consumer_thinning_contract(
         physical_skeleton_follow_through=physical_skeleton_follow_through,
     )
@@ -530,6 +533,7 @@ def _private_functional_surface_policy() -> dict[str, Any]:
         physical_source_classification_buckets=PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS,
         physical_source_surface_classifications=PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS,
         forbidden_physical_residue_classes=FORBIDDEN_PHYSICAL_RESIDUE_CLASSES,
+        active_path_scan_policy=ACTIVE_PATH_SCAN_POLICY,
         retirement_evidence_refs=RETIREMENT_EVIDENCE_REFS,
         target_owner_by_physical_classification=TARGET_OWNER_BY_PHYSICAL_CLASSIFICATION,
         active_caller_status_by_physical_classification=ACTIVE_CALLER_STATUS_BY_PHYSICAL_CLASSIFICATION,

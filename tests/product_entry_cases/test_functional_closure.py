@@ -221,6 +221,23 @@ class ProductEntryFunctionalClosureTest(unittest.TestCase):
         self.assertEqual(active_path_scan["surface_kind"], "mag_active_path_scan_no_legacy_default_caller")
         self.assertEqual(active_path_scan["state"], "passed")
         self.assertTrue(active_path_scan["no_legacy_default_caller"])
+        self.assertEqual(
+            active_path_scan["policy_ref"],
+            "contracts/private_functional_surface_policy.json#/"
+            "physical_source_morphology_policy/active_path_scan_policy",
+        )
+        self.assertEqual(
+            active_path_scan["policy_id"],
+            "mag.active_path_scan.no_legacy_default_caller.policy.v1",
+        )
+        self.assertEqual(
+            active_path_scan["scanned_scope"]["roots"],
+            ["src", "tests", "schemas", "contracts", "scripts", "plugins"],
+        )
+        self.assertEqual(
+            active_path_scan["scanned_scope"]["suffixes"],
+            [".json", ".py", ".sh", ".toml", ".yaml", ".yml"],
+        )
         self.assertGreater(active_path_scan["scanned_file_count"], 0)
         self.assertEqual(active_path_scan["forbidden_default_caller_matches"], [])
         self.assertFalse(active_path_scan["claims_production_long_run_soak_complete"])

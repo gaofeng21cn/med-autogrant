@@ -109,6 +109,75 @@ FORBIDDEN_PHYSICAL_RESIDUE_CLASSES = [
     "legacy_compat_alias_surface",
 ]
 
+ACTIVE_PATH_SCAN_POLICY = {
+    "surface_kind": "mag_active_path_scan_policy",
+    "policy_id": "mag.active_path_scan.no_legacy_default_caller.policy.v1",
+    "target_domain_id": TARGET_DOMAIN_ID,
+    "state": "contract_owned_no_resurrection_scan_policy",
+    "roots": ["src", "tests", "schemas", "contracts", "scripts", "plugins"],
+    "files": ["Makefile", "pyproject.toml", ".agents/plugins/marketplace.json"],
+    "suffixes": [".json", ".py", ".sh", ".toml", ".yaml", ".yml"],
+    "excludes_human_docs": True,
+    "human_doc_policy": (
+        "docs/history/provenance may name retired surfaces without making them default callers"
+    ),
+    "scans_repo_source_only": True,
+    "retired_active_paths": [
+        "tests/test_product_entry.py",
+        "src/med_autogrant/domain_runtime_parts/patch_targets.py",
+        "src/med_autogrant/gateway.py",
+        "src/med_autogrant/local_manager.py",
+        "src/med_autogrant/" + "host" + "_agent.py",
+    ],
+    "forbidden_default_caller_patterns": [
+        {
+            "pattern_id": "domain_runtime_patch_bridge_import",
+            "literal_parts": ["med_autogrant.domain_runtime_parts", ".patch_targets"],
+            "policy": "patch runtime owner modules directly; do not use retired facade patch bridge",
+        },
+        {
+            "pattern_id": "hermes_default_runtime_owner",
+            "literal_parts": ["DEFAULT_RUNTIME_OWNER = \"", "hermes_agent", "\""],
+            "policy": "Hermes-Agent remains explicit proof/provider provenance only",
+        },
+        {
+            "pattern_id": "hermes_default_executor_owner",
+            "literal_parts": ["DEFAULT_EXECUTOR_OWNER = \"", "hermes_agent", "\""],
+            "policy": "default executor stays Codex CLI",
+        },
+        {
+            "pattern_id": "claude_default_executor_owner",
+            "literal_parts": ["DEFAULT_EXECUTOR_OWNER = \"", "claude_code", "\""],
+            "policy": "non-default executors require explicit OPL adapter selection",
+        },
+        {
+            "pattern_id": "gateway_default_runtime_owner",
+            "literal_parts": ["DEFAULT_RUNTIME_OWNER = \"", "gateway", "\""],
+            "policy": "Gateway/local-manager wording is retired from active runtime ownership",
+        },
+        {
+            "pattern_id": "local_manager_default_runtime_owner",
+            "literal_parts": ["DEFAULT_RUNTIME_OWNER = \"", "local_manager", "\""],
+            "policy": "local-manager is not a default product/runtime owner",
+        },
+        {
+            "pattern_id": "host" + "_agent_default_runtime_owner",
+            "literal_parts": ["DEFAULT_RUNTIME_OWNER = \"", "host" + "_agent", "\""],
+            "policy": "repo-local host-agent runtime is not a product owner",
+        },
+        {
+            "pattern_id": "json_hermes_default_executor",
+            "literal_parts": ["\"default_executor_name\": \"", "hermes_agent", "\""],
+            "policy": "manifest/contracts must keep Codex CLI as default executor",
+        },
+    ],
+    "authority_boundary": {
+        "policy_can_authorize_physical_delete": False,
+        "policy_can_claim_production_long_run_soak": False,
+        "policy_can_claim_grant_readiness": False,
+    },
+}
+
 PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS = [
     {
         "surface_id": "domain_runtime",

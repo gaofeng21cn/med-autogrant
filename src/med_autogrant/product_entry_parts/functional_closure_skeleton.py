@@ -1,20 +1,11 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
 from med_autogrant.product_entry_parts.primitives import TARGET_DOMAIN_ID
 
-_ACTIVE_PATH_SCAN_ROOTS = ("src", "tests", "schemas", "contracts", "scripts", "plugins")
-_ACTIVE_PATH_SCAN_FILES = ("Makefile", "pyproject.toml", ".agents/plugins/marketplace.json")
-_ACTIVE_PATH_SCAN_SUFFIXES = {".py", ".json", ".toml", ".sh", ".yaml", ".yml"}
-_RETIRED_ACTIVE_PATHS = (
-    "tests/test_product_entry.py",
-    "src/med_autogrant/domain_runtime_parts/patch_targets.py",
-    "src/med_autogrant/gateway.py",
-    "src/med_autogrant/local_manager.py",
-    "src/med_autogrant/" + "host" + "_agent.py",
-)
 _RETIRED_PUBLIC_COMMANDS = (
     "run-local",
     "runtime-run",
@@ -35,50 +26,6 @@ _RETIRED_PUBLIC_COMMAND_TEST_REFS = {
         "tests/test_domain_entry.py::DomainEntryDispatchTest::test_domain_entry_rejects_retired_runtime_commands",
     ],
 }
-_FORBIDDEN_DEFAULT_CALLER_PATTERNS = (
-    {
-        "pattern_id": "domain_runtime_patch_bridge_import",
-        "literal_parts": ("med_autogrant.domain_runtime_parts", ".patch_targets"),
-        "policy": "patch runtime owner modules directly; do not use retired facade patch bridge",
-    },
-    {
-        "pattern_id": "hermes_default_runtime_owner",
-        "literal_parts": ("DEFAULT_RUNTIME_OWNER = \"", "hermes_agent", "\""),
-        "policy": "Hermes-Agent remains explicit proof/provider provenance only",
-    },
-    {
-        "pattern_id": "hermes_default_executor_owner",
-        "literal_parts": ("DEFAULT_EXECUTOR_OWNER = \"", "hermes_agent", "\""),
-        "policy": "default executor stays Codex CLI",
-    },
-    {
-        "pattern_id": "claude_default_executor_owner",
-        "literal_parts": ("DEFAULT_EXECUTOR_OWNER = \"", "claude_code", "\""),
-        "policy": "non-default executors require explicit OPL adapter selection",
-    },
-    {
-        "pattern_id": "gateway_default_runtime_owner",
-        "literal_parts": ("DEFAULT_RUNTIME_OWNER = \"", "gateway", "\""),
-        "policy": "Gateway/local-manager wording is retired from active runtime ownership",
-    },
-    {
-        "pattern_id": "local_manager_default_runtime_owner",
-        "literal_parts": ("DEFAULT_RUNTIME_OWNER = \"", "local_manager", "\""),
-        "policy": "local-manager is not a default product/runtime owner",
-    },
-    {
-        "pattern_id": "host" + "_agent_default_runtime_owner",
-        "literal_parts": ("DEFAULT_RUNTIME_OWNER = \"", "host" + "_agent", "\""),
-        "policy": "repo-local host-agent runtime is not a product owner",
-    },
-    {
-        "pattern_id": "json_hermes_default_executor",
-        "literal_parts": ("\"default_executor_name\": \"", "hermes_agent", "\""),
-        "policy": "manifest/contracts must keep Codex CLI as default executor",
-    },
-)
-
-
 def build_retired_legacy_default_path_receipts() -> list[dict[str, Any]]:
     return [
         {
@@ -112,7 +59,9 @@ def build_retired_legacy_default_path_receipts() -> list[dict[str, Any]]:
     ]
 
 
-def build_physical_skeleton_follow_through() -> dict[str, Any]:
+def build_physical_skeleton_follow_through(
+    *, active_path_scan_policy: dict[str, Any] | None = None
+) -> dict[str, Any]:
     roots = {
         "agent": {
             "owner": TARGET_DOMAIN_ID,
@@ -174,7 +123,10 @@ def build_physical_skeleton_follow_through() -> dict[str, Any]:
         },
     }
     repo_root = Path(__file__).resolve().parents[3]
-    active_path_scan = _build_active_path_scan_no_legacy_default_caller(repo_root)
+    active_path_scan = _build_active_path_scan_no_legacy_default_caller(
+        repo_root,
+        scan_policy=active_path_scan_policy,
+    )
     retired_public_command_scan = _build_retired_public_command_scan()
     return {
         "surface_kind": "mag_physical_skeleton_follow_through",
@@ -341,15 +293,23 @@ def _retired_public_command_status(
     }
 
 
-def _build_active_path_scan_no_legacy_default_caller(repo_root: Path) -> dict[str, Any]:
-    scanned_paths = _active_path_scan_paths(repo_root)
+def _build_active_path_scan_no_legacy_default_caller(
+    repo_root: Path,
+    *,
+    scan_policy: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    if scan_policy is None:
+        scan_policy = _load_active_path_scan_policy(repo_root)
+    else:
+        scan_policy = _validated_active_path_scan_policy(scan_policy)
+    scanned_paths = _active_path_scan_paths(repo_root, scan_policy=scan_policy)
     forbidden_patterns = [
         {
             "pattern_id": str(pattern["pattern_id"]),
             "literal": "".join(pattern["literal_parts"]),
             "policy": str(pattern["policy"]),
         }
-        for pattern in _FORBIDDEN_DEFAULT_CALLER_PATTERNS
+        for pattern in scan_policy["forbidden_default_caller_patterns"]
     ]
     matches: list[dict[str, Any]] = []
     for path in scanned_paths:
@@ -373,7 +333,7 @@ def _build_active_path_scan_no_legacy_default_caller(repo_root: Path) -> dict[st
             "exists": (repo_root / path).exists(),
             "state": "absent" if not (repo_root / path).exists() else "present_forbidden",
         }
-        for path in _RETIRED_ACTIVE_PATHS
+        for path in scan_policy["retired_active_paths"]
     ]
     retired_surface_path_matches = [
         status for status in retired_surface_path_status if status["state"] != "absent"
@@ -386,13 +346,18 @@ def _build_active_path_scan_no_legacy_default_caller(repo_root: Path) -> dict[st
         "state": "passed" if not matches and not retired_surface_path_matches else "failed",
         "evidence_ref_id": "active_path_scan_no_legacy_default_caller_ref",
         "no_legacy_default_caller": not matches and not retired_surface_path_matches,
+        "policy_ref": (
+            "contracts/private_functional_surface_policy.json#/"
+            "physical_source_morphology_policy/active_path_scan_policy"
+        ),
+        "policy_id": scan_policy["policy_id"],
         "scanned_scope": {
-            "roots": list(_ACTIVE_PATH_SCAN_ROOTS),
-            "files": list(_ACTIVE_PATH_SCAN_FILES),
-            "suffixes": sorted(_ACTIVE_PATH_SCAN_SUFFIXES),
-            "excludes_human_docs": True,
-            "human_doc_policy": "docs/history/provenance may name retired surfaces without making them default callers",
-            "scans_repo_source_only": True,
+            "roots": list(scan_policy["roots"]),
+            "files": list(scan_policy["files"]),
+            "suffixes": list(scan_policy["suffixes"]),
+            "excludes_human_docs": scan_policy["excludes_human_docs"],
+            "human_doc_policy": scan_policy["human_doc_policy"],
+            "scans_repo_source_only": scan_policy["scans_repo_source_only"],
         },
         "scanned_file_count": len(scanned_paths),
         "scanned_sample_refs": [
@@ -413,16 +378,103 @@ def _build_active_path_scan_no_legacy_default_caller(repo_root: Path) -> dict[st
     }
 
 
-def _active_path_scan_paths(repo_root: Path) -> list[Path]:
+def _load_active_path_scan_policy(repo_root: Path) -> dict[str, Any]:
+    policy_path = repo_root / "contracts" / "private_functional_surface_policy.json"
+    payload = json.loads(policy_path.read_text(encoding="utf-8"))
+    morphology_policy = _require_mapping(
+        payload,
+        "physical_source_morphology_policy",
+        context="private_functional_surface_policy",
+    )
+    scan_policy = _require_mapping(
+        morphology_policy,
+        "active_path_scan_policy",
+        context="private_functional_surface_policy.physical_source_morphology_policy",
+    )
+    return _validated_active_path_scan_policy(scan_policy)
+
+
+def _validated_active_path_scan_policy(policy: dict[str, Any]) -> dict[str, Any]:
+    if policy.get("target_domain_id") != TARGET_DOMAIN_ID:
+        raise ValueError("active path scan policy target_domain_id must be med-autogrant.")
+    if policy.get("policy_id") != "mag.active_path_scan.no_legacy_default_caller.policy.v1":
+        raise ValueError("Unsupported active path scan policy_id.")
+    result = {
+        "policy_id": _require_nonempty_string(policy, "policy_id", context="active_path_scan_policy"),
+        "roots": _require_string_list(policy, "roots", context="active_path_scan_policy"),
+        "files": _require_string_list(policy, "files", context="active_path_scan_policy"),
+        "suffixes": sorted(
+            _require_string_list(policy, "suffixes", context="active_path_scan_policy")
+        ),
+        "retired_active_paths": _require_string_list(
+            policy,
+            "retired_active_paths",
+            context="active_path_scan_policy",
+        ),
+        "forbidden_default_caller_patterns": _validated_forbidden_patterns(policy),
+        "excludes_human_docs": _require_bool(
+            policy,
+            "excludes_human_docs",
+            context="active_path_scan_policy",
+        ),
+        "human_doc_policy": _require_nonempty_string(
+            policy,
+            "human_doc_policy",
+            context="active_path_scan_policy",
+        ),
+        "scans_repo_source_only": _require_bool(
+            policy,
+            "scans_repo_source_only",
+            context="active_path_scan_policy",
+        ),
+    }
+    return result
+
+
+def _validated_forbidden_patterns(policy: dict[str, Any]) -> list[dict[str, Any]]:
+    patterns = _require_list(
+        policy,
+        "forbidden_default_caller_patterns",
+        context="active_path_scan_policy",
+    )
+    result: list[dict[str, Any]] = []
+    for index, pattern in enumerate(patterns):
+        pattern_mapping = _require_mapping(
+            pattern,
+            context=f"active_path_scan_policy.forbidden_default_caller_patterns[{index}]",
+        )
+        result.append(
+            {
+                "pattern_id": _require_nonempty_string(
+                    pattern_mapping,
+                    "pattern_id",
+                    context=f"forbidden_default_caller_patterns[{index}]",
+                ),
+                "literal_parts": _require_string_list(
+                    pattern_mapping,
+                    "literal_parts",
+                    context=f"forbidden_default_caller_patterns[{index}]",
+                ),
+                "policy": _require_nonempty_string(
+                    pattern_mapping,
+                    "policy",
+                    context=f"forbidden_default_caller_patterns[{index}]",
+                ),
+            }
+        )
+    return result
+
+
+def _active_path_scan_paths(repo_root: Path, *, scan_policy: dict[str, Any]) -> list[Path]:
     paths: set[Path] = set()
-    for root_name in _ACTIVE_PATH_SCAN_ROOTS:
+    for root_name in scan_policy["roots"]:
         root = repo_root / root_name
         if not root.exists():
             continue
         for path in root.rglob("*"):
-            if path.is_file() and path.suffix in _ACTIVE_PATH_SCAN_SUFFIXES:
+            if path.is_file() and path.suffix in scan_policy["suffixes"]:
                 paths.add(path)
-    for file_name in _ACTIVE_PATH_SCAN_FILES:
+    for file_name in scan_policy["files"]:
         path = repo_root / file_name
         if path.is_file():
             paths.add(path)
@@ -434,3 +486,39 @@ def _read_scan_text(path: Path) -> str | None:
         return path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         return None
+
+
+def _require_mapping(value: Any, key: str | None = None, *, context: str) -> dict[str, Any]:
+    candidate = value if key is None else value.get(key) if isinstance(value, dict) else None
+    if not isinstance(candidate, dict):
+        field = context if key is None else f"{context}.{key}"
+        raise ValueError(f"{field} must be an object.")
+    return candidate
+
+
+def _require_list(value: dict[str, Any], key: str, *, context: str) -> list[Any]:
+    candidate = value.get(key)
+    if not isinstance(candidate, list) or not candidate:
+        raise ValueError(f"{context}.{key} must be a non-empty list.")
+    return candidate
+
+
+def _require_string_list(value: dict[str, Any], key: str, *, context: str) -> list[str]:
+    candidate = _require_list(value, key, context=context)
+    if not all(isinstance(item, str) and item for item in candidate):
+        raise ValueError(f"{context}.{key} must contain only non-empty strings.")
+    return list(candidate)
+
+
+def _require_nonempty_string(value: dict[str, Any], key: str, *, context: str) -> str:
+    candidate = value.get(key)
+    if not isinstance(candidate, str) or not candidate:
+        raise ValueError(f"{context}.{key} must be a non-empty string.")
+    return candidate
+
+
+def _require_bool(value: dict[str, Any], key: str, *, context: str) -> bool:
+    candidate = value.get(key)
+    if not isinstance(candidate, bool):
+        raise ValueError(f"{context}.{key} must be a boolean.")
+    return candidate

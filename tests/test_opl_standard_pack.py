@@ -23,6 +23,7 @@ from med_autogrant.opl_standard_pack_profiles import (
     WORKSPACE_TOPOLOGY_PROFILE,
 )
 from med_autogrant.opl_standard_pack_source_policy import (
+    ACTIVE_PATH_SCAN_POLICY,
     ACTIVE_CALLER_STATUS_BY_PHYSICAL_CLASSIFICATION,
     FORBIDDEN_GENERIC_OWNER_ROLES,
     FORBIDDEN_PHYSICAL_RESIDUE_CLASSES,
@@ -296,6 +297,7 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         physical_source_classification_buckets=PHYSICAL_SOURCE_CLASSIFICATION_BUCKETS,
         physical_source_surface_classifications=PHYSICAL_SOURCE_SURFACE_CLASSIFICATIONS,
         forbidden_physical_residue_classes=FORBIDDEN_PHYSICAL_RESIDUE_CLASSES,
+        active_path_scan_policy=ACTIVE_PATH_SCAN_POLICY,
         retirement_evidence_refs=RETIREMENT_EVIDENCE_REFS,
         target_owner_by_physical_classification=TARGET_OWNER_BY_PHYSICAL_CLASSIFICATION,
         active_caller_status_by_physical_classification=(
@@ -414,6 +416,50 @@ def test_private_functional_policy_classifies_physical_source_morphology() -> No
         == "do_not_restore_legacy_local_persistence_attempt_records_repo_cadence_"
         "executor_probe_or_compat_alias"
     )
+    assert morphology["active_path_scan_policy"] == ACTIVE_PATH_SCAN_POLICY
+    active_path_scan_policy = morphology["active_path_scan_policy"]
+    assert active_path_scan_policy["policy_id"] == (
+        "mag.active_path_scan.no_legacy_default_caller.policy.v1"
+    )
+    assert active_path_scan_policy["roots"] == [
+        "src",
+        "tests",
+        "schemas",
+        "contracts",
+        "scripts",
+        "plugins",
+    ]
+    assert active_path_scan_policy["files"] == [
+        "Makefile",
+        "pyproject.toml",
+        ".agents/plugins/marketplace.json",
+    ]
+    assert active_path_scan_policy["suffixes"] == [
+        ".json",
+        ".py",
+        ".sh",
+        ".toml",
+        ".yaml",
+        ".yml",
+    ]
+    assert {
+        pattern["pattern_id"]
+        for pattern in active_path_scan_policy["forbidden_default_caller_patterns"]
+    } == {
+        "domain_runtime_patch_bridge_import",
+        "hermes_default_runtime_owner",
+        "hermes_default_executor_owner",
+        "claude_default_executor_owner",
+        "gateway_default_runtime_owner",
+        "local_manager_default_runtime_owner",
+        "host_agent_default_runtime_owner",
+        "json_hermes_default_executor",
+    }
+    assert active_path_scan_policy["authority_boundary"] == {
+        "policy_can_authorize_physical_delete": False,
+        "policy_can_claim_production_long_run_soak": False,
+        "policy_can_claim_grant_readiness": False,
+    }
     assert morphology["authority_boundary"] == {
         "mag_can_own_generic_runtime": False,
         "mag_can_own_generated_wrapper": False,
