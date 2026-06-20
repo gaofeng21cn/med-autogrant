@@ -417,16 +417,12 @@
           "additionalProperties": false,
           "required": [
             "mode",
-            "legacy_summary_role",
             "style",
             "answer_checklist"
           ],
           "properties": {
             "mode": {
               "const": "ai_first"
-            },
-            "legacy_summary_role": {
-              "const": "fallback_only"
             },
             "style": {
               "const": "plain_language"

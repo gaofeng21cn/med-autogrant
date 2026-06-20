@@ -181,7 +181,6 @@ class ProductEntryProgressCockpitTest(unittest.TestCase):
                     },
                     "narration_policy": {
                         "mode": "ai_first",
-                        "legacy_summary_role": "fallback_only",
                         "style": "plain_language",
                         "answer_checklist": ["current_stage", "current_blockers", "next_step"],
                     },
@@ -282,7 +281,6 @@ class ProductEntryProgressCockpitTest(unittest.TestCase):
                     },
                     "narration_policy": {
                         "mode": "ai_first",
-                        "legacy_summary_role": "fallback_only",
                         "style": "plain_language",
                         "answer_checklist": ["current_stage", "current_blockers", "next_step"],
                     },
